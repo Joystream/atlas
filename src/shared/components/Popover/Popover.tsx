@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Placement } from '@popperjs/core'
 import Tippy, { TippyProps } from '@tippyjs/react/headless'
-import React, { MutableRefObject } from 'react'
+import React, { LegacyRef, MutableRefObject } from 'react'
 
 export type TippyInstance = Parameters<Required<TippyProps>['render']>[2] // what a mess, i know
 
@@ -12,6 +12,7 @@ export type PopoverProps = {
   instanceRef?: MutableRefObject<TippyInstance>
   hideOnClick?: boolean
   className?: string
+  contentContainerRef?: LegacyRef<HTMLDivElement>
 }
 
 const EXIT_ANIMATION_DURATION = 100
@@ -23,6 +24,7 @@ export const Popover: React.FC<PopoverProps> = ({
   offset = [0, 8],
   content,
   instanceRef,
+  contentContainerRef,
   className,
 }) => {
   return (
@@ -37,14 +39,14 @@ export const Popover: React.FC<PopoverProps> = ({
         }
       }}
       onTrigger={(instance) => {
-        const box = instance.popper.firstElementChild
+        const box = instance.popper.firstElementChild?.firstElementChild
         requestAnimationFrame(() => {
           box?.classList.add('popover-enter-active')
           box?.classList.remove('popover-exit-active')
         })
       }}
       onHide={(instance) => {
-        const box = instance.popper.firstElementChild
+        const box = instance.popper.firstElementChild?.firstElementChild
         requestAnimationFrame(() => {
           box?.classList.remove('popover-enter-active')
           box?.classList.add('popover-exit-active')
@@ -53,9 +55,11 @@ export const Popover: React.FC<PopoverProps> = ({
         })
       }}
       render={(attrs) => (
-        <ContentContainer {...attrs} className={className}>
-          {content}
-        </ContentContainer>
+        <div ref={contentContainerRef}>
+          <ContentContainer {...attrs} className={className}>
+            {content}
+          </ContentContainer>
+        </div>
       )}
       placement={placement}
       offset={offset}

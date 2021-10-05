@@ -7,7 +7,7 @@ import { Popover } from './Popover'
 
 import { Text } from '../Text'
 
-export const MAX_CONTENT_HEIGHT = 219
+export const MAX_POPOVER_HEIGHT = 320
 
 type Scrollable = {
   isScrollable: boolean
@@ -22,12 +22,20 @@ export const HeaderContainer = styled(Text)<Scrollable>`
   ${({ isScrollable }) => isScrollable && headerContainerScrollableStyles};
 `
 
-export const ContentContainer = styled.div`
+const scrollableContentContainerStyles = css`
+  overflow-y: scroll;
+`
+export const ContentContainer = styled.div<Scrollable>`
   display: grid;
   gap: ${sizes(3)};
   padding: ${sizes(4)} 0;
-  max-height: ${MAX_CONTENT_HEIGHT}px;
-  overflow-y: auto;
+
+  ${({ isScrollable }) => isScrollable && scrollableContentContainerStyles};
+`
+
+export const footerContainerScrollableStyles = css`
+  padding-top: ${sizes(4)};
+  border-top: 1px solid ${colors.gray[600]};
 `
 
 export const FooterContainer = styled.div<Scrollable>`
@@ -37,16 +45,14 @@ export const FooterContainer = styled.div<Scrollable>`
   justify-content: end;
   gap: ${sizes(2)};
 
-  ${({ isScrollable }) =>
-    isScrollable &&
-    `
-    padding-top: ${sizes(4)};
-    border-top: 1px solid ${colors.gray[600]};
-  `}
+  ${({ isScrollable }) => isScrollable && footerContainerScrollableStyles};
 `
 
-export const PopoverContainer = styled(Popover)`
+export const PopoverContainer = styled(Popover)<Scrollable>`
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   background-color: ${colors.gray[700]};
   padding: ${sizes(4)};
   width: 240px;
+  max-height: ${MAX_POPOVER_HEIGHT}px;
 `

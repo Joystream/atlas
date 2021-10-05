@@ -6,7 +6,7 @@ import {
   ContentContainer,
   FooterContainer,
   HeaderContainer,
-  MAX_CONTENT_HEIGHT,
+  MAX_POPOVER_HEIGHT,
   PopoverContainer,
 } from './PopoverDialog.styles'
 
@@ -18,11 +18,12 @@ type PopoverDialogProps = {
 
 export const PopoverDialog: React.FC<PopoverDialogProps> = ({ header, content, footer, children, ...rest }) => {
   const [containerRef, containerBounds] = useMeasure()
-
-  const isScrollable = containerBounds.height >= MAX_CONTENT_HEIGHT
+  const isScrollable = containerBounds.height >= MAX_POPOVER_HEIGHT
   return (
     <PopoverContainer
       {...rest}
+      isScrollable={isScrollable}
+      contentContainerRef={containerRef}
       content={
         <>
           {header && (
@@ -30,7 +31,7 @@ export const PopoverDialog: React.FC<PopoverDialogProps> = ({ header, content, f
               {header}
             </HeaderContainer>
           )}
-          <ContentContainer ref={containerRef}>{content}</ContentContainer>
+          <ContentContainer isScrollable={isScrollable}>{content}</ContentContainer>
           {footer && <FooterContainer isScrollable={isScrollable}>{footer}</FooterContainer>}
         </>
       }
