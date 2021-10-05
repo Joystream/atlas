@@ -3,12 +3,13 @@ import React from 'react'
 
 import { Spinner } from '@/shared/components/Spinner'
 import { Text } from '@/shared/components/Text'
+import { sizes } from '@/shared/theme'
 
 export const StudioLoading: React.FC = () => {
   return (
     <LoadingStudioContainer>
-      <Text variant="h1">Loading Joystream studio...</Text>
       <Spinner size="large" />
+      <Text variant="h2">Loading Joystream Studio...</Text>
     </LoadingStudioContainer>
   )
 }
@@ -23,7 +24,7 @@ const LoadingStudioContainer = styled.main`
   justify-content: center;
   align-items: center;
 
-  div {
-    margin-top: 24px;
+  > * + * {
+    margin-top: ${sizes(12)};
   }
 `
