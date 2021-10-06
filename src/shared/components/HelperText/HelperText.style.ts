@@ -5,19 +5,18 @@ import { colors, sizes, typography } from '@/shared/theme'
 import { Text } from '../Text'
 
 export type HelperTextProps = {
-  helperTextVariant?: 'default' | 'error' | 'warning'
+  helperTextVariant?: 'error' | 'warning'
 }
 
 const helperVariants = {
-  default: colors.gray[400],
   error: colors.error,
   warning: colors.warning,
 }
 
 export const StyledHelperText = styled(Text)<HelperTextProps>`
   margin: 0;
-  color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
   word-break: break-all;
+  ${({ helperTextVariant }) => helperTextVariant && `color: ${helperVariants[helperTextVariant]}`};
 `
 
 export const HelperTextsWrapper = styled.div`
@@ -31,5 +30,5 @@ export const HelperTextsWrapper = styled.div`
 `
 
 export const HelperTextCount = styled(Text)<HelperTextProps>`
-  color: ${({ helperTextVariant = 'default' }) => helperVariants[helperTextVariant]};
+  ${({ helperTextVariant }) => helperTextVariant && `color: ${helperVariants[helperTextVariant]}`};
 `
