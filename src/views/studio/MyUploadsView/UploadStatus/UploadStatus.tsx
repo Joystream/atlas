@@ -44,6 +44,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
+  const { setUploadStatus } = useUploadsStore((state) => state.actions)
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -93,8 +94,10 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
+      setUploadStatus(asset.contentId, { lastStatus: 'inProgress', progress: 0 })
       const fileHash = await computeFileHash(file)
       if (fileHash !== asset.ipfsContentId) {
+        setUploadStatus(asset.contentId, { lastStatus: undefined })
         openDifferentFileDialog()
       } else {
         startFileUpload(
@@ -114,7 +117,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
         )
       }
     },
-    [asset, openDifferentFileDialog, startFileUpload]
+    [asset, openDifferentFileDialog, setUploadStatus, startFileUpload]
   )
 
   const isVideo = asset.type === 'video'
