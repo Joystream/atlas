@@ -46,7 +46,7 @@ export const LogoLink = styled(Link)`
 `
 
 export const SidebarNavList = styled.ul`
-  margin-top: 56px;
+  margin-top: 28px;
   list-style: none;
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   padding: 0;
@@ -95,16 +95,14 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
 
-  &:hover {
-    background-color: ${colors.transparentPrimary[10]};
-  }
-
+  &:hover,
   &:focus {
-    background-color: ${colors.transparentPrimary[10]};
+    background-color: ${colors.transparentPrimary[18]};
   }
 
-  &:active {
-    background-color: ${colors.transparentPrimary[18]};
+  &:active,
+  &[data-active='true'] {
+    background-color: ${colors.transparentPrimary[10]};
   }
 
   > svg {
@@ -115,15 +113,11 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 
   > span {
-    margin-left: ${sizes(8)};
+    margin-left: ${sizes(6)};
     font-weight: bold;
     font-family: ${typography.fonts.headers};
     font-size: ${typography.sizes.h5};
     line-height: 1;
-  }
-
-  &[data-active='true'] {
-    background-color: ${colors.transparentPrimary[18]};
   }
 
   ::after {
@@ -219,6 +213,6 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   top: ${sizes(2)};
 
   ${media.md} {
-    top: ${sizes(3)};
+    top: ${sizes(4)};
   }
 `
