@@ -44,7 +44,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h6">Followed Channels</ChannelsTitle>
+        <ChannelsTitle variant="h6">Followed channels</ChannelsTitle>
         <ChannelsWrapper>
           <ChannelsList>
             {channels.map(({ id }) => (
