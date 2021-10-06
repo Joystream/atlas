@@ -7,7 +7,6 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphExternal } from '@/shared/icons'
 import { SvgJoystreamLogoFull } from '@/shared/illustrations'
-import { openInNewTab } from '@/utils/browser'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
@@ -43,13 +42,12 @@ export const SidenavViewer: React.FC = () => {
         <>
           <Button
             variant="secondary"
-            onClick={() => {
-              setExpanded(false)
-              openInNewTab(absoluteRoutes.studio.index(), true)
-            }}
+            to={absoluteRoutes.studio.index()}
+            newTab
+            onClick={() => setExpanded(false)}
             icon={<SvgGlyphExternal />}
           >
-            Joystream studio
+            Joystream Studio
           </Button>
         </>
       }

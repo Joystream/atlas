@@ -8,7 +8,6 @@ import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { RoutingState } from '@/types/routing'
-import { openInNewTab } from '@/utils/browser'
 
 import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './TopbarViewer.style'
 
@@ -102,7 +101,8 @@ export const TopbarViewer: React.FC = () => {
       <ButtonWrapper>
         {mdMatch && (
           <Button
-            onClick={() => openInNewTab(absoluteRoutes.studio.index())}
+            to={absoluteRoutes.studio.index()}
+            newTab
             icon={<SvgGlyphAddVideo />}
             iconPlacement="left"
             size="medium"
@@ -111,7 +111,7 @@ export const TopbarViewer: React.FC = () => {
           </Button>
         )}
         {!isFocused && !mdMatch && (
-          <IconButton>
+          <IconButton to={absoluteRoutes.studio.index()} newTab>
             <SvgGlyphAddVideo />
           </IconButton>
         )}

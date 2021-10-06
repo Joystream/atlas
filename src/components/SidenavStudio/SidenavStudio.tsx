@@ -7,7 +7,6 @@ import { useUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
 import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
-import { openInNewTab } from '@/utils/browser'
 
 import { NavItemType, SidenavBase } from '../SidenavBase'
 
@@ -55,11 +54,6 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
     return item
   })
 
-  const handleClick = () => {
-    setExpanded(false)
-    openInNewTab(absoluteRoutes.viewer.index(), true)
-  }
-
   return (
     <SidenavBase
       expanded={expanded}
@@ -68,7 +62,13 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={
-        <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
+        <Button
+          variant="secondary"
+          to={absoluteRoutes.viewer.index()}
+          newTab
+          onClick={() => setExpanded(false)}
+          icon={<SvgGlyphExternal />}
+        >
           Joystream
         </Button>
       }
