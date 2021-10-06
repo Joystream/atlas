@@ -48,11 +48,11 @@ const errorStyles = (props: CheckboxStateProps) =>
   props.error
     ? [
         css`
-          border: 1px solid ${colors.error};
+          border: 1px solid ${colors.secondary.alert[100]};
         `,
         props.selected &&
           css`
-            background-color: ${colors.error};
+            background-color: ${colors.secondary.alert[100]};
           `,
       ]
     : null
