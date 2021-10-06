@@ -13,6 +13,7 @@ export const Header = styled.header`
   max-height: var(--size-topbar-height);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   box-shadow: inset 0 -1px 0 ${colors.gray[700]};
   background-color: ${colors.black};
 
@@ -21,9 +22,6 @@ export const Header = styled.header`
     calc(${sizes(4)} + 48px + ${sizes(2)});
 
   ${media.md} {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    column-gap: ${sizes(2)};
     padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
       calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
@@ -33,4 +31,8 @@ export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
+
+  /* increase the clickable area */
+  padding: 16px;
+  margin: -16px;
 `

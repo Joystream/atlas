@@ -52,6 +52,5 @@ export const StyledSearchbar = styled(Searchbar)<FocusProps>`
 `
 
 export const ButtonWrapper = styled.div`
-  align-self: center;
-  justify-self: flex-end;
+  flex-shrink: 0;
 `
