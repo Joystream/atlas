@@ -12,7 +12,7 @@ export type HamburgerButtonProps = {
 
 export const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick, className }) => {
   return (
-    <Hamburger onClick={onClick} aria-label="Main menu" aria-expanded={active} className={className}>
+    <Hamburger tabIndex={1} onClick={onClick} aria-label="Main menu" aria-expanded={active} className={className}>
       <HamburgerBox>
         <HamburgerInner active={active} />
       </HamburgerBox>
