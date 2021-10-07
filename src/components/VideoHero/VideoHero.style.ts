@@ -10,12 +10,12 @@ type IsCategoryProp = {
 
 export const Container = styled.section<IsCategoryProp>`
   position: relative;
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
-  padding: 36px var(--global-horizontal-padding) 16px;
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: 36px var(--size-global-horizontal-padding) 16px;
   display: grid;
 
   ${media.sm} {
-    padding: 32px var(--global-horizontal-padding);
+    padding: 32px var(--size-global-horizontal-padding);
     height: ${({ isCategory }) => (isCategory ? '392px' : '66.6667vh')};
   }
 `
