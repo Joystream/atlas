@@ -86,7 +86,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
 
   const renderAssetsGroupInfo = () => {
     if (isWaiting) {
-      return 'Waiting for upload...'
+      return 'Starting upload...'
     }
     if (errorsCount) {
       return `${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`
