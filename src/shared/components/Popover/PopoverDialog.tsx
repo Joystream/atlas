@@ -1,37 +1,35 @@
 import React from 'react'
-import useMeasure from 'react-use-measure'
 
 import { PopoverProps } from './Popover'
-import {
-  ContentContainer,
-  FooterContainer,
-  HeaderContainer,
-  MAX_POPOVER_HEIGHT,
-  PopoverContainer,
-} from './PopoverDialog.styles'
+import { ContentContainer, FooterContainer, HeaderContainer, PopoverContainer } from './PopoverDialog.styles'
 
 type PopoverDialogProps = {
   header?: string
   content: React.ReactNode
   footer?: React.ReactNode
+  scrollable?: boolean
 } & PopoverProps
 
-export const PopoverDialog: React.FC<PopoverDialogProps> = ({ header, content, footer, children, ...rest }) => {
-  const [containerRef, containerBounds] = useMeasure()
-  const isScrollable = containerBounds.height >= MAX_POPOVER_HEIGHT
+export const PopoverDialog: React.FC<PopoverDialogProps> = ({
+  header,
+  content,
+  footer,
+  scrollable = false,
+  children,
+  ...rest
+}) => {
   return (
     <PopoverContainer
       {...rest}
-      contentContainerRef={containerRef}
       content={
         <>
           {header && (
-            <HeaderContainer isScrollable={isScrollable} variant="h6">
+            <HeaderContainer isScrollable={scrollable} variant="h6">
               {header}
             </HeaderContainer>
           )}
-          <ContentContainer isScrollable={isScrollable}>{content}</ContentContainer>
-          {footer && <FooterContainer isScrollable={isScrollable}>{footer}</FooterContainer>}
+          <ContentContainer isScrollable={scrollable}>{content}</ContentContainer>
+          {footer && <FooterContainer isScrollable={scrollable}>{footer}</FooterContainer>}
         </>
       }
     >
