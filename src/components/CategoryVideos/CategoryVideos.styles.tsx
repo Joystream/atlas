@@ -60,7 +60,7 @@ export const FiltersInnerContainer = styled.div`
 `
 
 export const OtherFilterStyledText = styled(Text)`
-  margin: 0 0 ${sizes(2)} ${sizes(2)};
+  margin-bottom: ${sizes(2)};
   display: flex;
   align-items: center;
 `
