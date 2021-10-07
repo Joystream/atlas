@@ -21,13 +21,8 @@ export const OverlayBackground = styled.div`
 
 export const InnerContainer = styled.div`
   padding: ${sizes(4)};
-  height: 100%;
   overflow-y: auto;
-  flex-direction: column;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   ${media.sm} {
     padding: ${sizes(6)};
@@ -41,6 +36,6 @@ export const OverlayHeading = styled(Text)`
 
 export const OverlayContent = styled(Text)`
   max-width: 560px;
-  margin-top: ${sizes(2)};
+  margin: ${sizes(2)} auto;
   text-align: center;
 `

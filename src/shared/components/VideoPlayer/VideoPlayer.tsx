@@ -43,6 +43,7 @@ import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
+  isVideoPending?: boolean
   nextVideo?: VideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
@@ -62,10 +63,21 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'processing'
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { className, isInBackground, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
+  {
+    isVideoPending,
+    className,
+    isInBackground,
+    playing,
+    nextVideo,
+    channelId,
+    videoId,
+    autoplay,
+    videoStyle,
+    ...videoJsConfig
+  },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -122,6 +134,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     callback?.()
     player.pause()
   }, [])
+
+  useEffect(() => {
+    if (!isVideoPending) {
+      return
+    }
+    setPlayerState('pending')
+  }, [isVideoPending])
 
   // handle hotkeys
   useEffect(() => {

@@ -56,7 +56,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
         appear
       >
         <div>
-          {playerState === 'processing' && <InactiveOverlay />}
+          {playerState === 'pending' && <InactiveOverlay />}
           {playerState === 'loading' && <LoadingOverlay />}
           {playerState === 'ended' && (
             <EndingOverlay

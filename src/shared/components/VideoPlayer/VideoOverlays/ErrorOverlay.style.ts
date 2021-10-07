@@ -27,6 +27,7 @@ export const StyledAnimatedError = styled(AnimatedError)`
 
 export const ButtonGroup = styled.div`
   margin-top: ${sizes(8)};
+  justify-content: center;
   display: flex;
 `
 export const StyledDiscordButton = styled(Button)`
