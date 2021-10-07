@@ -13,7 +13,12 @@ type Dividers = {
   dividers: boolean
 }
 
+type HasHeader = {
+  hasHeader: boolean
+}
+
 export const PopoverContainer = styled(Popover)`
+  padding: ${sizes(4)};
   display: flex;
   flex-direction: column;
   background-color: ${colors.gray[700]};
@@ -23,20 +28,21 @@ export const PopoverContainer = styled(Popover)`
 
 const headerDividersStyles = css`
   box-shadow: inset 0 -1px 0 0 ${colors.gray[600]};
+  padding-bottom: ${sizes(4)};
 `
 
 export const Header = styled(Text)<Dividers>`
-  padding: ${sizes(4)};
   ${({ dividers }) => dividers && headerDividersStyles};
 `
 
-export const ContentContainer = styled.div<Dividers>`
+export const ContentContainer = styled.div<HasHeader>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: ${({ dividers }) => (dividers ? sizes(4) : `0 ${sizes(4)}`)};
+  padding: ${({ hasHeader }) => (hasHeader ? `${sizes(4)} 0` : `0  0 ${sizes(4)} 0`)};
 `
 
 export const footerContainerDividersStyles = css`
+  padding-top: ${sizes(4)};
   box-shadow: inset 0 1px 0 0 ${colors.gray[600]};
 `
 
@@ -46,7 +52,6 @@ export const FooterContainer = styled.div<Dividers>`
   grid-auto-columns: max-content;
   justify-content: end;
   gap: ${sizes(2)};
-  padding: ${sizes(4)};
 
   ${({ dividers }) => dividers && footerContainerDividersStyles};
 `
