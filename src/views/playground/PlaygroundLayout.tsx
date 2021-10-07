@@ -17,6 +17,7 @@ import {
   ImageDownsizing,
   OrionTesting,
   PlaygroundBreakpoints,
+  PlaygroundCategoryVideos,
   PlaygroundCommonStore,
   PlaygroundConnectionState,
   PlaygroundDrafts,
@@ -42,6 +43,7 @@ const playgroundRoutes = [
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
+  { path: 'categoryvideos/1', element: <PlaygroundCategoryVideos />, name: 'Filters' },
 ]
 
 const PlaygroundLayout = () => {

@@ -263,7 +263,7 @@ export const CategoryVideos = () => {
   return (
     <Container>
       <ControlsContainer>
-        <GridItem colSpan={{ base: 2, md: 1 }}>
+        <GridItem colSpan={{ xxs: 2, md: 1 }}>
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
         </GridItem>
         <Select
