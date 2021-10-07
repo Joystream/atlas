@@ -8,10 +8,12 @@ import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } fro
 
 export const InactiveOverlay: React.FC = () => {
   const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
+  const loaderVariant = xsMatch ? (smMatch ? 'xlarge' : 'large') : 'compact'
   return (
     <OverlayBackground>
       <InnerContainer>
-        <StyledLoader variant={smMatch ? 'xlarge' : 'compact'} />
+        <StyledLoader variant={loaderVariant} />
         <OverlayHeading variant={smMatch ? 'h3' : 'h5'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
