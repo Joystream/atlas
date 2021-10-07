@@ -54,7 +54,7 @@ export const CategoryVideos = () => {
   const [videoLegnthFilter, setVideoLegnthFilter] = useState<VideoLengthOptions>()
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
-  const [_videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
+  const [, setVideoWhereInput] = useState<VideoWhereInput>({
     categoryId_eq: id,
     languageId_eq: 'en',
   })
