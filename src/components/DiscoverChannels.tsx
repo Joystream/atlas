@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { ChannelEdge, VideoEdge } from '@/api/queries'
+import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
 import { sizes } from '@/shared/theme'
 
@@ -30,6 +30,7 @@ export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ additionalLi
     <StyledInfiniteChannelWithVideosGrid
       title="Discover new channels"
       onDemand
+      orderBy={ChannelOrderByInput.CreatedAtDesc}
       additionalSortFn={sortChannelsByFollowsDesc}
       additionalLink={additionalLink}
     />
