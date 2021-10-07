@@ -135,6 +135,7 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {!isMediaLoading && video ? (
             <VideoPlayer
+              isVideoPending={video?.mediaAvailability === 'PENDING'}
               channelId={video.channel.id}
               videoId={video.id}
               autoplay

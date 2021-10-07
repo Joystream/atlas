@@ -1,42 +1,8 @@
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
-import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
-
-import { AnimatedError } from '../../AnimatedError'
-import { Button } from '../../Button'
-import { Text } from '../../Text'
-
-export const OverlayBackground = styled.div`
-  display: flex;
-  z-index: ${zIndex.nearOverlay};
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: ${colors.gray[900]};
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-  width: 100%;
-`
-
-export const InnerContainer = styled.div`
-  padding: ${sizes(4)};
-  height: 100%;
-  overflow-y: auto;
-  flex-direction: column;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  ${media.sm} {
-    padding: ${sizes(6)};
-  }
-`
+import { AnimatedError } from '@/shared/components/AnimatedError'
+import { Button } from '@/shared/components/Button'
+import { media, sizes } from '@/shared/theme'
 
 export const AnimationWrapper = styled.div`
   width: 100%;
@@ -59,23 +25,9 @@ export const StyledAnimatedError = styled(AnimatedError)`
   }
 `
 
-export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '20px', toSize: '40px' }, breakpoints.xxs, breakpoints.md)};
-
-  margin-top: ${sizes(8)};
-  text-align: center;
-`
-
-export const ErrorMessage = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '16px' }, breakpoints.xxs, breakpoints.md)};
-
-  max-width: 560px;
-  margin-top: ${sizes(2)};
-  text-align: center;
-`
-
 export const ButtonGroup = styled.div`
   margin-top: ${sizes(8)};
+  justify-content: center;
   display: flex;
 `
 export const StyledDiscordButton = styled(Button)`
