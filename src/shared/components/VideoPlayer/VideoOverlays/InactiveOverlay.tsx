@@ -11,7 +11,7 @@ export const InactiveOverlay: React.FC = () => {
   return (
     <OverlayBackground>
       <InnerContainer>
-        <StyledLoader variant={smMatch ? 'xlarge' : 'large'} />
+        <StyledLoader variant={smMatch ? 'xlarge' : 'compact'} />
         <OverlayHeading variant={smMatch ? 'h3' : 'h5'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>

@@ -8,7 +8,7 @@ import loaderSmallAnimation from '../../assets/animations/loader-S.json'
 import LoaderXSmallAnimation from '../../assets/animations/loader-XS.json'
 import loaderPlayerAnimation from '../../assets/animations/loader-player.json'
 
-type LoaderVariant = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall' | 'player'
+type LoaderVariant = 'xlarge' | 'large' | 'compact' | 'medium' | 'small' | 'xsmall' | 'player'
 type LoaderProps = {
   variant?: LoaderVariant
   className?: string
@@ -21,6 +21,7 @@ type LoaderConfig = {
 const VARIANT_TO_CONFIG: Record<LoaderVariant, LoaderConfig> = {
   xlarge: { data: loaderLargeAnimation, size: 216 },
   large: { data: loaderLargeAnimation, size: 108 },
+  compact: { data: loaderLargeAnimation, size: 60 },
   medium: { data: loaderMediumAnimation, size: 36 },
   small: { data: loaderSmallAnimation, size: 24 },
   xsmall: { data: LoaderXSmallAnimation, size: 16 },
