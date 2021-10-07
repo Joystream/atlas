@@ -13,6 +13,7 @@ export type FollowedChannel = {
 export type RecentSearchType = 'video' | 'channel'
 export type RecentSearch = {
   id: string
+  title?: string
   type: RecentSearchType
 }
 

@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
+import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { RoutingState } from '@/types/routing'
 
-import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './TopbarViewer.style'
+import { ButtonWrapper, Overlay, SearchbarContainer, StyledTopbarBase } from './TopbarViewer.style'
 
 export const TopbarViewer: React.FC = () => {
   const navigate = useNavigate()
@@ -17,19 +18,21 @@ export const TopbarViewer: React.FC = () => {
   const locationState = location.state as RoutingState
   const overlaidLocation = locationState?.overlaidLocation || location
   const mdMatch = useMediaMatch('md')
+  const searchbarRef = useRef(null)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
+  // Lose focus on location change
   useEffect(() => {
-    // close the searchbar on external navigation
-    if (isFocused && !location.pathname.includes(absoluteRoutes.viewer.search())) {
-      setSearchQuery('')
+    if (location.pathname) {
       setIsFocused(false)
     }
+  }, [location.pathname])
 
+  useEffect(() => {
     // focus the searchbar when visiting search (e.g. from a link)
-    if (!isFocused && location.pathname.includes(absoluteRoutes.viewer.search())) {
+    if (location.pathname.includes(absoluteRoutes.viewer.search())) {
       setIsFocused(true)
       if (location.search) {
         const params = new URLSearchParams(location.search)
@@ -37,7 +40,7 @@ export const TopbarViewer: React.FC = () => {
         setSearchQuery(query || '')
       }
     }
-  }, [isFocused, location.pathname, location.search])
+  }, [location.pathname, location.search])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
@@ -47,7 +50,7 @@ export const TopbarViewer: React.FC = () => {
       navigate(absoluteRoutes.viewer.search({ query: searchQuery.trim() }), { state })
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
-      handleCancel()
+      handleBlur()
       e.currentTarget.blur()
     }
   }
@@ -57,45 +60,39 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery(e.currentTarget.value)
   }
 
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
+
   const handleFocus = () => {
     setIsFocused(true)
-
-    // open the search overlay if not already visible
-    if (!location.pathname.includes(absoluteRoutes.viewer.search())) {
-      const state: RoutingState = { overlaidLocation }
-
-      navigate(absoluteRoutes.viewer.search(), { state })
-    }
   }
 
   const handleCancel = () => {
     setSearchQuery('')
-    setIsFocused(false)
-
-    // navigate to overlaid view or home on searchbar close
-    const overlaidLocation = locationState?.overlaidLocation || { pathname: absoluteRoutes.viewer.index() }
-    navigate(overlaidLocation)
   }
 
   return (
     <StyledTopbarBase
       hasFocus={isFocused}
-      noLogo={!mdMatch && isFocused}
+      noLogo={!mdMatch && !!searchQuery}
       fullLogoNode={<SvgJoystreamLogoFull />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
     >
       <SearchbarContainer>
-        <StyledSearchbar
+        <Searchbar
           placeholder="Search..."
           onChange={handleChange}
           value={searchQuery}
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           onCancel={handleCancel}
-          showCancelButton={isFocused}
+          showCancelButton={!!searchQuery}
+          onClose={handleBlur}
           controlled
           hasFocus={isFocused}
           onClick={handleFocus}
+          ref={searchbarRef}
         />
       </SearchbarContainer>
       <ButtonWrapper>
@@ -110,12 +107,13 @@ export const TopbarViewer: React.FC = () => {
             Start publishing
           </Button>
         )}
-        {!isFocused && !mdMatch && (
+        {!searchQuery && !mdMatch && (
           <IconButton to={absoluteRoutes.studio.index()} newTab>
             <SvgGlyphAddVideo />
           </IconButton>
         )}
       </ButtonWrapper>
+      {isFocused && <Overlay onClick={handleBlur} />}
     </StyledTopbarBase>
   )
 }

@@ -12,8 +12,8 @@ type AllResultsTabProps = {
   videos: VideoFieldsFragment[]
   channels: BasicChannelFieldsFragment[]
   loading: boolean
-  onVideoClick: (id: string) => void
-  onChannelClick: (id: string) => void
+  onVideoClick: (id: string, title?: string) => void
+  onChannelClick: (id: string, title?: string) => void
 }
 
 export const AllResultsTab: React.FC<AllResultsTabProps> = ({

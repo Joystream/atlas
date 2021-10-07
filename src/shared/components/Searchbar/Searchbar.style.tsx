@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components/Text'
 import { SvgOutlineSearch } from '@/shared/icons'
-import { media } from '@/shared/theme'
+import { media, transitions } from '@/shared/theme'
 
 import { colors, sizes } from '../../theme'
 import { IconButton } from '../IconButton'
@@ -39,25 +39,45 @@ export const CancelButton = styled(IconButton)`
   }
 `
 
-export const Container = styled.div`
-  position: relative;
+export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
   display: flex;
   align-items: center;
+  transition: width ${transitions.timings.regular} ${transitions.easing};
+  will-change: width;
+  top: 0;
+  right: 0;
   box-shadow: inset 0 0 0 1px ${colors.gray[700]};
+  ${({ hasFocus, hasQuery }) => `
+    height: ${hasFocus ? '64px' : '39px'};
+    position: ${hasFocus ? 'fixed' : 'relative'};
+    width: ${hasQuery || hasFocus ? '100%' : '39px'};
+    padding-left: ${hasFocus ? sizes(4) : 0};
+    background-color: ${hasFocus ? colors.gray[800] : 'transparent'};
+    ${
+      !hasFocus &&
+      `
+      border: 1px solid ${colors.gray[700]};
+      margin-left: auto;`
+    };
+  `};
 
   ${media.md} {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    margin-left: 0;
     height: 48px;
     padding-left: ${sizes(4)};
   }
 `
 
 // TODO: remove override on viewer update
-export const StyledSvgOutlineSearch = styled(SvgOutlineSearch)`
+export const StyledSvgOutlineSearch = styled(SvgOutlineSearch)<{ hasFocus: boolean }>`
   flex-shrink: 0;
 
   circle,
   path {
-    stroke: ${colors.gray['300']};
+    stroke: ${({ hasFocus }) => (hasFocus ? colors.gray[50] : colors.gray[300])};
   }
 `
 
