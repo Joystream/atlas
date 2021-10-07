@@ -2,19 +2,9 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/shared/theme'
 
-import { HelperText } from '../HelperText/HelperText'
+import { HelperText } from '../HelperText'
 
-export type RadioButtonStyleProps = Partial<{
-  disabled: boolean
-  checked: boolean
-}> &
-  RadioButtonCaptionProps
-
-type RadioButtonCaptionProps = {
-  error?: boolean
-}
-
-export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
+export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean }>`
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
@@ -23,7 +13,7 @@ export const RadioButtonLabel = styled.label<RadioButtonStyleProps>`
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
 
-export const StyledHelperText = styled(HelperText)<RadioButtonCaptionProps>`
+export const StyledHelperText = styled(HelperText)<{ error?: boolean }>`
   margin: 0;
   grid-column-start: 2;
 

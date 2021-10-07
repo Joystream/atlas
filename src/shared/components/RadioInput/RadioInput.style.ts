@@ -61,7 +61,7 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
     return css`
       opacity: 0.5;
       background-color: ${checked ? colors.gray[50] : colors.gray[400]};
-      border: ${checked ? `4px solid ${colors.gray[400]}` : `1px solid ${colors.gray[200]}`};
+      border: ${checked ? `4px solid ${colors.gray[400]}` : `1px solid ${colors.gray[300]}`};
       background-clip: ${checked ? 'content-box' : 'unset'};
 
       &::before {
@@ -69,7 +69,7 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: ${colors.transparent};
+        background-color: ${checked ? colors.gray[50] : colors.transparent};
       }
     `
   } else if (error) {

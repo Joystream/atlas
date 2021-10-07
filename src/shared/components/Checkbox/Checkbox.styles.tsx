@@ -4,33 +4,19 @@ import styled from '@emotion/styled/'
 import { SvgGlyphCheck } from '@/shared/icons'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-import { HelperText } from '../HelperText'
-
-type CheckboxLabelProps = {
-  disabled?: boolean
-}
-
-export const CheckboxLabel = styled.label<CheckboxLabelProps>`
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  display: inline-grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  grid-column-gap: ${sizes(3)};
-  grid-row-gap: ${sizes(1)};
-`
-
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
-  margin: -${sizes(1)};
+  margin: -${sizes(2)};
   cursor: pointer;
   border-radius: 100%;
   color: ${colors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
 
   :hover {
-    background: ${({ disabled }) => !disabled && colors.transparentPrimary[12]};
+    background: ${({ disabled }) => !disabled && colors.transparentPrimary[18]};
+    box-shadow: ${({ disabled }) => !disabled && colors.transparentPrimary[18]};
   }
 `
 
@@ -47,7 +33,7 @@ const disabledStyles = (props: CheckboxStateProps) =>
         css`
           cursor: not-allowed;
           opacity: 0.5;
-          border: 1px solid ${colors.gray[200]};
+          border: 1px solid ${colors.gray[300]};
           background-color: ${colors.gray[400]};
         `,
         props.selected &&
@@ -62,11 +48,11 @@ const errorStyles = (props: CheckboxStateProps) =>
   props.error
     ? [
         css`
-          border: 1px solid ${colors.error};
+          border: 1px solid ${colors.secondary.alert[100]};
         `,
         props.selected &&
           css`
-            background-color: ${colors.error};
+            background-color: ${colors.secondary.alert[100]};
           `,
       ]
     : null
@@ -80,7 +66,7 @@ export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
   color: ${colors.white};
   border: 1px solid ${colors.gray[300]};
-  border-radius: 1px;
+  border-radius: 2px;
   ${selectedStyles};
   ${errorStyles};
   ${disabledStyles};
@@ -105,15 +91,11 @@ export const Checkmark = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 1px;
 `
 
-export const StyledHelperText = styled(HelperText)`
-  margin: 0;
-  grid-column-start: 2;
-`
 export const StyledGlyphCheck = styled(SvgGlyphCheck)`
   position: absolute;
 `

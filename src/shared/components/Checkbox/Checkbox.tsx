@@ -2,17 +2,9 @@ import React, { useState } from 'react'
 
 import { SvgGlyphMinus } from '@/shared/icons'
 
-import {
-  CheckboxLabel,
-  Checkmark,
-  Container,
-  InnerContainer,
-  Input,
-  StyledGlyphCheck,
-  StyledHelperText,
-} from './Checkbox.styles'
+import { Checkmark, Container, InnerContainer, Input, StyledGlyphCheck } from './Checkbox.styles'
 
-import { Text } from '../Text'
+import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
@@ -74,7 +66,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     }
 
     return (
-      <CheckboxLabel disabled={disabled}>
+      <RadioAndCheckboxBase disabled={disabled} label={label} error={error} helperText={helperText}>
         <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
           <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
             <Input
@@ -92,9 +84,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgGlyphMinus /> : <StyledGlyphCheck />}</Checkmark>
           </InnerContainer>
         </Container>
-        {label && <Text variant="body1">{label}</Text>}
-        {helperText && <StyledHelperText helperText={helperText} error={error} />}
-      </CheckboxLabel>
+      </RadioAndCheckboxBase>
     )
   }
 )
