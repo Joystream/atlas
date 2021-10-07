@@ -13,38 +13,31 @@ type Dividers = {
   dividers: boolean
 }
 
-type Header = {
-  hasHeader: boolean
-}
-
-const headerContainerDividersStyles = css`
-  border-bottom: 1px solid ${colors.gray[600]};
+export const PopoverContainer = styled(Popover)`
+  display: flex;
+  flex-direction: column;
+  background-color: ${colors.gray[700]};
+  width: 240px;
+  max-height: ${MAX_POPOVER_HEIGHT}px;
 `
 
-export const HeaderContainer = styled(Text)<Dividers>`
-  padding-bottom: ${sizes(4)};
-  ${({ dividers }) => dividers && headerContainerDividersStyles};
+const headerDividersStyles = css`
+  box-shadow: inset 0 -1px 0 0 ${colors.gray[600]};
 `
 
-const ContentHeaderHasHeaderStyles = ({ hasHeader }: Header) =>
-  hasHeader
-    ? css`
-        padding: ${sizes(4)} 0;
-      `
-    : css`
-        padding-bottom: ${sizes(4)};
-      `
+export const Header = styled(Text)<Dividers>`
+  padding: ${sizes(4)};
+  ${({ dividers }) => dividers && headerDividersStyles};
+`
 
-export const ContentContainer = styled.div<Dividers & Header>`
-  display: grid;
-  gap: ${sizes(3)};
+export const ContentContainer = styled.div<Dividers>`
   overflow-y: auto;
-  ${({ hasHeader }) => ContentHeaderHasHeaderStyles({ hasHeader })}
+  overflow-x: hidden;
+  padding: ${({ dividers }) => (dividers ? sizes(4) : `0 ${sizes(4)}`)};
 `
 
 export const footerContainerDividersStyles = css`
-  padding-top: ${sizes(4)};
-  border-top: 1px solid ${colors.gray[600]};
+  box-shadow: inset 0 1px 0 0 ${colors.gray[600]};
 `
 
 export const FooterContainer = styled.div<Dividers>`
@@ -53,16 +46,7 @@ export const FooterContainer = styled.div<Dividers>`
   grid-auto-columns: max-content;
   justify-content: end;
   gap: ${sizes(2)};
-  padding-top: ${sizes(4)};
+  padding: ${sizes(4)};
 
   ${({ dividers }) => dividers && footerContainerDividersStyles};
-`
-
-export const PopoverContainer = styled(Popover)<Header>`
-  display: grid;
-  grid-template-rows: ${({ hasHeader }) => (hasHeader ? 'auto 1fr auto' : '1fr auto')};
-  background-color: ${colors.gray[700]};
-  padding: ${sizes(4)};
-  width: 240px;
-  max-height: ${MAX_POPOVER_HEIGHT}px;
 `

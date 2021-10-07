@@ -9,16 +9,18 @@ import { Text } from '../Text'
 export default {
   title: 'Shared/P/PopoverDialog',
   component: PopoverDialog,
-  argTypes: {},
+  args: {
+    header: "I'm a title",
+    dividers: false,
+  },
 } as Meta
 
-const Template: Story = () => {
+const Template: Story = (args) => {
   return (
     <>
       <div>
         <PopoverDialog
-          header={"I'm a title"}
-          dividers
+          {...args}
           content={
             <>
               <Text>Example text</Text>
