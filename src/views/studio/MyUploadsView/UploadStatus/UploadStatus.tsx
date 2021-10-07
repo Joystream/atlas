@@ -243,7 +243,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     }
     return (
       <ProgressbarContainer>
-        <CircularProgress value={uploadStatus?.progress ?? 0} noTrail />
+        <CircularProgress value={uploadStatus?.progress ?? 0} />
       </ProgressbarContainer>
     )
   }
