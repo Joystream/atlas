@@ -7,15 +7,17 @@ import { Loader } from '@/shared/components/Loader'
 import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.style'
 
 export const InactiveOverlay: React.FC = () => {
+  const smMatch = useMediaMatch('sm')
   const xsMatch = useMediaMatch('xs')
+  const loaderVariant = xsMatch ? (smMatch ? 'xlarge' : 'large') : 'compact'
   return (
     <OverlayBackground>
       <InnerContainer>
-        <StyledLoader variant={xsMatch ? 'xlarge' : 'large'} />
-        <OverlayHeading variant={xsMatch ? 'h3' : 'h5'}>
+        <StyledLoader variant={loaderVariant} />
+        <OverlayHeading variant={smMatch ? 'h3' : 'h5'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
-        <OverlayContent variant={xsMatch ? 'body1' : 'body2'} secondary>
+        <OverlayContent variant={smMatch ? 'body1' : 'body2'} secondary>
           Please try again in a few minutes
         </OverlayContent>
       </InnerContainer>

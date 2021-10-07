@@ -30,8 +30,11 @@ export const InnerContainer = styled.div`
 `
 
 export const OverlayHeading = styled(Text)`
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(4)};
   text-align: center;
+  ${media.sm} {
+    margin-top: ${sizes(8)};
+  }
 `
 
 export const OverlayContent = styled(Text)`
