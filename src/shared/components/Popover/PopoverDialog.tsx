@@ -7,29 +7,32 @@ type PopoverDialogProps = {
   header?: string
   content: React.ReactNode
   footer?: React.ReactNode
-  scrollable?: boolean
+  dividers?: boolean
 } & PopoverProps
 
 export const PopoverDialog: React.FC<PopoverDialogProps> = ({
   header,
   content,
   footer,
-  scrollable = false,
+  dividers = false,
   children,
   ...rest
 }) => {
   return (
     <PopoverContainer
       {...rest}
+      hasHeader={!!header}
       content={
         <>
           {header && (
-            <HeaderContainer isScrollable={scrollable} variant="h6">
+            <HeaderContainer dividers={dividers} variant="h6">
               {header}
             </HeaderContainer>
           )}
-          <ContentContainer isScrollable={scrollable}>{content}</ContentContainer>
-          {footer && <FooterContainer isScrollable={scrollable}>{footer}</FooterContainer>}
+          <ContentContainer hasHeader={!!header} dividers={dividers}>
+            {content}
+          </ContentContainer>
+          {footer && <FooterContainer dividers={dividers}>{footer}</FooterContainer>}
         </>
       }
     >

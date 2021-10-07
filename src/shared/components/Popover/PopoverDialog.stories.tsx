@@ -18,7 +18,7 @@ const Template: Story = () => {
       <div>
         <PopoverDialog
           header={"I'm a title"}
-          scrollable
+          dividers
           content={
             <>
               <Text>Example text</Text>
