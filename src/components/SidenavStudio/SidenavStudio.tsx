@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
-import { openInNewTab } from '@/utils/browser'
+import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
 
 import { NavItemType, SidenavBase } from '../SidenavBase'
 
@@ -31,10 +31,14 @@ const studioNavbarItems: NavItemType[] = [
   },
 ]
 
-export const StudioSidenav: React.FC = () => {
+type SidenavStudioProps = {
+  className?: string
+}
+
+export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
   const [expanded, setExpanded] = useState(false)
-  const { activeChannelId } = useAuthorizedUser()
-  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
+  const { activeChannelId } = useUser()
+  const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId || ''))
 
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
@@ -50,22 +54,25 @@ export const StudioSidenav: React.FC = () => {
     return item
   })
 
-  const handleClick = () => {
-    setExpanded(false)
-    openInNewTab(absoluteRoutes.viewer.index(), true)
-  }
-
   return (
     <SidenavBase
       expanded={expanded}
       toggleSideNav={setExpanded}
-      isStudio
+      logoNode={<SvgJoystreamLogoStudio />}
+      logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
       buttonsContent={
-        <Button variant="secondary" onClick={handleClick} icon={<SvgGlyphExternal />}>
+        <Button
+          variant="secondary"
+          to={absoluteRoutes.viewer.index()}
+          newTab
+          onClick={() => setExpanded(false)}
+          icon={<SvgGlyphExternal />}
+        >
           Joystream
         </Button>
       }
+      className={className}
     />
   )
 }

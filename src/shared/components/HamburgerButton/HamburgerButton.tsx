@@ -7,11 +7,12 @@ export type HamburgerButtonProps = {
   active: boolean
   onClick: (e: React.MouseEvent<HTMLElement>) => void
   outerStyles?: SerializedStyles
+  className?: string
 }
 
-export const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick }) => {
+export const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClick, className }) => {
   return (
-    <Hamburger onClick={onClick} aria-label="Main menu" aria-expanded={active}>
+    <Hamburger tabIndex={1} onClick={onClick} aria-label="Main menu" aria-expanded={active} className={className}>
       <HamburgerBox>
         <HamburgerInner active={active} />
       </HamburgerBox>

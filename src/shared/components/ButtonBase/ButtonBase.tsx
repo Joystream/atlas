@@ -9,6 +9,7 @@ export type ButtonBaseProps = {
   disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
+  newTab?: boolean
   type?: 'button' | 'submit'
   textOnly?: boolean
   iconOnly?: boolean
@@ -21,6 +22,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
     {
       onClick,
       to,
+      newTab,
       type = 'button',
       children,
       size = 'medium',
@@ -34,7 +36,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
   ) => {
     const clickable = !!onClick || !!to || type === 'submit'
 
-    const linkProps = getLinkPropsFromTo(to)
+    const linkProps = getLinkPropsFromTo(to, newTab)
 
     return (
       <StyledButtonBase

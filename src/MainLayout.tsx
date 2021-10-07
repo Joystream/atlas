@@ -5,7 +5,8 @@ import { Route, Routes } from 'react-router-dom'
 import { AdminOverlay } from '@/components/AdminOverlay'
 import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarBase } from '@/components/TopbarBase'
-import { BASE_PATHS } from '@/config/routes'
+import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
 import { isBrowserOutdated } from '@/utils/browser'
 
 import { useDialog } from './providers/dialogs'
@@ -15,7 +16,7 @@ import { ViewerLayout } from './views/viewer/ViewerLayout'
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
     <>
-      <TopbarBase variant="studio" />
+      <TopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()} />
       <StudioLoading />
     </>
   ),

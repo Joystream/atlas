@@ -24,7 +24,7 @@ export const SearchbarContainer = styled.div`
     display: none;
   }
 
-  ${media.sm} {
+  ${media.md} {
     max-width: 1156px;
     justify-content: center;
     margin: 0;
@@ -38,12 +38,12 @@ export const SearchbarContainer = styled.div`
 export const StyledSearchbar = styled(Searchbar)<FocusProps>`
   transition: width ${transitions.timings.regular} ${transitions.easing};
   will-change: width;
-  width: ${({ hasFocus }) => (hasFocus ? 'calc(100% - 57px)' : '39px')};
+  width: ${({ hasFocus }) => (hasFocus ? '100%' : '39px')};
   padding-left: ${({ hasFocus }) => (hasFocus ? sizes(4) : 0)};
   margin-left: auto;
   height: 39px;
 
-  ${media.sm} {
+  ${media.md} {
     max-width: 480px;
     width: 100%;
     margin-left: 0;
@@ -52,6 +52,5 @@ export const StyledSearchbar = styled(Searchbar)<FocusProps>`
 `
 
 export const ButtonWrapper = styled.div`
-  align-self: center;
-  justify-self: flex-end;
+  flex-shrink: 0;
 `

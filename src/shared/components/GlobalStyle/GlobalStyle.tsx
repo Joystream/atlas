@@ -6,6 +6,9 @@ import { transitionStyles } from './transitionStyles'
 
 import { colors, media, sizes, typography } from '../../theme'
 
+const scrollbarBackgroundColor = colors.transparentPrimary[10]
+const scrollbarThumbColor = colors.transparentPrimary[18]
+
 const globalStyles = css`
   ${emotionNormalize};
 
@@ -27,11 +30,11 @@ const globalStyles = css`
   }
 
   *::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
+    background: ${scrollbarBackgroundColor};
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: var(--thumbBG);
+    background-color: ${scrollbarThumbColor};
     border-radius: 20px;
   }
 
@@ -60,18 +63,18 @@ const globalStyles = css`
   }
 
   :root {
-    --scrollbarBG: ${colors.transparentPrimary[10]};
-    --thumbBG: ${colors.transparentPrimary[18]};
-    --global-horizontal-padding: ${sizes(4)};
-    --sidenav-collapsed-width: 0;
+    --size-global-horizontal-padding: ${sizes(4)};
+    --size-sidenav-width-collapsed: 0;
+    --size-topbar-height: 64px;
 
     ${media.md} {
-      --global-horizontal-padding: ${sizes(8)};
-      --sidenav-collapsed-width: 72px;
+      --size-global-horizontal-padding: ${sizes(8)};
+      --size-sidenav-width-collapsed: 72px;
+      --size-topbar-height: 80px;
     }
 
     scrollbar-width: thin;
-    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    scrollbar-color: ${scrollbarThumbColor} ${scrollbarBackgroundColor};
   }
 `
 

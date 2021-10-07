@@ -4,7 +4,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
-import { SvgJoystreamFullLogo } from '@/shared/illustrations'
+import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 
 import {
   BackLink,
@@ -30,7 +30,7 @@ export const SignInMainView: React.FC = () => {
     <StyledContainer>
       <Header>
         <LogoContainer>
-          <SvgJoystreamFullLogo />
+          <SvgJoystreamLogoFull />
         </LogoContainer>
         <StyledHero variant="hero">Welcome to Joystream Studio</StyledHero>
         <SubTitle variant="body1">

@@ -1,10 +1,9 @@
 import isPropValid from '@emotion/is-prop-valid'
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/shared/components/Badge'
-import { SvgJoystreamFullLogo, SvgStudioFullLogo } from '@/shared/illustrations'
+import { HamburgerButton } from '@/shared/components/HamburgerButton'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
@@ -13,10 +12,6 @@ export const NAVBAR_LEFT_PADDING = 24
 type ExpandableElementProps = {
   expanded?: boolean
 }
-
-type SidebarNavProps = {
-  isStudio?: boolean
-} & ExpandableElementProps
 
 type SubItemProps = {
   subitemsHeight?: number
@@ -27,42 +22,31 @@ type SidebarNavLinkProps = {
 } & ExpandableElementProps &
   LinkProps
 
-export const SidebarNav = styled.nav<SidebarNavProps>`
+export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
   top: 0;
   bottom: 0;
   height: 100%;
   z-index: ${zIndex.sideNav};
-  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--sidenav-collapsed-width)')};
+  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   overflow: hidden;
-  color: ${colors.white};
-  background-color: ${({ isStudio }) => (isStudio ? colors.gray[800] : colors.gray[700])};
+  color: ${colors.gray[50]};
+  background-color: ${colors.gray[800]};
 `
 
 export const LogoLink = styled(Link)`
   display: flex;
-  margin-top: 24px;
+  align-items: center;
+  height: var(--size-topbar-height);
   margin-left: 80px;
   text-decoration: none;
 `
 
-const logoStyles = css`
-  height: ${sizes(8)};
-`
-
-export const JoystreamLogo = styled(SvgJoystreamFullLogo)`
-  ${logoStyles}
-`
-
-export const StudioLogo = styled(SvgStudioFullLogo)`
-  ${logoStyles}
-`
-
 export const SidebarNavList = styled.ul`
-  margin-top: 56px;
+  margin-top: 28px;
   list-style: none;
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   padding: 0;
@@ -105,22 +89,20 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
 
 export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
-  color: ${colors.white};
+  color: ${colors.gray[50]};
   text-decoration: none;
   display: flex;
   position: relative;
   align-items: center;
 
-  &:hover {
-    background-color: ${colors.transparentPrimary[10]};
-  }
-
+  &:hover,
   &:focus {
-    background-color: ${colors.transparentPrimary[10]};
+    background-color: ${colors.transparentPrimary[18]};
   }
 
-  &:active {
-    background-color: ${colors.transparentPrimary[18]};
+  &:active,
+  &[data-active='true'] {
+    background-color: ${colors.transparentPrimary[10]};
   }
 
   > svg {
@@ -131,15 +113,11 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 
   > span {
-    margin-left: ${sizes(8)};
+    margin-left: ${sizes(6)};
     font-weight: bold;
     font-family: ${typography.fonts.headers};
     font-size: ${typography.sizes.h5};
     line-height: 1;
-  }
-
-  &[data-active='true'] {
-    background-color: ${colors.transparentPrimary[18]};
   }
 
   ::after {
@@ -147,10 +125,11 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       content: ${({ content }) => `'${content}'`};
       position: absolute;
       font-size: 12px;
-      color: white;
+      line-height: 1;
+      color: ${colors.gray[50]};
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
-      left: calc(var(--sidenav-collapsed-width) / 2);
+      left: calc(var(--size-sidenav-width-collapsed) / 2);
       transform: translateX(-50%);
       bottom: 0;
       margin-bottom: 10px;
@@ -224,5 +203,16 @@ export const LegalLink = styled(Link)`
 
   &:active {
     color: ${colors.gray[500]};
+  }
+`
+
+export const StyledHamburgerButton = styled(HamburgerButton)`
+  position: fixed;
+  z-index: ${zIndex.sideNav};
+  left: ${sizes(3)};
+  top: ${sizes(2)};
+
+  ${media.md} {
+    top: ${sizes(4)};
   }
 `

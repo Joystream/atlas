@@ -3,7 +3,8 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { TopbarBase } from '@/components/TopbarBase'
-import { relativeRoutes } from '@/config/routes'
+import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { colors, sizes } from '@/shared/theme'
 
 import { CopyrightPolicyView } from './CopyrightPolicyView'
@@ -17,7 +18,7 @@ const legalRoutes = [
 export const LegalLayout: React.FC = () => {
   return (
     <div>
-      <StyledTopbarBase />
+      <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoFull />} logoLinkUrl={absoluteRoutes.viewer.index()} />
       <Container>
         <Routes>
           {legalRoutes.map((route) => (

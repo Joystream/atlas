@@ -508,7 +508,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ActionBarTransactionWrapper fullWidth={!activeChannelId}>
+            <ActionBarTransactionWrapper>
               {!activeChannelId && progressDrawerSteps?.length ? (
                 <StyledProgressDrawer steps={progressDrawerSteps} />
               ) : null}

@@ -6,17 +6,17 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { SvgGlyphAddVideo } from '@/shared/icons'
+import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { RoutingState } from '@/types/routing'
-import { openInNewTab } from '@/utils/browser'
 
-import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './ViewerTopbar.style'
+import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './TopbarViewer.style'
 
-export const ViewerTopbar: React.FC = () => {
+export const TopbarViewer: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = location.state as RoutingState
   const overlaidLocation = locationState?.overlaidLocation || location
-  const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -78,7 +78,12 @@ export const ViewerTopbar: React.FC = () => {
   }
 
   return (
-    <StyledTopbarBase hasFocus={isFocused} noLogo={!smMatch && isFocused}>
+    <StyledTopbarBase
+      hasFocus={isFocused}
+      noLogo={!mdMatch && isFocused}
+      fullLogoNode={<SvgJoystreamLogoFull />}
+      logoLinkUrl={absoluteRoutes.viewer.index()}
+    >
       <SearchbarContainer>
         <StyledSearchbar
           placeholder="Search..."
@@ -94,9 +99,10 @@ export const ViewerTopbar: React.FC = () => {
         />
       </SearchbarContainer>
       <ButtonWrapper>
-        {smMatch && (
+        {mdMatch && (
           <Button
-            onClick={() => openInNewTab(absoluteRoutes.studio.index())}
+            to={absoluteRoutes.studio.index()}
+            newTab
             icon={<SvgGlyphAddVideo />}
             iconPlacement="left"
             size="medium"
@@ -104,8 +110,8 @@ export const ViewerTopbar: React.FC = () => {
             Start publishing
           </Button>
         )}
-        {!isFocused && !smMatch && (
-          <IconButton>
+        {!isFocused && !mdMatch && (
+          <IconButton to={absoluteRoutes.studio.index()} newTab>
             <SvgGlyphAddVideo />
           </IconButton>
         )}

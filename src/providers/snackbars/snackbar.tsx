@@ -58,7 +58,7 @@ export const Snackbars: React.FC = () => {
 
 const SnackbarsContainer = styled.div`
   position: fixed;
-  left: var(--sidenav-collapsed-width);
+  left: var(--size-sidenav-width-collapsed);
   bottom: ${sizes(18)};
   margin-left: ${sizes(4)};
   max-width: 360px;

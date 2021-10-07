@@ -7,8 +7,8 @@ import { IconButton } from '../IconButton'
 import { Text } from '../Text'
 
 export const MediaWrapper = styled.div`
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
-  width: calc(100% + calc(2 * var(--global-horizontal-padding)));
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  width: calc(100% + calc(2 * var(--size-global-horizontal-padding)));
   position: relative;
 `
 
@@ -70,7 +70,7 @@ export const EditCoverDesktopOverlay = styled.div`
 
 export const EditCoverMobileButton = styled(IconButton)`
   position: absolute;
-  left: var(--global-horizontal-padding);
+  left: var(--size-global-horizontal-padding);
   top: ${sizes(1)};
   background-color: ${colors.gray[800]};
 

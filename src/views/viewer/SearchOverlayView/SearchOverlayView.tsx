@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useEffect } from 'react'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { QUERY_PARAMS } from '@/config/routes'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -33,11 +32,11 @@ export const SearchOverlayView: React.FC = () => {
 const OverlayContainer = styled.div`
   position: fixed;
   z-index: ${zIndex.nearOverlay};
-  top: ${TOP_NAVBAR_HEIGHT}px;
-  left: var(--sidenav-collapsed-width);
+  top: var(--size-topbar-height);
+  left: var(--size-sidenav-width-collapsed);
   right: 0;
-  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  height: calc(100vh - var(--size-topbar-height));
   background-color: ${colors.black};
-  padding: 0 var(--global-horizontal-padding);
+  padding: 0 var(--size-global-horizontal-padding);
   overflow: auto;
 `

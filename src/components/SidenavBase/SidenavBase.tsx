@@ -4,13 +4,11 @@ import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import { HamburgerButton } from '@/shared/components/HamburgerButton'
 import { transitions } from '@/shared/theme'
 
 import {
   ButtonGroup,
   DrawerOverlay,
-  JoystreamLogo,
   LegalLink,
   LegalLinksWrapper,
   LogoLink,
@@ -19,7 +17,7 @@ import {
   SidebarNavItem,
   SidebarNavLink,
   SidebarNavList,
-  StudioLogo,
+  StyledHamburgerButton,
   SubItem,
   SubItemsWrapper,
 } from './SidenavBase.style'
@@ -37,20 +35,24 @@ type NavItemType = {
 
 export type SidenavProps = {
   items: NavItemType[]
-  isStudio?: boolean
   additionalContent?: React.ReactNode
   buttonsContent?: React.ReactNode
   expanded: boolean
   toggleSideNav: (value: boolean) => void
+  logoNode: React.ReactNode
+  logoLinkUrl: string
+  className?: string
 }
 
 const SidenavBase: React.FC<SidenavProps> = ({
   expanded,
   items,
-  isStudio,
+  logoNode,
+  logoLinkUrl,
   additionalContent,
   buttonsContent,
   toggleSideNav,
+  className,
 }) => {
   return (
     <>
@@ -62,9 +64,9 @@ const SidenavBase: React.FC<SidenavProps> = ({
       >
         <DrawerOverlay onClick={() => toggleSideNav(false)} />
       </CSSTransition>
-      <SidebarNav expanded={expanded} isStudio={isStudio}>
-        <LogoLink to="./" onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
-          {isStudio ? <StudioLogo /> : <JoystreamLogo />}
+      <SidebarNav expanded={expanded} className={className}>
+        <LogoLink to={logoLinkUrl} onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
+          {logoNode}
         </LogoLink>
         <SidebarNavList>
           {items.map((item) => (
@@ -99,7 +101,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
-      <HamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
+      <StyledHamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
     </>
   )
 }

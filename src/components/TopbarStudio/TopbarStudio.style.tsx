@@ -6,19 +6,14 @@ import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
 
-import { TOP_NAVBAR_HEIGHT, TopbarBase } from '../TopbarBase'
+import { TopbarBase } from '../TopbarBase'
 
 type CommonStudioTopbarProps = {
   isActive?: boolean
   hasChannels?: boolean
 }
 
-type StyledTopbarBaseProps = {
-  fullWidth?: boolean
-}
-
-export const StyledTopbarBase = styled(TopbarBase)<StyledTopbarBaseProps>`
-  ${({ fullWidth }) => fullWidth && 'left: 0;'}
+export const StyledTopbarBase = styled(TopbarBase)`
   ${media.sm} {
     display: flex;
     justify-content: space-between;
@@ -157,7 +152,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   grid-template-columns: 1fr;
   grid-gap: ${sizes(4)};
   padding: ${({ hasChannels }) => (hasChannels ? sizes(3) : `0 ${sizes(3)} ${sizes(3)}`)};
-  transform: translateY(${({ isActive }) => (isActive ? `${TOP_NAVBAR_HEIGHT}px` : '-100%')});
+  transform: translateY(${({ isActive }) => (isActive ? 'var(--size-topbar-height)' : '-100%')});
   background-color: ${colors.gray[700]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   z-index: ${zIndex.nearOverlay};

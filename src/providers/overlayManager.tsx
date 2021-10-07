@@ -88,7 +88,7 @@ export const useOverlayManager = () => {
 
 const overlayManagerStyles = (scrollbarGap = 0) => css`
   :root {
-    --scrollbar-gap-width: ${scrollbarGap}px;
+    --size-scrollbar-width: ${scrollbarGap}px;
   }
 
   body {

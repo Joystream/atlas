@@ -1,16 +1,15 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
 import { colors, zIndex } from '@/shared/theme'
 
 export const Container = styled(animated.div)`
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
-  top: ${TOP_NAVBAR_HEIGHT}px;
-  left: var(--sidenav-collapsed-width);
+  top: var(--size-topbar-height);
+  left: var(--size-sidenav-width-collapsed);
   right: 0;
-  height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  height: calc(100vh - var(--size-topbar-height));
   display: flex;
   flex-direction: column;
   background-color: ${colors.gray[900]};
