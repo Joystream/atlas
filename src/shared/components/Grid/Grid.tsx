@@ -6,7 +6,7 @@ import useResizeObserver from 'use-resize-observer'
 import { toPx } from '@/shared/utils/styles'
 
 import { media, sizes } from '../../theme'
-import { MIN_VIDEO_TILE_WIDTH } from '../VideoTileBase'
+import { MIN_VIDEO_TILE_WIDTH } from '../VideoTileBase/VideoTileCover'
 
 type GridProps = {
   gap?: number | string
