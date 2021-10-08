@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
@@ -49,6 +51,9 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const locationState = location.state as RoutingState
     const overlaidLocation = locationState?.overlaidLocation || location
     const query = recentSearch || value
+    const { addRecentSearch } = usePersonalDataStore((state) => ({
+      addRecentSearch: state.actions.addRecentSearch,
+    }))
 
     useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
@@ -70,16 +75,17 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
         const state: RoutingState = { overlaidLocation }
-        // navigate to search results
+        addRecentSearch(new Date().getTime(), query)
 
+        // navigate to search results
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
       }
-      if (event.key === 'Escape' || event.key === 'Esc') {
+      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         onClose?.()
         event.currentTarget.blur()
       }
 
-      if (event.key === 'ArrowDown' || event.key === 'Tab') {
+      if (event.key === 'ArrowDown') {
         event.preventDefault()
         setSelectedItem((prevState) => {
           if (prevState === null) {
@@ -168,7 +174,14 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </SearchHelper>
             </>
           )}
-          {hasFocus && <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} selectedItem={selectedItem} onLastSelectedItem={onLastSelectedItem} />}
+          {hasFocus && (
+            <SearchBox
+              searchQuery={query || ''}
+              onSelectRecentSearch={onSelectRecentSearch}
+              selectedItem={selectedItem}
+              onLastSelectedItem={onLastSelectedItem}
+            />
+          )}
         </Container>
       </>
     )

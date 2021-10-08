@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
@@ -14,11 +13,7 @@ import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTop
 
 export const TopbarViewer: React.FC = () => {
   const location = useLocation()
-
   const mdMatch = useMediaMatch('md')
-  const { addRecentSearch } = usePersonalDataStore((state) => ({
-    addRecentSearch: state.actions.addRecentSearch,
-  }))
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const [searchQuery, setSearchQuery] = useState('')
