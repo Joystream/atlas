@@ -16,7 +16,7 @@ import { Text } from '@/shared/components/Text'
 import { SvgGlyphClose } from '@/shared/icons'
 
 import {
-  DateUploadFilterContainer,
+  FilterContentContainer,
   FiltersContainer,
   FiltersInnerContainer,
   MobileFilterContainer,
@@ -69,7 +69,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
   }
 
   const dateUploadedInputs = (
-    <>
+    <FilterContentContainer>
       <RadioButton
         onChange={() => {
           setdateUploadedFilter(1)
@@ -106,10 +106,10 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         value={365}
         selectedValue={dateUploadedFilter}
       ></RadioButton>
-    </>
+    </FilterContentContainer>
   )
   const videoLengthInputs = (
-    <>
+    <FilterContentContainer>
       <RadioButton
         onChange={() => {
           setVideoLegnthFilter('0-to-4')
@@ -137,23 +137,27 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         value="10-to-9999"
         selectedValue={videoLegnthFilter}
       />
-    </>
+    </FilterContentContainer>
   )
-  const licenseInputs = knownLicenses.map((license) => (
-    <Checkbox
-      name="license"
-      key={license.code}
-      label={license.name}
-      value={!!licensesFilter?.includes(license.code)}
-      onChange={(value) =>
-        setLicensesFilter((licenses) =>
-          value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
-        )
-      }
-    ></Checkbox>
-  ))
+  const licenseInputs = (
+    <FilterContentContainer>
+      {knownLicenses.map((license) => (
+        <Checkbox
+          name="license"
+          key={license.code}
+          label={license.name}
+          value={!!licensesFilter?.includes(license.code)}
+          onChange={(value) =>
+            setLicensesFilter((licenses) =>
+              value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
+            )
+          }
+        ></Checkbox>
+      ))}
+    </FilterContentContainer>
+  )
   const otherFiltersInputs = (
-    <>
+    <FilterContentContainer>
       <Checkbox
         onChange={setPaidPromotionalMaterialFilter}
         name="other-filters"
@@ -166,7 +170,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         label="Mature content rating"
         value={!!matureContentRatingFilter}
       ></Checkbox>
-    </>
+    </FilterContentContainer>
   )
 
   return (
@@ -232,7 +236,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
           <FiltersContainer open={true}>
             <FiltersInnerContainer>
               <PopoverDialog
-                content={<DateUploadFilterContainer>{dateUploadedInputs}</DateUploadFilterContainer>}
+                content={dateUploadedInputs}
                 footer={
                   <>
                     <Button
@@ -313,7 +317,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
                       onClick={clearOtherFilters}
                       size="small"
                       variant="secondary"
-                      disabled={!matureContentRatingFilter && !paidPromotionalMaterialFilter}
+                      disabled={!canClearOtherFilters}
                     >
                       Clear
                     </Button>
@@ -323,7 +327,11 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
                   </>
                 }
               >
-                <Button badge={canClearOtherFilters} variant="secondary" onClick={() => null}>
+                <Button
+                  badge={(paidPromotionalMaterialFilter ? 1 : 0) + (matureContentRatingFilter ? 1 : 0)}
+                  variant="secondary"
+                  onClick={() => null}
+                >
                   Other filters
                 </Button>
               </PopoverDialog>

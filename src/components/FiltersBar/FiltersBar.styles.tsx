@@ -4,8 +4,7 @@ import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
 import { colors, sizes, transitions } from '@/shared/theme'
 
-export const DateUploadFilterContainer = styled.div`
-  padding-bottom: ${sizes(1)};
+export const FilterContentContainer = styled.div`
   display: grid;
   gap: ${sizes(3)};
 `

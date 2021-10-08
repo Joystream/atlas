@@ -50,7 +50,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {icon}
           </ButtonIconWrapper>
         )}
-        {badge && <Badge dot={badge === true}>{badge !== true && badge}</Badge>}
+        {!!badge && <Badge dot={badge === true}>{badge !== true && badge}</Badge>}
       </StyledButtonBase>
     )
   }
