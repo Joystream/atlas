@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphTrash } from '@/shared/icons'
+import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
 import { formatDateAgo } from '@/utils/time'
@@ -31,7 +31,6 @@ import { Text } from '../Text'
 
 export type VideoTileBaseMetaProps = {
   showChannel?: boolean
-  showMeta?: boolean
   removeButton?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -42,6 +41,7 @@ export type VideoTilePublisherProps = {
   publisherMode?: boolean
   isPullupDisabled?: boolean
   isDraft?: boolean
+  hasAssetUploadFailed?: boolean
   videoPublishState?: 'default' | 'unlisted'
   uploadStatus?: UploadStatus
   onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
@@ -49,6 +49,7 @@ export type VideoTilePublisherProps = {
   onEditVideoClick?: () => void
   onCopyVideoURLClick?: () => void
   onDeleteVideoClick?: () => void
+  onReuploadVideoClick?: () => void
 }
 
 export type VideoTileBaseProps = {
@@ -61,7 +62,6 @@ export type VideoTileBaseProps = {
   progress?: number
   views?: number | null
   thumbnailUrl?: string | null
-  hasThumbnailUploadFailed?: boolean
   isLoadingThumbnail?: boolean
   isLoadingAvatar?: boolean
   isLoading?: boolean
@@ -82,14 +82,13 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   progress = 0,
   views,
   thumbnailUrl,
-  hasThumbnailUploadFailed,
   channelHref,
   videoHref,
   isLoadingThumbnail,
+  hasAssetUploadFailed,
   isLoadingAvatar,
   isLoading = true,
   showChannel = true,
-  showMeta = true,
   removeButton = false,
   videoPublishState = 'default',
   uploadStatus,
@@ -104,6 +103,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onEditVideoClick,
   onCopyVideoURLClick,
   onDeleteVideoClick,
+  onReuploadVideoClick,
   isPullupDisabled,
 }) => {
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
@@ -126,6 +126,42 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     }
   }
 
+  const publisherKebabMenuItems = hasAssetUploadFailed
+    ? [
+        {
+          icon: <SvgGlyphTrash />,
+          onClick: onDeleteVideoClick,
+          title: 'Delete video',
+        },
+        {
+          icon: <SvgGlyphRetry />,
+          onClick: onReuploadVideoClick,
+          title: 'Reupload file',
+        },
+      ]
+    : [
+        {
+          icon: <SvgGlyphPlay />,
+          onClick: onOpenInTabClick,
+          title: 'Play in Joystream',
+        },
+        {
+          icon: <SvgGlyphCopy />,
+          onClick: onCopyVideoURLClick,
+          title: 'Copy video URL',
+        },
+        {
+          icon: <SvgGlyphEdit />,
+          onClick: onEditVideoClick,
+          title: isDraft ? 'Edit draft' : 'Edit video',
+        },
+        {
+          icon: <SvgGlyphTrash />,
+          onClick: onDeleteVideoClick,
+          title: isDraft ? 'Delete draft' : 'Delete video',
+        },
+      ]
+
   return (
     <Container className={className} isLoading={isLoading || isUploading}>
       <VideoTileCover
@@ -133,7 +169,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         setTileSize={setTileSize}
         tileSize={tileSize}
         onRemoveButtonClick={onRemoveButtonClick}
-        onClick={onClick}
+        onClick={hasAssetUploadFailed ? onReuploadVideoClick : onClick}
         isLoading={isLoading}
         thumbnailUrl={thumbnailUrl}
         isLoadingThumbnail={isLoadingThumbnail}
@@ -141,7 +177,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         publisherMode={publisherMode}
         videoPublishState={videoPublishState}
         uploadStatus={uploadStatus}
-        hasThumbnailUploadFailed={hasThumbnailUploadFailed}
+        hasAssetUploadFailed={hasAssetUploadFailed}
         onPullupClick={onPullupClick}
         removeButton={removeButton}
         isPullupDisabled={isPullupDisabled}
@@ -199,56 +235,34 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   </Anchor>
                 ))}
               <MetaContainer noMarginTop={!showChannel}>
-                {showMeta &&
-                  (isUploading ? (
-                    isLoading ? (
-                      <SpacedSkeletonLoader height={12} width="80%" />
-                    ) : (
-                      <Text variant="body2" secondary>
-                        {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
-                        {uploadStatus.lastStatus === 'processing' && 'Processing...'}
-                      </Text>
-                    )
-                  ) : isLoading ? (
-                    <SpacedSkeletonLoader height={12} width="80%" />
-                  ) : createdAt ? (
-                    <Text variant="body2" secondary>
-                      {isDraft
-                        ? `Last updated ${formatDateAgo(createdAt)}`
-                        : formatVideoViewsAndDate(views ?? null, createdAt)}
-                    </Text>
-                  ) : null)}
+                {isLoading && <SpacedSkeletonLoader height={12} width="80%" />}
+                {isUploading && !hasAssetUploadFailed && (
+                  <Text variant="body2" secondary>
+                    {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
+                    {uploadStatus.lastStatus === 'processing' && 'Processing...'}
+                  </Text>
+                )}
+                {!isUploading && !hasAssetUploadFailed && createdAt && (
+                  <Text variant="body2" secondary>
+                    {isDraft
+                      ? `Last updated ${formatDateAgo(createdAt)}`
+                      : formatVideoViewsAndDate(views ?? null, createdAt)}
+                  </Text>
+                )}
+                {hasAssetUploadFailed && (
+                  <Text variant="body2" secondary>
+                    Upload failed...
+                  </Text>
+                )}
               </MetaContainer>
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
-
         <ContextMenu
           placement="bottom-end"
           items={
             publisherMode
-              ? [
-                  {
-                    icon: <SvgGlyphPlay />,
-                    onClick: onOpenInTabClick,
-                    title: 'Play in Joystream',
-                  },
-                  {
-                    icon: <SvgGlyphCopy />,
-                    onClick: onCopyVideoURLClick,
-                    title: 'Copy video URL',
-                  },
-                  {
-                    icon: <SvgGlyphEdit />,
-                    onClick: onEditVideoClick,
-                    title: isDraft ? 'Edit draft' : 'Edit video',
-                  },
-                  {
-                    icon: <SvgGlyphTrash />,
-                    onClick: onDeleteVideoClick,
-                    title: isDraft ? 'Delete draft' : 'Delete video',
-                  },
-                ]
+              ? publisherKebabMenuItems
               : [
                   {
                     icon: <SvgGlyphCopy />,

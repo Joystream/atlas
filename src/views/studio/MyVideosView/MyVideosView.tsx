@@ -268,6 +268,7 @@ export const MyVideosView = () => {
             }}
             onEditVideoClick={() => handleVideoClick(video.id)}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
+            onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads())}
           />
         )
       })

@@ -16,6 +16,7 @@ export const PullUp: React.FC<PullUpProps> = ({ disabled, onClick }) => (
   <Tooltip
     text={disabled ? 'Video already added to edit list' : 'Open in new tab'}
     placement="top-start"
+    arrowDisabled
     offsetY={16}
     offsetX={1}
   >

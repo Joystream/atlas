@@ -121,11 +121,11 @@ export const CoverNoImage = styled.div`
 export const CoverThumbnailUploadFailed = styled.div`
   ${square('100%')}
 
-  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  grid-gap: ${sizes(2)};
+  background: ${colors.gray[900]};
+  display: grid;
+  justify-items: center;
+  align-content: center;
 `
 
 export const SkeletonHoverOverlay = styled.div`
@@ -139,8 +139,10 @@ export const SkeletonHoverOverlay = styled.div`
   align-items: center;
   z-index: ${zIndex.overlay};
 `
-
-export const CoverHoverOverlay = styled.div`
+type CoverHoverOverlayProps = {
+  darker?: boolean
+}
+export const CoverHoverOverlay = styled.div<CoverHoverOverlayProps>`
   position: absolute;
   top: 0;
   right: 0;
@@ -148,7 +150,7 @@ export const CoverHoverOverlay = styled.div`
   left: 0;
   opacity: 0;
   transition: opacity ${transitions.timings.regular} ${transitions.easing}, border ${transitions.timings.routing} linear;
-  background-color: ${colors.transparentGray[54]};
+  background-color: ${({ darker }) => (darker ? colors.transparentBlack[54] : colors.transparentGray[54])};
   display: flex;
   justify-content: center;
   align-items: center;

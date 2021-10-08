@@ -6,6 +6,7 @@ import {
   SvgGlyphClose,
   SvgGlyphDraft,
   SvgGlyphHide,
+  SvgIllustrativeReupload,
   SvgLargeEdit,
   SvgLargeUploadFailed,
   SvgOutlineVideo,
@@ -42,12 +43,12 @@ import { UploadProgressBar } from '../UploadProgressBar'
 type TileSize = 'small' | 'big' | undefined
 
 type VideoTileCoverProps = {
+  hasAssetUploadFailed?: boolean
   videoHref?: string
   setTileSize: React.Dispatch<React.SetStateAction<TileSize>>
   tileSize: TileSize
   duration?: number | null
   thumbnailUrl?: string | null
-  hasThumbnailUploadFailed?: boolean
   isLoadingThumbnail?: boolean
   isLoading?: boolean
   title?: string | null
@@ -59,6 +60,7 @@ export const MIN_VIDEO_TILE_WIDTH = 250
 const SMALL_SIZE_WIDTH = 300
 
 export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
+  hasAssetUploadFailed,
   videoHref,
   setTileSize,
   tileSize,
@@ -73,7 +75,6 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   videoPublishState,
   duration,
   isPullupDisabled,
-  hasThumbnailUploadFailed,
   onPullupClick,
   removeButton,
   title,
@@ -144,18 +145,18 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                   </>
                 ) : (
                   <>
-                    {thumbnailUrl && !failedLoadImage ? (
+                    {thumbnailUrl && !hasAssetUploadFailed && !failedLoadImage ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
                         onError={handleFailedThumbnailLoad}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
-                    ) : hasThumbnailUploadFailed ? (
+                    ) : hasAssetUploadFailed ? (
                       <CoverThumbnailUploadFailed>
                         <SvgLargeUploadFailed />
-                        <Text variant="subtitle2" secondary>
-                          Thumbnail upload failed
+                        <Text variant="caption" secondary>
+                          Asset upload failed
                         </Text>
                       </CoverThumbnailUploadFailed>
                     ) : (
@@ -168,8 +169,8 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                       </CoverVideoPublishingStateOverlay>
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                    <CoverHoverOverlay>
-                      {publisherMode && (
+                    <CoverHoverOverlay darker={hasAssetUploadFailed}>
+                      {publisherMode && !hasAssetUploadFailed && (
                         <CoverTopLeftContainer>
                           <PullUp
                             // set to true when video is already on the snackbar
@@ -183,7 +184,11 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                       )}
                       <CoverIconWrapper>
                         {publisherMode ? (
-                          <SvgLargeEdit />
+                          hasAssetUploadFailed ? (
+                            <SvgIllustrativeReupload />
+                          ) : (
+                            <SvgLargeEdit />
+                          )
                         ) : (
                           <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
                         )}
