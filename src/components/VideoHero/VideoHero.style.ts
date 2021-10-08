@@ -63,10 +63,6 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
   height: 110px;
   align-items: center;
 
-  ${media.xs} {
-    height: 144px;
-  }
-
   ${media.sm} {
     height: auto;
   }

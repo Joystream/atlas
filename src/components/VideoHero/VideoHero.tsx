@@ -47,7 +47,8 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
   onTimeUpdate,
   onEnded,
 }) => {
-  const isCompact = useMediaMatch('xs')
+  const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
 
   const [soundMuted, setSoundMuted] = useState(true)
 
@@ -89,9 +90,9 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video.id)}>
-                      <Text variant={isCompact ? 'h2' : 'h4'}>{videoHeroData.heroTitle}</Text>
+                      <Text variant={smMatch ? 'h2' : 'h4'}>{videoHeroData.heroTitle}</Text>
                     </Link>
-                  ) : isCompact ? (
+                  ) : smMatch ? (
                     <SkeletonLoader height={48} width={360} />
                   ) : (
                     <div>
@@ -113,28 +114,24 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
             {videoHeroData ? (
               <ButtonsContainer>
                 <Button
-                  size={isCompact ? 'large' : 'medium'}
-                  fullWidth={!isCompact}
+                  size={xsMatch ? 'large' : 'medium'}
+                  fullWidth={!xsMatch}
                   to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
                   icon={<SvgActionPlay />}
                 >
                   Play
                 </Button>
                 {withMuteButton && (
-                  <IconButton
-                    size={isCompact ? 'large' : 'medium'}
-                    variant="secondary"
-                    onClick={handleSoundToggleClick}
-                  >
+                  <IconButton size={smMatch ? 'large' : 'medium'} variant="secondary" onClick={handleSoundToggleClick}>
                     {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
                   </IconButton>
                 )}
               </ButtonsContainer>
             ) : (
               <ButtonsContainer>
-                <SkeletonLoader width={isCompact ? '96px' : '100%'} height={isCompact ? '48px' : '40px'} />
+                <SkeletonLoader width={xsMatch ? '96px' : '100%'} height={xsMatch ? '48px' : '40px'} />
                 {withMuteButton && (
-                  <SkeletonLoader width={isCompact ? '48px' : '40px'} height={isCompact ? '48px' : '40px'} />
+                  <SkeletonLoader width={smMatch ? '48px' : '40px'} height={smMatch ? '48px' : '40px'} />
                 )}
               </ButtonsContainer>
             )}
