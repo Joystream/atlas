@@ -21,6 +21,7 @@ export type VideoHeroData = {
   heroTitle: string
   heroVideoCutUrl: string
   thumbnailPhotoUrl?: string | null
+  progress?: number
 }
 
 export const useVideoHeroData = (): VideoHeroData | null => {

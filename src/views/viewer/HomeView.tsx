@@ -57,7 +57,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero videoHeroData={videoHeroData} />
+      <VideoHero videoHeroData={videoHeroData} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
@@ -86,7 +86,7 @@ export const HomeView: React.FC = () => {
 
 const Container = styled.div`
   position: relative;
-  padding-bottom: ${sizes(16)};
+  padding: ${sizes(16)} 0;
 
   > section {
     :not(:first-of-type) {
