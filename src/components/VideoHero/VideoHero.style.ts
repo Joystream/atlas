@@ -1,29 +1,32 @@
 import styled from '@emotion/styled'
 
+import { LayoutGrid } from '@/shared/components/LayoutGrid'
 import { colors, media, sizes } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
 
-export const Container = styled.section`
+type IsCategoryProp = {
+  isCategory?: boolean
+}
+
+export const Container = styled.section<IsCategoryProp>`
   position: relative;
-  padding: 160px var(--global-horizontal-padding) ${sizes(4)};
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: 36px var(--size-global-horizontal-padding) 16px;
+  display: grid;
 
   ${media.sm} {
-    padding: ${sizes(8)} var(--global-horizontal-padding);
-    height: 66.6667vh;
+    padding: 32px var(--size-global-horizontal-padding);
+    height: ${({ isCategory }) => (isCategory ? '392px' : '66.6667vh')};
   }
 `
 
-export const BackgroundContainer = styled.div`
+export const BackgroundContainer = styled.div<IsCategoryProp>`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 240px;
+  height: ${({ isCategory }) => (isCategory ? '360px' : '240px')};
 
   ${media.sm} {
     bottom: -128px;
@@ -42,16 +45,35 @@ export const GradientOverlay = styled.div`
     ${colors.transparentBlack[54]};
 `
 
-export const InfoContainer = styled.div`
+export const InfoContainer = styled.div<IsCategoryProp>`
   position: relative;
+  align-self: end;
+  margin-top: ${({ isCategory }) => (isCategory ? '208px' : '124px')};
   width: 100%;
+  ${media.sm} {
+    margin-top: unset;
+  }
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(4)};
 `
 
+export const StyledLayoutGrid = styled(LayoutGrid)`
+  height: 110px;
+  align-items: center;
+
+  ${media.sm} {
+    height: auto;
+  }
+`
+
 export const TitleContainer = styled.div`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
   a {
     text-decoration: none;
   }
