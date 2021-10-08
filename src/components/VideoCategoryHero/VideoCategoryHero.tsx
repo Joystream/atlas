@@ -20,13 +20,15 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [videoProgress, setVideoProgress] = useState(0)
 
+  const videosLength = videos?.length || 0
+
   const handleVideoClick = (idx: number) => {
     setActiveVideoIdx(idx)
     setVideoProgress(0)
   }
 
   const handleEnded = () => {
-    const idx = activeVideoIdx + 1 >= 3 ? 0 : activeVideoIdx + 1
+    const idx = activeVideoIdx + 1 >= videosLength ? 0 : activeVideoIdx + 1
     setVideoProgress(0)
     setActiveVideoIdx(idx)
   }
@@ -46,7 +48,7 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
     video ? { ...video, progress: idx === activeVideoIdx ? videoProgress : 0 } : null
   )
 
-  const shouldShowSlider = videos && videos?.length > 1
+  const shouldShowSlider = videosLength > 1
 
   return (
     <VideoHero

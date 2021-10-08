@@ -1,8 +1,10 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoHeroData } from '@/api/featured'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { transitions } from '@/shared/theme'
 
 import {
   VideoHeroSliderWrapper,
@@ -26,12 +28,12 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
   onTileClick,
 }) => {
   const smMatch = useMediaMatch('sm')
+  const videosLength = videos?.length || 0
 
   const handleChangeTile = (e: React.MouseEvent) => {
     if (smMatch || !videos) {
       return
     }
-    const videosLength = videos.length
     const clientWidthCenter = e.currentTarget.clientWidth / 2
 
     if (clientWidthCenter <= e.clientX) {
@@ -44,21 +46,29 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
   }
 
   return (
-    <VideoHeroSliderWrapper onClick={handleChangeTile}>
-      {loading
-        ? Array.from({ length: 3 }).map((_, idx) => (
-            <SkeletonLoader key={idx} width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
-          ))
-        : videos?.map((video, idx) => (
-            <VideoSliderPreview
-              key={idx}
-              progress={video?.progress}
-              thumbnailUrl={video?.thumbnailPhotoUrl}
-              active={idx === activeVideoIdx}
-              onClick={() => smMatch && onTileClick?.(idx)}
-            />
-          ))}
-    </VideoHeroSliderWrapper>
+    <SwitchTransition>
+      <CSSTransition
+        key={loading ? 'data' : 'placeholder'}
+        classNames={transitions.names.fade}
+        timeout={parseInt(transitions.timings.regular)}
+      >
+        <VideoHeroSliderWrapper onClick={handleChangeTile} columnsNumber={videosLength}>
+          {loading
+            ? Array.from({ length: videosLength }).map((_, idx) => (
+                <SkeletonLoader key={idx} width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
+              ))
+            : videos?.map((video, idx) => (
+                <VideoSliderPreview
+                  key={idx}
+                  progress={video?.progress}
+                  thumbnailUrl={video?.thumbnailPhotoUrl}
+                  active={idx === activeVideoIdx}
+                  onClick={() => smMatch && onTileClick?.(idx)}
+                />
+              ))}
+        </VideoHeroSliderWrapper>
+      </CSSTransition>
+    </SwitchTransition>
   )
 }
 

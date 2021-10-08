@@ -2,7 +2,11 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
-export const VideoHeroSliderWrapper = styled.div`
+type VideoHeroSliderWrapperProps = {
+  columnsNumber?: number
+}
+
+export const VideoHeroSliderWrapper = styled.div<VideoHeroSliderWrapperProps>`
   position: absolute;
   margin: ${sizes(4)};
   top: 0;
@@ -11,7 +15,7 @@ export const VideoHeroSliderWrapper = styled.div`
   width: calc(100% - ${sizes(8)});
   height: 100%;
   grid-gap: ${sizes(2)};
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(${({ columnsNumber = 0 }) => columnsNumber}, 1fr);
   ${media.sm} {
     bottom: 0;
     z-index: ${zIndex.overlay};
