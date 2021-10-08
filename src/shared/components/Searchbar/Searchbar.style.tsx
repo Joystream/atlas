@@ -51,7 +51,7 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
     height: ${hasFocus ? '64px' : '39px'};
     position: ${hasFocus ? 'fixed' : 'relative'};
     width: ${hasQuery || hasFocus ? '100%' : '39px'};
-    padding-left: ${hasFocus ? sizes(4) : 0};
+    padding-left: ${hasFocus || hasQuery ? sizes(2) : 0};
     background-color: ${hasFocus ? colors.gray[800] : 'transparent'};
     ${
       !hasFocus &&

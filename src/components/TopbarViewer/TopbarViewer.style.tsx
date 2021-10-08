@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { IconButton } from '@/shared/components/IconButton'
 import { colors, media, sizes, square, transitions, zIndex } from '@/shared/theme'
 
 import { TopbarBase } from '../TopbarBase'
@@ -18,7 +19,6 @@ export const SearchbarContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  margin-right: ${sizes(2)};
   z-index: ${zIndex.globalOverlay};
 
   > svg {
@@ -54,4 +54,8 @@ export const Overlay = styled.div`
   ${media.sm} {
     display: block;
   }
+`
+
+export const StyledIconButton = styled(IconButton)`
+  margin-left: ${sizes(2)};
 `

@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
 import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { RoutingState } from '@/types/routing'
 
-import { ButtonWrapper, Overlay, SearchbarContainer, StyledTopbarBase } from './TopbarViewer.style'
+import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.style'
 
 export const TopbarViewer: React.FC = () => {
   const navigate = useNavigate()
@@ -18,7 +17,6 @@ export const TopbarViewer: React.FC = () => {
   const locationState = location.state as RoutingState
   const overlaidLocation = locationState?.overlaidLocation || location
   const mdMatch = useMediaMatch('md')
-  const searchbarRef = useRef(null)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -92,7 +90,6 @@ export const TopbarViewer: React.FC = () => {
           controlled
           hasFocus={isFocused}
           onClick={handleFocus}
-          ref={searchbarRef}
         />
       </SearchbarContainer>
       <ButtonWrapper>
@@ -108,9 +105,9 @@ export const TopbarViewer: React.FC = () => {
           </Button>
         )}
         {!searchQuery && !mdMatch && (
-          <IconButton to={absoluteRoutes.studio.index()} newTab>
+          <StyledIconButton to={absoluteRoutes.studio.index()} newTab>
             <SvgGlyphAddVideo />
-          </IconButton>
+          </StyledIconButton>
         )}
       </ButtonWrapper>
       {isFocused && <Overlay onClick={handleBlur} />}

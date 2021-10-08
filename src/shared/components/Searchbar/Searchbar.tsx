@@ -63,7 +63,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     return (
       <>
         <Container className={className} hasFocus={hasFocus} hasQuery={!!query} ref={ref}>
-          {(mdMatch || hasFocus) && (
+          {(mdMatch || hasFocus || !!query) && (
             <>
               {!mdMatch && hasFocus ? (
                 <Button onClick={onClose} iconOnly icon={<SvgGlyphChevronLeft />} variant="tertiary" />
@@ -84,7 +84,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               />
             </>
           )}
-          {query && (
+          {!!query && (
             <CancelButton onClick={handleCancel} variant="tertiary" size="small">
               <SvgGlyphClose />
             </CancelButton>
