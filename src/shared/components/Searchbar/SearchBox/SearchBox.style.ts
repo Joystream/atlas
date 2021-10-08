@@ -71,7 +71,7 @@ export const Caption = styled(Text)`
   font-weight: ${typography.weights.medium};
 `
 
-export const SearchItemWrapper = styled(Link)<{ variant: 'default' | 'textOnly' }>`
+export const SearchItemWrapper = styled(Link)<{ selected?: boolean; variant: 'default' | 'textOnly' }>`
   display: flex;
   align-items: center;
   padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
@@ -79,8 +79,13 @@ export const SearchItemWrapper = styled(Link)<{ variant: 'default' | 'textOnly' 
 
   &:hover {
     background-color: ${colors.transparentPrimary[10]};
+  }
 
-    ${() => `
+  ${({ selected }) =>
+    selected &&
+    `
+    background-color: ${colors.transparentPrimary[10]};
+
       ${Shortcut} {
         display: flex;
       }

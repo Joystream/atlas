@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
+import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
@@ -32,15 +35,80 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       onClick,
       hasFocus,
       onClose,
+      onKeyDown,
       ...htmlProps
     },
     ref
   ) => {
-    const mdMatch = useMediaMatch('md')
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
+    const mdMatch = useMediaMatch('sm')
+    const inputRef = useRef<HTMLInputElement>(null)
+    const [selectedItem, setSelectedItem] = useState<number | null>(null)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const locationState = location.state as RoutingState
+    const overlaidLocation = locationState?.overlaidLocation || location
+    const query = recentSearch || value
+
+    useEffect(() => {
+      const onKeyPress = (event: KeyboardEvent) => {
+        if (event.key === '/') {
+          onClick?.()
+          inputRef.current && setTimeout(() => inputRef.current?.focus(), 10)
+        }
+        if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !!query) {
+          inputRef?.current?.blur()
+          onClose?.()
+        }
+      }
+      window.addEventListener('keydown', onKeyPress)
+      return () => {
+        window.removeEventListener('keydown', onKeyPress)
+      }
+    }, [onClick, onClose, query])
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
+        const state: RoutingState = { overlaidLocation }
+        // navigate to search results
+
+        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
+      }
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        onClose?.()
+        event.currentTarget.blur()
+      }
+
+      if (event.key === 'ArrowDown' || event.key === 'Tab') {
+        event.preventDefault()
+        setSelectedItem((prevState) => {
+          if (prevState === null) {
+            return 0
+          }
+          return prevState + 1
+        })
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        setSelectedItem((prevState) => {
+          if (prevState === null) {
+            return 0
+          }
+          if (prevState === 0) {
+            return null
+          }
+          return prevState - 1
+        })
+      }
+    }
+
+    const onLastSelectedItem = () => {
+      setSelectedItem(0)
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRecentSearch(null)
+      setSelectedItem(null)
       if (onChange) {
         onChange(e)
       }
@@ -56,8 +124,6 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       setRecentSearch(title)
       onClose()
     }
-
-    const query = recentSearch || value
 
     return (
       <>
@@ -76,11 +142,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 placeholder={placeholder}
                 type="search"
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 onFocus={onFocus}
                 onFocusCapture={onFocus}
                 onBlur={onBlur}
                 onSubmit={onSubmit}
                 data-hj-allow
+                ref={inputRef}
                 {...htmlProps}
               />
             </>
@@ -100,7 +168,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </SearchHelper>
             </>
           )}
-          {hasFocus && <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} />}
+          {hasFocus && <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} selectedItem={selectedItem} onLastSelectedItem={onLastSelectedItem} />}
         </Container>
       </>
     )

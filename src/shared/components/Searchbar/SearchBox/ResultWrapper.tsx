@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router'
 
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { Text } from '@/shared/components/Text'
@@ -11,9 +12,32 @@ type SearchItemProps = {
   onDelete?: () => void
   onClick?: () => void
   variant?: 'default' | 'textOnly'
+  selected?: boolean
+  handleSelectedItem: (top: number) => void
 }
 
-export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick, variant = 'default' }) => {
+export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick, selected, handleSelectedItem, variant = 'default' }) => {
+  const wrapperRef = useRef<HTMLAnchorElement>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const onKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && selected && to) {
+        navigate(to)
+      }
+    }
+    window.addEventListener('keydown', onKeyPress)
+    return () => {
+      window.removeEventListener('keydown', onKeyPress)
+    }
+  }, [navigate, selected, to])
+
+  useEffect(() => {
+    if (selected && wrapperRef.current) {
+      handleSelectedItem(wrapperRef.current.offsetTop)
+    }
+  }, [handleSelectedItem, selected])
+
   return (
     <SearchItemWrapper to={to} onClick={onClick} variant={variant}>
       <SearchItemContent>{children}</SearchItemContent>

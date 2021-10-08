@@ -19,9 +19,11 @@ type ResultProps = {
   video?: VideoFieldsFragment
   channel?: AllChannelFieldsFragment
   query?: string
+  selected?: boolean
+  handleSelectedItem: (top: number) => void
 }
 
-export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
+export const Result: React.FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem }) => {
   const title = video ? video.title : channel?.title
   const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset({
     entity: channel,
@@ -46,7 +48,7 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
   const thumbnailUrl = video ? videoThumbnail : channelAvatar
 
   return (
-    <ResultWrapper to={to}>
+    <ResultWrapper to={to} selected={selected} handleSelectedItem={handleSelectedItem}>
       <ResultContent>
         {isLoading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />

@@ -13,13 +13,17 @@ type RecentSearchItemProps = {
   onDelete?: () => void
   query?: string
   title?: string
+  selected?: boolean
+  handleSelectedItem: (top: number) => void
 }
 
-export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDelete, query, onClick }) => {
+export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDelete, query, onClick, selected, handleSelectedItem }) => {
   return (
     <ResultWrapper
       onDelete={onDelete}
       onClick={() => onClick(title)}
+      handleSelectedItem={handleSelectedItem}
+      selected={selected}
       to={absoluteRoutes.viewer.search({ query: title?.trim() })}
       variant="textOnly"
     >
