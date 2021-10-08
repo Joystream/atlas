@@ -1,11 +1,12 @@
 import parse from 'html-react-parser'
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { Text } from '@/shared/components/Text'
 import { SvgClock } from '@/shared/icons'
 
 import { ResultWrapper } from './ResultWrapper'
 import { ClockWrapper, RecentSearchItemWrapper } from './SearchBox.style'
+import { useHighlitedTitle } from './useHighlitedTitle'
 
 type RecentSearchItemProps = {
   onDelete?: () => void
@@ -15,13 +16,7 @@ type RecentSearchItemProps = {
 }
 
 export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDelete, to, query }) => {
-  const highlightedTitle = useMemo(() => {
-    if (query) {
-      const regex = new RegExp(query, 'i')
-      return title ? title.replace(regex, (match) => `<span style="color: white">${match}</span>`) : ''
-    }
-    return title || ''
-  }, [query, title])
+  const highlightedTitle = useHighlitedTitle(title, query)
 
   return (
     <ResultWrapper to={to} onDelete={onDelete}>

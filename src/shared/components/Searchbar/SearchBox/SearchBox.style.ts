@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/Button'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
+import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 
 export const Container = styled.div<{ visible: boolean }>`
@@ -18,7 +19,7 @@ export const Container = styled.div<{ visible: boolean }>`
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
   ${({ visible }) => !visible && 'display: none'};
 
-  ${media.sm} {
+  ${media.md} {
     box-shadow: none;
     height: auto;
     max-height: 400px;
@@ -137,6 +138,10 @@ export const ResultThumbnail = styled.img<{ rounded?: boolean }>`
     ${rounded && `border-radius: ${rounded ? '50%' : 'unset'}`};
   `};
 
+  margin-right: ${sizes(4)};
+`
+
+export const StyledSvgAvatarSilhouette = styled(SvgAvatarSilhouette)`
   margin-right: ${sizes(4)};
 `
 

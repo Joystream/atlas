@@ -11,7 +11,7 @@ import { SearchHelper } from './Searchbar.style'
 import { CancelButton, Container, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
 
 type SearchbarProps = {
-  value: string
+  value: string | null
   onCancel?: () => void
   showCancelButton?: boolean
   controlled?: boolean
@@ -39,7 +39,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     ref
   ) => {
     const [value, setValue] = useState('')
-    const mdMatch = useMediaMatch('sm')
+    const mdMatch = useMediaMatch('md')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) {
@@ -71,7 +71,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 <StyledSvgOutlineSearch hasFocus={hasFocus} />
               )}
               <Input
-                value={query}
+                value={query || ''}
                 placeholder={placeholder}
                 type="search"
                 onChange={handleChange}
@@ -100,7 +100,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             </>
           )}
           <CSSTransition in={hasFocus} timeout={200} unmountOnExit mountOnEnter>
-            <SearchBox searchQuery={query} />
+            <SearchBox searchQuery={query || ''} />
           </CSSTransition>
         </Container>
       </>

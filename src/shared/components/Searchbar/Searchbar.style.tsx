@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components/Text'
@@ -72,7 +73,9 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
 `
 
 // TODO: remove override on viewer update
-export const StyledSvgOutlineSearch = styled(SvgOutlineSearch)<{ hasFocus: boolean }>`
+export const StyledSvgOutlineSearch = styled(SvgOutlineSearch, { shouldForwardProp: isPropValid })<{
+  hasFocus: boolean
+}>`
   flex-shrink: 0;
 
   circle,

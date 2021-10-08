@@ -15,7 +15,10 @@ export const useSearchResults = (searchQuery: string, limit = 50) => {
       },
       whereChannel: {},
     },
-    { onError: (error) => SentryLogger.error('Failed to fetch search results', 'SearchResults', error) }
+    {
+      skip: !searchQuery,
+      onError: (error) => SentryLogger.error('Failed to fetch search results', 'SearchResults', error),
+    }
   )
 
   const getChannelsAndVideos = (loading: boolean, data: SearchQuery['search'] | undefined) => {

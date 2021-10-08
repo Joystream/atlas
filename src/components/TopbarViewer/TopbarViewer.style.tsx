@@ -26,7 +26,7 @@ export const SearchbarContainer = styled.div`
   }
 
   ${media.md} {
-    max-width: 1156px;
+    max-width: 480px;
     justify-content: center;
     margin: 0;
 

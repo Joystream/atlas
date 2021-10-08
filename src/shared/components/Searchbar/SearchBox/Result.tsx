@@ -5,10 +5,11 @@ import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useHighlitedTitle } from '@/shared/components/Searchbar/SearchBox/useHighlitedTitle'
 import { Text } from '@/shared/components/Text'
 
 import { ResultWrapper } from './ResultWrapper'
-import { ResultContent, ResultThumbnail, StyledSkeletonLoader } from './SearchBox.style'
+import { ResultContent, ResultThumbnail, StyledSkeletonLoader, StyledSvgAvatarSilhouette } from './SearchBox.style'
 
 type ResultProps = {
   video?: VideoFieldsFragment
@@ -17,6 +18,8 @@ type ResultProps = {
 }
 
 export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
+  const title = video ? video.title : channel?.title
+  const highlightedTitle = useHighlitedTitle(title, query)
   const { updateRecentSearches } = usePersonalDataStore((state) => ({
     updateRecentSearches: state.actions.updateRecentSearches,
   }))
@@ -40,15 +43,6 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
 
   const isLoading = video ? videoThumbnailLoading : channelAvatarLoading
 
-  const highlightedTitle = useMemo(() => {
-    const title = video ? video.title : channel?.title
-    if (query) {
-      const regex = new RegExp(query, 'i')
-      return title ? title.replace(regex, (match) => `<span style="color: white">${match}</span>`) : ''
-    }
-    return title || ''
-  }, [channel?.title, query, video])
-
   const handleResultClick = () => {
     if (video) {
       updateRecentSearches(video.id, 'video', video.title || '')
@@ -58,13 +52,17 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
     }
   }
 
+  const thumbnailUrl = video ? videoThumbnail : channelAvatar
+
   return (
     <ResultWrapper to={to} onClick={handleResultClick}>
       <ResultContent>
         {isLoading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />
+        ) : channel && !thumbnailUrl ? (
+          <StyledSvgAvatarSilhouette width={32} height={32} />
         ) : (
-          <ResultThumbnail src={(video ? videoThumbnail : channelAvatar) || ''} rounded={!!channel} />
+          <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
           <Text secondary>{parse(highlightedTitle)}</Text>
