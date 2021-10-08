@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { LayoutGrid } from '@/shared/components/LayoutGrid'
 import { colors, media, sizes } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
@@ -58,7 +59,25 @@ export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(4)};
 `
 
+export const StyledLayoutGrid = styled(LayoutGrid)`
+  height: 110px;
+  align-items: center;
+
+  ${media.xs} {
+    height: 144px;
+  }
+
+  ${media.sm} {
+    height: auto;
+  }
+`
+
 export const TitleContainer = styled.div`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
   a {
     text-decoration: none;
   }

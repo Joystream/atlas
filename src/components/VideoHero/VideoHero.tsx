@@ -7,7 +7,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
-import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
+import { GridItem } from '@/shared/components/LayoutGrid'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
@@ -22,6 +22,7 @@ import {
   GradientOverlay,
   InfoContainer,
   StyledChannelLink,
+  StyledLayoutGrid,
   TitleContainer,
 } from './VideoHero.style'
 
@@ -76,7 +77,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       {sliderNode && sliderNode}
       {headerNode && headerNode}
       <InfoContainer isCategory={isCategory}>
-        <LayoutGrid>
+        <StyledLayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
             <StyledChannelLink variant="secondary" id={videoHeroData?.video.channel.id} />
             <TitleContainer>
@@ -93,16 +94,16 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                   ) : isCompact ? (
                     <SkeletonLoader height={48} width={360} />
                   ) : (
-                    <>
+                    <div>
                       <SkeletonLoader height={30} width="100%" bottomSpace={4} />
                       <SkeletonLoader height={30} width={240} />
-                    </>
+                    </div>
                   )}
                 </CSSTransition>
               </SwitchTransition>
             </TitleContainer>
           </GridItem>
-        </LayoutGrid>
+        </StyledLayoutGrid>
         <SwitchTransition>
           <CSSTransition
             key={videoHeroData ? 'data' : 'placeholder'}
