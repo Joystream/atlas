@@ -7,7 +7,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
-import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
+import { GridItem } from '@/shared/components/LayoutGrid'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgActionPlay } from '@/shared/icons/ActionPlay'
@@ -22,52 +22,63 @@ import {
   GradientOverlay,
   InfoContainer,
   StyledChannelLink,
+  StyledLayoutGrid,
   TitleContainer,
 } from './VideoHero.style'
 
 import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 
-const VIDEO_PLAYBACK_DELAY = 1250
-
 export type VideoHeroProps = {
+  isCategory?: boolean
+  headerNode?: React.ReactNode
+  sliderNode?: React.ReactNode
+  withMuteButton?: boolean
   videoHeroData: VideoHeroData | null
+  onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
+  onEnded?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
 }
 
-export const VideoHero: React.FC<VideoHeroProps> = ({ videoHeroData }) => {
-  const isCompact = useMediaMatch('sm')
+export const VideoHero: React.FC<VideoHeroProps> = ({
+  videoHeroData = null,
+  headerNode,
+  isCategory,
+  sliderNode,
+  withMuteButton,
+  onTimeUpdate,
+  onEnded,
+}) => {
+  const smMatch = useMediaMatch('sm')
+  const xsMatch = useMediaMatch('xs')
 
-  const [videoPlaying, setVideoPlaying] = useState(false)
   const [soundMuted, setSoundMuted] = useState(true)
-
-  const handlePlaybackDataLoaded = () => {
-    setTimeout(() => {
-      setVideoPlaying(true)
-    }, VIDEO_PLAYBACK_DELAY)
-  }
 
   const handleSoundToggleClick = () => {
     setSoundMuted(!soundMuted)
   }
 
+  const handleEnded = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    onEnded?.(e)
+  }
+
   return (
-    <Container>
-      <BackgroundContainer>
+    <Container isCategory={isCategory}>
+      <BackgroundContainer isCategory={isCategory}>
         {videoHeroData && (
           <BackgroundVideoPlayer
             muted={soundMuted}
-            playing={videoPlaying}
+            autoPlay
+            onTimeUpdate={onTimeUpdate}
             poster={videoHeroData.thumbnailPhotoUrl || ''}
-            onLoadedData={handlePlaybackDataLoaded}
-            onPlay={() => setVideoPlaying(true)}
-            onPause={() => setVideoPlaying(false)}
-            onEnded={() => setVideoPlaying(false)}
+            onEnded={handleEnded}
             src={videoHeroData?.heroVideoCutUrl}
           />
         )}
         <GradientOverlay />
       </BackgroundContainer>
-      <InfoContainer>
-        <LayoutGrid>
+      {sliderNode && sliderNode}
+      {headerNode && headerNode}
+      <InfoContainer isCategory={isCategory}>
+        <StyledLayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
             <StyledChannelLink variant="secondary" id={videoHeroData?.video.channel.id} />
             <TitleContainer>
@@ -79,21 +90,21 @@ export const VideoHero: React.FC<VideoHeroProps> = ({ videoHeroData }) => {
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video.id)}>
-                      <Text variant={isCompact ? 'h2' : 'h4'}>{videoHeroData.heroTitle}</Text>
+                      <Text variant={smMatch ? 'h2' : 'h4'}>{videoHeroData.heroTitle}</Text>
                     </Link>
-                  ) : isCompact ? (
+                  ) : smMatch ? (
                     <SkeletonLoader height={48} width={360} />
                   ) : (
-                    <>
+                    <div>
                       <SkeletonLoader height={30} width="100%" bottomSpace={4} />
                       <SkeletonLoader height={30} width={240} />
-                    </>
+                    </div>
                   )}
                 </CSSTransition>
               </SwitchTransition>
             </TitleContainer>
           </GridItem>
-        </LayoutGrid>
+        </StyledLayoutGrid>
         <SwitchTransition>
           <CSSTransition
             key={videoHeroData ? 'data' : 'placeholder'}
@@ -103,21 +114,25 @@ export const VideoHero: React.FC<VideoHeroProps> = ({ videoHeroData }) => {
             {videoHeroData ? (
               <ButtonsContainer>
                 <Button
-                  size={isCompact ? 'large' : 'medium'}
-                  fullWidth={!isCompact}
+                  size={xsMatch ? 'large' : 'medium'}
+                  fullWidth={!xsMatch}
                   to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
                   icon={<SvgActionPlay />}
                 >
                   Play
                 </Button>
-                <IconButton size={isCompact ? 'large' : 'medium'} variant="secondary" onClick={handleSoundToggleClick}>
-                  {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
-                </IconButton>
+                {withMuteButton && (
+                  <IconButton size={smMatch ? 'large' : 'medium'} variant="secondary" onClick={handleSoundToggleClick}>
+                    {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
+                  </IconButton>
+                )}
               </ButtonsContainer>
             ) : (
               <ButtonsContainer>
-                <SkeletonLoader width={isCompact ? '96px' : '100%'} height={isCompact ? '48px' : '40px'} />
-                <SkeletonLoader width={isCompact ? '48px' : '40px'} height={isCompact ? '48px' : '40px'} />
+                <SkeletonLoader width={xsMatch ? '96px' : '100%'} height={xsMatch ? '48px' : '40px'} />
+                {withMuteButton && (
+                  <SkeletonLoader width={smMatch ? '48px' : '40px'} height={smMatch ? '48px' : '40px'} />
+                )}
               </ButtonsContainer>
             )}
           </CSSTransition>

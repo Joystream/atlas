@@ -4,6 +4,7 @@ import { colors, media, sizes } from '@/shared/theme'
 
 export const Container = styled.div`
   margin-top: ${sizes(16)};
+  position: relative;
 `
 
 export const ControlsContainer = styled.div`
