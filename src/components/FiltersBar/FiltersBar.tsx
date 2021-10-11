@@ -280,6 +280,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
                 </Button>
               </PopoverDialog>
               <PopoverDialog
+                dividers
                 content={licenseInputs}
                 footer={
                   <>

@@ -91,6 +91,17 @@ export const StyledText = styled(Text)<TextProps>`
   color: inherit;
 `
 
+const BadgeDotStyles = css`
+  &::after {
+    ${square(8)}
+
+    content: '';
+    background-color: ${colors.white};
+    border-radius: 50%;
+    display: block;
+  }
+`
+
 export const Badge = styled.div<{ dot?: boolean }>`
   ${square(16)}
 
@@ -104,16 +115,5 @@ export const Badge = styled.div<{ dot?: boolean }>`
   border-radius: 50%;
   top: -${sizes(2)};
   right: -${sizes(2)};
-  ${({ dot }) =>
-    dot &&
-    css`
-      &::after {
-        ${square(8)}
-
-        content: '';
-        background-color: ${colors.white};
-        border-radius: 50%;
-        display: block;
-      }
-    `}
+  ${({ dot }) => dot && BadgeDotStyles}
 `
