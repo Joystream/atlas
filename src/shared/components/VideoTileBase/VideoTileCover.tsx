@@ -6,10 +6,10 @@ import {
   SvgGlyphClose,
   SvgGlyphDraft,
   SvgGlyphHide,
+  SvgIllustrativeEdit,
+  SvgIllustrativePlay,
   SvgIllustrativeReupload,
-  SvgLargeEdit,
   SvgLargeUploadFailed,
-  SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
@@ -132,11 +132,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     {(videoHref || publisherMode) && (
                       <SkeletonHoverOverlay>
                         <CoverIconWrapper>
-                          {publisherMode ? (
-                            <SvgLargeEdit />
-                          ) : (
-                            <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
-                          )}
+                          {publisherMode ? <SvgIllustrativeEdit /> : <SvgIllustrativePlay />}
                         </CoverIconWrapper>
                       </SkeletonHoverOverlay>
                     )}
@@ -181,10 +177,10 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                           hasAssetUploadFailed ? (
                             <SvgIllustrativeReupload />
                           ) : (
-                            <SvgLargeEdit />
+                            <SvgIllustrativeEdit />
                           )
                         ) : (
-                          <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
+                          <SvgIllustrativePlay />
                         )}
                       </CoverIconWrapper>
                       {removeButton && (
