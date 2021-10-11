@@ -91,7 +91,7 @@ export const StyledText = styled(Text)<TextProps>`
   color: inherit;
 `
 
-const BadgeDotStyles = css`
+const badgeDotStyles = css`
   &::after {
     ${square(8)}
 
@@ -106,7 +106,7 @@ export const Badge = styled.div<{ dot?: boolean }>`
   ${square(16)}
 
   font-weight: ${typography.weights.bold};
-  font-size: 0.6rem;
+  font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,5 +115,5 @@ export const Badge = styled.div<{ dot?: boolean }>`
   border-radius: 50%;
   top: -${sizes(2)};
   right: -${sizes(2)};
-  ${({ dot }) => dot && BadgeDotStyles}
+  ${({ dot }) => dot && badgeDotStyles}
 `

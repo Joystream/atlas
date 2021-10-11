@@ -7,7 +7,7 @@ import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
 import { SORT_OPTIONS } from '@/config/sorting'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Button } from '@/shared/components/Button'
+import { Button, ButtonProps } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { PopoverDialog } from '@/shared/components/Popover'
 import { RadioButton } from '@/shared/components/RadioButton'
@@ -78,7 +78,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         label="Last 24 hours"
         value={1}
         selectedValue={dateUploadedFilter}
-      ></RadioButton>
+      />
       <RadioButton
         onChange={() => {
           setdateUploadedFilter(7)
@@ -87,7 +87,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         label="Last 7 days"
         value={7}
         selectedValue={dateUploadedFilter}
-      ></RadioButton>
+      />
       <RadioButton
         onChange={() => {
           setdateUploadedFilter(30)
@@ -96,7 +96,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         label="Last 30 days"
         value={30}
         selectedValue={dateUploadedFilter}
-      ></RadioButton>
+      />
       <RadioButton
         onChange={() => {
           setdateUploadedFilter(365)
@@ -105,7 +105,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         label="Last 365 days"
         value={365}
         selectedValue={dateUploadedFilter}
-      ></RadioButton>
+      />
     </FilterContentContainer>
   )
   const videoLengthInputs = (
@@ -152,7 +152,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
               value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
             )
           }
-        ></Checkbox>
+        />
       ))}
     </FilterContentContainer>
   )
@@ -163,192 +163,189 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         name="other-filters"
         label="Paid promotional material"
         value={!!paidPromotionalMaterialFilter}
-      ></Checkbox>
+      />
       <Checkbox
         onChange={setMatureContentRatingFilter}
         name="other-filters"
         label="Mature content rating"
         value={!!matureContentRatingFilter}
-      ></Checkbox>
+      />
     </FilterContentContainer>
   )
 
+  if (betweenBaseAndSMMatch) {
+    return (
+      <MobileFilterDialog
+        onExitClick={() => setiIsFiltersOpen(false)}
+        showDialog={isFiltersOpen}
+        title="Filters"
+        content={
+          <>
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                Sort by
+              </Text>
+              <Select
+                size="small"
+                helperText={null}
+                value={sortVideosBy}
+                items={SORT_OPTIONS}
+                onChange={handleSorting}
+              />
+            </MobileFilterContainer>
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                Date uploaded
+              </Text>
+              {dateUploadedInputs}
+            </MobileFilterContainer>
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                Length
+              </Text>
+              {videoLengthInputs}
+            </MobileFilterContainer>
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                License
+              </Text>
+              {licenseInputs}
+            </MobileFilterContainer>
+            <MobileFilterContainer>
+              <OtherFilterStyledText secondary variant="overhead">
+                <OtherFilterStyledIcon />
+                Exclude:
+              </OtherFilterStyledText>
+              {otherFiltersInputs}
+            </MobileFilterContainer>
+          </>
+        }
+        primaryButton={{
+          text: 'Apply',
+          onClick: handleApplyFilter,
+        }}
+        secondaryButton={{
+          text: 'Clear',
+          disabled: canClearAllFilters === false,
+          onClick: clearAllFilters,
+        }}
+      />
+    )
+  }
   return (
-    <>
-      {betweenBaseAndSMMatch ? (
-        <MobileFilterDialog
-          onExitClick={() => setiIsFiltersOpen(false)}
-          showDialog={isFiltersOpen}
-          title="Filters"
-          content={
-            <>
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  Sort by
-                </Text>
-                <Select
-                  size="small"
-                  helperText={null}
-                  value={sortVideosBy}
-                  items={SORT_OPTIONS}
-                  onChange={handleSorting}
-                />
-              </MobileFilterContainer>
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  Date uploaded
-                </Text>
-                {dateUploadedInputs}
-              </MobileFilterContainer>
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  Length
-                </Text>
-                {videoLengthInputs}
-              </MobileFilterContainer>
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  License
-                </Text>
-                {licenseInputs}
-              </MobileFilterContainer>
-              <MobileFilterContainer>
+    <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
+      <FiltersContainer open={true}>
+        <FiltersInnerContainer>
+          <PopoverDialog
+            content={dateUploadedInputs}
+            footer={
+              <FilterPopoverFooter
+                clearButtonProps={{
+                  onClick: clearDateUploadedFilter,
+                  disabled: dateUploadedFilter === undefined,
+                }}
+                applyButtonProps={{
+                  onClick: handleApplyFilter,
+                }}
+              />
+            }
+          >
+            <Button badge={canClearDateUploadedFilter && 1} variant="secondary">
+              Date uploaded
+            </Button>
+          </PopoverDialog>
+          <PopoverDialog
+            content={videoLengthInputs}
+            footer={
+              <FilterPopoverFooter
+                clearButtonProps={{
+                  onClick: clearVideoLegnthFilter,
+                  disabled: videoLegnthFilter?.length === 0,
+                }}
+                applyButtonProps={{
+                  onClick: handleApplyFilter,
+                }}
+              />
+            }
+          >
+            <Button badge={canClearVideoLegnthFilter && 1} variant="secondary">
+              Length
+            </Button>
+          </PopoverDialog>
+          <PopoverDialog
+            dividers
+            content={licenseInputs}
+            footer={
+              <FilterPopoverFooter
+                clearButtonProps={{
+                  onClick: clearLicensesFilter,
+                  disabled: licensesFilter?.length === 0,
+                }}
+                applyButtonProps={{
+                  onClick: handleApplyFilter,
+                }}
+              />
+            }
+          >
+            <Button badge={licensesFilter?.length} variant="secondary">
+              License
+            </Button>
+          </PopoverDialog>
+          <PopoverDialog
+            content={
+              <>
                 <OtherFilterStyledText secondary variant="overhead">
                   <OtherFilterStyledIcon />
                   Exclude:
                 </OtherFilterStyledText>
                 {otherFiltersInputs}
-              </MobileFilterContainer>
-            </>
-          }
-          primaryButton={{
-            text: 'Apply',
-            onClick: handleApplyFilter,
-          }}
-          secondaryButton={{
-            text: 'Clear',
-            disabled: canClearAllFilters === false,
-            onClick: clearAllFilters,
-          }}
-        />
-      ) : (
-        <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
-          <FiltersContainer open={true}>
-            <FiltersInnerContainer>
-              <PopoverDialog
-                content={dateUploadedInputs}
-                footer={
-                  <>
-                    <Button
-                      onClick={clearDateUploadedFilter}
-                      size="small"
-                      variant="secondary"
-                      disabled={dateUploadedFilter === undefined}
-                    >
-                      Clear
-                    </Button>
-                    <Button size="small" onClick={handleApplyFilter}>
-                      Apply
-                    </Button>
-                  </>
-                }
-              >
-                <Button badge={canClearDateUploadedFilter && 1} variant="secondary" onClick={() => null}>
-                  Date uploaded
-                </Button>
-              </PopoverDialog>
-              <PopoverDialog
-                content={videoLengthInputs}
-                footer={
-                  <>
-                    <Button
-                      size="small"
-                      variant="secondary"
-                      onClick={clearVideoLegnthFilter}
-                      disabled={videoLegnthFilter?.length === 0}
-                    >
-                      Clear
-                    </Button>
-                    <Button size="small" onClick={handleApplyFilter}>
-                      Apply
-                    </Button>
-                  </>
-                }
-              >
-                <Button badge={canClearVideoLegnthFilter && 1} variant="secondary" onClick={() => null}>
-                  Length
-                </Button>
-              </PopoverDialog>
-              <PopoverDialog
-                dividers
-                content={licenseInputs}
-                footer={
-                  <>
-                    <Button
-                      size="small"
-                      variant="secondary"
-                      disabled={licensesFilter?.length === 0}
-                      onClick={clearLicensesFilter}
-                    >
-                      Clear
-                    </Button>
-                    <Button size="small" onClick={handleApplyFilter}>
-                      Apply
-                    </Button>
-                  </>
-                }
-              >
-                <Button badge={licensesFilter?.length} variant="secondary" onClick={() => null}>
-                  License
-                </Button>
-              </PopoverDialog>
-              <PopoverDialog
-                content={
-                  <>
-                    <OtherFilterStyledText secondary variant="overhead">
-                      <OtherFilterStyledIcon />
-                      Exclude:
-                    </OtherFilterStyledText>
-                    {otherFiltersInputs}
-                  </>
-                }
-                footer={
-                  <>
-                    <Button
-                      onClick={clearOtherFilters}
-                      size="small"
-                      variant="secondary"
-                      disabled={!canClearOtherFilters}
-                    >
-                      Clear
-                    </Button>
-                    <Button size="small" onClick={handleApplyFilter}>
-                      Apply
-                    </Button>
-                  </>
-                }
-              >
-                <Button
-                  badge={(paidPromotionalMaterialFilter ? 1 : 0) + (matureContentRatingFilter ? 1 : 0)}
-                  variant="secondary"
-                  onClick={() => null}
-                >
-                  Other filters
-                </Button>
-              </PopoverDialog>
-            </FiltersInnerContainer>
+              </>
+            }
+            footer={
+              <FilterPopoverFooter
+                clearButtonProps={{
+                  onClick: clearOtherFilters,
+                  disabled: !canClearOtherFilters,
+                }}
+                applyButtonProps={{
+                  onClick: handleApplyFilter,
+                }}
+              />
+            }
+          >
+            <Button
+              badge={(paidPromotionalMaterialFilter ? 1 : 0) + (matureContentRatingFilter ? 1 : 0)}
+              variant="secondary"
+            >
+              Other filters
+            </Button>
+          </PopoverDialog>
+        </FiltersInnerContainer>
 
-            {canClearAllFilters && (
-              <Button onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
-                Clear all
-              </Button>
-            )}
-          </FiltersContainer>
-        </CSSTransition>
-      )}
-    </>
+        {canClearAllFilters && (
+          <Button onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
+            Clear all
+          </Button>
+        )}
+      </FiltersContainer>
+    </CSSTransition>
   )
 }
+
+type FilterPopoverFooterProps = {
+  applyButtonProps: ButtonProps
+  clearButtonProps: ButtonProps
+}
+const FilterPopoverFooter: React.FC<FilterPopoverFooterProps> = ({ applyButtonProps, clearButtonProps }) => (
+  <>
+    <Button size="small" variant="secondary" {...clearButtonProps}>
+      Clear
+    </Button>
+    <Button size="small" {...applyButtonProps}>
+      Apply
+    </Button>
+  </>
+)
 
 const MobileFilterDialog: React.FC<{ title: string; content: React.ReactNode } & ActionDialogProps> = ({
   title,

@@ -34,8 +34,6 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
     },
     ref
   ) => {
-    const clickable = !!onClick || !!to || type === 'submit'
-
     const linkProps = getLinkPropsFromTo(to, newTab)
 
     return (
@@ -43,7 +41,6 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         ref={ref}
         type={to ? undefined : type}
         onClick={onClick}
-        clickable={clickable}
         disabled={disabled}
         aria-disabled={disabled}
         {...linkProps}

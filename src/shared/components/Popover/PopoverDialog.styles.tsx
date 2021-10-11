@@ -13,10 +13,6 @@ type Dividers = {
   dividers: boolean
 }
 
-type HasHeader = {
-  hasHeader: boolean
-}
-
 export const PopoverContainer = styled(Popover)`
   display: flex;
   flex-direction: column;
@@ -36,7 +32,7 @@ export const Header = styled(Text)<Dividers>`
   ${({ dividers }) => dividers && headerDividersStyles};
 `
 
-export const ContentContainer = styled.div<HasHeader>`
+export const ContentContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   padding: ${sizes(4)};
