@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { AssetAvailability } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -12,7 +12,7 @@ import { VideoTileProps, useVideoSharedLogic } from './VideoTile'
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
 export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isDraft, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
+  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar, refetch } =
     useVideoSharedLogic({
       id,
       isDraft,
@@ -24,12 +24,17 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
   const uploadsStatus = useUploadsStore(
     (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
   )
-  const hasThumbnailUploadFailed =
-    video?.thumbnailPhotoAvailability === AssetAvailability.Pending && uploadsStatus?.lastStatus !== 'completed'
-  const hasVideoUploadFailed =
-    video?.mediaAvailability === AssetAvailability.Pending && uploadsStatus?.lastStatus !== 'completed'
+
+  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
+  const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
 
   const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
+
+  useEffect(() => {
+    if (uploadsStatus?.lastStatus === 'completed') {
+      refetch()
+    }
+  }, [refetch, uploadsStatus?.lastStatus])
 
   return (
     <VideoTileBase

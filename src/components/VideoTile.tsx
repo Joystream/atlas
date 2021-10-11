@@ -48,7 +48,7 @@ type UseVideoSharedLogicOpts = {
   onNotFound?: () => void
 }
 export const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpts) => {
-  const { video, loading } = useVideo(id ?? '', {
+  const { video, loading, refetch } = useVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
@@ -72,5 +72,6 @@ export const useVideoSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedL
     thumbnailPhotoUrl,
     avatarPhotoUrl,
     videoHref,
+    refetch,
   }
 }
