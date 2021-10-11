@@ -52,6 +52,5 @@ export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
 
   & path {
     fill: currentColor;
-    stroke: currentColor;
   }
 `

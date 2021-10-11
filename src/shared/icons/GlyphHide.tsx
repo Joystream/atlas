@@ -9,6 +9,6 @@ export const SvgGlyphHide = (props: React.SVGProps<SVGSVGElement>) => (
       d="M12.463 11.377a7.38 7.38 0 01-1.306.866l-7.62-7.62c.387-.318.821-.615 1.306-.866l7.62 7.62zM6.985 3.07A7.147 7.147 0 018 3c5 0 7 5 7 5s-.36.898-1.153 1.932l-6.862-6.86zM1 8s2 5 7 5c.353 0 .691-.025 1.015-.071L2.153 6.068C1.36 7.102 1 8 1 8z"
       fill="#F4F6F8"
     />
-    <path d="M3 3l10 10" stroke="#F4F6F8" strokeWidth={2} />
+    <path d="M3 3l10 10" stroke="currentColor" strokeWidth={2} />
   </svg>
 )

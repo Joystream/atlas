@@ -86,7 +86,7 @@ export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps>`
 
 export const StyledText = styled(Text)<TextProps>`
   /* compensate for line-height being 1 */
-  ${textPaddingStyles}
+  ${textPaddingStyles};
 
   color: inherit;
 `
