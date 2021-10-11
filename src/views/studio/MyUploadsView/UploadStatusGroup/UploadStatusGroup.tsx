@@ -67,8 +67,11 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const assetsGroupNumberText = `${uploads.length} asset${uploads.length > 1 ? 's' : ''}`
 
   useEffect(() => {
-    if (isProcessing) {
-      setUploadGroupState('processing')
+    if (isCompleted) {
+      setUploadGroupState('completed')
+    }
+    if (errorsCount || missingAssetsCount) {
+      setUploadGroupState('error')
     }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
@@ -76,17 +79,20 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (isProcessing) {
       setUploadGroupState('processing')
     }
-    if (isCompleted) {
-      setUploadGroupState('completed')
-    }
-    if (errorsCount || missingAssetsCount) {
-      setUploadGroupState('error')
-    }
   }, [errorsCount, hasUploadingAsset, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (isWaiting) {
       return 'Starting upload...'
+    }
+    if (isCompleted) {
+      return 'Uploaded'
+    }
+    if (isProcessing) {
+      return 'Processing...'
+    }
+    if (hasUploadingAsset) {
+      return `Uploading... (${masterProgress}%)`
     }
     if (errorsCount) {
       return `${errorsCount} asset${errorsCount > 1 ? 's' : ''} upload failed`
@@ -97,13 +103,6 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (uploadRetries) {
       return `Trying to reconnect...(${uploadRetries})`
     }
-    if (isCompleted) {
-      return 'Uploaded'
-    }
-    if (isProcessing) {
-      return 'Processing...'
-    }
-    return `Uploading... (${masterProgress}%)`
   }
 
   const enrichedUploadData =

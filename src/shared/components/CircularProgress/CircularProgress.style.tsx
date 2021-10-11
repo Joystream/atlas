@@ -11,11 +11,11 @@ type TrailProps = {
 const getStrokeColor = (variant?: TrailVariant) => {
   switch (variant) {
     case 'default':
-      return colors.gray[700]
+      return colors.gray[500]
     case 'player':
       return colors.transparentWhite[32]
     default:
-      return colors.gray[700]
+      return colors.gray[500]
   }
 }
 
