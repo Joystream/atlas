@@ -47,21 +47,20 @@ type VideoTileCoverProps = {
   videoHref?: string
   setTileSize: React.Dispatch<React.SetStateAction<TileSize>>
   tileSize: TileSize
-  duration?: number | null
-  thumbnailUrl?: string | null
-  isLoadingThumbnail?: boolean
   isLoading?: boolean
-  title?: string | null
-  channelTitle?: string | null
-  onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onClick?: (event: React.MouseEvent<HTMLElement>) => void
   uploadStatus?: UploadStatus
   isDraft?: boolean
+  isUnlisted?: boolean
   publisherMode?: boolean
-  videoPublishState?: 'default' | 'unlisted'
   isPullupDisabled?: boolean
-  onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
   removeButton?: boolean
+  duration?: number | null
+  thumbnailUrl?: string | null
+  thumbnailAlt?: string
+  isLoadingThumbnail?: boolean
+  onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void
 }
 
 export const MIN_VIDEO_TILE_WIDTH = 250
@@ -79,14 +78,13 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   thumbnailUrl,
   isLoadingThumbnail,
   isDraft,
+  isUnlisted,
   publisherMode,
-  videoPublishState,
   duration,
   isPullupDisabled,
   onPullupClick,
   removeButton,
-  title,
-  channelTitle,
+  thumbnailAlt,
 }) => {
   const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
@@ -124,7 +122,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
         <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
-              key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
+              key={isLoading ? 'cover-placeholder' : 'cover'}
               timeout={parseInt(transitions.timings.sharp)}
               classNames={transitions.names.fade}
             >
@@ -147,11 +145,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                 ) : (
                   <>
                     {thumbnailUrl && !hasAssetUploadFailed ? (
-                      <CoverImage
-                        darkenImg={videoPublishState === 'unlisted' || !!isDraft}
-                        src={thumbnailUrl}
-                        alt={`${title} by ${channelTitle} thumbnail`}
-                      />
+                      <CoverImage darkenImg={isUnlisted || !!isDraft} src={thumbnailUrl} alt={thumbnailAlt} />
                     ) : hasAssetUploadFailed ? (
                       <CoverThumbnailUploadFailed>
                         <SvgLargeUploadFailed />
@@ -162,7 +156,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     ) : (
                       <CoverNoImage />
                     )}
-                    {(videoPublishState === 'unlisted' || isDraft) && !isUploading && (
+                    {(isUnlisted || isDraft) && !isUploading && (
                       <CoverVideoPublishingStateOverlay>
                         {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
                         <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>

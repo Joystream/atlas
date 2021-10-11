@@ -41,8 +41,8 @@ export type VideoTilePublisherProps = {
   publisherMode?: boolean
   isPullupDisabled?: boolean
   isDraft?: boolean
+  isUnlisted?: boolean
   hasAssetUploadFailed?: boolean
-  videoPublishState?: 'default' | 'unlisted'
   uploadStatus?: UploadStatus
   onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
   onOpenInTabClick?: () => void
@@ -90,10 +90,10 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   isLoading = true,
   showChannel = true,
   removeButton = false,
-  videoPublishState = 'default',
   uploadStatus,
   publisherMode = false,
   isDraft,
+  isUnlisted,
   onChannelClick,
   onPullupClick,
   onRemoveButtonClick,
@@ -174,15 +174,14 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         thumbnailUrl={thumbnailUrl}
         isLoadingThumbnail={isLoadingThumbnail}
         isDraft={isDraft}
+        isUnlisted={isUnlisted}
         publisherMode={publisherMode}
-        videoPublishState={videoPublishState}
         uploadStatus={uploadStatus}
         hasAssetUploadFailed={hasAssetUploadFailed}
         onPullupClick={onPullupClick}
         removeButton={removeButton}
         isPullupDisabled={isPullupDisabled}
-        title={title}
-        channelTitle={channelTitle}
+        thumbnailAlt={`${title} by ${channelTitle} thumbnail`}
         duration={duration}
       />
       {!!progress && (

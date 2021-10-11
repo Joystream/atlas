@@ -93,7 +93,6 @@ PublisherDefault.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  videoPublishState: 'default',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
@@ -124,7 +123,6 @@ PublisherUnlisted.args = {
   progress: 50,
   views: 10000,
   publisherMode: true,
-  videoPublishState: 'unlisted',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
@@ -140,7 +138,6 @@ const Mix: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
           <VideoTileBase
             {...args}
             publisherMode
-            videoPublishState={'default'}
             createdAt={createdAtDate}
             onEditVideoClick={handler}
             onCopyVideoURLClick={handler}
@@ -158,7 +155,7 @@ const Mix: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
           <VideoTileBase
             {...args}
             publisherMode
-            videoPublishState={'unlisted'}
+            isUnlisted
             createdAt={createdAtDate}
             onEditVideoClick={handler}
             onCopyVideoURLClick={handler}

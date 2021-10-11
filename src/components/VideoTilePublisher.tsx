@@ -46,7 +46,7 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
       isLoading={loading}
       onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
-      videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
+      isUnlisted={!video?.isPublic || !video?.isPublic === undefined}
       isDraft={isDraft}
       {...metaProps}
     />
