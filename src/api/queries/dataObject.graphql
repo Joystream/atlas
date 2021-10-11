@@ -2,5 +2,13 @@ query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContent
   dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
     liaisonJudgement
     joystreamContentId
+    videomediaDataObject {
+      id
+      mediaAvailability
+    }
+    videothumbnailPhotoDataObject {
+      id
+      thumbnailPhotoAvailability
+    }
   }
 }
