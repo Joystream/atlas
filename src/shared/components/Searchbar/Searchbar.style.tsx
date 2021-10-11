@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components/Text'
-import { SvgOutlineSearch } from '@/shared/icons'
+import { SvgGlyphSearchAlt } from '@/shared/icons'
 import { media, transitions } from '@/shared/theme'
 
 import { colors, sizes } from '../../theme'
@@ -73,14 +73,14 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
 `
 
 // TODO: remove override on viewer update
-export const StyledSvgOutlineSearch = styled(SvgOutlineSearch, { shouldForwardProp: isPropValid })<{
-  hasFocus: boolean
+export const StyledSvgOutlineSearch = styled(SvgGlyphSearchAlt, { shouldForwardProp: isPropValid })<{
+  highlighted?: boolean
 }>`
   flex-shrink: 0;
 
   circle,
   path {
-    stroke: ${({ hasFocus }) => (hasFocus ? colors.gray[50] : colors.gray[300])};
+    fill: ${({ highlighted }) => (highlighted ? colors.gray[50] : colors.gray[300])};
   }
 `
 

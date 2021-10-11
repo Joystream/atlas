@@ -68,7 +68,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               {!mdMatch && hasFocus ? (
                 <Button onClick={onClose} iconOnly icon={<SvgGlyphChevronLeft />} variant="tertiary" />
               ) : (
-                <StyledSvgOutlineSearch hasFocus={hasFocus} />
+                <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
               )}
               <Input
                 value={query || ''}
