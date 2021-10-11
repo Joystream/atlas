@@ -2,7 +2,7 @@ import parse from 'html-react-parser'
 import React from 'react'
 
 import { Text } from '@/shared/components/Text'
-import { SvgClock } from '@/shared/icons'
+import { SvgGlyphClock } from '@/shared/icons'
 
 import { ResultWrapper } from './ResultWrapper'
 import { ClockWrapper, RecentSearchItemWrapper } from './SearchBox.style'
@@ -22,7 +22,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDel
     <ResultWrapper to={to} onDelete={onDelete}>
       <RecentSearchItemWrapper>
         <ClockWrapper>
-          <SvgClock />
+          <SvgGlyphClock />
         </ClockWrapper>
         <Text secondary variant="button2">
           {parse(highlightedTitle)}
