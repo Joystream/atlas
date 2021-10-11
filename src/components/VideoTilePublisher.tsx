@@ -21,12 +21,15 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
 
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
-  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
-  const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
-  const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
   const uploadsStatus = useUploadsStore(
     (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
   )
+  const hasThumbnailUploadFailed =
+    video?.thumbnailPhotoAvailability === AssetAvailability.Pending && uploadsStatus?.lastStatus !== 'completed'
+  const hasVideoUploadFailed =
+    video?.mediaAvailability === AssetAvailability.Pending && uploadsStatus?.lastStatus !== 'completed'
+
+  const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
   return (
     <VideoTileBase
