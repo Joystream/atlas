@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
@@ -80,8 +80,6 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   title,
   channelTitle,
 }) => {
-  const [failedLoadImage, setFailedLoadImage] = useState(false)
-
   const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
   const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
     onResize: (size) => {
@@ -101,11 +99,6 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
     if (onRemoveButtonClick) {
       event.preventDefault()
       onRemoveButtonClick(event)
-    }
-  }
-  const handleFailedThumbnailLoad = () => {
-    if (!failedLoadImage) {
-      setFailedLoadImage(true)
     }
   }
 
@@ -145,11 +138,10 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                   </>
                 ) : (
                   <>
-                    {thumbnailUrl && !hasAssetUploadFailed && !failedLoadImage ? (
+                    {thumbnailUrl && !hasAssetUploadFailed ? (
                       <CoverImage
                         darkenImg={videoPublishState === 'unlisted' || !!isDraft}
                         src={thumbnailUrl}
-                        onError={handleFailedThumbnailLoad}
                         alt={`${title} by ${channelTitle} thumbnail`}
                       />
                     ) : hasAssetUploadFailed ? (

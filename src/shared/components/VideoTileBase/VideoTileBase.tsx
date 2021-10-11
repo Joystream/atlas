@@ -236,7 +236,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                 ))}
               <MetaContainer noMarginTop={!showChannel}>
                 {isLoading && <SpacedSkeletonLoader height={12} width="80%" />}
-                {isUploading && !hasAssetUploadFailed && (
+                {isUploading && (
                   <Text variant="body2" secondary>
                     {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
                     {uploadStatus.lastStatus === 'processing' && 'Processing...'}
@@ -249,7 +249,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       : formatVideoViewsAndDate(views ?? null, createdAt)}
                   </Text>
                 )}
-                {hasAssetUploadFailed && (
+                {hasAssetUploadFailed && !isUploading && (
                   <Text variant="body2" secondary>
                     Upload failed...
                   </Text>
