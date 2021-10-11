@@ -12,6 +12,7 @@ import {
   SvgOutlineVideo,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { UploadStatus } from '@/types/uploads'
 import { formatDurationShort } from '@/utils/time'
 
 import { PullUp } from './PullUp'
@@ -36,7 +37,6 @@ import {
   UploadProgressTransition,
 } from './VideoTileCover.style'
 
-import { VideoTileBaseMetaProps, VideoTilePublisherProps } from '.'
 import { Text } from '../Text'
 import { UploadProgressBar } from '../UploadProgressBar'
 
@@ -53,8 +53,16 @@ type VideoTileCoverProps = {
   isLoading?: boolean
   title?: string | null
   channelTitle?: string | null
-} & VideoTileBaseMetaProps &
-  VideoTilePublisherProps
+  onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void
+  uploadStatus?: UploadStatus
+  isDraft?: boolean
+  publisherMode?: boolean
+  videoPublishState?: 'default' | 'unlisted'
+  isPullupDisabled?: boolean
+  onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
+  removeButton?: boolean
+}
 
 export const MIN_VIDEO_TILE_WIDTH = 250
 const SMALL_SIZE_WIDTH = 300
