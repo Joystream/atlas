@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -20,7 +20,7 @@ type ResultProps = {
   channel?: AllChannelFieldsFragment
   query?: string
   selected?: boolean
-  handleSelectedItem: (top: number) => void
+  handleSelectedItem: (top: number, title?: string | null) => void
 }
 
 export const Result: React.FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem }) => {
@@ -47,8 +47,15 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query, selected,
 
   const thumbnailUrl = video ? videoThumbnail : channelAvatar
 
+  const onSelected = useCallback(
+    (top: number) => {
+      handleSelectedItem(top, title)
+    },
+    [handleSelectedItem, title]
+  )
+
   return (
-    <ResultWrapper to={to} selected={selected} handleSelectedItem={handleSelectedItem}>
+    <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected}>
       <ResultContent>
         {isLoading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />

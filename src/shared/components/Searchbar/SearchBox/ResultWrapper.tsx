@@ -16,7 +16,15 @@ type SearchItemProps = {
   handleSelectedItem: (top: number) => void
 }
 
-export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick, selected, handleSelectedItem, variant = 'default' }) => {
+export const ResultWrapper: React.FC<SearchItemProps> = ({
+  to,
+  onDelete,
+  children,
+  onClick,
+  selected,
+  handleSelectedItem,
+ variant = 'default'
+}) => {
   const wrapperRef = useRef<HTMLAnchorElement>(null)
   const navigate = useNavigate()
 
@@ -39,7 +47,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, childre
   }, [handleSelectedItem, selected])
 
   return (
-    <SearchItemWrapper to={to} onClick={onClick} variant={variant}>
+    <SearchItemWrapper to={to} onClick={onClick} selected={selected} ref={wrapperRef} variant={variant}>
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
         <Text secondary variant="caption">

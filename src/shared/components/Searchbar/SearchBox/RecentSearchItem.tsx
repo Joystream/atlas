@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { absoluteRoutes } from '@/config/routes'
 import { Text } from '@/shared/components/Text'
@@ -14,15 +14,29 @@ type RecentSearchItemProps = {
   query?: string
   title?: string
   selected?: boolean
-  handleSelectedItem: (top: number) => void
+  handleSelectedItem: (top: number, title?: string) => void
 }
 
-export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDelete, query, onClick, selected, handleSelectedItem }) => {
+export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
+  title,
+  onDelete,
+  query,
+  onClick,
+  selected,
+  handleSelectedItem,
+}) => {
+  const onSelected = useCallback(
+    (top: number) => {
+      handleSelectedItem(top, title)
+    },
+    [handleSelectedItem, title]
+  )
+
   return (
     <ResultWrapper
       onDelete={onDelete}
       onClick={() => onClick(title)}
-      handleSelectedItem={handleSelectedItem}
+      handleSelectedItem={onSelected}
       selected={selected}
       to={absoluteRoutes.viewer.search({ query: title?.trim() })}
       variant="textOnly"

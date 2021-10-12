@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -81,6 +81,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
       }
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
+        event.preventDefault()
         onClose?.()
         event.currentTarget.blur()
       }
@@ -131,6 +132,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       onClose()
     }
 
+    const onSelectItem = useCallback((title?: string | null) => {
+      setRecentSearch(title)
+    }, [])
+
     return (
       <>
         <Container className={className} hasFocus={hasFocus} hasQuery={!!query} ref={ref}>
@@ -176,10 +181,11 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
           )}
           {hasFocus && (
             <SearchBox
-              searchQuery={query || ''}
+              searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}
               selectedItem={selectedItem}
               onLastSelectedItem={onLastSelectedItem}
+              onSelectItem={onSelectItem}
             />
           )}
         </Container>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -21,6 +21,7 @@ type SearchBoxProps = {
   onSelectRecentSearch: (title?: string) => void
   selectedItem: null | number
   onLastSelectedItem: () => void
+  onSelectItem: (title?: string | null) => void
 }
 
 const generatePlaceholders = () => {
@@ -38,7 +39,13 @@ const generatePlaceholders = () => {
   })
 }
 
-export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecentSearch, selectedItem, onLastSelectedItem }) => {
+export const SearchBox: React.FC<SearchBoxProps> = ({
+  searchQuery,
+  onSelectRecentSearch,
+  selectedItem,
+  onLastSelectedItem,
+  onSelectItem,
+}) => {
   const { channels, videos, loading } = useSearchResults(searchQuery, 3)
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
     recentSearches: state.recentSearches,
@@ -46,24 +53,40 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecen
   }))
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const scrollToSelectedItem = (top: number) => {
-    if (selectedItem === 0) {
-      containerRef?.current?.scrollTo(0, 0)
-    } else {
-      containerRef?.current?.scrollTo(0, top)
-    }
-  }
+  const scrollToSelectedItem = useCallback(
+    (top: number, title?: string | null) => {
+      onSelectItem(title)
+      if (!containerRef.current) {
+        return
+      }
+      if (selectedItem === 0 || top < containerRef.current.offsetHeight) {
+        containerRef?.current?.scrollTo(0, 0)
+      } else if (top >= containerRef.current.offsetHeight) {
+        containerRef?.current?.scrollTo(0, top - 250)
+      }
+    },
+    [onSelectItem, selectedItem]
+  )
 
   const handleRecentSearchDelete = (id: number) => {
     deleteRecentSearch(id)
   }
 
+  const slicedReccentSearches = recentSearches.slice(0, 6)
+
   // Fire when user select last result
   useEffect(() => {
-    if (selectedItem === recentSearches.length + videos.length + channels.length) {
+    if (selectedItem === slicedReccentSearches.length + videos.length + channels.length) {
       onLastSelectedItem()
     }
-  }, [recentSearches.length, videos.length, channels.length, onLastSelectedItem, selectedItem])
+  }, [
+    recentSearches.length,
+    videos.length,
+    channels.length,
+    onLastSelectedItem,
+    selectedItem,
+    slicedReccentSearches.length,
+  ])
 
   return (
     <Container visible={!!recentSearches.length || !!videos.length || !!channels.length || loading} ref={containerRef}>
@@ -72,7 +95,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecen
           <Caption secondary variant="caption">
             Recent searches
           </Caption>
-          {recentSearches.slice(0, 6).map((recentSearch, idx) => (
+          {slicedReccentSearches.map((recentSearch, idx) => (
             <RecentSearchItem
               key={`RecentSearchItem-${recentSearch.id}`}
               onDelete={() => handleRecentSearchDelete(recentSearch.id)}
@@ -96,7 +119,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecen
               key={`result-video-${video.id}`}
               video={video}
               query={searchQuery}
-              selected={selectedItem === idx + recentSearches.length}
+              selected={selectedItem === idx + slicedReccentSearches.length}
               handleSelectedItem={scrollToSelectedItem}
             />
           ))}
@@ -112,7 +135,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecen
               key={`result-channel-${channel.id}`}
               channel={channel}
               query={searchQuery}
-              selected={selectedItem === idx + recentSearches.length + videos.length}
+              selected={selectedItem === idx + slicedReccentSearches.length + videos.length}
               handleSelectedItem={scrollToSelectedItem}
             />
           ))}
@@ -120,8 +143,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecen
       )}
       <ShortcutsWrapper>
         <ShortcutsGroup>
-          <StyledShortcutIndicator>⇥</StyledShortcutIndicator>
-          or
           <StyledShortcutIndicator group>↓</StyledShortcutIndicator>
           <StyledShortcutIndicator>↑</StyledShortcutIndicator>
           to navigate
