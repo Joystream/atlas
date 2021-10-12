@@ -39,7 +39,6 @@ export type VideoTileBaseMetaProps = {
 
 export type VideoTilePublisherProps = {
   publisherMode?: boolean
-  isPullupDisabled?: boolean
   isDraft?: boolean
   isUnlisted?: boolean
   hasAssetUploadFailed?: boolean
@@ -104,7 +103,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onCopyVideoURLClick,
   onDeleteVideoClick,
   onReuploadVideoClick,
-  isPullupDisabled,
 }) => {
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
@@ -180,7 +178,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         hasAssetUploadFailed={hasAssetUploadFailed}
         onPullupClick={onPullupClick}
         removeButton={removeButton}
-        isPullupDisabled={isPullupDisabled}
         thumbnailAlt={`${title} by ${channelTitle} thumbnail`}
         duration={duration}
       />

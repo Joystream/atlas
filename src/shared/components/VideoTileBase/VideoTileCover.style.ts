@@ -203,8 +203,8 @@ export const CoverSkeletonLoader = styled(SkeletonLoader)`
   left: 0;
 `
 
-export const CoverTopLeftContainer = styled.div`
+export const CoverTopRigthContainer = styled.div`
   position: absolute;
   top: ${sizes(2)};
-  left: ${sizes(2)};
+  right: ${sizes(2)};
 `

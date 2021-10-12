@@ -6,7 +6,6 @@ import {
   SvgGlyphClose,
   SvgGlyphDraft,
   SvgGlyphHide,
-  SvgIllustrativeEdit,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
   SvgLargeUploadFailed,
@@ -27,7 +26,7 @@ import {
   CoverNoImage,
   CoverSkeletonLoader,
   CoverThumbnailUploadFailed,
-  CoverTopLeftContainer,
+  CoverTopRigthContainer,
   CoverVideoPublishingStateOverlay,
   CoverWrapper,
   DELAYED_FADE_CLASSNAME,
@@ -52,7 +51,6 @@ type VideoTileCoverProps = {
   isDraft?: boolean
   isUnlisted?: boolean
   publisherMode?: boolean
-  isPullupDisabled?: boolean
   removeButton?: boolean
   duration?: number | null
   thumbnailUrl?: string | null
@@ -81,7 +79,6 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   isUnlisted,
   publisherMode,
   duration,
-  isPullupDisabled,
   onPullupClick,
   removeButton,
   thumbnailAlt,
@@ -132,7 +129,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     {(videoHref || publisherMode) && (
                       <SkeletonHoverOverlay>
                         <CoverIconWrapper>
-                          {publisherMode ? <SvgIllustrativeEdit /> : <SvgIllustrativePlay />}
+                          <SvgIllustrativePlay />
                         </CoverIconWrapper>
                       </SkeletonHoverOverlay>
                     )}
@@ -161,27 +158,12 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     <CoverHoverOverlay darker={hasAssetUploadFailed}>
                       {publisherMode && !hasAssetUploadFailed && (
-                        <CoverTopLeftContainer>
-                          <PullUp
-                            // set to true when video is already on the snackbar
-                            disabled={!!isPullupDisabled}
-                            onClick={(event) => {
-                              event.preventDefault()
-                              onPullupClick && onPullupClick(event)
-                            }}
-                          />
-                        </CoverTopLeftContainer>
+                        <CoverTopRigthContainer>
+                          <PullUp tooltipText="Edit" onClick={onPullupClick} />
+                        </CoverTopRigthContainer>
                       )}
                       <CoverIconWrapper>
-                        {publisherMode ? (
-                          hasAssetUploadFailed ? (
-                            <SvgIllustrativeReupload />
-                          ) : (
-                            <SvgIllustrativeEdit />
-                          )
-                        ) : (
-                          <SvgIllustrativePlay />
-                        )}
+                        {publisherMode && hasAssetUploadFailed ? <SvgIllustrativeReupload /> : <SvgIllustrativePlay />}
                       </CoverIconWrapper>
                       {removeButton && (
                         <RemoveButton onClick={handleRemoveClick}>
