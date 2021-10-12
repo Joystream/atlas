@@ -159,3 +159,8 @@ export const PlaceholderWrapper = styled.div`
   align-items: center;
   padding: ${sizes(4)};
 `
+
+export const HighlightedWord = styled.mark`
+  color: ${colors.gray[50]};
+  background-color: transparent;
+`

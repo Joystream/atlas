@@ -54,12 +54,7 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
     width: ${hasQuery || hasFocus ? '100%' : '39px'};
     padding-left: ${hasFocus || hasQuery ? sizes(2) : 0};
     background-color: ${hasFocus ? colors.gray[800] : 'transparent'};
-    ${
-      !hasFocus &&
-      `
-      border: 1px solid ${colors.gray[700]};
-      margin-left: auto;`
-    };
+    margin-left: ${!hasFocus ? 'auto' : 'unset'}
   `};
 
   ${media.md} {

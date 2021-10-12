@@ -12,9 +12,8 @@ export type FollowedChannel = {
 
 export type RecentSearchType = 'video' | 'channel'
 export type RecentSearch = {
-  id: string
+  id: number
   title?: string
-  type: RecentSearchType
 }
 
 export type DismissedMessage = {

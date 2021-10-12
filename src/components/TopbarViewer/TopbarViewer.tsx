@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
@@ -17,6 +18,9 @@ export const TopbarViewer: React.FC = () => {
   const locationState = location.state as RoutingState
   const overlaidLocation = locationState?.overlaidLocation || location
   const mdMatch = useMediaMatch('md')
+  const { addRecentSearch } = usePersonalDataStore((state) => ({
+    addRecentSearch: state.actions.addRecentSearch,
+  }))
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -31,7 +35,6 @@ export const TopbarViewer: React.FC = () => {
   useEffect(() => {
     // focus the searchbar when visiting search (e.g. from a link)
     if (location.pathname.includes(absoluteRoutes.viewer.search())) {
-      setIsFocused(true)
       if (location.search) {
         const params = new URLSearchParams(location.search)
         const query = params.get(QUERY_PARAMS.SEARCH)
@@ -40,22 +43,24 @@ export const TopbarViewer: React.FC = () => {
     }
   }, [location.pathname, location.search])
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((event.key === 'Enter' || event.key === 'NumpadEnter') && searchQuery.trim()) {
+      setIsFocused(false)
       const state: RoutingState = { overlaidLocation }
+      addRecentSearch(new Date().getTime(), searchQuery)
 
       // navigate to search results
       navigate(absoluteRoutes.viewer.search({ query: searchQuery.trim() }), { state })
     }
-    if (e.key === 'Escape' || e.key === 'Esc') {
+    if (event.key === 'Escape' || event.key === 'Esc') {
       handleBlur()
-      e.currentTarget.blur()
+      event.currentTarget.blur()
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsFocused(true)
-    setSearchQuery(e.currentTarget.value)
+    setSearchQuery(event.currentTarget.value)
   }
 
   const handleBlur = () => {

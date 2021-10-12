@@ -26,8 +26,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       onChange,
       onFocus,
       onCancel,
-      controlled = false,
-      value: externalValue,
+      value,
       onBlur,
       onSubmit,
       className,
@@ -38,27 +37,27 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     },
     ref
   ) => {
-    const [value, setValue] = useState('')
     const mdMatch = useMediaMatch('md')
+    const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setRecentSearch(null)
       if (onChange) {
         onChange(e)
       }
-      if (!controlled) {
-        setValue(e.currentTarget.value)
-      }
     }
     const handleCancel = () => {
+      setRecentSearch(null)
       if (onCancel) {
         onCancel()
       }
-      if (!controlled) {
-        setValue('')
-      }
     }
 
-    const query = controlled ? externalValue : value
+    const onSelectRecentSearch = (title?: string) => {
+      setRecentSearch(title)
+    }
+
+    const query = recentSearch || value
 
     return (
       <>
@@ -100,7 +99,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             </>
           )}
           <CSSTransition in={hasFocus} timeout={200} unmountOnExit mountOnEnter>
-            <SearchBox searchQuery={query || ''} />
+            <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} />
           </CSSTransition>
         </Container>
       </>

@@ -7,14 +7,14 @@ import { SvgGlyphClose } from '@/shared/icons'
 import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.style'
 
 type SearchItemProps = {
-  to: string
+  to?: string
   onDelete?: () => void
   onClick?: () => void
 }
 
 export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick }) => {
   return (
-    <SearchItemWrapper to={to} onClick={onClick}>
+    <SearchItemWrapper to={to || '#'} onClick={onClick}>
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
         <Text secondary variant="caption">

@@ -18,6 +18,7 @@ import {
 
 type SearchBoxProps = {
   searchQuery: string
+  onSelectRecentSearch: (title?: string) => void
 }
 
 const generatePlaceholders = () => {
@@ -35,15 +36,15 @@ const generatePlaceholders = () => {
   })
 }
 
-export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery }) => {
+export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery, onSelectRecentSearch }) => {
   const { channels, videos, loading } = useSearchResults(searchQuery, 3)
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
     recentSearches: state.recentSearches,
     deleteRecentSearch: state.actions.deleteRecentSearch,
   }))
 
-  const handleRecentSearchDelete = (id: string, type: 'video' | 'channel') => {
-    deleteRecentSearch(id, type)
+  const handleRecentSearchDelete = (id: number) => {
+    deleteRecentSearch(id)
   }
 
   return (
@@ -55,11 +56,11 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ searchQuery }) => {
           </Caption>
           {recentSearches.slice(0, 6).map((recentSearch) => (
             <RecentSearchItem
-              key={`RecentSearchItem-${recentSearch.type}-${recentSearch.id}`}
-              onDelete={() => handleRecentSearchDelete(recentSearch.id, recentSearch.type)}
-              to={`/${recentSearch.type}/${recentSearch.id}`}
+              key={`RecentSearchItem-${recentSearch.id}`}
+              onDelete={() => handleRecentSearchDelete(recentSearch.id)}
               title={recentSearch.title}
               query={searchQuery}
+              onClick={onSelectRecentSearch}
             />
           ))}
         </Section>

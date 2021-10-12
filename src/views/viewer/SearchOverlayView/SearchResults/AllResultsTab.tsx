@@ -12,17 +12,9 @@ type AllResultsTabProps = {
   videos: VideoFieldsFragment[]
   channels: BasicChannelFieldsFragment[]
   loading: boolean
-  onVideoClick: (id: string, title?: string) => void
-  onChannelClick: (id: string, title?: string) => void
 }
 
-export const AllResultsTab: React.FC<AllResultsTabProps> = ({
-  videos: allVideos,
-  channels,
-  loading,
-  onVideoClick,
-  onChannelClick,
-}) => {
+export const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channels, loading }) => {
   return (
     <>
       {(allVideos.length > 0 || loading) && (
@@ -32,7 +24,7 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({
           ) : (
             <SectionHeader variant="h5">Videos</SectionHeader>
           )}
-          <VideoGallery videos={allVideos} loading={loading} onVideoClick={onVideoClick} />
+          <VideoGallery videos={allVideos} loading={loading} />
         </div>
       )}
       {(channels.length > 0 || loading) && (
@@ -42,7 +34,7 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({
           ) : (
             <SectionHeader variant="h5">Channels</SectionHeader>
           )}
-          <ChannelGallery channels={channels} loading={loading} onChannelClick={onChannelClick} />
+          <ChannelGallery channels={channels} loading={loading} />
         </div>
       )}
     </>

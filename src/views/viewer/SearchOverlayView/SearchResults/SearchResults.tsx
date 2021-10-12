@@ -7,7 +7,6 @@ import { VideoGrid } from '@/components/VideoGrid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { useSearchResults } from '@/hooks/useSearchResults'
-import { usePersonalDataStore } from '@/providers/personalData'
 import { Tabs } from '@/shared/components/Tabs'
 import { sizes } from '@/shared/theme'
 
@@ -23,14 +22,6 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { channels, videos, error, loading } = useSearchResults(query)
 
-  const updateRecentSearches = usePersonalDataStore((state) => state.actions.updateRecentSearches)
-
-  const handleVideoClick = (id: string, title?: string) => {
-    updateRecentSearches(id, 'video', title)
-  }
-  const handleChannelClick = (id: string, title?: string) => {
-    updateRecentSearches(id, 'channel', title)
-  }
   if (error) {
     return <ViewErrorFallback />
   }
@@ -45,28 +36,10 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
     <ViewWrapper>
       <Container>
         <Tabs tabs={mappedTabs} onSelectTab={setSelectedIndex} initialIndex={0} />
-        {selectedIndex === 0 && (
-          <AllResultsTab
-            key={query}
-            loading={loading}
-            videos={videos}
-            channels={channels}
-            onVideoClick={handleVideoClick}
-            onChannelClick={handleChannelClick}
-          />
-        )}
-        {selectedIndex === 1 &&
-          (loading ? (
-            <SkeletonLoaderVideoGrid />
-          ) : (
-            <VideoGrid videos={videos} onVideoClick={handleVideoClick} onChannelClick={handleChannelClick} />
-          ))}
+        {selectedIndex === 0 && <AllResultsTab key={query} loading={loading} videos={videos} channels={channels} />}
+        {selectedIndex === 1 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
         {selectedIndex === 2 &&
-          (loading ? (
-            <SkeletonLoaderVideoGrid />
-          ) : (
-            <ChannelGrid channels={channels} repeat="fill" onChannelClick={handleChannelClick} />
-          ))}
+          (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
       </Container>
     </ViewWrapper>
   )
