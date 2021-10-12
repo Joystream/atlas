@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { absoluteRoutes } from '@/config/routes'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphClock } from '@/shared/icons'
 
@@ -16,7 +17,11 @@ type RecentSearchItemProps = {
 
 export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDelete, query, onClick }) => {
   return (
-    <ResultWrapper onDelete={onDelete} onClick={() => onClick(title)}>
+    <ResultWrapper
+      onDelete={onDelete}
+      onClick={() => onClick(title)}
+      to={absoluteRoutes.viewer.search({ query: title?.trim() })}
+    >
       <RecentSearchItemWrapper>
         <ClockWrapper>
           <SvgGlyphClock />

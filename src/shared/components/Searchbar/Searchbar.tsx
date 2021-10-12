@@ -55,6 +55,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     const onSelectRecentSearch = (title?: string) => {
       setRecentSearch(title)
+      onClose()
     }
 
     const query = recentSearch || value
