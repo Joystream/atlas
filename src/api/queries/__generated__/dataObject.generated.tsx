@@ -13,6 +13,7 @@ export type GetDataObjectAvailabilityQuery = {
   __typename?: 'Query'
   dataObjects: Array<{
     __typename?: 'DataObject'
+    id: string
     liaisonJudgement: Types.LiaisonJudgement
     joystreamContentId: string
     videomediaDataObject?: Types.Maybe<
@@ -27,6 +28,7 @@ export type GetDataObjectAvailabilityQuery = {
 export const GetDataObjectAvailabilityDocument = gql`
   query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContentIdIn: [String!]) {
     dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
+      id
       liaisonJudgement
       joystreamContentId
       videomediaDataObject {
