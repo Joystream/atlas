@@ -42,7 +42,9 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
 
   const uploadsStatus = useUploadsStore((state) => state.uploadsStatus)
 
-  const assetsInProgress = Object.values(uploadsStatus).filter((asset) => asset?.lastStatus === 'inProgress')
+  const assetsInProgress = Object.values(uploadsStatus).filter(
+    (asset) => asset?.lastStatus === 'inProgress' || asset?.lastStatus === 'processing'
+  )
 
   const studioNavbarItemsWithBadge = studioNavbarItems.map((item) => {
     if (item.to === absoluteRoutes.studio.videos()) {
