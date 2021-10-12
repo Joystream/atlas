@@ -61,6 +61,8 @@ type DataObject {
   ipfsContentId: String!
   # Joystream runtime content id
   joystreamContentId: String!
+  videomediaDataObject: [Video!]
+  videothumbnailPhotoDataObject: [Video!]
 }
 
 input DataObjectWhereInput {

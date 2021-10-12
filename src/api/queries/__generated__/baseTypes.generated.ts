@@ -87,6 +87,8 @@ export type DataObject = {
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']
+  videomediaDataObject?: Maybe<Array<Video>>
+  videothumbnailPhotoDataObject?: Maybe<Array<Video>>
 }
 
 export type DataObjectWhereInput = {

@@ -21,15 +21,15 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
 
   const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
-  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
+  const uploadStatus = useUploadsStore((state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || ''])
 
-  const uploadsStatus = useUploadsStore(
-    (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
-  )
+  const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
+  const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
+  const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
   return (
     <VideoTileBase
-      uploadStatus={uploadsStatus}
+      uploadStatus={uploadStatus}
       isLoadingThumbnail={isLoadingThumbnail}
       isLoadingAvatar={isLoadingAvatar}
       publisherMode
@@ -40,12 +40,12 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
       duration={video?.duration}
       views={video?.views}
       thumbnailUrl={thumbnailPhotoUrl}
-      hasThumbnailUploadFailed={hasThumbnailUploadFailed}
+      hasAssetUploadFailed={hasAssetUploadFailed}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
       isLoading={loading}
       onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
       onCopyVideoURLClick={isDraft ? undefined : () => copyToClipboard(videoHref ? location.origin + videoHref : '')}
-      videoPublishState={video?.isPublic || video?.isPublic === undefined ? 'default' : 'unlisted'}
+      isUnlisted={!video?.isPublic || !video?.isPublic === undefined}
       isDraft={isDraft}
       {...metaProps}
     />
