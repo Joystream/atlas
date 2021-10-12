@@ -248,7 +248,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                       : formatVideoViewsAndDate(views ?? null, createdAt)}
                   </Text>
                 )}
-                {hasAssetUploadFailed && !isUploading && (
+                {hasAssetUploadFailed && !uploadStatus && (
                   <Text variant="body2" secondary>
                     Upload failed...
                   </Text>
