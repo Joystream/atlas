@@ -80,7 +80,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
         // navigate to search results
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
       }
-      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
+      if (event.key === 'Escape' || event.key === 'Esc') {
         event.preventDefault()
         onClose?.()
         event.currentTarget.blur()
