@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
@@ -80,7 +79,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
         // navigate to search results
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
       }
-      if (event.key === 'Escape' || event.key === 'Esc') {
+      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         event.preventDefault()
         onClose?.()
         event.currentTarget.blur()

@@ -78,7 +78,6 @@ export const TopbarViewer: React.FC = () => {
           onCancel={handleCancel}
           showCancelButton={!!searchQuery}
           onClose={handleBlur}
-          onBlur={handleBlur}
           controlled
           hasFocus={isFocused}
           onClick={handleFocus}

@@ -23,7 +23,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
   onClick,
   selected,
   handleSelectedItem,
- variant = 'default'
+  variant = 'default',
 }) => {
   const wrapperRef = useRef<HTMLAnchorElement>(null)
   const navigate = useNavigate()

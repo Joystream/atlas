@@ -71,23 +71,11 @@ export const Caption = styled(Text)`
   font-weight: ${typography.weights.medium};
 `
 
-export const SearchItemWrapper = styled(Link)<{ selected?: boolean; variant: 'default' | 'textOnly' }>`
-  display: flex;
-  align-items: center;
-  padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
-  text-decoration: none;
-
-  &:hover {
-    background-color: ${colors.transparentPrimary[10]};
-  }
-
-  ${({ selected }) =>
-    selected &&
-    `
-    background-color: ${colors.transparentPrimary[10]};
+const selectedStyles = (hover?: boolean) => `
+  background-color: ${colors.transparentPrimary[10]};
 
       ${Shortcut} {
-        display: flex;
+        ${!hover && 'display: flex'};
       }
       
       ${ClockWrapper} {
@@ -101,8 +89,19 @@ export const SearchItemWrapper = styled(Link)<{ selected?: boolean; variant: 'de
           stroke: ${colors.gray[50]};
         }
       }
-    `}
+`
+
+export const SearchItemWrapper = styled(Link)<{ selected?: boolean; variant: 'default' | 'textOnly' }>`
+  display: flex;
+  align-items: center;
+  padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
+  text-decoration: none;
+
+  &:hover {
+    ${() => selectedStyles(true)}
   }
+
+  ${({ selected }) => selected && selectedStyles(!selected)}
 `
 
 export const DeleteButton = styled(IconButton)`

@@ -61,7 +61,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       }
       if (selectedItem === 0 || top < containerRef.current.offsetHeight) {
         containerRef?.current?.scrollTo(0, 0)
-      } else if (top >= containerRef.current.offsetHeight) {
+      }
+      if (top >= containerRef.current.offsetHeight - 50) {
         containerRef?.current?.scrollTo(0, top - 250)
       }
     },
