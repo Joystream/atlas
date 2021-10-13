@@ -240,12 +240,7 @@ export const MyVideosView = () => {
               id={draft.id}
               showChannel={false}
               isDraft
-              isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
               onClick={() => handleVideoClick(draft.id, { draft: true })}
-              onPullupClick={(e) => {
-                e.stopPropagation()
-                handleVideoClick(draft.id, { draft: true, minimized: true })
-              }}
               onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
               onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
@@ -260,11 +255,10 @@ export const MyVideosView = () => {
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
             id={video.id}
             showChannel={false}
-            isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-            onClick={() => handleVideoClick(video.id)}
             onPullupClick={(e) => {
               e.stopPropagation()
-              handleVideoClick(video.id, { minimized: true })
+              e.preventDefault()
+              handleVideoClick(video.id)
             }}
             onEditVideoClick={() => handleVideoClick(video.id)}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}

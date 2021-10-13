@@ -13,6 +13,7 @@ import {
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
+import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDurationShort } from '@/utils/time'
 
 import { PullUp } from './PullUp'
@@ -27,7 +28,7 @@ import {
   CoverNoImage,
   CoverSkeletonLoader,
   CoverThumbnailUploadFailed,
-  CoverTopLeftContainer,
+  CoverTopRigthContainer,
   CoverVideoPublishingStateOverlay,
   CoverWrapper,
   DELAYED_FADE_CLASSNAME,
@@ -45,6 +46,7 @@ type TileSize = 'small' | 'big' | undefined
 type VideoTileCoverProps = {
   hasAssetUploadFailed?: boolean
   videoHref?: string
+  openInNewBrowserTab?: boolean
   setTileSize: React.Dispatch<React.SetStateAction<TileSize>>
   tileSize: TileSize
   isLoading?: boolean
@@ -52,7 +54,6 @@ type VideoTileCoverProps = {
   isDraft?: boolean
   isUnlisted?: boolean
   publisherMode?: boolean
-  isPullupDisabled?: boolean
   removeButton?: boolean
   duration?: number | null
   thumbnailUrl?: string | null
@@ -69,6 +70,7 @@ const SMALL_SIZE_WIDTH = 300
 export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   hasAssetUploadFailed,
   videoHref,
+  openInNewBrowserTab,
   setTileSize,
   tileSize,
   onRemoveButtonClick,
@@ -81,7 +83,6 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   isUnlisted,
   publisherMode,
   duration,
-  isPullupDisabled,
   onPullupClick,
   removeButton,
   thumbnailAlt,
@@ -118,7 +119,11 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
   return (
     <CoverWrapper>
-      <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+      <Anchor
+        to={videoHref ?? ''}
+        onClick={createAnchorClickHandler(videoHref)}
+        {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
+      >
         <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition
@@ -129,10 +134,10 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
               <CoverImageContainer>
                 {isLoadingThumbnail && !isDraft ? (
                   <>
-                    {(videoHref || publisherMode) && (
+                    {(videoHref || publisherMode) && !isLoading && (
                       <SkeletonHoverOverlay>
                         <CoverIconWrapper>
-                          {publisherMode ? <SvgIllustrativeEdit /> : <SvgIllustrativePlay />}
+                          {isDraft ? <SvgIllustrativeEdit /> : <SvgIllustrativePlay />}
                         </CoverIconWrapper>
                       </SkeletonHoverOverlay>
                     )}
@@ -160,25 +165,16 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     <CoverHoverOverlay darker={hasAssetUploadFailed}>
-                      {publisherMode && !hasAssetUploadFailed && (
-                        <CoverTopLeftContainer>
-                          <PullUp
-                            // set to true when video is already on the snackbar
-                            disabled={!!isPullupDisabled}
-                            onClick={(event) => {
-                              event.preventDefault()
-                              onPullupClick && onPullupClick(event)
-                            }}
-                          />
-                        </CoverTopLeftContainer>
+                      {publisherMode && !hasAssetUploadFailed && onPullupClick && (
+                        <CoverTopRigthContainer>
+                          <PullUp tooltipText="Edit" onClick={onPullupClick} />
+                        </CoverTopRigthContainer>
                       )}
                       <CoverIconWrapper>
-                        {publisherMode ? (
-                          hasAssetUploadFailed ? (
-                            <SvgIllustrativeReupload />
-                          ) : (
-                            <SvgIllustrativeEdit />
-                          )
+                        {publisherMode && hasAssetUploadFailed ? (
+                          <SvgIllustrativeReupload />
+                        ) : isDraft ? (
+                          <SvgIllustrativeEdit />
                         ) : (
                           <SvgIllustrativePlay />
                         )}

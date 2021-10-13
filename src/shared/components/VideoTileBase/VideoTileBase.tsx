@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
+import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDateAgo } from '@/utils/time'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
@@ -39,7 +40,6 @@ export type VideoTileBaseMetaProps = {
 
 export type VideoTilePublisherProps = {
   publisherMode?: boolean
-  isPullupDisabled?: boolean
   isDraft?: boolean
   isUnlisted?: boolean
   hasAssetUploadFailed?: boolean
@@ -66,6 +66,7 @@ export type VideoTileBaseProps = {
   isLoadingAvatar?: boolean
   isLoading?: boolean
   videoHref?: string
+  openInNewBrowserTab?: boolean
   channelHref?: string
   className?: string
 } & VideoTileBaseMetaProps &
@@ -84,6 +85,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   thumbnailUrl,
   channelHref,
   videoHref,
+  openInNewBrowserTab,
   isLoadingThumbnail,
   hasAssetUploadFailed,
   isLoadingAvatar,
@@ -104,7 +106,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   onCopyVideoURLClick,
   onDeleteVideoClick,
   onReuploadVideoClick,
-  isPullupDisabled,
 }) => {
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
@@ -126,46 +127,56 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     }
   }
 
+  const assetFailedKebabItems = [
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: 'Delete video',
+    },
+    {
+      icon: <SvgGlyphRetry />,
+      onClick: onReuploadVideoClick,
+      title: 'Reupload file',
+    },
+  ]
+
+  const publisherBasicKebabItems = [
+    {
+      icon: <SvgGlyphPlay />,
+      onClick: onOpenInTabClick,
+      title: 'Play in Joystream',
+    },
+    {
+      icon: <SvgGlyphCopy />,
+      onClick: onCopyVideoURLClick,
+      title: 'Copy video URL',
+    },
+  ]
+
+  const publisherAndDraftKebabItems = [
+    {
+      icon: <SvgGlyphEdit />,
+      onClick: onEditVideoClick,
+      title: isDraft ? 'Edit draft' : 'Edit video',
+    },
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: isDraft ? 'Delete draft' : 'Delete video',
+    },
+  ]
+
   const publisherKebabMenuItems = hasAssetUploadFailed
-    ? [
-        {
-          icon: <SvgGlyphTrash />,
-          onClick: onDeleteVideoClick,
-          title: 'Delete video',
-        },
-        {
-          icon: <SvgGlyphRetry />,
-          onClick: onReuploadVideoClick,
-          title: 'Reupload file',
-        },
-      ]
-    : [
-        {
-          icon: <SvgGlyphPlay />,
-          onClick: onOpenInTabClick,
-          title: 'Play in Joystream',
-        },
-        {
-          icon: <SvgGlyphCopy />,
-          onClick: onCopyVideoURLClick,
-          title: 'Copy video URL',
-        },
-        {
-          icon: <SvgGlyphEdit />,
-          onClick: onEditVideoClick,
-          title: isDraft ? 'Edit draft' : 'Edit video',
-        },
-        {
-          icon: <SvgGlyphTrash />,
-          onClick: onDeleteVideoClick,
-          title: isDraft ? 'Delete draft' : 'Delete video',
-        },
-      ]
+    ? assetFailedKebabItems
+    : isDraft
+    ? publisherAndDraftKebabItems
+    : [...publisherBasicKebabItems, ...publisherAndDraftKebabItems]
 
   return (
     <Container className={className} isLoading={isLoading || isUploading}>
       <VideoTileCover
         videoHref={videoHref}
+        openInNewBrowserTab={openInNewBrowserTab}
         setTileSize={setTileSize}
         tileSize={tileSize}
         onRemoveButtonClick={onRemoveButtonClick}
@@ -180,7 +191,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         hasAssetUploadFailed={hasAssetUploadFailed}
         onPullupClick={onPullupClick}
         removeButton={removeButton}
-        isPullupDisabled={isPullupDisabled}
         thumbnailAlt={`${title} by ${channelTitle} thumbnail`}
         duration={duration}
       />
@@ -212,7 +222,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               {isLoading ? (
                 <SkeletonLoader height={18} width="60%" />
               ) : (
-                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                <TitleHeaderAnchor
+                  to={videoHref ?? ''}
+                  onClick={createAnchorClickHandler(videoHref)}
+                  {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
+                >
                   <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>

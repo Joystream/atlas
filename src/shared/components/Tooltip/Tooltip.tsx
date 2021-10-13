@@ -7,7 +7,7 @@ import { transitions } from '@/shared/theme'
 
 import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.style'
 
-type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
+type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
   text?: string
   headerText?: string

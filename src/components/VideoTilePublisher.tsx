@@ -30,6 +30,14 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
   return (
     <VideoTileBase
       uploadStatus={uploadStatus}
+      videoHref={
+        !isDraft
+          ? hasAssetUploadFailed
+            ? absoluteRoutes.studio.uploads()
+            : absoluteRoutes.viewer.video(video?.id)
+          : undefined
+      }
+      openInNewBrowserTab={!isDraft && !hasAssetUploadFailed}
       isLoadingThumbnail={isLoadingThumbnail}
       isLoadingAvatar={isLoadingAvatar}
       publisherMode
