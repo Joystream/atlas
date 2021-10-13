@@ -9,21 +9,21 @@ export const useFiltersBar = () => {
   const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string>()
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
   const [licensesFilter, setLicensesFilter] = useState<number[]>()
-  const [videoLegnthFilter, setVideoLegnthFilter] = useState<VideoLengthOptions>()
+  const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
 
-  const [isFiltersOpen, setiIsFiltersOpen] = useState(true)
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
 
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined
-  const canClearVideoLegnthFilter =
+  const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearLicensesFilter =
     videoWhereInput?.licenseId_in !== undefined && videoWhereInput?.licenseId_in?.length !== 0
   const canClearOtherFilters = !!videoWhereInput?.hasMarketing_eq || !!videoWhereInput?.isExplicit_eq
   const canClearAllFilters =
-    canClearDateUploadedFilter || canClearVideoLegnthFilter || canClearLicensesFilter || canClearOtherFilters
+    canClearDateUploadedFilter || canClearVideoLengthFilter || canClearLicensesFilter || canClearOtherFilters
 
   const clearDateUploadedFilter = () => {
     setDateUploadedFilter(undefined)
@@ -32,8 +32,8 @@ export const useFiltersBar = () => {
       return value
     })
   }
-  const clearVideoLegnthFilter = () => {
-    setVideoLegnthFilter(undefined)
+  const clearVideoLengthFilter = () => {
+    setVideoLengthFilter(undefined)
     setVideoWhereInput((value) => {
       delete value.duration_lte
       delete value.duration_gte
@@ -58,7 +58,7 @@ export const useFiltersBar = () => {
   }
   const clearAllFilters = () => {
     clearDateUploadedFilter()
-    clearVideoLegnthFilter()
+    clearVideoLengthFilter()
     clearLicensesFilter()
     clearOtherFilters()
   }
@@ -70,11 +70,11 @@ export const useFiltersBar = () => {
       selectedCategoryIdFilter,
       setSelectedCategoryIdFilter,
       isFiltersOpen,
-      setiIsFiltersOpen,
+      setIsFiltersOpen,
       dateUploadedFilter,
       setDateUploadedFilter,
-      videoLegnthFilter,
-      setVideoLegnthFilter,
+      videoLengthFilter,
+      setVideoLengthFilter,
       paidPromotionalMaterialFilter,
       setPaidPromotionalMaterialFilter,
       matureContentRatingFilter,
@@ -85,12 +85,12 @@ export const useFiltersBar = () => {
     canClearFilters: {
       canClearAllFilters,
       canClearDateUploadedFilter,
-      canClearVideoLegnthFilter,
+      canClearVideoLengthFilter,
       canClearLicensesFilter,
       canClearOtherFilters,
       clearAllFilters,
       clearDateUploadedFilter,
-      clearVideoLegnthFilter,
+      clearVideoLengthFilter,
       clearLicensesFilter,
       clearOtherFilters,
     },

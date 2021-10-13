@@ -28,7 +28,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
   setVideoWhereInput,
   videoWhereInput,
   filters: {
-    setiIsFiltersOpen,
+    setIsFiltersOpen,
     isFiltersOpen,
     dateUploadedFilter,
     setDateUploadedFilter,
@@ -36,18 +36,18 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
     setMatureContentRatingFilter,
     paidPromotionalMaterialFilter,
     setPaidPromotionalMaterialFilter,
-    videoLegnthFilter,
-    setVideoLegnthFilter,
+    videoLengthFilter,
+    setVideoLengthFilter,
     licensesFilter,
     setLicensesFilter,
   },
   canClearFilters: {
     canClearDateUploadedFilter,
-    canClearVideoLegnthFilter,
+    canClearVideoLengthFilter,
     canClearAllFilters,
     clearAllFilters,
     clearDateUploadedFilter,
-    clearVideoLegnthFilter,
+    clearVideoLengthFilter,
     clearLicensesFilter,
     clearOtherFilters,
   },
@@ -99,30 +99,30 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
     <FilterContentContainer>
       <RadioButton
         onChange={() => {
-          setVideoLegnthFilter('0-to-4')
+          setVideoLengthFilter('0-to-4')
         }}
         name="length"
         label="Less than 4 minutes"
         value="0-to-4"
-        selectedValue={videoLegnthFilter}
+        selectedValue={videoLengthFilter}
       />
       <RadioButton
         onChange={() => {
-          setVideoLegnthFilter('4-to-10')
+          setVideoLengthFilter('4-to-10')
         }}
         name="length"
         label="4 to 10 minutes"
         value="4-to-10"
-        selectedValue={videoLegnthFilter}
+        selectedValue={videoLengthFilter}
       />
       <RadioButton
         onChange={() => {
-          setVideoLegnthFilter('10-to-9999')
+          setVideoLengthFilter('10-to-9999')
         }}
         name="length"
         label="More than 10 minutes"
         value="10-to-9999"
-        selectedValue={videoLegnthFilter}
+        selectedValue={videoLengthFilter}
       />
     </FilterContentContainer>
   )
@@ -163,7 +163,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
   if (betweenBaseAndSMMatch) {
     return (
       <MobileFilterDialog
-        onExitClick={() => setiIsFiltersOpen(false)}
+        onExitClick={() => setIsFiltersOpen(false)}
         showDialog={isFiltersOpen}
         title="Filters"
         content={
@@ -254,20 +254,20 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
             footer={
               <FilterPopoverFooter
                 clearButtonProps={{
-                  onClick: clearVideoLegnthFilter,
-                  disabled: videoLegnthFilter === undefined,
+                  onClick: clearVideoLengthFilter,
+                  disabled: videoLengthFilter === undefined,
                 }}
                 applyButtonProps={{
                   onClick: () =>
                     setVideoWhereInput((value) => ({
                       ...value,
-                      ...getDurationRules(videoLegnthFilter),
+                      ...getDurationRules(videoLengthFilter),
                     })),
                 }}
               />
             }
           >
-            <Button badge={canClearVideoLegnthFilter} variant="secondary">
+            <Button badge={canClearVideoLengthFilter} variant="secondary">
               Length
             </Button>
           </PopoverDialog>

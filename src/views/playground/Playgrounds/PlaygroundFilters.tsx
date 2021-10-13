@@ -22,7 +22,7 @@ export const PlaygroundFilters: React.FC = () => {
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
-    filters: { setiIsFiltersOpen },
+    filters: { setIsFiltersOpen },
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
 
@@ -32,7 +32,7 @@ export const PlaygroundFilters: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
   const handleFilterClick = () => {
-    setiIsFiltersOpen((value) => !value)
+    setIsFiltersOpen((value) => !value)
   }
 
   useEffect(() => {
