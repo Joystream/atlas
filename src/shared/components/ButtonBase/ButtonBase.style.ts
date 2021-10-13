@@ -16,7 +16,6 @@ export type ButtonSize = 'large' | 'medium' | 'small'
 export type ButtonBaseStyleProps = {
   variant: ButtonVariant
   size: ButtonSize
-  clickable?: boolean
   fullWidth?: boolean
   textOnly: boolean
   iconOnly: boolean
@@ -257,7 +256,7 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   text-decoration: none;
   border: 0;
   background-color: transparent;
-  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
+  cursor: pointer;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 
   &:disabled,

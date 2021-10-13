@@ -28,7 +28,7 @@ export const PopoverDialog: React.FC<PopoverDialogProps> = ({
               {header}
             </Header>
           )}
-          <ContentContainer dividers={dividers}>{content}</ContentContainer>
+          <ContentContainer>{content}</ContentContainer>
           {footer && <FooterContainer dividers={dividers}>{footer}</FooterContainer>}
         </>
       }

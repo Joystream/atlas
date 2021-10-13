@@ -23,30 +23,33 @@ export const PopoverContainer = styled(Popover)`
 
 const headerDividersStyles = css`
   box-shadow: inset 0 -1px 0 0 ${colors.gray[600]};
+  padding-bottom: ${sizes(4)};
 `
 
 export const Header = styled(Text)<Dividers>`
-  padding: ${sizes(4)};
+  padding: ${sizes(4)} ${sizes(4)} 0 ${sizes(4)};
+
   ${({ dividers }) => dividers && headerDividersStyles};
 `
 
-export const ContentContainer = styled.div<Dividers>`
+export const ContentContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: ${({ dividers }) => (dividers ? sizes(4) : `0 ${sizes(4)}`)};
+  padding: ${sizes(4)};
 `
 
 export const footerContainerDividersStyles = css`
+  padding-top: ${sizes(4)};
   box-shadow: inset 0 1px 0 0 ${colors.gray[600]};
 `
 
 export const FooterContainer = styled.div<Dividers>`
+  padding: 0 ${sizes(4)} ${sizes(4)} ${sizes(4)};
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   justify-content: end;
   gap: ${sizes(2)};
-  padding: ${sizes(4)};
 
   ${({ dividers }) => dividers && footerContainerDividersStyles};
 `

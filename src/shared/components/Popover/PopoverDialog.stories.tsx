@@ -30,7 +30,6 @@ const Template: Story = (args) => {
               <Text>Example text</Text>
               <Text>Example text</Text>
               <Text>Example text</Text>
-              <Text>Example text</Text>
             </>
           }
           footer={

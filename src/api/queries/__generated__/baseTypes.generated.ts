@@ -424,12 +424,18 @@ export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
   channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
+  createdAt_gte?: Maybe<Scalars['DateTime']>
+  duration_lte?: Maybe<Scalars['Int']>
+  duration_gte?: Maybe<Scalars['Int']>
   thumbnailPhotoAvailability_eq?: Maybe<AssetAvailability>
   mediaAvailability_eq?: Maybe<AssetAvailability>
-  createdAt_gte?: Maybe<Scalars['DateTime']>
+  licenseId_in?: Maybe<Array<Scalars['ID']>>
+  languageId_eq?: Maybe<Scalars['ID']>
+  hasMarketing_eq?: Maybe<Scalars['Boolean']>
   isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
   isCensored_eq?: Maybe<Scalars['Boolean']>
+  isExplicit_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
   id_eq?: Maybe<Scalars['ID']>
 }
