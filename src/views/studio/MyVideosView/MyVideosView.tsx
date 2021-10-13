@@ -241,10 +241,6 @@ export const MyVideosView = () => {
               showChannel={false}
               isDraft
               onClick={() => handleVideoClick(draft.id, { draft: true })}
-              onPullupClick={(e) => {
-                e.stopPropagation()
-                handleVideoClick(draft.id, { draft: true })
-              }}
               onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
               onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />

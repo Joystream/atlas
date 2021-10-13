@@ -127,41 +127,50 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     }
   }
 
+  const assetFailedKebabItems = [
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: 'Delete video',
+    },
+    {
+      icon: <SvgGlyphRetry />,
+      onClick: onReuploadVideoClick,
+      title: 'Reupload file',
+    },
+  ]
+
+  const publisherBasicKebabItems = [
+    {
+      icon: <SvgGlyphPlay />,
+      onClick: onOpenInTabClick,
+      title: 'Play in Joystream',
+    },
+    {
+      icon: <SvgGlyphCopy />,
+      onClick: onCopyVideoURLClick,
+      title: 'Copy video URL',
+    },
+  ]
+
+  const publisherAndDraftKebabItems = [
+    {
+      icon: <SvgGlyphEdit />,
+      onClick: onEditVideoClick,
+      title: isDraft ? 'Edit draft' : 'Edit video',
+    },
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: isDraft ? 'Delete draft' : 'Delete video',
+    },
+  ]
+
   const publisherKebabMenuItems = hasAssetUploadFailed
-    ? [
-        {
-          icon: <SvgGlyphTrash />,
-          onClick: onDeleteVideoClick,
-          title: 'Delete video',
-        },
-        {
-          icon: <SvgGlyphRetry />,
-          onClick: onReuploadVideoClick,
-          title: 'Reupload file',
-        },
-      ]
-    : [
-        {
-          icon: <SvgGlyphPlay />,
-          onClick: onOpenInTabClick,
-          title: 'Play in Joystream',
-        },
-        {
-          icon: <SvgGlyphCopy />,
-          onClick: onCopyVideoURLClick,
-          title: 'Copy video URL',
-        },
-        {
-          icon: <SvgGlyphEdit />,
-          onClick: onEditVideoClick,
-          title: isDraft ? 'Edit draft' : 'Edit video',
-        },
-        {
-          icon: <SvgGlyphTrash />,
-          onClick: onDeleteVideoClick,
-          title: isDraft ? 'Delete draft' : 'Delete video',
-        },
-      ]
+    ? assetFailedKebabItems
+    : isDraft
+    ? publisherAndDraftKebabItems
+    : [...publisherBasicKebabItems, ...publisherAndDraftKebabItems]
 
   return (
     <Container className={className} isLoading={isLoading || isUploading}>
@@ -171,7 +180,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         setTileSize={setTileSize}
         tileSize={tileSize}
         onRemoveButtonClick={onRemoveButtonClick}
-        onClick={onClick}
+        onClick={hasAssetUploadFailed ? onReuploadVideoClick : onClick}
         isLoading={isLoading}
         thumbnailUrl={thumbnailUrl}
         isLoadingThumbnail={isLoadingThumbnail}

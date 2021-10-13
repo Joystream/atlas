@@ -6,6 +6,7 @@ import {
   SvgGlyphClose,
   SvgGlyphDraft,
   SvgGlyphHide,
+  SvgIllustrativeEdit,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
   SvgLargeUploadFailed,
@@ -133,10 +134,10 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
               <CoverImageContainer>
                 {isLoadingThumbnail && !isDraft ? (
                   <>
-                    {(videoHref || publisherMode) && (
+                    {(videoHref || publisherMode) && !isLoading && (
                       <SkeletonHoverOverlay>
                         <CoverIconWrapper>
-                          <SvgIllustrativePlay />
+                          {isDraft ? <SvgIllustrativeEdit /> : <SvgIllustrativePlay />}
                         </CoverIconWrapper>
                       </SkeletonHoverOverlay>
                     )}
@@ -164,13 +165,19 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     )}
                     {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
                     <CoverHoverOverlay darker={hasAssetUploadFailed}>
-                      {publisherMode && !hasAssetUploadFailed && (
+                      {publisherMode && !hasAssetUploadFailed && onPullupClick && (
                         <CoverTopRigthContainer>
                           <PullUp tooltipText="Edit" onClick={onPullupClick} />
                         </CoverTopRigthContainer>
                       )}
                       <CoverIconWrapper>
-                        {publisherMode && hasAssetUploadFailed ? <SvgIllustrativeReupload /> : <SvgIllustrativePlay />}
+                        {publisherMode && hasAssetUploadFailed ? (
+                          <SvgIllustrativeReupload />
+                        ) : isDraft ? (
+                          <SvgIllustrativeEdit />
+                        ) : (
+                          <SvgIllustrativePlay />
+                        )}
                       </CoverIconWrapper>
                       {removeButton && (
                         <RemoveButton onClick={handleRemoveClick}>
