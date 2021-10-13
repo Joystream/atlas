@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { VideoOrderByInput } from '@/api/queries'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -21,19 +21,26 @@ export const PlaygroundFilters: React.FC = () => {
 
   const filtersBarLogic = useFiltersBar()
   const {
-    filters: { setiIsFiltersOpen, setSelectedLanguage, selectedLanguage, sortVideosBy, setSortVideosBy },
+    setVideoWhereInput,
+    filters: { setiIsFiltersOpen },
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
 
-  const handleSorting = (value?: VideoOrderByInput | null) => {
-    if (value) {
-      setSortVideosBy(value)
-    }
-  }
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | null | undefined>(
+    VideoOrderByInput.CreatedAtDesc
+  )
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
   const handleFilterClick = () => {
     setiIsFiltersOpen((value) => !value)
   }
+
+  useEffect(() => {
+    setVideoWhereInput((value) => ({
+      ...value,
+      languageId_eq: selectedLanguage,
+    }))
+  }, [selectedLanguage, setVideoWhereInput])
 
   return (
     <Container>
@@ -68,7 +75,13 @@ export const PlaygroundFilters: React.FC = () => {
         {mdMatch && (
           <SortContainer>
             <Text variant="body2">Sort by</Text>
-            <Select size="small" helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            <Select
+              size="small"
+              helperText={null}
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={setSortVideosBy}
+            />
           </SortContainer>
         )}
       </ControlsContainer>

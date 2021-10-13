@@ -424,6 +424,7 @@ export type VideoWhereInput = {
   channelId_eq?: Maybe<Scalars['ID']>
   createdAt_gte?: Maybe<Scalars['DateTime']>
   duration_lte?: Maybe<Scalars['Int']>
+  duration_gte?: Maybe<Scalars['Int']>
   thumbnailPhotoAvailability_eq?: Maybe<AssetAvailability>
   mediaAvailability_eq?: Maybe<AssetAvailability>
   licenseId_in?: Maybe<Array<Scalars['ID']>>

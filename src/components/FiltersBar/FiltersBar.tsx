@@ -1,17 +1,13 @@
 import { add } from 'date-fns'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { VideoOrderByInput, VideoWhereInput } from '@/api/queries'
-import { SORT_OPTIONS } from '@/config/sorting'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button, ButtonProps } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
 import { PopoverDialog } from '@/shared/components/Popover'
 import { RadioButton } from '@/shared/components/RadioButton'
-import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphClose } from '@/shared/icons'
 
@@ -23,21 +19,19 @@ import {
   OtherFilterStyledIcon,
   OtherFilterStyledText,
 } from './FiltersBar.styles'
+import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
 
 import { ActionDialog, ActionDialogProps } from '../ActionDialog'
 import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
 
-type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
-
 export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
-  handleApplyFilter,
+  setVideoWhereInput,
+  videoWhereInput,
   filters: {
     setiIsFiltersOpen,
     isFiltersOpen,
-    sortVideosBy,
-    setSortVideosBy,
     dateUploadedFilter,
-    setdateUploadedFilter,
+    setDateUploadedFilter,
     matureContentRatingFilter,
     setMatureContentRatingFilter,
     paidPromotionalMaterialFilter,
@@ -50,7 +44,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
   canClearFilters: {
     canClearDateUploadedFilter,
     canClearVideoLegnthFilter,
-    canClearOtherFilters,
     canClearAllFilters,
     clearAllFilters,
     clearDateUploadedFilter,
@@ -62,17 +55,11 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
   const smMatch = useMediaMatch('sm')
   const betweenBaseAndSMMatch = !smMatch
 
-  const handleSorting = (value?: VideoOrderByInput | null) => {
-    if (value) {
-      setSortVideosBy(value)
-    }
-  }
-
   const dateUploadedInputs = (
     <FilterContentContainer>
       <RadioButton
         onChange={() => {
-          setdateUploadedFilter(1)
+          setDateUploadedFilter(1)
         }}
         name="date-uploaded"
         label="Last 24 hours"
@@ -81,7 +68,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
       />
       <RadioButton
         onChange={() => {
-          setdateUploadedFilter(7)
+          setDateUploadedFilter(7)
         }}
         name="date-uploaded"
         label="Last 7 days"
@@ -90,7 +77,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
       />
       <RadioButton
         onChange={() => {
-          setdateUploadedFilter(30)
+          setDateUploadedFilter(30)
         }}
         name="date-uploaded"
         label="Last 30 days"
@@ -99,7 +86,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
       />
       <RadioButton
         onChange={() => {
-          setdateUploadedFilter(365)
+          setDateUploadedFilter(365)
         }}
         name="date-uploaded"
         label="Last 365 days"
@@ -183,18 +170,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
           <>
             <MobileFilterContainer>
               <Text secondary variant="overhead">
-                Sort by
-              </Text>
-              <Select
-                size="small"
-                helperText={null}
-                value={sortVideosBy}
-                items={SORT_OPTIONS}
-                onChange={handleSorting}
-              />
-            </MobileFilterContainer>
-            <MobileFilterContainer>
-              <Text secondary variant="overhead">
                 Date uploaded
               </Text>
               {dateUploadedInputs}
@@ -222,7 +197,19 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         }
         primaryButton={{
           text: 'Apply',
-          onClick: handleApplyFilter,
+          onClick: () =>
+            setVideoWhereInput((value) => ({
+              ...value,
+              createdAt_gte: dateUploadedFilter
+                ? add(new Date(), {
+                    days: -dateUploadedFilter,
+                  })
+                : undefined,
+              licenseId_in: licensesFilter?.map((license) => license.toString()),
+              hasMarketing_eq: paidPromotionalMaterialFilter,
+              isExplicit_eq: matureContentRatingFilter,
+              ...getDurationRules(),
+            })),
         }}
         secondaryButton={{
           text: 'Clear',
@@ -245,12 +232,20 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
                   disabled: dateUploadedFilter === undefined,
                 }}
                 applyButtonProps={{
-                  onClick: handleApplyFilter,
+                  onClick: () =>
+                    setVideoWhereInput((value) => ({
+                      ...value,
+                      createdAt_gte: dateUploadedFilter
+                        ? add(new Date(), {
+                            days: -dateUploadedFilter,
+                          })
+                        : undefined,
+                    })),
                 }}
               />
             }
           >
-            <Button badge={canClearDateUploadedFilter && 1} variant="secondary">
+            <Button badge={canClearDateUploadedFilter} variant="secondary">
               Date uploaded
             </Button>
           </PopoverDialog>
@@ -260,15 +255,19 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
               <FilterPopoverFooter
                 clearButtonProps={{
                   onClick: clearVideoLegnthFilter,
-                  disabled: videoLegnthFilter?.length === 0,
+                  disabled: videoLegnthFilter === undefined,
                 }}
                 applyButtonProps={{
-                  onClick: handleApplyFilter,
+                  onClick: () =>
+                    setVideoWhereInput((value) => ({
+                      ...value,
+                      ...getDurationRules(videoLegnthFilter),
+                    })),
                 }}
               />
             }
           >
-            <Button badge={canClearVideoLegnthFilter && 1} variant="secondary">
+            <Button badge={canClearVideoLegnthFilter} variant="secondary">
               Length
             </Button>
           </PopoverDialog>
@@ -279,15 +278,19 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
               <FilterPopoverFooter
                 clearButtonProps={{
                   onClick: clearLicensesFilter,
-                  disabled: licensesFilter?.length === 0,
+                  disabled: licensesFilter === undefined || licensesFilter?.length === 0,
                 }}
                 applyButtonProps={{
-                  onClick: handleApplyFilter,
+                  onClick: () =>
+                    setVideoWhereInput((value) => ({
+                      ...value,
+                      licenseId_in: licensesFilter?.map((license) => license.toString()),
+                    })),
                 }}
               />
             }
           >
-            <Button badge={licensesFilter?.length} variant="secondary">
+            <Button badge={videoWhereInput?.licenseId_in?.length} variant="secondary">
               License
             </Button>
           </PopoverDialog>
@@ -305,18 +308,20 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
               <FilterPopoverFooter
                 clearButtonProps={{
                   onClick: clearOtherFilters,
-                  disabled: !canClearOtherFilters,
+                  disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
                 }}
                 applyButtonProps={{
-                  onClick: handleApplyFilter,
+                  onClick: () =>
+                    setVideoWhereInput((value) => ({
+                      ...value,
+                      hasMarketing_eq: paidPromotionalMaterialFilter,
+                      isExplicit_eq: matureContentRatingFilter,
+                    })),
                 }}
               />
             }
           >
-            <Button
-              badge={(paidPromotionalMaterialFilter ? 1 : 0) + (matureContentRatingFilter ? 1 : 0)}
-              variant="secondary"
-            >
+            <Button badge={+!!videoWhereInput?.hasMarketing_eq + +!!videoWhereInput?.isExplicit_eq} variant="secondary">
               Other filters
             </Button>
           </PopoverDialog>
@@ -360,139 +365,22 @@ const MobileFilterDialog: React.FC<{ title: string; content: React.ReactNode } &
   )
 }
 
-export const useFiltersBar = () => {
-  const { id } = useParams()
-
-  // filters
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [dateUploadedFilter, setdateUploadedFilter] = useState<number>()
-  const [licensesFilter, setLicensesFilter] = useState<number[]>()
-  const [videoLegnthFilter, setVideoLegnthFilter] = useState<VideoLengthOptions>()
-  const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
-  const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
-
-  const clearSortVideosBy = () => setSortVideosBy(VideoOrderByInput.CreatedAtDesc)
-  const clearDateUploadedFilter = () => setdateUploadedFilter(undefined)
-  const clearVideoLegnthFilter = () => setVideoLegnthFilter(undefined)
-  const clearLicensesFilter = () => setLicensesFilter(undefined)
-  const clearOtherFilters = () => {
-    setPaidPromotionalMaterialFilter(undefined)
-    setMatureContentRatingFilter(undefined)
-  }
-  const clearAllFilters = () => {
-    setSelectedLanguage('en')
-    clearSortVideosBy()
-    clearDateUploadedFilter()
-    clearVideoLegnthFilter()
-    clearLicensesFilter()
-    clearOtherFilters()
-    handleApplyFilter()
-  }
-
-  const canClearDateUploadedFilter = dateUploadedFilter !== undefined
-  const canClearVideoLegnthFilter = videoLegnthFilter !== undefined
-  const canClearLicensesFilter = licensesFilter !== undefined
-  const canClearOtherFilters = matureContentRatingFilter !== undefined || paidPromotionalMaterialFilter !== undefined
-  const canClearAllFilters =
-    selectedLanguage !== 'en' ||
-    sortVideosBy !== VideoOrderByInput.CreatedAtDesc ||
-    canClearDateUploadedFilter ||
-    canClearVideoLegnthFilter ||
-    canClearLicensesFilter ||
-    canClearOtherFilters
-
-  const [isFiltersOpen, setiIsFiltersOpen] = useState(true)
-  const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({
-    categoryId_eq: id,
-    languageId_eq: 'en',
-  })
-
-  const handleApplyFilter = useCallback(() => {
-    const getDurationRules = () => {
-      switch (videoLegnthFilter) {
-        case '0-to-4':
-          return {
-            duration_lte: 4 * 60 * 1000,
-          }
-        case '4-to-10':
-          return {
-            duration_gte: 4 * 60 * 1000,
-            duration_lte: 10 * 60 * 1000,
-          }
-        case '10-to-9999':
-          return {
-            duration_gte: 10 * 60 * 1000,
-          }
-        default:
-          return {}
+const getDurationRules = (duration?: VideoLengthOptions) => {
+  switch (duration) {
+    case '0-to-4':
+      return {
+        duration_lte: 4 * 60,
       }
-    }
-
-    setVideoWhereInput({
-      categoryId_eq: id,
-      languageId_eq: selectedLanguage,
-      createdAt_gte: dateUploadedFilter
-        ? add(new Date(), {
-            days: -dateUploadedFilter,
-          })
-        : undefined,
-      licenseId_in: licensesFilter?.map((license) => license.toString()),
-      hasMarketing_eq: paidPromotionalMaterialFilter,
-      isExplicit_eq: matureContentRatingFilter,
-      ...getDurationRules(),
-    })
-  }, [
-    dateUploadedFilter,
-    id,
-    licensesFilter,
-    matureContentRatingFilter,
-    paidPromotionalMaterialFilter,
-    selectedLanguage,
-    videoLegnthFilter,
-  ])
-
-  useEffect(() => {
-    handleApplyFilter()
-    // this is ok only want to apply filters here when language changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedLanguage])
-
-  return {
-    categoryId: id,
-    handleApplyFilter,
-    videoWhereInput,
-    setVideoWhereInput,
-    filters: {
-      isFiltersOpen,
-      setiIsFiltersOpen,
-      setSelectedLanguage,
-      selectedLanguage,
-      dateUploadedFilter,
-      setdateUploadedFilter,
-      sortVideosBy,
-      setSortVideosBy,
-      videoLegnthFilter,
-      setVideoLegnthFilter,
-      paidPromotionalMaterialFilter,
-      setPaidPromotionalMaterialFilter,
-      matureContentRatingFilter,
-      setMatureContentRatingFilter,
-      licensesFilter,
-      setLicensesFilter,
-    },
-    canClearFilters: {
-      canClearAllFilters,
-      canClearDateUploadedFilter,
-      canClearVideoLegnthFilter,
-      canClearLicensesFilter,
-      canClearOtherFilters,
-      clearAllFilters,
-      clearSortVideosBy,
-      clearDateUploadedFilter,
-      clearVideoLegnthFilter,
-      clearLicensesFilter,
-      clearOtherFilters,
-    },
-  } as const
+    case '4-to-10':
+      return {
+        duration_gte: 4 * 60,
+        duration_lte: 10 * 60,
+      }
+    case '10-to-9999':
+      return {
+        duration_gte: 10 * 60,
+      }
+    default:
+      return {}
+  }
 }

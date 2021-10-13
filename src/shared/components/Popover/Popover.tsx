@@ -12,12 +12,14 @@ export type PopoverProps = {
   instanceRef?: MutableRefObject<TippyInstance>
   hideOnClick?: boolean
   className?: string
+  onHide?(): void
 }
 
 const EXIT_ANIMATION_DURATION = 100
 
 export const Popover: React.FC<PopoverProps> = ({
   hideOnClick = true,
+  onHide,
   placement = 'bottom-start',
   children,
   offset = [0, 8],
@@ -49,7 +51,10 @@ export const Popover: React.FC<PopoverProps> = ({
           box?.classList.remove('popover-enter-active')
           box?.classList.add('popover-exit-active')
 
-          setTimeout(() => instance.unmount(), EXIT_ANIMATION_DURATION)
+          setTimeout(() => {
+            instance.unmount()
+            onHide?.()
+          }, EXIT_ANIMATION_DURATION)
         })
       }}
       render={(attrs) => (

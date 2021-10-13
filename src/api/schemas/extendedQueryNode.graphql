@@ -199,6 +199,7 @@ input VideoWhereInput {
   channelId_eq: ID
   createdAt_gte: DateTime
   duration_lte: Int
+  duration_gte: Int
   thumbnailPhotoAvailability_eq: AssetAvailability
   mediaAvailability_eq: AssetAvailability
   licenseId_in: [ID!]
