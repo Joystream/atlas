@@ -12,6 +12,7 @@ import {
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
+import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDurationShort } from '@/utils/time'
 
 import { PullUp } from './PullUp'
@@ -44,6 +45,7 @@ type TileSize = 'small' | 'big' | undefined
 type VideoTileCoverProps = {
   hasAssetUploadFailed?: boolean
   videoHref?: string
+  openInNewBrowserTab?: boolean
   setTileSize: React.Dispatch<React.SetStateAction<TileSize>>
   tileSize: TileSize
   isLoading?: boolean
@@ -67,6 +69,7 @@ const SMALL_SIZE_WIDTH = 300
 export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   hasAssetUploadFailed,
   videoHref,
+  openInNewBrowserTab,
   setTileSize,
   tileSize,
   onRemoveButtonClick,
@@ -115,7 +118,11 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
   return (
     <CoverWrapper>
-      <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+      <Anchor
+        to={videoHref ?? ''}
+        onClick={createAnchorClickHandler(videoHref)}
+        {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
+      >
         <CoverContainer ref={imgRef} clickable={clickable}>
           <SwitchTransition>
             <CSSTransition

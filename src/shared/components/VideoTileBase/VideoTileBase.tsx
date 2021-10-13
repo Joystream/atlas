@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { UploadStatus } from '@/types/uploads'
+import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDateAgo } from '@/utils/time'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
@@ -65,6 +66,7 @@ export type VideoTileBaseProps = {
   isLoadingAvatar?: boolean
   isLoading?: boolean
   videoHref?: string
+  openInNewBrowserTab?: boolean
   channelHref?: string
   className?: string
 } & VideoTileBaseMetaProps &
@@ -83,6 +85,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   thumbnailUrl,
   channelHref,
   videoHref,
+  openInNewBrowserTab,
   isLoadingThumbnail,
   hasAssetUploadFailed,
   isLoadingAvatar,
@@ -164,10 +167,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     <Container className={className} isLoading={isLoading || isUploading}>
       <VideoTileCover
         videoHref={videoHref}
+        openInNewBrowserTab={openInNewBrowserTab}
         setTileSize={setTileSize}
         tileSize={tileSize}
         onRemoveButtonClick={onRemoveButtonClick}
-        onClick={hasAssetUploadFailed ? onReuploadVideoClick : onClick}
+        onClick={onClick}
         isLoading={isLoading}
         thumbnailUrl={thumbnailUrl}
         isLoadingThumbnail={isLoadingThumbnail}
@@ -209,7 +213,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               {isLoading ? (
                 <SkeletonLoader height={18} width="60%" />
               ) : (
-                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                <TitleHeaderAnchor
+                  to={videoHref ?? ''}
+                  onClick={createAnchorClickHandler(videoHref)}
+                  {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
+                >
                   <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>

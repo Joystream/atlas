@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { SvgGlyphEdit } from '@/shared/icons'
-import { sizes } from '@/shared/theme'
+import { colors, sizes } from '@/shared/theme'
 
 import { IconButton } from '../IconButton'
 import { Tooltip } from '../Tooltip'
@@ -29,6 +29,6 @@ const StyledIconButton = styled(IconButton)`
   padding: ${sizes(2)};
 
   :hover {
-    background-color: black;
+    background-color: ${colors.gray[600]};
   }
 `

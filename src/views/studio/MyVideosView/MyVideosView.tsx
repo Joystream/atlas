@@ -20,7 +20,6 @@ import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
 import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/shared/icons'
 import { sizes } from '@/shared/theme'
-import { openInNewTab } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -260,7 +259,6 @@ export const MyVideosView = () => {
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
             id={video.id}
             showChannel={false}
-            onClick={() => openInNewTab(absoluteRoutes.viewer.video(video.id), true)}
             onPullupClick={(e) => {
               e.stopPropagation()
               e.preventDefault()
