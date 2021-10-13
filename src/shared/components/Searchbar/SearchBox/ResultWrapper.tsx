@@ -10,11 +10,12 @@ type SearchItemProps = {
   to: string
   onDelete?: () => void
   onClick?: () => void
+  variant?: 'default' | 'textOnly'
 }
 
-export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick }) => {
+export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, children, onClick, variant = 'default' }) => {
   return (
-    <SearchItemWrapper to={to} onClick={onClick}>
+    <SearchItemWrapper to={to} onClick={onClick} variant={variant}>
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
         <Text secondary variant="caption">
@@ -24,6 +25,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, childre
       </Shortcut>
       {onDelete && (
         <DeleteButton
+          size="small"
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()

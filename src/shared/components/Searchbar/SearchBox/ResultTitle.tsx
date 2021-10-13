@@ -16,8 +16,9 @@ export const ResultTitle: React.FC<ResultTitleProps> = ({ title, query }) => {
   if (!query) {
     return <>{title}</>
   }
+
   const filteredQuery = query.replace(SPECIAL_CHARACTERS, '\\$&').replace(/\s+/g, '|')
-  const regex = new RegExp(`(^|\\s)${filteredQuery}(?=$|\\s)`, 'ig')
+  const regex = new RegExp(`${filteredQuery}(?=$|\\s)`, 'ig')
   const groups = title?.split(/\s+/)
   const match = title.match(regex)
 

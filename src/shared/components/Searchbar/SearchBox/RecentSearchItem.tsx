@@ -21,6 +21,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({ title, onDel
       onDelete={onDelete}
       onClick={() => onClick(title)}
       to={absoluteRoutes.viewer.search({ query: title?.trim() })}
+      variant="textOnly"
     >
       <RecentSearchItemWrapper>
         <ClockWrapper>

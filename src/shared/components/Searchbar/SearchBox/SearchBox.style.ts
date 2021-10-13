@@ -66,12 +66,14 @@ export const Caption = styled(Text)`
   display: block;
   padding: ${sizes(4)};
   padding-bottom: ${sizes(2)};
+  line-height: ${typography.lineHeights.subtitle1};
+  font-weight: ${typography.weights.medium};
 `
 
-export const SearchItemWrapper = styled(Link)`
+export const SearchItemWrapper = styled(Link)<{ variant: 'default' | 'textOnly' }>`
   display: flex;
   align-items: center;
-  padding: ${sizes(2)} ${sizes(4)};
+  padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
   text-decoration: none;
 
   &:hover {
@@ -151,6 +153,7 @@ export const StyledSkeletonLoader = styled(SkeletonLoader)`
 
 export const ResultContent = styled.div`
   display: flex;
+  align-items: center;
   padding: ${sizes(1)} 0;
 `
 
@@ -163,4 +166,8 @@ export const PlaceholderWrapper = styled.div`
 export const HighlightedWord = styled.mark`
   color: ${colors.gray[50]};
   background-color: transparent;
+`
+
+export const Title = styled(Text)`
+  display: block;
 `

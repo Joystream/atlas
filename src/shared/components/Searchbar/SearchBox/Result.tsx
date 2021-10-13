@@ -7,7 +7,13 @@ import { ResultTitle } from '@/shared/components/Searchbar/SearchBox/ResultTitle
 import { Text } from '@/shared/components/Text'
 
 import { ResultWrapper } from './ResultWrapper'
-import { ResultContent, ResultThumbnail, StyledSkeletonLoader, StyledSvgAvatarSilhouette } from './SearchBox.style'
+import {
+  ResultContent,
+  ResultThumbnail,
+  StyledSkeletonLoader,
+  StyledSvgAvatarSilhouette,
+  Title,
+} from './SearchBox.style'
 
 type ResultProps = {
   video?: VideoFieldsFragment
@@ -50,9 +56,9 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
           <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
-          <Text secondary>
+          <Title secondary variant="button2">
             <ResultTitle title={title} query={query} />
-          </Text>
+          </Title>
           <Text secondary variant="caption">
             {video ? video.channel.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
           </Text>

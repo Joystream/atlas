@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { IconButton } from '@/shared/components/IconButton'
@@ -101,9 +100,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </SearchHelper>
             </>
           )}
-          <CSSTransition in={hasFocus} timeout={200} unmountOnExit mountOnEnter>
-            <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} />
-          </CSSTransition>
+          {hasFocus && <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} />}
         </Container>
       </>
     )

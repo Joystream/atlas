@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { Button } from '@/shared/components/Button'
 import { Searchbar } from '@/shared/components/Searchbar'
@@ -21,9 +22,18 @@ export const TopbarViewer: React.FC = () => {
   const { addRecentSearch } = usePersonalDataStore((state) => ({
     addRecentSearch: state.actions.addRecentSearch,
   }))
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    if (isFocused) {
+      incrementOverlaysOpenCount()
+    } else {
+      decrementOverlaysOpenCount()
+    }
+  }, [decrementOverlaysOpenCount, incrementOverlaysOpenCount, isFocused])
 
   // Lose focus on location change
   useEffect(() => {
