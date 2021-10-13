@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
@@ -97,7 +97,7 @@ export const SearchItemWrapper = styled(Link)`
   }
 `
 
-export const DeleteButton = styled(Button)`
+export const DeleteButton = styled(IconButton)`
   margin-left: ${sizes(2)};
 
   path {

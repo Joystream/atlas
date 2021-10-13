@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react'
 
+import { SPECIAL_CHARACTERS } from '@/config/regex'
+
 import { HighlightedWord } from './SearchBox.style'
 
 type ResultTitleProps = {
@@ -14,7 +16,7 @@ export const ResultTitle: React.FC<ResultTitleProps> = ({ title, query }) => {
   if (!query) {
     return <>{title}</>
   }
-  const filteredQuery = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&').replace(/\s+/g, '|')
+  const filteredQuery = query.replace(SPECIAL_CHARACTERS, '\\$&').replace(/\s+/g, '|')
   const regex = new RegExp(`(^|\\s)${filteredQuery}(?=$|\\s)`, 'ig')
   const groups = title?.split(/\s+/)
   const match = title.match(regex)

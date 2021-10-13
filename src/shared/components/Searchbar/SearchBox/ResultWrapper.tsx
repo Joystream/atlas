@@ -24,15 +24,15 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({ to, onDelete, childre
       </Shortcut>
       {onDelete && (
         <DeleteButton
-          iconOnly
-          icon={<SvgGlyphClose />}
           onClick={(event) => {
             event.preventDefault()
             event.stopPropagation()
             onDelete()
           }}
           variant="tertiary"
-        />
+        >
+          <SvgGlyphClose />
+        </DeleteButton>
       )}
     </SearchItemWrapper>
   )

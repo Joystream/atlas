@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Button } from '@/shared/components/Button'
+import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
 
@@ -66,7 +66,9 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
           {(mdMatch || hasFocus || !!query) && (
             <>
               {!mdMatch && hasFocus ? (
-                <Button onClick={onClose} iconOnly icon={<SvgGlyphChevronLeft />} variant="tertiary" />
+                <IconButton onClick={onClose} variant="tertiary">
+                  <SvgGlyphChevronLeft />
+                </IconButton>
               ) : (
                 <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
               )}
