@@ -43,7 +43,7 @@ const playgroundRoutes = [
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
-  { path: 'categoryvideos/1', element: <PlaygroundFilters />, name: 'Filters' },
+  { path: 'filters', element: <PlaygroundFilters />, name: 'Filters' },
 ]
 
 const PlaygroundLayout = () => {
