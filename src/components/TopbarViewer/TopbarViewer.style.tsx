@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Searchbar } from '@/shared/components/Searchbar'
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { IconButton } from '@/shared/components/IconButton'
+import { colors, media, sizes, square, transitions, zIndex } from '@/shared/theme'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -11,21 +11,22 @@ type FocusProps = {
 
 export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   transition: background-color 0.4s ${transitions.easing};
-  background-color: ${(props) => (props.hasFocus ? colors.gray[900] : colors.black)};
+  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[900] : colors.black)};
+  ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
 `
 
 export const SearchbarContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  margin-right: ${sizes(2)};
+  z-index: ${zIndex.globalOverlay};
 
   > svg {
     display: none;
   }
 
   ${media.md} {
-    max-width: 1156px;
+    max-width: 480px;
     justify-content: center;
     margin: 0;
 
@@ -35,22 +36,26 @@ export const SearchbarContainer = styled.div`
   }
 `
 
-export const StyledSearchbar = styled(Searchbar)<FocusProps>`
-  transition: width ${transitions.timings.regular} ${transitions.easing};
-  will-change: width;
-  width: ${({ hasFocus }) => (hasFocus ? '100%' : '39px')};
-  padding-left: ${({ hasFocus }) => (hasFocus ? sizes(4) : 0)};
-  margin-left: auto;
-  height: 39px;
+export const ButtonWrapper = styled.div`
+  align-self: center;
+  justify-self: flex-end;
+  flex-shrink: 0;
+`
 
-  ${media.md} {
-    max-width: 480px;
-    width: 100%;
-    margin-left: 0;
-    height: initial;
+export const Overlay = styled.div`
+  ${square('100%')};
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: ${colors.transparentBlack[54]};
+  display: none;
+
+  ${media.sm} {
+    display: block;
   }
 `
 
-export const ButtonWrapper = styled.div`
-  flex-shrink: 0;
+export const StyledIconButton = styled(IconButton)`
+  margin-left: ${sizes(2)};
 `
