@@ -50,8 +50,16 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery(event.currentTarget.value)
   }
 
-  const handleBlur = () => {
+  const onClose = () => {
     setIsFocused(false)
+  }
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (event.relatedTarget instanceof HTMLAnchorElement && event.relatedTarget?.href) {
+      event.preventDefault()
+      return
+    }
+    onClose()
   }
 
   const handleFocus = () => {
@@ -77,7 +85,8 @@ export const TopbarViewer: React.FC = () => {
           onFocus={handleFocus}
           onCancel={handleCancel}
           showCancelButton={!!searchQuery}
-          onClose={handleBlur}
+          onClose={onClose}
+          onBlur={handleBlur}
           controlled
           hasFocus={isFocused}
           onClick={handleFocus}
@@ -101,7 +110,7 @@ export const TopbarViewer: React.FC = () => {
           </StyledIconButton>
         )}
       </ButtonWrapper>
-      {isFocused && <Overlay onClick={handleBlur} />}
+      {isFocused && <Overlay onClick={onClose} />}
     </StyledTopbarBase>
   )
 }
