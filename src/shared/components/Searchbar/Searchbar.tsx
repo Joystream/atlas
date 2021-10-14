@@ -42,7 +42,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     ref
   ) => {
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
-    const mdMatch = useMediaMatch('sm')
+    const mdMatch = useMediaMatch('md')
     const inputRef = useRef<HTMLInputElement>(null)
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
     const navigate = useNavigate()
