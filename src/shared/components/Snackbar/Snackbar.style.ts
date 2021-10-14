@@ -95,7 +95,7 @@ export const SnackbarButtonsContainer = styled.div`
 export const SnackbarActionButton = styled(Button)`
   display: flex;
   align-items: center;
-  padding: ${sizes(2)};
+  padding: 0;
   min-width: auto;
   margin-right: ${sizes(2)};
   font-size: ${typography.sizes.body1};

@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, sizes, square, transitions, typography, zIndex } from '@/shared/theme'
+import { colors, sizes, square, typography } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -31,51 +31,6 @@ type ActiveProps = {
   isActive?: boolean
 }
 
-export const CoverWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`
-
-const clickableAnimation = (clickable: boolean) =>
-  clickable
-    ? css`
-        transform: translate(-${sizes(2)}, -${sizes(2)});
-        box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']};
-
-        ${CoverHoverOverlay} {
-          opacity: 1;
-        }
-        ${CoverIconWrapper} {
-          opacity: 1;
-        }
-      `
-    : css`
-        ${CoverHoverOverlay} {
-          opacity: 1;
-          border-color: ${colors.white};
-        }
-
-        ${CoverIconWrapper} {
-          opacity: 1;
-        }
-      `
-export const CoverContainer = styled.div<ClickableProps>`
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-top: 56.25%;
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
-
-  :active {
-    ${() => clickableAnimation(false)}
-  }
-
-  :hover:not(:active) {
-    ${(props) => clickableAnimation(props.clickable)}
-  }
-`
-
 export const Anchor = styled(Link)`
   all: unset;
   color: inherit;
@@ -88,7 +43,6 @@ export const TitleHeaderAnchor = styled(Link)`
 `
 
 export const InfoContainer = styled.div`
-  min-height: 94px;
   display: flex;
   flex-direction: row;
   margin-top: ${sizes(3)};
@@ -138,78 +92,6 @@ export const MetaContainer = styled.div<MetaContainerProps>`
   width: 100%;
 `
 
-export const CoverImageContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
-
-type CoverImageProps = {
-  darkenImg: boolean
-}
-export const CoverImage = styled.img<CoverImageProps>`
-  ${square('100%')}
-
-  display: block;
-  ${({ darkenImg }) => darkenImg && `filter: brightness(45%);`}
-`
-
-export const CoverNoImage = styled.div`
-  ${square('100%')}
-
-  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
-`
-
-export const CoverThumbnailUploadFailed = styled.div`
-  ${square('100%')}
-
-  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
-
-export const SkeletonHoverOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: ${zIndex.overlay};
-`
-
-export const CoverHoverOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  opacity: 0;
-  transition: opacity ${transitions.timings.regular} ${transitions.easing}, border ${transitions.timings.routing} linear;
-  background-color: ${colors.transparentGray[54]};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: ${HOVER_BORDER_SIZE} solid transparent;
-`
-
-export const RemoveButton = styled(IconButton)`
-  position: absolute;
-  top: ${sizes(2)};
-  right: ${sizes(2)};
-`
-
-export const CoverIconWrapper = styled.div`
-  opacity: 0;
-  transition: all ${transitions.timings.regular} ease-out;
-`
-
 export const ProgressOverlay = styled.div`
   position: relative;
   height: ${sizes(1)};
@@ -225,33 +107,6 @@ export const ProgressBar = styled.div`
   max-width: 100%;
   width: 0;
   background-color: ${colors.gray[50]};
-`
-
-export const CoverVideoPublishingStateOverlay = styled.div`
-  position: absolute;
-  bottom: ${sizes(2)};
-  left: ${sizes(2)};
-  padding: ${sizes(1)} ${sizes(2)};
-  display: flex;
-  align-items: center;
-  background-color: ${colors.black};
-  color: ${colors.white};
-  z-index: ${zIndex.overlay};
-`
-
-export const PublishingStateText = styled(Text)`
-  margin-left: ${sizes(1.5)};
-`
-
-export const CoverDurationOverlay = styled.div`
-  position: absolute;
-  bottom: ${sizes(2)};
-  right: ${sizes(2)};
-  padding: ${sizes(1.5)} ${sizes(2)};
-  background-color: ${colors.black};
-  color: ${colors.white};
-  font-size: ${typography.sizes.body2};
-  z-index: ${zIndex.overlay};
 `
 
 export const StyledAvatar = styled(Avatar)<ChannelProps>`
@@ -278,17 +133,4 @@ export const ChannelHandle = styled(Text)<ChannelProps>`
 
 export const SpacedSkeletonLoader = styled(SkeletonLoader)`
   margin-top: 6px;
-`
-export const CoverSkeletonLoader = styled(SkeletonLoader)`
-  ${square('100%')}
-
-  position: absolute;
-  top: 0;
-  left: 0;
-`
-
-export const CoverTopLeftContainer = styled.div`
-  position: absolute;
-  top: ${sizes(2)};
-  left: ${sizes(2)};
 `

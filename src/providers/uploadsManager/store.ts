@@ -1,9 +1,8 @@
-import create from 'zustand'
-import { persist } from 'zustand/middleware'
-
 import { ChannelId, VideoId } from '@/joystream-lib'
+import { createStore } from '@/store'
+import { UploadStatus } from '@/types/uploads'
 
-import { AssetParent, AssetUpload, UploadStatus, UploadsStatusRecord } from './types'
+import { AssetParent, AssetUpload, UploadsStatusRecord } from './types'
 
 type AssetFile = {
   contentId: string
@@ -12,57 +11,84 @@ type AssetFile = {
 
 type UploadStoreState = {
   uploads: AssetUpload[]
-  addAsset: (asset: AssetUpload) => void
-  removeAsset: (contentId: string) => void
-  removeAssetsWithParent: (type: AssetParent, id: ChannelId | VideoId) => void
   uploadsStatus: UploadsStatusRecord
-  setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
   assetsFiles: AssetFile[]
-  addAssetFile: (assetFile: AssetFile) => void
   isSyncing: boolean
+  processingAssetsIds: string[]
+}
+
+type UploadStoreActions = {
+  addAssetToUploads: (asset: AssetUpload) => void
+  removeAssetFromUploads: (contentId: string) => void
+  removeAssetsWithParentFromUploads: (type: AssetParent, id: ChannelId | VideoId) => void
+  setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
+  addAssetFile: (assetFile: AssetFile) => void
   setIsSyncing: (isSyncing: boolean) => void
+  removeProcessingAssetId: (contentId: string) => void
+  addProcessingAssetId: (contentId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
-export const useUploadsStore = create<UploadStoreState>(
-  persist(
-    (set) => ({
+export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>(
+  {
+    actionsFactory: (set) => ({
+      setUploadStatus: (contentId, status) => {
+        set((state) => {
+          state.uploadsStatus[contentId] = { ...state.uploadsStatus[contentId], ...status }
+        })
+      },
+      addAssetFile: (assetFile) => {
+        set((state) => {
+          state.assetsFiles.push(assetFile)
+        })
+      },
+      addAssetToUploads: (asset) => {
+        set((state) => {
+          state.uploads.push(asset)
+        })
+      },
+      removeAssetFromUploads: (contentId) => {
+        set((state) => {
+          state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
+        })
+      },
+      removeAssetsWithParentFromUploads: (type, id) => {
+        set((state) => {
+          state.uploads = state.uploads.filter(
+            (asset) => asset.parentObject.id !== id || asset.parentObject.type !== type
+          )
+        })
+      },
+      setIsSyncing: (isSyncing) => {
+        set((state) => {
+          state.isSyncing = isSyncing
+        })
+      },
+      addProcessingAssetId: (contentId) => {
+        set((state) => {
+          state.processingAssetsIds.push(contentId)
+        })
+      },
+      removeProcessingAssetId: (contentId) => {
+        set((state) => {
+          state.processingAssetsIds = state.processingAssetsIds.filter((id) => id !== contentId)
+        })
+      },
+    }),
+    state: {
       uploads: [],
       uploadsStatus: {},
       assetsFiles: [],
       isSyncing: false,
-
-      setUploadStatus: (contentId, status) => {
-        set((state) => ({
-          ...state,
-          uploadsStatus: { ...state.uploadsStatus, [contentId]: { ...state.uploadsStatus[contentId], ...status } },
-        }))
-      },
-      addAssetFile: (assetFile) => {
-        set((state) => ({ ...state, assetsFiles: [...state.assetsFiles, assetFile] }))
-      },
-      addAsset: (asset) => {
-        set((state) => ({ ...state, uploads: [...state.uploads, asset] }))
-      },
-      removeAsset: (contentId) => {
-        set((state) => ({
-          ...state,
-          uploads: state.uploads.filter((asset) => asset.contentId !== contentId),
-        }))
-      },
-      removeAssetsWithParent: (type, id) => {
-        set((state) => ({
-          ...state,
-          uploads: state.uploads.filter((asset) => asset.parentObject.id !== id || asset.parentObject.type !== type),
-        }))
-      },
-      setIsSyncing: (isSyncing) => {
-        set((state) => ({ ...state, isSyncing: isSyncing }))
-      },
-    }),
-    {
-      name: UPLOADS_LOCAL_STORAGE_KEY,
+      processingAssetsIds: [],
+    },
+  },
+  {
+    persist: {
+      key: UPLOADS_LOCAL_STORAGE_KEY,
+      whitelist: ['uploads', 'processingAssetsIds'],
+      version: 0,
       migrate: (state) => {
         const uploads = window.localStorage.getItem(UPLOADS_LOCAL_STORAGE_KEY)
         return {
@@ -70,7 +96,6 @@ export const useUploadsStore = create<UploadStoreState>(
           uploads: JSON.parse(uploads || ''),
         }
       },
-      whitelist: ['uploads'],
-    }
-  )
+    },
+  }
 )

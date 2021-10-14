@@ -1,38 +1,29 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, zIndex } from '../../theme'
+import { colors, media, sizes, square } from '../../theme'
 
 type HamburgerInnerProps = {
   active: boolean
 }
 
 export const Hamburger = styled.button`
-  height: ${sizes(11)};
-  width: ${sizes(11)};
-  padding: 0;
-  top: 18px;
+  ${square(48)};
 
-  /* FIXME: this shouldn't be set to 'fixed', button should work on its own, consumer may set it to fixed */
-  position: fixed;
-  z-index: ${zIndex.sideNav};
+  padding: 0;
   cursor: pointer;
-  background-color: ${colors.gray[700]};
   border: none;
   border-radius: 100%;
   display: inline-block;
-  margin-left: ${sizes(3)};
+  background-color: transparent;
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.12);
-  }
-
+  &:hover,
   &:focus {
-    background-color: rgba(0, 0, 0, 0.24);
+    background-color: ${colors.transparentPrimary[12]};
   }
 
   &:active {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: ${colors.transparentPrimary[6]};
   }
 
   ${media.md} {
@@ -65,7 +56,7 @@ export const HamburgerInner = styled.span<HamburgerInnerProps>`
   &::after {
     width: 18px;
     height: 2px;
-    background-color: ${colors.white};
+    background-color: ${colors.gray[50]};
     position: absolute;
   }
 

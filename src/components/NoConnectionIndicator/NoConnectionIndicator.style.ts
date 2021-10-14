@@ -2,8 +2,6 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
-import { TOP_NAVBAR_HEIGHT } from '../TopbarBase'
-
 export const TextWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -22,7 +20,7 @@ export const IconWrapper = styled.div`
 export const IndicatorWrapper = styled.div`
   display: flex;
   position: fixed;
-  top: calc(${TOP_NAVBAR_HEIGHT}px + ${sizes(4)});
+  top: calc(var(--size-topbar-height) + ${sizes(4)});
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -32,6 +30,6 @@ export const IndicatorWrapper = styled.div`
   background-color: ${colors.gray[600]};
   padding: ${sizes(3)} ${sizes(5)};
   ${media.md} {
-    margin-left: var(--sidenav-collapsed-width);
+    margin-left: var(--size-sidenav-width-collapsed);
   }
 `

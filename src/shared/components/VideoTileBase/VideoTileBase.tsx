@@ -1,94 +1,56 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import useResizeObserver from 'use-resize-observer'
 
-import { useContextMenu } from '@/hooks/useContextMenu'
-import {
-  SvgGlyphClose,
-  SvgGlyphCopy,
-  SvgGlyphDraft,
-  SvgGlyphEdit,
-  SvgGlyphHide,
-  SvgGlyphMore,
-  SvgGlyphPlay,
-  SvgGlyphTrash,
-  SvgLargeEdit,
-  SvgLargeUploadFailed,
-  SvgOutlineVideo,
-} from '@/shared/icons'
+import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
-import { formatDateAgo, formatDurationShort } from '@/utils/time'
+import { UploadStatus } from '@/types/uploads'
+import { getLinkPropsFromTo } from '@/utils/button'
+import { formatDateAgo } from '@/utils/time'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
-import { PullUp } from './PullUp'
 import {
   Anchor,
   AvatarContainer,
   ChannelHandle,
   Container,
-  CoverContainer,
-  CoverDurationOverlay,
-  CoverHoverOverlay,
-  CoverIconWrapper,
-  CoverImage,
-  CoverImageContainer,
-  CoverNoImage,
-  CoverSkeletonLoader,
-  CoverThumbnailUploadFailed,
-  CoverTopLeftContainer,
-  CoverVideoPublishingStateOverlay,
-  CoverWrapper,
   InfoContainer,
   KebabMenuButtonIcon,
   MetaContainer,
   ProgressBar,
   ProgressOverlay,
-  PublishingStateText,
-  RemoveButton,
-  SkeletonHoverOverlay,
   SpacedSkeletonLoader,
   StyledAvatar,
   TextContainer,
   TitleHeader,
   TitleHeaderAnchor,
 } from './VideoTileBase.styles'
+import { VideoTileCover } from './VideoTileCover'
 
-import { ContextMenu, ContextMenuItem } from '../ContextMenu'
+import { ContextMenu } from '../ContextMenu'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
 
 export type VideoTileBaseMetaProps = {
   showChannel?: boolean
-  showMeta?: boolean
   removeButton?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement>) => void
   onChannelClick?: (e: React.MouseEvent<HTMLElement>) => void
   onRemoveButtonClick?: (e: React.MouseEvent<HTMLElement>) => void
 }
 
-export type VideoTilePublisherProps =
-  | {
-      publisherMode: true
-      isPullupDisabled?: boolean
-      isDraft?: boolean
-      videoPublishState?: 'default' | 'unlisted'
-      onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
-      onOpenInTabClick?: () => void
-      onEditVideoClick?: () => void
-      onCopyVideoURLClick?: () => void
-      onDeleteVideoClick?: () => void
-    }
-  | {
-      publisherMode?: false
-      isPullupDisabled?: undefined
-      isDraft?: undefined
-      videoPublishState?: undefined
-      onPullupClick?: undefined
-      onOpenInTabClick?: undefined
-      onEditVideoClick?: undefined
-      onCopyVideoURLClick?: () => void
-      onDeleteVideoClick?: undefined
-    }
+export type VideoTilePublisherProps = {
+  publisherMode?: boolean
+  isDraft?: boolean
+  isUnlisted?: boolean
+  hasAssetUploadFailed?: boolean
+  uploadStatus?: UploadStatus
+  onPullupClick?: (e: React.MouseEvent<HTMLElement>) => void
+  onOpenInTabClick?: () => void
+  onEditVideoClick?: () => void
+  onCopyVideoURLClick?: () => void
+  onDeleteVideoClick?: () => void
+  onReuploadVideoClick?: () => void
+}
 
 export type VideoTileBaseProps = {
   title?: string | null
@@ -100,20 +62,17 @@ export type VideoTileBaseProps = {
   progress?: number
   views?: number | null
   thumbnailUrl?: string | null
-  hasThumbnailUploadFailed?: boolean
   isLoadingThumbnail?: boolean
   isLoadingAvatar?: boolean
   isLoading?: boolean
   videoHref?: string
+  openInNewBrowserTab?: boolean
   channelHref?: string
   className?: string
 } & VideoTileBaseMetaProps &
   VideoTilePublisherProps
 
 type TileSize = 'small' | 'big' | undefined
-
-export const MIN_VIDEO_TILE_WIDTH = 250
-const SMALL_SIZE_WIDTH = 300
 
 export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   title,
@@ -124,47 +83,34 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   progress = 0,
   views,
   thumbnailUrl,
-  hasThumbnailUploadFailed,
   channelHref,
   videoHref,
+  openInNewBrowserTab,
   isLoadingThumbnail,
+  hasAssetUploadFailed,
   isLoadingAvatar,
   isLoading = true,
   showChannel = true,
-  showMeta = true,
   removeButton = false,
-  videoPublishState = 'default',
+  uploadStatus,
   publisherMode = false,
   isDraft,
+  isUnlisted,
   onChannelClick,
   onPullupClick,
-  onClick,
   onRemoveButtonClick,
+  onClick,
   className,
   onOpenInTabClick,
   onEditVideoClick,
   onCopyVideoURLClick,
   onDeleteVideoClick,
-  isPullupDisabled,
+  onReuploadVideoClick,
 }) => {
-  const { openContextMenu, contextMenuOpts } = useContextMenu()
   const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
-  const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
-    onResize: (size) => {
-      const { width: videoTileWidth } = size
-      if (videoTileWidth) {
-        if (tileSize !== 'small' && videoTileWidth < SMALL_SIZE_WIDTH) {
-          setTileSize('small')
-        }
-        if (tileSize !== 'big' && videoTileWidth >= SMALL_SIZE_WIDTH) {
-          setTileSize('big')
-        }
-      }
-    },
-  })
-  const [failedLoadImage, setFailedLoadImage] = useState(false)
-  const clickable = (!!onClick || !!videoHref) && !isLoading
+  const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
+  const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
   const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
   const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -177,109 +123,77 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
   const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!href) {
       event.preventDefault()
+      onClick?.(event)
     }
   }
-  const handleCoverHoverOverlayClick = (event: React.MouseEvent<HTMLElement>) => {
-    onClick?.(event)
-  }
-  const handleRemoveClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (onRemoveButtonClick) {
-      event.preventDefault()
-      onRemoveButtonClick(event)
-    }
-  }
-  const handleFailedThumbnailLoad = () => {
-    if (!failedLoadImage) {
-      setFailedLoadImage(true)
-    }
-  }
+
+  const assetFailedKebabItems = [
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: 'Delete video',
+    },
+    {
+      icon: <SvgGlyphRetry />,
+      onClick: onReuploadVideoClick,
+      title: 'Reupload file',
+    },
+  ]
+
+  const publisherBasicKebabItems = [
+    {
+      icon: <SvgGlyphPlay />,
+      onClick: onOpenInTabClick,
+      title: 'Play in Joystream',
+    },
+    {
+      icon: <SvgGlyphCopy />,
+      onClick: onCopyVideoURLClick,
+      title: 'Copy video URL',
+    },
+  ]
+
+  const publisherAndDraftKebabItems = [
+    {
+      icon: <SvgGlyphEdit />,
+      onClick: onEditVideoClick,
+      title: isDraft ? 'Edit draft' : 'Edit video',
+    },
+    {
+      icon: <SvgGlyphTrash />,
+      onClick: onDeleteVideoClick,
+      title: isDraft ? 'Delete draft' : 'Delete video',
+    },
+  ]
+
+  const publisherKebabMenuItems = hasAssetUploadFailed
+    ? assetFailedKebabItems
+    : isDraft
+    ? publisherAndDraftKebabItems
+    : [...publisherBasicKebabItems, ...publisherAndDraftKebabItems]
+
   return (
-    <Container className={className} isLoading={isLoading}>
-      <CoverWrapper>
-        <CoverContainer ref={imgRef} clickable={clickable}>
-          <SwitchTransition>
-            <CSSTransition
-              key={isLoadingThumbnail ? 'cover-placeholder' : 'cover'}
-              timeout={parseInt(transitions.timings.sharp)}
-              classNames={transitions.names.fade}
-            >
-              <CoverImageContainer>
-                <Anchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
-                  {isLoadingThumbnail && !isDraft ? (
-                    <>
-                      {(videoHref || publisherMode) && (
-                        <SkeletonHoverOverlay>
-                          <CoverIconWrapper>
-                            {publisherMode ? (
-                              <SvgLargeEdit />
-                            ) : (
-                              <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
-                            )}
-                          </CoverIconWrapper>
-                        </SkeletonHoverOverlay>
-                      )}
-                      <CoverSkeletonLoader />
-                    </>
-                  ) : (
-                    <>
-                      {thumbnailUrl && !failedLoadImage ? (
-                        <CoverImage
-                          darkenImg={videoPublishState === 'unlisted' || !!isDraft}
-                          src={thumbnailUrl}
-                          onError={handleFailedThumbnailLoad}
-                          alt={`${title} by ${channelTitle} thumbnail`}
-                        />
-                      ) : hasThumbnailUploadFailed ? (
-                        <CoverThumbnailUploadFailed>
-                          <SvgLargeUploadFailed />
-                          <Text variant="subtitle2" secondary>
-                            Thumbnail upload failed
-                          </Text>
-                        </CoverThumbnailUploadFailed>
-                      ) : (
-                        <CoverNoImage />
-                      )}
-                      {(videoPublishState === 'unlisted' || isDraft) && (
-                        <CoverVideoPublishingStateOverlay>
-                          {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
-                          <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
-                        </CoverVideoPublishingStateOverlay>
-                      )}
-                      {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
-                      <CoverHoverOverlay onClick={handleCoverHoverOverlayClick}>
-                        {publisherMode && (
-                          <CoverTopLeftContainer>
-                            <PullUp
-                              // set to true when video is already on the snackbar
-                              disabled={!!isPullupDisabled}
-                              onClick={(event) => {
-                                event.preventDefault()
-                                onPullupClick && onPullupClick(event)
-                              }}
-                            />
-                          </CoverTopLeftContainer>
-                        )}
-                        <CoverIconWrapper>
-                          {publisherMode ? (
-                            <SvgLargeEdit />
-                          ) : (
-                            <SvgOutlineVideo width={34} height={34} viewBox="0 0 34 34" />
-                          )}
-                        </CoverIconWrapper>
-                        {removeButton && (
-                          <RemoveButton onClick={handleRemoveClick}>
-                            <SvgGlyphClose />
-                          </RemoveButton>
-                        )}
-                      </CoverHoverOverlay>
-                    </>
-                  )}
-                </Anchor>
-              </CoverImageContainer>
-            </CSSTransition>
-          </SwitchTransition>
-        </CoverContainer>
-      </CoverWrapper>
+    <Container className={className} isLoading={isLoading || isUploading}>
+      <VideoTileCover
+        videoHref={videoHref}
+        openInNewBrowserTab={openInNewBrowserTab}
+        setTileSize={setTileSize}
+        tileSize={tileSize}
+        onRemoveButtonClick={onRemoveButtonClick}
+        onClick={hasAssetUploadFailed ? onReuploadVideoClick : onClick}
+        isLoading={isLoading}
+        thumbnailUrl={thumbnailUrl}
+        isLoadingThumbnail={isLoadingThumbnail}
+        isDraft={isDraft}
+        isUnlisted={isUnlisted}
+        publisherMode={publisherMode}
+        uploadStatus={uploadStatus}
+        hasAssetUploadFailed={hasAssetUploadFailed}
+        onPullupClick={onPullupClick}
+        removeButton={removeButton}
+        thumbnailAlt={`${title} by ${channelTitle} thumbnail`}
+        duration={duration}
+      />
       {!!progress && (
         <ProgressOverlay>
           <ProgressBar style={{ width: `${progress}%` }} />
@@ -308,7 +222,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               {isLoading ? (
                 <SkeletonLoader height={18} width="60%" />
               ) : (
-                <TitleHeaderAnchor to={videoHref ?? ''} onClick={createAnchorClickHandler(videoHref)}>
+                <TitleHeaderAnchor
+                  to={videoHref ?? ''}
+                  onClick={createAnchorClickHandler(videoHref)}
+                  {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
+                >
                   <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
                     {title || 'Untitled'}
                   </TitleHeader>
@@ -329,61 +247,47 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                     </ChannelHandle>
                   </Anchor>
                 ))}
-              {showMeta && (
-                <MetaContainer noMarginTop={!showChannel}>
-                  {isLoading ? (
-                    <SpacedSkeletonLoader height={12} width={'80%'} />
-                  ) : createdAt ? (
-                    <Text variant="body2" secondary>
-                      {isDraft
-                        ? `Last updated ${formatDateAgo(createdAt)}`
-                        : formatVideoViewsAndDate(views ?? null, createdAt)}
-                    </Text>
-                  ) : null}
-                </MetaContainer>
-              )}
+              <MetaContainer noMarginTop={!showChannel}>
+                {isLoading && <SpacedSkeletonLoader height={12} width="80%" />}
+                {isUploading && (
+                  <Text variant="body2" secondary>
+                    {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
+                    {uploadStatus.lastStatus === 'processing' && 'Processing...'}
+                  </Text>
+                )}
+                {!isUploading && !hasAssetUploadFailed && createdAt && (
+                  <Text variant="body2" secondary>
+                    {isDraft
+                      ? `Last updated ${formatDateAgo(createdAt)}`
+                      : formatVideoViewsAndDate(views ?? null, createdAt)}
+                  </Text>
+                )}
+                {hasAssetUploadFailed && !uploadStatus && (
+                  <Text variant="body2" secondary>
+                    Upload failed...
+                  </Text>
+                )}
+              </MetaContainer>
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
-        <KebabMenuButtonIcon
-          onClick={(event) => openContextMenu(event, 200)}
-          variant="tertiary"
-          size="small"
-          isActive={contextMenuOpts.isActive}
+        <ContextMenu
+          placement="bottom-end"
+          items={
+            publisherMode
+              ? publisherKebabMenuItems
+              : [
+                  {
+                    icon: <SvgGlyphCopy />,
+                    onClick: onCopyVideoURLClick,
+                    title: 'Copy video URL',
+                  },
+                ]
+          }
         >
-          <SvgGlyphMore />
-        </KebabMenuButtonIcon>
-        <ContextMenu contextMenuOpts={contextMenuOpts}>
-          {publisherMode ? (
-            <>
-              {onOpenInTabClick && (
-                <ContextMenuItem icon={<SvgGlyphPlay />} onClick={onOpenInTabClick}>
-                  Play in Joystream
-                </ContextMenuItem>
-              )}
-              {onCopyVideoURLClick && (
-                <ContextMenuItem icon={<SvgGlyphCopy />} onClick={onCopyVideoURLClick}>
-                  Copy video URL
-                </ContextMenuItem>
-              )}
-              {onEditVideoClick && (
-                <ContextMenuItem icon={<SvgGlyphEdit />} onClick={onEditVideoClick}>
-                  {isDraft ? 'Edit draft' : 'Edit video'}
-                </ContextMenuItem>
-              )}
-              {onDeleteVideoClick && (
-                <ContextMenuItem icon={<SvgGlyphTrash />} onClick={onDeleteVideoClick}>
-                  {isDraft ? 'Delete draft' : 'Delete video'}
-                </ContextMenuItem>
-              )}
-            </>
-          ) : (
-            onCopyVideoURLClick && (
-              <ContextMenuItem onClick={onCopyVideoURLClick} icon={<SvgGlyphCopy />}>
-                Copy video URL
-              </ContextMenuItem>
-            )
-          )}
+          <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
+            <SvgGlyphMore />
+          </KebabMenuButtonIcon>
         </ContextMenu>
       </InfoContainer>
     </Container>

@@ -61,6 +61,13 @@ type DataObject {
   ipfsContentId: String!
   # Joystream runtime content id
   joystreamContentId: String!
+  videomediaDataObject: [Video!]
+  videothumbnailPhotoDataObject: [Video!]
+}
+
+input DataObjectWhereInput {
+  joystreamContentId_eq: String
+  joystreamContentId_in: [String!]
 }
 
 type Membership {
@@ -192,12 +199,18 @@ input VideoWhereInput {
   categoryId_eq: ID
   channelId_in: [ID!]
   channelId_eq: ID
+  createdAt_gte: DateTime
+  duration_lte: Int
+  duration_gte: Int
   thumbnailPhotoAvailability_eq: AssetAvailability
   mediaAvailability_eq: AssetAvailability
-  createdAt_gte: DateTime
+  licenseId_in: [ID!]
+  languageId_eq: ID
+  hasMarketing_eq: Boolean
   isFeatured_eq: Boolean
   isPublic_eq: Boolean
   isCensored_eq: Boolean
+  isExplicit_eq: Boolean
   id_in: [ID!]
   id_eq: ID
 }
@@ -297,6 +310,8 @@ type Query {
 
   # Free text search across videos and channels
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
+
+  dataObjects(limit: Int, where: DataObjectWhereInput): [DataObject!]!
 }
 
 type Subscription {

@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/shared/components/Text'
 import { SvgOutlineSearch } from '@/shared/icons'
+import { media } from '@/shared/theme'
 
 import { colors, sizes } from '../../theme'
 import { IconButton } from '../IconButton'
@@ -11,7 +13,7 @@ export const Input = styled.input`
   border: unset;
   padding: 14px ${sizes(3)};
   background: none;
-  color: ${colors.white};
+  color: ${colors.gray[50]};
 
   /* override mobile Safari user agent styling */
   border-radius: 0;
@@ -31,25 +33,49 @@ export const CancelButton = styled(IconButton)`
   right: 0;
   border: none;
   margin-right: ${sizes(2)};
+
+  path {
+    stroke: ${colors.gray[300]};
+  }
 `
 
 export const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: ${sizes(14)};
-  background-color: ${colors.gray[800]};
-  padding-left: ${sizes(4)};
+  box-shadow: inset 0 0 0 1px ${colors.gray[700]};
 
-  :focus-within {
-    outline: 1px solid ${colors.gray[500]};
+  ${media.md} {
+    height: 48px;
+    padding-left: ${sizes(4)};
   }
 `
 
 // TODO: remove override on viewer update
 export const StyledSvgOutlineSearch = styled(SvgOutlineSearch)`
+  flex-shrink: 0;
+
   circle,
   path {
     stroke: ${colors.gray['300']};
+  }
+`
+
+export const SearchHelper = styled(Text)`
+  padding-right: ${sizes(4)};
+  flex-shrink: 0;
+  display: none;
+
+  ${media.md} {
+    display: block;
+  }
+`
+
+export const SearchButton = styled(IconButton)`
+  padding: 0;
+  margin: 0 auto;
+
+  ${media.md} {
+    display: none;
   }
 `

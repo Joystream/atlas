@@ -36,9 +36,15 @@ export const Arrow = styled.div`
     transform: rotate(45deg);
   }
 `
-export const TooltipText = styled(Text)`
+
+type TooltipTextProps = {
+  withIcon?: boolean
+}
+
+export const TooltipText = styled(Text)<TooltipTextProps>`
   max-width: 200px;
   line-height: ${typography.lineHeights.subtitle1};
+  ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
 
 export const TooltipHeader = styled.div`

@@ -3,13 +3,9 @@ import * as React from 'react'
 
 export const SvgGlyphEdit = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M5 11l4-4" stroke="#F4F6F8" strokeWidth={4} />
-    <mask id="glyph-edit_svg__a" mask-type="alpha" maskUnits="userSpaceOnUse" x={0} y={8} width={8} height={8}>
-      <path d="M2 14l4-4" stroke="#fff" strokeWidth={4} />
-    </mask>
-    <g mask="url(#glyph-edit_svg__a)">
-      <path d="M2 11l1.5-1.5 3 3L5 14H2v-3z" fill="#F4F6F8" />
-    </g>
-    <path d="M11 5l2-2" stroke="#F4F6F8" strokeWidth={4} />
+    <path
+      d="M12.414 6.414l2-2-2.828-2.828-2 2 2.828 2.828zM10.414 8.414L4.828 14H2v-2.828l5.586-5.586 2.828 2.828z"
+      fill="#F4F6F8"
+    />
   </svg>
 )

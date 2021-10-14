@@ -3,42 +3,42 @@ import { ErrorBoundary } from '@sentry/react'
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
 import { PrivateRoute } from '@/components/PrivateRoute'
+import { SidenavStudio } from '@/components/SidenavStudio'
 import { StudioEntrypoint } from '@/components/StudioEntrypoint'
 import { StudioLoading } from '@/components/StudioLoading'
-import { StudioSidenav } from '@/components/StudioSidenav'
-import { StudioTopbar } from '@/components/StudioTopbar'
-import { TOP_NAVBAR_HEIGHT } from '@/components/TopbarBase'
+import { TopbarStudio } from '@/components/TopbarStudio'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useDialog } from '@/providers/dialogs'
-import { EditVideoSheetProvider, useVideoEditSheetRouting } from '@/providers/editVideoSheet'
 import { JoystreamProvider } from '@/providers/joystream'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
+import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
+import { transitions } from '@/shared/theme'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
   CreateEditChannelView,
   CreateMemberView,
-  EditVideoSheet,
   MyUploadsView,
   MyVideosView,
   SignInJoinView,
   SignInView,
+  VideoWorkspace,
 } from '@/views/studio'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
   const location = useLocation()
-  const displayedLocation = useVideoEditSheetRouting()
+  const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
     useUser()
 
@@ -76,8 +76,16 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      <StudioTopbar fullWidth={!channelSet || !memberSet} hideChannelInfo={!memberSet} />
-      {channelSet && <StudioSidenav />}
+      <TopbarStudio hideChannelInfo={!memberSet} />
+      <CSSTransition
+        in={channelSet}
+        timeout={parseInt(transitions.timings.regular)}
+        classNames={SLIDE_ANIMATION}
+        mountOnEnter
+        unmountOnExit
+      >
+        <StyledSidenavStudio />
+      </CSSTransition>
       {!userInitialized ? (
         <StudioLoading />
       ) : (
@@ -132,7 +140,7 @@ const StudioLayout = () => {
               />
             </Routes>
           </MainContainer>
-          {channelSet && <EditVideoSheet />}
+          {channelSet && <VideoWorkspace />}
         </>
       )}
     </>
@@ -141,8 +149,31 @@ const StudioLayout = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: ${TOP_NAVBAR_HEIGHT}px var(--global-horizontal-padding) 0;
-  margin-left: var(--sidenav-collapsed-width);
+  height: 100%;
+  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
+  margin-left: var(--size-sidenav-width-collapsed);
+`
+
+const SLIDE_ANIMATION = 'slide-left'
+
+const StyledSidenavStudio = styled(SidenavStudio)`
+  &.${SLIDE_ANIMATION}-enter {
+    transform: translateX(-100%);
+  }
+
+  &.${SLIDE_ANIMATION}-enter-active {
+    transition: transform ${transitions.timings.regular} ${transitions.routingEasing};
+    transform: translateX(0%);
+  }
+
+  &.${SLIDE_ANIMATION}-exit {
+    transform: translateX(0%);
+  }
+
+  &.${SLIDE_ANIMATION}-exit-active {
+    transition: transform ${transitions.timings.regular} ${transitions.routingEasing};
+    transform: translateX(-100%);
+  }
 `
 
 const StudioLayoutWrapper: React.FC = () => {
@@ -155,14 +186,14 @@ const StudioLayoutWrapper: React.FC = () => {
       }}
     >
       <ActiveUserProvider>
-        <EditVideoSheetProvider>
+        <VideoWorkspaceProvider>
           <JoystreamProvider>
             <ConnectionStatusManager />
             <UploadsManager />
             <TransactionManager />
             <StudioLayout />
           </JoystreamProvider>
-        </EditVideoSheetProvider>
+        </VideoWorkspaceProvider>
       </ActiveUserProvider>
     </ErrorBoundary>
   )

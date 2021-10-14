@@ -9,27 +9,30 @@ type DenseProps = {
 }
 
 export const FormFieldWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 4 : 6)};
+  margin-top: ${({ dense }) => sizes(dense ? 4 : 10)};
   width: 100%;
-  max-width: 760px;
+`
+
+export const FormFieldHeader = styled.header`
+  display: flex;
+  align-items: center;
+  width: 85%;
+  word-wrap: break-word;
 `
 
 export const FormFieldTitle = styled(Text)`
-  margin: 0;
-  line-height: ${sizes(5)};
-  word-wrap: break-word;
-  width: 85%;
+  margin-right: ${sizes(4)};
 `
 
 export const FormFieldDescription = styled(Text)`
-  margin-top: ${sizes(2)};
   width: 85%;
+  padding: ${sizes(2)} 0;
   font-size: ${typography.sizes.subtitle2};
   color: ${colors.gray[300]};
   line-height: ${sizes(5)};
   word-wrap: break-word;
 `
 
-export const ChildrenWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 2 : 6)};
+export const ChildrenWrapper = styled.div`
+  margin-top: ${sizes(4)};
 `

@@ -31,6 +31,5 @@ export const TransactionManager: React.FC = () => {
       removeOldBlockActions(indexerHead)
     },
   })
-
   return <TransactionDialog status={dialogStep} onClose={() => setDialogStep(null)} />
 }

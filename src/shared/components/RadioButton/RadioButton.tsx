@@ -1,47 +1,37 @@
 import React from 'react'
 
-import {
-  Input,
-  RadioButtonContainer,
-  RadioButtonLabel,
-  RadioButtonStyleProps,
-  StyledHelperText,
-  StyledInput,
-  StyledLabelText,
-} from './RadioButton.style'
+import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
+import { RadioInput } from '../RadioInput'
 
 type RadioButtonProps = Partial<{
   selectedValue: string | number
   label: string
   helperText?: string
   className?: string
+  error?: boolean
 }> &
-  Omit<RadioButtonStyleProps, 'clickable'> &
-  React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
-  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onClick'>
+  React.InputHTMLAttributes<HTMLInputElement>
 
 export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
   ({ value, selectedValue, label, helperText, className, disabled, error, onChange, ...props }, ref) => {
-    const isSelected = value === selectedValue
-
     return (
-      <RadioButtonLabel disabled={disabled} className={className}>
-        <RadioButtonContainer>
-          <StyledInput checked={isSelected} error={error} disabled={disabled}>
-            <Input
-              ref={ref}
-              value={value}
-              type="radio"
-              disabled={disabled}
-              {...props}
-              checked={isSelected}
-              onChange={onChange}
-            />
-          </StyledInput>
-        </RadioButtonContainer>
-        {label && <StyledLabelText variant="body1">{label}</StyledLabelText>}
-        {helperText && <StyledHelperText helperText={helperText} error={error} />}
-      </RadioButtonLabel>
+      <RadioAndCheckboxBase
+        disabled={disabled}
+        className={className}
+        label={label}
+        error={error}
+        helperText={helperText}
+      >
+        <RadioInput
+          {...props}
+          ref={ref}
+          error={error}
+          disabled={disabled}
+          onChange={onChange}
+          value={value}
+          selectedValue={selectedValue}
+        />
+      </RadioAndCheckboxBase>
     )
   }
 )

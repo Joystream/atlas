@@ -3,36 +3,38 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { VideoTilePublisher } from '@/components/VideoTile'
+import { VideoTilePublisher } from '@/components/VideoTilePublisher'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useDialog } from '@/providers/dialogs'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Grid } from '@/shared/components/Grid'
-import { Pagination } from '@/shared/components/Pagination'
 import { Select } from '@/shared/components/Select'
 import { Tabs } from '@/shared/components/Tabs'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphUpload } from '@/shared/icons'
+import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/shared/icons'
+import { sizes } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  PaginationContainer,
-  SortContainer,
+  MobileButton,
   StyledDismissibleBanner,
+  StyledGrid,
+  StyledLimitedWidthContainer,
+  StyledPagination,
+  StyledSelect,
+  StyledText,
   TabsContainer,
-  ViewContainer,
 } from './MyVideos.styles'
+import { NewVideoTile } from './NewVideoTile'
 
-const TABS = ['All Videos', 'Public', 'Drafts', 'Unlisted'] as const
+const TABS = ['All videos', 'Public', 'Drafts', 'Unlisted'] as const
 
 const INITIAL_VIDEOS_PER_ROW = 4
 const ROWS_AMOUNT = 4
@@ -43,17 +45,22 @@ const SNACKBAR_TIMEOUT = 5000
 
 export const MyVideosView = () => {
   const navigate = useNavigate()
-  const { setSheetState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useEditVideoSheet()
+  const { setVideoWorkspaceState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
+  const smMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
 
   const [currentVideosTab, setCurrentVideosTab] = useState(0)
   const currentTabName = TABS[currentVideosTab]
   const isDraftTab = currentTabName === 'Drafts'
-  const isPublic_eq = getPublicness(currentTabName)
+  const isAllVideosTab = currentTabName === 'All videos'
+  const isPublicTab = currentTabName === 'Public'
+  const isUnlistedTab = currentTabName === 'Unlisted'
+  const isPublic_eq = isPublicTab ? true : isUnlistedTab ? false : undefined
 
   const removeDraftNotificationsCount = useRef(0)
   const addToTabNotificationsCount = useRef(0)
@@ -63,10 +70,13 @@ export const MyVideosView = () => {
   const { removeDrafts, markAllDraftsAsSeenForChannel } = useDraftStore(({ actions }) => actions)
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId))
   const _drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const drafts =
-    sortVideosBy === VideoOrderByInput.CreatedAtAsc
+
+  const drafts = [
+    ...(_drafts.length ? ['new-video-tile' as const] : []),
+    ...(sortVideosBy === VideoOrderByInput.CreatedAtDesc
       ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
+  ]
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
     {
@@ -85,8 +95,8 @@ export const MyVideosView = () => {
   const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
   const deleteVideo = useDeleteVideo()
 
-  const videos = edges
-    ?.map((edge) => edge.node)
+  const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
+    ?.map((edge) => (edge === 'new-video-tile' ? edge : edge.node))
     .slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
   const placeholderItems = Array.from({ length: loading ? videosPerPage - (videos ? videos.length : 0) : 0 }, () => ({
     id: undefined,
@@ -95,7 +105,7 @@ export const MyVideosView = () => {
 
   const videosWithSkeletonLoaders = [...(videos || []), ...placeholderItems]
   const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const hasNoVideos = currentTabName === 'All Videos' && totalCount === 0 && drafts.length === 0
+  const hasNoVideos = isAllVideosTab && totalCount === 0 && drafts.length === 0
 
   useEffect(() => {
     if (!fetchMore || !edges?.length || !totalCount) {
@@ -150,15 +160,15 @@ export const MyVideosView = () => {
         })
       }
 
-      setSheetState('minimized')
+      setVideoWorkspaceState('minimized')
     } else {
       const tabIdx = videoTabs.findIndex((t) => t.id === id)
       if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
-      navigate(absoluteRoutes.studio.editVideo())
+      navigate(absoluteRoutes.studio.videoWorkspace())
     }
   }
 
-  // Workaround for removing drafts from video sheet tabs via snackbar
+  // Workaround for removing drafts from video videoWorkspace tabs via snackbar
   // Snackbar will probably need a refactor to handle actions that change state
   useEffect(() => {
     if (tabIdToRemoveViaSnackbar !== undefined) {
@@ -220,130 +230,180 @@ export const MyVideosView = () => {
     ? drafts
         // pagination slice
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
-        .map((draft, idx) => (
+        .map((draft, idx) => {
+          if (draft === 'new-video-tile') {
+            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={() => addVideoTab()} />
+          }
+          return (
+            <VideoTilePublisher
+              key={`draft-${idx}`}
+              id={draft.id}
+              showChannel={false}
+              isDraft
+              onClick={() => handleVideoClick(draft.id, { draft: true })}
+              onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+              onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+            />
+          )
+        })
+    : videosWithSkeletonLoaders.map((video, idx) => {
+        if (video === 'new-video-tile') {
+          return <NewVideoTile loading={loading} key={idx} onClick={() => addVideoTab()} />
+        }
+        return (
           <VideoTilePublisher
-            key={idx}
-            id={draft.id}
+            key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
+            id={video.id}
             showChannel={false}
-            isDraft
-            isPullupDisabled={!!videoTabs.find((t) => t.id === draft.id)}
-            onClick={() => handleVideoClick(draft.id, { draft: true })}
             onPullupClick={(e) => {
               e.stopPropagation()
-              handleVideoClick(draft.id, { draft: true, minimized: true })
+              e.preventDefault()
+              handleVideoClick(video.id)
             }}
-            onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-            onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+            onEditVideoClick={() => handleVideoClick(video.id)}
+            onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
+            onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads())}
           />
-        ))
-    : videosWithSkeletonLoaders.map((video, idx) => (
-        <VideoTilePublisher
-          key={idx}
-          id={video.id}
-          showChannel={false}
-          isPullupDisabled={!!videoTabs.find((t) => t.id === video.id)}
-          onClick={() => handleVideoClick(video.id)}
-          onPullupClick={(e) => {
-            e.stopPropagation()
-            handleVideoClick(video.id, { minimized: true })
-          }}
-          onEditVideoClick={() => handleVideoClick(video.id)}
-          onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
-        />
-      ))
+        )
+      })
 
   if (error) {
     return <ViewErrorFallback />
   }
 
+  const sortVisibleAndUploadButtonVisible = isDraftTab ? !!drafts.length : !hasNoVideos
+
+  const sortSelectNode = (
+    <Select
+      size="small"
+      labelPosition="left"
+      label="Sort by"
+      value={sortVideosBy}
+      items={SORT_OPTIONS}
+      onChange={handleSorting}
+    />
+  )
+
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <LimitedWidthContainer>
-      <ViewContainer>
-        <Text variant="h2">My videos</Text>
-        {hasNoVideos ? (
-          <EmptyFallback
-            title="Add your first video"
-            subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
-            button={
-              <Button icon={<SvgGlyphUpload />} to={absoluteRoutes.studio.editVideo()} variant="secondary" size="large">
+    <StyledLimitedWidthContainer>
+      <StyledText variant="h2">My videos</StyledText>
+      {!smMatch && sortVisibleAndUploadButtonVisible && (
+        <MobileButton
+          size="large"
+          to={absoluteRoutes.studio.videoWorkspace()}
+          icon={<SvgGlyphAddVideo />}
+          onClick={() => addVideoTab()}
+        >
+          Upload video
+        </MobileButton>
+      )}
+      {hasNoVideos ? (
+        <EmptyFallback
+          verticalCentered
+          title="Add your first video"
+          subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
+          button={
+            <Button
+              icon={<SvgGlyphUpload />}
+              to={absoluteRoutes.studio.videoWorkspace()}
+              variant="secondary"
+              size="large"
+              onClick={() => addVideoTab()}
+            >
+              Upload video
+            </Button>
+          }
+        />
+      ) : (
+        <>
+          <TabsContainer>
+            <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
+            {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
+            {smMatch && sortVisibleAndUploadButtonVisible && (
+              <Button
+                to={absoluteRoutes.studio.videoWorkspace()}
+                icon={<SvgGlyphAddVideo />}
+                onClick={() => addVideoTab()}
+              >
                 Upload video
               </Button>
-            }
+            )}
+          </TabsContainer>
+          {isDraftTab && (
+            <StyledDismissibleBanner
+              id="video-draft-saved-locally-warning"
+              title="Video drafts are saved locally"
+              icon="info"
+              description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
+            />
+          )}
+          {isUnlistedTab && (
+            <StyledDismissibleBanner
+              id="unlisted-video-link-info"
+              title="Unlisted videos can be seen only with direct link"
+              icon="info"
+              description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
+            />
+          )}
+          {!mdMatch && sortVisibleAndUploadButtonVisible && (
+            <StyledSelect
+              size="small"
+              labelPosition="left"
+              label="Sort by"
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
+            />
+          )}
+          <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(4)}>
+            {gridContent}
+          </StyledGrid>
+          {((isDraftTab && drafts.length === 0) ||
+            (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
+            <EmptyFallback
+              verticalCentered
+              title={
+                isAllVideosTab
+                  ? 'No videos yet'
+                  : isPublicTab
+                  ? 'No public videos yet'
+                  : isDraftTab
+                  ? 'No drafts here yet'
+                  : 'No unlisted videos here yet'
+              }
+              subtitle={
+                isAllVideosTab
+                  ? null
+                  : isPublicTab
+                  ? 'Videos published with "Public" privacy setting will show up here.'
+                  : isDraftTab
+                  ? "Each video that hasn't been published yet will be available here as a draft."
+                  : 'Videos published with "Unlisted" privacy setting will show up here.'
+              }
+              button={
+                <Button
+                  icon={<SvgGlyphUpload />}
+                  to={absoluteRoutes.studio.videoWorkspace()}
+                  variant="secondary"
+                  size="large"
+                  onClick={() => addVideoTab()}
+                >
+                  Upload video
+                </Button>
+              }
+            />
+          )}
+          <StyledPagination
+            onChangePage={handleChangePage}
+            page={currentPage}
+            itemsPerPage={videosPerPage}
+            // +1 is for new video tile
+            totalCount={isDraftTab ? drafts.length : (totalCount || 0) + 1}
           />
-        ) : (
-          <>
-            <TabsContainer>
-              <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-              <SortContainer>
-                <Text variant="body2">Sort by</Text>
-                <Select helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
-              </SortContainer>
-            </TabsContainer>
-            {isDraftTab && (
-              <StyledDismissibleBanner
-                id="video-draft-saved-locally-warning"
-                title="Video drafts are saved locally"
-                icon="info"
-                description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
-              />
-            )}
-            {currentTabName === 'Unlisted' && (
-              <StyledDismissibleBanner
-                id="unlisted-video-link-info"
-                title="Unlisted videos can be seen only with direct link"
-                icon="info"
-                description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
-              />
-            )}
-            <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-              {gridContent}
-            </Grid>
-            {((isDraftTab && drafts.length === 0) ||
-              (!isDraftTab && !loading && totalCount === 0 && (!videos || videos.length === 0))) && (
-              <EmptyFallback
-                title={
-                  currentTabName === 'All Videos'
-                    ? 'No videos yet'
-                    : currentTabName === 'Public'
-                    ? 'No public videos yet'
-                    : currentTabName === 'Drafts'
-                    ? 'No drafts here yet'
-                    : 'No unlisted videos here yet'
-                }
-                subtitle={
-                  currentTabName === 'All Videos'
-                    ? null
-                    : currentTabName === 'Public'
-                    ? 'Videos published with "Public" privacy setting will show up here.'
-                    : currentTabName === 'Drafts'
-                    ? "Each video that hasn't been published yet will be available here as a draft."
-                    : 'Videos published with "Unlisted" privacy setting will show up here.'
-                }
-                button={
-                  <Button
-                    icon={<SvgGlyphUpload />}
-                    to={absoluteRoutes.studio.editVideo()}
-                    variant="secondary"
-                    size="large"
-                  >
-                    Upload video
-                  </Button>
-                }
-              />
-            )}
-            <PaginationContainer>
-              <Pagination
-                onChangePage={handleChangePage}
-                page={currentPage}
-                itemsPerPage={videosPerPage}
-                totalCount={isDraftTab ? drafts.length : totalCount}
-              />
-            </PaginationContainer>
-          </>
-        )}
-      </ViewContainer>
-    </LimitedWidthContainer>
+        </>
+      )}
+    </StyledLimitedWidthContainer>
   )
 }
 
@@ -354,16 +414,4 @@ const usePagination = (currentTab: number) => {
     setCurrentPage(0)
   }, [currentTab])
   return { currentPage, setCurrentPage }
-}
-
-const getPublicness = (currentTabName: typeof TABS[number]) => {
-  switch (currentTabName) {
-    case 'Public':
-      return true
-    case 'Unlisted':
-      return false
-    case 'All Videos':
-    default:
-      return undefined
-  }
 }

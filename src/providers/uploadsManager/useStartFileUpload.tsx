@@ -6,11 +6,12 @@ import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
 import { ResolvedAssetDetails } from '@/types/assets'
+import { UploadStatus } from '@/types/uploads'
 import { createStorageNodeUrl } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
-import { InputAssetUpload, StartFileUploadOptions, UploadStatus } from './types'
+import { InputAssetUpload, StartFileUploadOptions } from './types'
 
 import { useSnackbar } from '../snackbars'
 import { useStorageProviders } from '../storageProviders'
@@ -18,18 +19,16 @@ import { useStorageProviders } from '../storageProviders'
 const RETRIES_COUNT = 3
 const RETRY_DELAY = 1000
 const UPLOADING_SNACKBAR_TIMEOUT = 8000
-const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
 export const useStartFileUpload = () => {
   const navigate = useNavigate()
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageProvider, markStorageProviderNotWorking } = useStorageProviders()
 
-  const addAssetFile = useUploadsStore((state) => state.addAssetFile)
-  const addAsset = useUploadsStore((state) => state.addAsset)
-  const setUploadStatus = useUploadsStore((state) => state.setUploadStatus)
+  const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAssetId } = useUploadsStore(
+    (state) => state.actions
+  )
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
-
   const pendingUploadingNotificationsCounts = useRef(0)
   const assetsNotificationsCount = useRef<{
     uploads: {
@@ -46,36 +45,15 @@ export const useStartFileUpload = () => {
   const displayUploadingNotification = useRef(
     debounce(() => {
       displaySnackbar({
-        title:
-          pendingUploadingNotificationsCounts.current > 1
-            ? `${pendingUploadingNotificationsCounts.current} assets being uploaded`
-            : 'Asset being uploaded',
-        iconType: 'info',
+        title: `${pendingUploadingNotificationsCounts.current} ${
+          pendingUploadingNotificationsCounts.current > 1 ? 'files' : 'file'
+        } added to uploads`,
+        iconType: 'uploading',
         timeout: UPLOADING_SNACKBAR_TIMEOUT,
-        actionText: 'See',
+        actionText: 'Inspect',
         onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
       })
       pendingUploadingNotificationsCounts.current = 0
-    }, 700)
-  )
-
-  const displayUploadedNotification = useRef(
-    debounce((key) => {
-      const uploaded = assetsNotificationsCount.current.uploaded[key]
-      const uploads = assetsNotificationsCount.current.uploads[key]
-
-      displaySnackbar({
-        customId: key,
-        title: `${uploaded}/${uploads} assets uploaded`,
-        iconType: 'success',
-        timeout: UPLOADED_SNACKBAR_TIMEOUT,
-        actionText: 'See',
-        onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
-      })
-      if (uploaded === uploads) {
-        assetsNotificationsCount.current.uploaded[key] = 0
-        assetsNotificationsCount.current.uploads[key] = 0
-      }
     }, 700)
   )
 
@@ -126,7 +104,7 @@ export const useStartFileUpload = () => {
         }
         rax.attach()
         if (!opts?.isReUpload && !opts?.changeHost && file) {
-          addAsset({ ...asset, size: file.size })
+          addAssetToUploads({ ...asset, size: file.size })
         }
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })
@@ -140,7 +118,6 @@ export const useStartFileUpload = () => {
 
         assetsNotificationsCount.current.uploads[assetKey] =
           (assetsNotificationsCount.current.uploads[assetKey] || 0) + 1
-
         await axios.put(assetUrl.toString(), opts?.changeHost ? fileInState?.blob : file, {
           headers: {
             // workaround for a bug in the storage node
@@ -162,8 +139,8 @@ export const useStartFileUpload = () => {
             backoffType: 'static',
             onRetryAttempt: (err) => {
               const cfg = rax.getConfig(err)
-              if (cfg?.currentRetryAttempt === 1) {
-                setAssetStatus({ lastStatus: 'reconnecting' })
+              if (cfg?.currentRetryAttempt || 0 >= 1) {
+                setAssetStatus({ lastStatus: 'reconnecting', retries: cfg?.currentRetryAttempt })
               }
             },
           },
@@ -171,10 +148,11 @@ export const useStartFileUpload = () => {
         })
 
         // TODO: remove assets from the same parent if all finished
-        setAssetStatus({ lastStatus: 'completed', progress: 100 })
+        setAssetStatus({ lastStatus: 'processing', progress: 100 })
+        addProcessingAssetId(asset.contentId)
+
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
-        displayUploadedNotification.current(assetKey)
 
         const performanceEntries = performance.getEntriesByName(assetUrl)
         if (performanceEntries.length === 1) {
@@ -207,14 +185,15 @@ export const useStartFileUpload = () => {
       }
     },
     [
-      addAsset,
       assetsFiles,
-      displaySnackbar,
       getRandomStorageProvider,
+      setUploadStatus,
+      addAssetFile,
+      addProcessingAssetId,
+      addAssetToUploads,
+      displaySnackbar,
       markStorageProviderNotWorking,
       navigate,
-      addAssetFile,
-      setUploadStatus,
     ]
   )
 

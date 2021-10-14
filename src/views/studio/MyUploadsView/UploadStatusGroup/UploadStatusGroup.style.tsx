@@ -1,13 +1,11 @@
-import { css, keyframes } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { ExpandButton } from '@/shared/components/ExpandButton'
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { Text } from '@/shared/components/Text'
+import { colors, sizes, transitions } from '@/shared/theme'
 
-type ProgressbarProps = {
-  progress: number
-  hasUploadingAsset: boolean
-}
+import { UploadStatusGroupSize } from './UploadStatusGroup'
 
 type UploadStatusGroupProps = {
   isActive?: boolean
@@ -28,80 +26,63 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   align-items: center;
   padding: ${sizes(4)};
   width: 100%;
-  height: ${sizes(20)};
-  background-color: ${({ isActive }) => (isActive ? colors.gray[900] : colors.black)};
+  background-color: ${colors.gray[900]};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
-
-  &:hover {
-    background-color: ${colors.gray[900]};
-  }
 `
 
-const pulse = keyframes`
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 1;
-  }
-`
+type ThumbnailProps = {
+  size?: UploadStatusGroupSize
+}
 
-const pulseAnimationCss = (props: ProgressbarProps) =>
-  props.hasUploadingAsset
-    ? css`
-        animation: ${pulse} 2.5s infinite ease-in-out;
-      `
-    : null
-
-export const ProgressBar = styled.div<ProgressbarProps>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: ${colors.transparentPrimary[20]};
-  transform-origin: 0 0;
-  transform: scaleX(${({ progress }) => progress && `${progress / 100}`});
-  transition: transform 1s linear;
-  ${pulseAnimationCss}
-`
-
-export const Thumbnail = styled.div`
-  display: none;
+export const Thumbnail = styled.div<ThumbnailProps>`
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
-  width: ${sizes(18)};
-  height: ${sizes(12)};
   background-color: ${colors.gray[700]};
+  height: ${sizes(12)};
 
-  ${media.xs} {
-    display: flex;
-  }
+  ${({ size }) => {
+    if (size === 'compact') {
+      return css`
+        width: ${sizes(12)};
+      `
+    }
+    if (size === 'large') {
+      return css`
+        width: ${sizes(18)};
+      `
+    }
+  }};
 `
 export const AssetsInfoContainer = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin-left: ${sizes(4)};
-  height: ${sizes(12)};
   color: ${colors.gray[300]};
+  flex: 0 1 auto;
+  overflow: hidden;
+`
+
+export const AssetGroupTitleText = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const UploadInfoContainer = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   margin-left: auto;
   width: fit-content;
-  height: ${sizes(12)};
   color: ${colors.gray[300]};
-  text-align: right;
 `
 
 export const StyledExpandButton = styled(ExpandButton)`

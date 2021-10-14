@@ -1,84 +1,84 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, typography } from '@/shared/theme'
+import { colors, media, sizes, transitions, zIndex } from '@/shared/theme'
 
+import { Button } from '../Button'
 import { Text } from '../Text'
+import { Tooltip } from '../Tooltip'
 
-export const StyledActionBarContainer = styled.div`
-  display: flex;
+export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   background-color: ${colors.gray[900]};
-  padding: ${sizes(3)} ${sizes(4)};
   border-top: 1px solid ${colors.gray[700]};
+  display: grid;
+  padding: ${sizes(4)};
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr;
+  z-index: ${zIndex.header};
+  transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
+  transition: transform ${transitions.timings.regular} ${transitions.easing};
+  grid-template-areas: 'primary-text badge' 'primary-button primary-button';
 
-  ${media.md} {
-    flex-direction: row;
-    justify-content: space-between;
+  &.${transitions.names.fade}-enter-active {
+    transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
+  }
+  ${media.sm} {
+    grid-template-areas: 'primary-text badge primary-button';
+    padding: ${sizes(4)} ${sizes(8)};
+  }
+  ${media.lg} {
+    grid-template-columns: max-content 1fr max-content max-content;
+    grid-template-areas: 'primary-text secondary-text badge primary-button';
     padding: ${sizes(4)} ${sizes(8)};
   }
 `
 
-export const StyledInnerContainer = styled.div`
-  display: flex;
-  width: 100%;
-`
-
-export const StyledInfoContainer = styled.div`
-  display: none;
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-
-  ${media.sm} {
-    display: flex;
-  }
-
-  ${media.lg} {
-    align-items: center;
-    width: 100%;
-  }
-`
-
 export const StyledPrimaryText = styled(Text)`
-  color: ${colors.white};
-  font-family: ${typography.fonts.headers};
-  font-size: ${typography.sizes.h5};
-  font-weight: ${typography.weights.bold};
-  text-align: right;
-
-  ${media.md} {
-    margin-right: ${sizes(4)};
-  }
+  grid-area: primary-text;
+  margin-right: ${sizes(5)};
+  align-self: center;
 `
 
 export const StyledSecondaryText = styled(Text)`
-  color: ${colors.gray[300]};
-  font-size: ${typography.sizes.body2};
-  line-height: 20px;
-  max-width: 360px;
   display: none;
-
-  ${media.md} {
+  ${media.lg} {
+    grid-area: secondary-text;
+    max-width: 360px;
+    align-self: center;
     display: block;
   }
 `
 
-export const StyledButtonsContainer = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
+export const ActionButtonPrimaryTooltip = styled(Tooltip)`
+  grid-area: primary-button;
+`
 
-  > *:not(:last-child) {
-    margin-right: ${sizes(4)};
+export const ActionButtonPrimary = styled(Button)`
+  grid-area: primary-button;
+  width: 100%;
+  margin-top: ${sizes(4)};
+  ${media.sm} {
+    margin-top: 0;
+    margin-left: ${sizes(4)};
   }
 `
 
-export const DetailsContainer = styled.div`
+export const DraftsBadgeContainer = styled.div`
+  grid-area: badge;
+  user-select: none;
   margin-left: auto;
   display: flex;
   align-items: center;
-  padding: 0 ${sizes(5)};
+  height: 100%;
+  padding: ${sizes(4)} 0;
+  transition: background-color ${transitions.timings.sharp} ${transitions.easing};
+
+  ${media.sm} {
+    padding: 0 ${sizes(4)};
+
+    :hover {
+      background-color: ${colors.transparentPrimary[18]};
+    }
+  }
 `
 
 export const DetailsIconWrapper = styled.span`

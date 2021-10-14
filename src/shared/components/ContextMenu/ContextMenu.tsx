@@ -1,39 +1,50 @@
-import React, { ReactNode } from 'react'
-import { CSSTransition } from 'react-transition-group'
-
-import { Portal } from '@/components/Portal'
-import { useOverlayManager } from '@/providers/overlayManager'
+import React, { ReactNode, useRef } from 'react'
 
 import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
 
+import { Popover, PopoverProps, TippyInstance } from '../Popover'
+
 type MenuItemProps = {
   icon: ReactNode
-  onClick: () => void
+  title: string
+  onClick?: () => void
 }
 
-type ContextMenuProps = {
-  contextMenuOpts: {
-    isActive?: boolean
-    position: { x: number; y: number; left: boolean }
-  }
-}
-
-export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, children, onClick }) => {
+export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title }) => {
   return (
     <StyledMenuItem onClick={onClick}>
       {icon}
-      <StyledText>{children}</StyledText>
+      <StyledText>{title}</StyledText>
     </StyledMenuItem>
   )
 }
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ contextMenuOpts: { isActive, position }, children }) => {
-  const { contextMenuContainerRef } = useOverlayManager()
+type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
+
+export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...rest }) => {
+  const contextMenuInstanceRef = useRef<TippyInstance>()
   return (
-    <Portal containerRef={contextMenuContainerRef}>
-      <CSSTransition in={isActive} timeout={150} classNames="menu" unmountOnExit>
-        <StyledContainer position={position}>{children}</StyledContainer>
-      </CSSTransition>
-    </Portal>
+    <Popover
+      hideOnClick
+      instanceRef={contextMenuInstanceRef}
+      content={
+        <StyledContainer>
+          {items.map((item, index) => (
+            <ContextMenuItem
+              key={index}
+              icon={item.icon}
+              title={item.title}
+              onClick={() => {
+                item.onClick?.()
+                contextMenuInstanceRef.current?.hide()
+              }}
+            />
+          ))}
+        </StyledContainer>
+      }
+      {...rest}
+    >
+      {children}
+    </Popover>
   )
 }

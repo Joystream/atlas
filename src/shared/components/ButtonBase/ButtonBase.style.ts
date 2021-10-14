@@ -16,7 +16,6 @@ export type ButtonSize = 'large' | 'medium' | 'small'
 export type ButtonBaseStyleProps = {
   variant: ButtonVariant
   size: ButtonSize
-  clickable?: boolean
   fullWidth?: boolean
   textOnly: boolean
   iconOnly: boolean
@@ -45,6 +44,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
           path {
             fill: ${textOnly && colors.blue[400]};
           }
+        }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
         }
       `
     case 'secondary':
@@ -100,6 +104,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
         &:active {
           background-color: ${colors.secondary.alert[300]};
         }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
+        }
       `
     case 'destructive-secondary':
       return css`
@@ -145,6 +154,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
 
         &:active {
           background-color: ${colors.secondary.warning[300]};
+        }
+
+        &:disabled,
+        &[aria-disabled='true'] {
+          ${!textOnly && `background-color: ${colors.gray[600]}`};
         }
       `
     case 'warning-secondary':
@@ -219,8 +233,8 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  margin-top: -0.5px;
-  margin-bottom: -0.5px;
+  margin-top: ${({ textOnly }) => textOnly && '-0.5px'};
+  margin-bottom: ${({ textOnly }) => textOnly && '-0.5px'};
   height: 100%;
   visibility: hidden;
   border-bottom-width: ${({ textOnly }) => textOnly && '1px'};
@@ -242,13 +256,14 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   text-decoration: none;
   border: 0;
   background-color: transparent;
-  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
+  cursor: pointer;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 
   &:disabled,
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
+    color: ${colors.gray[50]};
   }
 
   transition-duration: ${transitions.timings.sharp};

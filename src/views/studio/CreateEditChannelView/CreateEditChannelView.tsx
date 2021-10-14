@@ -14,18 +14,19 @@ import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useEditVideoSheet } from '@/providers/editVideoSheet'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'
-import { ActionBarTransaction } from '@/shared/components/ActionBar'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
+import { ActionBar } from '@/shared/components/ActionBar'
 import { ChannelCover } from '@/shared/components/ChannelCover'
 import { FormField } from '@/shared/components/FormField'
 import { Select, SelectItem } from '@/shared/components/Select'
 import { TextArea } from '@/shared/components/TextArea'
 import { Tooltip } from '@/shared/components/Tooltip'
+import { SvgPlayerCancel } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
@@ -36,8 +37,10 @@ import { formatNumberShort } from '@/utils/number'
 import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
 
 import {
+  ActionBarTransactionWrapper,
   InnerFormContainer,
   StyledAvatar,
+  StyledProgressDrawer,
   StyledSubTitle,
   StyledTitleArea,
   StyledTitleSection,
@@ -70,7 +73,6 @@ type CreateEditChannelViewProps = {
 export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
@@ -110,12 +112,13 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     register,
     handleSubmit: createSubmitHandler,
     control,
-    formState: { isDirty, dirtyFields, errors },
+    formState: { isDirty, dirtyFields, errors, isValid },
     watch,
     setFocus,
     setValue,
     reset,
   } = useForm<Inputs>({
+    mode: 'onChange',
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null },
       cover: { contentId: null, assetDimensions: null, imageCropData: null },
@@ -130,7 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { sheetState, anyVideoTabsCachedAssets, setSheetState } = useEditVideoSheet()
+  const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   useEffect(() => {
@@ -226,7 +229,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    setSheetState('closed')
+    setVideoWorkspaceState('closed')
 
     const metadata: CreateChannelMetadata = {
       ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
@@ -360,6 +363,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
   const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
+  const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
 
   return (
     <form onSubmit={handleSubmit}>
@@ -426,18 +430,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 name="title"
                 control={control}
                 rules={textFieldValidation({ name: 'Channel name', minLength: 3, maxLength: 40, required: true })}
-                render={({ field: { ref, value, onChange } }) => (
-                  <Tooltip text="Click to edit channel title">
-                    <StyledTitleArea
-                      ref={ref}
-                      placeholder="Channel title"
-                      value={value}
-                      onChange={(e) => {
-                        onChange(e.currentTarget.value)
-                      }}
-                      error={!!errors.title}
-                      helperText={errors.title?.message}
-                    />
+                render={({ field: { value, onChange } }) => (
+                  <Tooltip text="Click to edit channel title" placement="top-start">
+                    <StyledTitleArea min={3} max={40} placeholder="Channel title" value={value} onChange={onChange} />
                   </Tooltip>
                 )}
               />
@@ -508,22 +503,47 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             />
           </FormField>
           <CSSTransition
-            in={sheetState !== 'open'}
+            in={videoWorkspaceState !== 'open'}
             timeout={2 * parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ActionBarTransaction
-              disabled={nodeConnectionStatus !== 'connected'}
-              fee={0}
-              progressDrawerSteps={!activeChannelId ? progressDrawerSteps : undefined}
-              isActive={newChannel || (!loading && isDirty)}
-              fullWidth={!activeChannelId}
-              primaryButtonText={newChannel ? 'Create channel' : 'Publish changes'}
-              secondaryButtonText={newChannel ? undefined : 'Cancel'}
-              onCancelClick={() => reset()}
-              onConfirmClick={handleSubmit}
-            />
+            <ActionBarTransactionWrapper>
+              {!activeChannelId && progressDrawerSteps?.length ? (
+                <StyledProgressDrawer steps={progressDrawerSteps} />
+              ) : null}
+              <ActionBar
+                primaryText="Fee: 0 Joy"
+                secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+                isEdit={!newChannel}
+                primaryButton={{
+                  text: newChannel ? 'Create channel' : 'Publish changes',
+                  disabled: isDisabled,
+                  onClick: handleSubmit,
+                  tooltip: isDisabled
+                    ? {
+                        headerText: newChannel
+                          ? 'Fill all required fields to proceed'
+                          : isValid
+                          ? 'Change anything to proceed'
+                          : 'Fill all required fields to proceed',
+                        text: newChannel
+                          ? 'Required: title'
+                          : isValid
+                          ? 'To publish changes you have to provide new value to any field'
+                          : 'Required: title',
+                        icon: true,
+                      }
+                    : undefined,
+                }}
+                secondaryButton={{
+                  visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
+                  text: 'Cancel',
+                  onClick: () => reset(),
+                  icon: <SvgPlayerCancel width={16} height={16} />,
+                }}
+              />
+            </ActionBarTransactionWrapper>
           </CSSTransition>
         </InnerFormContainer>
       </LimitedWidthContainer>

@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
 import { absoluteRoutes } from '@/config/routes'
@@ -8,33 +9,42 @@ import { useDialog } from '@/providers/dialogs'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { Button } from '@/shared/components/Button'
 import { CircularProgress } from '@/shared/components/CircularProgress'
+import { Loader } from '@/shared/components/Loader'
 import { Text } from '@/shared/components/Text'
 import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
 import {
+  FailedStatusWrapper,
+  FileInfo,
   FileInfoContainer,
+  FileInfoDetails,
   FileInfoType,
   FileLineContainer,
   FileLineLastPoint,
   FileLinePoint,
   FileStatusContainer,
   ProgressbarContainer,
-  StatusMessage,
+  RetryButton,
+  StatusText,
 } from './UploadStatus.style'
+
+import { UploadStatusGroupSize } from '../UploadStatusGroup'
 
 type UploadStatusProps = {
   isLast?: boolean
   asset: AssetUpload
+  size?: UploadStatusGroupSize
 }
 
-export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset }) => {
+export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
+  const { setUploadStatus } = useUploadsStore((state) => state.actions)
 
   const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
   const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
@@ -57,7 +67,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
       text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
       onClick: () => {
         if (asset.parentObject.type === 'video') {
-          navigate(absoluteRoutes.studio.editVideo())
+          navigate(absoluteRoutes.studio.videoWorkspace())
         }
         if (asset.parentObject.type === 'channel') {
           navigate(absoluteRoutes.studio.editChannel())
@@ -84,8 +94,10 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
+      setUploadStatus(asset.contentId, { lastStatus: 'inProgress', progress: 0 })
       const fileHash = await computeFileHash(file)
       if (fileHash !== asset.ipfsContentId) {
+        setUploadStatus(asset.contentId, { lastStatus: undefined })
         openDifferentFileDialog()
       } else {
         startFileUpload(
@@ -105,7 +117,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
         )
       }
     },
-    [asset, openDifferentFileDialog, startFileUpload]
+    [asset, openDifferentFileDialog, setUploadStatus, startFileUpload]
   )
 
   const isVideo = asset.type === 'video'
@@ -165,11 +177,11 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     }
   }
 
-  const dimension =
+  const assetDimension =
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
-  const size = formatBytes(asset.size)
+  const assetSize = formatBytes(asset.size)
 
   const assetsDialogs = {
     avatar: avatarDialogRef,
@@ -189,24 +201,32 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   }
 
   const renderStatusMessage = () => {
-    if (uploadStatus?.lastStatus === 'reconnecting') {
-      return 'Reconnecting...'
-    }
+    const failedStatusText = size === 'compact' ? 'Upload failed' : 'Asset upload failed'
     if (uploadStatus?.lastStatus === 'error') {
       return (
-        <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
-          Try again
-        </Button>
+        <FailedStatusWrapper>
+          <StatusText variant="subtitle2" secondary size={size}>
+            {failedStatusText}
+          </StatusText>
+          <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
+            Try again
+          </RetryButton>
+        </FailedStatusWrapper>
       )
     }
     if (!uploadStatus?.lastStatus) {
       return (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          <Button size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
-            Reconnect file
-          </Button>
-        </div>
+        <FailedStatusWrapper>
+          <StatusText variant="subtitle2" secondary size={size}>
+            {failedStatusText}
+          </StatusText>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
+              Reconnect file
+            </RetryButton>
+          </div>
+        </FailedStatusWrapper>
       )
     }
   }
@@ -218,27 +238,54 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (uploadStatus?.lastStatus === 'error' || !uploadStatus?.lastStatus) {
       return <SvgAlertWarning />
     }
+    if (uploadStatus?.lastStatus === 'processing') {
+      return <Loader variant="small" />
+    }
     return (
       <ProgressbarContainer>
-        <CircularProgress value={uploadStatus?.progress ?? 0} />
+        <CircularProgress strokeWidth={10} value={uploadStatus?.progress ?? 0} />
       </ProgressbarContainer>
     )
   }
-
+  const isReconnecting = uploadStatus?.lastStatus === 'reconnecting'
   return (
     <>
-      <FileLineContainer isLast={isLast}>
-        {isLast ? <FileLineLastPoint /> : <FileLinePoint />}
-        <FileStatusContainer>{renderStatusIndicator()}</FileStatusContainer>
+      <FileLineContainer isLast={isLast} size={size}>
         <FileInfoContainer>
-          <FileInfoType>
-            {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
-            <Text variant="body2">{fileTypeText}</Text>
-          </FileInfoType>
-          <Text variant="body2">{dimension}</Text>
-          <Text>{size}</Text>
+          {isLast ? <FileLineLastPoint size={size} /> : <FileLinePoint size={size} />}
+          <FileStatusContainer>
+            <SwitchTransition>
+              <CSSTransition
+                key={uploadStatus?.lastStatus || 'no-status'}
+                classNames={transitions.names.fade}
+                timeout={200}
+              >
+                {renderStatusIndicator()}
+              </CSSTransition>
+            </SwitchTransition>
+          </FileStatusContainer>
+          <FileInfo size={size}>
+            <FileInfoType warning={isReconnecting && size === 'compact'}>
+              {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
+              <Text variant="body2">{fileTypeText}</Text>
+            </FileInfoType>
+            {size === 'compact' && isReconnecting ? (
+              <Text variant="body2" secondary>
+                Trying to reconnect...({uploadStatus.retries})
+              </Text>
+            ) : (
+              <FileInfoDetails size={size}>
+                {assetDimension && (
+                  <Text variant="body2" secondary>
+                    {assetDimension}
+                  </Text>
+                )}
+                {assetSize && <Text secondary>{assetSize}</Text>}
+              </FileInfoDetails>
+            )}
+          </FileInfo>
         </FileInfoContainer>
-        <StatusMessage variant="subtitle2">{renderStatusMessage()}</StatusMessage>
+        {renderStatusMessage()}
       </FileLineContainer>
       <ImageCropDialog ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
       <ImageCropDialog ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />

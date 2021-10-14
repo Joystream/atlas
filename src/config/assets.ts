@@ -1,1 +1,2 @@
 export const ASSET_RESPONSE_TIMEOUT = 5000
+export const ASSET_POLLING_INTERVAL = 2000

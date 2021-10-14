@@ -7,19 +7,18 @@ import { Text } from '@/shared/components/Text'
 import { colors, media, sizes, typography } from '@/shared/theme'
 
 import { ChannelLink } from '../ChannelLink'
-import { TOP_NAVBAR_HEIGHT } from '../TopbarBase'
 
 const BUTTONS_HEIGHT = 48
 
 export const Container = styled.section`
   position: relative;
-  max-height: calc(100vh - ${TOP_NAVBAR_HEIGHT}px);
+  max-height: calc(100vh - var(--size-topbar-height));
   margin-bottom: -${sizes(6)}px;
 `
 
 export const MediaWrapper = styled.div`
-  margin: 0 calc(-1 * var(--global-horizontal-padding));
-  width: calc(100% + calc(2 * var(--global-horizontal-padding)));
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  width: calc(100% + calc(2 * var(--size-global-horizontal-padding)));
 `
 
 export const Media = styled.div`

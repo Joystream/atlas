@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, zIndex } from '@/shared/theme'
+import { colors, sizes, typography, zIndex } from '@/shared/theme'
 
-import { badgeStyles } from '../Badge'
+import { smallBadgeStyles } from '../Badge'
 
 type TabProps = {
   selected: boolean
@@ -33,24 +33,23 @@ export const TabsGroup = styled.div`
 `
 
 export const Tab = styled.div<TabProps>`
-  transition: border-bottom 0.125s ease, color 0.125s ease;
+  transition: box-shadow 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
-  padding: 22px 0;
-  font-size: 14px;
-  color: ${(props) => (props.selected ? colors.white : colors.gray[300])};
-  text-transform: capitalize;
+  padding: ${sizes(6)} 0;
+  font-size: ${typography.sizes.body2};
+  color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
   text-align: center;
-  border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : '4px solid transparent')};
+  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${colors.blue[500]};` : 'none')};
 
   :hover,
   :focus {
-    border-bottom: ${(props) => (props.selected ? `4px solid ${colors.blue[500]}` : `4px solid ${colors.gray[300]}`)};
+    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? colors.blue[500] : colors.gray[300])};
     cursor: pointer;
   }
 
   span {
-    ${badgeStyles}
+    ${smallBadgeStyles}
 
     &[data-badge]::after {
       margin-top: calc(-1 * ${sizes(2)});

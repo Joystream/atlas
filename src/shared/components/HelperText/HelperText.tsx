@@ -24,7 +24,7 @@ export const HelperText: React.FC<HelperTextProps> = ({
   maxLength,
   warning,
   error,
-  helperText = '\u00A0',
+  helperText,
   charactersCount,
   className,
 }) => {
@@ -48,12 +48,11 @@ export const HelperText: React.FC<HelperTextProps> = ({
 
   return (
     <HelperTextsWrapper className={className}>
-      {/* caption cannot be child of <div> */}
-      <StyledHelperText variant="caption" as="span" helperTextVariant={getVariant(warning, error)}>
+      <StyledHelperText variant="caption" helperTextVariant={getVariant(warning, error)} secondary>
         {helperText}
       </StyledHelperText>
       {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-        <HelperTextCount variant="caption" helperTextVariant={charactersWarning}>
+        <HelperTextCount variant="caption" helperTextVariant={charactersWarning} secondary>
           {charactersCount}/{maxLength}
         </HelperTextCount>
       )}

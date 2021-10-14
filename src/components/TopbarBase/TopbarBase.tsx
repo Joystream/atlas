@@ -1,31 +1,23 @@
 import React from 'react'
 
-import { FullLogo, Header, LogoContainer, LogoLink, ShortLogo, StudioText } from './TopbarBase.style'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { SvgJoystreamLogoShort } from '@/shared/illustrations'
 
-export type TopbarVariant = 'default' | 'studio'
+import { Header, LogoLink } from './TopbarBase.style'
+
 export type TopbarBaseProps = {
-  variant?: TopbarVariant
+  fullLogoNode: React.ReactNode
+  logoLinkUrl: string
+  noLogo?: boolean
   className?: string
-  isHamburgerButtonPresent?: boolean
 }
 
-export const TopbarBase: React.FC<TopbarBaseProps> = ({
-  children,
-  variant = 'default',
-  className,
-  isHamburgerButtonPresent = true,
-}) => {
-  const isStudio = variant === 'studio'
-  const logoLink = isStudio ? '/studio' : '/'
+export const TopbarBase: React.FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLinkUrl, noLogo, className }) => {
+  const mdMatch = useMediaMatch('md')
+
   return (
     <Header className={className}>
-      <LogoContainer variant={variant} isHamburgerButtonPresent={isHamburgerButtonPresent}>
-        <LogoLink to={logoLink}>
-          <ShortLogo />
-          <FullLogo variant={variant} />
-          {isStudio && <StudioText secondary>studio</StudioText>}
-        </LogoLink>
-      </LogoContainer>
+      {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgJoystreamLogoShort />}</LogoLink>}
       {children}
     </Header>
   )

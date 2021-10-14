@@ -43,12 +43,12 @@ import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
+  isVideoPending?: boolean
   nextVideo?: VideoFieldsFragment | null
   className?: string
   videoStyle?: CSSProperties
   autoplay?: boolean
   isInBackground?: boolean
-  isMediaLoading?: boolean
   playing?: boolean
   channelId?: string
   videoId?: string
@@ -63,10 +63,11 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused'
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
+    isVideoPending,
     className,
     isInBackground,
     playing,
@@ -75,7 +76,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     videoId,
     autoplay,
     videoStyle,
-    isMediaLoading,
     ...videoJsConfig
   },
   externalRef
@@ -135,6 +135,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     player.pause()
   }, [])
 
+  useEffect(() => {
+    if (!isVideoPending) {
+      return
+    }
+    setPlayerState('pending')
+  }, [isVideoPending])
+
   // handle hotkeys
   useEffect(() => {
     if (!player || isInBackground) {
@@ -179,9 +186,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (!player) {
       return
     }
-    if (isMediaLoading) {
-      setPlayerState('loading')
-    }
     const handler = (event: Event) => {
       if (event.type === 'waiting' || event.type === 'seeking') {
         setPlayerState('loading')
@@ -194,7 +198,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     return () => {
       player.off(['waiting', 'canplay', 'seeking', 'seeked'], handler)
     }
-  }, [isMediaLoading, player, playerState])
+  }, [player, playerState])
 
   useEffect(() => {
     if (!player) {
@@ -419,8 +423,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     setCurrentVolume(Number(event.target.value))
   }
 
-  const handleMute = (event: React.MouseEvent) => {
-    event.stopPropagation()
+  const handleMute = () => {
     if (currentVolume === 0) {
       setCurrentVolume(cachedVolume || 0.05)
     } else {
@@ -428,7 +431,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handlePictureInPicture = () => {
+  const handlePictureInPicture = (event: React.MouseEvent) => {
+    event.stopPropagation()
     if (document.pictureInPictureElement) {
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
       player.exitPictureInPicture()
@@ -442,7 +446,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handleFullScreen = () => {
+  const handleFullScreen = (event: React.MouseEvent) => {
+    event.stopPropagation()
     if (player?.isFullscreen()) {
       player?.exitFullscreen()
     } else {
@@ -463,7 +468,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const showControlsIndicator = !isInBackground && playerState !== 'ended'
   return (
     <Container isFullScreen={isFullScreen} className={className} isInBackground={isInBackground}>
-      <div data-vjs-player>
+      <div data-vjs-player onClick={handlePlayPause}>
         {showBigPlayButton && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
@@ -509,7 +514,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     )}
                   </PlayButton>
                 </PlayControl>
-                <VolumeControl>
+                <VolumeControl onClick={(e) => e.stopPropagation()}>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
                     {renderVolumeButton()}
                   </VolumeButton>

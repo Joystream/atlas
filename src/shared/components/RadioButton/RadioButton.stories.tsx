@@ -9,6 +9,8 @@ export default {
   args: {
     label: 'Hello there',
     helperText: 'Caption',
+    disabled: false,
+    error: false,
   },
 } as Meta
 

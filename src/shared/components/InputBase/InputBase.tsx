@@ -18,7 +18,7 @@ export type InputBaseProps = {
 
 export const InputBase: React.FC<InputBaseProps> = ({
   children,
-  helperText = '\u00A0',
+  helperText,
   warning,
   error,
   disabled,
@@ -30,9 +30,9 @@ export const InputBase: React.FC<InputBaseProps> = ({
 }) => {
   return (
     <FormGroup as={isSelect ? 'div' : 'label'} disabled={disabled} className={className} error={error}>
-      {label && <LabelText>{label}</LabelText>}
+      {label && <LabelText variant="body2">{label}</LabelText>}
       {children}
-      {helperText !== null && (
+      {helperText && (
         <HelperText
           warning={warning}
           error={error}

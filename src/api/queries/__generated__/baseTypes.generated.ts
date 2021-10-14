@@ -87,6 +87,13 @@ export type DataObject = {
   liaisonJudgement: LiaisonJudgement
   ipfsContentId: Scalars['String']
   joystreamContentId: Scalars['String']
+  videomediaDataObject?: Maybe<Array<Video>>
+  videothumbnailPhotoDataObject?: Maybe<Array<Video>>
+}
+
+export type DataObjectWhereInput = {
+  joystreamContentId_eq?: Maybe<Scalars['String']>
+  joystreamContentId_in?: Maybe<Array<Scalars['String']>>
 }
 
 export type EntityViewsInfo = {
@@ -190,6 +197,7 @@ export type Query = {
   channelViews?: Maybe<EntityViewsInfo>
   channels: Array<Channel>
   channelsConnection: ChannelConnection
+  dataObjects: Array<DataObject>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
   /** Get list of most followed channels */
@@ -251,6 +259,11 @@ export type QueryChannelsConnectionArgs = {
   after?: Maybe<Scalars['String']>
   where?: Maybe<ChannelWhereInput>
   orderBy?: Maybe<Array<ChannelOrderByInput>>
+}
+
+export type QueryDataObjectsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<DataObjectWhereInput>
 }
 
 export type QueryMembershipByUniqueInputArgs = {
@@ -411,12 +424,18 @@ export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
   channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
+  createdAt_gte?: Maybe<Scalars['DateTime']>
+  duration_lte?: Maybe<Scalars['Int']>
+  duration_gte?: Maybe<Scalars['Int']>
   thumbnailPhotoAvailability_eq?: Maybe<AssetAvailability>
   mediaAvailability_eq?: Maybe<AssetAvailability>
-  createdAt_gte?: Maybe<Scalars['DateTime']>
+  licenseId_in?: Maybe<Array<Scalars['ID']>>
+  languageId_eq?: Maybe<Scalars['ID']>
+  hasMarketing_eq?: Maybe<Scalars['Boolean']>
   isFeatured_eq?: Maybe<Scalars['Boolean']>
   isPublic_eq?: Maybe<Scalars['Boolean']>
   isCensored_eq?: Maybe<Scalars['Boolean']>
+  isExplicit_eq?: Maybe<Scalars['Boolean']>
   id_in?: Maybe<Array<Scalars['ID']>>
   id_eq?: Maybe<Scalars['ID']>
 }

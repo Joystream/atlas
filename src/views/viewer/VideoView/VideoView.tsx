@@ -133,12 +133,12 @@ export const VideoView: React.FC = () => {
     <StyledViewWrapper>
       <PlayerWrapper>
         <PlayerContainer>
-          {video ? (
+          {!isMediaLoading && video ? (
             <VideoPlayer
+              isVideoPending={video?.mediaAvailability === 'PENDING'}
               channelId={video.channel.id}
               videoId={video.id}
               autoplay
-              isMediaLoading={isMediaLoading}
               src={mediaUrl}
               fill
               posterUrl={thumbnailPhotoUrl}

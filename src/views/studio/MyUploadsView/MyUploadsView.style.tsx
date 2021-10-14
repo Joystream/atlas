@@ -6,8 +6,11 @@ import { sizes } from '@/shared/theme'
 
 export const UploadsContainer = styled(LimitedWidthContainer)`
   padding-bottom: 120px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 export const StyledText = styled(Text)`
-  margin: ${sizes(8)} 0;
+  margin: ${sizes(12)} 0;
 `

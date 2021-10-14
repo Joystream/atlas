@@ -75,7 +75,6 @@ Regular.args = {
   createdAt: new Date(),
   publisherMode: false,
   showChannel: true,
-  showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,
@@ -90,12 +89,10 @@ PublisherDefault.args = {
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
-  showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,
   publisherMode: true,
-  videoPublishState: 'default',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
@@ -108,7 +105,6 @@ PublisherDraft.args = {
   createdAt: new Date(),
   showChannel: false,
   isDraft: true,
-  showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,
@@ -123,12 +119,10 @@ PublisherUnlisted.args = {
   channelAvatarUrl: '',
   createdAt: new Date(),
   showChannel: false,
-  showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,
   publisherMode: true,
-  videoPublishState: 'unlisted',
   thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
 }
 
@@ -144,7 +138,6 @@ const Mix: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
           <VideoTileBase
             {...args}
             publisherMode
-            videoPublishState={'default'}
             createdAt={createdAtDate}
             onEditVideoClick={handler}
             onCopyVideoURLClick={handler}
@@ -162,7 +155,7 @@ const Mix: Story<VideoTileBaseProps> = ({ createdAt, ...args }) => {
           <VideoTileBase
             {...args}
             publisherMode
-            videoPublishState={'unlisted'}
+            isUnlisted
             createdAt={createdAtDate}
             onEditVideoClick={handler}
             onCopyVideoURLClick={handler}
@@ -181,7 +174,6 @@ Mixed.args = {
   channelAvatarUrl: '',
   createdAt: new Date('2021'),
   showChannel: false,
-  showMeta: true,
   duration: 100,
   progress: 50,
   views: 10000,

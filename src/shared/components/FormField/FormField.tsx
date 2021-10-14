@@ -1,18 +1,34 @@
 import React from 'react'
 
-import { ChildrenWrapper, FormFieldDescription, FormFieldTitle, FormFieldWrapper } from './FormField.style'
+import {
+  ChildrenWrapper,
+  FormFieldDescription,
+  FormFieldHeader,
+  FormFieldTitle,
+  FormFieldWrapper,
+} from './FormField.style'
+
+import { Text } from '../Text'
 
 export type FormFieldProps = {
   title: string
+  optional?: boolean
   description?: string | string[]
   dense?: boolean
   className?: string
 }
 
-export const FormField: React.FC<FormFieldProps> = ({ children, title, description, dense, className }) => {
+export const FormField: React.FC<FormFieldProps> = ({ children, title, description, className, optional, dense }) => {
   return (
-    <FormFieldWrapper dense={dense} className={className}>
-      <FormFieldTitle variant="h6">{title}</FormFieldTitle>
+    <FormFieldWrapper className={className} dense={dense}>
+      <FormFieldHeader>
+        <FormFieldTitle variant="h6">{title}</FormFieldTitle>
+        {optional && (
+          <Text variant="body2" secondary>
+            (Optional)
+          </Text>
+        )}
+      </FormFieldHeader>
       {description &&
         (description instanceof Array ? (
           description.map((p, idx) => (
@@ -23,7 +39,7 @@ export const FormField: React.FC<FormFieldProps> = ({ children, title, descripti
         ) : (
           <FormFieldDescription variant="body2">{description}</FormFieldDescription>
         ))}
-      <ChildrenWrapper dense={dense}>{children}</ChildrenWrapper>
+      <ChildrenWrapper>{children}</ChildrenWrapper>
     </FormFieldWrapper>
   )
 }

@@ -127,8 +127,8 @@ export const UnOrderedItem = styled(Text)`
 export const StyledButton = styled(Button)`
   position: fixed;
   bottom: 20px;
-  left: var(--global-horizontal-padding);
-  width: calc(100% - var(--global-horizontal-padding) * 2);
+  left: var(--size-global-horizontal-padding);
+  width: calc(100% - var(--size-global-horizontal-padding) * 2);
   ${media.sm} {
     margin-top: 40px;
     position: unset;

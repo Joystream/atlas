@@ -7,9 +7,9 @@ import { transitions } from '@/shared/theme'
 
 import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.style'
 
-type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
+type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
-  text: string
+  text?: string
   headerText?: string
   icon?: boolean
   placement?: Placement
@@ -31,6 +31,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
+  if (!text) {
+    return <>{children}</>
+  }
   return (
     <Tippy
       onMount={() => setIsVisible(true)}
@@ -54,7 +57,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
               {headerText && <TooltipText variant="overhead">{headerText}</TooltipText>}
             </TooltipHeader>
 
-            <TooltipText variant="caption">{text}</TooltipText>
+            <TooltipText withIcon={!!icon} variant="caption">
+              {text}
+            </TooltipText>
 
             {!arrowDisabled && <Arrow />}
           </StyledTooltip>
