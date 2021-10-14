@@ -1,0 +1,382 @@
+{
+  "type": "color",
+  "core": {
+    "neutral": {
+      "default": {
+        "50": {
+          "value": "#F4F6F8"
+        },
+        "100": {
+          "value": "#DAE2EB"
+        },
+        "200": {
+          "value": "#B5C1C9"
+        },
+        "300": {
+          "value": "#7B8A95"
+        },
+        "400": {
+          "value": "#52616B"
+        },
+        "500": {
+          "value": "#424E57"
+        },
+        "600": {
+          "value": "#343D44"
+        },
+        "700": {
+          "value": "#272D33"
+        },
+        "800": {
+          "value": "#181C20"
+        },
+        "900": {
+          "value": "#0B0C0F"
+        }
+      },
+      "lighten": {
+        "50": {
+          "value": "#F9FBFDFA"
+        },
+        "100": {
+          "value": "#EAF3FDED"
+        },
+        "200": {
+          "value": "#E5F4FEC9"
+        },
+        "300": {
+          "value": "#D0EAFD96"
+        },
+        "400": {
+          "value": "#C3E7FF6B"
+        },
+        "500": {
+          "value": "#BDDFF959"
+        },
+        "600": {
+          "value": "#C1E2FC45"
+        },
+        "700": {
+          "value": "#C3E1FF33"
+        },
+        "800": {
+          "value": "#B9D7F621"
+        },
+        "900": {
+          "value": "#B7C8FA0F"
+        },
+        "description": "A transparent version of the ‘Neutral / Default’ palette, with the same look when placed against a pure white background"
+      },
+      "darken": {
+        "50": {
+          "value": "##234B730D"
+        },
+        "100": {
+          "value": "#083E7A26"
+        },
+        "200": {
+          "value": "#08304B4D"
+        },
+        "300": {
+          "value": "#011E3385"
+        },
+        "400": {
+          "value": "#011725AD"
+        },
+        "500": {
+          "value": "#03131FBF"
+        },
+        "600": {
+          "value": "#010D15CC"
+        },
+        "700": {
+          "value": "#01080FD9"
+        },
+        "800": {
+          "value": "#01060AE8"
+        },
+        "900": {
+          "value": "#010205F5"
+        },
+        "description": "A transparent version of the ‘Neutral / Default’ palette, with the same look when placed against a pure black background"
+      }
+    },
+    "blue": {
+      "50": {
+        "value": "#BECAFF"
+      },
+      "100": {
+        "value": "#9FACFF"
+      },
+      "200": {
+        "value": "#8890FF"
+      },
+      "300": {
+        "value": "#7174FF"
+      },
+      "400": {
+        "value": "#5A58FF"
+      },
+      "500": {
+        "value": "#4038FF",
+        "description": "Joystream brand primary color"
+      },
+      "600": {
+        "value": "#342ECF"
+      },
+      "700": {
+        "value": "#2823A0"
+      },
+      "800": {
+        "value": "#1B186C"
+      },
+      "900": {
+        "value": "#08071E"
+      }
+    },
+    "green": {
+      "50": {
+        "value": "#75E1A2"
+      },
+      "100": {
+        "value": "#12CC60"
+      },
+      "200": {
+        "value": "#0EB152"
+      },
+      "300": {
+        "value": "#0C9846"
+      },
+      "400": {
+        "value": "#0A823C"
+      },
+      "500": {
+        "value": "#096C32"
+      },
+      "600": {
+        "value": "#075829"
+      },
+      "700": {
+        "value": "#05441F"
+      },
+      "800": {
+        "value": "#042D15"
+      },
+      "900": {
+        "value": "#010D06"
+      }
+    },
+    "red": {
+      "50": {
+        "value": "#FFBBB7"
+      },
+      "100": {
+        "value": "#FF948D"
+      },
+      "200": {
+        "value": "#FF695F"
+      },
+      "300": {
+        "value": "#F34235"
+      },
+      "400": {
+        "value": "#CF382D"
+      },
+      "500": {
+        "value": "#AE2F26"
+      },
+      "600": {
+        "value": "#8D261F"
+      },
+      "700": {
+        "value": "#6D1E18"
+      },
+      "800": {
+        "value": "#4A1410"
+      },
+      "900": {
+        "value": "#150605"
+      }
+    },
+    "yellow": {
+      "50": {
+        "value": "#FEE879"
+      },
+      "100": {
+        "value": "#ECC502"
+      },
+      "200": {
+        "value": "#CAA802"
+      },
+      "300": {
+        "value": "#AC9002"
+      },
+      "400": {
+        "value": "#917901"
+      },
+      "500": {
+        "value": "#786401"
+      },
+      "600": {
+        "value": "#615001"
+      },
+      "700": {
+        "value": "#4A3D01"
+      },
+      "800": {
+        "value": "#302800"
+      },
+      "900": {
+        "value": "#0A0900"
+      }
+    }
+  },
+  "derived": {
+    "text": {
+      "description": "Colors for text & icons",
+      "muted": {
+        "value": "{core.neutral.default.400}",
+        "description": "Disabled text, placeholders, etc."
+      },
+      "default": {
+        "value": "{core.neutral.default.500}",
+        "description": "Paragraphs, captions, etc."
+      },
+      "strong": {
+        "value": "{core.neutral.default.600}",
+        "description": "Headlines, component labels, etc."
+      },
+      "accent": {
+        "primary": {
+          "value": "{core.blue.300}",
+          "description": "Accent, links etc."
+        },
+        "error": {
+          "value": "{core.red.300}",
+          "description": "Error, warning text etc."
+        },
+        "success": {
+          "value": "{core.green.300}",
+          "description": "Success, positive text, etc."
+        }
+      }
+    },
+    "border": {
+      "muted": {
+        "solid": {
+          "value": "{core.neutral.default.700}"
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.700}",
+          "description": "Dividers, separators, etc."
+        }
+      },
+      "default": {
+        "solid": {
+          "value": "{core.neutral.default.500}"
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.500}",
+          "description": "Component borders on default states"
+        }
+      },
+      "strong": {
+        "solid": {
+          "value": "{core.neutral.default.300}"
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.300}",
+          "description": "Component borders on hover states"
+        }
+      }
+    },
+    "background": {
+      "muted": {
+        "solid": {
+          "value": "{core.neutral.default.900}",
+          "description": "1st level section, cards, etc."
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.900}"
+        }
+      },
+      "default": {
+        "solid": {
+          "value": "{core.neutral.default.800}",
+          "description": "2nd level section, cards, etc."
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.800}",
+          "description": "Component backgrounds on hover states"
+        }
+      },
+      "strong": {
+        "solid": {
+          "value": "{core.neutral.default.700}",
+          "description": "Windows, dialogs, side sheets, etc."
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.700}",
+          "description": "Component backgrounds on pressed states"
+        }
+      },
+      "elevated": {
+        "solid": {
+          "value": "{core.neutral.default.600}",
+          "description": "Dropdowns, popovers, etc."
+        },
+        "alpha": {
+          "value": "{core.neutral.lighten.600}"
+        }
+      },
+      "overlay": {
+        "value": "{core.neutral.darken.700}",
+        "description": "Overlay behind dialogs, side sheets, etc."
+      },
+      "accent": {
+        "primary": {
+          "muted": {
+            "value": "{core.blue.600}",
+            "description": "Component backgrounds on pressed states"
+          },
+          "default": {
+            "value": "{core.blue.500}",
+            "description": "Component backgrounds on default states, callouts, etc."
+          },
+          "strong": {
+            "value": "{core.blue.400}",
+            "description": "Component backgrounds on hover statess"
+          }
+        },
+        "error": {
+          "muted": {
+            "value": "{core.red.600}",
+            "description": "Component backgrounds on pressed states"
+          },
+          "default": {
+            "value": "{core.red.500}",
+            "description": "Component backgrounds on default states, callouts, etc."
+          },
+          "strong": {
+            "value": "{core.red.400}",
+            "description": "Component backgrounds on hover statess"
+          }
+        },
+        "success": {
+          "muted": {
+            "value": "{core.green.600}",
+            "description": "Component backgrounds on pressed states"
+          },
+          "default": {
+            "value": "{core.green.500}",
+            "description": "Component backgrounds on default states, callouts, etc."
+          },
+          "strong": {
+            "value": "{core.green.400}",
+            "description": "Component backgrounds on hover statess"
+          }
+        }
+      }
+    }
+  }
+}

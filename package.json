@@ -25,11 +25,13 @@
     "lint:prettier": "prettier --check .",
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
+    "fetch-tokens": "node ./src/styles/scripts/fetchTokens",
     "codegen:graphql": "graphql-codegen --config codegen.config.yml",
     "codegen:graphql-watch": "yarn codegen:graphql --watch",
     "codegen:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
     "codegen:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
-    "codegen:svgs": "yarn codegen:illustrations && yarn codegen:icons"
+    "codegen:svgs": "yarn codegen:illustrations && yarn codegen:icons",
+    "codegen:styles": "yarn fetch-tokens && style-dictionary build --config ./sd.config.js"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
@@ -137,6 +139,7 @@
     "prettier": "~2.3.2",
     "rollup-plugin-visualizer": "^5.5.2",
     "storybook-builder-vite": "^0.0.12",
+    "style-dictionary": "^3.0.2",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^22.0.0",
