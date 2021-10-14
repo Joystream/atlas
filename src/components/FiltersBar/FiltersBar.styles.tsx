@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { colors, sizes, transitions, zIndex } from '@/shared/theme'
 
 export const FilterContentContainer = styled.div`
   display: grid;
@@ -16,6 +16,9 @@ export const MobileFilterContainer = styled.div`
 `
 
 export const FiltersContainer = styled.div<{ open: boolean }>`
+  position: absolute;
+  z-index: ${zIndex.header};
+  width: 100%;
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
   padding: ${sizes(4)};

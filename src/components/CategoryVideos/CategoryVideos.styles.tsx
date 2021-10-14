@@ -2,6 +2,8 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes } from '@/shared/theme'
 
+import { InfiniteVideoGrid } from '../InfiniteGrids'
+
 export const Container = styled.div`
   /* margin-top: ${sizes(16)}; */
 
@@ -32,4 +34,9 @@ export const SortContainer = styled.div`
     grid-template-columns: auto 1fr;
     grid-area: initial;
   }
+`
+
+export const StyledVideoGrid = styled(InfiniteVideoGrid)`
+  position: relative;
+  padding-top: ${sizes(12)};
 `

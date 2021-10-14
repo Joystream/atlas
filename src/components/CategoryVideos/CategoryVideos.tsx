@@ -12,10 +12,9 @@ import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 
-import { Container, ControlsContainer, SortContainer } from './CategoryVideos.styles'
+import { Container, ControlsContainer, SortContainer, StyledVideoGrid } from './CategoryVideos.styles'
 
 import { FiltersBar, useFiltersBar } from '../FiltersBar'
-import { InfiniteVideoGrid } from '../InfiniteGrids'
 
 export const CategoryVideos = () => {
   const { id } = useParams()
@@ -26,7 +25,7 @@ export const CategoryVideos = () => {
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
-    filters: { setSelectedCategoryIdFilter, setiIsFiltersOpen },
+    filters: { setSelectedCategoryIdFilter, setIsFiltersOpen },
     canClearFilters: { canClearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
@@ -49,7 +48,7 @@ export const CategoryVideos = () => {
   }
 
   const handleFilterClick = () => {
-    setiIsFiltersOpen((value) => !value)
+    setIsFiltersOpen((value) => !value)
   }
 
   useEffect(() => {
@@ -59,7 +58,6 @@ export const CategoryVideos = () => {
     }))
   }, [selectedLanguage, setVideoWhereInput])
 
-  console.log({ videoWhereInput })
   return (
     <Container>
       <ControlsContainer>
@@ -97,7 +95,7 @@ export const CategoryVideos = () => {
         )}
       </ControlsContainer>
       <FiltersBar {...filtersBarLogic} />
-      {/* <InfiniteVideoGrid videoWhereInput={videoWhereInput} orderBy={sortVideosBy} onDemand /> */}
+      <StyledVideoGrid videoWhereInput={videoWhereInput} orderBy={sortVideosBy} onDemandInfinite />
     </Container>
   )
 }

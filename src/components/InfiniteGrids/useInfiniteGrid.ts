@@ -42,6 +42,8 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onError?: (error: unknown) => void
   queryVariables: TArgs
   onDemand?: boolean
+  onDemandInfinite?: boolean
+  activatedInfinteGrid?: boolean
   onScrollToBottom?: () => void
   orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
@@ -71,6 +73,8 @@ export const useInfiniteGrid = <
   onError,
   queryVariables,
   onDemand,
+  onDemandInfinite,
+  activatedInfinteGrid,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
   additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
@@ -138,7 +142,7 @@ export const useInfiniteGrid = <
 
   // handle scroll to bottom
   useEffect(() => {
-    if (onDemand) {
+    if (onDemand || (onDemandInfinite && !activatedInfinteGrid)) {
       return
     }
     if (error) return
@@ -153,7 +157,7 @@ export const useInfiniteGrid = <
 
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
+  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand, onDemandInfinite, activatedInfinteGrid])
 
   const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
 

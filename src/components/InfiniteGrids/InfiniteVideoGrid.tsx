@@ -33,6 +33,7 @@ type InfiniteVideoGridProps = {
   className?: string
   currentlyWatchedVideoId?: string
   onDemand?: boolean
+  onDemandInfinite?: boolean
   orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalLink?: {
     name: string
@@ -52,9 +53,11 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   className,
   currentlyWatchedVideoId,
   onDemand = false,
+  onDemandInfinite = false,
   additionalLink,
   titleLoader,
 }) => {
+  const [activatedInfinteGrid, setActivatedInfinteGrid] = useState(false)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const rowsToLoad = useVideoGridRows()
   const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
@@ -68,8 +71,6 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
       ...videoWhereInput,
     },
   }
-
-  console.log({ queryVariables })
 
   const fetchMore = useCallback(() => {
     setTargetRowsCount(targetRowsCount + rowsToLoad)
@@ -87,6 +88,8 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     orderBy,
     targetRowsCount,
     onDemand,
+    onDemandInfinite,
+    activatedInfinteGrid,
     onScrollToBottom: !onDemand ? fetchMore : undefined,
     dataAccessor: (rawData) => {
       if (currentlyWatchedVideoId) {
@@ -121,14 +124,14 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     return null
   }
 
-  const shouldShowLoadMoreButton = onDemand && !loading && displayedItems.length < totalCount
-  console.log({ loading, dispItems: displayedItems, totalCount })
+  const shouldShowLoadMoreButton =
+    (onDemand || (onDemandInfinite && !activatedInfinteGrid)) && !loading && displayedItems.length < totalCount
   // TODO: We should probably postpone doing first fetch until `onResize` gets called.
   // Right now we'll make the first request and then right after another one based on the resized columns
   return (
     <section className={className}>
-      <GridHeadingContainer>
-        {title && (
+      {title && (
+        <GridHeadingContainer>
           <TitleContainer>
             {(!ready || !displayedItems.length) && titleLoader ? (
               <SkeletonLoader height={30} width={250} />
@@ -147,12 +150,20 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
               </AdditionalLink>
             )}
           </TitleContainer>
-        )}
-      </GridHeadingContainer>
+        </GridHeadingContainer>
+      )}
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
       {shouldShowLoadMoreButton && (
         <LoadMoreButtonWrapper>
-          <LoadMoreButton onClick={fetchMore} />
+          <LoadMoreButton
+            label={onDemandInfinite ? 'Keep loading videos' : undefined}
+            onClick={() => {
+              fetchMore()
+              if (onDemandInfinite) {
+                setActivatedInfinteGrid(true)
+              }
+            }}
+          />
         </LoadMoreButtonWrapper>
       )}
     </section>
