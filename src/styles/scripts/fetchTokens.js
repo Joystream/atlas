@@ -22,8 +22,14 @@ const generateTokens = async () => {
       const filePath = path.join(__dirname, '..', 'tokens')
       const fileName = path.basename(res.config.url)
 
+      fs.mkdir(filePath, { recursive: true }, (err) => {
+        if (err) {
+          console.log("Couldn't generate directory", err)
+        }
+      })
+
       fs.writeFile(`${filePath}/${fileName}`, JSON.stringify(res.data, null, 2), (err) => {
-        console.log(`Generating ${filePath}/${fileName} done`)
+        console.log(`Generating ${fileName} done`)
         if (err) {
           console.log("Couldn't generate tokens", err)
         }
