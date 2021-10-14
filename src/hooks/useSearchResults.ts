@@ -1,13 +1,25 @@
-import { useMemo } from 'react'
+import { debounce } from 'lodash-es'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
 import { SentryLogger } from '@/utils/logs'
 
 export const useSearchResults = (searchQuery: string, limit = 50) => {
+  const [text, setText] = useState(searchQuery)
+  const debouncedQuery = useRef(
+    debounce((query: string) => {
+      setText(query)
+    }, 500)
+  )
+
+  useEffect(() => {
+    debouncedQuery.current(searchQuery)
+  }, [searchQuery])
+
   const { data, loading, error } = useSearch(
     {
-      text: searchQuery,
+      text,
       limit,
       whereVideo: {
         mediaAvailability_eq: AssetAvailability.Accepted,
