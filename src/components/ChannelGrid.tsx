@@ -12,20 +12,20 @@ const StyledChannelCard = styled(ChannelCard)`
 
 type ChannelGridProps = {
   channels: BasicChannelFieldsFragment[]
-  onChannelClick?: (id: string) => void
+  onChannelClick?: (id: string, title?: string) => void
 } & React.ComponentProps<typeof Grid>
 
 export const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelClick, ...gridProps }) => {
-  const handleClick = (id: string) => {
+  const handleClick = (id: string, title?: string) => {
     if (onChannelClick) {
-      onChannelClick(id)
+      onChannelClick(id, title)
     }
   }
 
   return (
     <Grid {...gridProps}>
-      {channels.map(({ id }) => (
-        <StyledChannelCard key={id} id={id} onClick={() => handleClick(id)} />
+      {channels.map(({ id, title }) => (
+        <StyledChannelCard key={id} id={id} onClick={() => handleClick(id, title || undefined)} />
       ))}
     </Grid>
   )
