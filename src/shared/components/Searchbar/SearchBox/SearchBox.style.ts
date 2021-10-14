@@ -27,6 +27,8 @@ export const Container = styled.div<{ visible: boolean }>`
 `
 
 export const Section = styled.section`
+  padding: ${sizes(2)} 0;
+
   :not(:last-child) {
     box-shadow: inset 0 -1px 0 ${colors.gray[700]};
   }
@@ -64,8 +66,7 @@ export const StyledShortcutIndicator = styled(ShortcutIndicator)<{ group?: boole
 
 export const Caption = styled(Text)`
   display: block;
-  padding: ${sizes(4)};
-  padding-bottom: ${sizes(2)};
+  padding: ${sizes(2)} ${sizes(4)};
   line-height: ${typography.lineHeights.subtitle1};
   font-weight: ${typography.weights.medium};
 `
