@@ -1,3 +1,15 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { template } = require('lodash')
+
+const variablesTemplate = template(`import { css } from '@emotion/react'
+
+export const globalStyles = css\`
+  :root {
+    <%= output %>
+  }\`
+
+`)
+
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
   parsers: [
@@ -11,63 +23,45 @@ module.exports = {
     },
   ],
   format: {
-    // Adding a custom format to show how to get an alias's name.
-    customFormat: ({ dictionary, options }) => {
-      // console.log(dictionary.allTokens, options)
+    customFormat: ({ dictionary }) => {
+      return variablesTemplate({
+        output: dictionary.allTokens
+          .map((token) => {
+            let value = `--${token.name}: ${token.value};`
 
-      return `import { css } from '@emotion/react'
+            if (dictionary.usesReference(token.original.value)) {
+              const refs = dictionary.getReferences(token.original.value)
 
-export const globalStyles = css\`
-  :root {
-  ${dictionary.allTokens
-    .map((token) => {
-      let value = JSON.stringify(token.value)
-      // new option added to decide whether or not to output references
-      if (options.outputReferences) {
-        // the `dictionary` object now has `usesReference()` and
-        // `getReferences()` methods. `usesReference()` will return true if
-        // the value has a reference in it. `getReferences()` will return
-        // an array of references to the whole tokens so that you can access
-        // their names or any other attributes.
-        if (dictionary.usesReference(token.original.value)) {
-          const refs = dictionary.getReferences(token.original.value)
-          refs.forEach((ref) => {
-            value = value.replace(ref.value, function () {
-              return `${ref.name}`
-            })
+              refs.forEach((ref) => {
+                value = value.replace(ref.value, ` --${ref.name}`)
+              })
+            }
+            return value
           })
-        }
-      }
-
-      return `--${token.name}: ${value};`
-    })
-    .join(`\n`)}
-  }
-    \`
-    
-`
+          .join('\n    '),
+      })
     },
   },
   platforms: {
     css: {
-      transforms: [`attribute/cti`, `name/cti/kebab`],
+      transforms: [`name/cti/kebab`],
       buildPath: 'src/styles/generated/',
       files: [
         {
           destination: `variables.css`,
           format: `css/variables`,
           options: {
-            'outputReferences': true,
+            outputReferences: true,
           },
         },
       ],
     },
     js: {
-      transformGroup: 'js',
+      transforms: [`attribute/cti`, `name/cti/kebab`],
       buildPath: 'src/styles/generated/',
       files: [
         {
-          destination: 'variables.js',
+          destination: 'variables.ts',
           format: 'customFormat',
           options: {
             outputReferences: true,

@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Thu, 14 Oct 2021 06:59:16 GMT
+ * Generated on Thu, 14 Oct 2021 13:37:30 GMT
  */
 
 :root {
@@ -74,6 +74,13 @@
   --core-neutral-default-200: #B5C1C9;
   --core-neutral-default-100: #DAE2EB;
   --core-neutral-default-50: #F4F6F8;
+  --transition-transition-type: [object Object];
+  --easing-bounce: [0.3, 1.5, 0.6, 0.95];
+  --easing-medium: [0.03, 0.5, 0.25, 1];
+  --easing-fast: [0, 0, 0.3, 1];
+  --timing-slow: 500ms;
+  --timing-medium: 250ms;
+  --timing-fast: 150ms;
   --derived-background-accent-success-strong: var(--core-green-400);
   --derived-background-accent-success-default: var(--core-green-500);
   --derived-background-accent-success-muted: var(--core-green-600);
@@ -104,4 +111,8 @@
   --derived-text-strong: var(--core-neutral-default-600);
   --derived-text-default: var(--core-neutral-default-500);
   --derived-text-muted: var(--core-neutral-default-400);
+  --transition-callout: [object Object];
+  --transition-slow: [object Object];
+  --transition-medium: [object Object];
+  --transition-fast: [object Object];
 }

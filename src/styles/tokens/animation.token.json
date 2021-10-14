@@ -1,0 +1,72 @@
+{
+  "timing": {
+    "type": "duration",
+    "fast": {
+      "value": "150ms"
+    },
+    "medium": {
+      "value": "250ms"
+    },
+    "slow": {
+      "value": "500ms"
+    }
+  },
+  "easing": {
+    "type": "cubic-bezier",
+    "fast": {
+      "value": "[0, 0, 0.3, 1]"
+    },
+    "medium": {
+      "value": "[0.03, 0.5, 0.25, 1]"
+    },
+    "bounce": {
+      "value": "[0.3, 1.5, 0.6, 0.95]"
+    }
+  },
+  "transition": {
+    "transitionType": {
+      "type": "typedef",
+      "value": {
+        "timing": {
+          "type": "duration",
+          "required": true
+        },
+        "easing": {
+          "type": "cubic-bezier",
+          "required": true
+        }
+      }
+    },
+    "fast": {
+      "type": "{transition.transitionType}",
+      "description": "Transitions of small UI elements, such as buttons, dropdowns, popovers, inputs, etc.",
+      "value": {
+        "timing": "{timing.fast}",
+        "easing": "{easing.fast}"
+      }
+    },
+    "medium": {
+      "type": "{transition.transitionType}",
+      "description": "Transitions of large UI elements, such as dialogs, pages, sections, etc.",
+      "value": {
+        "timing": "{timing.medium}",
+        "easing": "{easing.medium}"
+      }
+    },
+    "slow": {
+      "type": "{transition.transitionType}",
+      "value": {
+        "timing": "{timing.slow}",
+        "easing": "{easing.medium}"
+      }
+    },
+    "callout": {
+      "type": "{transition.transitionType}",
+      "description": "Transition of elements that need to grab the user’s attention, such as snakcbars, notifications, etc.",
+      "value": {
+        "timing": "{timing.medium}",
+        "easing": "{easing.bounce}"
+      }
+    }
+  }
+}
