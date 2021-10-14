@@ -43,19 +43,6 @@ module.exports = {
     },
   },
   platforms: {
-    css: {
-      transforms: [`name/cti/kebab`],
-      buildPath: 'src/styles/generated/',
-      files: [
-        {
-          destination: `variables.css`,
-          format: `css/variables`,
-          options: {
-            outputReferences: true,
-          },
-        },
-      ],
-    },
     js: {
       transforms: [`attribute/cti`, `name/cti/kebab`],
       buildPath: 'src/styles/generated/',
