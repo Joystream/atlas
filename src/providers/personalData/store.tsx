@@ -3,14 +3,7 @@ import { round } from 'lodash-es'
 import { createStore } from '@/store'
 import { readFromLocalStorage } from '@/utils/localStorage'
 
-import {
-  DismissedMessage,
-  FollowedChannel,
-  RecentSearch,
-  RecentSearchType,
-  WatchedVideo,
-  WatchedVideoStatus,
-} from './types'
+import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 
 export type PersonalDataStoreState = {
   watchedVideos: WatchedVideo[]
@@ -33,7 +26,8 @@ const WHITELIST = [
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
   updateChannelFollowing: (id: string, follow: boolean) => void
-  updateRecentSearches: (id: string, type: RecentSearchType) => void
+  addRecentSearch: (id: number, title: string) => void
+  deleteRecentSearch: (id: number) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   setCurrentVolume: (volume: number) => void
   setCachedVolume: (volume: number) => void
@@ -79,10 +73,18 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updateRecentSearches: (id, type) => {
+      addRecentSearch: (id, title) => {
+        set((state) => {
+          const index = state.recentSearches.findIndex((item) => item.id === id)
+          if (index >= 0) {
+            state.recentSearches.splice(index, 1)
+          }
+          state.recentSearches.unshift({ title, id })
+        })
+      },
+      deleteRecentSearch: (id) => {
         set((state) => {
           state.recentSearches = state.recentSearches.filter((search) => search.id !== id)
-          state.recentSearches.unshift({ id, type })
         })
       },
       updateDismissedMessages: (id, add = true) => {

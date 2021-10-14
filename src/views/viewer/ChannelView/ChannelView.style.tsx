@@ -174,7 +174,6 @@ type SearchContainerProps = {
 export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
-  width: 100%;
   align-items: center;
   margin: ${sizes(6)} 0 ${sizes(16)};
   position: relative;

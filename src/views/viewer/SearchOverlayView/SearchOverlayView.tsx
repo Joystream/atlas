@@ -6,7 +6,6 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { colors, zIndex } from '@/shared/theme'
 
-import { RecentSearches } from './RecentSearches'
 import { SearchResults } from './SearchResults'
 
 export const SearchOverlayView: React.FC = () => {
@@ -24,7 +23,7 @@ export const SearchOverlayView: React.FC = () => {
 
   return (
     <OverlayContainer role="dialog">
-      {searchQuery ? <SearchResults query={searchQuery} /> : <RecentSearches />}
+      <SearchResults query={searchQuery || ''} />
     </OverlayContainer>
   )
 }

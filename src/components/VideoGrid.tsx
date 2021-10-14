@@ -14,8 +14,8 @@ const StyledVideoTile = styled(VideoTile)`
 type VideoGridProps = {
   videos: VideoFieldsFragment[]
   showChannel?: boolean
-  onVideoClick?: (id: string) => void
-  onChannelClick?: (id: string) => void
+  onVideoClick?: (id: string, title?: string) => void
+  onChannelClick?: (id: string, title?: string) => void
 }
 export const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true, onVideoClick, onChannelClick }) => {
   return (
@@ -27,12 +27,12 @@ export const VideoGrid: React.FC<VideoGridProps> = ({ videos, showChannel = true
           showChannel={showChannel}
           onClick={() => {
             if (onVideoClick) {
-              onVideoClick(v.id)
+              onVideoClick(v.id, v.title || undefined)
             }
           }}
           onChannelClick={() => {
             if (onChannelClick) {
-              onChannelClick(v.channel.id)
+              onChannelClick(v.channel.id, v.channel.title || undefined)
             }
           }}
         />
