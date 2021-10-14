@@ -54,14 +54,6 @@ export const TopbarViewer: React.FC = () => {
     setIsFocused(false)
   }
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    if (event.relatedTarget instanceof HTMLAnchorElement && event.relatedTarget?.href) {
-      event.preventDefault()
-      return
-    }
-    onClose()
-  }
-
   const handleFocus = () => {
     setIsFocused(true)
   }
@@ -86,7 +78,6 @@ export const TopbarViewer: React.FC = () => {
           onCancel={handleCancel}
           showCancelButton={!!searchQuery}
           onClose={onClose}
-          onBlur={handleBlur}
           controlled
           hasFocus={isFocused}
           onClick={handleFocus}

@@ -47,7 +47,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
   }, [handleSelectedItem, selected])
 
   return (
-    <SearchItemWrapper to={to} onClick={onClick} selected={selected} ref={wrapperRef} variant={variant} tabIndex={-1}>
+    <SearchItemWrapper to={to} onClick={onClick} selected={selected} ref={wrapperRef} variant={variant}>
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
         <Text secondary variant="caption">
