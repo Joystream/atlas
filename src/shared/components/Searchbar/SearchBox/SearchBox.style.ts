@@ -8,17 +8,65 @@ import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
+import { animation } from '@/shared/theme/tokens'
 
 export const Container = styled.div<{ visible: boolean }>`
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
-  background-color: ${colors.gray[800]};
-  overflow-y: auto;
   height: 100vh;
+  overflow-y: hidden;
+  background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
-  ${({ visible }) => !visible && 'display: none'};
+  ${({ visible }) => !visible && 'height: 0'};
+
+  &.searchbox-enter {
+    opacity: 0;
+    height: 0;
+
+    ${media.sm} {
+      opacity: 0;
+      max-height: 0;
+    }
+  }
+
+  &.searchbox-enter-active {
+    opacity: 1;
+    height: 100vh;
+    transition: all ${animation.slow.timing} ${animation.medium.easing};
+
+    ${media.sm} {
+      height: auto;
+      max-height: 400px;
+      transition: all ${animation.medium.timing} ${animation.medium.easing};
+    }
+  }
+
+  &.searchbox-exit {
+    opacity: 1;
+    height: 100vh;
+    overflow-y: hidden;
+
+    ${media.sm} {
+      opacity: 1;
+      height: auto;
+      max-height: 400px;
+    }
+  }
+
+  &.searchbox-exit-active {
+    opacity: 0;
+    height: 0;
+    transition: all ${animation.slow.timing} ${animation.medium.easing};
+
+    ${media.sm} {
+      opacity: 0;
+      max-height: 0;
+      height: auto;
+      transition: all ${animation.medium.timing} ${animation.medium.easing};
+    }
+  }
 
   ${media.md} {
     box-shadow: none;

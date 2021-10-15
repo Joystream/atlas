@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -190,7 +191,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </SearchHelper>
             </>
           )}
-          {hasFocus && (
+          <CSSTransition classNames="searchbox" in={hasFocus} timeout={500} unmountOnExit mountOnEnter>
             <SearchBox
               searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}
@@ -200,7 +201,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               handleSetNumberOfItems={handleSetNumberOfItems}
               onMouseMove={() => setSelectedItem(null)}
             />
-          )}
+          </CSSTransition>
         </Container>
       </>
     )

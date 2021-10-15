@@ -13,6 +13,10 @@ export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   transition: background-color 0.4s ${transitions.easing};
   background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[900] : colors.black)};
   ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
+
+  &.topbar-exit {
+    z-index: ${zIndex.globalOverlay};
+  }
 `
 
 export const SearchbarContainer = styled.div`

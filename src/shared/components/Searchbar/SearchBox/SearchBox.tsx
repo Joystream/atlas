@@ -19,6 +19,7 @@ import {
 type SearchBoxProps = {
   searchQuery: string
   onSelectRecentSearch: (title?: string) => void
+  className?: string
   selectedItem: null | number
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
@@ -44,6 +45,7 @@ const generatePlaceholders = () => {
 export const SearchBox: React.FC<SearchBoxProps> = ({
   searchQuery,
   onSelectRecentSearch,
+  className,
   selectedItem,
   onLastSelectedItem,
   onSelectItem,
@@ -103,6 +105,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   return (
     <Container
       visible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
     >
