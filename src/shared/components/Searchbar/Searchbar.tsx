@@ -45,6 +45,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const mdMatch = useMediaMatch('md')
     const inputRef = useRef<HTMLInputElement>(null)
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
+    const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
     const navigate = useNavigate()
     const location = useLocation()
     const locationState = location.state as RoutingState
@@ -97,13 +98,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       if (event.key === 'ArrowUp') {
         event.preventDefault()
         setSelectedItem((prevState) => {
-          if (prevState === null) {
-            return 0
+          if (prevState === null && numberOfItems) {
+            return numberOfItems - 1
           }
           if (prevState === 0) {
             return null
           }
-          return prevState - 1
+          return prevState ? prevState - 1 : 0
         })
       }
     }
@@ -134,6 +135,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const onSelectItem = useCallback((title?: string | null) => {
       setRecentSearch(title)
     }, [])
+
+    const handleSetNumberOfItems = (items: number) => {
+      setNumberOfItems(items)
+    }
 
     return (
       <>
@@ -185,6 +190,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               selectedItem={selectedItem}
               onLastSelectedItem={onLastSelectedItem}
               onSelectItem={onSelectItem}
+              handleSetNumberOfItems={handleSetNumberOfItems}
             />
           )}
         </Container>

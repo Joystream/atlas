@@ -22,6 +22,7 @@ type SearchBoxProps = {
   selectedItem: null | number
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
+  handleSetNumberOfItems: (items: number) => void
 }
 
 const generatePlaceholders = () => {
@@ -45,6 +46,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   selectedItem,
   onLastSelectedItem,
   onSelectItem,
+  handleSetNumberOfItems,
 }) => {
   const { channels, videos, loading } = useSearchResults(searchQuery, 3)
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
@@ -74,6 +76,10 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   }
 
   const slicedReccentSearches = recentSearches.slice(0, 6)
+
+  useEffect(() => {
+    handleSetNumberOfItems(slicedReccentSearches.length + videos.length + channels.length)
+  }, [handleSetNumberOfItems, slicedReccentSearches.length, videos.length, channels.length])
 
   // Fire when user select last result
   useEffect(() => {
