@@ -3,6 +3,8 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
+import { QUERY_PARAMS } from '@/config/routes'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Loader } from '@/shared/components/Loader'
@@ -36,6 +38,7 @@ export type UploadStatusGroupProps = {
 
 export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
+  const hightlightFailed = useRouterQuery(QUERY_PARAMS.UPLOADS)
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
@@ -72,6 +75,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     }
     if (errorsCount || missingAssetsCount) {
       setUploadGroupState('error')
+      setAssetsDrawerActive(!!hightlightFailed)
     }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
@@ -79,7 +83,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (isProcessing) {
       setUploadGroupState('processing')
     }
-  }, [errorsCount, hasUploadingAsset, isCompleted, isProcessing, missingAssetsCount])
+  }, [errorsCount, hasUploadingAsset, hightlightFailed, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (isWaiting) {

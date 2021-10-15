@@ -215,7 +215,7 @@ export const UploadsManager: React.FC = () => {
           } waiting to resume upload`,
           description: 'Reconnect files to fix the issue',
           actionText: 'See',
-          onActionClick: () => navigate(absoluteRoutes.studio.uploads()),
+          onActionClick: () => navigate(absoluteRoutes.studio.uploads({ highlightFailed: 'true' })),
           iconType: 'warning',
         })
       }

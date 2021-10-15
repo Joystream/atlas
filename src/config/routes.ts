@@ -36,7 +36,7 @@ export const relativeRoutes = {
     editChannel: () => 'channel',
     videos: () => 'videos',
     videoWorkspace: () => 'video-workspace',
-    uploads: () => 'uploads',
+    uploads: (query?: { highlightFailed?: string }) => withQueryParameters('uploads', query),
     signIn: (query?: { step?: string }) => withQueryParameters('signin', query),
     signInJoin: (query?: { step?: string }) => withQueryParameters('signin/join', query),
     newMembership: () => 'membership/new',
@@ -68,4 +68,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   JOIN: 'step',
+  UPLOADS: 'highlightFailed',
 }
