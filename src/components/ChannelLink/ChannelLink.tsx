@@ -5,6 +5,7 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { Avatar, AvatarSize } from '@/shared/components/Avatar'
+import { TextVariant } from '@/shared/components/Text'
 import { SentryLogger } from '@/utils/logs'
 
 import { Container, HandleSkeletonLoader, StyledText } from './ChannelLink.style'
@@ -20,6 +21,7 @@ type ChannelLinkProps = {
   avatarSize?: AvatarSize
   className?: string
   onNotFound?: () => void
+  textVariant?: TextVariant
 }
 
 export const ChannelLink: React.FC<ChannelLinkProps> = ({
@@ -32,6 +34,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   avatarSize = 'default',
   onNotFound,
   className,
+  textVariant,
 }) => {
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
@@ -51,11 +54,11 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
       {!hideHandle &&
         (displayedChannel ? (
           variant === 'secondary' ? (
-            <StyledText withAvatar={!hideAvatar} secondary variant="button2">
+            <StyledText withAvatar={!hideAvatar} secondary variant={textVariant || 'button2'}>
               {displayedChannel.title}
             </StyledText>
           ) : (
-            <StyledText withAvatar={!hideAvatar} variant="h6">
+            <StyledText withAvatar={!hideAvatar} variant={textVariant || 'h6'}>
               {displayedChannel.title}
             </StyledText>
           )

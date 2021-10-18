@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
 import { ChannelLink } from '@/components/ChannelLink'
-import { breakpoints, colors, media, sizes, zIndex } from '@/shared/theme'
+import { colors, media, sizes, zIndex } from '@/shared/theme'
 
 import { Button } from '../../Button'
 import { CircularProgress } from '../../CircularProgress'
@@ -15,47 +14,58 @@ type OverlayBackgroundProps = {
 
 export const OverlayBackground = styled.div<OverlayBackgroundProps>`
   position: absolute;
+  display: flex;
   overflow: auto;
+  justify-content: center;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: ${zIndex.overlay};
-  background-image: ${({ thumbnailUrl }) =>
-    `linear-gradient(to right, ${colors.transparentBlack[86]}, ${colors.transparentBlack[86]}), url(${thumbnailUrl}) `};
-  background-size: cover;
   height: 100%;
+  background-color: ${colors.gray[900]};
 `
 
-type InnerContainerProps = {
+type ContainerProps = {
   isFullScreen?: boolean
 }
 
-export const InnerContainer = styled.div<InnerContainerProps>`
-  padding: ${sizes(4)};
+export const Container = styled.div<ContainerProps>`
   height: calc(100% - ${({ isFullScreen }) => (isFullScreen ? '5.5em' : '4.25em')});
-  overflow-y: auto;
   width: 100%;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
 
-  ${media.sm} {
+  ${media.md} {
     flex-direction: column;
-    padding: ${sizes(6)};
+    width: auto;
   }
 `
 
-export const VideoInfo = styled.div`
+export const InnerContainer = styled.div`
+  display: flex;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+
+  ${media.md} {
+    width: 100%;
+  }
+`
+
+export const VideoInfo = styled.div<{ noNextVideo?: boolean }>`
   overflow: hidden;
   margin: auto;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${media.sm} {
+
+  ${media.md} {
+    width: ${({ noNextVideo }) => (noNextVideo ? 'auto' : '320px')};
     margin: unset;
+    align-items: unset;
+    margin-left: ${({ noNextVideo }) => (noNextVideo ? 0 : sizes(6))};
   }
 `
 
@@ -64,15 +74,21 @@ export const SubHeading = styled(Text)`
 `
 
 export const Heading = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: sizes(6), toSize: sizes(8) }, breakpoints.xxs, breakpoints.lg)};
-
-  margin-top: ${sizes(4)};
+  margin-top: ${sizes(3)};
   flex-shrink: 0;
   max-width: 560px;
   width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
   text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  ${media.md} {
+    margin-top: ${sizes(2)};
+    text-align: left;
+  }
 `
 
 type StyledChannelLinkProps = {
@@ -80,10 +96,10 @@ type StyledChannelLinkProps = {
 }
 export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
   flex-shrink: 0;
-  margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
+  margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
 
-  ${media.sm} {
-    margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
+  ${media.md} {
+    margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
   }
 
   span {
@@ -91,7 +107,8 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     display: flex;
     align-items: center;
     margin-left: ${sizes(2)};
-    ${media.sm} {
+
+    ${media.md} {
       font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(4))};
       margin-left: ${sizes(3)};
     }
@@ -101,7 +118,9 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     width: ${sizes(6)};
     height: ${sizes(6)};
     min-width: ${sizes(6)};
-    ${media.sm} {
+
+    ${media.md} {
+      margin-right: ${sizes(1)};
       width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       height: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       min-width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
@@ -110,12 +129,18 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
 `
 export const CountDownWrapper = styled.div`
   flex-shrink: 0;
-  margin: ${sizes(6)} ${sizes(4)};
+  margin-right: ${sizes(8)};
+  margin-left: ${sizes(4)};
   position: relative;
   display: flex;
-  height: ${sizes(14)};
   justify-content: center;
   align-items: center;
+  height: calc(100% - 4.25em);
+
+  ${media.md} {
+    margin: ${sizes(6)} ${sizes(4)};
+    height: ${sizes(14)};
+  }
 `
 
 export const StyledCircularProgress = styled(CircularProgress)`
@@ -137,7 +162,18 @@ export const CountDownButton = styled(IconButton)`
 
 export const RestartButton = styled(Button)`
   margin-top: ${sizes(6)};
-  ${media.sm} {
+  align-self: center;
+
+  ${media.md} {
     margin-top: ${sizes(12)};
+  }
+`
+
+export const VideoThumbnail = styled.img`
+  width: 320px;
+  display: none;
+
+  ${media.md} {
+    display: block;
   }
 `
