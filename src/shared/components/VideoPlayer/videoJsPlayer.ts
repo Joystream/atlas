@@ -9,6 +9,7 @@ export type VideoJsConfig = {
   fluid?: boolean
   fill?: boolean
   muted?: boolean
+  posterUrl?: string | null
   startTime?: number
   onDataLoaded?: () => void
   onPlay?: () => void
@@ -25,6 +26,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
   src,
   width,
   muted = false,
+  posterUrl,
   startTime = 0,
   onDataLoaded,
   onPlay,
@@ -46,6 +48,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       loadingSpinner: false,
       bigPlayButton: false,
       controlBar: false,
+      preload: 'metadata',
     }
 
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)
@@ -107,6 +110,14 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
 
     player.muted(muted)
   }, [player, muted])
+
+  useEffect(() => {
+    if (!player || !posterUrl) {
+      return
+    }
+
+    player.poster(posterUrl)
+  }, [player, posterUrl])
 
   useEffect(() => {
     if (!player || !onDataLoaded) {
