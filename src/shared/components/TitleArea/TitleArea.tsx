@@ -53,7 +53,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
         onBlur={onBlur}
       />
 
-      <TitleAreaInfo visible={touched && !value?.length}>
+      <TitleAreaInfo visible={(touched && !value?.length) || (!!value?.length && invalidInput)}>
         <MinMaxChars secondary variant="caption">
           Min {min} Chars | Max {max} Chars
         </MinMaxChars>
