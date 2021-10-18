@@ -13,7 +13,7 @@ export const useFiltersBar = () => {
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
 
-  const [isFiltersOpen, setIsFiltersOpen] = useState(true)
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
 
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined

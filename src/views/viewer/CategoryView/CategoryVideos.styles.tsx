@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Select } from '@/shared/components/Select'
 import { colors, media, sizes } from '@/shared/theme'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
@@ -40,3 +41,9 @@ export const StyledVideoGrid = styled(InfiniteVideoGrid)`
   position: relative;
   padding-top: ${sizes(12)};
 `
+
+export const StyledSelect = styled(Select)`
+  ul {
+    z-index: 500;
+  }
+` as typeof Select

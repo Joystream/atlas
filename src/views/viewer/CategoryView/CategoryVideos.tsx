@@ -9,11 +9,10 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { GridItem } from '@/shared/components/LayoutGrid'
-import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 
-import { Container, ControlsContainer, SortContainer, StyledVideoGrid } from './CategoryVideos.styles'
+import { Container, ControlsContainer, SortContainer, StyledSelect, StyledVideoGrid } from './CategoryVideos.styles'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
@@ -68,7 +67,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
         <GridItem colSpan={{ base: 2, md: 1 }}>
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
         </GridItem>
-        <Select
+        <StyledSelect
           placeholder="Select language"
           onChange={setSelectedLanguage}
           size="small"
@@ -95,7 +94,13 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
         {mdMatch && (
           <SortContainer>
             <Text variant="body2">Sort by</Text>
-            <Select size="small" helperText={null} value={sortVideosBy} items={SORT_OPTIONS} onChange={handleSorting} />
+            <StyledSelect
+              size="small"
+              helperText={null}
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
+            />
           </SortContainer>
         )}
       </ControlsContainer>
