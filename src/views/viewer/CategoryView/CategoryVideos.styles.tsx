@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes } from '@/shared/theme'
 
-import { InfiniteVideoGrid } from '../InfiniteGrids'
+import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
 export const Container = styled.div`
   /* margin-top: ${sizes(16)}; */

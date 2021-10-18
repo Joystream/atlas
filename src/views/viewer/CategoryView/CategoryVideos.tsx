@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
 
+import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
+import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -14,10 +15,7 @@ import { SvgActionFilters } from '@/shared/icons'
 
 import { Container, ControlsContainer, SortContainer, StyledVideoGrid } from './CategoryVideos.styles'
 
-import { FiltersBar, useFiltersBar } from '../FiltersBar'
-
-export const CategoryVideos = () => {
-  const { id } = useParams()
+export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const betweenMdAndLgMatch = mdMatch && !lgMatch
@@ -31,15 +29,21 @@ export const CategoryVideos = () => {
   } = filtersBarLogic
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>()
+  const { videoCount } = useVideoCount(
+    { where: videoWhereInput },
+    {
+      notifyOnNetworkStatusChange: true,
+    }
+  )
 
   useEffect(() => {
     setVideoWhereInput({
-      categoryId_eq: id,
+      categoryId_eq: categoryId,
       languageId_eq: 'en',
     })
-    setSelectedCategoryIdFilter(id)
-  }, [id, setSelectedCategoryIdFilter, setVideoWhereInput])
+    setSelectedCategoryIdFilter(categoryId)
+  }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
 
   const handleSorting = (value?: VideoOrderByInput | null) => {
     if (value) {
@@ -62,9 +66,10 @@ export const CategoryVideos = () => {
     <Container>
       <ControlsContainer>
         <GridItem colSpan={{ base: 2, md: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
+          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
         </GridItem>
         <Select
+          placeholder="Select language"
           onChange={setSelectedLanguage}
           size="small"
           helperText={null}

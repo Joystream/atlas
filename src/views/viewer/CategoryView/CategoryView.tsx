@@ -1,10 +1,12 @@
 import React from 'react'
+import { useParams } from 'react-router'
 
 import { useVideos } from '@/api/hooks'
-import { CategoryVideos } from '@/components/CategoryVideos'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { VideoCategoryHero } from '@/components/VideoCategoryHero'
 import { SvgVideoCategoriesFilmAndAnimation } from '@/shared/icons'
+
+import { CategoryVideos } from './CategoryVideos'
 
 const dummyHeroVideos = [
   {
@@ -26,6 +28,7 @@ const dummyHeroVideos = [
 
 export const CategoryView = () => {
   const { videos } = useVideos({ limit: 3 })
+  const { id } = useParams()
 
   const dummyVideos = videos
     ? videos.map((video, idx) => ({
@@ -44,7 +47,7 @@ export const CategoryView = () => {
         }}
         videos={dummyVideos}
       />
-      <CategoryVideos />
+      <CategoryVideos categoryId={id} />
     </LimitedWidthContainer>
   )
 }
