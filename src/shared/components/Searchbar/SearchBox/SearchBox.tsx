@@ -54,6 +54,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     deleteRecentSearch: state.actions.deleteRecentSearch,
   }))
   const containerRef = useRef<HTMLDivElement>(null)
+  const topRef = useRef(0)
 
   const scrollToSelectedItem = useCallback(
     (top: number, title?: string | null) => {
@@ -61,12 +62,14 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       if (!containerRef.current) {
         return
       }
-      if (selectedItem === 0 || top < containerRef.current.offsetHeight) {
+      const { offsetHeight } = containerRef.current
+      if (selectedItem === 0 || top < offsetHeight) {
         containerRef?.current?.scrollTo(0, 0)
       }
-      if (top >= containerRef.current.offsetHeight - 50) {
-        containerRef?.current?.scrollTo(0, top - 250)
+      if (top >= offsetHeight - 50) {
+        containerRef?.current?.scrollTo(0, top + (top < topRef.current ? -50 : -250))
       }
+      topRef.current = top
     },
     [onSelectItem, selectedItem]
   )
@@ -111,6 +114,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               selected={idx === selectedItem}
               handleSelectedItem={scrollToSelectedItem}
               onClick={onSelectRecentSearch}
+              selectedItem={selectedItem}
             />
           ))}
         </Section>
@@ -128,6 +132,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               query={searchQuery}
               selected={selectedItem === idx + slicedReccentSearches.length}
               handleSelectedItem={scrollToSelectedItem}
+              selectedItem={selectedItem}
             />
           ))}
         </Section>
@@ -144,6 +149,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               query={searchQuery}
               selected={selectedItem === idx + slicedReccentSearches.length + videos.length}
               handleSelectedItem={scrollToSelectedItem}
+              selectedItem={selectedItem}
             />
           ))}
         </Section>

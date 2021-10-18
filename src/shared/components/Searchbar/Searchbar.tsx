@@ -56,6 +56,12 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }))
 
     useEffect(() => {
+      if (selectedItem === null || !hasFocus) {
+        setRecentSearch(null)
+      }
+    }, [selectedItem, hasFocus])
+
+    useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
         if (event.key === '/') {
           onClick?.()
@@ -84,6 +90,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
         event.preventDefault()
         onClose?.()
         event.currentTarget.blur()
+        setSelectedItem(null)
       }
 
       if (event.key === 'ArrowDown') {

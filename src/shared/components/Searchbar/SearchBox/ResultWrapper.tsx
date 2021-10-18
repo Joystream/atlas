@@ -14,6 +14,7 @@ type SearchItemProps = {
   variant?: 'default' | 'textOnly'
   selected?: boolean
   handleSelectedItem: (top: number) => void
+  selectedItem: null | number
 }
 
 export const ResultWrapper: React.FC<SearchItemProps> = ({
@@ -24,6 +25,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
   selected,
   handleSelectedItem,
   variant = 'default',
+  selectedItem,
 }) => {
   const wrapperRef = useRef<HTMLAnchorElement>(null)
   const navigate = useNavigate()
@@ -47,7 +49,14 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
   }, [handleSelectedItem, selected])
 
   return (
-    <SearchItemWrapper to={to} onClick={onClick} selected={selected} ref={wrapperRef} variant={variant}>
+    <SearchItemWrapper
+      to={to}
+      onClick={onClick}
+      selected={selected}
+      ref={wrapperRef}
+      variant={variant}
+      selectedItem={selectedItem}
+    >
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
         <Text secondary variant="caption">

@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -91,14 +92,18 @@ const selectedStyles = (hover?: boolean) => `
       }
 `
 
-export const SearchItemWrapper = styled(Link)<{ selected?: boolean; variant: 'default' | 'textOnly' }>`
+export const SearchItemWrapper = styled(Link, { shouldForwardProp: isPropValid })<{
+  selected?: boolean
+  variant: 'default' | 'textOnly'
+  selectedItem: number | null
+}>`
   display: flex;
   align-items: center;
   padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
   text-decoration: none;
 
   &:hover {
-    ${() => selectedStyles(true)}
+    ${({ selectedItem }) => selectedItem === null && selectedStyles(true)}
   }
 
   ${({ selected }) => selected && selectedStyles(!selected)}

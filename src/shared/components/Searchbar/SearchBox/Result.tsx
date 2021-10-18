@@ -21,9 +21,17 @@ type ResultProps = {
   query?: string
   selected?: boolean
   handleSelectedItem: (top: number, title?: string | null) => void
+  selectedItem: null | number
 }
 
-export const Result: React.FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem }) => {
+export const Result: React.FC<ResultProps> = ({
+  video,
+  channel,
+  query,
+  selected,
+  handleSelectedItem,
+  selectedItem,
+}) => {
   const title = video ? video.title : channel?.title
   const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset({
     entity: channel,
@@ -55,7 +63,7 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query, selected,
   )
 
   return (
-    <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected}>
+    <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected} selectedItem={selectedItem}>
       <ResultContent>
         {isLoading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />

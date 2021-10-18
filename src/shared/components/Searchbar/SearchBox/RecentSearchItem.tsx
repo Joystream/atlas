@@ -15,6 +15,7 @@ type RecentSearchItemProps = {
   title?: string
   selected?: boolean
   handleSelectedItem: (top: number, title?: string) => void
+  selectedItem: null | number
 }
 
 export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
@@ -24,6 +25,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
   onClick,
   selected,
   handleSelectedItem,
+  selectedItem,
 }) => {
   const onSelected = useCallback(
     (top: number) => {
@@ -40,6 +42,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
       selected={selected}
       to={absoluteRoutes.viewer.search({ query: title?.trim() })}
       variant="textOnly"
+      selectedItem={selectedItem}
     >
       <RecentSearchItemWrapper>
         <ClockWrapper>
