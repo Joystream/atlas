@@ -205,7 +205,7 @@ export const VideoView: React.FC = () => {
             title={`More from ${video?.channel.title}`}
             titleLoader
             ready={!loading}
-            channelId={channelId}
+            videoWhereInput={{ channelId_eq: channelId }}
             showChannel={false}
             currentlyWatchedVideoId={video?.id}
           />
