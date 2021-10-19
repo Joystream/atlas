@@ -84,7 +84,8 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [countdownProgress, isCountDownStarted, isEnded, navigate, randomNextVideo])
 
-  const handleCountDownButton = () => {
+  const handleCountDownButton = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
     if (isCountDownStarted) {
       setIsCountDownStarted(false)
       setCountdownProgress(0)
