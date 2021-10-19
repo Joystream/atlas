@@ -62,7 +62,7 @@ export const HomeView: React.FC = () => {
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
             title="Followed channels"
-            channelIdIn={channelIdIn}
+            videoWhereInput={{ channelId_in: channelIdIn }}
             ready={!followedLoading}
             onDemand
             titleLoader
@@ -70,7 +70,7 @@ export const HomeView: React.FC = () => {
         ) : null}
         <InfiniteVideoGrid
           title="Popular on Joystream"
-          idIn={mostViewedVideosIds}
+          videoWhereInput={{ id_in: mostViewedVideosIds }}
           ready={!mostViewedVideosLoading}
           onDemand
           titleLoader
