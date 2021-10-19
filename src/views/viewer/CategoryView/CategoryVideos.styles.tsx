@@ -1,10 +1,15 @@
 import styled from '@emotion/styled'
 
+import { Select } from '@/shared/components/Select'
 import { colors, media, sizes } from '@/shared/theme'
 
+import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
+
 export const Container = styled.div`
-  margin-top: ${sizes(16)};
-  position: relative;
+  /* margin-top: ${sizes(16)}; */
+
+  /* todo remove line below and uncomment above when layout is ready */
+  margin-top: ${sizes(32)};
 `
 
 export const ControlsContainer = styled.div`
@@ -32,16 +37,13 @@ export const SortContainer = styled.div`
   }
 `
 
-export const FiltersContainer = styled.div<{ open: boolean }>`
-  display: ${({ open }) => (open ? 'flex' : 'none')};
-  justify-content: space-between;
-  padding: ${sizes(4)};
-  background-color: ${colors.gray[900]};
+export const StyledVideoGrid = styled(InfiniteVideoGrid)`
+  position: relative;
+  padding-top: ${sizes(12)};
 `
 
-export const FiltersInnerContainer = styled.div`
-  display: grid;
-  gap: ${sizes(4)};
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-`
+export const StyledSelect = styled(Select)`
+  ul {
+    z-index: 500;
+  }
+` as typeof Select
