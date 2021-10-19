@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 
 import { IconButton } from '@/shared/components/IconButton'
 import { colors, media, sizes, square, transitions, zIndex } from '@/shared/theme'
+import { animation } from '@/shared/theme/tokens'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -54,9 +55,20 @@ export const Overlay = styled.div`
   left: 0;
   background-color: ${colors.transparentBlack[54]};
   display: none;
+  transition: opacity ${animation.medium.timing}ms ${animation.medium.easing};
 
   ${media.sm} {
     display: block;
+
+    &.searchbar-overlay-enter-active,
+    &.searchbar-overlay-exit {
+      opacity: 1;
+    }
+
+    &.searchbar-overlay-enter,
+    &.searchbar-overlay-exit-active {
+      opacity: 0;
+    }
   }
 `
 

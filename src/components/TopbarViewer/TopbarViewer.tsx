@@ -104,7 +104,9 @@ export const TopbarViewer: React.FC = () => {
           </StyledIconButton>
         )}
       </ButtonWrapper>
-      {isFocused && <Overlay onClick={onClose} />}
+      <CSSTransition classNames="searchbar-overlay" in={isFocused} timeout={0} unmountOnExit mountOnEnter>
+        <Overlay onClick={onClose} />
+      </CSSTransition>
     </StyledTopbarBase>
   )
 }

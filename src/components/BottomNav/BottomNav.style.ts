@@ -15,7 +15,7 @@ export const Container = styled.div`
   bottom: 0;
   z-index: ${zIndex.nearVideoWorkspaceOverlay};
   display: flex;
-  transition: transform ${animation.medium.timing} ${animation.medium.easing};
+  transition: transform ${animation.medium.timing}ms ${animation.medium.easing};
 
   &.bottom-nav-active,
   &.bottom-nav-exit {

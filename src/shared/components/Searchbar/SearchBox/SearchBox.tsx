@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react'
+import { SpringValue } from 'react-spring'
 
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -20,6 +21,11 @@ type SearchBoxProps = {
   searchQuery: string
   onSelectRecentSearch: (title?: string) => void
   className?: string
+  styles?: {
+    opacity: SpringValue<number>
+    maxHeight: SpringValue<string>
+  }
+  animationInProgress: boolean
   selectedItem: null | number
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
@@ -45,6 +51,8 @@ const generatePlaceholders = () => {
 export const SearchBox: React.FC<SearchBoxProps> = ({
   searchQuery,
   onSelectRecentSearch,
+  styles,
+  animationInProgress,
   className,
   selectedItem,
   onLastSelectedItem,
@@ -104,9 +112,11 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   return (
     <Container
-      visible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      isVisible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      style={styles}
       className={className}
       ref={containerRef}
+      animationInProgress={animationInProgress}
       onMouseMove={onMouseMove}
     >
       {!!recentSearches.length && (
