@@ -198,6 +198,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               onLastSelectedItem={onLastSelectedItem}
               onSelectItem={onSelectItem}
               handleSetNumberOfItems={handleSetNumberOfItems}
+              onMouseMove={() => setSelectedItem(null)}
             />
           )}
         </Container>

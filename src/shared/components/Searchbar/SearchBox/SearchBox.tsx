@@ -23,6 +23,7 @@ type SearchBoxProps = {
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
   handleSetNumberOfItems: (items: number) => void
+  onMouseMove: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 const generatePlaceholders = () => {
@@ -47,6 +48,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   onLastSelectedItem,
   onSelectItem,
   handleSetNumberOfItems,
+  onMouseMove,
 }) => {
   const { channels, videos, loading } = useSearchResults(searchQuery, 3)
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
@@ -66,7 +68,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       if (selectedItem === 0 || top < offsetHeight) {
         containerRef?.current?.scrollTo(0, 0)
       }
-      if (top >= offsetHeight - 50) {
+      if (top >= offsetHeight + (top < topRef.current ? -250 : -50)) {
         containerRef?.current?.scrollTo(0, top + (top < topRef.current ? -50 : -250))
       }
       topRef.current = top
@@ -99,7 +101,11 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   ])
 
   return (
-    <Container visible={!!recentSearches.length || !!videos.length || !!channels.length || loading} ref={containerRef}>
+    <Container
+      visible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      ref={containerRef}
+      onMouseMove={onMouseMove}
+    >
       {!!recentSearches.length && (
         <Section>
           <Caption secondary variant="caption">
