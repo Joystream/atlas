@@ -78,7 +78,7 @@ export const CategoryView = () => {
         }}
         videos={dummyVideos}
       />
-      <CategoryVideos />
+      <CategoryVideos categoryId={id} />
 
       <TitleContainer>
         <Text variant="h4">Other categories</Text>
