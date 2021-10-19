@@ -71,7 +71,6 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
           placeholder="Select language"
           onChange={setSelectedLanguage}
           size="small"
-          helperText={null}
           value={selectedLanguage}
           items={languages}
         />
