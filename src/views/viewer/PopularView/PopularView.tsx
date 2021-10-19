@@ -43,7 +43,12 @@ export const PopularView: FC = () => {
   return (
     <VideoContentTemplate title="Popular on Joystream" cta={['new', 'home', 'channels']}>
       <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
-      <InfiniteVideoGrid title="Popular videos" idIn={mostViewedVideosIds} ready={!mostViewedVideosLoading} onDemand />
+      <InfiniteVideoGrid
+        title="Popular videos"
+        videoWhereInput={{ id_in: mostViewedVideosIds }}
+        ready={!mostViewedVideosLoading}
+        onDemand
+      />
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand
