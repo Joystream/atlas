@@ -1,52 +1,54 @@
-import styled from '@emotion/styled'
-import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
+import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
+import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { GridItem } from '@/shared/components/LayoutGrid'
-import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
-import { colors, media, sizes } from '@/shared/theme'
 
-import { FiltersBar, FiltersBarProps } from './FiltersBar'
-import { useFiltersBar } from './useFiltersBar'
+import { Container, ControlsContainer, SortContainer, StyledSelect, StyledVideoGrid } from './CategoryVideos.styles'
 
-export default {
-  title: 'other/FiltersBar',
-  component: FiltersBar,
-  decorators: [
-    (Story) => (
-      <OverlayManagerProvider>
-        <Story />
-      </OverlayManagerProvider>
-    ),
-  ],
-} as Meta
-
-const RegularTemplate: Story<FiltersBarProps> = () => {
+export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const betweenMdAndLgMatch = mdMatch && !lgMatch
 
   const filtersBarLogic = useFiltersBar()
-
   const {
     setVideoWhereInput,
-    filters: { setIsFiltersOpen },
+    filters: { setSelectedCategoryIdFilter, setIsFiltersOpen },
     canClearFilters: { canClearAllFilters },
+    videoWhereInput,
   } = filtersBarLogic
 
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | null | undefined>(
-    VideoOrderByInput.CreatedAtDesc
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>()
+  const { videoCount } = useVideoCount(
+    { where: videoWhereInput },
+    {
+      notifyOnNetworkStatusChange: true,
+    }
   )
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
+
+  useEffect(() => {
+    setVideoWhereInput({
+      categoryId_eq: categoryId,
+      languageId_eq: 'en',
+    })
+    setSelectedCategoryIdFilter(categoryId)
+  }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
+
+  const handleSorting = (value?: VideoOrderByInput | null) => {
+    if (value) {
+      setSortVideosBy(value)
+    }
+  }
 
   const handleFilterClick = () => {
     setIsFiltersOpen((value) => !value)
@@ -63,12 +65,12 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
     <Container>
       <ControlsContainer>
         <GridItem colSpan={{ base: 2, md: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
+          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
         </GridItem>
-        <Select
+        <StyledSelect
+          placeholder="Select language"
           onChange={setSelectedLanguage}
           size="small"
-          helperText={null}
           value={selectedLanguage}
           items={languages}
         />
@@ -91,53 +93,18 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
         {mdMatch && (
           <SortContainer>
             <Text variant="body2">Sort by</Text>
-            <Select
+            <StyledSelect
               size="small"
               helperText={null}
               value={sortVideosBy}
               items={SORT_OPTIONS}
-              onChange={setSortVideosBy}
+              onChange={handleSorting}
             />
           </SortContainer>
         )}
       </ControlsContainer>
       <FiltersBar {...filtersBarLogic} />
+      <StyledVideoGrid videoWhereInput={videoWhereInput} orderBy={sortVideosBy} onDemandInfinite />
     </Container>
   )
 }
-
-export const Regular = RegularTemplate.bind({})
-
-const Container = styled.div`
-  margin-top: ${sizes(16)};
-  position: relative;
-`
-
-const ControlsContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: ${sizes(4)};
-  align-items: center;
-  padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${colors.gray[700]};
-  z-index: 100;
-  position: relative;
-  background-color: black;
-  min-height: 72px;
-
-  ${media.md} {
-    grid-template-columns: auto 160px 1fr 242px;
-  }
-`
-
-const SortContainer = styled.div`
-  padding-left: ${sizes(4)};
-  display: grid;
-  grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: 1fr;
-  ${media.xs} {
-    grid-template-columns: auto 1fr;
-    grid-area: initial;
-  }
-`
