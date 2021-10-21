@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -71,18 +72,11 @@ export const Caption = styled(Text)`
   font-weight: ${typography.weights.medium};
 `
 
-export const SearchItemWrapper = styled(Link)<{ variant: 'default' | 'textOnly' }>`
-  display: flex;
-  align-items: center;
-  padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
-  text-decoration: none;
+const selectedStyles = (hover?: boolean) => `
+  background-color: ${colors.transparentPrimary[10]};
 
-  &:hover {
-    background-color: ${colors.transparentPrimary[10]};
-
-    ${() => `
       ${Shortcut} {
-        display: flex;
+        ${!hover && 'display: flex'};
       }
       
       ${ClockWrapper} {
@@ -96,8 +90,23 @@ export const SearchItemWrapper = styled(Link)<{ variant: 'default' | 'textOnly' 
           stroke: ${colors.gray[50]};
         }
       }
-    `}
+`
+
+export const SearchItemWrapper = styled(Link, { shouldForwardProp: isPropValid })<{
+  selected?: boolean
+  variant: 'default' | 'textOnly'
+  selectedItem: number | null
+}>`
+  display: flex;
+  align-items: center;
+  padding: ${({ variant }) => `${sizes(variant === 'default' ? 1 : 2)} ${sizes(4)}`};
+  text-decoration: none;
+
+  &:hover {
+    ${({ selectedItem }) => selectedItem === null && selectedStyles(true)}
   }
+
+  ${({ selected }) => selected && selectedStyles(!selected)}
 `
 
 export const DeleteButton = styled(IconButton)`
