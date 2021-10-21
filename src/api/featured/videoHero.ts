@@ -1,14 +1,13 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useApolloClient } from '@apollo/client'
+import { useMemo } from 'react'
 
 import { useVideo } from '@/api/hooks'
 import { VideoFieldsFragment } from '@/api/queries'
-import { BUILD_ENV } from '@/config/envs'
-import { VIDEO_HERO_DATA_URL } from '@/config/urls'
+import { GetVideoHeroDocument, GetVideoHeroQuery } from '@/api/queries/__generated__/featured.generated'
 import { AssetType, useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
-import backupVideoHeroData from './backupVideoHeroData.json'
+import { useGenericFeaturedData } from './helpers'
 
 type RawVideoHeroData = {
   videoId: string
@@ -25,13 +24,18 @@ export type VideoHeroData = {
 }
 
 export const useVideoHeroData = (): VideoHeroData | null => {
-  const [fetchedVideoHeroData, setFetchedVideoHeroData] = useState<RawVideoHeroData | null>(null)
+  const client = useApolloClient()
+  const fetchVideoHero = useMemo(
+    () => async () => (await client.query<GetVideoHeroQuery>({ query: GetVideoHeroDocument })).data.videoHero,
+    [client]
+  )
+  const { data: rawData } = useGenericFeaturedData<RawVideoHeroData>('video-hero', fetchVideoHero)
 
-  const { video, loading } = useVideo(fetchedVideoHeroData?.videoId || '', {
-    skip: !fetchedVideoHeroData?.videoId,
+  const { video } = useVideo(rawData?.videoId || '', {
+    skip: !rawData?.videoId,
     onError: (error) =>
       SentryLogger.error('Failed to fetch video hero', 'VideoHero', error, {
-        video: { id: fetchedVideoHeroData?.videoId },
+        video: { id: rawData?.videoId },
       }),
   })
 
@@ -40,33 +44,11 @@ export const useVideoHeroData = (): VideoHeroData | null => {
     assetType: AssetType.THUMBNAIL,
   })
 
-  useEffect(() => {
-    if (fetchedVideoHeroData && !video && !loading && BUILD_ENV !== 'production') {
-      setFetchedVideoHeroData(backupVideoHeroData)
-    }
-  }, [fetchedVideoHeroData, loading, video])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<RawVideoHeroData>(VIDEO_HERO_DATA_URL)
-        setFetchedVideoHeroData(response.data)
-      } catch (e) {
-        SentryLogger.error('Failed to fetch video hero info', 'useVideoHeroData', e, {
-          videoHero: { url: VIDEO_HERO_DATA_URL },
-        })
-        setFetchedVideoHeroData(backupVideoHeroData)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  return video && fetchedVideoHeroData
+  return video && rawData
     ? {
         video,
-        heroTitle: fetchedVideoHeroData.heroTitle,
-        heroVideoCutUrl: fetchedVideoHeroData.heroVideoCutUrl,
+        heroTitle: rawData.heroTitle,
+        heroVideoCutUrl: rawData.heroVideoCutUrl,
         thumbnailPhotoUrl,
       }
     : null
