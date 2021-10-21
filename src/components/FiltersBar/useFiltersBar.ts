@@ -10,8 +10,8 @@ export const useFiltersBar = () => {
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
   const [licensesFilter, setLicensesFilter] = useState<number[]>()
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
-  const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
-  const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
+  const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
+  const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
@@ -21,7 +21,7 @@ export const useFiltersBar = () => {
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearLicensesFilter =
     videoWhereInput?.licenseId_in !== undefined && videoWhereInput?.licenseId_in?.length !== 0
-  const canClearOtherFilters = !!videoWhereInput?.hasMarketing_eq || !!videoWhereInput?.isExplicit_eq
+  const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
   const canClearAllFilters =
     canClearDateUploadedFilter || canClearVideoLengthFilter || canClearLicensesFilter || canClearOtherFilters
 
@@ -48,8 +48,8 @@ export const useFiltersBar = () => {
     })
   }
   const clearOtherFilters = () => {
-    setPaidPromotionalMaterialFilter(undefined)
-    setMatureContentRatingFilter(undefined)
+    setExcludePaidPromotionalMaterialFilter(undefined)
+    setExcludeMatureContentRatingFilter(undefined)
     setVideoWhereInput((value) => {
       delete value.isExplicit_eq
       delete value.hasMarketing_eq
@@ -75,10 +75,10 @@ export const useFiltersBar = () => {
       setDateUploadedFilter,
       videoLengthFilter,
       setVideoLengthFilter,
-      paidPromotionalMaterialFilter,
-      setPaidPromotionalMaterialFilter,
-      matureContentRatingFilter,
-      setMatureContentRatingFilter,
+      excludePaidPromotionalMaterialFilter,
+      setExcludePaidPromotionalMaterialFilter,
+      excludeMatureContentRatingFilter,
+      setExcludeMatureContentRatingFilter,
       licensesFilter,
       setLicensesFilter,
     },

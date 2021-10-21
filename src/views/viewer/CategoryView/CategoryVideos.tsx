@@ -29,14 +29,13 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const { videoCount } = useVideoCount(
     { where: videoWhereInput },
     {
-      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-and-network',
     }
   )
 
   useEffect(() => {
     setVideoWhereInput({
       categoryId_eq: categoryId,
-      languageId_eq: 'en',
     })
     setSelectedCategoryIdFilter(categoryId)
   }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
@@ -62,7 +61,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     <Container>
       <ControlsContainer>
         <GridItem colSpan={{ base: 2, sm: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
+          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount && `(${videoCount})`}</Text>
         </GridItem>
         <StyledSelect
           placeholder="Select language"
