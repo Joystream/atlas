@@ -12,7 +12,7 @@ import { Button } from '@/shared/components/Button'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
-import { SvgGlyphChevronRight, SvgVideoCategoriesFilmAndAnimation } from '@/shared/icons'
+import { SvgGlyphChevronRight } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
@@ -56,6 +56,7 @@ export const CategoryView = () => {
       ),
     [id]
   )
+  const currentCategory = Object.values(videoCategories).find((category) => category.id === id)
   const dummyVideos = videos
     ? videos.map((video, idx) => ({
         video,
@@ -73,8 +74,8 @@ export const CategoryView = () => {
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       <VideoCategoryHero
         header={{
-          title: 'Film & Animation',
-          icon: <SvgVideoCategoriesFilmAndAnimation />,
+          title: currentCategory?.title,
+          icon: currentCategory?.icon,
         }}
         videos={dummyVideos}
       />
@@ -102,6 +103,7 @@ export const CategoryView = () => {
               icon={category.icon}
               videosTotalCount={videoCount}
               variant={MdBreakpointMatch ? 'default' : 'compact'}
+              id={category.id}
             />
           </GridItem>
         ))}

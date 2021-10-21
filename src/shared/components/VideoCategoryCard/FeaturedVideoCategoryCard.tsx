@@ -2,6 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BackgroundVideoPlayer } from '@/components/BackgroundVideoPlayer'
+import { absoluteRoutes } from '@/config/routes'
 import { useHover } from '@/hooks/useHover'
 import { sizes, transitions } from '@/shared/theme'
 
@@ -25,6 +26,7 @@ export type FeaturedVideoCategoryCardProps = {
   videoTitle: string
   color: string
   variant?: FeaturedVideoCategoryCardVariant
+  id: string
 }
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
@@ -34,8 +36,9 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   videoTitle,
   color,
   variant = 'default',
+  id,
 }) => {
-  const [hoverRef, isVideoHovering] = useHover<HTMLDivElement>()
+  const [hoverRef, isVideoHovering] = useHover<HTMLAnchorElement>()
   const isLoading = false
 
   return (
@@ -45,7 +48,13 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <FeaturedContainer ref={hoverRef} isLoading={isLoading} variantCategory={variant} color={color}>
+        <FeaturedContainer
+          href={absoluteRoutes.viewer.category(id)}
+          ref={hoverRef}
+          isLoading={isLoading}
+          variantCategory={variant}
+          color={color}
+        >
           <PlayerContainer>
             {
               <BackgroundVideoPlayer
