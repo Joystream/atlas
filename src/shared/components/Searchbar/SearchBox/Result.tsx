@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
@@ -19,9 +19,19 @@ type ResultProps = {
   video?: VideoFieldsFragment
   channel?: AllChannelFieldsFragment
   query?: string
+  selected?: boolean
+  handleSelectedItem: (top: number, title?: string | null) => void
+  selectedItem: null | number
 }
 
-export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
+export const Result: React.FC<ResultProps> = ({
+  video,
+  channel,
+  query,
+  selected,
+  handleSelectedItem,
+  selectedItem,
+}) => {
   const title = video ? video.title : channel?.title
   const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset({
     entity: channel,
@@ -45,8 +55,15 @@ export const Result: React.FC<ResultProps> = ({ video, channel, query }) => {
 
   const thumbnailUrl = video ? videoThumbnail : channelAvatar
 
+  const onSelected = useCallback(
+    (top: number) => {
+      handleSelectedItem(top, title)
+    },
+    [handleSelectedItem, title]
+  )
+
   return (
-    <ResultWrapper to={to}>
+    <ResultWrapper to={to} selected={selected} handleSelectedItem={onSelected} selectedItem={selectedItem}>
       <ResultContent>
         {isLoading ? (
           <StyledSkeletonLoader width={video ? '64px' : '32px'} height={video ? '40px' : '32px'} rounded={!!channel} />

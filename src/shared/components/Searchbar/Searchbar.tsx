@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
+import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
@@ -32,15 +36,93 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       onClick,
       hasFocus,
       onClose,
+      onKeyDown,
       ...htmlProps
     },
     ref
   ) => {
-    const mdMatch = useMediaMatch('md')
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
+    const mdMatch = useMediaMatch('md')
+    const inputRef = useRef<HTMLInputElement>(null)
+    const [selectedItem, setSelectedItem] = useState<number | null>(null)
+    const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const locationState = location.state as RoutingState
+    const overlaidLocation = locationState?.overlaidLocation || location
+    const query = recentSearch || value
+    const { addRecentSearch } = usePersonalDataStore((state) => ({
+      addRecentSearch: state.actions.addRecentSearch,
+    }))
+
+    useEffect(() => {
+      if (selectedItem === null || !hasFocus) {
+        setRecentSearch(null)
+      }
+    }, [selectedItem, hasFocus])
+
+    useEffect(() => {
+      const onKeyPress = (event: KeyboardEvent) => {
+        if (event.key === '/') {
+          onClick?.()
+          inputRef.current && setTimeout(() => inputRef.current?.focus(), 10)
+        }
+        if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !!query) {
+          inputRef?.current?.blur()
+          onClose?.()
+        }
+      }
+      window.addEventListener('keydown', onKeyPress)
+      return () => {
+        window.removeEventListener('keydown', onKeyPress)
+      }
+    }, [onClick, onClose, query])
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
+        const state: RoutingState = { overlaidLocation }
+        addRecentSearch(new Date().getTime(), query)
+
+        // navigate to search results
+        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
+      }
+      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
+        event.preventDefault()
+        onClose?.()
+        event.currentTarget.blur()
+        setSelectedItem(null)
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        setSelectedItem((prevState) => {
+          if (prevState === null) {
+            return 0
+          }
+          return prevState + 1
+        })
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        setSelectedItem((prevState) => {
+          if (prevState === null && numberOfItems) {
+            return numberOfItems - 1
+          }
+          if (prevState === 0) {
+            return null
+          }
+          return prevState ? prevState - 1 : 0
+        })
+      }
+    }
+
+    const onLastSelectedItem = () => {
+      setSelectedItem(0)
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRecentSearch(null)
+      setSelectedItem(null)
       if (onChange) {
         onChange(e)
       }
@@ -57,7 +139,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       onClose()
     }
 
-    const query = recentSearch || value
+    const onSelectItem = useCallback((title?: string | null) => {
+      setRecentSearch(title)
+    }, [])
+
+    const handleSetNumberOfItems = (items: number) => {
+      setNumberOfItems(items)
+    }
 
     return (
       <>
@@ -76,11 +164,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 placeholder={placeholder}
                 type="search"
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 onFocus={onFocus}
                 onFocusCapture={onFocus}
                 onBlur={onBlur}
                 onSubmit={onSubmit}
                 data-hj-allow
+                ref={inputRef}
                 {...htmlProps}
               />
             </>
@@ -100,7 +190,17 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </SearchHelper>
             </>
           )}
-          {hasFocus && <SearchBox searchQuery={query || ''} onSelectRecentSearch={onSelectRecentSearch} />}
+          {hasFocus && (
+            <SearchBox
+              searchQuery={value || ''}
+              onSelectRecentSearch={onSelectRecentSearch}
+              selectedItem={selectedItem}
+              onLastSelectedItem={onLastSelectedItem}
+              onSelectItem={onSelectItem}
+              handleSetNumberOfItems={handleSetNumberOfItems}
+              onMouseMove={() => setSelectedItem(null)}
+            />
+          )}
         </Container>
       </>
     )
