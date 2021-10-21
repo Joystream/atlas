@@ -7,7 +7,6 @@ import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
@@ -16,8 +15,6 @@ import { Container, ControlsContainer, SortContainer, StyledSelect, StyledVideoG
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
-  const lgMatch = useMediaMatch('lg')
-  const betweenMdAndLgMatch = mdMatch && !lgMatch
 
   const filtersBarLogic = useFiltersBar()
   const {
@@ -64,7 +61,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   return (
     <Container>
       <ControlsContainer>
-        <GridItem colSpan={{ base: 2, md: 1 }}>
+        <GridItem colSpan={{ base: 2, sm: 1 }}>
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
         </GridItem>
         <StyledSelect
@@ -75,33 +72,25 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
           items={languages}
         />
         <div>
-          {betweenMdAndLgMatch ? (
-            <IconButton variant="secondary" onClick={handleFilterClick}>
-              <SvgActionFilters />
-            </IconButton>
-          ) : (
-            <Button
-              badge={canClearAllFilters}
-              variant="secondary"
-              icon={<SvgActionFilters />}
-              onClick={handleFilterClick}
-            >
-              Filters
-            </Button>
-          )}
+          <Button
+            badge={canClearAllFilters}
+            variant="secondary"
+            icon={<SvgActionFilters />}
+            onClick={handleFilterClick}
+          >
+            Filters
+          </Button>
         </div>
-        {mdMatch && (
-          <SortContainer>
-            <Text variant="body2">Sort by</Text>
-            <StyledSelect
-              size="small"
-              helperText={null}
-              value={sortVideosBy}
-              items={SORT_OPTIONS}
-              onChange={handleSorting}
-            />
-          </SortContainer>
-        )}
+        <SortContainer>
+          <Text variant="body2">Sort by</Text>
+          <StyledSelect
+            size="small"
+            helperText={null}
+            value={sortVideosBy}
+            items={SORT_OPTIONS}
+            onChange={handleSorting}
+          />
+        </SortContainer>
       </ControlsContainer>
       <FiltersBar {...filtersBarLogic} />
       <StyledVideoGrid videoWhereInput={videoWhereInput} orderBy={sortVideosBy} onDemandInfinite />
