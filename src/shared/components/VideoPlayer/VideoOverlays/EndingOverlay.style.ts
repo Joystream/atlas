@@ -60,6 +60,7 @@ export const VideoInfo = styled.div<{ noNextVideo?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: ${({ noNextVideo }) => (noNextVideo ? 'center' : 'unset')};
 
   ${media.md} {
     width: ${({ noNextVideo }) => (noNextVideo ? 'auto' : '320px')};
@@ -96,7 +97,9 @@ type StyledChannelLinkProps = {
 }
 export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
   flex-shrink: 0;
+  display: flex;
   margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
+  justify-content: ${({ noNextVideo }) => (noNextVideo ? 'center' : 'unset')};
 
   ${media.md} {
     margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
