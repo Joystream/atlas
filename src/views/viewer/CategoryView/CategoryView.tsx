@@ -39,7 +39,7 @@ const dummyHeroVideos = [
 ]
 
 export const CategoryView = () => {
-  const MdBreakpointMatch = useMediaMatch('md')
+  const mdBreakpointMatch = useMediaMatch('md')
   const { id } = useParams()
   const { videos } = useVideos({ limit: 3 })
   const { videoCount, error } = useVideoCount(
@@ -89,7 +89,7 @@ export const CategoryView = () => {
           iconPlacement="right"
           variant="secondary"
         >
-          {MdBreakpointMatch ? 'Browse categories' : ''}
+          {mdBreakpointMatch ? 'Browse categories' : ''}
         </Button>
       </TitleContainer>
       <CategoriesContainer>
@@ -102,7 +102,7 @@ export const CategoryView = () => {
               color={category.color}
               icon={category.icon}
               videosTotalCount={videoCount}
-              variant={MdBreakpointMatch ? 'default' : 'compact'}
+              variant={mdBreakpointMatch ? 'default' : 'compact'}
               id={category.id}
             />
           </GridItem>

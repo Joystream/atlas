@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/shared/components/LayoutGrid'
-import { colors, sizes } from '@/shared/theme'
+import { colors, media, sizes } from '@/shared/theme'
 
 export const TitleContainer = styled.div`
   display: flex;
@@ -14,4 +14,12 @@ export const TitleContainer = styled.div`
 
 export const CategoriesContainer = styled(LayoutGrid)`
   margin-top: ${sizes(12)};
+`
+
+export const FallbackWrapper = styled.div`
+  /* margin: ${sizes(46)} auto ${sizes(31)} auto; */
+
+  ${media.sm} {
+    margin: ${sizes(46)} auto ${sizes(31)} auto;
+  }
 `
