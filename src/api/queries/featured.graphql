@@ -1,0 +1,17 @@
+query GetVideoHero {
+  videoHero {
+    videoId
+    heroTitle
+    heroVideoCutUrl
+  }
+}
+
+query GetCategoriesFeaturedVideos {
+  allCategoriesFeaturedVideos {
+    categoryId
+    videos {
+      videoId
+      videoCutUrl
+    }
+  }
+}
