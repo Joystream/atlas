@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
-import { QUERY_PARAMS } from '@/config/routes'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { Loader } from '@/shared/components/Loader'
@@ -12,6 +11,7 @@ import { Text } from '@/shared/components/Text'
 import { UploadProgressBar } from '@/shared/components/UploadProgressBar'
 import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { RoutingState } from '@/types/routing'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
 import {
@@ -38,11 +38,13 @@ export type UploadStatusGroupProps = {
 
 export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
-  const hightlightFailed = useRouterQuery(QUERY_PARAMS.UPLOADS)
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
   const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.contentId], shallow))
+  const location = useLocation()
+
+  const locationState = location.state as RoutingState
 
   const isChannelType = uploads[0].parentObject.type === 'channel'
 
@@ -75,7 +77,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     }
     if (errorsCount || missingAssetsCount) {
       setUploadGroupState('error')
-      setAssetsDrawerActive(!!hightlightFailed)
+      setAssetsDrawerActive(!!locationState?.highlightFailed)
     }
     if (hasUploadingAsset) {
       setUploadGroupState('inProgress')
@@ -83,7 +85,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
     if (isProcessing) {
       setUploadGroupState('processing')
     }
-  }, [errorsCount, hasUploadingAsset, hightlightFailed, isCompleted, isProcessing, missingAssetsCount])
+  }, [errorsCount, hasUploadingAsset, locationState?.highlightFailed, isCompleted, isProcessing, missingAssetsCount])
 
   const renderAssetsGroupInfo = () => {
     if (isWaiting) {

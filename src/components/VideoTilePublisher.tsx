@@ -33,7 +33,10 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = ({ id, isD
       videoHref={
         !isDraft
           ? hasAssetUploadFailed
-            ? absoluteRoutes.studio.uploads({ highlightFailed: 'true' })
+            ? {
+                pathname: absoluteRoutes.studio.uploads(),
+                state: { highlightFailed: true },
+              }
             : absoluteRoutes.viewer.video(video?.id)
           : undefined
       }
