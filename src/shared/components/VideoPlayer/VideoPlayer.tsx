@@ -502,7 +502,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   <PlayButton
                     isEnded={playerState === 'ended'}
                     onClick={handlePlayPause}
-                    tooltipText={isPlaying ? 'Pause (k)' : 'Play (k)'}
+                    tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
                     tooltipPosition="left"
                   >
                     {playerState === 'ended' ? (

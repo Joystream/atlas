@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AssetType, useAsset } from '@/providers/assets'
+import { Text } from '@/shared/components/Text'
 import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/shared/icons'
 
 import {
+  Container,
   CountDownButton,
   CountDownWrapper,
   Heading,
@@ -17,6 +20,7 @@ import {
   StyledCircularProgress,
   SubHeading,
   VideoInfo,
+  VideoThumbnail,
 } from './EndingOverlay.style'
 
 type EndingOverlayProps = {
@@ -41,6 +45,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
   const navigate = useNavigate()
   const [countdownProgress, setCountdownProgress] = useState(0)
   const [isCountDownStarted, setIsCountDownStarted] = useState(false)
+  const mdMatch = useMediaMatch('md')
 
   const { url: randomNextVideoThumbnailUrl } = useAsset({
     entity: randomNextVideo,
@@ -79,7 +84,8 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [countdownProgress, isCountDownStarted, isEnded, navigate, randomNextVideo])
 
-  const handleCountDownButton = () => {
+  const handleCountDownButton = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
     if (isCountDownStarted) {
       setIsCountDownStarted(false)
       setCountdownProgress(0)
@@ -88,17 +94,28 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }
 
+  const thumbnailUrl = useMemo(() => {
+    if (randomNextVideo) {
+      return randomNextVideoThumbnailUrl || ''
+    } else {
+      return currentThumbnailUrl || ''
+    }
+  }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
+
   return (
-    <OverlayBackground thumbnailUrl={randomNextVideo ? randomNextVideoThumbnailUrl : currentThumbnailUrl}>
+    <OverlayBackground>
       {randomNextVideo ? (
-        <InnerContainer isFullScreen={isFullScreen}>
-          <VideoInfo>
-            <SubHeading variant="body1" secondary>
-              Up next
-            </SubHeading>
-            <Heading variant="h3">{randomNextVideo.title}</Heading>
-            <StyledChannelLink id={channelId} avatarSize="default" />
-          </VideoInfo>
+        <Container isFullScreen={isFullScreen}>
+          <InnerContainer>
+            <VideoThumbnail src={thumbnailUrl} />
+            <VideoInfo>
+              <Text variant={mdMatch ? 'body1' : 'body2'} secondary>
+                Up next
+              </Text>
+              <Heading variant={mdMatch ? 'h4' : 'h5'}>{randomNextVideo.title}</Heading>
+              <StyledChannelLink id={channelId} avatarSize="default" textVariant={mdMatch ? 'body1' : 'body2'} />
+            </VideoInfo>
+          </InnerContainer>
           <CountDownWrapper>
             <StyledCircularProgress
               value={countdownProgress}
@@ -111,19 +128,21 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               {isCountDownStarted ? <SvgPlayerPause /> : <SvgPlayerPlay />}
             </CountDownButton>
           </CountDownWrapper>
-        </InnerContainer>
+        </Container>
       ) : (
-        <InnerContainer isFullScreen={isFullScreen}>
-          <VideoInfo>
-            <SubHeading variant="body1" secondary>
-              You’ve finished watching a video from
-            </SubHeading>
-            <StyledChannelLink id={channelId} avatarSize="small" noNextVideo />
-            <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgGlyphRestart />}>
-              Play again
-            </RestartButton>
-          </VideoInfo>
-        </InnerContainer>
+        <Container>
+          <InnerContainer>
+            <VideoInfo noNextVideo>
+              <SubHeading variant={mdMatch ? 'body1' : 'body2'} secondary>
+                You’ve finished watching a video from
+              </SubHeading>
+              <StyledChannelLink id={channelId} avatarSize="small" noNextVideo textVariant={mdMatch ? 'h2' : 'h5'} />
+              <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgGlyphRestart />}>
+                Play again
+              </RestartButton>
+            </VideoInfo>
+          </InnerContainer>
+        </Container>
       )}
     </OverlayBackground>
   )
