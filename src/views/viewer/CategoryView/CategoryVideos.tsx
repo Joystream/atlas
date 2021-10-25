@@ -66,7 +66,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
         </GridItem>
         <StyledSelect
-          placeholder="Select language"
+          placeholder="Any language"
           onChange={setSelectedLanguage}
           size="small"
           value={selectedLanguage}
