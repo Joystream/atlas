@@ -79,7 +79,7 @@ export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
-  border-top: ${({ hasChannels }) => hasChannels && `1px solid ${colors.transparentWhite[18]}`};
+  border-top: ${({ hasChannels }) => hasChannels && `1px solid ${colors.transparentPrimary[18]}`};
 `
 export const MemberInnerContainer = styled.div`
   display: flex;
@@ -105,7 +105,7 @@ export const DrawerMemberText = styled(Text)`
 `
 
 export const DrawerMemberTitleText = styled(Text)`
-  background-color: ${colors.transparentPrimary[20]};
+  background-color: ${colors.transparentPrimary[18]};
   color: ${colors.gray[50]};
   padding: ${sizes(0.5)} ${sizes(1)};
 `

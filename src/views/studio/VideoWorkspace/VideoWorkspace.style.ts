@@ -23,5 +23,5 @@ export const DrawerOverlay = styled(animated.div)`
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: ${colors.transparentBlack[66]};
+  background-color: ${colors.transparentBlack[54]};
 `
