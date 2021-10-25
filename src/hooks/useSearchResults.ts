@@ -2,10 +2,17 @@ import { debounce } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
+import { VideoWhereInput } from '@/api/queries'
 import { AssetAvailability, SearchQuery } from '@/api/queries'
 import { SentryLogger } from '@/utils/logs'
 
-export const useSearchResults = (searchQuery: string, limit = 50) => {
+type SearchResultData = {
+  searchQuery: string
+  limit?: number
+  videoWhereInput?: VideoWhereInput
+}
+
+export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: SearchResultData) => {
   const [text, setText] = useState(searchQuery)
   const debouncedQuery = useRef(
     debounce((query: string) => {
@@ -24,6 +31,9 @@ export const useSearchResults = (searchQuery: string, limit = 50) => {
       whereVideo: {
         mediaAvailability_eq: AssetAvailability.Accepted,
         thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        ...videoWhereInput,
       },
       whereChannel: {},
     },

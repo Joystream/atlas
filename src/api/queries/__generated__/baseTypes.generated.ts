@@ -422,6 +422,7 @@ export enum VideoOrderByInput {
 
 export type VideoWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
+  categoryId_in?: Maybe<Array<Scalars['ID']>>
   channelId_in?: Maybe<Array<Scalars['ID']>>
   channelId_eq?: Maybe<Scalars['ID']>
   createdAt_gte?: Maybe<Scalars['DateTime']>

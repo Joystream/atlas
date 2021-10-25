@@ -54,7 +54,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   handleSetNumberOfItems,
   onMouseMove,
 }) => {
-  const { channels, videos, loading } = useSearchResults(searchQuery, 3)
+  const { channels, videos, loading } = useSearchResults({ searchQuery, limit: 3 })
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
     recentSearches: state.recentSearches,
     deleteRecentSearch: state.actions.deleteRecentSearch,

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -8,7 +8,6 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
-import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
@@ -47,9 +46,6 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
     const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
     const navigate = useNavigate()
-    const location = useLocation()
-    const locationState = location.state as RoutingState
-    const overlaidLocation = locationState?.overlaidLocation || location
     const query = recentSearch || value
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
@@ -80,11 +76,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
-        const state: RoutingState = { overlaidLocation }
         addRecentSearch(query)
 
         // navigate to search results
-        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
+        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }))
       }
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         event.preventDefault()

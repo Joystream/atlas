@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Select } from '@/shared/components/Select'
 import { colors, sizes, typography, zIndex } from '@/shared/theme'
 
 import { smallBadgeStyles } from '../Badge'
@@ -23,7 +24,6 @@ export const TabsGroup = styled.div`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
-  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
@@ -36,7 +36,7 @@ export const Tab = styled.div<TabProps>`
   transition: box-shadow 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
-  padding: ${sizes(6)} 0;
+  padding: ${sizes(7)} 0;
   font-size: ${typography.sizes.body2};
   color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
   text-align: center;
@@ -67,4 +67,15 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
   z-index: ${zIndex.overlay};
   background-image: linear-gradient(${(props) => (props.direction === 'prev' ? 270 : 90)}deg, transparent, black);
   pointer-events: none;
+`
+
+export const FiltersWrapper = styled.div`
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+`
+
+export const StyledSelect = styled(Select)`
+  min-width: 170px;
+  margin-right: ${sizes(4)};
 `

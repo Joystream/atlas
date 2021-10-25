@@ -197,6 +197,7 @@ input VideoCategoryWhereUniqueInput {
 
 input VideoWhereInput {
   categoryId_eq: ID
+  categoryId_in: [ID!]
   channelId_in: [ID!]
   channelId_eq: ID
   createdAt_gte: DateTime

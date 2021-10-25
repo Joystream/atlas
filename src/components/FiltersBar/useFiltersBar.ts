@@ -4,7 +4,7 @@ import { VideoWhereInput } from '@/api/queries'
 
 export type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
 
-export const useFiltersBar = () => {
+export const useFiltersBar = (initiallyFiltersOpen = true) => {
   // filters
   const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string>()
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
@@ -12,8 +12,10 @@ export const useFiltersBar = () => {
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
   const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
+  const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
+  const [language, setLanguage] = useState<unknown>()
 
-  const [isFiltersOpen, setIsFiltersOpen] = useState(true)
+  const [isFiltersOpen, setIsFiltersOpen] = useState(initiallyFiltersOpen)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
 
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined
@@ -22,8 +24,14 @@ export const useFiltersBar = () => {
   const canClearLicensesFilter =
     videoWhereInput?.licenseId_in !== undefined && videoWhereInput?.licenseId_in?.length !== 0
   const canClearOtherFilters = !!videoWhereInput?.hasMarketing_eq || !!videoWhereInput?.isExplicit_eq
+  const canClearCategoriesFilter =
+    videoWhereInput?.categoryId_in !== undefined && videoWhereInput?.categoryId_in?.length !== 0
   const canClearAllFilters =
-    canClearDateUploadedFilter || canClearVideoLengthFilter || canClearLicensesFilter || canClearOtherFilters
+    canClearDateUploadedFilter ||
+    canClearVideoLengthFilter ||
+    canClearLicensesFilter ||
+    canClearOtherFilters ||
+    canClearCategoriesFilter
 
   const clearDateUploadedFilter = () => {
     setDateUploadedFilter(undefined)
@@ -56,10 +64,20 @@ export const useFiltersBar = () => {
       return value
     })
   }
+
+  const clearCategoriesFilter = () => {
+    setCategoriesFilter(undefined)
+    setVideoWhereInput((value) => {
+      delete value.categoryId_in
+      return value
+    })
+  }
+
   const clearAllFilters = () => {
     clearDateUploadedFilter()
     clearVideoLengthFilter()
     clearLicensesFilter()
+    clearCategoriesFilter()
     clearOtherFilters()
   }
 
@@ -81,6 +99,10 @@ export const useFiltersBar = () => {
       setMatureContentRatingFilter,
       licensesFilter,
       setLicensesFilter,
+      categoriesFilter,
+      setCategoriesFilter,
+      language,
+      setLanguage,
     },
     canClearFilters: {
       canClearAllFilters,
@@ -88,11 +110,13 @@ export const useFiltersBar = () => {
       canClearVideoLengthFilter,
       canClearLicensesFilter,
       canClearOtherFilters,
+      canClearCategoriesFilter,
       clearAllFilters,
       clearDateUploadedFilter,
       clearVideoLengthFilter,
       clearLicensesFilter,
       clearOtherFilters,
+      clearCategoriesFilter,
     },
   } as const
 }

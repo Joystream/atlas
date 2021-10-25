@@ -1,8 +1,13 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
 import { colors, sizes, transitions } from '@/shared/theme'
+
+import { ActionDialog } from '../ActionDialog'
+
+type Variant = 'default' | 'secondary'
 
 export const FilterContentContainer = styled.div`
   display: grid;
@@ -15,13 +20,14 @@ export const MobileFilterContainer = styled.div`
   gap: ${sizes(3)};
 `
 
-export const FiltersContainer = styled.div<{ open: boolean }>`
+export const FiltersContainer = styled.div<{ open: boolean; variant: Variant }>`
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
-  padding: ${sizes(4)};
-  background-color: ${colors.gray[900]};
+  padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(4)} 0`)};
+  background-color: ${({ variant }) => (variant === 'default' ? colors.gray[900] : 'transparent')};
   will-change: opacity;
   transition: opacity ${transitions.timings.sharp} ${transitions.easing};
+  width: 100%;
 
   &.filters-active,
   &.filters-exit {
@@ -53,4 +59,24 @@ export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
   & path {
     fill: currentColor;
   }
+`
+
+export const ClearAllButton = styled(Button)<{ filtersVariant: Variant }>`
+  margin-left: ${({ filtersVariant }) => (filtersVariant === 'secondary' ? 'auto' : 'unset')};
+`
+
+export const StyledActionDialog = styled(ActionDialog)`
+  background-color: ${colors.gray[700]};
+`
+
+export const ActionDialogHeader = styled.div`
+  border-bottom: 1px solid ${colors.gray[600]};
+  margin-bottom: ${sizes(4)};
+  padding-top: ${sizes(2)};
+  padding-bottom: ${sizes(6)};
+`
+
+export const StyledTitleText = styled(Text)`
+  width: 90%;
+  word-wrap: break-word;
 `

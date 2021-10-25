@@ -5,6 +5,8 @@ import { Text } from '@/shared/components/Text'
 import { SvgEmptyStateIllustration } from '@/shared/illustrations'
 import { colors, sizes } from '@/shared/theme'
 
+import { StartNewSearch } from './SearchResults.style'
+
 const Container = styled.div`
   margin: ${sizes(20)} auto 0;
   display: grid;
@@ -36,7 +38,14 @@ export const EmptyFallback: React.FC = () => (
     <SvgEmptyStateIllustration />
     <Message>
       <Title variant="h3">Sorry, we couldn&apos;t find any matches.</Title>
-      <Subtitle>Please try a different keyword.</Subtitle>
+      <Subtitle>Please try a different keyword or change filtering criteria.</Subtitle>
+      <StartNewSearch
+        variant="secondary"
+        size="large"
+        onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: '/' }))}
+      >
+        Start new search
+      </StartNewSearch>
     </Message>
   </Container>
 )

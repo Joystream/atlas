@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import { Location } from 'history'
 import React, { useEffect, useState } from 'react'
-import { Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BottomNav } from '@/components/BottomNav'
@@ -13,9 +13,10 @@ import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
-import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchOverlayView, VideoView } from '@/views/viewer'
+import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchView, VideoView } from '@/views/viewer'
 
 const viewerRoutes = [
+  { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.new(), element: <NewView /> },
@@ -27,7 +28,6 @@ const viewerRoutes = [
 export const ViewerLayout: React.FC = () => {
   const location = useLocation() as Location<RoutingState>
   const navigate = useNavigate()
-  const searchMatch = useMatch({ path: absoluteRoutes.viewer.search() })
   const [cachedLocation, setCachedLocation] = useState(location)
   const mdMatch = useMediaMatch('md')
 
@@ -79,15 +79,6 @@ export const ViewerLayout: React.FC = () => {
               </Routes>
             </CSSTransition>
           </SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(transitions.timings.routingSearchOverlay)}
-            classNames={transitions.names.slideDown}
-            in={!!searchMatch}
-            unmountOnExit
-            mountOnEnter
-          >
-            <Route path={relativeRoutes.viewer.search()} element={<SearchOverlayView />} />
-          </CSSTransition>
         </ErrorBoundary>
       </MainContainer>
       {!mdMatch && <BottomNav />}
