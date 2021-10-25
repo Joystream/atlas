@@ -1,7 +1,6 @@
-import beazierEasing from 'bezier-easing'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useTransition } from 'react-spring'
+import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -9,7 +8,6 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
-import { animation } from '@/shared/theme/tokens'
 import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
@@ -56,31 +54,6 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
-    const [animationInProgress, setAnimationInProgress] = useState(false)
-    const searchboxTransition = useTransition(hasFocus, {
-      from: {
-        opacity: 0,
-        height: mdMatch ? 'auto' : '0vh',
-        maxHeight: mdMatch ? '0px' : '0vh',
-        onStart: () => setAnimationInProgress(true),
-      },
-      enter: {
-        opacity: 1,
-        height: mdMatch ? 'auto' : '100vh',
-        maxHeight: mdMatch ? '400px' : '100vh',
-        onResolve: () => setTimeout(() => setAnimationInProgress(false), 200),
-      },
-      leave: {
-        opacity: 0.3,
-        height: mdMatch ? 'auto' : '0vh',
-        maxHeight: mdMatch ? '0px' : '0vh',
-        onStart: () => setAnimationInProgress(true),
-      },
-      config: {
-        duration: animation.medium.timing,
-        easing: beazierEasing(0, 0, 0.58, 1),
-      },
-    })
 
     useEffect(() => {
       if (selectedItem === null || !hasFocus) {
@@ -219,22 +192,17 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
           </InnerContainer>
-          {searchboxTransition(
-            (styles, item) =>
-              item && (
-                <SearchBox
-                  styles={styles}
-                  searchQuery={value || ''}
-                  onSelectRecentSearch={onSelectRecentSearch}
-                  selectedItem={selectedItem}
-                  onLastSelectedItem={onLastSelectedItem}
-                  onSelectItem={onSelectItem}
-                  handleSetNumberOfItems={handleSetNumberOfItems}
-                  onMouseMove={() => setSelectedItem(null)}
-                  animationInProgress={animationInProgress}
-                />
-              )
-          )}
+          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={600}>
+            <SearchBox
+              searchQuery={value || ''}
+              onSelectRecentSearch={onSelectRecentSearch}
+              selectedItem={selectedItem}
+              onLastSelectedItem={onLastSelectedItem}
+              onSelectItem={onSelectItem}
+              handleSetNumberOfItems={handleSetNumberOfItems}
+              onMouseMove={() => setSelectedItem(null)}
+            />
+          </CSSTransition>
         </Container>
       </>
     )

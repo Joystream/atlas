@@ -25,7 +25,6 @@ type SearchBoxProps = {
     opacity: SpringValue<number>
     maxHeight: SpringValue<string>
   }
-  animationInProgress: boolean
   selectedItem: null | number
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
@@ -52,7 +51,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   searchQuery,
   onSelectRecentSearch,
   styles,
-  animationInProgress,
   className,
   selectedItem,
   onLastSelectedItem,
@@ -116,7 +114,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       style={styles}
       className={className}
       ref={containerRef}
-      animationInProgress={animationInProgress}
       onMouseMove={onMouseMove}
     >
       {!!recentSearches.length && (

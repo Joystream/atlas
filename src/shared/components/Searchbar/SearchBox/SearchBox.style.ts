@@ -11,17 +11,66 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-export const Container = styled(animated.div)<{ isVisible: boolean; animationInProgress: boolean }>`
+export const Container = styled(animated.div)<{ isVisible: boolean }>`
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
   height: 100vh;
-  overflow-y: ${({ animationInProgress }) => (!animationInProgress ? 'auto' : 'hidden')};
+  overflow-y: auto;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
-  transition: all ${animation.medium.timing}ms ${animation.medium.easing};
+  transition: all ${animation.medium.timing} ${animation.medium.easing};
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
+
+  &.searchbox-enter {
+    opacity: 0.3;
+    height: auto;
+    max-height: 0;
+
+    ${media.md} {
+      max-height: 0;
+    }
+  }
+
+  &.searchbox-exit {
+    opacity: 1;
+    height: 100vh;
+    max-height: 100vh;
+
+    ${media.md} {
+      height: auto;
+      max-height: 400px;
+    }
+  }
+
+  &.searchbox-exit-active {
+    opacity: 0.3;
+    height: auto;
+    max-height: 0;
+    overflow-y: hidden;
+
+    ${media.md} {
+      max-height: 0;
+    }
+  }
+
+  &.searchbox-enter-active {
+    opacity: 1;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: hidden;
+
+    ${media.md} {
+      height: auto;
+      max-height: 400px;
+    }
+  }
+
+  ${media.md} {
+    height: auto;
+    max-height: 400px;
+  }
 `
 
 export const Section = styled.section`

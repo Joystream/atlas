@@ -55,7 +55,7 @@ export const Overlay = styled.div`
   left: 0;
   background-color: ${colors.transparentBlack[54]};
   display: none;
-  transition: opacity ${animation.medium.timing}ms ${animation.medium.easing};
+  transition: opacity ${animation.medium.timing} ${animation.medium.easing};
 
   ${media.sm} {
     display: block;
