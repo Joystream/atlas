@@ -71,7 +71,7 @@ export const TopbarViewer: React.FC = () => {
       logoLinkUrl={absoluteRoutes.viewer.index()}
     >
       <SearchbarContainer>
-        <CSSTransition classNames="searchbar" in={isFocused} timeout={{ enter: 250, exit: 500 }}>
+        <CSSTransition classNames="searchbar" in={isFocused} timeout={0}>
           <Searchbar
             placeholder="Search..."
             onChange={handleChange}

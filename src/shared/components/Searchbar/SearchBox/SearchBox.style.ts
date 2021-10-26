@@ -1,7 +1,6 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { animated } from 'react-spring'
 
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
@@ -11,7 +10,7 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-export const Container = styled(animated.div)<{ isVisible: boolean }>`
+export const Container = styled.div<{ isVisible: boolean }>`
   position: absolute;
   left: 0;
   top: 100%;

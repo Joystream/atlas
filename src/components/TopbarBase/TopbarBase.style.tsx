@@ -6,7 +6,7 @@ import { colors, media, sizes, zIndex } from '@/shared/theme'
 export const Header = styled.header`
   position: fixed;
   top: 0;
-  left: var(--size-sidenav-width-collapsed);
+  left: 0;
   right: 0;
   z-index: ${zIndex.header};
   min-height: var(--size-topbar-height);
@@ -22,7 +22,8 @@ export const Header = styled.header`
     calc(${sizes(4)} + 48px + ${sizes(2)});
 
   ${media.md} {
-    padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)} ${sizes(8)};
+    padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
+      calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
 `
 

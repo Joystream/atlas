@@ -15,6 +15,12 @@ export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[900] : colors.black)};
   ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
 
+  ${media.md} {
+    left: ${({ hasFocus }) => (hasFocus ? 'var(--size-sidenav-width-collapsed)' : 0)};
+    padding: ${({ hasFocus }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
+    ${hasFocus ? sizes(8) : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`}`};
+  }
+
   &.topbar-exit {
     z-index: ${zIndex.globalOverlay};
   }
