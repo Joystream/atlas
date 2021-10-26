@@ -20,20 +20,22 @@ export const ControlsContainer = styled.div`
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[700]};
 
-  ${media.md} {
+  ${media.sm} {
     grid-template-columns: auto 160px 1fr 242px;
   }
 `
 
 export const SortContainer = styled.div`
-  padding-left: ${sizes(4)};
   display: grid;
   grid-gap: 8px;
   align-items: center;
   grid-template-columns: 1fr;
-  ${media.xs} {
+  grid-column-end: span 2;
+
+  ${media.sm} {
     grid-template-columns: auto 1fr;
     grid-area: initial;
+    padding-left: ${sizes(4)};
   }
 `
 
