@@ -64,6 +64,7 @@ export const useFiltersBar = () => {
     clearVideoLengthFilter()
     clearCategoriesFilter()
     clearOtherFilters()
+    clearCategoriesFilter()
   }
 
   return {

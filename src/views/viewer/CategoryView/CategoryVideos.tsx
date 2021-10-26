@@ -7,23 +7,22 @@ import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 
 import { Container, ControlsContainer, SortContainer, StyledSelect, StyledVideoGrid } from './CategoryVideos.styles'
+import { FallbackWrapper } from './CategoryView.style'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
-  const lgMatch = useMediaMatch('lg')
-  const betweenMdAndLgMatch = mdMatch && !lgMatch
 
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
     filters: { setSelectedCategoryIdFilter, setIsFiltersOpen },
-    canClearFilters: { canClearAllFilters },
+    canClearFilters: { canClearAllFilters, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
 
@@ -32,14 +31,13 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const { videoCount } = useVideoCount(
     { where: videoWhereInput },
     {
-      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'cache-and-network',
     }
   )
 
   useEffect(() => {
     setVideoWhereInput({
       categoryId_eq: categoryId,
-      languageId_eq: 'en',
     })
     setSelectedCategoryIdFilter(categoryId)
   }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
@@ -64,47 +62,57 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   return (
     <Container>
       <ControlsContainer>
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos ({videoCount})</Text>
+        <GridItem colSpan={{ base: 2, sm: 1 }}>
+          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
         </GridItem>
         <StyledSelect
-          placeholder="Select language"
+          placeholder="Any language"
           onChange={setSelectedLanguage}
           size="small"
           value={selectedLanguage}
           items={languages}
         />
         <div>
-          {betweenMdAndLgMatch ? (
-            <IconButton variant="secondary" onClick={handleFilterClick}>
-              <SvgActionFilters />
-            </IconButton>
-          ) : (
-            <Button
-              badge={canClearAllFilters}
-              variant="secondary"
-              icon={<SvgActionFilters />}
-              onClick={handleFilterClick}
-            >
-              Filters
-            </Button>
-          )}
+          <Button
+            badge={canClearAllFilters}
+            variant="secondary"
+            icon={<SvgActionFilters />}
+            onClick={handleFilterClick}
+          >
+            Filters
+          </Button>
         </div>
-        {mdMatch && (
-          <SortContainer>
-            <Text variant="body2">Sort by</Text>
-            <StyledSelect
-              size="small"
-              helperText={null}
-              value={sortVideosBy}
-              items={SORT_OPTIONS}
-              onChange={handleSorting}
-            />
-          </SortContainer>
-        )}
+        <SortContainer>
+          <Text variant="body2">Sort by</Text>
+          <StyledSelect
+            size="small"
+            helperText={null}
+            value={sortVideosBy}
+            items={SORT_OPTIONS}
+            onChange={handleSorting}
+          />
+        </SortContainer>
       </ControlsContainer>
       <FiltersBar {...filtersBarLogic} />
-      <StyledVideoGrid videoWhereInput={videoWhereInput} orderBy={sortVideosBy} onDemandInfinite />
+
+      <StyledVideoGrid
+        emptyFallback={
+          <FallbackWrapper>
+            <EmptyFallback
+              title="No videos found"
+              subtitle="Please, try changing your filtering criteria"
+              button={
+                <Button onClick={clearAllFilters} variant="secondary">
+                  Clear all filters
+                </Button>
+              }
+            />
+          </FallbackWrapper>
+        }
+        videoWhereInput={videoWhereInput}
+        orderBy={sortVideosBy}
+        onDemandInfinite
+      />
     </Container>
   )
 }

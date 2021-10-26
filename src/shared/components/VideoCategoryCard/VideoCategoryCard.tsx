@@ -2,6 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideoCount } from '@/api/hooks'
+import { absoluteRoutes } from '@/config/routes'
 import { sizes, transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -27,6 +28,7 @@ export type VideoCategoryCardProps = {
   coverImg: string
   categoryId: string
   color: string
+  id: string
   videosTotalCount: number | undefined
   variant?: 'default' | 'compact'
   loading?: boolean
@@ -41,6 +43,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   videosTotalCount,
   coverImg,
   color,
+  id,
 }) => {
   const { videoCount, loading: loadingVidCount } = useVideoCount(
     {
@@ -64,7 +67,12 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         timeout={parseInt(transitions.timings.sharp)}
         classNames={transitions.names.fade}
       >
-        <GeneralContainer isLoading={isLoading} variantCategory={variant} color={color}>
+        <GeneralContainer
+          href={absoluteRoutes.viewer.category(id)}
+          isLoading={isLoading}
+          variantCategory={variant}
+          color={color}
+        >
           <Content variantCategory={variant}>
             {isLoading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />

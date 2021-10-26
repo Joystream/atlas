@@ -10,8 +10,8 @@ import { VideoHero } from '../VideoHero'
 
 export type VideoCategoryHeroProps = {
   header: {
-    icon: ReactNode
-    title: string
+    icon?: ReactNode
+    title?: string
   }
   videos?: (VideoHeroData | null)[]
 }
@@ -56,7 +56,10 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
       videoHeroData={videos ? videos[activeVideoIdx] : null}
-      headerNode={<VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />}
+      headerNode={
+        !!header.title &&
+        !!header.icon && <VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />
+      }
       sliderNode={
         shouldShowSlider ? (
           <VideoHeroSlider
