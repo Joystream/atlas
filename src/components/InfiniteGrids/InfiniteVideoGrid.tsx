@@ -35,6 +35,7 @@ type InfiniteVideoGridProps = {
   onDemand?: boolean
   onDemandInfinite?: boolean
   orderBy?: ChannelOrderByInput | VideoOrderByInput
+  emptyFallback?: React.ReactNode
   additionalLink?: {
     name: string
     url: string
@@ -56,6 +57,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
   onDemandInfinite = false,
   additionalLink,
   titleLoader,
+  emptyFallback,
 }) => {
   const [activatedInfinteGrid, setActivatedInfinteGrid] = useState(false)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
@@ -120,7 +122,7 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     return null
   }
 
-  if (displayedItems.length <= 0 && placeholdersCount <= 0) {
+  if (displayedItems.length <= 0 && placeholdersCount <= 0 && !emptyFallback) {
     return null
   }
 
@@ -128,43 +130,50 @@ export const InfiniteVideoGrid: React.FC<InfiniteVideoGridProps> = ({
     (onDemand || (onDemandInfinite && !activatedInfinteGrid)) && !loading && displayedItems.length < totalCount
   // TODO: We should probably postpone doing first fetch until `onResize` gets called.
   // Right now we'll make the first request and then right after another one based on the resized columns
+
   return (
     <section className={className}>
-      {title && (
-        <GridHeadingContainer>
-          <TitleContainer>
-            {(!ready || !displayedItems.length) && titleLoader ? (
-              <SkeletonLoader height={30} width={250} />
-            ) : (
-              <Text variant="h4">{title}</Text>
-            )}
-            {additionalLink && (
-              <AdditionalLink
-                to={additionalLink.url}
-                size="medium"
-                variant="secondary"
-                iconPlacement="right"
-                icon={<SvgGlyphChevronRight />}
-              >
-                {additionalLink.name}
-              </AdditionalLink>
-            )}
-          </TitleContainer>
-        </GridHeadingContainer>
-      )}
-      <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
-      {shouldShowLoadMoreButton && (
-        <LoadMoreButtonWrapper>
-          <LoadMoreButton
-            label={onDemandInfinite ? 'Keep loading videos' : undefined}
-            onClick={() => {
-              fetchMore()
-              if (onDemandInfinite) {
-                setActivatedInfinteGrid(true)
-              }
-            }}
-          />
-        </LoadMoreButtonWrapper>
+      {totalCount === 0 && !loading && !!emptyFallback ? (
+        emptyFallback
+      ) : (
+        <>
+          {title && (
+            <GridHeadingContainer>
+              <TitleContainer>
+                {(!ready || !displayedItems.length) && titleLoader ? (
+                  <SkeletonLoader height={30} width={250} />
+                ) : (
+                  <Text variant="h4">{title}</Text>
+                )}
+                {additionalLink && (
+                  <AdditionalLink
+                    to={additionalLink.url}
+                    size="medium"
+                    variant="secondary"
+                    iconPlacement="right"
+                    icon={<SvgGlyphChevronRight />}
+                  >
+                    {additionalLink.name}
+                  </AdditionalLink>
+                )}
+              </TitleContainer>
+            </GridHeadingContainer>
+          )}
+          <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
+          {shouldShowLoadMoreButton && (
+            <LoadMoreButtonWrapper>
+              <LoadMoreButton
+                label={onDemandInfinite ? 'Keep loading videos' : undefined}
+                onClick={() => {
+                  fetchMore()
+                  if (onDemandInfinite) {
+                    setActivatedInfinteGrid(true)
+                  }
+                }}
+              />
+            </LoadMoreButtonWrapper>
+          )}
+        </>
       )}
     </section>
   )

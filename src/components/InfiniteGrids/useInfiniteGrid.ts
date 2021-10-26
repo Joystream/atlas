@@ -1,4 +1,4 @@
-import { ApolloError, useQuery } from '@apollo/client'
+import { ApolloError, NetworkStatus, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
@@ -89,6 +89,7 @@ export const useInfiniteGrid = <
     error,
     fetchMore,
     refetch,
+    networkStatus,
   } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
@@ -161,13 +162,15 @@ export const useInfiniteGrid = <
 
   const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
 
+  const isRefetching = networkStatus === NetworkStatus.refetch
+
   const displayedEdges = edges?.slice(skipCount, targetLoadedItemsCount) ?? []
-  const displayedItems = displayedEdges.map((edge) => edge.node)
+  const displayedItems = isRefetching ? [] : displayedEdges.map((edge) => edge.node)
 
   const displayedItemsCount = data
     ? Math.min(targetDisplayedItemsCount, data.totalCount - skipCount)
     : targetDisplayedItemsCount
-  const placeholdersCount = displayedItemsCount - displayedItems.length
+  const placeholdersCount = isRefetching ? targetDisplayedItemsCount : displayedItemsCount - displayedItems.length
 
   return {
     displayedItems,

@@ -18,7 +18,7 @@ import {
   SvgVideoCategoriesTravelAndEvents,
 } from '@/shared/icons'
 
-type VideoCategoryData = { title: string; icon: React.ReactNode; color: string; coverImg: string }
+export type VideoCategoryData = { title: string; id: string; icon: React.ReactNode; color: string; coverImg: string }
 export const videoCategories = {
   'science-and-Technology': {
     id: '14',
