@@ -3,6 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'
 import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDateAgo } from '@/utils/time'
@@ -65,7 +66,7 @@ export type VideoTileBaseProps = {
   isLoadingThumbnail?: boolean
   isLoadingAvatar?: boolean
   isLoading?: boolean
-  videoHref?: string
+  videoHref?: string | { pathname: string; state: RoutingState }
   openInNewBrowserTab?: boolean
   channelHref?: string
   className?: string
@@ -224,7 +225,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               ) : (
                 <TitleHeaderAnchor
                   to={videoHref ?? ''}
-                  onClick={createAnchorClickHandler(videoHref)}
+                  onClick={createAnchorClickHandler(typeof videoHref === 'string' ? videoHref : videoHref?.pathname)}
                   {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
                 >
                   <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
