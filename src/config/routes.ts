@@ -68,5 +68,4 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 export const QUERY_PARAMS = {
   SEARCH: 'query',
   JOIN: 'step',
-  UPLOADS: 'highlightFailed',
 }
