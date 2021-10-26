@@ -42,6 +42,7 @@ export const DiscoverView: React.FC = () => {
               videoUrl={category.videoUrl}
               color={category.color}
               icon={category.icon}
+              id={category.id}
             />
           </GridItem>
         ))}
@@ -60,6 +61,7 @@ export const DiscoverView: React.FC = () => {
               icon={category.icon}
               videosTotalCount={videoCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}
+              id={category.id}
             />
           </GridItem>
         ))}

@@ -77,8 +77,8 @@ export const useFiltersBar = () => {
     clearDateUploadedFilter()
     clearVideoLengthFilter()
     clearLicensesFilter()
-    clearCategoriesFilter()
     clearOtherFilters()
+    clearCategoriesFilter()
   }
 
   return {
