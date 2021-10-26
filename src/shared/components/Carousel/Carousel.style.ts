@@ -52,6 +52,7 @@ export const GliderContainer = styled.div`
 export const Track = styled.div`
   .glider-slide:not(:first-of-type) {
     margin-left: ${sizes(4)};
+
     ${media.lg} {
       margin-left: ${sizes(6)};
     }
