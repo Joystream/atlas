@@ -126,20 +126,14 @@ export const videoCategories = {
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/news-and-politics.webp',
   },
 } as const
-export const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & VideoCategoryData> = [
+export const selectedFeaturedVideoCategories: Array<VideoCategoryData> = [
   {
-    ...videoCategories['travel-and-events'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5778.mp4',
-    videoTitle: 'Wreck Diving. Philippines, Boracay.',
+    ...videoCategories['autos-and-vehicles'],
   },
   {
     ...videoCategories['education'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/3941.mp4',
-    videoTitle: 'ФИЛОСОФИЯ СТОИЦИЗМА',
   },
   {
     ...videoCategories['film-and-animation'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5984.mp4',
-    videoTitle: 'taxi driver edit',
   },
 ]

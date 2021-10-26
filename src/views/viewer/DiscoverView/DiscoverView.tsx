@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
 import { useVideoCount } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -14,9 +15,23 @@ import {
   FeaturedCategoriesContainer,
   StyledLimitedWidthContainer,
 } from './DiscoverView.style'
-import { featuredVideoCategories, videoCategories } from './data'
+import { selectedFeaturedVideoCategories, videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
+  const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
+  const featuredVideoCategoryCardsData = selectedFeaturedVideoCategories.map((category) => {
+    categoriesFeaturedVideos?.[category.id]
+
+    const video =
+      categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl) ??
+      categoriesFeaturedVideos?.[category.id]?.[0]
+    return {
+      ...category,
+      videoTitle: video?.title ?? '',
+      videoUrl: video?.videoCutUrl ?? '',
+    }
+  })
+
   const { videoCount, error } = useVideoCount(
     {},
     {
@@ -33,7 +48,7 @@ export const DiscoverView: React.FC = () => {
     <StyledLimitedWidthContainer big>
       <Text variant="h2">Discover</Text>
       <FeaturedCategoriesContainer>
-        {featuredVideoCategories.map((category, i) => (
+        {featuredVideoCategoryCardsData.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
             <FeaturedVideoCategoryCard
               variant={isMdBreakpoint ? 'default' : 'compact'}

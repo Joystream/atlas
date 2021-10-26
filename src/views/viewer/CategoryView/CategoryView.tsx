@@ -2,13 +2,17 @@ import { sampleSize } from 'lodash'
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { useVideoCount, useVideos } from '@/api/hooks'
+import { CategoriesFeaturedVideos, useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
+import { useVideoCount } from '@/api/hooks'
 import { VideoCategoryHero } from '@/components/VideoCategoryHero'
+import { VideoTile } from '@/components/VideoTile'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { AssetType, useAsset } from '@/providers/assets'
 import { Button } from '@/shared/components/Button'
+import { Grid } from '@/shared/components/Grid'
 import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
@@ -20,25 +24,12 @@ import { CategoriesContainer, TitleContainer } from './CategoryView.style'
 
 import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 
-const dummyHeroVideos = [
-  {
-    videoCutUrl: 'https://eu-central-1.linodeobjects.com/atlas-hero/hero-cut-3768.mp4',
-    thumbnailPhotoUrl: 'https://picsum.photos/200/300',
-  },
-  {
-    videoCutUrl: 'https://eu-central-1.linodeobjects.com/atlas-hero/cover-cut-ghost-signals.mp4',
-    thumbnailPhotoUrl: 'https://picsum.photos/400/600',
-  },
-  {
-    videoCutUrl: 'https://eu-central-1.linodeobjects.com/atlas-hero/cover-cut-1103.mp4',
-    thumbnailPhotoUrl: 'https://picsum.photos/600/800',
-  },
-]
-
 export const CategoryView = () => {
-  const mdBreakpointMatch = useMediaMatch('md')
   const { id } = useParams()
-  const { videos } = useVideos({ limit: 3 })
+  const data = useCategoriesFeaturedVideos()
+  const featuredVideos = data?.[id]
+  const videoHeroVideos = useVideoHeroVideos(featuredVideos)
+  const mdBreakpointMatch = useMediaMatch('md')
   const { videoCount, error } = useVideoCount(
     {},
     {
@@ -54,17 +45,10 @@ export const CategoryView = () => {
     [id]
   )
   const currentCategory = Object.values(videoCategories).find((category) => category.id === id)
-  const dummyVideos = videos
-    ? videos.map((video, idx) => ({
-        video,
-        ...dummyHeroVideos[idx],
-      }))
-    : [null, null, null]
 
   if (error) {
     return <ViewErrorFallback />
   }
-
   return (
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       <VideoCategoryHero
@@ -72,8 +56,22 @@ export const CategoryView = () => {
           title: currentCategory?.title,
           icon: currentCategory?.icon,
         }}
-        videos={dummyVideos}
+        videos={videoHeroVideos}
       />
+
+      {(featuredVideos?.length ?? 0) > 0 && (
+        <>
+          <TitleContainer>
+            <Text variant="h4">Featured Videos</Text>
+          </TitleContainer>
+          <Grid>
+            {[...(featuredVideos ?? [])]?.map((video, idx) => (
+              <VideoTile id={video.id} key={idx} showChannel />
+            ))}
+          </Grid>
+        </>
+      )}
+
       <CategoryVideos categoryId={id} />
 
       <TitleContainer>
@@ -105,4 +103,32 @@ export const CategoryView = () => {
       </CategoriesContainer>
     </VideoContentTemplate>
   )
+}
+
+const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string]) => {
+  const videoHeroVideos = featuredVideos?.slice(0, 3).map((video) => ({
+    video,
+    thumbnailPhotoUrl: '',
+  }))
+
+  const { url: thumbnailPhotoUrl1 } = useAsset({
+    entity: videoHeroVideos?.[0].video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: thumbnailPhotoUrl2 } = useAsset({
+    entity: videoHeroVideos?.[1].video,
+    assetType: AssetType.THUMBNAIL,
+  })
+  const { url: thumbnailPhotoUrl3 } = useAsset({
+    entity: videoHeroVideos?.[2].video,
+    assetType: AssetType.THUMBNAIL,
+  })
+
+  if (!videoHeroVideos) return [null, null, null]
+
+  videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
+  videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
+  videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
+
+  return videoHeroVideos
 }
