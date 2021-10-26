@@ -127,6 +127,8 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
 }
 
 const StyledVideoTile = styled(VideoTile)`
+  justify-content: flex-start;
+
   ${AvatarContainer} {
     display: none;
 
