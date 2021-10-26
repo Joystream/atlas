@@ -46,10 +46,6 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     return <ViewErrorFallback />
   }
 
-  if (!loading && channels.length === 0 && videos.length === 0 && !!query) {
-    return <EmptyFallback />
-  }
-
   const mappedTabs = tabs.map((tab) => ({ name: tab }))
 
   return (
@@ -74,9 +70,15 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>
-          {selectedIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
-          {selectedIndex === 1 &&
-            (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+          {!loading && channels.length === 0 && videos.length === 0 && !!query ? (
+            <EmptyFallback />
+          ) : (
+            <>
+              {selectedIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
+              {selectedIndex === 1 &&
+                (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
+            </>
+          )}
         </LimitedWidthContainer>
       </Results>
     </ViewWrapper>

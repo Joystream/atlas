@@ -35,7 +35,6 @@ export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: S
         isCensored_eq: false,
         ...videoWhereInput,
       },
-      whereChannel: {},
     },
     {
       skip: !searchQuery,
