@@ -55,7 +55,8 @@ export const FormGroup = styled.label<FormGroupProps>`
     }
 
     :not(:focus):not(button) {
-      border: 1px solid ${({ error, disabled }) => (error && !disabled ? colors.error : colors.gray[200])};
+      border: 1px solid
+        ${({ error, disabled }) => (error && !disabled ? colors.secondary.alert[100] : colors.gray[200])};
     }
   }
 `

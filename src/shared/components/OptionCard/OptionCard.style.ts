@@ -15,7 +15,7 @@ const getOptionCardBorderColor = ({ checked, disabled, error }: OptionCardLabelP
   if (disabled) {
     return colors.gray[500]
   } else if (error) {
-    return colors.error
+    return colors.secondary.alert[100]
   } else if (checked && !error) {
     return colors.blue[500]
   }
