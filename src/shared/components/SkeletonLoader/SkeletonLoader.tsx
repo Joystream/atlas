@@ -29,7 +29,23 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ className, ...pr
   </SkeletonLoaderContainer>
 )
 
-/* TODO: All skeleton colors needs to be replaced after introducing design tokens */
+/**
+ *  TODO: All skeleton colors needs to be replaced after introducing design tokens, like the following:
+ *  Base
+ *  background-color: rgba(187, 217, 246, 0.13); // core.neutral.800.lighten
+ *
+ *  Gradient wave
+ *  background: linear-gradient(
+ *    104deg,
+ *    rgba(183, 200, 250, 0) 15%,        // core.neutral.900.lighten, with no opacity
+ *    rgba(183, 200, 250, 0.06) 30%,     // core.neutral.900.lighten
+ *    rgba(187, 217, 246, 0.13) 48%,     // core.neutral.800.lighten
+ *    rgba(187, 217, 246, 0.13) 52%,     // core.neutral.800.lighten
+ *    rgba(183, 200, 250, 0.06) 70%,     // core.neutral.900.lighten
+ *    rgba(183, 200, 250, 0) 85%         // core.neutral.900.lighten, with no opacity
+ *  );
+ *
+ */
 
 const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   width: ${({ width = '100%' }) => getPropValue(width)};

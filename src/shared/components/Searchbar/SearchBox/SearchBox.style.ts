@@ -10,6 +10,8 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
+const containerDesktopHeight = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
+
 export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   position: absolute;
   left: 0;
@@ -37,7 +39,7 @@ export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
     }
   }
 
@@ -56,13 +58,14 @@ export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
     }
   }
 
   ${media.md} {
+    box-shadow: unset;
     height: auto;
-    max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
+    max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
   }
 `
 

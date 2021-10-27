@@ -16,6 +16,12 @@ export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
 
   ${media.md} {
+    /**
+    *  We need to change left and padding properties when search is open, because of problem with z-indexes between
+    *  hamburger and TopBar. When search is open, TopBar must have higher z-index which cause hiding the hamburger
+    *  behind TopBar. By moving the TopBar to the right, the hamburger remains visible.
+    */
+
     left: ${({ hasFocus }) => (hasFocus ? 'var(--size-sidenav-width-collapsed)' : 0)};
     padding: ${({ hasFocus }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
     ${hasFocus ? sizes(8) : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`}`};
