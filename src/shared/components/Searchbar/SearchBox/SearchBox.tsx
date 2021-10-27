@@ -83,15 +83,17 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     deleteRecentSearch(id)
   }
 
-  const slicedReccentSearches = recentSearches.slice(0, 6)
+  const filteredRecentSearches = searchQuery.length
+    ? recentSearches.filter((item) => new RegExp(searchQuery, 'i').test(item.title as string))
+    : recentSearches
 
   useEffect(() => {
-    handleSetNumberOfItems(slicedReccentSearches.length + videos.length + channels.length)
-  }, [handleSetNumberOfItems, slicedReccentSearches.length, videos.length, channels.length])
+    handleSetNumberOfItems(filteredRecentSearches.length + videos.length + channels.length)
+  }, [handleSetNumberOfItems, filteredRecentSearches.length, videos.length, channels.length])
 
   // Fire when user select last result
   useEffect(() => {
-    if (selectedItem === slicedReccentSearches.length + videos.length + channels.length) {
+    if (selectedItem === filteredRecentSearches.length + videos.length + channels.length) {
       onLastSelectedItem()
     }
   }, [
@@ -100,7 +102,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     channels.length,
     onLastSelectedItem,
     selectedItem,
-    slicedReccentSearches.length,
+    filteredRecentSearches.length,
   ])
 
   return (
@@ -116,7 +118,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           <Caption secondary variant="caption">
             Recent searches
           </Caption>
-          {slicedReccentSearches.map((recentSearch, idx) => (
+          {filteredRecentSearches.map((recentSearch, idx) => (
             <RecentSearchItem
               key={`RecentSearchItem-${recentSearch.id}`}
               onDelete={() => handleRecentSearchDelete(recentSearch.id)}
@@ -141,7 +143,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               key={`result-video-${video.id}`}
               video={video}
               query={searchQuery}
-              selected={selectedItem === idx + slicedReccentSearches.length}
+              selected={selectedItem === idx + filteredRecentSearches.length}
               handleSelectedItem={scrollToSelectedItem}
               selectedItem={selectedItem}
             />
@@ -158,7 +160,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               key={`result-channel-${channel.id}`}
               channel={channel}
               query={searchQuery}
-              selected={selectedItem === idx + slicedReccentSearches.length + videos.length}
+              selected={selectedItem === idx + filteredRecentSearches.length + videos.length}
               handleSelectedItem={scrollToSelectedItem}
               selectedItem={selectedItem}
             />

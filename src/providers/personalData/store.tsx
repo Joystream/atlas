@@ -80,6 +80,7 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
             state.recentSearches.splice(index, 1)
           }
           state.recentSearches.unshift({ title, id })
+          state.recentSearches.splice(6, 1)
         })
       },
       deleteRecentSearch: (id) => {
