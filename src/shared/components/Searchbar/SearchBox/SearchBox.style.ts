@@ -8,22 +8,64 @@ import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
+import { animation } from '@/shared/theme/tokens'
 
-export const Container = styled.div<{ visible: boolean }>`
+const containerDesktopHeight = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
+
+export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
-  background-color: ${colors.gray[800]};
-  overflow-y: auto;
   height: 100vh;
+  overflow-y: scroll;
+  background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
-  ${({ visible }) => !visible && 'display: none'};
+  transition: all ${animation.medium.timing} ${animation.medium.easing};
+  ${({ isVisible }) => !isVisible && 'height: 0 !important'};
+
+  &.searchbox-enter {
+    height: auto;
+    max-height: 0;
+
+    ${media.md} {
+      max-height: 0;
+    }
+  }
+
+  &.searchbox-exit {
+    height: 100vh;
+    max-height: 100vh;
+
+    ${media.md} {
+      height: auto;
+      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+    }
+  }
+
+  &.searchbox-exit-active {
+    height: auto;
+    max-height: 0;
+
+    ${media.md} {
+      max-height: 0;
+    }
+  }
+
+  &.searchbox-enter-active {
+    height: 100vh;
+    max-height: 100vh;
+
+    ${media.md} {
+      height: auto;
+      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+    }
+  }
 
   ${media.md} {
-    box-shadow: none;
+    box-shadow: unset;
     height: auto;
-    max-height: 400px;
+    max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
   }
 `
 
@@ -170,7 +212,7 @@ export const ResultContent = styled.div`
 export const PlaceholderWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: ${sizes(4)};
+  padding: ${sizes(2)} ${sizes(4)};
 `
 
 export const HighlightedWord = styled.mark`
@@ -180,4 +222,8 @@ export const HighlightedWord = styled.mark`
 
 export const Title = styled(Text)`
   display: block;
+`
+
+export const SkeletonAvatar = styled(SkeletonLoader)`
+  margin-right: ${sizes(4)};
 `
