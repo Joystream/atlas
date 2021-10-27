@@ -20,13 +20,12 @@ export const MobileFilterContainer = styled.div`
   gap: ${sizes(3)};
 `
 
-export const FiltersContainer = styled.div<{ open: boolean; variant: Variant }>`
+export const FiltersContainer = styled.div<{ open: boolean }>`
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
-  padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(4)} 0`)};
-  background-color: ${({ variant }) => (variant === 'default' ? colors.gray[900] : 'transparent')};
+  padding: ${sizes(4)} 0;
   will-change: opacity;
-  transition: opacity ${transitions.timings.sharp} ${transitions.easing};
+  transition: opacity ${transitions.timings.routing} ${transitions.easing} 100ms;
   width: 100%;
 
   &.filters-active,

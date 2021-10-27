@@ -21,7 +21,7 @@ const Message = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-top: 90px;
+  margin-top: ${sizes(10)};
   margin-bottom: ${sizes(10)};
 `
 
@@ -29,16 +29,22 @@ const Title = styled(Text)`
   line-height: 1.25;
 `
 const Subtitle = styled(Text)`
+  width: 360px;
   line-height: 1.75;
   color: ${colors.gray[300]};
+  margin-top: ${sizes(2)};
 `
 
-export const EmptyFallback: React.FC = () => (
+type EmptyFallback = {
+  type: 'videos' | 'channels'
+}
+
+export const EmptyFallback: React.FC<EmptyFallback> = ({ type }) => (
   <Container>
     <SvgEmptyStateIllustration />
     <Message>
-      <Title variant="h3">Sorry, we couldn&apos;t find any matches.</Title>
-      <Subtitle>Please try a different keyword or change filtering criteria.</Subtitle>
+      <Title variant="h3">No {type} found</Title>
+      <Subtitle>Please, try using different search terms or changing your filtering criteria</Subtitle>
       <StartNewSearch
         variant="secondary"
         size="large"

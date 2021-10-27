@@ -12,11 +12,11 @@ export const Filters = styled.div`
   align-items: center;
   background-color: ${colors.gray[700]};
   will-change: height;
-  transition: height ${transitions.timings.routing} ${transitions.easing};
   margin: 0 var(--size-global-horizontal-padding);
-  height: calc(100vh - 145px);
+  height: 100vh;
   width: 100%;
   padding: 0 var(--size-global-horizontal-padding);
+  transition: height ${transitions.timings.routing} ${transitions.easing};
 
   ${media.sm} {
     background-color: ${colors.gray[800]};
@@ -25,16 +25,30 @@ export const Filters = styled.div`
     height: 72px;
   }
 
-  &.filters-active,
-  &.filters-exit {
-    height: calc(100vh - 145px);
+  &.filters-enter {
+    height: 0;
+    overflow: hidden;
+  }
+
+  &.filters-enter-active {
+    height: 100vh;
+    overflow: hidden;
 
     ${media.sm} {
       height: 72px;
     }
   }
-  &.filters-exit-active,
-  &.filters-enter {
+
+  &.filters-exit {
+    height: 100vh;
+    overflow: hidden;
+
+    ${media.sm} {
+      height: 72px;
+    }
+  }
+
+  &.filters-exit-active {
     height: 0;
     overflow: hidden;
   }
@@ -47,7 +61,9 @@ export const SearchControls = styled.div<{ filtersOpen: boolean }>`
   width: 100%;
   background-color: ${colors.gray[900]};
   z-index: ${zIndex.videoWorkspaceOverlay};
-  ${({ filtersOpen }) => !filtersOpen && `border-bottom: 1px solid ${colors.gray[700]}`};
+  transition: border-bottom 0ms linear 300ms;
+  border-bottom: ${({ filtersOpen }) =>
+    filtersOpen ? `0 solid ${colors.gray[700]}` : `1px solid ${colors.gray[700]}`};
 
   ${media.md} {
     width: calc(100% - var(--size-sidenav-width-collapsed));

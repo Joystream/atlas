@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { Tabs } from '@/shared/components/Tabs'
+import { transitions } from '@/shared/theme'
 
 import { EmptyFallback } from './EmptyFallback'
 import { Filters, PaddingWrapper, Results, SearchControls } from './SearchResults.style'
@@ -69,7 +70,13 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             selectedLanguage={language}
           />
         </PaddingWrapper>
-        <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
+        <CSSTransition
+          in={isFiltersOpen}
+          timeout={parseInt(transitions.timings.routing)}
+          classNames="filters"
+          unmountOnExit
+          mountOnEnter
+        >
           <Filters>
             <FiltersBar {...filtersBarLogic} variant="secondary" hasCategories mobileLanguageSelector />
           </Filters>
@@ -78,7 +85,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>
           {!loading && channels.length === 0 && videos.length === 0 && !!query ? (
-            <EmptyFallback />
+            <EmptyFallback type={selectedIndex === 0 ? 'videos' : 'channels'} />
           ) : (
             <>
               {selectedIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}

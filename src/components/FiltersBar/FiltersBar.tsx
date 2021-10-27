@@ -265,7 +265,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         }
         primaryButton={{
           text: 'Apply',
-          onClick: () =>
+          onClick: () => {
             setVideoWhereInput((value) => ({
               ...value,
               createdAt_gte: dateUploadedFilter
@@ -279,7 +279,9 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               categoryId_in: categoriesFilter,
               languageId_eq: language as string,
               ...getDurationRules(),
-            })),
+            }))
+            setIsFiltersOpen(false)
+          },
         }}
         secondaryButton={{
           text: 'Clear',
@@ -294,12 +296,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   }
   return (
     <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
-      <FiltersContainer open={true} variant={variant}>
+      <FiltersContainer open={true}>
         <FiltersInnerContainer>
           {hasCategories && (
             <PopoverDialog
               instanceRef={categoriesPopoverRef}
               content={categoriesInputs}
+              dividers
               footer={
                 <FilterPopoverFooter
                   clearButtonProps={{
@@ -307,6 +310,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                     disabled: categoriesFilter === undefined,
                   }}
                   applyButtonProps={{
+                    disabled: !categoriesFilter || !categoriesFilter.length,
                     onClick: () => {
                       categoriesPopoverRef.current?.hide()
                       setVideoWhereInput((value) => ({
@@ -333,6 +337,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: dateUploadedFilter === undefined,
                 }}
                 applyButtonProps={{
+                  disabled: !dateUploadedFilter,
                   onClick: () => {
                     datePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -362,6 +367,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: videoLengthFilter === undefined,
                 }}
                 applyButtonProps={{
+                  disabled: !videoLengthFilter,
                   onClick: () => {
                     lengthPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -388,6 +394,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: licensesFilter === undefined || licensesFilter?.length === 0,
                 }}
                 applyButtonProps={{
+                  disabled: !licensesFilter || !licensesFilter.length,
                   onClick: () => {
                     licensePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -421,6 +428,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
                 }}
                 applyButtonProps={{
+                  disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
                   onClick: () => {
                     othersPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({

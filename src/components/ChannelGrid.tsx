@@ -7,7 +7,7 @@ import { Grid } from '@/shared/components/Grid'
 import { ChannelCard } from './ChannelCard'
 
 const StyledChannelCard = styled(ChannelCard)`
-  margin: 0 auto;
+  width: 100%;
 `
 
 type ChannelGridProps = {
