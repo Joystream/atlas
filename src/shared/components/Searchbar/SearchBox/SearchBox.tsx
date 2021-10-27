@@ -13,12 +13,14 @@ import {
   Section,
   ShortcutsGroup,
   ShortcutsWrapper,
+  SkeletonAvatar,
   StyledShortcutIndicator,
 } from './SearchBox.style'
 
 type SearchBoxProps = {
   searchQuery: string
   onSelectRecentSearch: (title?: string) => void
+  className?: string
   selectedItem: null | number
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
@@ -28,13 +30,13 @@ type SearchBoxProps = {
 
 const generatePlaceholders = () => {
   const min = 20
-  const max = 100
+  const max = 80
   const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
   return placeholderItems.map((_, idx) => {
     const generatedWidth = Math.floor(Math.random() * (max - min)) + min
     return (
       <PlaceholderWrapper key={`placeholder-${idx}`}>
-        <SkeletonLoader width="32px" height="32px" rounded />
+        <SkeletonAvatar width="32px" height="32px" rounded />
         <SkeletonLoader width={`${generatedWidth}%`} height="16px" />
       </PlaceholderWrapper>
     )
@@ -44,6 +46,7 @@ const generatePlaceholders = () => {
 export const SearchBox: React.FC<SearchBoxProps> = ({
   searchQuery,
   onSelectRecentSearch,
+  className,
   selectedItem,
   onLastSelectedItem,
   onSelectItem,
@@ -102,9 +105,11 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   return (
     <Container
-      visible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      isVisible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
+      hasQuery={searchQuery}
     >
       {!!recentSearches.length && (
         <Section>

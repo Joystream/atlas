@@ -6,7 +6,7 @@ import { SvgGlyphSearchAlt } from '@/shared/icons'
 import { media } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-import { colors, sizes } from '../../theme'
+import { colors, sizes, square } from '../../theme'
 import { IconButton } from '../IconButton'
 
 export const Input = styled.input`
@@ -32,30 +32,27 @@ export const Input = styled.input`
 
 export const CancelButton = styled(IconButton)`
   position: absolute;
-  right: 0;
+  right: ${sizes(4)};
   border: none;
   margin-right: ${sizes(2)};
 
   path {
     stroke: ${colors.gray[300]};
   }
+
+  ${media.md} {
+    right: 0;
+  }
 `
 
 export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
-  display: flex;
-  align-items: center;
-  transition: background-color ${animation.medium.timing} ${animation.medium.easing};
-  will-change: background-color;
   top: 0;
   right: 0;
   ${({ hasFocus, hasQuery }) => `
     height: ${hasFocus ? '64px' : '39px'};
-    position: ${hasFocus ? 'fixed' : 'relative'};
     width: ${hasQuery || hasFocus ? '100%' : '39px'};
-    padding-left: ${hasFocus || hasQuery ? sizes(2) : 0};
     background-color: ${hasFocus ? colors.gray[800] : 'transparent'};
     margin-left: ${!hasFocus ? 'auto' : 'unset'};
-    box-shadow: ${!hasFocus ? `inset 0 0 0 1px ${colors.gray[700]}` : 'unset'};
   `};
 
   ${media.md} {
@@ -64,6 +61,25 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
     width: 100%;
     margin-left: 0;
     height: 48px;
+  }
+`
+
+export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
+  ${square('100%')};
+
+  display: flex;
+  align-items: center;
+  transition: background-color ${animation.medium.timing} ${animation.medium.easing};
+  will-change: background-color;
+  top: 0;
+  left: 0;
+  position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'unset')};
+  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[800] : 'transparent')};
+  box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${colors.gray[700]}` : 'unset')};
+  padding-left: ${({ hasFocus, hasQuery }) => (hasFocus || hasQuery ? sizes(2) : 0)};
+
+  ${media.md} {
+    position: relative;
     padding-left: ${sizes(4)};
   }
 `

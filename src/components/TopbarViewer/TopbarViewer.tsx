@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -70,18 +71,20 @@ export const TopbarViewer: React.FC = () => {
       logoLinkUrl={absoluteRoutes.viewer.index()}
     >
       <SearchbarContainer>
-        <Searchbar
-          placeholder="Search..."
-          onChange={handleChange}
-          value={searchQuery}
-          onFocus={handleFocus}
-          onCancel={handleCancel}
-          showCancelButton={!!searchQuery}
-          onClose={onClose}
-          controlled
-          hasFocus={isFocused}
-          onClick={handleFocus}
-        />
+        <CSSTransition classNames="searchbar" in={isFocused} timeout={0}>
+          <Searchbar
+            placeholder="Search..."
+            onChange={handleChange}
+            value={searchQuery}
+            onFocus={handleFocus}
+            onCancel={handleCancel}
+            showCancelButton={!!searchQuery}
+            onClose={onClose}
+            controlled
+            hasFocus={isFocused}
+            onClick={handleFocus}
+          />
+        </CSSTransition>
       </SearchbarContainer>
       <ButtonWrapper>
         {mdMatch && (
@@ -101,7 +104,9 @@ export const TopbarViewer: React.FC = () => {
           </StyledIconButton>
         )}
       </ButtonWrapper>
-      {isFocused && <Overlay onClick={onClose} />}
+      <CSSTransition classNames="searchbar-overlay" in={isFocused} timeout={0} unmountOnExit mountOnEnter>
+        <Overlay onClick={onClose} />
+      </CSSTransition>
     </StyledTopbarBase>
   )
 }

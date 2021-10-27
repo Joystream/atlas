@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -11,7 +12,7 @@ import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
-import { CancelButton, Container, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
+import { CancelButton, Container, InnerContainer, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
 
 type SearchbarProps = {
   value: string | null
@@ -32,7 +33,6 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       value,
       onBlur,
       onSubmit,
-      className,
       onClick,
       hasFocus,
       onClose,
@@ -41,8 +41,8 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     },
     ref
   ) => {
-    const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
     const mdMatch = useMediaMatch('md')
+    const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
     const inputRef = useRef<HTMLInputElement>(null)
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
     const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
@@ -149,48 +149,50 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     return (
       <>
-        <Container className={className} hasFocus={hasFocus} hasQuery={!!query} ref={ref}>
-          {(mdMatch || hasFocus || !!query) && (
-            <>
-              {!mdMatch && hasFocus ? (
-                <IconButton onClick={onClose} variant="tertiary">
-                  <SvgGlyphChevronLeft />
-                </IconButton>
-              ) : (
-                <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
-              )}
-              <Input
-                value={query || ''}
-                placeholder={placeholder}
-                type="search"
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                onFocus={onFocus}
-                onFocusCapture={onFocus}
-                onBlur={onBlur}
-                onSubmit={onSubmit}
-                data-hj-allow
-                ref={inputRef}
-                {...htmlProps}
-              />
-            </>
-          )}
-          {!!query && (
-            <CancelButton onClick={handleCancel} variant="tertiary" size="small">
-              <SvgGlyphClose />
-            </CancelButton>
-          )}
-          {!query && !hasFocus && (
-            <>
-              <SearchButton variant="tertiary" onClick={onClick}>
-                <SvgGlyphSearch />
-              </SearchButton>
-              <SearchHelper variant="caption" secondary>
-                Press <ShortcutIndicator>/</ShortcutIndicator>
-              </SearchHelper>
-            </>
-          )}
-          {hasFocus && (
+        <Container hasFocus={hasFocus} ref={ref} hasQuery={!!query}>
+          <InnerContainer hasFocus={hasFocus} hasQuery={!!query}>
+            {(mdMatch || hasFocus || !!query) && (
+              <>
+                {!mdMatch && hasFocus ? (
+                  <IconButton onClick={onClose} variant="tertiary">
+                    <SvgGlyphChevronLeft />
+                  </IconButton>
+                ) : (
+                  <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
+                )}
+                <Input
+                  value={query || ''}
+                  placeholder={placeholder}
+                  type="search"
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                  onFocus={onFocus}
+                  onFocusCapture={onFocus}
+                  onBlur={onBlur}
+                  onSubmit={onSubmit}
+                  data-hj-allow
+                  ref={inputRef}
+                  {...htmlProps}
+                />
+              </>
+            )}
+            {!!query && (
+              <CancelButton onClick={handleCancel} variant="tertiary" size="small">
+                <SvgGlyphClose />
+              </CancelButton>
+            )}
+            {!query && !hasFocus && (
+              <>
+                <SearchButton variant="tertiary" onClick={onClick}>
+                  <SvgGlyphSearch />
+                </SearchButton>
+                <SearchHelper variant="caption" secondary>
+                  Press <ShortcutIndicator>/</ShortcutIndicator>
+                </SearchHelper>
+              </>
+            )}
+          </InnerContainer>
+          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={600}>
             <SearchBox
               searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}
@@ -200,7 +202,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               handleSetNumberOfItems={handleSetNumberOfItems}
               onMouseMove={() => setSelectedItem(null)}
             />
-          )}
+          </CSSTransition>
         </Container>
       </>
     )
