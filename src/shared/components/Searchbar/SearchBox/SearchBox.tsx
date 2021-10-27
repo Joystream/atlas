@@ -13,6 +13,7 @@ import {
   Section,
   ShortcutsGroup,
   ShortcutsWrapper,
+  SkeletonAvatar,
   StyledShortcutIndicator,
 } from './SearchBox.style'
 
@@ -29,13 +30,13 @@ type SearchBoxProps = {
 
 const generatePlaceholders = () => {
   const min = 20
-  const max = 100
+  const max = 80
   const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
   return placeholderItems.map((_, idx) => {
     const generatedWidth = Math.floor(Math.random() * (max - min)) + min
     return (
       <PlaceholderWrapper key={`placeholder-${idx}`}>
-        <SkeletonLoader width="32px" height="32px" rounded />
+        <SkeletonAvatar width="32px" height="32px" rounded />
         <SkeletonLoader width={`${generatedWidth}%`} height="16px" />
       </PlaceholderWrapper>
     )
@@ -108,6 +109,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
+      hasQuery={searchQuery}
     >
       {!!recentSearches.length && (
         <Section>

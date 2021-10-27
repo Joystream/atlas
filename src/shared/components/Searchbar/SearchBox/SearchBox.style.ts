@@ -10,20 +10,19 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-export const Container = styled.div<{ isVisible: boolean }>`
+export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: scroll;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
   transition: all ${animation.medium.timing} ${animation.medium.easing};
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
 
   &.searchbox-enter {
-    opacity: 0.3;
     height: auto;
     max-height: 0;
 
@@ -33,21 +32,18 @@ export const Container = styled.div<{ isVisible: boolean }>`
   }
 
   &.searchbox-exit {
-    opacity: 1;
     height: 100vh;
     max-height: 100vh;
 
     ${media.md} {
       height: auto;
-      max-height: 400px;
+      max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
     }
   }
 
   &.searchbox-exit-active {
-    opacity: 0.3;
     height: auto;
     max-height: 0;
-    overflow-y: hidden;
 
     ${media.md} {
       max-height: 0;
@@ -55,20 +51,18 @@ export const Container = styled.div<{ isVisible: boolean }>`
   }
 
   &.searchbox-enter-active {
-    opacity: 1;
     height: 100vh;
     max-height: 100vh;
-    overflow-y: hidden;
 
     ${media.md} {
       height: auto;
-      max-height: 400px;
+      max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
     }
   }
 
   ${media.md} {
     height: auto;
-    max-height: 400px;
+    max-height: ${({ hasQuery }) => (hasQuery ? '90vh' : '400px')};
   }
 `
 
@@ -215,7 +209,7 @@ export const ResultContent = styled.div`
 export const PlaceholderWrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: ${sizes(4)};
+  padding: ${sizes(2)} ${sizes(4)};
 `
 
 export const HighlightedWord = styled.mark`
@@ -225,4 +219,8 @@ export const HighlightedWord = styled.mark`
 
 export const Title = styled(Text)`
   display: block;
+`
+
+export const SkeletonAvatar = styled(SkeletonLoader)`
+  margin-right: ${sizes(4)};
 `
