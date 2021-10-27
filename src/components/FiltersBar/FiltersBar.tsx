@@ -1,5 +1,5 @@
 import { add } from 'date-fns'
-import React from 'react'
+import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useCategories } from '@/api/hooks'
@@ -8,7 +8,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button, ButtonProps } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
-import { PopoverDialog } from '@/shared/components/Popover'
+import { PopoverDialog, TippyInstance } from '@/shared/components/Popover'
 import { RadioButton } from '@/shared/components/RadioButton'
 import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
@@ -76,6 +76,11 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const smMatch = useMediaMatch('sm')
   const betweenBaseAndSMMatch = !smMatch
   const { categories } = useCategories()
+  const categoriesPopoverRef = useRef<TippyInstance>()
+  const datePopoverRef = useRef<TippyInstance>()
+  const lengthPopoverRef = useRef<TippyInstance>()
+  const licensePopoverRef = useRef<TippyInstance>()
+  const othersPopoverRef = useRef<TippyInstance>()
 
   const categoriesInputs = (
     <FilterContentContainer>
@@ -279,7 +284,10 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         secondaryButton={{
           text: 'Clear',
           disabled: !canClearAllFilters,
-          onClick: clearAllFilters,
+          onClick: () => {
+            clearAllFilters()
+            setIsFiltersOpen(false)
+          },
         }}
       />
     )
@@ -290,6 +298,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         <FiltersInnerContainer>
           {hasCategories && (
             <PopoverDialog
+              instanceRef={categoriesPopoverRef}
               content={categoriesInputs}
               footer={
                 <FilterPopoverFooter
@@ -298,11 +307,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                     disabled: categoriesFilter === undefined,
                   }}
                   applyButtonProps={{
-                    onClick: () =>
+                    onClick: () => {
+                      categoriesPopoverRef.current?.hide()
                       setVideoWhereInput((value) => ({
                         ...value,
                         categoryId_in: categoriesFilter,
-                      })),
+                      }))
+                    },
                   }}
                 />
               }
@@ -313,6 +324,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             </PopoverDialog>
           )}
           <PopoverDialog
+            instanceRef={datePopoverRef}
             content={dateUploadedInputs}
             footer={
               <FilterPopoverFooter
@@ -321,7 +333,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: dateUploadedFilter === undefined,
                 }}
                 applyButtonProps={{
-                  onClick: () =>
+                  onClick: () => {
+                    datePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
                       ...value,
                       createdAt_gte: dateUploadedFilter
@@ -329,7 +342,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                             days: -dateUploadedFilter,
                           })
                         : undefined,
-                    })),
+                    }))
+                  },
                 }}
               />
             }
@@ -339,6 +353,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             </Button>
           </PopoverDialog>
           <PopoverDialog
+            instanceRef={lengthPopoverRef}
             content={videoLengthInputs}
             footer={
               <FilterPopoverFooter
@@ -347,11 +362,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: videoLengthFilter === undefined,
                 }}
                 applyButtonProps={{
-                  onClick: () =>
+                  onClick: () => {
+                    lengthPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
                       ...value,
                       ...getDurationRules(videoLengthFilter),
-                    })),
+                    }))
+                  },
                 }}
               />
             }
@@ -361,6 +378,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             </Button>
           </PopoverDialog>
           <PopoverDialog
+            instanceRef={licensePopoverRef}
             dividers
             content={licenseInputs}
             footer={
@@ -370,11 +388,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: licensesFilter === undefined || licensesFilter?.length === 0,
                 }}
                 applyButtonProps={{
-                  onClick: () =>
+                  onClick: () => {
+                    licensePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
                       ...value,
                       licenseId_in: licensesFilter?.map((license) => license.toString()),
-                    })),
+                    }))
+                  },
                 }}
               />
             }
@@ -384,6 +404,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             </Button>
           </PopoverDialog>
           <PopoverDialog
+            instanceRef={othersPopoverRef}
             content={
               <>
                 <OtherFilterStyledText secondary variant="overhead">
@@ -400,12 +421,14 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
                 }}
                 applyButtonProps={{
-                  onClick: () =>
+                  onClick: () => {
+                    othersPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
                       ...value,
                       hasMarketing_eq: paidPromotionalMaterialFilter,
                       isExplicit_eq: matureContentRatingFilter,
-                    })),
+                    }))
+                  },
                 }}
               />
             }
