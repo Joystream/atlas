@@ -57,7 +57,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   justify-content: space-between;
   align-items: center;
   border: ${({ isOpen, error, disabled }) =>
-    `1px solid ${isOpen ? colors.blue[500] : error && !disabled ? colors.error : colors.gray[200]}`};
+    `1px solid ${isOpen ? colors.blue[500] : error && !disabled ? colors.secondary.alert[100] : colors.gray[200]}`};
 
   ${({ size }) => {
     switch (size) {
