@@ -11,7 +11,6 @@ export const PaddingWrapper = styled.div`
 export const Filters = styled.div`
   align-items: center;
   background-color: ${colors.gray[700]};
-  overflow: hidden;
   will-change: height;
   transition: height ${transitions.timings.routing} ${transitions.easing};
   margin: 0 var(--size-global-horizontal-padding);
@@ -29,6 +28,7 @@ export const Filters = styled.div`
   &.filters-active,
   &.filters-exit {
     height: calc(100vh - 145px);
+
     ${media.sm} {
       height: 72px;
     }
@@ -36,6 +36,7 @@ export const Filters = styled.div`
   &.filters-exit-active,
   &.filters-enter {
     height: 0;
+    overflow: hidden;
   }
 `
 

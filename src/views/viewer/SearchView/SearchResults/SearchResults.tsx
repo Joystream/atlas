@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { ChannelGrid } from '@/components/ChannelGrid'
@@ -25,10 +25,17 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen, setLanguage, language },
-    canClearFilters: { canClearAllFilters },
+    canClearFilters: { canClearAllFilters, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
   const { videos, channels, loading, error } = useSearchResults({ searchQuery: query, videoWhereInput })
+
+  useEffect(() => {
+    if (selectedIndex === 1) {
+      setLanguage(undefined)
+      clearAllFilters()
+    }
+  }, [clearAllFilters, selectedIndex, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage)
@@ -57,7 +64,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             onSelectTab={setSelectedIndex}
             initialIndex={0}
             onFiltersClick={selectedIndex === 0 ? toggleFilters : undefined}
-            onSelectedLanguage={handleSelectLanguage}
+            onSelectedLanguage={selectedIndex === 0 ? handleSelectLanguage : undefined}
             filtersActive={canClearAllFilters}
             selectedLanguage={language}
           />
