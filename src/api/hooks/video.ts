@@ -126,6 +126,10 @@ export const useMostViewedVideos = (
     {
       where: {
         id_in: mostViewedVideosIds,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+        isPublic_eq: true,
+        isCensored_eq: false,
       },
     },
     { skip: !mostViewedVideosIds }
