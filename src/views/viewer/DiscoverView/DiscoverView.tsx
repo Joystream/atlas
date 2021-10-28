@@ -33,8 +33,8 @@ export const DiscoverView: React.FC = () => {
     return {
       videoTitle: video?.title ?? '',
       videoUrl: video?.videoCutUrl ?? '',
-      ...category,
       ...selectedFeaturedVideoCategories.find((cat) => cat.id === category.id),
+      ...category,
     }
   }) ?? [null, null, null]
 
