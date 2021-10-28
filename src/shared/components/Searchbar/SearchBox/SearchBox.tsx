@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
+import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
@@ -84,7 +85,13 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   }
 
   const filteredRecentSearches = searchQuery.length
-    ? recentSearches.filter((item) => new RegExp(searchQuery, 'i').test(item.title as string))
+    ? recentSearches
+        .filter((item) =>
+          new RegExp(`${searchQuery.replace(SPECIAL_CHARACTERS, '\\$&').replace(/\s+/g, '|')}`, 'i').test(
+            item.title || ''
+          )
+        )
+        .slice(0, 3)
     : recentSearches
 
   useEffect(() => {
@@ -107,13 +114,13 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   return (
     <Container
-      isVisible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      isVisible={!!filteredRecentSearches.length || !!videos.length || !!channels.length || loading}
       className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
       hasQuery={searchQuery}
     >
-      {!!recentSearches.length && (
+      {!!filteredRecentSearches.length && (
         <Section>
           <Caption secondary variant="caption">
             Recent searches
