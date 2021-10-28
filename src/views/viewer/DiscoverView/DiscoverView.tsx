@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
-import { useVideoCount } from '@/api/hooks'
+import { useCategories, useVideoCount } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { GridItem } from '@/shared/components/LayoutGrid'
@@ -18,19 +18,25 @@ import {
 import { selectedFeaturedVideoCategories, videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
-  const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
-  const featuredVideoCategoryCardsData = selectedFeaturedVideoCategories.map((category) => {
-    categoriesFeaturedVideos?.[category.id]
+  const { categories } = useCategories()
+  const videoCategoriesArray = Object.values(videoCategories)
+  const mappedVideoCategories = categories?.map((category) => ({
+    ...videoCategoriesArray.find((vidCategory) => vidCategory.id === category.id),
+    ...category,
+  }))
 
+  const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
+  const featuredVideoCategoryCardsData = categories?.map((category) => {
     const video =
       categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl) ??
       categoriesFeaturedVideos?.[category.id]?.[0]
     return {
-      ...category,
       videoTitle: video?.title ?? '',
       videoUrl: video?.videoCutUrl ?? '',
+      ...category,
+      ...selectedFeaturedVideoCategories.find((cat) => cat.id === category.id),
     }
-  })
+  }) ?? [null, null, null]
 
   const { videoCount, error } = useVideoCount(
     {},
@@ -48,16 +54,16 @@ export const DiscoverView: React.FC = () => {
     <StyledLimitedWidthContainer big>
       <Text variant="h2">Discover</Text>
       <FeaturedCategoriesContainer>
-        {featuredVideoCategoryCardsData.map((category, i) => (
+        {featuredVideoCategoryCardsData?.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
             <FeaturedVideoCategoryCard
               variant={isMdBreakpoint ? 'default' : 'compact'}
-              title={category.title}
-              videoTitle={category.videoTitle}
-              videoUrl={category.videoUrl}
-              color={category.color}
-              icon={category.icon}
-              id={category.id}
+              title={category?.name ?? ''}
+              videoTitle={category?.videoTitle ?? ''}
+              videoUrl={category?.videoUrl ?? ''}
+              color={category?.color ?? 'white'}
+              icon={category?.icon}
+              id={category?.id ?? i.toString()}
             />
           </GridItem>
         ))}
@@ -66,13 +72,13 @@ export const DiscoverView: React.FC = () => {
         <Text variant="h4">All categories</Text>
       </BorderTextContainer>
       <CategoriesContainer>
-        {Object.values(videoCategories).map((category, i) => (
+        {mappedVideoCategories?.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>
             <VideoCategoryCard
-              title={category.title}
-              coverImg={category.coverImg}
+              title={category.name ?? ''}
+              coverImg={category?.coverImg ?? ''}
               categoryId={category.id}
-              color={category.color}
+              color={category.color ?? 'white'}
               icon={category.icon}
               videosTotalCount={videoCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}

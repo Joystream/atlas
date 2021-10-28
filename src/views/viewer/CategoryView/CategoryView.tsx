@@ -53,7 +53,7 @@ export const CategoryView = () => {
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       <VideoCategoryHero
         header={{
-          title: currentCategory?.title,
+          title: currentCategory?.name,
           icon: currentCategory?.icon,
         }}
         videos={videoHeroVideos}
@@ -89,7 +89,7 @@ export const CategoryView = () => {
         {otherCategory.map((category) => (
           <GridItem key={category.id} colSpan={{ base: 6, lg: 4 }}>
             <VideoCategoryCard
-              title={category.title}
+              title={category.name}
               coverImg={category.coverImg}
               categoryId={category.id}
               color={category.color}
