@@ -106,29 +106,34 @@ export const CategoryView = () => {
 }
 
 const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string]) => {
-  const videoHeroVideos = featuredVideos?.slice(0, 3).map((video) => ({
-    video,
-    thumbnailPhotoUrl: '',
-  }))
+  const videoHeroVideos = featuredVideos
+    ?.filter((vid) => !!vid.videoCutUrl)
+    .slice(0, 3)
+    .map((video) => ({
+      video,
+      heroTitle: video.title ?? '',
+      heroVideoCutUrl: video.videoCutUrl ?? '',
+      thumbnailPhotoUrl: '',
+    }))
 
   const { url: thumbnailPhotoUrl1 } = useAsset({
-    entity: videoHeroVideos?.[0].video,
+    entity: videoHeroVideos?.[0]?.video,
     assetType: AssetType.THUMBNAIL,
   })
   const { url: thumbnailPhotoUrl2 } = useAsset({
-    entity: videoHeroVideos?.[1].video,
+    entity: videoHeroVideos?.[1]?.video,
     assetType: AssetType.THUMBNAIL,
   })
   const { url: thumbnailPhotoUrl3 } = useAsset({
-    entity: videoHeroVideos?.[2].video,
+    entity: videoHeroVideos?.[2]?.video,
     assetType: AssetType.THUMBNAIL,
   })
 
   if (!videoHeroVideos) return [null, null, null]
 
-  videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
-  videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
-  videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
+  if (videoHeroVideos[0]) videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
+  if (videoHeroVideos[1]) videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
+  if (videoHeroVideos[2]) videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
 
   return videoHeroVideos
 }
