@@ -1,3 +1,4 @@
+import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
@@ -67,13 +68,13 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   // Calculate searchbox height whether keyboard is open or not
   useEffect(() => {
-    const onVisualViewportChange = () => {
+    const debouncedVisualViewportChange = debounce(() => {
       setVisualViewportHeight(window.visualViewport.height)
-    }
-    window.visualViewport.addEventListener('resize', onVisualViewportChange)
+    }, 100)
+    window.visualViewport.addEventListener('resize', debouncedVisualViewportChange)
 
     return () => {
-      window.visualViewport.removeEventListener('resize', onVisualViewportChange)
+      window.visualViewport.removeEventListener('resize', debouncedVisualViewportChange)
     }
   }, [])
 
