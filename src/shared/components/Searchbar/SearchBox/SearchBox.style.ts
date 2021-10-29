@@ -13,7 +13,7 @@ import { animation } from '@/shared/theme/tokens'
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
 const getContainerMobileHeight = (visualViewportHeight: number, hasFocus: boolean) =>
-  `calc(${hasFocus ? `${visualViewportHeight}px` : '100vh'} - ${hasFocus ? '72px' : '64px'}) `
+  `calc(${hasFocus ? `${visualViewportHeight}px` : '100vh'})`
 
 export const Container = styled.div<{
   isVisible: boolean
@@ -30,6 +30,7 @@ export const Container = styled.div<{
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
   transition: all ${animation.medium.timing} ${animation.medium.easing};
+  padding-bottom: ${({ isVisible }) => (isVisible ? sizes(20) : 'unset')};
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
 
   &.searchbox-enter {
@@ -77,6 +78,7 @@ export const Container = styled.div<{
     box-shadow: unset;
     height: auto;
     max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
+    padding-bottom: 0;
   }
 `
 

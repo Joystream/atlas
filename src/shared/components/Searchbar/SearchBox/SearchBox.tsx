@@ -56,7 +56,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   onMouseMove,
   hasFocus,
 }) => {
-  const { channels, videos, loading } = useSearchResults({ searchQuery, limit: 3 })
+  const { channels, videos, loading } = useSearchResults({ searchQuery })
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
     recentSearches: state.recentSearches,
     deleteRecentSearch: state.actions.deleteRecentSearch,
@@ -108,20 +108,22 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
         )
         .slice(0, 3)
     : recentSearches
+  const slicedVideos = videos.slice(0, 3)
+  const slicedChannels = channels.slice(0, 3)
 
   useEffect(() => {
-    handleSetNumberOfItems(filteredRecentSearches.length + videos.length + channels.length)
-  }, [handleSetNumberOfItems, filteredRecentSearches.length, videos.length, channels.length])
+    handleSetNumberOfItems(filteredRecentSearches.length + slicedVideos.length + slicedChannels.length)
+  }, [handleSetNumberOfItems, filteredRecentSearches.length, slicedVideos.length, slicedChannels.length])
 
   // Fire when user select last result
   useEffect(() => {
-    if (selectedItem === filteredRecentSearches.length + videos.length + channels.length) {
+    if (selectedItem === filteredRecentSearches.length + slicedVideos.length + slicedChannels.length) {
       onLastSelectedItem()
     }
   }, [
     recentSearches.length,
-    videos.length,
-    channels.length,
+    slicedVideos.length,
+    slicedChannels.length,
     onLastSelectedItem,
     selectedItem,
     filteredRecentSearches.length,
@@ -129,7 +131,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
   return (
     <Container
-      isVisible={!!filteredRecentSearches.length || !!videos.length || !!channels.length || loading}
+      isVisible={!!filteredRecentSearches.length || !!slicedVideos.length || !!slicedChannels.length || loading}
       className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
@@ -158,12 +160,12 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
         </Section>
       )}
       {loading && <Section>{generatePlaceholders()}</Section>}
-      {!!videos.length && (
+      {!!slicedVideos.length && (
         <Section>
           <Caption secondary variant="caption">
             Videos
           </Caption>
-          {videos.map((video, idx) => (
+          {slicedVideos.map((video, idx) => (
             <Result
               key={`result-video-${video.id}`}
               video={video}
@@ -175,17 +177,17 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           ))}
         </Section>
       )}
-      {!!channels.length && (
+      {!!slicedChannels.length && (
         <Section>
           <Caption secondary variant="caption">
             Channels
           </Caption>
-          {channels.map((channel, idx) => (
+          {slicedChannels.map((channel, idx) => (
             <Result
               key={`result-channel-${channel.id}`}
               channel={channel}
               query={searchQuery}
-              selected={selectedItem === idx + filteredRecentSearches.length + videos.length}
+              selected={selectedItem === idx + filteredRecentSearches.length + slicedVideos.length}
               handleSelectedItem={scrollToSelectedItem}
               selectedItem={selectedItem}
             />

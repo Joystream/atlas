@@ -11,6 +11,7 @@ import { TopbarViewer } from '@/components/TopbarViewer'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSearchStore } from '@/providers/search'
 import { transitions } from '@/shared/theme'
 import { RoutingState } from '@/types/routing'
 import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchView, VideoView } from '@/views/viewer'
@@ -30,6 +31,7 @@ export const ViewerLayout: React.FC = () => {
   const navigate = useNavigate()
   const [cachedLocation, setCachedLocation] = useState(location)
   const mdMatch = useMediaMatch('md')
+  const { searchOpen } = useSearchStore()
 
   useEffect(() => {
     if (location.pathname === cachedLocation.pathname) {
@@ -81,7 +83,7 @@ export const ViewerLayout: React.FC = () => {
           </SwitchTransition>
         </ErrorBoundary>
       </MainContainer>
-      {!mdMatch && <BottomNav />}
+      {!mdMatch && !searchOpen && <BottomNav />}
     </>
   )
 }
