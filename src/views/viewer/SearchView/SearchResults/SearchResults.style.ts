@@ -60,7 +60,7 @@ export const SearchControls = styled.div<{ filtersOpen: boolean }>`
   top: var(--size-topbar-height);
   width: 100%;
   background-color: ${colors.gray[900]};
-  z-index: ${zIndex.videoWorkspaceOverlay};
+  z-index: ${zIndex.nearOverlay};
   transition: border-bottom 0ms linear 300ms;
   border-bottom: ${({ filtersOpen }) =>
     filtersOpen ? `0 solid ${colors.gray[700]}` : `1px solid ${colors.gray[700]}`};

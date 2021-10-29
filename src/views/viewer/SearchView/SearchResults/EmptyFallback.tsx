@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { useSearchStore } from '@/providers/search'
 import { Text } from '@/shared/components/Text'
 import { SvgEmptyStateIllustration } from '@/shared/illustrations'
 import { colors, sizes } from '@/shared/theme'
@@ -39,19 +40,20 @@ type EmptyFallback = {
   type: 'videos' | 'channels'
 }
 
-export const EmptyFallback: React.FC<EmptyFallback> = ({ type }) => (
-  <Container>
-    <SvgEmptyStateIllustration />
-    <Message>
-      <Title variant="h3">No {type} found</Title>
-      <Subtitle>Please, try using different search terms or changing your filtering criteria</Subtitle>
-      <StartNewSearch
-        variant="secondary"
-        size="large"
-        onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: '/' }))}
-      >
-        Start new search
-      </StartNewSearch>
-    </Message>
-  </Container>
-)
+export const EmptyFallback: React.FC<EmptyFallback> = ({ type }) => {
+  const {
+    actions: { setSearchOpen },
+  } = useSearchStore()
+  return (
+    <Container>
+      <SvgEmptyStateIllustration />
+      <Message>
+        <Title variant="h3">No {type} found</Title>
+        <Subtitle>Please, try using different search terms or changing your filtering criteria</Subtitle>
+        <StartNewSearch variant="secondary" size="large" onClick={() => setSearchOpen(true)}>
+          Start new search
+        </StartNewSearch>
+      </Message>
+    </Container>
+  )
+}

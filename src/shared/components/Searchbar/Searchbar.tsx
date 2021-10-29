@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useSearchStore } from '@/providers/search'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
@@ -27,25 +28,11 @@ type SearchbarProps = {
   showCancelButton?: boolean
   controlled?: boolean
   onClick?: () => void
-  hasFocus: boolean
   onClose: () => void
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
   (
-    {
-      placeholder,
-      onChange,
-      onFocus,
-      onCancel,
-      value,
-      onBlur,
-      onSubmit,
-      onClick,
-      hasFocus,
-      onClose,
-      onKeyDown,
-      ...htmlProps
-    },
+    { placeholder, onChange, onFocus, onCancel, value, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps },
     ref
   ) => {
     const mdMatch = useMediaMatch('md')
@@ -59,19 +46,20 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
+    const { searchOpen } = useSearchStore()
 
     useEffect(() => {
-      if (hasFocus) {
+      if (searchOpen) {
         inputRef.current?.focus()
         setInputHasFocus(true)
       }
-    }, [hasFocus])
+    }, [searchOpen])
 
     useEffect(() => {
-      if (selectedItem === null || !hasFocus) {
+      if (selectedItem === null || !searchOpen) {
         setRecentSearch(null)
       }
-    }, [selectedItem, hasFocus])
+    }, [selectedItem, searchOpen])
 
     useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
@@ -160,16 +148,16 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     return (
       <>
-        <Container hasFocus={hasFocus} ref={ref} hasQuery={!!query}>
-          <InnerContainer hasFocus={hasFocus} hasQuery={!!query}>
-            {(mdMatch || hasFocus || !!query) && (
+        <Container hasFocus={searchOpen} ref={ref} hasQuery={!!query}>
+          <InnerContainer hasFocus={searchOpen} hasQuery={!!query}>
+            {(mdMatch || searchOpen || !!query) && (
               <>
-                {!mdMatch && hasFocus ? (
+                {!mdMatch && searchOpen ? (
                   <IconButton onClick={onClose} variant="tertiary">
                     <SvgGlyphChevronLeft />
                   </IconButton>
                 ) : (
-                  <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
+                  <StyledSvgOutlineSearch highlighted={searchOpen} width={24} height={24} />
                 )}
                 <StyledForm action=".">
                   <Input
@@ -197,7 +185,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 <SvgGlyphClose />
               </CancelButton>
             )}
-            {!query && !hasFocus && (
+            {!query && !searchOpen && (
               <>
                 <SearchButton variant="tertiary" onClick={onClick}>
                   <SvgGlyphSearch />
@@ -208,7 +196,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
           </InnerContainer>
-          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={500}>
+          <CSSTransition classNames="searchbox" in={searchOpen} unmountOnExit mountOnEnter timeout={500}>
             <SearchBox
               searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}
