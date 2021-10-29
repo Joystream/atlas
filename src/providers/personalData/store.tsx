@@ -26,8 +26,8 @@ const WHITELIST = [
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
   updateChannelFollowing: (id: string, follow: boolean) => void
-  addRecentSearch: (id: number, title: string) => void
-  deleteRecentSearch: (id: number) => void
+  addRecentSearch: (title: string) => void
+  deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   setCurrentVolume: (volume: number) => void
   setCachedVolume: (volume: number) => void
@@ -73,18 +73,16 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      addRecentSearch: (id, title) => {
+      addRecentSearch: (title) => {
         set((state) => {
-          const index = state.recentSearches.findIndex((item) => item.id === id)
-          if (index >= 0) {
-            state.recentSearches.splice(index, 1)
-          }
-          state.recentSearches.unshift({ title, id })
+          const filteredCurrentSearches = state.recentSearches.filter((item) => item.title !== title)
+          const newSearches = [{ title }, ...filteredCurrentSearches]
+          state.recentSearches = newSearches.slice(0, 6)
         })
       },
-      deleteRecentSearch: (id) => {
+      deleteRecentSearch: (title) => {
         set((state) => {
-          state.recentSearches = state.recentSearches.filter((search) => search.id !== id)
+          state.recentSearches = state.recentSearches.filter((search) => search.title !== title)
         })
       },
       updateDismissedMessages: (id, add = true) => {
