@@ -187,9 +187,7 @@ export type MutationSetCategoryFeaturedVideosArgs = {
 }
 
 export type MutationSetVideoHeroArgs = {
-  heroTitle: Scalars['String']
-  heroVideoCutUrl: Scalars['String']
-  videoId: Scalars['ID']
+  newVideoHero: VideoHeroInput
 }
 
 export type MutationUnfollowChannelArgs = {
@@ -462,6 +460,14 @@ export type VideoEdge = {
 
 export type VideoHero = {
   __typename?: 'VideoHero'
+  heroPosterUrl: Scalars['String']
+  heroTitle: Scalars['String']
+  heroVideoCutUrl: Scalars['String']
+  videoId: Scalars['ID']
+}
+
+export type VideoHeroInput = {
+  heroPosterUrl: Scalars['String']
   heroTitle: Scalars['String']
   heroVideoCutUrl: Scalars['String']
   videoId: Scalars['ID']

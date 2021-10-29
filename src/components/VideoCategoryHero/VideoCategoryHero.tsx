@@ -1,10 +1,9 @@
 import { round } from 'lodash'
 import React, { ReactNode, useState } from 'react'
 
-import { VideoHeroData } from '@/api/featured'
-
 import { VideoHeroHeader } from './VideoHereoHeader'
 import { VideoHeroSlider } from './VideoHeroSlider'
+import { VideoHeroFeaturedVideo } from './types'
 
 import { VideoHero } from '../VideoHero'
 
@@ -13,7 +12,7 @@ export type VideoCategoryHeroProps = {
     icon?: ReactNode
     title?: string
   }
-  videos?: (VideoHeroData | null)[]
+  videos?: (VideoHeroFeaturedVideo | null)[]
 }
 
 export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, videos }) => {
@@ -49,13 +48,23 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
   )
 
   const shouldShowSlider = videosLength > 1
+  const currentVideoData = videos?.[activeVideoIdx]
 
   return (
     <VideoHero
       isCategory
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
-      videoHeroData={videos ? videos[activeVideoIdx] : null}
+      videoHeroData={
+        currentVideoData
+          ? {
+              video: currentVideoData.video,
+              heroTitle: currentVideoData.video.title || '',
+              heroVideoCutUrl: currentVideoData.videoCutUrl,
+              heroPosterUrl: null,
+            }
+          : null
+      }
       headerNode={
         !!header.title &&
         !!header.icon && <VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />

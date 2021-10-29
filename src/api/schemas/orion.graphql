@@ -39,7 +39,7 @@ type Mutation {
   """
   followChannel(channelId: ID!): ChannelFollowsInfo!
   setCategoryFeaturedVideos(categoryId: ID!, videos: [FeaturedVideoInput!]!): [FeaturedVideo!]!
-  setVideoHero(heroTitle: String!, heroVideoCutUrl: String!, videoId: ID!): VideoHero!
+  setVideoHero(newVideoHero: VideoHeroInput!): VideoHero!
 
   """
   Remove a single follow from the target channel
@@ -163,6 +163,14 @@ type Query {
 }
 
 type VideoHero {
+  heroPosterUrl: String!
+  heroTitle: String!
+  heroVideoCutUrl: String!
+  videoId: ID!
+}
+
+input VideoHeroInput {
+  heroPosterUrl: String!
   heroTitle: String!
   heroVideoCutUrl: String!
   videoId: ID!
