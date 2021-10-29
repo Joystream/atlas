@@ -208,7 +208,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
           </InnerContainer>
-          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={600}>
+          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={500}>
             <SearchBox
               searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}

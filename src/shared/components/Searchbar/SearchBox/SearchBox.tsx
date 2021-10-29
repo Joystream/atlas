@@ -136,6 +136,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       hasQuery={searchQuery}
       visualViewportHeight={visualViewportHeight}
       hasFocus={hasFocus}
+      data-scroll-lock-scrollable
     >
       {!!filteredRecentSearches.length && (
         <Section>

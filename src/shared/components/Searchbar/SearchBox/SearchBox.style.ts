@@ -33,10 +33,11 @@ export const Container = styled.div<{
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
 
   &.searchbox-enter {
-    height: auto;
+    height: 0;
     max-height: 0;
 
     ${media.md} {
+      height: auto;
       max-height: 0;
     }
   }

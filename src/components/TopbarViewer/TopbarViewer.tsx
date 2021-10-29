@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { Button } from '@/shared/components/Button'
 import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
@@ -14,21 +15,18 @@ import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTop
 export const TopbarViewer: React.FC = () => {
   const location = useLocation()
   const mdMatch = useMediaMatch('md')
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
 
-  // This is alternative for body-scroll-lock library which didn't work properly for this component in iOS
   useLayoutEffect(() => {
-    const body = document.querySelector('body')
-    const html = document.querySelector('html')
-    if (body && html) {
-      body.style.overflow = isFocused && !mdMatch ? 'hidden' : ''
-      body.style.position = isFocused ? 'fixed' : ''
-      body.style.top = isFocused ? `-${window.pageYOffset}px` : ''
-      body.style.width = isFocused ? '100%' : ''
+    if (isFocused) {
+      incrementOverlaysOpenCount()
+    } else {
+      decrementOverlaysOpenCount()
     }
-  }, [isFocused, mdMatch])
+  }, [isFocused, incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
   // Lose focus on location change
   useEffect(() => {
