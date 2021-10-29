@@ -81,7 +81,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
         const state: RoutingState = { overlaidLocation }
-        addRecentSearch(new Date().getTime(), query)
+        addRecentSearch(query)
 
         // navigate to search results
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })

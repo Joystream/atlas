@@ -80,8 +80,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     [onSelectItem, selectedItem]
   )
 
-  const handleRecentSearchDelete = (id: number) => {
-    deleteRecentSearch(id)
+  const handleRecentSearchDelete = (title: string) => {
+    deleteRecentSearch(title)
   }
 
   const filteredRecentSearches = searchQuery.length
@@ -127,8 +127,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           </Caption>
           {filteredRecentSearches.map((recentSearch, idx) => (
             <RecentSearchItem
-              key={`RecentSearchItem-${recentSearch.id}`}
-              onDelete={() => handleRecentSearchDelete(recentSearch.id)}
+              key={`RecentSearchItem-${recentSearch.title}`}
+              onDelete={() => handleRecentSearchDelete(recentSearch.title)}
               title={recentSearch.title}
               query={searchQuery}
               selected={idx === selectedItem}
