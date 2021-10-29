@@ -68,7 +68,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
             muted={soundMuted}
             autoPlay
             onTimeUpdate={onTimeUpdate}
-            poster={videoHeroData.thumbnailPhotoUrl || ''}
+            poster={videoHeroData.heroPosterUrl ?? undefined}
             onEnded={handleEnded}
             src={videoHeroData?.heroVideoCutUrl}
           />
