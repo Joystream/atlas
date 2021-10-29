@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
+import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
@@ -79,19 +80,27 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     [onSelectItem, selectedItem]
   )
 
-  const handleRecentSearchDelete = (id: number) => {
-    deleteRecentSearch(id)
+  const handleRecentSearchDelete = (title: string) => {
+    deleteRecentSearch(title)
   }
 
-  const slicedReccentSearches = recentSearches.slice(0, 6)
+  const filteredRecentSearches = searchQuery.length
+    ? recentSearches
+        .filter((item) =>
+          new RegExp(`${searchQuery.replace(SPECIAL_CHARACTERS, '\\$&').replace(/\s+/g, '|')}`, 'i').test(
+            item.title || ''
+          )
+        )
+        .slice(0, 3)
+    : recentSearches
 
   useEffect(() => {
-    handleSetNumberOfItems(slicedReccentSearches.length + videos.length + channels.length)
-  }, [handleSetNumberOfItems, slicedReccentSearches.length, videos.length, channels.length])
+    handleSetNumberOfItems(filteredRecentSearches.length + videos.length + channels.length)
+  }, [handleSetNumberOfItems, filteredRecentSearches.length, videos.length, channels.length])
 
   // Fire when user select last result
   useEffect(() => {
-    if (selectedItem === slicedReccentSearches.length + videos.length + channels.length) {
+    if (selectedItem === filteredRecentSearches.length + videos.length + channels.length) {
       onLastSelectedItem()
     }
   }, [
@@ -100,26 +109,26 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     channels.length,
     onLastSelectedItem,
     selectedItem,
-    slicedReccentSearches.length,
+    filteredRecentSearches.length,
   ])
 
   return (
     <Container
-      isVisible={!!recentSearches.length || !!videos.length || !!channels.length || loading}
+      isVisible={!!filteredRecentSearches.length || !!videos.length || !!channels.length || loading}
       className={className}
       ref={containerRef}
       onMouseMove={onMouseMove}
       hasQuery={searchQuery}
     >
-      {!!recentSearches.length && (
+      {!!filteredRecentSearches.length && (
         <Section>
           <Caption secondary variant="caption">
             Recent searches
           </Caption>
-          {slicedReccentSearches.map((recentSearch, idx) => (
+          {filteredRecentSearches.map((recentSearch, idx) => (
             <RecentSearchItem
-              key={`RecentSearchItem-${recentSearch.id}`}
-              onDelete={() => handleRecentSearchDelete(recentSearch.id)}
+              key={`RecentSearchItem-${recentSearch.title}`}
+              onDelete={() => handleRecentSearchDelete(recentSearch.title)}
               title={recentSearch.title}
               query={searchQuery}
               selected={idx === selectedItem}
@@ -141,7 +150,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               key={`result-video-${video.id}`}
               video={video}
               query={searchQuery}
-              selected={selectedItem === idx + slicedReccentSearches.length}
+              selected={selectedItem === idx + filteredRecentSearches.length}
               handleSelectedItem={scrollToSelectedItem}
               selectedItem={selectedItem}
             />
@@ -158,7 +167,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
               key={`result-channel-${channel.id}`}
               channel={channel}
               query={searchQuery}
-              selected={selectedItem === idx + slicedReccentSearches.length + videos.length}
+              selected={selectedItem === idx + filteredRecentSearches.length + videos.length}
               handleSelectedItem={scrollToSelectedItem}
               selectedItem={selectedItem}
             />
