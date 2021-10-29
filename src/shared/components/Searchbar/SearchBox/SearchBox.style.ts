@@ -10,14 +10,22 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-const containerDesktopHeight = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
+const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
-export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
-  position: absolute;
+const getContainerMobileHeight = (visualViewportHeight: number, hasFocus: boolean) =>
+  `calc(${visualViewportHeight}px - ${hasFocus ? '72px' : '64px'}) `
+
+export const Container = styled.div<{
+  isVisible: boolean
+  hasQuery?: string
+  visualViewportHeight: number
+  hasFocus: boolean
+}>`
+  position: fixed;
+  top: ${sizes(16)};
   left: 0;
-  top: 100%;
   width: 100%;
-  height: 100vh;
+  height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
   overflow-y: scroll;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
@@ -34,12 +42,12 @@ export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   }
 
   &.searchbox-exit {
-    height: 100vh;
+    height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
     max-height: 100vh;
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
     }
   }
 
@@ -53,19 +61,21 @@ export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   }
 
   &.searchbox-enter-active {
-    height: 100vh;
+    height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
     max-height: 100vh;
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
     }
   }
 
   ${media.md} {
+    position: absolute;
+    top: 100%;
     box-shadow: unset;
     height: auto;
-    max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+    max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
   }
 `
 

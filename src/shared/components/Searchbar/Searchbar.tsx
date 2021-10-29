@@ -11,7 +11,15 @@ import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/ico
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
-import { CancelButton, Container, InnerContainer, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
+import {
+  CancelButton,
+  Container,
+  InnerContainer,
+  Input,
+  SearchButton,
+  StyledForm,
+  StyledSvgOutlineSearch,
+} from './Searchbar.style'
 
 type SearchbarProps = {
   value: string | null
@@ -45,11 +53,19 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const inputRef = useRef<HTMLInputElement>(null)
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
     const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
+    const [inputHasFocus, setInputHasFocus] = useState(false)
     const navigate = useNavigate()
     const query = recentSearch || value
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
+
+    useEffect(() => {
+      if (hasFocus) {
+        inputRef.current?.focus()
+        setInputHasFocus(true)
+      }
+    }, [hasFocus])
 
     useEffect(() => {
       if (selectedItem === null || !hasFocus) {
@@ -155,20 +171,25 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 ) : (
                   <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
                 )}
-                <Input
-                  value={query || ''}
-                  placeholder={placeholder}
-                  type="search"
-                  onChange={handleChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={onFocus}
-                  onFocusCapture={onFocus}
-                  onBlur={onBlur}
-                  onSubmit={onSubmit}
-                  data-hj-allow
-                  ref={inputRef}
-                  {...htmlProps}
-                />
+                <StyledForm action=".">
+                  <Input
+                    value={query || ''}
+                    placeholder={placeholder}
+                    type="search"
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={onFocus}
+                    onFocusCapture={onFocus}
+                    onBlur={(event) => {
+                      onBlur?.(event)
+                      setInputHasFocus(false)
+                    }}
+                    onSubmit={onSubmit}
+                    data-hj-allow
+                    ref={inputRef}
+                    {...htmlProps}
+                  />
+                </StyledForm>
               </>
             )}
             {!!query && (
@@ -196,6 +217,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               onSelectItem={onSelectItem}
               handleSetNumberOfItems={handleSetNumberOfItems}
               onMouseMove={() => setSelectedItem(null)}
+              hasFocus={inputHasFocus}
             />
           </CSSTransition>
         </Container>

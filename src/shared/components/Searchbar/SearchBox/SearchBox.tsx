@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
@@ -27,6 +27,7 @@ type SearchBoxProps = {
   onSelectItem: (title?: string | null) => void
   handleSetNumberOfItems: (items: number) => void
   onMouseMove: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  hasFocus: boolean
 }
 
 const generatePlaceholders = () => {
@@ -53,6 +54,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   onSelectItem,
   handleSetNumberOfItems,
   onMouseMove,
+  hasFocus,
 }) => {
   const { channels, videos, loading } = useSearchResults({ searchQuery, limit: 3 })
   const { recentSearches, deleteRecentSearch } = usePersonalDataStore((state) => ({
@@ -61,6 +63,19 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   }))
   const containerRef = useRef<HTMLDivElement>(null)
   const topRef = useRef(0)
+  const [visualViewportHeight, setVisualViewportHeight] = useState(window.visualViewport.height)
+
+  // Calculate searchbox height whether keyboard is open or not
+  useEffect(() => {
+    const onVisualViewportChange = () => {
+      setVisualViewportHeight(window.visualViewport.height)
+    }
+    window.visualViewport.addEventListener('resize', onVisualViewportChange)
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', onVisualViewportChange)
+    }
+  }, [])
 
   const scrollToSelectedItem = useCallback(
     (top: number, title?: string | null) => {
@@ -119,6 +134,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       ref={containerRef}
       onMouseMove={onMouseMove}
       hasQuery={searchQuery}
+      visualViewportHeight={visualViewportHeight}
+      hasFocus={hasFocus}
     >
       {!!filteredRecentSearches.length && (
         <Section>
