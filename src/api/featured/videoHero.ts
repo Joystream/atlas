@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import { useVideo } from '@/api/hooks'
 import { VideoFieldsFragment } from '@/api/queries'
 import { GetVideoHeroDocument, GetVideoHeroQuery } from '@/api/queries/__generated__/featured.generated'
-import { AssetType, useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 import { useGenericFeaturedData } from './helpers'
@@ -13,14 +12,14 @@ type RawVideoHeroData = {
   videoId: string
   heroTitle: string
   heroVideoCutUrl: string
+  heroPosterUrl: string
 }
 
 export type VideoHeroData = {
   video: VideoFieldsFragment
   heroTitle: string
   heroVideoCutUrl: string
-  thumbnailPhotoUrl?: string | null
-  progress?: number
+  heroPosterUrl: string | null
 }
 
 export const useVideoHeroData = (): VideoHeroData | null => {
@@ -39,17 +38,10 @@ export const useVideoHeroData = (): VideoHeroData | null => {
       }),
   })
 
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-
   return video && rawData
     ? {
         video,
-        heroTitle: rawData.heroTitle,
-        heroVideoCutUrl: rawData.heroVideoCutUrl,
-        thumbnailPhotoUrl,
+        ...rawData,
       }
     : null
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { VideoHeroData } from '@/api/featured'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { transitions } from '@/shared/theme'
@@ -14,10 +13,12 @@ import {
   VideoSliderThumbnail,
 } from './VideoHeroSlider.style'
 
+import { VideoHeroFeaturedVideo } from '../types'
+
 export type VideoHeroSliderProps = {
   activeVideoIdx: number
   loading?: boolean
-  videos?: (VideoHeroData | null)[]
+  videos?: (VideoHeroFeaturedVideo | null)[]
   onTileClick?: (idx: number) => void
 }
 

@@ -3,6 +3,7 @@ query GetVideoHero {
     videoId
     heroTitle
     heroVideoCutUrl
+    heroPosterUrl
   }
 }
 
