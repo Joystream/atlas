@@ -111,9 +111,8 @@ const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string]) =>
     .slice(0, 3)
     .map((video) => ({
       video,
-      heroTitle: video.title ?? '',
-      heroVideoCutUrl: video.videoCutUrl ?? '',
       thumbnailPhotoUrl: '',
+      videoCutUrl: video?.videoCutUrl ?? '',
     }))
 
   const { url: thumbnailPhotoUrl1 } = useAsset({

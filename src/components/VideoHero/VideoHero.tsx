@@ -65,6 +65,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       <BackgroundContainer isCategory={isCategory}>
         {videoHeroData && (
           <BackgroundVideoPlayer
+            preload="metadata"
             muted={soundMuted}
             autoPlay
             onTimeUpdate={onTimeUpdate}
