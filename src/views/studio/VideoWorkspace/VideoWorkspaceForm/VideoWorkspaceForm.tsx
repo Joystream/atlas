@@ -410,7 +410,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
 
   return (
     <>
-      <FormScrolling actionBarHeight={actionBarBounds.height} isEdit={isEdit}>
+      <FormScrolling actionBarHeight={actionBarBounds.height} isEdit={isEdit} data-scroll-lock-scrollable>
         <FormWrapper as="form">
           <Controller
             name="assets"
