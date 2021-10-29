@@ -33,6 +33,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
   useEffect(() => {
     const onKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && selected && to) {
+        event.preventDefault()
         navigate(to)
       }
     }
