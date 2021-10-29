@@ -8,7 +8,13 @@ export type GetVideoHeroQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetVideoHeroQuery = {
   __typename?: 'Query'
-  videoHero: { __typename?: 'VideoHero'; videoId: string; heroTitle: string; heroVideoCutUrl: string }
+  videoHero: {
+    __typename?: 'VideoHero'
+    videoId: string
+    heroTitle: string
+    heroVideoCutUrl: string
+    heroPosterUrl: string
+  }
 }
 
 export type GetCategoriesFeaturedVideosQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -28,6 +34,7 @@ export const GetVideoHeroDocument = gql`
       videoId
       heroTitle
       heroVideoCutUrl
+      heroPosterUrl
     }
   }
 `
