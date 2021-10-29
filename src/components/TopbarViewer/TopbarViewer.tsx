@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -24,7 +24,7 @@ export const TopbarViewer: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (searchOpen) {
       incrementOverlaysOpenCount()
     } else {

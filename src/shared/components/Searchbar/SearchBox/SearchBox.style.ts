@@ -12,20 +12,22 @@ import { animation } from '@/shared/theme/tokens'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
-const getContainerMobileHeight = (visualViewportHeight: number, hasFocus: boolean) =>
-  `calc(${hasFocus ? `${visualViewportHeight}px` : '100vh'})`
-
-export const Container = styled.div<{
+type ContainerProps = {
   isVisible: boolean
   hasQuery?: string
   visualViewportHeight: number
   hasFocus: boolean
-}>`
+}
+
+const getContainerMobileHeight = ({ visualViewportHeight, hasFocus }: ContainerProps) =>
+  `${hasFocus ? `${visualViewportHeight}px` : '100vh'}`
+
+export const Container = styled.div<ContainerProps>`
   position: fixed;
   top: ${sizes(16)};
   left: 0;
   width: 100%;
-  height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
+  height: ${getContainerMobileHeight};
   overflow-y: scroll;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
@@ -38,6 +40,7 @@ export const Container = styled.div<{
   &.searchbox-enter {
     height: 0;
     max-height: 0;
+    padding-bottom: 0;
 
     ${media.md} {
       height: auto;
@@ -46,8 +49,9 @@ export const Container = styled.div<{
   }
 
   &.searchbox-exit {
-    height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
+    height: ${getContainerMobileHeight};
     max-height: 100vh;
+    padding-bottom: 0;
 
     ${media.md} {
       height: auto;
@@ -58,6 +62,7 @@ export const Container = styled.div<{
   &.searchbox-exit-active {
     height: auto;
     max-height: 0;
+    padding-bottom: 0;
 
     ${media.md} {
       max-height: 0;
@@ -65,7 +70,7 @@ export const Container = styled.div<{
   }
 
   &.searchbox-enter-active {
-    height: ${({ visualViewportHeight, hasFocus }) => getContainerMobileHeight(visualViewportHeight, hasFocus)};
+    height: ${getContainerMobileHeight};
     max-height: 100vh;
 
     ${media.md} {

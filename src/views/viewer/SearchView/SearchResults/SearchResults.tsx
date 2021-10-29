@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import { ChannelGrid } from '@/components/ChannelGrid'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -8,14 +7,16 @@ import { SkeletonLoaderVideoGrid } from '@/components/SkeletonLoaderVideoGrid'
 import { VideoGrid } from '@/components/VideoGrid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { languages } from '@/config/languages'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
 import { Tabs } from '@/shared/components/Tabs'
-import { transitions } from '@/shared/theme'
+import { SvgActionFilters } from '@/shared/icons'
 
-import { Filters, PaddingWrapper, Results, SearchControls } from './SearchResults.style'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.style'
 
 type SearchResultsProps = {
   query: string
@@ -23,6 +24,7 @@ type SearchResultsProps = {
 const tabs = ['Videos', 'Channels']
 
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
+  const smMatch = useMediaMatch('sm')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const filtersBarLogic = useFiltersBar(false)
   const {
@@ -63,29 +65,31 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
 
   return (
     <ViewWrapper>
-      <SearchControls filtersOpen={isFiltersOpen}>
-        <PaddingWrapper>
-          <Tabs
-            tabs={mappedTabs}
-            onSelectTab={setSelectedIndex}
-            initialIndex={0}
-            onFiltersClick={selectedIndex === 0 ? toggleFilters : undefined}
-            onSelectedLanguage={selectedIndex === 0 ? handleSelectLanguage : undefined}
-            filtersActive={canClearAllFilters}
-            selectedLanguage={language}
-          />
+      <SearchControls>
+        <PaddingWrapper filtersOpen={isFiltersOpen}>
+          <Tabs tabs={mappedTabs} onSelectTab={setSelectedIndex} initialIndex={0} variant="large" />
+          <FiltersWrapper>
+            {smMatch && (
+              <StyledSelect
+                items={languages}
+                placeholder="Any language"
+                size="small"
+                value={language}
+                onChange={handleSelectLanguage}
+              />
+            )}
+            <Button
+              icon={<SvgActionFilters />}
+              iconPlacement="left"
+              variant="secondary"
+              badge={canClearAllFilters}
+              onClick={toggleFilters}
+            >
+              {smMatch && 'Filters'}
+            </Button>
+          </FiltersWrapper>
         </PaddingWrapper>
-        <CSSTransition
-          in={isFiltersOpen}
-          timeout={parseInt(transitions.timings.routing)}
-          classNames="filters"
-          unmountOnExit
-          mountOnEnter
-        >
-          <Filters>
-            <FiltersBar {...filtersBarLogic} variant="secondary" hasCategories mobileLanguageSelector />
-          </Filters>
-        </CSSTransition>
+        <FiltersBar {...filtersBarLogic} variant="secondary" hasCategories mobileLanguageSelector />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

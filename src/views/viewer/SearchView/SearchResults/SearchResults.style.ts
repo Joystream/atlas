@@ -1,68 +1,22 @@
 import styled from '@emotion/styled'
 
+import { Select } from '@/shared/components/Select'
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 import { transitions } from '@/shared/theme'
 
-export const PaddingWrapper = styled.div`
+export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
+  display: flex;
   padding: 0 var(--size-global-horizontal-padding);
+  border-bottom: 1px solid ${({ filtersOpen }) => colors.gray[filtersOpen ? 800 : 700]};
 `
 
-export const Filters = styled.div`
-  align-items: center;
-  background-color: ${colors.gray[700]};
-  will-change: height;
-  margin: 0 var(--size-global-horizontal-padding);
-  height: 100vh;
-  width: 100%;
-  padding: 0 var(--size-global-horizontal-padding);
-  transition: height ${transitions.timings.routing} ${transitions.easing};
-
-  ${media.sm} {
-    background-color: ${colors.gray[800]};
-    margin: 0;
-    display: flex;
-    height: 72px;
-  }
-
-  &.filters-enter {
-    height: 0;
-    overflow: hidden;
-  }
-
-  &.filters-enter-active {
-    height: 100vh;
-    overflow: hidden;
-
-    ${media.sm} {
-      height: 72px;
-    }
-  }
-
-  &.filters-exit {
-    height: 100vh;
-    overflow: hidden;
-
-    ${media.sm} {
-      height: 72px;
-    }
-  }
-
-  &.filters-exit-active {
-    height: 0;
-    overflow: hidden;
-  }
-`
-
-export const SearchControls = styled.div<{ filtersOpen: boolean }>`
+export const SearchControls = styled.div`
   position: fixed;
   left: var(--size-sidenav-width-collapsed);
   top: var(--size-topbar-height);
   width: 100%;
   background-color: ${colors.gray[900]};
   z-index: ${zIndex.nearOverlay};
-  transition: border-bottom 0ms linear 300ms;
-  border-bottom: ${({ filtersOpen }) =>
-    filtersOpen ? `0 solid ${colors.gray[700]}` : `1px solid ${colors.gray[700]}`};
 
   ${media.md} {
     width: calc(100% - var(--size-sidenav-width-collapsed));
@@ -77,4 +31,15 @@ export const Results = styled.div<{ filtersOpen: boolean }>`
     padding-top: ${({ filtersOpen }) => sizes(filtersOpen ? 48 : 30)};
     transition: padding-top ${transitions.timings.routing} ${transitions.easing};
   }
+`
+
+export const FiltersWrapper = styled.div`
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+`
+
+export const StyledSelect = styled(Select)`
+  min-width: 170px;
+  margin-right: ${sizes(4)};
 `

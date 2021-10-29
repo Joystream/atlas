@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { ActionDialog } from '../ActionDialog'
 
@@ -21,21 +21,52 @@ export const MobileFilterContainer = styled.div`
 `
 
 export const FiltersContainer = styled.div<{ open: boolean }>`
+  align-items: center;
+  margin: 0 var(--size-global-horizontal-padding);
+  background-color: ${colors.gray[700]};
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
-  padding: ${sizes(4)} 0;
-  will-change: opacity;
-  transition: opacity ${transitions.timings.routing} ${transitions.easing} 100ms;
+  padding: ${sizes(4)} var(--size-global-horizontal-padding);
+  will-change: opacity, height;
+  transition: all ${transitions.timings.routing} ${transitions.easing};
   width: 100%;
 
-  &.filters-active,
-  &.filters-exit {
-    opacity: 1;
-  }
-
-  &.filters-exit-active,
   &.filters-enter {
     opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &.filters-enter-active {
+    opacity: 1;
+    height: 100vh;
+    overflow: hidden;
+
+    ${media.sm} {
+      height: 72px;
+    }
+  }
+
+  &.filters-exit {
+    opacity: 1;
+    height: 100vh;
+    overflow: hidden;
+
+    ${media.sm} {
+      height: 72px;
+    }
+  }
+
+  &.filters-exit-active {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  ${media.sm} {
+    background-color: ${colors.gray[800]};
+    margin: 0;
+    display: flex;
   }
 `
 

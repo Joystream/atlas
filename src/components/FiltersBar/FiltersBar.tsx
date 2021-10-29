@@ -13,6 +13,7 @@ import { RadioButton } from '@/shared/components/RadioButton'
 import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphClose } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
   ActionDialogHeader,
@@ -295,7 +296,13 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     )
   }
   return (
-    <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
+    <CSSTransition
+      in={isFiltersOpen}
+      timeout={parseInt(transitions.timings.routing)}
+      classNames="filters"
+      mountOnEnter
+      unmountOnExit
+    >
       <FiltersContainer open={true}>
         <FiltersInnerContainer>
           {hasCategories && (
