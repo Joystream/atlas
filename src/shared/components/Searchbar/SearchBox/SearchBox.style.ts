@@ -13,7 +13,7 @@ import { animation } from '@/shared/theme/tokens'
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
 const getContainerMobileHeight = (visualViewportHeight: number, hasFocus: boolean) =>
-  `calc(${visualViewportHeight}px - ${hasFocus ? '72px' : '64px'}) `
+  `calc(${hasFocus ? `${visualViewportHeight}px` : '100vh'} - ${hasFocus ? '72px' : '64px'}) `
 
 export const Container = styled.div<{
   isVisible: boolean

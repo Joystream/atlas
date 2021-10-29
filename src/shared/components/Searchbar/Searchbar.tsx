@@ -166,7 +166,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                     type="search"
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    onFocus={onFocus}
+                    onFocus={(event) => {
+                      onFocus?.(event)
+                      setInputHasFocus(true)
+                    }}
                     onFocusCapture={onFocus}
                     onBlur={(event) => {
                       onBlur?.(event)
