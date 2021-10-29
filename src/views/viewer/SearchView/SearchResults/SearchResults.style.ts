@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 import { transitions } from '@/shared/theme'
 
@@ -78,9 +77,4 @@ export const Results = styled.div<{ filtersOpen: boolean }>`
     padding-top: ${({ filtersOpen }) => sizes(filtersOpen ? 48 : 30)};
     transition: padding-top ${transitions.timings.routing} ${transitions.easing};
   }
-`
-
-export const StartNewSearch = styled(Button)`
-  margin-top: ${sizes(6)};
-  align-self: center;
 `
