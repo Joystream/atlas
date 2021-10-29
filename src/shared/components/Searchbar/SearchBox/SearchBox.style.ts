@@ -30,7 +30,7 @@ export const Container = styled.div<{
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
   transition: all ${animation.medium.timing} ${animation.medium.easing};
-  padding-bottom: ${({ isVisible }) => (isVisible ? sizes(20) : 'unset')};
+  padding-bottom: ${({ isVisible }) => (isVisible ? sizes(40) : 'unset')};
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
 
   &.searchbox-enter {
