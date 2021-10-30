@@ -19,7 +19,6 @@ export type TabsProps = {
   onFiltersClick?: () => void
   onSelectedLanguage?: (language: unknown) => void
   selectedLanguage?: unknown
-  filtersActive?: boolean
   variant?: 'default' | 'large'
 }
 

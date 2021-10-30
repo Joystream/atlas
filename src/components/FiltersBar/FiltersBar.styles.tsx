@@ -7,8 +7,6 @@ import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { ActionDialog } from '../ActionDialog'
 
-type Variant = 'default' | 'secondary'
-
 export const FilterContentContainer = styled.div`
   display: grid;
   gap: ${sizes(3)};
@@ -91,8 +89,8 @@ export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
   }
 `
 
-export const ClearAllButton = styled(Button)<{ filtersVariant: Variant }>`
-  margin-left: ${({ filtersVariant }) => (filtersVariant === 'secondary' ? 'auto' : 'unset')};
+export const ClearAllButton = styled(Button)`
+  margin-left: auto;
 `
 
 export const StyledActionDialog = styled(ActionDialog)`

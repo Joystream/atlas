@@ -89,7 +89,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             </Button>
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} variant="secondary" hasCategories mobileLanguageSelector />
+        <FiltersBar {...filtersBarLogic} hasCategories mobileLanguageSelector />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

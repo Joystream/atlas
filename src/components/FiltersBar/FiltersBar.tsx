@@ -32,7 +32,6 @@ import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
 import { ActionDialogProps } from '../ActionDialog'
 
 type FiltersBarProps = {
-  variant?: 'default' | 'secondary'
   hasCategories?: boolean
   mobileLanguageSelector?: boolean
 }
@@ -40,7 +39,6 @@ type FiltersBarProps = {
 export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
-  variant = 'default',
   hasCategories,
   mobileLanguageSelector,
   filters: {
@@ -455,12 +453,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         </FiltersInnerContainer>
 
         {canClearAllFilters && (
-          <ClearAllButton
-            onClick={clearAllFilters}
-            filtersVariant={variant}
-            variant="tertiary"
-            icon={<SvgGlyphClose />}
-          >
+          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
             Clear all
           </ClearAllButton>
         )}
