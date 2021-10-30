@@ -16,9 +16,6 @@ export type TabsProps = {
   onSelectTab: (idx: number) => void
   selected?: number
   className?: string
-  onFiltersClick?: () => void
-  onSelectedLanguage?: (language: unknown) => void
-  selectedLanguage?: unknown
   variant?: 'default' | 'large'
 }
 
