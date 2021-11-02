@@ -19,24 +19,28 @@ import { selectedFeaturedVideoCategories, videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
   const { categories } = useCategories()
-  const videoCategoriesArray = Object.values(videoCategories)
   const mappedVideoCategories = categories?.map((category) => ({
-    ...videoCategoriesArray.find((vidCategory) => vidCategory.id === category.id),
+    ...videoCategories[category.id],
     ...category,
   }))
 
   const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
-  const featuredVideoCategoryCardsData = categories?.map((category) => {
-    const video =
-      categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl) ??
-      categoriesFeaturedVideos?.[category.id]?.[0]
-    return {
-      videoTitle: video?.title ?? '',
-      videoUrl: video?.videoCutUrl ?? '',
-      ...selectedFeaturedVideoCategories.find((cat) => cat.id === category.id),
-      ...category,
-    }
-  }) ?? [null, null, null]
+  const featuredVideoCategoryCardsData = categories
+    ?.map((category) => {
+      const video =
+        categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl) ??
+        categoriesFeaturedVideos?.[category.id]?.[0] ??
+        undefined
+      return video === undefined
+        ? undefined
+        : {
+            videoTitle: video?.title ?? '',
+            videoUrl: video?.videoCutUrl ?? '',
+            ...selectedFeaturedVideoCategories.find((cat) => cat.id === category.id),
+            ...category,
+          }
+    })
+    .filter((cat) => !!cat) ?? [null, null, null]
 
   const { videoCount, error } = useVideoCount(
     {},

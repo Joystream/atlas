@@ -27,7 +27,7 @@ import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 export const CategoryView = () => {
   const { id } = useParams()
   const data = useCategoriesFeaturedVideos()
-  const featuredVideos = data?.[id]
+  const featuredVideos = data?.[id] ?? []
   const videoHeroVideos = useVideoHeroVideos(featuredVideos)
   const mdBreakpointMatch = useMediaMatch('md')
   const { videoCount, error } = useVideoCount(
@@ -59,13 +59,13 @@ export const CategoryView = () => {
         videos={videoHeroVideos}
       />
 
-      {(featuredVideos?.length ?? 0) > 0 && (
+      {(featuredVideos.length ?? 0) > 0 && (
         <>
           <TitleContainer>
             <Text variant="h4">Featured Videos</Text>
           </TitleContainer>
           <Grid>
-            {[...(featuredVideos ?? [])]?.map((video, idx) => (
+            {featuredVideos.map((video, idx) => (
               <VideoTile id={video.id} key={idx} showChannel />
             ))}
           </Grid>
@@ -105,9 +105,9 @@ export const CategoryView = () => {
   )
 }
 
-const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string]) => {
+const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string] = []) => {
   const videoHeroVideos = featuredVideos
-    ?.filter((vid) => !!vid.videoCutUrl)
+    .filter((vid) => !!vid.videoCutUrl)
     .slice(0, 3)
     .map((video) => ({
       video,
