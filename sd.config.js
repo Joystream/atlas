@@ -33,7 +33,7 @@ module.exports = {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                value = value.replace(ref.value, ` --${ref.name}`)
+                value = value.replace(ref.value, ` var(--${ref.name})`)
               })
             }
             return value
