@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { template } = require('lodash')
+const { basename } = require('path')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
 
-export const globalStyles = css\`
+export const variables = css\`
   :root {
     <%= output %>
   }\`
@@ -27,13 +28,14 @@ module.exports = {
       return variablesTemplate({
         output: dictionary.allTokens
           .map((token) => {
-            let value = `--${token.name.replaceAll('-default', '')}: ${token.value};`
+            const prefix = basename(token.filePath).replace('.token.json', '')
+            let value = `--${prefix}-${token.name.replaceAll('-default', '')}: ${token.value};`
 
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                value = value.replace(ref.value, ` var(--${ref.name.replaceAll('-default', '')})`)
+                value = value.replace(ref.value, ` var(--${prefix}-${ref.name.replaceAll('-default', '')})`)
               })
             }
             return value

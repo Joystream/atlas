@@ -2,6 +2,8 @@ import { Global, SerializedStyles, css } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import React from 'react'
 
+import { variables } from '@/styles/generated/variables'
+
 import { transitionStyles } from './transitionStyles'
 
 import { colors, media, sizes, typography } from '../../theme'
@@ -11,6 +13,7 @@ const scrollbarThumbColor = colors.transparentPrimary[18]
 
 const globalStyles = css`
   ${emotionNormalize};
+  ${variables};
 
   html,
   body,
