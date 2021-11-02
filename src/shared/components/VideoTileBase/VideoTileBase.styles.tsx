@@ -2,14 +2,12 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, square, typography } from '@/shared/theme'
+import { colors, sizes, square, typography } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
-
-export const HOVER_BORDER_SIZE = '2px'
 
 type SizeProps = {
   size?: 'small' | 'big'
@@ -62,12 +60,12 @@ export const TextContainer = styled.div`
 export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
   ${square(32)};
 
-  opacity: 1;
+  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
   margin-left: ${sizes(2)};
   pointer-events: ${({ isActive }) => (isActive ? 'auto' : 'none')};
 
-  ${media.md} {
-    opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  @media (any-pointer: coarse) {
+    opacity: 1;
   }
 `
 
