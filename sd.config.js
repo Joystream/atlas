@@ -27,13 +27,13 @@ module.exports = {
       return variablesTemplate({
         output: dictionary.allTokens
           .map((token) => {
-            let value = `--${token.name}: ${token.value};`
+            let value = `--${token.name.replaceAll('-default', '')}: ${token.value};`
 
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                value = value.replace(ref.value, ` var(--${ref.name})`)
+                value = value.replace(ref.value, ` var(--${ref.name.replaceAll('-default', '')})`)
               })
             }
             return value
