@@ -6,6 +6,7 @@ import { smallBadgeStyles } from '../Badge'
 
 type TabProps = {
   selected: boolean
+  variant: 'default' | 'large'
 }
 
 type BackgroundGradientProps = {
@@ -23,7 +24,6 @@ export const TabsGroup = styled.div`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
-  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
@@ -36,7 +36,7 @@ export const Tab = styled.div<TabProps>`
   transition: box-shadow 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
-  padding: ${sizes(6)} 0;
+  padding: ${({ variant }) => sizes(variant === 'default' ? 6 : 7)} 0;
   font-size: ${typography.sizes.body2};
   color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
   text-align: center;

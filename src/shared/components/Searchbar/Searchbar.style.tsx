@@ -114,3 +114,8 @@ export const SearchButton = styled(IconButton)`
     display: none;
   }
 `
+
+export const StyledForm = styled.form`
+  display: block;
+  width: 100%;
+`
