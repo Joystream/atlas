@@ -11,6 +11,7 @@ import { colors } from '@/shared/theme'
 import {
   Animations,
   AutomaticCrop,
+  DesignTokens,
   Dialogs,
   FileHashing,
   GridTesting,
@@ -44,6 +45,7 @@ const playgroundRoutes = [
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
   { path: 'filters', element: <PlaygroundFilters />, name: 'Filters' },
+  { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
 ]
 
 const PlaygroundLayout = () => {
