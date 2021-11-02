@@ -1,7 +1,7 @@
 import { Global, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 
 import { transitions } from '@/shared/theme'
 import { createId } from '@/utils/createId'
@@ -26,12 +26,12 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
     if (overlaysSet.size === 0 && scrollLocked) {
       setScrollLocked(false)
       setScrollbarGap(0)
-      enableBodyScroll(document.body)
+      enablePageScroll()
     } else if (overlaysSet.size > 0 && !scrollLocked) {
       const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
       setScrollLocked(true)
       setScrollbarGap(scrollbarGap)
-      disableBodyScroll(document.body, { reserveScrollBarGap: true })
+      disablePageScroll()
     }
   }, [overlaysSet.size, scrollLocked])
 

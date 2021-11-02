@@ -45,7 +45,7 @@ export const BaseDialog: React.FC<BaseDialogProps> = ({
         onEnter={incrementOverlaysOpenCount}
         onExited={decrementOverlaysOpenCount}
       >
-        <StyledContainer className={className}>
+        <StyledContainer className={className} data-scroll-lock-scrollable>
           {exitButton && (
             <StyledExitButton aria-label="close dialog" onClick={onExitClick} variant="tertiary">
               <SvgGlyphClose />

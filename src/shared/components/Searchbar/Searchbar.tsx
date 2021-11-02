@@ -1,18 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useSearchStore } from '@/providers/search'
 import { IconButton } from '@/shared/components/IconButton'
 import { ShortcutIndicator } from '@/shared/components/ShortcutIndicator'
 import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/shared/icons'
-import { RoutingState } from '@/types/routing'
 
 import { SearchBox } from './SearchBox'
 import { SearchHelper } from './Searchbar.style'
-import { CancelButton, Container, InnerContainer, Input, SearchButton, StyledSvgOutlineSearch } from './Searchbar.style'
+import {
+  CancelButton,
+  Container,
+  InnerContainer,
+  Input,
+  SearchButton,
+  StyledForm,
+  StyledSvgOutlineSearch,
+} from './Searchbar.style'
 
 type SearchbarProps = {
   value: string | null
@@ -20,25 +28,11 @@ type SearchbarProps = {
   showCancelButton?: boolean
   controlled?: boolean
   onClick?: () => void
-  hasFocus: boolean
   onClose: () => void
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
   (
-    {
-      placeholder,
-      onChange,
-      onFocus,
-      onCancel,
-      value,
-      onBlur,
-      onSubmit,
-      onClick,
-      hasFocus,
-      onClose,
-      onKeyDown,
-      ...htmlProps
-    },
+    { placeholder, onChange, onFocus, onCancel, value, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps },
     ref
   ) => {
     const mdMatch = useMediaMatch('md')
@@ -46,20 +40,26 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const inputRef = useRef<HTMLInputElement>(null)
     const [selectedItem, setSelectedItem] = useState<number | null>(null)
     const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
+    const [inputHasFocus, setInputHasFocus] = useState(false)
     const navigate = useNavigate()
-    const location = useLocation()
-    const locationState = location.state as RoutingState
-    const overlaidLocation = locationState?.overlaidLocation || location
     const query = recentSearch || value
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
+    const { searchOpen } = useSearchStore()
 
     useEffect(() => {
-      if (selectedItem === null || !hasFocus) {
+      if (searchOpen) {
+        inputRef.current?.focus()
+        setInputHasFocus(true)
+      }
+    }, [searchOpen])
+
+    useEffect(() => {
+      if (selectedItem === null || !searchOpen) {
         setRecentSearch(null)
       }
-    }, [selectedItem, hasFocus])
+    }, [selectedItem, searchOpen])
 
     useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
@@ -80,11 +80,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
-        const state: RoutingState = { overlaidLocation }
         addRecentSearch(query)
 
         // navigate to search results
-        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }), { state })
+        navigate(absoluteRoutes.viewer.search({ query: query?.trim() }))
       }
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         event.preventDefault()
@@ -149,31 +148,39 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     return (
       <>
-        <Container hasFocus={hasFocus} ref={ref} hasQuery={!!query}>
-          <InnerContainer hasFocus={hasFocus} hasQuery={!!query}>
-            {(mdMatch || hasFocus || !!query) && (
+        <Container hasFocus={searchOpen} ref={ref} hasQuery={!!query}>
+          <InnerContainer hasFocus={searchOpen} hasQuery={!!query}>
+            {(mdMatch || searchOpen || !!query) && (
               <>
-                {!mdMatch && hasFocus ? (
+                {!mdMatch && searchOpen ? (
                   <IconButton onClick={onClose} variant="tertiary">
                     <SvgGlyphChevronLeft />
                   </IconButton>
                 ) : (
-                  <StyledSvgOutlineSearch highlighted={hasFocus} width={24} height={24} />
+                  <StyledSvgOutlineSearch highlighted={searchOpen} width={24} height={24} />
                 )}
-                <Input
-                  value={query || ''}
-                  placeholder={placeholder}
-                  type="search"
-                  onChange={handleChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={onFocus}
-                  onFocusCapture={onFocus}
-                  onBlur={onBlur}
-                  onSubmit={onSubmit}
-                  data-hj-allow
-                  ref={inputRef}
-                  {...htmlProps}
-                />
+                <StyledForm action=".">
+                  <Input
+                    value={query || ''}
+                    placeholder={placeholder}
+                    type="search"
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={(event) => {
+                      onFocus?.(event)
+                      setInputHasFocus(true)
+                    }}
+                    onFocusCapture={onFocus}
+                    onBlur={(event) => {
+                      onBlur?.(event)
+                      setInputHasFocus(false)
+                    }}
+                    onSubmit={onSubmit}
+                    data-hj-allow
+                    ref={inputRef}
+                    {...htmlProps}
+                  />
+                </StyledForm>
               </>
             )}
             {!!query && (
@@ -181,7 +188,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 <SvgGlyphClose />
               </CancelButton>
             )}
-            {!query && !hasFocus && (
+            {!query && !searchOpen && (
               <>
                 <SearchButton variant="tertiary" onClick={onClick}>
                   <SvgGlyphSearch />
@@ -192,7 +199,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
           </InnerContainer>
-          <CSSTransition classNames="searchbox" in={hasFocus} unmountOnExit mountOnEnter timeout={600}>
+          <CSSTransition classNames="searchbox" in={searchOpen} unmountOnExit mountOnEnter timeout={500}>
             <SearchBox
               searchQuery={value || ''}
               onSelectRecentSearch={onSelectRecentSearch}
@@ -201,6 +208,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               onSelectItem={onSelectItem}
               handleSetNumberOfItems={handleSetNumberOfItems}
               onMouseMove={() => setSelectedItem(null)}
+              hasFocus={inputHasFocus}
             />
           </CSSTransition>
         </Container>

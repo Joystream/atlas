@@ -10,42 +10,59 @@ import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
 import { animation } from '@/shared/theme/tokens'
 
-const containerDesktopHeight = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
+const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
-export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
-  position: absolute;
+type ContainerProps = {
+  isVisible: boolean
+  hasQuery?: string
+  visualViewportHeight: number
+  hasFocus: boolean
+}
+
+const getContainerMobileHeight = ({ visualViewportHeight, hasFocus }: ContainerProps) =>
+  `${hasFocus ? `${visualViewportHeight}px` : '100vh'}`
+
+export const Container = styled.div<ContainerProps>`
+  position: fixed;
+  top: ${sizes(16)};
   left: 0;
-  top: 100%;
   width: 100%;
-  height: 100vh;
+  height: ${getContainerMobileHeight};
   overflow-y: scroll;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
   transition: all ${animation.medium.timing} ${animation.medium.easing};
+
+  /* 160px padding is used to cover the entire screen regardless of device */
+  padding-bottom: ${({ isVisible }) => (isVisible ? '160px' : 'unset')};
   ${({ isVisible }) => !isVisible && 'height: 0 !important'};
 
   &.searchbox-enter {
-    height: auto;
+    height: 0;
     max-height: 0;
+    padding-bottom: 0;
 
     ${media.md} {
+      height: auto;
       max-height: 0;
     }
   }
 
   &.searchbox-exit {
-    height: 100vh;
+    height: ${getContainerMobileHeight};
     max-height: 100vh;
+    padding-bottom: 0;
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
     }
   }
 
   &.searchbox-exit-active {
     height: auto;
     max-height: 0;
+    padding-bottom: 0;
 
     ${media.md} {
       max-height: 0;
@@ -53,19 +70,22 @@ export const Container = styled.div<{ isVisible: boolean; hasQuery?: string }>`
   }
 
   &.searchbox-enter-active {
-    height: 100vh;
+    height: ${getContainerMobileHeight};
     max-height: 100vh;
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
     }
   }
 
   ${media.md} {
+    position: absolute;
+    top: 100%;
     box-shadow: unset;
     height: auto;
-    max-height: ${({ hasQuery }) => (hasQuery ? containerDesktopHeight : '400px')};
+    max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
+    padding-bottom: 0;
   }
 `
 

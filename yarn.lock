@@ -5585,6 +5585,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/scroll-lock@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@types/scroll-lock@npm:2.1.0"
+  checksum: 01d8c295a3d11158b665255acfe96259d5b28566ae07f26011c47ba2b8eb0211386a9c5f752f82d3bf1d0153d08e8a51f641307cd808b1eda9f26418a62fa2d1
+  languageName: node
+  linkType: hard
+
 "@types/set-cookie-parser@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/set-cookie-parser@npm:2.4.1"
@@ -7015,6 +7022,7 @@ __metadata:
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
     "@types/react-transition-group": ^4.4.0
+    "@types/scroll-lock": ^2.1.0
     "@types/video.js": ^7.3.26
     "@typescript-eslint/eslint-plugin": ^4.29.3
     "@typescript-eslint/parser": ^4.29.3
@@ -7025,7 +7033,6 @@ __metadata:
     babel-loader: ^8.2.2
     bezier-easing: ^2.1.0
     bn.js: ^4.12.0
-    body-scroll-lock: ^3.1.5
     buffer: ^5.7.1
     cropperjs: ^1.5.10
     date-fns: ^2.23.0
@@ -7064,6 +7071,7 @@ __metadata:
     react-use-measure: ^2.0.4
     retry-axios: ^2.4.0
     rollup-plugin-visualizer: ^5.5.2
+    scroll-lock: ^2.1.5
     storybook-builder-vite: ^0.0.12
     stylelint: ^13.13.1
     stylelint-config-prettier: ^8.0.2
@@ -7556,13 +7564,6 @@ __metadata:
     raw-body: 2.4.0
     type-is: ~1.6.17
   checksum: 490231b4c89bbd43112762f7ba8e5342c174a6c9f64284a3b0fcabf63277e332f8316765596f1e5b15e4f3a6cf0422e005f4bb3149ed3a224bb025b7a36b9ac1
-  languageName: node
-  linkType: hard
-
-"body-scroll-lock@npm:^3.1.5":
-  version: 3.1.5
-  resolution: "body-scroll-lock@npm:3.1.5"
-  checksum: 52c25b81d6e7a87cfbdd7870363c3e20a439dbc76535b735916e2df907abbce95c0da0d2c7a2cfe88f49775d53bbc4bd09445ffda2d61b999efa3f0b1dedfc5e
   languageName: node
   linkType: hard
 
@@ -18416,6 +18417,13 @@ resolve@^2.0.0-next.3:
     ajv: ^6.12.5
     ajv-keywords: ^3.5.2
   checksum: fb73f3d759d43ba033c877628fe9751620a26879f6301d3dbeeb48cf2a65baec5cdf99da65d1bf3b4ff5444b2e59cbe4f81c2456b5e0d2ba7d7fd4aed5da29ce
+  languageName: node
+  linkType: hard
+
+"scroll-lock@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "scroll-lock@npm:2.1.5"
+  checksum: f18e9b93084bde8c8f56f749a49ad5d2b4ca8aadbfcb640c025bb273ca041c465a08b79fa07eb378d3d4d69c95c5fed5d6881f8af0dc3ee03b60ed7012e61b2b
   languageName: node
   linkType: hard
 
