@@ -1,14 +1,20 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { template } = require('lodash')
+const { template, camelCase, kebabCase } = require('lodash')
 const { basename } = require('path')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
 
 export const variables = css\`
   :root {
-    <%= output %>
+    <%= cssVariables %>
   }\`
+export const theme = {
+  <%= themeVariables %>
+}
 
+export const cVar = (key: keyof typeof theme) => {
+  return theme[key]
+}
 `)
 
 module.exports = {
@@ -26,7 +32,7 @@ module.exports = {
   format: {
     customFormat: ({ dictionary }) => {
       return variablesTemplate({
-        output: dictionary.allTokens
+        cssVariables: dictionary.allTokens
           .map((token) => {
             const baseFileName = basename(token.filePath).replace('.token.json', '')
             // singularize string
@@ -44,11 +50,23 @@ module.exports = {
             return value
           })
           .join('\n    '),
+        themeVariables: dictionary.allTokens
+          .map((token) => {
+            const baseFileName = basename(token.filePath).replace('.token.json', '')
+            // singularize string
+            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
+            const variableName = `${prefix}-${token.name.replaceAll('-default', '')}`
+            const key = camelCase(variableName)
+            const value = `'var(--${kebabCase(variableName)})'`
+
+            return `${key}: ${value},`
+          })
+          .join('\n  '),
       })
     },
   },
   platforms: {
-    js: {
+    ts: {
       transforms: [`attribute/cti`, `name/cti/kebab`],
       buildPath: 'src/styles/generated/',
       files: [

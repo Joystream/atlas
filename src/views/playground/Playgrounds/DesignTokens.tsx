@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { cVar } from '@/styles/generated/variables'
+
 export const DesignTokens = () => {
   return (
     <>
@@ -25,10 +27,10 @@ const Box = styled.div`
 `
 
 const GreenDiv = styled(Box)`
-  background-color: var(--color-core-green-800);
+  background-color: ${cVar('colorCoreGreen800')};
 `
 const RedDiv = styled(Box)`
-  background-color: var(--color-background-error-muted);
+  background-color: ${cVar('colorBackgroundErrorMuted')};
 `
 const AlphaContainer = styled.div`
   position: relative;
@@ -36,7 +38,7 @@ const AlphaContainer = styled.div`
 
 const AlphaDiv = styled(Box)`
   position: absolute;
-  background-color: var(--color-background-elevated-alpha);
+  background-color: ${cVar('colorBackgroundElevatedAlpha')};
 `
 const AlphaTestDiv = styled.div`
   position: absolute;
