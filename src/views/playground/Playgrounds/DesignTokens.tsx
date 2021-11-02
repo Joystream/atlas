@@ -4,11 +4,11 @@ import React from 'react'
 export const DesignTokens = () => {
   return (
     <>
-      <GreenDiv>--colors-core-green-800</GreenDiv>
-      <RedDiv>--colors-background-error-muted</RedDiv>
+      <GreenDiv>--color-core-green-800</GreenDiv>
+      <RedDiv>--color-background-error-muted</RedDiv>
       <AlphaContainer>
         <AlphaTestDiv />
-        <AlphaDiv>--colors-background-elevated-alpha</AlphaDiv>
+        <AlphaDiv>--color-background-elevated-alpha</AlphaDiv>
       </AlphaContainer>
     </>
   )
@@ -25,10 +25,10 @@ const Box = styled.div`
 `
 
 const GreenDiv = styled(Box)`
-  background-color: var(--colors-core-green-800);
+  background-color: var(--color-core-green-800);
 `
 const RedDiv = styled(Box)`
-  background-color: var(--colors-background-error-muted);
+  background-color: var(--color-background-error-muted);
 `
 const AlphaContainer = styled.div`
   position: relative;
@@ -36,7 +36,7 @@ const AlphaContainer = styled.div`
 
 const AlphaDiv = styled(Box)`
   position: absolute;
-  background-color: var(--colors-background-elevated-alpha);
+  background-color: var(--color-background-elevated-alpha);
 `
 const AlphaTestDiv = styled.div`
   position: absolute;

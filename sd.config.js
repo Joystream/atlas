@@ -28,7 +28,10 @@ module.exports = {
       return variablesTemplate({
         output: dictionary.allTokens
           .map((token) => {
-            const prefix = basename(token.filePath).replace('.token.json', '')
+            const baseFileName = basename(token.filePath).replace('.token.json', '')
+            // singularize string
+            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
+
             let value = `--${prefix}-${token.name.replaceAll('-default', '')}: ${token.value};`
 
             if (dictionary.usesReference(token.original.value)) {
