@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import Sticky from 'react-stickynode'
+import useMeasure from 'react-use-measure'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -17,6 +19,7 @@ import { FallbackWrapper } from './CategoryView.style'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
+  const [containerRef, containerBounds] = useMeasure()
 
   const filtersBarLogic = useFiltersBar()
   const {
@@ -52,6 +55,8 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setIsFiltersOpen((value) => !value)
   }
 
+  const topbarHeight = mdMatch ? 80 : 64
+
   useEffect(() => {
     setVideoWhereInput((value) => ({
       ...value,
@@ -61,41 +66,44 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   return (
     <Container>
-      <ControlsContainer>
-        <GridItem colSpan={{ base: 2, sm: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
-        </GridItem>
-        <StyledSelect
-          placeholder="Any language"
-          onChange={setSelectedLanguage}
-          size="small"
-          value={selectedLanguage}
-          items={languages}
-        />
-        <div>
-          <Button
-            badge={canClearAllFilters}
-            variant="secondary"
-            icon={<SvgActionFilters />}
-            onClick={handleFilterClick}
-          >
-            Filters
-          </Button>
-        </div>
-        <SortContainer>
-          <Text variant="body2">Sort by</Text>
+      <Sticky innerZ={50} top={topbarHeight} bottomBoundary={containerBounds.height}>
+        <ControlsContainer>
+          <GridItem colSpan={{ base: 2, sm: 1 }}>
+            <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
+          </GridItem>
           <StyledSelect
+            placeholder="Any language"
+            onChange={setSelectedLanguage}
             size="small"
-            helperText={null}
-            value={sortVideosBy}
-            items={SORT_OPTIONS}
-            onChange={handleSorting}
+            value={selectedLanguage}
+            items={languages}
           />
-        </SortContainer>
-      </ControlsContainer>
-      <FiltersBar {...filtersBarLogic} />
+          <div>
+            <Button
+              badge={canClearAllFilters}
+              variant="secondary"
+              icon={<SvgActionFilters />}
+              onClick={handleFilterClick}
+            >
+              Filters
+            </Button>
+          </div>
+          <SortContainer>
+            <Text variant="body2">Sort by</Text>
+            <StyledSelect
+              size="small"
+              helperText={null}
+              value={sortVideosBy}
+              items={SORT_OPTIONS}
+              onChange={handleSorting}
+            />
+          </SortContainer>
+        </ControlsContainer>
+        <FiltersBar {...filtersBarLogic} />
+      </Sticky>
 
       <StyledVideoGrid
+        ref={containerRef}
         emptyFallback={
           <FallbackWrapper>
             <EmptyFallback

@@ -17,8 +17,9 @@ export const ControlsContainer = styled.div`
   grid-template-columns: 1fr auto;
   gap: ${sizes(4)};
   align-items: center;
-  padding-bottom: ${sizes(4)};
+  padding: ${sizes(4)} 0;
   border-bottom: 1px solid ${colors.gray[700]};
+  background-color: ${colors.black};
 
   ${media.sm} {
     grid-template-columns: auto 160px 1fr 242px;

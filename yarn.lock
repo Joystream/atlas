@@ -5540,6 +5540,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-stickynode@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@types/react-stickynode@npm:4.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: e38f4678384d4f60311349ab847a4d5f34dd9fbf923e4a7c607816b13ced6f00c3e4057bab3670f0315f465dfe4c12c2d7603be221b377128638bf811b2143a2
+  languageName: node
+  linkType: hard
+
 "@types/react-syntax-highlighter@npm:11.0.5":
   version: 11.0.5
   resolution: "@types/react-syntax-highlighter@npm:11.0.5"
@@ -7014,6 +7023,7 @@ __metadata:
     "@types/node": ^14
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
+    "@types/react-stickynode": ^4.0.0
     "@types/react-transition-group": ^4.4.0
     "@types/video.js": ^7.3.26
     "@typescript-eslint/eslint-plugin": ^4.29.3
@@ -7060,6 +7070,7 @@ __metadata:
     react-router: 6.0.0-beta.3
     react-router-dom: 6.0.0-beta.3
     react-spring: ^9.2.4
+    react-stickynode: ^4.0.0
     react-textarea-autosize: ^8.3.3
     react-transition-group: ^4.4.1
     react-use-measure: ^2.0.4
@@ -8303,7 +8314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:2.x, classnames@npm:^2.2.1, classnames@npm:^2.2.5, classnames@npm:^2.2.6":
+"classnames@npm:2.x, classnames@npm:^2.0.0, classnames@npm:^2.2.1, classnames@npm:^2.2.5, classnames@npm:^2.2.6":
   version: 2.3.1
   resolution: "classnames@npm:2.3.1"
   checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
@@ -10478,7 +10489,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^3.1.0":
+"eventemitter3@npm:^3.0.0, eventemitter3@npm:^3.1.0":
   version: 3.1.2
   resolution: "eventemitter3@npm:3.1.2"
   checksum: 81e4e82b8418f5cfd986d2b4a2fa5397ac4eb8134e09bcb47005545e22fdf8e9e61d5c053d34651112245aae411bdfe6d0ad5511da0400743fef5fc38bfcfbe3
@@ -16371,6 +16382,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"performance-now@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "performance-now@npm:2.1.0"
+  checksum: 534e641aa8f7cba160f0afec0599b6cecefbb516a2e837b512be0adbe6c1da5550e89c78059c7fabc5c9ffdf6627edabe23eb7c518c4500067a898fa65c2b550
+  languageName: node
+  linkType: hard
+
 "picomatch@npm:^2.0.4, picomatch@npm:^2.2.1, picomatch@npm:^2.2.2, picomatch@npm:^2.2.3":
   version: 2.3.0
   resolution: "picomatch@npm:2.3.0"
@@ -17034,6 +17052,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"raf@npm:^3.0.0":
+  version: 3.4.1
+  resolution: "raf@npm:3.4.1"
+  dependencies:
+    performance-now: ^2.1.0
+  checksum: 50ba284e481c8185dbcf45fc4618ba3aec580bb50c9121385d5698cb6012fe516d2015b1df6dd407a7b7c58d44be8086108236affbce1861edd6b44637c8cd52
+  languageName: node
+  linkType: hard
+
 "ramda@npm:^0.21.0":
   version: 0.21.0
   resolution: "ramda@npm:0.21.0"
@@ -17512,6 +17539,22 @@ fsevents@^1.2.7:
     "@react-spring/web": ~9.2.0
     "@react-spring/zdog": ~9.2.0
   checksum: ca5153f17866e74ff0c99c70b72c5058252592aee5f5b8775461263fcd7cbf402ef5389c7e4a88d97eb7c1b5c3179030258b875a4a32ffc8810b04c40a3e67e6
+  languageName: node
+  linkType: hard
+
+"react-stickynode@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "react-stickynode@npm:4.0.0"
+  dependencies:
+    classnames: ^2.0.0
+    core-js: ^3.6.5
+    prop-types: ^15.6.0
+    shallowequal: ^1.0.0
+    subscribe-ui-event: ^2.0.6
+  peerDependencies:
+    react: ^0.14.2 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    react-dom: ^0.14.2 || ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 51c0cb132af5875441bcd2d849cd29f21073ace105eef8eac00e2971c5d11050d516b2c78b515f91846b17b0b6c8022fd935385071da66329d0e11fd698523f5
   languageName: node
   linkType: hard
 
@@ -18656,7 +18699,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"shallowequal@npm:^1.1.0":
+"shallowequal@npm:^1.0.0, shallowequal@npm:^1.1.0":
   version: 1.1.0
   resolution: "shallowequal@npm:1.1.0"
   checksum: f4c1de0837f106d2dbbfd5d0720a5d059d1c66b42b580965c8f06bb1db684be8783538b684092648c981294bf817869f743a066538771dbecb293df78f765e00
@@ -19536,6 +19579,17 @@ resolve@^2.0.0-next.3:
   version: 4.0.10
   resolution: "stylis@npm:4.0.10"
   checksum: 0fecaf5c234ec3ffcb0afc21478742a815a21cb964365259789be9c1692e72e13d8c081c1150fd76ed2146633a3251cdecd6e0c120b158f44bd74c38f81cafb3
+  languageName: node
+  linkType: hard
+
+"subscribe-ui-event@npm:^2.0.6":
+  version: 2.0.7
+  resolution: "subscribe-ui-event@npm:2.0.7"
+  dependencies:
+    eventemitter3: ^3.0.0
+    lodash: ^4.17.15
+    raf: ^3.0.0
+  checksum: 60c78c1930bedd58cb18fda4b88e271f7181aaf02ee83d6071a414de13a9fdb3941ea1d6222fa92c109d59f16d17d8f7110f88d9afd94609951977fc5c9834b3
   languageName: node
   linkType: hard
 
