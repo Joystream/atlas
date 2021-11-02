@@ -25,46 +25,42 @@ export const FiltersContainer = styled.div<{ open: boolean }>`
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
-  will-change: opacity, height;
+  will-change: opacity, transform;
   transition: all ${transitions.timings.routing} ${transitions.easing};
+  transform: translateY(0);
   width: 100%;
+  position: absolute;
+  height: 100vh;
 
   &.filters-enter {
     opacity: 0;
-    height: 0;
     overflow: hidden;
+    transform: translateY(-100%);
   }
 
   &.filters-enter-active {
     opacity: 1;
-    height: 100vh;
     overflow: hidden;
-
-    ${media.sm} {
-      height: 72px;
-    }
+    transform: translateY(0);
   }
 
   &.filters-exit {
     opacity: 1;
-    height: 100vh;
     overflow: hidden;
-
-    ${media.sm} {
-      height: 72px;
-    }
+    transform: translateY(0);
   }
 
   &.filters-exit-active {
     opacity: 0;
-    height: 0;
     overflow: hidden;
+    transform: translateY(-100%);
   }
 
   ${media.sm} {
     background-color: ${colors.gray[800]};
     margin: 0;
     display: flex;
+    height: 72px;
   }
 `
 

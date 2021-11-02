@@ -5,9 +5,12 @@ import { colors, media, sizes, zIndex } from '@/shared/theme'
 import { transitions } from '@/shared/theme'
 
 export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
+  position: relative;
   display: flex;
   padding: 0 var(--size-global-horizontal-padding);
   border-bottom: 1px solid ${({ filtersOpen }) => colors.gray[filtersOpen ? 800 : 700]};
+  z-index: ${zIndex.nearOverlay};
+  background-color: ${colors.black};
 `
 
 export const SearchControls = styled.div`

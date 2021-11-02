@@ -60,6 +60,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     setLanguage,
   },
   canClearFilters: {
+    canClearOtherFilters,
     canClearDateUploadedFilter,
     canClearVideoLengthFilter,
     canClearAllFilters,
@@ -315,7 +316,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                     disabled: categoriesFilter === undefined,
                   }}
                   applyButtonProps={{
-                    disabled: !categoriesFilter || !categoriesFilter.length,
+                    disabled: (!categoriesFilter || !categoriesFilter.length) && !canClearCategoriesFilter,
                     onClick: () => {
                       categoriesPopoverRef.current?.hide()
                       setVideoWhereInput((value) => ({
@@ -342,7 +343,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: dateUploadedFilter === undefined,
                 }}
                 applyButtonProps={{
-                  disabled: !dateUploadedFilter,
+                  disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
                   onClick: () => {
                     datePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -372,7 +373,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: videoLengthFilter === undefined,
                 }}
                 applyButtonProps={{
-                  disabled: !videoLengthFilter,
+                  disabled: !videoLengthFilter && !canClearVideoLengthFilter,
                   onClick: () => {
                     lengthPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -399,7 +400,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: licensesFilter === undefined || licensesFilter?.length === 0,
                 }}
                 applyButtonProps={{
-                  disabled: !licensesFilter || !licensesFilter.length,
+                  disabled: (!licensesFilter || !licensesFilter.length) && !clearLicensesFilter,
                   onClick: () => {
                     licensePopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
@@ -433,7 +434,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
                 }}
                 applyButtonProps={{
-                  disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
+                  disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter && !canClearOtherFilters,
                   onClick: () => {
                     othersPopoverRef.current?.hide()
                     setVideoWhereInput((value) => ({
