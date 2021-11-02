@@ -11,6 +11,7 @@ import { colors } from '@/shared/theme'
 import {
   Animations,
   AutomaticCrop,
+  DesignTokens,
   FileHashing,
   GridTesting,
   ImageDownsizing,
@@ -42,6 +43,7 @@ const playgroundRoutes = [
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
+  { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
 ]
 
 const PlaygroundLayout = () => {
