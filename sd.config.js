@@ -3,7 +3,6 @@ const { template, camelCase, kebabCase } = require('lodash')
 const { basename } = require('path')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
-
 export const variables = css\`
   :root {
     <%= cssVariables %>
@@ -11,7 +10,6 @@ export const variables = css\`
 export const theme = {
   <%= themeVariables %>
 }
-
 export const cVar = (key: keyof typeof theme) => {
   return theme[key]
 }
@@ -23,7 +21,7 @@ module.exports = {
     {
       pattern: /\.json$/,
       parse: ({ contents }) => {
-        // add "./value" to every references alias - e.g.  "value": "{core.neutral.default.900}", will become  "value": "{core.neutral.default.900.value}",
+        // add ".value" to every references alias - e.g.  "value": "{core.neutral.default.900}", will become  "value": "{core.neutral.default.900.value}",
         const parsed = contents.replaceAll(/}"|\.value}"/g, `.value}"`)
         return JSON.parse(parsed)
       },
@@ -49,7 +47,7 @@ module.exports = {
             }
             return value
           })
-          .join('\n    '),
+          .join('\n'),
         themeVariables: dictionary.allTokens
           .map((token) => {
             const baseFileName = basename(token.filePath).replace('.token.json', '')
@@ -61,7 +59,7 @@ module.exports = {
 
             return `${key}: ${value},`
           })
-          .join('\n  '),
+          .join('\n'),
       })
     },
   },
