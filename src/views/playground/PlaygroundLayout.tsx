@@ -53,7 +53,7 @@ const PlaygroundLayout = () => {
         <Container>
           <NavContainer>
             {playgroundRoutes.map((route) => (
-              <Link key={route.path} to={route.path}>
+              <Link key={route.path} to={`/playground/${route.path}`}>
                 {route.name}
               </Link>
             ))}
