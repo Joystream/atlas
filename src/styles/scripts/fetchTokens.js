@@ -28,7 +28,7 @@ const generateTokens = async () => {
         }
       })
 
-      fs.writeFile(`${filePath}/${fileName}`, JSON.stringify(res.data, null, 2), (err) => {
+      fs.writeFile(`${filePath}/${fileName}`, JSON.stringify(res.data, null, 2) + '\n', (err) => {
         console.log(`Generating ${fileName} done`)
         if (err) {
           console.log("Couldn't generate tokens", err)
