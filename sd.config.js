@@ -37,6 +37,7 @@ module.exports = {
     easingTransform: {
       type: 'value',
       matcher: (token) => token.attributes.category === 'easing',
+      // [1, 2, 3, 4] will become 1, 2, 3, 4
       transformer: (token) => token.value.replaceAll(/\[|\]/g, ''),
     },
     transitionTransform: {
