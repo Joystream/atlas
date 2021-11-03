@@ -27,6 +27,16 @@ module.exports = {
       },
     },
   ],
+  transform: {
+    easingTransform: {
+      type: 'value',
+      matcher: (token) => token.attributes.category === 'easing',
+      transformer: (token) => {
+        // transforms [1, 2, 3, 4] to 1, 2, 3, 4
+        return token.value.replaceAll(/\[|\]/g, '')
+      },
+    },
+  },
   format: {
     customFormat: ({ dictionary }) => {
       return variablesTemplate({
@@ -35,9 +45,7 @@ module.exports = {
             const baseFileName = basename(token.filePath).replace('.token.json', '')
             // singularize string
             const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-
             let value = `--${prefix}-${token.name.replaceAll('-default', '')}: ${token.value};`
-
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
@@ -65,7 +73,7 @@ module.exports = {
   },
   platforms: {
     ts: {
-      transforms: [`attribute/cti`, `name/cti/kebab`],
+      transforms: [`attribute/cti`, `name/cti/kebab`, 'easingTransform'],
       buildPath: 'src/styles/generated/',
       files: [
         {

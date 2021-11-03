@@ -26,12 +26,13 @@
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
     "fetch-tokens": "node ./src/styles/scripts/fetchTokens",
+    "build-tokens": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
     "codegen:graphql": "graphql-codegen --config codegen.config.yml",
     "codegen:graphql-watch": "yarn codegen:graphql --watch",
     "codegen:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
     "codegen:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
     "codegen:svgs": "yarn codegen:illustrations && yarn codegen:icons",
-    "codegen:styles": "yarn fetch-tokens && style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts"
+    "codegen:styles": "yarn fetch-tokens && yarn build-tokens"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [

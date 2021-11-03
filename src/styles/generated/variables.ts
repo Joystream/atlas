@@ -5,9 +5,9 @@ export const variables = css`
     --animation-timing-fast: 150ms;
     --animation-timing-medium: 250ms;
     --animation-timing-slow: 500ms;
-    --animation-easing-fast: [0, 0, 0.3, 1];
-    --animation-easing-medium: [0.03, 0.5, 0.25, 1];
-    --animation-easing-bounce: [0.3, 1.5, 0.6, 0.95];
+    --animation-easing-fast: 0, 0, 0.3, 1;
+    --animation-easing-medium: 0.03, 0.5, 0.25, 1;
+    --animation-easing-bounce: 0.3, 1.5, 0.6, 0.95;
     --animation-transition-transition-type: [object Object];
     --animation-transition-fast: [object Object];
     --animation-transition-medium: [object Object];
@@ -228,7 +228,6 @@ export const theme = {
   colorBackgroundSuccess: 'var(--color-background-success)',
   colorBackgroundSuccessStrong: 'var(--color-background-success-strong)',
 }
-
 export const cVar = (key: keyof typeof theme) => {
   return theme[key]
 }
