@@ -14,13 +14,16 @@ type SearchResultData = {
 
 export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: SearchResultData) => {
   const [text, setText] = useState(searchQuery)
+  const [typing, setTyping] = useState(false)
   const debouncedQuery = useRef(
     debounce((query: string) => {
       setText(query)
+      setTyping(false)
     }, 500)
   )
 
   useEffect(() => {
+    setTyping(true)
     debouncedQuery.current(searchQuery)
   }, [searchQuery])
 
@@ -58,6 +61,6 @@ export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: S
     channels,
     videos,
     error,
-    loading,
+    loading: loading || typing,
   }
 }

@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
 
 import { absoluteRoutes } from '@/config/routes'
-import { Text } from '@/shared/components/Text'
 import { SvgGlyphClock } from '@/shared/icons'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
-import { ClockWrapper, RecentSearchItemWrapper } from './SearchBox.style'
+import { ClockWrapper, RecentSearchItemWrapper, Title } from './SearchBox.style'
 
 type RecentSearchItemProps = {
   onClick: (title?: string) => void
@@ -48,9 +47,9 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
         <ClockWrapper>
           <SvgGlyphClock />
         </ClockWrapper>
-        <Text secondary variant="button2">
+        <Title secondary={!selected} variant="button2">
           <ResultTitle title={title} query={query} />
-        </Text>
+        </Title>
       </RecentSearchItemWrapper>
     </ResultWrapper>
   )

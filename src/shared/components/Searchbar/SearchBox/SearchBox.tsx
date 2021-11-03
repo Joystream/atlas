@@ -1,5 +1,5 @@
 import { debounce } from 'lodash-es'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
@@ -29,21 +29,6 @@ type SearchBoxProps = {
   handleSetNumberOfItems: (items: number) => void
   onMouseMove: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   hasFocus: boolean
-}
-
-const generatePlaceholders = () => {
-  const min = 20
-  const max = 80
-  const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
-  return placeholderItems.map((_, idx) => {
-    const generatedWidth = Math.floor(Math.random() * (max - min)) + min
-    return (
-      <PlaceholderWrapper key={`placeholder-${idx}`}>
-        <SkeletonAvatar width="32px" height="32px" rounded />
-        <SkeletonLoader width={`${generatedWidth}%`} height="16px" />
-      </PlaceholderWrapper>
-    )
-  })
 }
 
 export const SearchBox: React.FC<SearchBoxProps> = ({
@@ -95,6 +80,21 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     },
     [onSelectItem, selectedItem]
   )
+
+  const generatePlaceholders = useMemo(() => {
+    const min = 20
+    const max = 80
+    const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
+    return placeholderItems.map((_, idx) => {
+      const generatedWidth = Math.floor(Math.random() * (max - min)) + min
+      return (
+        <PlaceholderWrapper key={`placeholder-${idx}`}>
+          <SkeletonAvatar width="32px" height="32px" rounded />
+          <SkeletonLoader width={`${generatedWidth}%`} height="16px" />
+        </PlaceholderWrapper>
+      )
+    })
+  }, [])
 
   const handleRecentSearchDelete = (title: string) => {
     deleteRecentSearch(title)
@@ -160,8 +160,8 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           ))}
         </Section>
       )}
-      {loading && <Section>{generatePlaceholders()}</Section>}
-      {!!slicedVideos.length && (
+      {loading && !!searchQuery && <Section>{generatePlaceholders}</Section>}
+      {!!slicedVideos.length && !loading && (
         <Section>
           <Caption secondary variant="caption">
             Videos
@@ -178,7 +178,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
           ))}
         </Section>
       )}
-      {!!slicedChannels.length && (
+      {!!slicedChannels.length && !loading && (
         <Section>
           <Caption secondary variant="caption">
             Channels

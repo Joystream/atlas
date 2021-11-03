@@ -52,6 +52,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       if (searchOpen) {
         inputRef.current?.focus()
         setInputHasFocus(true)
+        setSelectedItem(null)
       }
     }, [searchOpen])
 
@@ -63,9 +64,10 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
-        if (event.key === '/') {
+        if (event.key === '/' && !searchOpen) {
+          event.preventDefault()
           onClick?.()
-          inputRef.current && setTimeout(() => inputRef.current?.focus(), 10)
+          inputRef.current?.focus()
         }
         if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !!query) {
           inputRef?.current?.blur()
@@ -76,7 +78,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       return () => {
         window.removeEventListener('keydown', onKeyPress)
       }
-    }, [onClick, onClose, query])
+    }, [onClick, onClose, query, searchOpen])
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
@@ -127,6 +129,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       }
     }
     const handleCancel = () => {
+      inputRef.current?.focus()
       setRecentSearch(null)
       if (onCancel) {
         onCancel()
