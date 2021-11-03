@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import Sticky from 'react-stickynode'
 
 import { Select } from '@/shared/components/Select'
 import { colors, media, sizes } from '@/shared/theme'
@@ -13,10 +12,12 @@ export const Container = styled.div`
   margin-top: ${sizes(32)};
 `
 
-export const StyledSticky = styled(Sticky)`
+export const StyledSticky = styled.div`
   /* ignore global horizontal padding */
   width: calc(100% + calc(2 * var(--size-global-horizontal-padding)));
   margin-left: calc(-1 * var(--size-global-horizontal-padding));
+  position: sticky;
+  z-index: 50;
 `
 
 export const ControlsContainer = styled.div`

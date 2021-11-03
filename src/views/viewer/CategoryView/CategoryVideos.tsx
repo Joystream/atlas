@@ -1,5 +1,5 @@
+import { isEqual } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import useMeasure from 'react-use-measure'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -25,8 +25,8 @@ import { FallbackWrapper } from './CategoryView.style'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
-  const [videoGridRef, videoGridBounds] = useMeasure()
   const containerRef = useRef<HTMLDivElement>(null)
+  const [scrollWhenFilterChange, setScrollWhenFilterChange] = useState(false)
 
   const filtersBarLogic = useFiltersBar()
   const {
@@ -72,12 +72,21 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   }, [selectedLanguage, setVideoWhereInput])
 
   useEffect(() => {
-    containerRef.current?.scrollIntoView()
+    if (scrollWhenFilterChange) {
+      containerRef.current?.scrollIntoView()
+    }
+
+    // account for videoWhereInput initialization
+    if (!isEqual(videoWhereInput, {})) {
+      setScrollWhenFilterChange(true)
+    }
+    // we dont want to rerun effect when scrollWhenFilterChange changes but only videoWhereInput
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoWhereInput])
 
   return (
     <Container ref={containerRef}>
-      <StyledSticky innerZ={50} top={topbarHeight} bottomBoundary={videoGridBounds.height}>
+      <StyledSticky style={{ top: topbarHeight - 1 }}>
         <ControlsContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
             <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
@@ -114,7 +123,6 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
       </StyledSticky>
 
       <StyledVideoGrid
-        ref={videoGridRef}
         emptyFallback={
           <FallbackWrapper>
             <EmptyFallback
