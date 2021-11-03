@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Sticky from 'react-stickynode'
 
 import { Select } from '@/shared/components/Select'
 import { colors, media, sizes } from '@/shared/theme'
@@ -12,12 +13,19 @@ export const Container = styled.div`
   margin-top: ${sizes(32)};
 `
 
+export const StyledSticky = styled(Sticky)`
+  /* ignore global horizontal padding */
+  width: calc(100% + calc(2 * var(--size-global-horizontal-padding)));
+  margin-left: calc(-1 * var(--size-global-horizontal-padding));
+`
+
 export const ControlsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   gap: ${sizes(4)};
   align-items: center;
-  padding: ${sizes(4)} 0;
+  /* readd global horizontal padding to the component */
+  padding: ${sizes(4)} var(--size-global-horizontal-padding);
   border-bottom: 1px solid ${colors.gray[700]};
   background-color: ${colors.black};
 

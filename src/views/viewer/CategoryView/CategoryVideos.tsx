@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Sticky from 'react-stickynode'
 import useMeasure from 'react-use-measure'
 
 import { useVideoCount } from '@/api/hooks'
@@ -14,7 +13,14 @@ import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 
-import { Container, ControlsContainer, SortContainer, StyledSelect, StyledVideoGrid } from './CategoryVideos.styles'
+import {
+  Container,
+  ControlsContainer,
+  SortContainer,
+  StyledSelect,
+  StyledSticky,
+  StyledVideoGrid,
+} from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.style'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
@@ -66,7 +72,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   return (
     <Container>
-      <Sticky innerZ={50} top={topbarHeight} bottomBoundary={containerBounds.height}>
+      <StyledSticky innerZ={50} top={topbarHeight} bottomBoundary={containerBounds.height}>
         <ControlsContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
             <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
@@ -100,7 +106,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
           </SortContainer>
         </ControlsContainer>
         <FiltersBar {...filtersBarLogic} />
-      </Sticky>
+      </StyledSticky>
 
       <StyledVideoGrid
         ref={containerRef}
