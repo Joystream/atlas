@@ -11,7 +11,10 @@ import { createLookup } from '@/utils/data'
 
 import { useGenericFeaturedData } from './helpers'
 
-type CategoriesFeaturedVideos = Record<string, (VideoFieldsFragment & { videoCutUrl?: string | null })[]>
+export type CategoriesFeaturedVideos = Record<
+  string,
+  Array<VideoFieldsFragment & { videoCutUrl?: string | null }> | undefined
+>
 
 export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null => {
   const client = useApolloClient()
