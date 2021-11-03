@@ -38,13 +38,13 @@ module.exports = {
       type: 'value',
       matcher: (token) => token.attributes.category === 'easing',
       // [1, 2, 3, 4] will become 1, 2, 3, 4
-      transformer: (token) => token.value.replaceAll(/\[|\]/g, ''),
+      transformer: (token) => `cubic-bezier(${token.value.replaceAll(/\[|\]/g, '')})`,
     },
     transitionTransform: {
       type: 'value',
       transitive: true,
       matcher: (token) => token.attributes.category === 'transition' && token.value.timing && token.value.easing,
-      transformer: (token) => `${token.value.timing.value} cubic-bezier(${token.value.easing.value})`,
+      transformer: (token) => `${token.value.timing.value} ${token.value.easing.value}`,
     },
   },
   format: {
