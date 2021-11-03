@@ -34,8 +34,7 @@ export const Container = styled.div<ContainerProps>`
   transition: all ${animation.medium.timing} ${animation.medium.easing};
 
   /* 160px padding is used to cover the entire screen regardless of device */
-  padding-bottom: ${({ isVisible }) => (isVisible ? '160px' : 'unset')};
-  ${({ isVisible }) => !isVisible && 'height: 0 !important'};
+  padding-bottom: 160px;
 
   &.searchbox-enter {
     height: 0;
@@ -83,7 +82,7 @@ export const Container = styled.div<ContainerProps>`
     position: absolute;
     top: 100%;
     box-shadow: unset;
-    height: auto;
+    height: ${({ isVisible }) => (!isVisible ? 0 : 'auto')};
     max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
     padding-bottom: 0;
   }
@@ -136,6 +135,10 @@ export const Caption = styled(Text)`
 
 const selectedStyles = (hover?: boolean) => `
   background-color: ${colors.transparentPrimary[10]};
+  
+      ${Title} {
+        color: ${colors.gray[50]};
+      }
 
       ${Shortcut} {
         ${!hover && 'display: flex'};
@@ -209,7 +212,7 @@ export const ResultThumbnail = styled.img<{ rounded?: boolean }>`
   ${({ rounded }) => `
     width: ${rounded ? '32px' : '64px'};
     height: ${rounded ? '32px' : '40px'};
-    ${rounded && `border-radius: ${rounded ? '50%' : 'unset'}`};
+    border-radius: ${rounded ? '50%' : '2px'};
   `};
 
   margin-right: ${sizes(4)};

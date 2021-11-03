@@ -73,7 +73,7 @@ export const Result: React.FC<ResultProps> = ({
           <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
-          <Title secondary variant="button2">
+          <Title secondary={!selected} variant="button2">
             <ResultTitle title={title} query={query} />
           </Title>
           <Text secondary variant="caption">
