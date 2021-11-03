@@ -18,128 +18,96 @@ import {
   SvgVideoCategoriesTravelAndEvents,
 } from '@/shared/icons'
 
-export type VideoCategoryData = { title: string; id: string; icon: React.ReactNode; color: string; coverImg: string }
-export const videoCategories = {
-  'science-and-Technology': {
+export type VideoCategoryData = { id: string; icon: React.ReactNode; color: string; coverImg: string }
+export const videoCategories: Record<string, VideoCategoryData> = {
+  '14': {
     id: '14',
-    title: 'Science & Technology',
     icon: <SvgVideoCategoriesScienceAndTechnology />,
     color: '#D92E61',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/science-and-technology.webp',
   },
-  'pets-and-animals': {
+  '4': {
     id: '4',
-    title: 'Pets & Animals',
     icon: <SvgVideoCategoriesPetsAndAnimals />,
     color: '#E7BE2D',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/pets-and-animals.webp',
   },
-  'film-and-animation': {
+  '1': {
     id: '1',
-    title: 'Film & Animation',
     icon: <SvgVideoCategoriesFilmAndAnimation />,
     color: '#BD4BE4',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/film-and-animation.webp',
   },
-  'people-and-blogs': {
+  '8': {
     id: '8',
-    title: 'People & Blogs',
     icon: <SvgVideoCategoriesPeopleAndBlogs />,
     color: '#BDE933',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/people-and-blogs.webp',
   },
-  'entertainment': {
+  '10': {
     id: '10',
-    title: 'Entertainment',
     icon: <SvgVideoCategoriesEntertainment />,
     color: '#54A7F0',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/entertainment.webp',
   },
-  'education': {
+  '13': {
     id: '13',
-    title: 'Education',
     icon: <SvgVideoCategoriesEducation />,
     color: '#DD379D',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/education.webp',
   },
-  'travel-and-events': {
+  '6': {
     id: '6',
-    title: 'Travel & Events',
     icon: <SvgVideoCategoriesTravelAndEvents />,
     color: '#5A7AEE',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/travel-and-events.webp',
   },
-  'sports': {
+  '5': {
     id: '5',
-    title: 'Sports',
     icon: <SvgVideoCategoriesSports />,
     color: '#41EE5A',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/sports.webp',
   },
-  'gaming': {
+  '7': {
     id: '7',
-    title: 'Gaming',
     icon: <SvgVideoCategoriesGaming />,
     color: '#9455E8',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/gaming.webp',
   },
-  'comedy': {
+  '9': {
     id: '9',
-    title: 'Comedy',
     icon: <SvgVideoCategoriesComedy />,
     color: '#4FE1F2',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/comedy.webp',
   },
-  'autos-and-vehicles': {
+  '2': {
     id: '2',
-    title: 'Autos & Vehicles',
     icon: <SvgVideoCategoriesAutosAndVehicles />,
     color: '#6E5FEC',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/autos-and-vehicles.webp',
   },
-  'howto-and-style': {
+  '12': {
     id: '12',
-    title: 'Howto & Style',
     icon: <SvgVideoCategoriesHowtoAndStyle />,
     color: '#E57827',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/howto-and-style.webp',
   },
-  'music': {
+  '3': {
     id: '3',
-    title: 'Music',
     icon: <SvgVideoCategoriesMusic />,
     color: '#6EEC3A',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/music.webp',
   },
-  'nonprofits-and-activism': {
+  '15': {
     id: '15',
-    title: 'Nonprofits & Activism',
     icon: <SvgVideoCategoriesNonprofitsAndActivism />,
     color: '#E141D6',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/nonprofit-and-activism.webp',
   },
-  'news-and-politics': {
+  '11': {
     id: '11',
-    title: 'News & Politics',
     icon: <SvgVideoCategoriesNewsAndPolitics />,
     color: '#48F0B3',
     coverImg: 'https://eu-central-1.linodeobjects.com/atlas-assets/category-images/news-and-politics.webp',
   },
 } as const
-export const featuredVideoCategories: Array<{ videoUrl: string; videoTitle: string } & VideoCategoryData> = [
-  {
-    ...videoCategories['travel-and-events'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5778.mp4',
-    videoTitle: 'Wreck Diving. Philippines, Boracay.',
-  },
-  {
-    ...videoCategories['education'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/3941.mp4',
-    videoTitle: 'ФИЛОСОФИЯ СТОИЦИЗМА',
-  },
-  {
-    ...videoCategories['film-and-animation'],
-    videoUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/featured-videos/5984.mp4',
-    videoTitle: 'taxi driver edit',
-  },
-]
