@@ -69,7 +69,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
         <PaddingWrapper filtersOpen={isFiltersOpen}>
           <Tabs tabs={mappedTabs} onSelectTab={setSelectedIndex} initialIndex={0} variant="large" />
           <FiltersWrapper>
-            {smMatch && (
+            {smMatch && selectedIndex === 0 && (
               <StyledSelect
                 items={languages}
                 placeholder="Any language"
@@ -78,15 +78,17 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
                 onChange={handleSelectLanguage}
               />
             )}
-            <Button
-              icon={<SvgActionFilters />}
-              iconPlacement="left"
-              variant="secondary"
-              badge={canClearAllFilters}
-              onClick={toggleFilters}
-            >
-              {smMatch && 'Filters'}
-            </Button>
+            {selectedIndex === 0 && (
+              <Button
+                icon={<SvgActionFilters />}
+                iconPlacement="left"
+                variant="secondary"
+                badge={canClearAllFilters}
+                onClick={toggleFilters}
+              >
+                {smMatch && 'Filters'}
+              </Button>
+            )}
           </FiltersWrapper>
         </PaddingWrapper>
         <FiltersBar {...filtersBarLogic} hasCategories mobileLanguageSelector />
