@@ -15,6 +15,13 @@ export const cVar = (key: keyof typeof theme) => {
 }
 `)
 
+const createTokenKey = (token) => {
+  const baseFileName = basename(token.filePath).replace('.token.json', '')
+  // singularize string
+  const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
+  return `${prefix}-${token.name.replaceAll('-default', '')}`
+}
+
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
   transform: {
@@ -47,18 +54,13 @@ module.exports = {
             if (token.type === 'typedef') {
               return
             }
-            const baseFileName = basename(token.filePath).replace('.token.json', '')
-            // singularize string
-            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-            let keyValuePair = `--${prefix}-${token.name.replaceAll('-default', '')}: ${token.value};`
+
+            let keyValuePair = `--${createTokenKey(token)}: ${token.value};`
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                keyValuePair = keyValuePair.replace(
-                  ref.value,
-                  ` var(--${prefix}-${ref.name.replaceAll('-default', '')})`
-                )
+                keyValuePair = keyValuePair.replace(ref.value, ` var(--${createTokenKey(ref)})`)
               })
             }
             return keyValuePair
@@ -69,10 +71,7 @@ module.exports = {
             if (token.type === 'typedef') {
               return
             }
-            const baseFileName = basename(token.filePath).replace('.token.json', '')
-            // singularize string
-            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-            const variableName = `${prefix}-${token.name.replaceAll('-default', '')}`
+            const variableName = createTokenKey(token)
             const key = camelCase(variableName)
             const value = `'var(--${kebabCase(variableName)})'`
 
