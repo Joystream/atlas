@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useMeasure from 'react-use-measure'
 
 import { useVideoCount } from '@/api/hooks'
@@ -25,7 +25,8 @@ import { FallbackWrapper } from './CategoryView.style'
 
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
-  const [containerRef, containerBounds] = useMeasure()
+  const [videoGridRef, videoGridBounds] = useMeasure()
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const filtersBarLogic = useFiltersBar()
   const {
@@ -70,9 +71,13 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     }))
   }, [selectedLanguage, setVideoWhereInput])
 
+  useEffect(() => {
+    containerRef.current?.scrollIntoView()
+  }, [videoWhereInput])
+
   return (
-    <Container>
-      <StyledSticky innerZ={50} top={topbarHeight} bottomBoundary={containerBounds.height}>
+    <Container ref={containerRef}>
+      <StyledSticky innerZ={50} top={topbarHeight} bottomBoundary={videoGridBounds.height}>
         <ControlsContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
             <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
@@ -109,7 +114,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
       </StyledSticky>
 
       <StyledVideoGrid
-        ref={containerRef}
+        ref={videoGridRef}
         emptyFallback={
           <FallbackWrapper>
             <EmptyFallback
