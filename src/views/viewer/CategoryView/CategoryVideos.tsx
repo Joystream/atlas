@@ -26,7 +26,7 @@ import { FallbackWrapper } from './CategoryView.style'
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollWhenFilterChange, setScrollWhenFilterChange] = useState(false)
+  const scrollWhenFilterChange = useRef(false)
 
   const filtersBarLogic = useFiltersBar()
   const {
@@ -71,7 +71,6 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     }))
   }, [selectedLanguage, setVideoWhereInput])
 
-  const scrollWhenFilterChange = useRef(false)
   useEffect(() => {
     if (scrollWhenFilterChange.current) {
       containerRef.current?.scrollIntoView()
