@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSearchStore } from '@/providers/search'
 import { IconButton } from '@/shared/components/IconButton'
@@ -23,7 +24,6 @@ import {
 } from './Searchbar.style'
 
 type SearchbarProps = {
-  value: string | null
   onCancel?: () => void
   showCancelButton?: boolean
   controlled?: boolean
@@ -31,10 +31,7 @@ type SearchbarProps = {
   onClose: () => void
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
-  (
-    { placeholder, onChange, onFocus, onCancel, value, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps },
-    ref
-  ) => {
+  ({ placeholder, onChange, onFocus, onCancel, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps }, ref) => {
     const mdMatch = useMediaMatch('md')
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -42,11 +39,16 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const [numberOfItems, setNumberOfItems] = useState<number | null>(null)
     const [inputHasFocus, setInputHasFocus] = useState(false)
     const navigate = useNavigate()
-    const query = recentSearch || value
+    const routerQuery = useRouterQuery(QUERY_PARAMS.SEARCH)
+    const {
+      searchOpen,
+      searchQuery,
+      actions: { setSearchQuery },
+    } = useSearchStore()
+    const query = recentSearch || searchQuery
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
-    const { searchOpen } = useSearchStore()
 
     useEffect(() => {
       if (searchOpen) {
@@ -156,7 +158,15 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             {(mdMatch || searchOpen || !!query) && (
               <>
                 {!mdMatch && searchOpen ? (
-                  <IconButton onClick={onClose} variant="tertiary">
+                  <IconButton
+                    onClick={() => {
+                      onClose()
+                      if (!routerQuery) {
+                        setSearchQuery('')
+                      }
+                    }}
+                    variant="tertiary"
+                  >
                     <SvgGlyphChevronLeft />
                   </IconButton>
                 ) : (
@@ -204,7 +214,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
           </InnerContainer>
           <CSSTransition classNames="searchbox" in={searchOpen} unmountOnExit mountOnEnter timeout={500}>
             <SearchBox
-              searchQuery={value || ''}
+              searchQuery={searchQuery || ''}
               onSelectRecentSearch={onSelectRecentSearch}
               selectedItem={selectedItem}
               onLastSelectedItem={onLastSelectedItem}

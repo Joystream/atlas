@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, typography, zIndex } from '@/shared/theme'
 
 import { smallBadgeStyles } from '../Badge'
 
@@ -36,7 +36,7 @@ export const Tab = styled.div<TabProps>`
   transition: box-shadow 0.125s ease, color 0.125s ease;
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
-  padding: ${({ variant }) => sizes(variant === 'default' ? 6 : 7)} 0;
+  padding: ${sizes(6)} 0;
   font-size: ${typography.sizes.body2};
   color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
   text-align: center;
@@ -46,6 +46,10 @@ export const Tab = styled.div<TabProps>`
   :focus {
     box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? colors.blue[500] : colors.gray[300])};
     cursor: pointer;
+  }
+
+  ${media.md} {
+    padding: ${({ variant }) => sizes(variant === 'default' ? 6 : 7)} 0;
   }
 
   span {

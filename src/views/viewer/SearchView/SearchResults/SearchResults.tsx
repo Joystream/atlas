@@ -33,17 +33,19 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     canClearFilters: { canClearAllFilters, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
-  const { videos, channels, loading, error } = useSearchResults({ searchQuery: query, videoWhereInput })
+  const { videos, channels, loading, error } = useSearchResults({
+    searchQuery: query,
+    videoWhereInput: selectedIndex === 0 ? videoWhereInput : undefined,
+  })
   const {
-    actions: { setSearchOpen },
+    actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
 
   useEffect(() => {
     if (selectedIndex === 1) {
-      setLanguage(undefined)
-      clearAllFilters()
+      setIsFiltersOpen(false)
     }
-  }, [clearAllFilters, selectedIndex, setLanguage])
+  }, [clearAllFilters, selectedIndex, setIsFiltersOpen, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage)
@@ -100,7 +102,14 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
               title={`No ${selectedIndex === 0 ? 'videos' : 'channels'} found`}
               subtitle="Please, try using different search terms or change your filtering criteria"
               button={
-                <Button variant="secondary" size="large" onClick={() => setSearchOpen(true)}>
+                <Button
+                  variant="secondary"
+                  size="large"
+                  onClick={() => {
+                    setSearchOpen(true)
+                    setSearchQuery('')
+                  }}
+                >
                   Start new search
                 </Button>
               }
