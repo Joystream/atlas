@@ -71,17 +71,16 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     }))
   }, [selectedLanguage, setVideoWhereInput])
 
+  const scrollWhenFilterChange = useRef(false)
   useEffect(() => {
-    if (scrollWhenFilterChange) {
+    if (scrollWhenFilterChange.current) {
       containerRef.current?.scrollIntoView()
     }
 
     // account for videoWhereInput initialization
     if (!isEqual(videoWhereInput, {})) {
-      setScrollWhenFilterChange(true)
+      scrollWhenFilterChange.current = true
     }
-    // we dont want to rerun effect when scrollWhenFilterChange changes but only videoWhereInput
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoWhereInput])
 
   return (
