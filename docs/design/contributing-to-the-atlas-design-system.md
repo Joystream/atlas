@@ -5,7 +5,7 @@ Below is an overview of the contribution path in the Atlas Design System. While 
 ℹ️ *Link to a specific GitHub issue template to be provided by Adam Ruthendorf-Przewoski by Nov 12th 2021 at the latest.*
 
 ## Path
-![Contribution path](src/pontribution-proces.png)
+![Contribution path](assets/contribution-proces.png)
 
 ### Legend
 As contribution ideas can come in different shapes and sizes, star icons are used to determine the contribution path for each size. Steps marked with one star icon apply to all contribution sizes.

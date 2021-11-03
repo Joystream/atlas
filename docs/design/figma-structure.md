@@ -10,7 +10,7 @@
 
 
 ## Context
-![Figma Team structure](src/figma-structure.png)
+![Figma Team structure](assets/figma-structure.png)
 
 Because Figma is a cloud-based tool, all our design files are stored in the cloud and are organized within a structure imposed by the tool. Figma allows for up to 4 layers of organization:
 ```
@@ -21,8 +21,8 @@ As an Atlas Design Team, we use Figma in the [Professional tier](https://www.fig
 
 ## Structure overview
 
-![Figma Atlas Team structure](src/figma-atlas-structure.png)
-![Figma Atlas screenshot](src/figma-screenshot.png)
+![Figma Atlas Team structure](assets/figma-atlas-structure.png)
+![Figma Atlas screenshot](assets/figma-screenshot.png)
 _💡 Tip: You can pin Projects to your sidebar in Figma, by clicking on the star next to the Project card. Pinned Projects can be rearranged._
 
 <!-- <style>
