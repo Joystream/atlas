@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -19,10 +19,9 @@ export const TopbarViewer: React.FC = () => {
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const {
     searchOpen,
-    actions: { setSearchOpen },
+    searchQuery,
+    actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-
-  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (searchOpen) {
@@ -48,7 +47,7 @@ export const TopbarViewer: React.FC = () => {
         setSearchQuery(query || '')
       }
     }
-  }, [location.pathname, location.search])
+  }, [location.pathname, location.search, setSearchQuery])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchOpen(true)
@@ -79,7 +78,6 @@ export const TopbarViewer: React.FC = () => {
           <Searchbar
             placeholder="Search..."
             onChange={handleChange}
-            value={searchQuery}
             onFocus={handleFocus}
             onCancel={handleCancel}
             showCancelButton={!!searchQuery}

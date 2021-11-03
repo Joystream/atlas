@@ -74,7 +74,7 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   top: 0;
   left: 0;
   position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'unset')};
-  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[800] : 'transparent')};
+  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[800] : colors.gray[900])};
   box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${colors.gray[700]}` : 'unset')};
   padding-left: ${({ hasFocus, hasQuery }) => (hasFocus || hasQuery ? sizes(2) : 0)};
 

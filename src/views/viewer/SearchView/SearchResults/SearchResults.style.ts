@@ -10,7 +10,7 @@ export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
   padding: 0 var(--size-global-horizontal-padding);
   border-bottom: 1px solid ${({ filtersOpen }) => colors.gray[filtersOpen ? 800 : 700]};
   z-index: ${zIndex.nearOverlay};
-  background-color: ${colors.black};
+  background-color: ${colors.gray[900]};
 `
 
 export const SearchControls = styled.div`
