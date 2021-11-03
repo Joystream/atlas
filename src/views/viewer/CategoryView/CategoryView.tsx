@@ -3,7 +3,8 @@ import React from 'react'
 import { useParams } from 'react-router'
 
 import { CategoriesFeaturedVideos, useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
-import { useVideoCount } from '@/api/hooks'
+import { useCategories, useVideoCount } from '@/api/hooks'
+import { VideoCategoryFieldsFragment } from '@/api/queries'
 import { VideoCategoryHero } from '@/components/VideoCategoryHero'
 import { VideoTile } from '@/components/VideoTile'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -25,6 +26,11 @@ import { CategoriesContainer, TitleContainer } from './CategoryView.style'
 import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 
 export const CategoryView = () => {
+  const { categories } = useCategories()
+  const mappedVideoCategories = categories?.map((category) => ({
+    ...videoCategories[category.id],
+    ...category,
+  }))
   const { id } = useParams()
   const data = useCategoriesFeaturedVideos()
   const featuredVideos = data?.[id] ?? []
@@ -36,15 +42,15 @@ export const CategoryView = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
     }
   )
-  const otherCategory: Array<VideoCategoryData> = React.useMemo(
+  const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = React.useMemo(
     () =>
       sampleSize(
-        Object.values(videoCategories).filter((category) => category.id !== id),
+        mappedVideoCategories?.filter((category) => category.id !== id),
         3
       ),
-    [id]
+    [id, mappedVideoCategories]
   )
-  const currentCategory = Object.values(videoCategories).find((category) => category.id === id)
+  const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
 
   if (error) {
     return <ViewErrorFallback />
@@ -53,7 +59,7 @@ export const CategoryView = () => {
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       <VideoCategoryHero
         header={{
-          title: currentCategory?.name,
+          title: currentCategory?.name ?? undefined,
           icon: currentCategory?.icon,
         }}
         videos={videoHeroVideos}
@@ -89,7 +95,7 @@ export const CategoryView = () => {
         {otherCategory.map((category) => (
           <GridItem key={category.id} colSpan={{ base: 6, lg: 4 }}>
             <VideoCategoryCard
-              title={category.name}
+              title={category.name ?? ''}
               coverImg={category.coverImg}
               categoryId={category.id}
               color={category.color}

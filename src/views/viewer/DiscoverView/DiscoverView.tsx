@@ -15,7 +15,7 @@ import {
   FeaturedCategoriesContainer,
   StyledLimitedWidthContainer,
 } from './DiscoverView.style'
-import { selectedFeaturedVideoCategories, videoCategories } from './data'
+import { videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
   const { categories } = useCategories()
@@ -36,8 +36,7 @@ export const DiscoverView: React.FC = () => {
         : {
             videoTitle: video?.title ?? '',
             videoUrl: video?.videoCutUrl ?? '',
-            ...selectedFeaturedVideoCategories.find((cat) => cat.id === category.id),
-            ...category,
+            ...mappedVideoCategories?.find((cat) => cat.id === category.id),
           }
     })
     .filter((cat) => !!cat) ?? [null, null, null]
