@@ -39,7 +39,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   id,
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLAnchorElement>()
-  const isLoading = false
+  const isLoading = !title && !videoUrl && !icon
 
   return (
     <SwitchTransition>
@@ -58,7 +58,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
           <PlayerContainer>
             {
               <BackgroundVideoPlayer
-                src={videoUrl}
+                src={isLoading ? undefined : videoUrl}
                 loop
                 muted
                 playing={variant === 'default' ? isVideoHovering : true}

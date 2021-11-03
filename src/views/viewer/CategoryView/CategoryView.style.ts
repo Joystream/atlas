@@ -4,10 +4,12 @@ import { LayoutGrid } from '@/shared/components/LayoutGrid'
 import { colors, media, sizes } from '@/shared/theme'
 
 export const TitleContainer = styled.div`
+  z-index: 1;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: ${sizes(21)} 0 ${sizes(0)} 0;
+  margin: ${sizes(21)} 0 ${sizes(12)} 0;
   padding-bottom: ${sizes(6)};
   border-bottom: 1px solid ${colors.gray[700]};
 `
