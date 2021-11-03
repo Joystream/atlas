@@ -17,23 +17,29 @@ export const cVar = (key: keyof typeof theme) => {
 
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
-  parsers: [
-    {
-      pattern: /\.json$/,
-      parse: ({ contents }) => {
-        // add ".value" to every references alias - e.g.  "value": "{core.neutral.default.900}", will become  "value": "{core.neutral.default.900.value}",
-        const parsed = contents.replaceAll(/}"|\.value}"/g, `.value}"`)
-        return JSON.parse(parsed)
+  transform: {
+    referencedValueTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.value.value,
+      transformer: (token) => {
+        return token.value.value
       },
     },
-  ],
-  transform: {
     easingTransform: {
       type: 'value',
       matcher: (token) => token.attributes.category === 'easing',
       transformer: (token) => {
         // transforms [1, 2, 3, 4] to 1, 2, 3, 4
         return token.value.replaceAll(/\[|\]/g, '')
+      },
+    },
+    transitionTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.attributes.category === 'transition' && token.value.timing && token.value.easing,
+      transformer: (token) => {
+        return `${token.value.timing.value} cubic-bezier(${token.value.easing.value})`
       },
     },
   },
@@ -73,7 +79,13 @@ module.exports = {
   },
   platforms: {
     ts: {
-      transforms: [`attribute/cti`, `name/cti/kebab`, 'easingTransform'],
+      transforms: [
+        `attribute/cti`,
+        `name/cti/kebab`,
+        'referencedValueTransform',
+        'easingTransform',
+        'transitionTransform',
+      ],
       buildPath: 'src/styles/generated/',
       files: [
         {

@@ -35,6 +35,10 @@ const GreenDiv = styled(Box)`
 `
 const RedDiv = styled(Box)`
   background-color: ${cVar('colorBackgroundErrorMuted')};
+  transition: background-color ${cVar('animationTransitionMedium')};
+  :hover {
+    background-color: ${cVar('colorBackgroundErrorStrong')};
+  }
 `
 const AlphaContainer = styled.div`
   position: relative;
