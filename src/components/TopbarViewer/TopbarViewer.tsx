@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -31,15 +31,8 @@ export const TopbarViewer: React.FC = () => {
     }
   }, [searchOpen, incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
-  // Lose focus on location change
+  // set input search query on results page
   useEffect(() => {
-    if (location.pathname) {
-      setSearchOpen(false)
-    }
-  }, [location.pathname, setSearchOpen])
-
-  useEffect(() => {
-    // focus the searchbar when visiting search (e.g. from a link)
     if (location.pathname.includes(absoluteRoutes.viewer.search())) {
       if (location.search) {
         const params = new URLSearchParams(location.search)
@@ -54,9 +47,9 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery(event.currentTarget.value)
   }
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setSearchOpen(false)
-  }
+  }, [setSearchOpen])
 
   const handleFocus = () => {
     setSearchOpen(true)
