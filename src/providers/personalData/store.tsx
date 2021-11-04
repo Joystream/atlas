@@ -107,13 +107,15 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
     persist: {
       key: 'personalData',
       whitelist: WHITELIST,
-      version: 0,
+      version: 0.1,
       onRehydrateStorage: () => {
         WHITELIST.forEach((item) => {
           window.localStorage.removeItem(item)
         })
       },
-      migrate: () => null,
+      migrate: (oldState) => ({
+        recentSearches: oldState.filter((item: RecentSearch) => !Object.prototype.hasOwnProperty.call(item, 'type')),
+      }),
     },
   }
 )
