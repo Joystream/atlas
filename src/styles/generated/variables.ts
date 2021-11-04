@@ -5,14 +5,14 @@ export const variables = css`
     --animation-timing-fast: 150ms;
     --animation-timing-medium: 250ms;
     --animation-timing-slow: 500ms;
-    --animation-easing-fast: [0, 0, 0.3, 1];
-    --animation-easing-medium: [0.03, 0.5, 0.25, 1];
-    --animation-easing-bounce: [0.3, 1.5, 0.6, 0.95];
-    --animation-transition-transition-type: [object Object];
-    --animation-transition-fast: [object Object];
-    --animation-transition-medium: [object Object];
-    --animation-transition-slow: [object Object];
-    --animation-transition-callout: [object Object];
+    --animation-easing-fast: cubic-bezier(0, 0, 0.3, 1);
+    --animation-easing-medium: cubic-bezier(0.03, 0.5, 0.25, 1);
+    --animation-easing-bounce: cubic-bezier(0.3, 1.5, 0.6, 0.95);
+
+    --animation-transition-fast: var(--animation-timing-fast) var(--animation-easing-fast);
+    --animation-transition-medium: var(--animation-timing-medium) var(--animation-easing-medium);
+    --animation-transition-slow: var(--animation-timing-slow) var(--animation-easing-medium);
+    --animation-transition-callout: var(--animation-timing-medium) var(--animation-easing-bounce);
     --color-core-neutral-50: #f4f6f8;
     --color-core-neutral-50-lighten: #fafafafa;
     --color-core-neutral-50-darken: #234a710d;
@@ -122,7 +122,7 @@ export const theme = {
   animationEasingFast: 'var(--animation-easing-fast)',
   animationEasingMedium: 'var(--animation-easing-medium)',
   animationEasingBounce: 'var(--animation-easing-bounce)',
-  animationTransitionTransitionType: 'var(--animation-transition-transition-type)',
+
   animationTransitionFast: 'var(--animation-transition-fast)',
   animationTransitionMedium: 'var(--animation-transition-medium)',
   animationTransitionSlow: 'var(--animation-transition-slow)',
@@ -228,7 +228,6 @@ export const theme = {
   colorBackgroundSuccess: 'var(--color-background-success)',
   colorBackgroundSuccessStrong: 'var(--color-background-success-strong)',
 }
-
 export const cVar = (key: keyof typeof theme) => {
   return theme[key]
 }

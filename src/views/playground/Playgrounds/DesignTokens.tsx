@@ -28,9 +28,17 @@ const Box = styled.div`
 
 const GreenDiv = styled(Box)`
   background-color: ${cVar('colorCoreGreen800')};
+  transition: background-color 200ms ${cVar('animationEasingBounce')};
+  :hover {
+    background-color: ${cVar('colorCoreGreen300')};
+  }
 `
 const RedDiv = styled(Box)`
   background-color: ${cVar('colorBackgroundErrorMuted')};
+  transition: background-color ${cVar('animationTransitionMedium')};
+  :hover {
+    background-color: ${cVar('colorBackgroundErrorStrong')};
+  }
 `
 const AlphaContainer = styled.div`
   position: relative;

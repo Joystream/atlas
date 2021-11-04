@@ -15,45 +15,64 @@ export const cVar = (key: keyof typeof theme) => {
 }
 `)
 
+const createTokenKey = (token) => {
+  const baseFileName = basename(token.filePath).replace('.token.json', '')
+  // singularize string
+  const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
+  return `${prefix}-${token.name.replaceAll('-default', '')}`
+}
+
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
-  parsers: [
-    {
-      pattern: /\.json$/,
-      parse: ({ contents }) => {
-        // add ".value" to every references alias - e.g.  "value": "{core.neutral.default.900}", will become  "value": "{core.neutral.default.900.value}",
-        const parsed = contents.replaceAll(/}"|\.value}"/g, `.value}"`)
-        return JSON.parse(parsed)
-      },
+  transform: {
+    referencedValueTransform: {
+      // style dictionary requires adding ".value" suffix to all referenced value,  e.g.  "value": "{core.neutral.default.900}" should be  e.g.  "value": "{core.neutral.default.900.value}"
+      // this transform should fix it, although it just a workaround
+      // we could remove this when they do something about it https://github.com/amzn/style-dictionary/issues/721
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.value.value && token.type !== 'typedef',
+      transformer: (token) => token.value.value,
     },
-  ],
+    easingTransform: {
+      type: 'value',
+      matcher: (token) => token.attributes.category === 'easing',
+      // [1, 2, 3, 4] will become 1, 2, 3, 4
+      transformer: (token) => `cubic-bezier(${token.value.replaceAll(/\[|\]/g, '')})`,
+    },
+    transitionTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.attributes.category === 'transition' && token.value.timing && token.value.easing,
+      transformer: (token) => `${token.value.timing.value} ${token.value.easing.value}`,
+    },
+  },
   format: {
     customFormat: ({ dictionary }) => {
       return variablesTemplate({
         cssVariables: dictionary.allTokens
           .map((token) => {
-            const baseFileName = basename(token.filePath).replace('.token.json', '')
-            // singularize string
-            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
+            if (token.type === 'typedef') {
+              return
+            }
 
-            let value = `--${prefix}-${token.name.replaceAll('-default', '')}: ${token.value};`
-
+            let keyValuePair = `--${createTokenKey(token)}: ${token.value};`
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                value = value.replace(ref.value, ` var(--${prefix}-${ref.name.replaceAll('-default', '')})`)
+                keyValuePair = keyValuePair.replace(ref.value, ` var(--${createTokenKey(ref)})`)
               })
             }
-            return value
+            return keyValuePair
           })
           .join('\n'),
         themeVariables: dictionary.allTokens
           .map((token) => {
-            const baseFileName = basename(token.filePath).replace('.token.json', '')
-            // singularize string
-            const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-            const variableName = `${prefix}-${token.name.replaceAll('-default', '')}`
+            if (token.type === 'typedef') {
+              return
+            }
+            const variableName = createTokenKey(token)
             const key = camelCase(variableName)
             const value = `'var(--${kebabCase(variableName)})'`
 
@@ -65,7 +84,13 @@ module.exports = {
   },
   platforms: {
     ts: {
-      transforms: [`attribute/cti`, `name/cti/kebab`],
+      transforms: [
+        `attribute/cti`,
+        `name/cti/kebab`,
+        'referencedValueTransform',
+        'easingTransform',
+        'transitionTransform',
+      ],
       buildPath: 'src/styles/generated/',
       files: [
         {
