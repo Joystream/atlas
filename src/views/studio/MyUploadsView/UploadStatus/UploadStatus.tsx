@@ -3,9 +3,9 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
-import { useDialog } from '@/providers/dialogs'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
@@ -46,16 +46,16 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
   const { setUploadStatus } = useUploadsStore((state) => state.actions)
 
-  const thumbnailDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const thumbnailDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const [openDifferentFileDialog, closeDifferentFileDialog] = useDialog({
+  const [openDifferentFileDialog, closeDifferentFileDialog] = useConfirmationModal({
     title: 'Different file was selected!',
     description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
       asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
     } to use the new file.`,
-    variant: 'warning',
+    iconType: 'warning',
     primaryButton: {
       text: 'Reselect file',
       onClick: () => {
@@ -75,20 +75,18 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
         closeDifferentFileDialog()
       },
     },
-    exitButton: false,
   })
-  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useDialog({
+  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useConfirmationModal({
     title: 'Missing asset details',
     description:
       "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
-    variant: 'warning',
+    iconType: 'warning',
     secondaryButton: {
       text: 'Close',
       onClick: () => {
         closeMissingCropDataDialog()
       },
     },
-    exitButton: false,
   })
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
@@ -287,9 +285,9 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
         </FileInfoContainer>
         {renderStatusMessage()}
       </FileLineContainer>
-      <ImageCropDialog ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
-      <ImageCropDialog ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />
-      <ImageCropDialog ref={coverDialogRef} imageType="cover" onConfirm={handleCropConfirm} />
+      <ImageCropModal ref={thumbnailDialogRef} imageType="videoThumbnail" onConfirm={handleCropConfirm} />
+      <ImageCropModal ref={avatarDialogRef} imageType="avatar" onConfirm={handleCropConfirm} />
+      <ImageCropModal ref={coverDialogRef} imageType="cover" onConfirm={handleCropConfirm} />
     </>
   )
 }

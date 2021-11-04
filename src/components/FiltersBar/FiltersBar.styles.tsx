@@ -5,8 +5,6 @@ import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
 import { colors, media, sizes, transitions } from '@/shared/theme'
 
-import { ActionDialog } from '../ActionDialog'
-
 export const FilterContentContainer = styled.div`
   display: grid;
   gap: ${sizes(3)};
@@ -83,20 +81,4 @@ export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
 
 export const ClearAllButton = styled(Button)`
   margin-left: auto;
-`
-
-export const StyledActionDialog = styled(ActionDialog)`
-  background-color: ${colors.gray[700]};
-`
-
-export const ActionDialogHeader = styled.div`
-  border-bottom: 1px solid ${colors.gray[600]};
-  margin-bottom: ${sizes(4)};
-  padding-top: ${sizes(2)};
-  padding-bottom: ${sizes(6)};
-`
-
-export const StyledTitleText = styled(Text)`
-  width: 90%;
-  word-wrap: break-word;
 `

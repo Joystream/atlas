@@ -3,18 +3,18 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { DialogProvider } from '@/providers/dialogs'
 import { ActiveUserProvider } from '@/providers/user'
 import { colors } from '@/shared/theme'
 
 import {
   Animations,
   AutomaticCrop,
-  Dialogs,
   FileHashing,
   GridTesting,
   ImageDownsizing,
+  Modals,
   OrionTesting,
   PlaygroundBreakpoints,
   PlaygroundCommonStore,
@@ -38,7 +38,7 @@ const playgroundRoutes = [
   { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
   { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
   { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
-  { path: 'dialogs', element: <Dialogs />, name: 'Dialogs' },
+  { path: 'modals', element: <Modals />, name: 'Modals' },
   { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
   { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
@@ -49,7 +49,7 @@ const playgroundRoutes = [
 const PlaygroundLayout = () => {
   return (
     <ActiveUserProvider>
-      <DialogProvider>
+      <ConfirmationModalProvider>
         <Container>
           <NavContainer>
             {playgroundRoutes.map((route) => (
@@ -67,7 +67,7 @@ const PlaygroundLayout = () => {
           </ContentContainer>
         </Container>
         <ConnectionStatusManager />
-      </DialogProvider>
+      </ConfirmationModalProvider>
     </ActiveUserProvider>
   )
 }

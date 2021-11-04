@@ -9,7 +9,7 @@ import { createId } from '@/utils/createId'
 type OverlayManagerContextValue = {
   scrollLocked: boolean
   setOverlaysSet: React.Dispatch<React.SetStateAction<Set<string>>>
-  dialogContainerRef: React.RefObject<HTMLDivElement>
+  modalContainerRef: React.RefObject<HTMLDivElement>
 }
 
 const OverlayManagerContext = React.createContext<OverlayManagerContextValue | undefined>(undefined)
@@ -20,7 +20,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const [overlaysSet, setOverlaysSet] = useState(new Set<string>())
 
-  const dialogContainerRef = useRef<HTMLDivElement>(null)
+  const modalContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (overlaysSet.size === 0 && scrollLocked) {
@@ -37,17 +37,17 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={[overlayManagerStyles(scrollbarGap), dialogTransitions]} />
+      <Global styles={[overlayManagerStyles(scrollbarGap), modalTransitions]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
           setOverlaysSet,
-          dialogContainerRef,
+          modalContainerRef,
         }}
       >
         {children}
 
-        <PortalContainer ref={dialogContainerRef} />
+        <PortalContainer ref={modalContainerRef} />
       </OverlayManagerContext.Provider>
     </>
   )
@@ -65,7 +65,7 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setOverlaysSet, dialogContainerRef } = context
+  const { setOverlaysSet, modalContainerRef } = context
 
   const overlayId = useRef(createId()).current
   const incrementOverlaysOpenCount = useCallback(() => {
@@ -82,7 +82,7 @@ export const useOverlayManager = () => {
   return {
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
-    dialogContainerRef,
+    modalContainerRef,
   }
 }
 
@@ -96,24 +96,24 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
   }
 `
 
-const dialogTransitions = css`
-  &.${transitions.names.dialog}-enter {
+const modalTransitions = css`
+  &.${transitions.names.modal}-enter {
     opacity: 0;
     transform: scale(0.88);
   }
 
-  &.${transitions.names.dialog}-enter-active {
+  &.${transitions.names.modal}-enter-active {
     opacity: 1;
     transform: scale(1);
     transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 
-  &.${transitions.names.dialog}-exit {
+  &.${transitions.names.modal}-exit {
     opacity: 1;
     transform: scale(1);
   }
 
-  &.${transitions.names.dialog}-exit-active {
+  &.${transitions.names.modal}-exit-active {
     opacity: 0;
     transform: scale(0.88);
     transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);

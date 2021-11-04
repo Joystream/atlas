@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { TransactionDialog } from '@/components/TransactionDialog'
+import { TransactionModal } from '@/components/TransactionModal'
 import { SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
@@ -31,5 +31,5 @@ export const TransactionManager: React.FC = () => {
       removeOldBlockActions(indexerHead)
     },
   })
-  return <TransactionDialog status={dialogStep} onClose={() => setDialogStep(null)} />
+  return <TransactionModal status={dialogStep} onClose={() => setDialogStep(null)} />
 }

@@ -1,5 +1,5 @@
 export * from './AutomaticCrop'
-export * from './Dialogs'
+export * from './Modals'
 export * from './FileHashing'
 export * from './ImageDownsizing'
 export * from './PlaygroundConnectionState'

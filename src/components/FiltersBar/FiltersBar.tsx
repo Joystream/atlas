@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useCategories } from '@/api/hooks'
+import { DialogModal, DialogModalProps } from '@/components/DialogModal'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -16,7 +17,6 @@ import { SvgGlyphClose } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
 
 import {
-  ActionDialogHeader,
   ClearAllButton,
   FilterContentContainer,
   FiltersContainer,
@@ -24,12 +24,8 @@ import {
   MobileFilterContainer,
   OtherFilterStyledIcon,
   OtherFilterStyledText,
-  StyledActionDialog,
-  StyledTitleText,
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
-
-import { ActionDialogProps } from '../ActionDialog'
 
 type FiltersBarProps = {
   hasCategories?: boolean
@@ -210,7 +206,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     return (
       <MobileFilterDialog
         onExitClick={() => setIsFiltersOpen(false)}
-        showDialog={isFiltersOpen}
+        show={isFiltersOpen}
         title="Filters"
         content={
           <>
@@ -478,20 +474,14 @@ const FilterPopoverFooter: React.FC<FilterPopoverFooterProps> = ({ applyButtonPr
   </>
 )
 
-const MobileFilterDialog: React.FC<{ title: string; content: React.ReactNode } & ActionDialogProps> = ({
-  title,
+const MobileFilterDialog: React.FC<{ content: React.ReactNode } & DialogModalProps> = ({
   content,
-  ...actionDialogProps
+  ...dialogModalProps
 }) => {
   return (
-    <StyledActionDialog {...actionDialogProps}>
-      {title && (
-        <ActionDialogHeader>
-          <StyledTitleText variant="h5">{title}</StyledTitleText>
-        </ActionDialogHeader>
-      )}
+    <DialogModal {...dialogModalProps} dividers>
       {content}
-    </StyledActionDialog>
+    </DialogModal>
   )
 }
 
