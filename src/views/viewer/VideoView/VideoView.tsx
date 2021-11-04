@@ -37,7 +37,7 @@ import {
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id, {
+  const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()

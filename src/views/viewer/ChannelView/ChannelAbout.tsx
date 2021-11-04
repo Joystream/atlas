@@ -21,8 +21,8 @@ import {
 
 export const ChannelAbout = () => {
   const { id } = useParams()
-  const { channel } = useChannel(id)
-  const { videoCount } = useChannelVideoCount(id)
+  const { channel } = useChannel(id ?? '')
+  const { videoCount } = useChannelVideoCount(id ?? '')
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
