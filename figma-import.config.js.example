@@ -1,0 +1,6 @@
+module.exports = {
+  FIGMA_TOKEN: '',
+  FILE_KEY: '',
+  FRAME_WITH_ICONS_ID: '',
+  CONCURRENCY: 1,
+}
