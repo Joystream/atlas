@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
@@ -49,11 +49,21 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     const { addRecentSearch } = usePersonalDataStore((state) => ({
       addRecentSearch: state.actions.addRecentSearch,
     }))
+    const { pathname } = useLocation()
+
+    // Lose focus on location change
+    useEffect(() => {
+      if (pathname) {
+        onClose?.()
+        inputRef.current?.blur()
+      }
+    }, [pathname, onClose])
 
     useEffect(() => {
       if (searchOpen) {
         inputRef.current?.focus()
         setInputHasFocus(true)
+      } else {
         setSelectedItem(null)
       }
     }, [searchOpen])
