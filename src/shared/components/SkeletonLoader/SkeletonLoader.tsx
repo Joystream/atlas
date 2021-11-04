@@ -63,6 +63,7 @@ const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
 const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
   height: ${({ height = '100%' }) => getPropValue(height)};
   transform: translateX(0%);
+  /* TODO replace hex values with variables(#272d33 = colorCoreNeutral700) */
   background: linear-gradient(
     104deg,
     rgba(183, 200, 250, 0) 15%,
