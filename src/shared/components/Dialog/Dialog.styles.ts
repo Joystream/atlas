@@ -3,15 +3,11 @@ import styled from '@emotion/styled'
 
 import { colors, media, sizes } from '@/shared/theme'
 
-export type Size = 'default' | 'compact'
+export type DialogSize = 'default' | 'compact'
 
 type DividersProps = {
   dividers: boolean
 }
-
-type HeaderProps = {
-  denseHeader: boolean
-} & DividersProps
 
 type FooterProps = {
   hasAdditionalActions: boolean
@@ -22,9 +18,8 @@ type SizeProps = {
 }
 
 type ContentProps = {
-  hasHeader: boolean
-  hasFooter: boolean
-} & DividersProps
+  denseHeader: boolean
+}
 
 const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
   size === 'default'
@@ -52,21 +47,17 @@ export const DialogContainer = styled.div<SizeProps>`
 
 const headerDividersStyles = css`
   box-shadow: inset 0 -1px 0 0 ${colors.gray[600]};
+  padding-bottom: var(--local-size-dialog-padding);
 `
 
-const headerDenseStyles = css`
-  padding-bottom: ${sizes(3)};
-`
-
-export const Header = styled.div<HeaderProps>`
+export const Header = styled.div<DividersProps>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  padding: var(--local-size-dialog-padding);
+  padding: var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0;
 
   ${({ dividers }) => dividers && headerDividersStyles};
-  ${({ denseHeader }) => denseHeader && headerDenseStyles};
 `
 
 export const HeaderContent = styled.div`
@@ -82,43 +73,26 @@ export const HeaderIconContainer = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-const getContentTopPaddingStyles = ({ hasHeader, dividers }: ContentProps) =>
-  dividers || !hasHeader
-    ? css`
-        padding-top: var(--local-size-dialog-padding);
-      `
-    : null
-
-const getContentBottomPaddingStyles = ({ hasFooter, dividers }: ContentProps) =>
-  dividers || !hasFooter
-    ? css`
-        padding-bottom: var(--local-size-dialog-padding);
-      `
-    : null
-
-const getContentPaddingStyles = (props: ContentProps) => css`
-  ${getContentTopPaddingStyles(props)};
-  ${getContentBottomPaddingStyles(props)};
-`
+const getDenseHeaderContentStyles = ({ denseHeader }: ContentProps) =>
+  denseHeader &&
+  css`
+    padding-top: ${sizes(3)};
+  `
 
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding-left: var(--local-size-dialog-padding);
-  padding-right: var(--local-size-dialog-padding);
-
-  /* introduce minimal height so that the scrollbar doesn't show up when not needed */
-  min-height: 20px;
-
-  ${getContentPaddingStyles};
+  padding: var(--local-size-dialog-padding);
+  ${getDenseHeaderContentStyles};
 `
 
 export const footerDividersStyles = css`
   box-shadow: inset 0 1px 0 0 ${colors.gray[600]};
+  padding-top: var(--local-size-dialog-padding);
 `
 
 export const Footer = styled.div<FooterProps>`
-  padding: var(--local-size-dialog-padding);
+  padding: 0 var(--local-size-dialog-padding) var(--local-size-dialog-padding);
   display: grid;
   grid-auto-flow: row;
   grid-auto-rows: auto;

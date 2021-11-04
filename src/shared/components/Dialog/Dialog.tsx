@@ -9,12 +9,12 @@ import { SvgGlyphClose, SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } 
 import {
   Content,
   DialogContainer,
+  DialogSize,
   Footer,
   FooterButtonsContainer,
   Header,
   HeaderContent,
   HeaderIconContainer,
-  Size,
 } from './Dialog.styles'
 
 type DialogButtonProps = {
@@ -31,7 +31,7 @@ export type DialogProps = {
   iconType?: DialogIconType
   headerIcon?: React.ReactNode
   dividers?: boolean
-  size?: Size
+  size?: DialogSize
   primaryButton?: DialogButtonProps
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: React.ReactNode
@@ -62,7 +62,6 @@ export const Dialog: React.FC<DialogProps> = ({
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
-  const hasHeader = !!title || !!onExitClick
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
   const buttonProps: ButtonProps = { size: isCompact ? 'small' : !smMatch ? 'medium' : 'large' }
 
@@ -70,8 +69,8 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return (
     <DialogContainer size={size} className={className}>
-      {title && (
-        <Header dividers={dividers} denseHeader={!!iconNode}>
+      {(title || onExitClick) && (
+        <Header dividers={dividers}>
           <HeaderContent>
             {iconNode ? <HeaderIconContainer>{iconNode}</HeaderIconContainer> : null}
             <Text variant={isCompact ? 'h6' : !smMatch ? 'h5' : 'h4'}>{title}</Text>
@@ -83,7 +82,7 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content hasHeader={hasHeader} hasFooter={hasFooter} dividers={dividers} data-scroll-lock-scrollable>
+      <Content denseHeader={!!iconNode} data-scroll-lock-scrollable>
         {description ? (
           <Text variant="body2" secondary>
             {description}

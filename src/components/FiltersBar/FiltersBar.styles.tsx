@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphHide } from '@/shared/icons'
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/shared/theme'
 
 export const FilterContentContainer = styled.div`
   display: grid;
@@ -18,8 +18,7 @@ export const MobileFilterContainer = styled.div`
 
 export const FiltersContainer = styled.div<{ open: boolean }>`
   align-items: center;
-  margin: 0 var(--size-global-horizontal-padding);
-  background-color: ${colors.gray[700]};
+  background-color: ${colors.gray[800]};
   display: ${({ open }) => (open ? 'flex' : 'none')};
   justify-content: space-between;
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
@@ -27,8 +26,8 @@ export const FiltersContainer = styled.div<{ open: boolean }>`
   transition: all ${transitions.timings.routing} ${transitions.easing};
   transform: translateY(0);
   width: 100%;
+  height: 72px;
   position: absolute;
-  height: 100vh;
 
   &.filters-enter {
     overflow: hidden;
@@ -48,13 +47,6 @@ export const FiltersContainer = styled.div<{ open: boolean }>`
   &.filters-exit-active {
     overflow: hidden;
     transform: translateY(-100%);
-  }
-
-  ${media.sm} {
-    background-color: ${colors.gray[800]};
-    margin: 0;
-    display: flex;
-    height: 72px;
   }
 `
 

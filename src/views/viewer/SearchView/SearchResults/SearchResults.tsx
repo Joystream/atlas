@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useCategories } from '@/api/hooks'
 import { ChannelGrid } from '@/components/ChannelGrid'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -40,6 +41,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   const {
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+  const { categories } = useCategories()
 
   useEffect(() => {
     if (selectedIndex === 1) {
@@ -93,7 +95,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             )}
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} hasCategories mobileLanguageSelector />
+        <FiltersBar {...filtersBarLogic} categories={categories} mobileLanguageSelector />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

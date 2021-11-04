@@ -285,11 +285,12 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                   },
                 ]
           }
-        >
-          <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
-            <SvgGlyphMore />
-          </KebabMenuButtonIcon>
-        </ContextMenu>
+          trigger={
+            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
+              <SvgGlyphMore />
+            </KebabMenuButtonIcon>
+          }
+        />
       </InfoContainer>
     </Container>
   )

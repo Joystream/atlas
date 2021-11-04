@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
+import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
 import { VideoOrderByInput } from '@/api/queries'
-import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Button } from '@/shared/components/Button'
 import { IconButton } from '@/shared/components/IconButton'
 import { GridItem } from '@/shared/components/LayoutGrid'
@@ -14,7 +15,22 @@ import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 import { colors, media, sizes } from '@/shared/theme'
 
-export const PlaygroundFilters: React.FC = () => {
+import { FiltersBar, FiltersBarProps } from './FiltersBar'
+import { useFiltersBar } from './useFiltersBar'
+
+export default {
+  title: 'General/FiltersBar',
+  component: FiltersBar,
+  decorators: [
+    (Story) => (
+      <OverlayManagerProvider>
+        <Story />
+      </OverlayManagerProvider>
+    ),
+  ],
+} as Meta
+
+const RegularTemplate: Story<FiltersBarProps> = () => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const betweenMdAndLgMatch = mdMatch && !lgMatch
@@ -45,7 +61,6 @@ export const PlaygroundFilters: React.FC = () => {
   return (
     <Container>
       <ControlsContainer>
-        {/* TODO: xss should be base here */}
         <GridItem colSpan={{ xxs: 2, md: 1 }}>
           <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
         </GridItem>
@@ -90,8 +105,11 @@ export const PlaygroundFilters: React.FC = () => {
   )
 }
 
+export const Regular = RegularTemplate.bind({})
+
 const Container = styled.div`
   margin-top: ${sizes(16)};
+  position: relative;
 `
 
 const ControlsContainer = styled.div`
@@ -101,6 +119,10 @@ const ControlsContainer = styled.div`
   align-items: center;
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${colors.gray[700]};
+  z-index: 100;
+  position: relative;
+  background-color: black;
+  min-height: 72px;
 
   ${media.md} {
     grid-template-columns: auto 160px 1fr 242px;
