@@ -28,7 +28,7 @@ const Box = styled.div`
 
 const GreenDiv = styled(Box)`
   background-color: ${cVar('colorCoreGreen800')};
-  transition: background-color 200ms cubic-bezier(${cVar('animationEasingBounce')});
+  transition: background-color 200ms ${cVar('animationEasingBounce')};
   :hover {
     background-color: ${cVar('colorCoreGreen300')};
   }
