@@ -54,7 +54,7 @@ export const Container = styled.div<ContainerProps>`
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
+      max-height: ${({ hasQuery, isVisible }) => (isVisible ? (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px') : 0)};
     }
   }
 
@@ -74,7 +74,7 @@ export const Container = styled.div<ContainerProps>`
 
     ${media.md} {
       height: auto;
-      max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
+      max-height: ${({ hasQuery, isVisible }) => (isVisible ? (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px') : 0)};
     }
   }
 
@@ -83,7 +83,7 @@ export const Container = styled.div<ContainerProps>`
     top: 100%;
     box-shadow: unset;
     height: ${({ isVisible }) => (!isVisible ? 0 : 'auto')};
-    max-height: ${({ hasQuery }) => (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px')};
+    max-height: ${({ hasQuery, isVisible }) => (isVisible ? (hasQuery ? CONTAINER_DESKTOP_HEIGHT : '400px') : 0)};
     padding-bottom: 0;
   }
 `

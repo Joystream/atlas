@@ -23,8 +23,10 @@ export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: S
   )
 
   useEffect(() => {
-    setTyping(true)
-    debouncedQuery.current(searchQuery)
+    if (searchQuery.length) {
+      setTyping(true)
+      debouncedQuery.current(searchQuery)
+    }
   }, [searchQuery])
 
   const { data, loading, error } = useSearch(
