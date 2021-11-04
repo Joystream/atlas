@@ -4,8 +4,6 @@ import Tippy from '@tippyjs/react/headless'
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { Instance } from 'tippy.js'
 
-// export type PopoverInstance = Parameters<Required<TippyProps>['render']>[2] // what a mess, i know
-
 export type PopoverImperativeHandle = {
   hide: () => void
 }
