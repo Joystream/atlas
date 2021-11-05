@@ -1,4 +1,4 @@
-import { cVar } from '@/styles/generated/variables'
+import { cVar } from '@/styles'
 
 export default {
   white: '#FFFFFF',
