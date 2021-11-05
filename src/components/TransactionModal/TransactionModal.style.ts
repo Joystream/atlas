@@ -123,7 +123,8 @@ export const Success = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${rgba(colors.blue[500], 0.2)};
+  /* TODO replace with variable: blue 500 */
+  background: ${rgba('#4038ff', 0.2)};
 `
 
 export const SuccessIcon = styled.div`
