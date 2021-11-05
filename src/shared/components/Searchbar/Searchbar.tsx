@@ -81,10 +81,6 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
           onClick?.()
           inputRef.current?.focus()
         }
-        if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !!query) {
-          inputRef?.current?.blur()
-          onClose?.()
-        }
       }
       window.addEventListener('keydown', onKeyPress)
       return () => {
