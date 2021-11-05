@@ -481,6 +481,7 @@ const getDurationRules = (duration?: VideoLengthOptions) => {
     case '0-to-4':
       return {
         duration_lte: 4 * 60,
+        duration_gte: undefined,
       }
     case '4-to-10':
       return {
@@ -490,6 +491,7 @@ const getDurationRules = (duration?: VideoLengthOptions) => {
     case '10-to-9999':
       return {
         duration_gte: 10 * 60,
+        duration_lte: undefined,
       }
     default:
       return {}

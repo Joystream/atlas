@@ -54,8 +54,10 @@ const getSearchKeyArgs = (args: Record<string, SearchQueryVariables['whereVideo'
   const languageIdEq = args?.whereVideo?.languageId_eq || ''
   const categoryIdIn = args?.whereVideo?.categoryId_in || []
   const createdAtGte = args?.whereVideo?.createdAt_gte ? JSON.stringify(args.whereVideo.createdAt_gte) : ''
+  const durationGte = args?.whereVideo?.duration_gte || null
+  const durationLte = args?.whereVideo?.duration_lte || null
 
-  return `${text}:${languageIdEq}:${createdAtGte}:${categoryIdIn}:${isExplicitEq}:${hasMarketingEq}:${licenseIdIn}`
+  return `${text}:${languageIdEq}:${createdAtGte}:${categoryIdIn}:${isExplicitEq}:${hasMarketingEq}:${licenseIdIn}:${durationLte}:${durationGte}`
 }
 
 const createDateHandler = () => ({
