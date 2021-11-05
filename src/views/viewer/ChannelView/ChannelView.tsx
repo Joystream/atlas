@@ -59,7 +59,7 @@ export const ChannelView: React.FC = () => {
   const videoRows = useVideoGridRows('main')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { channel, loading, error } = useChannel(id, {
+  const { channel, loading, error } = useChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {
@@ -74,7 +74,7 @@ export const ChannelView: React.FC = () => {
     errorSearch,
     searchQuery,
   } = useSearchVideos({
-    id,
+    id: id ?? '',
     onError: (error) =>
       SentryLogger.error('Failed to search channel videos', 'ChannelView', error, {
         search: { channelId: id, query: searchQuery },
