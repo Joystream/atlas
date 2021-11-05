@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { cVar } from '@/styles/generated/variables'
+import { cVar } from '@/styles'
 
 export const DesignTokens = () => {
   return (
