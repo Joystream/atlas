@@ -9,7 +9,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useDialog } from '@/providers/dialogs'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
@@ -92,7 +92,7 @@ export const MyVideosView = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
-  const [openDeleteDraftDialog, closeDeleteDraftDialog] = useDialog()
+  const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
@@ -186,10 +186,10 @@ export const MyVideosView = () => {
     openDeleteDraftDialog({
       title: 'Delete this draft?',
       description: 'You will not be able to undo this.',
-      variant: 'warning',
-      error: true,
+      iconType: 'warning',
       primaryButton: {
         text: 'Remove draft',
+        variant: 'destructive',
         onClick: () => {
           closeDeleteDraftDialog()
           removeDrafts([draftId])

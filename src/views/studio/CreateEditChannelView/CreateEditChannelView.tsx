@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import { ImageCropDialog, ImageCropDialogImperativeHandle, ImageCropDialogProps } from '@/components/ImageCropDialog'
+import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from '@/components/ImageCropModal'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { languages } from '@/config/languages'
@@ -71,8 +71,8 @@ type CreateEditChannelViewProps = {
 }
 
 export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
-  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
@@ -202,7 +202,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     }
   })
 
-  const handleCoverChange: ImageCropDialogProps['onConfirm'] = (
+  const handleCoverChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
     croppedUrl,
     assetDimensions,
@@ -213,7 +213,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     setValue('cover', { contentId: newCoverAssetId, assetDimensions, imageCropData }, { shouldDirty: true })
   }
 
-  const handleAvatarChange: ImageCropDialogProps['onConfirm'] = (
+  const handleAvatarChange: ImageCropModalProps['onConfirm'] = (
     croppedBlob,
     croppedUrl,
     assetDimensions,
@@ -379,7 +379,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               editable
               disabled={loading}
             />
-            <ImageCropDialog
+            <ImageCropModal
               imageType="cover"
               onConfirm={handleCoverChange}
               onError={() =>
@@ -408,7 +408,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 editable
                 loading={loading}
               />
-              <ImageCropDialog
+              <ImageCropModal
                 imageType="avatar"
                 onConfirm={handleAvatarChange}
                 onError={() =>

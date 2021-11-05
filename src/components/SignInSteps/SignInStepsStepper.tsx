@@ -7,7 +7,7 @@ import { AccountStep } from './AccountStep'
 import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
 
-import { Multistepper } from '../Multistepper'
+import { StepperModal } from '../StepperModal'
 
 export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()
@@ -29,10 +29,10 @@ export const SignInStepsStepper: React.FC = () => {
   ]
 
   return (
-    <Multistepper
+    <StepperModal
       currentStepIdx={step <= 0 ? 0 : step - 1}
       steps={steps}
-      showDialog={step >= 1}
+      show={step >= 1}
       onExitClick={() => navigate('?step=0')}
     />
   )

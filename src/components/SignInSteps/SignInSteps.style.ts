@@ -36,9 +36,9 @@ export const StepSubTitle = styled(Text)`
 export const StepFooter = styled.div`
   position: relative;
   background-color: ${colors.gray[800]};
-  padding: var(--dialog-padding);
-  width: calc(100% + 2 * var(--dialog-padding));
-  margin: calc(-1 * var(--dialog-padding));
+  padding: var(--local-size-stepper-padding);
+  width: calc(100% + 2 * var(--local-size-stepper-padding));
+  margin: calc(-1 * var(--local-size-stepper-padding));
   margin-top: 0;
   display: flex;
   justify-content: center;

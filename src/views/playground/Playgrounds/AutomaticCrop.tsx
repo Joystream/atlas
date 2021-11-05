@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { Button } from '@/shared/components/Button'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { computeFileHash } from '@/utils/hashing'
@@ -10,8 +10,8 @@ export const AutomaticCrop: React.FC = () => {
   const [initialHash, setInitialHash] = useState('')
   const [automaticCropHash, setAutomaticCropHash] = useState('')
 
-  const initialCropDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const automaticCropDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const initialCropDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const automaticCropDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
   const handleInitialCrop = async (
     croppedBlob: Blob,
@@ -39,8 +39,8 @@ export const AutomaticCrop: React.FC = () => {
         <p>Initial hash: {initialHash}</p>
         <p>Automatic crop hash: {automaticCropHash}</p>
       </div>
-      <ImageCropDialog ref={initialCropDialogRef} imageType="avatar" onConfirm={handleInitialCrop} />
-      <ImageCropDialog ref={automaticCropDialogRef} imageType="avatar" onConfirm={handleAutomaticCrop} />
+      <ImageCropModal ref={initialCropDialogRef} imageType="avatar" onConfirm={handleInitialCrop} />
+      <ImageCropModal ref={automaticCropDialogRef} imageType="avatar" onConfirm={handleAutomaticCrop} />
     </>
   )
 }

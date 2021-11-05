@@ -9,7 +9,7 @@ import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
 import { isBrowserOutdated } from '@/utils/browser'
 
-import { useDialog } from './providers/dialogs'
+import { useConfirmationModal } from './providers/confirmationModal'
 import { LegalLayout } from './views/legal'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
 
@@ -27,11 +27,11 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 })
 
 export const MainLayout: React.FC = () => {
-  const [openDialog, closeDialog] = useDialog({
+  const [openDialog, closeDialog] = useConfirmationModal({
     title: 'Outdated browser detected',
     description:
       'It seems the browser version you are using is not fully supported by Joystream. Some of the features may be broken or not accessible. For the best experience, please upgrade your browser to the latest version.',
-    variant: 'warning',
+    iconType: 'warning',
     primaryButton: {
       text: 'Click here to see instructions',
       onClick: () => window.open('https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'),

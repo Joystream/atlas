@@ -12,10 +12,10 @@ import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { MemberId } from '@/joystream-lib'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useDialog } from '@/providers/dialogs'
 import { useUser } from '@/providers/user'
-import { Spinner } from '@/shared/components/Spinner'
+import { Loader } from '@/shared/components/Loader'
 import { TextArea } from '@/shared/components/TextArea'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
@@ -57,14 +57,13 @@ export const CreateMemberView = () => {
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useDialog({
-    exitButton: false,
-    icon: <Spinner />,
+  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
+    headerIcon: <Loader variant="medium" />,
     title: 'Creating membership...',
     description:
       "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
   })
-  const [openErrorDialog, closeErrorDialog] = useDialog()
+  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   // subscription doesn't allow 'onError' callback
@@ -103,7 +102,7 @@ export const CreateMemberView = () => {
       closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       openErrorDialog({
-        variant: 'error',
+        iconType: 'error',
         title: 'Something went wrong...',
         description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
         secondaryButton: {

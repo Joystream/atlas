@@ -3,12 +3,12 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyle } from '@/shared/components/GlobalStyle'
 import { routingTransitions } from '@/styles/routingTransitions'
 
 import { MainLayout } from './MainLayout'
 import { AssetsManager } from './providers/assets'
-import { DialogProvider } from './providers/dialogs'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { StorageProvidersProvider } from './providers/storageProviders'
@@ -25,11 +25,11 @@ export const App = () => {
         <BrowserRouter>
           <OverlayManagerProvider>
             <StorageProvidersProvider>
-              <DialogProvider>
+              <ConfirmationModalProvider>
                 <MainLayout />
                 <Snackbars />
                 <AssetsManager />
-              </DialogProvider>
+              </ConfirmationModalProvider>
             </StorageProvidersProvider>
           </OverlayManagerProvider>
         </BrowserRouter>

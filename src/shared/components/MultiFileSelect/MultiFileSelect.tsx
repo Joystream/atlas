@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { SvgGlyphChevronRight } from '@/shared/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
@@ -72,7 +72,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
   error,
   className,
 }) => {
-  const dialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [step, setStep] = useState<FileType>('video')
   const [isImgLoading, setIsImgLoading] = useState(false)
   const [isVideoLoading, setIsVideoLoading] = useState(false)
@@ -259,7 +259,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           </CSSTransition>
         )}
       </StepsContainer>
-      <ImageCropDialog ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
+      <ImageCropModal ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
     </MultiFileSelectContainer>
   )
 }
