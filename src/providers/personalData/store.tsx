@@ -1,7 +1,6 @@
 import { round } from 'lodash-es'
 
 import { createStore } from '@/store'
-import { readFromLocalStorage } from '@/utils/localStorage'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 
@@ -33,21 +32,15 @@ export type PersonalDataStoreActions = {
   setCachedVolume: (volume: number) => void
 }
 
-const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
-const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
-const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
-const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
-const currentVolume = readFromLocalStorage<number>('playerVolume') ?? 1
-
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: {
       cachedVolume: 0,
-      watchedVideos,
-      followedChannels,
-      recentSearches,
-      dismissedMessages,
-      currentVolume,
+      watchedVideos: [],
+      followedChannels: [],
+      recentSearches: [],
+      dismissedMessages: [],
+      currentVolume: 1,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -108,12 +101,8 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       key: 'personalData',
       whitelist: WHITELIST,
       version: 1,
-      onRehydrateStorage: () => {
-        WHITELIST.forEach((item) => {
-          window.localStorage.removeItem(item)
-        })
-      },
       migrate: (oldState) => ({
+        ...oldState,
         recentSearches: oldState.recentSearches.filter(
           (item: RecentSearch) => !Object.prototype.hasOwnProperty.call(item, 'type')
         ),
