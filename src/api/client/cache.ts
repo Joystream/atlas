@@ -49,8 +49,8 @@ const getChannelKeyArgs = (args: Record<string, GetChannelsConnectionQueryVariab
 const getSearchKeyArgs = (args: Record<string, SearchQueryVariables['whereVideo']> | null) => {
   const text = args?.text || ''
   const licenseIdIn = args?.whereVideo?.licenseId_in || []
-  const hasMarketingEq = args?.whereVideo?.hasMarketing_eq || true
-  const isExplicitEq = args?.whereVideo?.isExplicit_eq || true
+  const hasMarketingEq = args?.whereVideo?.hasMarketing_eq ?? ''
+  const isExplicitEq = args?.whereVideo?.isExplicit_eq ?? ''
   const languageIdEq = args?.whereVideo?.languageId_eq || ''
   const categoryIdIn = args?.whereVideo?.categoryId_in || []
   const createdAtGte = args?.whereVideo?.createdAt_gte ? JSON.stringify(args.whereVideo.createdAt_gte) : ''

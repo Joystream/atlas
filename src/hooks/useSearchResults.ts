@@ -42,7 +42,6 @@ export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: S
       },
     },
     {
-      fetchPolicy: 'no-cache',
       skip: !searchQuery,
       onError: (error) => SentryLogger.error('Failed to fetch search results', 'SearchResults', error),
     }
