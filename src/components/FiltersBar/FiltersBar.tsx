@@ -47,10 +47,10 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     isFiltersOpen,
     dateUploadedFilter,
     setDateUploadedFilter,
-    matureContentRatingFilter,
-    setMatureContentRatingFilter,
-    paidPromotionalMaterialFilter,
-    setPaidPromotionalMaterialFilter,
+    excludeMatureContentRatingFilter,
+    setExcludeMatureContentRatingFilter,
+    excludePaidPromotionalMaterialFilter,
+    setExcludePaidPromotionalMaterialFilter,
     videoLengthFilter,
     setVideoLengthFilter,
     licensesFilter,
@@ -192,16 +192,16 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const otherFiltersInputs = (
     <FilterContentContainer>
       <Checkbox
-        onChange={setPaidPromotionalMaterialFilter}
+        onChange={setExcludePaidPromotionalMaterialFilter}
         name="other-filters"
         label="Paid promotional material"
-        value={!!paidPromotionalMaterialFilter}
+        value={!!excludePaidPromotionalMaterialFilter}
       />
       <Checkbox
-        onChange={setMatureContentRatingFilter}
+        onChange={setExcludeMatureContentRatingFilter}
         name="other-filters"
         label="Mature content rating"
-        value={!!matureContentRatingFilter}
+        value={!!excludeMatureContentRatingFilter}
       />
     </FilterContentContainer>
   )
@@ -274,8 +274,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   })
                 : undefined,
               licenseId_in: licensesFilter?.map((license) => license.toString()),
-              hasMarketing_eq: paidPromotionalMaterialFilter,
-              isExplicit_eq: matureContentRatingFilter,
+              hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
+              isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
               categoryId_in: categoriesFilter,
               languageId_eq: language as string,
               ...getDurationRules(),
@@ -420,7 +420,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             ref={othersPopoverRef}
             trigger={
               <Button
-                badge={+!!videoWhereInput?.hasMarketing_eq + +!!videoWhereInput?.isExplicit_eq}
+                badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
                 variant="secondary"
               >
                 Other filters
@@ -428,20 +428,23 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             }
             primaryButton={{
               text: 'Apply',
-              disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter && !canClearOtherFilters,
+              disabled:
+                !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
               onClick: () => {
                 othersPopoverRef.current?.hide()
                 setVideoWhereInput((value) => ({
                   ...value,
-                  hasMarketing_eq: paidPromotionalMaterialFilter,
-                  isExplicit_eq: matureContentRatingFilter,
+                  hasMarketing_eq: excludePaidPromotionalMaterialFilter
+                    ? !excludePaidPromotionalMaterialFilter
+                    : undefined,
+                  isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
                 }))
               },
             }}
             secondaryButton={{
               text: 'Clear',
               onClick: clearOtherFilters,
-              disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
+              disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
             }}
           >
             <OtherFilterStyledText secondary variant="overhead">

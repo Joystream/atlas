@@ -10,8 +10,8 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
   const [licensesFilter, setLicensesFilter] = useState<number[]>()
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
-  const [paidPromotionalMaterialFilter, setPaidPromotionalMaterialFilter] = useState<boolean>()
-  const [matureContentRatingFilter, setMatureContentRatingFilter] = useState<boolean>()
+  const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
+  const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
   const [language, setLanguage] = useState<unknown>()
 
@@ -23,7 +23,7 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearLicensesFilter =
     videoWhereInput?.licenseId_in !== undefined && videoWhereInput?.licenseId_in?.length !== 0
-  const canClearOtherFilters = !!videoWhereInput?.hasMarketing_eq || !!videoWhereInput?.isExplicit_eq
+  const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
   const canClearCategoriesFilter =
     videoWhereInput?.categoryId_in !== undefined && videoWhereInput?.categoryId_in?.length !== 0
   const canClearAllFilters =
@@ -56,8 +56,8 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
     })
   }
   const clearOtherFilters = () => {
-    setPaidPromotionalMaterialFilter(undefined)
-    setMatureContentRatingFilter(undefined)
+    setExcludePaidPromotionalMaterialFilter(undefined)
+    setExcludeMatureContentRatingFilter(undefined)
     setVideoWhereInput((value) => {
       delete value.isExplicit_eq
       delete value.hasMarketing_eq
@@ -93,10 +93,10 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
       setDateUploadedFilter,
       videoLengthFilter,
       setVideoLengthFilter,
-      paidPromotionalMaterialFilter,
-      setPaidPromotionalMaterialFilter,
-      matureContentRatingFilter,
-      setMatureContentRatingFilter,
+      excludePaidPromotionalMaterialFilter,
+      setExcludePaidPromotionalMaterialFilter,
+      excludeMatureContentRatingFilter,
+      setExcludeMatureContentRatingFilter,
       licensesFilter,
       setLicensesFilter,
       categoriesFilter,
