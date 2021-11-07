@@ -4,8 +4,8 @@ import { Route, Routes } from 'react-router-dom'
 
 import { TopbarBase } from '@/components/TopbarBase'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
-import { colors, sizes } from '@/shared/theme'
+import { SvgJoystreamLogoFull } from '@/illustrations'
+import { colors, sizes } from '@/theme'
 
 import { CopyrightPolicyView } from './CopyrightPolicyView'
 import { TermsOfServiceView } from './TermsOfServiceView'

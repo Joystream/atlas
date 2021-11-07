@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
+import { Button } from '@/components/Button'
+import { TextField } from '@/components/TextField'
 import { useStartFileUpload, useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { TextField } from '@/shared/components/TextField'
 
 export const UploadFiles = () => {
   const { activeChannelId } = useAuthorizedUser()

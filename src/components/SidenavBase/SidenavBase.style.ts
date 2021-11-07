@@ -2,9 +2,9 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
-import { smallBadgeStyles } from '@/shared/components/Badge'
-import { HamburgerButton } from '@/shared/components/HamburgerButton'
-import { colors, media, sizes, transitions, typography, zIndex } from '@/shared/theme'
+import { smallBadgeStyles } from '@/components/Badge'
+import { HamburgerButton } from '@/components/HamburgerButton'
+import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24

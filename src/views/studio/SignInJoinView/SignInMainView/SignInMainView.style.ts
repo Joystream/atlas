@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { SvgSigninIllustration } from '@/shared/illustrations'
-import { colors, media, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { SvgSigninIllustration } from '@/illustrations'
+import { colors, media, sizes } from '@/theme'
 
 export const StyledContainer = styled(LimitedWidthContainer)`
   margin-top: 64px;

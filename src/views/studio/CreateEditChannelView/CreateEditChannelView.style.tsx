@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { Avatar } from '@/shared/components/Avatar'
-import { ProgressDrawer } from '@/shared/components/ProgressDrawer'
-import { TitleArea } from '@/shared/components/TitleArea'
-import { media, sizes, transitions, zIndex } from '@/shared/theme'
+import { Avatar } from '@/components/Avatar'
+import { ProgressDrawer } from '@/components/ProgressDrawer'
+import { TitleArea } from '@/components/TitleArea'
+import { media, sizes, transitions, zIndex } from '@/theme'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 
 export const StyledTitleSection = styled(TitleSection)`

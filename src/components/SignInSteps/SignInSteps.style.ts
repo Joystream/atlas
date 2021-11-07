@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphWarning } from '@/shared/icons/GlyphWarning'
-import { SvgJoystreamLogoIcon, SvgPolkadotLogoIcon } from '@/shared/illustrations'
-import { colors, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { SvgGlyphWarning } from '@/icons/GlyphWarning'
+import { SvgJoystreamLogoIcon, SvgPolkadotLogoIcon } from '@/illustrations'
+import { colors, sizes } from '@/theme'
 
 export const StepWrapper = styled.div`
   width: 100%;

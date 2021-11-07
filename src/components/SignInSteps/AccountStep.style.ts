@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
-import { RadioButton } from '@/shared/components/RadioButton'
-import { Spinner } from '@/shared/components/Spinner'
-import { Text } from '@/shared/components/Text'
-import { SvgAccountCreationIllustration } from '@/shared/illustrations'
-import { colors, media, sizes, transitions, typography } from '@/shared/theme'
+import { Button } from '@/components/Button'
+import { RadioButton } from '@/components/RadioButton'
+import { Spinner } from '@/components/Spinner'
+import { Text } from '@/components/Text'
+import { SvgAccountCreationIllustration } from '@/illustrations'
+import { colors, media, sizes, transitions, typography } from '@/theme'
 
 import { StepWrapper } from './SignInSteps.style'
 

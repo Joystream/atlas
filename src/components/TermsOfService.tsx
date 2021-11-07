@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { LegalLastUpdateText, LegalListItem, LegalParagraph } from '@/shared/components/LegalText'
-import { Text } from '@/shared/components/Text'
+import { LegalLastUpdateText, LegalListItem, LegalParagraph } from '@/components/LegalText'
+import { Text } from '@/components/Text'
 
 export const TermsOfService: React.FC = () => {
   return (

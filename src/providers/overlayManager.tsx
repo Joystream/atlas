@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 import { createId } from '@/utils/createId'
 
 type OverlayManagerContextValue = {

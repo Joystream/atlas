@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
-import { colors, zIndex } from '@/shared/theme'
+import { colors, zIndex } from '@/theme'
 
 export const Container = styled(animated.div)`
   position: fixed;

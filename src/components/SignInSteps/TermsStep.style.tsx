@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
-import { colors, sizes } from '@/shared/theme'
+import { Button } from '@/components/Button'
+import { IconButton } from '@/components/IconButton'
+import { colors, sizes } from '@/theme'
 
 export const TermsBox = styled.div`
   scroll-behavior: smooth;

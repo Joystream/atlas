@@ -2,10 +2,10 @@ import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/icons'
 import { useUser } from '@/providers/user'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 
 import {
   AccountAddress,

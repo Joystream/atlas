@@ -20,7 +20,7 @@ import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
   CreateEditChannelView,

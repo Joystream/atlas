@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/theme'
 
 export const routingTransitions = css`
   .${transitions.names.fadeAndSlide}-enter {

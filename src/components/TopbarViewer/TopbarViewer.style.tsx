@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/shared/components/IconButton'
-import { colors, media, sizes, square, transitions, zIndex } from '@/shared/theme'
+import { IconButton } from '@/components/IconButton'
 import { cVar } from '@/styles'
+import { colors, media, sizes, square, transitions, zIndex } from '@/theme'
 
 import { TopbarBase } from '../TopbarBase'
 

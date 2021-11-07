@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar } from '@/shared/components/Avatar'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { colors, sizes } from '@/theme'
+
+import { Avatar } from '../Avatar'
 
 type ContainerProps = {
   disabled?: boolean

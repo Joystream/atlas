@@ -5,9 +5,9 @@ import { BrowserRouter } from 'react-router-dom'
 import useHotjar from 'react-use-hotjar'
 
 import { createApolloClient } from '@/api'
+import { GlobalStyle } from '@/components/GlobalStyle'
 import { BUILD_ENV, readEnv } from '@/config/envs'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
-import { GlobalStyle } from '@/shared/components/GlobalStyle'
 import { routingTransitions } from '@/styles/routingTransitions'
 
 import { MainLayout } from './MainLayout'

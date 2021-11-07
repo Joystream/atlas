@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
-import { colors, sizes } from '@/shared/theme'
+import { Button } from '@/components/Button'
+import { colors, sizes } from '@/theme'
 
 export const LoadMoreButtonWrapper = styled.div`
   margin-top: ${sizes(12)};

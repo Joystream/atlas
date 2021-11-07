@@ -1,13 +1,13 @@
 import React, { FC, useState } from 'react'
 
 import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
+import { Grid } from '@/components/Grid'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { VideoTile } from '@/components/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
-import { Grid } from '@/shared/components/Grid'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 

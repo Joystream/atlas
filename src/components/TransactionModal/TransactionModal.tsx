@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { Dialog } from '@/components/Dialog'
+import { Text } from '@/components/Text'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
+import { SvgGlyphCheck } from '@/icons'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import { Dialog } from '@/shared/components/Dialog'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphCheck } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 
 import { TRANSACTION_STEPS_DETAILS } from './TransactionModal.constants'
 import {

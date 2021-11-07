@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { AnimatedError } from '@/shared/components/AnimatedError'
-import { Loader } from '@/shared/components/Loader'
+import { AnimatedError } from '@/components/AnimatedError'
+import { Loader } from '@/components/Loader'
 
 export const Animations = () => {
   return (

@@ -2,10 +2,10 @@ import React from 'react'
 import { useParams } from 'react-router'
 
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
+import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
+import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
 import { PIONEER_URL } from '@/config/urls'
-import { GridItem } from '@/shared/components/LayoutGrid/LayoutGrid'
-import { Text } from '@/shared/components/Text'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 

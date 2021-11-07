@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, zIndex } from '@/shared/theme'
+import { colors, media, sizes, zIndex } from '@/theme'
 
 export const Header = styled.header`
   position: fixed;

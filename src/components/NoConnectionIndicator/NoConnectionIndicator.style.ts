@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, zIndex } from '@/shared/theme'
+import { colors, media, sizes, zIndex } from '@/theme'
 
 export const TextWrapper = styled.div`
   width: 100%;

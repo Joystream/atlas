@@ -1,14 +1,14 @@
 import React from 'react'
 import shallow from 'zustand/shallow'
 
+import { Button } from '@/components/Button'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { SvgGlyphUpload } from '@/icons'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { SvgGlyphUpload } from '@/shared/icons'
 
 import { StyledText, UploadsContainer } from './MyUploadsView.style'
 import { UploadStatusGroup } from './UploadStatusGroup'

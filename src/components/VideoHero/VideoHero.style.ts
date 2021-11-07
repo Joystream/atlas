@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { LayoutGrid } from '@/shared/components/LayoutGrid'
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes } from '@/theme'
 
 import { ChannelLink } from '../ChannelLink'
+import { LayoutGrid } from '../LayoutGrid'
 
 type IsCategoryProp = {
   isCategory?: boolean

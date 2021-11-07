@@ -1,10 +1,10 @@
 import React from 'react'
 
+import { Button } from '@/components/Button'
+import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/icons'
+import { SvgJoystreamLogoFull } from '@/illustrations'
 
 import {
   BackLink,

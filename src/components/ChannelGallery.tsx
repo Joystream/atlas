@@ -2,9 +2,9 @@ import React, { useMemo } from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { ChannelCard } from '@/components/ChannelCard'
-import { Gallery } from '@/shared/components/Gallery'
-import { breakpointsOfGrid } from '@/shared/components/Grid'
-import { RankingNumberTile } from '@/shared/components/RankingNumberTile'
+import { Gallery } from '@/components/Gallery'
+import { breakpointsOfGrid } from '@/components/Grid'
+import { RankingNumberTile } from '@/components/RankingNumberTile'
 
 type ChannelGalleryProps = {
   title?: string

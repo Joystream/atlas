@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { useVideo } from '@/api/hooks'
+import { VideoTileBase, VideoTileBaseMetaProps, VideoTileBaseProps } from '@/components/VideoTileBase'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
-import { VideoTileBase, VideoTileBaseMetaProps, VideoTileBaseProps } from '@/shared/components/VideoTileBase'
 import { copyToClipboard } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 

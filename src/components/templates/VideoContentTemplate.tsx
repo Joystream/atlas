@@ -1,16 +1,12 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '@/components/CallToActionButton'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import {
-  CallToActionButton,
-  CallToActionButtonProps,
-  CallToActionWrapper,
-} from '@/shared/components/CallToActionButton'
-import { Text } from '@/shared/components/Text'
-import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/shared/icons'
-import { media, sizes, typography } from '@/shared/theme'
+import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/icons'
+import { media, sizes, typography } from '@/theme'
 
 type CtaData = 'home' | 'new' | 'channels' | 'popular'
 

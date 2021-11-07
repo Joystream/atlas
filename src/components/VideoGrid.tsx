@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { Grid } from '@/shared/components/Grid'
+import { Grid } from '@/components/Grid'
 
 import { VideoTile } from './VideoTile'
 

@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { SvgCoinsIllustration } from '@/shared/illustrations'
-import { colors, media, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { SvgCoinsIllustration } from '@/illustrations'
+import { colors, media, sizes } from '@/theme'
 
 export const StyledStudioContainer = styled(LimitedWidthContainer)`
   display: flex;

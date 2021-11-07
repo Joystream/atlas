@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { Spinner } from '@/shared/components/Spinner'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { Spinner } from '@/components/Spinner'
+import { Text } from '@/components/Text'
+import { sizes } from '@/theme'
 
 export const StudioLoading: React.FC = () => {
   return (

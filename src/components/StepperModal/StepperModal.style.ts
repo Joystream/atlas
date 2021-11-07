@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Step } from '@/shared/components/Step'
-import { SvgGlyphChevronRight } from '@/shared/icons'
-import { colors, media, sizes } from '@/shared/theme'
+import { Step } from '@/components/Step'
+import { SvgGlyphChevronRight } from '@/icons'
+import { colors, media, sizes } from '@/theme'
 
 import { Modal } from '../Modal'
 

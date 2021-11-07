@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/shared/components/IconButton'
-import { Tabs } from '@/shared/components/Tabs'
-import { colors } from '@/shared/theme'
+import { IconButton } from '@/components/IconButton'
+import { Tabs } from '@/components/Tabs'
+import { colors } from '@/theme'
 
 export const Container = styled.div`
   position: fixed;

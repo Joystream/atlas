@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { Avatar } from '@/shared/components/Avatar'
-import { LayoutGrid } from '@/shared/components/LayoutGrid/LayoutGrid'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes } from '@/shared/theme'
+import { Avatar } from '@/components/Avatar'
+import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
+import { Text } from '@/components/Text'
+import { colors, sizes } from '@/theme'
 
 export const TextContainer = styled.div`
   display: grid;

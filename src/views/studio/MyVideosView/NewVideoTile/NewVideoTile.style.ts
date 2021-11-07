@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphAddVideo } from '@/shared/icons'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { Text } from '@/components/Text'
+import { SvgGlyphAddVideo } from '@/icons'
+import { colors, sizes, transitions } from '@/theme'
 
 export const StyledIcon = styled(SvgGlyphAddVideo)`
   > path {

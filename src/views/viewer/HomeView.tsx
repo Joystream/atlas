@@ -12,7 +12,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: React.FC = () => {

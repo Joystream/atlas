@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/Button'
+import { DismissibleBanner } from '@/components/DismissibleBanner'
+import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Button } from '@/shared/components/Button'
-import { DismissibleBanner } from '@/shared/components/DismissibleBanner'
-import { Grid } from '@/shared/components/Grid'
-import { Pagination } from '@/shared/components/Pagination'
-import { Select } from '@/shared/components/Select'
-import { Text } from '@/shared/components/Text'
-import { colors, media, sizes } from '@/shared/theme'
+import { Pagination } from '@/components/Pagination'
+import { Select } from '@/components/Select'
+import { Text } from '@/components/Text'
+import { colors, media, sizes } from '@/theme'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   height: 100%;

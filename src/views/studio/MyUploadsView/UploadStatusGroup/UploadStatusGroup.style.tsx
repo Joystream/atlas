@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { ExpandButton } from '@/shared/components/ExpandButton'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { ExpandButton } from '@/components/ExpandButton'
+import { Text } from '@/components/Text'
+import { colors, sizes, transitions } from '@/theme'
 
 import { UploadStatusGroupSize } from './UploadStatusGroup'
 

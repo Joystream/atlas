@@ -2,14 +2,14 @@ import React, { useCallback, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
+import { Button } from '@/components/Button'
+import { Searchbar } from '@/components/Searchbar'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { SvgGlyphAddVideo } from '@/icons'
+import { SvgJoystreamLogoFull } from '@/illustrations'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
-import { Button } from '@/shared/components/Button'
-import { Searchbar } from '@/shared/components/Searchbar'
-import { SvgGlyphAddVideo } from '@/shared/icons'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 
 import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.style'
 

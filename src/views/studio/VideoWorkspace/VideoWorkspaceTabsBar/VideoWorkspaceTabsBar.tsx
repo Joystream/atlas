@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
 
+import { Badge } from '@/components/Badge'
+import { IconButton } from '@/components/IconButton'
+import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/icons'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
-import { Badge } from '@/shared/components/Badge'
-import { IconButton } from '@/shared/components/IconButton'
-import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 
 import {
   AddDraftButtonContainer,

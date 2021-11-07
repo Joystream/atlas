@@ -3,15 +3,16 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { AvatarSize } from '@/components/Avatar'
+import { TextVariant } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
-import { AvatarSize } from '@/shared/components/Avatar'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { TextVariant } from '@/shared/components/Text'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import { Container, StyledAvatar, StyledText } from './ChannelLink.style'
+
+import { SkeletonLoader } from '../SkeletonLoader'
 
 type ChannelLinkProps = {
   id?: string

@@ -1,8 +1,8 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { Button } from '@/components/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { Button } from '@/shared/components/Button'
 
 import { StepperModal } from './StepperModal'
 

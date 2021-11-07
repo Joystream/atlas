@@ -1,9 +1,9 @@
+import errorAnimation from '@/assets/animations/error.json'
+import processingAssetsAnimation from '@/assets/animations/transaction/processing-assets.json'
+import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
+import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
+import signatureAnimation from '@/assets/animations/transaction/signature.json'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import errorAnimation from '@/shared/assets/animations/error.json'
-import processingAssetsAnimation from '@/shared/assets/animations/transaction/processing-assets.json'
-import processingTransactionAnimation from '@/shared/assets/animations/transaction/processing-transaction.json'
-import propagatingChangesAnimation from '@/shared/assets/animations/transaction/propagating-changes.json'
-import signatureAnimation from '@/shared/assets/animations/transaction/signature.json'
 
 export const TRANSACTION_STEPS_DETAILS = {
   [ExtrinsicStatus.ProcessingAssets]: {

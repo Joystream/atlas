@@ -7,9 +7,9 @@ import {
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
 } from '@/api/queries'
-import { Grid } from '@/shared/components/Grid'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { Grid } from '@/components/Grid'
+import { Text } from '@/components/Text'
+import { sizes } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'

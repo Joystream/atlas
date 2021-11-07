@@ -1,10 +1,10 @@
 import React from 'react'
 
 import { AssetAvailability } from '@/api/queries'
+import { VideoTileBase, VideoTilePublisherProps } from '@/components/VideoTileBase'
 import { absoluteRoutes } from '@/config/routes'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { VideoTileBase, VideoTilePublisherProps } from '@/shared/components/VideoTileBase'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
 
 import { VideoTileProps, useVideoSharedLogic } from './VideoTile'

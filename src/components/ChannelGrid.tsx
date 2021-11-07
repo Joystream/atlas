@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { Grid } from '@/shared/components/Grid'
+import { Grid } from '@/components/Grid'
 
 import { ChannelCard } from './ChannelCard'
 

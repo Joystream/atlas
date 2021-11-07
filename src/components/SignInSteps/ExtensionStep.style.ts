@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { Button } from '@/components/Button'
+import { Text } from '@/components/Text'
+import { sizes } from '@/theme'
 
 import { StepFooter } from './SignInSteps.style'
 

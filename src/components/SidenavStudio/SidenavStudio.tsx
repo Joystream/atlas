@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
+import { Button } from '@/components/Button'
 import { absoluteRoutes } from '@/config/routes'
+import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/icons'
+import { SvgJoystreamLogoStudio } from '@/illustrations'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/shared/icons'
-import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
 
 import { NavItemType, SidenavBase } from '../SidenavBase'
 

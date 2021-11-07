@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { ActiveUserProvider } from '@/providers/user'
-import { colors } from '@/shared/theme'
+import { colors } from '@/theme'
 
 import {
   Animations,

@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { Button } from '@/components/Button'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { Button } from '@/shared/components/Button'
 
 export const Modals = () => {
   const [openFirstDialog, closeFirstDialog] = useConfirmationModal({

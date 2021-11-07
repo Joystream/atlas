@@ -9,13 +9,13 @@ import {
   VideoOrderByInput,
   VideoWhereInput,
 } from '@/api/queries'
+import { Grid } from '@/components/Grid'
+import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
+import { LoadMoreButton } from '@/components/LoadMoreButton'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { Text } from '@/components/Text'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { Grid } from '@/shared/components/Grid'
-import { GridHeadingContainer, TitleContainer } from '@/shared/components/GridHeading'
-import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChevronRight } from '@/shared/icons'
+import { SvgGlyphChevronRight } from '@/icons'
 import { SentryLogger } from '@/utils/logs'
 
 import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.style'

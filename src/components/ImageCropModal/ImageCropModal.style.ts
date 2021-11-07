@@ -2,10 +2,10 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { DialogModal } from '@/components/DialogModal'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Slider } from '@/shared/components/Slider'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes } from '@/shared/theme'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { Slider } from '@/components/Slider'
+import { Text } from '@/components/Text'
+import { colors, sizes } from '@/theme'
 
 export const StyledDialogModal = styled(DialogModal)`
   width: 536px;

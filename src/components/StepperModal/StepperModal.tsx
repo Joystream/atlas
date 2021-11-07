@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 
-import { IconButton } from '@/shared/components/IconButton'
-import { Step } from '@/shared/components/Step'
-import { SvgGlyphClose } from '@/shared/icons'
+import { IconButton } from '@/components/IconButton'
+import { Step } from '@/components/Step'
+import { SvgGlyphClose } from '@/icons'
 
 import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.style'
 

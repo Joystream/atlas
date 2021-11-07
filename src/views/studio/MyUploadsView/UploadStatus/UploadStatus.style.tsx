@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { colors, media, sizes } from '@/shared/theme'
+import { Button } from '@/components/Button'
+import { Text } from '@/components/Text'
+import { colors, media, sizes } from '@/theme'
 
 import { UploadStatusGroupSize } from '../UploadStatusGroup'
 

@@ -2,9 +2,9 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, PathMatch } from 'react-router-dom'
 
-import { Text } from '@/shared/components/Text'
-import { colors, sizes, typography, zIndex } from '@/shared/theme'
+import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
+import { colors, sizes, typography, zIndex } from '@/theme'
 
 export const Container = styled.div`
   width: 100%;

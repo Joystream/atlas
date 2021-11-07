@@ -3,10 +3,10 @@ import React from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { ChannelGallery } from '@/components/ChannelGallery'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { Text } from '@/components/Text'
 import { VideoGallery } from '@/components/VideoGallery'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { sizes } from '@/theme'
 
 type AllResultsTabProps = {
   videos: VideoFieldsFragment[]

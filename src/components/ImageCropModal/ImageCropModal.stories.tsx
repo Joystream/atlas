@@ -2,9 +2,9 @@ import styled from '@emotion/styled/'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
+import { Avatar } from '@/components/Avatar'
+import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { Avatar } from '@/shared/components/Avatar'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from './ImageCropModal'

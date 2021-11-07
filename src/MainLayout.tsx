@@ -6,7 +6,7 @@ import { AdminOverlay } from '@/components/AdminOverlay'
 import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarBase } from '@/components/TopbarBase'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
-import { SvgJoystreamLogoStudio } from '@/shared/illustrations'
+import { SvgJoystreamLogoStudio } from '@/illustrations'
 import { isBrowserOutdated } from '@/utils/browser'
 
 import { useConfirmationModal } from './providers/confirmationModal'

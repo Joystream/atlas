@@ -3,10 +3,10 @@ import styled from '@emotion/styled'
 import Lottie from 'react-lottie-player'
 
 import { Modal } from '@/components/Modal'
-import { Spinner } from '@/shared/components/Spinner'
-import { SvgPolkadotLogo } from '@/shared/icons'
-import { colors, sizes, square, transitions } from '@/shared/theme'
+import { Spinner } from '@/components/Spinner'
+import { SvgPolkadotLogo } from '@/icons'
 import { cVar } from '@/styles'
+import { colors, sizes, square, transitions } from '@/theme'
 
 type StepProps = {
   isActive?: boolean

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
-import { Select } from '@/shared/components/Select'
-import { colors, media, sizes, zIndex } from '@/shared/theme'
-import { transitions } from '@/shared/theme'
+import { Select } from '@/components/Select'
+import { colors, media, sizes, zIndex } from '@/theme'
+import { transitions } from '@/theme'
 
 export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
   position: relative;

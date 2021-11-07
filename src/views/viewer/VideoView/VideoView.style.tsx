@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { fluidRange } from 'polished'
 
+import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { Text } from '@/components/Text'
 import { ViewWrapper } from '@/components/ViewWrapper'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { breakpoints, colors, media, sizes, typography } from '@/shared/theme'
+import { breakpoints, colors, media, sizes, typography } from '@/theme'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;

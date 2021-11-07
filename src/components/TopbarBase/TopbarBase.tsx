@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgJoystreamLogoShort } from '@/shared/illustrations'
+import { SvgJoystreamLogoShort } from '@/illustrations'
 
 import { Header, LogoLink } from './TopbarBase.style'
 

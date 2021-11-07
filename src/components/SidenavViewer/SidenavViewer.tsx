@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
+import { Button } from '@/components/Button'
 import { SidenavBase } from '@/components/SidenavBase'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
+import { SvgGlyphExternal } from '@/icons'
+import { SvgJoystreamLogoFull } from '@/illustrations'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { Button } from '@/shared/components/Button'
-import { SvgGlyphExternal } from '@/shared/icons'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'

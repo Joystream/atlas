@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
+import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Avatar } from '@/shared/components/Avatar'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { colors, sizes, transitions } from '@/theme'
 
 export const Header = styled.header`
   margin: 0 auto;

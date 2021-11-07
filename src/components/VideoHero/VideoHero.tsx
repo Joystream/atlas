@@ -3,17 +3,14 @@ import { Link } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoHeroData } from '@/api/featured'
+import { Button } from '@/components/Button'
+import { GridItem } from '@/components/LayoutGrid'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
-import { GridItem } from '@/shared/components/LayoutGrid'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { SvgActionPlay } from '@/shared/icons/ActionPlay'
-import { SvgActionSoundOff } from '@/shared/icons/ActionSoundOff'
-import { SvgActionSoundOn } from '@/shared/icons/ActionSoundOn'
-import { transitions } from '@/shared/theme'
+import { SvgActionPlay } from '@/icons/ActionPlay'
+import { SvgActionSoundOff } from '@/icons/ActionSoundOff'
+import { SvgActionSoundOn } from '@/icons/ActionSoundOn'
+import { transitions } from '@/theme'
 
 import {
   BackgroundContainer,
@@ -27,6 +24,8 @@ import {
 } from './VideoHero.style'
 
 import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
+import { IconButton } from '../IconButton'
+import { SkeletonLoader } from '../SkeletonLoader'
 
 export type VideoHeroProps = {
   isCategory?: boolean

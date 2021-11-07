@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { ChannelLink } from '@/components/ChannelLink'
-import { Text } from '@/shared/components/Text'
-import { colors, sizes, typography } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { colors, sizes, typography } from '@/theme'
 
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.style'
 

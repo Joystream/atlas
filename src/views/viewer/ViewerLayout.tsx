@@ -12,7 +12,7 @@ import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 import { RoutingState } from '@/types/routing'
 import {
   CategoryView,

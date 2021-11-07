@@ -3,12 +3,12 @@ import { FallbackRender } from '@sentry/react/dist/errorboundary'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { AnimatedError } from '@/components/AnimatedError'
+import { Button } from '@/components/Button'
+import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
-import { AnimatedError } from '@/shared/components/AnimatedError'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { media, sizes } from '@/shared/theme'
+import { media, sizes } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 // this isn't a react component, just a function that will be executed once to get a react element

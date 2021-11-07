@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
+import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Avatar } from '@/shared/components/Avatar'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { TextField } from '@/shared/components/TextField'
-import { media, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { TextField } from '@/components/TextField'
+import { media, sizes } from '@/theme'
 
 export const Header = styled.header`
   margin-bottom: ${sizes(12)};
