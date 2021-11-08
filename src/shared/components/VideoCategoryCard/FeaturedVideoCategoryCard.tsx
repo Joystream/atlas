@@ -49,7 +49,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
         classNames={transitions.names.fade}
       >
         <FeaturedContainer
-          href={absoluteRoutes.viewer.category(id)}
+          to={absoluteRoutes.viewer.category(id)}
           ref={hoverRef}
           isLoading={isLoading}
           variantCategory={variant}

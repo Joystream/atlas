@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
@@ -42,7 +43,7 @@ const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled.a<ColorProps & VariantProps & LoadingProps>`
+export const Container = styled(Link)<ColorProps & VariantProps & LoadingProps>`
   text-decoration: unset;
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
