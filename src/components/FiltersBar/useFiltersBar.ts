@@ -8,7 +8,6 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
   // filters
   const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string>()
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
-  const [licensesFilter, setLicensesFilter] = useState<number[]>()
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
   const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
@@ -21,17 +20,11 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
-  const canClearLicensesFilter =
-    videoWhereInput?.licenseId_in !== undefined && videoWhereInput?.licenseId_in?.length !== 0
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
   const canClearCategoriesFilter =
     videoWhereInput?.categoryId_in !== undefined && videoWhereInput?.categoryId_in?.length !== 0
   const canClearAllFilters =
-    canClearDateUploadedFilter ||
-    canClearVideoLengthFilter ||
-    canClearLicensesFilter ||
-    canClearOtherFilters ||
-    canClearCategoriesFilter
+    canClearDateUploadedFilter || canClearVideoLengthFilter || canClearOtherFilters || canClearCategoriesFilter
 
   const clearDateUploadedFilter = () => {
     setDateUploadedFilter(undefined)
@@ -45,13 +38,6 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
     setVideoWhereInput((value) => {
       delete value.duration_lte
       delete value.duration_gte
-      return value
-    })
-  }
-  const clearLicensesFilter = () => {
-    setLicensesFilter(undefined)
-    setVideoWhereInput((value) => {
-      delete value.licenseId_in
       return value
     })
   }
@@ -76,7 +62,6 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
   const clearAllFilters = () => {
     clearDateUploadedFilter()
     clearVideoLengthFilter()
-    clearLicensesFilter()
     clearCategoriesFilter()
     clearOtherFilters()
   }
@@ -97,8 +82,6 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
       setExcludePaidPromotionalMaterialFilter,
       excludeMatureContentRatingFilter,
       setExcludeMatureContentRatingFilter,
-      licensesFilter,
-      setLicensesFilter,
       categoriesFilter,
       setCategoriesFilter,
       language,
@@ -108,13 +91,11 @@ export const useFiltersBar = (initiallyFiltersOpen = true) => {
       canClearAllFilters,
       canClearDateUploadedFilter,
       canClearVideoLengthFilter,
-      canClearLicensesFilter,
       canClearOtherFilters,
       canClearCategoriesFilter,
       clearAllFilters,
       clearDateUploadedFilter,
       clearVideoLengthFilter,
-      clearLicensesFilter,
       clearOtherFilters,
       clearCategoriesFilter,
     },
