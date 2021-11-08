@@ -27,7 +27,7 @@ const tabs = ['Videos', 'Channels']
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const filtersBarLogic = useFiltersBar(false)
+  const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen, setLanguage, language },

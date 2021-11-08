@@ -7,6 +7,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { AvatarSize } from '@/shared/components/Avatar'
 import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
+import { TextVariant } from '@/shared/components/Text'
 import { transitions } from '@/shared/theme'
 import { SentryLogger } from '@/utils/logs'
 
@@ -23,6 +24,7 @@ type ChannelLinkProps = {
   avatarSize?: AvatarSize
   className?: string
   onNotFound?: () => void
+  textVariant?: TextVariant
 }
 
 export const ChannelLink: React.FC<ChannelLinkProps> = ({
@@ -35,6 +37,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   avatarSize = 'default',
   onNotFound,
   className,
+  textVariant,
 }) => {
   const { channel } = useBasicChannel(id || '', {
     skip: !id,
@@ -49,6 +52,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
   const displayedChannel = overrideChannel || channel
   const isSecondary = variant === 'secondary'
 
+  const _textVariant = textVariant ?? isSecondary ? 'button2' : 'h6'
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
@@ -67,7 +71,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {displayedChannel ? (
-              <StyledText variant={isSecondary ? 'button2' : 'h6'} isSecondary={isSecondary}>
+              <StyledText variant={_textVariant} isSecondary={isSecondary}>
                 {displayedChannel.title}
               </StyledText>
             ) : (
