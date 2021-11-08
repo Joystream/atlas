@@ -16,8 +16,9 @@ import {
   StyledModal,
   StyledPolkadotLogo,
   StyledTransactionIllustration,
-  Success,
+  SuccessBackground,
   SuccessIcon,
+  SuccessWrapper,
 } from './TransactionModal.style'
 
 export type TransactionModalProps = {
@@ -113,11 +114,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
           mountOnEnter
           unmountOnExit
         >
-          <Success>
+          <SuccessWrapper>
+            <SuccessBackground />
             <SuccessIcon>
               <SvgGlyphCheck width={27} height={27} />
             </SuccessIcon>
-          </Success>
+          </SuccessWrapper>
         </CSSTransition>
       </StyledTransactionIllustration>
       <Dialog
