@@ -30,7 +30,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, language, setLanguage },
-    canClearFilters: { canClearAllFilters, canClearCategoriesFilter, clearAllFilters },
+    canClearFilters: { canClearAllFilters, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
 
