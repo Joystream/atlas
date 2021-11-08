@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
+import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/icons'
 import { AssetType, useAsset } from '@/providers/assets'
 
 import {

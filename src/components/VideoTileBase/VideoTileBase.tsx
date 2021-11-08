@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgGlyphCopy, SvgGlyphEdit, SvgGlyphMore, SvgGlyphPlay, SvgGlyphRetry, SvgGlyphTrash } from '@/icons'
+import {
+  SvgGlyphCopy,
+  SvgGlyphEdit,
+  SvgGlyphMore,
+  SvgGlyphPlay,
+  SvgGlyphRetry,
+  SvgGlyphTrash,
+} from '@/components/icons'
 import { transitions } from '@/theme'
 import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'

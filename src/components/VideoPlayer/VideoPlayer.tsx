@@ -14,7 +14,7 @@ import {
   SvgPlayerSmallScreen,
   SvgPlayerSoundHalf,
   SvgPlayerSoundOn,
-} from '@/icons'
+} from '@/components/icons'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'

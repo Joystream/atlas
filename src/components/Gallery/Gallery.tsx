@@ -1,6 +1,6 @@
 import React, { ComponentProps, useRef } from 'react'
 
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/icons'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/components/icons'
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.style'
 

@@ -4,7 +4,7 @@ import Lottie from 'react-lottie-player'
 
 import { Modal } from '@/components/Modal'
 import { Spinner } from '@/components/Spinner'
-import { SvgPolkadotLogo } from '@/icons'
+import { SvgPolkadotLogo } from '@/components/icons'
 import { cVar } from '@/styles'
 import { colors, sizes, square, transitions } from '@/theme'
 

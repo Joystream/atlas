@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import { SvgCoinsIllustration } from '@/illustrations'
+import { SvgCoinsIllustration } from '@/components/illustrations'
 import { colors, media, sizes } from '@/theme'
 
 export const StyledStudioContainer = styled(LimitedWidthContainer)`

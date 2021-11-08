@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgGlyphAddVideo } from '@/icons'
+import { SvgGlyphAddVideo } from '@/components/icons'
 
 import { Button, ButtonProps } from './Button'
 

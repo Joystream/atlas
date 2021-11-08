@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/icons'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/components/icons'
 
 import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.style'
 import { PAGINATION_BUTTON_WIDTH } from './constants'

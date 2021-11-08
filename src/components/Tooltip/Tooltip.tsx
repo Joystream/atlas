@@ -2,7 +2,7 @@ import Tippy from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphInfo } from '@/icons'
+import { SvgGlyphInfo } from '@/components/icons'
 import { transitions } from '@/theme'
 
 import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.style'

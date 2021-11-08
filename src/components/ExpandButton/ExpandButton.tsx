@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { SvgGlyphChevronDown } from '@/icons'
+import { SvgGlyphChevronDown } from '@/components/icons'
 import { transitions } from '@/theme'
 
 import { IconButton, IconButtonProps } from '../IconButton'

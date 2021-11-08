@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { SvgBgPattern } from '@/illustrations'
+import { SvgBgPattern } from '@/components/illustrations'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
 
 import { IconButton } from '../IconButton'

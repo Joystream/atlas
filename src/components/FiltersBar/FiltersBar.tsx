@@ -10,9 +10,9 @@ import { PopoverImperativeHandle } from '@/components/Popover'
 import { RadioButton } from '@/components/RadioButton'
 import { Select } from '@/components/Select'
 import { Text } from '@/components/Text'
+import { SvgGlyphClose } from '@/components/icons'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphClose } from '@/icons'
 import { transitions } from '@/theme'
 
 import {

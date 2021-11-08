@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphChannel, SvgOutlineConnect } from '@/icons'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/components/icons'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/theme'
 

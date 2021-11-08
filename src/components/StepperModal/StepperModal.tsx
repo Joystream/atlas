@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 
 import { IconButton } from '@/components/IconButton'
 import { Step } from '@/components/Step'
-import { SvgGlyphClose } from '@/icons'
+import { SvgGlyphClose } from '@/components/icons'
 
 import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.style'
 

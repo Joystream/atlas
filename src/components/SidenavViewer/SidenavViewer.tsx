@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/Button'
 import { SidenavBase } from '@/components/SidenavBase'
+import { SvgGlyphExternal } from '@/components/icons'
+import { SvgJoystreamLogoFull } from '@/components/illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphExternal } from '@/icons'
-import { SvgJoystreamLogoFull } from '@/illustrations'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger } from '@/utils/logs'
 

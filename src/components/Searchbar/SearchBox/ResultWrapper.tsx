@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
-import { SvgGlyphClose } from '@/icons'
+import { SvgGlyphClose } from '@/components/icons'
 
 import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.style'
 

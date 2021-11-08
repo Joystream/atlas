@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgGlyphInfo } from '@/icons'
+import { SvgGlyphInfo } from '@/components/icons'
 import { colors, sizes, transitions, typography } from '@/theme'
 
 import { SelectSizes } from '.'

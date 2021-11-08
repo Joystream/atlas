@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 
+import { SvgGlyphClock } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphClock } from '@/icons'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'

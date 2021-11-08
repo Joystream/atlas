@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { SvgGlyphMinus } from '@/icons'
+import { SvgGlyphMinus } from '@/components/icons'
 
 import { Checkmark, Container, InnerContainer, Input, StyledGlyphCheck } from './Checkbox.styles'
 

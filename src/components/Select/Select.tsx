@@ -1,7 +1,7 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import React, { Ref, forwardRef } from 'react'
 
-import { SvgGlyphChevronDown } from '@/icons'
+import { SvgGlyphChevronDown } from '@/components/icons'
 
 import {
   SelectButton,

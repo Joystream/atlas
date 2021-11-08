@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgPlayerSoundOff } from '@/icons'
+import { SvgPlayerSoundOff } from '@/components/icons'
 import { colors, media, sizes, transitions, zIndex } from '@/theme'
 
 import { PlayerControlButton } from './PlayerControlButton'

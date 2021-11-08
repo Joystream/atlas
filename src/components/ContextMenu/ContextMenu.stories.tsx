@@ -2,7 +2,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgGlyphCopy } from '@/icons'
+import { SvgGlyphCopy } from '@/components/icons'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { ContextMenu } from './ContextMenu'

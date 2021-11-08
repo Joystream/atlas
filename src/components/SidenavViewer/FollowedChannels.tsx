@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/icons'
+import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/components/icons'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/theme'
 

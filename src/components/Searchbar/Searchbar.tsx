@@ -4,10 +4,10 @@ import { CSSTransition } from 'react-transition-group'
 
 import { IconButton } from '@/components/IconButton'
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
+import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/components/icons'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/icons'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useSearchStore } from '@/providers/search'
 

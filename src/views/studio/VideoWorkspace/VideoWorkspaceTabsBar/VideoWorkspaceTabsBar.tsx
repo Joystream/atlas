@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 
 import { Badge } from '@/components/Badge'
 import { IconButton } from '@/components/IconButton'
-import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/icons'
+import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/components/icons'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
 
 import {

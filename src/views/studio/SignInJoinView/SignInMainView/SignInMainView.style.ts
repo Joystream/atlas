@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import { SvgSigninIllustration } from '@/illustrations'
+import { SvgSigninIllustration } from '@/components/illustrations'
 import { colors, media, sizes } from '@/theme'
 
 export const StyledContainer = styled(LimitedWidthContainer)`

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components/SignInSteps'
+import { SvgGlyphNewChannel } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphNewChannel } from '@/icons'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user'
 

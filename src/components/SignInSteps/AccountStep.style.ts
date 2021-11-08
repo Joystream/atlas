@@ -4,7 +4,7 @@ import { Button } from '@/components/Button'
 import { RadioButton } from '@/components/RadioButton'
 import { Spinner } from '@/components/Spinner'
 import { Text } from '@/components/Text'
-import { SvgAccountCreationIllustration } from '@/illustrations'
+import { SvgAccountCreationIllustration } from '@/components/illustrations'
 import { colors, media, sizes, transitions, typography } from '@/theme'
 
 import { StepWrapper } from './SignInSteps.style'

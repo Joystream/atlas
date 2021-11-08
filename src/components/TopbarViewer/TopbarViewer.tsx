@@ -4,10 +4,10 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Button } from '@/components/Button'
 import { Searchbar } from '@/components/Searchbar'
+import { SvgGlyphAddVideo } from '@/components/icons'
+import { SvgJoystreamLogoFull } from '@/components/illustrations'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphAddVideo } from '@/icons'
-import { SvgJoystreamLogoFull } from '@/illustrations'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 

@@ -3,7 +3,12 @@ import React, { useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
-import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/icons'
+import {
+  SvgGlyphUpload,
+  SvgIllustrativeFileSelected,
+  SvgIllustrativeImage,
+  SvgIllustrativeVideo,
+} from '@/components/icons'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { FileType } from '@/types/files'
 

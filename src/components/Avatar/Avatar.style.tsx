@@ -2,7 +2,7 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
 
-import { SvgAvatarSilhouette } from '@/illustrations'
+import { SvgAvatarSilhouette } from '@/components/illustrations'
 import { colors, media, transitions, typography } from '@/theme'
 
 import { SkeletonLoader } from '../SkeletonLoader'

@@ -10,7 +10,7 @@ import {
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
   SvgLargeUploadFailed,
-} from '@/icons'
+} from '@/components/icons'
 import { transitions } from '@/theme'
 import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'

@@ -7,8 +7,14 @@ import { CircularProgress } from '@/components/CircularProgress'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { Loader } from '@/components/Loader'
 import { Text } from '@/components/Text'
+import {
+  SvgAlertSuccess,
+  SvgAlertWarning,
+  SvgGlyphFileImage,
+  SvgGlyphFileVideo,
+  SvgGlyphUpload,
+} from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/icons'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'

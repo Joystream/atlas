@@ -12,7 +12,7 @@ import {
   SvgPlayerSoundHalf,
   SvgPlayerSoundOff,
   SvgPlayerSoundOn,
-} from '@/icons'
+} from '@/components/icons'
 
 import {
   ControlsIndicatorIconWrapper,

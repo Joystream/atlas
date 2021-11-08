@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgGlyphChevronDown } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChevronDown } from '@/icons'
 import { transitions } from '@/theme'
 
 import { StepFooter, StepWrapper } from './SignInSteps.style'

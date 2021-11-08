@@ -1,8 +1,8 @@
 import { To } from 'history'
 import React, { FC, MouseEvent, ReactNode } from 'react'
 
+import { SvgGlyphChevronRight } from '@/components/icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphChevronRight } from '@/icons'
 import { getLinkPropsFromTo } from '@/utils/button'
 
 import { BodyWrapper, ContentWrapper, IconWrapper, StyledContainer } from './CallToActionButton.style'

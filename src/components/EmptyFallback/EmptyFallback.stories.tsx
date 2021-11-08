@@ -2,7 +2,7 @@ import { Story } from '@storybook/react'
 import React from 'react'
 
 import { Button } from '@/components/Button'
-import { SvgGlyphUpload } from '@/icons'
+import { SvgGlyphUpload } from '@/components/icons'
 
 import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'
 

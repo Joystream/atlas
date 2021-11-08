@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
-import { SvgGlyphChevronRight } from '@/icons'
+import { SvgGlyphChevronRight } from '@/components/icons'
 import { colors, media, sizes } from '@/theme'
 
 import { Modal } from '../Modal'

@@ -6,7 +6,7 @@ import { IconButton } from '@/components/IconButton'
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { SvgAvatarSilhouette } from '@/illustrations'
+import { SvgAvatarSilhouette } from '@/components/illustrations'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square, typography } from '@/theme'
 

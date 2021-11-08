@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
+import { SvgGlyphExternal } from '@/components/icons'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { SvgGlyphExternal } from '@/icons'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/icons'
+import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/components/icons'
 import { transitions } from '@/theme'
 
 import {

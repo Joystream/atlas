@@ -1,8 +1,8 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgGlyphInfo } from '@/components/icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphInfo } from '@/icons'
 import { transitions } from '@/theme'
 
 import {

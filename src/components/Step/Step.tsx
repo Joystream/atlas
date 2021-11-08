@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 
-import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/icons'
+import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/components/icons'
 
 import { Overhead, ProgressContainer, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper } from './Step.styles'
 

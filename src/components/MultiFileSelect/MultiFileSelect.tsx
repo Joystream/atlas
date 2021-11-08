@@ -3,7 +3,7 @@ import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
-import { SvgGlyphChevronRight } from '@/icons'
+import { SvgGlyphChevronRight } from '@/components/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { SignInStepsStepper } from '@/components/SignInSteps'
 import { Text } from '@/components/Text'
+import { SvgGlyphChevronRight } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChevronRight } from '@/icons'
 
 import {
   HeroContainer,

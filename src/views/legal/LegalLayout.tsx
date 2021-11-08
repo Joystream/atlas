@@ -3,8 +3,8 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { TopbarBase } from '@/components/TopbarBase'
+import { SvgJoystreamLogoFull } from '@/components/illustrations'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { SvgJoystreamLogoFull } from '@/illustrations'
 import { colors, sizes } from '@/theme'
 
 import { CopyrightPolicyView } from './CopyrightPolicyView'

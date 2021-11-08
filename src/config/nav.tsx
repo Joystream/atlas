@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/icons'
 
 export const viewerNavItems = [
   {

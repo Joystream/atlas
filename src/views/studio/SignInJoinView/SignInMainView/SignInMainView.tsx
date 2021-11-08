@@ -2,9 +2,9 @@ import React from 'react'
 
 import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/components/icons'
+import { SvgJoystreamLogoFull } from '@/components/illustrations'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/icons'
-import { SvgJoystreamLogoFull } from '@/illustrations'
 
 import {
   BackLink,

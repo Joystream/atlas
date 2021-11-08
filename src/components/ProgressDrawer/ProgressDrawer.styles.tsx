@@ -1,7 +1,7 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
-import { SvgGlyphChevronDown } from '@/icons'
+import { SvgGlyphChevronDown } from '@/components/icons'
 import { colors, sizes, transitions } from '@/theme'
 
 import { CircularProgress } from '../CircularProgress'

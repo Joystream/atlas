@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState }
 
 import { DialogModalProps } from '@/components/DialogModal'
 import { IconButton } from '@/components/IconButton'
-import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/icons'
+import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/components/icons'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'

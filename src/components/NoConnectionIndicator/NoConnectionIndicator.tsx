@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgAlertWarning } from '@/icons'
+import { SvgAlertWarning } from '@/components/icons'
 import { ConnectionStatus } from '@/providers/connectionStatus'
 import { transitions } from '@/theme'
 

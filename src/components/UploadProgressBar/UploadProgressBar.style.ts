@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAlertSuccess } from '@/icons'
+import { SvgAlertSuccess } from '@/components/icons'
 import { colors, sizes } from '@/theme'
 
 import { Loader } from '../Loader'

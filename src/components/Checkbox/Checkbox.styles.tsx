@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
-import { SvgGlyphCheck } from '@/icons'
+import { SvgGlyphCheck } from '@/components/icons'
 import { colors, sizes, transitions } from '@/theme'
 
 export const Container = styled.div<CheckboxStateProps>`

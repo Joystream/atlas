@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphSearchAlt } from '@/icons'
+import { SvgGlyphSearchAlt } from '@/components/icons'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square } from '@/theme'
 

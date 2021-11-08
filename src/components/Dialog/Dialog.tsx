@@ -3,8 +3,8 @@ import React from 'react'
 import { Button, ButtonProps } from '@/components/Button'
 import { IconButton } from '@/components/IconButton'
 import { Text } from '@/components/Text'
+import { SvgGlyphClose, SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/components/icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SvgGlyphClose, SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/icons'
 
 import {
   Content,
