@@ -28,8 +28,8 @@
     "tokens:fetch": "node ./scripts/fetchTokens && prettier --write src/styles/tokens",
     "tokens:build": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
     "tokens": "yarn tokens:fetch && yarn tokens:build",
-    "svgs:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
-    "svgs:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
+    "svgs:icons": "svgr --config-file svgr.config.js -d src/components/icons src/components/icons/svgs",
+    "svgs:illustrations": "svgr --config-file svgr.config.js -d src/components/illustrations src/components/illustrations/svgs",
     "svgs": "yarn svgs:icons && yarn svgs:illustrations",
     "graphql": "graphql-codegen --config codegen.config.yml",
     "svgs:import": "node ./scripts/figma-import"

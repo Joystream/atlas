@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { GlobalStyle } from '../src/shared/components/GlobalStyle'
+import { GlobalStyles } from '../src/components/GlobalStyles'
 
 const Wrapper = styled.div`
   padding: 10px;
@@ -21,7 +21,7 @@ const StylesWrapperDecorator = (styleFn) => {
       <div style={{ position: 'absolute', fontSize: '12px', right: '4px', top: '4px' }}>
         {width}px x {height}px
       </div>
-      <GlobalStyle />
+      <GlobalStyles />
       {styleFn()}
     </Wrapper>
   )
