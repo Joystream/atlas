@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/theme'
 
-import { HelperText } from '../HelperText'
+import { HelperText } from '../../HelperText'
 
 export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean }>`
   display: inline-grid;

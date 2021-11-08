@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 
 import { TextArea, TextAreaProps } from './TextArea'
 
-import { Button } from '../Button'
+import { Button } from '../../Button'
 
 export default {
   title: 'inputs/TextArea',

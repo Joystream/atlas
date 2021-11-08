@@ -7,14 +7,18 @@ import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
 import { ActionBar } from '@/components/ActionBar'
 import { ChannelCover } from '@/components/ChannelCover'
-import { FormField } from '@/components/FormField'
-import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from '@/components/ImageCropModal'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Select, SelectItem } from '@/components/Select'
-import { TextArea } from '@/components/TextArea'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { FormField } from '@/components/forms/FormField'
+import { TextArea } from '@/components/forms/TextArea'
 import { SvgPlayerCancel } from '@/components/icons'
+import {
+  ImageCropModal,
+  ImageCropModalImperativeHandle,
+  ImageCropModalProps,
+} from '@/components/overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Dialog } from '@/components/Dialog'
+import { Dialog } from '@/components/overlays/Dialog'
 
 export const StyledDialog = styled(Dialog)`
   width: 240px;

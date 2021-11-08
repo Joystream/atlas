@@ -6,7 +6,7 @@ import { SvgGlyphClose } from '@/components/icons'
 
 import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.styles'
 
-import { ModalProps } from '../Modal'
+import { ModalProps } from '../overlays/Modal'
 
 type Step = {
   title: string

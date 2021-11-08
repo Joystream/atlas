@@ -3,7 +3,7 @@ import React from 'react'
 
 import { FormField, FormFieldProps } from './FormField'
 
-import { Select } from '../Select'
+import { Select } from '../../Select'
 import { TextArea } from '../TextArea'
 import { TextField } from '../TextField'
 

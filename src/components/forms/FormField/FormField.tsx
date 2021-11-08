@@ -8,7 +8,7 @@ import {
   FormFieldWrapper,
 } from './FormField.styles'
 
-import { Text } from '../Text'
+import { Text } from '../../Text'
 
 export type FormFieldProps = {
   title: string

@@ -4,7 +4,7 @@ import { Step } from '@/components/Step'
 import { SvgGlyphChevronRight } from '@/components/icons'
 import { colors, media, sizes } from '@/theme'
 
-import { Modal } from '../Modal'
+import { Modal } from '../overlays/Modal'
 
 export const StyledModal = styled(Modal)`
   width: 740px;

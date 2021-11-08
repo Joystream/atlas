@@ -2,7 +2,7 @@ import React from 'react'
 
 import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.styles'
 
-import { Text } from '../Text'
+import { Text } from '../../Text'
 
 type RadioAndCheckboxBaseProps = {
   disabled?: boolean

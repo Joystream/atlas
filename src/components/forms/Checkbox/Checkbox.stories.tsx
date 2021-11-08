@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Checkbox, CheckboxProps } from './Checkbox'
 
-import { WithValue } from '../../../.storybook/WithValue'
+import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
   title: 'inputs/Checkbox',

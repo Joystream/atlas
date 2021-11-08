@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { CircularProgress } from '@/components/CircularProgress'
-import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { Loader } from '@/components/Loader'
 import { Text } from '@/components/Text'
 import {
@@ -14,6 +13,7 @@ import {
   SvgGlyphFileVideo,
   SvgGlyphUpload,
 } from '@/components/icons'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'

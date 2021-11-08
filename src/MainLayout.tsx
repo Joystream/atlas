@@ -2,10 +2,10 @@ import loadable from '@loadable/component'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { AdminOverlay } from '@/components/AdminOverlay'
 import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarBase } from '@/components/TopbarBase'
 import { SvgJoystreamLogoStudio } from '@/components/illustrations'
+import { AdminOverlay } from '@/components/overlays/AdminOverlay'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
 import { isBrowserOutdated } from '@/utils/browser'
 

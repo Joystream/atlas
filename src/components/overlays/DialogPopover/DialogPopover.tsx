@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 
-import { DialogProps } from '@/components/Dialog'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/Popover'
+import { DialogProps } from '@/components/overlays/Dialog'
 
 import { StyledDialog } from './DialogPopover.styles'
 

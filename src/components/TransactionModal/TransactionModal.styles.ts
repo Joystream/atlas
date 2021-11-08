@@ -2,9 +2,9 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import Lottie from 'react-lottie-player'
 
-import { Modal } from '@/components/Modal'
 import { Spinner } from '@/components/Spinner'
 import { SvgPolkadotLogo } from '@/components/icons'
+import { Modal } from '@/components/overlays/Modal'
 import { cVar } from '@/styles'
 import { colors, sizes, square, transitions } from '@/theme'
 

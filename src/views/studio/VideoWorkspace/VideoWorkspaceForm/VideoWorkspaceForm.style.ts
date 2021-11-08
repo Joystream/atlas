@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
 import { Button } from '@/components/Button'
-import { FormField } from '@/components/FormField'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MultiFileSelect } from '@/components/MultiFileSelect'
 import { Text } from '@/components/Text'
 import { TitleArea } from '@/components/TitleArea'
+import { FormField } from '@/components/forms/FormField'
 import { media, sizes } from '@/theme'
 
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspaceTabsBar'

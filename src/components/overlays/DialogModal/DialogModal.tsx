@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Dialog, DialogProps } from '@/components/Dialog'
-import { Modal, ModalProps } from '@/components/Modal'
+import { Dialog, DialogProps } from '@/components/overlays/Dialog'
+import { Modal, ModalProps } from '@/components/overlays/Modal'
 
 export type DialogModalProps = Pick<ModalProps, 'show'> & DialogProps
 

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes, typography } from '@/theme'
 
-import { Text } from '../Text'
+import { Text } from '../../Text'
 
 type DenseProps = {
   dense?: boolean

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Dialog } from '@/components/Dialog'
 import { Text } from '@/components/Text'
+import { SvgGlyphCheck } from '@/components/icons'
+import { Dialog } from '@/components/overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { transitions } from '@/theme'
@@ -20,8 +21,6 @@ import {
   SuccessIcon,
   SuccessWrapper,
 } from './TransactionModal.styles'
-
-import { SvgGlyphCheck } from '../icons'
 
 export type TransactionModalProps = {
   status: ExtrinsicStatus | null
