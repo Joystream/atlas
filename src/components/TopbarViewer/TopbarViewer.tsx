@@ -11,7 +11,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 
-import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.style'
+import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
   const location = useLocation()

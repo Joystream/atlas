@@ -20,7 +20,7 @@ import { SvgGlyphChevronRight } from '@/components/icons'
 import { languages } from '@/config/languages'
 import { SentryLogger } from '@/utils/logs'
 
-import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
+import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.styles'
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean

@@ -19,7 +19,7 @@ import {
   SuccessBackground,
   SuccessIcon,
   SuccessWrapper,
-} from './TransactionModal.style'
+} from './TransactionModal.styles'
 
 import { SvgGlyphCheck } from '../icons'
 

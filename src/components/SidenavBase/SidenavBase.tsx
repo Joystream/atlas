@@ -20,7 +20,7 @@ import {
   StyledHamburgerButton,
   SubItem,
   SubItemsWrapper,
-} from './SidenavBase.style'
+} from './SidenavBase.styles'
 
 type NavSubitem = {
   name: string

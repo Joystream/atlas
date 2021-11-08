@@ -5,7 +5,7 @@ import { SvgGlyphChevronRight } from '@/components/icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getLinkPropsFromTo } from '@/utils/button'
 
-import { BodyWrapper, ContentWrapper, IconWrapper, StyledContainer } from './CallToActionButton.style'
+import { BodyWrapper, ContentWrapper, IconWrapper, StyledContainer } from './CallToActionButton.styles'
 
 export type ColorVariants = 'red' | 'green' | 'yellow' | 'blue' | 'lightBlue'
 

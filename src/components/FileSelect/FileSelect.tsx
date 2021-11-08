@@ -24,7 +24,7 @@ import {
   SelectedFileInfoInnerContainer,
   Thumbnail,
   Title,
-} from './FileSelect.style'
+} from './FileSelect.styles'
 
 import { Button } from '../Button'
 import { Text } from '../Text'

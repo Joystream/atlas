@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Badge, ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.style'
+import { Badge, ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.styles'
 
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 import { TextVariant } from '../Text'

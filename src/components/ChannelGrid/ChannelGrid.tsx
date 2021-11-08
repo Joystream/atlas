@@ -4,7 +4,7 @@ import React from 'react'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 
-import { ChannelCard } from './ChannelCard'
+import { ChannelCard } from '../ChannelCard'
 
 const StyledChannelCard = styled(ChannelCard)`
   width: 100%;

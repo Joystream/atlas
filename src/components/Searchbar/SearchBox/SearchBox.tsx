@@ -17,7 +17,7 @@ import {
   ShortcutsWrapper,
   SkeletonAvatar,
   StyledShortcutIndicator,
-} from './SearchBox.style'
+} from './SearchBox.styles'
 
 type SearchBoxProps = {
   searchQuery: string

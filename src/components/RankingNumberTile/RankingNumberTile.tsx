@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ChildrenWrapper, RankingNumber, RankingNumberTileWrapper } from './RankingNumberTile.style'
+import { ChildrenWrapper, RankingNumber, RankingNumberTileWrapper } from './RankingNumberTile.styles'
 
 type RankingNumberTileProps = {
   rankingNumber: number

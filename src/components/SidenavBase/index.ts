@@ -1,2 +1,2 @@
 export * from './SidenavBase'
-export * from './SidenavBase.style'
+export * from './SidenavBase.styles'

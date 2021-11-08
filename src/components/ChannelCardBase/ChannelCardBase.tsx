@@ -13,7 +13,7 @@ import {
   FollowButton,
   InfoWrapper,
   StyledAvatar,
-} from './ChannelCardBase.style'
+} from './ChannelCardBase.styles'
 
 import { SkeletonLoader } from '../SkeletonLoader'
 

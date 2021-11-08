@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { StyledRcSlider } from './Slider.style'
+import { StyledRcSlider } from './Slider.styles'
 
 export type SliderProps = {
   value: number

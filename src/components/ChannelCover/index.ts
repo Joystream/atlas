@@ -1,2 +1,2 @@
 export * from './ChannelCover'
-export * from './ChannelCover.style'
+export * from './ChannelCover.styles'

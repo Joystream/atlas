@@ -4,7 +4,7 @@ import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
 import { sizes } from '@/theme'
 
-import { StepFooter } from './SignInSteps.style'
+import { StepFooter } from './SignInSteps.styles'
 
 export const StyledButton = styled(Button)`
   margin: ${sizes(4)} 0;

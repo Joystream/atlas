@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { StyledButtonBase } from './IconButton.style'
+import { StyledButtonBase } from './IconButton.styles'
 
 import { ButtonBaseProps } from '../ButtonBase'
 

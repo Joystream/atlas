@@ -3,7 +3,7 @@ import React from 'react'
 
 import { getLinkPropsFromTo } from '@/utils/button'
 
-import { BorderWrapper, ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.style'
+import { BorderWrapper, ButtonBaseStyleProps, StyledButtonBase } from './ButtonBase.styles'
 
 export type ButtonBaseProps = {
   disabled?: boolean

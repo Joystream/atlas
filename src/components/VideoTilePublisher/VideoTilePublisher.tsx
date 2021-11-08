@@ -7,7 +7,7 @@ import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { copyToClipboard, openInNewTab } from '@/utils/browser'
 
-import { VideoTileProps, useVideoSharedLogic } from './VideoTile'
+import { VideoTileProps, useVideoSharedLogic } from '../VideoTile'
 
 export type VideoTileWPublisherProps = VideoTileProps &
   Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>

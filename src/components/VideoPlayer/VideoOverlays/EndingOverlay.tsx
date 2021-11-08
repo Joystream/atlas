@@ -21,7 +21,7 @@ import {
   SubHeading,
   VideoInfo,
   VideoThumbnail,
-} from './EndingOverlay.style'
+} from './EndingOverlay.styles'
 
 type EndingOverlayProps = {
   channelId?: string

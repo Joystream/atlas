@@ -4,7 +4,7 @@ import React from 'react'
 import { Loader } from '@/components/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.style'
+import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.styles'
 
 export const InactiveOverlay: React.FC = () => {
   const smMatch = useMediaMatch('sm')

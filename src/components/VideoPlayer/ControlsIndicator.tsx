@@ -23,7 +23,7 @@ import {
   INDICATOR_TRANSITION,
   LoaderWrapper,
   StyledLoader,
-} from './ControlsIndicator.style'
+} from './ControlsIndicator.styles'
 import { CustomVideojsEvents } from './utils'
 
 import { Text } from '../Text'

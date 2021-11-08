@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { InputAndTitleWrapper, OptionCardLabel, OptionCardTitle } from './OptionCard.style'
+import { InputAndTitleWrapper, OptionCardLabel, OptionCardTitle } from './OptionCard.styles'
 
 import { RadioInput } from '../RadioInput'
 import { Text } from '../Text'

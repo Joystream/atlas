@@ -18,7 +18,7 @@ import { SvgGlyphChevronRight } from '@/components/icons'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 
-import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.style'
+import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 import { VideoTile } from '../VideoTile'

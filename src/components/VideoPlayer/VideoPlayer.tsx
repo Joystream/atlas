@@ -39,7 +39,7 @@ import {
   VolumeControl,
   VolumeSlider,
   VolumeSliderContainer,
-} from './VideoPlayer.style'
+} from './VideoPlayer.styles'
 import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 

@@ -5,7 +5,7 @@ import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/theme'
 
-import { ModalBackdrop, ModalContent } from './Modal.style'
+import { ModalBackdrop, ModalContent } from './Modal.styles'
 
 export type ModalProps = {
   show?: boolean

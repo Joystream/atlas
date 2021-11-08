@@ -6,7 +6,7 @@ Almost all style conventions we use in Atlas are taken care by ESLint and Pretti
 
 ## Writing Components
 
-We like to separate what a component does from how it looks like, and so when we have more than a couple of styled components in the same file, we move those to another file called `[Component].style.ts` and import them from `[Component].tsx`, when then group those files in a folder called `[Component]` and export as default the Component from an `index.ts`.
+We like to separate what a component does from how it looks like, and so when we have more than a couple of styled components in the same file, we move those to another file called `[Component].styles.ts` and import them from `[Component].tsx`, when then group those files in a folder called `[Component]` and export as default the Component from an `index.ts`.
 Where it is clear what each styled component does, but the styled details are hidden.
 
 When writing a component, we like to put hooks at the top of the function body, followed by derived state and only after that event handlers. There are of course exceptions like if you need some piece of derived state inside an hook, in this case is fine to declare it where it logically makes sense.
@@ -55,7 +55,7 @@ When possible, we like to use variables from our theme, which is imported from `
 Here is a kitchen sink example:
 
 ```javascript
-// YourComponent.style.tsx
+// YourComponent.styles.tsx
 import styled from "@emotion/styled"
 import {css} from "@emotion/react"
 

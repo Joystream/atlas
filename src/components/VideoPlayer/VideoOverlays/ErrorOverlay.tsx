@@ -4,8 +4,8 @@ import { Button } from '@/components/Button'
 import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { AnimationWrapper, ButtonGroup, StyledAnimatedError, StyledDiscordButton } from './ErrorOverlay.style'
-import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.style'
+import { AnimationWrapper, ButtonGroup, StyledAnimatedError, StyledDiscordButton } from './ErrorOverlay.styles'
+import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.styles'
 
 export const ErrorOverlay: React.FC = () => {
   const smMatch = useMediaMatch('sm')

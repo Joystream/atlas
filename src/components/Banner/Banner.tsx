@@ -11,7 +11,7 @@ import {
   BannerIconContainer,
   BannerTitle,
   BannerWrapper,
-} from './Banner.style'
+} from './Banner.styles'
 
 export type BannerVariant = 'primary' | 'secondary' | 'tertiary'
 

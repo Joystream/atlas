@@ -12,7 +12,7 @@ import {
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
-} from './Avatar.style'
+} from './Avatar.styles'
 
 export type AvatarProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void

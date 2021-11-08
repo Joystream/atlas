@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { colors, media, transitions, zIndex } from '@/theme'
 
-import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.style'
+import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.styles'
 
 import { Text } from '../Text'
 

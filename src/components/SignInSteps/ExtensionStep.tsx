@@ -8,8 +8,13 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 
-import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'
-import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
+import {
+  PolkadotExtensionRejectedWrapper,
+  StyledButton,
+  StyledListItem,
+  StyledStepFooter,
+} from './ExtensionStep.styles'
+import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.styles'
 
 type ExtensionStepProps = {
   nextStepPath: string

@@ -14,7 +14,7 @@ import {
   ShowMoreButton,
   ShowMoreIconWrapper,
   StyledChannelLink,
-} from './FollowedChannels.style'
+} from './FollowedChannels.styles'
 
 const MAX_CHANNELS = 4
 

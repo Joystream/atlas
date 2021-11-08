@@ -4,7 +4,7 @@ import React from 'react'
 import { VideoFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 
-import { VideoTile } from './VideoTile'
+import { VideoTile } from '../VideoTile'
 
 const StyledVideoTile = styled(VideoTile)`
   margin: 0 auto;

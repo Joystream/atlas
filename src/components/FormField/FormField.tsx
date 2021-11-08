@@ -6,7 +6,7 @@ import {
   FormFieldHeader,
   FormFieldTitle,
   FormFieldWrapper,
-} from './FormField.style'
+} from './FormField.styles'
 
 import { Text } from '../Text'
 

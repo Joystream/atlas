@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 
-import { TextInput } from './TextField.style'
+import { TextInput } from './TextField.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
 

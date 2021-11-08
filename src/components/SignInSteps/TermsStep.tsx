@@ -5,8 +5,8 @@ import { SvgGlyphChevronDown } from '@/components/icons'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/theme'
 
-import { StepFooter, StepWrapper } from './SignInSteps.style'
-import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
+import { StepFooter, StepWrapper } from './SignInSteps.styles'
+import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.styles'
 
 import { TermsOfService } from '../TermsOfService'
 

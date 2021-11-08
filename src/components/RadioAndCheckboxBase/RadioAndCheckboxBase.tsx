@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.style'
+import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.styles'
 
 import { Text } from '../Text'
 

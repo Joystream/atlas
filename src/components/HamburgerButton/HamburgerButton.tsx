@@ -1,7 +1,7 @@
 import { SerializedStyles } from '@emotion/react'
 import React from 'react'
 
-import { Hamburger, HamburgerBox, HamburgerInner } from './HamburgerButton.style'
+import { Hamburger, HamburgerBox, HamburgerInner } from './HamburgerButton.styles'
 
 export type HamburgerButtonProps = {
   active: boolean

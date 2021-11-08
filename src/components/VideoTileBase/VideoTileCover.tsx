@@ -37,7 +37,7 @@ import {
   RemoveButton,
   SkeletonHoverOverlay,
   UploadProgressTransition,
-} from './VideoTileCover.style'
+} from './VideoTileCover.styles'
 
 import { Text } from '../Text'
 import { UploadProgressBar } from '../UploadProgressBar'

@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { viewerNavItems } from '@/config/nav'
 import { transitions } from '@/theme'
 
-import { Container, NavLink, NavTitle } from './BottomNav.style'
+import { Container, NavLink, NavTitle } from './BottomNav.styles'
 
 const Link: React.FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
   const match = useMatch(to)

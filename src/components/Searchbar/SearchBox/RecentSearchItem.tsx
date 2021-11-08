@@ -5,7 +5,7 @@ import { absoluteRoutes } from '@/config/routes'
 
 import { ResultTitle } from './ResultTitle'
 import { ResultWrapper } from './ResultWrapper'
-import { ClockWrapper, RecentSearchItemWrapper, Title } from './SearchBox.style'
+import { ClockWrapper, RecentSearchItemWrapper, Title } from './SearchBox.styles'
 
 type RecentSearchItemProps = {
   onClick: (title?: string) => void

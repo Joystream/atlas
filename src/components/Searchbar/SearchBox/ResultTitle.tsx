@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 
-import { HighlightedWord } from './SearchBox.style'
+import { HighlightedWord } from './SearchBox.styles'
 
 type ResultTitleProps = {
   title?: string | null

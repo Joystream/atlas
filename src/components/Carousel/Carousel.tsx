@@ -9,7 +9,7 @@ import React, {
   useRef,
 } from 'react'
 
-import { Container, Dots, GliderContainer, Track } from './Carousel.style'
+import { Container, Dots, GliderContainer, Track } from './Carousel.styles'
 
 import { GliderProps, useGlider } from '../Glider'
 

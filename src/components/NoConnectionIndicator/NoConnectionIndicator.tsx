@@ -6,7 +6,7 @@ import { SvgAlertWarning } from '@/components/icons'
 import { ConnectionStatus } from '@/providers/connectionStatus'
 import { transitions } from '@/theme'
 
-import { IconWrapper, IndicatorWrapper, TextWrapper } from './NoConnectionIndicator.style'
+import { IconWrapper, IndicatorWrapper, TextWrapper } from './NoConnectionIndicator.styles'
 
 export type NoConnectionIndicatorProps = {
   nodeConnectionStatus: ConnectionStatus

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CustomRadioInput, CustomRadioInputProps, Input } from './RadioInput.style'
+import { CustomRadioInput, CustomRadioInputProps, Input } from './RadioInput.styles'
 
 export type RadioInputProps = Partial<{
   selectedValue: string | number

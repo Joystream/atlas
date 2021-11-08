@@ -16,7 +16,7 @@ import {
   ProgressControl,
   SeekBar,
   StyledTooltipText,
-} from './CustomTimeline.style'
+} from './CustomTimeline.styles'
 import { PlayerState } from './VideoPlayer'
 
 type CustomTimelineProps = {

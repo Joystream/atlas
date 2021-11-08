@@ -3,7 +3,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/components/icons'
 
-import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.style'
+import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.styles'
 import { PAGINATION_BUTTON_WIDTH } from './constants'
 
 export type PaginationProps = {

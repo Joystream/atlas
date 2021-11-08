@@ -1,6 +1,6 @@
 import React, { ReactNode, useRef } from 'react'
 
-import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style'
+import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 

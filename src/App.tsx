@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import useHotjar from 'react-use-hotjar'
 
 import { createApolloClient } from '@/api'
-import { GlobalStyle } from '@/components/GlobalStyle'
+import { GlobalStyles } from '@/components/GlobalStyles'
 import { BUILD_ENV, readEnv } from '@/config/envs'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { routingTransitions } from '@/styles/routingTransitions'
@@ -33,7 +33,7 @@ export const App = () => {
 
   return (
     <>
-      <GlobalStyle additionalStyles={[routingTransitions]} />
+      <GlobalStyles additionalStyles={[routingTransitions]} />
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>

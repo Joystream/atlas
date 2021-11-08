@@ -9,7 +9,7 @@ import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
 import { getVideoMetadata } from '@/utils/video'
 
-import { AnimatedUnderline, MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.style'
+import { AnimatedUnderline, MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.styles'
 
 import { FileSelect } from '../FileSelect'
 import { Step } from '../Step'

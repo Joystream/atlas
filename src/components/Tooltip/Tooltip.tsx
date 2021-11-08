@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { SvgGlyphInfo } from '@/components/icons'
 import { transitions } from '@/theme'
 
-import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.style'
+import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {

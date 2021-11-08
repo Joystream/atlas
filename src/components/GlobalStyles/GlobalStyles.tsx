@@ -85,7 +85,7 @@ type GlobalStyleProps = {
   additionalStyles?: SerializedStyles[] | SerializedStyles
 }
 
-export const GlobalStyle: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+export const GlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
   const additionalStylesArray = additionalStyles
     ? Array.isArray(additionalStyles)
       ? additionalStyles

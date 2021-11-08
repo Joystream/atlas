@@ -18,7 +18,7 @@ import {
   FollowButton,
   InfoWrapper,
   StyledAvatar,
-} from './ChannelWithVideos.style'
+} from './ChannelWithVideos.styles'
 
 type ChannelWithVideosProps = {
   channelId?: string

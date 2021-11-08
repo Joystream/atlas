@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { ControlButton, ControlButtonTooltip, ControlButtonTooltipText } from './PlayerControlButton.style'
+import { ControlButton, ControlButtonTooltip, ControlButtonTooltipText } from './PlayerControlButton.styles'
 
 type PlayerControlButtonProps = {
   className?: string

@@ -10,7 +10,7 @@ import {
   StyledLoader,
   StyledSvgAlertSuccess,
   UploadProgressBarContainer,
-} from './UploadProgressBar.style'
+} from './UploadProgressBar.styles'
 
 export type UploadProgressBarProps = {
   progress?: number

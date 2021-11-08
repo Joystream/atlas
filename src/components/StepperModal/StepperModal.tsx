@@ -4,7 +4,7 @@ import { IconButton } from '@/components/IconButton'
 import { Step } from '@/components/Step'
 import { SvgGlyphClose } from '@/components/icons'
 
-import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.style'
+import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.styles'
 
 import { ModalProps } from '../Modal'
 

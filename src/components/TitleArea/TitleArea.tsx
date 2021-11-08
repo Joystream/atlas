@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.style'
+import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.styles'
 
 import { Text } from '../Text'
 

@@ -13,7 +13,7 @@ import {
   DraftsBadgeContainer,
   StyledPrimaryText,
   StyledSecondaryText,
-} from './ActionBar.style'
+} from './ActionBar.styles'
 
 import { Button, ButtonProps } from '../Button'
 import { Text } from '../Text'

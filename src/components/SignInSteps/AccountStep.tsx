@@ -22,7 +22,7 @@ import {
   StyledSpinner,
   StyledStepWrapper,
   SubTitle,
-} from './AccountStep.style'
+} from './AccountStep.styles'
 import {
   BottomBarIcon,
   StepFooter,
@@ -31,7 +31,7 @@ import {
   StepWrapper,
   StyledJoystreamLogo,
   StyledPolkadotLogo,
-} from './SignInSteps.style'
+} from './SignInSteps.styles'
 
 type AccountStepProps = {
   nextStepPath: string

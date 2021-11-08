@@ -12,7 +12,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useSearchStore } from '@/providers/search'
 
 import { SearchBox } from './SearchBox'
-import { SearchHelper } from './Searchbar.style'
+import { SearchHelper } from './Searchbar.styles'
 import {
   CancelButton,
   Container,
@@ -21,7 +21,7 @@ import {
   SearchButton,
   StyledForm,
   StyledSvgOutlineSearch,
-} from './Searchbar.style'
+} from './Searchbar.styles'
 
 type SearchbarProps = {
   onCancel?: () => void

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.style'
+import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.styles'
 
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {

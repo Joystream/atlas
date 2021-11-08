@@ -37,7 +37,7 @@ import {
   StyledLink,
   StyledTopbarBase,
   TextContainer,
-} from './TopbarStudio.style'
+} from './TopbarStudio.styles'
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean

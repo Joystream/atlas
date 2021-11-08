@@ -25,7 +25,7 @@ import {
   HorizontalSpacedContainer,
   StyledTabs,
   VerticalSpacedContainer,
-} from './AdminOverlay.style'
+} from './AdminOverlay.styles'
 
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',

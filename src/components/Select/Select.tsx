@@ -12,7 +12,7 @@ import {
   SelectWrapper,
   StyledLabelText,
   StyledSvgGlyphInfo,
-} from './Select.style'
+} from './Select.styles'
 
 import { Badge } from '../Badge'
 import { InputBase, InputBaseProps } from '../InputBase'

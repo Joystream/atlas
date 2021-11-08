@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useMostFollowedChannelsAllTime } from '@/api/hooks'
 
-import { ChannelGallery } from './ChannelGallery'
+import { ChannelGallery } from '../ChannelGallery'
 
 export const TopTenChannels = () => {
   const { channels, loading } = useMostFollowedChannelsAllTime({ limit: 10 })

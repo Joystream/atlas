@@ -15,7 +15,7 @@ import {
   Media,
   MediaWrapper,
   StyledBackgroundPattern,
-} from './ChannelCover.style'
+} from './ChannelCover.styles'
 
 import { Text } from '../Text'
 

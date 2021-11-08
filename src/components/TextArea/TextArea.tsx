@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from 'react'
 
-import { StyledTextArea } from './TextArea.style'
+import { StyledTextArea } from './TextArea.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
 

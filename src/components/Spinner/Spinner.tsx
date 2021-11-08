@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SpinnerWrapper } from './Spinner.style'
+import { SpinnerWrapper } from './Spinner.styles'
 
 export type SpinnerSize = 'large' | 'medium' | 'small'
 

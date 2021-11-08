@@ -11,7 +11,7 @@ import {
   SnackbarTitle,
   SnackbarWrapper,
   StyledInnerWrapper,
-} from './Snackbar.style'
+} from './Snackbar.styles'
 
 import { IconButton } from '../IconButton'
 

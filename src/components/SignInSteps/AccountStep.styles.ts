@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { SvgAccountCreationIllustration } from '@/components/illustrations'
 import { colors, media, sizes, transitions, typography } from '@/theme'
 
-import { StepWrapper } from './SignInSteps.style'
+import { StepWrapper } from './SignInSteps.styles'
 
 type AccountWrapperProps = {
   isSelected?: boolean

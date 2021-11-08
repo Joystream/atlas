@@ -22,7 +22,7 @@ import {
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
-} from './VideoHero.style'
+} from './VideoHero.styles'
 
 import { BackgroundVideoPlayer } from '../BackgroundVideoPlayer'
 import { IconButton } from '../IconButton'

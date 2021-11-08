@@ -16,7 +16,7 @@ import {
   StyledImage,
   StyledSlider,
   ZoomControl,
-} from './ImageCropModal.style'
+} from './ImageCropModal.styles'
 import { CropperImageType, useCropper } from './cropper'
 
 export type ImageCropModalProps = {

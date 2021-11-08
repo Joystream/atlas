@@ -5,7 +5,7 @@ import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
 import { SvgGlyphClose } from '@/components/icons'
 
-import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.style'
+import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.styles'
 
 type SearchItemProps = {
   to: string

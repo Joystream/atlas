@@ -2,10 +2,10 @@ import React, { ComponentProps, useRef } from 'react'
 
 import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/components/icons'
 
-import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.style'
+import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.styles'
 
 import { Carousel, CarouselProps } from '../Carousel'
-import { Arrow } from '../Carousel/Carousel.style'
+import { Arrow } from '../Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '../GridHeading'
 import { Text } from '../Text'
 

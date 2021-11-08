@@ -3,7 +3,7 @@ import React from 'react'
 import { SvgJoystreamLogoShort } from '@/components/illustrations'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { Header, LogoLink } from './TopbarBase.style'
+import { Header, LogoLink } from './TopbarBase.styles'
 
 export type TopbarBaseProps = {
   fullLogoNode: React.ReactNode

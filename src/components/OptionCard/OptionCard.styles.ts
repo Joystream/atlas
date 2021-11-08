@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/theme'
 
-import { CustomRadioInput, activeState, hoverState } from '../RadioInput/RadioInput.style'
+import { CustomRadioInput, activeState, hoverState } from '../RadioInput/RadioInput.styles'
 import { Text } from '../Text'
 
 type OptionCardLabelProps = {

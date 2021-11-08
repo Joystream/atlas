@@ -8,7 +8,7 @@ import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { AvatarContainer } from '@/components/VideoTileBase/VideoTileBase.styles'
 import { media } from '@/theme'
 
-import { VideoTile } from './VideoTile'
+import { VideoTile } from '../VideoTile'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number

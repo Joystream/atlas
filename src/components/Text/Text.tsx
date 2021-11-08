@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { styledVariants } from './Text.style'
+import { styledVariants } from './Text.styles'
 
 export type TextVariant = keyof typeof styledVariants
 

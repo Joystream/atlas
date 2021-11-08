@@ -13,7 +13,7 @@ import {
   StyledSkeletonLoader,
   StyledSvgAvatarSilhouette,
   Title,
-} from './SearchBox.style'
+} from './SearchBox.styles'
 
 type ResultProps = {
   video?: VideoFieldsFragment

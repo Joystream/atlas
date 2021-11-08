@@ -10,7 +10,7 @@ import { AssetType, useAsset } from '@/providers/assets'
 import { transitions } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, StyledAvatar, StyledText } from './ChannelLink.style'
+import { Container, StyledAvatar, StyledText } from './ChannelLink.styles'
 
 import { SkeletonLoader } from '../SkeletonLoader'
 
