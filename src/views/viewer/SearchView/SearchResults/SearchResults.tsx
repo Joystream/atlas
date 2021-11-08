@@ -27,7 +27,7 @@ const tabs = ['Videos', 'Channels']
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
-  const filtersBarLogic = useFiltersBar(false)
+  const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen, setLanguage, language },
@@ -50,7 +50,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   }, [clearAllFilters, selectedTabIndex, setIsFiltersOpen, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
-    setLanguage(selectedLanguage)
+    setLanguage(selectedLanguage as string | null | undefined)
     setVideoWhereInput((value) => ({
       ...value,
       languageId_eq: selectedLanguage as string,
@@ -80,11 +80,10 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
           <FiltersWrapper>
             {smMatch && selectedTabIndex === 0 && (
               <StyledSelect
-                items={languages}
-                placeholder="Any language"
+                onChange={handleSelectLanguage}
                 size="small"
                 value={language}
-                onChange={handleSelectLanguage}
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
               />
             )}
             {selectedTabIndex === 0 && (
@@ -100,7 +99,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             )}
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} categories={categories} mobileLanguageSelector />
+        <FiltersBar {...filtersBarLogic} categories={categories} />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

@@ -33,14 +33,12 @@ type FilterCategory = {
 
 export type FiltersBarProps = {
   categories?: FilterCategory[]
-  mobileLanguageSelector?: boolean
 }
 
 export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
   categories,
-  mobileLanguageSelector,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
@@ -192,20 +190,18 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         title="Filters"
         content={
           <>
-            {mobileLanguageSelector && (
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  Language
-                </Text>
-                <Select
-                  items={languages}
-                  placeholder="Any language"
-                  size="small"
-                  value={language}
-                  onChange={setLanguage}
-                />
-              </MobileFilterContainer>
-            )}
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                Language
+              </Text>
+              <Select
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                placeholder="Any language"
+                size="small"
+                value={language}
+                onChange={setLanguage}
+              />
+            </MobileFilterContainer>
             {categories && (
               <MobileFilterContainer>
                 <Text secondary variant="overhead">
@@ -248,7 +244,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
               isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
               categoryId_in: categoriesFilter,
-              languageId_eq: language as string,
+              languageId_eq: language === 'undefined' ? undefined : language,
               ...getDurationRules(),
             }))
             setIsFiltersOpen(false)

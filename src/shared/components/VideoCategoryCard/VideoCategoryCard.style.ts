@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/shared/components/Text'
 import { colors, sizes, transitions } from '@/shared/theme'
@@ -42,7 +43,7 @@ const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled.a<ColorProps & VariantProps & LoadingProps>`
+export const Container = styled(Link)<ColorProps & VariantProps & LoadingProps>`
   text-decoration: unset;
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};
@@ -61,6 +62,20 @@ export const Container = styled.a<ColorProps & VariantProps & LoadingProps>`
     ${CoverImg} {
       opacity: 1;
     }
+
+    ::after {
+      transform: translate(${sizes(2)}, ${sizes(2)});
+    }
+  }
+
+  ::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
   }
 `
 
@@ -104,7 +119,7 @@ export const Title = styled(Text)<VariantProps>`
 // ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e
 export const PieChart = styled.div`
   margin-right: ${sizes(2)};
-  background: ${transparentize(0.8, colors.gray[300])};
+  background: ${transparentize(0.8, '#7b8a95')};
   border-radius: 100%;
   height: ${sizes(4)};
   width: ${sizes(4)};

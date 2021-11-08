@@ -68,7 +68,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
         classNames={transitions.names.fade}
       >
         <GeneralContainer
-          href={absoluteRoutes.viewer.category(id)}
+          to={absoluteRoutes.viewer.category(id)}
           isLoading={isLoading}
           variantCategory={variant}
           color={color}

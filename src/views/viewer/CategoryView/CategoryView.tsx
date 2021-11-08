@@ -31,7 +31,7 @@ export const CategoryView = () => {
     ...videoCategories[category.id],
     ...category,
   }))
-  const { id } = useParams()
+  const { id = '' } = useParams()
   const data = useCategoriesFeaturedVideos()
   const featuredVideos = data?.[id] ?? []
   const videoHeroVideos = useVideoHeroVideos(featuredVideos)
