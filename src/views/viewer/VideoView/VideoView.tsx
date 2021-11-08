@@ -104,6 +104,24 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
+  const replaceUrls = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g
+    const parts: string[] | React.ReactNodeArray = text.split(urlRegex) || []
+    for (let i = 1; i < parts.length; i += 2) {
+      const part = parts[i] as string
+      parts[i] = (
+        <Button
+          textOnly
+          key={`description-link-${i}`}
+          to={part.startsWith(window.origin) ? part.replace(window.origin, '') : part}
+        >
+          {part}
+        </Button>
+      )
+    }
+    return parts
+  }
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -160,11 +178,7 @@ export const VideoView: React.FC = () => {
         </ChannelContainer>
         <DescriptionContainer>
           {video ? (
-            <>
-              {video.description?.split('\n').map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </>
+            video.description?.split('\n').map((line, idx) => <p key={idx}>{replaceUrls(line)}</p>)
           ) : (
             <>
               <DescriptionSkeletonLoader width={700} />
