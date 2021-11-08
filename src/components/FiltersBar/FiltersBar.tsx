@@ -4,7 +4,6 @@ import { CSSTransition } from 'react-transition-group'
 
 import { DialogModal, DialogModalProps } from '@/components/DialogModal'
 import { languages } from '@/config/languages'
-import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
@@ -53,8 +52,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     setExcludePaidPromotionalMaterialFilter,
     videoLengthFilter,
     setVideoLengthFilter,
-    licensesFilter,
-    setLicensesFilter,
     categoriesFilter,
     setCategoriesFilter,
     language,
@@ -69,7 +66,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     clearAllFilters,
     clearDateUploadedFilter,
     clearVideoLengthFilter,
-    clearLicensesFilter,
     clearOtherFilters,
     canClearCategoriesFilter,
   },
@@ -79,7 +75,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const categoriesPopoverRef = useRef<PopoverImperativeHandle>(null)
   const datePopoverRef = useRef<PopoverImperativeHandle>(null)
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
-  const licensePopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
 
   const categoriesInputs = (
@@ -172,23 +167,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
       />
     </FilterContentContainer>
   )
-  const licenseInputs = (
-    <FilterContentContainer>
-      {knownLicenses.map((license) => (
-        <Checkbox
-          name="license"
-          key={license.code}
-          label={license.name}
-          value={!!licensesFilter?.includes(license.code)}
-          onChange={(value) =>
-            setLicensesFilter((licenses) =>
-              value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
-            )
-          }
-        />
-      ))}
-    </FilterContentContainer>
-  )
   const otherFiltersInputs = (
     <FilterContentContainer>
       <Checkbox
@@ -249,12 +227,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               {videoLengthInputs}
             </MobileFilterContainer>
             <MobileFilterContainer>
-              <Text secondary variant="overhead">
-                License
-              </Text>
-              {licenseInputs}
-            </MobileFilterContainer>
-            <MobileFilterContainer>
               <OtherFilterStyledText secondary variant="overhead">
                 <OtherFilterStyledIcon />
                 Exclude:
@@ -273,7 +245,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                     days: -dateUploadedFilter,
                   })
                 : undefined,
-              licenseId_in: licensesFilter?.map((license) => license.toString()),
               hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
               isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
               categoryId_in: categoriesFilter,
@@ -388,33 +359,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             }}
           >
             {videoLengthInputs}
-          </DialogPopover>
-          <DialogPopover
-            ref={licensePopoverRef}
-            dividers
-            trigger={
-              <Button badge={videoWhereInput?.licenseId_in?.length} variant="secondary">
-                License
-              </Button>
-            }
-            primaryButton={{
-              text: 'Apply',
-              disabled: (!licensesFilter || !licensesFilter.length) && !clearLicensesFilter,
-              onClick: () => {
-                licensePopoverRef.current?.hide()
-                setVideoWhereInput((value) => ({
-                  ...value,
-                  licenseId_in: licensesFilter?.map((license) => license.toString()),
-                }))
-              },
-            }}
-            secondaryButton={{
-              text: 'Clear',
-              onClick: clearLicensesFilter,
-              disabled: licensesFilter === undefined || licensesFilter?.length === 0,
-            }}
-          >
-            {licenseInputs}
           </DialogPopover>
           <DialogPopover
             ref={othersPopoverRef}
