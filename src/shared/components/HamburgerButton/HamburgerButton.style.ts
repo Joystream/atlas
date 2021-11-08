@@ -1,37 +1,15 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, square } from '../../theme'
+import { colors, square } from '../../theme'
+import { IconButton } from '../IconButton'
 
 type HamburgerInnerProps = {
   active: boolean
 }
 
-export const Hamburger = styled.button`
+export const Hamburger = styled(IconButton)`
   ${square(48)};
-
-  padding: 0;
-  cursor: pointer;
-  border: none;
-  border-radius: 100%;
-  display: inline-block;
-  background-color: transparent;
-
-  &:hover,
-  &:focus {
-    background-color: ${colors.transparentPrimary[12]};
-  }
-
-  &:active {
-    background-color: ${colors.transparentPrimary[6]};
-  }
-
-  ${media.md} {
-    top: 16px;
-    height: ${sizes(12)};
-    width: ${sizes(12)};
-    background: none;
-  }
 `
 
 export const HamburgerBox = styled.span`
