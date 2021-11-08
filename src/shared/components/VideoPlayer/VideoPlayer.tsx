@@ -488,7 +488,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
-                  {(!showBigPlayButton || mdMatch) && (
+                  {(!isAutoPlayFailed || mdMatch) && (
                     <PlayButton
                       isEnded={playerState === 'ended'}
                       onClick={handlePlayPause}

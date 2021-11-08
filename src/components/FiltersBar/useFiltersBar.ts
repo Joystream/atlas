@@ -6,13 +6,12 @@ export type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
 
 export const useFiltersBar = () => {
   // filters
-  const [selectedCategoryIdFilter, setSelectedCategoryIdFilter] = useState<string>()
   const [dateUploadedFilter, setDateUploadedFilter] = useState<number>()
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
   const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
-  const [language, setLanguage] = useState<unknown>()
+  const [language, setLanguage] = useState<string | null | undefined>('undefined')
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
@@ -71,8 +70,6 @@ export const useFiltersBar = () => {
     videoWhereInput,
     setVideoWhereInput,
     filters: {
-      selectedCategoryIdFilter,
-      setSelectedCategoryIdFilter,
       isFiltersOpen,
       setIsFiltersOpen,
       dateUploadedFilter,

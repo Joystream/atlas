@@ -1,15 +1,13 @@
 import styled from '@emotion/styled'
 
 import { Select } from '@/shared/components/Select'
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
 export const Container = styled.div`
-  /* margin-top: ${sizes(16)}; */
-
-  /* todo remove line below and uncomment above when layout is ready */
-  margin-top: ${sizes(32)};
+  margin-top: ${sizes(16)};
+  scroll-behavior: smooth;
 `
 
 export const StyledSticky = styled.div`
@@ -31,27 +29,17 @@ export const ControlsContainer = styled.div`
   background-color: ${colors.black};
 
   ${media.sm} {
-    grid-template-columns: auto 160px 1fr 242px;
+    grid-template-columns: auto 160px 1fr 160px;
   }
 `
 
-export const SortContainer = styled.div`
-  display: grid;
-  grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: 1fr;
-  grid-column-end: span 2;
+export const StyledVideoGrid = styled(InfiniteVideoGrid)<{ isFiltersOpen: boolean }>`
+  position: relative;
 
   ${media.sm} {
-    grid-template-columns: auto 1fr;
-    grid-area: initial;
-    padding-left: ${sizes(4)};
+    padding-top: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
+    transition: padding-top ${transitions.timings.routing} ${transitions.easing};
   }
-`
-
-export const StyledVideoGrid = styled(InfiniteVideoGrid)`
-  position: relative;
-  padding-top: ${sizes(12)};
 `
 
 export const StyledSelect = styled(Select)`
