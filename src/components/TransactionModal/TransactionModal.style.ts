@@ -1,12 +1,12 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import { rgba } from 'polished'
 import Lottie from 'react-lottie-player'
 
 import { Modal } from '@/components/Modal'
 import { Spinner } from '@/shared/components/Spinner'
 import { SvgPolkadotLogo } from '@/shared/icons'
 import { colors, sizes, square, transitions } from '@/shared/theme'
+import { cVar } from '@/styles'
 
 type StepProps = {
   isActive?: boolean
@@ -115,16 +115,19 @@ export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
   margin-bottom: ${sizes(6)};
 `
 
-export const Success = styled.div`
+export const SuccessBackground = styled.div`
   ${square('100%')};
-
   position: absolute;
-  top: 0;
+  background: ${cVar('colorCoreBlue500')};
+  opacity: 0.2;
+`
+
+export const SuccessWrapper = styled.div`
+  ${square('100%')};
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* TODO replace with variable: blue 500 */
-  background: ${rgba('#4038ff', 0.2)};
 `
 
 export const SuccessIcon = styled.div`
