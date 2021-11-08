@@ -50,7 +50,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   }, [clearAllFilters, selectedIndex, setIsFiltersOpen, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
-    setLanguage(selectedLanguage)
+    setLanguage(selectedLanguage as string | null | undefined)
     setVideoWhereInput((value) => ({
       ...value,
       languageId_eq: selectedLanguage as string,
@@ -75,11 +75,10 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
           <FiltersWrapper>
             {smMatch && selectedIndex === 0 && (
               <StyledSelect
-                items={languages}
-                placeholder="Any language"
+                onChange={handleSelectLanguage}
                 size="small"
                 value={language}
-                onChange={handleSelectLanguage}
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
               />
             )}
             {selectedIndex === 0 && (
@@ -95,7 +94,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             )}
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} categories={categories} mobileLanguageSelector />
+        <FiltersBar {...filtersBarLogic} categories={categories} />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

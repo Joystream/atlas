@@ -5,7 +5,6 @@ import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { languages } from '@/config/languages'
-import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { Button } from '@/shared/components/Button'
 import { EmptyFallback } from '@/shared/components/EmptyFallback'
@@ -13,17 +12,16 @@ import { GridItem } from '@/shared/components/LayoutGrid'
 import { Text } from '@/shared/components/Text'
 import { SvgActionFilters } from '@/shared/icons'
 
-import {
-  Container,
-  ControlsContainer,
-  SortContainer,
-  StyledSelect,
-  StyledSticky,
-  StyledVideoGrid,
-} from './CategoryVideos.styles'
+import { Container, ControlsContainer, StyledSelect, StyledSticky, StyledVideoGrid } from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.style'
 
+const ADAPTED_SORT_OPTIONS = [
+  { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
+  { name: 'oldest', value: VideoOrderByInput.CreatedAtAsc },
+]
+
 export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
+  const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollWhenFilterChange = useRef(false)
@@ -31,13 +29,13 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
-    filters: { setSelectedCategoryIdFilter, setIsFiltersOpen },
-    canClearFilters: { canClearAllFilters, clearAllFilters },
+    filters: { setIsFiltersOpen, language, setLanguage },
+    canClearFilters: { canClearAllFilters, canClearCategoriesFilter, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('undefined')
+
   const { videoCount } = useVideoCount(
     { where: videoWhereInput },
     {
@@ -49,21 +47,12 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setVideoWhereInput({
       categoryId_eq: categoryId,
     })
-    setSelectedCategoryIdFilter(categoryId)
-  }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
-
-  useEffect(() => {
-    setVideoWhereInput((value) => ({
-      ...value,
-      languageId_eq: selectedLanguage === 'undefined' ? undefined : selectedLanguage,
-    }))
-  }, [selectedLanguage, setVideoWhereInput])
+  }, [categoryId, setVideoWhereInput])
 
   useEffect(() => {
     if (scrollWhenFilterChange.current) {
       containerRef.current?.scrollIntoView()
     }
-
     // account for videoWhereInput initialization
     if (!isEqual(videoWhereInput, {})) {
       scrollWhenFilterChange.current = true
@@ -80,8 +69,26 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setIsFiltersOpen((value) => !value)
   }
 
+  const handleSelectLanguage = (language: string | null | undefined) => {
+    setLanguage(language)
+    setVideoWhereInput((value) => ({
+      ...value,
+      languageId_eq: language === 'undefined' ? undefined : language,
+    }))
+  }
+
   const topbarHeight = mdMatch ? 80 : 64
 
+  const sortingNode = (
+    <StyledSelect
+      size="small"
+      helperText={null}
+      value={sortVideosBy}
+      valueLabel="Sort by: "
+      items={ADAPTED_SORT_OPTIONS}
+      onChange={handleSorting}
+    />
+  )
   return (
     <Container ref={containerRef}>
       <StyledSticky style={{ top: topbarHeight - 1 }}>
@@ -89,12 +96,16 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
           <GridItem colSpan={{ base: 2, sm: 1 }}>
             <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
           </GridItem>
-          <StyledSelect
-            onChange={setSelectedLanguage}
-            size="small"
-            value={selectedLanguage}
-            items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
-          />
+          {smMatch ? (
+            <StyledSelect
+              onChange={handleSelectLanguage}
+              size="small"
+              value={language}
+              items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+            />
+          ) : (
+            sortingNode
+          )}
           <div>
             <Button
               badge={canClearAllFilters}
@@ -105,16 +116,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
               Filters
             </Button>
           </div>
-          <SortContainer>
-            <Text variant="body2">Sort by</Text>
-            <StyledSelect
-              size="small"
-              helperText={null}
-              value={sortVideosBy}
-              items={SORT_OPTIONS}
-              onChange={handleSorting}
-            />
-          </SortContainer>
+          {smMatch && sortingNode}
         </ControlsContainer>
         <FiltersBar {...filtersBarLogic} />
       </StyledSticky>

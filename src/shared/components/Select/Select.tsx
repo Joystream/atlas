@@ -31,6 +31,7 @@ export type SelectItem<T = string> = {
 export type SelectProps<T = string> = {
   onChange?: (value?: T | null) => void
   value?: T | null
+  valueLabel?: string
   labelPosition?: 'top' | 'left'
   items: SelectItem<T>[]
   placeholder?: string
@@ -48,6 +49,7 @@ export const _Select = <T extends unknown>(
     placeholder = 'Select option',
     error,
     value,
+    valueLabel,
     disabled,
     onChange,
     containerRef,
@@ -95,7 +97,7 @@ export const _Select = <T extends unknown>(
             tabIndex={disabled ? -1 : 0}
             size={size}
           >
-            {selectedItem?.name || placeholder}
+            {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
             {selectedItem?.badgeText && <Badge variant="caption">{selectedItem.badgeText}</Badge>}
             <SvgGlyphChevronDown />
           </SelectButton>

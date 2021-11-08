@@ -29,21 +29,7 @@ export const ControlsContainer = styled.div`
   background-color: ${colors.black};
 
   ${media.sm} {
-    grid-template-columns: auto 160px 1fr 242px;
-  }
-`
-
-export const SortContainer = styled.div`
-  display: grid;
-  grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: 1fr;
-  grid-column-end: span 2;
-
-  ${media.sm} {
-    grid-template-columns: auto 1fr;
-    grid-area: initial;
-    padding-left: ${sizes(4)};
+    grid-template-columns: auto 160px 1fr 160px;
   }
 `
 
