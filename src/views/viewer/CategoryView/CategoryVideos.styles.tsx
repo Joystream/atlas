@@ -6,10 +6,8 @@ import { colors, media, sizes } from '@/shared/theme'
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
 export const Container = styled.div`
-  /* margin-top: ${sizes(16)}; */
-
-  /* todo remove line below and uncomment above when layout is ready */
-  margin-top: ${sizes(32)};
+  margin-top: ${sizes(16)};
+  scroll-behavior: smooth;
 `
 
 export const StyledSticky = styled.div`

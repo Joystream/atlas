@@ -61,6 +61,20 @@ export const Container = styled.a<ColorProps & VariantProps & LoadingProps>`
     ${CoverImg} {
       opacity: 1;
     }
+
+    ::after {
+      transform: translate(${sizes(2)}, ${sizes(2)});
+    }
+  }
+
+  ::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
   }
 `
 

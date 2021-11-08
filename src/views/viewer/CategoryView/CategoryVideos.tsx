@@ -37,7 +37,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   } = filtersBarLogic
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>()
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('undefined')
   const { videoCount } = useVideoCount(
     { where: videoWhereInput },
     {
@@ -52,22 +52,10 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setSelectedCategoryIdFilter(categoryId)
   }, [categoryId, setSelectedCategoryIdFilter, setVideoWhereInput])
 
-  const handleSorting = (value?: VideoOrderByInput | null) => {
-    if (value) {
-      setSortVideosBy(value)
-    }
-  }
-
-  const handleFilterClick = () => {
-    setIsFiltersOpen((value) => !value)
-  }
-
-  const topbarHeight = mdMatch ? 80 : 64
-
   useEffect(() => {
     setVideoWhereInput((value) => ({
       ...value,
-      languageId_eq: selectedLanguage,
+      languageId_eq: selectedLanguage === 'undefined' ? undefined : selectedLanguage,
     }))
   }, [selectedLanguage, setVideoWhereInput])
 
@@ -82,6 +70,18 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     }
   }, [videoWhereInput])
 
+  const handleSorting = (value?: VideoOrderByInput | null) => {
+    if (value) {
+      setSortVideosBy(value)
+    }
+  }
+
+  const handleFilterClick = () => {
+    setIsFiltersOpen((value) => !value)
+  }
+
+  const topbarHeight = mdMatch ? 80 : 64
+
   return (
     <Container ref={containerRef}>
       <StyledSticky style={{ top: topbarHeight - 1 }}>
@@ -90,11 +90,10 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
             <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
           </GridItem>
           <StyledSelect
-            placeholder="Any language"
             onChange={setSelectedLanguage}
             size="small"
             value={selectedLanguage}
-            items={languages}
+            items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
           />
           <div>
             <Button
