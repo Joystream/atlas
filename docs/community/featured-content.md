@@ -19,8 +19,8 @@ Atlas mostly relies on blockchain state to display content. However, there are s
 
 In general the process for updating the featured content will look as follows:
 
-1. _Content curators_ prepare ideas for new featured content. This includes preparing metadata according to the [structure below](#metadata-structure) and preparing any neccessary assets (video cuts, posters, etc)
-2. Optionally, if video hero is affected, video hero propostion should be sent to the _reviewer_ for approval
+1. _Content curators_ prepare ideas for new featured content. This includes preparing metadata according to the [structure below](#metadata-structure) and preparing any necessary assets (video cuts, posters, etc.)
+2. Optionally, if video hero is affected, video hero propositions should be sent to the _reviewer_ for approval
 3. Once all content is ready and optionally approved, _content curators_ should send all required metadata and assets to the _content admin_
 4. _Content admin_, using their credentials, makes assets publicly accessible and updates the featured content in Orion
 5. Changes are live in Atlas
@@ -67,7 +67,7 @@ type Query {
 
 ## Featured assets
 
-Other than the metadata mentioned above, some featured content will also require additional assets, for example short preview cut of video hero or poster image specficially for video hero section. To enable hosting those, JSG have prepared an object storage on Linode (S3-compatible). _Content admin_ should have access to this storage and upload any assets prepared by _content curators_ to it. Any URLs in the [metadata structure above](#metadata-structure) should link to this Linode storage.
+Other than the metadata mentioned above, some featured content will also require additional assets, for example short preview cut of video hero or poster image specifically for video hero section. To enable hosting those, JSG have prepared an object storage on Linode (S3-compatible). _Content admin_ should have access to this storage and upload any assets prepared by _content curators_ to it. Any URLs in the [metadata structure above](#metadata-structure) should link to this Linode storage.
 
 To access the storage, any S3-compatible client can be used, some good choices are [Cyberduck](https://cyberduck.io/) (UI-based) and [s3cmd](https://s3tools.org/s3cmd-howto]).
 
