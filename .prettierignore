@@ -9,4 +9,4 @@ public/mockServiceWorker.js
 docs/
 
 # don't prettify minified animation JSONs
-src/shared/assets/animations
+src/assets/animations
