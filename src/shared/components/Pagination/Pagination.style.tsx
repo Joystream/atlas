@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media, square, transitions, typography } from '@/shared/theme'
+import { media, square, transitions, typography } from '@/shared/theme'
+import { cVar } from '@/styles'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
 
@@ -37,7 +38,7 @@ export const ChevronButton = styled(IconButton)`
 export const ThreeDotsWrapper = styled.div`
   ${square(PAGINATION_BUTTON_WIDTH)};
 
-  color: ${colors.gray[300]};
+  color: ${cVar('colorCoreNeutral300')};
   font-size: ${typography.sizes.subtitle2};
   justify-content: center;
   align-items: center;
@@ -47,8 +48,8 @@ export const ThreeDotsWrapper = styled.div`
 `
 
 const buttonActiveState = css`
-  background-color: ${colors.transparentPrimary[12]};
-  color: ${colors.gray[50]};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
+  color: ${cVar('colorCoreNeutral50')};
 `
 
 export const PaginationButton = styled.button<PaginationButtonProps>`
@@ -58,7 +59,7 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
   flex-shrink: 0;
   border: none;
   cursor: pointer;
-  color: ${colors.gray[300]};
+  color: ${cVar('colorCoreNeutral300')};
   font-size: ${typography.sizes.subtitle2};
   justify-content: center;
   align-items: center;
@@ -72,8 +73,8 @@ export const PaginationButton = styled.button<PaginationButtonProps>`
 
   :hover,
   :focus {
-    background-color: ${colors.transparentPrimary[18]};
-    color: ${colors.gray[50]};
+    background-color: ${cVar('colorCoreNeutral700Lighten')};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   :active {
