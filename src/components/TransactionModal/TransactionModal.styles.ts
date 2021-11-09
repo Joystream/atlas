@@ -117,6 +117,7 @@ export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
 
 export const SuccessBackground = styled.div`
   ${square('100%')};
+
   position: absolute;
   background: ${cVar('colorCoreBlue500')};
   opacity: 0.2;
@@ -124,6 +125,7 @@ export const SuccessBackground = styled.div`
 
 export const SuccessWrapper = styled.div`
   ${square('100%')};
+
   position: absolute;
   display: flex;
   align-items: center;
