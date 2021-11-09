@@ -105,12 +105,13 @@ export const VideoView: React.FC = () => {
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
   const replaceUrls = (text: string) => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g
+    const urlRegex = /(https?:\/\/[^\s]+|www.[^\s]+)/g
     const parts: string[] | React.ReactNodeArray = text.split(urlRegex) || []
     for (let i = 1; i < parts.length; i += 2) {
       const part = parts[i] as string
       parts[i] = (
         <Button
+          size="large"
           textOnly
           key={`description-link-${i}`}
           to={part.startsWith(window.origin) ? part.replace(window.origin, '') : part}
