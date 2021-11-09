@@ -62,7 +62,6 @@
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.1",
     "bezier-easing": "^2.1.0",
-    "bluebird": "^3.7.2",
     "bn.js": "^4.12.0",
     "buffer": "^5.7.1",
     "change-case": "^4.1.2",

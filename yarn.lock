@@ -7496,7 +7496,6 @@ __metadata:
     axios: ^0.21.1
     babel-loader: ^8.2.2
     bezier-easing: ^2.1.0
-    bluebird: ^3.7.2
     bn.js: ^4.12.0
     buffer: ^5.7.1
     change-case: ^4.1.2
@@ -8003,7 +8002,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.3.5, bluebird@npm:^3.5.5, bluebird@npm:^3.7.2":
+"bluebird@npm:^3.3.5, bluebird@npm:^3.5.5":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
