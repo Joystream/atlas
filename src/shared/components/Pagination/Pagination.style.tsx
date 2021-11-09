@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { media, square, transitions, typography } from '@/shared/theme'
+import { Button } from '@/shared/components/Button'
+import { media, square, typography } from '@/shared/theme'
 import { cVar } from '@/styles'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
@@ -52,33 +53,17 @@ const buttonActiveState = css`
   color: ${cVar('colorCoreNeutral50')};
 `
 
-export const PaginationButton = styled.button<PaginationButtonProps>`
+export const PaginationButton = styled(Button)<PaginationButtonProps>`
   ${square(PAGINATION_BUTTON_WIDTH)};
 
-  display: flex;
-  flex-shrink: 0;
-  border: none;
-  cursor: pointer;
   color: ${cVar('colorCoreNeutral300')};
-  font-size: ${typography.sizes.subtitle2};
-  justify-content: center;
-  align-items: center;
-  background: none;
   border-radius: 100%;
-  text-decoration: none;
-  font-family: ${typography.fonts.headers};
-  transition: background-color ${transitions.timings.loading} ${transitions.easing},
-    color ${transitions.timings.loading} ${transitions.easing}, opacity 200ms ${transitions.easing};
   user-select: none;
 
   :hover,
-  :focus {
-    background-color: ${cVar('colorCoreNeutral700Lighten')};
-    color: ${cVar('colorCoreNeutral50')};
-  }
-
+  :focus,
   :active {
-    ${buttonActiveState};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   ${({ isActive }) => isActive && buttonActiveState};

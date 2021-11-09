@@ -70,6 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         typeof pageItem === 'number' ? (
           <PaginationButton
             isActive={internalPage ? internalPage === pageItem : pageItem === 1}
+            variant="tertiary"
             key={idx}
             onClick={() => handleChangePage(pageItem)}
           >
