@@ -19,7 +19,7 @@ const createTokenKey = (token) => {
   const baseFileName = basename(token.filePath).replace('.token.json', '')
   // singularize string
   const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-  return `${prefix}-${token.name.replaceAll('-default', '')}`
+  return `${prefix}-${token.name.replace(/-default/g, '')}`
 }
 
 module.exports = {
