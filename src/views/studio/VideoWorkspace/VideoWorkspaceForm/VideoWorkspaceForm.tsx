@@ -410,7 +410,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
 
   return (
     <>
-      <FormScrolling actionBarHeight={actionBarBounds.height} isEdit={isEdit}>
+      <FormScrolling actionBarHeight={actionBarBounds.height} isEdit={isEdit} data-scroll-lock-scrollable>
         <FormWrapper as="form">
           <Controller
             name="assets"
@@ -434,9 +434,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
             <Controller
               name="title"
               control={control}
-              rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 40, required: true })}
+              rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 60, required: true })}
               render={({ field: { value, onChange } }) => (
-                <StyledTitleArea onChange={onChange} value={value} min={3} max={40} placeholder="Video title" />
+                <StyledTitleArea onChange={onChange} value={value} min={3} max={60} placeholder="Video title" />
               )}
             />
 

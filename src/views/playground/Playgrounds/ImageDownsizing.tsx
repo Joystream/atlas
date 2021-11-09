@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ImageCropDialog, ImageCropDialogImperativeHandle } from '@/components/ImageCropDialog'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
 import { AssetDimensions } from '@/types/cropper'
@@ -56,8 +56,8 @@ const StyledImg = styled.img`
 `
 
 export const ImageDownsizing = () => {
-  const avatarDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
-  const coverDialogRef = useRef<ImageCropDialogImperativeHandle>(null)
+  const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
+  const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const avatarImgRef = useRef<HTMLImageElement | null>(null)
   const coverImgRef = useRef<HTMLImageElement | null>(null)
 
@@ -156,7 +156,7 @@ export const ImageDownsizing = () => {
       </ul>
       <StyledLink href="https://alexandre.alapetite.fr/doc-alex/large-image/index.en.html">More</StyledLink>
       <StyledButton onClick={() => avatarDialogRef.current?.open()}>Upload avatar image</StyledButton>
-      <ImageCropDialog imageType="avatar" onConfirm={handleConfirmAvatar} ref={avatarDialogRef} />
+      <ImageCropModal imageType="avatar" onConfirm={handleConfirmAvatar} ref={avatarDialogRef} />
       {avatarUrl && (
         <>
           <StyledImg src={avatarUrl} ref={avatarImgRef} />
@@ -171,7 +171,7 @@ export const ImageDownsizing = () => {
         </>
       )}
       <StyledButton onClick={() => coverDialogRef.current?.open()}>Upload cover image</StyledButton>
-      <ImageCropDialog imageType="cover" onConfirm={handleConfirmCover} ref={coverDialogRef} />
+      <ImageCropModal imageType="cover" onConfirm={handleConfirmCover} ref={coverDialogRef} />
       {coverUrl && (
         <>
           <StyledImg src={coverUrl} ref={coverImgRef} />

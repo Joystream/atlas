@@ -1,3 +1,4 @@
+import { ConsoleLogger } from '@/utils/logs'
 import { formatNumber, formatNumberShort } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
@@ -41,6 +42,10 @@ export const getVideoMetadata = async (file: File): Promise<VideoMetadata> => {
       const fileURL = URL.createObjectURL(file)
       videoEl.src = fileURL
       videoEl.addEventListener('loadeddata', handleLoadedData, { once: true })
+      videoEl.addEventListener('error', (error) => {
+        ConsoleLogger.warn('Cannot get metadata from a given video file', error)
+        reject(new Error("Can't play video file"))
+      })
     } else {
       reject(new Error("Can't play video file"))
     }

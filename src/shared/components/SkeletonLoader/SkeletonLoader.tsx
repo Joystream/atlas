@@ -2,7 +2,7 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { colors } from '@/shared/theme'
+import { cVar } from '@/styles/generated/variables'
 
 export type SkeletonLoaderProps = {
   width?: string | number
@@ -36,7 +36,7 @@ const SkeletonLoaderContainer = styled.div<SkeletonLoaderProps>`
   height: ${({ height = '100%' }) => getPropValue(height)};
   margin-bottom: ${({ bottomSpace = 0 }) => getPropValue(bottomSpace)};
   border-radius: ${({ rounded = false }) => (rounded ? '100%' : '0')};
-  background-color: ${colors.gray['800']};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
   overflow: hidden;
 
   /* Safari fix
@@ -49,14 +49,12 @@ const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
   transform: translateX(0%);
   background: linear-gradient(
     104deg,
-    ${colors.gray['700']}00 15%,
-    ${colors.gray['700']}3F 25%,
-    ${colors.gray['700']}7F 30%,
-    ${colors.gray['700']}FF 48%,
-    ${colors.gray['700']}FF 52%,
-    ${colors.gray['700']}7F 70%,
-    ${colors.gray['700']}3F 75%,
-    ${colors.gray['700']}00 85%
+    rgba(0, 0, 0, 0) 15%,
+    ${cVar('colorCoreNeutral900Lighten')} 30%,
+    ${cVar('colorCoreNeutral800Lighten')} 48%,
+    ${cVar('colorCoreNeutral800Lighten')} 52%,
+    ${cVar('colorCoreNeutral900Lighten')} 70%,
+    rgba(0, 0, 0, 0) 85%
   );
   animation: ${pulse} 1.5s linear infinite;
 `

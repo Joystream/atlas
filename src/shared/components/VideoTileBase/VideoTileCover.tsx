@@ -12,6 +12,7 @@ import {
   SvgLargeUploadFailed,
 } from '@/shared/icons'
 import { transitions } from '@/shared/theme'
+import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'
 import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDurationShort } from '@/utils/time'
@@ -45,7 +46,7 @@ type TileSize = 'small' | 'big' | undefined
 
 type VideoTileCoverProps = {
   hasAssetUploadFailed?: boolean
-  videoHref?: string
+  videoHref?: string | { pathname: string; state: RoutingState }
   openInNewBrowserTab?: boolean
   setTileSize: React.Dispatch<React.SetStateAction<TileSize>>
   tileSize: TileSize
@@ -117,11 +118,15 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
   }
 
   const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
+
+  const href = typeof videoHref === 'string' ? videoHref : videoHref?.pathname
+
   return (
     <CoverWrapper>
       <Anchor
         to={videoHref ?? ''}
-        onClick={createAnchorClickHandler(videoHref)}
+        onClick={createAnchorClickHandler(href)}
+        state={typeof videoHref !== 'string' ? videoHref?.state : undefined}
         {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
       >
         <CoverContainer ref={imgRef} clickable={clickable}>

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react'
 import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
-import { useDialog } from '@/providers/dialogs'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { SvgGlyphUpload, SvgIllustrativeFileSelected, SvgIllustrativeImage, SvgIllustrativeVideo } from '@/shared/icons'
 import { FileType } from '@/types/files'
 
@@ -91,7 +91,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     noKeyboard: true,
   })
 
-  const [openErrorDialog, closeErrorDialog] = useDialog()
+  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
 
   useEffect(() => {
     if (!error) {
@@ -100,8 +100,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     openErrorDialog({
       title: 'Unsupported file type selected',
       description: error,
-      variant: 'warning',
-      exitButton: false,
+      iconType: 'warning',
       primaryButton: {
         onClick: () => {
           closeErrorDialog()
@@ -109,7 +108,6 @@ export const FileSelect: React.FC<FileSelectProps> = ({
           open()
         },
         text: 'Reselect file',
-        variant: 'primary',
       },
       secondaryButton: {
         text: 'Cancel',

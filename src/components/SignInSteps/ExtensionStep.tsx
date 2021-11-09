@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { useDialog } from '@/providers/dialogs'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 import { Button } from '@/shared/components/Button'
 import { Text } from '@/shared/components/Text'
@@ -19,8 +19,8 @@ export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) =>
   const navigate = useNavigate()
   const step = useRouterQuery('step')
   const { extensionConnected } = useUser()
-  const [openEnableExtensionDialog, closeEnableExtensionDialog] = useDialog({
-    description: <PolkadotExtensionRejected />,
+  const [openEnableExtensionDialog, closeEnableExtensionDialog] = useConfirmationModal({
+    children: <PolkadotExtensionRejected />,
     onExitClick: () => closeEnableExtensionDialog(),
   })
 

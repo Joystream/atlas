@@ -37,7 +37,7 @@ import {
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()
-  const { loading, video, error } = useVideo(id, {
+  const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const { addVideoView } = useAddVideoView()
@@ -46,10 +46,6 @@ export const VideoView: React.FC = () => {
 
   const timestampFromQuery = Number(useRouterQuery('time'))
 
-  const { url: thumbnailPhotoUrl } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
@@ -141,7 +137,6 @@ export const VideoView: React.FC = () => {
               autoplay
               src={mediaUrl}
               fill
-              posterUrl={thumbnailPhotoUrl}
               onEnd={handleVideoEnd}
               onTimeUpdated={handleTimeUpdate}
               startTime={startTimestamp}

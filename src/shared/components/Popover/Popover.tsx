@@ -1,32 +1,35 @@
 import styled from '@emotion/styled'
 import { Placement } from '@popperjs/core'
-import Tippy, { TippyProps } from '@tippyjs/react/headless'
-import React, { MutableRefObject } from 'react'
+import Tippy from '@tippyjs/react/headless'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { Instance } from 'tippy.js'
 
-export type TippyInstance = Parameters<Required<TippyProps>['render']>[2] // what a mess, i know
+export type PopoverImperativeHandle = {
+  hide: () => void
+}
 
 export type PopoverProps = {
-  content: React.ReactNode
+  trigger: React.ReactNode
   placement?: Placement
   offset?: [number, number]
-  instanceRef?: MutableRefObject<TippyInstance>
   hideOnClick?: boolean
   className?: string
   onHide?(): void
+  children?: React.ReactNode
 }
 
 const EXIT_ANIMATION_DURATION = 100
 
-export const Popover: React.FC<PopoverProps> = ({
-  hideOnClick = true,
-  onHide,
-  placement = 'bottom-start',
-  children,
-  offset = [0, 8],
-  content,
-  instanceRef,
-  className,
-}) => {
+const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverProps> = (
+  { hideOnClick = true, onHide, placement = 'bottom-start', children, offset = [0, 8], trigger, className },
+  ref
+) => {
+  const tippyRef = useRef<Instance>()
+
+  useImperativeHandle(ref, () => ({
+    hide: () => tippyRef.current?.hide(),
+  }))
+
   return (
     <Tippy
       trigger="click"
@@ -34,9 +37,7 @@ export const Popover: React.FC<PopoverProps> = ({
       interactive
       animation
       onCreate={(instance) => {
-        if (instanceRef) {
-          instanceRef.current = instance
-        }
+        tippyRef.current = instance
       }}
       onTrigger={(instance) => {
         const box = instance.popper.firstElementChild
@@ -59,13 +60,13 @@ export const Popover: React.FC<PopoverProps> = ({
       }}
       render={(attrs) => (
         <ContentContainer {...attrs} className={className}>
-          {content}
+          {children}
         </ContentContainer>
       )}
       placement={placement}
       offset={offset}
     >
-      <TriggerContainer tabIndex={0}>{children}</TriggerContainer>
+      <TriggerContainer tabIndex={0}>{trigger}</TriggerContainer>
     </Tippy>
   )
 }
@@ -91,3 +92,6 @@ const ContentContainer = styled.div`
     transition: ${EXIT_ANIMATION_DURATION}ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `
+
+export const Popover = forwardRef(_Popover)
+Popover.displayName = 'Popover'

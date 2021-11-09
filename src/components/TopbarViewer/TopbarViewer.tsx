@@ -1,102 +1,84 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useCallback, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useOverlayManager } from '@/providers/overlayManager'
+import { useSearchStore } from '@/providers/search'
 import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
+import { Searchbar } from '@/shared/components/Searchbar'
 import { SvgGlyphAddVideo } from '@/shared/icons'
 import { SvgJoystreamLogoFull } from '@/shared/illustrations'
-import { RoutingState } from '@/types/routing'
 
-import { ButtonWrapper, SearchbarContainer, StyledSearchbar, StyledTopbarBase } from './TopbarViewer.style'
+import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.style'
 
 export const TopbarViewer: React.FC = () => {
-  const navigate = useNavigate()
   const location = useLocation()
-  const locationState = location.state as RoutingState
-  const overlaidLocation = locationState?.overlaidLocation || location
   const mdMatch = useMediaMatch('md')
-
-  const [searchQuery, setSearchQuery] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const {
+    searchOpen,
+    searchQuery,
+    actions: { setSearchOpen, setSearchQuery },
+  } = useSearchStore()
 
   useEffect(() => {
-    // close the searchbar on external navigation
-    if (isFocused && !location.pathname.includes(absoluteRoutes.viewer.search())) {
-      setSearchQuery('')
-      setIsFocused(false)
+    if (searchOpen) {
+      incrementOverlaysOpenCount()
+    } else {
+      decrementOverlaysOpenCount()
     }
+  }, [searchOpen, incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
-    // focus the searchbar when visiting search (e.g. from a link)
-    if (!isFocused && location.pathname.includes(absoluteRoutes.viewer.search())) {
-      setIsFocused(true)
+  // set input search query on results page
+  useEffect(() => {
+    if (location.pathname.includes(absoluteRoutes.viewer.search())) {
       if (location.search) {
         const params = new URLSearchParams(location.search)
         const query = params.get(QUERY_PARAMS.SEARCH)
         setSearchQuery(query || '')
       }
     }
-  }, [isFocused, location.pathname, location.search])
+  }, [location.pathname, location.search, setSearchQuery])
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === 'Enter' || e.key === 'NumpadEnter') && searchQuery.trim()) {
-      const state: RoutingState = { overlaidLocation }
-
-      // navigate to search results
-      navigate(absoluteRoutes.viewer.search({ query: searchQuery.trim() }), { state })
-    }
-    if (e.key === 'Escape' || e.key === 'Esc') {
-      handleCancel()
-      e.currentTarget.blur()
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchOpen(true)
+    setSearchQuery(event.currentTarget.value)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFocused(true)
-    setSearchQuery(e.currentTarget.value)
-  }
+  const onClose = useCallback(() => {
+    setSearchOpen(false)
+  }, [setSearchOpen])
 
   const handleFocus = () => {
-    setIsFocused(true)
-
-    // open the search overlay if not already visible
-    if (!location.pathname.includes(absoluteRoutes.viewer.search())) {
-      const state: RoutingState = { overlaidLocation }
-
-      navigate(absoluteRoutes.viewer.search(), { state })
-    }
+    setSearchOpen(true)
   }
 
   const handleCancel = () => {
     setSearchQuery('')
-    setIsFocused(false)
-
-    // navigate to overlaid view or home on searchbar close
-    const overlaidLocation = locationState?.overlaidLocation || { pathname: absoluteRoutes.viewer.index() }
-    navigate(overlaidLocation)
   }
 
   return (
     <StyledTopbarBase
-      hasFocus={isFocused}
-      noLogo={!mdMatch && isFocused}
+      hasFocus={searchOpen}
+      noLogo={!mdMatch && !!searchQuery}
       fullLogoNode={<SvgJoystreamLogoFull />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
     >
       <SearchbarContainer>
-        <StyledSearchbar
-          placeholder="Search..."
-          onChange={handleChange}
-          value={searchQuery}
-          onKeyDown={handleKeyPress}
-          onFocus={handleFocus}
-          onCancel={handleCancel}
-          showCancelButton={isFocused}
-          controlled
-          hasFocus={isFocused}
-          onClick={handleFocus}
-        />
+        <CSSTransition classNames="searchbar" in={searchOpen} timeout={0}>
+          <Searchbar
+            placeholder="Search..."
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onCancel={handleCancel}
+            showCancelButton={!!searchQuery}
+            onClose={onClose}
+            controlled
+            onClick={handleFocus}
+          />
+        </CSSTransition>
       </SearchbarContainer>
       <ButtonWrapper>
         {mdMatch && (
@@ -110,12 +92,15 @@ export const TopbarViewer: React.FC = () => {
             Start publishing
           </Button>
         )}
-        {!isFocused && !mdMatch && (
-          <IconButton to={absoluteRoutes.studio.index()} newTab>
+        {!searchQuery && !mdMatch && (
+          <StyledIconButton to={absoluteRoutes.studio.index()} newTab>
             <SvgGlyphAddVideo />
-          </IconButton>
+          </StyledIconButton>
         )}
       </ButtonWrapper>
+      <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
+        <Overlay onClick={onClose} />
+      </CSSTransition>
     </StyledTopbarBase>
   )
 }

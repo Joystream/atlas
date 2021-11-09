@@ -10,7 +10,7 @@ export type HelperTextProps = {
 
 const helperVariants = {
   error: colors.secondary.alert[100],
-  warning: colors.warning,
+  warning: colors.secondary.warning[100],
 }
 
 export const StyledHelperText = styled(Text)<HelperTextProps>`

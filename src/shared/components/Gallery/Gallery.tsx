@@ -31,18 +31,16 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
         <TitleContainer>
           {title && <Text variant="h4">{title}</Text>}
           {seeAllUrl && (
-            <>
-              <SeeAllLink
-                iconPlacement="left"
-                icon={<SvgPlayerPlay width={16} height={16} />}
-                textOnly
-                to={seeAllUrl}
-                size="large"
-                variant="primary"
-              >
-                See all
-              </SeeAllLink>
-            </>
+            <SeeAllLink
+              iconPlacement="left"
+              icon={<SvgPlayerPlay width={16} height={16} />}
+              textOnly
+              to={seeAllUrl}
+              size="large"
+              variant="primary"
+            >
+              See all
+            </SeeAllLink>
           )}
           <CarouselArrowsContainer>
             <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">

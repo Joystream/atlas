@@ -48,6 +48,7 @@ export const useVideoJsPlayer: VideoJsPlayerHook = ({
       loadingSpinner: false,
       bigPlayButton: false,
       controlBar: false,
+      preload: 'metadata',
     }
 
     const playerInstance = videojs(playerRef.current as Element, videoJsOptions)

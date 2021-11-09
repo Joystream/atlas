@@ -16,6 +16,7 @@ export type TabsProps = {
   onSelectTab: (idx: number) => void
   selected?: number
   className?: string
+  variant?: 'default' | 'large'
 }
 
 const SCROLL_SHADOW_OFFSET = 10
@@ -26,6 +27,7 @@ export const Tabs: React.FC<TabsProps> = ({
   initialIndex = -1,
   selected: paramsSelected,
   className,
+  variant = 'default',
 }) => {
   const [_selected, setSelected] = useState(initialIndex)
   const selected = paramsSelected ?? _selected
@@ -91,19 +93,16 @@ export const Tabs: React.FC<TabsProps> = ({
       </CSSTransition>
       <TabsGroup ref={tabsRef}>
         {tabs.map((tab, idx) => (
-          <Tab onClick={createClickHandler(idx)} key={`${tab.name}-${idx}`} selected={selected === idx}>
+          <Tab
+            onClick={createClickHandler(idx)}
+            key={`${tab.name}-${idx}`}
+            selected={selected === idx}
+            variant={variant}
+          >
             <span data-badge={tab.badgeNumber}>{tab.name}</span>
           </Tab>
         ))}
       </TabsGroup>
-      <CSSTransition
-        in={shadowsVisible.right && isContentOverflown}
-        timeout={100}
-        classNames={transitions.names.fade}
-        unmountOnExit
-      >
-        <BackgroundGradient direction="next" />
-      </CSSTransition>
     </TabsWrapper>
   )
 }

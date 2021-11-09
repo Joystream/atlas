@@ -63,7 +63,7 @@ export const MinMaxChars = styled(Text)`
 `
 
 export const CharactersCounter = styled(Text)<CharactersCounterProps>`
-  ${({ error }) => error && `color: ${colors.error}`};
+  ${({ error }) => error && `color: ${colors.secondary.alert[100]}`};
 
   font-feature-settings: 'tnum' on, 'lnum' on;
 `

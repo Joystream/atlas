@@ -43,10 +43,9 @@ const Template: Story = (args) => {
               title: 'Copy video URL',
             },
           ]}
+          trigger={<Button>Open menu on the left side</Button>}
           {...args}
-        >
-          <Button>Open menu on the left side</Button>
-        </ContextMenu>
+        />
       </div>
     </>
   )

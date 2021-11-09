@@ -13,8 +13,8 @@ import { StudioLoading } from '@/components/StudioLoading'
 import { TopbarStudio } from '@/components/TopbarStudio'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useDialog } from '@/providers/dialogs'
 import { JoystreamProvider } from '@/providers/joystream'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
@@ -42,7 +42,7 @@ const StudioLayout = () => {
   const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
     useUser()
 
-  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useDialog()
+  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
@@ -53,7 +53,7 @@ const StudioLayout = () => {
   useEffect(() => {
     if (!isAllowedBrowser()) {
       openUnsupportedBrowserDialog({
-        variant: 'warning',
+        iconType: 'warning',
         title: 'Unsupported browser detected',
         description:
           'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',

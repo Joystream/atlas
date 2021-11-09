@@ -84,11 +84,11 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
 
         &:hover,
         &:focus {
-          background-color: ${colors.transparentPrimary[12]};
+          background-color: ${colors.transparentPrimary[18]};
         }
 
         &:active {
-          background-color: ${colors.transparentPrimary[6]};
+          background-color: ${colors.transparentPrimary[10]};
         }
       `
     case 'destructive':

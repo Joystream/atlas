@@ -5585,6 +5585,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/scroll-lock@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@types/scroll-lock@npm:2.1.0"
+  checksum: 01d8c295a3d11158b665255acfe96259d5b28566ae07f26011c47ba2b8eb0211386a9c5f752f82d3bf1d0153d08e8a51f641307cd808b1eda9f26418a62fa2d1
+  languageName: node
+  linkType: hard
+
 "@types/set-cookie-parser@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/set-cookie-parser@npm:2.4.1"
@@ -7015,6 +7022,7 @@ __metadata:
     "@types/react": ^17.0.19
     "@types/react-dom": ^17.0.9
     "@types/react-transition-group": ^4.4.0
+    "@types/scroll-lock": ^2.1.0
     "@types/video.js": ^7.3.26
     "@typescript-eslint/eslint-plugin": ^4.29.3
     "@typescript-eslint/parser": ^4.29.3
@@ -7025,7 +7033,6 @@ __metadata:
     babel-loader: ^8.2.2
     bezier-easing: ^2.1.0
     bn.js: ^4.12.0
-    body-scroll-lock: ^3.1.5
     buffer: ^5.7.1
     cropperjs: ^1.5.10
     date-fns: ^2.23.0
@@ -7056,15 +7063,17 @@ __metadata:
     react-intersection-observer: ^8.31.0
     react-lottie-player: ^1.4.0
     react-number-format: ^4.4.4
-    react-router: 6.0.0-beta.3
-    react-router-dom: 6.0.0-beta.3
+    react-router: ^6.0.0
+    react-router-dom: ^6.0.0
     react-spring: ^9.2.4
     react-textarea-autosize: ^8.3.3
     react-transition-group: ^4.4.1
     react-use-measure: ^2.0.4
     retry-axios: ^2.4.0
     rollup-plugin-visualizer: ^5.5.2
+    scroll-lock: ^2.1.5
     storybook-builder-vite: ^0.0.12
+    style-dictionary: ^3.0.2
     stylelint: ^13.13.1
     stylelint-config-prettier: ^8.0.2
     stylelint-config-standard: ^22.0.0
@@ -7556,13 +7565,6 @@ __metadata:
     raw-body: 2.4.0
     type-is: ~1.6.17
   checksum: 490231b4c89bbd43112762f7ba8e5342c174a6c9f64284a3b0fcabf63277e332f8316765596f1e5b15e4f3a6cf0422e005f4bb3149ed3a224bb025b7a36b9ac1
-  languageName: node
-  linkType: hard
-
-"body-scroll-lock@npm:^3.1.5":
-  version: 3.1.5
-  resolution: "body-scroll-lock@npm:3.1.5"
-  checksum: 52c25b81d6e7a87cfbdd7870363c3e20a439dbc76535b735916e2df907abbce95c0da0d2c7a2cfe88f49775d53bbc4bd09445ffda2d61b999efa3f0b1dedfc5e
   languageName: node
   linkType: hard
 
@@ -8653,6 +8655,13 @@ __metadata:
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: d7b9913ff92cae20cb577a4ac6fcc121bd6223319e54a40f51a14740a681ad5c574fd29a57da478a5f234a6fa6c52cbf0b7c641353e03c648b1ae85ba670b977
+  languageName: node
+  linkType: hard
+
+"commander@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "commander@npm:5.1.0"
+  checksum: 0b7fec1712fbcc6230fcb161d8d73b4730fa91a21dc089515489402ad78810547683f058e2a9835929c212fead1d6a6ade70db28bbb03edbc2829a9ab7d69447
   languageName: node
   linkType: hard
 
@@ -11196,7 +11205,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^8.1":
+"fs-extra@npm:^8.1, fs-extra@npm:^8.1.0":
   version: 8.1.0
   resolution: "fs-extra@npm:8.1.0"
   dependencies:
@@ -12119,6 +12128,15 @@ fsevents@^1.2.7:
   dependencies:
     "@babel/runtime": ^7.7.6
   checksum: ec14960f422cc53eaea47f0a07c0b666241687386c0947178579c707c4d813b35d5ff3a06e2bb3f8d40193541811f366d990ac654aaf7a43d334abf63a2b4b63
+  languageName: node
+  linkType: hard
+
+"history@npm:^5.0.3":
+  version: 5.1.0
+  resolution: "history@npm:5.1.0"
+  dependencies:
+    "@babel/runtime": ^7.7.6
+  checksum: c978710a188ee5ad5d2acf55721c77e27469578c891a66311e71e8920d1390d14476e39a6db07e0ab0f5f8d594f1f62eb55a1059c7549cde7795a36367df5869
   languageName: node
   linkType: hard
 
@@ -17440,26 +17458,26 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.0.0-beta.3":
-  version: 6.0.0-beta.3
-  resolution: "react-router-dom@npm:6.0.0-beta.3"
+"react-router-dom@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-router-dom@npm:6.0.0"
   dependencies:
-    react-router: 6.0.0-beta.3
+    react-router: 6.0.0
   peerDependencies:
-    history: ">=5"
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 03a8ecc8ca76d650e52313193a6384d763bd18aeaa86604d85721650634a72b993b899278a470a6a14c6740658de6c5bdc2aded8fd1d0b20d6925b2abab5dfed
+  checksum: d411dbdb139b27535f80326a8c6dc0dbf600a5fadda8db27460caeade87c252543cc75a8338f032ecf3fcb3d0c9856b10e3e071f8e0c9ccf73f93453fc453884
   languageName: node
   linkType: hard
 
-"react-router@npm:6.0.0-beta.3":
-  version: 6.0.0-beta.3
-  resolution: "react-router@npm:6.0.0-beta.3"
+"react-router@npm:6.0.0, react-router@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-router@npm:6.0.0"
+  dependencies:
+    history: ^5.0.3
   peerDependencies:
-    history: ">=5"
     react: ">=16.8"
-  checksum: e82b0b350bce22a1de584aa2dc2c25cd049936c7c23e65458744595682b91dac61d5349d454e90f2ebae9a34a8233ddbf2ff7ed5a2af95f3ac8bf775acaaabbf
+  checksum: c6ddc02366009e6ea2db28631d676026c1da3b51c0c179b1a1a92e5602f66cbf379e1d56418c7612009f8b049c159c40b4fd1eb8b261c991bf11206417930175
   languageName: node
   linkType: hard
 
@@ -18416,6 +18434,13 @@ resolve@^2.0.0-next.3:
     ajv: ^6.12.5
     ajv-keywords: ^3.5.2
   checksum: fb73f3d759d43ba033c877628fe9751620a26879f6301d3dbeeb48cf2a65baec5cdf99da65d1bf3b4ff5444b2e59cbe4f81c2456b5e0d2ba7d7fd4aed5da29ce
+  languageName: node
+  linkType: hard
+
+"scroll-lock@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "scroll-lock@npm:2.1.5"
+  checksum: f18e9b93084bde8c8f56f749a49ad5d2b4ca8aadbfcb640c025bb273ca041c465a08b79fa07eb378d3d4d69c95c5fed5d6881f8af0dc3ee03b60ed7012e61b2b
   languageName: node
   linkType: hard
 
@@ -19388,6 +19413,24 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"style-dictionary@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "style-dictionary@npm:3.0.2"
+  dependencies:
+    chalk: ^4.0.0
+    change-case: ^4.1.2
+    commander: ^5.1.0
+    fs-extra: ^8.1.0
+    glob: ^7.1.6
+    json5: ^2.1.3
+    lodash: ^4.17.15
+    tinycolor2: ^1.4.1
+  bin:
+    style-dictionary: bin/style-dictionary
+  checksum: 36e43023cb429da8c44e12109deaa0d7ab53d3bf3beffb8e3138526ccda5f11a77b30439c786faecc9f80412736a1f963ce924312620343db9a516bd0813c8a1
+  languageName: node
+  linkType: hard
+
 "style-loader@npm:^1.3.0":
   version: 1.3.0
   resolution: "style-loader@npm:1.3.0"
@@ -19897,6 +19940,13 @@ resolve@^2.0.0-next.3:
   version: 1.1.0
   resolution: "tiny-invariant@npm:1.1.0"
   checksum: 27d29bbb9e1d1d86e25766711c28ad91af6d67c87d561167077ac7fbce5212b97bbfe875e70bc369808e075748c825864c9b61f0e9f8652275ec86bcf4dcc924
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.4.1":
+  version: 1.4.2
+  resolution: "tinycolor2@npm:1.4.2"
+  checksum: 57ed262e08815a4ab0ed933edafdbc6555a17081781766149813b44a080ecbe58b3ee281e81c0e75b42e4d41679f138cfa98eabf043f829e0683c04adb12c031
   languageName: node
   linkType: hard
 

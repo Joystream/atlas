@@ -1,16 +1,8 @@
 import { round } from 'lodash-es'
 
 import { createStore } from '@/store'
-import { readFromLocalStorage } from '@/utils/localStorage'
 
-import {
-  DismissedMessage,
-  FollowedChannel,
-  RecentSearch,
-  RecentSearchType,
-  WatchedVideo,
-  WatchedVideoStatus,
-} from './types'
+import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
 
 export type PersonalDataStoreState = {
   watchedVideos: WatchedVideo[]
@@ -33,27 +25,22 @@ const WHITELIST = [
 export type PersonalDataStoreActions = {
   updateWatchedVideos: (__typename: WatchedVideoStatus, id: string, timestamp?: number) => void
   updateChannelFollowing: (id: string, follow: boolean) => void
-  updateRecentSearches: (id: string, type: RecentSearchType) => void
+  addRecentSearch: (title: string) => void
+  deleteRecentSearch: (title: string) => void
   updateDismissedMessages: (id: string, add?: boolean) => void
   setCurrentVolume: (volume: number) => void
   setCachedVolume: (volume: number) => void
 }
 
-const watchedVideos = readFromLocalStorage<WatchedVideo[]>('watchedVideos') ?? []
-const followedChannels = readFromLocalStorage<FollowedChannel[]>('followedChannels') ?? []
-const recentSearches = readFromLocalStorage<RecentSearch[]>('recentSearches') ?? []
-const dismissedMessages = readFromLocalStorage<DismissedMessage[]>('dismissedMessages') ?? []
-const currentVolume = readFromLocalStorage<number>('playerVolume') ?? 1
-
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
     state: {
       cachedVolume: 0,
-      watchedVideos,
-      followedChannels,
-      recentSearches,
-      dismissedMessages,
-      currentVolume,
+      watchedVideos: [],
+      followedChannels: [],
+      recentSearches: [],
+      dismissedMessages: [],
+      currentVolume: 1,
     },
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
@@ -79,10 +66,16 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
           }
         })
       },
-      updateRecentSearches: (id, type) => {
+      addRecentSearch: (title) => {
         set((state) => {
-          state.recentSearches = state.recentSearches.filter((search) => search.id !== id)
-          state.recentSearches.unshift({ id, type })
+          const filteredCurrentSearches = state.recentSearches.filter((item) => item.title !== title)
+          const newSearches = [{ title }, ...filteredCurrentSearches]
+          state.recentSearches = newSearches.slice(0, 6)
+        })
+      },
+      deleteRecentSearch: (title) => {
+        set((state) => {
+          state.recentSearches = state.recentSearches.filter((search) => search.title !== title)
         })
       },
       updateDismissedMessages: (id, add = true) => {
@@ -107,13 +100,13 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
     persist: {
       key: 'personalData',
       whitelist: WHITELIST,
-      version: 0,
-      onRehydrateStorage: () => {
-        WHITELIST.forEach((item) => {
-          window.localStorage.removeItem(item)
-        })
-      },
-      migrate: () => null,
+      version: 1,
+      migrate: (oldState) => ({
+        ...oldState,
+        recentSearches: oldState.recentSearches.filter(
+          (item: RecentSearch) => !Object.prototype.hasOwnProperty.call(item, 'type')
+        ),
+      }),
     },
   }
 )

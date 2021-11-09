@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 
-import { BaseDialog } from '@/components/BaseDialog'
+import { Modal } from '@/components/Modal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { Button } from '@/shared/components/Button'
@@ -32,7 +32,7 @@ export const PlaygroundConnectionState = () => {
     <div>
       <Text variant="h3">Connection state</Text>
       <Text variant="body1">{nodeConnectionStatus}</Text>
-      <BaseDialog exitButton={false} showDialog={nodeConnectionStatus === 'disconnected'}>
+      <Modal show={nodeConnectionStatus === 'disconnected'}>
         {nodeConnectionStatus === 'disconnected' && (
           <>
             <Text variant="h3">Disconnected from node</Text>
@@ -46,7 +46,7 @@ export const PlaygroundConnectionState = () => {
             <Text variant="body2">Waiting to reconnect...</Text>
           </>
         )}
-      </BaseDialog>
+      </Modal>
     </div>
   )
 }

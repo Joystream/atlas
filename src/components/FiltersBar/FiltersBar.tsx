@@ -1,17 +1,22 @@
 import { add } from 'date-fns'
-import React from 'react'
+import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import knownLicenses from '@/data/knownLicenses.json'
+import { DialogModal, DialogModalProps } from '@/components/DialogModal'
+import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Button, ButtonProps } from '@/shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import { Checkbox } from '@/shared/components/Checkbox'
-import { PopoverDialog } from '@/shared/components/Popover'
+import { DialogPopover } from '@/shared/components/DialogPopover'
+import { PopoverImperativeHandle } from '@/shared/components/Popover'
 import { RadioButton } from '@/shared/components/RadioButton'
+import { Select } from '@/shared/components/Select'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphClose } from '@/shared/icons'
+import { transitions } from '@/shared/theme'
 
 import {
+  ClearAllButton,
   FilterContentContainer,
   FiltersContainer,
   FiltersInnerContainer,
@@ -21,39 +26,75 @@ import {
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
 
-import { ActionDialog, ActionDialogProps } from '../ActionDialog'
-import { StyledTitleText } from '../MessageDialog/MessageDialog.style'
+type FilterCategory = {
+  id: string
+  name?: string | null
+}
 
-export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
+export type FiltersBarProps = {
+  categories?: FilterCategory[]
+  mobileLanguageSelector?: boolean
+}
+
+export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
+  categories,
+  mobileLanguageSelector,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
     dateUploadedFilter,
     setDateUploadedFilter,
-    matureContentRatingFilter,
-    setMatureContentRatingFilter,
-    paidPromotionalMaterialFilter,
-    setPaidPromotionalMaterialFilter,
+    excludeMatureContentRatingFilter,
+    setExcludeMatureContentRatingFilter,
+    excludePaidPromotionalMaterialFilter,
+    setExcludePaidPromotionalMaterialFilter,
     videoLengthFilter,
     setVideoLengthFilter,
-    licensesFilter,
-    setLicensesFilter,
+    categoriesFilter,
+    setCategoriesFilter,
+    language,
+    setLanguage,
   },
   canClearFilters: {
+    canClearOtherFilters,
     canClearDateUploadedFilter,
     canClearVideoLengthFilter,
     canClearAllFilters,
+    clearCategoriesFilter,
     clearAllFilters,
     clearDateUploadedFilter,
     clearVideoLengthFilter,
-    clearLicensesFilter,
     clearOtherFilters,
+    canClearCategoriesFilter,
   },
 }) => {
   const smMatch = useMediaMatch('sm')
   const betweenBaseAndSMMatch = !smMatch
+  const categoriesPopoverRef = useRef<PopoverImperativeHandle>(null)
+  const datePopoverRef = useRef<PopoverImperativeHandle>(null)
+  const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
+  const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
+
+  const categoriesInputs = (
+    <FilterContentContainer>
+      {categories &&
+        categories.map((category) => (
+          <Checkbox
+            name="category-filter"
+            label={category.name as string}
+            key={`category-filter-${category.id}`}
+            value={!!categoriesFilter?.includes(category.id)}
+            onChange={(value) => {
+              setCategoriesFilter((categories) =>
+                value ? [...(categories ?? []), category.id] : categories?.filter((id) => id !== category.id)
+              )
+            }}
+          />
+        ))}
+    </FilterContentContainer>
+  )
 
   const dateUploadedInputs = (
     <FilterContentContainer>
@@ -126,36 +167,19 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
       />
     </FilterContentContainer>
   )
-  const licenseInputs = (
-    <FilterContentContainer>
-      {knownLicenses.map((license) => (
-        <Checkbox
-          name="license"
-          key={license.code}
-          label={license.name}
-          value={!!licensesFilter?.includes(license.code)}
-          onChange={(value) =>
-            setLicensesFilter((licenses) =>
-              value ? [...(licenses ?? []), license.code] : licenses?.filter((code) => code !== license.code)
-            )
-          }
-        />
-      ))}
-    </FilterContentContainer>
-  )
   const otherFiltersInputs = (
     <FilterContentContainer>
       <Checkbox
-        onChange={setPaidPromotionalMaterialFilter}
+        onChange={setExcludePaidPromotionalMaterialFilter}
         name="other-filters"
         label="Paid promotional material"
-        value={!!paidPromotionalMaterialFilter}
+        value={!!excludePaidPromotionalMaterialFilter}
       />
       <Checkbox
-        onChange={setMatureContentRatingFilter}
+        onChange={setExcludeMatureContentRatingFilter}
         name="other-filters"
         label="Mature content rating"
-        value={!!matureContentRatingFilter}
+        value={!!excludeMatureContentRatingFilter}
       />
     </FilterContentContainer>
   )
@@ -164,10 +188,32 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
     return (
       <MobileFilterDialog
         onExitClick={() => setIsFiltersOpen(false)}
-        showDialog={isFiltersOpen}
+        show={isFiltersOpen}
         title="Filters"
         content={
           <>
+            {mobileLanguageSelector && (
+              <MobileFilterContainer>
+                <Text secondary variant="overhead">
+                  Language
+                </Text>
+                <Select
+                  items={languages}
+                  placeholder="Any language"
+                  size="small"
+                  value={language}
+                  onChange={setLanguage}
+                />
+              </MobileFilterContainer>
+            )}
+            {categories && (
+              <MobileFilterContainer>
+                <Text secondary variant="overhead">
+                  Categories
+                </Text>
+                {categoriesInputs}
+              </MobileFilterContainer>
+            )}
             <MobileFilterContainer>
               <Text secondary variant="overhead">
                 Date uploaded
@@ -181,12 +227,6 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
               {videoLengthInputs}
             </MobileFilterContainer>
             <MobileFilterContainer>
-              <Text secondary variant="overhead">
-                License
-              </Text>
-              {licenseInputs}
-            </MobileFilterContainer>
-            <MobileFilterContainer>
               <OtherFilterStyledText secondary variant="overhead">
                 <OtherFilterStyledIcon />
                 Exclude:
@@ -197,7 +237,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
         }
         primaryButton={{
           text: 'Apply',
-          onClick: () =>
+          onClick: () => {
             setVideoWhereInput((value) => ({
               ...value,
               createdAt_gte: dateUploadedFilter
@@ -205,163 +245,178 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar>> = ({
                     days: -dateUploadedFilter,
                   })
                 : undefined,
-              licenseId_in: licensesFilter?.map((license) => license.toString()),
-              hasMarketing_eq: paidPromotionalMaterialFilter,
-              isExplicit_eq: matureContentRatingFilter,
+              hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
+              isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+              categoryId_in: categoriesFilter,
+              languageId_eq: language as string,
               ...getDurationRules(),
-            })),
+            }))
+            setIsFiltersOpen(false)
+          },
         }}
         secondaryButton={{
           text: 'Clear',
-          disabled: canClearAllFilters === false,
-          onClick: clearAllFilters,
+          disabled: !canClearAllFilters,
+          onClick: () => {
+            clearAllFilters()
+            setIsFiltersOpen(false)
+          },
         }}
       />
     )
   }
   return (
-    <CSSTransition in={isFiltersOpen} timeout={100} classNames="filters" unmountOnExit>
+    <CSSTransition
+      in={isFiltersOpen}
+      timeout={parseInt(transitions.timings.routing)}
+      classNames="filters"
+      mountOnEnter
+      unmountOnExit
+    >
       <FiltersContainer open={true}>
         <FiltersInnerContainer>
-          <PopoverDialog
-            content={dateUploadedInputs}
-            footer={
-              <FilterPopoverFooter
-                clearButtonProps={{
-                  onClick: clearDateUploadedFilter,
-                  disabled: dateUploadedFilter === undefined,
-                }}
-                applyButtonProps={{
-                  onClick: () =>
-                    setVideoWhereInput((value) => ({
-                      ...value,
-                      createdAt_gte: dateUploadedFilter
-                        ? add(new Date(), {
-                            days: -dateUploadedFilter,
-                          })
-                        : undefined,
-                    })),
-                }}
-              />
+          {categories && (
+            <DialogPopover
+              ref={categoriesPopoverRef}
+              trigger={
+                <Button variant="secondary" badge={canClearCategoriesFilter && categoriesFilter?.length}>
+                  Categories
+                </Button>
+              }
+              dividers
+              primaryButton={{
+                text: 'Apply',
+                disabled: (!categoriesFilter || !categoriesFilter.length) && !canClearCategoriesFilter,
+                onClick: () => {
+                  categoriesPopoverRef.current?.hide()
+                  setVideoWhereInput((value) => ({
+                    ...value,
+                    categoryId_in: categoriesFilter,
+                  }))
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearCategoriesFilter,
+                disabled: categoriesFilter === undefined,
+              }}
+            >
+              {categoriesInputs}
+            </DialogPopover>
+          )}
+          <DialogPopover
+            ref={datePopoverRef}
+            trigger={
+              <Button badge={canClearDateUploadedFilter} variant="secondary">
+                Date uploaded
+              </Button>
             }
+            primaryButton={{
+              text: 'Apply',
+              disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
+              onClick: () => {
+                datePopoverRef.current?.hide()
+                setVideoWhereInput((value) => ({
+                  ...value,
+                  createdAt_gte: dateUploadedFilter
+                    ? add(new Date(), {
+                        days: -dateUploadedFilter,
+                      })
+                    : undefined,
+                }))
+              },
+            }}
+            secondaryButton={{
+              text: 'Clear',
+              onClick: clearDateUploadedFilter,
+              disabled: dateUploadedFilter === undefined,
+            }}
           >
-            <Button badge={canClearDateUploadedFilter} variant="secondary">
-              Date uploaded
-            </Button>
-          </PopoverDialog>
-          <PopoverDialog
-            content={videoLengthInputs}
-            footer={
-              <FilterPopoverFooter
-                clearButtonProps={{
-                  onClick: clearVideoLengthFilter,
-                  disabled: videoLengthFilter === undefined,
-                }}
-                applyButtonProps={{
-                  onClick: () =>
-                    setVideoWhereInput((value) => ({
-                      ...value,
-                      ...getDurationRules(videoLengthFilter),
-                    })),
-                }}
-              />
+            {dateUploadedInputs}
+          </DialogPopover>
+          <DialogPopover
+            ref={lengthPopoverRef}
+            trigger={
+              <Button badge={canClearVideoLengthFilter} variant="secondary">
+                Length
+              </Button>
             }
+            primaryButton={{
+              text: 'Apply',
+              disabled: !videoLengthFilter && !canClearVideoLengthFilter,
+              onClick: () => {
+                lengthPopoverRef.current?.hide()
+                setVideoWhereInput((value) => ({
+                  ...value,
+                  ...getDurationRules(videoLengthFilter),
+                }))
+              },
+            }}
+            secondaryButton={{
+              text: 'Clear',
+              onClick: clearVideoLengthFilter,
+              disabled: videoLengthFilter === undefined,
+            }}
           >
-            <Button badge={canClearVideoLengthFilter} variant="secondary">
-              Length
-            </Button>
-          </PopoverDialog>
-          <PopoverDialog
-            dividers
-            content={licenseInputs}
-            footer={
-              <FilterPopoverFooter
-                clearButtonProps={{
-                  onClick: clearLicensesFilter,
-                  disabled: licensesFilter === undefined || licensesFilter?.length === 0,
-                }}
-                applyButtonProps={{
-                  onClick: () =>
-                    setVideoWhereInput((value) => ({
-                      ...value,
-                      licenseId_in: licensesFilter?.map((license) => license.toString()),
-                    })),
-                }}
-              />
+            {videoLengthInputs}
+          </DialogPopover>
+          <DialogPopover
+            ref={othersPopoverRef}
+            trigger={
+              <Button
+                badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
+                variant="secondary"
+              >
+                Other filters
+              </Button>
             }
+            primaryButton={{
+              text: 'Apply',
+              disabled:
+                !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
+              onClick: () => {
+                othersPopoverRef.current?.hide()
+                setVideoWhereInput((value) => ({
+                  ...value,
+                  hasMarketing_eq: excludePaidPromotionalMaterialFilter
+                    ? !excludePaidPromotionalMaterialFilter
+                    : undefined,
+                  isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+                }))
+              },
+            }}
+            secondaryButton={{
+              text: 'Clear',
+              onClick: clearOtherFilters,
+              disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
+            }}
           >
-            <Button badge={videoWhereInput?.licenseId_in?.length} variant="secondary">
-              License
-            </Button>
-          </PopoverDialog>
-          <PopoverDialog
-            content={
-              <>
-                <OtherFilterStyledText secondary variant="overhead">
-                  <OtherFilterStyledIcon />
-                  Exclude:
-                </OtherFilterStyledText>
-                {otherFiltersInputs}
-              </>
-            }
-            footer={
-              <FilterPopoverFooter
-                clearButtonProps={{
-                  onClick: clearOtherFilters,
-                  disabled: !paidPromotionalMaterialFilter && !matureContentRatingFilter,
-                }}
-                applyButtonProps={{
-                  onClick: () =>
-                    setVideoWhereInput((value) => ({
-                      ...value,
-                      hasMarketing_eq: paidPromotionalMaterialFilter,
-                      isExplicit_eq: matureContentRatingFilter,
-                    })),
-                }}
-              />
-            }
-          >
-            <Button badge={+!!videoWhereInput?.hasMarketing_eq + +!!videoWhereInput?.isExplicit_eq} variant="secondary">
-              Other filters
-            </Button>
-          </PopoverDialog>
+            <OtherFilterStyledText secondary variant="overhead">
+              <OtherFilterStyledIcon />
+              Exclude:
+            </OtherFilterStyledText>
+            {otherFiltersInputs}
+          </DialogPopover>
         </FiltersInnerContainer>
 
         {canClearAllFilters && (
-          <Button onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
+          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
             Clear all
-          </Button>
+          </ClearAllButton>
         )}
       </FiltersContainer>
     </CSSTransition>
   )
 }
 
-type FilterPopoverFooterProps = {
-  applyButtonProps: ButtonProps
-  clearButtonProps: ButtonProps
-}
-const FilterPopoverFooter: React.FC<FilterPopoverFooterProps> = ({ applyButtonProps, clearButtonProps }) => (
-  <>
-    <Button size="small" variant="secondary" {...clearButtonProps}>
-      Clear
-    </Button>
-    <Button size="small" {...applyButtonProps}>
-      Apply
-    </Button>
-  </>
-)
-
-const MobileFilterDialog: React.FC<{ title: string; content: React.ReactNode } & ActionDialogProps> = ({
-  title,
+const MobileFilterDialog: React.FC<{ content: React.ReactNode } & DialogModalProps> = ({
   content,
-  ...actionDialogProps
+  ...dialogModalProps
 }) => {
   return (
-    <ActionDialog {...actionDialogProps}>
-      {title && <StyledTitleText variant="h4">{title}</StyledTitleText>}
+    <DialogModal {...dialogModalProps} dividers>
       {content}
-    </ActionDialog>
+    </DialogModal>
   )
 }
 
@@ -370,6 +425,7 @@ const getDurationRules = (duration?: VideoLengthOptions) => {
     case '0-to-4':
       return {
         duration_lte: 4 * 60,
+        duration_gte: undefined,
       }
     case '4-to-10':
       return {
@@ -379,6 +435,7 @@ const getDurationRules = (duration?: VideoLengthOptions) => {
     case '10-to-9999':
       return {
         duration_gte: 10 * 60,
+        duration_lte: undefined,
       }
     default:
       return {}

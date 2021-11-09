@@ -1,11 +1,12 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, typography, zIndex } from '@/shared/theme'
+import { colors, media, sizes, typography, zIndex } from '@/shared/theme'
 
 import { smallBadgeStyles } from '../Badge'
 
 type TabProps = {
   selected: boolean
+  variant: 'default' | 'large'
 }
 
 type BackgroundGradientProps = {
@@ -23,7 +24,6 @@ export const TabsGroup = styled.div`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
-  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
@@ -46,6 +46,10 @@ export const Tab = styled.div<TabProps>`
   :focus {
     box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? colors.blue[500] : colors.gray[300])};
     cursor: pointer;
+  }
+
+  ${media.md} {
+    padding: ${({ variant }) => sizes(variant === 'default' ? 6 : 7)} 0;
   }
 
   span {

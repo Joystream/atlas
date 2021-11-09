@@ -15,6 +15,7 @@ export type ButtonBaseProps = {
   iconOnly?: boolean
   children?: React.ReactNode
   className?: string
+  tabIndex?: number
 } & Partial<Pick<ButtonBaseStyleProps, 'size' | 'variant' | 'fullWidth'>>
 
 export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
@@ -29,6 +30,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
       variant = 'primary',
       textOnly = false,
       iconOnly = false,
+      tabIndex,
       disabled,
       ...styleProps
     },
@@ -39,6 +41,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
     return (
       <StyledButtonBase
         ref={ref}
+        tabIndex={tabIndex}
         type={to ? undefined : type}
         onClick={onClick}
         disabled={disabled}

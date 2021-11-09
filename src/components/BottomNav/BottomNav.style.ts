@@ -4,7 +4,7 @@ import { Link, PathMatch } from 'react-router-dom'
 
 import { Text } from '@/shared/components/Text'
 import { colors, sizes, typography, zIndex } from '@/shared/theme'
-import { animation } from '@/shared/theme/tokens'
+import { cVar } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
@@ -15,7 +15,7 @@ export const Container = styled.div`
   bottom: 0;
   z-index: ${zIndex.nearVideoWorkspaceOverlay};
   display: flex;
-  transition: transform ${animation.medium.timing} ${animation.medium.easing};
+  transition: transform ${cVar('animationTransitionMedium')};
 
   &.bottom-nav-active,
   &.bottom-nav-exit {

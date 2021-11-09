@@ -14,6 +14,6 @@ export const ShortcutIndicator = styled.kbd`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  line-height: 11px;
+  line-height: 12px;
   margin-left: ${sizes(2)};
 `
