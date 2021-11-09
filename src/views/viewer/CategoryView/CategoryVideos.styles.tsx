@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Select } from '@/shared/components/Select'
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media, sizes, transitions } from '@/shared/theme'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
@@ -33,9 +33,13 @@ export const ControlsContainer = styled.div`
   }
 `
 
-export const StyledVideoGrid = styled(InfiniteVideoGrid)`
+export const StyledVideoGrid = styled(InfiniteVideoGrid)<{ isFiltersOpen: boolean }>`
   position: relative;
-  padding-top: ${sizes(12)};
+
+  ${media.sm} {
+    padding-top: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
+    transition: padding-top ${transitions.timings.routing} ${transitions.easing};
+  }
 `
 
 export const StyledSelect = styled(Select)`

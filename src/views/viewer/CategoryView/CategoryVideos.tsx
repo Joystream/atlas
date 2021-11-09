@@ -29,7 +29,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
-    filters: { setIsFiltersOpen, language, setLanguage },
+    filters: { setIsFiltersOpen, isFiltersOpen, language, setLanguage },
     canClearFilters: { canClearAllFilters, clearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
@@ -122,6 +122,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
       </StyledSticky>
 
       <StyledVideoGrid
+        isFiltersOpen={isFiltersOpen}
         emptyFallback={
           <FallbackWrapper>
             <EmptyFallback
