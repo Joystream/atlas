@@ -4,6 +4,8 @@ const axios = require('axios')
 const fs = require('fs')
 const path = require('path')
 
+const TOKENS_DIR = path.join(__dirname, '..', 'src/styles/tokens')
+
 const fetchTokenUrlsFromGithub = async () => {
   try {
     const res = await axios.get('https://api.github.com/repos/Joystream/atlas-resources/contents/design_tokens')
@@ -15,24 +17,25 @@ const fetchTokenUrlsFromGithub = async () => {
 
 const TOKEN_BLACK_LIST = ['typography']
 
-const generateTokens = async () => {
+const fetchTokens = async () => {
+  fs.mkdir(TOKENS_DIR, { recursive: true }, (err) => {
+    if (err) {
+      console.log("Couldn't generate directory", err)
+    }
+  })
+
   try {
     const tokenUrls = await fetchTokenUrlsFromGithub()
     const responses = await axios.all(tokenUrls.map((res) => axios.get(res)))
 
     responses.forEach((res) => {
-      const filePath = path.join(__dirname, '..', 'tokens')
       const fileName = path.basename(res.config.url)
       if (fileName.includes(TOKEN_BLACK_LIST)) {
         return
       }
-      fs.mkdir(filePath, { recursive: true }, (err) => {
-        if (err) {
-          console.log("Couldn't generate directory", err)
-        }
-      })
+      const filePath = path.join(TOKENS_DIR, fileName)
 
-      fs.writeFile(`${filePath}/${fileName}`, JSON.stringify(res.data, null, 2) + '\n', (err) => {
+      fs.writeFile(filePath, JSON.stringify(res.data, null, 2) + '\n', (err) => {
         console.log(`Generating ${fileName} done`)
         if (err) {
           console.log("Couldn't generate tokens", err)
@@ -44,4 +47,4 @@ const generateTokens = async () => {
   }
 }
 
-generateTokens()
+fetchTokens()

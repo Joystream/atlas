@@ -25,14 +25,14 @@
     "lint:prettier": "prettier --check .",
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
-    "fetch-tokens": "node ./src/styles/scripts/fetchTokens  && prettier --write src/styles/tokens",
-    "build-tokens": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
-    "codegen:graphql": "graphql-codegen --config codegen.config.yml",
-    "codegen:graphql-watch": "yarn codegen:graphql --watch",
-    "codegen:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
-    "codegen:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
-    "codegen:svgs": "yarn codegen:illustrations && yarn codegen:icons",
-    "codegen:styles": "yarn fetch-tokens && yarn build-tokens"
+    "tokens:fetch": "node ./scripts/fetchTokens && prettier --write src/styles/tokens",
+    "tokens:build": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
+    "tokens": "yarn tokens:fetch && yarn tokens:build",
+    "svgs:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
+    "svgs:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
+    "svgs": "yarn svgs:icons && yarn svgs:illustrations",
+    "graphql:watch": "yarn codegen:graphql --watch",
+    "graphql": "graphql-codegen --config codegen.config.yml"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
