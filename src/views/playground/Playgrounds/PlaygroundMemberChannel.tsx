@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useMemberships } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import { Button } from '@/components/Button'
-import { RadioButton } from '@/components/RadioButton'
+import { RadioButton } from '@/components/forms/RadioButton'
 import { useUser } from '@/providers/user'
 
 const account = 'POLKADOT_ACCOUNT'

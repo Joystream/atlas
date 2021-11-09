@@ -2,7 +2,7 @@ import { format, isValid, parse } from 'date-fns'
 import React, { forwardRef, useEffect, useState } from 'react'
 import NumberFormat from 'react-number-format'
 
-import { TextField } from '../TextField'
+import { TextField } from '../forms/TextField'
 
 const DATE_FORMAT = 'dd/MM/yyyy'
 

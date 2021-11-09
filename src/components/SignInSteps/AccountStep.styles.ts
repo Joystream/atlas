@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/Button'
-import { RadioButton } from '@/components/RadioButton'
 import { Spinner } from '@/components/Spinner'
 import { Text } from '@/components/Text'
+import { RadioButton } from '@/components/forms/RadioButton'
 import { SvgAccountCreationIllustration } from '@/components/illustrations'
 import { colors, media, sizes, transitions, typography } from '@/theme'
 

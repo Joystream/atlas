@@ -3,10 +3,7 @@ import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Button } from '@/components/Button'
-import { DialogModal, DialogModalProps } from '@/components/DialogModal'
-import { DialogPopover } from '@/components/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/Popover'
-import { RadioButton } from '@/components/RadioButton'
 import { Select } from '@/components/Select'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/forms/Checkbox'
@@ -25,6 +22,10 @@ import {
   OtherFilterStyledText,
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
+
+import { RadioButton } from '../forms/RadioButton'
+import { DialogModal, DialogModalProps } from '../overlays/DialogModal'
+import { DialogPopover } from '../overlays/DialogPopover'
 
 type FilterCategory = {
   id: string

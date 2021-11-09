@@ -3,7 +3,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 import { colors, media, sizes, typography } from '@/theme'
 
-import { Text } from '../Text'
+import { Text } from '../../Text'
 
 export const Container = styled.div`
   position: relative;

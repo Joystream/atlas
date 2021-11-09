@@ -4,7 +4,7 @@ import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import { TextField } from '@/components/TextField'
+import { TextField } from '@/components/forms/TextField'
 import { media, sizes } from '@/theme'
 
 export const Header = styled.header`

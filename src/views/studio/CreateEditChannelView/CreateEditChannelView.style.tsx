@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { ProgressDrawer } from '@/components/ProgressDrawer'
-import { TitleArea } from '@/components/TitleArea'
+import { TitleArea } from '@/components/forms/TitleArea'
 import { media, sizes, transitions, zIndex } from '@/theme'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import { DialogModal, DialogModalProps } from '@/components/DialogModal'
+import { DialogModal, DialogModalProps } from '@/components/overlays/DialogModal'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {

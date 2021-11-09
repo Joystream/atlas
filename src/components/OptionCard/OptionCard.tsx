@@ -2,8 +2,8 @@ import React from 'react'
 
 import { InputAndTitleWrapper, OptionCardLabel, OptionCardTitle } from './OptionCard.styles'
 
-import { RadioInput } from '../RadioInput'
 import { Text } from '../Text'
+import { RadioInput } from '../forms/RadioInput'
 
 export type OptionCardProps = {
   label: string

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/Button'
-import { FormField } from '@/components/FormField'
 import { Select } from '@/components/Select'
 import { TabItem } from '@/components/Tabs'
-import { TextField } from '@/components/TextField'
 import { Checkbox } from '@/components/forms/Checkbox'
+import { FormField } from '@/components/forms/FormField'
+import { TextField } from '@/components/forms/TextField'
 import { SvgGlyphClose, SvgGlyphExternal } from '@/components/icons'
 import { SvgGlyphWarning } from '@/components/icons/GlyphWarning'
 import { availableNodes } from '@/config/availableNodes'

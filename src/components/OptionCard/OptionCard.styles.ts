@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 
 import { colors, sizes } from '@/theme'
 
-import { CustomRadioInput, activeState, hoverState } from '../RadioInput/RadioInput.styles'
 import { Text } from '../Text'
+import { CustomRadioInput, activeState, hoverState } from '../forms/RadioInput/RadioInput.styles'
 
 type OptionCardLabelProps = {
   checked?: boolean

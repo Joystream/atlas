@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.styles'
 
-import { Text } from '../Text'
+import { Text } from '../../Text'
 
 export type TitleAreaProps = {
   name?: string

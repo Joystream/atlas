@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
-import { DialogModalProps } from '@/components/DialogModal'
 import { IconButton } from '@/components/IconButton'
 import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/components/icons'
+import { DialogModalProps } from '@/components/overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'

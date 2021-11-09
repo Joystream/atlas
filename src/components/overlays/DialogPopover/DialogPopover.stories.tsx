@@ -3,8 +3,8 @@ import React from 'react'
 
 import { DialogPopover } from './DialogPopover'
 
-import { Button } from '../Button'
-import { Text } from '../Text'
+import { Button } from '../../Button'
+import { Text } from '../../Text'
 
 export default {
   title: 'overlays/DialogPopover',

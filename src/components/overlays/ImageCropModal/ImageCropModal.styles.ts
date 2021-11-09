@@ -1,10 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { DialogModal } from '@/components/DialogModal'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Slider } from '@/components/Slider'
 import { Text } from '@/components/Text'
+import { DialogModal } from '@/components/overlays/DialogModal'
 import { colors, sizes } from '@/theme'
 
 export const StyledDialogModal = styled(DialogModal)`

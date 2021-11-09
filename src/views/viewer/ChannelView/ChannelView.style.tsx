@@ -9,7 +9,7 @@ import { Select } from '@/components/Select'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
-import { TextField } from '@/components/TextField'
+import { TextField } from '@/components/forms/TextField'
 import { colors, media, sizes, transitions, typography } from '@/theme'
 
 const SM_TITLE_HEIGHT = '44px'

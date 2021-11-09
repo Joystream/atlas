@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react'
 
-import { TextInput } from './TextField.styles'
+import { InputBase, InputBaseProps } from '@/components/InputBase'
 
-import { InputBase, InputBaseProps } from '../InputBase'
+import { TextInput } from './TextField.styles'
 
 export type TextFieldProps = {
   name?: string

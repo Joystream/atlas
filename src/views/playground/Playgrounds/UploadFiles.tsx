@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/Button'
-import { TextField } from '@/components/TextField'
+import { TextField } from '@/components/forms/TextField'
 import { useStartFileUpload, useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 
