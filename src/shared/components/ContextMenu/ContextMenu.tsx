@@ -22,10 +22,10 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title 
 
 type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, disabled, ...rest }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...rest }) => {
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
-    <Popover hideOnClick ref={contextMenuInstanceRef} disabled={disabled} {...rest}>
+    <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
       <StyledContainer>
         {items.map((item, index) => (
           <ContextMenuItem
