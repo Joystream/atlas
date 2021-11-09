@@ -272,25 +272,27 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
             </TextContainer>
           </CSSTransition>
         </SwitchTransition>
-        <ContextMenu
-          placement="bottom-end"
-          items={
-            publisherMode
-              ? publisherKebabMenuItems
-              : [
-                  {
-                    icon: <SvgGlyphCopy />,
-                    onClick: onCopyVideoURLClick,
-                    title: 'Copy video URL',
-                  },
-                ]
-          }
-          trigger={
-            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
-              <SvgGlyphMore />
-            </KebabMenuButtonIcon>
-          }
-        />
+        {!isUploading && (
+          <ContextMenu
+            placement="bottom-end"
+            items={
+              publisherMode
+                ? publisherKebabMenuItems
+                : [
+                    {
+                      icon: <SvgGlyphCopy />,
+                      onClick: onCopyVideoURLClick,
+                      title: 'Copy video URL',
+                    },
+                  ]
+            }
+            trigger={
+              <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small" disabled>
+                <SvgGlyphMore />
+              </KebabMenuButtonIcon>
+            }
+          />
+        )}
       </InfoContainer>
     </Container>
   )
