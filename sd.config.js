@@ -19,7 +19,7 @@ const createTokenKey = (token) => {
   const baseFileName = basename(token.filePath).replace('.token.json', '')
   // singularize string
   const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-  return `${prefix}-${token.name.replaceAll('-default', '')}`
+  return `${prefix}-${token.name.replace(/-default/g, '')}`
 }
 
 module.exports = {
@@ -38,7 +38,7 @@ module.exports = {
       type: 'value',
       matcher: (token) => token.attributes.category === 'easing',
       // [1, 2, 3, 4] will become 1, 2, 3, 4
-      transformer: (token) => `cubic-bezier(${token.value.replaceAll(/\[|\]/g, '')})`,
+      transformer: (token) => `cubic-bezier(${token.value.toString().replace(/\[|\]/g, '')})`,
     },
     transitionTransform: {
       type: 'value',

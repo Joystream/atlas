@@ -25,7 +25,7 @@
     "lint:prettier": "prettier --check .",
     "lint:css": "stylelint './src/**/*.{tsx,ts}'",
     "lint": "yarn lint:css && yarn lint:ts && yarn lint:prettier",
-    "fetch-tokens": "node ./src/styles/scripts/fetchTokens",
+    "fetch-tokens": "node ./src/styles/scripts/fetchTokens  && prettier --write src/styles/tokens",
     "build-tokens": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
     "codegen:graphql": "graphql-codegen --config codegen.config.yml",
     "codegen:graphql-watch": "yarn codegen:graphql --watch",
