@@ -8,6 +8,7 @@ type MenuItemProps = {
   icon: ReactNode
   title: string
   onClick?: () => void
+  disabled?: boolean
 }
 
 export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title }) => {
@@ -21,10 +22,10 @@ export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title 
 
 type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...rest }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, disabled, ...rest }) => {
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
-    <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
+    <Popover hideOnClick ref={contextMenuInstanceRef} disabled={disabled} {...rest}>
       <StyledContainer>
         {items.map((item, index) => (
           <ContextMenuItem
