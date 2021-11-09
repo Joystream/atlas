@@ -13,6 +13,8 @@ const fetchTokenUrlsFromGithub = async () => {
   }
 }
 
+const TOKEN_BLACK_LIST = ['typography']
+
 const generateTokens = async () => {
   try {
     const tokenUrls = await fetchTokenUrlsFromGithub()
@@ -21,7 +23,9 @@ const generateTokens = async () => {
     responses.forEach((res) => {
       const filePath = path.join(__dirname, '..', 'tokens')
       const fileName = path.basename(res.config.url)
-
+      if (fileName.includes(TOKEN_BLACK_LIST)) {
+        return
+      }
       fs.mkdir(filePath, { recursive: true }, (err) => {
         if (err) {
           console.log("Couldn't generate directory", err)

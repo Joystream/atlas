@@ -38,7 +38,7 @@ module.exports = {
       type: 'value',
       matcher: (token) => token.attributes.category === 'easing',
       // [1, 2, 3, 4] will become 1, 2, 3, 4
-      transformer: (token) => `cubic-bezier(${token.value.replaceAll(/\[|\]/g, '')})`,
+      transformer: (token) => `cubic-bezier(${token.value.replace(/\[|\]/g, '')})`,
     },
     transitionTransform: {
       type: 'value',
