@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { IconButton } from '@/shared/components/IconButton'
 import { colors, media, sizes, square, transitions, zIndex } from '@/shared/theme'
-import { animation } from '@/shared/theme/tokens'
+import { cVar } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -67,7 +67,7 @@ export const Overlay = styled.div`
   left: 0;
   background-color: ${colors.transparentBlack[54]};
   display: none;
-  transition: opacity ${animation.medium.timing} ${animation.medium.easing};
+  transition: opacity ${cVar('animationTransitionMedium')};
 
   ${media.sm} {
     display: block;

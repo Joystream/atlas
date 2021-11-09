@@ -8,7 +8,7 @@ import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
 import { Text } from '@/shared/components/Text'
 import { SvgAvatarSilhouette } from '@/shared/illustrations'
 import { colors, media, sizes, square, typography } from '@/shared/theme'
-import { animation } from '@/shared/theme/tokens'
+import { cVar } from '@/styles'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
@@ -31,7 +31,7 @@ export const Container = styled.div<ContainerProps>`
   overflow-y: scroll;
   background-color: ${colors.gray[800]};
   box-shadow: inset 0 1px 0 ${colors.gray[700]};
-  transition: all ${animation.medium.timing} ${animation.medium.easing};
+  transition: all ${cVar('animationTransitionMedium')};
 
   /* 160px padding is used to cover the entire screen regardless of device */
   padding-bottom: 160px;

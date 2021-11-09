@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/shared/components/Text'
 import { SvgGlyphSearchAlt } from '@/shared/icons'
 import { media } from '@/shared/theme'
-import { animation } from '@/shared/theme/tokens'
+import { cVar } from '@/styles'
 
 import { colors, sizes, square } from '../../theme'
 import { IconButton } from '../IconButton'
@@ -69,7 +69,7 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
 
   display: flex;
   align-items: center;
-  transition: background-color ${animation.medium.timing} ${animation.medium.easing};
+  transition: background-color ${cVar('animationTransitionMedium')};
   will-change: background-color;
   top: 0;
   left: 0;
