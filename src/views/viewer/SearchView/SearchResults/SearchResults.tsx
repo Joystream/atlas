@@ -99,7 +99,9 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>
-          {!loading && channels.length === 0 && videos.length === 0 && !!query ? (
+          {!loading &&
+          ((videos.length === 0 && selectedIndex === 0) || (channels.length === 0 && selectedIndex === 1)) &&
+          !!query ? (
             <EmptyFallback
               title={`No ${selectedIndex === 0 ? 'videos' : 'channels'} found`}
               subtitle="Please, try using different search terms or change your filtering criteria"
