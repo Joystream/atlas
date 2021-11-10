@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, sizes, square, typography } from '@/shared/theme'
+import { colors, media, sizes, square, typography } from '@/shared/theme'
 
 import { Avatar } from '../Avatar'
 import { IconButton } from '../IconButton'
@@ -85,6 +85,15 @@ export const Container = styled.article<LoadingProps>`
   width: 100%;
   display: inline-flex;
   flex-direction: column;
+  min-height: 250px;
+
+  ${media.sm} {
+    min-height: 260px;
+  }
+
+  ${media.xxl} {
+    min-height: 270px;
+  }
 
   ${containerHoverStyles};
 `
