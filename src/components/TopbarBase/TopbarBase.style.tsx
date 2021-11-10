@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
-export const Header = styled.header`
+export const Header = styled.header<{ noSidebar?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -18,12 +18,14 @@ export const Header = styled.header`
   background-color: ${colors.black};
 
   /* add left padding to reserve space for sidenav hamburger button */
-  padding: ${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}
-    calc(${sizes(4)} + 48px + ${sizes(2)});
+  padding: ${({ noSidebar }) => `${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}
+  ${noSidebar ? 'var(--size-global-horizontal-padding)' : `calc(${sizes(4)} + 48px + ${sizes(2)})`}`};
 
   ${media.md} {
-    padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
-      calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
+    padding: ${({ noSidebar }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
+    ${
+      noSidebar ? 'var(--size-global-horizontal-padding)' : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`
+    }`};
   }
 `
 

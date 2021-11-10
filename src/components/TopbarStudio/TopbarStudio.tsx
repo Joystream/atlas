@@ -41,6 +41,7 @@ import {
 
 type StudioTopbarProps = {
   hideChannelInfo?: boolean
+  noSidebar: boolean
 }
 
 type ChannelInfoProps = {
@@ -65,7 +66,7 @@ type NavDrawerProps = {
   handleClose: () => void
 }
 
-export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo, noSidebar }) => {
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
 
   const navigate = useNavigate()
@@ -137,7 +138,11 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
 
   return (
     <>
-      <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
+      <StyledTopbarBase
+        fullLogoNode={<SvgJoystreamLogoStudio />}
+        logoLinkUrl={absoluteRoutes.studio.index()}
+        noSidebar={noSidebar}
+      >
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition

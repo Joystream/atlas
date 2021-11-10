@@ -76,7 +76,7 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      <TopbarStudio hideChannelInfo={!memberSet} />
+      <TopbarStudio noSidebar={!channelSet} hideChannelInfo={!memberSet} />
       <CSSTransition
         in={channelSet}
         timeout={parseInt(transitions.timings.regular)}
@@ -90,7 +90,7 @@ const StudioLayout = () => {
         <StudioLoading />
       ) : (
         <>
-          <MainContainer>
+          <MainContainer noSidebar={!channelSet}>
             <Routes location={displayedLocation}>
               <Route
                 path={relativeRoutes.studio.index()}
@@ -110,7 +110,7 @@ const StudioLayout = () => {
               />
               <PrivateRoute
                 path={relativeRoutes.studio.newChannel()}
-                element={<CreateEditChannelView newChannel />}
+                element={<CreateEditChannelView newChannel noSidebar={!channelSet} />}
                 isAuth={memberSet}
                 redirectTo={ENTRY_POINT_ROUTE}
               />
@@ -147,11 +147,11 @@ const StudioLayout = () => {
   )
 }
 
-const MainContainer = styled.main`
+const MainContainer = styled.main<{ noSidebar: boolean }>`
   position: relative;
   height: 100%;
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
-  margin-left: var(--size-sidenav-width-collapsed);
+  margin-left: ${({ noSidebar }) => (noSidebar ? 'unset' : 'var(--size-sidenav-width-collapsed)')};
 `
 
 const SLIDE_ANIMATION = 'slide-left'

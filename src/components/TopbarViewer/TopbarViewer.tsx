@@ -65,6 +65,7 @@ export const TopbarViewer: React.FC = () => {
       noLogo={!mdMatch && !!searchQuery}
       fullLogoNode={<SvgJoystreamLogoFull />}
       logoLinkUrl={absoluteRoutes.viewer.index()}
+      noSidebar={false}
     >
       <SearchbarContainer>
         <CSSTransition classNames="searchbar" in={searchOpen} timeout={0}>
