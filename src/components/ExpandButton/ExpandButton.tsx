@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { SvgGlyphChevronDown } from '@/components/icons'
+import { SvgGlyphChevronDown } from '@/components/_icons'
+import { IconButton, IconButtonProps } from '@/components/_inputs/IconButton'
 import { transitions } from '@/theme'
-
-import { IconButton, IconButtonProps } from '../IconButton'
 
 type ExpandButtonProps = {
   expanded?: boolean

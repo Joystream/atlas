@@ -2,11 +2,11 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { IconButton } from '@/components/IconButton'
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { SvgAvatarSilhouette } from '@/components/illustrations'
+import { SvgAvatarSilhouette } from '@/components/_illustrations'
+import { IconButton } from '@/components/_inputs/IconButton'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square, typography } from '@/theme'
 

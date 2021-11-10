@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/Button'
 import { Spinner } from '@/components/Spinner'
 import { Text } from '@/components/Text'
-import { RadioButton } from '@/components/forms/RadioButton'
-import { SvgAccountCreationIllustration } from '@/components/illustrations'
+import { SvgAccountCreationIllustration } from '@/components/_illustrations'
+import { Button } from '@/components/_inputs/Button'
+import { RadioButton } from '@/components/_inputs/RadioButton'
 import { colors, media, sizes, transitions, typography } from '@/theme'
 
 import { StepWrapper } from './SignInSteps.styles'

@@ -1,7 +1,7 @@
 import React from 'react'
 import Lottie from 'react-lottie-player'
 
-import errorAnimation from '../../assets/animations/error.json'
+import errorAnimation from '@/assets/animations/error.json'
 
 type AnimatedErrorProps = {
   className?: string

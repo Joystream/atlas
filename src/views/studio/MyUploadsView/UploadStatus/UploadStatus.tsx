@@ -12,8 +12,8 @@ import {
   SvgGlyphFileImage,
   SvgGlyphFileVideo,
   SvgGlyphUpload,
-} from '@/components/icons'
-import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/overlays/ImageCropModal'
+} from '@/components/_icons'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'

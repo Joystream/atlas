@@ -14,14 +14,13 @@ import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { LoadMoreButton } from '@/components/LoadMoreButton'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { SvgGlyphChevronRight } from '@/components/icons'
+import { SvgGlyphChevronRight } from '@/components/_icons'
+import { VideoTile } from '@/components/_video/VideoTile'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 
 import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
-
-import { VideoTile } from '../VideoTile'
 
 type InfiniteVideoGridProps = {
   title?: string

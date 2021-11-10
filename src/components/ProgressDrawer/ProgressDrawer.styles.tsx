@@ -1,11 +1,10 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
-import { SvgGlyphChevronDown } from '@/components/icons'
+import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
+import { SvgGlyphChevronDown } from '@/components/_icons'
 import { colors, sizes, transitions } from '@/theme'
-
-import { CircularProgress } from '../CircularProgress'
-import { Text } from '../Text'
 
 export const Container = styled.div`
   width: 280px;

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react'
 
-import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
-import { Modal } from '@/components/overlays/Modal'
+import { Button } from '@/components/_inputs/Button'
+import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { ConsoleLogger } from '@/utils/logs'

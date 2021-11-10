@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import React from 'react'
 import Lottie from 'react-lottie-player'
 
-import loaderLargeAnimation from '../../assets/animations/loader-L.json'
-import loaderMediumAnimation from '../../assets/animations/loader-M.json'
-import loaderSmallAnimation from '../../assets/animations/loader-S.json'
-import LoaderXSmallAnimation from '../../assets/animations/loader-XS.json'
-import loaderPlayerAnimation from '../../assets/animations/loader-player.json'
+import loaderLargeAnimation from '@/assets/animations/loader-L.json'
+import loaderMediumAnimation from '@/assets/animations/loader-M.json'
+import loaderSmallAnimation from '@/assets/animations/loader-S.json'
+import LoaderXSmallAnimation from '@/assets/animations/loader-XS.json'
+import loaderPlayerAnimation from '@/assets/animations/loader-player.json'
 
 type LoaderVariant = 'xlarge' | 'large' | 'compact' | 'medium' | 'small' | 'xsmall' | 'player'
 type LoaderProps = {

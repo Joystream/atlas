@@ -1,10 +1,9 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAlertSuccess } from '@/components/icons'
+import { Loader } from '@/components/Loader'
+import { SvgAlertSuccess } from '@/components/_icons'
 import { colors, sizes } from '@/theme'
-
-import { Loader } from '../Loader'
 
 export const UploadProgressBarContainer = styled.div`
   position: absolute;

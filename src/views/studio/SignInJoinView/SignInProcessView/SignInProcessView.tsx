@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SignInStepsStepper } from '@/components/SignInSteps'
 import { Text } from '@/components/Text'
-import { SvgGlyphChevronRight } from '@/components/icons'
+import { SvgGlyphChevronRight } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
 import {

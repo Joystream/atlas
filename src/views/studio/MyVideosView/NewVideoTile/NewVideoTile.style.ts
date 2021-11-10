@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { SvgGlyphAddVideo } from '@/components/icons'
+import { SvgGlyphAddVideo } from '@/components/_icons'
 import { colors, sizes, transitions } from '@/theme'
 
 export const StyledIcon = styled(SvgGlyphAddVideo)`

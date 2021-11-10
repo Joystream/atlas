@@ -3,10 +3,9 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { MIN_VIDEO_TILE_WIDTH } from '@/components/_video/VideoTileBase/VideoTileCover'
 import { media, sizes } from '@/theme'
 import { toPx } from '@/utils/styles'
-
-import { MIN_VIDEO_TILE_WIDTH } from '../VideoTileBase/VideoTileCover'
 
 type GridProps = {
   gap?: number | string

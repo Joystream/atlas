@@ -1,7 +1,10 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphInfo } from '@/components/icons'
+import { Text } from '@/components/Text'
+import { Tooltip, TooltipProps } from '@/components/Tooltip'
+import { SvgGlyphInfo } from '@/components/_icons'
+import { Button, ButtonProps } from '@/components/_inputs/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/theme'
 
@@ -14,10 +17,6 @@ import {
   StyledPrimaryText,
   StyledSecondaryText,
 } from './ActionBar.styles'
-
-import { Button, ButtonProps } from '../Button'
-import { Text } from '../Text'
-import { Tooltip, TooltipProps } from '../Tooltip'
 
 type ActionDialogButtonProps = {
   text?: string

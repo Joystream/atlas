@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-import { Button } from '@/components/Button'
-import { Select } from '@/components/Select'
 import { Text } from '@/components/Text'
-import { FormField } from '@/components/forms/FormField'
-import { TextArea } from '@/components/forms/TextArea'
-import { TextField } from '@/components/forms/TextField'
+import { Button } from '@/components/_inputs/Button'
+import { FormField } from '@/components/_inputs/FormField'
+import { Select } from '@/components/_inputs/Select'
+import { TextArea } from '@/components/_inputs/TextArea'
+import { TextField } from '@/components/_inputs/TextField'
 import { RawDraft, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUser } from '@/providers/user'
 

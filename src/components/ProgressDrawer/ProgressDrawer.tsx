@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/components/icons'
+import { Text } from '@/components/Text'
+import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/components/_icons'
+import { IconButton } from '@/components/_inputs/IconButton'
 import { transitions } from '@/theme'
 
 import {
@@ -17,9 +19,6 @@ import {
   StyledCircularProgress,
   StyledSvgGlyphChevronDown,
 } from './ProgressDrawer.styles'
-
-import { IconButton } from '../IconButton'
-import { Text } from '../Text'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type ProgressDrawerProps = {

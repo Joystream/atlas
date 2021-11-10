@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
-import { SvgGlyphExternal } from '@/components/icons'
+import { SvgGlyphExternal } from '@/components/_icons'
+import { Button } from '@/components/_inputs/Button'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'

@@ -1,12 +1,12 @@
 import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { colors, media, sizes, transitions } from '@/theme'
 
 import { ColorVariants } from './CallToActionButton'
 
 import { CallToActionButtonProps } from '.'
-import { Text } from '../Text'
 
 const mappedColors = {
   blue: colors.blue[500],

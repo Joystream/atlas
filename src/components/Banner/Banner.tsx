@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
-import { IconButton } from '@/components/IconButton'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphClose } from '@/components/icons'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphClose } from '@/components/_icons'
+import { IconButton } from '@/components/_inputs/IconButton'
 
 import {
   BannerActionButton,

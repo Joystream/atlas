@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
-import { SvgGlyphExternal } from '@/components/icons'
+import { SvgGlyphExternal } from '@/components/_icons'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'

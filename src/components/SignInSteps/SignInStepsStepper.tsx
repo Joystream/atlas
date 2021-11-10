@@ -1,13 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
 
+import { StepperModal } from '@/components/_overlays/StepperModal'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 
 import { AccountStep } from './AccountStep'
 import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
-
-import { StepperModal } from '../StepperModal'
 
 export const SignInStepsStepper: React.FC = () => {
   const navigate = useNavigate()

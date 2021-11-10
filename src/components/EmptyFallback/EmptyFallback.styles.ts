@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { media, sizes } from '@/theme'
 
 import { EmptyFallbackSizes } from './EmptyFallback'
-
-import { Text } from '../Text'
 
 type ContainerProps = {
   variant?: EmptyFallbackSizes

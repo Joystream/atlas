@@ -1,7 +1,7 @@
 import { To } from 'history'
 import React, { FC, MouseEvent, ReactNode } from 'react'
 
-import { SvgGlyphChevronRight } from '@/components/icons'
+import { SvgGlyphChevronRight } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getLinkPropsFromTo } from '@/utils/button'
 

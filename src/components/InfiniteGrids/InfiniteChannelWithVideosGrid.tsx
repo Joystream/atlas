@@ -8,15 +8,15 @@ import {
   GetChannelsConnectionQueryVariables,
   VideoEdge,
 } from '@/api/queries'
-import { ChannelWithVideos } from '@/components/ChannelWithVideos'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { LoadMoreButton } from '@/components/LoadMoreButton'
-import { Select } from '@/components/Select'
 import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { SvgGlyphChevronRight } from '@/components/icons'
+import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
+import { SvgGlyphChevronRight } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
 import { languages } from '@/config/languages'
 import { SentryLogger } from '@/utils/logs'
 

@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Snackbar } from '@/components/Snackbar'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphUpload } from '@/components/icons'
+import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphUpload } from '@/components/_icons'
 import { sizes, transitions, zIndex } from '@/theme'
 
 import { SnackbarIconType, useSnackbarStore } from './store'

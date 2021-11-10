@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
+import { Button } from '@/components/_inputs/Button'
 import { colors, media, sizes, transitions, zIndex } from '@/theme'
-
-import { Button } from '../Button'
-import { Text } from '../Text'
-import { Tooltip } from '../Tooltip'
 
 export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   background-color: ${colors.gray[900]};

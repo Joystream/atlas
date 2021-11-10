@@ -1,8 +1,7 @@
 import React from 'react'
 
 import { Grid } from '@/components/Grid'
-
-import { VideoTile } from '../VideoTile'
+import { VideoTile } from '@/components/_video/VideoTile'
 
 type SkeletonLoaderVideoGridProps = {
   videosCount?: number

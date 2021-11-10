@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
-import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { MultiFileSelect } from '@/components/MultiFileSelect'
 import { Text } from '@/components/Text'
-import { FormField } from '@/components/forms/FormField'
-import { TitleArea } from '@/components/forms/TitleArea'
+import { Button } from '@/components/_inputs/Button'
+import { FormField } from '@/components/_inputs/FormField'
+import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
+import { TitleArea } from '@/components/_inputs/TitleArea'
 import { media, sizes } from '@/theme'
 
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspaceTabsBar'

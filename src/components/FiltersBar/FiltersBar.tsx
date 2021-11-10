@@ -2,12 +2,15 @@ import { add } from 'date-fns'
 import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Button } from '@/components/Button'
-import { PopoverImperativeHandle } from '@/components/Popover'
-import { Select } from '@/components/Select'
 import { Text } from '@/components/Text'
-import { Checkbox } from '@/components/forms/Checkbox'
-import { SvgGlyphClose } from '@/components/icons'
+import { SvgGlyphClose } from '@/components/_icons'
+import { Button } from '@/components/_inputs/Button'
+import { Checkbox } from '@/components/_inputs/Checkbox'
+import { RadioButton } from '@/components/_inputs/RadioButton'
+import { Select } from '@/components/_inputs/Select'
+import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
+import { DialogPopover } from '@/components/_overlays/DialogPopover'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/theme'
@@ -22,10 +25,6 @@ import {
   OtherFilterStyledText,
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
-
-import { RadioButton } from '../forms/RadioButton'
-import { DialogModal, DialogModalProps } from '../overlays/DialogModal'
-import { DialogPopover } from '../overlays/DialogPopover'
 
 type FilterCategory = {
   id: string

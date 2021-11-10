@@ -1,11 +1,10 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
+import { Button } from '@/components/_inputs/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
 
 import { DismissibleBanner, DismissibleBannerProps } from './DismissibleBanner'
-
-import { Button } from '../Button'
 
 export default {
   title: 'other/DismissibleBanner',

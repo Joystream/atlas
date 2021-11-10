@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgNavPopular } from '@/components/icons'
+import { SvgNavPopular } from '@/components/_icons'
 
 import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '.'
 

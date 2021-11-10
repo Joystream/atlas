@@ -1,9 +1,8 @@
 import React from 'react'
 
 import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
+import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
 import { absoluteRoutes } from '@/config/routes'
-
-import { InfiniteChannelWithVideosGrid } from '../InfiniteGrids'
 
 export const PromisingNewChannels = () => {
   const sortChannelsByViewsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {

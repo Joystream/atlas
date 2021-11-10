@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
-import { Button } from '@/components/Button'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import { TextField } from '@/components/forms/TextField'
+import { Button } from '@/components/_inputs/Button'
+import { TextField } from '@/components/_inputs/TextField'
 import { media, sizes } from '@/theme'
 
 export const Header = styled.header`

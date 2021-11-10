@@ -1,9 +1,9 @@
 import React from 'react'
 import shallow from 'zustand/shallow'
 
-import { Button } from '@/components/Button'
 import { EmptyFallback } from '@/components/EmptyFallback'
-import { SvgGlyphUpload } from '@/components/icons'
+import { SvgGlyphUpload } from '@/components/_icons'
+import { Button } from '@/components/_inputs/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'

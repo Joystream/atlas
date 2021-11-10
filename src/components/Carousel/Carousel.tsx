@@ -9,9 +9,9 @@ import React, {
   useRef,
 } from 'react'
 
-import { Container, Dots, GliderContainer, Track } from './Carousel.styles'
+import { GliderProps, useGlider } from '@/components/Glider'
 
-import { GliderProps, useGlider } from '../Glider'
+import { Container, Dots, GliderContainer, Track } from './Carousel.styles'
 
 export type CarouselProps = {
   className?: string

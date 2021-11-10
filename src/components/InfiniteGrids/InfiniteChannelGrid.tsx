@@ -9,12 +9,11 @@ import {
 } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 import { Text } from '@/components/Text'
+import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { sizes } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
-
-import { ChannelCard } from '../ChannelCard'
 
 type InfiniteChannelGridProps = {
   title?: string

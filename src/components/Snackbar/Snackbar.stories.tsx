@@ -2,12 +2,11 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Button } from '@/components/_inputs/Button'
 import { Snackbars, useSnackbar } from '@/providers/snackbars'
 import { DisplaySnackbarArgs } from '@/providers/snackbars/store'
 
 import { Snackbar } from './Snackbar'
-
-import { Button } from '../Button'
 
 export default {
   title: 'other/Snackbar',

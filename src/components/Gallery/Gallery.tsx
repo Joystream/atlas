@@ -1,13 +1,12 @@
 import React, { ComponentProps, useRef } from 'react'
 
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/components/icons'
+import { Carousel, CarouselProps } from '@/components/Carousel'
+import { Arrow } from '@/components/Carousel/Carousel.styles'
+import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
+import { Text } from '@/components/Text'
+import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/components/_icons'
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.styles'
-
-import { Carousel, CarouselProps } from '../Carousel'
-import { Arrow } from '../Carousel/Carousel.styles'
-import { GridHeadingContainer, TitleContainer } from '../GridHeading'
-import { Text } from '../Text'
 
 export type GalleryProps = {
   title?: string

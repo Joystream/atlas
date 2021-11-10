@@ -1,13 +1,12 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_inputs/Button'
+import { IconButton } from '@/components/_inputs/IconButton'
 import { cVar } from '@/styles'
 import { media, square, typography } from '@/theme'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
-
-import { Button } from '../Button'
-import { IconButton } from '../IconButton'
 
 type PaginationButtonProps = {
   isActive?: boolean

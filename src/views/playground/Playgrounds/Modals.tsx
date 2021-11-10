@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/_inputs/Button'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 
 export const Modals = () => {

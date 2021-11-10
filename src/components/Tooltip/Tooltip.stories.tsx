@@ -2,11 +2,11 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Tooltip, TooltipProps } from './Tooltip'
+import { Text } from '@/components/Text'
+import { ChannelCardBase } from '@/components/_channel/ChannelCardBase'
+import { Button } from '@/components/_inputs/Button'
 
-import { Button } from '../Button'
-import { ChannelCardBase } from '../ChannelCardBase'
-import { Text } from '../Text'
+import { Tooltip, TooltipProps } from './Tooltip'
 
 export default {
   title: 'other/Tooltip',

@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { TopbarBase } from '@/components/TopbarBase'
-import { SvgJoystreamLogoFull } from '@/components/illustrations'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { colors, sizes } from '@/theme'
 

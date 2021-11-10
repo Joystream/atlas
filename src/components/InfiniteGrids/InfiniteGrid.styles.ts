@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/_inputs/Button'
 import { colors, sizes } from '@/theme'
 
 export const LoadMoreButtonWrapper = styled.div`

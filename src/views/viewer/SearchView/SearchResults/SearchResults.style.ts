@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Select } from '@/components/Select'
+import { Select } from '@/components/_inputs/Select'
 import { colors, media, sizes, zIndex } from '@/theme'
 import { transitions } from '@/theme'
 

@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { Button } from '@/components/Button'
 import { Text } from '@/components/Text'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/components/icons'
-import { SvgJoystreamLogoFull } from '@/components/illustrations'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/components/_icons'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { Button } from '@/components/_inputs/Button'
 import { absoluteRoutes } from '@/config/routes'
 
 import {

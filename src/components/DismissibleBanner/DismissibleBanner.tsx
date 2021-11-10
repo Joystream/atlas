@@ -1,8 +1,7 @@
 import React from 'react'
 
+import { Banner, BannerProps } from '@/components/Banner'
 import { usePersonalDataStore } from '@/providers/personalData'
-
-import { Banner, BannerProps } from '../Banner'
 
 export type DismissibleBannerProps = {
   id: string

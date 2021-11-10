@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useChannelPreviewVideos } from '@/api/hooks'
-import { VideoGallery } from '@/components/VideoGallery'
+import { VideoGallery } from '@/components/_video/VideoGallery'
 import { readEnv } from '@/config/envs'
 import { SentryLogger } from '@/utils/logs'
 
