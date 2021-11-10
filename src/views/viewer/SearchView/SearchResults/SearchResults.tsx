@@ -26,7 +26,7 @@ const tabs = ['Videos', 'Channels']
 
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0)
   const filtersBarLogic = useFiltersBar(false)
   const {
     setVideoWhereInput,
@@ -36,7 +36,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   } = filtersBarLogic
   const { videos, channels, loading, error } = useSearchResults({
     searchQuery: query,
-    videoWhereInput: selectedIndex === 0 ? videoWhereInput : undefined,
+    videoWhereInput: selectedTabIndex === 0 ? videoWhereInput : undefined,
   })
   const {
     actions: { setSearchOpen, setSearchQuery },
@@ -44,10 +44,10 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   const { categories } = useCategories()
 
   useEffect(() => {
-    if (selectedIndex === 1) {
+    if (selectedTabIndex === 1) {
       setIsFiltersOpen(false)
     }
-  }, [clearAllFilters, selectedIndex, setIsFiltersOpen, setLanguage])
+  }, [clearAllFilters, selectedTabIndex, setIsFiltersOpen, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage)
@@ -67,13 +67,18 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
 
   const mappedTabs = tabs.map((tab) => ({ name: tab }))
 
+  const showEmptyFallback =
+    !loading &&
+    ((videos.length === 0 && selectedTabIndex === 0) || (channels.length === 0 && selectedTabIndex === 1)) &&
+    !!query
+
   return (
     <ViewWrapper>
       <SearchControls>
         <PaddingWrapper filtersOpen={isFiltersOpen}>
-          <Tabs tabs={mappedTabs} onSelectTab={setSelectedIndex} initialIndex={0} variant="large" />
+          <Tabs tabs={mappedTabs} onSelectTab={setSelectedTabIndex} initialIndex={0} variant="large" />
           <FiltersWrapper>
-            {smMatch && selectedIndex === 0 && (
+            {smMatch && selectedTabIndex === 0 && (
               <StyledSelect
                 items={languages}
                 placeholder="Any language"
@@ -82,7 +87,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
                 onChange={handleSelectLanguage}
               />
             )}
-            {selectedIndex === 0 && (
+            {selectedTabIndex === 0 && (
               <Button
                 icon={<SvgActionFilters />}
                 iconPlacement="left"
@@ -99,11 +104,9 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>
-          {!loading &&
-          ((videos.length === 0 && selectedIndex === 0) || (channels.length === 0 && selectedIndex === 1)) &&
-          !!query ? (
+          {showEmptyFallback ? (
             <EmptyFallback
-              title={`No ${selectedIndex === 0 ? 'videos' : 'channels'} found`}
+              title={`No ${selectedTabIndex === 0 ? 'videos' : 'channels'} found`}
               subtitle="Please, try using different search terms or change your filtering criteria"
               button={
                 <Button
@@ -120,8 +123,8 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             />
           ) : (
             <>
-              {selectedIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
-              {selectedIndex === 1 &&
+              {selectedTabIndex === 0 && (loading ? <SkeletonLoaderVideoGrid /> : <VideoGrid videos={videos} />)}
+              {selectedTabIndex === 1 &&
                 (loading ? <SkeletonLoaderVideoGrid /> : <ChannelGrid channels={channels} repeat="fill" />)}
             </>
           )}
