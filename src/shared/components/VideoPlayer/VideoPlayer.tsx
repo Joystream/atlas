@@ -499,20 +499,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
-                  <PlayButton
-                    isEnded={playerState === 'ended'}
-                    onClick={handlePlayPause}
-                    tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                    tooltipPosition="left"
-                  >
-                    {playerState === 'ended' ? (
-                      <SvgPlayerRestart />
-                    ) : isPlaying ? (
-                      <SvgPlayerPause />
-                    ) : (
-                      <SvgPlayerPlay />
-                    )}
-                  </PlayButton>
+                  {!showBigPlayButton && (
+                    <PlayButton
+                      isEnded={playerState === 'ended'}
+                      onClick={handlePlayPause}
+                      tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
+                      tooltipPosition="left"
+                    >
+                      {playerState === 'ended' ? (
+                        <SvgPlayerRestart />
+                      ) : isPlaying ? (
+                        <SvgPlayerPause />
+                      ) : (
+                        <SvgPlayerPlay />
+                      )}
+                    </PlayButton>
+                  )}
                 </PlayControl>
                 <VolumeControl onClick={(e) => e.stopPropagation()}>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>
