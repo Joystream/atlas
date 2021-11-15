@@ -3,6 +3,7 @@ import graphql from '@rollup/plugin-graphql'
 import inject from '@rollup/plugin-inject'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import docgen from 'react-docgen-typescript-vite-plugin'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
@@ -26,6 +27,7 @@ export default defineConfig({
       babelHelpers: 'bundled',
     }),
     graphql(),
+    docgen(['./**/*.tsx']),
     {
       ...inject({
         include: ['node_modules/**/*.js*'],

@@ -5176,6 +5176,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@storybook/react-docgen-typescript-plugin@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@storybook/react-docgen-typescript-plugin@npm:1.0.1"
+  dependencies:
+    debug: ^4.1.1
+    endent: ^2.0.1
+    find-cache-dir: ^3.3.1
+    flat-cache: ^3.0.4
+    micromatch: ^4.0.2
+    react-docgen-typescript: ^2.0.0
+    tslib: ^2.0.0
+  peerDependencies:
+    typescript: ">= 3.x"
+    webpack: ">= 4"
+  checksum: b76875a37ae78421e4549453d67359f743a2245c9474f1897426f5e436ef7a35e277823033b13949ec453dcd63f699bbdf7c1009a18058783bc67eab75db49b1
+  languageName: node
+  linkType: hard
+
 "@storybook/react@npm:^6.3.7":
   version: 6.3.7
   resolution: "@storybook/react@npm:6.3.7"
@@ -6064,6 +6082,20 @@ __metadata:
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
   checksum: fda8f37537aca9d3ed860d559289ab1dddb6897e642e6f53e909bbd18a7ac3129a8faa2a7d093847c91346cf09c86ef36e350c715406fba1f2271759b449adf6
+  languageName: node
+  linkType: hard
+
+"@types/strip-bom@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/strip-bom@npm:3.0.0"
+  checksum: cb165d0c2ce6abbef95506ebee25be02bd453600ef1792dc1754236e5d6f9c830d52bdb85978d0b08ea1f36b96a61235ac5ad99e0f4c2767fb4ea004e141d2df
+  languageName: node
+  linkType: hard
+
+"@types/strip-json-comments@npm:0.0.30":
+  version: 0.0.30
+  resolution: "@types/strip-json-comments@npm:0.0.30"
+  checksum: 829ddd389645073f347c5b1924a8c34b8813af29756576e511c46f40e218193cf93ccbade62661d47fc70f707e98f410331729b8c20edfcb2e807d51df1ad4b7
   languageName: node
   linkType: hard
 
@@ -7521,6 +7553,7 @@ __metadata:
     prettier: ~2.4.1
     rc-slider: ^9.7.2
     react: ^17.0.2
+    react-docgen-typescript-vite-plugin: ^0.0.3
     react-dom: ^17.0.2
     react-dropzone: ^11.3.1
     react-hook-form: ^7.8.1
@@ -17957,6 +17990,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-docgen-typescript-vite-plugin@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "react-docgen-typescript-vite-plugin@npm:0.0.3"
+  dependencies:
+    "@storybook/react-docgen-typescript-plugin": ^1.0.1
+    globby: ^11.0.4
+    tsconfig: ^7.0.0
+  peerDependencies:
+    typescript: ^4.3.5
+    vite: ^2.5.1
+  checksum: 29716c6a65360f162f334c10f91d41bf9c05b9134ab9d269c148a390ee3944110a214fd5111135cfa7b1261e9269fddbc9e7990283554496d7320a81b224aad6
+  languageName: node
+  linkType: hard
+
 "react-docgen-typescript@npm:^2.0.0":
   version: 2.1.0
   resolution: "react-docgen-typescript@npm:2.1.0"
@@ -20138,17 +20185,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"strip-json-comments@npm:^2.0.0, strip-json-comments@npm:~2.0.1":
+  version: 2.0.1
+  resolution: "strip-json-comments@npm:2.0.1"
+  checksum: 1074ccb63270d32ca28edfb0a281c96b94dc679077828135141f27d52a5a398ef5e78bcf22809d23cadc2b81dfbe345eb5fd8699b385c8b1128907dec4a7d1e1
+  languageName: node
+  linkType: hard
+
 "strip-json-comments@npm:^3.1.0, strip-json-comments@npm:^3.1.1":
   version: 3.1.1
   resolution: "strip-json-comments@npm:3.1.1"
   checksum: 492f73e27268f9b1c122733f28ecb0e7e8d8a531a6662efbd08e22cccb3f9475e90a1b82cab06a392f6afae6d2de636f977e231296400d0ec5304ba70f166443
-  languageName: node
-  linkType: hard
-
-"strip-json-comments@npm:~2.0.1":
-  version: 2.0.1
-  resolution: "strip-json-comments@npm:2.0.1"
-  checksum: 1074ccb63270d32ca28edfb0a281c96b94dc679077828135141f27d52a5a398ef5e78bcf22809d23cadc2b81dfbe345eb5fd8699b385c8b1128907dec4a7d1e1
   languageName: node
   linkType: hard
 
@@ -20920,6 +20967,18 @@ resolve@^2.0.0-next.3:
     typescript:
       optional: true
   checksum: c2a698b85d521298fe6f2435fbf2d3dc5834b423ea25abd321805ead3f399dbeedce7ca09492d7eb005b9d2c009c6b9587055bc3ab273dc6b9e40eefd7edb5b2
+  languageName: node
+  linkType: hard
+
+"tsconfig@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "tsconfig@npm:7.0.0"
+  dependencies:
+    "@types/strip-bom": ^3.0.0
+    "@types/strip-json-comments": 0.0.30
+    strip-bom: ^3.0.0
+    strip-json-comments: ^2.0.0
+  checksum: 8bce05e93c673defd56d93d83d4055e49651d3947c076339c4bc15d47b7eb5029bed194087e568764213a2e4bf45c477ba9f4da16adfd92cd901af7c09e4517e
   languageName: node
   linkType: hard
 
