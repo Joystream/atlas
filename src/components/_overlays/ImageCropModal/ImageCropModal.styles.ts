@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { colors, sizes } from '@/theme'
 

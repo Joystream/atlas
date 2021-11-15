@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { DialogModal, DialogModalProps } from './DialogModal'

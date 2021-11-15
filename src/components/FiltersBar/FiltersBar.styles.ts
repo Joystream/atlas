@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphHide } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { colors, sizes, transitions } from '@/theme'
 
 export const FilterContentContainer = styled.div`

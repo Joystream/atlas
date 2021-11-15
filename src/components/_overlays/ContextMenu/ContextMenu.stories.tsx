@@ -2,8 +2,8 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphCopy } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { ContextMenu } from './ContextMenu'

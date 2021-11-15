@@ -5,7 +5,7 @@ import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { colors, media, sizes } from '@/theme'
 

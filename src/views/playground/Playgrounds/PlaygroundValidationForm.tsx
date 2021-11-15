@@ -4,7 +4,7 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Datepicker } from '@/components/Datepicker'
-import { Button as _Button } from '@/components/_inputs/Button'
+import { Button as _Button } from '@/components/_buttons/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { RadioButton } from '@/components/_inputs/RadioButton'

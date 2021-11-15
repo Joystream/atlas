@@ -2,15 +2,15 @@ import React from 'react'
 import shallow from 'zustand/shallow'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphUpload } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
 
-import { StyledText, UploadsContainer } from './MyUploadsView.style'
+import { StyledText, UploadsContainer } from './MyUploadsView.styles'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 

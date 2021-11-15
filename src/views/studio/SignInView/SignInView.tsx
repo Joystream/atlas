@@ -18,7 +18,7 @@ import {
   StyledButton,
   SubTitle,
   Wrapper,
-} from './SignInView.style'
+} from './SignInView.styles'
 
 export const SignInView = () => {
   const navigate = useNavigate()

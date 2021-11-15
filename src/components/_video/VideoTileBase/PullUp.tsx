@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { Tooltip } from '@/components/Tooltip'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphEdit } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { colors, sizes } from '@/theme'
 
 type StateProps = {

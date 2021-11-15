@@ -2,8 +2,8 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { colors, media, transitions, typography } from '@/theme'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel' | 'channel-card'

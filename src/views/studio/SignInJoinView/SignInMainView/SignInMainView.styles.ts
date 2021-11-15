@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgSigninIllustration } from '@/components/_illustrations'
-import { Button } from '@/components/_inputs/Button'
 import { colors, media, sizes } from '@/theme'
 
 export const StyledContainer = styled(LimitedWidthContainer)`

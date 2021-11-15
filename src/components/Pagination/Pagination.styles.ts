@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/_inputs/Button'
-import { IconButton } from '@/components/_inputs/IconButton'
+import { Button } from '@/components/_buttons/Button'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar } from '@/styles'
 import { media, square, typography } from '@/theme'
 

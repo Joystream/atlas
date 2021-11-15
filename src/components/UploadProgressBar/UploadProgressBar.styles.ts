@@ -1,8 +1,8 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Loader } from '@/components/Loader'
 import { SvgAlertSuccess } from '@/components/_icons'
+import { Loader } from '@/components/_loaders/Loader'
 import { colors, sizes } from '@/theme'
 
 export const UploadProgressBarContainer = styled.div`

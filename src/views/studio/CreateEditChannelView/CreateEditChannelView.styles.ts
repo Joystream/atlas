@@ -4,7 +4,7 @@ import { Avatar } from '@/components/Avatar'
 import { ProgressDrawer } from '@/components/ProgressDrawer'
 import { TitleArea } from '@/components/_inputs/TitleArea'
 import { media, sizes, transitions, zIndex } from '@/theme'
-import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.style'
+import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;

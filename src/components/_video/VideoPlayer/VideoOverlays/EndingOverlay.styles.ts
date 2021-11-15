@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { Button } from '@/components/_inputs/Button'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { colors, media, sizes, zIndex } from '@/theme'
 
 type OverlayBackgroundProps = {

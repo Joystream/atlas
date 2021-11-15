@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
-import { Button } from '@/components/_inputs/Button'
 import { absoluteRoutes } from '@/config/routes'
 
 import {
@@ -16,7 +16,7 @@ import {
   StyledHero,
   StyledSignInIllustrationSVG,
   SubTitle,
-} from './SignInMainView.style'
+} from './SignInMainView.styles'
 
 export type Membership = {
   id: string

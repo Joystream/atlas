@@ -5,10 +5,10 @@ import { useParams } from 'react-router-dom'
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { Button } from '@/components/_inputs/Button'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
@@ -33,7 +33,7 @@ import {
   PlayerWrapper,
   StyledViewWrapper,
   TitleText,
-} from './VideoView.style'
+} from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()

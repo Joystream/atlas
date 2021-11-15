@@ -3,8 +3,8 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelCardBase } from '@/components/_channel/ChannelCardBase'
-import { Button } from '@/components/_inputs/Button'
 
 import { Tooltip, TooltipProps } from './Tooltip'
 

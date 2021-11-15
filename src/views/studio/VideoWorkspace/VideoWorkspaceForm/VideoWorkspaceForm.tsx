@@ -8,8 +8,8 @@ import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { Datepicker } from '@/components/Datepicker'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgPlayerCancel } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
@@ -52,7 +52,7 @@ import {
   StyledActionBar,
   StyledMultiFileSelect,
   StyledTitleArea,
-} from './VideoWorkspaceForm.style'
+} from './VideoWorkspaceForm.styles'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({

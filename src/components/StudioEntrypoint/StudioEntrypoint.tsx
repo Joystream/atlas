@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { StudioLoading } from '@/components/StudioLoading'
+import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user'
 

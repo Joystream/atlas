@@ -2,8 +2,8 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphSearchAlt } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square } from '@/theme'
 

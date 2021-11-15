@@ -3,10 +3,10 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
-import { IconButton } from '@/components/_inputs/IconButton'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square, typography } from '@/theme'
 

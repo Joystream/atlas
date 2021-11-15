@@ -1,7 +1,7 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { colors, square } from '@/theme'
 
 type HamburgerInnerProps = {

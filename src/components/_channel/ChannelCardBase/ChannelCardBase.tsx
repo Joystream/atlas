@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/theme'
 import { formatNumberShort } from '@/utils/number'

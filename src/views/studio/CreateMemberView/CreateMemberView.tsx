@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
-import { Loader } from '@/components/Loader'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { TextArea } from '@/components/_inputs/TextArea'
+import { Loader } from '@/components/_loaders/Loader'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
@@ -29,7 +29,7 @@ import {
   StyledTextField,
   SubTitle,
   Wrapper,
-} from './CreateMemberView.style'
+} from './CreateMemberView.styles'
 
 type Inputs = {
   handle: string

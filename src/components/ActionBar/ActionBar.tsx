@@ -3,8 +3,8 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
+import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { SvgGlyphInfo } from '@/components/_icons'
-import { Button, ButtonProps } from '@/components/_inputs/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/theme'
 

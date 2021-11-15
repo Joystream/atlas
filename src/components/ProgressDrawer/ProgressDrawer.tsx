@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { transitions } from '@/theme'
 
 import {

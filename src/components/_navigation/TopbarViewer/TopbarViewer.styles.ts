@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar } from '@/styles'
 import { colors, media, sizes, square, transitions, zIndex } from '@/theme'
 

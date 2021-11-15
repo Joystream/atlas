@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { Spinner } from '@/components/Spinner'
 import { Text } from '@/components/Text'
+import { Spinner } from '@/components/_loaders/Spinner'
 import { sizes } from '@/theme'
 
 export const StudioLoading: React.FC = () => {

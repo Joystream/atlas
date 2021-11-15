@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { AnimatedError } from '@/components/AnimatedError'
-import { Loader } from '@/components/Loader'
+import { Loader } from '@/components/_loaders/Loader'
 
 export const Animations = () => {
   return (

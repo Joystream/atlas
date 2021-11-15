@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { useUser } from '@/providers/user'
 

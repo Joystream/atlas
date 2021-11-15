@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { sizes } from '@/theme'
 
 export const Container = styled.section`

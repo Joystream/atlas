@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
 import { useStartFileUpload, useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'

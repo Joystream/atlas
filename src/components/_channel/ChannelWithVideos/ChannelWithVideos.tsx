@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 
 import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'

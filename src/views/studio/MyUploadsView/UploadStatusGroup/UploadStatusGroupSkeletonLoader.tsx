@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { colors, media } from '@/theme'
 
 import {
@@ -9,7 +9,7 @@ import {
   Container,
   UploadInfoContainer,
   UploadStatusGroupContainer,
-} from './UploadStatusGroup.style'
+} from './UploadStatusGroup.styles'
 
 export const UploadStatusGroupSkeletonLoader: React.FC = () => {
   return (

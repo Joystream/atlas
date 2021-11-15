@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import React, { FC, MouseEvent } from 'react'
 
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphChevronDown } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 
 type LoadMoreButtonProps = {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void

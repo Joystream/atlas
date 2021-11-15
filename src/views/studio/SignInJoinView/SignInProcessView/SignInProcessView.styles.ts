@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgCoinsIllustration } from '@/components/_illustrations'
-import { Button } from '@/components/_inputs/Button'
 import { colors, media, sizes } from '@/theme'
 
 export const StyledStudioContainer = styled(LimitedWidthContainer)`

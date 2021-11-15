@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphExternal } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
-import { Button } from '@/components/_inputs/Button'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'

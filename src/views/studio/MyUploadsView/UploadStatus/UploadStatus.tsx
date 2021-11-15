@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { CircularProgress } from '@/components/CircularProgress'
-import { Loader } from '@/components/Loader'
 import { Text } from '@/components/Text'
 import {
   SvgAlertSuccess,
@@ -13,6 +12,7 @@ import {
   SvgGlyphFileVideo,
   SvgGlyphUpload,
 } from '@/components/_icons'
+import { Loader } from '@/components/_loaders/Loader'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -36,7 +36,7 @@ import {
   ProgressbarContainer,
   RetryButton,
   StatusText,
-} from './UploadStatus.style'
+} from './UploadStatus.styles'
 
 import { UploadStatusGroupSize } from '../UploadStatusGroup'
 

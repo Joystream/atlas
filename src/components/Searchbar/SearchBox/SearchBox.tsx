@@ -1,7 +1,7 @@
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SPECIAL_CHARACTERS } from '@/config/regex'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { usePersonalDataStore } from '@/providers/personalData'

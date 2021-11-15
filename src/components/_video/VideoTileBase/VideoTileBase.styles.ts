@@ -3,9 +3,9 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { colors, sizes, square, typography } from '@/theme'
 
 type SizeProps = {

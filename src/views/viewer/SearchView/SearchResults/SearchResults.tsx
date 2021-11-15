@@ -4,20 +4,20 @@ import { useCategories } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { SkeletonLoaderVideoGrid } from '@/components/SkeletonLoaderVideoGrid'
 import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelGrid } from '@/components/_channel/ChannelGrid'
 import { SvgActionFilters } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
+import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
 import { VideoGrid } from '@/components/_video/VideoGrid'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
 
-import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.style'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgBgPattern } from '@/components/_illustrations'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
 
 export const MediaWrapper = styled.div`

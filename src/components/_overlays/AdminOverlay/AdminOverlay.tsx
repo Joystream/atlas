@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 import { TabItem } from '@/components/Tabs'
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphClose, SvgGlyphExternal } from '@/components/_icons'
 import { SvgGlyphWarning } from '@/components/_icons/GlyphWarning'
-import { Button } from '@/components/_inputs/Button'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select } from '@/components/_inputs/Select'

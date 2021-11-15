@@ -16,9 +16,9 @@ import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
@@ -50,7 +50,7 @@ import {
   TitleSection,
   TitleSkeletonLoader,
   VideoSection,
-} from './ChannelView.style'
+} from './ChannelView.styles'
 
 const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50

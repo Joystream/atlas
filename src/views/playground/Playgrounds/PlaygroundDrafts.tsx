@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'

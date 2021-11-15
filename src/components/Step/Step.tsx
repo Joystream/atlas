@@ -2,9 +2,10 @@ import React, { forwardRef, useEffect, useState } from 'react'
 
 import { CircularProgress } from '@/components/CircularProgress'
 import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 
 import { Overhead, ProgressContainer, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper } from './Step.styles'
+
+import { IconButton } from '../_buttons/IconButton'
 
 export type StepProps = {
   title: string

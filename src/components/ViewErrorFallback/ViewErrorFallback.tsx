@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { AnimatedError } from '@/components/AnimatedError'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
 import { media, sizes } from '@/theme'

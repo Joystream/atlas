@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { Button, ButtonProps } from '@/components/_buttons/Button'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphClose, SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/components/_icons'
-import { Button, ButtonProps } from '@/components/_inputs/Button'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {

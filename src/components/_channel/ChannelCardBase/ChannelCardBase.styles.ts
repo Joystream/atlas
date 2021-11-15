@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { colors, sizes, transitions } from '@/theme'
 
 export const ChannelCardArticle = styled.article`

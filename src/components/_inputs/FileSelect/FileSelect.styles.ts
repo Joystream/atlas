@@ -2,9 +2,8 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { colors, media, sizes, transitions } from '@/theme'
-
-import { IconButton } from '../IconButton'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean

@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphClose } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 
 import {
   SnackbarActionButton,

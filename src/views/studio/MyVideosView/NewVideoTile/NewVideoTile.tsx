@@ -11,7 +11,7 @@ import {
   StyledIcon,
   StyledText,
   TextAndIconWrapper,
-} from './NewVideoTile.style'
+} from './NewVideoTile.styles'
 
 type NewVideoTileProps = {
   loading?: boolean

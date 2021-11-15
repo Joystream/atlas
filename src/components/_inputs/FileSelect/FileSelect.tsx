@@ -4,13 +4,13 @@ import { DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone'
 import { useTransition } from 'react-spring'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import {
   SvgGlyphUpload,
   SvgIllustrativeFileSelected,
   SvgIllustrativeImage,
   SvgIllustrativeVideo,
 } from '@/components/_icons'
-import { Button } from '@/components/_inputs/Button'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { FileType } from '@/types/files'
 

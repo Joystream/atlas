@@ -7,7 +7,7 @@ import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { media } from '@/theme'
-import { AvatarContainer } from '@/views/viewer/ChannelView/ChannelAbout.style'
+import { AvatarContainer } from '@/views/viewer/ChannelView/ChannelAbout.styles'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number

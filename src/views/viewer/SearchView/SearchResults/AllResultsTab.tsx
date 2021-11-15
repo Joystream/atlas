@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
 import { ChannelGallery } from '@/components/_channel/ChannelGallery'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoGallery } from '@/components/_video/VideoGallery'
 import { sizes } from '@/theme'
 

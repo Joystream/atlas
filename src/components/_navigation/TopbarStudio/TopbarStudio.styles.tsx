@@ -2,8 +2,8 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
 
 import { TopbarBase } from '../TopbarBase'

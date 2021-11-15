@@ -16,7 +16,7 @@ import {
   SubTitle,
   UnOrderedItem,
   UnOrderedList,
-} from './SignInProcessView.style'
+} from './SignInProcessView.styles'
 
 export const SignInProcessView = () => {
   return (

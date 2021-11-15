@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { AnimatedError } from '@/components/AnimatedError'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { media, sizes } from '@/theme'
 
 export const AnimationWrapper = styled.div`

@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { colors, sizes, square, transitions, typography, zIndex } from '@/theme'
 
 export const HOVER_BORDER_SIZE = '2px'

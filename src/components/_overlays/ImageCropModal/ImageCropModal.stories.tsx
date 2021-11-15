@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
-import { SkeletonLoader } from '@/components/SkeletonLoader'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 

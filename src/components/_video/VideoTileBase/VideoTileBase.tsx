@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SkeletonLoader } from '@/components/SkeletonLoader'
 import { Text } from '@/components/Text'
 import {
   SvgGlyphCopy,
@@ -11,6 +10,7 @@ import {
   SvgGlyphRetry,
   SvgGlyphTrash,
 } from '@/components/_icons'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { transitions } from '@/theme'
 import { RoutingState } from '@/types/routing'

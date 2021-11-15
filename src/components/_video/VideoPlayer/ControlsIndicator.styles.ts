@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Loader } from '@/components/Loader'
+import { Loader } from '@/components/_loaders/Loader'
 import { colors, media, sizes } from '@/theme'
 
 const INDICATOR_SIZE = sizes(20)

@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 
 import { Badge } from '@/components/Badge'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/components/_icons'
-import { IconButton } from '@/components/_inputs/IconButton'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
 
 import {
@@ -13,7 +13,7 @@ import {
   TabWrapper,
   TabsContainer,
   Topbar,
-} from './VideoWorkspaceTabsBar.style'
+} from './VideoWorkspaceTabsBar.styles'
 
 type TabsBarProps = {
   videoTabs: VideoWorkspaceTab[]

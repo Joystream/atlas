@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
 
 export const CAROUSEL_ARROW_HEIGHT = 48

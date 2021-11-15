@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { computeFileHash } from '@/utils/hashing'

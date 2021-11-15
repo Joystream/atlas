@@ -38,7 +38,7 @@ import { requiredValidation, textFieldValidation } from '@/utils/formValidationO
 import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
-import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
+import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 import {
   ActionBarTransactionWrapper,
@@ -49,7 +49,7 @@ import {
   StyledTitleArea,
   StyledTitleSection,
   TitleContainer,
-} from './CreateEditChannelView.style'
+} from './CreateEditChannelView.styles'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },

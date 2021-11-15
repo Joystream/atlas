@@ -17,7 +17,7 @@ import {
   StyledAvatar,
   StyledLayoutGrid,
   TextContainer,
-} from './ChannelAbout.style'
+} from './ChannelAbout.styles'
 
 export const ChannelAbout = () => {
   const { id } = useParams()

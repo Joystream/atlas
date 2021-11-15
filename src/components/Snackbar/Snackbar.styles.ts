@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_inputs/Button'
+import { Button } from '@/components/_buttons/Button'
 import { colors, sizes, transitions, typography, zIndex } from '@/theme'
 
 import { SnackbarVariant } from './Snackbar'

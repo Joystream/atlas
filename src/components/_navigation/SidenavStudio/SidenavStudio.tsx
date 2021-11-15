@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
+import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
-import { Button } from '@/components/_inputs/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'

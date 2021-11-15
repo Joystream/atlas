@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Tabs } from '@/components/Tabs'
-import { IconButton } from '@/components/_inputs/IconButton'
+import { IconButton } from '@/components/_buttons/IconButton'
 import { colors } from '@/theme'
 
 export const Container = styled.div`
