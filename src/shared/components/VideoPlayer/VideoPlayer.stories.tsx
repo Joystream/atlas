@@ -1,7 +1,9 @@
+import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
+import { createApolloClient } from '@/api'
 import { colors } from '@/shared/theme'
 
 import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
@@ -9,6 +11,17 @@ import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
 export default {
   title: 'video/VideoPlayer',
   component: VideoPlayer,
+  decorators: [
+    (Story) => {
+      const apolloClient = createApolloClient()
+
+      return (
+        <ApolloProvider client={apolloClient}>
+          <Story />
+        </ApolloProvider>
+      )
+    },
+  ],
 } as Meta
 
 const Template: Story<VideoPlayerProps> = (args) => (

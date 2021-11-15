@@ -14,6 +14,10 @@ export default {
         options: ['default', 'studio'],
       },
     },
+    logoLinkUrl: {
+      type: 'string',
+      defaultValue: 'http://localhost:6006',
+    },
   },
   decorators: [
     (Story) => (
@@ -25,7 +29,7 @@ export default {
 } as Meta
 
 const RegularTemplate: Story<TopbarBaseProps> = (args) => {
-  return <TopbarBase {...args} />
+  return <TopbarBase {...args} fullLogoNode={<>logo</>} />
 }
 
 export const Regular = RegularTemplate.bind({})

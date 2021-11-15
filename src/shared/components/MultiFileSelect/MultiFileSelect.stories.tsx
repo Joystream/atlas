@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { InputFilesState, MultiFileSelect, MultiFileSelectProps } from './MultiFileSelect'
@@ -10,9 +11,11 @@ export default {
   component: MultiFileSelect,
   decorators: [
     (Story) => (
-      <OverlayManagerProvider>
-        <Story />
-      </OverlayManagerProvider>
+      <ConfirmationModalProvider>
+        <OverlayManagerProvider>
+          <Story />
+        </OverlayManagerProvider>
+      </ConfirmationModalProvider>
     ),
   ],
 } as Meta

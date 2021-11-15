@@ -13,6 +13,7 @@ export default {
       defaultValue: 'Checkbox label',
     },
     value: { table: { disable: true } },
+    name: { table: { disable: true } },
     indeterminate: { table: { disable: true } },
     disabled: { table: { disable: true } },
     error: { table: { disable: true } },
