@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media } from '@/shared/theme'
 
 export const RankingNumberTileWrapper = styled.div`
   position: relative;
