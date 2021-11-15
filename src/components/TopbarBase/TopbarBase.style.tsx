@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { colors, media, sizes, zIndex } from '@/shared/theme'
 
-export const Header = styled.header<{ noSidebar?: boolean }>`
+export const Header = styled.header<{ hasSidebar?: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -18,13 +18,13 @@ export const Header = styled.header<{ noSidebar?: boolean }>`
   background-color: ${colors.black};
 
   /* add left padding to reserve space for sidenav hamburger button */
-  padding: ${({ noSidebar }) => `${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}
-  ${noSidebar ? 'var(--size-global-horizontal-padding)' : `calc(${sizes(4)} + 48px + ${sizes(2)})`}`};
+  padding: ${({ hasSidebar }) => `${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}
+  ${!hasSidebar ? 'var(--size-global-horizontal-padding)' : `calc(${sizes(4)} + 48px + ${sizes(2)})`}`};
 
   ${media.md} {
-    padding: ${({ noSidebar }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
+    padding: ${({ hasSidebar }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
     ${
-      noSidebar ? 'var(--size-global-horizontal-padding)' : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`
+      !hasSidebar ? 'var(--size-global-horizontal-padding)' : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`
     }`};
   }
 `

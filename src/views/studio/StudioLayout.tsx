@@ -76,7 +76,7 @@ const StudioLayout = () => {
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
-      <TopbarStudio noSidebar={!channelSet} hideChannelInfo={!memberSet} />
+      <TopbarStudio hasSidebar={channelSet} hideChannelInfo={!memberSet} />
       <CSSTransition
         in={channelSet}
         timeout={parseInt(transitions.timings.regular)}
