@@ -114,7 +114,7 @@ export const VideoView: React.FC = () => {
           size="large"
           textOnly
           key={`description-link-${i}`}
-          to={part.startsWith(window.origin) ? part.replace(window.origin, '') : part}
+          to={part.startsWith('www') ? `http://${part}` : part}
         >
           {part}
         </Button>
