@@ -6,7 +6,7 @@ import { SvgNavPopular } from '@/shared/icons'
 import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '.'
 
 export default {
-  title: 'Shared/C/CallToActionButton',
+  title: 'button/CallToActionButton',
   component: CallToActionButton,
   argTypes: {
     colorVariant: {

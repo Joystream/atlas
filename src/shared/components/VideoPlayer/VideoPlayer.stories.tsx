@@ -7,7 +7,7 @@ import { colors } from '@/shared/theme'
 import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
 
 export default {
-  title: 'Shared/V/VideoPlayer',
+  title: 'video/VideoPlayer',
   component: VideoPlayer,
 } as Meta
 

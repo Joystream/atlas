@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { FileSelect, FileSelectProps } from './FileSelect'
 
 export default {
-  title: 'Shared/F/FileSelect',
+  title: 'inputs/FileSelect',
   component: FileSelect,
   argTypes: {
     fileType: {

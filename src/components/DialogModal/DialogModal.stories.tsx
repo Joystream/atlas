@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/Button'
 import { DialogModal, DialogModalProps } from './DialogModal'
 
 export default {
-  title: 'General/DialogModal',
+  title: 'overlays/DialogModal',
   component: DialogModal,
   args: {
     title: 'There is an information of the utmost importance!',

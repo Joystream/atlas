@@ -4,7 +4,7 @@ import React from 'react'
 import { ActionBar, ActionBarProps } from './ActionBar'
 
 export default {
-  title: 'Shared/A/ActionBar',
+  title: 'other/ActionBar',
   component: ActionBar,
   args: {
     primaryText: 'Fee: 0.2 Joy',

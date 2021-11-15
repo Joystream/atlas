@@ -4,7 +4,7 @@ import React from 'react'
 import { Tabs, TabsProps } from './Tabs'
 
 export default {
-  title: 'Shared/T/Tabs',
+  title: 'other/Tabs',
   component: Tabs,
   argTypes: {
     tabs: {

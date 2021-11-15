@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { TopbarBase, TopbarBaseProps } from './TopbarBase'
 
 export default {
-  title: 'Shared/T/TopbarBase',
+  title: 'navigation/TopbarBase',
   component: TopbarBase,
   argTypes: {
     variant: {

@@ -6,7 +6,7 @@ import { Checkbox, CheckboxProps } from './Checkbox'
 import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
-  title: 'Shared/C/Checkbox',
+  title: 'inputs/Checkbox',
   component: Checkbox,
   argTypes: {
     label: {

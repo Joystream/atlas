@@ -4,7 +4,7 @@ import React from 'react'
 import { SkeletonLoader, SkeletonLoaderProps } from './SkeletonLoader'
 
 export default {
-  title: 'Shared/S/SkeletonLoader',
+  title: 'loaders/SkeletonLoader',
   component: SkeletonLoader,
   argTypes: {
     width: {

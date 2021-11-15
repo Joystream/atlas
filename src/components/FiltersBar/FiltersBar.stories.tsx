@@ -19,7 +19,7 @@ import { FiltersBar, FiltersBarProps } from './FiltersBar'
 import { useFiltersBar } from './useFiltersBar'
 
 export default {
-  title: 'General/FiltersBar',
+  title: 'other/FiltersBar',
   component: FiltersBar,
   decorators: [
     (Story) => (

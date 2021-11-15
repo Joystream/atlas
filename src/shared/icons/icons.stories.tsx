@@ -8,7 +8,7 @@ import { colors } from '@/shared/theme'
 import * as icons from '.'
 
 export default {
-  title: 'Shared/I/Icons',
+  title: 'Icons/Icons',
 } as Meta
 
 const Template: Story = () => (

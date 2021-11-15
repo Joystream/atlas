@@ -6,7 +6,7 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { InputFilesState, MultiFileSelect, MultiFileSelectProps } from './MultiFileSelect'
 
 export default {
-  title: 'Shared/M/MultiFileSelect',
+  title: 'inputs/MultiFileSelect',
   component: MultiFileSelect,
   decorators: [
     (Story) => (

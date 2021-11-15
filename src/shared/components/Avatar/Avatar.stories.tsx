@@ -4,7 +4,7 @@ import React from 'react'
 import { Avatar, AvatarProps } from './Avatar'
 
 export default {
-  title: 'Shared/A/Avatar',
+  title: 'other/Avatar',
   component: Avatar,
   argTypes: {
     size: {

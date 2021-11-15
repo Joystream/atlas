@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { RadioInput, RadioInputProps } from './RadioInput'
 
 export default {
-  title: 'Shared/R/RadioInput',
+  title: 'inputs/RadioInput',
   component: RadioInput,
   args: {
     disabled: false,

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { ProgressDrawer, ProgressDrawerProps } from './ProgressDrawer'
 
 export default {
-  title: 'Shared/P/ProgressDrawer',
+  title: 'other/ProgressDrawer',
   component: ProgressDrawer,
   argTypes: {},
 } as Meta

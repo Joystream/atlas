@@ -7,7 +7,7 @@ import { Button } from '../Button'
 import { Text } from '../Text'
 
 export default {
-  title: 'Shared/D/DialogPopover',
+  title: 'overlays/DialogPopover',
   component: DialogPopover,
   argTypes: {
     dividers: {

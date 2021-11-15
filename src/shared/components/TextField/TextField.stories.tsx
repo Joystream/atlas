@@ -6,7 +6,7 @@ import { TextField, TextFieldProps } from '.'
 import { Button } from '../Button'
 
 export default {
-  title: 'Shared/T/TextField',
+  title: 'inputs/TextField',
   component: TextField,
   args: {
     label: 'label text',

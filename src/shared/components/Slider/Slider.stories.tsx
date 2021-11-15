@@ -6,7 +6,7 @@ import { Slider, SliderProps } from '.'
 import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
-  title: 'Shared/S/Slider',
+  title: 'inputs/Slider',
   component: Slider,
   args: {
     min: 0,

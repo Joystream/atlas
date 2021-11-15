@@ -4,7 +4,7 @@ import React from 'react'
 import { ChannelCover, ChannelCoverProps } from './ChannelCover'
 
 export default {
-  title: 'Shared/C/ChannelCover',
+  title: 'channel/ChannelCover',
   component: ChannelCover,
   argTypes: {
     editable: {

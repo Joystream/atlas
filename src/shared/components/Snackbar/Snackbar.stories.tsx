@@ -10,7 +10,7 @@ import { Snackbar } from './Snackbar'
 import { Button } from '../Button'
 
 export default {
-  title: 'Shared/S/Snackbar',
+  title: 'other/Snackbar',
   component: Snackbar,
   argTypes: {
     title: { defaultValue: 'Lorem ipsul dolor' },

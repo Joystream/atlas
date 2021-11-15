@@ -7,7 +7,7 @@ import { SvgGlyphUpload } from '@/shared/icons'
 import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'
 
 export default {
-  title: 'Shared/E/EmptyFallback',
+  title: 'other/EmptyFallback',
   argTypes: {
     title: {
       control: { type: 'text' },
