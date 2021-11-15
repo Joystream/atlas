@@ -18,7 +18,7 @@ let counter = 0
  */
 const clearIconsDir = async () => {
   try {
-    await fs.rmdir(IconsDir, { recursive: true })
+    await fs.rm(IconsDir, { recursive: true })
     console.log(`${IconsDir} successfully deleted!`)
   } catch (err) {
     console.error(`Error while deleting ${IconsDir}.`)
