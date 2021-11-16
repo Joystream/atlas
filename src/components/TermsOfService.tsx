@@ -71,9 +71,9 @@ export const TermsOfService: React.FC = () => {
       <LegalParagraph header>7. Content Takedown Policy</LegalParagraph>
       <LegalParagraph>
         Jsgenesis has established a policy for content takedowns in accordance with the Digital Millennium Copyright Act
-        (DMCA){' '}
+        (DMCA) which can be viewed{' '}
         <a href="https://play.joystream.org/legal/copyright" rel="noopener noreferrer" target="_blank">
-          which can be viewed here.
+          here.
         </a>
       </LegalParagraph>
       <LegalParagraph header>8. Governing Law</LegalParagraph>
