@@ -57,7 +57,7 @@ export const StyledAvatar = styled(Avatar)`
 export const ActionBarTransactionWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: var(--size-sidenav-width-collapsed);
+  left: var(--size-sidenav-width);
   right: 0;
   z-index: ${zIndex.header};
 
