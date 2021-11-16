@@ -86,7 +86,6 @@ export const useTransaction = (): HandleTransactionFn => {
         })
         return false
       }
-      console.log()
       if (e instanceof ExtrinsicFailedError) {
         SentryLogger.error('Extrinsic failed', 'TransactionManager', e)
       } else {
