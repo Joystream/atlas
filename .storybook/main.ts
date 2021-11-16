@@ -11,11 +11,13 @@ interface CustomizedStorybookConfig extends StorybookConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   core: any
   viteFinal?: (config: UserConfig, options: Options) => UserConfig
+  framework: string
 }
 
 const config: CustomizedStorybookConfig = {
   'stories': ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   'addons': ['@storybook/addon-links', '@storybook/addon-essentials'],
+  'framework': '@storybook/react',
   'core': {
     'builder': 'storybook-builder-vite',
   },
