@@ -10,21 +10,13 @@ export type TopbarBaseProps = {
   logoLinkUrl: string
   noLogo?: boolean
   className?: string
-  hasSidebar?: boolean
 }
 
-export const TopbarBase: React.FC<TopbarBaseProps> = ({
-  children,
-  fullLogoNode,
-  logoLinkUrl,
-  noLogo,
-  className,
-  hasSidebar = false,
-}) => {
+export const TopbarBase: React.FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLinkUrl, noLogo, className }) => {
   const mdMatch = useMediaMatch('md')
 
   return (
-    <Header className={className} hasSidebar={hasSidebar}>
+    <Header className={className}>
       {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgJoystreamLogoShort />}</LogoLink>}
       {children}
     </Header>

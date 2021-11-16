@@ -68,10 +68,9 @@ type Inputs = {
 
 type CreateEditChannelViewProps = {
   newChannel?: boolean
-  noSidebar?: boolean
 }
 
-export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel, noSidebar }) => {
+export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
@@ -509,7 +508,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ActionBarTransactionWrapper noSidebar={noSidebar}>
+            <ActionBarTransactionWrapper>
               {!activeChannelId && progressDrawerSteps?.length ? (
                 <StyledProgressDrawer steps={progressDrawerSteps} />
               ) : null}

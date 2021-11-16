@@ -54,10 +54,10 @@ export const StyledAvatar = styled(Avatar)`
   }
 `
 
-export const ActionBarTransactionWrapper = styled.div<{ noSidebar?: boolean }>`
+export const ActionBarTransactionWrapper = styled.div`
   position: fixed;
   bottom: 0;
-  left: ${({ noSidebar }) => (noSidebar ? 0 : 'var(--size-sidenav-width-collapsed)')};
+  left: var(--size-sidenav-width-collapsed);
   right: 0;
   z-index: ${zIndex.header};
 
