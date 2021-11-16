@@ -19,12 +19,16 @@ const createTokenKey = (token) => {
   const baseFileName = basename(token.filePath).replace('.token.json', '')
   // singularize string
   const prefix = baseFileName.substr(-1) === 's' ? baseFileName.slice(0, -1) : baseFileName
-  return `${prefix}-${token.name.replace(/-default/g, '')}`
+  return `${prefix}-${token.name}`
 }
 
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
   transform: {
+    removeDefaultFromName: {
+      type: 'name',
+      transformer: (token) => token.name.replace(/-default/g, ''),
+    },
     referencedValueTransform: {
       // style dictionary requires adding ".value" suffix to all referenced value,  e.g.  "value": "{core.neutral.default.900}" should be  e.g.  "value": "{core.neutral.default.900.value}"
       // this transform should fix it, although it just a workaround
@@ -87,6 +91,7 @@ module.exports = {
       transforms: [
         `attribute/cti`,
         `name/cti/kebab`,
+        'removeDefaultFromName',
         'referencedValueTransform',
         'easingTransform',
         'transitionTransform',
