@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media, sizes } from '@/shared/theme'
+import { colors, media } from '@/shared/theme'
 
 export const RankingNumberTileWrapper = styled.div`
   position: relative;
@@ -13,8 +13,6 @@ const variantStyles = (variant: 'channel' | 'video') => {
   switch (variant) {
     case 'channel':
       return css`
-        height: 100%;
-        top: -${sizes(5)};
         ${media.md} {
           top: 0;
           align-items: flex-start;
@@ -26,12 +24,12 @@ const variantStyles = (variant: 'channel' | 'video') => {
       `
     case 'video':
       return css`
-        height: 50%;
         ${media.md} {
           line-height: 0.7;
           font-size: 140px;
         }
         ${media.xl} {
+          padding-top: 0;
           font-size: 180px;
         }
       `
@@ -55,8 +53,8 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   -webkit-text-stroke-color: ${colors.gray[500]};
   font-family: 'PxGrotesk', sans-serif;
   letter-spacing: -0.17em;
-  display: flex;
-  align-items: center;
+  height: 0;
+  padding-top: 3%;
 
   ${({ variant }) => variantStyles(variant)};
 `

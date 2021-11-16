@@ -90,7 +90,7 @@ const StudioLayout = () => {
         <StudioLoading />
       ) : (
         <>
-          <MainContainer>
+          <MainContainer hasSidebar={channelSet}>
             <Routes location={displayedLocation}>
               <Route
                 path={relativeRoutes.studio.index()}
@@ -147,11 +147,13 @@ const StudioLayout = () => {
   )
 }
 
-const MainContainer = styled.main`
+const MainContainer = styled.main<{ hasSidebar: boolean }>`
+  --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
+
   position: relative;
   height: 100%;
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
-  margin-left: var(--size-sidenav-width-collapsed);
+  margin-left: var(--size-sidenav-width);
 `
 
 const SLIDE_ANIMATION = 'slide-left'

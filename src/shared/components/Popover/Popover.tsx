@@ -16,12 +16,13 @@ export type PopoverProps = {
   className?: string
   onHide?(): void
   children?: React.ReactNode
+  disabled?: boolean
 }
 
 const EXIT_ANIMATION_DURATION = 100
 
 const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverProps> = (
-  { hideOnClick = true, onHide, placement = 'bottom-start', children, offset = [0, 8], trigger, className },
+  { hideOnClick = true, onHide, placement = 'bottom-start', children, offset = [0, 8], trigger, className, disabled },
   ref
 ) => {
   const tippyRef = useRef<Instance>()
@@ -32,6 +33,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverP
 
   return (
     <Tippy
+      disabled={disabled}
       trigger="click"
       hideOnClick={hideOnClick}
       interactive

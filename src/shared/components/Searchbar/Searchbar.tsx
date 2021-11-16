@@ -51,6 +51,11 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }))
     const { pathname } = useLocation()
 
+    const handleClose = () => {
+      onClose?.()
+      setSelectedItem(null)
+    }
+
     // Lose focus on location change
     useEffect(() => {
       if (pathname) {
@@ -90,16 +95,17 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
+        event.preventDefault()
         addRecentSearch(query)
+        handleClose()
 
         // navigate to search results
         navigate(absoluteRoutes.viewer.search({ query: query?.trim() }))
       }
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Tab') {
         event.preventDefault()
-        onClose?.()
         event.currentTarget.blur()
-        setSelectedItem(null)
+        handleClose()
       }
 
       if (event.key === 'ArrowDown') {

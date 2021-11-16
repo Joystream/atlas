@@ -94,9 +94,13 @@ const SidenavBase: React.FC<SidenavProps> = ({
           <SidebarNavFooter>
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
-              <LegalLink to={absoluteRoutes.legal.termsOfService()}>Terms of Service</LegalLink>
+              <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
+                Terms of Service
+              </LegalLink>
               <span>•</span>
-              <LegalLink to={absoluteRoutes.legal.copyright()}>Copyright Policy</LegalLink>
+              <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
+                Copyright Policy
+              </LegalLink>
             </LegalLinksWrapper>
           </SidebarNavFooter>
         </CSSTransition>

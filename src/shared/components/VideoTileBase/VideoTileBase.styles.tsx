@@ -60,7 +60,7 @@ export const TextContainer = styled.div`
 export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
   ${square(32)};
 
-  opacity: ${({ isActive }) => (isActive ? 1 : 0)};
+  opacity: 0;
   margin-left: ${sizes(2)};
   pointer-events: ${({ isActive }) => (isActive ? 'auto' : 'none')};
 

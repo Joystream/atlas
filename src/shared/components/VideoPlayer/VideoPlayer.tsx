@@ -3,6 +3,7 @@ import React, { CSSProperties, useCallback, useEffect, useRef, useState } from '
 import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import {
   SvgPlayerFullScreen,
@@ -95,6 +96,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
   const [isAutoPlayFailed, setIsAutoPlayFailed] = useState(false)
+  const mdMatch = useMediaMatch('md')
 
   const playVideo = useCallback(
     async (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => {
@@ -499,20 +501,22 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
-                  <PlayButton
-                    isEnded={playerState === 'ended'}
-                    onClick={handlePlayPause}
-                    tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
-                    tooltipPosition="left"
-                  >
-                    {playerState === 'ended' ? (
-                      <SvgPlayerRestart />
-                    ) : isPlaying ? (
-                      <SvgPlayerPause />
-                    ) : (
-                      <SvgPlayerPlay />
-                    )}
-                  </PlayButton>
+                  {(!showBigPlayButton || mdMatch) && (
+                    <PlayButton
+                      isEnded={playerState === 'ended'}
+                      onClick={handlePlayPause}
+                      tooltipText={isPlaying ? 'Pause (k)' : playerState === 'ended' ? 'Play again (k)' : 'Play (k)'}
+                      tooltipPosition="left"
+                    >
+                      {playerState === 'ended' ? (
+                        <SvgPlayerRestart />
+                      ) : isPlaying ? (
+                        <SvgPlayerPause />
+                      ) : (
+                        <SvgPlayerPlay />
+                      )}
+                    </PlayButton>
+                  )}
                 </PlayControl>
                 <VolumeControl onClick={(e) => e.stopPropagation()}>
                   <VolumeButton tooltipText="Volume" showTooltipOnlyOnFocus onClick={handleMute}>

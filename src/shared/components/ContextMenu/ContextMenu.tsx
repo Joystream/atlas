@@ -8,6 +8,7 @@ type MenuItemProps = {
   icon: ReactNode
   title: string
   onClick?: () => void
+  disabled?: boolean
 }
 
 export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title }) => {

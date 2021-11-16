@@ -274,6 +274,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
         </SwitchTransition>
         <ContextMenu
           placement="bottom-end"
+          disabled={isUploading}
           items={
             publisherMode
               ? publisherKebabMenuItems
@@ -286,7 +287,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
                 ]
           }
           trigger={
-            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
+            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small" isActive={!isUploading}>
               <SvgGlyphMore />
             </KebabMenuButtonIcon>
           }
