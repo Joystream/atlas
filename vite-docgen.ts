@@ -40,7 +40,6 @@ const docgenPlugin = (include: string[], context: string = process.cwd()): Plugi
     name: 'react-docgen-plugin',
     transform(source, id) {
       if (!pattern.test(id)) return null
-      console.log(id)
       const docs = docGenParser.parseWithProgramProvider(id, () => tsProgram)
       return generateDocgenCodeBlock({
         filename: id,
