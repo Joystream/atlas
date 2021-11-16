@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ExtrinsicStatus } from '@/joystream-lib'
 import { Dialog } from '@/shared/components/Dialog'
 import { Text } from '@/shared/components/Text'
@@ -132,7 +133,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
           status === ExtrinsicStatus.VoucherSizeLimitExceeded
             ? {
                 text: 'Go to discord',
-                to: 'https://discord.com/invite/DE9UN3YpRP',
+                to: JOYSTREAM_STORAGE_DISCORD_URL,
               }
             : undefined
         }

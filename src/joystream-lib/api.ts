@@ -150,7 +150,7 @@ export class JoystreamJs {
                       // In this case - continue (we'll just display dispatchError.toString())
                     }
                   }
-                  reject(new ExtrinsicFailedError(event, errorMsg))
+                  reject(new ExtrinsicFailedError(event, errorMsg, errorMsg.includes('VoucherSizeLimitExceeded')))
                 } else if (event.method === 'ExtrinsicSuccess') {
                   const blockHash = status.asFinalized
                   this.api.rpc.chain
