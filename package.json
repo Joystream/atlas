@@ -18,7 +18,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "node --max_old_space_size=15872 ./node_modules/vite/bin/vite.js build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint:ts": "eslint --ext .js,.jsx,.ts,.tsx --max-warnings 0 .",
