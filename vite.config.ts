@@ -27,7 +27,7 @@ export default defineConfig({
       babelHelpers: 'bundled',
     }),
     graphql(),
-    docgen(['src/**/*.tsx']),
+    docgen(['src/components/**/*.tsx']),
     {
       ...inject({
         include: ['node_modules/**/*.js*'],
