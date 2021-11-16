@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { ExtrinsicStatus } from '@/joystream-lib'
@@ -29,8 +29,8 @@ export type TransactionModalProps = {
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onClose, className }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
-  const initialStatusRef = useRef<number | null>(null)
-  const nonUploadTransaction = initialStatusRef.current === ExtrinsicStatus.Unsigned
+  const [initialStatus, setInitialStatus] = useState<number | null>(null)
+  const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
     status != null
@@ -38,16 +38,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
       : null
 
   useEffect(() => {
-    if (status !== null && initialStatusRef.current === null) {
-      initialStatusRef.current = status
+    if (status !== null && initialStatus === null) {
+      setInitialStatus(status)
     }
     if (status === null) {
-      initialStatusRef.current = null
+      setInitialStatus(null)
     }
     if (status) {
       setPolkadotLogoVisible(false)
     }
-  }, [status])
+  }, [initialStatus, status])
 
   useEffect(() => {
     if (status === ExtrinsicStatus.Completed) {
@@ -58,12 +58,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
   }, [status, onClose])
 
   const canCancel =
-    status === ExtrinsicStatus.ProcessingAssets ||
-    status === ExtrinsicStatus.Unsigned ||
-    status === ExtrinsicStatus.Completed ||
-    status === ExtrinsicStatus.Error
+    status &&
+    [
+      ExtrinsicStatus.ProcessingAssets,
+      ExtrinsicStatus.Unsigned,
+      ExtrinsicStatus.Completed,
+      ExtrinsicStatus.Error,
+      ExtrinsicStatus.VoucherSizeLimitExceeded,
+    ].includes(status)
 
-  const transactionSteps = Object.values(TRANSACTION_STEPS_DETAILS).slice(nonUploadTransaction ? 2 : 1)
+  const transactionSteps = Object.values(TRANSACTION_STEPS_DETAILS).slice(nonUploadTransaction ? 3 : 2)
 
   return (
     <StyledModal show={!!stepDetails} {...className}>
@@ -124,8 +128,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
       </StyledTransactionIllustration>
       <Dialog
         title={stepDetails?.title}
+        primaryButton={
+          status === ExtrinsicStatus.VoucherSizeLimitExceeded
+            ? {
+                text: 'Go to discord',
+                to: 'https://discord.com/invite/DE9UN3YpRP',
+              }
+            : undefined
+        }
         secondaryButton={{
-          text: status === ExtrinsicStatus.Completed || status === ExtrinsicStatus.Error ? 'Close' : 'Cancel',
+          text:
+            status &&
+            [ExtrinsicStatus.Error, ExtrinsicStatus.VoucherSizeLimitExceeded, ExtrinsicStatus.Completed].includes(
+              status
+            )
+              ? 'Close'
+              : 'Cancel',
           onClick: onClose,
           disabled: !canCancel,
         }}

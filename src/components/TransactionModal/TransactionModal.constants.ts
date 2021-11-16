@@ -70,4 +70,17 @@ export const TRANSACTION_STEPS_DETAILS = {
       loop: false,
     },
   },
+  [ExtrinsicStatus.VoucherSizeLimitExceeded]: {
+    title: 'Storage limit exceeded',
+    description:
+      'Each publisher has a storage limit. If your file exceed yours you won’t be able to upload it. You can aquire additional storage space by asking on our discord.',
+    animation: {
+      data: errorAnimation,
+      size: {
+        width: 288,
+        height: 264,
+      },
+      loop: false,
+    },
+  },
 }

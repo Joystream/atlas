@@ -86,13 +86,17 @@ export const useTransaction = (): HandleTransactionFn => {
         })
         return false
       }
-
+      console.log()
       if (e instanceof ExtrinsicFailedError) {
         SentryLogger.error('Extrinsic failed', 'TransactionManager', e)
       } else {
         SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', e)
       }
-      setDialogStep(ExtrinsicStatus.Error)
+      if (e.message.includes('VoucherSizeLimitExceeded ')) {
+        setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
+      } else {
+        setDialogStep(ExtrinsicStatus.Error)
+      }
       return false
     }
   }
