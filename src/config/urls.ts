@@ -15,5 +15,6 @@ export const STORAGE_URL_PATH = 'asset/v0'
 export const COVER_VIDEO_INFO_URL = 'https://eu-central-1.linodeobjects.com/atlas-hero/cover-info.json'
 
 export const JOYSTREAM_DISCORD_URL = 'https://discord.gg/DE9UN3YpRP'
+export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'
 
 export const PIONEER_URL = 'https://testnet.joystream.org'

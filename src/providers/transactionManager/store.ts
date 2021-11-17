@@ -6,14 +6,7 @@ type ProcessedBlockAction = {
   callback: () => void
 }
 
-export type TransactionDialogStep =
-  | ExtrinsicStatus.ProcessingAssets
-  | ExtrinsicStatus.Unsigned
-  | ExtrinsicStatus.Signed
-  | ExtrinsicStatus.Syncing
-  | ExtrinsicStatus.Completed
-  | ExtrinsicStatus.Error
-  | null
+export type TransactionDialogStep = ExtrinsicStatus | null
 
 type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]

@@ -49,8 +49,8 @@ export const useTransaction = (): HandleTransactionFn => {
       setDialogStep(ExtrinsicStatus.Unsigned)
       const { data: txData, block } = await txFactory(setDialogStep)
       if (onTxFinalize) {
-        onTxFinalize(txData).catch((e) =>
-          SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', e)
+        onTxFinalize(txData).catch((error) =>
+          SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', error)
         )
       }
 
@@ -60,8 +60,8 @@ export const useTransaction = (): HandleTransactionFn => {
           if (onTxSync) {
             try {
               await onTxSync(txData)
-            } catch (e) {
-              SentryLogger.error('Failed transaction sync callback', 'TransactionManager', e)
+            } catch (error) {
+              SentryLogger.error('Failed transaction sync callback', 'TransactionManager', error)
             }
           }
           resolve()
@@ -75,8 +75,8 @@ export const useTransaction = (): HandleTransactionFn => {
           resolve(true)
         })
       })
-    } catch (e) {
-      if (e instanceof ExtrinsicSignCancelledError) {
+    } catch (error) {
+      if (error instanceof ExtrinsicSignCancelledError) {
         ConsoleLogger.warn('Sign cancelled')
         setDialogStep(null)
         displaySnackbar({
@@ -87,12 +87,17 @@ export const useTransaction = (): HandleTransactionFn => {
         return false
       }
 
-      if (e instanceof ExtrinsicFailedError) {
-        SentryLogger.error('Extrinsic failed', 'TransactionManager', e)
+      if (error instanceof ExtrinsicFailedError && !error.voucherSizeLimitExceeded) {
+        SentryLogger.error('Extrinsic failed', 'TransactionManager', error)
       } else {
-        SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', e)
+        SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
       }
-      setDialogStep(ExtrinsicStatus.Error)
+      if (error.voucherSizeLimitExceeded) {
+        SentryLogger.message('Voucher size limit exceeded', 'TransactionManager', error)
+        setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
+      } else {
+        setDialogStep(ExtrinsicStatus.Error)
+      }
       return false
     }
   }
