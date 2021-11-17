@@ -2837,6 +2837,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@livesession/sdk@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@livesession/sdk@npm:1.1.4"
+  checksum: aed63aabbffddffa5067c036194c064228739c97cbd814dec22868081296dd1a4e6425b11860afd31f4aecc793ae160abe6560a8d07fe20c70924861eba48dbc
+  languageName: node
+  linkType: hard
+
 "@loadable/component@npm:^5.15.0":
   version: 5.15.0
   resolution: "@loadable/component@npm:5.15.0"
@@ -6998,6 +7005,7 @@ __metadata:
     "@joystream/content-metadata-protobuf": ~1.1.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.16.1
+    "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22
     "@polkadot/extension-dapp": ~0.37.3-17
