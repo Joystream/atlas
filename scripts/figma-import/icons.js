@@ -2,13 +2,11 @@ const config = require('../../figma-import.config')
 
 const path = require('path')
 const fs = require('fs').promises
-const { pascalCase } = require('change-case')
+const { paramCase } = require('change-case')
 
 const { getImageContent, getNodeChildren, getSvgImageUrl } = require('./utils/api')
 
-const IconsDir = path.resolve(__dirname, '../../src/shared/icons/figmaSvgs')
-
-const getIconFolderPath = () => path.resolve(IconsDir)
+const iconsDir = path.resolve('src/shared/icons/figmaSvgs')
 
 let counter = 0
 
@@ -18,10 +16,10 @@ let counter = 0
  */
 const clearIconsDir = async () => {
   try {
-    await fs.rm(IconsDir, { recursive: true })
-    console.log(`${IconsDir} successfully deleted!`)
+    await fs.rm(iconsDir, { recursive: true })
+    console.log(`${iconsDir} successfully deleted!`)
   } catch (err) {
-    console.error(`Error while deleting ${IconsDir}.`)
+    console.error(`Error while deleting ${iconsDir}`)
   }
 }
 
@@ -36,18 +34,17 @@ const clearIconsDir = async () => {
 const generateIcon = async (iconNode, total) => {
   const iconUrl = await getSvgImageUrl(iconNode.id)
 
-  const iconName = pascalCase(iconNode.name)
-  const iconFolderPath = getIconFolderPath(iconName)
+  const iconName = paramCase(iconNode.name)
 
   try {
-    await fs.access(iconFolderPath)
+    await fs.access(iconsDir)
   } catch (error) {
-    await fs.mkdir(iconFolderPath)
+    await fs.mkdir(iconsDir)
   }
 
   const { data: iconContent } = await getImageContent(iconUrl)
 
-  await Promise.all([await fs.writeFile(path.resolve(iconFolderPath, `${iconName}.svg`), iconContent, 'utf-8')])
+  await Promise.all([await fs.writeFile(path.resolve(iconsDir, `${iconName}.svg`), iconContent, 'utf-8')])
 
   counter++
   process.stdout.write(` ${counter}/${total} icons has been saved\r`)
