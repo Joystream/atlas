@@ -35,6 +35,7 @@ const docgenPlugin = (include: string[], context: string = process.cwd()): Plugi
       return true
     },
   })
+
   const tsProgram = createProgram(files, tscfg)
   return {
     name: 'react-docgen-plugin',

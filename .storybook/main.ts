@@ -3,6 +3,7 @@ import path from 'path'
 import { cwd as _cwd } from 'process'
 import { UserConfig } from 'vite'
 
+import docgen from '../vite-docgen'
 import _viteConfig from '../vite.config'
 
 const cwd = _cwd()
@@ -31,7 +32,11 @@ const config: CustomizedStorybookConfig = {
 
     const merged: UserConfig = {
       ...storybookConfig,
-      plugins: [...(storybookConfig.plugins || []), ...filteredVitePlugins],
+      plugins: [
+        ...(storybookConfig.plugins || []),
+        ...filteredVitePlugins,
+        docgen(['src/components/**/*.tsx', 'src/shared/**/*.tsx']),
+      ],
       optimizeDeps: {
         ...storybookConfig.optimizeDeps,
         include: [...(storybookConfig.optimizeDeps?.include || []), ...(viteConfig.optimizeDeps?.include || [])],
