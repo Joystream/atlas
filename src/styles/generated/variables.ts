@@ -255,6 +255,48 @@ export const variables = css`
       var(--typography-fonts-primary);
     --typography-mobile-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
+    --typography-h900-desktop-letter-spacing: -0.01em;
+    --typography-h800-desktop-letter-spacing: -0.005em;
+    --typography-h500-mobile-letter-spacing: 0.005em;
+    --typography-h400-mobile-letter-spacing: 0.01em;
+    --typography-h400-desktop-letter-spacing: 0.005em;
+    --typography-h300-mobile-letter-spacing: 0.01em;
+    --typography-h300-desktop-letter-spacing: 0.01em;
+    --typography-h200-mobile-letter-spacing: 0.02em;
+    --typography-h200-desktop-letter-spacing: 0.01em;
+    --typography-h100-mobile-letter-spacing: 0.07em;
+    --typography-h100-desktop-letter-spacing: 0.07em;
+    --typography-t200-mobile-regular-letter-spacing: 0.005em;
+    --typography-t200-mobile-strong-letter-spacing: 0.005em;
+    --typography-t200-desktop-regular-letter-spacing: 0.005em;
+    --typography-t200-desktop-strong-letter-spacing: 0.005em;
+    --typography-t100-mobile-regular-letter-spacing: 0.01em;
+    --typography-t100-mobile-strong-letter-spacing: 0.01em;
+    --typography-t100-desktop-regular-letter-spacing: 0.01em;
+    --typography-t100-desktop-strong-letter-spacing: 0.01em;
+    --typography-desktop-h900-letter-spacing: -0.01em;
+    --typography-desktop-h800-letter-spacing: -0.005em;
+    --typography-desktop-h400-letter-spacing: 0.005em;
+    --typography-desktop-h300-letter-spacing: 0.01em;
+    --typography-desktop-h200-letter-spacing: 0.01em;
+    --typography-desktop-h100-letter-spacing: 0.07em;
+    --typography-desktop-t200-regular-letter-spacing: 0.005em;
+    --typography-desktop-t200-strong-letter-spacing: 0.005em;
+    --typography-desktop-t100-regular-letter-spacing: 0.01em;
+    --typography-desktop-t100-strong-letter-spacing: 0.01em;
+    --typography-mobile-h500-letter-spacing: 0.005em;
+    --typography-mobile-h400-letter-spacing: 0.01em;
+    --typography-mobile-h300-letter-spacing: 0.01em;
+    --typography-mobile-h200-letter-spacing: 0.02em;
+    --typography-mobile-h100-letter-spacing: 0.07em;
+    --typography-mobile-t200-regular-letter-spacing: 0.005em;
+    --typography-mobile-t200-strong-letter-spacing: 0.005em;
+    --typography-mobile-t100-regular-letter-spacing: 0.01em;
+    --typography-mobile-t100-strong-letter-spacing: 0.01em;
+    --typography-h100-mobile-text-transform: 0.07em;
+    --typography-h100-desktop-text-transform: 0.07em;
+    --typography-desktop-h100-text-transform: 0.07em;
+    --typography-mobile-h100-text-transform: 0.07em;
   }
 `
 export const theme = {
@@ -449,6 +491,48 @@ export const theme = {
   typographyMobileT200Strong: 'var(--typography-mobile-t200-strong)',
   typographyMobileT100Regular: 'var(--typography-mobile-t100-regular)',
   typographyMobileT100Strong: 'var(--typography-mobile-t100-strong)',
+  typographyH900DesktopLetterSpacing: 'var(--typography-h900-desktop-letter-spacing)',
+  typographyH800DesktopLetterSpacing: 'var(--typography-h800-desktop-letter-spacing)',
+  typographyH500MobileLetterSpacing: 'var(--typography-h500-mobile-letter-spacing)',
+  typographyH400MobileLetterSpacing: 'var(--typography-h400-mobile-letter-spacing)',
+  typographyH400DesktopLetterSpacing: 'var(--typography-h400-desktop-letter-spacing)',
+  typographyH300MobileLetterSpacing: 'var(--typography-h300-mobile-letter-spacing)',
+  typographyH300DesktopLetterSpacing: 'var(--typography-h300-desktop-letter-spacing)',
+  typographyH200MobileLetterSpacing: 'var(--typography-h200-mobile-letter-spacing)',
+  typographyH200DesktopLetterSpacing: 'var(--typography-h200-desktop-letter-spacing)',
+  typographyH100MobileLetterSpacing: 'var(--typography-h100-mobile-letter-spacing)',
+  typographyH100DesktopLetterSpacing: 'var(--typography-h100-desktop-letter-spacing)',
+  typographyT200MobileRegularLetterSpacing: 'var(--typography-t200-mobile-regular-letter-spacing)',
+  typographyT200MobileStrongLetterSpacing: 'var(--typography-t200-mobile-strong-letter-spacing)',
+  typographyT200DesktopRegularLetterSpacing: 'var(--typography-t200-desktop-regular-letter-spacing)',
+  typographyT200DesktopStrongLetterSpacing: 'var(--typography-t200-desktop-strong-letter-spacing)',
+  typographyT100MobileRegularLetterSpacing: 'var(--typography-t100-mobile-regular-letter-spacing)',
+  typographyT100MobileStrongLetterSpacing: 'var(--typography-t100-mobile-strong-letter-spacing)',
+  typographyT100DesktopRegularLetterSpacing: 'var(--typography-t100-desktop-regular-letter-spacing)',
+  typographyT100DesktopStrongLetterSpacing: 'var(--typography-t100-desktop-strong-letter-spacing)',
+  typographyDesktopH900LetterSpacing: 'var(--typography-desktop-h900-letter-spacing)',
+  typographyDesktopH800LetterSpacing: 'var(--typography-desktop-h800-letter-spacing)',
+  typographyDesktopH400LetterSpacing: 'var(--typography-desktop-h400-letter-spacing)',
+  typographyDesktopH300LetterSpacing: 'var(--typography-desktop-h300-letter-spacing)',
+  typographyDesktopH200LetterSpacing: 'var(--typography-desktop-h200-letter-spacing)',
+  typographyDesktopH100LetterSpacing: 'var(--typography-desktop-h100-letter-spacing)',
+  typographyDesktopT200RegularLetterSpacing: 'var(--typography-desktop-t200-regular-letter-spacing)',
+  typographyDesktopT200StrongLetterSpacing: 'var(--typography-desktop-t200-strong-letter-spacing)',
+  typographyDesktopT100RegularLetterSpacing: 'var(--typography-desktop-t100-regular-letter-spacing)',
+  typographyDesktopT100StrongLetterSpacing: 'var(--typography-desktop-t100-strong-letter-spacing)',
+  typographyMobileH500LetterSpacing: 'var(--typography-mobile-h500-letter-spacing)',
+  typographyMobileH400LetterSpacing: 'var(--typography-mobile-h400-letter-spacing)',
+  typographyMobileH300LetterSpacing: 'var(--typography-mobile-h300-letter-spacing)',
+  typographyMobileH200LetterSpacing: 'var(--typography-mobile-h200-letter-spacing)',
+  typographyMobileH100LetterSpacing: 'var(--typography-mobile-h100-letter-spacing)',
+  typographyMobileT200RegularLetterSpacing: 'var(--typography-mobile-t200-regular-letter-spacing)',
+  typographyMobileT200StrongLetterSpacing: 'var(--typography-mobile-t200-strong-letter-spacing)',
+  typographyMobileT100RegularLetterSpacing: 'var(--typography-mobile-t100-regular-letter-spacing)',
+  typographyMobileT100StrongLetterSpacing: 'var(--typography-mobile-t100-strong-letter-spacing)',
+  typographyH100MobileTextTransform: 'var(--typography-h100-mobile-text-transform)',
+  typographyH100DesktopTextTransform: 'var(--typography-h100-desktop-text-transform)',
+  typographyDesktopH100TextTransform: 'var(--typography-desktop-h100-text-transform)',
+  typographyMobileH100TextTransform: 'var(--typography-mobile-h100-text-transform)',
 }
 export const cVar = (key: keyof typeof theme) => {
   return theme[key]

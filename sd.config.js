@@ -72,9 +72,29 @@ module.exports = {
   },
   format: {
     customFormat: ({ dictionary }) => {
-      const allTokens = dictionary.allTokens.filter((token) => {
+      const filteredTokens = dictionary.allTokens.filter((token) => {
         return token.type !== 'typedef'
       })
+
+      // create new tokens for letter-spacing
+      const letterSpacingTokens = filteredTokens
+        .filter((token) => token.original.value.letterSpacing)
+        .map((token) => ({
+          ...token,
+          value: token.original.value.letterSpacing,
+          name: `${token.name}-letter-spacing`,
+        }))
+
+      // create new tokens for text-transform
+      const textTransformTokens = filteredTokens
+        .filter((token) => token.original.value.textTransform)
+        .map((token) => ({
+          ...token,
+          value: token.original.value.letterSpacing,
+          name: `${token.name}-text-transform`,
+        }))
+
+      const allTokens = [...filteredTokens, ...letterSpacingTokens, ...textTransformTokens]
       return variablesTemplate({
         cssVariables: allTokens
           .map((token) => {
