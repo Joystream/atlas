@@ -3,7 +3,6 @@ import path from 'path'
 import { cwd as _cwd } from 'process'
 import { UserConfig } from 'vite'
 
-import docgen from '../vite-docgen'
 import _viteConfig from '../vite.config'
 
 const cwd = _cwd()
@@ -12,13 +11,11 @@ interface CustomizedStorybookConfig extends StorybookConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   core: any
   viteFinal?: (config: UserConfig, options: Options) => UserConfig
-  framework: string
 }
 
 const config: CustomizedStorybookConfig = {
   'stories': ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   'addons': ['@storybook/addon-links', '@storybook/addon-essentials'],
-  'framework': '@storybook/react',
   'core': {
     'builder': 'storybook-builder-vite',
   },
@@ -32,11 +29,7 @@ const config: CustomizedStorybookConfig = {
 
     const merged: UserConfig = {
       ...storybookConfig,
-      plugins: [
-        ...(storybookConfig.plugins || []),
-        ...filteredVitePlugins,
-        docgen(['src/components/**/*.tsx', 'src/shared/**/*.tsx']),
-      ],
+      plugins: [...(storybookConfig.plugins || []), ...filteredVitePlugins],
       optimizeDeps: {
         ...storybookConfig.optimizeDeps,
         include: [...(storybookConfig.optimizeDeps?.include || []), ...(viteConfig.optimizeDeps?.include || [])],
