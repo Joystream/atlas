@@ -132,7 +132,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
         primaryButton={
           status === ExtrinsicStatus.VoucherSizeLimitExceeded
             ? {
-                text: 'Go to discord',
+                text: 'Open Discord',
                 to: JOYSTREAM_STORAGE_DISCORD_URL,
               }
             : undefined

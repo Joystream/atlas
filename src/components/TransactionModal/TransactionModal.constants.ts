@@ -73,7 +73,7 @@ export const TRANSACTION_STEPS_DETAILS = {
   [ExtrinsicStatus.VoucherSizeLimitExceeded]: {
     title: 'Storage limit exceeded',
     description:
-      'Each publisher has a storage limit. If your file exceed yours you won’t be able to upload it. You can aquire additional storage space by asking on our discord.',
+      "Your transaction failed because publishing associated assets would exceed your storage quota. Each channel has a dedicated storage limit that's controlled by the DAO storage working group. You can ask for additional storage space in #storage-provider channel on Joystream Discord and then try again.",
     animation: {
       data: errorAnimation,
       size: {
