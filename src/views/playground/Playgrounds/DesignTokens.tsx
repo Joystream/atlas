@@ -6,6 +6,7 @@ import { cVar } from '@/styles'
 export const DesignTokens = () => {
   return (
     <>
+      <Typography>typographyDesktopH700</Typography>
       <GreenDiv>--color-core-green-800</GreenDiv>
       <RedDiv>--color-background-error-muted</RedDiv>
       <AlphaContainer>
@@ -24,6 +25,9 @@ const Box = styled.div`
   align-items: center;
   width: 200px;
   height: 200px;
+`
+const Typography = styled.p`
+  font: ${cVar('typographyDesktopH700')};
 `
 
 const GreenDiv = styled(Box)`

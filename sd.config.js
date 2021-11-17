@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { template, camelCase, kebabCase } = require('lodash')
+const { template, camelCase, isPlainObject } = require('lodash')
 const { basename } = require('path')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
@@ -50,35 +50,52 @@ module.exports = {
       matcher: (token) => token.attributes.category === 'transition' && token.value.timing && token.value.easing,
       transformer: (token) => `${token.value.timing.value} ${token.value.easing.value}`,
     },
+    typographyValueTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => {
+        return token.filePath === './src/styles/tokens/typography.token.json' && isPlainObject(token.value)
+      },
+      transformer: (token) => {
+        return `${token.value.fontWeight.value} ${token.value.fontSize.value}/${token.value.lineHeight} ${token.value.fontFamily.value}`
+      },
+    },
+    typographyNameTransform: {
+      type: 'name',
+      matcher: (token) => {
+        return token.filePath === './src/styles/tokens/typography.token.json'
+      },
+      transformer: (token) => {
+        return token.name.replace(/-heading|text-styles-alt-|text-styles-|-text/g, '')
+      },
+    },
   },
   format: {
     customFormat: ({ dictionary }) => {
+      const allTokens = dictionary.allTokens.filter((token) => {
+        return token.type !== 'typedef'
+      })
       return variablesTemplate({
-        cssVariables: dictionary.allTokens
+        cssVariables: allTokens
           .map((token) => {
-            if (token.type === 'typedef') {
-              return
-            }
-
             let keyValuePair = `--${createTokenKey(token)}: ${token.value};`
             if (dictionary.usesReference(token.original.value)) {
               const refs = dictionary.getReferences(token.original.value)
 
               refs.forEach((ref) => {
-                keyValuePair = keyValuePair.replace(ref.value, ` var(--${createTokenKey(ref)})`)
+                const [key, value] = keyValuePair.split(':')
+                const modifiedValue = value.replace(ref.value, `var(--${createTokenKey(ref)})`)
+                keyValuePair = `${key}:${modifiedValue}`
               })
             }
             return keyValuePair
           })
           .join('\n'),
-        themeVariables: dictionary.allTokens
+        themeVariables: allTokens
           .map((token) => {
-            if (token.type === 'typedef') {
-              return
-            }
             const variableName = createTokenKey(token)
             const key = camelCase(variableName)
-            const value = `'var(--${kebabCase(variableName)})'`
+            const value = `'var(--${variableName})'`
 
             return `${key}: ${value},`
           })
@@ -92,6 +109,8 @@ module.exports = {
         `attribute/cti`,
         `name/cti/kebab`,
         'removeDefaultFromName',
+        'typographyValueTransform',
+        'typographyNameTransform',
         'referencedValueTransform',
         'easingTransform',
         'transitionTransform',
