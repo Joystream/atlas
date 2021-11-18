@@ -40,6 +40,7 @@ export type SelectProps<T = string> = {
 
 // don't use React.FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const _Select = <T extends unknown>(
   {
     label = '',
