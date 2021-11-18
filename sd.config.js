@@ -65,12 +65,9 @@ module.exports = {
   },
   format: {
     customFormat: ({ dictionary }) => {
-      const filteredTokens = dictionary.allTokens.filter((token) => {
-        return token.type !== 'typedef'
-      })
-
       // create new tokens for letter-spacing
-      const letterSpacingTokens = filteredTokens
+      const allTokens = dictionary.allTokens
+      const letterSpacingTokens = allTokens
         .filter((token) => token.attributes.category === 'textStyles')
         .map((token) => ({
           ...token,
@@ -79,7 +76,7 @@ module.exports = {
         }))
 
       // create new tokens for text-transform
-      const textTransformTokens = filteredTokens
+      const textTransformTokens = allTokens
         .filter((token) => token.attributes.category === 'textStyles')
         .map((token) => ({
           ...token,
@@ -87,9 +84,9 @@ module.exports = {
           name: `${token.name}-text-transform`,
         }))
 
-      const allTokens = [...filteredTokens, ...letterSpacingTokens, ...textTransformTokens]
+      const convertedTokens = [...allTokens, ...letterSpacingTokens, ...textTransformTokens]
       return variablesTemplate({
-        cssVariables: allTokens
+        cssVariables: convertedTokens
           .map((token) => {
             let keyValuePair = `--${createTokenKey(token)}: ${token.value};`
             if (dictionary.usesReference(token.original.value)) {
@@ -104,7 +101,7 @@ module.exports = {
             return keyValuePair
           })
           .join('\n'),
-        themeVariables: allTokens
+        themeVariables: convertedTokens
           .map((token) => {
             const variableName = createTokenKey(token)
             const key = camelCase(variableName)
@@ -133,6 +130,7 @@ module.exports = {
         {
           destination: 'variables.ts',
           format: 'customFormat',
+          filter: (token) => token.type !== 'typedef',
           options: {
             outputReferences: true,
           },

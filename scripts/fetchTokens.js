@@ -15,7 +15,7 @@ const fetchTokenUrlsFromGithub = async () => {
   }
 }
 
-const TOKEN_WHITE_LIST = ['colors.token.json', 'animation.token.json', 'typography.token.json']
+const TOKEN_WHITE_LIST = ['colors', 'animation', 'typography']
 
 const fetchTokens = async () => {
   fs.mkdir(TOKENS_DIR, { recursive: true }, (err) => {
@@ -30,7 +30,7 @@ const fetchTokens = async () => {
 
     responses.forEach((res) => {
       const fileName = path.basename(res.config.url)
-      if (!TOKEN_WHITE_LIST.includes(fileName)) {
+      if (!TOKEN_WHITE_LIST.includes(fileName.split('.')[0])) {
         return
       }
       const filePath = path.join(TOKENS_DIR, fileName)
