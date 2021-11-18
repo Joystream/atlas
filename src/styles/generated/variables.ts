@@ -135,66 +135,6 @@ export const variables = css`
     --typography-font-weights-medium: 500;
     --typography-font-weights-semibold: 600;
     --typography-font-weights-bold: 700;
-    --typography-h900-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
-      var(--typography-fonts-primary);
-    --typography-h900-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-14) / 5rem
-      var(--typography-fonts-primary);
-    --typography-h800-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-7) / 2rem
-      var(--typography-fonts-primary);
-    --typography-h800-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-12) / 4rem
-      var(--typography-fonts-primary);
-    --typography-h700-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-6) / 2rem
-      var(--typography-fonts-primary);
-    --typography-h700-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-10) / 3.5rem
-      var(--typography-fonts-primary);
-    --typography-h600-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-5) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-h600-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
-      var(--typography-fonts-primary);
-    --typography-h500-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-4) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-h500-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-6) / 2rem
-      var(--typography-fonts-primary);
-    --typography-h400-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-h400-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-4) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-h300-mobile: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-h300-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-h200-mobile: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-h200-desktop: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-h100-mobile: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-h100-desktop: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-t300-mobile-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-t300-mobile-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-t300-desktop-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-t300-desktop-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
-    --typography-t200-mobile-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-t200-mobile-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-t200-desktop-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-t200-desktop-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
-    --typography-t100-mobile-regular: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-t100-mobile-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-t100-desktop-regular: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
-    --typography-t100-desktop-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
     --typography-desktop-h900: var(--typography-font-weights-semibold) var(--typography-font-sizes-14) / 5rem
       var(--typography-fonts-primary);
     --typography-desktop-h800: var(--typography-font-weights-semibold) var(--typography-font-sizes-12) / 4rem
@@ -213,15 +153,15 @@ export const variables = css`
       var(--typography-fonts-primary);
     --typography-desktop-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
-    --typography-desktop-t300-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
+    --typography-desktop-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
       var(--typography-fonts-primary);
     --typography-desktop-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
       var(--typography-fonts-primary);
-    --typography-desktop-t200-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
+    --typography-desktop-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
       var(--typography-fonts-primary);
     --typography-desktop-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
       var(--typography-fonts-primary);
-    --typography-desktop-t100-regular: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
+    --typography-desktop-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-desktop-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
@@ -243,60 +183,78 @@ export const variables = css`
       var(--typography-fonts-primary);
     --typography-mobile-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
-    --typography-mobile-t300-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
+    --typography-mobile-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
       var(--typography-fonts-primary);
     --typography-mobile-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
       var(--typography-fonts-primary);
-    --typography-mobile-t200-regular: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
+    --typography-mobile-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
       var(--typography-fonts-primary);
     --typography-mobile-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
       var(--typography-fonts-primary);
-    --typography-mobile-t100-regular: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
+    --typography-mobile-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-mobile-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
-    --typography-h900-desktop-letter-spacing: -0.01em;
-    --typography-h800-desktop-letter-spacing: -0.005em;
-    --typography-h500-mobile-letter-spacing: 0.005em;
-    --typography-h400-mobile-letter-spacing: 0.01em;
-    --typography-h400-desktop-letter-spacing: 0.005em;
-    --typography-h300-mobile-letter-spacing: 0.01em;
-    --typography-h300-desktop-letter-spacing: 0.01em;
-    --typography-h200-mobile-letter-spacing: 0.02em;
-    --typography-h200-desktop-letter-spacing: 0.01em;
-    --typography-h100-mobile-letter-spacing: 0.07em;
-    --typography-h100-desktop-letter-spacing: 0.07em;
-    --typography-t200-mobile-regular-letter-spacing: 0.005em;
-    --typography-t200-mobile-strong-letter-spacing: 0.005em;
-    --typography-t200-desktop-regular-letter-spacing: 0.005em;
-    --typography-t200-desktop-strong-letter-spacing: 0.005em;
-    --typography-t100-mobile-regular-letter-spacing: 0.01em;
-    --typography-t100-mobile-strong-letter-spacing: 0.01em;
-    --typography-t100-desktop-regular-letter-spacing: 0.01em;
-    --typography-t100-desktop-strong-letter-spacing: 0.01em;
     --typography-desktop-h900-letter-spacing: -0.01em;
     --typography-desktop-h800-letter-spacing: -0.005em;
+    --typography-desktop-h700-letter-spacing: 0;
+    --typography-desktop-h600-letter-spacing: 0;
+    --typography-desktop-h500-letter-spacing: 0;
     --typography-desktop-h400-letter-spacing: 0.005em;
     --typography-desktop-h300-letter-spacing: 0.01em;
     --typography-desktop-h200-letter-spacing: 0.01em;
     --typography-desktop-h100-letter-spacing: 0.07em;
-    --typography-desktop-t200-regular-letter-spacing: 0.005em;
+    --typography-desktop-t300-letter-spacing: 0;
+    --typography-desktop-t300-strong-letter-spacing: 0;
+    --typography-desktop-t200-letter-spacing: 0.005em;
     --typography-desktop-t200-strong-letter-spacing: 0.005em;
-    --typography-desktop-t100-regular-letter-spacing: 0.01em;
+    --typography-desktop-t100-letter-spacing: 0.01em;
     --typography-desktop-t100-strong-letter-spacing: 0.01em;
+    --typography-mobile-h900-letter-spacing: 0;
+    --typography-mobile-h800-letter-spacing: 0;
+    --typography-mobile-h700-letter-spacing: 0;
+    --typography-mobile-h600-letter-spacing: 0;
     --typography-mobile-h500-letter-spacing: 0.005em;
     --typography-mobile-h400-letter-spacing: 0.01em;
     --typography-mobile-h300-letter-spacing: 0.01em;
     --typography-mobile-h200-letter-spacing: 0.02em;
     --typography-mobile-h100-letter-spacing: 0.07em;
-    --typography-mobile-t200-regular-letter-spacing: 0.005em;
+    --typography-mobile-t300-letter-spacing: 0;
+    --typography-mobile-t300-strong-letter-spacing: 0;
+    --typography-mobile-t200-letter-spacing: 0.005em;
     --typography-mobile-t200-strong-letter-spacing: 0.005em;
-    --typography-mobile-t100-regular-letter-spacing: 0.01em;
+    --typography-mobile-t100-letter-spacing: 0.01em;
     --typography-mobile-t100-strong-letter-spacing: 0.01em;
-    --typography-h100-mobile-text-transform: 0.07em;
-    --typography-h100-desktop-text-transform: 0.07em;
-    --typography-desktop-h100-text-transform: 0.07em;
-    --typography-mobile-h100-text-transform: 0.07em;
+    --typography-desktop-h900-text-transform: none;
+    --typography-desktop-h800-text-transform: none;
+    --typography-desktop-h700-text-transform: none;
+    --typography-desktop-h600-text-transform: none;
+    --typography-desktop-h500-text-transform: none;
+    --typography-desktop-h400-text-transform: none;
+    --typography-desktop-h300-text-transform: none;
+    --typography-desktop-h200-text-transform: none;
+    --typography-desktop-h100-text-transform: uppercase;
+    --typography-desktop-t300-text-transform: none;
+    --typography-desktop-t300-strong-text-transform: none;
+    --typography-desktop-t200-text-transform: none;
+    --typography-desktop-t200-strong-text-transform: none;
+    --typography-desktop-t100-text-transform: none;
+    --typography-desktop-t100-strong-text-transform: none;
+    --typography-mobile-h900-text-transform: none;
+    --typography-mobile-h800-text-transform: none;
+    --typography-mobile-h700-text-transform: none;
+    --typography-mobile-h600-text-transform: none;
+    --typography-mobile-h500-text-transform: none;
+    --typography-mobile-h400-text-transform: none;
+    --typography-mobile-h300-text-transform: none;
+    --typography-mobile-h200-text-transform: none;
+    --typography-mobile-h100-text-transform: uppercase;
+    --typography-mobile-t300-text-transform: none;
+    --typography-mobile-t300-strong-text-transform: none;
+    --typography-mobile-t200-text-transform: none;
+    --typography-mobile-t200-strong-text-transform: none;
+    --typography-mobile-t100-text-transform: none;
+    --typography-mobile-t100-strong-text-transform: none;
   }
 `
 export const theme = {
@@ -431,36 +389,6 @@ export const theme = {
   typographyFontWeightsMedium: 'var(--typography-font-weights-medium)',
   typographyFontWeightsSemibold: 'var(--typography-font-weights-semibold)',
   typographyFontWeightsBold: 'var(--typography-font-weights-bold)',
-  typographyH900Mobile: 'var(--typography-h900-mobile)',
-  typographyH900Desktop: 'var(--typography-h900-desktop)',
-  typographyH800Mobile: 'var(--typography-h800-mobile)',
-  typographyH800Desktop: 'var(--typography-h800-desktop)',
-  typographyH700Mobile: 'var(--typography-h700-mobile)',
-  typographyH700Desktop: 'var(--typography-h700-desktop)',
-  typographyH600Mobile: 'var(--typography-h600-mobile)',
-  typographyH600Desktop: 'var(--typography-h600-desktop)',
-  typographyH500Mobile: 'var(--typography-h500-mobile)',
-  typographyH500Desktop: 'var(--typography-h500-desktop)',
-  typographyH400Mobile: 'var(--typography-h400-mobile)',
-  typographyH400Desktop: 'var(--typography-h400-desktop)',
-  typographyH300Mobile: 'var(--typography-h300-mobile)',
-  typographyH300Desktop: 'var(--typography-h300-desktop)',
-  typographyH200Mobile: 'var(--typography-h200-mobile)',
-  typographyH200Desktop: 'var(--typography-h200-desktop)',
-  typographyH100Mobile: 'var(--typography-h100-mobile)',
-  typographyH100Desktop: 'var(--typography-h100-desktop)',
-  typographyT300MobileRegular: 'var(--typography-t300-mobile-regular)',
-  typographyT300MobileStrong: 'var(--typography-t300-mobile-strong)',
-  typographyT300DesktopRegular: 'var(--typography-t300-desktop-regular)',
-  typographyT300DesktopStrong: 'var(--typography-t300-desktop-strong)',
-  typographyT200MobileRegular: 'var(--typography-t200-mobile-regular)',
-  typographyT200MobileStrong: 'var(--typography-t200-mobile-strong)',
-  typographyT200DesktopRegular: 'var(--typography-t200-desktop-regular)',
-  typographyT200DesktopStrong: 'var(--typography-t200-desktop-strong)',
-  typographyT100MobileRegular: 'var(--typography-t100-mobile-regular)',
-  typographyT100MobileStrong: 'var(--typography-t100-mobile-strong)',
-  typographyT100DesktopRegular: 'var(--typography-t100-desktop-regular)',
-  typographyT100DesktopStrong: 'var(--typography-t100-desktop-strong)',
   typographyDesktopH900: 'var(--typography-desktop-h900)',
   typographyDesktopH800: 'var(--typography-desktop-h800)',
   typographyDesktopH700: 'var(--typography-desktop-h700)',
@@ -470,11 +398,11 @@ export const theme = {
   typographyDesktopH300: 'var(--typography-desktop-h300)',
   typographyDesktopH200: 'var(--typography-desktop-h200)',
   typographyDesktopH100: 'var(--typography-desktop-h100)',
-  typographyDesktopT300Regular: 'var(--typography-desktop-t300-regular)',
+  typographyDesktopT300: 'var(--typography-desktop-t300)',
   typographyDesktopT300Strong: 'var(--typography-desktop-t300-strong)',
-  typographyDesktopT200Regular: 'var(--typography-desktop-t200-regular)',
+  typographyDesktopT200: 'var(--typography-desktop-t200)',
   typographyDesktopT200Strong: 'var(--typography-desktop-t200-strong)',
-  typographyDesktopT100Regular: 'var(--typography-desktop-t100-regular)',
+  typographyDesktopT100: 'var(--typography-desktop-t100)',
   typographyDesktopT100Strong: 'var(--typography-desktop-t100-strong)',
   typographyMobileH900: 'var(--typography-mobile-h900)',
   typographyMobileH800: 'var(--typography-mobile-h800)',
@@ -485,54 +413,72 @@ export const theme = {
   typographyMobileH300: 'var(--typography-mobile-h300)',
   typographyMobileH200: 'var(--typography-mobile-h200)',
   typographyMobileH100: 'var(--typography-mobile-h100)',
-  typographyMobileT300Regular: 'var(--typography-mobile-t300-regular)',
+  typographyMobileT300: 'var(--typography-mobile-t300)',
   typographyMobileT300Strong: 'var(--typography-mobile-t300-strong)',
-  typographyMobileT200Regular: 'var(--typography-mobile-t200-regular)',
+  typographyMobileT200: 'var(--typography-mobile-t200)',
   typographyMobileT200Strong: 'var(--typography-mobile-t200-strong)',
-  typographyMobileT100Regular: 'var(--typography-mobile-t100-regular)',
+  typographyMobileT100: 'var(--typography-mobile-t100)',
   typographyMobileT100Strong: 'var(--typography-mobile-t100-strong)',
-  typographyH900DesktopLetterSpacing: 'var(--typography-h900-desktop-letter-spacing)',
-  typographyH800DesktopLetterSpacing: 'var(--typography-h800-desktop-letter-spacing)',
-  typographyH500MobileLetterSpacing: 'var(--typography-h500-mobile-letter-spacing)',
-  typographyH400MobileLetterSpacing: 'var(--typography-h400-mobile-letter-spacing)',
-  typographyH400DesktopLetterSpacing: 'var(--typography-h400-desktop-letter-spacing)',
-  typographyH300MobileLetterSpacing: 'var(--typography-h300-mobile-letter-spacing)',
-  typographyH300DesktopLetterSpacing: 'var(--typography-h300-desktop-letter-spacing)',
-  typographyH200MobileLetterSpacing: 'var(--typography-h200-mobile-letter-spacing)',
-  typographyH200DesktopLetterSpacing: 'var(--typography-h200-desktop-letter-spacing)',
-  typographyH100MobileLetterSpacing: 'var(--typography-h100-mobile-letter-spacing)',
-  typographyH100DesktopLetterSpacing: 'var(--typography-h100-desktop-letter-spacing)',
-  typographyT200MobileRegularLetterSpacing: 'var(--typography-t200-mobile-regular-letter-spacing)',
-  typographyT200MobileStrongLetterSpacing: 'var(--typography-t200-mobile-strong-letter-spacing)',
-  typographyT200DesktopRegularLetterSpacing: 'var(--typography-t200-desktop-regular-letter-spacing)',
-  typographyT200DesktopStrongLetterSpacing: 'var(--typography-t200-desktop-strong-letter-spacing)',
-  typographyT100MobileRegularLetterSpacing: 'var(--typography-t100-mobile-regular-letter-spacing)',
-  typographyT100MobileStrongLetterSpacing: 'var(--typography-t100-mobile-strong-letter-spacing)',
-  typographyT100DesktopRegularLetterSpacing: 'var(--typography-t100-desktop-regular-letter-spacing)',
-  typographyT100DesktopStrongLetterSpacing: 'var(--typography-t100-desktop-strong-letter-spacing)',
   typographyDesktopH900LetterSpacing: 'var(--typography-desktop-h900-letter-spacing)',
   typographyDesktopH800LetterSpacing: 'var(--typography-desktop-h800-letter-spacing)',
+  typographyDesktopH700LetterSpacing: 'var(--typography-desktop-h700-letter-spacing)',
+  typographyDesktopH600LetterSpacing: 'var(--typography-desktop-h600-letter-spacing)',
+  typographyDesktopH500LetterSpacing: 'var(--typography-desktop-h500-letter-spacing)',
   typographyDesktopH400LetterSpacing: 'var(--typography-desktop-h400-letter-spacing)',
   typographyDesktopH300LetterSpacing: 'var(--typography-desktop-h300-letter-spacing)',
   typographyDesktopH200LetterSpacing: 'var(--typography-desktop-h200-letter-spacing)',
   typographyDesktopH100LetterSpacing: 'var(--typography-desktop-h100-letter-spacing)',
-  typographyDesktopT200RegularLetterSpacing: 'var(--typography-desktop-t200-regular-letter-spacing)',
+  typographyDesktopT300LetterSpacing: 'var(--typography-desktop-t300-letter-spacing)',
+  typographyDesktopT300StrongLetterSpacing: 'var(--typography-desktop-t300-strong-letter-spacing)',
+  typographyDesktopT200LetterSpacing: 'var(--typography-desktop-t200-letter-spacing)',
   typographyDesktopT200StrongLetterSpacing: 'var(--typography-desktop-t200-strong-letter-spacing)',
-  typographyDesktopT100RegularLetterSpacing: 'var(--typography-desktop-t100-regular-letter-spacing)',
+  typographyDesktopT100LetterSpacing: 'var(--typography-desktop-t100-letter-spacing)',
   typographyDesktopT100StrongLetterSpacing: 'var(--typography-desktop-t100-strong-letter-spacing)',
+  typographyMobileH900LetterSpacing: 'var(--typography-mobile-h900-letter-spacing)',
+  typographyMobileH800LetterSpacing: 'var(--typography-mobile-h800-letter-spacing)',
+  typographyMobileH700LetterSpacing: 'var(--typography-mobile-h700-letter-spacing)',
+  typographyMobileH600LetterSpacing: 'var(--typography-mobile-h600-letter-spacing)',
   typographyMobileH500LetterSpacing: 'var(--typography-mobile-h500-letter-spacing)',
   typographyMobileH400LetterSpacing: 'var(--typography-mobile-h400-letter-spacing)',
   typographyMobileH300LetterSpacing: 'var(--typography-mobile-h300-letter-spacing)',
   typographyMobileH200LetterSpacing: 'var(--typography-mobile-h200-letter-spacing)',
   typographyMobileH100LetterSpacing: 'var(--typography-mobile-h100-letter-spacing)',
-  typographyMobileT200RegularLetterSpacing: 'var(--typography-mobile-t200-regular-letter-spacing)',
+  typographyMobileT300LetterSpacing: 'var(--typography-mobile-t300-letter-spacing)',
+  typographyMobileT300StrongLetterSpacing: 'var(--typography-mobile-t300-strong-letter-spacing)',
+  typographyMobileT200LetterSpacing: 'var(--typography-mobile-t200-letter-spacing)',
   typographyMobileT200StrongLetterSpacing: 'var(--typography-mobile-t200-strong-letter-spacing)',
-  typographyMobileT100RegularLetterSpacing: 'var(--typography-mobile-t100-regular-letter-spacing)',
+  typographyMobileT100LetterSpacing: 'var(--typography-mobile-t100-letter-spacing)',
   typographyMobileT100StrongLetterSpacing: 'var(--typography-mobile-t100-strong-letter-spacing)',
-  typographyH100MobileTextTransform: 'var(--typography-h100-mobile-text-transform)',
-  typographyH100DesktopTextTransform: 'var(--typography-h100-desktop-text-transform)',
+  typographyDesktopH900TextTransform: 'var(--typography-desktop-h900-text-transform)',
+  typographyDesktopH800TextTransform: 'var(--typography-desktop-h800-text-transform)',
+  typographyDesktopH700TextTransform: 'var(--typography-desktop-h700-text-transform)',
+  typographyDesktopH600TextTransform: 'var(--typography-desktop-h600-text-transform)',
+  typographyDesktopH500TextTransform: 'var(--typography-desktop-h500-text-transform)',
+  typographyDesktopH400TextTransform: 'var(--typography-desktop-h400-text-transform)',
+  typographyDesktopH300TextTransform: 'var(--typography-desktop-h300-text-transform)',
+  typographyDesktopH200TextTransform: 'var(--typography-desktop-h200-text-transform)',
   typographyDesktopH100TextTransform: 'var(--typography-desktop-h100-text-transform)',
+  typographyDesktopT300TextTransform: 'var(--typography-desktop-t300-text-transform)',
+  typographyDesktopT300StrongTextTransform: 'var(--typography-desktop-t300-strong-text-transform)',
+  typographyDesktopT200TextTransform: 'var(--typography-desktop-t200-text-transform)',
+  typographyDesktopT200StrongTextTransform: 'var(--typography-desktop-t200-strong-text-transform)',
+  typographyDesktopT100TextTransform: 'var(--typography-desktop-t100-text-transform)',
+  typographyDesktopT100StrongTextTransform: 'var(--typography-desktop-t100-strong-text-transform)',
+  typographyMobileH900TextTransform: 'var(--typography-mobile-h900-text-transform)',
+  typographyMobileH800TextTransform: 'var(--typography-mobile-h800-text-transform)',
+  typographyMobileH700TextTransform: 'var(--typography-mobile-h700-text-transform)',
+  typographyMobileH600TextTransform: 'var(--typography-mobile-h600-text-transform)',
+  typographyMobileH500TextTransform: 'var(--typography-mobile-h500-text-transform)',
+  typographyMobileH400TextTransform: 'var(--typography-mobile-h400-text-transform)',
+  typographyMobileH300TextTransform: 'var(--typography-mobile-h300-text-transform)',
+  typographyMobileH200TextTransform: 'var(--typography-mobile-h200-text-transform)',
   typographyMobileH100TextTransform: 'var(--typography-mobile-h100-text-transform)',
+  typographyMobileT300TextTransform: 'var(--typography-mobile-t300-text-transform)',
+  typographyMobileT300StrongTextTransform: 'var(--typography-mobile-t300-strong-text-transform)',
+  typographyMobileT200TextTransform: 'var(--typography-mobile-t200-text-transform)',
+  typographyMobileT200StrongTextTransform: 'var(--typography-mobile-t200-strong-text-transform)',
+  typographyMobileT100TextTransform: 'var(--typography-mobile-t100-text-transform)',
+  typographyMobileT100StrongTextTransform: 'var(--typography-mobile-t100-strong-text-transform)',
 }
 export const cVar = (key: keyof typeof theme) => {
   return theme[key]

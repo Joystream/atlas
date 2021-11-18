@@ -27,7 +27,7 @@ module.exports = {
   transform: {
     removeDefaultFromName: {
       type: 'name',
-      transformer: (token) => token.name.replace(/-default/g, ''),
+      transformer: (token) => token.name.replace(/-default|-regular/g, ''),
     },
     referencedValueTransform: {
       // style dictionary requires adding ".value" suffix to all referenced value,  e.g.  "value": "{core.neutral.default.900}" should be  e.g.  "value": "{core.neutral.default.900.value}"
@@ -35,7 +35,7 @@ module.exports = {
       // we could remove this when they do something about it https://github.com/amzn/style-dictionary/issues/721
       type: 'value',
       transitive: true,
-      matcher: (token) => token.value.value && token.type !== 'typedef',
+      matcher: (token) => token.value?.value && token.type !== 'typedef',
       transformer: (token) => token.value.value,
     },
     easingTransform: {
@@ -53,21 +53,14 @@ module.exports = {
     typographyValueTransform: {
       type: 'value',
       transitive: true,
-      matcher: (token) => {
-        return token.filePath === './src/styles/tokens/typography.token.json' && isPlainObject(token.value)
-      },
-      transformer: (token) => {
-        return `${token.value.fontWeight.value} ${token.value.fontSize.value}/${token.value.lineHeight} ${token.value.fontFamily.value}`
-      },
+      matcher: (token) => token.attributes.category === 'textStyles' && isPlainObject(token.value),
+      transformer: (token) =>
+        `${token.value.fontWeight.value} ${token.value.fontSize.value}/${token.value.lineHeight} ${token.value.fontFamily.value}`,
     },
     typographyNameTransform: {
       type: 'name',
-      matcher: (token) => {
-        return token.filePath === './src/styles/tokens/typography.token.json'
-      },
-      transformer: (token) => {
-        return token.name.replace(/-heading|text-styles-alt-|text-styles-|-text/g, '')
-      },
+      matcher: (token) => token.attributes.category === 'textStyles',
+      transformer: (token) => token.name.replace(/-heading|-text|text-styles-/g, ''),
     },
   },
   format: {
@@ -78,19 +71,19 @@ module.exports = {
 
       // create new tokens for letter-spacing
       const letterSpacingTokens = filteredTokens
-        .filter((token) => token.original.value.letterSpacing)
+        .filter((token) => token.attributes.category === 'textStyles')
         .map((token) => ({
           ...token,
-          value: token.original.value.letterSpacing,
+          value: token.original.value.letterSpacing || 0,
           name: `${token.name}-letter-spacing`,
         }))
 
       // create new tokens for text-transform
       const textTransformTokens = filteredTokens
-        .filter((token) => token.original.value.textTransform)
+        .filter((token) => token.attributes.category === 'textStyles')
         .map((token) => ({
           ...token,
-          value: token.original.value.letterSpacing,
+          value: token.original.value.textTransform || 'none',
           name: `${token.name}-text-transform`,
         }))
 
