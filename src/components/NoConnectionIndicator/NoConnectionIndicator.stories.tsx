@@ -7,7 +7,7 @@ import { Snackbars } from '@/providers/snackbars'
 import { NoConnectionIndicator, NoConnectionIndicatorProps } from './NoConnectionIndicator'
 
 export default {
-  title: 'other/NoConnectionIndicator',
+  title: 'overlays/NoConnectionIndicator',
   component: NoConnectionIndicator,
   argTypes: {
     connectionStatus: { defaultValue: 'disconnected' },

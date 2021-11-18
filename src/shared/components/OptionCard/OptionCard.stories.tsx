@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { OptionCard, OptionCardProps } from './OptionCard'
 
 export default {
-  title: 'other/OptionCard',
+  title: 'inputs/OptionCard',
   component: OptionCard,
   args: {
     label: 'Radio input label',
