@@ -1,4 +1,4 @@
-const config = require('../../../figma-import.config')
+const config = require('../figma-import.config')
 
 const api = require('axios')
 

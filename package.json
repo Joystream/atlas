@@ -32,7 +32,7 @@
     "svgs:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
     "svgs": "yarn svgs:icons && yarn svgs:illustrations",
     "graphql": "graphql-codegen --config codegen.config.yml",
-    "figma-import": "node ./scripts/figma-import"
+    "svgs:import": "node ./scripts/figma-import"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
@@ -64,7 +64,6 @@
     "bezier-easing": "^2.1.0",
     "bn.js": "^4.12.0",
     "buffer": "^5.7.1",
-    "change-case": "^4.1.2",
     "cropperjs": "^1.5.12",
     "date-fns": "^2.25.0",
     "downshift": "^6.1.0",

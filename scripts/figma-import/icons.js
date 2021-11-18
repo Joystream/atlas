@@ -1,8 +1,8 @@
-const config = require('../../figma-import.config')
+const config = require('./figma-import.config')
 
 const path = require('path')
 const fs = require('fs').promises
-const { paramCase } = require('change-case')
+const { kebabCase } = require('lodash')
 
 const { getImageContent, getNodeChildren, getSvgImageUrl } = require('./utils/api')
 
@@ -34,7 +34,7 @@ const clearIconsDir = async () => {
 const generateIcon = async (iconNode, total) => {
   const iconUrl = await getSvgImageUrl(iconNode.id)
 
-  const iconName = paramCase(iconNode.name)
+  const iconName = kebabCase(iconNode.name)
 
   try {
     await fs.access(iconsDir)

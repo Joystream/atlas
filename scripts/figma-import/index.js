@@ -1,5 +1,5 @@
 const importIcons = require('./icons')
-const config = require('../../figma-import.config')
+const config = require('./figma-import.config')
 
 const configTest = () => {
   const missingFields = []
