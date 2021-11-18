@@ -1,7 +1,7 @@
 import { babel } from '@rollup/plugin-babel'
 import graphql from '@rollup/plugin-graphql'
 import inject from '@rollup/plugin-inject'
-import reactRefresh from '@vitejs/plugin-react-refresh'
+import react from '@vitejs/plugin-react'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
@@ -10,7 +10,9 @@ import checker from 'vite-plugin-checker'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    reactRefresh(),
+    react({
+      exclude: /\.stories\.(t|j)sx?$/,
+    }),
     checker({
       typescript: true,
       eslint: { files: ['./src'], extensions: ['.js', '.jsx', '.ts', '.tsx'] },
