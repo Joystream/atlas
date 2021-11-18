@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { PromisingNewChannels } from '@/components/PromisingNewChannels'
+import { PromisingNewChannels } from '@/components/_content/PromisingNewChannels'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 
 export const NewView: React.FC = () => (
