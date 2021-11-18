@@ -3,7 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useVideoCount } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/theme'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -19,8 +19,8 @@ import {
   VideosNumberContainer,
 } from './VideoCategoryCard.style'
 
-import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
+import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type VideoCategoryCardProps = {
   title: string

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, transitions } from '@/shared/theme'
+import { colors, sizes, transitions } from '@/theme'
 
 import { Container, IconCircle } from './VideoCategoryCard.style'
 

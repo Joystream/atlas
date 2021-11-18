@@ -1,11 +1,11 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgGlyphChevronLeft } from '@/components/_icons'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { IconButton } from '@/shared/components/IconButton'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { SvgGlyphChevronLeft } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 
 import { Divider, StyledVideoHeroHeader, VideoHeroHeaderTitle } from './VideoHeroHeader.style'
 

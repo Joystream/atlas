@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/shared/components/Text'
-import { colors, media, sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { colors, media, sizes } from '@/theme'
 
 export const StyledVideoHeroHeader = styled.header`
   position: relative;

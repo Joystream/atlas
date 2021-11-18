@@ -5,7 +5,7 @@ import { VideoHeroHeader } from './VideoHereoHeader'
 import { VideoHeroSlider } from './VideoHeroSlider'
 import { VideoHeroFeaturedVideo } from './types'
 
-import { VideoHero } from '../VideoHero'
+import { VideoHero } from '../_video/VideoHero'
 
 export type VideoCategoryHeroProps = {
   header: {

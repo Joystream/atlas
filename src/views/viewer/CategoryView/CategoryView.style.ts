@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { LayoutGrid } from '@/shared/components/LayoutGrid'
-import { colors, media, sizes } from '@/shared/theme'
+import { LayoutGrid } from '@/components/LayoutGrid'
+import { colors, media, sizes } from '@/theme'
 
 export const TitleContainer = styled.div`
   z-index: 1;

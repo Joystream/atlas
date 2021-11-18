@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { Select } from '@/shared/components/Select'
-import { colors, media, sizes, transitions } from '@/shared/theme'
+import { Select } from '@/components/_inputs/Select'
+import { colors, media, sizes, transitions } from '@/theme'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 

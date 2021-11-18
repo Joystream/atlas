@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
+import { LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { LayoutGrid } from '@/shared/components/LayoutGrid'
-import { colors, sizes } from '@/shared/theme'
+import { colors, sizes } from '@/theme'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin: ${sizes(16)} auto;

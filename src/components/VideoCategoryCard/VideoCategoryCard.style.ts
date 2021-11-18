@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 
-import { Text } from '@/shared/components/Text'
-import { colors, sizes, transitions } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { colors, sizes, transitions } from '@/theme'
 
 type ColorProps = { color: string }
 type LoadingProps = { isLoading?: boolean }

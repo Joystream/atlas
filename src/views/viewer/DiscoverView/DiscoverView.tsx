@@ -2,11 +2,11 @@ import React from 'react'
 
 import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
 import { useCategories, useVideoCount } from '@/api/hooks'
+import { GridItem } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
+import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/VideoCategoryCard'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { GridItem } from '@/shared/components/LayoutGrid'
-import { Text } from '@/shared/components/Text'
-import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/shared/components/VideoCategoryCard'
 import { SentryLogger } from '@/utils/logs'
 
 import {

@@ -1,9 +1,9 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 
 import {
   VideoHeroSliderWrapper,

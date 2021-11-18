@@ -3,7 +3,6 @@ import React, { CSSProperties, useCallback, useEffect, useRef, useState } from '
 import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   SvgPlayerFullScreen,
   SvgPlayerPause,
@@ -15,6 +14,7 @@ import {
   SvgPlayerSoundHalf,
   SvgPlayerSoundOn,
 } from '@/components/_icons'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'

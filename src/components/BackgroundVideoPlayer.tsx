@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/theme'
 import { ConsoleLogger } from '@/utils/logs'
 
 type BackgroundVideoPlayerProps = {

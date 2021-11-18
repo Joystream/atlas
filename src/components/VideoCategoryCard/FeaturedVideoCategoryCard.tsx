@@ -4,7 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { BackgroundVideoPlayer } from '@/components/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHover } from '@/hooks/useHover'
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/theme'
 
 import {
   FeaturedContainer,
@@ -15,8 +15,8 @@ import {
   PlayerContainer,
 } from './FeaturedVideoCategoryCard.style'
 
-import { SkeletonLoader } from '../SkeletonLoader'
 import { Text } from '../Text'
+import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type FeaturedVideoCategoryCardVariant = 'default' | 'compact'
 export type FeaturedVideoCategoryCardProps = {
