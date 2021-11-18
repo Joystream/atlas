@@ -1,0 +1,91 @@
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
+
+import { useAddVideoView, useVideo } from '@/api/hooks'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { absoluteRoutes } from '@/config/routes'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { AssetType, useAsset } from '@/providers/assets'
+import { Button } from '@/shared/components/Button'
+import { EmptyFallback } from '@/shared/components/EmptyFallback'
+import { VideoPlayer } from '@/shared/components/VideoPlayer'
+import { SentryLogger } from '@/utils/logs'
+
+import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.style'
+
+export const EmbeddedView: React.FC = () => {
+  const { id } = useParams()
+  const { loading, video, error } = useVideo(id ?? '', {
+    onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
+  })
+  const { addVideoView } = useAddVideoView()
+
+  const timestampFromQuery = Number(useRouterQuery('time'))
+
+  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+
+  const [startTimestamp, setStartTimestamp] = useState<number>()
+  useEffect(() => {
+    const duration = video?.duration ?? 0
+    if (!timestampFromQuery || timestampFromQuery > duration) {
+      return
+    }
+    setStartTimestamp(timestampFromQuery)
+  }, [video?.duration, timestampFromQuery])
+
+  const channelId = video?.channel.id
+  const videoId = video?.id
+  const categoryId = video?.category?.id
+
+  useEffect(() => {
+    if (!videoId || !channelId) {
+      return
+    }
+    addVideoView({
+      variables: {
+        videoId,
+        channelId,
+        categoryId,
+      },
+    }).catch((error) => {
+      SentryLogger.error('Failed to increase video views', 'VideoView', error)
+    })
+  }, [addVideoView, videoId, channelId, categoryId])
+
+  if (error) {
+    return <ViewErrorFallback />
+  }
+
+  if (!loading && !video) {
+    return (
+      <NotFoundVideoContainer>
+        <EmptyFallback
+          title="Video not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundVideoContainer>
+    )
+  }
+
+  return (
+    <>
+      {!isMediaLoading && video ? (
+        <VideoPlayer
+          isVideoPending={video?.mediaAvailability === 'PENDING'}
+          channelId={video.channel.id}
+          videoId={video.id}
+          autoplay
+          src={mediaUrl}
+          fill
+          startTime={startTimestamp}
+        />
+      ) : (
+        <PlayerSkeletonLoader />
+      )}
+    </>
+  )
+}
