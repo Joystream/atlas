@@ -6,7 +6,9 @@ import { cVar } from '@/styles'
 export const DesignTokens = () => {
   return (
     <>
-      <Typography>typographyDesktopH700</Typography>
+      <TypographyH700>typographyDesktopH700</TypographyH700>
+      <TypographyH100>typographyDesktopH100</TypographyH100>
+      <TypographyT100>typographyDesktopT100</TypographyT100>
       <GreenDiv>--color-core-green-800</GreenDiv>
       <RedDiv>--color-background-error-muted</RedDiv>
       <AlphaContainer>
@@ -26,8 +28,20 @@ const Box = styled.div`
   width: 200px;
   height: 200px;
 `
-const Typography = styled.p`
+const TypographyH700 = styled.p`
   font: ${cVar('typographyDesktopH700')};
+  letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH700TextTransform')};
+`
+const TypographyH100 = styled.p`
+  font: ${cVar('typographyDesktopH100')};
+  letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH100TextTransform')};
+`
+const TypographyT100 = styled.p`
+  font: ${cVar('typographyDesktopT100')};
+  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT100TextTransform')};
 `
 
 const GreenDiv = styled(Box)`
