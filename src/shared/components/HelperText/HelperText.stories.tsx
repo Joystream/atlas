@@ -4,7 +4,7 @@ import React from 'react'
 import { HelperText, HelperTextProps } from './HelperText'
 
 export default {
-  title: 'Shared/H/HelperText',
+  title: 'inputs/HelperText',
   component: HelperText,
   argTypes: {
     helperText: { defaultValue: 'some helper text' },

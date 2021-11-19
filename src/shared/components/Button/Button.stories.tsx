@@ -6,7 +6,7 @@ import { SvgGlyphAddVideo } from '@/shared/icons'
 import { Button, ButtonProps } from './Button'
 
 export default {
-  title: 'Shared/B/Button',
+  title: 'button/Button',
   component: Button,
   argTypes: {
     size: { table: { disable: true } },

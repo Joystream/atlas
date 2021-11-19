@@ -7,7 +7,7 @@ import { colors } from '@/shared/theme'
 import { Carousel, CarouselProps } from './Carousel'
 
 export default {
-  title: 'Shared/C/Carousel',
+  title: 'other/Carousel',
   component: Carousel,
 } as Meta
 

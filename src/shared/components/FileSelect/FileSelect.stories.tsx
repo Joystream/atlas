@@ -1,10 +1,12 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+
 import { FileSelect, FileSelectProps } from './FileSelect'
 
 export default {
-  title: 'Shared/F/FileSelect',
+  title: 'inputs/FileSelect',
   component: FileSelect,
   argTypes: {
     fileType: {
@@ -17,6 +19,13 @@ export default {
       defaultValue: '16:9 Ratio preferred. 4K, 1440p, 1080p or 720p. This is example FPO data only.',
     },
   },
+  decorators: [
+    (Story) => (
+      <ConfirmationModalProvider>
+        <Story />
+      </ConfirmationModalProvider>
+    ),
+  ],
 } as Meta
 
 const Template: Story<FileSelectProps> = (args) => {

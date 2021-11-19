@@ -10,7 +10,7 @@ const items: SelectItem[] = [
 ]
 
 export default {
-  title: 'Shared/S/Select',
+  title: 'inputs/Select',
   component: Select,
   args: {
     items,

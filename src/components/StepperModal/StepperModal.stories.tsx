@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/Button'
 import { StepperModal } from './StepperModal'
 
 export default {
-  title: 'General/StepperModal',
+  title: 'overlays/StepperModal',
   component: StepperModal,
   argTypes: {
     exitButton: { defaultValue: true },

@@ -6,13 +6,14 @@ import { Checkbox, CheckboxProps } from './Checkbox'
 import { WithValue } from '../../../../.storybook/WithValue'
 
 export default {
-  title: 'Shared/C/Checkbox',
+  title: 'inputs/Checkbox',
   component: Checkbox,
   argTypes: {
     label: {
       defaultValue: 'Checkbox label',
     },
     value: { table: { disable: true } },
+    name: { table: { disable: true } },
     indeterminate: { table: { disable: true } },
     disabled: { table: { disable: true } },
     error: { table: { disable: true } },

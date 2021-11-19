@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { TopbarBase, TopbarBaseProps } from './TopbarBase'
 
 export default {
-  title: 'Shared/T/TopbarBase',
+  title: 'navigation/TopbarBase',
   component: TopbarBase,
   argTypes: {
     variant: {
@@ -13,6 +13,10 @@ export default {
         type: 'select',
         options: ['default', 'studio'],
       },
+    },
+    logoLinkUrl: {
+      type: 'string',
+      defaultValue: 'http://localhost:6006',
     },
   },
   decorators: [
@@ -25,7 +29,7 @@ export default {
 } as Meta
 
 const RegularTemplate: Story<TopbarBaseProps> = (args) => {
-  return <TopbarBase {...args} />
+  return <TopbarBase {...args} fullLogoNode={<>logo</>} />
 }
 
 export const Regular = RegularTemplate.bind({})

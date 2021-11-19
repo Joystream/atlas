@@ -4,7 +4,7 @@ import React from 'react'
 import { Text, TextProps } from './Text'
 
 export default {
-  title: 'Shared/T/Text',
+  title: 'other/Text',
   component: Text,
 } as Meta
 

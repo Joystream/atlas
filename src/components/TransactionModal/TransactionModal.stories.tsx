@@ -7,7 +7,7 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { TransactionModal, TransactionModalProps } from './TransactionModal'
 
 export default {
-  title: 'General/TransactionModal',
+  title: 'overlays/TransactionModal',
   component: TransactionModal,
   decorators: [
     (Story) => (
