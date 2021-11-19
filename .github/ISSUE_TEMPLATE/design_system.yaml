@@ -1,0 +1,32 @@
+name: Design system feature request
+description: Request changes in the Atlas Design System
+assignees: 'toiletgranny'
+labels:
+  - 'design-system'
+  - 'design'
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: 'What would you like to have done?'
+    validations:
+      required: true
+  - type: input
+    id: component-link
+    attributes:
+      label: Figma link
+      description: 'If this is about an existing component, please, provide a Figma link'
+      placeholder: 'https://www.figma.com/file/Pf31tuYpozYmpq163U2ho8/Web-Components?node-id=...'
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How urgent this is?
+      options:
+        - "It's blocking me right now"
+        - 'This will block me soon'
+        - 'Not a blocker, but still worth considering'
+    validations:
+      required: true
