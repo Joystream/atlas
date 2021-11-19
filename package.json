@@ -31,7 +31,8 @@
     "svgs:icons": "svgr --config-file svgr.config.js -d src/shared/icons src/shared/icons/svgs",
     "svgs:illustrations": "svgr --config-file svgr.config.js -d src/shared/illustrations src/shared/illustrations/svgs",
     "svgs": "yarn svgs:icons && yarn svgs:illustrations",
-    "graphql": "graphql-codegen --config codegen.config.yml"
+    "graphql": "graphql-codegen --config codegen.config.yml",
+    "svgs:import": "node ./scripts/figma-import"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [
