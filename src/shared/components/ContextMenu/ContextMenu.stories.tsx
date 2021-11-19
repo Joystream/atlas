@@ -10,7 +10,7 @@ import { ContextMenu } from './ContextMenu'
 import { Button } from '../Button'
 
 export default {
-  title: 'Shared/C/ContextMenu',
+  title: 'overlays/ContextMenu',
   component: ContextMenu,
   decorators: [
     (Story) => (

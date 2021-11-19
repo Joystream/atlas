@@ -8,7 +8,7 @@ import { TextArea } from '../TextArea'
 import { TextField } from '../TextField'
 
 export default {
-  title: 'Shared/F/FormField',
+  title: 'inputs/FormField',
   component: FormField,
   argTypes: {
     className: {

@@ -9,7 +9,7 @@ import { ConsoleLogger } from '@/utils/logs'
 import { VideoTileBase, VideoTileBaseProps } from './VideoTileBase'
 
 export default {
-  title: 'Shared/V/VideoTile',
+  title: 'video/VideoTile',
   component: VideoTileBase,
   argTypes: {
     createdAt: { control: 'date' },

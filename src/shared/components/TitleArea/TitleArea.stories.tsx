@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { TitleArea, TitleAreaProps } from './TitleArea'
 
 export default {
-  title: 'Shared/T/TitleArea',
+  title: 'inputs/TitleArea',
   component: TitleArea,
   args: {
     min: 3,

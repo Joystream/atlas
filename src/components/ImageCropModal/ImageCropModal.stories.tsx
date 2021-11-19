@@ -10,7 +10,7 @@ import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from './ImageCropModal'
 
 export default {
-  title: 'General/ImageCropModal',
+  title: 'overlays/ImageCropModal',
   component: ImageCropModal,
   argTypes: {
     showDialog: { table: { disable: true } },

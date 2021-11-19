@@ -6,7 +6,7 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { Modal, ModalProps } from './Modal'
 
 export default {
-  title: 'General/Modal',
+  title: 'overlays/Modal',
   component: Modal,
   decorators: [
     (Story) => (

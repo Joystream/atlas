@@ -8,7 +8,7 @@ import { DismissibleBanner, DismissibleBannerProps } from './DismissibleBanner'
 import { Button } from '../Button'
 
 export default {
-  title: 'Shared/D/DismissibleBanner',
+  title: 'other/DismissibleBanner',
   component: DismissibleBanner,
   argTypes: {
     id: {

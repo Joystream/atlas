@@ -6,7 +6,7 @@ import { TextArea, TextAreaProps } from './TextArea'
 import { Button } from '../Button'
 
 export default {
-  title: 'Shared/T/TextArea',
+  title: 'inputs/TextArea',
   component: TextArea,
   argTypes: {
     value: { table: { disable: true } },

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Pagination, PaginationProps } from './Pagination'
 
 export default {
-  title: 'Shared/P/Pagination',
+  title: 'other/Pagination',
   component: Pagination,
   argTypes: {
     itemsPerPage: {

@@ -4,7 +4,7 @@ import React from 'react'
 import { CircularProgress, CircularProgressProps } from './CircularProgress'
 
 export default {
-  title: 'Shared/C/CircularProgress',
+  title: 'other/CircularProgress',
   component: CircularProgress,
   argTypes: {},
 } as Meta

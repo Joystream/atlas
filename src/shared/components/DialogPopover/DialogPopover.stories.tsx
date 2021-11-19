@@ -7,8 +7,13 @@ import { Button } from '../Button'
 import { Text } from '../Text'
 
 export default {
-  title: 'Shared/D/DialogPopover',
+  title: 'overlays/DialogPopover',
   component: DialogPopover,
+  argTypes: {
+    dividers: {
+      type: { name: 'boolean', required: false },
+    },
+  },
   args: {
     title: "I'm a title",
     dividers: false,

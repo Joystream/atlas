@@ -9,7 +9,7 @@ import { ChannelCardBase } from '../ChannelCardBase'
 import { Text } from '../Text'
 
 export default {
-  title: 'Shared/T/Tooltip',
+  title: 'other/Tooltip',
   component: Tooltip,
   argTypes: {
     text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },

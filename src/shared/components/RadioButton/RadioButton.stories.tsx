@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { RadioButton } from './RadioButton'
 
 export default {
-  title: 'Shared/R/RadioButton',
+  title: 'inputs/RadioButton',
   component: RadioButton,
   args: {
     label: 'Hello there',

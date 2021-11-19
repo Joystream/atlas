@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react'
 import { Datepicker, DatepickerProps } from './Datepicker'
 
 export default {
-  title: 'Shared/D/Datepicker',
+  title: 'inputs/Datepicker',
   component: Datepicker,
   args: {
     helperText: 'Lorem ipsum dolor sit amet...',
