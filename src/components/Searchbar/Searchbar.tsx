@@ -30,6 +30,7 @@ type SearchbarProps = {
   onClick?: () => void
   onClose: () => void
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
+
 export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
   ({ placeholder, onChange, onFocus, onCancel, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps }, ref) => {
     const mdMatch = useMediaMatch('md')
@@ -51,9 +52,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }))
     const { pathname } = useLocation()
 
+    const handleSelectedItemReset = useCallback(() => {
+      setSelectedItem(null)
+    }, [])
+
     const handleClose = () => {
       onClose?.()
-      setSelectedItem(null)
+      handleSelectedItemReset()
     }
 
     // Lose focus on location change
@@ -69,9 +74,9 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
         inputRef.current?.focus()
         setInputHasFocus(true)
       } else {
-        setSelectedItem(null)
+        handleSelectedItemReset()
       }
-    }, [searchOpen])
+    }, [handleSelectedItemReset, searchOpen])
 
     useEffect(() => {
       if (selectedItem === null || !searchOpen) {
@@ -131,13 +136,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       }
     }
 
-    const onLastSelectedItem = () => {
+    const onLastSelectedItem = useCallback(() => {
       setSelectedItem(0)
-    }
+    }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setRecentSearch(null)
-      setSelectedItem(null)
+      handleSelectedItemReset()
       if (onChange) {
         onChange(e)
       }
@@ -150,18 +155,21 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       }
     }
 
-    const onSelectRecentSearch = (title?: string) => {
-      setRecentSearch(title)
-      onClose()
-    }
+    const onSelectRecentSearch = useCallback(
+      (title?: string) => {
+        setRecentSearch(title)
+        onClose()
+      },
+      [onClose]
+    )
 
     const onSelectItem = useCallback((title?: string | null) => {
       setRecentSearch(title)
     }, [])
 
-    const handleSetNumberOfItems = (items: number) => {
+    const handleSetNumberOfItems = useCallback((items: number) => {
       setNumberOfItems(items)
-    }
+    }, [])
 
     return (
       <>
@@ -232,7 +240,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               onLastSelectedItem={onLastSelectedItem}
               onSelectItem={onSelectItem}
               handleSetNumberOfItems={handleSetNumberOfItems}
-              onMouseMove={() => setSelectedItem(null)}
+              onMouseMove={handleSelectedItemReset}
               hasFocus={inputHasFocus}
             />
           </CSSTransition>

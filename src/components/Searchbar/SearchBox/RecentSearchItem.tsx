@@ -17,40 +17,40 @@ type RecentSearchItemProps = {
   selectedItem: null | number
 }
 
-export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
-  title,
-  onDelete,
-  query,
-  onClick,
-  selected,
-  handleSelectedItem,
-  selectedItem,
-}) => {
-  const onSelected = useCallback(
-    (top: number) => {
-      handleSelectedItem(top, title)
-    },
-    [handleSelectedItem, title]
-  )
+export const RecentSearchItem: React.FC<RecentSearchItemProps> = React.memo(
+  ({ title, onDelete, query, onClick, selected, handleSelectedItem, selectedItem }) => {
+    const onSelected = useCallback(
+      (top: number) => {
+        handleSelectedItem(top, title)
+      },
+      [handleSelectedItem, title]
+    )
 
-  return (
-    <ResultWrapper
-      onDelete={onDelete}
-      onClick={() => onClick(title)}
-      handleSelectedItem={onSelected}
-      selected={selected}
-      to={absoluteRoutes.viewer.search({ query: title?.trim() })}
-      variant="textOnly"
-      selectedItem={selectedItem}
-    >
-      <RecentSearchItemWrapper>
-        <ClockWrapper>
-          <SvgActionClock />
-        </ClockWrapper>
-        <Title secondary={!selected} variant="button2">
-          <ResultTitle title={title} query={query} />
-        </Title>
-      </RecentSearchItemWrapper>
-    </ResultWrapper>
-  )
-}
+    const handleClick = useCallback(() => {
+      onClick(title)
+    }, [onClick, title])
+
+    return (
+      <ResultWrapper
+        onDelete={onDelete}
+        onClick={handleClick}
+        handleSelectedItem={onSelected}
+        selected={selected}
+        to={absoluteRoutes.viewer.search({ query: title?.trim() })}
+        variant="textOnly"
+        selectedItem={selectedItem}
+      >
+        <RecentSearchItemWrapper>
+          <ClockWrapper>
+            <SvgActionClock />
+          </ClockWrapper>
+          <Title secondary={!selected} variant="button2">
+            <ResultTitle title={title} query={query} />
+          </Title>
+        </RecentSearchItemWrapper>
+      </ResultWrapper>
+    )
+  }
+)
+
+RecentSearchItem.displayName = 'RecentSearchItem'
