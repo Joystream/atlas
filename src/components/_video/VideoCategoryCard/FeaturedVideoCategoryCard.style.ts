@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { colors, sizes, transitions } from '@/theme'
 
 import { Container, IconCircle } from './VideoCategoryCard.style'
-
-import { Text } from '../Text'
 
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
