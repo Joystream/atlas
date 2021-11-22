@@ -10,7 +10,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { SvgPlayerCancel } from '@/components/_icons'
+import { SvgControlsCancel } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -544,7 +544,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
                   text: 'Cancel',
                   onClick: () => reset(),
-                  icon: <SvgPlayerCancel width={16} height={16} />,
+                  icon: <SvgControlsCancel width={16} height={16} />,
                 }}
               />
             </ActionBarTransactionWrapper>

@@ -6,7 +6,7 @@ import { useTransition } from 'react-spring'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import {
-  SvgGlyphUpload,
+  SvgActionUpload,
   SvgIllustrativeFileSelected,
   SvgIllustrativeImage,
   SvgIllustrativeVideo,
@@ -164,7 +164,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
               <DragDropText variant="body2" secondary>
                 Drag and drop or
               </DragDropText>
-              <Button size="medium" onClick={() => open()} icon={<SvgGlyphUpload />}>
+              <Button size="medium" onClick={() => open()} icon={<SvgActionUpload />}>
                 Select a file
               </Button>
             </ButtonsGroup>

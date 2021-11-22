@@ -2,7 +2,7 @@
 import * as React from 'react'
 
 export const SvgActionPlay = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={9} height={10} viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M0 0l4.5 2.5L9 5 4.5 7.5 0 10V0z" fill="#F4F6F8" />
+  <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path fillRule="evenodd" clipRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zM6 5v6l5-3-5-3z" fill="#F4F6F8" />
   </svg>
 )

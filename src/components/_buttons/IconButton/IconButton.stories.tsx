@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgGlyphAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/components/_icons'
 
 import { IconButton, IconButtonProps } from '.'
 
@@ -21,13 +21,13 @@ export default {
 const Template: Story<IconButtonProps> = (args) => (
   <>
     <IconButton {...args} size="large">
-      <SvgGlyphAddVideo />
+      <SvgActionAddVideo />
     </IconButton>
     <IconButton {...args} size="medium">
-      <SvgGlyphAddVideo />
+      <SvgActionAddVideo />
     </IconButton>
     <IconButton {...args} size="small">
-      <SvgGlyphAddVideo />
+      <SvgActionAddVideo />
     </IconButton>
   </>
 )

@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphClose } from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
 
 import {
   SnackbarActionButton,
@@ -65,7 +65,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
               </SnackbarActionButton>
             )}
             <IconButton onClick={onClick} variant="tertiary" size="small">
-              <SvgGlyphClose />
+              <SvgActionClose />
             </IconButton>
           </SnackbarButtonsContainer>
         </SnackbarHeader>

@@ -1,21 +1,21 @@
 import React from 'react'
 
-import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/components/_icons'
+import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
 export const viewerNavItems = [
   {
-    icon: <SvgNavHome />,
+    icon: <SvgSidebarHome />,
     name: 'Home',
     to: absoluteRoutes.viewer.index(),
   },
   {
-    icon: <SvgNavPopular />,
+    icon: <SvgSidebarPopular />,
     name: 'Popular',
     to: absoluteRoutes.viewer.popular(),
   },
   {
-    icon: <SvgNavNew />,
+    icon: <SvgSidebarNew />,
     name: 'New',
     to: absoluteRoutes.viewer.new(),
   },
@@ -25,7 +25,7 @@ export const viewerNavItems = [
   //   to: absoluteRoutes.viewer.discover(),
   // },
   {
-    icon: <SvgNavChannels />,
+    icon: <SvgSidebarChannels />,
     name: 'Channels',
     to: absoluteRoutes.viewer.channels(),
   },

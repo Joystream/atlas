@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components/SignInSteps'
-import { SvgGlyphNewChannel } from '@/components/_icons'
+import { SvgActionNewChannel } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user'
@@ -69,7 +69,7 @@ export const SignInView = () => {
         </MemberGrid>
         <StyledButton
           disabled={nodeConnectionStatus !== 'connected' || internetConnectionStatus !== 'connected'}
-          icon={<SvgGlyphNewChannel />}
+          icon={<SvgActionNewChannel />}
           size="large"
           variant="secondary"
           to={absoluteRoutes.studio.signIn({ step: '1' })}

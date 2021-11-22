@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphExternal } from '@/components/_icons'
+import { SvgActionNewTab } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
@@ -46,7 +46,7 @@ export const SidenavViewer: React.FC = () => {
             to={absoluteRoutes.studio.index()}
             newTab
             onClick={() => setExpanded(false)}
-            icon={<SvgGlyphExternal />}
+            icon={<SvgActionNewTab />}
           >
             Joystream Studio
           </Button>

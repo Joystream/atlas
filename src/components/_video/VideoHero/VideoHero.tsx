@@ -7,9 +7,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgActionPlay } from '@/components/_icons/ActionPlay'
-import { SvgActionSoundOff } from '@/components/_icons/ActionSoundOff'
-import { SvgActionSoundOn } from '@/components/_icons/ActionSoundOn'
+import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
@@ -117,7 +115,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                   size={xsMatch ? 'large' : 'medium'}
                   fullWidth={!xsMatch}
                   to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
-                  icon={<SvgActionPlay />}
+                  icon={<SvgActionPlayAlt />}
                 >
                   Play
                 </Button>

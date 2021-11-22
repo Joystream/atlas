@@ -5,13 +5,12 @@ import useResizeObserver from 'use-resize-observer'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import {
-  SvgGlyphClose,
-  SvgGlyphDraft,
-  SvgGlyphHide,
+  SvgActionClose,
+  SvgActionDraft,
+  SvgActionHide,
   SvgIllustrativeEdit,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
-  SvgLargeUploadFailed,
 } from '@/components/_icons'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
@@ -38,6 +37,7 @@ import {
   PublishingStateText,
   RemoveButton,
   SkeletonHoverOverlay,
+  StyledSvgIllustrativeFileFailed,
   UploadProgressTransition,
 } from './VideoTileCover.styles'
 
@@ -153,7 +153,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                       <CoverImage darkenImg={isUnlisted || !!isDraft} src={thumbnailUrl} alt={thumbnailAlt} />
                     ) : hasAssetUploadFailed ? (
                       <CoverThumbnailUploadFailed>
-                        <SvgLargeUploadFailed />
+                        <StyledSvgIllustrativeFileFailed />
                         <Text variant="caption" secondary>
                           Asset upload failed
                         </Text>
@@ -163,7 +163,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                     )}
                     {(isUnlisted || isDraft) && !isUploading && (
                       <CoverVideoPublishingStateOverlay>
-                        {isDraft ? <SvgGlyphDraft /> : <SvgGlyphHide />}
+                        {isDraft ? <SvgActionDraft /> : <SvgActionHide />}
                         <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
                       </CoverVideoPublishingStateOverlay>
                     )}
@@ -185,7 +185,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = ({
                       </CoverIconWrapper>
                       {removeButton && (
                         <RemoveButton onClick={handleRemoveClick}>
-                          <SvgGlyphClose />
+                          <SvgActionClose />
                         </RemoveButton>
                       )}
                     </CoverHoverOverlay>

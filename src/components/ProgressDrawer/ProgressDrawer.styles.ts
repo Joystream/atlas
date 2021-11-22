@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
-import { SvgGlyphChevronDown } from '@/components/_icons'
+import { SvgActionChevronB } from '@/components/_icons'
 import { oldColors, sizes, transitions } from '@/styles'
 
 export const Container = styled.div`
@@ -54,7 +54,7 @@ export const StepsContainer = styled.div<StepsContainerProps>`
   z-index: 1;
 `
 
-export const StyledSvgGlyphChevronDown = styled(SvgGlyphChevronDown, {
+export const StyledSvgGlyphChevronDown = styled(SvgActionChevronB, {
   shouldForwardProp: isPropValid,
 })<StepsContainerProps>`
   transform: rotate(${({ isHidden }) => (isHidden ? '-180deg' : '0deg')});

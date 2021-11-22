@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/components/_icons'
+import { SvgActionAddVideo, SvgActionCheck, SvgActionLogOut, SvgActionNewChannel } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
@@ -148,7 +148,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
               classNames={transitions.names.fade}
             >
               <IconButton to={absoluteRoutes.studio.videoWorkspace()} onClick={() => addVideoTab()}>
-                <SvgGlyphAddVideo />
+                <SvgActionAddVideo />
               </IconButton>
             </CSSTransition>
             {activeMembershipLoading ? (
@@ -193,7 +193,7 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
           <DrawerMemberTitleText variant="caption">Member</DrawerMemberTitleText>
         </MemberTextContainer>
       </MemberInnerContainer>
-      <Button icon={<SvgGlyphLogOut />} variant="secondary" onClick={onLogoutClick}>
+      <Button icon={<SvgActionLogOut />} variant="secondary" onClick={onLogoutClick}>
         Log out
       </Button>
     </MemberInfoContainer>
@@ -220,7 +220,7 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
         </TextContainer>
         {active && (
           <GlyphCheckContainer>
-            <SvgGlyphCheck />
+            <SvgActionCheck />
           </GlyphCheckContainer>
         )}
       </ChannelInfoContainer>
@@ -252,7 +252,7 @@ const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
             <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
               <NewChannel>
                 <NewChannelIconContainer>
-                  <SvgGlyphNewChannel />
+                  <SvgActionNewChannel />
                 </NewChannelIconContainer>
                 <Text>Add new channel</Text>
               </NewChannel>

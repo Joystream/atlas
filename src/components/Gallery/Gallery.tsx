@@ -4,7 +4,7 @@ import { Carousel, CarouselProps } from '@/components/Carousel'
 import { Arrow } from '@/components/Carousel/Carousel.styles'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight, SvgPlayerPlay } from '@/components/_icons'
+import { SvgActionChevronL, SvgActionChevronR, SvgControlsPlay } from '@/components/_icons'
 
 import { CarouselArrowsContainer, Container, SeeAllLink } from './Gallery.styles'
 
@@ -32,7 +32,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
           {seeAllUrl && (
             <SeeAllLink
               iconPlacement="left"
-              icon={<SvgPlayerPlay width={16} height={16} />}
+              icon={<SvgControlsPlay width={16} height={16} />}
               textOnly
               to={seeAllUrl}
               size="large"
@@ -43,10 +43,10 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
           )}
           <CarouselArrowsContainer>
             <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">
-              <SvgGlyphChevronLeft />
+              <SvgActionChevronL />
             </Arrow>
             <Arrow {...carouselRef.current?.getNextArrowProps()} ref={nextArrowRef} size="large" variant="secondary">
-              <SvgGlyphChevronRight />
+              <SvgActionChevronR />
             </Arrow>
           </CarouselArrowsContainer>
         </TitleContainer>

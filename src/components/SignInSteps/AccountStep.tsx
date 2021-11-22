@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphChannel, SvgOutlineConnect } from '@/components/_icons'
+import { SvgActionChannel, SvgControlsConnect } from '@/components/_icons'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
@@ -97,7 +97,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
             <StepWrapper>
               <IconGroup>
                 <StyledPolkadotLogo />
-                <SvgOutlineConnect />
+                <SvgControlsConnect />
                 <StyledJoystreamLogo />
               </IconGroup>
               <StepTitle variant="h4">Connect account</StepTitle>
@@ -140,7 +140,7 @@ export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, sele
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
         <IconWrapper>
-          <SvgGlyphChannel />
+          <SvgActionChannel />
         </IconWrapper>
         <div>
           <Text variant="subtitle1">{name}</Text>

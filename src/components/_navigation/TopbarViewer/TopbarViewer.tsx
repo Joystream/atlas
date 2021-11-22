@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -85,7 +85,7 @@ export const TopbarViewer: React.FC = () => {
           <Button
             to={absoluteRoutes.studio.index()}
             newTab
-            icon={<SvgGlyphAddVideo />}
+            icon={<SvgActionAddVideo />}
             iconPlacement="left"
             size="medium"
           >
@@ -94,7 +94,7 @@ export const TopbarViewer: React.FC = () => {
         )}
         {!searchQuery && !mdMatch && (
           <StyledIconButton to={absoluteRoutes.studio.index()} newTab>
-            <SvgGlyphAddVideo />
+            <SvgActionAddVideo />
           </StyledIconButton>
         )}
       </ButtonWrapper>

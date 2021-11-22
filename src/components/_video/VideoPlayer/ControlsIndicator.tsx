@@ -4,15 +4,15 @@ import { VideoJsPlayer } from 'video.js'
 
 import { Text } from '@/components/Text'
 import {
-  SvgPlayerBackwardFiveSec,
-  SvgPlayerBackwardTenSec,
-  SvgPlayerForwardFiveSec,
-  SvgPlayerForwardTenSec,
-  SvgPlayerPause,
-  SvgPlayerPlay,
-  SvgPlayerSoundHalf,
-  SvgPlayerSoundOff,
-  SvgPlayerSoundOn,
+  SvgControlsPause,
+  SvgControlsPlay,
+  SvgControlsSeekBackward10,
+  SvgControlsSeekBackward5,
+  SvgControlsSeekForward10,
+  SvgControlsSeekForward5,
+  SvgControlsSoundLowVolume,
+  SvgControlsSoundOff,
+  SvgControlsSoundOn,
 } from '@/components/_icons'
 
 import {
@@ -108,61 +108,61 @@ const createIndicator = (type: VideoEvent | null, playerVolume: number, playerMu
   switch (type) {
     case CustomVideojsEvents.PauseControl:
       return {
-        icon: <SvgPlayerPause />,
+        icon: <SvgControlsPause />,
         description: 'Pause',
         type,
       }
     case CustomVideojsEvents.PlayControl:
       return {
-        icon: <SvgPlayerPlay />,
+        icon: <SvgControlsPlay />,
         description: 'Play',
         type,
       }
     case CustomVideojsEvents.BackwardFiveSec:
       return {
-        icon: <SvgPlayerBackwardFiveSec />,
+        icon: <SvgControlsSeekBackward5 />,
         description: 'Backward 5s',
         type,
       }
     case CustomVideojsEvents.ForwardFiveSec:
       return {
-        icon: <SvgPlayerForwardFiveSec />,
+        icon: <SvgControlsSeekForward5 />,
         description: 'Forward 5s',
         type,
       }
     case CustomVideojsEvents.BackwardTenSec:
       return {
-        icon: <SvgPlayerBackwardTenSec />,
+        icon: <SvgControlsSeekBackward10 />,
         description: 'Backward 10s',
         type,
       }
     case CustomVideojsEvents.ForwardTenSec:
       return {
-        icon: <SvgPlayerForwardTenSec />,
+        icon: <SvgControlsSeekForward10 />,
         description: 'Forward 10s',
         type,
       }
     case CustomVideojsEvents.Unmuted:
       return {
-        icon: <SvgPlayerSoundOn />,
+        icon: <SvgControlsSoundOn />,
         description: formattedVolume,
         type,
       }
     case CustomVideojsEvents.Muted:
       return {
-        icon: <SvgPlayerSoundOff />,
+        icon: <SvgControlsSoundOff />,
         description: 'Mute',
         type,
       }
     case CustomVideojsEvents.VolumeIncrease:
       return {
-        icon: <SvgPlayerSoundOn />,
+        icon: <SvgControlsSoundOn />,
         description: formattedVolume,
         type,
       }
     case CustomVideojsEvents.VolumeDecrease:
       return {
-        icon: isMuted ? <SvgPlayerSoundOff /> : <SvgPlayerSoundHalf />,
+        icon: isMuted ? <SvgControlsSoundOff /> : <SvgControlsSoundLowVolume />,
         description: isMuted ? 'Mute' : formattedVolume,
         type,
       }

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { TabItem } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphClose, SvgGlyphExternal } from '@/components/_icons'
-import { SvgGlyphWarning } from '@/components/_icons/GlyphWarning'
+import { SvgActionClose, SvgActionNewTab, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select } from '@/components/_inputs/Select'
@@ -74,16 +73,16 @@ export const AdminOverlay: React.FC = () => {
   return (
     <Container>
       <CloseButton variant="tertiary" onClick={handleCloseClick} size="small">
-        <SvgGlyphClose />
+        <SvgActionClose />
       </CloseButton>
       <HorizontalSpacedContainer>
-        <Button textOnly variant="tertiary" icon={<SvgGlyphExternal />} to={absoluteRoutes.viewer.index()}>
+        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
           Home
         </Button>
-        <Button textOnly variant="tertiary" icon={<SvgGlyphExternal />} to={absoluteRoutes.studio.index()}>
+        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.studio.index()}>
           Studio
         </Button>
-        <Button textOnly variant="tertiary" icon={<SvgGlyphExternal />} to={absoluteRoutes.playground.index()}>
+        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.playground.index()}>
           Playground
         </Button>
       </HorizontalSpacedContainer>
@@ -230,7 +229,7 @@ const StateTab: React.FC = () => {
       <Button onClick={handleExportClick} variant="secondary" size="large">
         Export local state
       </Button>
-      <Button onClick={handleImportClick} variant="secondary" size="large" icon={<SvgGlyphWarning />}>
+      <Button onClick={handleImportClick} variant="secondary" size="large" icon={<SvgAlertsWarning24 />}>
         Import local state
       </Button>
     </VerticalSpacedContainer>

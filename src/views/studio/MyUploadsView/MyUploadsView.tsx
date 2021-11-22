@@ -3,7 +3,7 @@ import shallow from 'zustand/shallow'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphUpload } from '@/components/_icons'
+import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
@@ -62,7 +62,7 @@ export const MyUploadsView: React.FC = () => {
           subtitle="You will see status of each ongoing upload here."
           button={
             <Button
-              icon={<SvgGlyphUpload />}
+              icon={<SvgActionUpload />}
               variant="secondary"
               size="large"
               to={absoluteRoutes.studio.videoWorkspace()}

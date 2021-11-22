@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphCheck } from '@/components/_icons'
+import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ExtrinsicStatus } from '@/joystream-lib'
@@ -122,7 +122,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
           <SuccessWrapper>
             <SuccessBackground />
             <SuccessIcon>
-              <SvgGlyphCheck width={27} height={27} />
+              <SvgActionCheck width={27} height={27} />
             </SuccessIcon>
           </SuccessWrapper>
         </CSSTransition>

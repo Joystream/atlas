@@ -3,17 +3,11 @@ import * as React from 'react'
 
 export const SvgIllustrativeImage = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M7 27l18-9.5 4 5.5a4 4 0 00-4 4v4H7v-4z" fill="#F4F6F8" />
-    <path d="M25 34H5a1 1 0 01-1-1V7a1 1 0 011-1h30a1 1 0 011 1v16" stroke="#F4F6F8" strokeWidth={2} />
+    <path d="M5 5a2 2 0 00-2 2v26a2 2 0 002 2h20v-2H5V7h30v16h2V7a2 2 0 00-2-2H5z" fill="#F4F6F8" />
+    <path d="M25 17.5L7 27v4h18v-4a4 4 0 014-4l-4-5.5z" fill="#F4F6F8" />
     <path
-      d="M36 42h-7a1 1 0 01-1-1V27a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1h-3"
-      stroke="#F4F6F8"
-      strokeWidth={2}
-      strokeMiterlimit={10}
-      strokeLinecap="square"
+      d="M45 27a2 2 0 00-2-2H29a2 2 0 00-2 2v14a2 2 0 002 2h8v-8.586l2 2L40.414 35 36 30.586 31.586 35 33 36.414l2-2V41h-6V27h14v14h-4v2h4a2 2 0 002-2V27zM12 17a3 3 0 100-6 3 3 0 000 6z"
+      fill="#F4F6F8"
     />
-    <path d="M36 42V32" stroke="#F4F6F8" strokeWidth={2} strokeMiterlimit={10} />
-    <path d="M33 35l3-3 3 3" stroke="#F4F6F8" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="square" />
-    <circle cx={12} cy={14} r={3} fill="#F4F6F8" />
   </svg>
 )

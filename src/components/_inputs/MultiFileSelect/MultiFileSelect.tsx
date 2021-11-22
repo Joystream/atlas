@@ -3,7 +3,7 @@ import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
 import { Step } from '@/components/Step'
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronR } from '@/components/_icons'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
@@ -228,7 +228,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
           isLoading={isVideoLoading}
         />
         <StepDivider>
-          <SvgGlyphChevronRight />
+          <SvgActionChevronR />
         </StepDivider>
         <Step
           variant="file"

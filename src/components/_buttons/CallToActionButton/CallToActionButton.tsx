@@ -1,7 +1,7 @@
 import { To } from 'history'
 import React, { FC, MouseEvent, ReactNode } from 'react'
 
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronR } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { getLinkPropsFromTo } from '@/utils/button'
 
@@ -33,7 +33,7 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
         <IconWrapper colorVariant={colorVariant === 'blue' ? 'lightBlue' : colorVariant}>{icon}</IconWrapper>
         <BodyWrapper variant={xsMatch ? 'h5' : 'h6'}>
           {label}
-          <SvgGlyphChevronRight />
+          <SvgActionChevronR />
         </BodyWrapper>
       </ContentWrapper>
     </StyledContainer>

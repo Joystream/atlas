@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphExternal } from '@/components/_icons'
+import { SvgActionNewTab } from '@/components/_icons'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
@@ -43,7 +43,7 @@ export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) =>
         To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
         following link:
       </StepSubTitle>
-      <StyledButton icon={<SvgGlyphExternal />} to="https://polkadot.js.org/extension/">
+      <StyledButton icon={<SvgActionNewTab />} to="https://polkadot.js.org/extension/">
         Install extension
       </StyledButton>
       <Button variant="tertiary" size="small" onClick={() => openEnableExtensionDialog()}>

@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphClose, SvgOutlineError, SvgOutlineSuccess, SvgOutlineWarning } from '@/components/_icons'
+import { SvgActionClose, SvgAlertsError32, SvgAlertsSuccess32, SvgAlertsWarning32 } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -41,9 +41,9 @@ export type DialogProps = {
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
-  success: <SvgOutlineSuccess />,
-  warning: <SvgOutlineWarning />,
-  error: <SvgOutlineError />,
+  success: <SvgAlertsSuccess32 />,
+  warning: <SvgAlertsWarning32 />,
+  error: <SvgAlertsError32 />,
 }
 
 export const Dialog: React.FC<DialogProps> = ({
@@ -77,7 +77,7 @@ export const Dialog: React.FC<DialogProps> = ({
           </HeaderContent>
           {onExitClick && (
             <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-              <SvgGlyphClose />
+              <SvgActionClose />
             </IconButton>
           )}
         </Header>

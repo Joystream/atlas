@@ -2,9 +2,9 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
 
-import { SvgAvatarSilhouette } from '@/components/_illustrations'
+import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors, oldTypography, transitions } from '@/styles'
+import { cVar, media, oldColors, oldTypography, transitions } from '@/styles'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel' | 'channel-card'
 
@@ -170,7 +170,7 @@ export const StyledImage = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `
-export const SilhouetteAvatar = styled(SvgAvatarSilhouette)`
+export const SilhouetteAvatar = styled(SvgIllustrativeFileFailed)`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -185,4 +185,10 @@ export const NewChannelAvatar = styled.div`
   height: 100%;
   border-radius: 100%;
   background-color: ${oldColors.gray[800]};
+`
+
+export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
+  path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
 `

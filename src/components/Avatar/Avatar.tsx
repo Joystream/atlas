@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SvgGlyphImage, SvgGlyphNewChannel, SvgLargeUploadFailed } from '@/components/_icons'
+import { SvgActionImage, SvgActionNewChannel } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import {
@@ -12,6 +12,7 @@ import {
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
+  StyledSvgIllustrativeFileFailed,
 } from './Avatar.styles'
 
 export type AvatarProps = {
@@ -50,13 +51,13 @@ export const Avatar: React.FC<AvatarProps> = ({
     <Container onClick={onClick} size={size} className={className}>
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
-          <SvgGlyphImage />
+          <SvgActionImage />
           <span>{assetUrl ? 'Edit Avatar' : 'Add avatar'}</span>
         </EditButton>
       )}
       {newChannel && !isEditable ? (
         <NewChannelAvatar>
-          <SvgGlyphNewChannel />
+          <SvgActionNewChannel />
         </NewChannelAvatar>
       ) : (
         <SwitchTransition>
@@ -71,7 +72,7 @@ export const Avatar: React.FC<AvatarProps> = ({
               <StyledImage src={assetUrl} onError={onError} />
             ) : hasAvatarUploadFailed ? (
               <NewChannelAvatar>
-                <SvgLargeUploadFailed />
+                <StyledSvgIllustrativeFileFailed />
               </NewChannelAvatar>
             ) : (
               <SilhouetteAvatar />

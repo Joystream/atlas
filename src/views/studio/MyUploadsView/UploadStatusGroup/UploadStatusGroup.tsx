@@ -6,7 +6,7 @@ import shallow from 'zustand/shallow'
 import { useChannel, useVideo } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { SvgAlertError, SvgAlertSuccess } from '@/components/_icons'
+import { SvgAlertsError24, SvgAlertsSuccess24 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
@@ -132,9 +132,9 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const renderThumbnailIcon = (uploadGroupState: UploadGroupState) => {
     switch (uploadGroupState) {
       case 'completed':
-        return <SvgAlertSuccess />
+        return <SvgAlertsSuccess24 />
       case 'error':
-        return <SvgAlertError />
+        return <SvgAlertsError24 />
       case 'inProgress':
       case 'processing':
         return <Loader variant="small" />

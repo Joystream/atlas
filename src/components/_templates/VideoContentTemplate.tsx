@@ -8,7 +8,7 @@ import {
   CallToActionButtonProps,
   CallToActionWrapper,
 } from '@/components/_buttons/CallToActionButton'
-import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/components/_icons'
+import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { media, oldTypography, sizes } from '@/styles'
 
@@ -24,25 +24,25 @@ const CTA_MAP: Record<string, CallToActionButtonProps> = {
     label: 'Home',
     to: absoluteRoutes.viewer.index(),
     colorVariant: 'yellow',
-    icon: <SvgNavHome />,
+    icon: <SvgSidebarHome />,
   },
   new: {
     label: 'New & Noteworthy',
     to: absoluteRoutes.viewer.new(),
     colorVariant: 'green',
-    icon: <SvgNavNew />,
+    icon: <SvgSidebarNew />,
   },
   channels: {
     label: 'Browse channels',
     to: absoluteRoutes.viewer.channels(),
     colorVariant: 'blue',
-    icon: <SvgNavChannels />,
+    icon: <SvgSidebarChannels />,
   },
   popular: {
     label: 'Popular on Joystream',
     to: absoluteRoutes.viewer.popular(),
     colorVariant: 'red',
-    icon: <SvgNavPopular />,
+    icon: <SvgSidebarPopular />,
   },
 }
 
