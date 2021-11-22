@@ -4,13 +4,13 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
 
 import { useChannel, useVideo } from '@/api/hooks'
+import { Text } from '@/components/Text'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { SvgAlertError, SvgAlertSuccess } from '@/components/_icons'
+import { Loader } from '@/components/_loaders/Loader'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
-import { Loader } from '@/shared/components/Loader'
-import { Text } from '@/shared/components/Text'
-import { UploadProgressBar } from '@/shared/components/UploadProgressBar'
-import { SvgAlertError, SvgAlertSuccess } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
@@ -23,7 +23,7 @@ import {
   Thumbnail,
   UploadInfoContainer,
   UploadStatusGroupContainer,
-} from './UploadStatusGroup.style'
+} from './UploadStatusGroup.styles'
 
 import { UploadStatus } from '../UploadStatus'
 

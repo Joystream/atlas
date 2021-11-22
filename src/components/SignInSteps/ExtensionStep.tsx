@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { SvgGlyphExternal } from '@/components/_icons'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphExternal } from '@/shared/icons'
 
-import { PolkadotExtensionRejectedWrapper, StyledButton, StyledListItem, StyledStepFooter } from './ExtensionStep.style'
-import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.style'
+import {
+  PolkadotExtensionRejectedWrapper,
+  StyledButton,
+  StyledListItem,
+  StyledStepFooter,
+} from './ExtensionStep.styles'
+import { BottomBarIcon, StepSubTitle, StepTitle, StepWrapper, StyledPolkadotLogo } from './SignInSteps.styles'
 
 type ExtensionStepProps = {
   nextStepPath: string

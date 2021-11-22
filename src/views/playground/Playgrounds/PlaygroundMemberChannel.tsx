@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import { Button } from '@/components/_buttons/Button'
+import { RadioButton } from '@/components/_inputs/RadioButton'
 import { useUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { RadioButton } from '@/shared/components/RadioButton'
 
 const account = 'POLKADOT_ACCOUNT'
 

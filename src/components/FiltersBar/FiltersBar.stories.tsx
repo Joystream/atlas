@@ -3,17 +3,17 @@ import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
 import { VideoOrderByInput } from '@/api/queries'
+import { GridItem } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgActionFilters } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
 import { languages } from '@/config/languages'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { Button } from '@/shared/components/Button'
-import { IconButton } from '@/shared/components/IconButton'
-import { GridItem } from '@/shared/components/LayoutGrid'
-import { Select } from '@/shared/components/Select'
-import { Text } from '@/shared/components/Text'
-import { SvgActionFilters } from '@/shared/icons'
-import { colors, media, sizes } from '@/shared/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 import { FiltersBar, FiltersBarProps } from './FiltersBar'
 import { useFiltersBar } from './useFiltersBar'
@@ -119,7 +119,7 @@ const ControlsContainer = styled.div`
   gap: ${sizes(4)};
   align-items: center;
   padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${colors.gray[700]};
+  border-bottom: 1px solid ${oldColors.gray[700]};
   z-index: 100;
   position: relative;
   background-color: black;

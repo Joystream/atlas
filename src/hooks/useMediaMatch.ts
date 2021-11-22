@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { breakpoints } from '@/shared/theme'
+import { breakpoints } from '@/styles'
 
 export const useMediaMatch = (breakpoint: keyof typeof breakpoints) => {
   const mediaString = `screen and (min-width: ${breakpoints[breakpoint]})`

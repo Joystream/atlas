@@ -1,10 +1,10 @@
 import React from 'react'
 
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/components/_icons'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { absoluteRoutes } from '@/config/routes'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChannel, SvgGlyphChevronLeft, SvgGlyphInfo } from '@/shared/icons'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
 
 import {
   BackLink,
@@ -16,7 +16,7 @@ import {
   StyledHero,
   StyledSignInIllustrationSVG,
   SubTitle,
-} from './SignInMainView.style'
+} from './SignInMainView.styles'
 
 export type Membership = {
   id: string

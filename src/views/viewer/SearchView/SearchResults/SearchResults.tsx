@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
 import { useCategories } from '@/api/hooks'
-import { ChannelGrid } from '@/components/ChannelGrid'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { SkeletonLoaderVideoGrid } from '@/components/SkeletonLoaderVideoGrid'
-import { VideoGrid } from '@/components/VideoGrid'
+import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
+import { ChannelGrid } from '@/components/_channel/ChannelGrid'
+import { SvgActionFilters } from '@/components/_icons'
+import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
+import { VideoGrid } from '@/components/_video/VideoGrid'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Tabs } from '@/shared/components/Tabs'
-import { SvgActionFilters } from '@/shared/icons'
 
-import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.style'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string

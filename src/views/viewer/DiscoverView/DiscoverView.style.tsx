@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
+import { LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { LayoutGrid } from '@/shared/components/LayoutGrid'
-import { colors, sizes } from '@/shared/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin: ${sizes(16)} auto;
@@ -18,5 +18,5 @@ export const CategoriesContainer = styled(LayoutGrid)`
 
 export const BorderTextContainer = styled.div`
   padding-bottom: ${sizes(5)};
-  border-bottom: 1px solid ${colors.gray[700]};
+  border-bottom: 1px solid ${oldColors.gray[700]};
 `

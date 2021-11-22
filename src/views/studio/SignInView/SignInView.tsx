@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { SignInStepsStepper } from '@/components/SignInSteps'
+import { SvgGlyphNewChannel } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useUser } from '@/providers/user'
-import { SvgGlyphNewChannel } from '@/shared/icons'
 
 import {
   CardWrapper,
@@ -18,7 +18,7 @@ import {
   StyledButton,
   SubTitle,
   Wrapper,
-} from './SignInView.style'
+} from './SignInView.styles'
 
 export const SignInView = () => {
   const navigate = useNavigate()

@@ -7,14 +7,13 @@ import {
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
 } from '@/api/queries'
-import { Grid } from '@/shared/components/Grid'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { Grid } from '@/components/Grid'
+import { Text } from '@/components/Text'
+import { ChannelCard } from '@/components/_channel/ChannelCard'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'
-
-import { ChannelCard } from '../ChannelCard'
 
 type InfiniteChannelGridProps = {
   title?: string
