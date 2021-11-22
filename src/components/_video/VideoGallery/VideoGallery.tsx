@@ -43,10 +43,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,
-  onVideoClick,
   removeButton,
-  onRemoveButtonClick,
-  onVideoNotFound,
   seeAllUrl,
   hasRanking = false,
   className,
@@ -85,9 +82,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
     id: undefined,
     progress: undefined,
   }))
-  const createClickHandler = (id?: string) => () => id && onVideoClick && onVideoClick(id)
-  const createRemoveButtonClickHandler = (id?: string) => () => id && onRemoveButtonClick && onRemoveButtonClick(id)
-  const createNotFoundHandler = (id?: string) => () => id && onVideoNotFound && onVideoNotFound(id)
   return (
     <Gallery
       title={title}
@@ -100,14 +94,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
-            <StyledVideoTile
-              id={video.id}
-              progress={video?.progress}
-              removeButton={video ? removeButton : false}
-              onClick={createClickHandler(video.id)}
-              onNotFound={createNotFoundHandler(video.id)}
-              onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
-            />
+            <StyledVideoTile id={video.id} progress={video?.progress} removeButton={video ? removeButton : false} />
           </RankingNumberTile>
         ) : (
           <StyledVideoTile
@@ -115,9 +102,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
             id={video.id}
             progress={video?.progress}
             removeButton={video ? removeButton : false}
-            onClick={createClickHandler(video.id)}
-            onNotFound={createNotFoundHandler(video.id)}
-            onRemoveButtonClick={createRemoveButtonClickHandler(video.id)}
           />
         )
       )}

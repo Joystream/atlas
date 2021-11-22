@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
@@ -14,13 +14,17 @@ export type VideoTileProps = {
 } & VideoTileBaseMetaProps &
   Pick<VideoTileBaseProps, 'progress' | 'className'>
 
-export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaProps }) => {
+export const VideoTile: React.FC<VideoTileProps> = React.memo(({ id, onNotFound, ...metaProps }) => {
   const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
     useVideoSharedLogic({
       id,
       isDraft: false,
       onNotFound,
     })
+
+  const onCopyVideoURLClick = useCallback(() => {
+    copyToClipboard(videoHref ? location.origin + videoHref : '')
+  }, [videoHref])
 
   return (
     <VideoTileBase
@@ -35,13 +39,15 @@ export const VideoTile: React.FC<VideoTileProps> = ({ id, onNotFound, ...metaPro
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
-      onCopyVideoURLClick={() => copyToClipboard(videoHref ? location.origin + videoHref : '')}
+      onCopyVideoURLClick={onCopyVideoURLClick}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       {...metaProps}
     />
   )
-}
+})
+
+VideoTile.displayName = 'VideoTile'
 
 type UseVideoSharedLogicOpts = {
   id?: string

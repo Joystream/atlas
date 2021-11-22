@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -81,103 +81,113 @@ export type VideoTileBaseProps = {
 
 type TileSize = 'small' | 'big' | undefined
 
-export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
-  title,
-  channelTitle,
-  channelAvatarUrl,
-  createdAt,
-  duration,
-  progress = 0,
-  views,
-  thumbnailUrl,
-  channelHref,
-  videoHref,
-  openInNewBrowserTab,
-  isLoadingThumbnail,
-  hasAssetUploadFailed,
-  isLoadingAvatar,
-  isLoading = true,
-  showChannel = true,
-  removeButton = false,
-  uploadStatus,
-  publisherMode = false,
-  isDraft,
-  isUnlisted,
-  onChannelClick,
-  onPullupClick,
-  onRemoveButtonClick,
-  onClick,
-  className,
-  onOpenInTabClick,
-  onEditVideoClick,
-  onCopyVideoURLClick,
-  onDeleteVideoClick,
-  onReuploadVideoClick,
-}) => {
-  const [tileSize, setTileSize] = useState<TileSize>(undefined)
+export const VideoTileBase: React.FC<VideoTileBaseProps> = React.memo(
+  ({
+    title,
+    channelTitle,
+    channelAvatarUrl,
+    createdAt,
+    duration,
+    progress = 0,
+    views,
+    thumbnailUrl,
+    channelHref,
+    videoHref,
+    openInNewBrowserTab,
+    isLoadingThumbnail,
+    hasAssetUploadFailed,
+    isLoadingAvatar,
+    isLoading = true,
+    showChannel = true,
+    removeButton = false,
+    uploadStatus,
+    publisherMode = false,
+    isDraft,
+    isUnlisted,
+    onChannelClick,
+    onPullupClick,
+    onRemoveButtonClick,
+    onClick,
+    className,
+    onOpenInTabClick,
+    onEditVideoClick,
+    onCopyVideoURLClick,
+    onDeleteVideoClick,
+    onReuploadVideoClick,
+  }) => {
+    const [tileSize, setTileSize] = useState<TileSize>(undefined)
 
-  const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
-  const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
-  const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
+    const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
+    const clickable = (!!onClick || !!videoHref) && !isLoading && !isUploading
+    const channelClickable = (!!onChannelClick || !!channelHref) && !isLoading
 
-  const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (!onChannelClick) {
-      return
+    const handleChannelClick = (event: React.MouseEvent<HTMLElement>) => {
+      if (!onChannelClick) {
+        return
+      }
+      onChannelClick(event)
     }
-    onChannelClick(event)
-  }
 
-  const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (!href) {
-      event.preventDefault()
-      onClick?.(event)
+    const createAnchorClickHandler = (href?: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (!href) {
+        event.preventDefault()
+        onClick?.(event)
+      }
     }
-  }
 
-  const assetFailedKebabItems = [
-    {
-      icon: <SvgActionTrash />,
-      onClick: onDeleteVideoClick,
-      title: 'Delete video',
-    },
-    {
-      icon: <SvgActionReupload />,
-      onClick: onReuploadVideoClick,
-      title: 'Reupload file',
-    },
-  ]
+    const publisherKebabMenuItems = useMemo(() => {
+      const assetFailedKebabItems = [
+        {
+          icon: <SvgActionTrash />,
+          onClick: onDeleteVideoClick,
+          title: 'Delete video',
+        },
+        {
+          icon: <SvgActionReupload />,
+          onClick: onReuploadVideoClick,
+          title: 'Reupload file',
+        },
+      ]
 
-  const publisherBasicKebabItems = [
-    {
-      icon: <SvgActionPlay />,
-      onClick: onOpenInTabClick,
-      title: 'Play in Joystream',
-    },
-    {
-      icon: <SvgActionCopy />,
-      onClick: onCopyVideoURLClick,
-      title: 'Copy video URL',
-    },
-  ]
+      const publisherBasicKebabItems = [
+        {
+          icon: <SvgActionPlay />,
+          onClick: onOpenInTabClick,
+          title: 'Play in Joystream',
+        },
+        {
+          icon: <SvgActionCopy />,
+          onClick: onCopyVideoURLClick,
+          title: 'Copy video URL',
+        },
+      ]
 
-  const publisherAndDraftKebabItems = [
-    {
-      icon: <SvgActionEdit />,
-      onClick: onEditVideoClick,
-      title: isDraft ? 'Edit draft' : 'Edit video',
-    },
-    {
-      icon: <SvgActionTrash />,
-      onClick: onDeleteVideoClick,
-      title: isDraft ? 'Delete draft' : 'Delete video',
-    },
-  ]
-
-  const publisherKebabMenuItems = hasAssetUploadFailed
-    ? assetFailedKebabItems
-    : isDraft
-    ? publisherAndDraftKebabItems
-    : [...publisherBasicKebabItems, ...publisherAndDraftKebabItems]
+      const publisherAndDraftKebabItems = [
+        {
+          icon: <SvgActionEdit />,
+          onClick: onEditVideoClick,
+          title: isDraft ? 'Edit draft' : 'Edit video',
+        },
+        {
+          icon: <SvgActionTrash />,
+          onClick: onDeleteVideoClick,
+          title: isDraft ? 'Delete draft' : 'Delete video',
+        },
+      ]
+      return hasAssetUploadFailed
+        ? assetFailedKebabItems
+        : isDraft
+        ? publisherAndDraftKebabItems
+        : [...publisherBasicKebabItems, ...publisherAndDraftKebabItems]
+    }, [
+      hasAssetUploadFailed,
+      isDraft,
+      onCopyVideoURLClick,
+      onDeleteVideoClick,
+      onEditVideoClick,
+      onOpenInTabClick,
+      onReuploadVideoClick,
+    ])
 
   return (
     <Container className={className} isLoading={isLoading || isUploading}>
@@ -302,3 +312,6 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
     </Container>
   )
 }
+)
+
+VideoTileBase.displayName = 'VideoTileBase'
