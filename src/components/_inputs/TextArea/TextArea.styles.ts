@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import resizeIcon from '@/components/_icons/svgs/glyph-resize.svg'
+import resizeIcon from '@/components/_icons/svgs/action-resize.svg'
 
 export const StyledTextArea = styled.textarea`
   width: 100%;
