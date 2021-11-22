@@ -5,9 +5,20 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
-import { ImageCropModal, ImageCropModalImperativeHandle, ImageCropModalProps } from '@/components/ImageCropModal'
+import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { ChannelCover } from '@/components/_channel/ChannelCover'
+import { SvgPlayerCancel } from '@/components/_icons'
+import { FormField } from '@/components/_inputs/FormField'
+import { Select, SelectItem } from '@/components/_inputs/Select'
+import { TextArea } from '@/components/_inputs/TextArea'
+import {
+  ImageCropModal,
+  ImageCropModalImperativeHandle,
+  ImageCropModalProps,
+} from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
@@ -20,21 +31,14 @@ import { useTransaction } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
-import { ActionBar } from '@/shared/components/ActionBar'
-import { ChannelCover } from '@/shared/components/ChannelCover'
-import { FormField } from '@/shared/components/FormField'
-import { Select, SelectItem } from '@/shared/components/Select'
-import { TextArea } from '@/shared/components/TextArea'
-import { Tooltip } from '@/shared/components/Tooltip'
-import { SvgPlayerCancel } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
-import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.style'
+import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 import {
   ActionBarTransactionWrapper,
@@ -45,7 +49,7 @@ import {
   StyledTitleArea,
   StyledTitleSection,
   TitleContainer,
-} from './CreateEditChannelView.style'
+} from './CreateEditChannelView.styles'
 
 const PUBLIC_SELECT_ITEMS: SelectItem<boolean>[] = [
   { name: 'Public', value: true },

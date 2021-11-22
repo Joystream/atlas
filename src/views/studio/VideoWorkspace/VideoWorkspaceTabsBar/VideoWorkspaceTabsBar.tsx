@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
 
+import { Badge } from '@/components/Badge'
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/components/_icons'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
-import { Badge } from '@/shared/components/Badge'
-import { IconButton } from '@/shared/components/IconButton'
-import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 
 import {
   AddDraftButtonContainer,
@@ -13,7 +13,7 @@ import {
   TabWrapper,
   TabsContainer,
   Topbar,
-} from './VideoWorkspaceTabsBar.style'
+} from './VideoWorkspaceTabsBar.styles'
 
 type TabsBarProps = {
   videoTabs: VideoWorkspaceTab[]

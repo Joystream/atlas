@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
-import { Button } from '@/shared/components/Button'
-import { Text } from '@/shared/components/Text'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { AssetDimensions } from '@/types/cropper'
 import { formatBytes } from '@/utils/size'
 

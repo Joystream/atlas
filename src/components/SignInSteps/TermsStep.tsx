@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { SvgGlyphChevronDown } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SvgGlyphChevronDown } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 
-import { StepFooter, StepWrapper } from './SignInSteps.style'
-import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.style'
+import { StepFooter, StepWrapper } from './SignInSteps.styles'
+import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.styles'
 
 import { TermsOfService } from '../TermsOfService'
 

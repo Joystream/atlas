@@ -3,19 +3,19 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
-import { ChannelLink } from '@/components/ChannelLink'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
+import { ChannelLink } from '@/components/_channel/ChannelLink'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { VideoPlayer } from '@/shared/components/VideoPlayer'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
@@ -33,7 +33,7 @@ import {
   PlayerWrapper,
   StyledViewWrapper,
   TitleText,
-} from './VideoView.style'
+} from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
   const { id } = useParams()

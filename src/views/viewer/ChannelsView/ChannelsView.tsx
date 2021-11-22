@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
-import { TopTenChannels } from '@/components/TopTenChannels'
-import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
+import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
+import { TopTenChannels } from '@/components/_content/TopTenChannels'
+import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 
 export const ChannelsView: React.FC = () => {
   return (

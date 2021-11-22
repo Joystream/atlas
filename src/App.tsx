@@ -7,8 +7,7 @@ import useHotjar from 'react-use-hotjar'
 import { createApolloClient } from '@/api'
 import { BUILD_ENV, readEnv } from '@/config/envs'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
-import { GlobalStyle } from '@/shared/components/GlobalStyle'
-import { routingTransitions } from '@/styles/routingTransitions'
+import { GlobalStyles } from '@/styles'
 
 import { MainLayout } from './MainLayout'
 import { AssetsManager } from './providers/assets'
@@ -33,7 +32,7 @@ export const App = () => {
 
   return (
     <>
-      <GlobalStyle additionalStyles={[routingTransitions]} />
+      <GlobalStyles />
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>

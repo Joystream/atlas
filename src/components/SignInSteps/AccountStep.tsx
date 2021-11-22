@@ -2,10 +2,10 @@ import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
+import { SvgGlyphChannel, SvgOutlineConnect } from '@/components/_icons'
 import { useUser } from '@/providers/user'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChannel, SvgOutlineConnect } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 
 import {
   AccountAddress,
@@ -22,7 +22,7 @@ import {
   StyledSpinner,
   StyledStepWrapper,
   SubTitle,
-} from './AccountStep.style'
+} from './AccountStep.styles'
 import {
   BottomBarIcon,
   StepFooter,
@@ -31,7 +31,7 @@ import {
   StepWrapper,
   StyledJoystreamLogo,
   StyledPolkadotLogo,
-} from './SignInSteps.style'
+} from './SignInSteps.styles'
 
 type AccountStepProps = {
   nextStepPath: string

@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 
 import {
   NewVideoTileLink,
@@ -11,7 +11,7 @@ import {
   StyledIcon,
   StyledText,
   TextAndIconWrapper,
-} from './NewVideoTile.style'
+} from './NewVideoTile.styles'
 
 type NewVideoTileProps = {
   loading?: boolean

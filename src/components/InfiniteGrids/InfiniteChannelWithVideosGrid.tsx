@@ -8,19 +8,19 @@ import {
   GetChannelsConnectionQueryVariables,
   VideoEdge,
 } from '@/api/queries'
-import { ChannelWithVideos } from '@/components/ChannelWithVideos'
+import { EmptyFallback } from '@/components/EmptyFallback'
+import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
+import { Text } from '@/components/Text'
+import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
+import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
+import { SvgGlyphChevronRight } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { languages } from '@/config/languages'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { GridHeadingContainer, TitleContainer } from '@/shared/components/GridHeading'
-import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
-import { Select } from '@/shared/components/Select'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChevronRight } from '@/shared/icons'
 import { SentryLogger } from '@/utils/logs'
 
-import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.style'
+import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.styles'
 
 type InfiniteChannelWithVideosGridProps = {
   onDemand?: boolean

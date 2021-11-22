@@ -3,17 +3,23 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
+import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
+import {
+  SvgAlertSuccess,
+  SvgAlertWarning,
+  SvgGlyphFileImage,
+  SvgGlyphFileVideo,
+  SvgGlyphUpload,
+} from '@/components/_icons'
+import { Loader } from '@/components/_loaders/Loader'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { CircularProgress } from '@/shared/components/CircularProgress'
-import { Loader } from '@/shared/components/Loader'
-import { Text } from '@/shared/components/Text'
-import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
@@ -30,7 +36,7 @@ import {
   ProgressbarContainer,
   RetryButton,
   StatusText,
-} from './UploadStatus.style'
+} from './UploadStatus.styles'
 
 import { UploadStatusGroupSize } from '../UploadStatusGroup'
 

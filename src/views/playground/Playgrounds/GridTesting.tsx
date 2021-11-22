@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { GridItem, LayoutGrid } from '@/shared/components/LayoutGrid'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 
 export const GridTesting = () => {
   return (
