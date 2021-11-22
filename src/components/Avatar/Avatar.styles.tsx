@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { TransitionGroup } from 'react-transition-group'
 
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
+import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, oldColors, oldTypography, transitions } from '@/styles'
 
@@ -170,7 +171,7 @@ export const StyledImage = styled.img`
   object-fit: cover;
   border-radius: 100%;
 `
-export const SilhouetteAvatar = styled(SvgIllustrativeFileFailed)`
+export const SilhouetteAvatar = styled(SvgAvatarSilhouette)`
   position: absolute;
   width: 100%;
   height: 100%;
