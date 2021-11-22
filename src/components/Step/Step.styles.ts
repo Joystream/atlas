@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, media, sizes, transitions, typography } from '@/theme'
+import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 type StepWrapperProps = {
   active?: boolean
@@ -31,7 +31,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border-color: ${active ? colors.blue[500] : colors.gray[500]};
+        border-color: ${active ? oldColors.blue[500] : oldColors.gray[500]};
         border-width: 1px 1px ${active ? '4px' : '1px'} 1px;
         border-style: solid;
 
@@ -73,9 +73,9 @@ export const StepStatus = styled.div`
 `
 
 export const StepNumber = styled.div<StepWrapperProps>`
-  background-color: ${({ active }) => (active ? colors.blue[500] : colors.gray[500])};
-  font-size: ${typography.sizes.subtitle2};
-  color: ${colors.white};
+  background-color: ${({ active }) => (active ? oldColors.blue[500] : oldColors.gray[500])};
+  font-size: ${oldTypography.sizes.subtitle2};
+  color: ${oldColors.white};
   border-radius: 100%;
   height: ${sizes(7)};
   width: ${sizes(7)};
@@ -114,7 +114,7 @@ export const ProgressContainer = styled.div`
 export const StepImage = styled.div`
   flex-shrink: 0;
   color: white;
-  background: ${colors.gray[600]};
+  background: ${oldColors.gray[600]};
   width: ${sizes(7)};
   height: ${sizes(7)};
   display: flex;

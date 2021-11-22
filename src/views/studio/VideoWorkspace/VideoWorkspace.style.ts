@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
-import { colors, zIndex } from '@/theme'
+import { oldColors, zIndex } from '@/styles'
 
 export const Container = styled(animated.div)`
   position: fixed;
@@ -12,8 +12,8 @@ export const Container = styled(animated.div)`
   height: calc(100vh - var(--size-topbar-height));
   display: flex;
   flex-direction: column;
-  background-color: ${colors.gray[900]};
-  box-shadow: 0 4px 52px ${colors.black};
+  background-color: ${oldColors.gray[900]};
+  box-shadow: 0 4px 52px ${oldColors.black};
 `
 
 export const DrawerOverlay = styled(animated.div)`
@@ -23,5 +23,5 @@ export const DrawerOverlay = styled(animated.div)`
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: ${colors.transparentBlack[54]};
+  background-color: ${oldColors.transparentBlack[54]};
 `

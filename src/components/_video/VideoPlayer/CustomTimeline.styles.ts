@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, media, transitions, zIndex } from '@/theme'
+import { media, oldColors, transitions, zIndex } from '@/styles'
 
 import { CustomControls, TRANSITION_DELAY } from './VideoPlayer.styles'
 
@@ -76,7 +76,7 @@ export const ProgressControl = styled.div<ProgressControlProps>`
 export const SeekBar = styled.div`
   position: relative;
   width: 100%;
-  background-color: ${colors.transparentWhite[32]};
+  background-color: ${oldColors.transparentWhite[32]};
   transition: height ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
   height: 0.5em;
   ${media.xs} {
@@ -86,7 +86,7 @@ export const SeekBar = styled.div`
 
 export const LoadProgress = styled.div`
   height: 100%;
-  background-color: ${colors.transparentWhite[32]};
+  background-color: ${oldColors.transparentWhite[32]};
 `
 
 export const MouseDisplayWrapper = styled.div`
@@ -99,7 +99,7 @@ export const MouseDisplay = styled.div`
   height: 100%;
   position: absolute;
   top: 0;
-  background-color: ${colors.transparentWhite[32]};
+  background-color: ${oldColors.transparentWhite[32]};
 `
 
 type MouseDisplayTooltipProps = {
@@ -121,7 +121,7 @@ export const StyledTooltipText = styled(Text)`
   /* 14px */
   font-size: 0.875em;
   pointer-events: none;
-  text-shadow: 0 1px 2px ${colors.transparentBlack[32]};
+  text-shadow: 0 1px 2px ${oldColors.transparentBlack[32]};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
@@ -133,7 +133,7 @@ export const PlayProgress = styled.div`
   position: absolute;
   top: 0;
   height: 100%;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   z-index: 1;
 `
 
@@ -144,9 +144,9 @@ export const PlayProgressThumb = styled.button`
   content: '';
   padding: 0;
   position: absolute;
-  box-shadow: 0 1px 2px ${colors.transparentBlack[32]};
+  box-shadow: 0 1px 2px ${oldColors.transparentBlack[32]};
   border-radius: 100%;
-  background: ${colors.white};
+  background: ${oldColors.white};
   transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};
   top: -0.75em;
   height: 2em;

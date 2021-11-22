@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   NewVideoTileLink,

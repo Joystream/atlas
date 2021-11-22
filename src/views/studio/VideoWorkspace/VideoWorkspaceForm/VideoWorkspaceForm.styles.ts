@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleArea } from '@/components/_inputs/TitleArea'
-import { media, sizes } from '@/theme'
+import { media, sizes } from '@/styles'
 
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspaceTabsBar'
 

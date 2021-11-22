@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, zIndex } from '@/theme'
+import { media, oldColors, sizes, zIndex } from '@/styles'
 
 type VideoHeroSliderWrapperProps = {
   columnsNumber?: number
@@ -65,7 +65,7 @@ type VideoSliderProgressBarProps = {
 }
 
 export const VideoSliderProgressBar = styled.div<VideoSliderProgressBarProps>`
-  background-color: ${colors.transparentWhite[32]};
+  background-color: ${oldColors.transparentWhite[32]};
   position: absolute;
   height: 4px;
   width: 100%;
@@ -82,7 +82,7 @@ export const VideoSliderProgress = styled.div`
   top: 0;
   left: 0;
   height: 100%;
-  background-color: ${colors.gray[200]};
+  background-color: ${oldColors.gray[200]};
   width: 100%;
   transform-origin: 0 0;
   transition: transform 125ms ease-in;

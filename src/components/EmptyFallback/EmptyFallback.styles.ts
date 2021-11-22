@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { media, sizes } from '@/theme'
+import { media, sizes } from '@/styles'
 
 import { EmptyFallbackSizes } from './EmptyFallback'
 

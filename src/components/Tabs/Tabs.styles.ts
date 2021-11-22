@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { colors, media, sizes, typography, zIndex } from '@/theme'
+import { media, oldColors, oldTypography, sizes, zIndex } from '@/styles'
 
 type TabProps = {
   selected: boolean
@@ -36,14 +36,14 @@ export const Tab = styled.div<TabProps>`
   width: ${TAB_WIDTH}px;
   min-width: ${TAB_WIDTH}px;
   padding: ${sizes(6)} 0;
-  font-size: ${typography.sizes.body2};
-  color: ${({ selected }) => (selected ? colors.white : colors.gray[300])};
+  font-size: ${oldTypography.sizes.body2};
+  color: ${({ selected }) => (selected ? oldColors.white : oldColors.gray[300])};
   text-align: center;
-  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${colors.blue[500]};` : 'none')};
+  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${oldColors.blue[500]};` : 'none')};
 
   :hover,
   :focus {
-    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? colors.blue[500] : colors.gray[300])};
+    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? oldColors.blue[500] : oldColors.gray[300])};
     cursor: pointer;
   }
 

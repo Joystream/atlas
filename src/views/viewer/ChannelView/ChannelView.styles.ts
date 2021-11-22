@@ -10,7 +10,7 @@ import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { Select } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, media, sizes, transitions, typography } from '@/theme'
+import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -24,7 +24,7 @@ const activeUnderline = css`
     position: absolute;
     width: 100%;
     height: 4px;
-    background-color: ${colors.blue[500]};
+    background-color: ${oldColors.blue[500]};
     bottom: -${sizes(3)};
   }
 `
@@ -82,7 +82,7 @@ export const SubTitle = styled(Text)`
 
   padding: ${sizes(1)} ${sizes(2)};
   margin-top: ${sizes(1)};
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
   display: inline-block;
 `
 
@@ -95,7 +95,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   position: relative;
 
   span {
-    font-size: ${typography.sizes.h2};
+    font-size: ${oldTypography.sizes.h2};
   }
   ${media.sm} {
     margin: 0 ${sizes(6)} 0 0;
@@ -123,7 +123,7 @@ export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
 export const StyledButtonContainer = styled.div`
   margin-top: ${sizes(2)};
   z-index: 2;
-  background-color: ${colors.transparentBlack[54]};
+  background-color: ${oldColors.transparentBlack[54]};
   grid-column: 1 / span 2;
   width: 100%;
 
@@ -160,7 +160,7 @@ export const TabsContainer = styled.div`
   }
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${colors.gray[800]};
+    border-bottom: solid 1px ${oldColors.gray[800]};
     grid-template-areas: initial;
     gap: ${sizes(8)};
     grid-template-rows: 1fr;
@@ -186,7 +186,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${colors.gray[800]};
+  border-bottom: solid 1px ${oldColors.gray[800]};
   ${media.sm} {
     border-bottom: none;
     grid-area: initial;
@@ -212,16 +212,16 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   > input {
     height: 40px;
     padding: 10px 16px 10px 42px;
-    caret-color: ${colors.blue[500]};
-    font-size: ${typography.sizes.body2};
-    line-height: ${typography.lineHeights.body2};
+    caret-color: ${oldColors.blue[500]};
+    font-size: ${oldTypography.sizes.body2};
+    line-height: ${oldTypography.lineHeights.body2};
 
     ${media.sm} {
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
     }
 
     &:focus {
-      border: 1px solid ${colors.white};
+      border: 1px solid ${oldColors.white};
     }
 
     ::-webkit-search-cancel-button {
@@ -251,7 +251,7 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
 
 export const StyledSelect = styled(Select)`
   button {
-    font-size: ${typography.sizes.body2};
-    line-height: ${typography.lineHeights.body2};
+    font-size: ${oldTypography.sizes.body2};
+    line-height: ${oldTypography.lineHeights.body2};
   }
 `

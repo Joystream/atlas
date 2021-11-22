@@ -6,7 +6,7 @@ import { Gallery } from '@/components/Gallery'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { VideoTile } from '@/components/_video/VideoTile'
-import { media } from '@/theme'
+import { media } from '@/styles'
 import { AvatarContainer } from '@/views/viewer/ChannelView/ChannelAbout.styles'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {

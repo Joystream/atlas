@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, typography } from '@/theme'
+import { oldColors, oldTypography, sizes } from '@/styles'
 
 type StyledTooltipProps = {
   headerText?: boolean
@@ -42,7 +42,7 @@ type TooltipTextProps = {
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
   max-width: 200px;
-  line-height: ${typography.lineHeights.subtitle1};
+  line-height: ${oldTypography.lineHeights.subtitle1};
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
 
@@ -55,7 +55,7 @@ export const StyledTooltip = styled.div<StyledTooltipProps>`
   display: inline-flex;
   flex-direction: ${({ headerText }) => (headerText ? 'column' : 'row')};
   padding: ${sizes(2)};
-  background-color: ${colors.gray[400]};
+  background-color: ${oldColors.gray[400]};
 
   ${TooltipHeader} {
     align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};

@@ -5,7 +5,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgAccountCreationIllustration } from '@/components/_illustrations'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { colors, media, sizes, transitions, typography } from '@/theme'
+import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 import { StepWrapper } from './SignInSteps.styles'
 
@@ -46,7 +46,7 @@ export const AccountsWrapper = styled.div`
 `
 
 export const AccountWrapper = styled.label<AccountWrapperProps>`
-  background-color: ${colors.transparentPrimary[6]};
+  background-color: ${oldColors.transparentPrimary[6]};
   cursor: pointer;
   text-align: left;
   display: flex;
@@ -54,13 +54,13 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   justify-content: space-between;
   margin-top: ${sizes(4)};
   padding: ${sizes(2)};
-  border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : 'transparent')};
+  border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
     background-color ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
-    border: 1px solid ${({ isSelected }) => (isSelected ? colors.blue[500] : colors.gray[50])};
-    background-color: ${colors.transparentPrimary[12]};
+    border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : oldColors.gray[50])};
+    background-color: ${oldColors.transparentPrimary[12]};
   }
 `
 export const AccountInfo = styled.div`
@@ -68,7 +68,7 @@ export const AccountInfo = styled.div`
   align-items: center;
 `
 export const IconWrapper = styled.div`
-  background-color: ${colors.transparentWhite[6]};
+  background-color: ${oldColors.transparentWhite[6]};
   border-radius: 100%;
   margin-right: ${sizes(3)};
   width: ${sizes(12)};
@@ -134,10 +134,10 @@ export const OrderedStep = styled(Text)`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${colors.gray[50]};
+    color: ${oldColors.gray[50]};
     padding-bottom: 2px;
-    font-family: ${typography.fonts.headers};
-    font-size: ${typography.sizes.h6};
-    background-color: ${colors.gray[600]};
+    font-family: ${oldTypography.fonts.headers};
+    font-size: ${oldTypography.sizes.h6};
+    background-color: ${oldColors.gray[600]};
   }
 `

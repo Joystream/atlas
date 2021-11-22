@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
+import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -14,7 +14,7 @@ export const Arrow = styled(IconButton)`
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
   padding: ${sizes(2)};
-  font-size: ${typography.sizes.subtitle2};
+  font-size: ${oldTypography.sizes.subtitle2};
 
   ${media.md} {
     display: block;
@@ -80,20 +80,20 @@ export const Dots = styled.div`
       width: 100%;
       height: ${sizes(1)};
       display: block;
-      background-color: ${colors.gray[700]};
+      background-color: ${oldColors.gray[700]};
       transition: all ${transitions.timings.regular} ${transitions.easing};
     }
 
     &:hover:not(.active) {
       &::after {
-        background-color: ${colors.gray[50]};
+        background-color: ${oldColors.gray[50]};
         transform: translateY(-2px);
       }
     }
 
     &.active {
       &::after {
-        background-color: ${colors.gray[300]};
+        background-color: ${oldColors.gray[300]};
       }
     }
   }

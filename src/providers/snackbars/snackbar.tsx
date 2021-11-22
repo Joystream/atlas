@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Snackbar } from '@/components/Snackbar'
 import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphUpload } from '@/components/_icons'
-import { sizes, transitions, zIndex } from '@/theme'
+import { sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 

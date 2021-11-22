@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { ExpandButton } from '@/components/ExpandButton'
 import { Text } from '@/components/Text'
-import { colors, sizes, transitions } from '@/theme'
+import { ExpandButton } from '@/components/_buttons/ExpandButton'
+import { oldColors, sizes, transitions } from '@/styles'
 
 import { UploadStatusGroupSize } from './UploadStatusGroup'
 
@@ -26,7 +26,7 @@ export const UploadStatusGroupContainer = styled.div<UploadStatusGroupProps>`
   align-items: center;
   padding: ${sizes(4)};
   width: 100%;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
   cursor: pointer;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 `
@@ -42,7 +42,7 @@ export const Thumbnail = styled.div<ThumbnailProps>`
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
-  background-color: ${colors.gray[700]};
+  background-color: ${oldColors.gray[700]};
   height: ${sizes(12)};
 
   ${({ size }) => {
@@ -65,7 +65,7 @@ export const AssetsInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   margin-left: ${sizes(4)};
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
   flex: 0 1 auto;
   overflow: hidden;
 `
@@ -82,7 +82,7 @@ export const UploadInfoContainer = styled.div`
   align-items: center;
   margin-left: auto;
   width: fit-content;
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
 `
 
 export const StyledExpandButton = styled(ExpandButton)`
@@ -96,7 +96,7 @@ export const AssetsDrawerContainer = styled.div<DrawerProps>`
   top: 0;
   width: 100%;
   max-height: ${({ isActive, maxHeight }) => (isActive ? `${maxHeight}px` : '0px')};
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   overflow: hidden;
   transition: max-height ${transitions.timings.loading} ${transitions.easing};
 `

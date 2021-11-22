@@ -13,7 +13,7 @@ import {
   SvgIllustrativeReupload,
   SvgLargeUploadFailed,
 } from '@/components/_icons'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'
 import { getLinkPropsFromTo } from '@/utils/button'

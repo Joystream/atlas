@@ -6,7 +6,7 @@ import { SvgGlyphCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ExtrinsicStatus } from '@/joystream-lib'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { TRANSACTION_STEPS_DETAILS } from './TransactionModal.constants'
 import {

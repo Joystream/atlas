@@ -8,7 +8,7 @@ import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar } from '@/styles'
-import { colors, media, sizes, square, typography } from '@/theme'
+import { media, oldColors, oldTypography, sizes, square } from '@/styles'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
@@ -29,8 +29,8 @@ export const Container = styled.div<ContainerProps>`
   width: 100%;
   height: ${getContainerMobileHeight};
   overflow-y: scroll;
-  background-color: ${colors.gray[800]};
-  box-shadow: inset 0 1px 0 ${colors.gray[700]};
+  background-color: ${oldColors.gray[800]};
+  box-shadow: inset 0 1px 0 ${oldColors.gray[700]};
   transition: all ${cVar('animationTransitionMedium')};
 
   /* 160px padding is used to cover the entire screen regardless of device */
@@ -92,7 +92,7 @@ export const Section = styled.section`
   padding: ${sizes(2)} 0;
 
   :not(:last-child) {
-    box-shadow: inset 0 -1px 0 ${colors.gray[700]};
+    box-shadow: inset 0 -1px 0 ${oldColors.gray[700]};
   }
 `
 
@@ -100,10 +100,10 @@ export const ShortcutsWrapper = styled.section`
   display: none;
   align-items: center;
   justify-content: center;
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
   padding: ${sizes(6)} 0;
-  font-size: ${typography.sizes.caption};
-  line-height: ${typography.lineHeights.caption};
+  font-size: ${oldTypography.sizes.caption};
+  line-height: ${oldTypography.lineHeights.caption};
 
   ${media.sm} {
     display: flex;
@@ -129,15 +129,15 @@ export const StyledShortcutIndicator = styled(ShortcutIndicator)<{ group?: boole
 export const Caption = styled(Text)`
   display: block;
   padding: ${sizes(2)} ${sizes(4)};
-  line-height: ${typography.lineHeights.subtitle1};
-  font-weight: ${typography.weights.medium};
+  line-height: ${oldTypography.lineHeights.subtitle1};
+  font-weight: ${oldTypography.weights.medium};
 `
 
 const selectedStyles = (hover?: boolean) => `
-  background-color: ${colors.transparentPrimary[10]};
+  background-color: ${oldColors.transparentPrimary[10]};
   
       ${Title} {
-        color: ${colors.gray[50]};
+        color: ${oldColors.gray[50]};
       }
 
       ${Shortcut} {
@@ -146,13 +146,13 @@ const selectedStyles = (hover?: boolean) => `
       
       ${ClockWrapper} {
         path {
-          fill: ${colors.gray[50]};
+          fill: ${oldColors.gray[50]};
         }
       }
       
       ${DeleteButton} {
         path {
-          stroke: ${colors.gray[50]};
+          stroke: ${oldColors.gray[50]};
         }
       }
 `
@@ -178,7 +178,7 @@ export const DeleteButton = styled(IconButton)`
   margin-left: ${sizes(2)};
 
   path {
-    stroke: ${colors.gray[300]};
+    stroke: ${oldColors.gray[300]};
   }
 `
 
@@ -189,7 +189,7 @@ export const ClockWrapper = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: ${colors.transparentPrimary[10]};
+  background-color: ${oldColors.transparentPrimary[10]};
   margin-right: ${sizes(4)};
 `
 
@@ -239,7 +239,7 @@ export const PlaceholderWrapper = styled.div`
 `
 
 export const HighlightedWord = styled.mark`
-  color: ${colors.gray[50]};
+  color: ${oldColors.gray[50]};
   background-color: transparent;
 `
 

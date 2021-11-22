@@ -14,7 +14,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   BackgroundContainer,

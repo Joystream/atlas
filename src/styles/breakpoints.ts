@@ -7,5 +7,3 @@ export const breakpoints = {
   xl: '1920px',
   xxl: '2560px',
 } as const
-
-export default breakpoints

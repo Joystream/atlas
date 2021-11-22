@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 export const ChannelCardAnchor = styled(Link)`
   text-decoration: none;

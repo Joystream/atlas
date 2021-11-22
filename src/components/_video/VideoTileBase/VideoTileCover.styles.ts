@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, sizes, square, transitions, typography, zIndex } from '@/theme'
+import { oldColors, oldTypography, sizes, square, transitions, zIndex } from '@/styles'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -21,7 +21,7 @@ const clickableAnimation = (clickable: boolean) =>
   clickable
     ? css`
         transform: translate(-${sizes(2)}, -${sizes(2)});
-        box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']};
+        box-shadow: ${sizes(2)} ${sizes(2)} 0 ${oldColors.blue['500']};
 
         ${CoverHoverOverlay} {
           opacity: 1;
@@ -37,7 +37,7 @@ const clickableAnimation = (clickable: boolean) =>
     : css`
         ${CoverHoverOverlay} {
           opacity: 1;
-          border-color: ${colors.white};
+          border-color: ${oldColors.white};
         }
 
         ${CoverIconWrapper} {
@@ -121,7 +121,7 @@ export const CoverThumbnailUploadFailed = styled.div`
   ${square('100%')}
 
   grid-gap: ${sizes(2)};
-  background: ${colors.gray[900]};
+  background: ${oldColors.gray[900]};
   display: grid;
   justify-items: center;
   align-content: center;
@@ -149,7 +149,7 @@ export const CoverHoverOverlay = styled.div<CoverHoverOverlayProps>`
   left: 0;
   opacity: 0;
   transition: opacity ${transitions.timings.regular} ${transitions.easing}, border ${transitions.timings.routing} linear;
-  background-color: ${({ darker }) => (darker ? colors.transparentBlack[54] : colors.transparentGray[54])};
+  background-color: ${({ darker }) => (darker ? oldColors.transparentBlack[54] : oldColors.transparentGray[54])};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,8 +174,8 @@ export const CoverVideoPublishingStateOverlay = styled.div`
   padding: ${sizes(1)} ${sizes(2)};
   display: flex;
   align-items: center;
-  background-color: ${colors.black};
-  color: ${colors.white};
+  background-color: ${oldColors.black};
+  color: ${oldColors.white};
   z-index: ${zIndex.overlay};
 `
 
@@ -188,9 +188,9 @@ export const CoverDurationOverlay = styled.div`
   bottom: ${sizes(2)};
   right: ${sizes(2)};
   padding: ${sizes(1.5)} ${sizes(2)};
-  background-color: ${colors.black};
-  color: ${colors.white};
-  font-size: ${typography.sizes.body2};
+  background-color: ${oldColors.black};
+  color: ${oldColors.white};
+  font-size: ${oldTypography.sizes.body2};
   z-index: ${zIndex.overlay};
 `
 

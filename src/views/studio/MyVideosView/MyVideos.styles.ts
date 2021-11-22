@@ -7,7 +7,7 @@ import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
-import { colors, media, sizes } from '@/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   height: 100%;
@@ -22,7 +22,7 @@ export const StyledText = styled(Text)`
 
 export const TabsContainer = styled.div`
   margin-bottom: ${sizes(12)};
-  border-bottom: solid 1px ${colors.gray[800]};
+  border-bottom: solid 1px ${oldColors.gray[800]};
 
   ${media.sm} {
     display: grid;

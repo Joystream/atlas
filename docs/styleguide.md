@@ -57,9 +57,9 @@ Here is a kitchen sink example:
 ```javascript
 // YourComponent.styles.tsx
 import styled from "@emotion/styled"
-import {css} from "@emotion/react"
+import { css } from "@emotion/react"
 
-import {colors, sizes} from "@/shared/theme"
+import { colors, sizes } from "@/shared/theme"
 
 
 const blueIfPressed = (props) => css`
@@ -72,7 +72,7 @@ export const Container = styled.div`
 `
 
 export const Button = styled.button`
-    font-size: ${typography.sizes.h1};
+    font-size: ${oldTypography.sizes.h1};
     padding: ${sizes(4)};
     ${blueOnIfPressed};
 ` 

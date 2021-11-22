@@ -3,7 +3,7 @@ import React from 'react'
 
 import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 type DiscoverChannelsProps = {
   additionalLink?: {

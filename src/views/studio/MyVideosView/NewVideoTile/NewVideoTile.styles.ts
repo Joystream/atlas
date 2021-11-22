@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom'
 import { Text } from '@/components/Text'
 import { SvgGlyphAddVideo } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const StyledIcon = styled(SvgGlyphAddVideo)`
   > path {
     transition: fill ${transitions.timings.player} ease-out;
-    fill: ${colors.gray[500]};
+    fill: ${oldColors.gray[500]};
   }
 `
 
 export const StyledText = styled(Text)`
   text-align: center;
   margin-top: ${sizes(2)};
-  color: ${colors.gray[500]};
+  color: ${oldColors.gray[500]};
   transition: color ${transitions.timings.player} ease-out;
 `
 
@@ -29,23 +29,23 @@ export const NewVideoTileWrapper = styled.div`
 export const NewVideoTileLink = styled(Link)`
   position: absolute;
   background: none;
-  border: 1px dashed ${colors.gray[500]};
-  color: ${colors.gray[500]};
+  border: 1px dashed ${oldColors.gray[500]};
+  color: ${oldColors.gray[500]};
   transition: border ${transitions.timings.player} ease-out;
   width: 100%;
   height: 100%;
   cursor: pointer;
 
   :hover {
-    border: 1px dashed ${colors.gray[200]};
-    color: ${colors.gray[200]};
+    border: 1px dashed ${oldColors.gray[200]};
+    color: ${oldColors.gray[200]};
     ${StyledIcon} {
       > path {
-        fill: ${colors.gray[200]};
+        fill: ${oldColors.gray[200]};
       }
     }
     ${StyledText} {
-      color: ${colors.gray[200]};
+      color: ${oldColors.gray[200]};
     }
   }
 `

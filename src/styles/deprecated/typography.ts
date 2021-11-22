@@ -1,4 +1,4 @@
-export default {
+export const oldTypography = {
   fonts: {
     base: "Inter, Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",
     headers: "PxGrotesk, Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",

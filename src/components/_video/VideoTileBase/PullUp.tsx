@@ -4,7 +4,7 @@ import React from 'react'
 import { Tooltip } from '@/components/Tooltip'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphEdit } from '@/components/_icons'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 type StateProps = {
   tooltipText: string
@@ -28,6 +28,6 @@ const StyledIconButton = styled(IconButton)`
   padding: ${sizes(2)};
 
   :hover {
-    background-color: ${colors.gray[600]};
+    background-color: ${oldColors.gray[600]};
   }
 `

@@ -12,7 +12,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoHero } from '@/components/_video/VideoHero'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { sizes, transitions } from '@/theme'
+import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: React.FC = () => {

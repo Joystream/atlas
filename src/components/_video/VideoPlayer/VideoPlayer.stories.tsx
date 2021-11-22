@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { createApolloClient } from '@/api'
-import { colors } from '@/theme'
+import { oldColors } from '@/styles'
 
 import { VideoPlayer, VideoPlayerProps } from './VideoPlayer'
 
@@ -36,6 +36,6 @@ Regular.args = {
 }
 
 const Wrapper = styled.div`
-  background-color: ${colors.gray['500']};
+  background-color: ${oldColors.gray['500']};
   height: 800px;
 `

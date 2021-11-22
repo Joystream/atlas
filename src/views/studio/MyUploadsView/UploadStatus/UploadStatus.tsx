@@ -19,7 +19,7 @@ import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 

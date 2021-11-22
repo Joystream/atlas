@@ -4,12 +4,12 @@ import { Link, PathMatch } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
-import { colors, sizes, typography, zIndex } from '@/theme'
+import { oldColors, oldTypography, sizes, zIndex } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
   height: 64px;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   position: fixed;
   left: 0;
   bottom: 0;
@@ -29,8 +29,8 @@ export const Container = styled.div`
 `
 
 export const NavLink = styled(Link, { shouldForwardProp: isPropValid })<{ active: PathMatch | null }>`
-  color: ${colors.white};
-  font-size: ${typography.sizes.button.small};
+  color: ${oldColors.white};
+  font-size: ${oldTypography.sizes.button.small};
   text-align: center;
   text-decoration: none;
   height: 100%;
@@ -41,7 +41,7 @@ export const NavLink = styled(Link, { shouldForwardProp: isPropValid })<{ active
   padding: 0 ${sizes(2.5)};
   flex: 1;
 
-  ${({ active }) => active && `background-color: ${colors.transparentPrimary[18]}`};
+  ${({ active }) => active && `background-color: ${oldColors.transparentPrimary[18]}`};
 `
 
 export const NavTitle = styled(Text)`

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { colors } from '@/theme'
+import { oldColors } from '@/styles'
 
 import { HamburgerButton, HamburgerButtonProps } from './HamburgerButton'
 
@@ -28,7 +28,7 @@ const Template: Story<HamburgerButtonProps> = (args) => {
 export const Regular = Template.bind({})
 
 const Wrapper = styled.div`
-  background-color: ${colors.gray['800']};
+  background-color: ${oldColors.gray['800']};
   width: 70px;
   height: 50px;
   margin-top: -10px;

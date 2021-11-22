@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { zIndex } from '@/theme'
+import { zIndex } from '@/styles'
 
 export const ModalBackdrop = styled.div`
   position: fixed;

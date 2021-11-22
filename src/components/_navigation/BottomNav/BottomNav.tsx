@@ -3,7 +3,7 @@ import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { viewerNavItems } from '@/config/nav'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { Container, NavLink, NavTitle } from './BottomNav.styles'
 

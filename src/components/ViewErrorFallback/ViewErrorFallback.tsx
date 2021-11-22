@@ -8,7 +8,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
 import { JOYSTREAM_DISCORD_URL } from '@/config/urls'
-import { media, sizes } from '@/theme'
+import { media, sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 // this isn't a react component, just a function that will be executed once to get a react element

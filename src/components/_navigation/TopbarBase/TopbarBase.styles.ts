@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { colors, media, sizes, zIndex } from '@/theme'
+import { media, oldColors, sizes, zIndex } from '@/styles'
 
 export const Header = styled.header`
   position: fixed;
@@ -14,8 +14,8 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: inset 0 -1px 0 ${colors.gray[700]};
-  background-color: ${colors.black};
+  box-shadow: inset 0 -1px 0 ${oldColors.gray[700]};
+  background-color: ${oldColors.black};
 
   /* add left padding to reserve space for sidenav hamburger button */
   padding: ${sizes(3)} calc(${sizes(4)} + var(--size-scrollbar-width)) ${sizes(3)}

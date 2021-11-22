@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, media, sizes, transitions } from '@/theme'
+import { media, oldColors, sizes, transitions } from '@/styles'
 
 type ControlButtonProps = {
   showTooltipOnlyOnFocus?: boolean
@@ -20,13 +20,13 @@ export const ControlButton = styled.button<ControlButtonProps>`
   transition: background ${transitions.timings.player} ease-in;
 
   & > svg {
-    filter: drop-shadow(0 1px 2px ${colors.transparentBlack[32]});
+    filter: drop-shadow(0 1px 2px ${oldColors.transparentBlack[32]});
     width: 1.5em;
     height: 1.5em;
   }
 
   :active {
-    background-color: ${colors.transparentPrimary[10]};
+    background-color: ${oldColors.transparentPrimary[10]};
     backdrop-filter: blur(${sizes(8)});
   }
 
@@ -44,7 +44,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     :hover {
       ${media.xs} {
         cursor: pointer;
-        background-color: ${colors.transparentPrimary[18]};
+        background-color: ${oldColors.transparentPrimary[18]};
         backdrop-filter: blur(${sizes(8)});
 
         ${() => ControlButtonTooltip} {
@@ -55,21 +55,21 @@ export const ControlButton = styled.button<ControlButtonProps>`
 
     :active {
       ${media.xs} {
-        background-color: ${colors.transparentPrimary[10]};
+        background-color: ${oldColors.transparentPrimary[10]};
       }
     }
 
     :focus {
       /* Provide a fallback style for browsers
     that don't support :focus-visible e.g safari */
-      box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+      box-shadow: inset 0 0 0 3px ${oldColors.transparentPrimary[18]};
       ${() => ControlButtonTooltip} {
         opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
       }
     }
 
     :focus-visible {
-      box-shadow: inset 0 0 0 3px ${colors.transparentPrimary[18]};
+      box-shadow: inset 0 0 0 3px ${oldColors.transparentPrimary[18]};
       ${() => ControlButtonTooltip} {
         opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
       }
@@ -112,7 +112,7 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   pointer-events: none;
   position: absolute;
   bottom: 3em;
-  background: ${colors.transparentBlack[54]};
+  background: ${oldColors.transparentBlack[54]};
   backdrop-filter: blur(${sizes(8)});
   align-items: center;
   padding: 0.5em;

@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
 import { SvgGlyphChevronDown } from '@/components/_icons'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const Container = styled.div`
   width: 280px;
@@ -31,7 +31,7 @@ export const StepsProgressContainer = styled.div`
 
 export const BottomRowContainer = styled.div`
   padding: ${sizes(4)};
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -48,7 +48,7 @@ export const StepsContainer = styled.div<StepsContainerProps>`
   grid-auto-flow: row;
   padding: ${sizes(4)};
   transform: translateY(${({ isHidden }) => (isHidden ? '150%' : '0%')});
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   position: relative;
   z-index: 1;
@@ -74,9 +74,9 @@ export const StepState = styled.div<StepStateProps>`
   border-radius: 100%;
   ${({ completed }) => [
     completed &&
-      `background-color: ${colors.blue[500]};
+      `background-color: ${oldColors.blue[500]};
     border: 2px solid transparent;`,
-    completed === false && `border: 2px solid ${colors.gray[300]}`,
+    completed === false && `border: 2px solid ${oldColors.gray[300]}`,
   ]};
 `
 
@@ -98,12 +98,12 @@ export const Step = styled.div<StepStateProps>`
       content: '';
       width: 100%;
       height: 1px;
-      background-color: ${colors.gray[300]};
+      background-color: ${oldColors.gray[300]};
     }
   }
 
   :hover {
-    background-color: ${({ completed }) => !completed && colors.transparentPrimary[18]};
+    background-color: ${({ completed }) => !completed && oldColors.transparentPrimary[18]};
   }
 `
 

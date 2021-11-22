@@ -12,7 +12,7 @@ import {
 } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { UploadStatus } from '@/types/uploads'
 import { getLinkPropsFromTo } from '@/utils/button'

@@ -13,7 +13,7 @@ import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   ClearAllButton,

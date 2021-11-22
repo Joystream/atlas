@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 import { BannerVariant } from './Banner'
 
@@ -47,18 +47,22 @@ export const BannerActionButton = styled(Button)`
 export const BannerDescription = styled(Text)`
   margin-top: ${sizes(2)};
   line-height: ${sizes(5)};
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
   word-break: break-word;
 `
 
 export const BannerWrapper = styled.div<BannerProps>`
   position: relative;
   padding: ${sizes(4)};
-  box-shadow: ${({ variant }) => variant === 'primary' && `inset 0 0 0 1px ${colors.gray[700]}`};
+  box-shadow: ${({ variant }) => variant === 'primary' && `inset 0 0 0 1px ${oldColors.gray[700]}`};
   width: 100%;
   background-color: ${({ variant }) =>
-    variant === 'tertiary' ? colors.gray[700] : variant === 'secondary' ? colors.blue[500] : colors.transparent};
+    variant === 'tertiary'
+      ? oldColors.gray[700]
+      : variant === 'secondary'
+      ? oldColors.blue[500]
+      : oldColors.transparent};
   ${BannerDescription} {
-    color: ${({ variant }) => variant === 'secondary' && colors.blue[200]};
+    color: ${({ variant }) => variant === 'secondary' && oldColors.blue[200]};
   }
 `

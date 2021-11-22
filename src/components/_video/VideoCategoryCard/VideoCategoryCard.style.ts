@@ -4,7 +4,7 @@ import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 type ColorProps = { color: string }
 type LoadingProps = { isLoading?: boolean }
@@ -27,7 +27,7 @@ export const CoverImgOverlay = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   mix-blend-mode: color;
 `
 
@@ -50,7 +50,7 @@ export const Container = styled(Link)<ColorProps & VariantProps & LoadingProps>`
   display: grid;
   cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
   border-left: 4px solid ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
-  background-color: ${({ isLoading }) => (isLoading ? colors.gray[900] : colors.gray[800])};
+  background-color: ${({ isLoading }) => (isLoading ? oldColors.gray[900] : oldColors.gray[800])};
 
   &:hover {
     ${hoverStyles}
@@ -145,7 +145,7 @@ export const PieSegment = styled.div<{ value: number }>`
 
   &::after,
   &::before {
-    background: ${colors.gray[300]};
+    background: ${oldColors.gray[300]};
     content: '';
     position: absolute;
     height: 100%;

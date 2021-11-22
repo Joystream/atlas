@@ -25,7 +25,7 @@ import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 

@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const StyledDialogModal = styled(DialogModal)`
   width: 536px;
@@ -62,12 +62,12 @@ export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean 
       height: 100%;
       top: 0;
       border-radius: ${({ rounded }) => (rounded ? '50%' : '0')};
-      box-shadow: inset 0 0 0 2px ${colors.transparentWhite[32]};
+      box-shadow: inset 0 0 0 2px ${oldColors.transparentWhite[32]};
     }
   }
 
   .cropper-modal {
-    background-color: ${colors.transparentBlack[54]};
+    background-color: ${oldColors.transparentBlack[54]};
   }
 
   pointer-events: ${({ disabled }) => disabled && 'none'};

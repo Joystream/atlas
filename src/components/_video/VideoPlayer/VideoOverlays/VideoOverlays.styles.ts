@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, media, sizes, zIndex } from '@/theme'
+import { media, oldColors, sizes, zIndex } from '@/styles'
 
 export const OverlayBackground = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const OverlayBackground = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
   position: absolute;
   top: 0;
   left: 0;

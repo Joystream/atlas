@@ -2,7 +2,7 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, square, typography } from '@/theme'
+import { oldColors, oldTypography, sizes, square } from '@/styles'
 
 import { ButtonBase, ButtonSize, ButtonVariant } from '../ButtonBase'
 
@@ -96,7 +96,7 @@ const badgeDotStyles = css`
     ${square(8)}
 
     content: '';
-    background-color: ${colors.white};
+    background-color: ${oldColors.white};
     border-radius: 50%;
     display: block;
   }
@@ -105,12 +105,12 @@ const badgeDotStyles = css`
 export const Badge = styled.div<{ dot?: boolean }>`
   ${square(16)}
 
-  font-weight: ${typography.weights.bold};
+  font-weight: ${oldTypography.weights.bold};
   font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   position: absolute;
   border-radius: 50%;
   top: -${sizes(2)};

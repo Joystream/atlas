@@ -4,7 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks'
 import { AssetAvailability, BasicVideoFieldsFragment } from '@/api/queries'
-import { colors, transitions } from '@/theme'
+import { oldColors, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
@@ -82,7 +82,7 @@ export const LoadingOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${colors.transparentBlack[54]};
+  background: ${oldColors.transparentBlack[54]};
   display: flex;
   background-size: cover;
   justify-content: center;

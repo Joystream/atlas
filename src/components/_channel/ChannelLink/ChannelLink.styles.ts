@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 type ContainerProps = {
   disabled?: boolean
@@ -29,7 +29,7 @@ type HandleProps = {
 }
 
 const secondaryTextCss = `
-  color: ${colors.gray[200]};
+  color: ${oldColors.gray[200]};
 `
 
 export const StyledText = styled(Text)<HandleProps>`

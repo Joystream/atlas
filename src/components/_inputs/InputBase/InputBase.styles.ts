@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, transitions, typography } from '@/theme'
+import { oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 type FormGroupProps = {
   error?: boolean
@@ -21,7 +21,7 @@ export const FormGroup = styled.label<FormGroupProps>`
 
   input,
   textarea {
-    color: ${colors.gray[50]};
+    color: ${oldColors.gray[50]};
   }
 
   input,
@@ -30,11 +30,11 @@ export const FormGroup = styled.label<FormGroupProps>`
     transition: border ${transitions.timings.regular} ${transitions.easing};
     background: none;
     padding: 10px ${sizes(4)};
-    font-size: ${typography.sizes.body1};
-    line-height: ${typography.lineHeights.body1};
+    font-size: ${oldTypography.sizes.body1};
+    line-height: ${oldTypography.lineHeights.body1};
 
     :focus {
-      border: 1px solid ${colors.blue[500]};
+      border: 1px solid ${oldColors.blue[500]};
     }
 
     :disabled {
@@ -42,20 +42,20 @@ export const FormGroup = styled.label<FormGroupProps>`
     }
 
     ::placeholder {
-      color: ${colors.gray[300]};
+      color: ${oldColors.gray[300]};
     }
 
     :not(:placeholder-shown):not(button) {
-      border: 1px solid ${colors.gray[200]};
+      border: 1px solid ${oldColors.gray[200]};
     }
 
     &:focus {
-      border: 1px solid ${colors.blue[500]};
+      border: 1px solid ${oldColors.blue[500]};
     }
 
     :not(:focus):not(button) {
       border: 1px solid
-        ${({ error, disabled }) => (error && !disabled ? colors.secondary.alert[100] : colors.gray[200])};
+        ${({ error, disabled }) => (error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200])};
     }
   }
 `

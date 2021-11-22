@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { Text } from '@/components/Text'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 const _LegalParagraph = styled(Text)`
   margin-top: ${sizes(6)};

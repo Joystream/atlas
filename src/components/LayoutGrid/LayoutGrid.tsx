@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { media } from '@/theme'
+import { media } from '@/styles'
 
 type ReponsivenessObject = Partial<Record<keyof typeof media | 'base', number>>
 

@@ -4,7 +4,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgCoinsIllustration } from '@/components/_illustrations'
-import { colors, media, sizes } from '@/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 export const StyledStudioContainer = styled(LimitedWidthContainer)`
   display: flex;
@@ -89,7 +89,7 @@ export const OrderedList = styled.ol`
     left: 20px;
     height: 92%;
     width: 1px;
-    border: 1px dashed ${colors.transparentWhite[32]};
+    border: 1px dashed ${oldColors.transparentWhite[32]};
   }
 `
 export const OrderedItem = styled(Text)`
@@ -108,7 +108,7 @@ export const OrderedItem = styled(Text)`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${colors.blue[500]};
+    background-color: ${oldColors.blue[500]};
     font-weight: bold;
   }
 `

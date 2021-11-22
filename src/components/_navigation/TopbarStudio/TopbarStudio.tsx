@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
-import { ExpandButton } from '@/components/ExpandButton'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphAddVideo, SvgGlyphCheck, SvgGlyphLogOut, SvgGlyphNewChannel } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
@@ -15,7 +15,7 @@ import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   AvatarSkeletonLoader,

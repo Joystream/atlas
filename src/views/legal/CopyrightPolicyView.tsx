@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { LegalListItem, LegalParagraph } from '@/components/LegalText'
 import { Text } from '@/components/Text'
+import { LegalListItem, LegalParagraph } from '@/components/_content/LegalText'
 
 export const CopyrightPolicyView: React.FC = () => {
   return (

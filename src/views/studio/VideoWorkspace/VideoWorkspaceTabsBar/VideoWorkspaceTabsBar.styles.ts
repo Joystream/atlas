@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, media, sizes } from '@/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 type AddDraftButtonContainerProps = {
   hasOverflow?: boolean
@@ -14,7 +14,7 @@ export const Topbar = styled.div`
   justify-content: space-between;
   height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
   min-height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
-  border-bottom: solid 1px ${colors.gray[700]};
+  border-bottom: solid 1px ${oldColors.gray[700]};
   padding: 0 ${sizes(4)};
   ${media.sm} {
     padding: 0 ${sizes(8)};
@@ -40,7 +40,7 @@ export const ButtonsContainer = styled.div`
   grid-auto-flow: column;
   grid-gap: ${sizes(1)};
   padding: 0 ${sizes(3)};
-  border-left: solid 1px ${colors.gray[700]};
+  border-left: solid 1px ${oldColors.gray[700]};
   ${media.sm} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
@@ -71,12 +71,12 @@ export const Tab = styled.div<{ selected: boolean }>`
   user-select: none;
   padding-right: ${sizes(3)};
   transition: box-shadow 0.125s ease;
-  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${colors.blue[500]};`}
+  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${oldColors.blue[500]};`}
 
   :hover {
-    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${colors.gray[300]};`}
+    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${oldColors.gray[300]};`}
     ${TabTitle} {
-      color: ${colors.gray[50]};
+      color: ${oldColors.gray[50]};
     }
   }
 `
@@ -90,7 +90,7 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   height: 100%;
   max-width: ${sizes(14)};
   padding: 0 ${sizes(2)};
-  border-left: 1px solid ${colors.gray[700]};
-  background-color: ${colors.gray[900]};
+  border-left: 1px solid ${oldColors.gray[700]};
+  background-color: ${oldColors.gray[900]};
   margin-left: ${sizes(2)};
 `

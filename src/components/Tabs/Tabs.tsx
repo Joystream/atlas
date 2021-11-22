@@ -2,7 +2,7 @@ import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { BackgroundGradient, TAB_WIDTH, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 

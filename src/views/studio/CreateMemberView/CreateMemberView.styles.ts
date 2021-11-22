@@ -5,7 +5,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
-import { media, sizes } from '@/theme'
+import { media, sizes } from '@/styles'
 
 export const Header = styled.header`
   margin-bottom: ${sizes(12)};

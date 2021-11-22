@@ -15,7 +15,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 

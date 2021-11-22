@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { ModalBackdrop, ModalContent } from './Modal.styles'
 

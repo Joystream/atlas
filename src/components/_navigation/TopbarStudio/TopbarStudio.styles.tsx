@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
+import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -23,11 +23,12 @@ export const StyledTopbarBase = styled(TopbarBase)`
 export const ChannelInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   align-items: center;
-  background-color: ${({ isActive }) => isActive && colors.transparentPrimary[10]};
+  background-color: ${({ isActive }) => isActive && oldColors.transparentPrimary[10]};
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ isActive }) => (isActive ? colors.transparentPrimary[10] : colors.transparentPrimary[18])};
+    background-color: ${({ isActive }) =>
+      isActive ? oldColors.transparentPrimary[10] : oldColors.transparentPrimary[18]};
   }
 
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
@@ -59,7 +60,7 @@ export const StudioTopbarContainer = styled.div`
   margin-right: ${sizes(3)};
   ${ChannelInfoContainer} {
     &:hover {
-      background-color: ${colors.transparent};
+      background-color: ${oldColors.transparent};
     }
     ${TextContainer} {
       display: none;
@@ -79,7 +80,7 @@ export const MemberInfoContainer = styled.div<CommonStudioTopbarProps>`
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
-  border-top: ${({ hasChannels }) => hasChannels && `1px solid ${colors.transparentPrimary[18]}`};
+  border-top: ${({ hasChannels }) => hasChannels && `1px solid ${oldColors.transparentPrimary[18]}`};
 `
 export const MemberInnerContainer = styled.div`
   display: flex;
@@ -105,14 +106,14 @@ export const DrawerMemberText = styled(Text)`
 `
 
 export const DrawerMemberTitleText = styled(Text)`
-  background-color: ${colors.transparentPrimary[18]};
-  color: ${colors.gray[50]};
+  background-color: ${oldColors.transparentPrimary[18]};
+  color: ${oldColors.gray[50]};
   padding: ${sizes(0.5)} ${sizes(1)};
 `
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${colors.white};
+  color: ${oldColors.white};
 `
 
 export const NewChannel = styled.div`
@@ -122,14 +123,14 @@ export const NewChannel = styled.div`
 
   p {
     margin-left: ${sizes(2)};
-    font-size: ${typography.sizes.body1};
-    color: ${colors.white};
+    font-size: ${oldTypography.sizes.body1};
+    color: ${oldColors.white};
     text-decoration: none;
   }
 
   &:hover {
     cursor: pointer;
-    background-color: ${colors.gray[700]};
+    background-color: ${oldColors.gray[700]};
   }
 `
 
@@ -139,7 +140,7 @@ export const NewChannelIconContainer = styled.div`
   align-items: center;
   width: 42px;
   height: 42px;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   border-radius: 100%;
 `
 
@@ -153,7 +154,7 @@ export const DrawerContainer = styled.div<CommonStudioTopbarProps>`
   grid-gap: ${sizes(4)};
   padding: ${({ hasChannels }) => (hasChannels ? sizes(3) : `0 ${sizes(3)} ${sizes(3)}`)};
   transform: translateY(${({ isActive }) => (isActive ? 'var(--size-topbar-height)' : '-100%')});
-  background-color: ${colors.gray[700]};
+  background-color: ${oldColors.gray[700]};
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   z-index: ${zIndex.nearOverlay};
 

@@ -4,14 +4,14 @@ import React from 'react'
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const TextContainer = styled.div`
   display: grid;
   grid-gap: ${sizes(4)};
   padding-bottom: ${sizes(8)};
   margin-bottom: ${sizes(8)};
-  border-bottom: 1px solid ${colors.gray[600]};
+  border-bottom: 1px solid ${oldColors.gray[600]};
 `
 
 export const LinksContainer = styled.div`
@@ -33,7 +33,7 @@ export const Details = styled.div`
   display: grid;
   gap: ${sizes(2)};
   padding-bottom: ${sizes(4)};
-  border-bottom: 1px solid ${colors.gray[600]};
+  border-bottom: 1px solid ${oldColors.gray[600]};
   margin-bottom: ${sizes(4)};
 `
 

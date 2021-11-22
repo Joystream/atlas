@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 export const Container = styled.section`
   display: flex;

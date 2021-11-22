@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { colors, media } from '@/theme'
+import { media, oldColors } from '@/styles'
 
 export const RankingNumberTileWrapper = styled.div`
   position: relative;
@@ -50,7 +50,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   font-weight: 700;
   font-size: 100px;
   -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: ${colors.gray[500]};
+  -webkit-text-stroke-color: ${oldColors.gray[500]};
   font-family: 'PxGrotesk', sans-serif;
   letter-spacing: -0.17em;
   height: 0;

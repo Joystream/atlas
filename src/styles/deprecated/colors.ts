@@ -1,6 +1,6 @@
 import { cVar } from '@/styles'
 
-export default {
+export const oldColors = {
   white: '#FFFFFF',
   black: '#000000',
   transparent: 'transparent',

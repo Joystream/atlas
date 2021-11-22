@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { SvgAlertSuccess } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const UploadProgressBarContainer = styled.div`
   position: absolute;
@@ -11,13 +11,13 @@ export const UploadProgressBarContainer = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
 `
 
 const greenBarAnimation = keyframes`
   0% {
     opacity: 0.2;
-    background-color: ${colors.secondary.success[100]};
+    background-color: ${oldColors.secondary.success[100]};
     transform: scaleX(0);
   }
   75% {
@@ -68,7 +68,7 @@ export const ProgressBar = styled.div<ProgressbarProps>`
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
@@ -85,7 +85,7 @@ export const BottomProgressBar = styled.div<ProgressbarProps>`
   transform-origin: 0 0;
   transform: scaleX(${({ progress }) => `${progress / 100}`});
   transition: transform 1s linear;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   height: 4px;
 `
 

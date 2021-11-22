@@ -12,7 +12,7 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import {
   CategoryView,

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { colors, sizes, typography } from '@/theme'
+import { oldColors, oldTypography, sizes } from '@/styles'
 
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase'
 
@@ -17,7 +17,7 @@ export const ChannelsTitle = styled(Text)`
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
 `
 export const ChannelsWrapper = styled.div`
   padding-left: ${NAVBAR_LEFT_PADDING}px;
@@ -47,14 +47,14 @@ export const ChannelsItem = styled.li`
 export const ShowMoreButton = styled.button`
   border: none;
   background: none;
-  font-family: ${typography.fonts.base};
+  font-family: ${oldTypography.fonts.base};
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   padding: ${sizes(5)} 0;
   display: flex;
   align-items: center;
-  color: ${colors.white};
+  color: ${oldColors.white};
 `
 
 export const ShowMoreIconWrapper = styled.span`

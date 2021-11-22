@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
 import { SvgGlyphCheck } from '@/components/_icons'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
@@ -11,20 +11,20 @@ export const Container = styled.div<CheckboxStateProps>`
   margin: -${sizes(2)};
   cursor: pointer;
   border-radius: 100%;
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
   transition: background ${transitions.timings.loading} ${transitions.easing};
 
   :hover {
-    background: ${({ disabled }) => !disabled && colors.transparentPrimary[18]};
-    box-shadow: ${({ disabled }) => !disabled && colors.transparentPrimary[18]};
+    background: ${({ disabled }) => !disabled && oldColors.transparentPrimary[18]};
+    box-shadow: ${({ disabled }) => !disabled && oldColors.transparentPrimary[18]};
   }
 `
 
 const selectedStyles = (props: CheckboxStateProps) =>
   props.selected
     ? css`
-        background-color: ${props.selected ? colors.blue[500] : 'transparent'};
-        border: 1px solid ${colors.blue[500]};
+        background-color: ${props.selected ? oldColors.blue[500] : 'transparent'};
+        border: 1px solid ${oldColors.blue[500]};
       `
     : null
 const disabledStyles = (props: CheckboxStateProps) =>
@@ -33,14 +33,14 @@ const disabledStyles = (props: CheckboxStateProps) =>
         css`
           cursor: not-allowed;
           opacity: 0.5;
-          border: 1px solid ${colors.gray[300]};
-          background-color: ${colors.gray[400]};
+          border: 1px solid ${oldColors.gray[300]};
+          background-color: ${oldColors.gray[400]};
         `,
         props.selected &&
           css`
-            background-color: ${colors.gray[700]};
-            border: 1px solid ${colors.gray[700]};
-            color: ${colors.gray[400]};
+            background-color: ${oldColors.gray[700]};
+            border: 1px solid ${oldColors.gray[700]};
+            color: ${oldColors.gray[400]};
           `,
       ]
     : null
@@ -48,11 +48,11 @@ const errorStyles = (props: CheckboxStateProps) =>
   props.error
     ? [
         css`
-          border: 1px solid ${colors.secondary.alert[100]};
+          border: 1px solid ${oldColors.secondary.alert[100]};
         `,
         props.selected &&
           css`
-            background-color: ${colors.secondary.alert[100]};
+            background-color: ${oldColors.secondary.alert[100]};
           `,
       ]
     : null
@@ -64,15 +64,15 @@ export type CheckboxStateProps = {
 }
 export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
-  color: ${colors.white};
-  border: 1px solid ${colors.gray[300]};
+  color: ${oldColors.white};
+  border: 1px solid ${oldColors.gray[300]};
   border-radius: 2px;
   ${selectedStyles};
   ${errorStyles};
   ${disabledStyles};
 
   &:active {
-    border: 1px solid ${colors.gray[100]};
+    border: 1px solid ${oldColors.gray[100]};
   }
 `
 

@@ -4,7 +4,7 @@ import { fluidRange } from 'polished'
 import { Text } from '@/components/Text'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { breakpoints, colors, media, sizes, typography } from '@/theme'
+import { breakpoints, media, oldColors, oldTypography, sizes } from '@/styles'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
@@ -42,7 +42,7 @@ export const InfoContainer = styled.div`
 export const Meta = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
-  color: ${colors.gray[300]};
+  color: ${oldColors.gray[300]};
 
   ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.xxs, breakpoints.xl)};
 `
@@ -59,15 +59,15 @@ export const ChannelContainer = styled.div`
 
 export const DescriptionContainer = styled.div`
   margin-top: ${sizes(6)};
-  border-top: 1px solid ${colors.gray[800]};
+  border-top: 1px solid ${oldColors.gray[800]};
 
   p {
-    font-size: ${typography.sizes.body2};
+    font-size: ${oldTypography.sizes.body2};
     margin: ${sizes(4)} 0 0;
 
     ${media.sm} {
       font-size: 1rem;
-      color: ${colors.gray[300]};
+      color: ${oldColors.gray[300]};
       line-height: 175%;
     }
   }
@@ -79,12 +79,12 @@ export const MoreVideosContainer = styled.div`
 
 export const MoreVideosHeader = styled.h5`
   margin: 0 0 ${sizes(4)};
-  font-size: ${typography.sizes.h5};
+  font-size: ${oldTypography.sizes.h5};
 `
 export const LicenseContainer = styled.div`
   margin: ${sizes(4)} 0 0;
-  font-size: ${typography.sizes.overhead};
-  color: ${colors.gray[500]};
+  font-size: ${oldTypography.sizes.overhead};
+  color: ${oldColors.gray[500]};
   letter-spacing: 0.03rem;
   line-height: 1.7;
 
@@ -95,7 +95,7 @@ export const LicenseContainer = styled.div`
 
   a {
     text-decoration: none;
-    color: ${colors.gray[500]};
+    color: ${oldColors.gray[500]};
   }
 `
 

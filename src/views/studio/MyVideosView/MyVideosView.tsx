@@ -19,7 +19,7 @@ import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {

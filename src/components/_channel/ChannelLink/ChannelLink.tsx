@@ -8,7 +8,7 @@ import { TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import { Container, StyledAvatar, StyledText } from './ChannelLink.styles'

@@ -10,7 +10,7 @@ import {
 import { Grid } from '@/components/Grid'
 import { Text } from '@/components/Text'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import { useInfiniteGrid } from './useInfiniteGrid'

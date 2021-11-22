@@ -10,7 +10,7 @@ import { SvgAlertError, SvgAlertSuccess } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import { UploadStatusGroupSkeletonLoader } from '@/views/studio/MyUploadsView/UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 

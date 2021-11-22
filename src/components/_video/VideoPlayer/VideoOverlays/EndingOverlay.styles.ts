@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { colors, media, sizes, zIndex } from '@/theme'
+import { media, oldColors, sizes, zIndex } from '@/styles'
 
 type OverlayBackgroundProps = {
   thumbnailUrl?: string | null
@@ -22,7 +22,7 @@ export const OverlayBackground = styled.div<OverlayBackgroundProps>`
   left: 0;
   z-index: ${zIndex.overlay};
   height: 100%;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
 `
 
 type ContainerProps = {

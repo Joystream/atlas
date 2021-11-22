@@ -3,7 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   VideoHeroSliderWrapper,

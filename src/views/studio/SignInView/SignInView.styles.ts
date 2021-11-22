@@ -4,7 +4,7 @@ import { Avatar } from '@/components/Avatar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const Header = styled.header`
   margin: 0 auto;
@@ -49,7 +49,7 @@ export const CardWrapper = styled.button`
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
   text-decoration: none;
   transition: background-color ${transitions.timings.routing} ${transitions.easing};
 
@@ -60,7 +60,7 @@ export const CardWrapper = styled.button`
   }
 
   :hover {
-    background-color: ${colors.gray[800]};
+    background-color: ${oldColors.gray[800]};
   }
 `
 

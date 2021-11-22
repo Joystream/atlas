@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgGlyphHide } from '@/components/_icons'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const FilterContentContainer = styled.div`
   display: grid;
@@ -17,7 +17,7 @@ export const MobileFilterContainer = styled.div`
 `
 
 export const FiltersContainer = styled.div<{ open: boolean }>`
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   position: absolute;
   z-index: -1;
   width: 100%;

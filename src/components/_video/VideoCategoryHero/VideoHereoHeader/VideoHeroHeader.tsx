@@ -5,7 +5,7 @@ import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphChevronLeft } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { Divider, StyledVideoHeroHeader, VideoHeroHeaderTitle } from './VideoHeroHeader.style'
 

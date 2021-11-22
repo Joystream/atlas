@@ -1,12 +1,16 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '@/components/CallToActionButton'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
+import {
+  CallToActionButton,
+  CallToActionButtonProps,
+  CallToActionWrapper,
+} from '@/components/_buttons/CallToActionButton'
 import { SvgNavChannels, SvgNavHome, SvgNavNew, SvgNavPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { media, sizes, typography } from '@/theme'
+import { media, oldTypography, sizes } from '@/styles'
 
 type CtaData = 'home' | 'new' | 'channels' | 'popular'
 
@@ -66,11 +70,11 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
 const Header = styled(Text)`
   margin: ${sizes(16)} 0;
-  font-size: ${typography.sizes.h3};
+  font-size: ${oldTypography.sizes.h3};
 
   ${media.lg} {
-    font-size: ${typography.sizes.h2};
-    line-height: ${typography.lineHeights.h2};
+    font-size: ${oldTypography.sizes.h2};
+    line-height: ${oldTypography.lineHeights.h2};
   }
 `
 

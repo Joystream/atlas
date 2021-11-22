@@ -6,7 +6,7 @@ import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { SvgGlyphInfo } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const GridHeadingContainer = styled.div`
   display: flex;
   align-items: center;
   padding-bottom: ${sizes(5)};
-  border-bottom: 1px solid ${colors.gray[700]};
+  border-bottom: 1px solid ${oldColors.gray[700]};
   margin-bottom: ${sizes(12)};
 `
 

@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'
 
-import { colors, sizes, square, typography } from '@/theme'
+import { oldColors, oldTypography, sizes, square } from '@/styles'
 
 export const ShortcutIndicator = styled.kbd`
   ${square(16)};
 
-  font-family: ${typography.fonts.base};
-  color: ${colors.gray[300]};
-  font-weight: ${typography.weights.extraBold};
+  font-family: ${oldTypography.fonts.base};
+  color: ${oldColors.gray[300]};
+  font-weight: ${oldTypography.weights.extraBold};
   font-size: 11px;
-  border: 1px solid ${colors.gray[500]};
+  border: 1px solid ${oldColors.gray[500]};
   border-radius: 2px;
   display: inline-flex;
   justify-content: center;

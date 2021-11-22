@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const LoadMoreButtonWrapper = styled.div`
   margin-top: ${sizes(12)};
@@ -14,7 +14,7 @@ export const LanguageSelectWrapper = styled.div`
 
 export const Separator = styled.div`
   height: 1px;
-  background-color: ${colors.gray[700]};
+  background-color: ${oldColors.gray[700]};
   margin: ${sizes(16)} 0;
 `
 

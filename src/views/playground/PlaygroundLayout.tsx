@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { ActiveUserProvider } from '@/providers/user'
-import { colors } from '@/theme'
+import { oldColors } from '@/styles'
 
 import {
   Animations,
@@ -84,7 +84,7 @@ const NavContainer = styled.div`
   font-size: 20px;
 
   a {
-    color: ${colors.gray[50]};
+    color: ${oldColors.gray[50]};
     margin-bottom: 20px;
   }
 `

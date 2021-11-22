@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { colors, media, sizes, transitions } from '@/theme'
+import { media, oldColors, sizes, transitions } from '@/styles'
 
 export const MultiFileSelectContainer = styled.div`
   width: 100%;
@@ -21,7 +21,7 @@ export const StepsContainer = styled.div`
 `
 
 export const StepDivider = styled.div`
-  color: ${colors.gray[600]};
+  color: ${oldColors.gray[600]};
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -44,7 +44,7 @@ export const AnimatedUnderline = styled.div`
   position: absolute;
   bottom: 0;
   height: 4px;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   width: 100%;
   will-change: left;
 

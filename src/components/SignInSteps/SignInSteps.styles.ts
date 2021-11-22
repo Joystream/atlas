@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { SvgGlyphWarning } from '@/components/_icons/GlyphWarning'
 import { SvgJoystreamLogoIcon, SvgPolkadotLogoIcon } from '@/components/_illustrations'
-import { colors, sizes } from '@/theme'
+import { oldColors, sizes } from '@/styles'
 
 export const StepWrapper = styled.div`
   width: 100%;
@@ -35,7 +35,7 @@ export const StepSubTitle = styled(Text)`
 
 export const StepFooter = styled.div`
   position: relative;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
   padding: var(--local-size-stepper-padding);
   width: calc(100% + 2 * var(--local-size-stepper-padding));
   margin: calc(-1 * var(--local-size-stepper-padding));

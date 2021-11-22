@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/components/_icons'
 import { FollowedChannel } from '@/providers/personalData/types'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   ChannelsItem,

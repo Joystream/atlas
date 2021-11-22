@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, typography } from '@/theme'
+import { oldColors, oldTypography, sizes } from '@/styles'
 
 type DenseProps = {
   dense?: boolean
@@ -26,8 +26,8 @@ export const FormFieldTitle = styled(Text)`
 export const FormFieldDescription = styled(Text)`
   width: 85%;
   padding: ${sizes(2)} 0;
-  font-size: ${typography.sizes.subtitle2};
-  color: ${colors.gray[300]};
+  font-size: ${oldTypography.sizes.subtitle2};
+  color: ${oldColors.gray[300]};
   line-height: ${sizes(5)};
   word-wrap: break-word;
 `

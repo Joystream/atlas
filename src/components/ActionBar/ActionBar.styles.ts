@@ -3,11 +3,11 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
-import { colors, media, sizes, transitions, zIndex } from '@/theme'
+import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
-  background-color: ${colors.gray[900]};
-  border-top: 1px solid ${colors.gray[700]};
+  background-color: ${oldColors.gray[900]};
+  border-top: 1px solid ${oldColors.gray[700]};
   display: grid;
   padding: ${sizes(4)};
   grid-template-rows: auto auto;
@@ -75,7 +75,7 @@ export const DraftsBadgeContainer = styled.div`
     padding: 0 ${sizes(4)};
 
     :hover {
-      background-color: ${colors.transparentPrimary[18]};
+      background-color: ${oldColors.transparentPrimary[18]};
     }
   }
 `

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 export const ChannelCardArticle = styled.article`
   position: relative;
@@ -13,7 +13,7 @@ export const ChannelCardArticle = styled.article`
   :hover:not(:active) {
     ${() => ChannelCardAnchor} {
       transform: translate(-${sizes(2)}, -${sizes(2)});
-      box-shadow: ${sizes(2)} ${sizes(2)} 0 ${colors.blue['500']};
+      box-shadow: ${sizes(2)} ${sizes(2)} 0 ${oldColors.blue['500']};
     }
   }
 `
@@ -28,7 +28,7 @@ export const ChannelCardAnchor = styled(Link)`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background-color: ${colors.gray[900]};
+  background-color: ${oldColors.gray[900]};
   padding: ${sizes(4)} 0;
 `
 

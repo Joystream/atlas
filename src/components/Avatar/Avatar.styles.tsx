@@ -4,7 +4,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, media, transitions, typography } from '@/theme'
+import { media, oldColors, oldTypography, transitions } from '@/styles'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel' | 'channel-card'
 
@@ -123,11 +123,11 @@ export const EditButton = styled.button<EditButtonProps>`
   border: none;
   position: absolute;
   z-index: 3;
-  color: ${colors.gray[100]};
-  font-family: ${typography.fonts.headers};
-  font-weight: ${typography.weights.bold};
-  font-size: ${typography.sizes.subtitle2};
-  ${({ size }) => size === 'cover' && `font-size: ${typography.sizes.button.small}`};
+  color: ${oldColors.gray[100]};
+  font-family: ${oldTypography.fonts.headers};
+  font-weight: ${oldTypography.weights.bold};
+  font-size: ${oldTypography.sizes.subtitle2};
+  ${({ size }) => size === 'cover' && `font-size: ${oldTypography.sizes.button.small}`};
 
   display: flex;
   flex-direction: column;
@@ -137,12 +137,12 @@ export const EditButton = styled.button<EditButtonProps>`
   opacity: 0;
 
   :hover {
-    background-color: ${colors.transparentBlack[54]};
+    background-color: ${oldColors.transparentBlack[54]};
     opacity: 1;
   }
 
   :active {
-    border: 2px solid ${colors.blue[500]};
+    border: 2px solid ${oldColors.blue[500]};
   }
 
   span {
@@ -184,5 +184,5 @@ export const NewChannelAvatar = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 100%;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
 `

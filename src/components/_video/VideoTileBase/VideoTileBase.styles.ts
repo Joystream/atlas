@@ -6,7 +6,7 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { colors, sizes, square, typography } from '@/theme'
+import { oldColors, oldTypography, sizes, square } from '@/styles'
 
 type SizeProps = {
   size?: 'small' | 'big'
@@ -97,7 +97,7 @@ export const ProgressOverlay = styled.div`
   position: relative;
   height: ${sizes(1)};
   margin-top: ${sizes(3)};
-  background-color: ${colors.gray[400]};
+  background-color: ${oldColors.gray[400]};
 `
 
 export const ProgressBar = styled.div`
@@ -107,7 +107,7 @@ export const ProgressBar = styled.div`
   height: 100%;
   max-width: 100%;
   width: 0;
-  background-color: ${colors.gray[50]};
+  background-color: ${oldColors.gray[50]};
 `
 
 export const StyledAvatar = styled(Avatar)<ChannelProps>`
@@ -117,8 +117,8 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
 `
 
 export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
-  font-size: ${({ size }) => (size === 'small' ? typography.sizes.h6 : typography.sizes.subtitle1)};
-  line-height: ${({ size }) => (size === 'small' ? typography.lineHeights.h6 : typography.lineHeights.subtitle1)};
+  font-size: ${({ size }) => (size === 'small' ? oldTypography.sizes.h6 : oldTypography.sizes.subtitle1)};
+  line-height: ${({ size }) => (size === 'small' ? oldTypography.lineHeights.h6 : oldTypography.lineHeights.subtitle1)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
   display: -webkit-box;
   -webkit-line-clamp: 2;

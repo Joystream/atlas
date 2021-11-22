@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgGlyphSearchAlt } from '@/components/_icons'
 import { cVar } from '@/styles'
-import { colors, media, sizes, square } from '@/theme'
+import { media, oldColors, sizes, square } from '@/styles'
 
 export const Input = styled.input`
   width: 100%;
@@ -13,14 +13,14 @@ export const Input = styled.input`
   border: unset;
   padding: 14px ${sizes(3)};
   background: none;
-  color: ${colors.gray[50]};
+  color: ${oldColors.gray[50]};
 
   /* override mobile Safari user agent styling */
   border-radius: 0;
   appearance: none;
 
   ::placeholder {
-    color: ${colors.gray[300]};
+    color: ${oldColors.gray[300]};
   }
 
   &::-webkit-search-cancel-button {
@@ -35,7 +35,7 @@ export const CancelButton = styled(IconButton)`
   margin-right: ${sizes(2)};
 
   path {
-    stroke: ${colors.gray[300]};
+    stroke: ${oldColors.gray[300]};
   }
 
   ${media.md} {
@@ -49,7 +49,7 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
   ${({ hasFocus, hasQuery }) => `
     height: ${hasFocus ? '64px' : '39px'};
     width: ${hasQuery || hasFocus ? '100%' : '39px'};
-    background-color: ${hasFocus ? colors.gray[800] : 'transparent'};
+    background-color: ${hasFocus ? oldColors.gray[800] : 'transparent'};
     margin-left: ${!hasFocus ? 'auto' : 'unset'};
   `};
 
@@ -72,8 +72,8 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   top: 0;
   left: 0;
   position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'unset')};
-  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[800] : colors.gray[900])};
-  box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${colors.gray[700]}` : 'unset')};
+  background-color: ${({ hasFocus }) => (hasFocus ? oldColors.gray[800] : oldColors.gray[900])};
+  box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${oldColors.gray[700]}` : 'unset')};
   padding-left: ${({ hasFocus, hasQuery }) => (hasFocus || hasQuery ? sizes(2) : 0)};
 
   ${media.md} {
@@ -90,7 +90,7 @@ export const StyledSvgOutlineSearch = styled(SvgGlyphSearchAlt, { shouldForwardP
 
   circle,
   path {
-    fill: ${({ highlighted }) => (highlighted ? colors.gray[50] : colors.gray[300])};
+    fill: ${({ highlighted }) => (highlighted ? oldColors.gray[50] : oldColors.gray[300])};
   }
 `
 

@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar } from '@/styles'
-import { media, square, typography } from '@/theme'
+import { media, oldTypography, square } from '@/styles'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
 
@@ -39,7 +39,7 @@ export const ThreeDotsWrapper = styled.div`
   ${square(PAGINATION_BUTTON_WIDTH)};
 
   color: ${cVar('colorCoreNeutral300')};
-  font-size: ${typography.sizes.subtitle2};
+  font-size: ${oldTypography.sizes.subtitle2};
   justify-content: center;
   align-items: center;
   display: flex;

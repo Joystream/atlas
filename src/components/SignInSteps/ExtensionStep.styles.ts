@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 import { StepFooter } from './SignInSteps.styles'
 

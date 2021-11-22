@@ -3,7 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
 import {

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { ProgressDrawer } from '@/components/ProgressDrawer'
 import { TitleArea } from '@/components/_inputs/TitleArea'
-import { media, sizes, transitions, zIndex } from '@/theme'
+import { media, sizes, transitions, zIndex } from '@/styles'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 export const StyledTitleSection = styled(TitleSection)`

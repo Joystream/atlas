@@ -5,7 +5,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgSigninIllustration } from '@/components/_illustrations'
-import { colors, media, sizes } from '@/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 export const StyledContainer = styled(LimitedWidthContainer)`
   margin-top: 64px;
@@ -35,7 +35,7 @@ export const LogoContainer = styled.div`
     align-self: center;
     padding: 2px 4px;
     margin-left: ${sizes(3)};
-    background-color: ${colors.gray[600]};
+    background-color: ${oldColors.gray[600]};
     font-size: 10px;
     content: 'studio';
   }
@@ -84,7 +84,7 @@ export const SignInButton = styled(Button)`
 
 export const SubTitle = styled(Text)`
   margin-top: ${sizes(4)};
-  color: ${colors.gray[200]};
+  color: ${oldColors.gray[200]};
 `
 
 export const BackLink = styled(Link)`
@@ -95,6 +95,6 @@ export const BackLink = styled(Link)`
   margin-top: ${sizes(5)};
 
   path {
-    stroke: ${colors.gray[300]};
+    stroke: ${oldColors.gray[300]};
   }
 `

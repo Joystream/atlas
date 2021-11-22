@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgGlyphInfo } from '@/components/_icons'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
 

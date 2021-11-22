@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, typography } from '@/theme'
+import { oldColors, oldTypography, sizes } from '@/styles'
 
 export type HelperTextProps = {
   helperTextVariant?: 'error' | 'warning'
 }
 
 const helperVariants = {
-  error: colors.secondary.alert[100],
-  warning: colors.secondary.warning[100],
+  error: oldColors.secondary.alert[100],
+  warning: oldColors.secondary.warning[100],
 }
 
 export const StyledHelperText = styled(Text)<HelperTextProps>`
@@ -22,7 +22,7 @@ export const HelperTextsWrapper = styled.div`
   min-height: ${sizes(3.5)};
   margin-left: 4px;
   margin-top: 8px;
-  font-size: ${typography.sizes.body2};
+  font-size: ${oldTypography.sizes.body2};
   display: flex;
   align-items: center;
   justify-content: space-between;

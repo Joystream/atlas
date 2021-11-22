@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   ButtonGroup,

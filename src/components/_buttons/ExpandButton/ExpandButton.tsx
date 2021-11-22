@@ -3,7 +3,7 @@ import React from 'react'
 
 import { IconButton, IconButtonProps } from '@/components/_buttons/IconButton'
 import { SvgGlyphChevronDown } from '@/components/_icons'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 type ExpandButtonProps = {
   expanded?: boolean

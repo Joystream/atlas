@@ -5,7 +5,7 @@ import { useVideoCount } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { sizes, transitions } from '@/theme'
+import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {

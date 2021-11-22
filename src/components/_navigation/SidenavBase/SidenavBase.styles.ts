@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { HamburgerButton } from '@/components/HamburgerButton'
-import { colors, media, sizes, transitions, typography, zIndex } from '@/theme'
+import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
+import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -33,8 +33,8 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   overflow: hidden;
-  color: ${colors.gray[50]};
-  background-color: ${colors.gray[800]};
+  color: ${oldColors.gray[50]};
+  background-color: ${oldColors.gray[800]};
 `
 
 export const LogoLink = styled(Link)`
@@ -89,7 +89,7 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
 
 export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
-  color: ${colors.gray[50]};
+  color: ${oldColors.gray[50]};
   text-decoration: none;
   display: flex;
   position: relative;
@@ -97,12 +97,12 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
 
   &:hover,
   &:focus {
-    background-color: ${colors.transparentPrimary[18]};
+    background-color: ${oldColors.transparentPrimary[18]};
   }
 
   &:active,
   &[data-active='true'] {
-    background-color: ${colors.transparentPrimary[10]};
+    background-color: ${oldColors.transparentPrimary[10]};
   }
 
   > svg {
@@ -115,8 +115,8 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   > span {
     margin-left: ${sizes(6)};
     font-weight: bold;
-    font-family: ${typography.fonts.headers};
-    font-size: ${typography.sizes.h5};
+    font-family: ${oldTypography.fonts.headers};
+    font-size: ${oldTypography.sizes.h5};
     line-height: 1;
   }
 
@@ -126,15 +126,15 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       position: absolute;
       font-size: 12px;
       line-height: 1;
-      color: ${colors.gray[50]};
+      color: ${oldColors.gray[50]};
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
       left: calc(var(--size-sidenav-width-collapsed) / 2);
       transform: translateX(-50%);
       bottom: 0;
       margin-bottom: 10px;
-      font-family: ${typography.fonts.headers};
-      font-weight: ${typography.weights.bold};
+      font-family: ${oldTypography.fonts.headers};
+      font-weight: ${oldTypography.weights.bold};
     }
   }
 `
@@ -149,7 +149,7 @@ export const DrawerOverlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `
 export const SubItemsWrapper = styled.div<SubItemProps>`
-  padding-left: calc(${typography.sizes.icon.xlarge} + ${sizes(8)});
+  padding-left: calc(${oldTypography.sizes.icon.xlarge} + ${sizes(8)});
   transition: height ${transitions.timings.regular} ${transitions.easing};
   overflow: hidden;
   height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
@@ -163,8 +163,8 @@ export const SubItemsWrapper = styled.div<SubItemProps>`
 `
 
 export const SubItem = styled.li`
-  font-size: ${typography.sizes.body2};
-  font-family: ${typography.fonts.base};
+  font-size: ${oldTypography.sizes.body2};
+  font-family: ${oldTypography.fonts.base};
   margin-top: ${sizes(8)};
 
   :first-of-type {
@@ -177,10 +177,10 @@ export const LegalLinksWrapper = styled.span`
   align-items: center;
   margin-top: ${sizes(8)};
   padding: ${sizes(4)} 0 ${sizes(6)};
-  border-top: 1px solid ${colors.gray[300]};
+  border-top: 1px solid ${oldColors.gray[300]};
 
   > * {
-    color: ${colors.gray[300]};
+    color: ${oldColors.gray[300]};
   }
 
   > * + * {
@@ -190,19 +190,19 @@ export const LegalLinksWrapper = styled.span`
 
 export const LegalLink = styled(Link)`
   text-decoration: none;
-  font-family: ${typography.fonts.headers};
-  font-size: ${typography.sizes.subtitle2};
+  font-family: ${oldTypography.fonts.headers};
+  font-size: ${oldTypography.sizes.subtitle2};
 
   &:hover {
-    color: ${colors.gray[400]};
+    color: ${oldColors.gray[400]};
   }
 
   &:focus {
-    color: ${colors.gray[400]};
+    color: ${oldColors.gray[400]};
   }
 
   &:active {
-    color: ${colors.gray[500]};
+    color: ${oldColors.gray[500]};
   }
 `
 

@@ -6,7 +6,7 @@ import { SvgPolkadotLogo } from '@/components/_icons'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar } from '@/styles'
-import { colors, sizes, square, transitions } from '@/theme'
+import { oldColors, sizes, square, transitions } from '@/styles'
 
 type StepProps = {
   isActive?: boolean
@@ -45,7 +45,7 @@ const zoomOut = keyframes`
 export const StyledModal = styled(Modal)`
   display: flex;
   flex-direction: column;
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
 `
 
 export const StepsBar = styled.div`
@@ -59,7 +59,7 @@ export const StepsBar = styled.div`
 
 export const Step = styled.div<StepProps>`
   position: relative;
-  background-color: ${colors.gray[700]};
+  background-color: ${oldColors.gray[700]};
   height: 100%;
   transition: background-color ${transitions.timings.regular} ${transitions.easing};
 
@@ -72,7 +72,7 @@ export const Step = styled.div<StepProps>`
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
     animation-duration: 2s;
-    background-color: ${colors.gray[500]};
+    background-color: ${oldColors.gray[500]};
     width: 100%;
   }
 `
@@ -138,7 +138,7 @@ export const SuccessIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   border-radius: 50%;
   opacity: 0;
   animation: ${zoomOut} 600ms ${transitions.easing} 1 100ms forwards;

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar } from '@/styles'
-import { colors, media, sizes, square, transitions, zIndex } from '@/theme'
+import { media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -12,7 +12,7 @@ type FocusProps = {
 
 export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   transition: background-color 0.4s ${transitions.easing};
-  background-color: ${({ hasFocus }) => (hasFocus ? colors.gray[900] : colors.black)};
+  background-color: ${({ hasFocus }) => (hasFocus ? oldColors.gray[900] : oldColors.black)};
   ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
 
   ${media.md} {
@@ -65,7 +65,7 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: ${colors.transparentBlack[54]};
+  background-color: ${oldColors.transparentBlack[54]};
   display: none;
   transition: opacity ${cVar('animationTransitionMedium')};
 

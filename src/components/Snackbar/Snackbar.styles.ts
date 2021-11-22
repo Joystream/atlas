@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { colors, sizes, transitions, typography, zIndex } from '@/theme'
+import { oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarVariant } from './Snackbar'
 
@@ -22,7 +22,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
   width: 100%;
   height: 0;
-  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? colors.gray[700] : colors.blue[500])};
+  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? oldColors.gray[700] : oldColors.blue[500])};
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
@@ -70,7 +70,7 @@ export const SnackbarHeader = styled.div`
 
 export const SnackbarTitle = styled(Text)<TitleProps>`
   color: ${({ colorVariant, hasDescription }) =>
-    hasDescription ? colors.white : colorVariant === 'primary' ? colors.blue[200] : colors.gray[300]};
+    hasDescription ? oldColors.white : colorVariant === 'primary' ? oldColors.blue[200] : oldColors.gray[300]};
 `
 
 export const SnackbarDescription = styled(Text)`
@@ -82,7 +82,7 @@ export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   ${SnackbarDescription} {
     ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
-    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${colors.blue[200]}`};
+    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${oldColors.blue[200]}`};
   }
 `
 
@@ -97,7 +97,7 @@ export const SnackbarActionButton = styled(Button)`
   padding: 0;
   min-width: auto;
   margin-right: ${sizes(2)};
-  font-size: ${typography.sizes.body1};
+  font-size: ${oldTypography.sizes.body1};
 `
 
 export const SnackbarIconContainer = styled.span`

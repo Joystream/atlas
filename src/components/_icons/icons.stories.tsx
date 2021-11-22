@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { Text } from '@/components/Text'
-import { colors } from '@/theme'
+import { oldColors } from '@/styles'
 
 import * as icons from '.'
 
@@ -38,7 +38,7 @@ const Container = styled.div`
 `
 
 const Item = styled.div`
-  border: 1px solid ${colors.gray[700]};
+  border: 1px solid ${oldColors.gray[700]};
   flex: 1;
   padding: 32px 0;
   text-align: center;

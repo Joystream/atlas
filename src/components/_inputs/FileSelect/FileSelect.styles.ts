@@ -3,7 +3,7 @@ import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { colors, media, sizes, transitions } from '@/theme'
+import { media, oldColors, sizes, transitions } from '@/styles'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean
@@ -36,7 +36,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     width: 100%;
     border: 1px dashed
       ${({ isDragAccept, isFileDialogActive }) =>
-        isDragAccept || isFileDialogActive ? colors.blue[500] : colors.gray[500]};
+        isDragAccept || isFileDialogActive ? oldColors.blue[500] : oldColors.gray[500]};
   }
 
   ${media.sm} {
@@ -63,7 +63,7 @@ export const SelectedFileInfoInnerContainer = styled(animated.div)`
 `
 
 export const SelectedFileInfoHeading = styled(Text)`
-  color: ${colors.blue[200]};
+  color: ${oldColors.blue[200]};
   display: block;
   margin: ${sizes(4)} 0 ${sizes(1)} 0;
 `
@@ -73,7 +73,7 @@ export const SelectedFileInfoBackground = styled.div`
   position: absolute;
   z-index: -1;
   opacity: 0.2;
-  background-color: ${colors.blue[500]};
+  background-color: ${oldColors.blue[500]};
   height: 100%;
 `
 

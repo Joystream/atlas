@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Select } from '@/components/_inputs/Select'
-import { colors, media, sizes, transitions } from '@/theme'
+import { media, oldColors, sizes, transitions } from '@/styles'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
@@ -25,8 +25,8 @@ export const ControlsContainer = styled.div`
   align-items: center;
   /* readd global horizontal padding to the component */
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
-  border-bottom: 1px solid ${colors.gray[700]};
-  background-color: ${colors.black};
+  border-bottom: 1px solid ${oldColors.gray[700]};
+  background-color: ${oldColors.black};
 
   ${media.sm} {
     grid-template-columns: auto 160px 1fr 160px;

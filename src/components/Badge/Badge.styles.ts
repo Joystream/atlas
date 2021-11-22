@@ -2,20 +2,20 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, typography } from '@/theme'
+import { oldColors, oldTypography, sizes } from '@/styles'
 
 export const smallBadgeStyles = css`
   &[data-badge]::after {
     position: absolute;
     width: ${sizes(4)};
     height: ${sizes(4)};
-    background: ${colors.blue[500]};
+    background: ${oldColors.blue[500]};
     border-radius: 100%;
     color: #fff;
     content: attr(data-badge);
-    font-size: ${typography.sizes.caption};
-    font-weight: ${typography.weights.regular};
-    font-family: ${typography.fonts.base};
+    font-size: ${oldTypography.sizes.caption};
+    font-weight: ${oldTypography.weights.regular};
+    font-family: ${oldTypography.fonts.base};
     padding-top: 1px;
     text-align: center;
   }
@@ -29,6 +29,6 @@ export const smallBadgeStyles = css`
 
 export const Badge = styled(Text)`
   margin-left: ${sizes(3)};
-  background-color: ${colors.gray[700]};
+  background-color: ${oldColors.gray[700]};
   padding: 2px ${sizes(1)};
 `

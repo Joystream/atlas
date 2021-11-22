@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { sizes } from '@/theme'
+import { sizes } from '@/styles'
 
 export const StudioLoading: React.FC = () => {
   return (

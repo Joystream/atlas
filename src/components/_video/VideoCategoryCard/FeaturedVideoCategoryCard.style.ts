@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { colors, sizes, transitions } from '@/theme'
+import { oldColors, sizes, transitions } from '@/styles'
 
 import { Container, IconCircle } from './VideoCategoryCard.style'
 
@@ -41,7 +41,7 @@ export const FeaturedIconCircle = styled(IconCircle)`
   margin-bottom: ${sizes(4)};
 
   path {
-    fill: ${colors.black};
+    fill: ${oldColors.black};
   }
 `
 
@@ -54,5 +54,5 @@ export const FeaturedVideoTitleContainer = styled.div<VariantProps>`
 `
 
 export const FeaturedVideoText = styled(Text)`
-  color: ${colors.gray[200]};
+  color: ${oldColors.gray[200]};
 `

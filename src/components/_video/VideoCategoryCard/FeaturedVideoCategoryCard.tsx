@@ -6,7 +6,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHover } from '@/hooks/useHover'
-import { sizes, transitions } from '@/theme'
+import { sizes, transitions } from '@/styles'
 
 import {
   FeaturedContainer,

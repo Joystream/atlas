@@ -3,7 +3,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/components/_icons'
-import { transitions } from '@/theme'
+import { transitions } from '@/styles'
 
 import {
   CoverImage,

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Loader } from '@/components/_loaders/Loader'
-import { colors, media, sizes } from '@/theme'
+import { media, oldColors, sizes } from '@/styles'
 
 const INDICATOR_SIZE = sizes(20)
 export const INDICATOR_TIMEOUT = 750
@@ -38,7 +38,7 @@ export const ControlsIndicatorIconWrapper = styled.div`
   width: ${INDICATOR_SIZE};
   height: ${INDICATOR_SIZE};
   backdrop-filter: blur(${sizes(6)});
-  background-color: ${colors.transparentBlack[54]};
+  background-color: ${oldColors.transparentBlack[54]};
   border-radius: 100%;
   display: flex;
   transform: scale(0.5);
@@ -66,7 +66,7 @@ export const ControlsIndicatorTooltip = styled.div`
   user-select: none;
   display: none;
   align-self: center;
-  background-color: ${colors.transparentBlack[54]};
+  background-color: ${oldColors.transparentBlack[54]};
   padding: ${sizes(2)};
   text-align: center;
   margin-top: ${sizes(3)};

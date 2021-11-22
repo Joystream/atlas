@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgGlyphInfo } from '@/components/_icons'
-import { colors, sizes, transitions, typography } from '@/theme'
+import { oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 import { SelectSizes } from '.'
 import { LabelText } from '../InputBase'
@@ -51,13 +51,15 @@ export const SelectButton = styled.button<SelectButtonProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   background: none;
-  color: ${({ filled }) => (filled ? colors.gray[50] : colors.gray[300])};
+  color: ${({ filled }) => (filled ? oldColors.gray[50] : oldColors.gray[300])};
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: ${({ isOpen, error, disabled }) =>
-    `1px solid ${isOpen ? colors.blue[500] : error && !disabled ? colors.secondary.alert[100] : colors.gray[200]}`};
+    `1px solid ${
+      isOpen ? oldColors.blue[500] : error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200]
+    }`};
 
   ${({ size }) => {
     switch (size) {
@@ -69,8 +71,8 @@ export const SelectButton = styled.button<SelectButtonProps>`
         return css`
           min-height: ${sizes(10)};
           padding: 0 ${sizes(4)} !important;
-          font-size: ${typography.sizes.body2} !important;
-          line-height: ${typography.lineHeights.body2} !important;
+          font-size: ${oldTypography.sizes.body2} !important;
+          line-height: ${oldTypography.lineHeights.body2} !important;
         `
     }
   }}
@@ -78,7 +80,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   svg {
     transition: all ${transitions.timings.regular} ${transitions.easing};
     transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
-    color: ${({ isOpen }) => (isOpen ? colors.blue[400] : 'inherit')};
+    color: ${({ isOpen }) => (isOpen ? oldColors.blue[400] : 'inherit')};
     margin-left: auto;
   }
 `
@@ -95,8 +97,8 @@ export const SelectMenu = styled.ul<SelectMenuProps>`
   z-index: 1;
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
-  background-color: ${colors.gray[700]};
-  color: ${colors.white};
+  background-color: ${oldColors.gray[700]};
+  color: ${oldColors.white};
   list-style: none;
 `
 type SelectOptionProps = {
@@ -108,11 +110,11 @@ export const SelectOption = styled.li<SelectOptionProps>`
   margin: 0;
   cursor: pointer;
   padding: ${sizes(3)} ${sizes(3)};
-  font-size: ${typography.sizes.subtitle2};
-  background-color: ${({ isSelected }) => (isSelected ? colors.gray[600] : 'none')};
+  font-size: ${oldTypography.sizes.subtitle2};
+  background-color: ${({ isSelected }) => (isSelected ? oldColors.gray[600] : 'none')};
 
   :hover {
-    background-color: ${colors.gray[600]};
+    background-color: ${oldColors.gray[600]};
   }
 
   *:first-of-type {

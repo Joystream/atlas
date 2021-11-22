@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { AnimatedError } from '@/components/AnimatedError'
 import { Button } from '@/components/_buttons/Button'
-import { media, sizes } from '@/theme'
+import { media, sizes } from '@/styles'
 
 export const AnimationWrapper = styled.div`
   width: 100%;
