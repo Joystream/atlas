@@ -1,17 +1,18 @@
+import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
+import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { VideoPlayer } from '@/shared/components/VideoPlayer'
 import { SentryLogger } from '@/utils/logs'
 
-import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.style'
+import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
 export const EmbeddedView: React.FC = () => {
   const { id } = useParams()
@@ -72,7 +73,7 @@ export const EmbeddedView: React.FC = () => {
   }
 
   return (
-    <>
+    <Container>
       {!isMediaLoading && video ? (
         <VideoPlayer
           isVideoPending={video?.mediaAvailability === 'PENDING'}
@@ -86,6 +87,11 @@ export const EmbeddedView: React.FC = () => {
       ) : (
         <PlayerSkeletonLoader />
       )}
-    </>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  overflow: hidden;
+  height: 100%;
+`
