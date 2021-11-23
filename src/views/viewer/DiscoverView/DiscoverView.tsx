@@ -31,13 +31,14 @@ export const DiscoverView: React.FC = () => {
       categories
         ?.map((category) => {
           const video = categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl)
-          return video === undefined
-            ? undefined
-            : {
-                videoTitle: video?.title ?? '',
-                videoUrl: video?.videoCutUrl ?? '',
-                ...mappedVideoCategories?.find((cat) => cat.id === category.id),
-              }
+
+          if (!video) return null
+
+          return {
+            videoTitle: video?.title ?? '',
+            videoUrl: video?.videoCutUrl ?? '',
+            ...mappedVideoCategories?.find((cat) => cat.id === category.id),
+          }
         })
         .filter((cat) => !!cat),
       3
