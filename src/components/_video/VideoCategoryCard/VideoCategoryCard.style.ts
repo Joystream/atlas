@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
@@ -43,7 +44,9 @@ const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
     box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled(Link)<ColorProps & VariantProps & LoadingProps>`
+export const Container = styled(Link, {
+  shouldForwardProp: (prop) => isPropValid(prop.toString()),
+})<ColorProps & VariantProps & LoadingProps>`
   text-decoration: unset;
   transition: all ${transitions.timings.regular} ${transitions.easing},
     border ${transitions.timings.sharp} ${transitions.easing};

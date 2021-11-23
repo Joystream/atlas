@@ -34,9 +34,7 @@ export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null =
   )
   const videosLookup = createLookup(videos || [])
   const categoriesLookup = rawData?.reduce((acc, cur) => {
-    acc[cur.categoryId] = cur.videos.map((v) => {
-      return { ...videosLookup[v.videoId], videoCutUrl: v.videoCutUrl }
-    })
+    acc[cur.categoryId] = cur.videos.map((v) => ({ ...videosLookup[v.videoId], videoCutUrl: v.videoCutUrl }))
     return acc
   }, {} as CategoriesFeaturedVideos)
 

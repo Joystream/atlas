@@ -30,10 +30,7 @@ export const DiscoverView: React.FC = () => {
     const _featuredVideoCategoryCardsData = sampleSize(
       categories
         ?.map((category) => {
-          const video =
-            categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl) ??
-            categoriesFeaturedVideos?.[category.id]?.[0] ??
-            undefined
+          const video = categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl)
           return video === undefined
             ? undefined
             : {
