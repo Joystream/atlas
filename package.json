@@ -28,11 +28,12 @@
     "tokens:fetch": "node ./scripts/fetchTokens && prettier --write src/styles/tokens",
     "tokens:build": "style-dictionary build --config ./sd.config.js && prettier --write src/styles/generated/variables.ts",
     "tokens": "yarn tokens:fetch && yarn tokens:build",
-    "svgs:icons": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs",
-    "svgs:illustrations": "svgr --config-file svgr.config.js -d src/components/_illustrations src/components/_illustrations/svgs",
     "svgs": "yarn svgs:icons && yarn svgs:illustrations",
-    "graphql": "graphql-codegen --config codegen.config.yml",
-    "svgs:import": "node ./scripts/figma-import"
+    "svgs:illustrations": "svgr --config-file svgr.config.js -d src/components/_illustrations src/components/_illustrations/svgs",
+    "svgs:icons-import": "node ./scripts/figma-import",
+    "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs && prettier --write src/components/_icons",
+    "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
+    "graphql": "graphql-codegen --config codegen.config.yml"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json}": [

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
-import { SvgGlyphRestart, SvgPlayerPause, SvgPlayerPlay } from '@/components/_icons'
+import { SvgControlsPause, SvgControlsPlay, SvgControlsReplay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AssetType, useAsset } from '@/providers/assets'
@@ -125,7 +125,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               noTrail={isCountDownStarted}
             />
             <CountDownButton variant="tertiary" onClick={handleCountDownButton}>
-              {isCountDownStarted ? <SvgPlayerPause /> : <SvgPlayerPlay />}
+              {isCountDownStarted ? <SvgControlsPause /> : <SvgControlsPlay />}
             </CountDownButton>
           </CountDownWrapper>
         </Container>
@@ -137,7 +137,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
                 You’ve finished watching a video from
               </SubHeading>
               <StyledChannelLink id={channelId} avatarSize="small" noNextVideo textVariant={mdMatch ? 'h2' : 'h5'} />
-              <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgGlyphRestart />}>
+              <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgControlsReplay />}>
                 Play again
               </RestartButton>
             </VideoInfo>

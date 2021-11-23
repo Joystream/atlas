@@ -3,7 +3,7 @@ import React, { Ref, forwardRef } from 'react'
 
 import { Badge } from '@/components/Badge'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgGlyphChevronDown } from '@/components/_icons'
+import { SvgActionChevronB } from '@/components/_icons'
 
 import {
   SelectButton,
@@ -100,7 +100,7 @@ export const _Select = <T extends unknown>(
           >
             {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
             {selectedItem?.badgeText && <Badge variant="caption">{selectedItem.badgeText}</Badge>}
-            <SvgGlyphChevronDown />
+            <SvgActionChevronB />
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>
             {isOpen &&

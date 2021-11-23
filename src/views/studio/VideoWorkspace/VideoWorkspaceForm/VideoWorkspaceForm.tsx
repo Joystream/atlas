@@ -8,7 +8,7 @@ import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgPlayerCancel } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -513,7 +513,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
                 size="large"
                 iconPlacement="right"
                 textOnly
-                icon={moreSettingsVisible ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
+                icon={moreSettingsVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
                 onClick={() => setMoreSettingsVisible(!moreSettingsVisible)}
               >
                 Show {moreSettingsVisible ? 'less' : 'more'} settings
@@ -676,7 +676,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
           visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
           text: 'Cancel',
           onClick: () => reset(),
-          icon: <SvgPlayerCancel width={16} height={16} />,
+          icon: <SvgControlsCancel width={16} height={16} />,
         }}
         draftBadge={{
           visible: !isEdit,

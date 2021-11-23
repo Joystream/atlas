@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronB } from '@/components/_icons'
 import { media, oldColors, sizes } from '@/styles'
 
 import { Modal } from '../Modal'
@@ -57,7 +57,7 @@ export const StyledStop = styled(Step)`
   height: 48px;
 `
 
-export const StyledChevron = styled(SvgGlyphChevronRight)`
+export const StyledChevron = styled(SvgActionChevronB)`
   margin: 0 ${sizes(1)};
   flex-shrink: 0;
   display: none;

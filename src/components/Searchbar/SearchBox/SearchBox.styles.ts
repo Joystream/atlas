@@ -137,7 +137,7 @@ const selectedStyles = (hover?: boolean) => `
   background-color: ${oldColors.transparentPrimary[10]};
   
       ${Title} {
-        color: ${oldColors.gray[50]};
+        fill: ${cVar('colorCoreNeutral50')};
       }
 
       ${Shortcut} {
@@ -146,13 +146,13 @@ const selectedStyles = (hover?: boolean) => `
       
       ${ClockWrapper} {
         path {
-          fill: ${oldColors.gray[50]};
+          fill: ${cVar('colorCoreNeutral50')};
         }
       }
       
       ${DeleteButton} {
         path {
-          stroke: ${oldColors.gray[50]};
+          fill: ${cVar('colorCoreNeutral50')};
         }
       }
 `
@@ -191,6 +191,10 @@ export const ClockWrapper = styled.div`
   border-radius: 50%;
   background-color: ${oldColors.transparentPrimary[10]};
   margin-right: ${sizes(4)};
+
+  path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
 `
 
 export const Shortcut = styled.div`

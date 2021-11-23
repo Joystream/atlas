@@ -14,7 +14,7 @@ import { useInfiniteGrid } from '@/components/InfiniteGrids/useInfiniteGrid'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { ChannelWithVideos } from '@/components/_channel/ChannelWithVideos'
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronR } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { languages } from '@/config/languages'
@@ -123,7 +123,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
                 size="medium"
                 variant="secondary"
                 iconPlacement="right"
-                icon={<SvgGlyphChevronRight />}
+                icon={<SvgActionChevronR />}
               >
                 {additionalLink.name}
               </AdditionalLink>

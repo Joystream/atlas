@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { SvgGlyphChevronLeft, SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 
 import { ChevronButton, PaginationButton, PaginationWrapper, ThreeDotsWrapper } from './Pagination.styles'
 import { PAGINATION_BUTTON_WIDTH } from './constants'
@@ -64,7 +64,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onChangePage(prevPage - 1)}
         disabled={internalPage <= 1}
       >
-        <SvgGlyphChevronLeft />
+        <SvgActionChevronL />
       </ChevronButton>
       {pages.map((pageItem, idx) =>
         typeof pageItem === 'number' ? (
@@ -86,7 +86,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => (internalPage ? onChangePage(nextPage - 1) : onChangePage(2))}
         disabled={internalPage >= totalPages}
       >
-        <SvgGlyphChevronRight />
+        <SvgActionChevronR />
       </ChevronButton>
     </PaginationWrapper>
   )

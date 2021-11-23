@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphWarning } from '@/components/_icons/GlyphWarning'
+import { SvgAlertsWarning24 } from '@/components/_icons'
 import { SvgJoystreamLogoIcon, SvgPolkadotLogoIcon } from '@/components/_illustrations'
 import { oldColors, sizes } from '@/styles'
 
@@ -44,7 +44,7 @@ export const StepFooter = styled.div`
   justify-content: center;
   align-items: center;
 `
-export const BottomBarIcon = styled(SvgGlyphWarning)`
+export const BottomBarIcon = styled(SvgAlertsWarning24)`
   flex-shrink: 0;
   margin-right: ${sizes(2)};
 `

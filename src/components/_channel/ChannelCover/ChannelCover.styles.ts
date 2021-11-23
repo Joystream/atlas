@@ -2,8 +2,9 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgBgPattern } from '@/components/_illustrations'
-import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
 
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
@@ -103,4 +104,10 @@ export const StyledBackgroundPattern = styled(SvgBgPattern)`
   position: absolute;
   top: 0;
   right: 0;
+`
+
+export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
+  path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
 `

@@ -2,7 +2,7 @@
 import * as React from 'react'
 
 export const SvgActionPause = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width={10} height={12} viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M4 0H0v12h4V0zM10 0H6v12h4V0z" fill="#F4F6F8" />
+  <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path d="M7 2H3v12h4V2zM13 2H9v12h4V2z" fill="#F4F6F8" />
   </svg>
 )

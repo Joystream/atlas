@@ -7,7 +7,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/components/_icons'
+import { SvgActionAddVideo, SvgActionUpload } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
@@ -292,7 +292,7 @@ export const MyVideosView = () => {
         <MobileButton
           size="large"
           to={absoluteRoutes.studio.videoWorkspace()}
-          icon={<SvgGlyphAddVideo />}
+          icon={<SvgActionAddVideo />}
           onClick={() => addVideoTab()}
         >
           Upload video
@@ -305,7 +305,7 @@ export const MyVideosView = () => {
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
             <Button
-              icon={<SvgGlyphUpload />}
+              icon={<SvgActionUpload />}
               to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
               size="large"
@@ -323,7 +323,7 @@ export const MyVideosView = () => {
             {smMatch && sortVisibleAndUploadButtonVisible && (
               <Button
                 to={absoluteRoutes.studio.videoWorkspace()}
-                icon={<SvgGlyphAddVideo />}
+                icon={<SvgActionAddVideo />}
                 onClick={() => addVideoTab()}
               >
                 Upload video
@@ -383,7 +383,7 @@ export const MyVideosView = () => {
               }
               button={
                 <Button
-                  icon={<SvgGlyphUpload />}
+                  icon={<SvgActionUpload />}
                   to={absoluteRoutes.studio.videoWorkspace()}
                   variant="secondary"
                   size="large"

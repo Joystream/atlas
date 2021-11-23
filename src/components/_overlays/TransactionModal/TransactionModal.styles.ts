@@ -2,7 +2,7 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import Lottie from 'react-lottie-player'
 
-import { SvgPolkadotLogo } from '@/components/_icons'
+import { SvgPolkadotLogoMono } from '@/components/_illustrations'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { Modal } from '@/components/_overlays/Modal'
 import { cVar } from '@/styles'
@@ -109,7 +109,7 @@ export const PolkadotLogoWrapper = styled.div`
   flex-direction: column;
 `
 
-export const StyledPolkadotLogo = styled(SvgPolkadotLogo)`
+export const StyledPolkadotLogo = styled(SvgPolkadotLogoMono)`
   margin-left: auto;
   margin-right: auto;
   margin-bottom: ${sizes(6)};

@@ -2,7 +2,7 @@ import Tippy from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphInfo } from '@/components/_icons'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
@@ -51,7 +51,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
             <TooltipHeader>
               {icon && (
                 <IconWrapper>
-                  <SvgGlyphInfo />
+                  <SvgAlertsInformative24 />
                 </IconWrapper>
               )}
               {headerText && <TooltipText variant="overhead">{headerText}</TooltipText>}

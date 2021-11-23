@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgNavPopular } from '@/components/_icons'
+import { SvgSidebarPopular } from '@/components/_icons'
 
 import { CallToActionButton, CallToActionButtonProps, CallToActionWrapper } from '.'
 
@@ -26,5 +26,5 @@ const Template: Story<CallToActionButtonProps> = (args) => {
 export const Default = Template.bind({})
 Default.args = {
   label: 'Call To Action Button',
-  icon: <SvgNavPopular />,
+  icon: <SvgSidebarPopular />,
 }

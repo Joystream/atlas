@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphChevronDown } from '@/components/_icons'
+import { SvgActionChevronB } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
@@ -48,7 +48,7 @@ export const TermsStep: React.FC = () => {
             unmountOnExit
           >
             <ScrollButton variant="secondary" onClick={handleScrollToBottom}>
-              <SvgGlyphChevronDown />
+              <SvgActionChevronB />
             </ScrollButton>
           </CSSTransition>
         </TermsOverlay>

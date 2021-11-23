@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 
-import { SvgGlyphClock } from '@/components/_icons'
+import { SvgActionClock } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
 import { ResultTitle } from './ResultTitle'
@@ -45,7 +45,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = ({
     >
       <RecentSearchItemWrapper>
         <ClockWrapper>
-          <SvgGlyphClock />
+          <SvgActionClock />
         </ClockWrapper>
         <Title secondary={!selected} variant="button2">
           <ResultTitle title={title} query={query} />

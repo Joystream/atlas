@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgAlertWarning } from '@/components/_icons'
+import { SvgAlertsWarning24 } from '@/components/_icons'
 import { ConnectionStatus } from '@/providers/connectionStatus'
 import { transitions } from '@/styles'
 
@@ -27,7 +27,7 @@ export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
     >
       <IndicatorWrapper>
         <IconWrapper>
-          <SvgAlertWarning />
+          <SvgAlertsWarning24 />
         </IconWrapper>
         <TextWrapper>
           {!isConnectedToInternet ? (

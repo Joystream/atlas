@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgPlayerSoundOff } from '@/components/_icons'
+import { SvgControlsSoundOff } from '@/components/_icons'
 import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -190,7 +190,7 @@ export const VolumeButton = styled(PlayerControlButton)`
   }
 `
 
-export const StyledSvgPlayerSoundOff = styled(SvgPlayerSoundOff)`
+export const StyledSvgPlayerSoundOff = styled(SvgControlsSoundOff)`
   opacity: 0.5;
 `
 export const CurrentTimeWrapper = styled.div`

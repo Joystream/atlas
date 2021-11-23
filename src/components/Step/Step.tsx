@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 
 import { CircularProgress } from '@/components/CircularProgress'
-import { SvgGlyphCheck, SvgGlyphLock, SvgGlyphTrash } from '@/components/_icons'
+import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/components/_icons'
 
 import { Overhead, ProgressContainer, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper } from './Step.styles'
 
@@ -42,7 +42,7 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
               <CircularProgress value={circularProgress} maxValue={100} />
             </ProgressContainer>
           ) : (
-            <StepNumber active={completed}>{completed || disabled ? <SvgGlyphCheck /> : number}</StepNumber>
+            <StepNumber active={completed}>{completed || disabled ? <SvgActionCheck /> : number}</StepNumber>
           )}
           <StepDetails>
             <Overhead variant="caption" secondary>
@@ -53,7 +53,7 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
         </StepStatus>
         {((onDelete && completed && !isLoading) || disabled) && (
           <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
-            {disabled ? <SvgGlyphLock /> : <SvgGlyphTrash />}
+            {disabled ? <SvgActionLock /> : <SvgActionTrash />}
           </IconButton>
         )}
       </StepWrapper>

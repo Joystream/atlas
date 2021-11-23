@@ -3,16 +3,10 @@ import * as React from 'react'
 
 export const SvgIllustrativeVideo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg width={48} height={48} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M25 34H5a1 1 0 01-1-1V7a1 1 0 011-1h30a1 1 0 011 1v16" stroke="#F4F6F8" strokeWidth={2} />
-    <path d="M18 16l7 4-7 4v-8z" fill="#F4F6F8" />
+    <path d="M3 7a2 2 0 012-2h30a2 2 0 012 2v16h-2V7H5v26h20v2H5a2 2 0 01-2-2V7z" fill="#F4F6F8" />
     <path
-      d="M36 42h-7a1 1 0 01-1-1V27a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1h-3"
-      stroke="#F4F6F8"
-      strokeWidth={2}
-      strokeMiterlimit={10}
-      strokeLinecap="square"
+      d="M18 16l7 4-7 4v-8zM43 25a2 2 0 012 2v14a2 2 0 01-2 2h-4v-2h4V27H29v14h6v-6.586l-2 2L31.586 35 36 30.586 40.414 35 39 36.414l-2-2V43h-8a2 2 0 01-2-2V27a2 2 0 012-2h14z"
+      fill="#F4F6F8"
     />
-    <path d="M36 42V32" stroke="#F4F6F8" strokeWidth={2} strokeMiterlimit={10} />
-    <path d="M33 35l3-3 3 3" stroke="#F4F6F8" strokeWidth={2} strokeMiterlimit={10} strokeLinecap="square" />
   </svg>
 )

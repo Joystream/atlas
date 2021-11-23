@@ -3,17 +3,23 @@ import React, { ReactNode, useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Snackbar } from '@/components/Snackbar'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphUpload } from '@/components/_icons'
+import {
+  SvgActionUpload,
+  SvgAlertsError24,
+  SvgAlertsInformative24,
+  SvgAlertsSuccess24,
+  SvgAlertsWarning24,
+} from '@/components/_icons'
 import { sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
-  info: <SvgAlertInfo />,
-  success: <SvgAlertSuccess />,
-  error: <SvgAlertError />,
-  warning: <SvgAlertWarning />,
-  uploading: <SvgGlyphUpload />,
+  info: <SvgAlertsInformative24 />,
+  success: <SvgAlertsSuccess24 />,
+  error: <SvgAlertsError24 />,
+  warning: <SvgAlertsWarning24 />,
+  uploading: <SvgActionUpload />,
 }
 
 const SNACKBARS_LIMIT = 3

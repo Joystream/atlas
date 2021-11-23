@@ -3,12 +3,12 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import {
-  SvgGlyphCopy,
-  SvgGlyphEdit,
-  SvgGlyphMore,
-  SvgGlyphPlay,
-  SvgGlyphRetry,
-  SvgGlyphTrash,
+  SvgActionCopy,
+  SvgActionEdit,
+  SvgActionMore,
+  SvgActionPlay,
+  SvgActionReupload,
+  SvgActionTrash,
 } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
@@ -136,12 +136,12 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
 
   const assetFailedKebabItems = [
     {
-      icon: <SvgGlyphTrash />,
+      icon: <SvgActionTrash />,
       onClick: onDeleteVideoClick,
       title: 'Delete video',
     },
     {
-      icon: <SvgGlyphRetry />,
+      icon: <SvgActionReupload />,
       onClick: onReuploadVideoClick,
       title: 'Reupload file',
     },
@@ -149,12 +149,12 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
 
   const publisherBasicKebabItems = [
     {
-      icon: <SvgGlyphPlay />,
+      icon: <SvgActionPlay />,
       onClick: onOpenInTabClick,
       title: 'Play in Joystream',
     },
     {
-      icon: <SvgGlyphCopy />,
+      icon: <SvgActionCopy />,
       onClick: onCopyVideoURLClick,
       title: 'Copy video URL',
     },
@@ -162,12 +162,12 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
 
   const publisherAndDraftKebabItems = [
     {
-      icon: <SvgGlyphEdit />,
+      icon: <SvgActionEdit />,
       onClick: onEditVideoClick,
       title: isDraft ? 'Edit draft' : 'Edit video',
     },
     {
-      icon: <SvgGlyphTrash />,
+      icon: <SvgActionTrash />,
       onClick: onDeleteVideoClick,
       title: isDraft ? 'Delete draft' : 'Delete video',
     },
@@ -286,7 +286,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
               ? publisherKebabMenuItems
               : [
                   {
-                    icon: <SvgGlyphCopy />,
+                    icon: <SvgActionCopy />,
                     onClick: onCopyVideoURLClick,
                     title: 'Copy video URL',
                   },
@@ -294,7 +294,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = ({
           }
           trigger={
             <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small" isActive={!isUploading}>
-              <SvgGlyphMore />
+              <SvgActionMore />
             </KebabMenuButtonIcon>
           }
         />

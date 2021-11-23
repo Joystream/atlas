@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphPan, SvgGlyphZoomIn, SvgGlyphZoomOut } from '@/components/_icons'
+import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
@@ -113,7 +113,7 @@ const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImpe
         onClick={() => handleZoomChange(currentZoom - zoomStep)}
         disabled={cropEditDisabled}
       >
-        <SvgGlyphZoomOut />
+        <SvgActionZoomOut />
       </IconButton>
       <StyledSlider
         value={currentZoom}
@@ -128,7 +128,7 @@ const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImpe
         onClick={() => handleZoomChange(currentZoom + zoomStep)}
         disabled={cropEditDisabled}
       >
-        <SvgGlyphZoomIn />
+        <SvgActionZoomIn />
       </IconButton>
     </ZoomControl>
   )
@@ -145,7 +145,7 @@ const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImpe
         dividers
       >
         <AlignInfoContainer>
-          <SvgGlyphPan />
+          <SvgActionPan />
           <AlignInfo variant="body2">Drag and adjust image position</AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (

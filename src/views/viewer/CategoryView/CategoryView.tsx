@@ -10,7 +10,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronR } from '@/components/_icons'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
@@ -83,7 +83,7 @@ export const CategoryView = () => {
       <TitleContainer>
         <Text variant="h4">Other categories</Text>
         <Button
-          icon={<SvgGlyphChevronRight />}
+          icon={<SvgActionChevronR />}
           to={absoluteRoutes.viewer.discover()}
           iconPlacement="right"
           variant="secondary"

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphSearchAlt } from '@/components/_icons'
+import { SvgControlsSearchAlt } from '@/components/_icons'
 import { cVar } from '@/styles'
 import { media, oldColors, sizes, square } from '@/styles'
 
@@ -83,7 +83,7 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
 `
 
 // TODO: remove override on viewer update
-export const StyledSvgOutlineSearch = styled(SvgGlyphSearchAlt, { shouldForwardProp: isPropValid })<{
+export const StyledSvgOutlineSearch = styled(SvgControlsSearchAlt, { shouldForwardProp: isPropValid })<{
   highlighted?: boolean
 }>`
   flex-shrink: 0;
