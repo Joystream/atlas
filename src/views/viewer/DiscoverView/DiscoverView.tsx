@@ -1,4 +1,3 @@
-import { sampleSize } from 'lodash-es'
 import React from 'react'
 
 import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
@@ -27,7 +26,7 @@ export const DiscoverView: React.FC = () => {
 
   const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
   const featuredVideoCategoryCardsData = React.useMemo(() => {
-    const _featuredVideoCategoryCardsData = sampleSize(
+    const _featuredVideoCategoryCardsData =
       categories
         ?.map((category) => {
           const video = categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl)
@@ -40,9 +39,8 @@ export const DiscoverView: React.FC = () => {
             ...mappedVideoCategories?.find((cat) => cat.id === category.id),
           }
         })
-        .filter((cat) => !!cat),
-      3
-    )
+        .filter((cat) => !!cat)
+        .slice(0, 3) ?? []
 
     return _featuredVideoCategoryCardsData.length > 0 ? _featuredVideoCategoryCardsData : [null, null, null]
   }, [categories, categoriesFeaturedVideos, mappedVideoCategories])

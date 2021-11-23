@@ -5,7 +5,9 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { oldColors, sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
-  margin: ${sizes(16)} auto;
+  margin: 0 auto;
+  /* for some reason this needs to be padding for chrome to work */
+  padding: ${sizes(16)} 0;
 `
 
 export const FeaturedCategoriesContainer = styled(LayoutGrid)`

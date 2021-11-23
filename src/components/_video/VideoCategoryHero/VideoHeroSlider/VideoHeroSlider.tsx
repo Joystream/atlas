@@ -46,15 +46,16 @@ export const VideoHeroSlider: React.FC<VideoHeroSliderProps> = ({
     }
   }
 
+  const isLoading = loading || videos?.some((v) => v?.isLoadingThumbnail)
   return (
     <SwitchTransition>
       <CSSTransition
-        key={loading ? 'data' : 'placeholder'}
+        key={isLoading ? 'data' : 'placeholder'}
         classNames={transitions.names.fade}
         timeout={parseInt(transitions.timings.regular)}
       >
         <VideoHeroSliderWrapper onClick={handleChangeTile} columnsNumber={videosLength}>
-          {loading
+          {isLoading
             ? Array.from({ length: videosLength }).map((_, idx) => (
                 <SkeletonLoader key={idx} width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
               ))
