@@ -66,6 +66,8 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
 
     const scrollToSelectedItem = useCallback(
       (top: number, title?: string | null) => {
+        const offsetTop = -250
+        const offsetBottom = -50
         onSelectItem(title)
         if (!containerRef.current) {
           return
@@ -74,15 +76,15 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
         if (selectedItem === 0 || top < offsetHeight) {
           containerRef?.current?.scrollTo(0, 0)
         }
-        if (top >= offsetHeight + (top < topRef.current ? -250 : -50)) {
-          containerRef?.current?.scrollTo(0, top + (top < topRef.current ? -50 : -250))
+        if (top >= offsetHeight + (top < topRef.current ? offsetTop : offsetBottom)) {
+          containerRef?.current?.scrollTo(0, top + (top < topRef.current ? offsetBottom : offsetTop))
         }
         topRef.current = top
       },
       [onSelectItem, selectedItem]
     )
 
-    const generatePlaceholders = useMemo(() => {
+    const placeholders = useMemo(() => {
       const min = 20
       const max = 80
       const placeholderItems = Array.from({ length: 6 }, () => ({ id: undefined }))
@@ -113,6 +115,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
     const slicedVideos = videos.slice(0, 3)
     const slicedChannels = channels.slice(0, 3)
 
+    // Pass number off all results
     useEffect(() => {
       handleSetNumberOfItems(filteredRecentSearches.length + slicedVideos.length + slicedChannels.length)
     }, [handleSetNumberOfItems, filteredRecentSearches.length, slicedVideos.length, slicedChannels.length])
@@ -161,7 +164,7 @@ export const SearchBox: React.FC<SearchBoxProps> = React.memo(
             ))}
           </Section>
         )}
-        {loading && !!searchQuery && <Section>{generatePlaceholders}</Section>}
+        {loading && !!searchQuery && <Section>{placeholders}</Section>}
         {!!slicedVideos.length && !loading && (
           <Section>
             <Caption secondary variant="caption">
