@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Text } from '@/components/Text'
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { SvgGlyphInfo } from '@/components/_icons'
+import { SvgActionInformative } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -59,7 +59,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
                 {draftBadge.text}
               </Text>
               <DetailsIconWrapper>
-                <SvgGlyphInfo />
+                <SvgActionInformative />
               </DetailsIconWrapper>
             </DraftsBadgeContainer>
           </Tooltip>

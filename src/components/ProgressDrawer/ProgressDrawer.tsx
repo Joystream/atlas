@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphCheck, SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionCheck, SvgActionChevronR } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import {
@@ -36,13 +36,13 @@ export const ProgressDrawer: React.FC<ProgressDrawerProps> = ({ steps, className
             <StepInnerContainer>
               <StepState completed={step.completed}>
                 <CSSTransition in={step.completed} timeout={100} classNames={transitions.names.fade} unmountOnExit>
-                  <SvgGlyphCheck />
+                  <SvgActionCheck />
                 </CSSTransition>
               </StepState>
               <Text variant="body2">{step.title}</Text>
             </StepInnerContainer>
             <CSSTransition in={!step.completed} timeout={100} classNames={transitions.names.fade} unmountOnExit>
-              <SvgGlyphChevronRight />
+              <SvgActionChevronR />
             </CSSTransition>
           </Step>
         ))}

@@ -2,7 +2,7 @@ import { Story } from '@storybook/react'
 import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphUpload } from '@/components/_icons'
+import { SvgActionUpload } from '@/components/_icons'
 
 import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'
 
@@ -28,7 +28,7 @@ const Template: Story<EmptyFallbackProps> = (args) => (
   <EmptyFallback
     {...args}
     button={
-      <Button icon={<SvgGlyphUpload />} variant="secondary" size="large">
+      <Button icon={<SvgActionUpload />} variant="secondary" size="large">
         Upload video
       </Button>
     }

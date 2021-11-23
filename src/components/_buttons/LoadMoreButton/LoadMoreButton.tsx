@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { FC, MouseEvent } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphChevronDown } from '@/components/_icons'
+import { SvgActionChevronB } from '@/components/_icons'
 
 type LoadMoreButtonProps = {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void
@@ -16,7 +16,7 @@ export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick, label = 'Show
     fullWidth
     onClick={onClick}
     iconPlacement="right"
-    icon={<SvgGlyphChevronDown width={12} height={12} />}
+    icon={<SvgActionChevronB width={12} height={12} />}
   >
     {label}
   </LoadMore>

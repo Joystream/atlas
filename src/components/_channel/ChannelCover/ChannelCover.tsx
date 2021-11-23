@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphFileImage, SvgGlyphImage, SvgLargeUploadFailed } from '@/components/_icons'
+import { SvgActionImage, SvgActionImageFile } from '@/components/_icons'
 import { transitions } from '@/styles'
 
 import {
@@ -16,6 +16,7 @@ import {
   Media,
   MediaWrapper,
   StyledBackgroundPattern,
+  StyledSvgIllustrativeFileFailed,
 } from './ChannelCover.styles'
 
 export type ChannelCoverProps = {
@@ -39,11 +40,11 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
         {editable && !disabled && (
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
-              <SvgGlyphImage />
+              <SvgActionImage />
               <EditButtonMessage variant="subtitle2">{`${assetUrl ? 'Edit ' : 'Add '} cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
-              <SvgGlyphFileImage />
+              <SvgActionImageFile />
             </EditCoverMobileButton>
           </EditableControls>
         )}
@@ -58,7 +59,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
                 <CoverImage src={assetUrl} />
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
-                  <SvgLargeUploadFailed />
+                  <StyledSvgIllustrativeFileFailed />
                   <Text variant="subtitle2" secondary>
                     Failed upload
                   </Text>

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
-import { SvgGlyphCheck } from '@/components/_icons'
+import { SvgActionCheck } from '@/components/_icons'
 import { oldColors, sizes, transitions } from '@/styles'
 
 export const Container = styled.div<CheckboxStateProps>`
@@ -96,6 +96,6 @@ export const Checkmark = styled.div`
   border-radius: 1px;
 `
 
-export const StyledGlyphCheck = styled(SvgGlyphCheck)`
+export const StyledGlyphCheck = styled(SvgActionCheck)`
   position: absolute;
 `

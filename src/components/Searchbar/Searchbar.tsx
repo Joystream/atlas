@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphChevronLeft, SvgGlyphClose, SvgGlyphSearch } from '@/components/_icons'
+import { SvgActionChevronL, SvgActionClose, SvgActionSearch } from '@/components/_icons'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
@@ -179,7 +179,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                     }}
                     variant="tertiary"
                   >
-                    <SvgGlyphChevronLeft />
+                    <SvgActionChevronL />
                   </IconButton>
                 ) : (
                   <StyledSvgOutlineSearch highlighted={searchOpen} width={24} height={24} />
@@ -210,13 +210,13 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             )}
             {!!query && (
               <CancelButton onClick={handleCancel} variant="tertiary" size="small">
-                <SvgGlyphClose />
+                <SvgActionClose />
               </CancelButton>
             )}
             {!query && !searchOpen && (
               <>
                 <SearchButton variant="tertiary" onClick={onClick}>
-                  <SvgGlyphSearch />
+                  <SvgActionSearch />
                 </SearchButton>
                 <SearchHelper variant="caption" secondary>
                   Press <ShortcutIndicator>/</ShortcutIndicator>

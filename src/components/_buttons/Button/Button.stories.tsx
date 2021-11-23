@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { SvgGlyphAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/components/_icons'
 
 import { Button, ButtonProps } from './Button'
 
@@ -69,7 +69,7 @@ WarningSecondary.args = {
 }
 export const WithIcon = Template.bind({})
 WithIcon.args = {
-  icon: <SvgGlyphAddVideo />,
+  icon: <SvgActionAddVideo />,
 }
 const TextOnlyTemplate: Story<ButtonProps> = (args) => (
   <div>
@@ -143,10 +143,10 @@ const IconOnlyTemplate: Story<ButtonProps> = (args) => (
 export const TextOnly = TextOnlyTemplate.bind({})
 TextOnly.args = {
   textOnly: true,
-  icon: <SvgGlyphAddVideo />,
+  icon: <SvgActionAddVideo />,
 }
 
 export const IconOnly = IconOnlyTemplate.bind({})
 IconOnly.args = {
-  icon: <SvgGlyphAddVideo />,
+  icon: <SvgActionAddVideo />,
 }

@@ -3,8 +3,9 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { oldColors, oldTypography, sizes, square, transitions, zIndex } from '@/styles'
+import { cVar, oldColors, oldTypography, sizes, square, transitions, zIndex } from '@/styles'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -206,4 +207,10 @@ export const CoverTopRigthContainer = styled.div`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};
+`
+
+export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
+  path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
 `

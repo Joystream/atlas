@@ -1,7 +1,13 @@
 import React, { ReactNode } from 'react'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgAlertError, SvgAlertInfo, SvgAlertSuccess, SvgAlertWarning, SvgGlyphClose } from '@/components/_icons'
+import {
+  SvgActionClose,
+  SvgAlertsError24,
+  SvgAlertsInformative24,
+  SvgAlertsSuccess24,
+  SvgAlertsWarning24,
+} from '@/components/_icons'
 
 import {
   BannerActionButton,
@@ -18,10 +24,10 @@ export type BannerVariant = 'primary' | 'secondary' | 'tertiary'
 type BannerIconType = 'success' | 'error' | 'info' | 'warning'
 
 const ICON_TYPE_TO_ICON: Record<BannerIconType, ReactNode> = {
-  info: <SvgAlertInfo />,
-  success: <SvgAlertSuccess />,
-  error: <SvgAlertError />,
-  warning: <SvgAlertWarning />,
+  info: <SvgAlertsInformative24 />,
+  success: <SvgAlertsSuccess24 />,
+  error: <SvgAlertsError24 />,
+  warning: <SvgAlertsWarning24 />,
 }
 
 export type BannerProps = {
@@ -57,7 +63,7 @@ export const Banner: React.FC<BannerProps> = ({
             </BannerActionButton>
           )}
           <IconButton aria-label="close dialog" onClick={onExitClick} variant="tertiary" size="small">
-            <SvgGlyphClose />
+            <SvgActionClose />
           </IconButton>
         </BannerButtonsContainer>
       </BannerHeader>

@@ -6,7 +6,7 @@ const { kebabCase } = require('lodash')
 
 const { getImageContent, getNodeChildren, getSvgImageUrl } = require('./utils/api')
 
-const iconsDir = path.resolve('src/shared/icons/figmaSvgs')
+const iconsDir = path.resolve('src/components/_icons/svgs')
 
 let counter = 0
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphExternal, SvgNavChannel, SvgNavUpload, SvgNavVideos } from '@/components/_icons'
+import { SvgActionNewTab, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
@@ -12,19 +12,19 @@ import { NavItemType, SidenavBase } from '../SidenavBase'
 
 const studioNavbarItems: NavItemType[] = [
   {
-    icon: <SvgNavVideos />,
+    icon: <SvgSidebarVideos />,
     name: 'Videos',
     expandedName: 'My videos',
     to: absoluteRoutes.studio.videos(),
   },
   {
-    icon: <SvgNavChannel />,
+    icon: <SvgSidebarChannel />,
     name: 'Channel',
     expandedName: 'My channel',
     to: absoluteRoutes.studio.editChannel(),
   },
   {
-    icon: <SvgNavUpload />,
+    icon: <SvgSidebarUpload />,
     name: 'Uploads',
     expandedName: 'My uploads',
     to: absoluteRoutes.studio.uploads(),
@@ -69,7 +69,7 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
           to={absoluteRoutes.viewer.index()}
           newTab
           onClick={() => setExpanded(false)}
-          icon={<SvgGlyphExternal />}
+          icon={<SvgActionNewTab />}
         >
           Joystream
         </Button>

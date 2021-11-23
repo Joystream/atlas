@@ -13,7 +13,7 @@ import { Grid } from '@/components/Grid'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
 import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
-import { SvgGlyphChevronRight } from '@/components/_icons'
+import { SvgActionChevronR } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
@@ -154,7 +154,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
                       size="medium"
                       variant="secondary"
                       iconPlacement="right"
-                      icon={<SvgGlyphChevronRight />}
+                      icon={<SvgActionChevronR />}
                     >
                       {additionalLink.name}
                     </AdditionalLink>

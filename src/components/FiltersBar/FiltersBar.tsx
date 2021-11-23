@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphClose } from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select } from '@/components/_inputs/Select'
@@ -396,7 +396,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         </FiltersInnerContainer>
 
         {canClearAllFilters && (
-          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
+          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgActionClose />}>
             Clear all
           </ClearAllButton>
         )}

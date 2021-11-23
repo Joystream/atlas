@@ -1,7 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAlertSuccess } from '@/components/_icons'
+import { SvgAlertsSuccess24 } from '@/components/_icons'
 import { Loader } from '@/components/_loaders/Loader'
 import { oldColors, sizes } from '@/styles'
 
@@ -94,7 +94,7 @@ export const StyledLoader = styled(Loader)`
   top: ${sizes(2)};
   right: ${sizes(2)};
 `
-export const StyledSvgAlertSuccess = styled(SvgAlertSuccess)`
+export const StyledSvgAlertSuccess = styled(SvgAlertsSuccess24)`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};

@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphCopy } from '@/components/_icons'
+import { SvgActionCopy } from '@/components/_icons'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { ContextMenu } from './ContextMenu'
@@ -27,17 +27,17 @@ const Template: Story = (args) => {
         <ContextMenu
           items={[
             {
-              icon: <SvgGlyphCopy />,
+              icon: <SvgActionCopy />,
               onClick: () => {},
               title: 'Copy video URL',
             },
             {
-              icon: <SvgGlyphCopy />,
+              icon: <SvgActionCopy />,
               onClick: () => {},
               title: 'Copy video URL',
             },
             {
-              icon: <SvgGlyphCopy />,
+              icon: <SvgActionCopy />,
               onClick: () => {},
               title: 'Copy video URL',
             },

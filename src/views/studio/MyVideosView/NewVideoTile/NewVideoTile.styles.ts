@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { SvgGlyphAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { oldColors, sizes, transitions } from '@/styles'
 
-export const StyledIcon = styled(SvgGlyphAddVideo)`
+export const StyledIcon = styled(SvgActionAddVideo)`
   > path {
     transition: fill ${transitions.timings.player} ease-out;
     fill: ${oldColors.gray[500]};

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgGlyphHide } from '@/components/_icons'
+import { SvgActionHide } from '@/components/_icons'
 import { oldColors, sizes, transitions } from '@/styles'
 
 export const FilterContentContainer = styled.div`
@@ -27,9 +27,7 @@ export const FiltersContainer = styled.div<{ open: boolean }>`
   will-change: transform;
   transition: all ${transitions.timings.routing} ${transitions.easing};
   transform: translateY(0);
-  width: 100%;
   height: 72px;
-  position: absolute;
 
   &.filters-enter {
     overflow: hidden;
@@ -65,7 +63,7 @@ export const OtherFilterStyledText = styled(Text)`
   align-items: center;
 `
 
-export const OtherFilterStyledIcon = styled(SvgGlyphHide)`
+export const OtherFilterStyledIcon = styled(SvgActionHide)`
   margin-right: ${sizes(2)};
 
   & path {

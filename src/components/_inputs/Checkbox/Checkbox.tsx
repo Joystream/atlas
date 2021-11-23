@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { SvgGlyphMinus } from '@/components/_icons'
+import { SvgActionMinus } from '@/components/_icons'
 
 import { Checkmark, Container, InnerContainer, Input, StyledGlyphCheck } from './Checkbox.styles'
 
@@ -81,7 +81,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               onBlur={handleBlur}
               {...props}
             />
-            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgGlyphMinus /> : <StyledGlyphCheck />}</Checkmark>
+            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgActionMinus /> : <StyledGlyphCheck />}</Checkmark>
           </InnerContainer>
         </Container>
       </RadioAndCheckboxBase>

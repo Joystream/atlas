@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
-import { SvgGlyphClose } from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
 
 import { DeleteButton, SearchItemContent, SearchItemWrapper, Shortcut } from './SearchBox.styles'
 
@@ -75,7 +75,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
           }}
           variant="tertiary"
         >
-          <SvgGlyphClose />
+          <SvgActionClose />
         </DeleteButton>
       )}
     </SearchItemWrapper>

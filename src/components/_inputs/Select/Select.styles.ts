@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgGlyphInfo } from '@/components/_icons'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { oldColors, oldTypography, sizes, transitions } from '@/styles'
 
 import { SelectSizes } from '.'
@@ -122,7 +122,7 @@ export const SelectOption = styled.li<SelectOptionProps>`
   }
 `
 
-export const StyledSvgGlyphInfo = styled(SvgGlyphInfo)`
+export const StyledSvgGlyphInfo = styled(SvgAlertsInformative24)`
   opacity: 0.5;
 
   &:hover {

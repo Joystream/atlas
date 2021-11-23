@@ -4,15 +4,15 @@ import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import {
-  SvgPlayerFullScreen,
-  SvgPlayerPause,
-  SvgPlayerPip,
-  SvgPlayerPipDisable,
-  SvgPlayerPlay,
-  SvgPlayerRestart,
-  SvgPlayerSmallScreen,
-  SvgPlayerSoundHalf,
-  SvgPlayerSoundOn,
+  SvgControlsFullScreen,
+  SvgControlsPause,
+  SvgControlsPipOff,
+  SvgControlsPipOn,
+  SvgControlsPlay,
+  SvgControlsReplay,
+  SvgControlsSmallScreen,
+  SvgControlsSoundLowVolume,
+  SvgControlsSoundOn,
 } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -449,7 +449,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (currentVolume === 0) {
       return <StyledSvgPlayerSoundOff />
     } else {
-      return currentVolume <= 0.5 ? <SvgPlayerSoundHalf /> : <SvgPlayerSoundOn />
+      return currentVolume <= 0.5 ? <SvgControlsSoundLowVolume /> : <SvgControlsSoundOn />
     }
   }
 
@@ -461,7 +461,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {isAutoPlayFailed && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
-              <SvgPlayerPlay />
+              <SvgControlsPlay />
             </BigPlayButton>
           </BigPlayButtonOverlay>
         )}
@@ -496,11 +496,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                       tooltipPosition="left"
                     >
                       {playerState === 'ended' ? (
-                        <SvgPlayerRestart />
+                        <SvgControlsReplay />
                       ) : isPlaying ? (
-                        <SvgPlayerPause />
+                        <SvgControlsPause />
                       ) : (
-                        <SvgPlayerPlay />
+                        <SvgControlsPlay />
                       )}
                     </PlayButton>
                   )}
@@ -528,7 +528,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                 <ScreenControls>
                   {isPiPSupported && (
                     <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
-                      {isPiPEnabled ? <SvgPlayerPipDisable /> : <SvgPlayerPip />}
+                      {isPiPEnabled ? <SvgControlsPipOff /> : <SvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
                   <PlayerControlButton
@@ -536,7 +536,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
                   >
-                    {isFullScreen ? <SvgPlayerSmallScreen /> : <SvgPlayerFullScreen />}
+                    {isFullScreen ? <SvgControlsSmallScreen /> : <SvgControlsFullScreen />}
                   </PlayerControlButton>
                 </ScreenControls>
               </CustomControls>

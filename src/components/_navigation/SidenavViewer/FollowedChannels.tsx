@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgGlyphChevronDown, SvgGlyphChevronUp } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
 
@@ -55,9 +55,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
           </ChannelsList>
           {numberOfChannels > MAX_CHANNELS && (
             <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
-              <ShowMoreIconWrapper>
-                {isShowingMore ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
-              </ShowMoreIconWrapper>
+              <ShowMoreIconWrapper>{isShowingMore ? <SvgActionChevronT /> : <SvgActionChevronB />}</ShowMoreIconWrapper>
               {isShowingMore ? <span>Show Less</span> : <span>Show {numberOfChannels - MAX_CHANNELS} More</span>}
             </ShowMoreButton>
           )}

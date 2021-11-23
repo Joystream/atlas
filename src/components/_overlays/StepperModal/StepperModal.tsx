@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 
 import { Step } from '@/components/Step'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgGlyphClose } from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
 
 import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.styles'
 
@@ -42,7 +42,7 @@ export const StepperModal: React.FC<StepperModalProps> = ({
             )
           })}
           <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-            <SvgGlyphClose />
+            <SvgActionClose />
           </IconButton>
         </StyledStepsInfoContainer>
       </StyledHeader>
