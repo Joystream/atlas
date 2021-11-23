@@ -44,6 +44,7 @@ export const DiscoverView: React.FC = () => {
 
     return _featuredVideoCategoryCardsData.length > 0 ? _featuredVideoCategoryCardsData : [null, null, null]
   }, [categories, categoriesFeaturedVideos, mappedVideoCategories])
+
   const { videoCount, error } = useVideoCount(
     {},
     {
@@ -61,7 +62,7 @@ export const DiscoverView: React.FC = () => {
       <Text variant="h2">Discover</Text>
       <FeaturedCategoriesContainer>
         {featuredVideoCategoryCardsData?.map((category, i) => (
-          <GridItem key={category?.id ?? i} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
+          <GridItem key={category?.id ?? `placeholder-${i}`} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
             <FeaturedVideoCategoryCard
               variant={isMdBreakpoint ? 'default' : 'compact'}
               title={category?.name ?? ''}

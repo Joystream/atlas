@@ -54,7 +54,7 @@ export const Container = styled(Link, {
   cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
   border-left: 4px solid ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
   background-color: ${({ isLoading }) => (isLoading ? oldColors.gray[900] : oldColors.gray[800])};
-
+  position: relative;
   &:hover {
     ${hoverStyles}
 
