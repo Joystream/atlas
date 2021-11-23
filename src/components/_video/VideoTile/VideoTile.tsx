@@ -22,7 +22,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(({ id, onNotFound,
       onNotFound,
     })
 
-  const onCopyVideoURLClick = useCallback(() => {
+  const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '')
   }, [videoHref])
 
@@ -39,7 +39,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(({ id, onNotFound,
       views={video?.views}
       videoHref={videoHref}
       channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
-      onCopyVideoURLClick={onCopyVideoURLClick}
+      onCopyVideoURLClick={handleCopyVideoURLClick}
       thumbnailUrl={thumbnailPhotoUrl}
       isLoading={loading}
       {...metaProps}

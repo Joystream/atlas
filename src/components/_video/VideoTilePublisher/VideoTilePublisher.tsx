@@ -29,7 +29,7 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo
     const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
     const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
-    const onCopyVideoURLClick = useCallback(() => {
+    const handleCopyVideoURLClick = useCallback(() => {
       copyToClipboard(videoHref ? location.origin + videoHref : '')
     }, [videoHref])
 
@@ -61,7 +61,7 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo
         channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
         isLoading={loading}
         onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
-        onCopyVideoURLClick={isDraft ? undefined : onCopyVideoURLClick}
+        onCopyVideoURLClick={isDraft ? undefined : handleCopyVideoURLClick}
         isUnlisted={!video?.isPublic || !video?.isPublic === undefined}
         isDraft={isDraft}
         {...metaProps}
