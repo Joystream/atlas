@@ -57,7 +57,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
           color={color}
         >
           <PlayerContainer>
-            {<BackgroundVideoPlayer src={isLoading ? undefined : videoUrl} loop muted playing={isPlaying} />}
+            <BackgroundVideoPlayer src={isLoading ? undefined : videoUrl} loop muted playing={isPlaying} />
           </PlayerContainer>
 
           <FeaturedContent variantCategory={variant}>
