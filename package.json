@@ -31,7 +31,7 @@
     "svgs": "yarn svgs:icons && yarn svgs:illustrations",
     "svgs:illustrations": "svgr --config-file svgr.config.js -d src/components/_illustrations src/components/_illustrations/svgs",
     "svgs:icons-import": "node ./scripts/figma-import",
-    "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs",
+    "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs && prettier --write src/components/_icons",
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
     "graphql": "graphql-codegen --config codegen.config.yml"
   },
