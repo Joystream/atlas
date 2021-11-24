@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
@@ -88,7 +88,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = React.memo(
     removeButton,
     thumbnailAlt,
   }) => {
-    const isUploading = useMemo(() => uploadStatus && uploadStatus.lastStatus !== 'completed', [uploadStatus])
+    const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
     const { ref: imgRef } = useResizeObserver<HTMLImageElement>({
       onResize: (size) => {
         const { width: videoTileWidth } = size
