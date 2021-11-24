@@ -26,7 +26,7 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
   currentThumbnailUrl,
   videoId,
   isFullScreen,
-  playRandomVideoOnEnded,
+  playRandomVideoOnEnded = true,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const { videos } = useBasicVideos({

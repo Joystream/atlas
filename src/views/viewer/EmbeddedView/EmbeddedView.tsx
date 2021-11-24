@@ -1,3 +1,4 @@
+import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
@@ -73,26 +74,47 @@ export const EmbeddedView: React.FC = () => {
   }
 
   return (
-    <Container>
-      {!isMediaLoading && video ? (
-        <VideoPlayer
-          isVideoPending={video?.mediaAvailability === 'PENDING'}
-          channelId={video.channel.id}
-          videoId={video.id}
-          autoplay
-          src={mediaUrl}
-          fill
-          startTime={startTimestamp}
-          playRandomVideoOnEnded={false}
-        />
-      ) : (
-        <PlayerSkeletonLoader />
-      )}
-    </Container>
+    <>
+      <EmbeddedGlobalStyles />
+      <Container>
+        {!isMediaLoading && video ? (
+          <VideoPlayer
+            isVideoPending={video?.mediaAvailability === 'PENDING'}
+            channelId={video.channel.id}
+            videoId={video.id}
+            autoplay
+            src={mediaUrl}
+            fill
+            startTime={startTimestamp}
+            isEmbedded
+          />
+        ) : (
+          <PlayerSkeletonLoader />
+        )}
+      </Container>
+    </>
   )
+}
+
+type GlobalStyleProps = {
+  additionalStyles?: SerializedStyles[] | SerializedStyles
+}
+export const EmbeddedGlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+  const additionalStylesArray = additionalStyles
+    ? Array.isArray(additionalStyles)
+      ? additionalStyles
+      : [additionalStyles]
+    : []
+  return <Global styles={[globalStyles, ...additionalStylesArray]} />
 }
 
 const Container = styled.div`
   overflow: hidden;
   height: 100%;
+`
+
+export const globalStyles = css`
+  body {
+    overflow: hidden;
+  }
 `

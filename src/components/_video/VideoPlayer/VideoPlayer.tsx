@@ -52,7 +52,7 @@ export type VideoPlayerProps = {
   playing?: boolean
   channelId?: string
   videoId?: string
-  playRandomVideoOnEnded?: boolean
+  isEmbedded?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -76,7 +76,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     videoId,
     autoplay,
     videoStyle,
-    playRandomVideoOnEnded,
+    isEmbedded,
     ...videoJsConfig
   },
   externalRef
@@ -562,7 +562,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           onPlay={handlePlayPause}
           channelId={channelId}
           currentThumbnailUrl={videoJsConfig.posterUrl}
-          playRandomVideoOnEnded={playRandomVideoOnEnded}
+          playRandomVideoOnEnded={!isEmbedded}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>
