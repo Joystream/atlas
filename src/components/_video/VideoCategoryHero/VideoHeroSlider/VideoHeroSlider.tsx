@@ -1,11 +1,11 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import {
+  ThumbnailSkeletonLoader,
   VideoHeroSliderWrapper,
   VideoSliderPreviewWrapper,
   VideoSliderProgress,
@@ -82,7 +82,7 @@ export const VideoSliderPreview: React.FC<VideoSliderPreviewProps> = ({
       >
         <VideoSliderPreviewWrapper onClick={onClick}>
           {isLoadingThumbnail ? (
-            <SkeletonLoader width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
+            <ThumbnailSkeletonLoader active={active} width={smMatch ? 80 : '100%'} height={smMatch ? 45 : 4} />
           ) : (
             <VideoSliderThumbnail src={thumbnailUrl || ''} active={active} />
           )}
