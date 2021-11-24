@@ -52,6 +52,7 @@ export type VideoPlayerProps = {
   playing?: boolean
   channelId?: string
   videoId?: string
+  playRandomVideoOnEnded?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -66,7 +67,18 @@ const isPiPSupported = 'pictureInPictureEnabled' in document
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
-  { isVideoPending, className, playing, nextVideo, channelId, videoId, autoplay, videoStyle, ...videoJsConfig },
+  {
+    isVideoPending,
+    className,
+    playing,
+    nextVideo,
+    channelId,
+    videoId,
+    autoplay,
+    videoStyle,
+    playRandomVideoOnEnded,
+    ...videoJsConfig
+  },
   externalRef
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
@@ -550,6 +562,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           onPlay={handlePlayPause}
           channelId={channelId}
           currentThumbnailUrl={videoJsConfig.posterUrl}
+          playRandomVideoOnEnded={playRandomVideoOnEnded}
         />
         {showControlsIndicator && <ControlsIndicator player={player} isLoading={playerState === 'loading'} />}
       </div>

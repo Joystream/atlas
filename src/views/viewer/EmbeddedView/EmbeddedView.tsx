@@ -83,6 +83,7 @@ export const EmbeddedView: React.FC = () => {
           src={mediaUrl}
           fill
           startTime={startTimestamp}
+          playRandomVideoOnEnded={false}
         />
       ) : (
         <PlayerSkeletonLoader />

@@ -10,21 +10,23 @@ import { getRandomIntInclusive } from '@/utils/number'
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
 import { PlayerState } from './VideoPlayer'
 
-type VideoOverlaProps = {
+type VideoOverlayProps = {
   playerState: PlayerState
   onPlay: () => void
   channelId?: string
   currentThumbnailUrl?: string | null
   videoId?: string
   isFullScreen?: boolean
+  playRandomVideoOnEnded?: boolean
 }
-export const VideoOverlay: React.FC<VideoOverlaProps> = ({
+export const VideoOverlay: React.FC<VideoOverlayProps> = ({
   playerState,
   onPlay,
   channelId,
   currentThumbnailUrl,
   videoId,
   isFullScreen,
+  playRandomVideoOnEnded,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
   const { videos } = useBasicVideos({
@@ -65,7 +67,7 @@ export const VideoOverlay: React.FC<VideoOverlaProps> = ({
               onPlayAgain={onPlay}
               channelId={channelId}
               currentThumbnailUrl={currentThumbnailUrl}
-              randomNextVideo={randomNextVideo}
+              randomNextVideo={playRandomVideoOnEnded ? randomNextVideo : undefined}
             />
           )}
           {playerState === 'error' && <ErrorOverlay />}
