@@ -65,18 +65,14 @@ export const CategoryView = () => {
         videos={videoHeroVideos}
       />
 
-      {(featuredVideos.length ?? 0) > 0 && (
-        <>
-          <TitleContainer>
-            <Text variant="h4">Featured category videos</Text>
-          </TitleContainer>
-          <Grid>
-            {featuredVideos.map((video, idx) => (
-              <VideoTile id={video.id} key={idx} showChannel />
-            ))}
-          </Grid>
-        </>
-      )}
+      <TitleContainer>
+        <Text variant="h4">Featured category videos</Text>
+      </TitleContainer>
+      <Grid>
+        {featuredVideos.map((video, idx) => (
+          <VideoTile id={video.id} key={idx} showChannel />
+        ))}
+      </Grid>
 
       <CategoryVideos categoryId={id} />
 
@@ -118,27 +114,37 @@ const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string] = [
     .map((video) => ({
       video,
       thumbnailPhotoUrl: '',
+      isLoadingThumbnail: true,
       videoCutUrl: video?.videoCutUrl ?? '',
     }))
 
-  const { url: thumbnailPhotoUrl1 } = useAsset({
+  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset({
     entity: videoHeroVideos?.[0]?.video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: thumbnailPhotoUrl2 } = useAsset({
+  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset({
     entity: videoHeroVideos?.[1]?.video,
     assetType: AssetType.THUMBNAIL,
   })
-  const { url: thumbnailPhotoUrl3 } = useAsset({
+  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset({
     entity: videoHeroVideos?.[2]?.video,
     assetType: AssetType.THUMBNAIL,
   })
 
   if (!videoHeroVideos) return [null, null, null]
 
-  if (videoHeroVideos[0]) videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
-  if (videoHeroVideos[1]) videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
-  if (videoHeroVideos[2]) videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
+  if (videoHeroVideos[0]) {
+    videoHeroVideos[0].thumbnailPhotoUrl = thumbnailPhotoUrl1 ?? ''
+    videoHeroVideos[0].isLoadingThumbnail = isLoadingThumbnail1
+  }
+  if (videoHeroVideos[1]) {
+    videoHeroVideos[1].thumbnailPhotoUrl = thumbnailPhotoUrl2 ?? ''
+    videoHeroVideos[1].isLoadingThumbnail = isLoadingThumbnail2
+  }
+  if (videoHeroVideos[2]) {
+    videoHeroVideos[2].thumbnailPhotoUrl = thumbnailPhotoUrl3 ?? ''
+    videoHeroVideos[2].isLoadingThumbnail = isLoadingThumbnail3
+  }
 
   return videoHeroVideos
 }

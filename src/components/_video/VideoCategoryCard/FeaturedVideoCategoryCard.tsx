@@ -25,7 +25,7 @@ export type FeaturedVideoCategoryCardProps = {
   videoTitle: string
   color: string
   variant?: FeaturedVideoCategoryCardVariant
-  id: string
+  id?: string
 }
 
 export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps> = ({
@@ -39,6 +39,8 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
 }) => {
   const [hoverRef, isVideoHovering] = useHover<HTMLAnchorElement>()
   const isLoading = !title && !videoUrl && !icon
+  const isPlaying = variant === 'default' ? isVideoHovering : true
+  const categoryUrl = id ? absoluteRoutes.viewer.category(id) : ''
 
   return (
     <SwitchTransition>
@@ -48,21 +50,14 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
         classNames={transitions.names.fade}
       >
         <FeaturedContainer
-          to={absoluteRoutes.viewer.category(id)}
+          to={categoryUrl}
           ref={hoverRef}
           isLoading={isLoading}
           variantCategory={variant}
           color={color}
         >
           <PlayerContainer>
-            {
-              <BackgroundVideoPlayer
-                src={isLoading ? undefined : videoUrl}
-                loop
-                muted
-                playing={variant === 'default' ? isVideoHovering : true}
-              />
-            }
+            <BackgroundVideoPlayer src={isLoading ? undefined : videoUrl} loop muted playing={isPlaying} />
           </PlayerContainer>
 
           <FeaturedContent variantCategory={variant}>

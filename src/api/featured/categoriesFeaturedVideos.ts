@@ -16,6 +16,7 @@ export type CategoriesFeaturedVideos = Record<
   Array<VideoFieldsFragment & { videoCutUrl?: string | null }> | undefined
 >
 
+// TODO: hook to only fetch a single category featured videos
 export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null => {
   const client = useApolloClient()
   const fetchCategoriesFeaturedVideos = useMemo(
@@ -27,9 +28,11 @@ export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null =
   const { data: rawData } = useGenericFeaturedData('categories-featured-videos', fetchCategoriesFeaturedVideos)
 
   const allVideosIds = rawData?.reduce((acc, cur) => [...acc, ...cur.videos.map((v) => v.videoId)], [] as string[])
-  const { videos } = useVideos({ where: { id_in: allVideosIds } }, { skip: !allVideosIds || !allVideosIds.length })
+  const { videos } = useVideos(
+    { limit: allVideosIds?.length, where: { id_in: allVideosIds } },
+    { skip: !allVideosIds || !allVideosIds.length }
+  )
   const videosLookup = createLookup(videos || [])
-
   const categoriesLookup = rawData?.reduce((acc, cur) => {
     acc[cur.categoryId] = cur.videos.map((v) => ({ ...videosLookup[v.videoId], videoCutUrl: v.videoCutUrl }))
     return acc
