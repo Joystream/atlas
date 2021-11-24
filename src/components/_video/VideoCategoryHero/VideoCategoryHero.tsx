@@ -71,12 +71,7 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
       }
       sliderNode={
         shouldShowSlider ? (
-          <VideoHeroSlider
-            loading={!videos?.[activeVideoIdx]}
-            activeVideoIdx={activeVideoIdx}
-            videos={videosWithProgress}
-            onTileClick={handleVideoClick}
-          />
+          <VideoHeroSlider activeVideoIdx={activeVideoIdx} videos={videosWithProgress} onTileClick={handleVideoClick} />
         ) : undefined
       }
     />

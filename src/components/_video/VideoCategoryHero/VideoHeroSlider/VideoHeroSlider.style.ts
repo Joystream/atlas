@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { media, oldColors, sizes, zIndex } from '@/styles'
 
 type VideoHeroSliderWrapperProps = {
@@ -86,4 +87,8 @@ export const VideoSliderProgress = styled.div`
   width: 100%;
   transform-origin: 0 0;
   transition: transform 125ms ease-in;
+`
+
+export const ThumbnailSkeletonLoader = styled(SkeletonLoader)<VideoSliderProgressBarProps>`
+  transform: translateY(${({ active }) => (active ? '-8px' : 0)});
 `

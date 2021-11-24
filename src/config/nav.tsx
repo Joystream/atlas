@@ -1,6 +1,12 @@
 import React from 'react'
 
-import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
+import {
+  SvgSidebarChannels,
+  SvgSidebarExplore,
+  SvgSidebarHome,
+  SvgSidebarNew,
+  SvgSidebarPopular,
+} from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 
 export const viewerNavItems = [
@@ -19,11 +25,11 @@ export const viewerNavItems = [
     name: 'New',
     to: absoluteRoutes.viewer.new(),
   },
-  // {
-  //   icon: <SvgNavDiscover />,
-  //   name: 'Discover',
-  //   to: absoluteRoutes.viewer.discover(),
-  // },
+  {
+    icon: <SvgSidebarExplore />,
+    name: 'Discover',
+    to: absoluteRoutes.viewer.discover(),
+  },
   {
     icon: <SvgSidebarChannels />,
     name: 'Channels',

@@ -1,13 +1,32 @@
+import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
+import React from 'react'
 
 import { Select } from '@/components/_inputs/Select'
 import { media, oldColors, sizes, transitions } from '@/styles'
 
 import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
 
+export const globalStyles = css`
+  body,
+  html {
+    scroll-behavior: smooth;
+  }
+`
+type GlobalStyleProps = {
+  additionalStyles?: SerializedStyles[] | SerializedStyles
+}
+export const CategoryGlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+  const additionalStylesArray = additionalStyles
+    ? Array.isArray(additionalStyles)
+      ? additionalStyles
+      : [additionalStyles]
+    : []
+  return <Global styles={[globalStyles, ...additionalStylesArray]} />
+}
+
 export const Container = styled.div`
   margin-top: ${sizes(16)};
-  scroll-behavior: smooth;
 `
 
 export const StyledSticky = styled.div`

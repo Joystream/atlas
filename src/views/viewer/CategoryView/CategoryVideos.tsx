@@ -12,7 +12,14 @@ import { SvgActionFilters } from '@/components/_icons'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { Container, ControlsContainer, StyledSelect, StyledSticky, StyledVideoGrid } from './CategoryVideos.styles'
+import {
+  CategoryGlobalStyles,
+  Container,
+  ControlsContainer,
+  StyledSelect,
+  StyledSticky,
+  StyledVideoGrid,
+} from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.style'
 
 const ADAPTED_SORT_OPTIONS = [
@@ -90,56 +97,59 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     />
   )
   return (
-    <Container ref={containerRef}>
-      <StyledSticky style={{ top: topbarHeight - 1 }}>
-        <ControlsContainer>
-          <GridItem colSpan={{ base: 2, sm: 1 }}>
-            <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
-          </GridItem>
-          {smMatch ? (
-            <StyledSelect
-              onChange={handleSelectLanguage}
-              size="small"
-              value={language}
-              items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
-            />
-          ) : (
-            sortingNode
-          )}
-          <div>
-            <Button
-              badge={canClearAllFilters}
-              variant="secondary"
-              icon={<SvgActionFilters />}
-              onClick={handleFilterClick}
-            >
-              Filters
-            </Button>
-          </div>
-          {smMatch && sortingNode}
-        </ControlsContainer>
-        <FiltersBar {...filtersBarLogic} />
-      </StyledSticky>
+    <>
+      <CategoryGlobalStyles />
+      <Container ref={containerRef}>
+        <StyledSticky style={{ top: topbarHeight - 1 }}>
+          <ControlsContainer>
+            <GridItem colSpan={{ base: 2, sm: 1 }}>
+              <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
+            </GridItem>
+            {smMatch ? (
+              <StyledSelect
+                onChange={handleSelectLanguage}
+                size="small"
+                value={language}
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+              />
+            ) : (
+              sortingNode
+            )}
+            <div>
+              <Button
+                badge={canClearAllFilters}
+                variant="secondary"
+                icon={<SvgActionFilters />}
+                onClick={handleFilterClick}
+              >
+                Filters
+              </Button>
+            </div>
+            {smMatch && sortingNode}
+          </ControlsContainer>
+          <FiltersBar {...filtersBarLogic} />
+        </StyledSticky>
 
-      <StyledVideoGrid
-        isFiltersOpen={isFiltersOpen}
-        emptyFallback={
-          <FallbackWrapper>
-            <EmptyFallback
-              title="No videos found"
-              subtitle="Please, try changing your filtering criteria"
-              button={
-                <Button onClick={clearAllFilters} variant="secondary">
-                  Clear all filters
-                </Button>
-              }
-            />
-          </FallbackWrapper>
-        }
-        videoWhereInput={videoWhereInput}
-        orderBy={sortVideosBy}
-        onDemandInfinite
-      />
-    </Container>
+        <StyledVideoGrid
+          isFiltersOpen={isFiltersOpen}
+          emptyFallback={
+            <FallbackWrapper>
+              <EmptyFallback
+                title="No videos found"
+                subtitle="Please, try changing your filtering criteria"
+                button={
+                  <Button onClick={clearAllFilters} variant="secondary">
+                    Clear all filters
+                  </Button>
+                }
+              />
+            </FallbackWrapper>
+          }
+          videoWhereInput={videoWhereInput}
+          orderBy={sortVideosBy}
+          onDemandInfinite
+        />
+      </Container>
+    </>
   )
 }

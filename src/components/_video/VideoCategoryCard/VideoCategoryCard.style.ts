@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { transparentize } from 'polished'
@@ -38,20 +39,20 @@ export const CoverImgContainer = styled.div`
 const hoverStyles = ({ isLoading, color }: LoadingProps & ColorProps) =>
   !isLoading &&
   css`
-    border-left: 0 solid ${color};
     transform: translate(-${sizes(2)}, -${sizes(2)});
-    box-shadow: ${sizes(2)} ${sizes(2)} 0 ${color};
+    box-shadow: inset 0px 0px ${color}, ${sizes(2)} ${sizes(2)} 0 ${color};
   `
 
-export const Container = styled(Link)<ColorProps & VariantProps & LoadingProps>`
+export const Container = styled(Link, {
+  shouldForwardProp: (prop) => isPropValid(prop.toString()),
+})<ColorProps & VariantProps & LoadingProps>`
   text-decoration: unset;
-  transition: all ${transitions.timings.regular} ${transitions.easing},
-    border ${transitions.timings.sharp} ${transitions.easing};
+  transition: all ${transitions.timings.regular} ${transitions.easing};
   display: grid;
   cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
-  border-left: 4px solid ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
+  box-shadow: inset 4px 0px ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
   background-color: ${({ isLoading }) => (isLoading ? oldColors.gray[900] : oldColors.gray[800])};
-
+  position: relative;
   &:hover {
     ${hoverStyles}
 
