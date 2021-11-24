@@ -1,6 +1,7 @@
 export const BASE_PATHS = {
   // must be empty so we don't get double '/' after joining paths
   viewer: '',
+  embedded: '/embedded',
   legal: '/legal',
   studio: '/studio',
   playground: '/playground',
@@ -16,6 +17,9 @@ const withQueryParameters = (basePath: string, query: Record<string, string> = {
 }
 
 export const relativeRoutes = {
+  embedded: {
+    video: (id = ':id') => `video/${id}`,
+  },
   viewer: {
     index: () => '',
     new: () => 'new',
