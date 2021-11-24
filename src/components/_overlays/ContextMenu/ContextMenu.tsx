@@ -11,14 +11,16 @@ type MenuItemProps = {
   disabled?: boolean
 }
 
-export const ContextMenuItem: React.FC<MenuItemProps> = ({ icon, onClick, title }) => {
+export const ContextMenuItem: React.FC<MenuItemProps> = React.memo(({ icon, onClick, title }) => {
   return (
     <StyledMenuItem onClick={onClick}>
       {icon}
       <StyledText>{title}</StyledText>
     </StyledMenuItem>
   )
-}
+})
+
+ContextMenuItem.displayName = 'ContextMenuItem'
 
 type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
 
