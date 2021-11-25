@@ -1,11 +1,9 @@
 import { ApolloProvider } from '@apollo/client'
-import ls from '@livesession/sdk'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import useHotjar from 'react-use-hotjar'
 
+import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
-import { BUILD_ENV, readEnv } from '@/config/envs'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyles } from '@/styles'
 
@@ -19,20 +17,11 @@ export const App = () => {
   // create client on render so the mocking setup is done if needed
   // App doesn't accept props and doesn't contain state so should never rerender
   const apolloClient = createApolloClient()
-  const { initHotjar } = useHotjar()
-
-  useEffect(() => {
-    if (BUILD_ENV === 'production') {
-      // eslint-disable-next-line no-console
-      initHotjar(parseInt(readEnv('HOTJAR_ID')), 6, false, console.info)
-      ls.init(readEnv('LIVESESSION_ID'), { keystrokes: true, rootHostname: '.joystream.org' })
-      ls.newPageView()
-    }
-  }, [initHotjar])
 
   return (
     <>
       <GlobalStyles />
+      <AnalyticsManager />
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>
