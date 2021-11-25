@@ -25,7 +25,7 @@ export const App = () => {
     if (BUILD_ENV === 'production') {
       // eslint-disable-next-line no-console
       initHotjar(parseInt(readEnv('HOTJAR_ID')), 6, false, console.info)
-      ls.init(readEnv('LIVESESSION_ID'), { keystrokes: true })
+      ls.init(readEnv('LIVESESSION_ID'), { keystrokes: true, rootHostname: '.joystream.org' })
       ls.newPageView()
     }
   }, [initHotjar])
