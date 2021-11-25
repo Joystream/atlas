@@ -519,7 +519,32 @@ export type GetMostViewedVideosQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosQuery = {
   __typename?: 'Query'
-  mostViewedVideos?: Types.Maybe<Array<{ __typename?: 'Video'; id: string; views?: Types.Maybe<number> }>>
+  mostViewedVideos?: Types.Maybe<
+    Array<{
+      __typename?: 'Video'
+      id: string
+      title?: Types.Maybe<string>
+      thumbnailPhotoUrls: Array<string>
+      thumbnailPhotoAvailability: Types.AssetAvailability
+      thumbnailPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+  >
 }
 
 export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
@@ -528,7 +553,32 @@ export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosAllTimeQuery = {
   __typename?: 'Query'
-  mostViewedVideosAllTime?: Types.Maybe<Array<{ __typename?: 'Video'; id: string; views?: Types.Maybe<number> }>>
+  mostViewedVideosAllTime?: Types.Maybe<
+    Array<{
+      __typename?: 'Video'
+      id: string
+      title?: Types.Maybe<string>
+      thumbnailPhotoUrls: Array<string>
+      thumbnailPhotoAvailability: Types.AssetAvailability
+      thumbnailPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+  >
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -890,10 +940,10 @@ export type GetBatchedVideoViewsQueryResult = Apollo.QueryResult<
 export const GetMostViewedVideosDocument = gql`
   query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
     mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-      id
-      views
+      ...BasicVideoFields
     }
   }
+  ${BasicVideoFieldsFragmentDoc}
 `
 
 /**
@@ -940,10 +990,10 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
 export const GetMostViewedVideosAllTimeDocument = gql`
   query GetMostViewedVideosAllTime($limit: Int!) {
     mostViewedVideosAllTime(limit: $limit) {
-      id
-      views
+      ...BasicVideoFields
     }
   }
+  ${BasicVideoFieldsFragmentDoc}
 `
 
 /**

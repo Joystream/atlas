@@ -1,8 +1,7 @@
 import React, { FC, useMemo } from 'react'
 
-import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
+import { useMostViewedChannelsAllTime, useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
-import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -25,15 +24,12 @@ export const PopularView: FC = () => {
     },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'PopularView', error) }
   )
-  const mostViewedVideosIds = useMemo(() => mostViewedVideosAllTime?.map((item) => item.id), [mostViewedVideosAllTime])
-  const { mostViewedChannelsAllTime, error: mostViewedChannelsError } = useMostViewedChannelsAllTimeIds(
+  const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
+  const { channels, error: mostViewedChannelsError } = useMostViewedChannelsAllTime(
     { limit: 15 },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels IDs', 'PopularView', error) }
   )
-  const mostViewedChannelsAllTimeIds = useMemo(
-    () => mostViewedChannelsAllTime?.map((item) => item.id),
-    [mostViewedChannelsAllTime]
-  )
+  const mostViewedChannelsAllTimeIds = channels?.map((item) => item.id)
   const videoWhereInput = useMemo(() => ({ id_in: mostViewedVideosIds }), [mostViewedVideosIds])
   const {
     videos,

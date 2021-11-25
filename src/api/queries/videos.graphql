@@ -120,15 +120,13 @@ query GetBatchedVideoViews($videoIdList: [ID!]!) {
 
 query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
   mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    views
+    ...BasicVideoFields
   }
 }
 
 query GetMostViewedVideosAllTime($limit: Int!) {
   mostViewedVideosAllTime(limit: $limit) {
-    id
-    views
+    ...BasicVideoFields
   }
 }
 

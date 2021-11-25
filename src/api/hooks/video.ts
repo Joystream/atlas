@@ -121,32 +121,11 @@ export const useMostViewedVideos = (
   variables?: GetMostViewedVideosQueryVariables,
   opts?: MostViewedVideosQueryOpts
 ) => {
-  const { mostViewedVideos, loading, error } = useMostViewedVideosIds(variables, opts)
-
-  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
-
-  const { videos, ...rest } = useVideos(
-    {
-      where: {
-        id_in: mostViewedVideosIds,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
-        isPublic_eq: true,
-        isCensored_eq: false,
-      },
-    },
-    { skip: !mostViewedVideosIds }
-  )
-
-  const sortedVideos = videos
-    ? videos.map((video) => ({ ...video, views: video.views || 0 })).sort((a, b) => b.views - a.views)
-    : null
+  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
 
   return {
-    videos: sortedVideos,
+    videos: data?.mostViewedVideos,
     ...rest,
-    error: error || rest.error,
-    loading: loading || rest.loading,
   }
 }
 

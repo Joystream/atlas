@@ -126,28 +126,24 @@ mutation UnfollowChannel($channelId: ID!) {
 
 query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
   mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    views
+    ...BasicChannelFields
   }
 }
 
 query GetMostViewedChannelsAllTime($limit: Int!) {
   mostViewedChannelsAllTime(limit: $limit) {
-    id
-    views
+    ...BasicChannelFields
   }
 }
 
 query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
   mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    follows
+    ...BasicChannelFields
   }
 }
 
 query GetMostFollowedChannelsAllTime($limit: Int!) {
   mostFollowedChannelsAllTime(limit: $limit) {
-    id
-    follows
+    ...BasicChannelFields
   }
 }
