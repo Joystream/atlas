@@ -21,7 +21,7 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const videoHeroData = useVideoHeroData()
+  const { videoHero } = useVideoHeroData()
 
   const {
     mostViewedVideos,
@@ -57,7 +57,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero videoHeroData={videoHeroData} withMuteButton />
+      <VideoHero videoHeroData={videoHero} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid

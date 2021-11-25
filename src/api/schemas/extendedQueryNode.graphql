@@ -2,6 +2,7 @@ scalar DateTime
 
 type CategoryFeaturedVideos {
   categoryId: ID!
+  category: VideoCategory
   videos: [FeaturedVideo!]!
 }
 
@@ -18,6 +19,7 @@ type EntityViewsInfo {
 type FeaturedVideo {
   videoCutUrl: String
   videoId: ID!
+  video: Video
 }
 
 input FeaturedVideoInput {
@@ -372,7 +374,7 @@ type Query {
 
   batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
 
-  categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
+  categoryFeaturedVideos(categoryId: ID!): CategoryFeaturedVideos!
 
   channelFollows(channelId: ID!): ChannelFollowsInfo
 

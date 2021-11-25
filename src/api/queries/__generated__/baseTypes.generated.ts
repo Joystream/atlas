@@ -21,6 +21,7 @@ export enum AssetAvailability {
 export type CategoryFeaturedVideos = {
   __typename?: 'CategoryFeaturedVideos'
   categoryId: Scalars['ID']
+  category?: Maybe<VideoCategory>
   videos: Array<FeaturedVideo>
 }
 
@@ -112,6 +113,7 @@ export type FeaturedVideo = {
   __typename?: 'FeaturedVideo'
   videoCutUrl?: Maybe<Scalars['String']>
   videoId: Scalars['ID']
+  video?: Maybe<Video>
 }
 
 export type FeaturedVideoInput = {
@@ -227,7 +229,7 @@ export type Query = {
   batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categoryFeaturedVideos: Array<FeaturedVideo>
+  categoryFeaturedVideos: CategoryFeaturedVideos
   channelFollows?: Maybe<ChannelFollowsInfo>
   channelViews?: Maybe<EntityViewsInfo>
   mostFollowedChannels: Array<Channel>

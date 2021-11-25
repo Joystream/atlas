@@ -1,11 +1,14 @@
-import { useApolloClient } from '@apollo/client'
+import { QueryHookOptions, useApolloClient } from '@apollo/client'
 import { useMemo } from 'react'
 
 import { useVideos } from '@/api/hooks'
 import { VideoFieldsFragment } from '@/api/queries'
 import {
-  GetCategoriesFeaturedVideosDocument,
+  GetAllCategoriesFeaturedVideosDocument,
+  GetAllCategoriesFeaturedVideosQuery,
   GetCategoriesFeaturedVideosQuery,
+  GetCategoriesFeaturedVideosQueryVariables,
+  useGetCategoriesFeaturedVideosQuery,
 } from '@/api/queries/__generated__/featured.generated'
 import { createLookup } from '@/utils/data'
 
@@ -21,7 +24,7 @@ export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null =
   const client = useApolloClient()
   const fetchCategoriesFeaturedVideos = useMemo(
     () => async () =>
-      (await client.query<GetCategoriesFeaturedVideosQuery>({ query: GetCategoriesFeaturedVideosDocument })).data
+      (await client.query<GetAllCategoriesFeaturedVideosQuery>({ query: GetAllCategoriesFeaturedVideosDocument })).data
         .allCategoriesFeaturedVideos,
     [client]
   )
@@ -39,4 +42,20 @@ export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null =
   }, {} as CategoriesFeaturedVideos)
 
   return (rawData && videos && categoriesLookup) ?? null
+}
+
+export const useCategoriesFeaturedVideos1 = (
+  id: string,
+  opts?: QueryHookOptions<GetCategoriesFeaturedVideosQuery, GetCategoriesFeaturedVideosQueryVariables>
+) => {
+  const { data, ...rest } = useGetCategoriesFeaturedVideosQuery({
+    ...opts,
+    variables: {
+      categoryId: id,
+    },
+  })
+  return {
+    categoriesFeaturedVideos: data?.categoryFeaturedVideos,
+    ...rest,
+  }
 }
