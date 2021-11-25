@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 
 import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
@@ -26,7 +26,7 @@ type ChannelWithVideosProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
-export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => {
+export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ channelId }) => {
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
@@ -50,15 +50,26 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
 
   const targetItemsCount = videosPerRow * videoRows
   const displayedVideos = (videos || []).slice(0, targetItemsCount)
-  const placeholderItems = videosLoading ? Array.from({ length: targetItemsCount }, () => ({ id: undefined })) : []
-
-  const gridContent = (
-    <>
-      {[...displayedVideos, ...placeholderItems].map((video, idx) => (
-        <VideoTile id={video.id} key={`channels-with-videos-${idx}`} showChannel />
-      ))}
-    </>
+  const placeholderItems = useMemo(
+    () => (videosLoading ? Array.from({ length: targetItemsCount }, () => ({ id: undefined })) : []),
+    [targetItemsCount, videosLoading]
   )
+
+  const gridContent = useMemo(
+    () => (
+      <>
+        {[...displayedVideos, ...placeholderItems].map((video, idx) => (
+          <VideoTile id={video.id} key={`channels-with-videos-${idx}`} showChannel />
+        ))}
+      </>
+    ),
+    [displayedVideos, placeholderItems]
+  )
+
+  const handleFollowClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault()
+    toggleFollowing()
+  }
 
   const isLoading = !channelId || channelLoading
 
@@ -86,14 +97,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
           {isLoading ? (
             <SkeletonLoader width="90px" height="40px" />
           ) : (
-            <FollowButton
-              variant="secondary"
-              size={'medium'}
-              onClick={(e) => {
-                e.preventDefault()
-                toggleFollowing()
-              }}
-            >
+            <FollowButton variant="secondary" size={'medium'} onClick={handleFollowClick}>
               {isFollowing ? 'Unfollow' : 'Follow'}
             </FollowButton>
           )}
@@ -102,4 +106,6 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
       <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
     </>
   )
-}
+})
+
+ChannelWithVideos.displayName = 'ChannelWithVideos'

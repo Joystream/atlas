@@ -4,6 +4,8 @@ import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
 import { absoluteRoutes } from '@/config/routes'
 
+const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
+
 export const PromisingNewChannels = () => {
   const sortChannelsByViewsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
     if (!edges) {
@@ -20,10 +22,7 @@ export const PromisingNewChannels = () => {
       onDemand
       first={100}
       orderBy={ChannelOrderByInput.CreatedAtDesc}
-      additionalLink={{
-        name: 'Browse Channels',
-        url: absoluteRoutes.viewer.channels(),
-      }}
+      additionalLink={ADDITIONAL_LINK}
       additionalSortFn={sortChannelsByViewsDesc}
     />
   )
