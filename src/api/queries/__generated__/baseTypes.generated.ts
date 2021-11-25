@@ -161,14 +161,15 @@ export type MembershipWhereUniqueInput = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  /** Add a single view to the target video's count */
+  setVideoHero: VideoHero
   addVideoView: EntityViewsInfo
-  /** Add a single follow to the target channel */
   followChannel: ChannelFollowsInfo
   setCategoryFeaturedVideos: Array<FeaturedVideo>
-  setVideoHero: VideoHero
-  /** Remove a single follow from the target channel */
   unfollowChannel: ChannelFollowsInfo
+}
+
+export type MutationSetVideoHeroArgs = {
+  newVideoHero: VideoHeroInput
 }
 
 export type MutationAddVideoViewArgs = {
@@ -184,10 +185,6 @@ export type MutationFollowChannelArgs = {
 export type MutationSetCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
   videos: Array<FeaturedVideoInput>
-}
-
-export type MutationSetVideoHeroArgs = {
-  newVideoHero: VideoHeroInput
 }
 
 export type MutationUnfollowChannelArgs = {
@@ -212,53 +209,102 @@ export type ProcessorState = {
 
 export type Query = {
   __typename?: 'Query'
-  /** Get featured videos for all categories */
-  allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
-  /** Get follows counts for a list of channels */
-  batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
-  /** Get views counts for a list of channels */
-  batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
-  /** Get views counts for a list of videos */
-  batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  /** Get featured videos for a given video category */
-  categoryFeaturedVideos: Array<FeaturedVideo>
-  channelByUniqueInput?: Maybe<Channel>
-  /** Get follows count for a single channel */
-  channelFollows?: Maybe<ChannelFollowsInfo>
-  /** Get views count for a single channel */
-  channelViews?: Maybe<EntityViewsInfo>
-  channels: Array<Channel>
-  channelsConnection: ChannelConnection
-  dataObjects: Array<DataObject>
   membershipByUniqueInput?: Maybe<Membership>
   memberships: Array<Membership>
-  /** Get list of most followed channels */
-  mostFollowedChannels: Array<ChannelFollowsInfo>
-  /** Get list of most followed channels of all time */
-  mostFollowedChannelsAllTime?: Maybe<Array<ChannelFollowsInfo>>
-  /** Get list of most viewed categories in a given time period */
-  mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed categories of all time */
-  mostViewedCategoriesAllTime?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed channels in a given time period */
-  mostViewedChannels?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed channels of all time */
-  mostViewedChannelsAllTime?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed videos in a given time period */
-  mostViewedVideos?: Maybe<Array<EntityViewsInfo>>
-  /** Get list of most viewed videos of all time */
-  mostViewedVideosAllTime?: Maybe<Array<EntityViewsInfo>>
-  search: Array<SearchFtsOutput>
+  channelByUniqueInput?: Maybe<Channel>
+  channels: Array<Channel>
+  channelsConnection: ChannelConnection
   videoByUniqueInput?: Maybe<Video>
-  videoCategories: Array<VideoCategory>
-  /** Get current video hero */
-  videoHero: VideoHero
-  /** Get views count for a single video */
-  videoViews?: Maybe<EntityViewsInfo>
   videos?: Maybe<Array<Video>>
   videosConnection: VideoConnection
-  workerByUniqueInput?: Maybe<Worker>
+  videoCategories: Array<VideoCategory>
   workers?: Maybe<Array<Worker>>
+  workerByUniqueInput?: Maybe<Worker>
+  search: Array<SearchFtsOutput>
+  dataObjects: Array<DataObject>
+  videoHero: VideoHero
+  allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
+  batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
+  batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
+  batchedVideoViews: Array<Maybe<EntityViewsInfo>>
+  categoryFeaturedVideos: Array<FeaturedVideo>
+  channelFollows?: Maybe<ChannelFollowsInfo>
+  channelViews?: Maybe<EntityViewsInfo>
+  mostFollowedChannels: Array<Channel>
+  mostFollowedChannelsAllTime?: Maybe<Array<Channel>>
+  mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
+  mostViewedCategoriesAllTime?: Maybe<Array<EntityViewsInfo>>
+  mostViewedChannels?: Maybe<Array<Channel>>
+  mostViewedChannelsAllTime?: Maybe<Array<Channel>>
+  mostViewedVideos?: Maybe<Array<Video>>
+  mostViewedVideosAllTime?: Maybe<Array<Video>>
+  videoViews?: Maybe<EntityViewsInfo>
+}
+
+export type QueryMembershipByUniqueInputArgs = {
+  where: MembershipWhereUniqueInput
+}
+
+export type QueryMembershipsArgs = {
+  where: MembershipWhereInput
+}
+
+export type QueryChannelByUniqueInputArgs = {
+  where: ChannelWhereUniqueInput
+}
+
+export type QueryChannelsArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  orderBy?: Maybe<Array<ChannelOrderByInput>>
+  where?: Maybe<ChannelWhereInput>
+}
+
+export type QueryChannelsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<ChannelWhereInput>
+  orderBy?: Maybe<Array<ChannelOrderByInput>>
+}
+
+export type QueryVideoByUniqueInputArgs = {
+  where: VideoWhereUniqueInput
+}
+
+export type QueryVideosArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<VideoWhereInput>
+  orderBy?: Maybe<Array<VideoOrderByInput>>
+}
+
+export type QueryVideosConnectionArgs = {
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<VideoWhereInput>
+  orderBy?: Maybe<Array<VideoOrderByInput>>
+}
+
+export type QueryWorkersArgs = {
+  offset?: Maybe<Scalars['Int']>
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<WorkerWhereInput>
+}
+
+export type QueryWorkerByUniqueInputArgs = {
+  where: WorkerWhereUniqueInput
+}
+
+export type QuerySearchArgs = {
+  limit?: Maybe<Scalars['Int']>
+  text: Scalars['String']
+  whereVideo?: Maybe<VideoWhereInput>
+  whereChannel?: Maybe<ChannelWhereInput>
+}
+
+export type QueryDataObjectsArgs = {
+  limit?: Maybe<Scalars['Int']>
+  where?: Maybe<DataObjectWhereInput>
 }
 
 export type QueryBatchedChannelFollowsArgs = {
@@ -277,43 +323,12 @@ export type QueryCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
 }
 
-export type QueryChannelByUniqueInputArgs = {
-  where: ChannelWhereUniqueInput
-}
-
 export type QueryChannelFollowsArgs = {
   channelId: Scalars['ID']
 }
 
 export type QueryChannelViewsArgs = {
   channelId: Scalars['ID']
-}
-
-export type QueryChannelsArgs = {
-  offset?: Maybe<Scalars['Int']>
-  limit?: Maybe<Scalars['Int']>
-  orderBy?: Maybe<Array<ChannelOrderByInput>>
-  where?: Maybe<ChannelWhereInput>
-}
-
-export type QueryChannelsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>
-  after?: Maybe<Scalars['String']>
-  where?: Maybe<ChannelWhereInput>
-  orderBy?: Maybe<Array<ChannelOrderByInput>>
-}
-
-export type QueryDataObjectsArgs = {
-  limit?: Maybe<Scalars['Int']>
-  where?: Maybe<DataObjectWhereInput>
-}
-
-export type QueryMembershipByUniqueInputArgs = {
-  where: MembershipWhereUniqueInput
-}
-
-export type QueryMembershipsArgs = {
-  where: MembershipWhereInput
 }
 
 export type QueryMostFollowedChannelsArgs = {
@@ -352,43 +367,8 @@ export type QueryMostViewedVideosAllTimeArgs = {
   limit: Scalars['Int']
 }
 
-export type QuerySearchArgs = {
-  limit?: Maybe<Scalars['Int']>
-  text: Scalars['String']
-  whereVideo?: Maybe<VideoWhereInput>
-  whereChannel?: Maybe<ChannelWhereInput>
-}
-
-export type QueryVideoByUniqueInputArgs = {
-  where: VideoWhereUniqueInput
-}
-
 export type QueryVideoViewsArgs = {
   videoId: Scalars['ID']
-}
-
-export type QueryVideosArgs = {
-  offset?: Maybe<Scalars['Int']>
-  limit?: Maybe<Scalars['Int']>
-  where?: Maybe<VideoWhereInput>
-  orderBy?: Maybe<Array<VideoOrderByInput>>
-}
-
-export type QueryVideosConnectionArgs = {
-  first?: Maybe<Scalars['Int']>
-  after?: Maybe<Scalars['String']>
-  where?: Maybe<VideoWhereInput>
-  orderBy?: Maybe<Array<VideoOrderByInput>>
-}
-
-export type QueryWorkerByUniqueInputArgs = {
-  where: WorkerWhereUniqueInput
-}
-
-export type QueryWorkersArgs = {
-  offset?: Maybe<Scalars['Int']>
-  limit?: Maybe<Scalars['Int']>
-  where?: Maybe<WorkerWhereInput>
 }
 
 export type SearchFtsOutput = {
@@ -464,6 +444,7 @@ export type VideoHero = {
   heroTitle: Scalars['String']
   heroVideoCutUrl: Scalars['String']
   videoId: Scalars['ID']
+  video?: Maybe<Video>
 }
 
 export type VideoHeroInput = {

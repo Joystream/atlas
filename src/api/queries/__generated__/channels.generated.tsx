@@ -392,7 +392,7 @@ export type GetMostViewedChannelsQueryVariables = Types.Exact<{
 
 export type GetMostViewedChannelsQuery = {
   __typename?: 'Query'
-  mostViewedChannels?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+  mostViewedChannels?: Types.Maybe<Array<{ __typename?: 'Channel'; id: string; views?: Types.Maybe<number> }>>
 }
 
 export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
@@ -401,7 +401,7 @@ export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
 
 export type GetMostViewedChannelsAllTimeQuery = {
   __typename?: 'Query'
-  mostViewedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+  mostViewedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'Channel'; id: string; views?: Types.Maybe<number> }>>
 }
 
 export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
@@ -411,7 +411,7 @@ export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
 
 export type GetMostFollowedChannelsQuery = {
   __typename?: 'Query'
-  mostFollowedChannels: Array<{ __typename?: 'ChannelFollowsInfo'; id: string; follows: number }>
+  mostFollowedChannels: Array<{ __typename?: 'Channel'; id: string; follows?: Types.Maybe<number> }>
 }
 
 export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
@@ -420,7 +420,9 @@ export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
 
 export type GetMostFollowedChannelsAllTimeQuery = {
   __typename?: 'Query'
-  mostFollowedChannelsAllTime?: Types.Maybe<Array<{ __typename?: 'ChannelFollowsInfo'; id: string; follows: number }>>
+  mostFollowedChannelsAllTime?: Types.Maybe<
+    Array<{ __typename?: 'Channel'; id: string; follows?: Types.Maybe<number> }>
+  >
 }
 
 export const BasicChannelFieldsFragmentDoc = gql`

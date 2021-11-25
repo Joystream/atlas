@@ -1,5 +1,30 @@
 scalar DateTime
 
+type CategoryFeaturedVideos {
+  categoryId: ID!
+  videos: [FeaturedVideo!]!
+}
+
+type ChannelFollowsInfo {
+  follows: Int!
+  id: ID!
+}
+
+type EntityViewsInfo {
+  id: ID!
+  views: Int!
+}
+
+type FeaturedVideo {
+  videoCutUrl: String
+  videoId: ID!
+}
+
+input FeaturedVideoInput {
+  videoCutUrl: String
+  videoId: ID!
+}
+
 type VideoCategory {
   id: ID!
   name: String
@@ -19,6 +44,13 @@ type PageInfo {
 
   startCursor: String
   endCursor: String
+}
+
+input VideoHeroInput {
+  heroPosterUrl: String!
+  heroTitle: String!
+  heroVideoCutUrl: String!
+  videoId: ID!
 }
 
 enum AssetAvailability {
@@ -191,6 +223,14 @@ type Video {
   views: Int
 }
 
+type VideoHero {
+  heroPosterUrl: String!
+  heroTitle: String!
+  heroVideoCutUrl: String!
+  videoId: ID!
+  video: Video
+}
+
 input VideoCategoryWhereUniqueInput {
   id: ID!
 }
@@ -272,6 +312,14 @@ type Language {
   iso: String!
 }
 
+type Mutation {
+  setVideoHero(newVideoHero: VideoHeroInput!): VideoHero!
+  addVideoView(categoryId: ID, channelId: ID!, videoId: ID!): EntityViewsInfo!
+  followChannel(channelId: ID!): ChannelFollowsInfo!
+  setCategoryFeaturedVideos(categoryId: ID!, videos: [FeaturedVideoInput!]!): [FeaturedVideo!]!
+  unfollowChannel(channelId: ID!): ChannelFollowsInfo!
+}
+
 type Query {
   # Lookup a membership by its ID
   membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
@@ -313,6 +361,40 @@ type Query {
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
 
   dataObjects(limit: Int, where: DataObjectWhereInput): [DataObject!]!
+
+  videoHero: VideoHero!
+
+  allCategoriesFeaturedVideos: [CategoryFeaturedVideos!]!
+
+  batchedChannelFollows(channelIdList: [ID!]!): [ChannelFollowsInfo]!
+
+  batchedChannelsViews(channelIdList: [ID!]!): [EntityViewsInfo]!
+
+  batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
+
+  categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
+
+  channelFollows(channelId: ID!): ChannelFollowsInfo
+
+  channelViews(channelId: ID!): EntityViewsInfo
+
+  mostFollowedChannels(limit: Int, timePeriodDays: Int!): [Channel!]!
+
+  mostFollowedChannelsAllTime(limit: Int!): [Channel!]
+
+  mostViewedCategories(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
+
+  mostViewedCategoriesAllTime(limit: Int!): [EntityViewsInfo!]
+
+  mostViewedChannels(limit: Int, timePeriodDays: Int!): [Channel!]
+
+  mostViewedChannelsAllTime(limit: Int!): [Channel!]
+
+  mostViewedVideos(limit: Int, timePeriodDays: Int!): [Video!]
+
+  mostViewedVideosAllTime(limit: Int!): [Video!]
+
+  videoViews(videoId: ID!): EntityViewsInfo
 }
 
 type Subscription {

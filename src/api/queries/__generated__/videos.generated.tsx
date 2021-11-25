@@ -519,7 +519,7 @@ export type GetMostViewedVideosQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosQuery = {
   __typename?: 'Query'
-  mostViewedVideos?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+  mostViewedVideos?: Types.Maybe<Array<{ __typename?: 'Video'; id: string; views?: Types.Maybe<number> }>>
 }
 
 export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
@@ -528,7 +528,7 @@ export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosAllTimeQuery = {
   __typename?: 'Query'
-  mostViewedVideosAllTime?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+  mostViewedVideosAllTime?: Types.Maybe<Array<{ __typename?: 'Video'; id: string; views?: Types.Maybe<number> }>>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
