@@ -5,25 +5,38 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { BottomNav } from '@/components/BottomNav'
-import { SidenavViewer } from '@/components/SidenavViewer'
-import { TopbarViewer } from '@/components/TopbarViewer'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { BottomNav } from '@/components/_navigation/BottomNav'
+import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
+import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { ChannelView, ChannelsView, HomeView, NewView, PopularView, SearchView, VideoView } from '@/views/viewer'
+import {
+  CategoryView,
+  ChannelView,
+  ChannelsView,
+  HomeView,
+  NewView,
+  PopularView,
+  SearchView,
+  VideoView,
+} from '@/views/viewer'
+
+import { DiscoverView } from './DiscoverView/DiscoverView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
   { path: relativeRoutes.viewer.new(), element: <NewView /> },
+  { path: relativeRoutes.viewer.discover(), element: <DiscoverView /> },
   { path: relativeRoutes.viewer.video(), element: <VideoView /> },
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
+  { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
 ]
 
 export const ViewerLayout: React.FC = () => {

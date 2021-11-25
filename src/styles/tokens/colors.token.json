@@ -1,391 +1,393 @@
 {
-  "type": "color",
-  "core": {
-    "neutral": {
-      "50": {
-        "default": {
-          "value": "#F4F6F8"
+  "color": {
+    "type": "color",
+    "core": {
+      "neutral": {
+        "50": {
+          "default": {
+            "value": "#F4F6F8"
+          },
+          "lighten": {
+            "value": "#FAFAFAFA"
+          },
+          "darken": {
+            "value": "#234A710D"
+          }
         },
-        "lighten": {
-          "value": "#FAFAFAFA"
+        "100": {
+          "default": {
+            "value": "#DAE2EB"
+          },
+          "lighten": {
+            "value": "#F2F2F3ED"
+          },
+          "darken": {
+            "value": "#083C7826"
+          }
         },
-        "darken": {
-          "value": "#234A710D"
+        "200": {
+          "default": {
+            "value": "#B5C1C9"
+          },
+          "lighten": {
+            "value": "#F2F2F3C9"
+          },
+          "darken": {
+            "value": "#082F4A4D"
+          }
+        },
+        "300": {
+          "default": {
+            "value": "#7B8A95"
+          },
+          "lighten": {
+            "value": "#E4E6E796"
+          },
+          "darken": {
+            "value": "#0A1C2985"
+          }
+        },
+        "400": {
+          "default": {
+            "value": "#52616B"
+          },
+          "lighten": {
+            "value": "#DCE1E56B"
+          },
+          "darken": {
+            "value": "#0C1317AD"
+          }
+        },
+        "500": {
+          "default": {
+            "value": "#424E57"
+          },
+          "lighten": {
+            "value": "#D2DDE559"
+          },
+          "darken": {
+            "value": "#101214BF"
+          }
+        },
+        "600": {
+          "default": {
+            "value": "#343D44"
+          },
+          "lighten": {
+            "value": "#CBE0F145"
+          },
+          "darken": {
+            "value": "#090A0BCC"
+          }
+        },
+        "700": {
+          "default": {
+            "value": "#272D33"
+          },
+          "lighten": {
+            "value": "#C2E0FF33"
+          },
+          "darken": {
+            "value": "#070808D9"
+          }
+        },
+        "800": {
+          "default": {
+            "value": "#181C20"
+          },
+          "lighten": {
+            "value": "#BBD9F621"
+          },
+          "darken": {
+            "value": "#050505E8"
+          }
+        },
+        "900": {
+          "default": {
+            "value": "#0B0C0F"
+          },
+          "lighten": {
+            "value": "#B7C8FA0F"
+          },
+          "darken": {
+            "value": "#010205F5"
+          }
         }
       },
-      "100": {
-        "default": {
-          "value": "#DAE2EB"
+      "blue": {
+        "50": {
+          "value": "#BECAFF"
         },
-        "lighten": {
-          "value": "#F2F2F3ED"
+        "100": {
+          "value": "#9FACFF"
         },
-        "darken": {
-          "value": "#083C7826"
+        "200": {
+          "value": "#8890FF"
+        },
+        "300": {
+          "value": "#7174FF"
+        },
+        "400": {
+          "value": "#5A58FF"
+        },
+        "500": {
+          "value": "#4038FF",
+          "description": "Joystream brand primary color"
+        },
+        "600": {
+          "value": "#342ECF"
+        },
+        "700": {
+          "value": "#2823A0"
+        },
+        "800": {
+          "value": "#1B186C"
+        },
+        "900": {
+          "value": "#08071E"
         }
       },
-      "200": {
-        "default": {
-          "value": "#B5C1C9"
+      "green": {
+        "50": {
+          "value": "#75E1A2"
         },
-        "lighten": {
-          "value": "#F2F2F3C9"
+        "100": {
+          "value": "#12CC60"
         },
-        "darken": {
-          "value": "#082F4A4D"
+        "200": {
+          "value": "#0EB152"
+        },
+        "300": {
+          "value": "#0C9846"
+        },
+        "400": {
+          "value": "#0A823C"
+        },
+        "500": {
+          "value": "#096C32"
+        },
+        "600": {
+          "value": "#075829"
+        },
+        "700": {
+          "value": "#05441F"
+        },
+        "800": {
+          "value": "#042D15"
+        },
+        "900": {
+          "value": "#010D06"
         }
       },
-      "300": {
-        "default": {
-          "value": "#7B8A95"
+      "red": {
+        "50": {
+          "value": "#FFBBB7"
         },
-        "lighten": {
-          "value": "#E4E6E796"
+        "100": {
+          "value": "#FF948D"
         },
-        "darken": {
-          "value": "#0A1C2985"
+        "200": {
+          "value": "#FF695F"
+        },
+        "300": {
+          "value": "#F34235"
+        },
+        "400": {
+          "value": "#CF382D"
+        },
+        "500": {
+          "value": "#AE2F26"
+        },
+        "600": {
+          "value": "#8D261F"
+        },
+        "700": {
+          "value": "#6D1E18"
+        },
+        "800": {
+          "value": "#4A1410"
+        },
+        "900": {
+          "value": "#150605"
         }
       },
-      "400": {
-        "default": {
-          "value": "#52616B"
+      "yellow": {
+        "50": {
+          "value": "#FEE879"
         },
-        "lighten": {
-          "value": "#DCE1E56B"
+        "100": {
+          "value": "#ECC502"
         },
-        "darken": {
-          "value": "#0C1317AD"
-        }
-      },
-      "500": {
-        "default": {
-          "value": "#424E57"
+        "200": {
+          "value": "#CAA802"
         },
-        "lighten": {
-          "value": "#D2DDE559"
+        "300": {
+          "value": "#AC9002"
         },
-        "darken": {
-          "value": "#101214BF"
-        }
-      },
-      "600": {
-        "default": {
-          "value": "#343D44"
+        "400": {
+          "value": "#917901"
         },
-        "lighten": {
-          "value": "#CBE0F145"
+        "500": {
+          "value": "#786401"
         },
-        "darken": {
-          "value": "#090A0BCC"
-        }
-      },
-      "700": {
-        "default": {
-          "value": "#272D33"
+        "600": {
+          "value": "#615001"
         },
-        "lighten": {
-          "value": "#C2E0FF33"
+        "700": {
+          "value": "#4A3D01"
         },
-        "darken": {
-          "value": "#070808D9"
-        }
-      },
-      "800": {
-        "default": {
-          "value": "#181C20"
+        "800": {
+          "value": "#302800"
         },
-        "lighten": {
-          "value": "#BBD9F621"
-        },
-        "darken": {
-          "value": "#050505E8"
-        }
-      },
-      "900": {
-        "default": {
-          "value": "#0B0C0F"
-        },
-        "lighten": {
-          "value": "#B7C8FA0F"
-        },
-        "darken": {
-          "value": "#010205F5"
+        "900": {
+          "value": "#0A0900"
         }
       }
     },
-    "blue": {
-      "50": {
-        "value": "#BECAFF"
-      },
-      "100": {
-        "value": "#9FACFF"
-      },
-      "200": {
-        "value": "#8890FF"
-      },
-      "300": {
-        "value": "#7174FF"
-      },
-      "400": {
-        "value": "#5A58FF"
-      },
-      "500": {
-        "value": "#4038FF",
-        "description": "Joystream brand primary color"
-      },
-      "600": {
-        "value": "#342ECF"
-      },
-      "700": {
-        "value": "#2823A0"
-      },
-      "800": {
-        "value": "#1B186C"
-      },
-      "900": {
-        "value": "#08071E"
-      }
-    },
-    "green": {
-      "50": {
-        "value": "#75E1A2"
-      },
-      "100": {
-        "value": "#12CC60"
-      },
-      "200": {
-        "value": "#0EB152"
-      },
-      "300": {
-        "value": "#0C9846"
-      },
-      "400": {
-        "value": "#0A823C"
-      },
-      "500": {
-        "value": "#096C32"
-      },
-      "600": {
-        "value": "#075829"
-      },
-      "700": {
-        "value": "#05441F"
-      },
-      "800": {
-        "value": "#042D15"
-      },
-      "900": {
-        "value": "#010D06"
-      }
-    },
-    "red": {
-      "50": {
-        "value": "#FFBBB7"
-      },
-      "100": {
-        "value": "#FF948D"
-      },
-      "200": {
-        "value": "#FF695F"
-      },
-      "300": {
-        "value": "#F34235"
-      },
-      "400": {
-        "value": "#CF382D"
-      },
-      "500": {
-        "value": "#AE2F26"
-      },
-      "600": {
-        "value": "#8D261F"
-      },
-      "700": {
-        "value": "#6D1E18"
-      },
-      "800": {
-        "value": "#4A1410"
-      },
-      "900": {
-        "value": "#150605"
-      }
-    },
-    "yellow": {
-      "50": {
-        "value": "#FEE879"
-      },
-      "100": {
-        "value": "#ECC502"
-      },
-      "200": {
-        "value": "#CAA802"
-      },
-      "300": {
-        "value": "#AC9002"
-      },
-      "400": {
-        "value": "#917901"
-      },
-      "500": {
-        "value": "#786401"
-      },
-      "600": {
-        "value": "#615001"
-      },
-      "700": {
-        "value": "#4A3D01"
-      },
-      "800": {
-        "value": "#302800"
-      },
-      "900": {
-        "value": "#0A0900"
-      }
-    }
-  },
-  "text": {
-    "description": "Colors for text & icons",
-    "default": {
-      "muted": {
-        "value": "{core.neutral.400.default}",
-        "description": "Disabled text, placeholders, etc."
-      },
+    "text": {
+      "description": "Colors for text & icons",
       "default": {
-        "value": "{core.neutral.500.default}",
-        "description": "Paragraphs, captions, etc."
+        "muted": {
+          "value": "{color.core.neutral.400.default}",
+          "description": "Disabled text, placeholders, etc."
+        },
+        "default": {
+          "value": "{color.core.neutral.500.default}",
+          "description": "Paragraphs, captions, etc."
+        },
+        "strong": {
+          "value": "{color.core.neutral.600.default}",
+          "description": "Headlines, component labels, etc."
+        }
       },
-      "strong": {
-        "value": "{core.neutral.600.default}",
-        "description": "Headlines, component labels, etc."
+      "primary": {
+        "value": "{color.core.blue.300}",
+        "description": "Accent, links etc."
+      },
+      "error": {
+        "value": "{color.core.red.300}",
+        "description": "Error, warning text etc."
+      },
+      "success": {
+        "value": "{color.core.green.300}",
+        "description": "Success, positive text, etc."
       }
     },
-    "primary": {
-      "value": "{core.blue.300}",
-      "description": "Accent, links etc."
-    },
-    "error": {
-      "value": "{core.red.300}",
-      "description": "Error, warning text etc."
-    },
-    "success": {
-      "value": "{core.green.300}",
-      "description": "Success, positive text, etc."
-    }
-  },
-  "border": {
-    "muted": {
-      "default": {
-        "value": "{core.neutral.700.default}"
-      },
-      "alpha": {
-        "value": "{core.neutral.700.lighten}",
-        "description": "Dividers, separators, etc."
-      }
-    },
-    "default": {
-      "default": {
-        "value": "{core.neutral.500.default}"
-      },
-      "alpha": {
-        "value": "{core.neutral.500.lighten}",
-        "description": "Component borders on default states"
-      }
-    },
-    "strong": {
-      "default": {
-        "value": "{core.neutral.300.default}"
-      },
-      "alpha": {
-        "value": "{core.neutral.300.lighten}",
-        "description": "Component borders on hover states"
-      }
-    }
-  },
-  "background": {
-    "default": {
+    "border": {
       "muted": {
         "default": {
-          "value": "{core.neutral.900.default}",
-          "description": "1st level section, cards, etc."
+          "value": "{color.core.neutral.700.default}"
         },
         "alpha": {
-          "value": "{core.neutral.900.lighten}"
+          "value": "{color.core.neutral.700.lighten}",
+          "description": "Dividers, separators, etc."
         }
       },
       "default": {
         "default": {
-          "value": "{core.neutral.800.default}",
-          "description": "2nd level section, cards, etc."
+          "value": "{color.core.neutral.500.default}"
         },
         "alpha": {
-          "value": "{core.neutral.800.lighten}",
-          "description": "Component backgrounds on hover states"
+          "value": "{color.core.neutral.500.lighten}",
+          "description": "Component borders on default states"
         }
       },
       "strong": {
         "default": {
-          "value": "{core.neutral.700.default}",
-          "description": "Windows, dialogs, side sheets, etc."
+          "value": "{color.core.neutral.300.default}"
         },
         "alpha": {
-          "value": "{core.neutral.700.lighten}",
+          "value": "{color.core.neutral.300.lighten}",
+          "description": "Component borders on hover states"
+        }
+      }
+    },
+    "background": {
+      "default": {
+        "muted": {
+          "default": {
+            "value": "{color.core.neutral.900.default}",
+            "description": "1st level section, cards, etc."
+          },
+          "alpha": {
+            "value": "{color.core.neutral.900.lighten}"
+          }
+        },
+        "default": {
+          "default": {
+            "value": "{color.core.neutral.800.default}",
+            "description": "2nd level section, cards, etc."
+          },
+          "alpha": {
+            "value": "{color.core.neutral.800.lighten}",
+            "description": "Component backgrounds on hover states"
+          }
+        },
+        "strong": {
+          "default": {
+            "value": "{color.core.neutral.700.default}",
+            "description": "Windows, dialogs, side sheets, etc."
+          },
+          "alpha": {
+            "value": "{color.core.neutral.700.lighten}",
+            "description": "Component backgrounds on pressed states"
+          }
+        },
+        "elevated": {
+          "default": {
+            "value": "{color.core.neutral.600.default}",
+            "description": "Dropdowns, popovers, etc."
+          },
+          "alpha": {
+            "value": "{color.core.neutral.600.lighten}"
+          }
+        },
+        "overlay": {
+          "value": "{color.core.neutral.500.darken}",
+          "description": "Overlay behind dialogs, side sheets, etc."
+        }
+      },
+      "primary": {
+        "muted": {
+          "value": "{color.core.blue.600}",
           "description": "Component backgrounds on pressed states"
-        }
-      },
-      "elevated": {
-        "default": {
-          "value": "{core.neutral.600.default}",
-          "description": "Dropdowns, popovers, etc."
         },
-        "alpha": {
-          "value": "{core.neutral.600.lighten}"
+        "default": {
+          "value": "{color.core.blue.500}",
+          "description": "Component backgrounds on default states, callouts, etc."
+        },
+        "strong": {
+          "value": "{color.core.blue.400}",
+          "description": "Component backgrounds on hover statess"
         }
       },
-      "overlay": {
-        "value": "{core.neutral.500.darken}",
-        "description": "Overlay behind dialogs, side sheets, etc."
-      }
-    },
-    "primary": {
-      "muted": {
-        "value": "{core.blue.600}",
-        "description": "Component backgrounds on pressed states"
+      "error": {
+        "muted": {
+          "value": "{color.core.red.600}",
+          "description": "Component backgrounds on pressed states"
+        },
+        "default": {
+          "value": "{color.core.red.500}",
+          "description": "Component backgrounds on default states, callouts, etc."
+        },
+        "strong": {
+          "value": "{color.core.red.400}",
+          "description": "Component backgrounds on hover statess"
+        }
       },
-      "default": {
-        "value": "{core.blue.500}",
-        "description": "Component backgrounds on default states, callouts, etc."
-      },
-      "strong": {
-        "value": "{core.blue.400}",
-        "description": "Component backgrounds on hover statess"
-      }
-    },
-    "error": {
-      "muted": {
-        "value": "{core.red.600}",
-        "description": "Component backgrounds on pressed states"
-      },
-      "default": {
-        "value": "{core.red.500}",
-        "description": "Component backgrounds on default states, callouts, etc."
-      },
-      "strong": {
-        "value": "{core.red.400}",
-        "description": "Component backgrounds on hover statess"
-      }
-    },
-    "success": {
-      "muted": {
-        "value": "{core.green.600}",
-        "description": "Component backgrounds on pressed states"
-      },
-      "default": {
-        "value": "{core.green.500}",
-        "description": "Component backgrounds on default states, callouts, etc."
-      },
-      "strong": {
-        "value": "{core.green.400}",
-        "description": "Component backgrounds on hover statess"
+      "success": {
+        "muted": {
+          "value": "{color.core.green.600}",
+          "description": "Component backgrounds on pressed states"
+        },
+        "default": {
+          "value": "{color.core.green.500}",
+          "description": "Component backgrounds on default states, callouts, etc."
+        },
+        "strong": {
+          "value": "{color.core.green.400}",
+          "description": "Component backgrounds on hover statess"
+        }
       }
     }
   }

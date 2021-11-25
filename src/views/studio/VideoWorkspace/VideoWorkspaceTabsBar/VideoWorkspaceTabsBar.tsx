@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
 
+import { Badge } from '@/components/Badge'
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgActionClose, SvgActionMaximize, SvgActionMinimize, SvgActionPlus } from '@/components/_icons'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
-import { Badge } from '@/shared/components/Badge'
-import { IconButton } from '@/shared/components/IconButton'
-import { SvgGlyphClose, SvgGlyphMaximize, SvgGlyphMinimize, SvgGlyphPlus } from '@/shared/icons'
 
 import {
   AddDraftButtonContainer,
@@ -13,7 +13,7 @@ import {
   TabWrapper,
   TabsContainer,
   Topbar,
-} from './VideoWorkspaceTabsBar.style'
+} from './VideoWorkspaceTabsBar.styles'
 
 type TabsBarProps = {
   videoTabs: VideoWorkspaceTab[]
@@ -64,16 +64,16 @@ export const VideoWorkspaceTabsBar: React.FC<TabsBarProps> = ({
           }
         >
           <IconButton variant="tertiary" onClick={onAddNewTabClick}>
-            <SvgGlyphPlus />
+            <SvgActionPlus />
           </IconButton>
         </AddDraftButtonContainer>
       </TabsContainer>
       <ButtonsContainer>
         <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
-          {videoWorkspaceState === 'open' ? <SvgGlyphMinimize /> : <SvgGlyphMaximize />}
+          {videoWorkspaceState === 'open' ? <SvgActionMinimize /> : <SvgActionMaximize />}
         </IconButton>
         <IconButton variant="tertiary" onClick={onCloseClick}>
-          <SvgGlyphClose />
+          <SvgActionClose />
         </IconButton>
       </ButtonsContainer>
     </Topbar>
@@ -118,7 +118,7 @@ const VideoWorkspaceSingleTab: React.FC<VideoWorkspaceTabProps> = ({
             onRemoveTabClick()
           }}
         >
-          <SvgGlyphClose />
+          <SvgActionClose />
         </IconButton>
         <TabTitle secondary={!selected} variant="subtitle2">
           {tabData?.title || 'Untitled'}

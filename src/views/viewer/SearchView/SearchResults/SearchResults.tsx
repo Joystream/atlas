@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
 import { useCategories } from '@/api/hooks'
-import { ChannelGrid } from '@/components/ChannelGrid'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { SkeletonLoaderVideoGrid } from '@/components/SkeletonLoaderVideoGrid'
-import { VideoGrid } from '@/components/VideoGrid'
+import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
+import { ChannelGrid } from '@/components/_channel/ChannelGrid'
+import { SvgActionFilters } from '@/components/_icons'
+import { SkeletonLoaderVideoGrid } from '@/components/_loaders/SkeletonLoaderVideoGrid'
+import { VideoGrid } from '@/components/_video/VideoGrid'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Tabs } from '@/shared/components/Tabs'
-import { SvgActionFilters } from '@/shared/icons'
 
-import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.style'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string
@@ -27,7 +27,7 @@ const tabs = ['Videos', 'Channels']
 export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
-  const filtersBarLogic = useFiltersBar(false)
+  const filtersBarLogic = useFiltersBar()
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen, setLanguage, language },
@@ -50,7 +50,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   }, [clearAllFilters, selectedTabIndex, setIsFiltersOpen, setLanguage])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
-    setLanguage(selectedLanguage)
+    setLanguage(selectedLanguage as string | null | undefined)
     setVideoWhereInput((value) => ({
       ...value,
       languageId_eq: selectedLanguage as string,
@@ -80,11 +80,10 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
           <FiltersWrapper>
             {smMatch && selectedTabIndex === 0 && (
               <StyledSelect
-                items={languages}
-                placeholder="Any language"
+                onChange={handleSelectLanguage}
                 size="small"
                 value={language}
-                onChange={handleSelectLanguage}
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
               />
             )}
             {selectedTabIndex === 0 && (
@@ -100,7 +99,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             )}
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} categories={categories} mobileLanguageSelector />
+        <FiltersBar {...filtersBarLogic} categories={categories} />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>

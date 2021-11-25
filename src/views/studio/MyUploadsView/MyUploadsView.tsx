@@ -1,16 +1,16 @@
 import React from 'react'
 import shallow from 'zustand/shallow'
 
+import { EmptyFallback } from '@/components/EmptyFallback'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { SvgGlyphUpload } from '@/shared/icons'
 
-import { StyledText, UploadsContainer } from './MyUploadsView.style'
+import { StyledText, UploadsContainer } from './MyUploadsView.styles'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
@@ -62,7 +62,7 @@ export const MyUploadsView: React.FC = () => {
           subtitle="You will see status of each ongoing upload here."
           button={
             <Button
-              icon={<SvgGlyphUpload />}
+              icon={<SvgActionUpload />}
               variant="secondary"
               size="large"
               to={absoluteRoutes.studio.videoWorkspace()}

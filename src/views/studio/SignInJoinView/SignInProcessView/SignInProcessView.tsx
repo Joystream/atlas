@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { SignInStepsStepper } from '@/components/SignInSteps'
+import { Text } from '@/components/Text'
+import { SvgActionChevronR } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphChevronRight } from '@/shared/icons'
 
 import {
   HeroContainer,
@@ -16,7 +16,7 @@ import {
   SubTitle,
   UnOrderedItem,
   UnOrderedList,
-} from './SignInProcessView.style'
+} from './SignInProcessView.styles'
 
 export const SignInProcessView = () => {
   return (
@@ -70,11 +70,7 @@ export const SignInProcessView = () => {
               Publish your content on Joystream
             </OrderedItem>
           </OrderedList>
-          <StyledButton
-            size="large"
-            icon={<SvgGlyphChevronRight />}
-            to={absoluteRoutes.studio.signInJoin({ step: '1' })}
-          >
+          <StyledButton size="large" icon={<SvgActionChevronR />} to={absoluteRoutes.studio.signInJoin({ step: '1' })}>
             Get started
           </StyledButton>
         </ListContainer>

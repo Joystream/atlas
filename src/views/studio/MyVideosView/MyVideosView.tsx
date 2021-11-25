@@ -3,8 +3,13 @@ import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
-import { VideoTilePublisher } from '@/components/VideoTilePublisher'
+import { EmptyFallback } from '@/components/EmptyFallback'
+import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionAddVideo, SvgActionUpload } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
+import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
@@ -14,12 +19,7 @@ import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from
 import { useSnackbar } from '@/providers/snackbars'
 import { useAuthorizedUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
-import { Button } from '@/shared/components/Button'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Select } from '@/shared/components/Select'
-import { Tabs } from '@/shared/components/Tabs'
-import { SvgGlyphAddVideo, SvgGlyphUpload } from '@/shared/icons'
-import { sizes } from '@/shared/theme'
+import { sizes } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
@@ -292,7 +292,7 @@ export const MyVideosView = () => {
         <MobileButton
           size="large"
           to={absoluteRoutes.studio.videoWorkspace()}
-          icon={<SvgGlyphAddVideo />}
+          icon={<SvgActionAddVideo />}
           onClick={() => addVideoTab()}
         >
           Upload video
@@ -305,7 +305,7 @@ export const MyVideosView = () => {
           subtitle="No videos uploaded yet. Start publishing by adding your first video to Joystream."
           button={
             <Button
-              icon={<SvgGlyphUpload />}
+              icon={<SvgActionUpload />}
               to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
               size="large"
@@ -323,7 +323,7 @@ export const MyVideosView = () => {
             {smMatch && sortVisibleAndUploadButtonVisible && (
               <Button
                 to={absoluteRoutes.studio.videoWorkspace()}
-                icon={<SvgGlyphAddVideo />}
+                icon={<SvgActionAddVideo />}
                 onClick={() => addVideoTab()}
               >
                 Upload video
@@ -383,7 +383,7 @@ export const MyVideosView = () => {
               }
               button={
                 <Button
-                  icon={<SvgGlyphUpload />}
+                  icon={<SvgActionUpload />}
                   to={absoluteRoutes.studio.videoWorkspace()}
                   variant="secondary"
                   size="large"

@@ -26,3 +26,5 @@ storybook-static
 .pnp.*
 
 .DS_Store
+
+figma-import.config.js

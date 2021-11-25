@@ -3,17 +3,23 @@ import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/ImageCropModal'
+import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
+import {
+  SvgActionImageFile,
+  SvgActionUpload,
+  SvgActionVideoFile,
+  SvgAlertsSuccess24,
+  SvgAlertsWarning24,
+} from '@/components/_icons'
+import { Loader } from '@/components/_loaders/Loader'
+import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
-import { CircularProgress } from '@/shared/components/CircularProgress'
-import { Loader } from '@/shared/components/Loader'
-import { Text } from '@/shared/components/Text'
-import { SvgAlertSuccess, SvgAlertWarning, SvgGlyphFileImage, SvgGlyphFileVideo, SvgGlyphUpload } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 import { formatBytes } from '@/utils/size'
 
@@ -30,7 +36,7 @@ import {
   ProgressbarContainer,
   RetryButton,
   StatusText,
-} from './UploadStatus.style'
+} from './UploadStatus.styles'
 
 import { UploadStatusGroupSize } from '../UploadStatusGroup'
 
@@ -206,7 +212,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
           <StatusText variant="subtitle2" secondary size={size}>
             {failedStatusText}
           </StatusText>
-          <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={handleChangeHost}>
+          <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
             Try again
           </RetryButton>
         </FailedStatusWrapper>
@@ -220,7 +226,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
           </StatusText>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            <RetryButton size="small" variant="secondary" icon={<SvgGlyphUpload />} onClick={reselectFile}>
+            <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={reselectFile}>
               Reconnect file
             </RetryButton>
           </div>
@@ -231,10 +237,10 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
 
   const renderStatusIndicator = () => {
     if (uploadStatus?.lastStatus === 'completed') {
-      return <SvgAlertSuccess />
+      return <SvgAlertsSuccess24 />
     }
     if (uploadStatus?.lastStatus === 'error' || !uploadStatus?.lastStatus) {
-      return <SvgAlertWarning />
+      return <SvgAlertsWarning24 />
     }
     if (uploadStatus?.lastStatus === 'processing') {
       return <Loader variant="small" />
@@ -264,7 +270,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
           </FileStatusContainer>
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
-              {isVideo ? <SvgGlyphFileVideo /> : <SvgGlyphFileImage />}
+              {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
               <Text variant="body2">{fileTypeText}</Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (

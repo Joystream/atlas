@@ -1,17 +1,18 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
+import { useVideoHeroData } from '@/api/featured'
 import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
-import { DiscoverChannels } from '@/components/DiscoverChannels'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { OfficialJoystreamUpdate } from '@/components/OfficialJoystreamUpdate'
-import { TopTenThisWeek } from '@/components/TopTenThisWeek'
-import { VideoHero } from '@/components/VideoHero'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
+import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
+import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystreamUpdate'
+import { TopTenThisWeek } from '@/components/_content/TopTenThisWeek'
+import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
+import { VideoHero } from '@/components/_video/VideoHero'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { sizes, transitions } from '@/shared/theme'
+import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 export const HomeView: React.FC = () => {
@@ -19,6 +20,8 @@ export const HomeView: React.FC = () => {
 
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
+
+  const videoHeroData = useVideoHeroData()
 
   const {
     mostViewedVideos,
@@ -54,12 +57,12 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero />
+      <VideoHero videoHeroData={videoHeroData} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
             title="Followed channels"
-            channelIdIn={channelIdIn}
+            videoWhereInput={{ channelId_in: channelIdIn }}
             ready={!followedLoading}
             onDemand
             titleLoader
@@ -67,7 +70,7 @@ export const HomeView: React.FC = () => {
         ) : null}
         <InfiniteVideoGrid
           title="Popular on Joystream"
-          idIn={mostViewedVideosIds}
+          videoWhereInput={{ id_in: mostViewedVideosIds }}
           ready={!mostViewedVideosLoading}
           onDemand
           titleLoader
@@ -83,7 +86,7 @@ export const HomeView: React.FC = () => {
 
 const Container = styled.div`
   position: relative;
-  padding-bottom: ${sizes(16)};
+  padding: ${sizes(16)} 0;
 
   > section {
     :not(:first-of-type) {

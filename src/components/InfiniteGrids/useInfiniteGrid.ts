@@ -1,10 +1,10 @@
-import { ApolloError, useQuery } from '@apollo/client'
+import { ApolloError, NetworkStatus, useQuery } from '@apollo/client'
 import { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
-import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
+import { ChannelEdge, ChannelOrderByInput, VideoEdge, VideoOrderByInput } from '@/api/queries'
 
 export type PaginatedData<T> = {
   edges: {
@@ -42,8 +42,10 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onError?: (error: unknown) => void
   queryVariables: TArgs
   onDemand?: boolean
+  onDemandInfinite?: boolean
+  activatedInfinteGrid?: boolean
   onScrollToBottom?: () => void
-  orderBy?: ChannelOrderByInput
+  orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -71,6 +73,8 @@ export const useInfiniteGrid = <
   onError,
   queryVariables,
   onDemand,
+  onDemandInfinite,
+  activatedInfinteGrid,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
   additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
@@ -85,12 +89,13 @@ export const useInfiniteGrid = <
     error,
     fetchMore,
     refetch,
+    networkStatus,
   } = useQuery<TRawData, TArgs>(query, {
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
-      ...queryVariables,
       orderBy,
+      ...queryVariables,
       first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,
@@ -138,7 +143,7 @@ export const useInfiniteGrid = <
 
   // handle scroll to bottom
   useEffect(() => {
-    if (onDemand) {
+    if (onDemand || (onDemandInfinite && !activatedInfinteGrid)) {
       return
     }
     if (error) return
@@ -153,17 +158,19 @@ export const useInfiniteGrid = <
 
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand])
+  }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand, onDemandInfinite, activatedInfinteGrid])
 
   const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
 
+  const isRefetching = networkStatus === NetworkStatus.refetch
+
   const displayedEdges = edges?.slice(skipCount, targetLoadedItemsCount) ?? []
-  const displayedItems = displayedEdges.map((edge) => edge.node)
+  const displayedItems = isRefetching ? [] : displayedEdges.map((edge) => edge.node)
 
   const displayedItemsCount = data
     ? Math.min(targetDisplayedItemsCount, data.totalCount - skipCount)
     : targetDisplayedItemsCount
-  const placeholdersCount = displayedItemsCount - displayedItems.length
+  const placeholdersCount = isRefetching ? targetDisplayedItemsCount : displayedItemsCount - displayedItems.length
 
   return {
     displayedItems,

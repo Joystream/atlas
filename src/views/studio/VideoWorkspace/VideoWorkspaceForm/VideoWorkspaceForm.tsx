@@ -7,6 +7,17 @@ import useMeasure from 'react-use-measure'
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
+import { Checkbox } from '@/components/_inputs/Checkbox'
+import { Datepicker } from '@/components/_inputs/Datepicker'
+import { FormField } from '@/components/_inputs/FormField'
+import { FileErrorType, ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
+import { OptionCard } from '@/components/_inputs/OptionCard'
+import { RadioButton } from '@/components/_inputs/RadioButton'
+import { Select, SelectItem } from '@/components/_inputs/Select'
+import { TextArea } from '@/components/_inputs/TextArea'
+import { TextField } from '@/components/_inputs/TextField'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
@@ -22,17 +33,6 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceTabData,
 } from '@/providers/videoWorkspace'
-import { Button } from '@/shared/components/Button'
-import { Checkbox } from '@/shared/components/Checkbox'
-import { Datepicker } from '@/shared/components/Datepicker'
-import { FormField } from '@/shared/components/FormField'
-import { FileErrorType, ImageInputFile, VideoInputFile } from '@/shared/components/MultiFileSelect'
-import { OptionCard } from '@/shared/components/OptionCard'
-import { RadioButton } from '@/shared/components/RadioButton'
-import { Select, SelectItem } from '@/shared/components/Select'
-import { TextArea } from '@/shared/components/TextArea'
-import { TextField } from '@/shared/components/TextField'
-import { SvgGlyphChevronDown, SvgGlyphChevronUp, SvgPlayerCancel } from '@/shared/icons'
 import { FileType } from '@/types/files'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
@@ -52,7 +52,7 @@ import {
   StyledActionBar,
   StyledMultiFileSelect,
   StyledTitleArea,
-} from './VideoWorkspaceForm.style'
+} from './VideoWorkspaceForm.styles'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -513,7 +513,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
                 size="large"
                 iconPlacement="right"
                 textOnly
-                icon={moreSettingsVisible ? <SvgGlyphChevronUp /> : <SvgGlyphChevronDown />}
+                icon={moreSettingsVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
                 onClick={() => setMoreSettingsVisible(!moreSettingsVisible)}
               >
                 Show {moreSettingsVisible ? 'less' : 'more'} settings
@@ -676,7 +676,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
           visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
           text: 'Cancel',
           onClick: () => reset(),
-          icon: <SvgPlayerCancel width={16} height={16} />,
+          icon: <SvgControlsCancel width={16} height={16} />,
         }}
         draftBadge={{
           visible: !isEdit,

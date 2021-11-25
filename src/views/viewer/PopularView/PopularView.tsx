@@ -4,9 +4,9 @@ import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
 import { useMostViewedChannelsAllTimeIds } from '@/api/hooks'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
-import { VideoGallery } from '@/components/VideoGallery'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { VideoContentTemplate } from '@/components/templates/VideoContentTemplate'
+import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
+import { VideoGallery } from '@/components/_video/VideoGallery'
 import { absoluteRoutes } from '@/config/routes'
 import { SentryLogger } from '@/utils/logs'
 
@@ -43,7 +43,12 @@ export const PopularView: FC = () => {
   return (
     <VideoContentTemplate title="Popular on Joystream" cta={['new', 'home', 'channels']}>
       <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
-      <InfiniteVideoGrid title="Popular videos" idIn={mostViewedVideosIds} ready={!mostViewedVideosLoading} onDemand />
+      <InfiniteVideoGrid
+        title="Popular videos"
+        videoWhereInput={{ id_in: mostViewedVideosIds }}
+        ready={!mostViewedVideosLoading}
+        onDemand
+      />
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand

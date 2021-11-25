@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
+import { SvgActionNewTab } from '@/components/_icons'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
-import { SvgGlyphExternal } from '@/shared/icons'
 import { AssetUploadStatus } from '@/types/uploads'
 import { openInNewTab } from '@/utils/browser'
 import { createLookup } from '@/utils/data'
@@ -69,7 +69,7 @@ export const UploadsManager: React.FC = () => {
             iconType: 'success',
             timeout: UPLOADED_SNACKBAR_TIMEOUT,
             actionText: 'See on Joystream',
-            actionIcon: <SvgGlyphExternal />,
+            actionIcon: <SvgActionNewTab />,
             onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(video.parentObject.id), true),
           })
         }

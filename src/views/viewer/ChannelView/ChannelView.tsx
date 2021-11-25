@@ -9,23 +9,23 @@ import {
   VideoOrderByInput,
   useSearchLazyQuery,
 } from '@/api/queries'
+import { EmptyFallback } from '@/components/EmptyFallback'
+import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { VideoTile } from '@/components/VideoTile'
+import { Pagination } from '@/components/Pagination'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
+import { ChannelCover } from '@/components/_channel/ChannelCover'
+import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
+import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
-import { Button } from '@/shared/components/Button'
-import { ChannelCover } from '@/shared/components/ChannelCover'
-import { EmptyFallback } from '@/shared/components/EmptyFallback'
-import { Grid } from '@/shared/components/Grid'
-import { Pagination } from '@/shared/components/Pagination'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphCheck, SvgGlyphPlus, SvgGlyphSearch } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
@@ -50,7 +50,7 @@ import {
   TitleSection,
   TitleSkeletonLoader,
   VideoSection,
-} from './ChannelView.style'
+} from './ChannelView.styles'
 
 const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
@@ -253,7 +253,7 @@ export const ChannelView: React.FC = () => {
           </TitleContainer>
           <StyledButtonContainer>
             <StyledButton
-              icon={isFollowing ? <SvgGlyphCheck /> : <SvgGlyphPlus />}
+              icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
               variant={isFollowing ? 'secondary' : 'primary'}
               onClick={toggleFollowing}
               size="large"
@@ -444,7 +444,7 @@ const Search: React.FC<SearchProps> = ({
         isSearching={isSearching}
       />
       <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
-        <SvgGlyphSearch />
+        <SvgActionSearch />
       </SearchButton>
     </SearchContainer>
   )

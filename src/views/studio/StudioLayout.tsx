@@ -6,12 +6,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
-import { PrivateRoute } from '@/components/PrivateRoute'
-import { SidenavStudio } from '@/components/SidenavStudio'
 import { StudioEntrypoint } from '@/components/StudioEntrypoint'
-import { StudioLoading } from '@/components/StudioLoading'
-import { TopbarStudio } from '@/components/TopbarStudio'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { StudioLoading } from '@/components/_loaders/StudioLoading'
+import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
+import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
+import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -20,7 +20,7 @@ import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
 import { ActiveUserProvider, useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import {
   CreateEditChannelView,
@@ -96,47 +96,57 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.index()}
                 element={<StudioEntrypoint enterLocation={enterLocation} />}
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.signIn()}
-                element={<SignInView />}
-                isAuth={hasMembership}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute element={<SignInView />} isAuth={hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.signInJoin()}
-                element={<SignInJoinView />}
-                isAuth={!hasMembership}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute element={<SignInJoinView />} isAuth={!hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.newChannel()}
-                element={<CreateEditChannelView newChannel />}
-                isAuth={memberSet}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute
+                    element={<CreateEditChannelView newChannel />}
+                    isAuth={memberSet}
+                    redirectTo={ENTRY_POINT_ROUTE}
+                  />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.editChannel()}
-                element={<CreateEditChannelView />}
-                isAuth={channelSet}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute
+                    element={<CreateEditChannelView />}
+                    isAuth={channelSet}
+                    redirectTo={ENTRY_POINT_ROUTE}
+                  />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.newMembership()}
-                element={<CreateMemberView />}
-                isAuth={accountSet && !memberSet}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute
+                    element={<CreateMemberView />}
+                    isAuth={accountSet && !memberSet}
+                    redirectTo={ENTRY_POINT_ROUTE}
+                  />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.uploads()}
-                element={<MyUploadsView />}
-                isAuth={channelSet}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={
+                  <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                }
               />
-              <PrivateRoute
+              <Route
                 path={relativeRoutes.studio.videos()}
-                element={<MyVideosView />}
-                isAuth={channelSet}
-                redirectTo={ENTRY_POINT_ROUTE}
+                element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
               />
             </Routes>
           </MainContainer>

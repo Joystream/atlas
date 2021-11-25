@@ -2,18 +2,18 @@ import { add } from 'date-fns'
 import React, { useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { DialogModal, DialogModalProps } from '@/components/DialogModal'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionClose } from '@/components/_icons'
+import { Checkbox } from '@/components/_inputs/Checkbox'
+import { RadioButton } from '@/components/_inputs/RadioButton'
+import { Select } from '@/components/_inputs/Select'
+import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
+import { DialogPopover } from '@/components/_overlays/DialogPopover'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { Button } from '@/shared/components/Button'
-import { Checkbox } from '@/shared/components/Checkbox'
-import { DialogPopover } from '@/shared/components/DialogPopover'
-import { PopoverImperativeHandle } from '@/shared/components/Popover'
-import { RadioButton } from '@/shared/components/RadioButton'
-import { Select } from '@/shared/components/Select'
-import { Text } from '@/shared/components/Text'
-import { SvgGlyphClose } from '@/shared/icons'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 
 import {
   ClearAllButton,
@@ -33,14 +33,12 @@ type FilterCategory = {
 
 export type FiltersBarProps = {
   categories?: FilterCategory[]
-  mobileLanguageSelector?: boolean
 }
 
 export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
   categories,
-  mobileLanguageSelector,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
@@ -192,20 +190,18 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         title="Filters"
         content={
           <>
-            {mobileLanguageSelector && (
-              <MobileFilterContainer>
-                <Text secondary variant="overhead">
-                  Language
-                </Text>
-                <Select
-                  items={languages}
-                  placeholder="Any language"
-                  size="small"
-                  value={language}
-                  onChange={setLanguage}
-                />
-              </MobileFilterContainer>
-            )}
+            <MobileFilterContainer>
+              <Text secondary variant="overhead">
+                Language
+              </Text>
+              <Select
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                placeholder="Any language"
+                size="small"
+                value={language}
+                onChange={setLanguage}
+              />
+            </MobileFilterContainer>
             {categories && (
               <MobileFilterContainer>
                 <Text secondary variant="overhead">
@@ -248,7 +244,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
               isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
               categoryId_in: categoriesFilter,
-              languageId_eq: language as string,
+              languageId_eq: language === 'undefined' ? undefined : language,
               ...getDurationRules(),
             }))
             setIsFiltersOpen(false)
@@ -400,7 +396,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         </FiltersInnerContainer>
 
         {canClearAllFilters && (
-          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgGlyphClose />}>
+          <ClearAllButton onClick={clearAllFilters} variant="tertiary" icon={<SvgActionClose />}>
             Clear all
           </ClearAllButton>
         )}

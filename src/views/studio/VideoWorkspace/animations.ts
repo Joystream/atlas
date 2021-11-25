@@ -2,7 +2,7 @@ import { useSpring } from 'react-spring'
 import useMeasure from 'react-use-measure'
 
 import { VideoWorkspaceState } from '@/providers/videoWorkspace'
-import { transitions } from '@/shared/theme'
+import { transitions } from '@/styles'
 
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
 

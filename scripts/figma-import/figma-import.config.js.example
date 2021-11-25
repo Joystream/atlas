@@ -1,0 +1,13 @@
+/**
+ * FIGMA_TOKEN - your personal API token, generated in figma profile settings
+ * FILE_KEY - unique file id
+ * FRAME_WITH_ICONS_ID - root frame id with assets to export in the following format: 000:00
+ * Example url: https://www.figma.com/file/[FILE_KEY]/Joystream-Atlas?node-id=[FRAME_WITH_ICONS_ID]
+ * Currently used icon file: https://www.figma.com/file/1uxugLps6oooI38PGmdrn9/Figma-API--%3E-Storybook?node-id=637%3A380
+ */
+
+module.exports = {
+  FIGMA_TOKEN: '',
+  FILE_KEY: '1uxugLps6oooI38PGmdrn9',
+  FRAME_WITH_ICONS_ID: '637:380',
+}

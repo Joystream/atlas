@@ -2,11 +2,11 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
-import { ChannelGallery } from '@/components/ChannelGallery'
-import { VideoGallery } from '@/components/VideoGallery'
-import { SkeletonLoader } from '@/shared/components/SkeletonLoader'
-import { Text } from '@/shared/components/Text'
-import { sizes } from '@/shared/theme'
+import { Text } from '@/components/Text'
+import { ChannelGallery } from '@/components/_channel/ChannelGallery'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { VideoGallery } from '@/components/_video/VideoGallery'
+import { sizes } from '@/styles'
 
 type AllResultsTabProps = {
   videos: VideoFieldsFragment[]

@@ -3,6 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type CategoryFeaturedVideos {
+  categoryId: ID!
+  videos: [FeaturedVideo!]!
+}
+
 type ChannelFollowsInfo {
   follows: Int!
   id: ID!
@@ -11,6 +16,16 @@ type ChannelFollowsInfo {
 type EntityViewsInfo {
   id: ID!
   views: Int!
+}
+
+type FeaturedVideo {
+  videoCutUrl: String
+  videoId: ID!
+}
+
+input FeaturedVideoInput {
+  videoCutUrl: String
+  videoId: ID!
 }
 
 type Mutation {
@@ -23,6 +38,8 @@ type Mutation {
   Add a single follow to the target channel
   """
   followChannel(channelId: ID!): ChannelFollowsInfo!
+  setCategoryFeaturedVideos(categoryId: ID!, videos: [FeaturedVideoInput!]!): [FeaturedVideo!]!
+  setVideoHero(newVideoHero: VideoHeroInput!): VideoHero!
 
   """
   Remove a single follow from the target channel
@@ -31,6 +48,11 @@ type Mutation {
 }
 
 type Query {
+  """
+  Get featured videos for all categories
+  """
+  allCategoriesFeaturedVideos: [CategoryFeaturedVideos!]!
+
   """
   Get follows counts for a list of channels
   """
@@ -47,6 +69,11 @@ type Query {
   batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
 
   """
+  Get featured videos for a given video category
+  """
+  categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
+
+  """
   Get follows count for a single channel
   """
   channelFollows(channelId: ID!): ChannelFollowsInfo
@@ -59,7 +86,14 @@ type Query {
   """
   Get list of most followed channels
   """
-  mostFollowedChannels(limit: Int, timePeriodDays: Int!): [ChannelFollowsInfo!]!
+  mostFollowedChannels(
+    limit: Int
+
+    """
+    timePeriodDays must take one of the following values: 7, 30
+    """
+    timePeriodDays: Int!
+  ): [ChannelFollowsInfo!]!
 
   """
   Get list of most followed channels of all time
@@ -67,27 +101,77 @@ type Query {
   mostFollowedChannelsAllTime(limit: Int!): [ChannelFollowsInfo!]
 
   """
-  Get list of channels with most views in given period
+  Get list of most viewed categories in a given time period
   """
-  mostViewedChannels(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
+  mostViewedCategories(
+    limit: Int
+
+    """
+    timePeriodDays must take one of the following values: 7, 30
+    """
+    timePeriodDays: Int!
+  ): [EntityViewsInfo!]
 
   """
-  Get list of channels with most views of all time
+  Get list of most viewed categories of all time
+  """
+  mostViewedCategoriesAllTime(limit: Int!): [EntityViewsInfo!]
+
+  """
+  Get list of most viewed channels in a given time period
+  """
+  mostViewedChannels(
+    limit: Int
+
+    """
+    timePeriodDays must take one of the following values: 7, 30
+    """
+    timePeriodDays: Int!
+  ): [EntityViewsInfo!]
+
+  """
+  Get list of most viewed channels of all time
   """
   mostViewedChannelsAllTime(limit: Int!): [EntityViewsInfo!]
 
   """
-  Get most viewed list of videos
+  Get list of most viewed videos in a given time period
   """
-  mostViewedVideos(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
+  mostViewedVideos(
+    limit: Int
+
+    """
+    timePeriodDays must take one of the following values: 7, 30
+    """
+    timePeriodDays: Int!
+  ): [EntityViewsInfo!]
 
   """
-  Get most viewed list of videos of all time
+  Get list of most viewed videos of all time
   """
   mostViewedVideosAllTime(limit: Int!): [EntityViewsInfo!]
+
+  """
+  Get current video hero
+  """
+  videoHero: VideoHero!
 
   """
   Get views count for a single video
   """
   videoViews(videoId: ID!): EntityViewsInfo
+}
+
+type VideoHero {
+  heroPosterUrl: String!
+  heroTitle: String!
+  heroVideoCutUrl: String!
+  videoId: ID!
+}
+
+input VideoHeroInput {
+  heroPosterUrl: String!
+  heroTitle: String!
+  heroVideoCutUrl: String!
+  videoId: ID!
 }

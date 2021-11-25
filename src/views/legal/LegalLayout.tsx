@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { TopbarBase } from '@/components/TopbarBase'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
-import { SvgJoystreamLogoFull } from '@/shared/illustrations'
-import { colors, sizes } from '@/shared/theme'
+import { oldColors, sizes } from '@/styles'
 
 import { CopyrightPolicyView } from './CopyrightPolicyView'
 import { TermsOfServiceView } from './TermsOfServiceView'
@@ -39,10 +39,10 @@ const Container = styled.div`
   max-width: 800px;
   margin: 120px auto;
   padding: ${sizes(8)} ${sizes(9)};
-  background-color: ${colors.gray[800]};
+  background-color: ${oldColors.gray[800]};
 
   a {
     text-decoration: none;
-    color: ${colors.gray[50]};
+    color: ${oldColors.gray[50]};
   }
 `
