@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useVideoHeroData } from '@/api/featured'
-import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
+import { useMostViewedVideosIds, useVideoHeroData, useVideosConnection } from '@/api/hooks'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'

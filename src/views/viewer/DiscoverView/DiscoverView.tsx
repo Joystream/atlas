@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { useAllCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
-import { useCategories, useVideoCount } from '@/api/hooks'
+import { useAllCategoriesFeaturedVideos, useCategories, useVideoCount } from '@/api/hooks'
 import { GridHeadingContainer } from '@/components/GridHeading'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
