@@ -16,7 +16,6 @@ import { Snackbars } from './providers/snackbars'
 import { StorageProvidersProvider } from './providers/storageProviders'
 
 export const App = () => {
-  // create client on render so the mocking setup is done if needed
   // App doesn't accept props and doesn't contain state so should never rerender
   const apolloClient = createApolloClient()
   const { initHotjar } = useHotjar()
