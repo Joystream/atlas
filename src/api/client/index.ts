@@ -1,48 +1,32 @@
-import { ApolloClient } from '@apollo/client'
+import { ApolloClient, HttpLink, split } from '@apollo/client'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { getMainDefinition } from '@apollo/client/utilities'
 
-import { NEW_ORION_URL } from '@/config/urls'
+import { NEW_ORION_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
 
 import cache from './cache'
 
 const createApolloClient = () => {
-  // const { queryNodeExecutor, orionExecutor } = createExecutors()
+  const subscriptionLink = new WebSocketLink({
+    uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
+    options: {
+      reconnect: true,
+      reconnectionAttempts: 5,
+    },
+  })
 
-  // const executableQueryNodeSchema = wrapSchema({
-  //   schema: buildASTSchema(extendedQueryNodeSchema),
-  //   executor: queryNodeExecutor,
-  //   createProxyingResolver,
-  // })
+  const orionLink = new HttpLink({ uri: NEW_ORION_URL })
 
-  // const executableOrionSchema = wrapSchema({
-  //   schema: buildASTSchema(orionSchema),
-  //   executor: orionExecutor,
-  //   createProxyingResolver,
-  // })
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query)
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
+    },
+    subscriptionLink,
+    orionLink
+  )
 
-  // const mergedSchema = mergeSchemas({
-  //   schemas: [executableQueryNodeSchema, executableOrionSchema],
-  //   resolvers: queryNodeStitchingResolvers(executableQueryNodeSchema, executableOrionSchema),
-  // })
-
-  // const queryLink = new SchemaLink({ schema: mergedSchema })
-  // const subscriptionLink = new WebSocketLink({
-  //   uri: QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL,
-  //   options: {
-  //     reconnect: true,
-  //     reconnectionAttempts: 5,
-  //   },
-  // })
-
-  // const splitLink = split(
-  //   ({ query }) => {
-  //     const definition = getMainDefinition(query)
-  //     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
-  //   },
-  //   subscriptionLink,
-  //   queryLink
-  // )
-
-  return new ApolloClient({ cache, uri: NEW_ORION_URL })
+  return new ApolloClient({ cache, link: splitLink })
 }
 
 export default createApolloClient
