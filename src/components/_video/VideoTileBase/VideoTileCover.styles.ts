@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, oldColors, oldTypography, sizes, square, transitions, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -191,7 +191,9 @@ export const CoverDurationOverlay = styled.div`
   padding: ${sizes(1.5)} ${sizes(2)};
   background-color: ${oldColors.black};
   color: ${oldColors.white};
-  font-size: ${oldTypography.sizes.body2};
+  font: ${cVar('typographyDesktopT200')};
+  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200TextTransform')};
   z-index: ${zIndex.overlay};
 `
 

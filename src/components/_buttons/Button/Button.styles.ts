@@ -2,7 +2,7 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, oldTypography, sizes, square } from '@/styles'
+import { cVar, oldColors, sizes, square } from '@/styles'
 
 import { ButtonBase, ButtonSize, ButtonVariant } from '../ButtonBase'
 
@@ -54,40 +54,39 @@ const sizeOverwriteStyles = ({
   }
 }
 
-const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
-  // make the text look centered wrt the icon
-  switch (size) {
-    case 'large':
-      return css`
-        margin-top: -2px;
-        padding-bottom: 2px;
-      `
-    case 'medium':
-      return css`
-        padding-bottom: 2px;
-      `
-    case 'small':
-      return css`
-        padding: 1px 0 3px;
-      `
-  }
-}
-
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles};
 
   position: relative;
 `
 
-export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps>`
+const getIconOnlyPadding = (size?: ButtonSize, iconOnly?: boolean) => {
+  if (!iconOnly) return null
+  switch (size) {
+    case 'large':
+      return css`
+        padding: ${sizes(1)};
+      `
+    case 'medium':
+      return css`
+        padding: ${sizes(0.5)};
+      `
+    case 'small':
+      return css``
+    default:
+      return css`
+        padding: ${sizes(0.5)};
+      `
+  }
+}
+
+export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: ButtonSize }>`
+  ${({ size, iconOnly }) => getIconOnlyPadding(size, iconOnly)};
   margin-right: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'left' && !iconOnly ? sizes(2) : 0)};
   margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `
 
 export const StyledText = styled(Text)<TextProps>`
-  /* compensate for line-height being 1 */
-  ${textPaddingStyles};
-
   color: inherit;
 `
 
@@ -105,7 +104,9 @@ const badgeDotStyles = css`
 export const Badge = styled.div<{ dot?: boolean }>`
   ${square(16)}
 
-  font-weight: ${oldTypography.weights.bold};
+  font: ${cVar('typographyDesktopT100Strong')};
+  letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
   font-size: 10px;
   display: flex;
   align-items: center;

@@ -85,7 +85,11 @@ export const _Select = <T extends unknown>(
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
-          {label && <StyledLabelText labelPosition={labelPosition}>{label}</StyledLabelText>}
+          {label && (
+            <StyledLabelText variant="h300" labelPosition={labelPosition}>
+              {label}
+            </StyledLabelText>
+          )}
         </SelectLabel>
         <SelectMenuWrapper>
           <SelectButton

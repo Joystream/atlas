@@ -209,7 +209,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="h400" secondary size={size}>
+          <StatusText variant="t200" secondary size={size}>
             {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
@@ -221,7 +221,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="h400" secondary size={size}>
+          <StatusText variant="t200" secondary size={size}>
             {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>

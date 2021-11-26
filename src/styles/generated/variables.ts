@@ -154,17 +154,17 @@ export const variables = css`
     --typography-desktop-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-desktop-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-h900: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
       var(--typography-fonts-primary);
     --typography-mobile-h800: var(--typography-font-weights-semibold) var(--typography-font-sizes-7) / 2rem
@@ -184,17 +184,17 @@ export const variables = css`
     --typography-mobile-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-mobile-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-h900-letter-spacing: -0.01em;
     --typography-desktop-h800-letter-spacing: -0.005em;
     --typography-desktop-h700-letter-spacing: 0;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -123,7 +123,9 @@ export const NewChannel = styled.div`
 
   p {
     margin-left: ${sizes(2)};
-    font-size: ${oldTypography.sizes.body1};
+    font: ${cVar('typographyDesktopT300')};
+    letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT300TextTransform')};
     color: ${oldColors.white};
     text-decoration: none;
   }

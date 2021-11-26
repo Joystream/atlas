@@ -143,7 +143,7 @@ export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, sele
           <SvgActionChannel />
         </IconWrapper>
         <div>
-          <Text variant="h400">{name}</Text>
+          <Text variant="t300-strong">{name}</Text>
           <AccountAddress secondary variant="t100">
             {id}
           </AccountAddress>

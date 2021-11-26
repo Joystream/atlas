@@ -5,7 +5,7 @@ import { oldColors, sizes } from '@/styles'
 export const GridHeadingContainer = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: ${sizes(5)};
+  padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${oldColors.gray[700]};
   margin-bottom: ${sizes(12)};
 `

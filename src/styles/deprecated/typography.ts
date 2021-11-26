@@ -1,7 +1,7 @@
 export const oldTypography = {
   fonts: {
-    base: "Inter, Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",
-    headers: "PxGrotesk, Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",
+    base: "'Comic Sans MS', 'Comic Sans', cursive",
+    headers: "'Comic Sans MS', 'Comic Sans', cursive",
   },
   weights: {
     thin: 100,

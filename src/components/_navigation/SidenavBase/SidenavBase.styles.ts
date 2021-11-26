@@ -4,7 +4,7 @@ import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/components/Badge'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
@@ -114,18 +114,15 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
 
   > span {
     margin-left: ${sizes(6)};
-    font-weight: bold;
-    font-family: ${oldTypography.fonts.headers};
-    font-size: ${oldTypography.sizes.h5};
-    line-height: 1;
+    font: ${cVar('typographyDesktopH400')};
+    letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH400TextTransform')};
   }
 
   ::after {
     ${media.md} {
       content: ${({ content }) => `'${content}'`};
       position: absolute;
-      font-size: 12px;
-      line-height: 1;
       color: ${oldColors.gray[50]};
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
@@ -133,8 +130,9 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       transform: translateX(-50%);
       bottom: 0;
       margin-bottom: 10px;
-      font-family: ${oldTypography.fonts.headers};
-      font-weight: ${oldTypography.weights.bold};
+      font: ${cVar('typographyDesktopT100Strong')};
+      letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
+      text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
     }
   }
 `
@@ -149,7 +147,7 @@ export const DrawerOverlay = styled.div`
   background-color: rgba(0 0 0 / 0.5);
 `
 export const SubItemsWrapper = styled.div<SubItemProps>`
-  padding-left: calc(${oldTypography.sizes.icon.xlarge} + ${sizes(8)});
+  padding-left: calc(32px + ${sizes(8)});
   transition: height ${transitions.timings.regular} ${transitions.easing};
   overflow: hidden;
   height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
@@ -163,8 +161,9 @@ export const SubItemsWrapper = styled.div<SubItemProps>`
 `
 
 export const SubItem = styled.li`
-  font-size: ${oldTypography.sizes.body2};
-  font-family: ${oldTypography.fonts.base};
+  font: ${cVar('typographyDesktopT200')};
+  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200TextTransform')};
   margin-top: ${sizes(8)};
 
   :first-of-type {
@@ -190,8 +189,10 @@ export const LegalLinksWrapper = styled.span`
 
 export const LegalLink = styled(Link)`
   text-decoration: none;
-  font-family: ${oldTypography.fonts.headers};
-  font-size: ${oldTypography.sizes.subtitle2};
+
+  font: ${cVar('typographyDesktopT200Strong')};
+  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
 
   &:hover {
     color: ${oldColors.gray[400]};

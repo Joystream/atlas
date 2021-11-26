@@ -10,7 +10,7 @@ import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { Select } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -94,9 +94,6 @@ export const StyledChannelLink = styled(ChannelLink)`
   margin-bottom: ${sizes(3)};
   position: relative;
 
-  span {
-    font-size: ${oldTypography.sizes.h2};
-  }
   ${media.sm} {
     margin: 0 ${sizes(6)} 0 0;
   }
@@ -206,8 +203,10 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${oldColors.blue[500]};
-    font-size: ${oldTypography.sizes.body2};
-    line-height: ${oldTypography.lineHeights.body2};
+
+    font: ${cVar('typographyDesktopT200')};
+    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200TextTransform')};
 
     ${media.sm} {
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
@@ -245,7 +244,8 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
 
 export const StyledSelect = styled(Select)`
   button {
-    font-size: ${oldTypography.sizes.body2};
-    line-height: ${oldTypography.lineHeights.body2};
+    font: ${cVar('typographyDesktopT200')};
+    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200TextTransform')};
   }
 `

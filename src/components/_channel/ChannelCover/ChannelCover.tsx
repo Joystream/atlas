@@ -41,7 +41,9 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgActionImage />
-              <EditButtonMessage variant="h400">{`${assetUrl ? 'Edit ' : 'Add '} cover image`}</EditButtonMessage>
+              <EditButtonMessage variant="t300-strong">{`${
+                assetUrl ? 'Edit ' : 'Add '
+              } cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
             <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
               <SvgActionImageFile />
@@ -60,7 +62,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
-                  <Text variant="h400" secondary>
+                  <Text variant="t100" secondary>
                     Failed upload
                   </Text>
                 </FailedUploadContainer>

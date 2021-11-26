@@ -4,7 +4,7 @@ import { fluidRange } from 'polished'
 import { Text } from '@/components/Text'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { breakpoints, media, oldColors, oldTypography, sizes } from '@/styles'
+import { breakpoints, cVar, media, oldColors, sizes } from '@/styles'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
@@ -62,13 +62,16 @@ export const DescriptionContainer = styled.div`
   border-top: 1px solid ${oldColors.gray[800]};
 
   p {
-    font-size: ${oldTypography.sizes.body2};
+    font: ${cVar('typographyDesktopT200')};
+    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200TextTransform')};
     margin: ${sizes(4)} 0 0;
 
     ${media.sm} {
-      font-size: 1rem;
+      font: ${cVar('typographyDesktopT300')};
+      letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
+      text-transform: ${cVar('typographyDesktopT300TextTransform')};
       color: ${oldColors.gray[300]};
-      line-height: 175%;
     }
   }
 `
@@ -79,14 +82,17 @@ export const MoreVideosContainer = styled.div`
 
 export const MoreVideosHeader = styled.h5`
   margin: 0 0 ${sizes(4)};
-  font-size: ${oldTypography.sizes.h5};
+  font: ${cVar('typographyDesktopH400')};
+  letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH400TextTransform')};
 `
 export const LicenseContainer = styled.div`
   margin: ${sizes(4)} 0 0;
-  font-size: ${oldTypography.sizes.overhead};
   color: ${oldColors.gray[500]};
-  letter-spacing: 0.03rem;
-  line-height: 1.7;
+
+  font: ${cVar('typographyDesktopH100')};
+  letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH100TextTransform')};
 
   p {
     max-width: 60ch;

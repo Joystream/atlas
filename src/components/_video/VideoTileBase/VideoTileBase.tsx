@@ -244,7 +244,11 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = React.memo(
                     onClick={createAnchorClickHandler(typeof videoHref === 'string' ? videoHref : videoHref?.pathname)}
                     {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
                   >
-                    <TitleHeader variant="h300" size={tileSize} onClick={onClick} clickable={clickable}>
+                    <TitleHeader
+                      variant={tileSize === 'small' ? 'h300' : 'h400'}
+                      onClick={onClick}
+                      clickable={clickable}
+                    >
                       {title || 'Untitled'}
                     </TitleHeader>
                   </TitleHeaderAnchor>

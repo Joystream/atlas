@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { Text } from '@/components/Text'
-import { media, oldColors, oldTypography, sizes } from '@/styles'
+import { cVar, media, oldColors, sizes } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
@@ -22,17 +22,17 @@ export const StyledTextArea = styled(TextareaAutosize)`
   caret-color: ${oldColors.blue[500]};
   color: white;
   background-color: ${oldColors.transparent};
-  font-family: ${oldTypography.fonts.headers};
-  font-weight: ${oldTypography.weights.bold};
   border: none;
   width: 100%;
   resize: none;
   height: auto;
-  font-size: ${oldTypography.sizes.h4};
-  line-height: ${oldTypography.lineHeights.h4};
+  font: ${cVar('typographyDesktopH500')};
+  letter-spacing: ${cVar('typographyDesktopH500LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH500TextTransform')};
   ${media.sm} {
-    font-size: ${oldTypography.sizes.h2};
-    line-height: ${oldTypography.lineHeights.h2};
+    font: ${cVar('typographyDesktopH700')};
+    letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH700TextTransform')};
   }
 
   &:hover {

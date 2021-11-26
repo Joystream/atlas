@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarVariant } from './Snackbar'
 
@@ -97,7 +97,9 @@ export const SnackbarActionButton = styled(Button)`
   padding: 0;
   min-width: auto;
   margin-right: ${sizes(2)};
-  font-size: ${oldTypography.sizes.body1};
+  font: ${cVar('typographyDesktopT300')};
+  letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT300TextTransform')};
 `
 
 export const SnackbarIconContainer = styled.span`

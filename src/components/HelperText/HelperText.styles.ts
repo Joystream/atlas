@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, oldTypography, sizes } from '@/styles'
+import { cVar, oldColors, sizes } from '@/styles'
 
 export type HelperTextProps = {
   helperTextVariant?: 'error' | 'warning'
@@ -22,7 +22,9 @@ export const HelperTextsWrapper = styled.div`
   min-height: ${sizes(3.5)};
   margin-left: 4px;
   margin-top: 8px;
-  font-size: ${oldTypography.sizes.body2};
+  font: ${cVar('typographyDesktopT200')};
+  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200TextTransform')};
   display: flex;
   align-items: center;
   justify-content: space-between;

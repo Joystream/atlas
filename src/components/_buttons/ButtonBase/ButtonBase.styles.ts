@@ -196,11 +196,11 @@ const sizeStyles = ({ size }: ButtonBaseStyleProps): SerializedStyles => {
   switch (size) {
     case 'large':
       return css`
-        padding: ${sizes(4)};
+        padding: ${sizes(3)};
       `
     case 'medium':
       return css`
-        padding: ${sizes(3)};
+        padding: ${sizes(2.5)};
       `
     case 'small':
       return css`
