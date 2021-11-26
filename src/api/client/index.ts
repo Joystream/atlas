@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink, split } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 
-import { NEW_ORION_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
+import { ORION_GRAPHQL_URL, QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL } from '@/config/urls'
 
 import cache from './cache'
 
@@ -15,7 +15,7 @@ const createApolloClient = () => {
     },
   })
 
-  const orionLink = new HttpLink({ uri: NEW_ORION_URL })
+  const orionLink = new HttpLink({ uri: ORION_GRAPHQL_URL })
 
   const splitLink = split(
     ({ query }) => {

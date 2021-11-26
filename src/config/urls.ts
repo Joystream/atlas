@@ -1,6 +1,5 @@
 import { readEnv } from './envs'
 
-export const NEW_ORION_URL = readEnv('NEW_ORION_URL')
 export const QUERY_NODE_GRAPHQL_URL = readEnv('QUERY_NODE_URL')
 export const QUERY_NODE_GRAPHQL_SUBSCRIPTION_URL = readEnv('QUERY_NODE_SUBSCRIPTION_URL')
 export const ORION_GRAPHQL_URL = readEnv('ORION_URL')
