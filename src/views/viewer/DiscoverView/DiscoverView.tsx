@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
+import { useAllCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
 import { useCategories, useVideoCount } from '@/api/hooks'
 import { GridHeadingContainer } from '@/components/GridHeading'
 import { GridItem } from '@/components/LayoutGrid'
@@ -8,6 +8,7 @@ import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
 import { CategoriesContainer, FeaturedCategoriesContainer, StyledLimitedWidthContainer } from './DiscoverView.styles'
@@ -20,17 +21,22 @@ export const DiscoverView: React.FC = () => {
     ...category,
   }))
 
-  const categoriesFeaturedVideos = useCategoriesFeaturedVideos()
+  const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
+
+  const categoriesFeaturedVideos = allCategoriesFeaturedVideos
+    ? createLookup(allCategoriesFeaturedVideos.map((category) => ({ id: category.categoryId, ...category })))
+    : null
+
   const featuredVideoCategoryCardsData = React.useMemo(() => {
     const _featuredVideoCategoryCardsData =
       categories
         ?.map((category) => {
-          const video = categoriesFeaturedVideos?.[category.id]?.find((video) => !!video.videoCutUrl)
+          const video = categoriesFeaturedVideos?.[category.id]?.videos.find((video) => !!video.videoCutUrl)
 
           if (!video) return null
 
           return {
-            videoTitle: video?.title ?? '',
+            videoTitle: video?.video.title ?? '',
             videoUrl: video?.videoCutUrl ?? '',
             ...mappedVideoCategories?.find((cat) => cat.id === category.id),
           }
@@ -39,7 +45,7 @@ export const DiscoverView: React.FC = () => {
         .slice(0, 3) ?? []
 
     return _featuredVideoCategoryCardsData.length > 0 ? _featuredVideoCategoryCardsData : [null, null, null]
-  }, [categories, categoriesFeaturedVideos, mappedVideoCategories])
+  }, [categories, mappedVideoCategories, categoriesFeaturedVideos])
 
   const { videoCount, error } = useVideoCount(
     {},

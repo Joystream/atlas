@@ -2,7 +2,7 @@ import { sampleSize } from 'lodash'
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { useCategoriesFeaturedVideos1 } from '@/api/featured/categoriesFeaturedVideos'
+import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
 import { useCategories, useVideoCount } from '@/api/hooks'
 import { VideoCategoryFieldsFragment } from '@/api/queries'
 import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
@@ -45,7 +45,7 @@ export const CategoryView = () => {
   )
   const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
 
-  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos1(id)
+  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(id)
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos?.videos)
 
   const { videoCount, error } = useVideoCount(
