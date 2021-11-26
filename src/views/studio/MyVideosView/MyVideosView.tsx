@@ -74,8 +74,8 @@ export const MyVideosView = () => {
   const drafts = [
     ...(_drafts.length ? ['new-video-tile' as const] : []),
     ...(sortVideosBy === VideoOrderByInput.CreatedAtDesc
-      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
+      ? _drafts.slice().sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      : _drafts.slice().sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
   ]
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(

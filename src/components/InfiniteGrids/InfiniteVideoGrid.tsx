@@ -182,3 +182,4 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     )
   }
 )
+InfiniteVideoGrid.displayName = 'InfiniteVideoGrid'

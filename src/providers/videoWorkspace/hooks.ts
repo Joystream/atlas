@@ -98,7 +98,8 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
 export const useVideoWorkspaceRouting = (): Location => {
   const navigate = useNavigate()
 
-  const location = useLocation() as Location<RoutingState>
+  const location = useLocation()
+  const locationState = location.state as RoutingState
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
   const videoWorkspaceMatch = useMatch({ path: absoluteRoutes.studio.videoWorkspace() })
@@ -132,7 +133,7 @@ export const useVideoWorkspaceRouting = (): Location => {
       (videoWorkspaceState === 'closed' && cachedVideoWorkspaceState !== 'minimized')
     ) {
       // restore the old location when videoWorkspace was minimized/closed
-      const oldLocation = location.state?.overlaidLocation ?? absoluteRoutes.studio.index()
+      const oldLocation = locationState?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)
     }
     if (videoWorkspaceState === 'open' && !videoWorkspaceMatch) {
@@ -142,10 +143,10 @@ export const useVideoWorkspaceRouting = (): Location => {
       }
       navigate(absoluteRoutes.studio.videoWorkspace(), { state: state })
     }
-  }, [videoWorkspaceState, cachedVideoWorkspaceState, location, navigate, videoWorkspaceMatch])
+  }, [videoWorkspaceState, cachedVideoWorkspaceState, location, locationState, navigate, videoWorkspaceMatch])
 
   if (videoWorkspaceMatch) {
-    return location.state?.overlaidLocation ?? cachedLocation ?? defaultLocation
+    return locationState?.overlaidLocation ?? cachedLocation ?? defaultLocation
   }
 
   return location
