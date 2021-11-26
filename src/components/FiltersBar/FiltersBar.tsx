@@ -191,7 +191,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         content={
           <>
             <MobileFilterContainer>
-              <Text secondary variant="overhead">
+              <Text secondary variant="h100">
                 Language
               </Text>
               <Select
@@ -204,26 +204,26 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             </MobileFilterContainer>
             {categories && (
               <MobileFilterContainer>
-                <Text secondary variant="overhead">
+                <Text secondary variant="h100">
                   Categories
                 </Text>
                 {categoriesInputs}
               </MobileFilterContainer>
             )}
             <MobileFilterContainer>
-              <Text secondary variant="overhead">
+              <Text secondary variant="h100">
                 Date uploaded
               </Text>
               {dateUploadedInputs}
             </MobileFilterContainer>
             <MobileFilterContainer>
-              <Text secondary variant="overhead">
+              <Text secondary variant="h100">
                 Length
               </Text>
               {videoLengthInputs}
             </MobileFilterContainer>
             <MobileFilterContainer>
-              <OtherFilterStyledText secondary variant="overhead">
+              <OtherFilterStyledText secondary variant="h100">
                 <OtherFilterStyledIcon />
                 Exclude:
               </OtherFilterStyledText>
@@ -387,7 +387,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
             }}
           >
-            <OtherFilterStyledText secondary variant="overhead">
+            <OtherFilterStyledText secondary variant="h100">
               <OtherFilterStyledIcon />
               Exclude:
             </OtherFilterStyledText>

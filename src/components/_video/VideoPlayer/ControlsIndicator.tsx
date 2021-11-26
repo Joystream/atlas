@@ -93,7 +93,7 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, is
         <ControlsIndicatorWrapper>
           <ControlsIndicatorIconWrapper>{indicator?.icon}</ControlsIndicatorIconWrapper>
           <ControlsIndicatorTooltip>
-            <Text variant="caption">{indicator?.description}</Text>
+            <Text variant="t100">{indicator?.description}</Text>
           </ControlsIndicatorTooltip>
         </ControlsIndicatorWrapper>
       </CSSTransition>

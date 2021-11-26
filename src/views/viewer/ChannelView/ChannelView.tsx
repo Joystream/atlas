@@ -241,7 +241,7 @@ export const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant="h1">{channel.title}</Title>
+                <Title variant="h800">{channel.title}</Title>
                 <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (
@@ -282,7 +282,7 @@ export const ChannelView: React.FC = () => {
           )}
           {currentTab === 'Videos' && (
             <SortContainer>
-              <Text variant="body2">Sort by</Text>
+              <Text variant="t200">Sort by</Text>
               <StyledSelect
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}

@@ -518,7 +518,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = ({
               >
                 Show {moreSettingsVisible ? 'less' : 'more'} settings
               </Button>
-              <MoreSettingsDescription variant="body2" secondary visible={!moreSettingsVisible}>
+              <MoreSettingsDescription variant="t200" secondary visible={!moreSettingsVisible}>
                 License, content rating, published before, marketing{isEdit && ', delete video'}
               </MoreSettingsDescription>
             </MoreSettingsHeader>

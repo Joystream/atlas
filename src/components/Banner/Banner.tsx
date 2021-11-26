@@ -55,7 +55,7 @@ export const Banner: React.FC<BannerProps> = ({
     <BannerWrapper className={className} variant={variant}>
       <BannerHeader>
         {icon && <BannerIconContainer>{ICON_TYPE_TO_ICON[icon]}</BannerIconContainer>}
-        <BannerTitle variant="subtitle2">{title}</BannerTitle>
+        <BannerTitle variant="h400">{title}</BannerTitle>
         <BannerButtonsContainer>
           {actionText && (
             <BannerActionButton variant="tertiary" onClick={onActionClick}>
@@ -67,7 +67,7 @@ export const Banner: React.FC<BannerProps> = ({
           </IconButton>
         </BannerButtonsContainer>
       </BannerHeader>
-      {description && <BannerDescription variant="body2">{description}</BannerDescription>}
+      {description && <BannerDescription variant="t200">{description}</BannerDescription>}
     </BannerWrapper>
   )
 }

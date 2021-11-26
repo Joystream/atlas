@@ -146,7 +146,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
                   {(!ready || !displayedItems.length) && titleLoader ? (
                     <SkeletonLoader height={30} width={250} />
                   ) : (
-                    <Text variant="h4">{title}</Text>
+                    <Text variant="h500">{title}</Text>
                   )}
                   {additionalLink && (
                     <AdditionalLink

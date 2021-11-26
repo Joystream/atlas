@@ -44,7 +44,7 @@ export const RecentSearchItem: React.FC<RecentSearchItemProps> = React.memo(
           <ClockWrapper>
             <SvgActionClock />
           </ClockWrapper>
-          <Title secondary={!selected} variant="button2">
+          <Title secondary={!selected} variant="t200-strong">
             <ResultTitle title={title} query={query} />
           </Title>
         </RecentSearchItemWrapper>

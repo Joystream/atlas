@@ -55,7 +55,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
       >
         <SnackbarHeader>
           {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
-          <SnackbarTitle variant="body2" hasDescription={!!description} colorVariant={variant}>
+          <SnackbarTitle variant="t200" hasDescription={!!description} colorVariant={variant}>
             {title}
           </SnackbarTitle>
           <SnackbarButtonsContainer>

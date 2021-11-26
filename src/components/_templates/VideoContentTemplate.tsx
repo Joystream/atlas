@@ -61,7 +61,7 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
   return (
     <StyledViewWrapper big>
-      {title && <Header variant="h3">{title}</Header>}
+      {title && <Header variant="h600">{title}</Header>}
       {children}
       {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>

@@ -99,7 +99,7 @@ export const _Select = <T extends unknown>(
             size={size}
           >
             {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
-            {selectedItem?.badgeText && <Badge variant="caption">{selectedItem.badgeText}</Badge>}
+            {selectedItem?.badgeText && <Badge variant="t100">{selectedItem.badgeText}</Badge>}
             <SvgActionChevronB />
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>

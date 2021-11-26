@@ -155,7 +155,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = React.memo(
                       ) : hasAssetUploadFailed ? (
                         <CoverThumbnailUploadFailed>
                           <StyledSvgIllustrativeFileFailed />
-                          <Text variant="caption" secondary>
+                          <Text variant="t100" secondary>
                             Asset upload failed
                           </Text>
                         </CoverThumbnailUploadFailed>

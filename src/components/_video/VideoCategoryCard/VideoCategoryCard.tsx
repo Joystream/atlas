@@ -82,7 +82,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (
-              <Title variantCategory={variant} variant={variant === 'default' ? 'h4' : 'h6'}>
+              <Title variantCategory={variant} variant={variant === 'default' ? 'h500' : 'h300'}>
                 {title}
               </Title>
             )}
@@ -95,7 +95,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                   <PieChart>
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
-                  <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
+                  <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
                     {videoCount} videos
                   </Text>
                 </>

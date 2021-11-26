@@ -7,7 +7,7 @@ import { LegalLastUpdateText, LegalListItem, LegalParagraph } from '../LegalText
 export const TermsOfService: React.FC = () => {
   return (
     <div>
-      <Text variant="h5">Terms of Service</Text>
+      <Text variant="h400">Terms of Service</Text>
       <LegalLastUpdateText>Last updated on the 4th of May 2021</LegalLastUpdateText>
       <LegalParagraph>
         This Terms of Service (&quot;Agreement&quot;) is a binding obligation between you (&quot;User&quot;) and

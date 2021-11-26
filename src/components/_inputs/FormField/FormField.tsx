@@ -22,9 +22,9 @@ export const FormField: React.FC<FormFieldProps> = ({ children, title, descripti
   return (
     <FormFieldWrapper className={className} dense={dense}>
       <FormFieldHeader>
-        <FormFieldTitle variant="h6">{title}</FormFieldTitle>
+        <FormFieldTitle variant="h300">{title}</FormFieldTitle>
         {optional && (
-          <Text variant="body2" secondary>
+          <Text variant="t200" secondary>
             (Optional)
           </Text>
         )}
@@ -32,12 +32,12 @@ export const FormField: React.FC<FormFieldProps> = ({ children, title, descripti
       {description &&
         (description instanceof Array ? (
           description.map((p, idx) => (
-            <FormFieldDescription key={idx} variant="body2">
+            <FormFieldDescription key={idx} variant="t200">
               {p}
             </FormFieldDescription>
           ))
         ) : (
-          <FormFieldDescription variant="body2">{description}</FormFieldDescription>
+          <FormFieldDescription variant="t200">{description}</FormFieldDescription>
         ))}
       <ChildrenWrapper>{children}</ChildrenWrapper>
     </FormFieldWrapper>

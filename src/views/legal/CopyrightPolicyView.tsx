@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 export const CopyrightPolicyView: React.FC = () => {
   return (
     <div>
-      <Text variant="h5">DMCA Policy For Content Takedown</Text>
+      <Text variant="h400">DMCA Policy For Content Takedown</Text>
       <LegalParagraph>
         Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in
         accordance with the Digital Millennium Copyright Act.

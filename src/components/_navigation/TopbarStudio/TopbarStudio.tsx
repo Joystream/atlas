@@ -190,7 +190,7 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
         <StyledAvatar assetUrl={memberAvatar} />
         <MemberTextContainer>
           <DrawerMemberText>{memberName}</DrawerMemberText>
-          <DrawerMemberTitleText variant="caption">Member</DrawerMemberTitleText>
+          <DrawerMemberTitleText variant="t100">Member</DrawerMemberTitleText>
         </MemberTextContainer>
       </MemberInnerContainer>
       <Button icon={<SvgActionLogOut />} variant="secondary" onClick={onLogoutClick}>
@@ -211,9 +211,9 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>
         <StyledAvatar size="small" assetUrl={avatarPhotoUrl} />
         <TextContainer>
-          <StyledChannelInfoText variant="body1">{channel ? channel.title : 'New Channel'}</StyledChannelInfoText>
+          <StyledChannelInfoText variant="t300">{channel ? channel.title : 'New Channel'}</StyledChannelInfoText>
           {memberName && (
-            <StyledChannelInfoText variant="caption" secondary>
+            <StyledChannelInfoText variant="t100" secondary>
               {memberName}
             </StyledChannelInfoText>
           )}

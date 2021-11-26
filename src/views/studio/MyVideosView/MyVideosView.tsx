@@ -287,7 +287,7 @@ export const MyVideosView = () => {
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <StyledLimitedWidthContainer>
-      <StyledText variant="h2">My videos</StyledText>
+      <StyledText variant="h700">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"

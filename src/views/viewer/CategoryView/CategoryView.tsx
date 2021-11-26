@@ -66,7 +66,7 @@ export const CategoryView = () => {
       />
 
       <TitleContainer>
-        <Text variant="h4">Featured category videos</Text>
+        <Text variant="h500">Featured category videos</Text>
       </TitleContainer>
       <Grid>
         {featuredVideos.map((video, idx) => (
@@ -77,7 +77,7 @@ export const CategoryView = () => {
       <CategoryVideos categoryId={id} />
 
       <TitleContainer>
-        <Text variant="h4">Other categories</Text>
+        <Text variant="h500">Other categories</Text>
         <Button
           icon={<SvgActionChevronR />}
           to={absoluteRoutes.viewer.discover()}

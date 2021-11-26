@@ -14,9 +14,9 @@ export type ButtonProps = {
 } & Omit<ButtonBaseProps, 'children'>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
-  large: 'button1',
-  medium: 'button2',
-  small: 'button3',
+  large: 't300-strong',
+  medium: 't200-strong',
+  small: 't100-strong',
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

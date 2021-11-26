@@ -59,7 +59,7 @@ export const DiscoverView: React.FC = () => {
 
   return (
     <StyledLimitedWidthContainer big>
-      <Text variant="h2">Discover</Text>
+      <Text variant="h700">Discover</Text>
       <FeaturedCategoriesContainer>
         {featuredVideoCategoryCardsData?.map((category, i) => (
           <GridItem key={category?.id ?? `placeholder-${i}`} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
@@ -76,7 +76,7 @@ export const DiscoverView: React.FC = () => {
         ))}
       </FeaturedCategoriesContainer>
       <BorderTextContainer>
-        <Text variant="h4">All categories</Text>
+        <Text variant="h500">All categories</Text>
       </BorderTextContainer>
       <CategoriesContainer>
         {(mappedVideoCategories ?? new Array(15).fill(null))?.map((category, i) => (

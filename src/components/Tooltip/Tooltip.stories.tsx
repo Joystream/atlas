@@ -35,7 +35,7 @@ export const WithText = TextTooltip.bind({})
 
 const HeadingTooltip: Story<TooltipProps> = (args) => (
   <Tooltip {...args}>
-    <Text variant="h1">Hello there!</Text>
+    <Text variant="h800">Hello there!</Text>
   </Tooltip>
 )
 

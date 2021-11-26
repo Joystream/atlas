@@ -32,8 +32,8 @@ export const SignInMainView: React.FC = () => {
         <LogoContainer>
           <SvgJoystreamLogoFull />
         </LogoContainer>
-        <StyledHero variant="hero">Welcome to Joystream Studio</StyledHero>
-        <SubTitle variant="body1">
+        <StyledHero variant="h900">Welcome to Joystream Studio</StyledHero>
+        <SubTitle variant="t300">
           Start your journey as a Video Publisher. Publish and manage your channel and video content.
         </SubTitle>
         <ButtonGroup>

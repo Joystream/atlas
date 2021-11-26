@@ -244,7 +244,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = React.memo(
                     onClick={createAnchorClickHandler(typeof videoHref === 'string' ? videoHref : videoHref?.pathname)}
                     {...getLinkPropsFromTo(videoHref, openInNewBrowserTab)}
                   >
-                    <TitleHeader variant="h6" size={tileSize} onClick={onClick} clickable={clickable}>
+                    <TitleHeader variant="h300" size={tileSize} onClick={onClick} clickable={clickable}>
                       {title || 'Untitled'}
                     </TitleHeader>
                   </TitleHeaderAnchor>
@@ -255,7 +255,7 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = React.memo(
                   ) : (
                     <Anchor to={channelHref ?? ''} onClick={createAnchorClickHandler(channelHref)}>
                       <ChannelHandle
-                        variant="body2"
+                        variant="t200"
                         channelClickable={channelClickable}
                         onClick={handleChannelClick}
                         secondary
@@ -267,20 +267,20 @@ export const VideoTileBase: React.FC<VideoTileBaseProps> = React.memo(
                 <MetaContainer noMarginTop={!showChannel}>
                   {isLoading && <SpacedSkeletonLoader height={12} width="80%" />}
                   {isUploading && (
-                    <Text variant="body2" secondary>
+                    <Text variant="t200" secondary>
                       {uploadStatus.lastStatus === 'inProgress' && 'Uploading...'}
                       {uploadStatus.lastStatus === 'processing' && 'Processing...'}
                     </Text>
                   )}
                   {!isUploading && !hasAssetUploadFailed && createdAt && (
-                    <Text variant="body2" secondary>
+                    <Text variant="t200" secondary>
                       {isDraft
                         ? `Last updated ${formatDateAgo(createdAt)}`
                         : formatVideoViewsAndDate(views ?? null, createdAt)}
                     </Text>
                   )}
                   {hasAssetUploadFailed && !uploadStatus && (
-                    <Text variant="body2" secondary>
+                    <Text variant="t200" secondary>
                       Upload failed...
                     </Text>
                   )}

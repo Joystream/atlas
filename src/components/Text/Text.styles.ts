@@ -1,139 +1,121 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { oldColors, oldTypography } from '@/styles'
+import { cVar } from '@/styles'
 
 type TextProps = {
   isSecondary?: boolean
 }
 
 const baseStyles = (props: TextProps) => css`
-  font-family: ${oldTypography.fonts.base};
   margin: 0;
-  color: ${props.isSecondary ? oldColors.gray[300] : oldColors.gray[50]};
+  color: ${props.isSecondary ? cVar('colorCoreNeutral400') : cVar('colorCoreNeutral50')};
 `
 
 export const styledVariants = {
-  hero: styled.h1<TextProps>`
+  h900: styled.h1<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.hero};
-    line-height: ${oldTypography.lineHeights.hero};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH900')};
+    letter-spacing: ${cVar('typographyDesktopH900LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH900TextTransform')};
   `,
-  h1: styled.h1<TextProps>`
+  h800: styled.h1<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h1};
-    line-height: ${oldTypography.lineHeights.h1};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH800')};
+    letter-spacing: ${cVar('typographyDesktopH800LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH800TextTransform')};
   `,
-  h2: styled.h2<TextProps>`
+  h700: styled.h2<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h2};
-    line-height: ${oldTypography.lineHeights.h2};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH700')};
+    letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH700TextTransform')};
   `,
-  h3: styled.h3<TextProps>`
+  h600: styled.h3<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h3};
-    line-height: ${oldTypography.lineHeights.h3};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH600')};
+    letter-spacing: ${cVar('typographyDesktopH600LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH600TextTransform')};
   `,
-  h4: styled.h4<TextProps>`
+  h500: styled.h4<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h4};
-    line-height: ${oldTypography.lineHeights.h4};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH500')};
+    letter-spacing: ${cVar('typographyDesktopH500LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH500TextTransform')};
   `,
-  h5: styled.h5<TextProps>`
+  h400: styled.h5<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h5};
-    line-height: ${oldTypography.lineHeights.h5};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH400')};
+    letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH400TextTransform')};
   `,
-  h6: styled.h6<TextProps>`
+  h300: styled.h6<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.h6};
-    line-height: ${oldTypography.lineHeights.h6};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopH300')};
+    letter-spacing: ${cVar('typographyDesktopH300LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH300TextTransform')};
   `,
-  subtitle1: styled.span<TextProps>`
+  h200: styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.subtitle1};
-    line-height: ${oldTypography.lineHeights.subtitle1};
-    font-weight: ${oldTypography.weights.regular};
+    font: ${cVar('typographyDesktopH200')};
+    letter-spacing: ${cVar('typographyDesktopH200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH200TextTransform')};
   `,
-  subtitle2: styled.span<TextProps>`
+  h100: styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.subtitle2};
-    line-height: ${oldTypography.lineHeights.subtitle2};
-    font-weight: ${oldTypography.weights.regular};
+    font: ${cVar('typographyDesktopH100')};
+    letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH100TextTransform')};
   `,
-  body1: styled.p<TextProps>`
+  t300: styled.p<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.body1};
-    line-height: ${oldTypography.lineHeights.body1};
-    font-weight: ${oldTypography.weights.regular};
+    font: ${cVar('typographyDesktopT300')};
+    letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT300TextTransform')};
   `,
-  body2: styled.p<TextProps>`
+  't300-strong': styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.body2};
-    line-height: ${oldTypography.lineHeights.body2};
-    font-weight: ${oldTypography.weights.regular};
+    font: ${cVar('typographyDesktopT300Strong')};
+    letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT300StrongTextTransform')};
   `,
-  caption: styled.span<TextProps>`
+  t200: styled.p<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.caption};
-    line-height: ${oldTypography.lineHeights.caption};
-    font-weight: ${oldTypography.weights.regular};
+    font: ${cVar('typographyDesktopT200')};
+    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200TextTransform')};
   `,
-  overhead: styled.span<TextProps>`
+  't200-strong': styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.overhead};
-    line-height: ${oldTypography.lineHeights.overhead};
-    font-weight: ${oldTypography.weights.semibold};
+    font: ${cVar('typographyDesktopT200Strong')};
+    letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
   `,
-  button1: styled.span<TextProps>`
+  t100: styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.button.large};
-    line-height: ${oldTypography.lineHeights.button};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopT100')};
+    letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT100TextTransform')};
   `,
-  button2: styled.span<TextProps>`
+  't100-strong': styled.span<TextProps>`
     ${baseStyles};
 
-    font-size: ${oldTypography.sizes.button.medium};
-    line-height: ${oldTypography.lineHeights.button};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
-  `,
-  button3: styled.span<TextProps>`
-    ${baseStyles};
-
-    font-size: ${oldTypography.sizes.button.small};
-    line-height: ${oldTypography.lineHeights.button};
-    font-weight: ${oldTypography.weights.bold};
-    font-family: ${oldTypography.fonts.headers};
+    font: ${cVar('typographyDesktopT100Strong')};
+    letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
   `,
 }

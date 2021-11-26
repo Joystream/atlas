@@ -533,7 +533,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </VolumeSliderContainer>
                 </VolumeControl>
                 <CurrentTimeWrapper>
-                  <CurrentTime variant="body2">
+                  <CurrentTime variant="t200">
                     {formatDurationShort(videoTime)} / {formatDurationShort(round(player?.duration() || 0))}
                   </CurrentTime>
                 </CurrentTimeWrapper>

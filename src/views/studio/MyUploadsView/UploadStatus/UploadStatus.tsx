@@ -209,7 +209,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="subtitle2" secondary size={size}>
+          <StatusText variant="h400" secondary size={size}>
             {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
@@ -221,7 +221,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="subtitle2" secondary size={size}>
+          <StatusText variant="h400" secondary size={size}>
             {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>
@@ -271,16 +271,16 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
               {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
-              <Text variant="body2">{fileTypeText}</Text>
+              <Text variant="t200">{fileTypeText}</Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (
-              <Text variant="body2" secondary>
+              <Text variant="t200" secondary>
                 Trying to reconnect...({uploadStatus.retries})
               </Text>
             ) : (
               <FileInfoDetails size={size}>
                 {assetDimension && (
-                  <Text variant="body2" secondary>
+                  <Text variant="t200" secondary>
                     {assetDimension}
                   </Text>
                 )}

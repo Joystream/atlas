@@ -12,7 +12,7 @@ export type TextProps = {
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 
 export const Text = React.forwardRef<HTMLHeadingElement, TextProps>(
-  ({ variant = 'body2', secondary, as, ...otherProps }, ref) => {
+  ({ variant = 't200', secondary, as, ...otherProps }, ref) => {
     const Tag = styledVariants[variant]
     const FinalTag = as ? Tag.withComponent(as) : Tag
     return <FinalTag {...otherProps} isSecondary={secondary} ref={ref} />
