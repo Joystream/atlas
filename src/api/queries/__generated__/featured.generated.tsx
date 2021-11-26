@@ -123,7 +123,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
       __typename?: 'FeaturedVideo'
       videoId: string
       videoCutUrl?: Types.Maybe<string>
-      video?: Types.Maybe<{
+      video: {
         __typename?: 'Video'
         id: string
         title?: Types.Maybe<string>
@@ -215,7 +215,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           attribution?: Types.Maybe<string>
           customText?: Types.Maybe<string>
         }>
-      }>
+      }
     }>
   }>
 }
@@ -233,7 +233,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       __typename?: 'FeaturedVideo'
       videoId: string
       videoCutUrl?: Types.Maybe<string>
-      video?: Types.Maybe<{
+      video: {
         __typename?: 'Video'
         id: string
         title?: Types.Maybe<string>
@@ -325,7 +325,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           attribution?: Types.Maybe<string>
           customText?: Types.Maybe<string>
         }>
-      }>
+      }
     }>
   }
 }

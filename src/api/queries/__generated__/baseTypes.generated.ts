@@ -113,7 +113,7 @@ export type FeaturedVideo = {
   __typename?: 'FeaturedVideo'
   videoCutUrl?: Maybe<Scalars['String']>
   videoId: Scalars['ID']
-  video?: Maybe<Video>
+  video: Video
 }
 
 export type FeaturedVideoInput = {

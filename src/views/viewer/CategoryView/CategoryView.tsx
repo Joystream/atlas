@@ -2,9 +2,10 @@ import { sampleSize } from 'lodash'
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { CategoriesFeaturedVideos, useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
+import { useCategoriesFeaturedVideos1 } from '@/api/featured/categoriesFeaturedVideos'
 import { useCategories, useVideoCount } from '@/api/hooks'
 import { VideoCategoryFieldsFragment } from '@/api/queries'
+import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
 import { Grid } from '@/components/Grid'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -26,22 +27,14 @@ import { CategoriesContainer, TitleContainer } from './CategoryView.styles'
 import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 
 export const CategoryView = () => {
+  const mdBreakpointMatch = useMediaMatch('md')
+  const { id = '' } = useParams()
+
   const { categories } = useCategories()
   const mappedVideoCategories = categories?.map((category) => ({
     ...videoCategories[category.id],
     ...category,
   }))
-  const { id = '' } = useParams()
-  const data = useCategoriesFeaturedVideos()
-  const featuredVideos = data?.[id] ?? []
-  const videoHeroVideos = useVideoHeroVideos(featuredVideos)
-  const mdBreakpointMatch = useMediaMatch('md')
-  const { videoCount, error } = useVideoCount(
-    {},
-    {
-      onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
-    }
-  )
   const otherCategory: Array<VideoCategoryData & VideoCategoryFieldsFragment> = React.useMemo(
     () =>
       sampleSize(
@@ -51,6 +44,16 @@ export const CategoryView = () => {
     [id, mappedVideoCategories]
   )
   const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
+
+  const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos1(id)
+  const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos?.videos)
+
+  const { videoCount, error } = useVideoCount(
+    {},
+    {
+      onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
+    }
+  )
 
   if (error) {
     return <ViewErrorFallback />
@@ -69,8 +72,8 @@ export const CategoryView = () => {
         <Text variant="h500">Featured category videos</Text>
       </TitleContainer>
       <Grid>
-        {featuredVideos.map((video, idx) => (
-          <VideoTile id={video.id} key={idx} showChannel />
+        {categoriesFeaturedVideos?.videos.map((featuredVideo, idx) => (
+          <VideoTile id={featuredVideo.video.id} key={idx} showChannel />
         ))}
       </Grid>
 
@@ -107,15 +110,17 @@ export const CategoryView = () => {
   )
 }
 
-const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string] = []) => {
+const useVideoHeroVideos = (
+  featuredVideos: GetCategoriesFeaturedVideosQuery['categoryFeaturedVideos']['videos'] = []
+) => {
   const videoHeroVideos = featuredVideos
     .filter((vid) => !!vid.videoCutUrl)
     .slice(0, 3)
-    .map((video) => ({
-      video,
+    .map((featuredVideo) => ({
+      video: featuredVideo.video,
+      videoCutUrl: featuredVideo.videoCutUrl || '',
       thumbnailPhotoUrl: '',
       isLoadingThumbnail: true,
-      videoCutUrl: video?.videoCutUrl ?? '',
     }))
 
   const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset({

@@ -19,7 +19,7 @@ type EntityViewsInfo {
 type FeaturedVideo {
   videoCutUrl: String
   videoId: ID!
-  video: Video
+  video: Video!
 }
 
 input FeaturedVideoInput {

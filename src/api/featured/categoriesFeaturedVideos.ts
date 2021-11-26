@@ -6,8 +6,10 @@ import { VideoFieldsFragment } from '@/api/queries'
 import {
   GetAllCategoriesFeaturedVideosDocument,
   GetAllCategoriesFeaturedVideosQuery,
+  GetAllCategoriesFeaturedVideosQueryVariables,
   GetCategoriesFeaturedVideosQuery,
   GetCategoriesFeaturedVideosQueryVariables,
+  useGetAllCategoriesFeaturedVideosQuery,
   useGetCategoriesFeaturedVideosQuery,
 } from '@/api/queries/__generated__/featured.generated'
 import { createLookup } from '@/utils/data'
@@ -18,6 +20,17 @@ export type CategoriesFeaturedVideos = Record<
   string,
   Array<VideoFieldsFragment & { videoCutUrl?: string | null }> | undefined
 >
+
+export const useAllCategoriesFeaturedVideos = (
+  opts?: QueryHookOptions<GetAllCategoriesFeaturedVideosQuery, GetAllCategoriesFeaturedVideosQueryVariables>
+) => {
+  const { data, ...rest } = useGetAllCategoriesFeaturedVideosQuery({ ...opts })
+
+  return {
+    allCategoriesFeaturedVideos: data?.allCategoriesFeaturedVideos,
+    ...rest,
+  }
+}
 
 // TODO: hook to only fetch a single category featured videos
 export const useCategoriesFeaturedVideos = (): CategoriesFeaturedVideos | null => {
