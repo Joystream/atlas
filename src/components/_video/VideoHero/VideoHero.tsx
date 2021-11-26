@@ -78,7 +78,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       <InfoContainer isCategory={isCategory}>
         <StyledLayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
-            <StyledChannelLink textSecondary id={videoHeroData?.video.channel.id} />
+            <StyledChannelLink textSecondary id={videoHeroData?.video?.channel.id} />
             <TitleContainer>
               <SwitchTransition>
                 <CSSTransition
@@ -87,7 +87,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                   timeout={parseInt(transitions.timings.regular)}
                 >
                   {videoHeroData ? (
-                    <Link to={absoluteRoutes.viewer.video(videoHeroData.video.id)}>
+                    <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
                       <Text variant={smMatch ? 'h700' : 'h500'}>{videoHeroData.heroTitle}</Text>
                     </Link>
                   ) : smMatch ? (
@@ -114,7 +114,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                 <Button
                   size={xsMatch ? 'large' : 'medium'}
                   fullWidth={!xsMatch}
-                  to={absoluteRoutes.viewer.video(videoHeroData.video.id)}
+                  to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}
                   icon={<SvgActionPlayAlt />}
                 >
                   Play

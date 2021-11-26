@@ -15,7 +15,7 @@ export type GetVideoHeroQuery = {
     heroTitle: string
     heroVideoCutUrl: string
     heroPosterUrl: string
-    video?: Types.Maybe<{
+    video: {
       __typename?: 'Video'
       id: string
       title?: Types.Maybe<string>
@@ -107,7 +107,7 @@ export type GetVideoHeroQuery = {
         attribution?: Types.Maybe<string>
         customText?: Types.Maybe<string>
       }>
-    }>
+    }
   }
 }
 
