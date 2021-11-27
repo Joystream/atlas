@@ -115,7 +115,7 @@ export const CoverImage = styled.img<CoverImageProps>`
 export const CoverNoImage = styled.div`
   ${square('100%')}
 
-  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
+  background: linear-gradient(125deg, rgb(16 18 20) 30%, rgb(34 36 38) 65%, rgb(16 18 20) 100%);
 `
 
 export const CoverThumbnailUploadFailed = styled.div`

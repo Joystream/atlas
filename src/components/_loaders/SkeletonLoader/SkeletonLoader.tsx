@@ -49,12 +49,12 @@ const SkeletonLoaderAnimated = styled.div<SkeletonLoaderProps>`
   transform: translateX(0%);
   background: linear-gradient(
     104deg,
-    rgba(0, 0, 0, 0) 15%,
+    rgba(0 0 0 / 0) 15%,
     ${cVar('colorCoreNeutral900Lighten')} 30%,
     ${cVar('colorCoreNeutral800Lighten')} 48%,
     ${cVar('colorCoreNeutral800Lighten')} 52%,
     ${cVar('colorCoreNeutral900Lighten')} 70%,
-    rgba(0, 0, 0, 0) 85%
+    rgba(0 0 0 / 0) 85%
   );
   animation: ${pulse} 1.5s linear infinite;
 `

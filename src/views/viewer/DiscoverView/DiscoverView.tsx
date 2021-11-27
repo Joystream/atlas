@@ -14,7 +14,7 @@ import {
   CategoriesContainer,
   FeaturedCategoriesContainer,
   StyledLimitedWidthContainer,
-} from './DiscoverView.style'
+} from './DiscoverView.styles'
 import { videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {

@@ -1,3 +1,4 @@
+import { Global } from '@emotion/react'
 import { isEqual } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -13,14 +14,14 @@ import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
-  CategoryGlobalStyles,
   Container,
   ControlsContainer,
   StyledSelect,
   StyledSticky,
   StyledVideoGrid,
+  categoryGlobalStyles,
 } from './CategoryVideos.styles'
-import { FallbackWrapper } from './CategoryView.style'
+import { FallbackWrapper } from './CategoryView.styles'
 
 const ADAPTED_SORT_OPTIONS = [
   { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
@@ -98,7 +99,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   )
   return (
     <>
-      <CategoryGlobalStyles />
+      <Global styles={categoryGlobalStyles} />
       <Container ref={containerRef}>
         <StyledSticky style={{ top: topbarHeight - 1 }}>
           <ControlsContainer>
