@@ -46,7 +46,9 @@ export const SignInMainView: React.FC = () => {
         </ButtonGroup>
         <BackLink to={absoluteRoutes.viewer.index()}>
           <SvgActionChevronL />
-          <Text secondary>Go back</Text>
+          <Text variant="t200" secondary>
+            Go back
+          </Text>
         </BackLink>
       </Header>
       <StyledSignInIllustrationSVG />

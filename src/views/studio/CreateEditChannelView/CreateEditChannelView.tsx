@@ -441,7 +441,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 )}
               />
               {!newChannel && (
-                <StyledSubTitle>{channel?.follows ? formatNumberShort(channel.follows) : 0} Followers</StyledSubTitle>
+                <StyledSubTitle variant="t200">
+                  {channel?.follows ? formatNumberShort(channel.follows) : 0} Followers
+                </StyledSubTitle>
               )}
             </>
           ) : (

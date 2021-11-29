@@ -284,7 +284,11 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
                     {assetDimension}
                   </Text>
                 )}
-                {assetSize && <Text secondary>{assetSize}</Text>}
+                {assetSize && (
+                  <Text variant="t200" secondary>
+                    {assetSize}
+                  </Text>
+                )}
               </FileInfoDetails>
             )}
           </FileInfo>

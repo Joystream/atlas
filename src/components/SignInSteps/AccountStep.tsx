@@ -101,7 +101,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 <StyledJoystreamLogo />
               </IconGroup>
               <StepTitle variant="h500">Connect account</StepTitle>
-              <StepSubTitle secondary>
+              <StepSubTitle variant="t200" secondary>
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>

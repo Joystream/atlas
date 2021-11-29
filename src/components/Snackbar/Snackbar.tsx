@@ -69,7 +69,11 @@ export const Snackbar: React.FC<SnackbarProps> = ({
             </IconButton>
           </SnackbarButtonsContainer>
         </SnackbarHeader>
-        {description && <SnackbarDescription secondary>{description}</SnackbarDescription>}
+        {description && (
+          <SnackbarDescription variant="t200" secondary>
+            {description}
+          </SnackbarDescription>
+        )}
         {actionText && description && (
           <SnackbarActionButton
             variant="tertiary"

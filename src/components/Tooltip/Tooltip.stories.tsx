@@ -27,7 +27,7 @@ export default {
 
 const TextTooltip: Story<TooltipProps> = (args) => (
   <Tooltip {...args}>
-    <Text>Hello there!</Text>
+    <Text variant="t200">Hello there!</Text>
   </Tooltip>
 )
 

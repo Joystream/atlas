@@ -165,7 +165,7 @@ export const VideoTileCover: React.FC<VideoTileCoverProps> = React.memo(
                       {(isUnlisted || isDraft) && !isUploading && (
                         <CoverVideoPublishingStateOverlay>
                           {isDraft ? <SvgActionDraft /> : <SvgActionHide />}
-                          <PublishingStateText>{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
+                          <PublishingStateText variant="t200">{isDraft ? 'Draft' : 'Unlisted'}</PublishingStateText>
                         </CoverVideoPublishingStateOverlay>
                       )}
                       {!!duration && <CoverDurationOverlay>{formatDurationShort(duration)}</CoverDurationOverlay>}
