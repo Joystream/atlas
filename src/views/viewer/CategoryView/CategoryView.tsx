@@ -21,7 +21,7 @@ import { AssetType, useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
-import { CategoriesContainer, TitleContainer } from './CategoryView.style'
+import { CategoriesContainer, TitleContainer } from './CategoryView.styles'
 
 import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 

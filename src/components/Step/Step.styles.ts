@@ -36,7 +36,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
         border-style: solid;
 
         ${media.sm} {
-          border-width: 1px 1px 1px 1px;
+          border-width: 1px;
         }
       `
     default:
@@ -109,25 +109,4 @@ export const StepTitle = styled(Text)`
 export const ProgressContainer = styled.div`
   width: ${sizes(7)};
   flex-shrink: 0;
-`
-
-export const StepImage = styled.div`
-  flex-shrink: 0;
-  color: white;
-  background: ${oldColors.gray[600]};
-  width: ${sizes(7)};
-  height: ${sizes(7)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-
-  img {
-    object-fit: cover;
-    height: 100%;
-  }
-`
-
-export const IconButtonContainer = styled.div`
-  width: ${sizes(10)};
 `

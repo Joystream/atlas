@@ -81,6 +81,8 @@ export const Heading = styled(Text)`
   text-overflow: ellipsis;
   overflow: hidden;
   text-align: center;
+
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

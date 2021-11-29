@@ -132,3 +132,4 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     </ViewWrapper>
   )
 })
+SearchResults.displayName = 'SearchResults'

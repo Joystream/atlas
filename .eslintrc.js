@@ -53,15 +53,6 @@ module.exports = {
     // force using Logger object
     'no-console': ['warn'],
 
-    // sort import member order
-    // can be removed once https://github.com/trivago/prettier-plugin-sort-imports/pull/44 gets released
-    'sort-imports': [
-      'warn',
-      {
-        'ignoreDeclarationSort': true,
-      },
-    ],
-
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',
     '@emotion/no-vanilla': 'error',

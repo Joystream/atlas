@@ -36,7 +36,7 @@ export const StyledTextArea = styled(TextareaAutosize)`
   }
 
   &:hover {
-    opacity: 75%;
+    opacity: 0.75;
   }
 
   ::placeholder {

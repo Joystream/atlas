@@ -42,7 +42,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 export const CustomControls = styled.div<CustomControlsProps>`
   position: absolute;
   transform: translateY(0.5em);
-  padding: 0.5em 0.5em 0 0.5em;
+  padding: 0.5em 0.5em 0;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
   border-top: ${({ isEnded }) => (isEnded ? `1px solid ${oldColors.transparentPrimary[18]}` : 'unset')};
   left: 0;
@@ -56,7 +56,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   top: ${({ isEnded }) => (isEnded ? 'unset' : 0)};
   align-items: flex-end;
   @media (hover: hover) {
-    padding: 0.5em 1em 0 1em;
+    padding: 0.5em 1em 0;
     top: unset;
     align-items: center;
     height: unset;
@@ -76,7 +76,7 @@ export const PlayControl = styled.div<PlayControlProps>`
   left: 0;
 
   /* hide PlayControl when loading on mobile */
-  ${({ isLoading }) => isLoading && `opacity: 0;`}
+  opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
   @media (hover: hover) {
     opacity: 1;
     margin-right: 0.5em;

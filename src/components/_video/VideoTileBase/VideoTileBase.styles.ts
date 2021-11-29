@@ -120,6 +120,7 @@ export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
   font-size: ${({ size }) => (size === 'small' ? oldTypography.sizes.h6 : oldTypography.sizes.subtitle1)};
   line-height: ${({ size }) => (size === 'small' ? oldTypography.lineHeights.h6 : oldTypography.lineHeights.subtitle1)};
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

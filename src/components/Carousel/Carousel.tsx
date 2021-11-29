@@ -109,3 +109,4 @@ export const Carousel = forwardRef<
     )
   }
 )
+Carousel.displayName = 'Carousel'

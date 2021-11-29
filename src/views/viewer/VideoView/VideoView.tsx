@@ -106,16 +106,18 @@ export const VideoView: React.FC = () => {
 
   const replaceUrls = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g
-    const parts: string[] | React.ReactNodeArray = text.split(urlRegex) || []
-    for (let i = 1; i < parts.length; i += 2) {
-      const part = parts[i] as string
-      parts[i] = (
-        <Button size="large" textOnly key={`description-link-${i}`} to={part}>
+    const parts = text.split(urlRegex)
+    return parts.reduce((acc, part, idx) => {
+      const node = urlRegex.test(part) ? (
+        <Button size="large" textOnly key={`description-link-${idx}`} to={part}>
           {part}
         </Button>
+      ) : (
+        part
       )
-    }
-    return parts
+
+      return [...acc, node]
+    }, [] as React.ReactNode[])
   }
 
   if (error) {

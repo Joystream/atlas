@@ -68,7 +68,7 @@ const textPaddingStyles = ({ size }: ButtonSizeProps): SerializedStyles => {
       `
     case 'small':
       return css`
-        padding: 1px 0 3px 0;
+        padding: 1px 0 3px;
       `
   }
 }
