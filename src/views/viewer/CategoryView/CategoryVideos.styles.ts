@@ -1,29 +1,16 @@
-import { Global, SerializedStyles, css } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
 
+import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { Select } from '@/components/_inputs/Select'
 import { media, oldColors, sizes, transitions } from '@/styles'
 
-import { InfiniteVideoGrid } from '../../../components/InfiniteGrids'
-
-export const globalStyles = css`
+export const categoryGlobalStyles = css`
   body,
   html {
     scroll-behavior: smooth;
   }
 `
-type GlobalStyleProps = {
-  additionalStyles?: SerializedStyles[] | SerializedStyles
-}
-export const CategoryGlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
-  const additionalStylesArray = additionalStyles
-    ? Array.isArray(additionalStyles)
-      ? additionalStyles
-      : [additionalStyles]
-    : []
-  return <Global styles={[globalStyles, ...additionalStylesArray]} />
-}
 
 export const Container = styled.div`
   margin-top: ${sizes(16)};
@@ -42,7 +29,8 @@ export const ControlsContainer = styled.div`
   grid-template-columns: 1fr auto;
   gap: ${sizes(4)};
   align-items: center;
-  /* readd global horizontal padding to the component */
+
+  /* re-add global horizontal padding to the component */
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
   border-bottom: 1px solid ${oldColors.gray[700]};
   background-color: ${oldColors.black};

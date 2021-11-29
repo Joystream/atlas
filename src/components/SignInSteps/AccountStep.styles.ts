@@ -117,10 +117,9 @@ export const OrderedSteps = styled.ol`
   }
 `
 export const OrderedStep = styled(Text)`
-  margin: 10px 10px;
+  margin: 10px 10px 20px;
   counter-increment: ordered-list-counter;
   display: flex;
-  margin-bottom: 20px;
   align-items: center;
   max-width: 170px;
   flex-direction: column;

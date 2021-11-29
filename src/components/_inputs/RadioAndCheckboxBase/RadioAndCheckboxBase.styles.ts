@@ -7,8 +7,7 @@ export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean }>`
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  grid-column-gap: ${sizes(2)};
-  grid-row-gap: ${sizes(1)};
+  grid-gap: ${sizes(1)} ${sizes(2)};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
 

@@ -6,10 +6,10 @@ import { Text } from '@/components/Text'
 import {
   SvgControlsPause,
   SvgControlsPlay,
-  SvgControlsSeekBackward10,
   SvgControlsSeekBackward5,
-  SvgControlsSeekForward10,
+  SvgControlsSeekBackward10,
   SvgControlsSeekForward5,
+  SvgControlsSeekForward10,
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
   SvgControlsSoundOn,

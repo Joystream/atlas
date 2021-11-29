@@ -146,7 +146,7 @@ export const DrawerOverlay = styled.div`
   bottom: 0;
   left: 0;
   z-index: ${zIndex.sideNav};
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0 0 0 / 0.5);
 `
 export const SubItemsWrapper = styled.div<SubItemProps>`
   padding-left: calc(${oldTypography.sizes.icon.xlarge} + ${sizes(8)});

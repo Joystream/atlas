@@ -148,12 +148,7 @@ export const TabsContainer = styled.div`
   display: grid;
   margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'tabs tabs tabs'
-    'search search search'
-    'sort sort sort';
-  grid-template-rows: 1fr auto auto;
+  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
   align-items: baseline;
   ${media.xs} {
     padding-top: ${sizes(8)};
@@ -161,10 +156,8 @@ export const TabsContainer = styled.div`
   ${media.sm} {
     align-items: center;
     border-bottom: solid 1px ${oldColors.gray[800]};
-    grid-template-areas: initial;
     gap: ${sizes(8)};
-    grid-template-rows: 1fr;
-    grid-template-columns: auto 1fr 250px;
+    grid-template: 1fr / auto 1fr 250px;
   }
 `
 
@@ -225,6 +218,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     }
 
     ::-webkit-search-cancel-button {
+      /* stylelint-disable-next-line property-no-vendor-prefix */
       -webkit-appearance: none;
     }
   }

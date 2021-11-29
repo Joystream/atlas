@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
@@ -14,6 +15,10 @@ type LoadingProp = {
   isLoading?: boolean
 }
 
+const dragAcceptCss = css`
+  background: radial-gradient(55.47% 148.24% at 50% 50%, rgba(0 0 0 / 0) 0%, rgba(64 56 255 / 0.2) 100%);
+`
+
 export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   overflow: hidden;
   position: relative;
@@ -22,8 +27,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
   display: flex;
   justify-content: center;
   transition: all ${transitions.timings.routing} ${transitions.easing};
-  background: ${({ isDragAccept }) =>
-    isDragAccept && `radial-gradient(55.47% 148.24% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(64, 56, 255, 0.2) 100%) ;`};
+  ${({ isDragAccept }) => isDragAccept && dragAcceptCss};
 
   ::after {
     content: '';

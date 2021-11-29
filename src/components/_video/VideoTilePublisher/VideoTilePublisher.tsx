@@ -69,3 +69,4 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo
     )
   }
 )
+VideoTilePublisher.displayName = 'VideoTilePublisher'
