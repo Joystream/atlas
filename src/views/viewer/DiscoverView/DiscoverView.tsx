@@ -10,7 +10,7 @@ import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_vide
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SentryLogger } from '@/utils/logs'
 
-import { FeaturedCategoriesContainer } from './DiscoverView.styles'
+import { CategoriesContainer, FeaturedCategoriesContainer, StyledLimitedWidthContainer } from './DiscoverView.styles'
 import { videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
