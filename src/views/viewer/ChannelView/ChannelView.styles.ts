@@ -198,7 +198,6 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${oldColors.blue[500]};
-
     font: ${cVar('typographyDesktopT200')};
     letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
