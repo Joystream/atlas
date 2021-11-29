@@ -157,6 +157,8 @@ const StudioLayout = () => {
   )
 }
 
+StudioLayout.displayName = 'StudioLayout'
+
 const MainContainer = styled.main<{ hasSidebar: boolean }>`
   --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
 

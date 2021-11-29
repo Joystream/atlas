@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -5,7 +6,13 @@ import { Controller, DeepMap, FieldNamesMarkedBoolean, useForm } from 'react-hoo
 import useMeasure from 'react-use-measure'
 
 import { useCategories } from '@/api/hooks'
-import { License } from '@/api/queries'
+import {
+  GetVideosConnectionDocument,
+  GetVideosConnectionQuery,
+  GetVideosConnectionQueryVariables,
+  License,
+  VideoOrderByInput,
+} from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
@@ -22,9 +29,13 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAssetStore, useRawAsset } from '@/providers/assets'
+import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
+import { useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactionManager'
+import { useStartFileUpload } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import {
   DEFAULT_LICENSE_ID,
@@ -34,9 +45,10 @@ import {
   useVideoWorkspaceTabData,
 } from '@/providers/videoWorkspace'
 import { FileType } from '@/types/files'
+import { writeVideoDataInCache } from '@/utils/cachingAssets'
 import { createId } from '@/utils/createId'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import {
   DeleteVideoButton,
@@ -64,28 +76,39 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 }))
 
 type VideoWorkspaceFormProps = {
-  onSubmit: (
-    data: VideoWorkspaceFormFields,
-    dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceFormFields>,
-    callback: () => void
-  ) => void
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: VideoWorkspaceTab
   fee: number
+  thumbnailHashPromise: Promise<string> | null
+  videoHashPromise: Promise<string> | null
 }
 
 type ValueOf<T> = T[keyof T]
 
 export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
-  ({ selectedVideoTab, onSubmit, onThumbnailFileChange, onVideoFileChange, onDeleteVideo, fee }) => {
-    const { activeChannelId } = useAuthorizedUser()
+  ({
+    selectedVideoTab,
+    onThumbnailFileChange,
+    onVideoFileChange,
+    onDeleteVideo,
+    fee,
+    thumbnailHashPromise,
+    videoHashPromise,
+  }) => {
+    const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
     const isEdit = !selectedVideoTab?.isDraft
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const mdMatch = useMediaMatch('md')
-
+    const { joystream } = useJoystream()
+    const resolveAsset = useRawAssetResolver()
+    const startFileUpload = useStartFileUpload()
+    const client = useApolloClient()
+    const handleTransaction = useTransaction()
+    const { activeChannelId, activeMemberId } = useAuthorizedUser()
+    const removeDrafts = useDraftStore((state) => state.actions.removeDrafts)
     const [forceReset, setForceReset] = useState(false)
     const [fileSelectError, setFileSelectError] = useState<string | null>(null)
     const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
@@ -244,27 +267,230 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       setValue,
     ])
 
-    const handleSubmit = createSubmitHandler(async (data: VideoWorkspaceFormFields) => {
-      // do initial validation
-      if (!isEdit && !data.assets.video.contentId) {
-        setFileSelectError('Video file cannot be empty')
-        return
-      }
-      if (!data.assets.thumbnail.cropContentId) {
-        setFileSelectError('Thumbnail cannot be empty')
-        return
-      }
-
-      const callback = () => {
-        if (!isEdit) {
-          setForceReset(true)
+    const onSubmit = useCallback(
+      async (
+        data: VideoWorkspaceFormFields,
+        dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceFormFields>,
+        callback?: () => void
+      ) => {
+        if (!selectedVideoTab || !joystream) {
+          return
         }
-      }
+        const { video: videoInputFile, thumbnail: thumbnailInputFile } = data.assets
+        const videoAsset = resolveAsset(videoInputFile.contentId)
+        const thumbnailAsset = resolveAsset(thumbnailInputFile.cropContentId)
 
-      debouncedDraftSave.current.flush()
+        const isNew = !isEdit
+        const license = {
+          code: data.licenseCode ?? undefined,
+          attribution: data.licenseAttribution ?? undefined,
+          customText: data.licenseCustomText ?? undefined,
+        }
+        const anyLicenseFieldsDirty =
+          dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
 
-      await onSubmit(data, dirtyFields, callback)
-    })
+        const metadata: CreateVideoMetadata = {
+          ...(isNew || dirtyFields.title ? { title: data.title } : {}),
+          ...(isNew || dirtyFields.description ? { description: data.description } : {}),
+          ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
+          ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
+          ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
+            ? { hasMarketing: data.hasMarketing }
+            : {}),
+          ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
+          ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
+          ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
+          ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
+            ? {
+                publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
+              }
+            : {}),
+          ...(isNew || dirtyFields.assets?.video
+            ? {
+                mimeMediaType: videoInputFile?.mimeType,
+              }
+            : {}),
+          ...(isNew || dirtyFields.assets?.video ? { duration: Math.round(videoInputFile?.duration || 0) } : {}),
+          ...(isNew || dirtyFields.assets?.video ? { mediaPixelHeight: videoInputFile?.mediaPixelHeight } : {}),
+          ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
+        }
+
+        const assets: VideoAssets = {}
+        let videoContentId = ''
+        let thumbnailContentId = ''
+
+        const processAssets = async () => {
+          if (videoAsset?.blob && videoHashPromise) {
+            const [asset, contentId] = joystream.createFileAsset({
+              size: videoAsset.blob.size,
+              ipfsContentId: await videoHashPromise,
+            })
+            assets.video = asset
+            videoContentId = contentId
+          } else if (dirtyFields.assets?.video) {
+            ConsoleLogger.warn('Missing video data')
+          }
+
+          if (thumbnailAsset?.blob && thumbnailHashPromise) {
+            const [asset, contentId] = joystream.createFileAsset({
+              size: thumbnailAsset.blob.size,
+              ipfsContentId: await thumbnailHashPromise,
+            })
+            assets.thumbnail = asset
+            thumbnailContentId = contentId
+          } else if (dirtyFields.assets?.thumbnail) {
+            ConsoleLogger.warn('Missing thumbnail data')
+          }
+        }
+
+        const uploadAssets = async (videoId: VideoId) => {
+          const uploadPromises: Promise<unknown>[] = []
+          if (videoAsset?.blob && videoContentId) {
+            const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
+            const uploadPromise = startFileUpload(videoAsset.blob, {
+              contentId: videoContentId,
+              owner: activeChannelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+                title: metadata.title,
+              },
+              type: 'video',
+              dimensions: width && height ? { width, height } : undefined,
+            })
+            uploadPromises.push(uploadPromise)
+          }
+          if (thumbnailAsset?.blob && thumbnailContentId) {
+            const uploadPromise = startFileUpload(thumbnailAsset.blob, {
+              contentId: thumbnailContentId,
+              owner: activeChannelId,
+              parentObject: {
+                type: 'video',
+                id: videoId,
+              },
+              type: 'thumbnail',
+              dimensions: thumbnailInputFile.assetDimensions,
+              imageCropData: thumbnailInputFile.imageCropData,
+            })
+            uploadPromises.push(uploadPromise)
+          }
+          Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
+        }
+
+        const refetchDataAndCacheAssets = async (videoId: VideoId) => {
+          // add resolution for newly created asset
+          addAsset(thumbnailContentId, { url: thumbnailAsset?.url })
+
+          const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
+            query: GetVideosConnectionDocument,
+            variables: {
+              orderBy: VideoOrderByInput.CreatedAtDesc,
+              where: {
+                id_eq: videoId,
+              },
+            },
+            fetchPolicy: 'network-only',
+          })
+
+          if (isNew) {
+            if (fetchedVideo.data.videosConnection?.edges[0]) {
+              writeVideoDataInCache({
+                edge: fetchedVideo.data.videosConnection.edges[0],
+                client,
+              })
+            }
+
+            updateSelectedVideoTab({
+              id: videoId,
+              isDraft: false,
+            })
+            removeDrafts([selectedVideoTab?.id])
+          }
+          setSelectedVideoTabCachedAssets(null)
+          setSelectedVideoTabCachedDirtyFormData({})
+
+          // allow for the changes in refetched video to propagate first
+          setTimeout(() => {
+            callback?.()
+          })
+        }
+
+        const completed = await handleTransaction({
+          preProcess: processAssets,
+          txFactory: (updateStatus) =>
+            isNew
+              ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+              : joystream.updateVideo(
+                  selectedVideoTab.id,
+                  activeMemberId,
+                  activeChannelId,
+                  metadata,
+                  assets,
+                  updateStatus
+                ),
+          onTxFinalize: uploadAssets,
+          onTxSync: refetchDataAndCacheAssets,
+          successMessage: {
+            title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+            description: isNew
+              ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+              : 'Changes to your video were saved on the blockchain.',
+          },
+        })
+
+        if (completed) {
+          setVideoWorkspaceState('minimized')
+          removeVideoTab(selectedVideoTabIdx)
+        }
+      },
+      [
+        activeChannelId,
+        activeMemberId,
+        addAsset,
+        client,
+        handleTransaction,
+        isEdit,
+        joystream,
+        removeDrafts,
+        removeVideoTab,
+        resolveAsset,
+        selectedVideoTab,
+        selectedVideoTabIdx,
+        setSelectedVideoTabCachedAssets,
+        setSelectedVideoTabCachedDirtyFormData,
+        setVideoWorkspaceState,
+        startFileUpload,
+        thumbnailHashPromise,
+        updateSelectedVideoTab,
+        videoHashPromise,
+      ]
+    )
+
+    const handleSubmit = useMemo(
+      () =>
+        createSubmitHandler(async (data: VideoWorkspaceFormFields) => {
+          // do initial validation
+          if (!isEdit && !data.assets.video.contentId) {
+            setFileSelectError('Video file cannot be empty')
+            return
+          }
+          if (!data.assets.thumbnail.cropContentId) {
+            setFileSelectError('Thumbnail cannot be empty')
+            return
+          }
+
+          const callback = () => {
+            if (!isEdit) {
+              setForceReset(true)
+            }
+          }
+
+          debouncedDraftSave.current.flush()
+
+          await onSubmit(data, dirtyFields, callback)
+        }),
+      [createSubmitHandler, dirtyFields, isEdit, onSubmit]
+    )
 
     useEffect(() => {
       const subscription = watch((data) => {
@@ -416,13 +642,61 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       [mediaAsset, originalThumbnailAsset?.blob, thumbnailAsset]
     )
 
+    const isFormValid = !!mediaAsset && !!thumbnailAsset && isValid
+
+    const isDisabled = useMemo(
+      () => !isDirty || (!isEdit && !mediaAsset) || !thumbnailAsset || !isValid || nodeConnectionStatus !== 'connected',
+      [isDirty, isEdit, isValid, mediaAsset, nodeConnectionStatus, thumbnailAsset]
+    )
+
+    const actionBarPrimaryButton = useMemo(
+      () => ({
+        text: isEdit ? 'Publish changes' : 'Upload',
+        disabled: isDisabled,
+        onClick: handleSubmit,
+        tooltip: isDisabled
+          ? {
+              headerText: isEdit
+                ? isFormValid
+                  ? 'Change anything to proceed'
+                  : 'Fill all required fields to proceed'
+                : 'Fill all required fields to proceed',
+              text: isEdit
+                ? isFormValid
+                  ? 'To publish changes you have to provide new value to any field'
+                  : 'Required: video file, thumbnail, title, category, language'
+                : 'Required: video file, thumbnail, title, category, language',
+              icon: true,
+            }
+          : undefined,
+      }),
+      [handleSubmit, isDisabled, isEdit, isFormValid]
+    )
+
+    const actionBarSecondaryButton = useMemo(
+      () => ({
+        visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
+        text: 'Cancel',
+        onClick: () => reset(),
+        icon: <SvgControlsCancel width={16} height={16} />,
+      }),
+      [isDirty, isEdit, nodeConnectionStatus, reset]
+    )
+
+    const actionBarDraftBadge = useMemo(
+      () => ({
+        visible: !isEdit,
+        text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
+        tooltip: {
+          text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+        },
+      }),
+      [isEdit, mdMatch]
+    )
+
     if (tabDataError || categoriesError) {
       return <ViewErrorFallback />
     }
-    const isFormValid = !!mediaAsset && !!thumbnailAsset && isValid
-
-    const isDisabled =
-      !isDirty || (!isEdit && !mediaAsset) || !thumbnailAsset || !isValid || nodeConnectionStatus !== 'connected'
 
     return (
       <>
@@ -665,39 +939,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           isEdit={isEdit}
           primaryText={`Fee: ${fee} Joy`}
           secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-          primaryButton={{
-            text: isEdit ? 'Publish changes' : 'Upload',
-            disabled: isDisabled,
-            onClick: handleSubmit,
-            tooltip: isDisabled
-              ? {
-                  headerText: isEdit
-                    ? isFormValid
-                      ? 'Change anything to proceed'
-                      : 'Fill all required fields to proceed'
-                    : 'Fill all required fields to proceed',
-                  text: isEdit
-                    ? isFormValid
-                      ? 'To publish changes you have to provide new value to any field'
-                      : 'Required: video file, thumbnail, title, category, language'
-                    : 'Required: video file, thumbnail, title, category, language',
-                  icon: true,
-                }
-              : undefined,
-          }}
-          secondaryButton={{
-            visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
-            text: 'Cancel',
-            onClick: () => reset(),
-            icon: <SvgControlsCancel width={16} height={16} />,
-          }}
-          draftBadge={{
-            visible: !isEdit,
-            text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
-            tooltip: {
-              text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-            },
-          }}
+          primaryButton={actionBarPrimaryButton}
+          secondaryButton={actionBarSecondaryButton}
+          draftBadge={actionBarDraftBadge}
           fullWidth={true}
         />
       </>
