@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
+import { transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
 import { Container, DrawerOverlay } from './VideoWorkspace.style'
 import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
-import { useVideoWorkspaceAnimations } from './animations'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
   // videoWorkspace state
@@ -23,9 +24,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     hasVideoTabAnyCachedAssets,
   } = useVideoWorkspace()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
-  const { containerRef, drawerOverlayAnimationProps, videoWorkspaceAnimationProps } =
-    useVideoWorkspaceAnimations(videoWorkspaceState)
-
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   // transaction management
@@ -99,28 +97,48 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   return (
     <>
-      <DrawerOverlay style={drawerOverlayAnimationProps} />
-      <Container ref={containerRef} role="dialog" style={videoWorkspaceAnimationProps}>
-        <VideoWorkspaceTabsBar
-          videoTabs={videoTabs}
-          selectedVideoTab={selectedVideoTab}
-          videoWorkspaceState={videoWorkspaceState}
-          onAddNewTabClick={addVideoTab}
-          onRemoveTabClick={handleRemoveVideoTab}
-          onTabSelect={onTabSelect}
-          onCloseClick={closeVideoWorkspace}
-          onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
-        />
-        <VideoWorkspaceForm
-          onDeleteVideo={handleDeleteVideo}
-          selectedVideoTab={selectedVideoTab}
-          onThumbnailFileChange={handleThumbnailFileChange}
-          onVideoFileChange={handleVideoFileChange}
-          fee={0}
-          thumbnailHashPromise={thumbnailHashPromise}
-          videoHashPromise={videoHashPromise}
-        />
-      </Container>
+      <CSSTransition
+        in={['open', 'minimized'].includes(videoWorkspaceState)}
+        mountOnEnter
+        unmountOnExit
+        timeout={parseInt(transitions.timings.routing)}
+        classNames="video-workspace-drawer"
+      >
+        <DrawerOverlay />
+      </CSSTransition>
+      <CSSTransition
+        in={['open', 'minimized'].includes(videoWorkspaceState)}
+        mountOnEnter
+        unmountOnExit
+        timeout={{ enter: 0, exit: parseInt(transitions.timings.routing) }}
+        classNames="video-workspace"
+      >
+        <Container
+          role="dialog"
+          state={videoWorkspaceState}
+          className={videoWorkspaceState === 'minimized' ? 'video-workspace--minimized' : 'video-workspace--maximized'}
+        >
+          <VideoWorkspaceTabsBar
+            videoTabs={videoTabs}
+            selectedVideoTab={selectedVideoTab}
+            videoWorkspaceState={videoWorkspaceState}
+            onAddNewTabClick={addVideoTab}
+            onRemoveTabClick={handleRemoveVideoTab}
+            onTabSelect={onTabSelect}
+            onCloseClick={closeVideoWorkspace}
+            onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
+          />
+          <VideoWorkspaceForm
+            onDeleteVideo={handleDeleteVideo}
+            selectedVideoTab={selectedVideoTab}
+            onThumbnailFileChange={handleThumbnailFileChange}
+            onVideoFileChange={handleVideoFileChange}
+            fee={0}
+            thumbnailHashPromise={thumbnailHashPromise}
+            videoHashPromise={videoHashPromise}
+          />
+        </Container>
+      </CSSTransition>
     </>
   )
 })

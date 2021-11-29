@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
@@ -79,6 +79,14 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
     const [isVideoLoading, setIsVideoLoading] = useState(false)
     const [rawImageFile, setRawImageFile] = useState<File | null>(null)
     const thumbnailStepRef = useRef<HTMLDivElement>(null)
+    const [underlineWidth, setUnderlineWidth] = useState(0)
+
+    useLayoutEffect(() => {
+      if (thumbnailStepRef?.current?.offsetWidth) {
+        setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth)
+      }
+    }, [])
+
     useEffect(() => {
       if (isImgLoading || isVideoLoading) {
         return
@@ -262,7 +270,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
             <CSSTransition in={step === 'image'} timeout={400} classNames="underline">
               <AnimatedUnderline
                 style={{
-                  width: thumbnailStepRef?.current?.offsetWidth,
+                  width: underlineWidth,
                   left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
                 }}
               />
