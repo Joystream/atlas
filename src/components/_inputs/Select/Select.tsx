@@ -86,7 +86,7 @@ export const _Select = <T extends unknown>(
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && (
-            <StyledLabelText variant="h300" labelPosition={labelPosition}>
+            <StyledLabelText variant="t200" labelPosition={labelPosition}>
               {label}
             </StyledLabelText>
           )}

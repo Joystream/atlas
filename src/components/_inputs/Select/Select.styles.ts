@@ -60,6 +60,9 @@ export const SelectButton = styled.button<SelectButtonProps>`
     `1px solid ${
       isOpen ? oldColors.blue[500] : error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200]
     }`};
+  font: ${cVar('typographyDesktopT200')} !important;
+  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')} !important;
+  text-transform: ${cVar('typographyDesktopT200TextTransform')} !important;
 
   ${({ size }) => {
     switch (size) {
@@ -71,9 +74,6 @@ export const SelectButton = styled.button<SelectButtonProps>`
         return css`
           min-height: ${sizes(10)};
           padding: 0 ${sizes(4)} !important;
-          font: ${cVar('typographyDesktopT200')};
-          letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')} !important;
-          text-transform: ${cVar('typographyDesktopT200TextTransform')} !important;
         `
     }
   }}
@@ -111,7 +111,7 @@ export const SelectOption = styled.li<SelectOptionProps>`
   align-items: center;
   margin: 0;
   cursor: pointer;
-  padding: ${sizes(3)} ${sizes(3)};
+  padding: ${sizes(2.5)};
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};

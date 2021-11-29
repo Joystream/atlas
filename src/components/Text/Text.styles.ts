@@ -9,7 +9,7 @@ type TextProps = {
 
 const baseStyles = (props: TextProps) => css`
   margin: 0;
-  color: ${props.isSecondary ? cVar('colorCoreNeutral400') : cVar('colorCoreNeutral50')};
+  color: ${props.isSecondary ? cVar('colorCoreNeutral300') : cVar('colorCoreNeutral50')};
 `
 
 export const styledVariants = {
@@ -62,21 +62,21 @@ export const styledVariants = {
     letter-spacing: ${cVar('typographyDesktopH300LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH300TextTransform')};
   `,
-  h200: styled.span<TextProps>`
+  h200: styled.h6<TextProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH200')};
     letter-spacing: ${cVar('typographyDesktopH200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH200TextTransform')};
   `,
-  h100: styled.span<TextProps>`
+  h100: styled.h6<TextProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopH100')};
     letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH100TextTransform')};
   `,
-  t300: styled.p<TextProps>`
+  t300: styled.span<TextProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopT300')};
@@ -90,7 +90,7 @@ export const styledVariants = {
     letter-spacing: ${cVar('typographyDesktopT300StrongLetterSpacing')};
     text-transform: ${cVar('typographyDesktopT300StrongTextTransform')};
   `,
-  t200: styled.p<TextProps>`
+  t200: styled.span<TextProps>`
     ${baseStyles};
 
     font: ${cVar('typographyDesktopT200')};

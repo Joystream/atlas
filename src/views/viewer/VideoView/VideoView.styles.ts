@@ -90,9 +90,9 @@ export const LicenseContainer = styled.div`
   margin: ${sizes(4)} 0 0;
   color: ${oldColors.gray[500]};
 
-  font: ${cVar('typographyDesktopH100')};
-  letter-spacing: ${cVar('typographyDesktopH100LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopH100TextTransform')};
+  font: ${cVar('typographyDesktopT100')};
+  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT100TextTransform')};
 
   p {
     max-width: 60ch;

@@ -66,13 +66,9 @@ export const Title = styled(Text)`
 
 export const SortContainer = styled.div`
   grid-area: sort;
-  display: grid;
   grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: auto 1fr;
 
   ${media.sm} {
-    grid-template-columns: auto 1fr;
     grid-area: initial;
   }
 `
@@ -165,7 +161,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
   align-items: center;
-  margin: ${sizes(6)} 0 ${sizes(16)};
+  margin: ${sizes(6)} 0 ${sizes(2)} 0;
   position: relative;
   ${media.sm} {
     grid-area: initial;
@@ -239,13 +235,5 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
 
   ${media.sm} {
     ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
-  }
-`
-
-export const StyledSelect = styled(Select)`
-  button {
-    font: ${cVar('typographyDesktopT200')};
-    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopT200TextTransform')};
   }
 `

@@ -19,6 +19,7 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
@@ -39,7 +40,6 @@ import {
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
-  StyledSelect,
   StyledTabs,
   StyledTextField,
   SubTitle,
@@ -282,8 +282,10 @@ export const ChannelView: React.FC = () => {
           )}
           {currentTab === 'Videos' && (
             <SortContainer>
-              <Text variant="t200">Sort by</Text>
-              <StyledSelect
+              <Select
+                size="small"
+                labelPosition="left"
+                label="Sort by"
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
                 placeholder={isSearching ? 'Best match' : undefined}

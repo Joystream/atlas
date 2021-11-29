@@ -129,7 +129,7 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       left: calc(var(--size-sidenav-width-collapsed) / 2);
       transform: translateX(-50%);
       bottom: 0;
-      margin-bottom: 10px;
+      margin-bottom: ${sizes(2)};
       font: ${cVar('typographyDesktopT100Strong')};
       letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
       text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
