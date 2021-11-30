@@ -61,8 +61,12 @@ module.exports = {
       type: 'value',
       transitive: true,
       matcher: (token) => token.attributes.category === 'effect',
-      transformer: (token) =>
-        `${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.spread} ${token.value.color}`,
+      transformer: (token) => {
+        const isDivider = token.attributes.type === 'dividers'
+        return `${isDivider ? 'inset' : ''} ${token.value.x} ${token.value.y} ${token.value.blur} ${
+          token.value.spread
+        } ${token.value.color}`
+      },
     },
   },
   format: {

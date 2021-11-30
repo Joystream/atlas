@@ -112,16 +112,16 @@ export const variables = css`
     --color-background-success-muted: var(--color-core-green-600);
     --color-background-success: var(--color-core-green-500);
     --color-background-success-strong: var(--color-core-green-400);
-    --effect-dividers-top: 0 1px 0 0 var(--color-border-muted-alpha);
-    --effect-dividers-bottom: 0 -1px 0 0 var(--color-border-muted-alpha);
-    --effect-dividers-left: 1px 0 0 0 var(--color-border-muted-alpha);
-    --effect-dividers-right: -1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-top: inset 0 1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-bottom: inset 0 -1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-left: inset 1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-right: inset -1px 0 0 0 var(--color-border-muted-alpha);
     --effect-elevation-8-layer1: 0 8px 16px 0 #0000001f;
     --effect-elevation-8-layer2: 0 4px 4px 0 #0000001a;
     --effect-elevation-16-layer1: 0 16px 32px 0 #00000029;
     --effect-elevation-16-layer2: 0 4px 8px 0 #0000001a;
     --effect-elevation-24-layer1: 0 24px 40px 0 #00000029;
-    --effect-elevation-24-layer2: 0 8px 8px 0 ##0000001f;
+    --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
