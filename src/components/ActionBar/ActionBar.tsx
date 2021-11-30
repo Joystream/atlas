@@ -48,14 +48,14 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isEdit ? !primaryButton?.disabled : true}>
-        <StyledPrimaryText variant={!smMatch ? 'h6' : 'h5'}>{primaryText}</StyledPrimaryText>
-        <StyledSecondaryText variant="body2" secondary>
+        <StyledPrimaryText variant={!smMatch ? 'h300' : 'h400'}>{primaryText}</StyledPrimaryText>
+        <StyledSecondaryText variant="t200" secondary>
           {secondaryText}
         </StyledSecondaryText>
         {draftBadge?.visible ? (
           <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
             <DraftsBadgeContainer>
-              <Text variant="body2" secondary>
+              <Text variant="t200" secondary>
                 {draftBadge.text}
               </Text>
               <DetailsIconWrapper>

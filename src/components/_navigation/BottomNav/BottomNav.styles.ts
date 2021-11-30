@@ -4,7 +4,7 @@ import { Link, PathMatch } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
-import { oldColors, oldTypography, sizes, zIndex } from '@/styles'
+import { oldColors, sizes, zIndex } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
@@ -30,7 +30,6 @@ export const Container = styled.div`
 
 export const NavLink = styled(Link, { shouldForwardProp: isPropValid })<{ active: PathMatch | null }>`
   color: ${oldColors.white};
-  font-size: ${oldTypography.sizes.button.small};
   text-align: center;
   text-decoration: none;
   height: 100%;

@@ -10,7 +10,7 @@ import {
 } from '@/components/_buttons/CallToActionButton'
 import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { media, oldTypography, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 type CtaData = 'home' | 'new' | 'channels' | 'popular'
 
@@ -61,7 +61,7 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
   return (
     <StyledViewWrapper big>
-      {title && <Header variant="h3">{title}</Header>}
+      {title && <Header variant="h600">{title}</Header>}
       {children}
       {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>
@@ -70,11 +70,14 @@ export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ chil
 
 const Header = styled(Text)`
   margin: ${sizes(16)} 0;
-  font-size: ${oldTypography.sizes.h3};
+  font: ${cVar('typographyDesktopH600')};
+  letter-spacing: ${cVar('typographyDesktopH600LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH600TextTransform')};
 
   ${media.lg} {
-    font-size: ${oldTypography.sizes.h2};
-    line-height: ${oldTypography.lineHeights.h2};
+    font: ${cVar('typographyDesktopH700')};
+    letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH700TextTransform')};
   }
 `
 

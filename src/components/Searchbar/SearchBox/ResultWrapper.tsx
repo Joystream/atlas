@@ -60,7 +60,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
     >
       <SearchItemContent>{children}</SearchItemContent>
       <Shortcut>
-        <Text secondary variant="caption">
+        <Text secondary variant="t100">
           Select
         </Text>
         <ShortcutIndicator>↩</ShortcutIndicator>

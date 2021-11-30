@@ -8,7 +8,7 @@ import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar } from '@/styles'
-import { media, oldColors, oldTypography, sizes, square } from '@/styles'
+import { media, oldColors, sizes, square } from '@/styles'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
@@ -102,8 +102,9 @@ export const ShortcutsWrapper = styled.section`
   justify-content: center;
   color: ${oldColors.gray[300]};
   padding: ${sizes(6)} 0;
-  font-size: ${oldTypography.sizes.caption};
-  line-height: ${oldTypography.lineHeights.caption};
+  font: ${cVar('typographyDesktopT100')};
+  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT100TextTransform')};
 
   ${media.sm} {
     display: flex;
@@ -129,8 +130,6 @@ export const StyledShortcutIndicator = styled(ShortcutIndicator)<{ group?: boole
 export const Caption = styled(Text)`
   display: block;
   padding: ${sizes(2)} ${sizes(4)};
-  line-height: ${oldTypography.lineHeights.subtitle1};
-  font-weight: ${oldTypography.weights.medium};
 `
 
 const selectedStyles = (hover?: boolean) => `

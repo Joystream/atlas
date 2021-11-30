@@ -218,7 +218,7 @@
           "T300": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.3}",
                 "fontWeight": "{typography.fontWeights.normal}",
                 "lineHeight": "1.5rem"
@@ -226,7 +226,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.3}",
                 "fontWeight": "{typography.fontWeights.semibold}",
                 "lineHeight": "1.5rem"
@@ -236,7 +236,7 @@
           "T200": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.2}",
                 "fontWeight": "{typography.fontWeights.normal}",
                 "lineHeight": "1.25rem",
@@ -245,7 +245,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.2}",
                 "fontWeight": "{typography.fontWeights.semibold}",
                 "lineHeight": "1.25rem",
@@ -256,7 +256,7 @@
           "T100": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.1}",
                 "fontWeight": "{typography.fontWeights.medium}",
                 "lineHeight": "1rem",
@@ -265,7 +265,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.1}",
                 "fontWeight": "{typography.fontWeights.bold}",
                 "lineHeight": "1rem",
@@ -361,7 +361,7 @@
           "T300": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.3}",
                 "fontWeight": "{typography.fontWeights.normal}",
                 "lineHeight": "1.5rem"
@@ -369,7 +369,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.3}",
                 "fontWeight": "{typography.fontWeights.semibold}",
                 "lineHeight": "1.5rem"
@@ -379,7 +379,7 @@
           "T200": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.2}",
                 "fontWeight": "{typography.fontWeights.normal}",
                 "lineHeight": "1.25rem",
@@ -388,7 +388,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.2}",
                 "fontWeight": "{typography.fontWeights.semibold}",
                 "lineHeight": "1.25rem",
@@ -399,7 +399,7 @@
           "T100": {
             "regular": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.1}",
                 "fontWeight": "{typography.fontWeights.medium}",
                 "lineHeight": "1rem",
@@ -408,7 +408,7 @@
             },
             "strong": {
               "value": {
-                "fontFamily": "{typography.fonts.primary}",
+                "fontFamily": "{typography.fonts.secondary}",
                 "fontSize": "{typography.fontSizes.1}",
                 "fontWeight": "{typography.fontWeights.bold}",
                 "lineHeight": "1rem",

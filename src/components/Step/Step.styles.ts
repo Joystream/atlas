@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
 type StepWrapperProps = {
   active?: boolean
@@ -74,7 +74,9 @@ export const StepStatus = styled.div`
 
 export const StepNumber = styled.div<StepWrapperProps>`
   background-color: ${({ active }) => (active ? oldColors.blue[500] : oldColors.gray[500])};
-  font-size: ${oldTypography.sizes.subtitle2};
+  font: ${cVar('typographyDesktopT200Strong')};
+  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
   color: ${oldColors.white};
   border-radius: 100%;
   height: ${sizes(7)};
@@ -99,7 +101,6 @@ export const Overhead = styled(Text)`
 
 export const StepTitle = styled(Text)`
   display: block;
-  margin-top: ${sizes(1)};
   height: 100%;
   white-space: nowrap;
   overflow: hidden;

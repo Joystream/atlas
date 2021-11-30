@@ -5,7 +5,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgAccountCreationIllustration } from '@/components/_illustrations'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
 import { StepWrapper } from './SignInSteps.styles'
 
@@ -135,8 +135,9 @@ export const OrderedStep = styled(Text)`
     justify-content: center;
     color: ${oldColors.gray[50]};
     padding-bottom: 2px;
-    font-family: ${oldTypography.fonts.headers};
-    font-size: ${oldTypography.sizes.h6};
+    font: ${cVar('typographyDesktopH300')};
+    letter-spacing: ${cVar('typographyDesktopH300LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH300TextTransform')};
     background-color: ${oldColors.gray[600]};
   }
 `

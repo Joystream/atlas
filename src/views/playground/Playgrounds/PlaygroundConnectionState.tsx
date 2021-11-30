@@ -30,20 +30,20 @@ export const PlaygroundConnectionState = () => {
   }, [connectToNode])
   return (
     <div>
-      <Text variant="h3">Connection state</Text>
-      <Text variant="body1">{nodeConnectionStatus}</Text>
+      <Text variant="h600">Connection state</Text>
+      <Text variant="t300">{nodeConnectionStatus}</Text>
       <Modal show={nodeConnectionStatus === 'disconnected'}>
         {nodeConnectionStatus === 'disconnected' && (
           <>
-            <Text variant="h3">Disconnected from node</Text>
-            <Text variant="body2">Waiting to reconnect...</Text>
+            <Text variant="h600">Disconnected from node</Text>
+            <Text variant="t200">Waiting to reconnect...</Text>
             <Button to={absoluteRoutes.viewer.index()}>Back to homepage</Button>
           </>
         )}
         {internetConnectionStatus === 'connected' && (
           <>
-            <Text variant="h3">No internet</Text>
-            <Text variant="body2">Waiting to reconnect...</Text>
+            <Text variant="h600">No internet</Text>
+            <Text variant="t200">Waiting to reconnect...</Text>
           </>
         )}
       </Modal>

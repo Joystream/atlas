@@ -40,7 +40,7 @@ export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
     >
       {children}
       <ControlButtonTooltip tooltipPosition={tooltipPosition}>
-        <ControlButtonTooltipText variant="caption">{tooltipText}</ControlButtonTooltipText>
+        <ControlButtonTooltipText variant="t100">{tooltipText}</ControlButtonTooltipText>
       </ControlButtonTooltip>
     </ControlButton>
   )

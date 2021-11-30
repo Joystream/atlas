@@ -28,7 +28,7 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
     <Container className={className}>
       <GridHeadingContainer>
         <TitleContainer>
-          {title && <Text variant="h4">{title}</Text>}
+          {title && <Text variant="h500">{title}</Text>}
           {seeAllUrl && (
             <SeeAllLink
               iconPlacement="left"

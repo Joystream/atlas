@@ -71,16 +71,16 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
               {isLoading ? (
                 <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
               ) : (
-                <Text variant={variant === 'default' ? 'h3' : 'h4'}>{title}</Text>
+                <Text variant={variant === 'default' ? 'h600' : 'h500'}>{title}</Text>
               )}
             </div>
 
             {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <FeaturedVideoText variant="caption" secondary>
+                <FeaturedVideoText variant="t100" secondary>
                   Featured video
                 </FeaturedVideoText>
-                <Text variant="h6">{videoTitle}</Text>
+                <Text variant="h300">{videoTitle}</Text>
               </FeaturedVideoTitleContainer>
             )}
           </FeaturedContent>

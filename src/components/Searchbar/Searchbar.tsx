@@ -226,7 +226,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 <SearchButton variant="tertiary" onClick={onClick}>
                   <SvgActionSearch />
                 </SearchButton>
-                <SearchHelper variant="caption" secondary>
+                <SearchHelper variant="t100" secondary>
                   Press <ShortcutIndicator>/</ShortcutIndicator>
                 </SearchHelper>
               </>

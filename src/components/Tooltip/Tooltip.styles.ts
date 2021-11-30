@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, oldTypography, sizes } from '@/styles'
+import { oldColors, sizes } from '@/styles'
 
 type StyledTooltipProps = {
   headerText?: boolean
@@ -42,7 +42,7 @@ type TooltipTextProps = {
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
   max-width: 200px;
-  line-height: ${oldTypography.lineHeights.subtitle1};
+
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
 

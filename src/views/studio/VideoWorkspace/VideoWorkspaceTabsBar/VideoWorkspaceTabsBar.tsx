@@ -120,10 +120,10 @@ const VideoWorkspaceSingleTab: React.FC<VideoWorkspaceTabProps> = ({
         >
           <SvgActionClose />
         </IconButton>
-        <TabTitle secondary={!selected} variant="subtitle2">
+        <TabTitle secondary={!selected} variant="t200">
           {tabData?.title || 'Untitled'}
         </TabTitle>
-        {badgeText && <Badge variant="caption">{badgeText}</Badge>}
+        {badgeText && <Badge variant="t100">{badgeText}</Badge>}
       </Tab>
     </TabWrapper>
   )

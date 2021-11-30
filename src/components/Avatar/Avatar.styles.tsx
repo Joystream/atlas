@@ -5,7 +5,7 @@ import { TransitionGroup } from 'react-transition-group'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, oldTypography, transitions } from '@/styles'
+import { cVar, media, oldColors, transitions } from '@/styles'
 
 export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel' | 'channel-card'
 
@@ -125,10 +125,12 @@ export const EditButton = styled.button<EditButtonProps>`
   position: absolute;
   z-index: 3;
   color: ${oldColors.gray[100]};
-  font-family: ${oldTypography.fonts.headers};
-  font-weight: ${oldTypography.weights.bold};
-  font-size: ${oldTypography.sizes.subtitle2};
-  ${({ size }) => size === 'cover' && `font-size: ${oldTypography.sizes.button.small}`};
+
+  font: ${cVar('typographyDesktopT200Strong')};
+  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
+
+  ${({ size }) => size === 'cover' && `font-size: var(--typography-font-sizes-1)`};
 
   display: flex;
   flex-direction: column;

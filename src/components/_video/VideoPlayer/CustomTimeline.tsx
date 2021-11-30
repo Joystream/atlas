@@ -195,7 +195,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
             }}
             isFullScreen={isFullScreen}
           >
-            <StyledTooltipText variant="body2">{mouseDisplayTooltipTime}</StyledTooltipText>
+            <StyledTooltipText variant="t200">{mouseDisplayTooltipTime}</StyledTooltipText>
           </MouseDisplayTooltip>
         </MouseDisplayWrapper>
         <PlayProgressWrapper>

@@ -37,9 +37,9 @@ export const EmptyFallback: FC<EmptyFallbackProps> = ({
   <Container className={className} variant={variant} verticalCentered={verticalCentered}>
     <SvgEmptyStateIllustration width={ILLUSTRATION_SIZES[variant].width} height={ILLUSTRATION_SIZES[variant].height} />
     <Message>
-      {title && <Title variant={variant === 'large' ? 'h4' : 'body1'}>{title}</Title>}
+      {title && <Title variant={variant === 'large' ? 'h500' : 't300'}>{title}</Title>}
       {subtitle && (
-        <Subtitle variant="body2" secondary>
+        <Subtitle variant="t200" secondary>
           {subtitle}
         </Subtitle>
       )}

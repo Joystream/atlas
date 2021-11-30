@@ -46,7 +46,7 @@ export const PlaygroundDrafts = () => {
 
   return (
     <div style={{ maxWidth: '600px' }}>
-      <Text variant="h3">Testing drafts</Text>
+      <Text variant="h600">Testing drafts</Text>
 
       {draftsIds.length > 0 && (
         <FormField title="change draft">
@@ -113,7 +113,7 @@ export const PlaygroundDrafts = () => {
           Remove all drafts
         </Button>
       </div>
-      <Text variant="h4" style={{ margin: '20px 0' }}>
+      <Text variant="h500" style={{ margin: '20px 0' }}>
         Saved drafts
       </Text>
       <pre>{JSON.stringify(drafts, null, 2)}</pre>

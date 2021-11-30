@@ -54,10 +54,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
                   <SvgAlertsInformative24 />
                 </IconWrapper>
               )}
-              {headerText && <TooltipText variant="overhead">{headerText}</TooltipText>}
+              {headerText && <TooltipText variant="h100">{headerText}</TooltipText>}
             </TooltipHeader>
 
-            <TooltipText withIcon={!!icon} variant="caption">
+            <TooltipText withIcon={!!icon} variant="t100">
               {text}
             </TooltipText>
 

@@ -80,7 +80,7 @@ export const InfiniteChannelGrid: React.FC<InfiniteChannelGridProps> = ({
 
   return (
     <section className={className}>
-      {title && <Title variant="h5">{title}</Title>}
+      {title && <Title variant="h400">{title}</Title>}
       <Grid onResize={(sizes) => setChannelsPerRow(sizes.length)} minWidth={200} maxColumns={null}>
         {gridContent}
       </Grid>

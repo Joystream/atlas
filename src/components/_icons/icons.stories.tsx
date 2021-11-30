@@ -17,7 +17,7 @@ const Template: Story = () => (
       return (
         <Item key={iconName}>
           <Component width="48px" height="48px" />
-          <Text secondary variant="caption">
+          <Text secondary variant="t100">
             {iconName}
           </Text>
         </Item>

@@ -24,7 +24,7 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
     <RadioAndCheckboxLabel disabled={disabled} className={className}>
       {children}
       {label && (
-        <Text variant="body2" secondary={disabled}>
+        <Text variant="t200" secondary={disabled}>
           {label}
         </Text>
       )}

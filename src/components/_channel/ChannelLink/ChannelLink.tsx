@@ -51,7 +51,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const displayedChannel = overrideChannel || channel
 
-  const _textVariant = textVariant ?? textSecondary ? 'button2' : 'h6'
+  const _textVariant = textVariant ?? textSecondary ? 't200-strong' : 't300-strong'
   return (
     <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (

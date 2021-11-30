@@ -31,11 +31,11 @@ export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
         </IconWrapper>
         <TextWrapper>
           {!isConnectedToInternet ? (
-            <Text variant="subtitle2">No network connection</Text>
+            <Text variant="h400">No network connection</Text>
           ) : (
-            nodeConnectionStatus === 'disconnected' && <Text variant="body2">No node connection</Text>
+            nodeConnectionStatus === 'disconnected' && <Text variant="t200">No node connection</Text>
           )}
-          <Text variant="body2" secondary>
+          <Text variant="t200" secondary>
             Wait for connection to restore
           </Text>
         </TextWrapper>

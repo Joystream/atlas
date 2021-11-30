@@ -109,11 +109,11 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
           <InnerContainer>
             <VideoThumbnail src={thumbnailUrl} />
             <VideoInfo>
-              <Text variant={mdMatch ? 'body1' : 'body2'} secondary>
+              <Text variant={mdMatch ? 't300' : 't200'} secondary>
                 Up next
               </Text>
-              <Heading variant={mdMatch ? 'h4' : 'h5'}>{randomNextVideo.title}</Heading>
-              <StyledChannelLink id={channelId} avatarSize="default" textVariant={mdMatch ? 'body1' : 'body2'} />
+              <Heading variant={mdMatch ? 'h500' : 'h400'}>{randomNextVideo.title}</Heading>
+              <StyledChannelLink id={channelId} avatarSize="default" textVariant={mdMatch ? 't300' : 't200'} />
             </VideoInfo>
           </InnerContainer>
           <CountDownWrapper>
@@ -133,10 +133,15 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
         <Container>
           <InnerContainer>
             <VideoInfo noNextVideo>
-              <SubHeading variant={mdMatch ? 'body1' : 'body2'} secondary>
+              <SubHeading variant={mdMatch ? 't300' : 't200'} secondary>
                 You’ve finished watching a video from
               </SubHeading>
-              <StyledChannelLink id={channelId} avatarSize="small" noNextVideo textVariant={mdMatch ? 'h2' : 'h5'} />
+              <StyledChannelLink
+                id={channelId}
+                avatarSize="small"
+                noNextVideo
+                textVariant={mdMatch ? 'h700' : 'h400'}
+              />
               <RestartButton onClick={onPlayAgain} variant="secondary" icon={<SvgControlsReplay />}>
                 Play again
               </RestartButton>
