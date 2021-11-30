@@ -26,6 +26,8 @@ import {
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 
+const ROUTING_ANIMATION_OFFSET = 100
+
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
@@ -50,25 +52,23 @@ export const ViewerLayout: React.FC = () => {
   const { searchOpen } = useSearchStore()
 
   useEffect(() => {
-    scrollPosition.current = window.scrollY
     if (location.pathname === cachedLocation.pathname) {
       return
     }
 
     setCachedLocation(location)
 
-    if (
-      locationState?.overlaidLocation?.pathname === location.pathname ||
-      location.pathname === absoluteRoutes.viewer.search()
-    ) {
+    if (locationState?.overlaidLocation?.pathname === location.pathname) {
       // if exiting routing overlay, skip scroll to top
       return
     }
-
+    if (navigationType !== 'POP') {
+      scrollPosition.current = window.scrollY
+    }
     // delay scroll to allow transition to finish first
     setTimeout(() => {
       window.scrollTo(0, navigationType !== 'POP' ? 0 : scrollPosition.current)
-    }, parseInt(transitions.timings.routing))
+    }, parseInt(transitions.timings.routing) + ROUTING_ANIMATION_OFFSET)
   }, [location, cachedLocation, locationState, navigationType])
 
   const displayedLocation = locationState?.overlaidLocation || location
