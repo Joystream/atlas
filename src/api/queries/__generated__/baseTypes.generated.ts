@@ -446,7 +446,7 @@ export type VideoHero = {
   heroTitle: Scalars['String']
   heroVideoCutUrl: Scalars['String']
   videoId: Scalars['ID']
-  video: Video
+  video?: Maybe<Video>
 }
 
 export type VideoHeroInput = {

@@ -230,7 +230,7 @@ type VideoHero {
   heroTitle: String!
   heroVideoCutUrl: String!
   videoId: ID!
-  video: Video!
+  video: Video
 }
 
 input VideoCategoryWhereUniqueInput {

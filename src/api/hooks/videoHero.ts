@@ -10,7 +10,7 @@ import { SentryLogger } from '@/utils/logs'
 import { VideoFieldsFragment } from '../queries'
 
 export type VideoHeroData = {
-  video: VideoFieldsFragment
+  video?: VideoFieldsFragment | null
   heroTitle: string
   heroVideoCutUrl: string
   heroPosterUrl: string | null
