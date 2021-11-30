@@ -45,10 +45,10 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             <StepNumber active={completed}>{completed || disabled ? <SvgActionCheck /> : number}</StepNumber>
           )}
           <StepDetails>
-            <Overhead variant="caption" secondary>
+            <Overhead variant="t100" secondary>
               Step {number}
             </Overhead>
-            <StepTitle variant="overhead">{title}</StepTitle>
+            <StepTitle variant="t100-strong">{title}</StepTitle>
           </StepDetails>
         </StepStatus>
         {((onDelete && completed && !isLoading) || disabled) && (

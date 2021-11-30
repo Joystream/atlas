@@ -63,7 +63,7 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
     <Container>
       <ControlsContainer>
         <GridItem colSpan={{ base: 2, md: 1 }}>
-          <Text variant={mdMatch ? 'h4' : 'h5'}>All videos (441)</Text>
+          <Text variant={mdMatch ? 'h500' : 'h400'}>All videos (441)</Text>
         </GridItem>
         <Select
           onChange={setSelectedLanguage}
@@ -90,7 +90,7 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
         </div>
         {mdMatch && (
           <SortContainer>
-            <Text variant="body2">Sort by</Text>
+            <Text variant="t200">Sort by</Text>
             <Select
               size="small"
               helperText={null}

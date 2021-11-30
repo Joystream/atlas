@@ -163,8 +163,8 @@ export const VideoView: React.FC = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer className={transitions.names.slide}>
-        {video ? <TitleText variant="h2">{video.title}</TitleText> : <SkeletonLoader height={46} width={400} />}
-        <Meta variant="subtitle1">
+        {video ? <TitleText variant="h700">{video.title}</TitleText> : <SkeletonLoader height={46} width={400} />}
+        <Meta variant="t300">
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (

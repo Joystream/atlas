@@ -74,12 +74,12 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = ({ channelId }) => 
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
-            <ChannelTitle variant="h6">{channel?.title}</ChannelTitle>
+            <ChannelTitle variant="h300">{channel?.title}</ChannelTitle>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
-            <ChannelFollows variant="body2" secondary>
+            <ChannelFollows variant="t200" secondary>
               {formatNumberShort(channel?.follows || 0)} followers
             </ChannelFollows>
           )}

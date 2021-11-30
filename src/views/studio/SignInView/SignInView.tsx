@@ -49,8 +49,8 @@ export const SignInView = () => {
     <>
       <Wrapper>
         <Header>
-          <Hero variant="hero">Sign in</Hero>
-          <SubTitle variant="body1" secondary>
+          <Hero variant="h900">Sign in</Hero>
+          <SubTitle variant="t300" secondary>
             Select the membership you want to use. Each membership can have an unlimited number of channels and is
             independent of other memberships you control.
           </SubTitle>
@@ -94,7 +94,7 @@ export const MembershipCard: React.FC<MembershipCardProps> = ({ handle, avatarUr
   return (
     <CardWrapper onClick={onClick} disabled={disabled}>
       <StyledAvatar assetUrl={avatarUri} />
-      <HandleText variant="h4">{handle}</HandleText>
+      <HandleText variant="h500">{handle}</HandleText>
     </CardWrapper>
   )
 }

@@ -8,7 +8,7 @@ export default {
   component: RadioButton,
   args: {
     label: 'Hello there',
-    helperText: 'Caption',
+    helperText: 't100',
     disabled: false,
     error: false,
   },

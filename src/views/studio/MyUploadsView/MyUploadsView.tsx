@@ -48,7 +48,7 @@ export const MyUploadsView: React.FC = () => {
 
   return (
     <UploadsContainer>
-      <StyledText variant="h2">My uploads</StyledText>
+      <StyledText variant="h700">My uploads</StyledText>
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (

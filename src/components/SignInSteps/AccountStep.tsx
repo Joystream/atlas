@@ -70,24 +70,24 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         {!accountsWithNoMembership?.length ? (
           <StyledStepWrapper>
             <AccountStepImg />
-            <StepTitle variant="h4">Create blockchain account</StepTitle>
-            <SubTitle variant="body2" secondary>
+            <StepTitle variant="h500">Create blockchain account</StepTitle>
+            <SubTitle variant="t200" secondary>
               Use the Polkadot extension to generate your personal keypair. Follow these instructions:
             </SubTitle>
             <OrderedSteps>
-              <OrderedStep secondary variant="caption" as="li">
+              <OrderedStep secondary variant="t100" as="li">
                 Open the extension popup with the icon in your browser bar
               </OrderedStep>
-              <OrderedStep secondary variant="caption" as="li">
+              <OrderedStep secondary variant="t100" as="li">
                 Click the plus icon
               </OrderedStep>
-              <OrderedStep secondary variant="caption" as="li">
+              <OrderedStep secondary variant="t100" as="li">
                 Continue with instructions presented on the screen
               </OrderedStep>
             </OrderedSteps>
             <StepFooter>
               <BottomBarIcon />
-              <Text variant="body2" secondary>
+              <Text variant="t200" secondary>
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
@@ -100,8 +100,8 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 <SvgControlsConnect />
                 <StyledJoystreamLogo />
               </IconGroup>
-              <StepTitle variant="h4">Connect account</StepTitle>
-              <StepSubTitle secondary>
+              <StepTitle variant="h500">Connect account</StepTitle>
+              <StepSubTitle variant="t200" secondary>
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
@@ -143,8 +143,8 @@ export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, sele
           <SvgActionChannel />
         </IconWrapper>
         <div>
-          <Text variant="subtitle1">{name}</Text>
-          <AccountAddress secondary variant="caption">
+          <Text variant="t300-strong">{name}</Text>
+          <AccountAddress secondary variant="t100">
             {id}
           </AccountAddress>
         </div>

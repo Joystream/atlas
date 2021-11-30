@@ -32,8 +32,8 @@ export const SignInMainView: React.FC = () => {
         <LogoContainer>
           <SvgJoystreamLogoFull />
         </LogoContainer>
-        <StyledHero variant="hero">Welcome to Joystream Studio</StyledHero>
-        <SubTitle variant="body1">
+        <StyledHero variant="h900">Welcome to Joystream Studio</StyledHero>
+        <SubTitle variant="t300">
           Start your journey as a Video Publisher. Publish and manage your channel and video content.
         </SubTitle>
         <ButtonGroup>
@@ -46,7 +46,9 @@ export const SignInMainView: React.FC = () => {
         </ButtonGroup>
         <BackLink to={absoluteRoutes.viewer.index()}>
           <SvgActionChevronL />
-          <Text secondary>Go back</Text>
+          <Text variant="t200" secondary>
+            Go back
+          </Text>
         </BackLink>
       </Header>
       <StyledSignInIllustrationSVG />

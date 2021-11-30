@@ -3,8 +3,7 @@ import emotionNormalize from 'emotion-normalize'
 import React from 'react'
 
 import { oldColors } from './deprecated/colors'
-import { oldTypography } from './deprecated/typography'
-import { variables } from './generated/variables'
+import { cVar, variables } from './generated/variables'
 import { media } from './media'
 import { sizes } from './sizes'
 import { transitionStyles } from './transitions'
@@ -47,7 +46,7 @@ const globalStyles = css`
   }
 
   body {
-    font-family: ${oldTypography.fonts.base};
+    font-family: ${cVar('typographyFontsSecondary')};
     background: ${oldColors.black};
     color: ${oldColors.gray[50]};
   }
@@ -58,7 +57,7 @@ const globalStyles = css`
   h4,
   h5,
   h6 {
-    font-family: ${oldTypography.fonts.headers};
+    font-family: ${cVar('typographyFontsPrimary')};
     color: ${oldColors.white};
   }
 

@@ -73,7 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
         <Header dividers={dividers}>
           <HeaderContent>
             {iconNode ? <HeaderIconContainer>{iconNode}</HeaderIconContainer> : null}
-            <Text variant={isCompact ? 'h6' : !smMatch ? 'h5' : 'h4'}>{title}</Text>
+            <Text variant={isCompact ? 'h300' : !smMatch ? 'h400' : 'h500'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
             <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
@@ -84,7 +84,7 @@ export const Dialog: React.FC<DialogProps> = ({
       )}
       <Content denseHeader={!!iconNode} data-scroll-lock-scrollable>
         {description ? (
-          <Text variant="body2" secondary>
+          <Text variant="t200" secondary>
             {description}
           </Text>
         ) : null}

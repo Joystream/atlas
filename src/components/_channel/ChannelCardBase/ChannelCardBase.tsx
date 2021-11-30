@@ -60,8 +60,8 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
                 </>
               ) : (
                 <>
-                  <ChannelTitle variant="h6">{title}</ChannelTitle>
-                  <ChannelFollows variant="body2" secondary>
+                  <ChannelTitle variant="h300">{title}</ChannelTitle>
+                  <ChannelFollows variant="t200" secondary>
                     {formatNumberShort(follows || 0)} followers
                   </ChannelFollows>
                   <FollowButton variant="secondary" size="small" onClick={onFollow}>

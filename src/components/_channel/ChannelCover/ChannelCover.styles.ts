@@ -4,7 +4,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgBgPattern } from '@/components/_illustrations'
-import { cVar, media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
@@ -83,9 +83,6 @@ export const EditCoverMobileButton = styled(IconButton)`
 `
 
 export const EditButtonMessage = styled(Text)`
-  font-weight: 700;
-  font-family: ${oldTypography.fonts.headers};
-  line-height: 1;
   color: ${oldColors.gray[100]};
   margin-top: ${sizes(1)};
 `

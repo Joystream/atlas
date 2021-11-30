@@ -48,11 +48,11 @@ export const HelperText: React.FC<HelperTextProps> = ({
 
   return (
     <HelperTextsWrapper className={className}>
-      <StyledHelperText variant="caption" helperTextVariant={getVariant(warning, error)} secondary>
+      <StyledHelperText variant="t100" helperTextVariant={getVariant(warning, error)} secondary>
         {helperText}
       </StyledHelperText>
       {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-        <HelperTextCount variant="caption" helperTextVariant={charactersWarning} secondary>
+        <HelperTextCount variant="t100" helperTextVariant={charactersWarning} secondary>
           {charactersCount}/{maxLength}
         </HelperTextCount>
       )}

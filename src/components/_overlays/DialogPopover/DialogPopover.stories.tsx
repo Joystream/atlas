@@ -33,13 +33,13 @@ const Template: Story = (args) => {
           text: 'Action2',
         }}
       >
-        <Text>Example text</Text>
-        <Text>Example text</Text>
-        <Text>Example text</Text>
-        <Text>Example text</Text>
-        <Text>Example text</Text>
-        <Text>Example text</Text>
-        <Text>Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
+        <Text variant="t200">Example text</Text>
       </DialogPopover>
     </div>
   )

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, oldTypography, sizes, transitions } from '@/styles'
+import { cVar, oldColors, sizes, transitions } from '@/styles'
 
 export const StyledContainer = styled.div`
   background-color: ${oldColors.gray[800]};
@@ -23,8 +23,8 @@ export const StyledMenuItem = styled.div`
 `
 
 export const StyledText = styled(Text)`
-  font-size: ${oldTypography.sizes.subtitle2};
-  font-weight: ${oldTypography.weights.medium};
-  line-height: ${sizes(4)};
+  font: ${cVar('typographyDesktopH200')};
+  letter-spacing: ${cVar('typographyDesktopH200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH200TextTransform')};
   margin-left: ${sizes(3)};
 `

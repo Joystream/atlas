@@ -104,7 +104,9 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
         <StyledSticky style={{ top: topbarHeight - 1 }}>
           <ControlsContainer>
             <GridItem colSpan={{ base: 2, sm: 1 }}>
-              <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
+              <Text variant={mdMatch ? 'h500' : 'h400'}>
+                All videos {videoCount !== undefined && `(${videoCount})`}
+              </Text>
             </GridItem>
             {smMatch ? (
               <StyledSelect

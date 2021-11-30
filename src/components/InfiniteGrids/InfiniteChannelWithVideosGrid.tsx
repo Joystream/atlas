@@ -111,7 +111,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       <GridHeadingContainer>
         {title && (
           <TitleContainer>
-            {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
+            {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h500">{title}</Text>}
             {languageSelector && (
               <LanguageSelectWrapper>
                 <Select items={languages} value={selectedLanguage} size="small" onChange={onSelectLanguage} />

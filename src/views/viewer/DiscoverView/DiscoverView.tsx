@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useCategoriesFeaturedVideos } from '@/api/featured/categoriesFeaturedVideos'
 import { useCategories, useVideoCount } from '@/api/hooks'
+import { GridHeadingContainer } from '@/components/GridHeading'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -9,12 +10,7 @@ import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_vide
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { SentryLogger } from '@/utils/logs'
 
-import {
-  BorderTextContainer,
-  CategoriesContainer,
-  FeaturedCategoriesContainer,
-  StyledLimitedWidthContainer,
-} from './DiscoverView.styles'
+import { CategoriesContainer, FeaturedCategoriesContainer, StyledLimitedWidthContainer } from './DiscoverView.styles'
 import { videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
@@ -59,7 +55,7 @@ export const DiscoverView: React.FC = () => {
 
   return (
     <StyledLimitedWidthContainer big>
-      <Text variant="h2">Discover</Text>
+      <Text variant="h700">Discover</Text>
       <FeaturedCategoriesContainer>
         {featuredVideoCategoryCardsData?.map((category, i) => (
           <GridItem key={category?.id ?? `placeholder-${i}`} colSpan={{ base: 12, sm: i === 0 ? 12 : 6, xl: 4 }}>
@@ -75,9 +71,9 @@ export const DiscoverView: React.FC = () => {
           </GridItem>
         ))}
       </FeaturedCategoriesContainer>
-      <BorderTextContainer>
-        <Text variant="h4">All categories</Text>
-      </BorderTextContainer>
+      <GridHeadingContainer>
+        <Text variant="h500">All categories</Text>
+      </GridHeadingContainer>
       <CategoriesContainer>
         {(mappedVideoCategories ?? new Array(15).fill(null))?.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>

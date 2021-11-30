@@ -54,11 +54,11 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
       />
 
       <TitleAreaInfo visible={(touched && !value?.length) || (!!value?.length && invalidInput)}>
-        <MinMaxChars secondary variant="caption">
+        <MinMaxChars secondary variant="t100">
           Min {min} Chars | Max {max} Chars
         </MinMaxChars>
-        <Text secondary variant="caption">
-          <CharactersCounter error={invalidInput} variant="caption">
+        <Text secondary variant="t100">
+          <CharactersCounter error={invalidInput} variant="t100">
             {value?.length || 0} &nbsp;
           </CharactersCounter>
           / {max}

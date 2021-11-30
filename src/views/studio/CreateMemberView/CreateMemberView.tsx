@@ -155,8 +155,8 @@ export const CreateMemberView = () => {
   return (
     <Wrapper>
       <Header>
-        <Hero variant="h2">Create your Joystream membership</Hero>
-        <SubTitle variant="body1" secondary>
+        <Hero variant="h700">Create your Joystream membership</Hero>
+        <SubTitle variant="t300" secondary>
           Membership represents you as a member of the Joystream community. You can use it to create a channel and
           publish content. It also allows you to participate in the platform governance, shaping its future.
         </SubTitle>
