@@ -56,13 +56,10 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
   )
 
   const gridContent = useMemo(
-    () => (
-      <>
-        {[...displayedVideos, ...placeholderItems].map((video, idx) => (
-          <VideoTile id={video.id} key={`channels-with-videos-${idx}`} showChannel />
-        ))}
-      </>
-    ),
+    () =>
+      [...displayedVideos, ...placeholderItems].map((video, idx) => (
+        <VideoTile id={video.id} key={`channels-with-videos-${idx}`} showChannel />
+      )),
     [displayedVideos, placeholderItems]
   )
 
@@ -97,7 +94,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
           {isLoading ? (
             <SkeletonLoader width="90px" height="40px" />
           ) : (
-            <FollowButton variant="secondary" size={'medium'} onClick={handleFollowClick}>
+            <FollowButton variant="secondary" size="medium" onClick={handleFollowClick}>
               {isFollowing ? 'Unfollow' : 'Follow'}
             </FollowButton>
           )}

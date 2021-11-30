@@ -10,7 +10,7 @@ import {
 } from '@/components/_buttons/CallToActionButton'
 import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { media, sizes, cVar } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 import { CtaData } from '@/types/cta'
 
 type VideoContentTemplateProps = {
