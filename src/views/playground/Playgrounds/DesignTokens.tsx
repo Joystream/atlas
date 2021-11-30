@@ -15,6 +15,9 @@ export const DesignTokens = () => {
         <AlphaTestDiv />
         <AlphaDiv>--color-background-elevated-alpha</AlphaDiv>
       </AlphaContainer>
+      <BackgroundContainer>
+        <BoxWithShadow>Box with shadow and divider(bottom)</BoxWithShadow>
+      </BackgroundContainer>
     </>
   )
 }
@@ -60,7 +63,7 @@ const RedDiv = styled(Box)`
     background-color: ${cVar('colorBackgroundErrorStrong')};
   }
 `
-const AlphaContainer = styled.div`
+const AlphaContainer = styled(Box)`
   position: relative;
 `
 
@@ -75,4 +78,17 @@ const AlphaTestDiv = styled.div`
   top: 10px;
   width: 200px;
   height: 100px;
+`
+
+const BackgroundContainer = styled.div`
+  width: 500px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${cVar('colorCoreGreen700')};
+`
+const BoxWithShadow = styled(Box)`
+  background-color: ${cVar('colorBackgroundPrimaryMuted')};
+  box-shadow: ${cVar('effectDividersBottom')}, ${cVar('effectElevation8Layer1')};
 `
