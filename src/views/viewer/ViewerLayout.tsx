@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React, { useEffect, useState } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { Route, Routes, useLocation, useNavigate, useNavigationType } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
@@ -41,13 +41,16 @@ const viewerRoutes = [
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
+  const scrollPosition = useRef<number>(0)
 
   const navigate = useNavigate()
+  const navigationType = useNavigationType()
   const [cachedLocation, setCachedLocation] = useState(location)
   const mdMatch = useMediaMatch('md')
   const { searchOpen } = useSearchStore()
 
   useEffect(() => {
+    scrollPosition.current = window.scrollY
     if (location.pathname === cachedLocation.pathname) {
       return
     }
@@ -64,9 +67,9 @@ export const ViewerLayout: React.FC = () => {
 
     // delay scroll to allow transition to finish first
     setTimeout(() => {
-      window.scrollTo(0, 0)
+      window.scrollTo(0, navigationType !== 'POP' ? 0 : scrollPosition.current)
     }, parseInt(transitions.timings.routing))
-  }, [location, cachedLocation, locationState])
+  }, [location, cachedLocation, locationState, navigationType])
 
   const displayedLocation = locationState?.overlaidLocation || location
 
