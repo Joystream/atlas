@@ -98,7 +98,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   return (
     <>
       <CSSTransition
-        in={['open', 'minimized'].includes(videoWorkspaceState)}
+        in={videoWorkspaceState === 'open'}
         mountOnEnter
         unmountOnExit
         timeout={parseInt(transitions.timings.routing)}
