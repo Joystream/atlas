@@ -95,6 +95,8 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     [setSelectedVideoTabIdx, setVideoWorkspaceState]
   )
 
+  const onNewTabClick = useCallback(() => addVideoTab(), [addVideoTab])
+
   return (
     <>
       <CSSTransition
@@ -122,7 +124,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             videoTabs={videoTabs}
             selectedVideoTab={selectedVideoTab}
             videoWorkspaceState={videoWorkspaceState}
-            onAddNewTabClick={addVideoTab}
+            onAddNewTabClick={onNewTabClick}
             onRemoveTabClick={handleRemoveVideoTab}
             onTabSelect={onTabSelect}
             onCloseClick={closeVideoWorkspace}
