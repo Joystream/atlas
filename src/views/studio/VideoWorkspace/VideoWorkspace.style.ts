@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { VideoWorkspaceState } from '@/providers/videoWorkspace'
-import { oldColors, transitions, zIndex } from '@/styles'
+import { oldColors, zIndex } from '@/styles'
+import { cVar } from '@/styles'
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '@/views/studio/VideoWorkspace/VideoWorkspaceTabsBar'
 
 export const DrawerOverlay = styled(animated.div)`
@@ -13,7 +14,7 @@ export const DrawerOverlay = styled(animated.div)`
   bottom: 0;
   left: 0;
   background-color: ${oldColors.transparentBlack[54]};
-  transition: opacity 200ms ${transitions.easing};
+  transition: opacity ${cVar('animationTransitionSlow')};
 
   &.video-workspace-drawer-enter-active,
   &.video-workspace-drawer-exit {
@@ -41,7 +42,7 @@ export const Container = styled.div<{ state: VideoWorkspaceState }>`
   box-shadow: 0 4px 52px ${oldColors.black};
   opacity: 1;
   transform: translateY(0);
-  transition: top ${transitions.timings.routing} ${transitions.easing};
+  transition: top ${cVar('animationTransitionSlow')};
 
   &.video-workspace {
     &-exit,
@@ -49,7 +50,7 @@ export const Container = styled.div<{ state: VideoWorkspaceState }>`
     &-enter-done {
       opacity: 1;
       transform: translateY(0);
-      transition: all ${transitions.timings.routing} ${transitions.easing};
+      transition: all ${cVar('animationTransitionSlow')};
     }
 
     &-enter,
