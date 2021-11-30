@@ -1,0 +1,140 @@
+{
+  "effect": {
+    "comment": "Before proceeding with this file, we need to discuss referencing tokens from other files (colors, in this example), and the overall structure of elevation shadows",
+    "shadowType": {
+      "type": "typedef",
+      "value": {
+        "x": {
+          "type": "dimension",
+          "required": true
+        },
+        "y": {
+          "type": "dimension",
+          "required": true
+        },
+        "blur": {
+          "type": "dimension",
+          "required": true
+        },
+        "spread": {
+          "type": "dimension",
+          "required": true
+        },
+        "color": {
+          "type": "color",
+          "required": true
+        }
+      }
+    },
+    "dividers": {
+      "top": {
+        "type": "{effect.shadowType}",
+        "value": {
+          "x": "0",
+          "y": "1px",
+          "blur": "0",
+          "spread": "0",
+          "color": "{color.border.muted.alpha}"
+        }
+      },
+      "bottom": {
+        "type": "{effect.shadowType}",
+        "value": {
+          "x": "0",
+          "y": "-1px",
+          "blur": "0",
+          "spread": "0",
+          "color": "{color.border.muted.alpha}"
+        }
+      },
+      "left": {
+        "type": "{effect.shadowType}",
+        "value": {
+          "x": "1px",
+          "y": "0",
+          "blur": "0",
+          "spread": "0",
+          "color": "{color.border.muted.alpha}"
+        }
+      },
+      "right": {
+        "type": "{effect.shadowType}",
+        "value": {
+          "x": "-1px",
+          "y": "0",
+          "blur": "0",
+          "spread": "0",
+          "color": "{color.border.muted.alpha}"
+        }
+      }
+    },
+    "elevation": {
+      "8": {
+        "layer1": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "8px",
+            "blur": "16px",
+            "spread": "0",
+            "color": "#0000001F"
+          }
+        },
+        "layer2": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "4px",
+            "blur": "4px",
+            "spread": "0",
+            "color": "#0000001A"
+          }
+        }
+      },
+      "16": {
+        "layer1": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "16px",
+            "blur": "32px",
+            "spread": "0",
+            "color": "#00000029"
+          }
+        },
+        "layer2": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "4px",
+            "blur": "8px",
+            "spread": "0",
+            "color": "#0000001A"
+          }
+        }
+      },
+      "24": {
+        "layer1": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "24px",
+            "blur": "40px",
+            "spread": "0",
+            "color": "#00000029"
+          }
+        },
+        "layer2": {
+          "type": "{effect.shadowType}",
+          "value": {
+            "x": "0",
+            "y": "8px",
+            "blur": "8px",
+            "spread": "0",
+            "color": "##0000001F"
+          }
+        }
+      }
+    }
+  }
+}

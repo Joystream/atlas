@@ -112,6 +112,16 @@ export const variables = css`
     --color-background-success-muted: var(--color-core-green-600);
     --color-background-success: var(--color-core-green-500);
     --color-background-success-strong: var(--color-core-green-400);
+    --effect-dividers-top: 0 1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-bottom: 0 -1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-left: 1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-right: -1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-elevation-8-layer1: 0 8px 16px 0 #0000001f;
+    --effect-elevation-8-layer2: 0 4px 4px 0 #0000001a;
+    --effect-elevation-16-layer1: 0 16px 32px 0 #00000029;
+    --effect-elevation-16-layer2: 0 4px 8px 0 #0000001a;
+    --effect-elevation-24-layer1: 0 24px 40px 0 #00000029;
+    --effect-elevation-24-layer2: 0 8px 8px 0 ##0000001f;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
@@ -154,17 +164,17 @@ export const variables = css`
     --typography-desktop-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-desktop-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-h900: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
       var(--typography-fonts-primary);
     --typography-mobile-h800: var(--typography-font-weights-semibold) var(--typography-font-sizes-7) / 2rem
@@ -184,17 +194,17 @@ export const variables = css`
     --typography-mobile-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-mobile-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-h900-letter-spacing: -0.01em;
     --typography-desktop-h800-letter-spacing: -0.005em;
     --typography-desktop-h700-letter-spacing: 0;
@@ -368,6 +378,16 @@ export const theme = {
   colorBackgroundSuccessMuted: 'var(--color-background-success-muted)',
   colorBackgroundSuccess: 'var(--color-background-success)',
   colorBackgroundSuccessStrong: 'var(--color-background-success-strong)',
+  effectDividersTop: 'var(--effect-dividers-top)',
+  effectDividersBottom: 'var(--effect-dividers-bottom)',
+  effectDividersLeft: 'var(--effect-dividers-left)',
+  effectDividersRight: 'var(--effect-dividers-right)',
+  effectElevation8Layer1: 'var(--effect-elevation-8-layer1)',
+  effectElevation8Layer2: 'var(--effect-elevation-8-layer2)',
+  effectElevation16Layer1: 'var(--effect-elevation-16-layer1)',
+  effectElevation16Layer2: 'var(--effect-elevation-16-layer2)',
+  effectElevation24Layer1: 'var(--effect-elevation-24-layer1)',
+  effectElevation24Layer2: 'var(--effect-elevation-24-layer2)',
   typographyFontsPrimary: 'var(--typography-fonts-primary)',
   typographyFontsSecondary: 'var(--typography-fonts-secondary)',
   typographyFontSizes1: 'var(--typography-font-sizes-1)',

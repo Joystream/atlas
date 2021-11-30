@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { template, camelCase, isPlainObject } = require('lodash')
+const { template, camelCase } = require('lodash')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
 export const variables = css\`
@@ -61,9 +61,8 @@ module.exports = {
       type: 'value',
       transitive: true,
       matcher: (token) => token.attributes.category === 'effect',
-      transformer: (token) => {
-        return `${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.spread} ${token.value.color}`
-      },
+      transformer: (token) =>
+        `${token.value.x} ${token.value.y} ${token.value.blur} ${token.value.spread} ${token.value.color}`,
     },
   },
   format: {
