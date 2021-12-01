@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
+import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -29,6 +29,17 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
+  const [dialogState, setDialogState] = useState<VideoWorkspaceState>('unset')
+  const prevDialogState = useRef(dialogState)
+
+  useEffect(() => {
+    if (prevDialogState.current === 'minimized' && videoWorkspaceState === 'open') {
+      setDialogState('maximized')
+    } else {
+      setDialogState(videoWorkspaceState)
+    }
+    prevDialogState.current = videoWorkspaceState
+  }, [videoWorkspaceState])
 
   useEffect(() => {
     if (videoWorkspaceState === 'closed' || !anyVideoTabsCachedAssets) {
@@ -96,28 +107,26 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const onNewTabClick = useCallback(() => addVideoTab(), [addVideoTab])
+
   return (
     <>
       <CSSTransition
-        in={videoWorkspaceState === 'open'}
+        in={['open', 'maximized'].includes(dialogState)}
         mountOnEnter
         unmountOnExit
-        timeout={0}
+        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
         classNames="video-workspace-drawer"
       >
         <DrawerOverlay />
       </CSSTransition>
       <CSSTransition
-        in={['open', 'minimized'].includes(videoWorkspaceState)}
+        in={['open', 'minimized', 'maximized'].includes(dialogState)}
         mountOnEnter
         unmountOnExit
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
         classNames="video-workspace"
       >
-        <Container
-          role="dialog"
-          className={videoWorkspaceState === 'minimized' ? 'video-workspace--minimized' : 'video-workspace--maximized'}
-        >
+        <Container role="dialog" dialogState={dialogState}>
           <VideoWorkspaceTabsBar
             videoTabs={videoTabs}
             selectedVideoTab={selectedVideoTab}

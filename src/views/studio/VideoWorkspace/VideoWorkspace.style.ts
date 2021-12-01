@@ -1,5 +1,7 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { VideoWorkspaceState } from '@/providers/videoWorkspace'
 import { oldColors, zIndex } from '@/styles'
 import { cVar } from '@/styles'
 
@@ -28,7 +30,27 @@ export const DrawerOverlay = styled.div`
   }
 `
 
-export const Container = styled.div`
+const containerStyles = (state: VideoWorkspaceState) => {
+  if (state === 'minimized') {
+    return css`
+      transform: translateY(calc(100% - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px));
+      opacity: 1;
+    `
+  }
+  if (state === 'maximized') {
+    return css`
+      transform: translateY(0);
+      opacity: 1;
+    `
+  }
+  return css`
+    transform: translateY(100%);
+    opacity: 0;
+  `
+}
+
+export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
+  ${({ dialogState }) => containerStyles(dialogState)};
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);
@@ -39,10 +61,8 @@ export const Container = styled.div`
   flex-direction: column;
   background-color: ${oldColors.gray[900]};
   box-shadow: 0 4px 52px ${oldColors.black};
-  opacity: 1;
-  transform: translateY(0);
-  transition: left ${cVar('animationTransitionSlow')};
-  will-change: top, transform, opacity;
+  transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+  will-change: transform, opacity;
 
   &.video-workspace {
     &-exit,
@@ -50,17 +70,12 @@ export const Container = styled.div`
     &-enter-done {
       opacity: 1;
       transform: translateY(0);
-      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
     }
 
     &-enter,
     &-exit-active {
       transform: translateY(100%);
       opacity: 0;
-    }
-
-    &--minimized {
-      top: calc(100% - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px);
     }
   }
 `
