@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react'
+import useMeasure from 'react-use-measure'
 
 import { InputBase, InputBaseProps } from '@/components/_inputs/InputBase'
 
-import { TextInput } from './TextField.styles'
+import { NodeContainer, TextFieldContainer, TextInput } from './TextField.styles'
 
 export type TextFieldProps = {
   name?: string
@@ -16,6 +17,8 @@ export type TextFieldProps = {
   className?: string
   placeholder?: string
   defaultValue?: string
+  nodeStart?: React.ReactNode
+  nodeEnd?: React.ReactNode
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
@@ -32,27 +35,41 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
     required,
     placeholder,
     defaultValue,
+    nodeStart,
+    nodeEnd,
     ...inputBaseProps
   },
   ref
 ) => {
+  const [nodeLeftRef, nodeLeftBounds] = useMeasure()
+  const [nodeRightRef, nodeRightBounds] = useMeasure()
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>
-      <TextInput
-        ref={ref}
-        name={name}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        type={type}
-        required={required}
-        tabIndex={disabled ? -1 : 0}
-        defaultValue={defaultValue}
-      />
+      <TextFieldContainer>
+        {nodeStart && (
+          <NodeContainer ref={nodeLeftRef} left>
+            {nodeStart}
+          </NodeContainer>
+        )}
+        <TextInput
+          leftNodeWidth={nodeLeftBounds.width}
+          rightNodeWidth={nodeRightBounds.width}
+          ref={ref}
+          name={name}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          type={type}
+          required={required}
+          tabIndex={disabled ? -1 : 0}
+          defaultValue={defaultValue}
+        />
+        {nodeEnd && <NodeContainer ref={nodeRightRef}>{nodeEnd}</NodeContainer>}
+      </TextFieldContainer>
     </InputBase>
   )
 }
