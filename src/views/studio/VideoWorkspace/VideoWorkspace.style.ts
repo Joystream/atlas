@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
-import { VideoWorkspaceState } from '@/providers/videoWorkspace'
 import { oldColors, zIndex } from '@/styles'
 import { cVar } from '@/styles'
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '@/views/studio/VideoWorkspace/VideoWorkspaceTabsBar'
@@ -29,7 +28,7 @@ export const DrawerOverlay = styled(animated.div)`
   }
 `
 
-export const Container = styled.div<{ state: VideoWorkspaceState }>`
+export const Container = styled.div`
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);
