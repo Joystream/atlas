@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import { animated } from 'react-spring'
 
 import { oldColors, zIndex } from '@/styles'
 import { cVar } from '@/styles'
-import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '@/views/studio/VideoWorkspace/VideoWorkspaceTabsBar'
 
-export const DrawerOverlay = styled(animated.div)`
+import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
+
+export const DrawerOverlay = styled.div`
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: 0;
@@ -41,7 +41,8 @@ export const Container = styled.div`
   box-shadow: 0 4px 52px ${oldColors.black};
   opacity: 1;
   transform: translateY(0);
-  transition: top ${cVar('animationTransitionSlow')};
+  transition: left ${cVar('animationTransitionSlow')};
+  will-change: top, transform, opacity;
 
   &.video-workspace {
     &-exit,
@@ -49,7 +50,7 @@ export const Container = styled.div`
     &-enter-done {
       opacity: 1;
       transform: translateY(0);
-      transition: all ${cVar('animationTransitionSlow')};
+      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
     }
 
     &-enter,
@@ -59,7 +60,7 @@ export const Container = styled.div`
     }
 
     &--minimized {
-      top: calc(100% - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px - 1px);
+      top: calc(100% - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px);
     }
   }
 `

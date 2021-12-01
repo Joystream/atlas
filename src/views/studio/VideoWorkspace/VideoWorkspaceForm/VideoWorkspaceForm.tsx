@@ -142,21 +142,12 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     } = useForm<VideoWorkspaceFormFields>({
       shouldFocusError: true,
       mode: 'onChange',
-      defaultValues: {
-        assets: {
-          video: {
-            contentId: null,
-          },
-          thumbnail: { cropContentId: null, originalContentId: null },
-        },
-        ...tabData,
-      },
     })
 
     const addAsset = useAssetStore((state) => state.actions.addAsset)
-    const mediaAsset = useRawAsset(watch('assets.video').contentId)
-    const thumbnailAsset = useRawAsset(watch('assets.thumbnail').cropContentId)
-    const originalThumbnailAsset = useRawAsset(watch('assets.thumbnail').originalContentId)
+    const mediaAsset = useRawAsset(watch('assets.video.contentId'))
+    const thumbnailAsset = useRawAsset(watch('assets.thumbnail.cropContentId'))
+    const originalThumbnailAsset = useRawAsset(watch('assets.thumbnail.originalContentId'))
 
     useEffect(() => {
       // reset form for edited video on videoWorkspace close
