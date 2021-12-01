@@ -6,6 +6,7 @@ export type TextVariant = keyof typeof styledVariants
 
 export type TextProps = {
   variant: TextVariant
+  color?: string
   secondary?: boolean
   className?: string
   as?: keyof JSX.IntrinsicElements
