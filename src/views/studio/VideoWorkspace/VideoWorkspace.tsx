@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
+import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
 import { Container, DrawerOverlay } from './VideoWorkspace.style'
@@ -101,7 +102,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         in={videoWorkspaceState === 'open'}
         mountOnEnter
         unmountOnExit
-        timeout={500}
+        timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="video-workspace-drawer"
       >
         <DrawerOverlay />
@@ -110,7 +111,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         in={['open', 'minimized'].includes(videoWorkspaceState)}
         mountOnEnter
         unmountOnExit
-        timeout={{ enter: 0, exit: 500 }}
+        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
         classNames="video-workspace"
       >
         <Container
