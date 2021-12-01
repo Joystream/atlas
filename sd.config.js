@@ -9,8 +9,9 @@ export const variables = css\`
 export const theme = {
   <%= themeVariables %>
 }
-export const cVar = (key: keyof typeof theme) => {
-  return theme[key]
+export const cVar = (key: keyof typeof theme, returnValue?: boolean) => {
+  if (returnValue) return theme[key].value
+  return theme[key].variable
 }
 `)
 
@@ -107,7 +108,9 @@ module.exports = {
             return keyValuePair
           })
           .join('\n'),
-        themeVariables: convertedTokens.map((token) => `${camelCase(token.name)}: 'var(--${token.name})',`).join('\n'),
+        themeVariables: convertedTokens
+          .map((token) => `${camelCase(token.name)}: { variable: 'var(--${token.name})', value: '${token.value}' },`)
+          .join('\n'),
       })
     },
   },
