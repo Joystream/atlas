@@ -102,7 +102,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         in={videoWorkspaceState === 'open'}
         mountOnEnter
         unmountOnExit
-        timeout={parseInt(cVar('animationTimingSlow', true))}
+        timeout={0}
         classNames="video-workspace-drawer"
       >
         <DrawerOverlay />
