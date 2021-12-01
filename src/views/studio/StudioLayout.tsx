@@ -27,10 +27,11 @@ import {
   CreateMemberView,
   MyUploadsView,
   MyVideosView,
-  SignInJoinView,
   SignInView,
   VideoWorkspace,
 } from '@/views/studio'
+
+import { SignInMainView } from './SignInMainView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -105,7 +106,7 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.signInJoin()}
                 element={
-                  <PrivateRoute element={<SignInJoinView />} isAuth={!hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute element={<SignInMainView />} isAuth={!hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route
