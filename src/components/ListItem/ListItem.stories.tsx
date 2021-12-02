@@ -36,7 +36,15 @@ const Template: Story<ListItemProps> = (args) => (
   </Container>
 )
 
+const TemplateSingle: Story<ListItemProps> = (args) => (
+  <Container>
+    <ListItem {...args} />
+  </Container>
+)
+
 export const Default = Template.bind({})
+
+export const Single = TemplateSingle.bind({})
 
 export const IconStart = Template.bind({})
 IconStart.args = {

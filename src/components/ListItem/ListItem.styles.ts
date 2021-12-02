@@ -22,7 +22,6 @@ const getContainerPadding = (size: ListItemSizes) => {
       `
   }
 }
-type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean }
 const disabledStyles = css`
   opacity: 0.25;
   cursor: not-allowed;
@@ -37,6 +36,7 @@ const interactiveStyles = css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
   }
 `
+type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean }
 export const Container = styled.div<ContainerProps>`
   display: grid;
   grid-gap: ${sizes(3)};
