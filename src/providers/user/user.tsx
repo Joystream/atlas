@@ -1,6 +1,6 @@
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -35,9 +35,10 @@ const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
-  const activeUserState = useActiveUserStore(({ actions, ...activeUser }) => ({ ...activeUser }))
-  const { setActiveUser, resetActiveUser } = useActiveUserStore((state) => state.actions)
-
+  const activeUserState = useActiveUserStore((state) => state)
+  const {
+    actions: { setActiveUser, resetActiveUser },
+  } = activeUserState
   useEffect(() => {
     SentryLogger.setUser(activeUserState)
     AssetLogger.setUser(activeUserState)
@@ -137,24 +138,40 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   const userInitialized =
     (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
 
-  const contextValue: ActiveUserContextValue = {
-    activeUserState,
-    setActiveUser,
-    resetActiveUser,
+  const contextValue: ActiveUserContextValue = useMemo(
+    () => ({
+      activeUserState,
+      setActiveUser,
+      resetActiveUser,
 
-    accounts,
-    extensionConnected,
+      accounts,
+      extensionConnected,
 
-    memberships,
-    membershipsLoading,
-    refetchMemberships,
+      memberships,
+      membershipsLoading,
+      refetchMemberships,
 
-    activeMembership,
-    activeMembershipLoading,
-    refetchActiveMembership,
+      activeMembership,
+      activeMembershipLoading,
+      refetchActiveMembership,
 
-    userInitialized,
-  }
+      userInitialized,
+    }),
+    [
+      accounts,
+      activeMembership,
+      activeMembershipLoading,
+      activeUserState,
+      extensionConnected,
+      memberships,
+      membershipsLoading,
+      refetchActiveMembership,
+      refetchMemberships,
+      resetActiveUser,
+      setActiveUser,
+      userInitialized,
+    ]
+  )
 
   if (membershipsError || activeMembershipError) {
     return <ViewErrorFallback />

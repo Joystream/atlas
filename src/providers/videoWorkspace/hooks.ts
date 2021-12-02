@@ -95,6 +95,7 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
   }
 }
 
+const WORKSPACE_MATCH = { path: absoluteRoutes.studio.videoWorkspace() }
 export const useVideoWorkspaceRouting = (): Location => {
   const navigate = useNavigate()
 
@@ -102,7 +103,7 @@ export const useVideoWorkspaceRouting = (): Location => {
   const locationState = location.state as RoutingState
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
-  const videoWorkspaceMatch = useMatch({ path: absoluteRoutes.studio.videoWorkspace() })
+  const videoWorkspaceMatch = useMatch(WORKSPACE_MATCH)
   const { videoWorkspaceState, setVideoWorkspaceState } = useVideoWorkspace()
   const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
 

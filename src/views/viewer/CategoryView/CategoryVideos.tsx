@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react'
 import { isEqual } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -22,6 +22,8 @@ import {
   categoryGlobalStyles,
 } from './CategoryVideos.styles'
 import { FallbackWrapper } from './CategoryView.styles'
+
+const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...languages]
 
 const ADAPTED_SORT_OPTIONS = [
   { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
@@ -77,13 +79,16 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setIsFiltersOpen((value) => !value)
   }
 
-  const handleSelectLanguage = (language: string | null | undefined) => {
-    setLanguage(language)
-    setVideoWhereInput((value) => ({
-      ...value,
-      languageId_eq: language === 'undefined' ? undefined : language,
-    }))
-  }
+  const handleSelectLanguage = useCallback(
+    (language: string | null | undefined) => {
+      setLanguage(language)
+      setVideoWhereInput((value) => ({
+        ...value,
+        languageId_eq: language === 'undefined' ? undefined : language,
+      }))
+    },
+    [setLanguage, setVideoWhereInput]
+  )
 
   const topbarHeight = mdMatch ? 80 : 64
 
@@ -113,7 +118,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
                 onChange={handleSelectLanguage}
                 size="small"
                 value={language}
-                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                items={SELECT_LANGUAGE_ITEMS}
               />
             ) : (
               sortingNode

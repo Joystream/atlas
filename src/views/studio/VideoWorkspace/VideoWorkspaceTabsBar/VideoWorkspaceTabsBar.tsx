@@ -26,59 +26,63 @@ type TabsBarProps = {
   onToggleMinimizedClick: () => void
 }
 
-export const VideoWorkspaceTabsBar: React.FC<TabsBarProps> = ({
-  videoTabs,
-  selectedVideoTab,
-  videoWorkspaceState,
-  onAddNewTabClick,
-  onRemoveTabClick,
-  onTabSelect,
-  onCloseClick,
-  onToggleMinimizedClick,
-}) => {
-  const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const handleTabSelect = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
-    onTabSelect(idx)
-    e.currentTarget.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center',
-    })
-  }
-  return (
-    <Topbar>
-      <TabsContainer ref={tabsContainerRef}>
-        {videoTabs.map((tab, idx) => (
-          <VideoWorkspaceSingleTab
-            key={tab.id || idx}
-            tab={tab}
-            selected={tab.id === selectedVideoTab?.id}
-            onTabSelect={(e) => handleTabSelect(e, idx)}
-            onRemoveTabClick={() => onRemoveTabClick(idx)}
-          />
-        ))}
-        <AddDraftButtonContainer
-          hasOverflow={
-            tabsContainerRef.current
-              ? tabsContainerRef?.current.scrollWidth > tabsContainerRef?.current.clientWidth
-              : false
-          }
-        >
-          <IconButton variant="tertiary" onClick={onAddNewTabClick}>
-            <SvgActionPlus />
+export const VideoWorkspaceTabsBar: React.FC<TabsBarProps> = React.memo(
+  ({
+    videoTabs,
+    selectedVideoTab,
+    videoWorkspaceState,
+    onAddNewTabClick,
+    onRemoveTabClick,
+    onTabSelect,
+    onCloseClick,
+    onToggleMinimizedClick,
+  }) => {
+    const tabsContainerRef = useRef<HTMLDivElement>(null)
+    const handleTabSelect = (e: React.MouseEvent<HTMLDivElement>, idx: number) => {
+      onTabSelect(idx)
+      e.currentTarget.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+      })
+    }
+    return (
+      <Topbar>
+        <TabsContainer ref={tabsContainerRef}>
+          {videoTabs.map((tab, idx) => (
+            <VideoWorkspaceSingleTab
+              key={tab.id || idx}
+              tab={tab}
+              selected={tab.id === selectedVideoTab?.id}
+              onTabSelect={(e) => handleTabSelect(e, idx)}
+              onRemoveTabClick={() => onRemoveTabClick(idx)}
+            />
+          ))}
+          <AddDraftButtonContainer
+            hasOverflow={
+              tabsContainerRef.current
+                ? tabsContainerRef?.current.scrollWidth > tabsContainerRef?.current.clientWidth
+                : false
+            }
+          >
+            <IconButton variant="tertiary" onClick={onAddNewTabClick}>
+              <SvgActionPlus />
+            </IconButton>
+          </AddDraftButtonContainer>
+        </TabsContainer>
+        <ButtonsContainer>
+          <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
+            {videoWorkspaceState === 'open' ? <SvgActionMinimize /> : <SvgActionMaximize />}
           </IconButton>
-        </AddDraftButtonContainer>
-      </TabsContainer>
-      <ButtonsContainer>
-        <IconButton variant="tertiary" onClick={onToggleMinimizedClick}>
-          {videoWorkspaceState === 'open' ? <SvgActionMinimize /> : <SvgActionMaximize />}
-        </IconButton>
-        <IconButton variant="tertiary" onClick={onCloseClick}>
-          <SvgActionClose />
-        </IconButton>
-      </ButtonsContainer>
-    </Topbar>
-  )
-}
+          <IconButton variant="tertiary" onClick={onCloseClick}>
+            <SvgActionClose />
+          </IconButton>
+        </ButtonsContainer>
+      </Topbar>
+    )
+  }
+)
+
+VideoWorkspaceTabsBar.displayName = 'VideoWorkspaceTabsBar'
 
 type VideoWorkspaceTabProps = {
   tab: VideoWorkspaceTab

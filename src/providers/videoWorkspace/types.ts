@@ -51,4 +51,4 @@ export type VideoWorkspaceFormFields = {
   assets: VideoWorkspaceAssets
 }
 
-export type VideoWorkspaceState = 'closed' | 'open' | 'minimized'
+export type VideoWorkspaceState = 'closed' | 'open' | 'minimized' | 'maximized' | 'unset'
