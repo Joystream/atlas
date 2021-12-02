@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { createId } from '@/utils/createId'
 
@@ -140,31 +140,46 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     (val) => val?.thumbnail.cropContentId || val?.video.contentId
   )
 
-  const hasVideoTabAnyCachedAssets = (tabIdx: number) => {
-    const tabId = videoTabs[tabIdx].id
-    return !!assetsCache[tabId]?.thumbnail || !!assetsCache[tabId]?.video
-  }
-
-  return (
-    <VideoWorkspaceContext.Provider
-      value={{
-        hasVideoTabAnyCachedAssets,
-        anyVideoTabsCachedAssets,
-        videoTabs,
-        addVideoTab,
-        removeVideoTab,
-        updateSelectedVideoTab,
-        selectedVideoTabIdx,
-        setSelectedVideoTabIdx,
-        videoWorkspaceState,
-        setVideoWorkspaceState,
-        selectedVideoTabCachedAssets,
-        setSelectedVideoTabCachedAssets,
-        selectedVideoTabCachedDirtyFormData,
-        setSelectedVideoTabCachedDirtyFormData,
-      }}
-    >
-      {children}
-    </VideoWorkspaceContext.Provider>
+  const hasVideoTabAnyCachedAssets = useCallback(
+    (tabIdx: number) => {
+      const tabId = videoTabs[tabIdx].id
+      return !!assetsCache[tabId]?.thumbnail || !!assetsCache[tabId]?.video
+    },
+    [assetsCache, videoTabs]
   )
+
+  const value = useMemo(
+    () => ({
+      hasVideoTabAnyCachedAssets,
+      anyVideoTabsCachedAssets,
+      videoTabs,
+      addVideoTab,
+      removeVideoTab,
+      updateSelectedVideoTab,
+      selectedVideoTabIdx,
+      setSelectedVideoTabIdx,
+      videoWorkspaceState,
+      setVideoWorkspaceState,
+      selectedVideoTabCachedAssets,
+      setSelectedVideoTabCachedAssets,
+      selectedVideoTabCachedDirtyFormData,
+      setSelectedVideoTabCachedDirtyFormData,
+    }),
+    [
+      addVideoTab,
+      anyVideoTabsCachedAssets,
+      hasVideoTabAnyCachedAssets,
+      removeVideoTab,
+      selectedVideoTabCachedAssets,
+      selectedVideoTabCachedDirtyFormData,
+      selectedVideoTabIdx,
+      setSelectedVideoTabCachedAssets,
+      setSelectedVideoTabCachedDirtyFormData,
+      updateSelectedVideoTab,
+      videoTabs,
+      videoWorkspaceState,
+    ]
+  )
+
+  return <VideoWorkspaceContext.Provider value={value}>{children}</VideoWorkspaceContext.Provider>
 }

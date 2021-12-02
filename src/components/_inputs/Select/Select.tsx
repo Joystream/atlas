@@ -1,5 +1,5 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
-import React, { Ref, forwardRef } from 'react'
+import React, { Ref, forwardRef, useMemo } from 'react'
 
 import { Badge } from '@/components/Badge'
 import { Tooltip } from '@/components/Tooltip'
@@ -79,7 +79,7 @@ export const _Select = <T extends unknown>(
     onSelectedItemChange: handleItemSelect,
   })
 
-  const selectedItem = items.find((item) => item.value === selectedItemValue)
+  const selectedItem = useMemo(() => items.find((item) => item.value === selectedItemValue), [items, selectedItemValue])
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
