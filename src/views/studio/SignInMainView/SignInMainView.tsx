@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { SignInStepsStepper } from '@/components/SignInSteps'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
@@ -37,7 +38,7 @@ export const SignInMainView: React.FC = () => {
           Start your journey as a Video Publisher. Publish and manage your channel and video content.
         </SubTitle>
         <ButtonGroup>
-          <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.signInJoin({ step: '0' })}>
+          <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.signInJoin({ step: '1' })}>
             Sign in
           </SignInButton>
           <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">
@@ -52,6 +53,7 @@ export const SignInMainView: React.FC = () => {
         </BackLink>
       </Header>
       <StyledSignInIllustrationSVG />
+      <SignInStepsStepper />
     </StyledContainer>
   )
 }
