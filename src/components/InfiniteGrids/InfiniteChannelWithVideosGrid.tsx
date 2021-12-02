@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from 'react'
+import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
 
 import {
   ChannelEdge,
@@ -63,16 +63,19 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     setTargetRowsCount((prevState) => prevState + 3)
   }, [])
 
-  const queryVariables: GetChannelsConnectionQueryVariables = {
-    ...(first ? { first } : {}),
-    ...(orderBy ? { orderBy } : {}),
-    where: {
-      ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
-      ...(idIn ? { id_in: idIn } : {}),
-      isPublic_eq: true,
-      isCensored_eq: false,
-    },
-  }
+  const queryVariables: GetChannelsConnectionQueryVariables = useMemo(
+    () => ({
+      ...(first ? { first } : {}),
+      ...(orderBy ? { orderBy } : {}),
+      where: {
+        ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
+        ...(idIn ? { id_in: idIn } : {}),
+        isPublic_eq: true,
+        isCensored_eq: false,
+      },
+    }),
+    [first, idIn, orderBy, selectedLanguage]
+  )
 
   const { displayedItems, placeholdersCount, loading, error, totalCount } = useInfiniteGrid<
     GetChannelsConnectionQuery,

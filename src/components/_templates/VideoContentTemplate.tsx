@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
@@ -11,8 +11,7 @@ import {
 import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { cVar, media, sizes } from '@/styles'
-
-type CtaData = 'home' | 'new' | 'channels' | 'popular'
+import { CtaData } from '@/types/cta'
 
 type VideoContentTemplateProps = {
   title?: string
@@ -47,17 +46,20 @@ const CTA_MAP: Record<string, CallToActionButtonProps> = {
 }
 
 export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
-  const ctaContent =
-    cta &&
-    cta.map((item, idx) => (
-      <CallToActionButton
-        key={`cta-${idx}`}
-        label={CTA_MAP[item].label}
-        to={CTA_MAP[item].to}
-        colorVariant={CTA_MAP[item].colorVariant}
-        icon={CTA_MAP[item].icon}
-      />
-    ))
+  const ctaContent = useMemo(
+    () =>
+      cta &&
+      cta.map((item, idx) => (
+        <CallToActionButton
+          key={`cta-${idx}`}
+          label={CTA_MAP[item].label}
+          to={CTA_MAP[item].to}
+          colorVariant={CTA_MAP[item].colorVariant}
+          icon={CTA_MAP[item].icon}
+        />
+      )),
+    [cta]
+  )
 
   return (
     <StyledViewWrapper big>
