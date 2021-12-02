@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 import { useFollowChannel, useUnfollowChannel } from '@/api/hooks'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -10,7 +12,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
   const isFollowing = usePersonalDataStore((state) => state.followedChannels.some((channel) => channel.id === id))
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
 
-  const toggleFollowing = () => {
+  const toggleFollowing = useCallback(() => {
     if (!id || !name) {
       return
     }
@@ -43,7 +45,16 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
     } catch (error) {
       SentryLogger.error('Failed to update channel following', 'useHandleFollowChannel', error, { channel: { id } })
     }
-  }
+  }, [
+    closeUnfollowDialog,
+    followChannel,
+    id,
+    isFollowing,
+    name,
+    openUnfollowDialog,
+    unfollowChannel,
+    updateChannelFollowing,
+  ])
   return {
     toggleFollowing,
     isFollowing,

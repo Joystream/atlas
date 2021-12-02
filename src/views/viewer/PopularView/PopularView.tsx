@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 
 import { useMostViewedVideosAllTimeIds } from '@/api/hooks'
 import { useMostViewedVideos } from '@/api/hooks'
@@ -8,7 +8,11 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoGallery } from '@/components/_video/VideoGallery'
 import { absoluteRoutes } from '@/config/routes'
+import { CtaData } from '@/types/cta'
 import { SentryLogger } from '@/utils/logs'
+
+const CTA: CtaData[] = ['new', 'home', 'channels']
+const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PopularView: FC = () => {
   const {
@@ -21,12 +25,16 @@ export const PopularView: FC = () => {
     },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'PopularView', error) }
   )
-  const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
+  const mostViewedVideosIds = useMemo(() => mostViewedVideosAllTime?.map((item) => item.id), [mostViewedVideosAllTime])
   const { mostViewedChannelsAllTime, error: mostViewedChannelsError } = useMostViewedChannelsAllTimeIds(
     { limit: 15 },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels IDs', 'PopularView', error) }
   )
-  const mostViewedChannelsAllTimeIds = mostViewedChannelsAllTime?.map((item) => item.id)
+  const mostViewedChannelsAllTimeIds = useMemo(
+    () => mostViewedChannelsAllTime?.map((item) => item.id),
+    [mostViewedChannelsAllTime]
+  )
+  const videoWhereInput = useMemo(() => ({ id_in: mostViewedVideosIds }), [mostViewedVideosIds])
   const {
     videos,
     loading,
@@ -41,11 +49,11 @@ export const PopularView: FC = () => {
   }
 
   return (
-    <VideoContentTemplate title="Popular on Joystream" cta={['new', 'home', 'channels']}>
+    <VideoContentTemplate title="Popular on Joystream" cta={CTA}>
       <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
       <InfiniteVideoGrid
         title="Popular videos"
-        videoWhereInput={{ id_in: mostViewedVideosIds }}
+        videoWhereInput={videoWhereInput}
         ready={!mostViewedVideosLoading}
         onDemand
       />
@@ -53,7 +61,7 @@ export const PopularView: FC = () => {
         title="Popular channels"
         onDemand
         idIn={mostViewedChannelsAllTimeIds}
-        additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }}
+        additionalLink={ADDITIONAL_LINK}
       />
     </VideoContentTemplate>
   )
