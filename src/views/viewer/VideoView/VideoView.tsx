@@ -12,6 +12,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -40,6 +41,7 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
+  const xsMatch = useMediaMatch('sm')
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
@@ -163,12 +165,16 @@ export const VideoView: React.FC = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer className={transitions.names.slide}>
-        {video ? <TitleText variant="h700">{video.title}</TitleText> : <SkeletonLoader height={46} width={400} />}
-        <Meta variant="t300">
+        {video ? (
+          <TitleText variant={xsMatch ? 'h700' : 'h500'}>{video.title}</TitleText>
+        ) : (
+          <SkeletonLoader height={xsMatch ? 56 : 32} width={400} />
+        )}
+        <Meta variant="t300" secondary>
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
-            <SkeletonLoader height={18} width={200} />
+            <SkeletonLoader height={24} width={200} />
           )}
         </Meta>
         <ChannelContainer>
