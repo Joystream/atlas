@@ -9,6 +9,7 @@ import {
   Container,
   EditButton,
   NewChannelAvatar,
+  Outline,
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
@@ -16,8 +17,8 @@ import {
 } from './Avatar.styles'
 
 export type AvatarProps = {
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void
-  onEditClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void
+  onEditClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
   loading?: boolean
@@ -40,15 +41,16 @@ export const Avatar: React.FC<AvatarProps> = ({
   newChannel,
   onError,
 }) => {
-  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation()
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
     if (onEditClick) {
-      onEditClick(e)
+      onEditClick(event)
     }
   }
   const isEditable = !loading && editable && size !== 'default'
   return (
-    <Container onClick={onClick} size={size} className={className}>
+    <Container onClick={onClick} size={size} className={className} editable={!!isEditable}>
+      <Outline />
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
           <SvgActionImage />
