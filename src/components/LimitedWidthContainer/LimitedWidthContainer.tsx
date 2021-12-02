@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 
+import { sizes } from '@/styles'
+
 type LimitedWidthContainerProps = { big?: boolean }
 
 export const LimitedWidthContainer = styled.div<LimitedWidthContainerProps>`
@@ -8,4 +10,5 @@ export const LimitedWidthContainer = styled.div<LimitedWidthContainerProps>`
   max-width: var(--max-inner-width);
   position: relative;
   margin: 0 auto;
+  padding-bottom: ${sizes(16)};
 `

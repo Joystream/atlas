@@ -368,7 +368,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
   const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
-
   return (
     <form onSubmit={handleSubmit}>
       <Controller

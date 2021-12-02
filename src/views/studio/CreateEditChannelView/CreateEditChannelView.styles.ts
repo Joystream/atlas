@@ -6,6 +6,8 @@ import { TitleArea } from '@/components/_inputs/TitleArea'
 import { media, sizes, transitions, zIndex } from '@/styles'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
+import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspace/VideoWorkspaceTabsBar'
+
 export const StyledTitleSection = styled(TitleSection)`
   display: inline-flex;
   width: auto;
@@ -38,7 +40,7 @@ export const TitleContainer = styled.div`
 export const InnerFormContainer = styled.div`
   width: 100%;
   margin-top: 50px;
-  padding-bottom: 250px;
+  padding-bottom: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
 `
 
 export const StyledAvatar = styled(Avatar)`
