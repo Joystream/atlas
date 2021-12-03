@@ -44,6 +44,7 @@ import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
+  allowFullscreen?: boolean
   isVideoPending?: boolean
   nextVideo?: VideoFieldsFragment | null
   className?: string
@@ -64,10 +65,17 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
+const isFullScreenEnabled =
+  'fullscreenEnabled' in document ||
+  'webkitFullscreenEnabled' in document ||
+  'mozFullScreenEnabled' in document ||
+  'msFullscreenEnabled' in document
+
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
+    allowFullscreen = true,
     isVideoPending,
     className,
     playing,
@@ -447,9 +455,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
     }
   }
+  const isFullScreenAllowed = isFullScreenEnabled && allowFullscreen
 
   const handleFullScreen = (event: React.MouseEvent) => {
     event.stopPropagation()
+    if (!isFullScreenAllowed) {
+      return
+    }
     if (player?.isFullscreen()) {
       player?.exitFullscreen()
     } else {
@@ -467,6 +479,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showPlayerControls = isLoaded && playerState
   const showControlsIndicator = playerState !== 'ended'
+
   return (
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
@@ -544,6 +557,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     </PlayerControlButton>
                   )}
                   <PlayerControlButton
+                    isDisabled={!isFullScreenAllowed}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
