@@ -115,9 +115,5 @@ export const FooterButtonsContainer = styled.div`
     grid-auto-flow: column;
     grid-auto-columns: auto;
     justify-content: end;
-
-    > :first-of-type {
-      order: 2;
-    }
   }
 `
