@@ -1,18 +1,15 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, media, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, zIndex } from '@/styles'
 
 type TabProps = {
   selected: boolean
-  variant: 'default' | 'large'
 }
 
 type BackgroundGradientProps = {
   direction: 'prev' | 'next'
 }
-
-export const TAB_WIDTH = 120
 
 export const TabsWrapper = styled.div`
   position: relative;
@@ -23,6 +20,7 @@ export const TabsGroup = styled.div`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
+  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
@@ -33,24 +31,22 @@ export const TabsGroup = styled.div`
 
 export const Tab = styled.div<TabProps>`
   transition: box-shadow 0.125s ease, color 0.125s ease;
-  width: ${TAB_WIDTH}px;
-  min-width: ${TAB_WIDTH}px;
-  padding: ${sizes(6)} 0;
+  padding: 0 ${sizes(8)};
+  height: 64px;
+  display: flex;
+  align-items: center;
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
   color: ${({ selected }) => (selected ? oldColors.white : oldColors.gray[300])};
   text-align: center;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${oldColors.blue[500]};` : 'none')};
+  flex-shrink: 0;
 
   :hover,
   :focus {
     box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? oldColors.blue[500] : oldColors.gray[300])};
     cursor: pointer;
-  }
-
-  ${media.md} {
-    padding: ${({ variant }) => sizes(variant === 'default' ? 6 : 7)} 0;
   }
 
   span {
