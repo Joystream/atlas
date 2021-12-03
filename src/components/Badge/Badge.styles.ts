@@ -16,6 +16,9 @@ export const smallBadgeStyles = css`
     text-transform: ${cVar('typographyDesktopT100TextTransform')};
     padding-top: 1px;
     text-align: center;
+    margin-left: ${sizes(2)};
+    line-height: 14px;
+    font-weight: normal;
   }
 
   &[data-badge^='-']::after,

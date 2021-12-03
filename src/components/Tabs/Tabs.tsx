@@ -27,7 +27,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
     const [_selected, setSelected] = useState(initialIndex)
     const selected = paramsSelected ?? _selected
     const [isContentOverflown, setIsContentOverflown] = useState(false)
-    const tabsRef = useRef<HTMLDivElement>(null)
+    const tabsGroupRef = useRef<HTMLDivElement>(null)
     const tabRef = useRef<HTMLDivElement>(null)
     const [shadowsVisible, setShadowsVisible] = useState({
       left: false,
@@ -35,7 +35,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
     })
 
     useEffect(() => {
-      const tabsGroup = tabsRef.current
+      const tabsGroup = tabsGroupRef.current
       if (!tabsGroup) {
         return
       }
@@ -43,7 +43,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
     }, [])
 
     useEffect(() => {
-      const tabsGroup = tabsRef.current
+      const tabsGroup = tabsGroupRef.current
       const tab = tabRef.current
       if (!tabsGroup || !isContentOverflown || !tab) {
         return
@@ -96,7 +96,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
         >
           <BackgroundGradient direction="next" />
         </CSSTransition>
-        <TabsGroup ref={tabsRef}>
+        <TabsGroup ref={tabsGroupRef}>
           {tabs.map((tab, idx) => (
             <Tab
               onClick={createClickHandler(idx)}
