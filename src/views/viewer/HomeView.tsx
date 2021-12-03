@@ -56,7 +56,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero videoHeroData={videoHero || null} withMuteButton />
+      <VideoHero videoHeroData={videoHero} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid

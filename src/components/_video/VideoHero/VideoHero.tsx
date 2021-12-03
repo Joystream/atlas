@@ -30,7 +30,7 @@ export type VideoHeroProps = {
   headerNode?: React.ReactNode
   sliderNode?: React.ReactNode
   withMuteButton?: boolean
-  videoHeroData: VideoHeroData | null
+  videoHeroData?: VideoHeroData | null
   onTimeUpdate?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
   onEnded?: (e: React.SyntheticEvent<HTMLVideoElement, Event>) => void
 }

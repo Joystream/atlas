@@ -27,13 +27,13 @@ export const useAllCategoriesFeaturedVideos = (
 }
 
 export const useCategoriesFeaturedVideos = (
-  id: string,
+  categoryId: string,
   opts?: QueryHookOptions<GetCategoriesFeaturedVideosQuery, GetCategoriesFeaturedVideosQueryVariables>
 ) => {
   const { data, ...rest } = useGetCategoriesFeaturedVideosQuery({
     ...opts,
     variables: {
-      categoryId: id,
+      categoryId,
     },
   })
   return {
