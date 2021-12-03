@@ -99,7 +99,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }, [onClick, onClose, query, searchOpen])
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
+      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && typeof selectedItem !== 'number') {
         event.preventDefault()
         addRecentSearch(query)
         handleClose()
