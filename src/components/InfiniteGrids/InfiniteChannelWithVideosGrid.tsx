@@ -68,7 +68,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       ...(first ? { first } : {}),
       ...(orderBy ? { orderBy } : {}),
       where: {
-        ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
+        ...(selectedLanguage ? { language: { iso_eq: selectedLanguage } } : {}),
         ...(idIn ? { id_in: idIn } : {}),
         isPublic_eq: true,
         isCensored_eq: false,

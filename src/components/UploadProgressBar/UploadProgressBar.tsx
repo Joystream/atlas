@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
-import { AssetUploadStatus } from '@/types/uploads'
+import { AssetUploadStatus } from '@/types/storage'
 
 import {
   BottomProgressBar,

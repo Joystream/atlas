@@ -1,4 +1,5 @@
 scalar DateTime
+scalar BigInt
 
 type VideoCategory {
   id: ID!
@@ -70,6 +71,374 @@ input DataObjectWhereInput {
   joystreamContentId_in: [String!]
 }
 
+type StorageDataObject {
+  id: ID!
+  createdAt: DateTime!
+
+  # Whether the data object was uploaded and accepted by the storage provider
+  isAccepted: Boolean!
+
+  # Data object size in bytes
+  size: BigInt!
+  storageBag: StorageBag!
+  storageBagId: String!
+
+  # IPFS content hash
+  ipfsHash: String!
+
+  # The type of the asset that the data object represents (if known)
+  type: DataObjectType!
+
+  # Prize for removing the data object
+  deletionPrize: Float!
+}
+
+type StorageBag {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+  objects: [StorageDataObject!]!
+  storageBuckets: [StorageBucket!]!
+  distributionBuckets: [DistributionBucket!]!
+
+  # Owner of the storage bag
+  owner: StorageBagOwner!
+}
+
+type StorageBucket {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # Current bucket operator status
+  operatorStatus: StorageBucketOperatorStatus!
+  operatorMetadata: StorageBucketOperatorMetadata
+  operatorMetadataId: String
+
+  # Whether the bucket is accepting any new storage bags
+  acceptingNewBags: Boolean!
+  bags: [StorageBag!]!
+
+  # Bucket's data object size limit in bytes
+  dataObjectsSizeLimit: Float!
+
+  # Bucket's data object count limit
+  dataObjectCountLimit: Float!
+
+  # Number of assigned data objects
+  dataObjectsCount: Float!
+
+  # Total size of assigned data objects
+  dataObjectsSize: Float!
+}
+
+union StorageBucketOperatorStatus =
+    StorageBucketOperatorStatusMissing
+  | StorageBucketOperatorStatusInvited
+  | StorageBucketOperatorStatusActive
+
+type StorageBucketOperatorStatusMissing {
+  phantom: Int
+}
+
+type StorageBucketOperatorStatusInvited {
+  workerId: Int!
+}
+
+type StorageBucketOperatorStatusActive {
+  workerId: Int!
+}
+
+type StorageBucketOperatorMetadata {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # Root node endpoint
+  nodeEndpoint: String
+  nodeLocation: NodeLocationMetadata
+  nodeLocationId: String
+
+  # Additional information about the node/operator
+  extra: String
+}
+
+type NodeLocationMetadata {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # ISO 3166-1 alpha-2 country code (2 letters)
+  countryCode: String
+
+  # City name
+  city: String
+  coordinates: GeoCoordinates
+  coordinatesId: String
+}
+
+type GeoCoordinates {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+  latitude: Float!
+  longitude: Float!
+}
+
+type DistributionBucketOperatorMetadata {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # Root distributor node api endpoint
+  nodeEndpoint: String
+  nodeLocation: NodeLocationMetadata
+  nodeLocationId: String
+
+  # Additional information about the node/operator
+  extra: String
+}
+
+type DistributionBucketOperator {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+  distributionBucket: DistributionBucket!
+  distributionBucketId: String!
+
+  # ID of the distribution group worker
+  workerId: Int!
+
+  # Current operator status
+  status: DistributionBucketOperatorStatus!
+  metadata: DistributionBucketOperatorMetadata
+  metadataId: String
+}
+
+enum DistributionBucketOperatorStatus {
+  INVITED
+  ACTIVE
+}
+
+type DistributionBucket {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+  family: DistributionBucketFamily!
+  familyId: String!
+  operators: [DistributionBucketOperator!]!
+
+  # Whether the bucket is accepting any new bags
+  acceptingNewBags: Boolean!
+
+  # Whether the bucket is currently distributing content
+  distributing: Boolean!
+  bags: [StorageBag!]!
+}
+
+type DistributionBucketFamily {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+  metadata: DistributionBucketFamilyMetadata
+  metadataId: String
+  buckets: [DistributionBucket!]!
+}
+
+type DistributionBucketFamilyMetadata {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # Name of the geographical region covered by the family (ie.: us-east-1)
+  region: String
+
+  # Optional, more specific description of the region covered by the family
+  description: String
+  areas: [DistributionBucketFamilyGeographicArea!]!
+
+  # List of targets (hosts/ips) best suited latency measurements for the family
+  latencyTestTargets: [String!]
+}
+
+type DistributionBucketFamilyGeographicArea {
+  id: ID!
+  createdAt: DateTime!
+  createdById: String!
+  updatedAt: DateTime
+  updatedById: String
+  deletedAt: DateTime
+  deletedById: String
+  version: Int!
+
+  # Geographical area (continent / country / subdivision)
+  area: GeographicalArea!
+  distributionBucketFamilyMetadata: DistributionBucketFamilyMetadata!
+  distributionBucketFamilyMetadataId: String!
+}
+
+union GeographicalArea = GeographicalAreaContinent | GeographicalAreaCountry | GeographicalAreaSubdivistion
+
+type GeographicalAreaContinent {
+  code: Continent
+}
+
+enum Continent {
+  AF
+  NA
+  OC
+  AN
+  AS
+  EU
+  SA
+}
+
+type GeographicalAreaCountry {
+  # ISO 3166-1 alpha-2 country code
+  code: String
+}
+
+type GeographicalAreaSubdivistion {
+  # ISO 3166-2 subdivision code
+  code: String
+}
+
+union StorageBagOwner =
+    StorageBagOwnerCouncil
+  | StorageBagOwnerWorkingGroup
+  | StorageBagOwnerMember
+  | StorageBagOwnerChannel
+  | StorageBagOwnerDAO
+
+type StorageBagOwnerCouncil {
+  phantom: Int
+}
+
+type StorageBagOwnerWorkingGroup {
+  workingGroupId: String
+}
+
+type StorageBagOwnerMember {
+  memberId: Int
+}
+
+type StorageBagOwnerChannel {
+  channelId: Int
+}
+
+type StorageBagOwnerDAO {
+  daoId: Int
+}
+
+union DataObjectType =
+    DataObjectTypeChannelAvatar
+  | DataObjectTypeChannelCoverPhoto
+  | DataObjectTypeVideoMedia
+  | DataObjectTypeVideoThumbnail
+  | DataObjectTypeUnknown
+
+type DataObjectTypeChannelAvatar {
+  # Related channel entity
+  channel: Channel
+}
+
+type DataObjectTypeChannelCoverPhoto {
+  # Related channel entity
+  channel: Channel
+}
+
+type DataObjectTypeVideoMedia {
+  # Related video entity
+  video: Video
+}
+
+type DataObjectTypeVideoThumbnail {
+  # Related video entity
+  video: Video
+}
+
+type DataObjectTypeUnknown {
+  phantom: Int
+}
+
+input StorageDataObjectWhereInput {
+  isAccepted_eq: Boolean
+}
+
+input StorageBagWhereInput {
+  id_eq: ID
+  id_in: [ID!]
+
+  AND: [StorageBagWhereInput!]
+  OR: [StorageBagWhereInput!]
+}
+
+input DistributionBucketWhereInput {
+  id_eq: ID
+  id_in: [ID!]
+
+  acceptingNewBags_eq: Boolean
+  distributing_eq: Boolean
+  distributing_in: [Boolean!]
+
+  bags_none: StorageBagWhereInput
+  bags_some: StorageBagWhereInput
+  bags_every: StorageBagWhereInput
+
+  AND: [DistributionBucketWhereInput!]
+  OR: [DistributionBucketWhereInput!]
+}
+
 type Membership {
   id: ID!
   handle: String!
@@ -104,12 +473,8 @@ type Channel {
   language: Language
 
   # === assets ===
-  coverPhotoDataObject: DataObject
-  coverPhotoUrls: [String!]!
-  coverPhotoAvailability: AssetAvailability!
-  avatarPhotoDataObject: DataObject
-  avatarPhotoUrls: [String!]!
-  avatarPhotoAvailability: AssetAvailability!
+  coverPhoto: StorageDataObject
+  avatarPhoto: StorageDataObject
 
   # === extended from Orion ===
   follows: Int
@@ -117,14 +482,17 @@ type Channel {
 }
 
 input ChannelWhereInput {
+  id_eq: ID
   id_in: [ID!]
-  ownerMemberId_eq: ID
+
   isCurated_eq: Boolean
   isPublic_eq: Boolean
   isCensored_eq: Boolean
-  coverPhotoAvailability_eq: AssetAvailability
-  avatarPhotoAvailability_eq: AssetAvailability
-  languageId_eq: ID
+
+  ownerMember: MembershipWhereInput
+  language: LanguageWhereInput
+  coverPhoto: DataObjectWhereInput
+  avatarPhoto: DataObjectWhereInput
 }
 
 input ChannelWhereUniqueInput {
@@ -175,14 +543,10 @@ type Video {
   license: License
 
   # === assets ===
-  thumbnailPhotoDataObject: DataObject
-  thumbnailPhotoUrls: [String!]!
-  thumbnailPhotoAvailability: AssetAvailability!
-  mediaDataObject: DataObject
-  mediaUrls: [String!]!
-  mediaAvailability: AssetAvailability!
+  media: StorageDataObject
+  mediaMetadata: VideoMediaMetadata
+  thumbnailPhoto: StorageDataObject
 
-  mediaMetadata: VideoMediaMetadata!
   # In seconds
   duration: Int
   skippableIntroDuration: Int
@@ -196,24 +560,81 @@ input VideoCategoryWhereUniqueInput {
 }
 
 input VideoWhereInput {
-  categoryId_eq: ID
-  categoryId_in: [ID!]
-  channelId_in: [ID!]
-  channelId_eq: ID
+  id_eq: ID
+  id_in: [ID!]
+
+  createdAt_eq: DateTime
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
   createdAt_gte: DateTime
-  duration_lte: Int
+
+  updatedAt_eq: DateTime
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+
+  title_eq: String
+  title_contains: String
+  title_startsWith: String
+  title_endsWith: String
+  title_in: [String!]
+
+  description_eq: String
+  description_contains: String
+  description_startsWith: String
+  description_endsWith: String
+  description_in: [String!]
+
+  duration_eq: Int
+  duration_gt: Int
   duration_gte: Int
-  thumbnailPhotoAvailability_eq: AssetAvailability
-  mediaAvailability_eq: AssetAvailability
-  licenseId_in: [ID!]
-  languageId_eq: ID
-  hasMarketing_eq: Boolean
-  isFeatured_eq: Boolean
+  duration_lt: Int
+  duration_lte: Int
+  duration_in: [Int!]
+
+  publishedBeforeJoystream_eq: DateTime
+  publishedBeforeJoystream_lt: DateTime
+  publishedBeforeJoystream_lte: DateTime
+  publishedBeforeJoystream_gt: DateTime
+  publishedBeforeJoystream_gte: DateTime
+
   isPublic_eq: Boolean
   isCensored_eq: Boolean
   isExplicit_eq: Boolean
-  id_in: [ID!]
+  isFeatured_eq: Boolean
+  hasMarketing_eq: Boolean
+
+  channel: ChannelWhereInput
+  category: VideoCategoryWhereInput
+  thumbnailPhoto: StorageDataObjectWhereInput
+  language: LanguageWhereInput
+  license: LicenseWhereInput
+  media: StorageDataObjectWhereInput
+  mediaMetadata: VideoMediaMetadataWhereInput
+
+  AND: [VideoWhereInput!]
+  OR: [VideoWhereInput!]
+}
+
+input VideoCategoryWhereInput {
   id_eq: ID
+  id_in: [ID!]
+}
+
+input LanguageWhereInput {
+  id_eq: ID
+  iso_eq: String
+}
+
+input VideoMediaMetadataWhereInput {
+  id_eq: ID
+}
+
+input LicenseWhereInput {
+  id_eq: ID
+  code_eq: Int
 }
 
 input VideoWhereUniqueInput {
@@ -313,6 +734,8 @@ type Query {
   search(limit: Int, text: String!, whereVideo: VideoWhereInput, whereChannel: ChannelWhereInput): [SearchFTSOutput!]!
 
   dataObjects(limit: Int, where: DataObjectWhereInput): [DataObject!]!
+
+  distributionBuckets(offset: Int, limit: Int, where: DistributionBucketWhereInput): [DistributionBucket!]!
 }
 
 type Subscription {

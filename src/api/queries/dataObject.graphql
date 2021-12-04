@@ -3,13 +3,5 @@ query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContent
     id
     liaisonJudgement
     joystreamContentId
-    videomediaDataObject {
-      id
-      mediaAvailability
-    }
-    videothumbnailPhotoDataObject {
-      id
-      thumbnailPhotoAvailability
-    }
   }
 }

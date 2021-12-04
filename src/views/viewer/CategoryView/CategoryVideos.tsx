@@ -55,7 +55,9 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   useEffect(() => {
     setVideoWhereInput({
-      categoryId_eq: categoryId,
+      category: {
+        id_eq: categoryId,
+      },
     })
   }, [categoryId, setVideoWhereInput])
 

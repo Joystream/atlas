@@ -43,7 +43,9 @@ export const HomeView: React.FC = () => {
   } = useVideosConnection(
     {
       where: {
-        channelId_in: channelIdIn,
+        channel: {
+          id_in: channelIdIn,
+        },
       },
     },
     { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
@@ -62,7 +64,7 @@ export const HomeView: React.FC = () => {
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
             title="Followed channels"
-            videoWhereInput={{ channelId_in: channelIdIn }}
+            videoWhereInput={{ channel: { id_in: channelIdIn } }}
             ready={!followedLoading}
             onDemand
             titleLoader

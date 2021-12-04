@@ -47,7 +47,9 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
   const { videoCount, loading: loadingVidCount } = useVideoCount(
     {
       where: {
-        categoryId_eq: categoryId,
+        category: {
+          id_eq: categoryId,
+        },
       },
     },
     {

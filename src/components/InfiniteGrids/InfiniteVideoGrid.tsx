@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
 import {
-  AssetAvailability,
   ChannelOrderByInput,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
@@ -71,8 +70,13 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const queryVariables: { where: VideoWhereInput } = {
       where: {
         isPublic_eq: true,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        isCensored_eq: false,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         ...videoWhereInput,
       },
     }

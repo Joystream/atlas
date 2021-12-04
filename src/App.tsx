@@ -7,6 +7,7 @@ import useHotjar from 'react-use-hotjar'
 import { createApolloClient } from '@/api'
 import { BUILD_ENV, readEnv } from '@/config/envs'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { DistributorsContextProvider } from '@/providers/distributors'
 import { GlobalStyles } from '@/styles'
 
 import { MainLayout } from './MainLayout'
@@ -35,13 +36,15 @@ export const App = () => {
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>
-            <StorageProvidersProvider>
-              <ConfirmationModalProvider>
-                <MainLayout />
-                <Snackbars />
-                <AssetsManager />
-              </ConfirmationModalProvider>
-            </StorageProvidersProvider>
+            <DistributorsContextProvider>
+              <StorageProvidersProvider>
+                <ConfirmationModalProvider>
+                  <MainLayout />
+                  <Snackbars />
+                  <AssetsManager />
+                </ConfirmationModalProvider>
+              </StorageProvidersProvider>
+            </DistributorsContextProvider>
           </OverlayManagerProvider>
         </BrowserRouter>
       </ApolloProvider>

@@ -1,19 +1,19 @@
-import { shuffle } from 'lodash-es'
+import BN from 'bn.js'
 import React, { useEffect } from 'react'
 
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
-import { ResolvedAssetDetails } from '@/types/assets'
-import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { useDistributors } from '@/providers/distributors'
+import { DistributorInfo } from '@/types/storage'
+import { joinUrlFragments } from '@/utils/asset'
+import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
-import { getAssetUrl, testAssetDownload } from './helpers'
+import { testAssetDownload } from './helpers'
 import { useAssetStore } from './store'
-import { AssetType } from './types'
-
-import { useStorageProviders } from '../storageProviders'
 
 export const AssetsManager: React.FC = () => {
-  const { getStorageProviders, getRandomStorageProvider } = useStorageProviders()
+  const { getAllDistributors } = useDistributors()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
   const assetIdsBeingResolved = useAssetStore((state) => state.assetIdsBeingResolved)
   const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset } = useAssetStore(
@@ -21,97 +21,122 @@ export const AssetsManager: React.FC = () => {
   )
 
   useEffect(() => {
-    Object.keys(pendingAssets).forEach(async (contentId) => {
-      // make sure we handle this only once
-      if (assetIdsBeingResolved.has(contentId)) {
+    Object.values(pendingAssets).forEach(async (dataObject) => {
+      // make sure we handle each asset only once
+      if (assetIdsBeingResolved.has(dataObject.id)) {
         return
       }
-      addAssetBeingResolved(contentId)
+      addAssetBeingResolved(dataObject.id)
 
-      const resolutionData = pendingAssets[contentId]
-      const storageProviders = await getStorageProviders()
-      const shuffledStorageProviders = shuffle(storageProviders)
-      const storageProvidersWithoutLiaison = shuffledStorageProviders.filter(
-        (provider) => provider.id !== resolutionData.dataObject?.liaison?.id
-      )
-      const liaison = resolutionData.dataObject?.liaison
-      const liaisonActive = liaison?.isActive && !!liaison.metadata?.match(/^https?/)
-      const storageProvidersToTry = [...(liaison && liaisonActive ? [liaison] : []), ...storageProvidersWithoutLiaison]
-      for (const storageProvider of storageProvidersToTry) {
-        const assetUrl = getAssetUrl(resolutionData, storageProvider.metadata ?? '')
-        if (!assetUrl) {
-          ConsoleLogger.warn('Unable to create asset url', resolutionData)
-          addAsset(contentId, {})
-          removePendingAsset(contentId)
-          removeAssetBeingResolved(contentId)
-          return
-        }
+      const distributors = await getAllDistributors(dataObject.storageBag.id)
+      if (!distributors) {
+        // TODO: potentially try to fetch distributors again
+        SentryLogger.error('No distributor was found for the storage bag', 'AssetsManager', null, {
+          asset: {
+            id: dataObject.id,
+            storageBagId: dataObject.storageBag.id,
+            type: dataObject.type.__typename,
+          },
+        })
+        return
+      }
 
-        const assetTestPromise = testAssetDownload(assetUrl, resolutionData.assetType)
+      const sortedDistributors = sortDistributors(distributors, dataObject)
 
-        const assetDetails: ResolvedAssetDetails = {
-          contentId,
-          storageProviderId: storageProvider.workerId,
-          storageProviderUrl: storageProvider.metadata,
-          assetType: resolutionData.assetType,
-          assetUrl,
-        }
+      for (const distributor of sortedDistributors) {
+        const assetUrl = createDistributorDataObjectUrl(distributor, dataObject)
 
-        assetTestPromise
-          .then((responseTime) => {
-            if (resolutionData.assetType === AssetType.MEDIA) {
-              // we're currently skipping monitoring video files as it's hard to measure their performance
-              // image assets are easy to measure but videos vary in length and size
-              // we will be able to handle that once we can access more detailed response timing
-              return
-            }
-
-            // if response takes <20ms assume it's coming from cache
-            // we shouldn't need that once we can do detailed timing, then we can check directly
-            if (responseTime > 20) {
-              AssetLogger.assetResponseMetric(assetDetails, responseTime)
-            }
-          })
-          .catch(() => {
-            AssetLogger.assetError(assetDetails)
-            ConsoleLogger.error('Failed to load asset', assetDetails)
-          })
+        const assetTestPromise = testAssetDownload(assetUrl, dataObject)
         const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
+        // TODO: test and enable back
+        // logDistributorPerformance(assetTestPromise, distributor, dataObject)
 
         try {
           await assetTestPromiseWithTimeout
-          addAsset(contentId, { url: assetUrl })
-          removePendingAsset(contentId)
-          removeAssetBeingResolved(contentId)
+          addAsset(dataObject.id, { url: assetUrl })
+          removePendingAsset(dataObject.id)
+          removeAssetBeingResolved(dataObject.id)
           return
-        } catch (e) {
-          // ignore anything else than TimeoutError as it will be handled by assetTestPromise.catch
-          if (e instanceof TimeoutError) {
-            AssetLogger.assetTimeout(assetDetails)
-            ConsoleLogger.warn('Asset load timed out', assetDetails)
+        } catch (err) {
+          if (err instanceof TimeoutError) {
+            // AssetLogger.assetTimeout(assetDetails)
+            ConsoleLogger.warn(`Distributor didn't respond in ${ASSET_RESPONSE_TIMEOUT} seconds`, {
+              dataObject,
+              distributor,
+            })
+          } else {
+            SentryLogger.error('Error during asset download test', 'AssetsManager', err, {
+              asset: { dataObject, distributor },
+            })
           }
         }
       }
 
-      SentryLogger.error('No storage provider was able to provide asset', 'AssetsManager', null, {
-        asset: {
-          contentId,
-          type: resolutionData.assetType,
-          storageProviderIds: storageProvidersToTry.map((sp) => sp.workerId),
-          storageProviderUrls: storageProvidersToTry.map((sp) => sp.metadata),
-        },
+      SentryLogger.error('None of the distributors provided the asset', 'AssetsManager', null, {
+        asset: { dataObject, sortedDistributors },
       })
     })
   }, [
     addAsset,
     addAssetBeingResolved,
     assetIdsBeingResolved,
-    getStorageProviders,
-    getRandomStorageProvider,
+    getAllDistributors,
     pendingAssets,
     removeAssetBeingResolved,
     removePendingAsset,
   ])
 
   return null
+}
+
+// deterministically sort distributors for a given dataObject
+// this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
+// TODO: geographical locations into the account, to offer a distributor physically closest to the client, this should ensure best response times
+const sortDistributors = (
+  distributors: DistributorInfo[],
+  dataObject: StorageDataObjectFieldsFragment
+): DistributorInfo[] => {
+  const dataObjectIdBn = new BN(dataObject.id)
+  const distributorsCountBn = new BN(distributors.length)
+  const firstDistributorIndex = dataObjectIdBn.mod(distributorsCountBn).toNumber()
+  return [...distributors.slice(firstDistributorIndex), ...distributors.slice(0, firstDistributorIndex)]
+}
+
+const createDistributorDataObjectUrl = (distributor: DistributorInfo, dataObject: StorageDataObjectFieldsFragment) => {
+  return joinUrlFragments(distributor.endpoint, 'api/v1/assets', dataObject.id)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const logDistributorPerformance = (
+  downloadTestPromise: Promise<number>,
+  distributor: DistributorInfo,
+  dataObject: StorageDataObjectFieldsFragment
+) => {
+  const eventEntry: DistributorEventEntry = {
+    distributorId: distributor.id,
+    distributorUrl: distributor.endpoint,
+    dataObjectId: dataObject.id,
+    dataObjectType: dataObject.type.__typename,
+  }
+
+  // TODO: enable detailed metrics with Resource Timing API https://developer.mozilla.org/en-US/docs/Web/API/Resource_Timing_API/Using_the_Resource_Timing_API#coping_with_cors
+  downloadTestPromise
+    .then((responseTime) => {
+      if (dataObject.type.__typename === 'DataObjectTypeVideoMedia') {
+        // we're currently skipping monitoring video files as it's hard to measure their performance
+        // image assets are easy to measure but videos vary in length and size
+        // we will be able to handle that once we can access more detailed response timing
+        return
+      }
+
+      // if response takes <20ms assume it's coming from cache
+      // we shouldn't need that once we can do detailed timing, then we can check directly
+      if (responseTime > 20) {
+        AssetLogger.assetResponseMetric(eventEntry, responseTime)
+      }
+    })
+    .catch((err) => {
+      AssetLogger.assetError(eventEntry)
+      throw err
+    })
 }

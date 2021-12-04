@@ -7456,7 +7456,7 @@ __metadata:
     "@graphql-tools/wrap": ^7.0.8
     "@joystream/content-metadata-protobuf": ~1.1.0
     "@joystream/prettier-config": ^1.0.0
-    "@joystream/types": 0.16.1
+    "@joystream/types": "file:./../monorepo/types"
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22
@@ -7532,6 +7532,7 @@ __metadata:
     react-use-hotjar: ^1.2.0
     react-use-measure: ^2.1.0
     retry-axios: ^2.4.0
+    rimraf: ^3.0.2
     rollup-plugin-visualizer: ^5.5.2
     scroll-lock: ^2.1.5
     storybook-builder-vite: ^0.1.10

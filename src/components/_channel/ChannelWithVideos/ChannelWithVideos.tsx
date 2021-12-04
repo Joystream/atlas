@@ -7,7 +7,7 @@ import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
@@ -45,7 +45,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset(channel?.avatarPhoto)
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
 
   const targetItemsCount = videosPerRow * videoRows

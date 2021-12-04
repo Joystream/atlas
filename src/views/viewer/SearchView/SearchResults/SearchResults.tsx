@@ -53,7 +53,9 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     setLanguage(selectedLanguage as string | null | undefined)
     setVideoWhereInput((value) => ({
       ...value,
-      languageId_eq: selectedLanguage as string,
+      language: {
+        iso_eq: selectedLanguage as string,
+      },
     }))
   }
 

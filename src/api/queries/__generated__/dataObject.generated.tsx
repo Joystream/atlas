@@ -16,12 +16,6 @@ export type GetDataObjectAvailabilityQuery = {
     id: string
     liaisonJudgement: Types.LiaisonJudgement
     joystreamContentId: string
-    videomediaDataObject?: Types.Maybe<
-      Array<{ __typename?: 'Video'; id: string; mediaAvailability: Types.AssetAvailability }>
-    >
-    videothumbnailPhotoDataObject?: Types.Maybe<
-      Array<{ __typename?: 'Video'; id: string; thumbnailPhotoAvailability: Types.AssetAvailability }>
-    >
   }>
 }
 
@@ -31,14 +25,6 @@ export const GetDataObjectAvailabilityDocument = gql`
       id
       liaisonJudgement
       joystreamContentId
-      videomediaDataObject {
-        id
-        mediaAvailability
-      }
-      videothumbnailPhotoDataObject {
-        id
-        thumbnailPhotoAvailability
-      }
     }
   }
 `

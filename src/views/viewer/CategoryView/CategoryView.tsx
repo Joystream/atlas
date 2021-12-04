@@ -17,7 +17,7 @@ import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
@@ -118,18 +118,15 @@ const useVideoHeroVideos = (featuredVideos: CategoriesFeaturedVideos[string] = [
       videoCutUrl: video?.videoCutUrl ?? '',
     }))
 
-  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset({
-    entity: videoHeroVideos?.[0]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset({
-    entity: videoHeroVideos?.[1]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset({
-    entity: videoHeroVideos?.[2]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
+  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset(
+    videoHeroVideos?.[0]?.video?.thumbnailPhoto
+  )
+  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset(
+    videoHeroVideos?.[1]?.video?.thumbnailPhoto
+  )
+  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset(
+    videoHeroVideos?.[2]?.video?.thumbnailPhoto
+  )
 
   if (!videoHeroVideos) return [null, null, null]
 

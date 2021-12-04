@@ -8,6 +8,7 @@ documents:
 config:
   scalars:
     DateTime: Date
+    BigInt: number
   preResolveTypes: true # avoid using Pick
 
 generates:

@@ -14,10 +14,11 @@ fragment LicenseFields on License {
 fragment BasicVideoFields on Video {
   id
   title
-  thumbnailPhotoUrls
-  thumbnailPhotoAvailability
-  thumbnailPhotoDataObject {
-    ...DataObjectFields
+  channel {
+    id
+  }
+  thumbnailPhoto {
+    ...StorageDataObjectFields
   }
 }
 
@@ -43,15 +44,11 @@ fragment VideoFields on Video {
   mediaMetadata {
     ...VideoMediaMetadataFields
   }
-  mediaUrls
-  mediaAvailability
-  mediaDataObject {
-    ...DataObjectFields
+  media {
+    ...StorageDataObjectFields
   }
-  thumbnailPhotoUrls
-  thumbnailPhotoAvailability
-  thumbnailPhotoDataObject {
-    ...DataObjectFields
+  thumbnailPhoto {
+    ...StorageDataObjectFields
   }
   channel {
     ...BasicChannelFields

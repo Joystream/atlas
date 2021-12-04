@@ -2,7 +2,6 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   AddVideoViewMutation,
-  AssetAvailability,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
   GetMostViewedVideosAllTimeQuery,
@@ -55,11 +54,17 @@ export const useChannelPreviewVideos = (
     ...opts,
     variables: {
       where: {
-        channelId_eq: channelId,
+        channel: {
+          id_eq: channelId,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
@@ -129,8 +134,12 @@ export const useMostViewedVideos = (
     {
       where: {
         id_in: mostViewedVideosIds,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
       },
@@ -159,10 +168,14 @@ export const useVideoCount = (
     variables: {
       ...variables,
       where: {
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
         isPublic_eq: true,
         isCensored_eq: false,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         ...variables?.where,
       },
     },

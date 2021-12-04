@@ -2,7 +2,6 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 import { useMemo } from 'react'
 
 import {
-  AssetAvailability,
   FollowChannelMutation,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
@@ -67,9 +66,15 @@ export const useChannelVideoCount = (
     ...opts,
     variables: {
       where: {
-        channelId_eq: channelId,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        channel: {
+          id_eq: channelId,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
         createdAt_gte: createdAt_gte,

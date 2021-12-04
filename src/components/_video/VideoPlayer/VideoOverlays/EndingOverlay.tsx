@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 import { SvgControlsPause, SvgControlsPlay, SvgControlsReplay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 
 import {
   Container,
@@ -47,10 +47,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
   const [isCountDownStarted, setIsCountDownStarted] = useState(false)
   const mdMatch = useMediaMatch('md')
 
-  const { url: randomNextVideoThumbnailUrl } = useAsset({
-    entity: randomNextVideo,
-    assetType: AssetType.THUMBNAIL,
-  })
+  const { url: randomNextVideoThumbnailUrl } = useAsset(randomNextVideo?.thumbnailPhoto)
 
   useEffect(() => {
     if (!randomNextVideo || !isEnded) {
