@@ -1,13 +1,12 @@
 import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { oldColors, sizes, transitions } from '@/styles'
+import { cVar, oldColors, sizes, transitions } from '@/styles'
 
-type ColorProps = { color: string }
+type ColorProps = { color?: string }
 type LoadingProps = { isLoading?: boolean }
 type VariantProps = { variantCategory?: 'default' | 'compact' }
 
@@ -97,15 +96,24 @@ export const Content = styled.div<VariantProps>`
   padding: ${({ variantCategory }) => (variantCategory === 'default' ? sizes(8) : sizes(4))};
 `
 
+export const CircleDefaultBackground = styled.div<ColorProps>`
+  position: absolute;
+  background: ${({ color = cVar('colorCoreNeutral300') }) => color};
+  opacity: 0.2;
+  width: 100%;
+  height: 100%;
+`
+
 export const IconCircle = styled.div<ColorProps>`
+  position: relative;
   display: flex;
+  overflow: hidden;
   margin-bottom: ${sizes(4)};
   align-items: center;
   justify-content: center;
   width: ${sizes(10)};
   height: ${sizes(10)};
   border-radius: 100%;
-  background: ${({ color }) => transparentize(0.8, color)};
 
   path {
     fill: ${({ color }) => color};
@@ -119,7 +127,6 @@ export const Title = styled(Text)<VariantProps>`
 // ref https://codeburst.io/how-to-pure-css-pie-charts-w-css-variables-38287aea161e
 export const PieChart = styled.div`
   margin-right: ${sizes(2)};
-  background: ${transparentize(0.8, '#7b8a95')};
   border-radius: 100%;
   height: ${sizes(4)};
   width: ${sizes(4)};

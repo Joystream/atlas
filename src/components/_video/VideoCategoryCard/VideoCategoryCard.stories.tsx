@@ -1,20 +1,40 @@
+import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+
+import { createApolloClient } from '@/api'
+import { SvgCategoriesAutosAndVehicles } from '@/components/_icons'
 
 import { VideoCategoryCard, VideoCategoryCardProps } from './VideoCategoryCard'
 
 import { FeaturedVideoCategoryCard } from '.'
 
 export default {
-  title: 'Shared/V/VideoCategoryCard',
-  argTypes: {
-    color: { defaultValue: '#D92E61' },
-    variant: { defaultValue: 'default' },
-    categoryId: { defaultValue: '1' },
-    videosTotalCount: { defaultValue: 300 },
-  },
+  title: 'video/VideoCategoryCard',
+  args: {
+    color: '#D92E61',
+    variant: 'default',
+    categoryId: '1',
+    videosTotalCount: 300,
+    icon: <SvgCategoriesAutosAndVehicles />,
+    title: 'Category',
+  } as VideoCategoryCardProps,
   component: VideoCategoryCard,
+  decorators: [
+    (Story) => {
+      const apolloClient = createApolloClient()
+
+      return (
+        <BrowserRouter>
+          <ApolloProvider client={apolloClient}>
+            <Story />
+          </ApolloProvider>
+        </BrowserRouter>
+      )
+    },
+  ],
 } as Meta
 
 const Template: Story<VideoCategoryCardProps> = (args) => {

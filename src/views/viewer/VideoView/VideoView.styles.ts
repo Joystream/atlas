@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
 import { Text } from '@/components/Text'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { breakpoints, cVar, media, oldColors, sizes } from '@/styles'
+import { cVar, media, oldColors, sizes } from '@/styles'
 
 export const StyledViewWrapper = styled(ViewWrapper)`
   display: flex;
@@ -42,14 +41,9 @@ export const InfoContainer = styled.div`
 export const Meta = styled(Text)`
   display: block;
   margin-top: ${sizes(1)};
-  color: ${oldColors.gray[300]};
-
-  ${fluidRange({ prop: 'fontSize', fromSize: '13px', toSize: '18px' }, breakpoints.xxs, breakpoints.xl)};
 `
 
 export const TitleText = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' }, breakpoints.xxs, breakpoints.xl)};
-
   word-break: break-word;
 `
 
