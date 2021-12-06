@@ -15,6 +15,12 @@ export enum CustomVideojsEvents {
   PauseControl = 'PAUSE_CONTROL',
 }
 
+export const isFullScreenEnabled =
+  document.fullscreenEnabled ||
+  document.webkitFullscreenEnabled ||
+  document.mozFullScreenEnabled ||
+  document.msFullscreenEnabled
+
 export const hotkeysHandler = (
   event: KeyboardEvent,
   playerInstance: VideoJsPlayer,
@@ -89,6 +95,9 @@ export const hotkeysHandler = (
       }
       return
     case 'KeyF':
+      if (!isFullScreenEnabled) {
+        return
+      }
       if (isFullscreen) {
         playerInstance.exitFullscreen()
       } else {

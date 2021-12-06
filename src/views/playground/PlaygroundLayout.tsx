@@ -12,7 +12,6 @@ import {
   Animations,
   AutomaticCrop,
   DesignTokens,
-  EmbeddedPlayer,
   FileHashing,
   GridTesting,
   ImageDownsizing,
@@ -45,7 +44,6 @@ const playgroundRoutes = [
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
   { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
-  { path: 'embedded-player', element: <EmbeddedPlayer />, name: 'Embedded Player' },
 ]
 
 const PlaygroundLayout = () => {

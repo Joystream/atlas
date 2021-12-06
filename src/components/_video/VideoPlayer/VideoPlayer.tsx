@@ -40,7 +40,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
-import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
+import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
@@ -423,11 +423,6 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       playVideo(player, true, () => setIsPlaying(true))
     }
   }
-  const isFullScreenEnabled =
-    document.fullscreenEnabled ||
-    document.webkitFullscreenEnabled ||
-    document.mozFullScreenEnabled ||
-    document.msFullscreenEnabled
 
   const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
