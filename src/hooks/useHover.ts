@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // Note: changing the ref to a different element after initialization will cause the hook to not work
 export const useHover = <T extends HTMLElement>() => {
@@ -6,8 +6,8 @@ export const useHover = <T extends HTMLElement>() => {
 
   const ref = useRef<T>(null)
 
-  const handleMouseOver = () => setValue(true)
-  const handleMouseOut = () => setValue(false)
+  const handleMouseOver = useCallback(() => setValue(true), [])
+  const handleMouseOut = useCallback(() => setValue(false), [])
 
   useEffect(() => {
     const node = ref.current
@@ -20,7 +20,7 @@ export const useHover = <T extends HTMLElement>() => {
         node.removeEventListener('mouseout', handleMouseOut)
       }
     }
-  }, [])
+  }, [handleMouseOut, handleMouseOver])
 
   return [ref, value] as const
 }
