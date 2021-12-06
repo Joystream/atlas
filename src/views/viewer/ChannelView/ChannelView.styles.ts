@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
@@ -52,9 +51,6 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
-
-  line-height: 1;
   margin-bottom: 0;
   padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
@@ -73,8 +69,6 @@ export const SortContainer = styled.div`
 `
 
 export const SubTitle = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
-
   padding: ${sizes(1)} ${sizes(2)};
   margin-top: ${sizes(1)};
   color: ${oldColors.gray[300]};
@@ -86,11 +80,11 @@ export const VideoSection = styled.section`
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
-  margin-bottom: ${sizes(3)};
+  margin: 0 ${sizes(5)} ${sizes(3)} 0;
   position: relative;
 
   ${media.sm} {
-    margin: 0 ${sizes(6)} 0 0;
+    margin: 0 ${sizes(5)} 0 0;
   }
 `
 

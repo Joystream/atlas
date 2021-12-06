@@ -23,6 +23,7 @@ import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
@@ -56,6 +57,7 @@ const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
   const videoRows = useVideoGridRows('main')
+  const xsMatch = useMediaMatch('xs')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
@@ -240,8 +242,8 @@ export const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant="h800">{channel.title}</Title>
-                <SubTitle variant="t200">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                <Title variant={xsMatch ? 'h700' : 'h500'}>{channel.title}</Title>
+                <SubTitle variant="t300">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (
               <>
