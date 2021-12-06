@@ -40,7 +40,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
-import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
+import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
@@ -58,6 +58,9 @@ export type VideoPlayerProps = {
 declare global {
   interface Document {
     readonly pictureInPictureEnabled: boolean
+    readonly webkitFullscreenEnabled: boolean
+    readonly mozFullScreenEnabled: boolean
+    readonly msFullscreenEnabled: boolean
     readonly pictureInPictureElement: Element
   }
 }
@@ -450,6 +453,9 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const handleFullScreen = (event: React.MouseEvent) => {
     event.stopPropagation()
+    if (!isFullScreenEnabled) {
+      return
+    }
     if (player?.isFullscreen()) {
       player?.exitFullscreen()
     } else {
@@ -467,6 +473,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const showPlayerControls = isLoaded && playerState
   const showControlsIndicator = playerState !== 'ended'
+
   return (
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
@@ -544,6 +551,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     </PlayerControlButton>
                   )}
                   <PlayerControlButton
+                    isDisabled={!isFullScreenEnabled}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}

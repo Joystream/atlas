@@ -1,11 +1,13 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
 type ControlButtonProps = {
   showTooltipOnlyOnFocus?: boolean
   disableFocus?: boolean
+  isDisabled?: boolean
 }
 
 export const ControlButton = styled.button<ControlButtonProps>`
@@ -18,16 +20,16 @@ export const ControlButton = styled.button<ControlButtonProps>`
   justify-content: center;
   position: relative;
   transition: background ${transitions.timings.player} ease-in;
+  ${({ isDisabled }) =>
+    isDisabled &&
+    css`
+      opacity: 0.5;
+    `}
 
   & > svg {
     filter: drop-shadow(0 1px 2px ${oldColors.transparentBlack[32]});
     width: 1.5em;
     height: 1.5em;
-  }
-
-  :active {
-    background-color: ${oldColors.transparentPrimary[10]};
-    backdrop-filter: blur(${sizes(8)});
   }
 
   @media (hover: hover) {
@@ -43,9 +45,9 @@ export const ControlButton = styled.button<ControlButtonProps>`
 
     :hover {
       ${media.xs} {
-        cursor: pointer;
-        background-color: ${oldColors.transparentPrimary[18]};
-        backdrop-filter: blur(${sizes(8)});
+        cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'pointer')};
+        background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorCoreNeutral700Lighten'))};
+        backdrop-filter: ${({ isDisabled }) => (isDisabled ? 'none' : `blur(${sizes(8)}) `)};
 
         ${() => ControlButtonTooltip} {
           opacity: ${({ showTooltipOnlyOnFocus }) => (showTooltipOnlyOnFocus ? 0 : 1)};
@@ -54,9 +56,8 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
 
     :active {
-      ${media.xs} {
-        background-color: ${oldColors.transparentPrimary[10]};
-      }
+      background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorCoreNeutral800Lighten'))};
+      backdrop-filter: ${({ isDisabled }) => (isDisabled ? 'none' : `blur(${sizes(8)}) `)};
     }
 
     :focus {
