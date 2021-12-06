@@ -58,17 +58,14 @@ export type VideoPlayerProps = {
 declare global {
   interface Document {
     readonly pictureInPictureEnabled: boolean
+    readonly webkitFullscreenEnabled: boolean
+    readonly mozFullScreenEnabled: boolean
+    readonly msFullscreenEnabled: boolean
     readonly pictureInPictureElement: Element
   }
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
-
-const isFullScreenEnabled =
-  'fullscreenEnabled' in document ||
-  'webkitFullscreenEnabled' in document ||
-  'mozFullScreenEnabled' in document ||
-  'msFullscreenEnabled' in document
 
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
@@ -426,6 +423,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       playVideo(player, true, () => setIsPlaying(true))
     }
   }
+  const isFullScreenEnabled =
+    document.fullscreenEnabled ||
+    document.webkitFullscreenEnabled ||
+    document.mozFullScreenEnabled ||
+    document.msFullscreenEnabled
 
   const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
