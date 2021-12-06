@@ -44,7 +44,6 @@ import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
-  allowFullscreen?: boolean
   isVideoPending?: boolean
   nextVideo?: VideoFieldsFragment | null
   className?: string
@@ -75,7 +74,6 @@ export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'p
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
-    allowFullscreen = true,
     isVideoPending,
     className,
     playing,
@@ -455,11 +453,10 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
     }
   }
-  const isFullScreenAllowed = isFullScreenEnabled && allowFullscreen
 
   const handleFullScreen = (event: React.MouseEvent) => {
     event.stopPropagation()
-    if (!isFullScreenAllowed) {
+    if (!isFullScreenEnabled) {
       return
     }
     if (player?.isFullscreen()) {
@@ -557,7 +554,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     </PlayerControlButton>
                   )}
                   <PlayerControlButton
-                    isDisabled={!isFullScreenAllowed}
+                    isDisabled={!isFullScreenEnabled}
                     tooltipPosition="right"
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}

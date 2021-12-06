@@ -54,8 +54,6 @@ export const EmbeddedView: React.FC = () => {
     })
   }, [addVideoView, videoId, channelId, categoryId])
 
-  const allowFullscreen = (window.frameElement as HTMLIFrameElement)?.allowFullscreen
-
   if (error) {
     return <ViewErrorFallback />
   }
@@ -89,7 +87,6 @@ export const EmbeddedView: React.FC = () => {
             fill
             startTime={startTimestamp}
             isEmbedded
-            allowFullscreen={allowFullscreen}
           />
         ) : (
           <PlayerSkeletonLoader />
