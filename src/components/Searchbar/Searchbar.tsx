@@ -137,7 +137,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }
 
     const onLastSelectedItem = useCallback(() => {
-      setSelectedItem(0)
+      setSelectedItem(null)
     }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
