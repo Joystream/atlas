@@ -1,11 +1,9 @@
 import ls from '@livesession/sdk'
 import React, { useCallback, useEffect } from 'react'
-import useHotjar from 'react-use-hotjar'
 
 import { BUILD_ENV, readEnv } from '@/config/envs'
 
 export const AnalyticsManager: React.FC = () => {
-  const { initHotjar } = useHotjar()
   const analyticsEnabled = BUILD_ENV === 'production'
 
   const initUsersnap = useCallback(() => {
@@ -23,15 +21,12 @@ export const AnalyticsManager: React.FC = () => {
 
   useEffect(() => {
     if (analyticsEnabled) {
-      // eslint-disable-next-line no-console
-      initHotjar(parseInt(readEnv('HOTJAR_ID')), 6, false, console.info)
-
       ls.init(readEnv('LIVESESSION_ID'), { keystrokes: true, rootHostname: '.joystream.org' })
       ls.newPageView()
 
       initUsersnap()
     }
-  }, [analyticsEnabled, initHotjar, initUsersnap])
+  }, [analyticsEnabled, initUsersnap])
 
   return null
 }

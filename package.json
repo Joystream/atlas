@@ -93,7 +93,6 @@
     "react-spring": "^9.3.2",
     "react-textarea-autosize": "^8.3.3",
     "react-transition-group": "^4.4.2",
-    "react-use-hotjar": "^1.2.0",
     "react-use-measure": "^2.1.0",
     "retry-axios": "^2.4.0",
     "scroll-lock": "^2.1.5",
