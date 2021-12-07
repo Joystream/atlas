@@ -1,8 +1,10 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { sizes } from '@/styles'
 
-export const TextInput = styled.input<{ leftNodeWidth: number; rightNodeWidth: number }>`
+type NodeWidth = { leftNodeWidth: number; rightNodeWidth: number }
+export const TextInput = styled.input<NodeWidth>`
   width: 100%;
   padding-left: ${({ leftNodeWidth }) => (leftNodeWidth ? `${leftNodeWidth}px !important` : 'inherit')};
   padding-right: ${({ rightNodeWidth }) => (rightNodeWidth ? `${rightNodeWidth}px !important` : 'inherit')};
@@ -12,7 +14,18 @@ export const TextFieldContainer = styled.div`
   position: relative;
 `
 
-export const NodeContainer = styled.div<{ left?: boolean }>`
+type PlacementProps = {
+  left?: boolean
+}
+const nodePlacementStyles = ({ left }: PlacementProps) =>
+  left
+    ? css`
+        left: 0;
+      `
+    : css`
+        right: 0;
+      `
+export const NodeContainer = styled.div<PlacementProps>`
   position: absolute;
   display: flex;
   align-items: center;
@@ -20,5 +33,5 @@ export const NodeContainer = styled.div<{ left?: boolean }>`
   z-index: 2;
   top: 0;
   padding: 0 ${sizes(4)};
-  ${({ left }) => (left ? 'left: 0px' : 'right: 0px')};
+  ${nodePlacementStyles};
 `
