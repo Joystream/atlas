@@ -25,9 +25,11 @@ In general the process for updating the featured content will look as follows:
 4. _Content admin_, using their credentials, makes assets publicly accessible and updates the featured content in Orion
 5. Changes are live in Atlas
 
-NOTE: for `category featured videos` the order of these will be the same as taken as the mutation submitted to Orion.
+IMPORTANT NOTE 1: for `category featured videos` the order of these will be the same as taken as the mutation submitted to Orion.
 * This means the first featured video (with an accompanying video file) will take the first spot in videos that show a preview.
 * For videos submitted with only an ID (and no video file) they will occupy the section below in the order submitted.
+
+IMPORTANT NOTE 2: Anytime a mutation is submitted, it will override whatever was previously set. So if you want to add/remove featured videos from categories--you must list all the ones you do want listed and remove those that you do not want listed anymore.
 
 ## Metadata structure
 
