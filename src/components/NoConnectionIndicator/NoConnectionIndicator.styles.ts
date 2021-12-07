@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { cVar, media, oldColors, sizes, zIndex } from '@/styles'
 
 export const CONNECTION_INDICATOR_CLASSNAME = 'connection-indicator'
-export const ENTER_TRANSITION_DELAY = 1000
+export const ENTER_TRANSITION_DELAY = 2500
 
 export const TextWrapper = styled.div`
   width: 100%;
