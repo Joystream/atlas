@@ -6,6 +6,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHover } from '@/hooks/useHover'
+import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { sizes, transitions } from '@/styles'
 
 import {
@@ -37,9 +38,9 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   variant = 'default',
   id,
 }) => {
+  const isTouchDevice = useTouchDevice()
   const [hoverRef, isVideoHovering] = useHover<HTMLAnchorElement>()
   const isLoading = !title && !videoUrl && !icon
-  const isTouchDevice = !!('ontouchstart' in window || navigator.maxTouchPoints)
   const isPlaying = !isTouchDevice ? isVideoHovering : true
   const categoryUrl = id ? absoluteRoutes.viewer.category(id) : ''
 
