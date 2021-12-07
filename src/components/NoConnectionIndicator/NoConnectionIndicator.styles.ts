@@ -33,6 +33,7 @@ export const IndicatorWrapper = styled.div`
   z-index: ${zIndex.globalOverlay};
   background-color: ${oldColors.gray[600]};
   padding: ${sizes(3)} ${sizes(5)};
+
   ${media.md} {
     margin-left: var(--size-sidenav-width-collapsed);
   }
@@ -43,6 +44,8 @@ export const IndicatorWrapper = styled.div`
 
   &.${CONNECTION_INDICATOR_CLASSNAME}-enter-active {
     opacity: 1;
+    transition: opacity ${cVar('animationTransitionMedium')};
+    transition-delay: opacity ${ENTER_TRANSITION_DELAY}ms;
   }
 
   &.${CONNECTION_INDICATOR_CLASSNAME}-exit {
@@ -51,11 +54,6 @@ export const IndicatorWrapper = styled.div`
 
   &.${CONNECTION_INDICATOR_CLASSNAME}-exit-active {
     opacity: 0;
-  }
-  &.${CONNECTION_INDICATOR_CLASSNAME}-enter-active, .${CONNECTION_INDICATOR_CLASSNAME}-exit-active {
     transition: opacity ${cVar('animationTransitionMedium')};
-  }
-  &.${CONNECTION_INDICATOR_CLASSNAME}-enter-active {
-    transition-delay: opacity ${ENTER_TRANSITION_DELAY}ms;
   }
 `
