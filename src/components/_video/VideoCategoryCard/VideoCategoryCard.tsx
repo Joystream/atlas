@@ -9,6 +9,7 @@ import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
+  CircleDefaultBackground,
   Content,
   CoverImg,
   CoverImgContainer,
@@ -72,7 +73,10 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
             {loading ? (
               <SkeletonLoader bottomSpace={sizes(4)} width="40px" height="40px" rounded />
             ) : (
-              <IconCircle color={color}>{icon}</IconCircle>
+              <IconCircle color={color}>
+                <CircleDefaultBackground color={color} />
+                {icon}
+              </IconCircle>
             )}
 
             {loading ? (
@@ -82,7 +86,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                 height={variant === 'default' ? '32px' : '20px'}
               />
             ) : (
-              <Title variantCategory={variant} variant={variant === 'default' ? 'h4' : 'h6'}>
+              <Title variantCategory={variant} variant={variant === 'default' ? 'h500' : 'h300'}>
                 {title}
               </Title>
             )}
@@ -93,9 +97,10 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
               ) : (
                 <>
                   <PieChart>
+                    <CircleDefaultBackground />
                     <PieSegment value={pieChartValue}></PieSegment>
                   </PieChart>
-                  <Text variant={variant === 'default' ? 'body2' : 'caption'} secondary>
+                  <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
                     {videoCount} videos
                   </Text>
                 </>

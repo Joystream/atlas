@@ -20,7 +20,7 @@ export const OptionCard = React.forwardRef<HTMLInputElement, OptionCardProps>(
     return (
       <OptionCardLabel disabled={disabled} checked={value === selectedValue} error={error} className={className}>
         <InputAndTitleWrapper>
-          <OptionCardTitle variant="subtitle1">{label}</OptionCardTitle>
+          <OptionCardTitle variant="h400">{label}</OptionCardTitle>
           <RadioInput
             {...props}
             ref={ref}
@@ -31,7 +31,7 @@ export const OptionCard = React.forwardRef<HTMLInputElement, OptionCardProps>(
             onChange={onChange}
           />
         </InputAndTitleWrapper>
-        <Text variant="caption" secondary>
+        <Text variant="t100" secondary>
           {helperText}
         </Text>
       </OptionCardLabel>

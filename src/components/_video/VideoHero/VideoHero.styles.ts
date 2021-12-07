@@ -68,6 +68,7 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
 `
 
 export const TitleContainer = styled.div`
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

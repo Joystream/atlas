@@ -73,10 +73,10 @@ export const Result: React.FC<ResultProps> = ({
           <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
-          <Title secondary={!selected} variant="button2">
+          <Title secondary={!selected} variant="t200-strong">
             <ResultTitle title={title} query={query} />
           </Title>
-          <Text secondary variant="caption">
+          <Text secondary variant="t100">
             {video ? video.channel.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
           </Text>
         </div>

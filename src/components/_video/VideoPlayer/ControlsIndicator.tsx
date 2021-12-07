@@ -6,10 +6,10 @@ import { Text } from '@/components/Text'
 import {
   SvgControlsPause,
   SvgControlsPlay,
-  SvgControlsSeekBackward10,
   SvgControlsSeekBackward5,
-  SvgControlsSeekForward10,
+  SvgControlsSeekBackward10,
   SvgControlsSeekForward5,
+  SvgControlsSeekForward10,
   SvgControlsSoundLowVolume,
   SvgControlsSoundOff,
   SvgControlsSoundOn,
@@ -93,7 +93,7 @@ export const ControlsIndicator: React.FC<ControlsIndicatorProps> = ({ player, is
         <ControlsIndicatorWrapper>
           <ControlsIndicatorIconWrapper>{indicator?.icon}</ControlsIndicatorIconWrapper>
           <ControlsIndicatorTooltip>
-            <Text variant="caption">{indicator?.description}</Text>
+            <Text variant="t100">{indicator?.description}</Text>
           </ControlsIndicatorTooltip>
         </ControlsIndicatorWrapper>
       </CSSTransition>

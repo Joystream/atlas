@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, oldColors, oldTypography, sizes, square, transitions, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
 export const HOVER_BORDER_SIZE = '2px'
 
@@ -115,7 +115,7 @@ export const CoverImage = styled.img<CoverImageProps>`
 export const CoverNoImage = styled.div`
   ${square('100%')}
 
-  background: linear-gradient(125deg, rgba(16, 18, 20, 1) 30%, rgba(34, 36, 38, 1) 65%, rgba(16, 18, 20, 1) 100%);
+  background: linear-gradient(125deg, rgb(16 18 20) 30%, rgb(34 36 38) 65%, rgb(16 18 20) 100%);
 `
 
 export const CoverThumbnailUploadFailed = styled.div`
@@ -191,7 +191,9 @@ export const CoverDurationOverlay = styled.div`
   padding: ${sizes(1.5)} ${sizes(2)};
   background-color: ${oldColors.black};
   color: ${oldColors.white};
-  font-size: ${oldTypography.sizes.body2};
+  font: ${cVar('typographyDesktopT200')};
+  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT200TextTransform')};
   z-index: ${zIndex.overlay};
 `
 

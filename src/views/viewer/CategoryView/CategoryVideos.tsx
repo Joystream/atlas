@@ -1,5 +1,6 @@
+import { Global } from '@emotion/react'
 import { isEqual } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -13,14 +14,16 @@ import { languages } from '@/config/languages'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
-  CategoryGlobalStyles,
   Container,
   ControlsContainer,
   StyledSelect,
   StyledSticky,
   StyledVideoGrid,
+  categoryGlobalStyles,
 } from './CategoryVideos.styles'
-import { FallbackWrapper } from './CategoryView.style'
+import { FallbackWrapper } from './CategoryView.styles'
+
+const SELECT_LANGUAGE_ITEMS = [{ name: 'All languages', value: 'undefined' }, ...languages]
 
 const ADAPTED_SORT_OPTIONS = [
   { name: 'newest', value: VideoOrderByInput.CreatedAtDesc },
@@ -76,13 +79,16 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
     setIsFiltersOpen((value) => !value)
   }
 
-  const handleSelectLanguage = (language: string | null | undefined) => {
-    setLanguage(language)
-    setVideoWhereInput((value) => ({
-      ...value,
-      languageId_eq: language === 'undefined' ? undefined : language,
-    }))
-  }
+  const handleSelectLanguage = useCallback(
+    (language: string | null | undefined) => {
+      setLanguage(language)
+      setVideoWhereInput((value) => ({
+        ...value,
+        languageId_eq: language === 'undefined' ? undefined : language,
+      }))
+    },
+    [setLanguage, setVideoWhereInput]
+  )
 
   const topbarHeight = mdMatch ? 80 : 64
 
@@ -98,19 +104,21 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   )
   return (
     <>
-      <CategoryGlobalStyles />
+      <Global styles={categoryGlobalStyles} />
       <Container ref={containerRef}>
         <StyledSticky style={{ top: topbarHeight - 1 }}>
           <ControlsContainer>
             <GridItem colSpan={{ base: 2, sm: 1 }}>
-              <Text variant={mdMatch ? 'h4' : 'h5'}>All videos {videoCount !== undefined && `(${videoCount})`}</Text>
+              <Text variant={mdMatch ? 'h500' : 'h400'}>
+                All videos {videoCount !== undefined && `(${videoCount})`}
+              </Text>
             </GridItem>
             {smMatch ? (
               <StyledSelect
                 onChange={handleSelectLanguage}
                 size="small"
                 value={language}
-                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                items={SELECT_LANGUAGE_ITEMS}
               />
             ) : (
               sortingNode

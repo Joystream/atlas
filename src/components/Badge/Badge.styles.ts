@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, oldTypography, sizes } from '@/styles'
+import { cVar, oldColors, sizes } from '@/styles'
 
 export const smallBadgeStyles = css`
   &[data-badge]::after {
@@ -13,9 +13,9 @@ export const smallBadgeStyles = css`
     border-radius: 100%;
     color: #fff;
     content: attr(data-badge);
-    font-size: ${oldTypography.sizes.caption};
-    font-weight: ${oldTypography.weights.regular};
-    font-family: ${oldTypography.fonts.base};
+    font: ${cVar('typographyDesktopT100')};
+    letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT100TextTransform')};
     padding-top: 1px;
     text-align: center;
   }

@@ -13,16 +13,17 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Pagination } from '@/components/Pagination'
-import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
+import { Select } from '@/components/_inputs/Select'
 import { VideoTile } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
@@ -39,7 +40,6 @@ import {
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
-  StyledSelect,
   StyledTabs,
   StyledTextField,
   SubTitle,
@@ -57,6 +57,7 @@ const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
   const videoRows = useVideoGridRows('main')
+  const xsMatch = useMediaMatch('xs')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
@@ -241,8 +242,8 @@ export const ChannelView: React.FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant="h1">{channel.title}</Title>
-                <SubTitle>{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                <Title variant={xsMatch ? 'h700' : 'h500'}>{channel.title}</Title>
+                <SubTitle variant="t300">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (
               <>
@@ -282,8 +283,10 @@ export const ChannelView: React.FC = () => {
           )}
           {currentTab === 'Videos' && (
             <SortContainer>
-              <Text variant="body2">Sort by</Text>
-              <StyledSelect
+              <Select
+                size="small"
+                labelPosition="left"
+                label="Sort by"
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
                 placeholder={isSearching ? 'Best match' : undefined}

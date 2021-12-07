@@ -1,5 +1,5 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
-import React, { Ref, forwardRef } from 'react'
+import React, { Ref, forwardRef, useMemo } from 'react'
 
 import { Badge } from '@/components/Badge'
 import { Tooltip } from '@/components/Tooltip'
@@ -79,13 +79,17 @@ export const _Select = <T extends unknown>(
     onSelectedItemChange: handleItemSelect,
   })
 
-  const selectedItem = items.find((item) => item.value === selectedItemValue)
+  const selectedItem = useMemo(() => items.find((item) => item.value === selectedItemValue), [items, selectedItemValue])
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
-          {label && <StyledLabelText labelPosition={labelPosition}>{label}</StyledLabelText>}
+          {label && (
+            <StyledLabelText variant="t200" labelPosition={labelPosition}>
+              {label}
+            </StyledLabelText>
+          )}
         </SelectLabel>
         <SelectMenuWrapper>
           <SelectButton
@@ -99,7 +103,7 @@ export const _Select = <T extends unknown>(
             size={size}
           >
             {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
-            {selectedItem?.badgeText && <Badge variant="caption">{selectedItem.badgeText}</Badge>}
+            {selectedItem?.badgeText && <Badge variant="t100">{selectedItem.badgeText}</Badge>}
             <SvgActionChevronB />
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>

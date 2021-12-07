@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { template, camelCase, isPlainObject } = require('lodash')
+const { template, camelCase } = require('lodash')
 
 const variablesTemplate = template(`import { css } from '@emotion/react'
 export const variables = css\`
@@ -9,26 +9,30 @@ export const variables = css\`
 export const theme = {
   <%= themeVariables %>
 }
-export const cVar = (key: keyof typeof theme) => {
-  return theme[key]
+export const cVar = (key: keyof typeof theme, returnValue?: boolean) => {
+  if (returnValue) return theme[key].value
+  return theme[key].variable
 }
 `)
 
 module.exports = {
   source: [`./src/styles/tokens/**/*.json`],
+  parsers: [
+    {
+      pattern: /\.json$/,
+      parse: ({ contents }) => {
+        // style dictionary requires adding ".value" suffix to all referenced value,  e.g.  "value": "{core.neutral.default.900}" should be  e.g.  "value": "{core.neutral.default.900.value}"
+        // this parser should fix it, although it just a workaround
+        // we could remove this when they do something about it https://github.com/amzn/style-dictionary/issues/721
+        const parsed = contents.replace(/}"|\.value}"/g, `.value}"`)
+        return JSON.parse(parsed)
+      },
+    },
+  ],
   transform: {
     removeDefaultFromName: {
       type: 'name',
       transformer: (token) => token.name.replace(/-default|-regular/g, ''),
-    },
-    referencedValueTransform: {
-      // style dictionary requires adding ".value" suffix to all referenced value,  e.g.  "value": "{core.neutral.default.900}" should be  e.g.  "value": "{core.neutral.default.900.value}"
-      // this transform should fix it, although it just a workaround
-      // we could remove this when they do something about it https://github.com/amzn/style-dictionary/issues/721
-      type: 'value',
-      transitive: true,
-      matcher: (token) => token.value?.value && token.type !== 'typedef',
-      transformer: (token) => token.value.value,
     },
     easingTransform: {
       type: 'value',
@@ -39,20 +43,31 @@ module.exports = {
     transitionTransform: {
       type: 'value',
       transitive: true,
-      matcher: (token) => token.attributes.type === 'transition' && token.value.timing && token.value.easing,
-      transformer: (token) => `${token.value.timing.value} ${token.value.easing.value}`,
+      matcher: (token) => token.attributes.type === 'transition',
+      transformer: (token) => `${token.value.timing} ${token.value.easing}`,
     },
     typographyValueTransform: {
       type: 'value',
       transitive: true,
-      matcher: (token) => token.attributes.type === 'textStyles' && isPlainObject(token.value),
+      matcher: (token) => token.attributes.type === 'textStyles',
       transformer: (token) =>
-        `${token.value.fontWeight.value} ${token.value.fontSize.value}/${token.value.lineHeight} ${token.value.fontFamily.value}`,
+        `${token.value.fontWeight} ${token.value.fontSize}/${token.value.lineHeight} ${token.value.fontFamily}`,
     },
     typographyNameTransform: {
       type: 'name',
       matcher: (token) => token.attributes.type === 'textStyles',
       transformer: (token) => token.name.replace(/-heading|-text|-styles/g, ''),
+    },
+    effectsTransform: {
+      type: 'value',
+      transitive: true,
+      matcher: (token) => token.attributes.category === 'effect',
+      transformer: (token) => {
+        const isDivider = token.attributes.type === 'dividers'
+        return `${isDivider ? 'inset' : ''} ${token.value.x} ${token.value.y} ${token.value.blur} ${
+          token.value.spread
+        } ${token.value.color}`
+      },
     },
   },
   format: {
@@ -93,7 +108,9 @@ module.exports = {
             return keyValuePair
           })
           .join('\n'),
-        themeVariables: convertedTokens.map((token) => `${camelCase(token.name)}: 'var(--${token.name})',`).join('\n'),
+        themeVariables: convertedTokens
+          .map((token) => `${camelCase(token.name)}: { variable: 'var(--${token.name})', value: '${token.value}' },`)
+          .join('\n'),
       })
     },
   },
@@ -105,9 +122,9 @@ module.exports = {
         'removeDefaultFromName',
         'typographyValueTransform',
         'typographyNameTransform',
-        'referencedValueTransform',
         'easingTransform',
         'transitionTransform',
+        'effectsTransform',
       ],
       buildPath: 'src/styles/generated/',
       files: [

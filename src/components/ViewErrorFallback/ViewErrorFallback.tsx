@@ -36,8 +36,8 @@ export const ViewErrorFallback: React.FC<ViewErrorFallbackProps> = ({ onResetCli
     <Container>
       <AnimatedError />
       <Message>
-        <Header variant="h3">Oops! An error occurred.</Header>
-        <Text variant="body1" secondary>
+        <Header variant="h600">Oops! An error occurred.</Header>
+        <Text variant="t300" secondary>
           Something bad happened and the app broke. This has been logged and we&apos;ll try to resolve it as soon as
           possible. You can find support in our Discord community.
         </Text>

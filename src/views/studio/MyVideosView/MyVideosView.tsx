@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useVideosConnection } from '@/api/hooks'
@@ -74,8 +74,8 @@ export const MyVideosView = () => {
   const drafts = [
     ...(_drafts.length ? ['new-video-tile' as const] : []),
     ...(sortVideosBy === VideoOrderByInput.CreatedAtDesc
-      ? _drafts.slice()?.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-      : _drafts.slice()?.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
+      ? _drafts.slice().sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      : _drafts.slice().sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())),
   ]
 
   const { edges, totalCount, loading, error, fetchMore, refetch, variables, pageInfo } = useVideosConnection(
@@ -134,6 +134,8 @@ export const MyVideosView = () => {
       }
     }
   }
+
+  const handleAddVideoTab = useCallback(() => addVideoTab(), [addVideoTab])
 
   type HandleVideoClickOpts = {
     draft?: boolean
@@ -232,7 +234,7 @@ export const MyVideosView = () => {
         .slice(videosPerPage * currentPage, currentPage * videosPerPage + videosPerPage)
         .map((draft, idx) => {
           if (draft === 'new-video-tile') {
-            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={() => addVideoTab()} />
+            return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
           }
           return (
             <VideoTilePublisher
@@ -248,7 +250,7 @@ export const MyVideosView = () => {
         })
     : videosWithSkeletonLoaders.map((video, idx) => {
         if (video === 'new-video-tile') {
-          return <NewVideoTile loading={loading} key={idx} onClick={() => addVideoTab()} />
+          return <NewVideoTile loading={loading} key={idx} onClick={handleAddVideoTab} />
         }
         return (
           <VideoTilePublisher
@@ -287,13 +289,13 @@ export const MyVideosView = () => {
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <StyledLimitedWidthContainer>
-      <StyledText variant="h2">My videos</StyledText>
+      <StyledText variant="h700">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"
           to={absoluteRoutes.studio.videoWorkspace()}
           icon={<SvgActionAddVideo />}
-          onClick={() => addVideoTab()}
+          onClick={handleAddVideoTab}
         >
           Upload video
         </MobileButton>
@@ -309,7 +311,7 @@ export const MyVideosView = () => {
               to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
               size="large"
-              onClick={() => addVideoTab()}
+              onClick={handleAddVideoTab}
             >
               Upload video
             </Button>
@@ -324,7 +326,7 @@ export const MyVideosView = () => {
               <Button
                 to={absoluteRoutes.studio.videoWorkspace()}
                 icon={<SvgActionAddVideo />}
-                onClick={() => addVideoTab()}
+                onClick={handleAddVideoTab}
               >
                 Upload video
               </Button>
@@ -387,7 +389,7 @@ export const MyVideosView = () => {
                   to={absoluteRoutes.studio.videoWorkspace()}
                   variant="secondary"
                   size="large"
-                  onClick={() => addVideoTab()}
+                  onClick={handleAddVideoTab}
                 >
                   Upload video
                 </Button>

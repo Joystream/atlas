@@ -19,13 +19,13 @@ function componentTemplate({ template }, opts, { imports, componentName, jsx }) 
   if (opts.typescript) {
     plugins.push('typescript')
   }
-
   const typeScriptTpl = template.smart({ plugins, preserveComments: true })
   return typeScriptTpl.ast`
     ${comment}
     ${imports}
     
-    export const ${componentName} = (props: React.SVGProps<SVGSVGElement>) => ${jsx}
+    export const ${componentName} = React.memo((props: React.SVGProps<SVGSVGElement>) => ${jsx})
+    ${componentName}.displayName = ${"'" + componentName.name + "'"}
   `
 }
 

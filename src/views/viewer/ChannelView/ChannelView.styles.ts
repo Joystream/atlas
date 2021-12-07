@@ -1,16 +1,14 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { fluidRange } from 'polished'
 
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { Select } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors, oldTypography, sizes, transitions } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -53,9 +51,6 @@ export const TitleContainer = styled.div`
 `
 
 export const Title = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '24px', toSize: '40px' })};
-
-  line-height: 1;
   margin-bottom: 0;
   padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
@@ -66,20 +61,14 @@ export const Title = styled(Text)`
 
 export const SortContainer = styled.div`
   grid-area: sort;
-  display: grid;
   grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: auto 1fr;
 
   ${media.sm} {
-    grid-template-columns: auto 1fr;
     grid-area: initial;
   }
 `
 
 export const SubTitle = styled(Text)`
-  ${fluidRange({ prop: 'fontSize', fromSize: '14px', toSize: '18px' })};
-
   padding: ${sizes(1)} ${sizes(2)};
   margin-top: ${sizes(1)};
   color: ${oldColors.gray[300]};
@@ -91,14 +80,11 @@ export const VideoSection = styled.section`
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
-  margin-bottom: ${sizes(3)};
+  margin: 0 ${sizes(5)} ${sizes(3)} 0;
   position: relative;
 
-  span {
-    font-size: ${oldTypography.sizes.h2};
-  }
   ${media.sm} {
-    margin: 0 ${sizes(6)} 0 0;
+    margin: 0 ${sizes(5)} 0 0;
   }
 `
 
@@ -148,12 +134,7 @@ export const TabsContainer = styled.div`
   display: grid;
   margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'tabs tabs tabs'
-    'search search search'
-    'sort sort sort';
-  grid-template-rows: 1fr auto auto;
+  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
   align-items: baseline;
   ${media.xs} {
     padding-top: ${sizes(8)};
@@ -161,10 +142,8 @@ export const TabsContainer = styled.div`
   ${media.sm} {
     align-items: center;
     border-bottom: solid 1px ${oldColors.gray[800]};
-    grid-template-areas: initial;
     gap: ${sizes(8)};
-    grid-template-rows: 1fr;
-    grid-template-columns: auto 1fr 250px;
+    grid-template: 1fr / auto 1fr 250px;
   }
 `
 
@@ -175,7 +154,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
   align-items: center;
-  margin: ${sizes(6)} 0 ${sizes(16)};
+  margin: ${sizes(6)} 0 ${sizes(2)} 0;
   position: relative;
   ${media.sm} {
     grid-area: initial;
@@ -213,8 +192,9 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${oldColors.blue[500]};
-    font-size: ${oldTypography.sizes.body2};
-    line-height: ${oldTypography.lineHeights.body2};
+    font: ${cVar('typographyDesktopT200')};
+    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopT200TextTransform')};
 
     ${media.sm} {
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
@@ -225,6 +205,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     }
 
     ::-webkit-search-cancel-button {
+      /* stylelint-disable-next-line property-no-vendor-prefix */
       -webkit-appearance: none;
     }
   }
@@ -246,12 +227,5 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
 
   ${media.sm} {
     ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
-  }
-`
-
-export const StyledSelect = styled(Select)`
-  button {
-    font-size: ${oldTypography.sizes.body2};
-    line-height: ${oldTypography.lineHeights.body2};
   }
 `

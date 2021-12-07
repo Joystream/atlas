@@ -47,7 +47,7 @@ export const UploadFiles = () => {
       {uploads.length > 0 ? (
         <pre>{JSON.stringify(uploads, undefined, 2)}</pre>
       ) : (
-        <p style={{ color: 'rgba(255,255,255,0.3)' }}>Add file</p>
+        <p style={{ color: 'rgba(255 255 255 / 0.3)' }}>Add file</p>
       )}
     </div>
   )

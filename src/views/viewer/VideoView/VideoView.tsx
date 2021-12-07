@@ -12,6 +12,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { AssetType, useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -40,6 +41,7 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
+  const xsMatch = useMediaMatch('sm')
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
@@ -106,16 +108,18 @@ export const VideoView: React.FC = () => {
 
   const replaceUrls = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g
-    const parts: string[] | React.ReactNodeArray = text.split(urlRegex) || []
-    for (let i = 1; i < parts.length; i += 2) {
-      const part = parts[i] as string
-      parts[i] = (
-        <Button size="large" textOnly key={`description-link-${i}`} to={part}>
+    const parts = text.split(urlRegex)
+    return parts.reduce((acc, part, idx) => {
+      const node = urlRegex.test(part) ? (
+        <Button size="large" textOnly key={`description-link-${idx}`} to={part}>
           {part}
         </Button>
+      ) : (
+        part
       )
-    }
-    return parts
+
+      return [...acc, node]
+    }, [] as React.ReactNode[])
   }
 
   if (error) {
@@ -161,12 +165,16 @@ export const VideoView: React.FC = () => {
         </PlayerContainer>
       </PlayerWrapper>
       <InfoContainer className={transitions.names.slide}>
-        {video ? <TitleText variant="h2">{video.title}</TitleText> : <SkeletonLoader height={46} width={400} />}
-        <Meta variant="subtitle1">
+        {video ? (
+          <TitleText variant={xsMatch ? 'h700' : 'h500'}>{video.title}</TitleText>
+        ) : (
+          <SkeletonLoader height={xsMatch ? 56 : 32} width={400} />
+        )}
+        <Meta variant="t300" secondary>
           {video ? (
             formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
           ) : (
-            <SkeletonLoader height={18} width={200} />
+            <SkeletonLoader height={24} width={200} />
           )}
         </Meta>
         <ChannelContainer>

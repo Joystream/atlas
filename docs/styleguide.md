@@ -72,7 +72,6 @@ export const Container = styled.div`
 `
 
 export const Button = styled.button`
-    font-size: ${oldTypography.sizes.h1};
     padding: ${sizes(4)};
     ${blueOnIfPressed};
 ` 

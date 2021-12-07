@@ -31,7 +31,7 @@ export const CallToActionButton: FC<CallToActionButtonProps> = ({
     <StyledContainer {...linkProps} onClick={onClick} colorVariant={colorVariant}>
       <ContentWrapper>
         <IconWrapper colorVariant={colorVariant === 'blue' ? 'lightBlue' : colorVariant}>{icon}</IconWrapper>
-        <BodyWrapper variant={xsMatch ? 'h5' : 'h6'}>
+        <BodyWrapper variant={xsMatch ? 'h400' : 'h300'}>
           {label}
           <SvgActionChevronR />
         </BodyWrapper>

@@ -12,7 +12,7 @@ const Link: React.FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
   return (
     <NavLink to={to} active={match}>
       {icon}
-      <NavTitle variant="button3">{name}</NavTitle>
+      <NavTitle variant="t100-strong">{name}</NavTitle>
     </NavLink>
   )
 }

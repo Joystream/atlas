@@ -2,7 +2,6 @@
 export * from './AccountCreationIllustration'
 export * from './AvatarSilhouette'
 export * from './BgPattern'
-export * from './CoinsIllustration'
 export * from './EmptyStateIllustration'
 export * from './JoystreamLogoFull'
 export * from './JoystreamLogoIcon'

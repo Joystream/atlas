@@ -10,12 +10,10 @@ export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   border-top: 1px solid ${oldColors.gray[700]};
   display: grid;
   padding: ${sizes(4)};
-  grid-template-rows: auto auto;
-  grid-template-columns: 1fr;
   z-index: ${zIndex.header};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
-  grid-template-areas: 'primary-text badge' 'primary-button primary-button';
+  grid-template: 'primary-text badge' auto 'primary-button primary-button' auto / 1fr;
 
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;

@@ -8,7 +8,7 @@ export type IconButtonProps = Omit<ButtonBaseProps, 'textOnly'> & {
   children: ReactNode
 }
 
-// Use normal Button component with IconOnly instad if possible
+// DEP Use normal Button component with IconOnly instad if possible
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = 'primary', children, ...buttonBaseProps }, ref) => {
     return (

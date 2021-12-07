@@ -20,6 +20,6 @@ export const CategoriesContainer = styled(LayoutGrid)`
 
 export const FallbackWrapper = styled.div`
   ${media.sm} {
-    margin: 184px auto 124px auto;
+    margin: 184px auto 124px;
   }
 `

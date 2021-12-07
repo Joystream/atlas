@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -10,28 +11,35 @@ type FocusProps = {
   hasFocus: boolean
 }
 
+const topbarFocusStyles = ({ hasFocus }: FocusProps) =>
+  hasFocus
+    ? css`
+        left: var(--size-sidenav-width-collapsed);
+        z-index: ${zIndex.globalOverlay};
+        background-color: ${oldColors.gray[900]};
+
+        ${media.md} {
+          /*
+          *  We need to change left and padding properties when search is open, because of problem with z-indexes between
+          *  hamburger and TopBar. When search is open, TopBar must have higher z-index which cause hiding the hamburger
+          *  behind TopBar. By moving the TopBar to the right, the hamburger remains visible.
+          */
+          left: var(--size-sidenav-width-collapsed);
+          padding-left: ${sizes(8)};
+        }
+      `
+    : css`
+        background-color: ${oldColors.black};
+      `
+
 export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
   transition: background-color 0.4s ${transitions.easing};
-  background-color: ${({ hasFocus }) => (hasFocus ? oldColors.gray[900] : oldColors.black)};
-  ${({ hasFocus }) => hasFocus && `z-index: ${zIndex.globalOverlay}`};
-
-  ${media.md} {
-    /**
-    *  We need to change left and padding properties when search is open, because of problem with z-indexes between
-    *  hamburger and TopBar. When search is open, TopBar must have higher z-index which cause hiding the hamburger
-    *  behind TopBar. By moving the TopBar to the right, the hamburger remains visible.
-    */
-
-    left: ${({ hasFocus }) => (hasFocus ? 'var(--size-sidenav-width-collapsed)' : 0)};
-    padding: ${({ hasFocus }) => `${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
-    ${hasFocus ? sizes(8) : `calc(var(--size-sidenav-width-collapsed) + ${sizes(8)})`}`};
-  }
+  ${topbarFocusStyles};
 
   &.topbar-exit {
     z-index: ${zIndex.globalOverlay};
   }
 `
-
 export const SearchbarContainer = styled.div`
   display: flex;
   width: 100%;

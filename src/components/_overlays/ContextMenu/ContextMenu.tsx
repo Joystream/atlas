@@ -15,7 +15,7 @@ export const ContextMenuItem: React.FC<MenuItemProps> = React.memo(({ icon, onCl
   return (
     <StyledMenuItem onClick={onClick}>
       {icon}
-      <StyledText>{title}</StyledText>
+      <StyledText variant="t200">{title}</StyledText>
     </StyledMenuItem>
   )
 })

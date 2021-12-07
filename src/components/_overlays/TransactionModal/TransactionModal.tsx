@@ -97,7 +97,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
         >
           <PolkadotLogoWrapper>
             <StyledPolkadotLogo />
-            <Text secondary variant="caption">
+            <Text secondary variant="t100">
               Continue in Polkadot extension
             </Text>
           </PolkadotLogoWrapper>

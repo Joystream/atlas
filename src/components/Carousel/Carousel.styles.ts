@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { media, oldColors, oldTypography, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -14,7 +14,9 @@ export const Arrow = styled(IconButton)`
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
   padding: ${sizes(2)};
-  font-size: ${oldTypography.sizes.subtitle2};
+  font: ${cVar('typographyDesktopH200')};
+  letter-spacing: ${cVar('typographyDesktopH200LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopH200TextTransform')};
 
   ${media.md} {
     display: block;

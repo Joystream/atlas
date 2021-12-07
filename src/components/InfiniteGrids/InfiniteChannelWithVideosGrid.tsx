@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useState } from 'react'
+import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
 
 import {
   ChannelEdge,
@@ -63,16 +63,19 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     setTargetRowsCount((prevState) => prevState + 3)
   }, [])
 
-  const queryVariables: GetChannelsConnectionQueryVariables = {
-    ...(first ? { first } : {}),
-    ...(orderBy ? { orderBy } : {}),
-    where: {
-      ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
-      ...(idIn ? { id_in: idIn } : {}),
-      isPublic_eq: true,
-      isCensored_eq: false,
-    },
-  }
+  const queryVariables: GetChannelsConnectionQueryVariables = useMemo(
+    () => ({
+      ...(first ? { first } : {}),
+      ...(orderBy ? { orderBy } : {}),
+      where: {
+        ...(selectedLanguage ? { languageId_eq: selectedLanguage } : {}),
+        ...(idIn ? { id_in: idIn } : {}),
+        isPublic_eq: true,
+        isCensored_eq: false,
+      },
+    }),
+    [first, idIn, orderBy, selectedLanguage]
+  )
 
   const { displayedItems, placeholdersCount, loading, error, totalCount } = useInfiniteGrid<
     GetChannelsConnectionQuery,
@@ -111,7 +114,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       <GridHeadingContainer>
         {title && (
           <TitleContainer>
-            {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h4">{title}</Text>}
+            {!isReady ? <SkeletonLoader height={23} width={250} /> : <Text variant="h500">{title}</Text>}
             {languageSelector && (
               <LanguageSelectWrapper>
                 <Select items={languages} value={selectedLanguage} size="small" onChange={onSelectLanguage} />

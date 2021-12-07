@@ -6,11 +6,7 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { oldColors, oldTypography, sizes, square } from '@/styles'
-
-type SizeProps = {
-  size?: 'small' | 'big'
-}
+import { oldColors, sizes, square } from '@/styles'
 
 type ChannelProps = {
   channelClickable: boolean
@@ -116,10 +112,9 @@ export const StyledAvatar = styled(Avatar)<ChannelProps>`
   cursor: ${({ channelClickable }) => (channelClickable ? 'pointer' : 'auto')};
 `
 
-export const TitleHeader = styled(Text)<ClickableProps & SizeProps>`
-  font-size: ${({ size }) => (size === 'small' ? oldTypography.sizes.h6 : oldTypography.sizes.subtitle1)};
-  line-height: ${({ size }) => (size === 'small' ? oldTypography.lineHeights.h6 : oldTypography.lineHeights.subtitle1)};
+export const TitleHeader = styled(Text)<ClickableProps>`
   cursor: ${(props) => (props.clickable ? 'pointer' : 'auto')};
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

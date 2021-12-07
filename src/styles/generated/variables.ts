@@ -112,6 +112,16 @@ export const variables = css`
     --color-background-success-muted: var(--color-core-green-600);
     --color-background-success: var(--color-core-green-500);
     --color-background-success-strong: var(--color-core-green-400);
+    --effect-dividers-top: inset 0 1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-bottom: inset 0 -1px 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-left: inset 1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-dividers-right: inset -1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-elevation-8-layer1: 0 8px 16px 0 #0000001f;
+    --effect-elevation-8-layer2: 0 4px 4px 0 #0000001a;
+    --effect-elevation-16-layer1: 0 16px 32px 0 #00000029;
+    --effect-elevation-16-layer2: 0 4px 8px 0 #0000001a;
+    --effect-elevation-24-layer1: 0 24px 40px 0 #00000029;
+    --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
@@ -154,17 +164,17 @@ export const variables = css`
     --typography-desktop-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-desktop-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-h900: var(--typography-font-weights-semibold) var(--typography-font-sizes-8) / 2.5rem
       var(--typography-fonts-primary);
     --typography-mobile-h800: var(--typography-font-weights-semibold) var(--typography-font-sizes-7) / 2rem
@@ -184,17 +194,17 @@ export const variables = css`
     --typography-mobile-h100: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
       var(--typography-fonts-primary);
     --typography-mobile-t300: var(--typography-font-weights-normal) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t300-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-3) / 1.5rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200: var(--typography-font-weights-normal) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t200-strong: var(--typography-font-weights-semibold) var(--typography-font-sizes-2) / 1.25rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100: var(--typography-font-weights-medium) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-mobile-t100-strong: var(--typography-font-weights-bold) var(--typography-font-sizes-1) / 1rem
-      var(--typography-fonts-primary);
+      var(--typography-fonts-secondary);
     --typography-desktop-h900-letter-spacing: -0.01em;
     --typography-desktop-h800-letter-spacing: -0.005em;
     --typography-desktop-h700-letter-spacing: 0;
@@ -258,228 +268,412 @@ export const variables = css`
   }
 `
 export const theme = {
-  animationTimingFast: 'var(--animation-timing-fast)',
-  animationTimingMedium: 'var(--animation-timing-medium)',
-  animationTimingSlow: 'var(--animation-timing-slow)',
-  animationEasingFast: 'var(--animation-easing-fast)',
-  animationEasingMedium: 'var(--animation-easing-medium)',
-  animationEasingBounce: 'var(--animation-easing-bounce)',
-  animationTransitionFast: 'var(--animation-transition-fast)',
-  animationTransitionMedium: 'var(--animation-transition-medium)',
-  animationTransitionSlow: 'var(--animation-transition-slow)',
-  animationTransitionCallout: 'var(--animation-transition-callout)',
-  colorCoreNeutral50: 'var(--color-core-neutral-50)',
-  colorCoreNeutral50Lighten: 'var(--color-core-neutral-50-lighten)',
-  colorCoreNeutral50Darken: 'var(--color-core-neutral-50-darken)',
-  colorCoreNeutral100: 'var(--color-core-neutral-100)',
-  colorCoreNeutral100Lighten: 'var(--color-core-neutral-100-lighten)',
-  colorCoreNeutral100Darken: 'var(--color-core-neutral-100-darken)',
-  colorCoreNeutral200: 'var(--color-core-neutral-200)',
-  colorCoreNeutral200Lighten: 'var(--color-core-neutral-200-lighten)',
-  colorCoreNeutral200Darken: 'var(--color-core-neutral-200-darken)',
-  colorCoreNeutral300: 'var(--color-core-neutral-300)',
-  colorCoreNeutral300Lighten: 'var(--color-core-neutral-300-lighten)',
-  colorCoreNeutral300Darken: 'var(--color-core-neutral-300-darken)',
-  colorCoreNeutral400: 'var(--color-core-neutral-400)',
-  colorCoreNeutral400Lighten: 'var(--color-core-neutral-400-lighten)',
-  colorCoreNeutral400Darken: 'var(--color-core-neutral-400-darken)',
-  colorCoreNeutral500: 'var(--color-core-neutral-500)',
-  colorCoreNeutral500Lighten: 'var(--color-core-neutral-500-lighten)',
-  colorCoreNeutral500Darken: 'var(--color-core-neutral-500-darken)',
-  colorCoreNeutral600: 'var(--color-core-neutral-600)',
-  colorCoreNeutral600Lighten: 'var(--color-core-neutral-600-lighten)',
-  colorCoreNeutral600Darken: 'var(--color-core-neutral-600-darken)',
-  colorCoreNeutral700: 'var(--color-core-neutral-700)',
-  colorCoreNeutral700Lighten: 'var(--color-core-neutral-700-lighten)',
-  colorCoreNeutral700Darken: 'var(--color-core-neutral-700-darken)',
-  colorCoreNeutral800: 'var(--color-core-neutral-800)',
-  colorCoreNeutral800Lighten: 'var(--color-core-neutral-800-lighten)',
-  colorCoreNeutral800Darken: 'var(--color-core-neutral-800-darken)',
-  colorCoreNeutral900: 'var(--color-core-neutral-900)',
-  colorCoreNeutral900Lighten: 'var(--color-core-neutral-900-lighten)',
-  colorCoreNeutral900Darken: 'var(--color-core-neutral-900-darken)',
-  colorCoreBlue50: 'var(--color-core-blue-50)',
-  colorCoreBlue100: 'var(--color-core-blue-100)',
-  colorCoreBlue200: 'var(--color-core-blue-200)',
-  colorCoreBlue300: 'var(--color-core-blue-300)',
-  colorCoreBlue400: 'var(--color-core-blue-400)',
-  colorCoreBlue500: 'var(--color-core-blue-500)',
-  colorCoreBlue600: 'var(--color-core-blue-600)',
-  colorCoreBlue700: 'var(--color-core-blue-700)',
-  colorCoreBlue800: 'var(--color-core-blue-800)',
-  colorCoreBlue900: 'var(--color-core-blue-900)',
-  colorCoreGreen50: 'var(--color-core-green-50)',
-  colorCoreGreen100: 'var(--color-core-green-100)',
-  colorCoreGreen200: 'var(--color-core-green-200)',
-  colorCoreGreen300: 'var(--color-core-green-300)',
-  colorCoreGreen400: 'var(--color-core-green-400)',
-  colorCoreGreen500: 'var(--color-core-green-500)',
-  colorCoreGreen600: 'var(--color-core-green-600)',
-  colorCoreGreen700: 'var(--color-core-green-700)',
-  colorCoreGreen800: 'var(--color-core-green-800)',
-  colorCoreGreen900: 'var(--color-core-green-900)',
-  colorCoreRed50: 'var(--color-core-red-50)',
-  colorCoreRed100: 'var(--color-core-red-100)',
-  colorCoreRed200: 'var(--color-core-red-200)',
-  colorCoreRed300: 'var(--color-core-red-300)',
-  colorCoreRed400: 'var(--color-core-red-400)',
-  colorCoreRed500: 'var(--color-core-red-500)',
-  colorCoreRed600: 'var(--color-core-red-600)',
-  colorCoreRed700: 'var(--color-core-red-700)',
-  colorCoreRed800: 'var(--color-core-red-800)',
-  colorCoreRed900: 'var(--color-core-red-900)',
-  colorCoreYellow50: 'var(--color-core-yellow-50)',
-  colorCoreYellow100: 'var(--color-core-yellow-100)',
-  colorCoreYellow200: 'var(--color-core-yellow-200)',
-  colorCoreYellow300: 'var(--color-core-yellow-300)',
-  colorCoreYellow400: 'var(--color-core-yellow-400)',
-  colorCoreYellow500: 'var(--color-core-yellow-500)',
-  colorCoreYellow600: 'var(--color-core-yellow-600)',
-  colorCoreYellow700: 'var(--color-core-yellow-700)',
-  colorCoreYellow800: 'var(--color-core-yellow-800)',
-  colorCoreYellow900: 'var(--color-core-yellow-900)',
-  colorTextMuted: 'var(--color-text-muted)',
-  colorText: 'var(--color-text)',
-  colorTextStrong: 'var(--color-text-strong)',
-  colorTextPrimary: 'var(--color-text-primary)',
-  colorTextError: 'var(--color-text-error)',
-  colorTextSuccess: 'var(--color-text-success)',
-  colorBorderMuted: 'var(--color-border-muted)',
-  colorBorderMutedAlpha: 'var(--color-border-muted-alpha)',
-  colorBorder: 'var(--color-border)',
-  colorBorderAlpha: 'var(--color-border-alpha)',
-  colorBorderStrong: 'var(--color-border-strong)',
-  colorBorderStrongAlpha: 'var(--color-border-strong-alpha)',
-  colorBackgroundMuted: 'var(--color-background-muted)',
-  colorBackgroundMutedAlpha: 'var(--color-background-muted-alpha)',
-  colorBackground: 'var(--color-background)',
-  colorBackgroundAlpha: 'var(--color-background-alpha)',
-  colorBackgroundStrong: 'var(--color-background-strong)',
-  colorBackgroundStrongAlpha: 'var(--color-background-strong-alpha)',
-  colorBackgroundElevated: 'var(--color-background-elevated)',
-  colorBackgroundElevatedAlpha: 'var(--color-background-elevated-alpha)',
-  colorBackgroundOverlay: 'var(--color-background-overlay)',
-  colorBackgroundPrimaryMuted: 'var(--color-background-primary-muted)',
-  colorBackgroundPrimary: 'var(--color-background-primary)',
-  colorBackgroundPrimaryStrong: 'var(--color-background-primary-strong)',
-  colorBackgroundErrorMuted: 'var(--color-background-error-muted)',
-  colorBackgroundError: 'var(--color-background-error)',
-  colorBackgroundErrorStrong: 'var(--color-background-error-strong)',
-  colorBackgroundSuccessMuted: 'var(--color-background-success-muted)',
-  colorBackgroundSuccess: 'var(--color-background-success)',
-  colorBackgroundSuccessStrong: 'var(--color-background-success-strong)',
-  typographyFontsPrimary: 'var(--typography-fonts-primary)',
-  typographyFontsSecondary: 'var(--typography-fonts-secondary)',
-  typographyFontSizes1: 'var(--typography-font-sizes-1)',
-  typographyFontSizes2: 'var(--typography-font-sizes-2)',
-  typographyFontSizes3: 'var(--typography-font-sizes-3)',
-  typographyFontSizes4: 'var(--typography-font-sizes-4)',
-  typographyFontSizes5: 'var(--typography-font-sizes-5)',
-  typographyFontSizes6: 'var(--typography-font-sizes-6)',
-  typographyFontSizes7: 'var(--typography-font-sizes-7)',
-  typographyFontSizes8: 'var(--typography-font-sizes-8)',
-  typographyFontSizes9: 'var(--typography-font-sizes-9)',
-  typographyFontSizes10: 'var(--typography-font-sizes-10)',
-  typographyFontSizes11: 'var(--typography-font-sizes-11)',
-  typographyFontSizes12: 'var(--typography-font-sizes-12)',
-  typographyFontSizes13: 'var(--typography-font-sizes-13)',
-  typographyFontSizes14: 'var(--typography-font-sizes-14)',
-  typographyFontWeightsLight: 'var(--typography-font-weights-light)',
-  typographyFontWeightsNormal: 'var(--typography-font-weights-normal)',
-  typographyFontWeightsMedium: 'var(--typography-font-weights-medium)',
-  typographyFontWeightsSemibold: 'var(--typography-font-weights-semibold)',
-  typographyFontWeightsBold: 'var(--typography-font-weights-bold)',
-  typographyDesktopH900: 'var(--typography-desktop-h900)',
-  typographyDesktopH800: 'var(--typography-desktop-h800)',
-  typographyDesktopH700: 'var(--typography-desktop-h700)',
-  typographyDesktopH600: 'var(--typography-desktop-h600)',
-  typographyDesktopH500: 'var(--typography-desktop-h500)',
-  typographyDesktopH400: 'var(--typography-desktop-h400)',
-  typographyDesktopH300: 'var(--typography-desktop-h300)',
-  typographyDesktopH200: 'var(--typography-desktop-h200)',
-  typographyDesktopH100: 'var(--typography-desktop-h100)',
-  typographyDesktopT300: 'var(--typography-desktop-t300)',
-  typographyDesktopT300Strong: 'var(--typography-desktop-t300-strong)',
-  typographyDesktopT200: 'var(--typography-desktop-t200)',
-  typographyDesktopT200Strong: 'var(--typography-desktop-t200-strong)',
-  typographyDesktopT100: 'var(--typography-desktop-t100)',
-  typographyDesktopT100Strong: 'var(--typography-desktop-t100-strong)',
-  typographyMobileH900: 'var(--typography-mobile-h900)',
-  typographyMobileH800: 'var(--typography-mobile-h800)',
-  typographyMobileH700: 'var(--typography-mobile-h700)',
-  typographyMobileH600: 'var(--typography-mobile-h600)',
-  typographyMobileH500: 'var(--typography-mobile-h500)',
-  typographyMobileH400: 'var(--typography-mobile-h400)',
-  typographyMobileH300: 'var(--typography-mobile-h300)',
-  typographyMobileH200: 'var(--typography-mobile-h200)',
-  typographyMobileH100: 'var(--typography-mobile-h100)',
-  typographyMobileT300: 'var(--typography-mobile-t300)',
-  typographyMobileT300Strong: 'var(--typography-mobile-t300-strong)',
-  typographyMobileT200: 'var(--typography-mobile-t200)',
-  typographyMobileT200Strong: 'var(--typography-mobile-t200-strong)',
-  typographyMobileT100: 'var(--typography-mobile-t100)',
-  typographyMobileT100Strong: 'var(--typography-mobile-t100-strong)',
-  typographyDesktopH900LetterSpacing: 'var(--typography-desktop-h900-letter-spacing)',
-  typographyDesktopH800LetterSpacing: 'var(--typography-desktop-h800-letter-spacing)',
-  typographyDesktopH700LetterSpacing: 'var(--typography-desktop-h700-letter-spacing)',
-  typographyDesktopH600LetterSpacing: 'var(--typography-desktop-h600-letter-spacing)',
-  typographyDesktopH500LetterSpacing: 'var(--typography-desktop-h500-letter-spacing)',
-  typographyDesktopH400LetterSpacing: 'var(--typography-desktop-h400-letter-spacing)',
-  typographyDesktopH300LetterSpacing: 'var(--typography-desktop-h300-letter-spacing)',
-  typographyDesktopH200LetterSpacing: 'var(--typography-desktop-h200-letter-spacing)',
-  typographyDesktopH100LetterSpacing: 'var(--typography-desktop-h100-letter-spacing)',
-  typographyDesktopT300LetterSpacing: 'var(--typography-desktop-t300-letter-spacing)',
-  typographyDesktopT300StrongLetterSpacing: 'var(--typography-desktop-t300-strong-letter-spacing)',
-  typographyDesktopT200LetterSpacing: 'var(--typography-desktop-t200-letter-spacing)',
-  typographyDesktopT200StrongLetterSpacing: 'var(--typography-desktop-t200-strong-letter-spacing)',
-  typographyDesktopT100LetterSpacing: 'var(--typography-desktop-t100-letter-spacing)',
-  typographyDesktopT100StrongLetterSpacing: 'var(--typography-desktop-t100-strong-letter-spacing)',
-  typographyMobileH900LetterSpacing: 'var(--typography-mobile-h900-letter-spacing)',
-  typographyMobileH800LetterSpacing: 'var(--typography-mobile-h800-letter-spacing)',
-  typographyMobileH700LetterSpacing: 'var(--typography-mobile-h700-letter-spacing)',
-  typographyMobileH600LetterSpacing: 'var(--typography-mobile-h600-letter-spacing)',
-  typographyMobileH500LetterSpacing: 'var(--typography-mobile-h500-letter-spacing)',
-  typographyMobileH400LetterSpacing: 'var(--typography-mobile-h400-letter-spacing)',
-  typographyMobileH300LetterSpacing: 'var(--typography-mobile-h300-letter-spacing)',
-  typographyMobileH200LetterSpacing: 'var(--typography-mobile-h200-letter-spacing)',
-  typographyMobileH100LetterSpacing: 'var(--typography-mobile-h100-letter-spacing)',
-  typographyMobileT300LetterSpacing: 'var(--typography-mobile-t300-letter-spacing)',
-  typographyMobileT300StrongLetterSpacing: 'var(--typography-mobile-t300-strong-letter-spacing)',
-  typographyMobileT200LetterSpacing: 'var(--typography-mobile-t200-letter-spacing)',
-  typographyMobileT200StrongLetterSpacing: 'var(--typography-mobile-t200-strong-letter-spacing)',
-  typographyMobileT100LetterSpacing: 'var(--typography-mobile-t100-letter-spacing)',
-  typographyMobileT100StrongLetterSpacing: 'var(--typography-mobile-t100-strong-letter-spacing)',
-  typographyDesktopH900TextTransform: 'var(--typography-desktop-h900-text-transform)',
-  typographyDesktopH800TextTransform: 'var(--typography-desktop-h800-text-transform)',
-  typographyDesktopH700TextTransform: 'var(--typography-desktop-h700-text-transform)',
-  typographyDesktopH600TextTransform: 'var(--typography-desktop-h600-text-transform)',
-  typographyDesktopH500TextTransform: 'var(--typography-desktop-h500-text-transform)',
-  typographyDesktopH400TextTransform: 'var(--typography-desktop-h400-text-transform)',
-  typographyDesktopH300TextTransform: 'var(--typography-desktop-h300-text-transform)',
-  typographyDesktopH200TextTransform: 'var(--typography-desktop-h200-text-transform)',
-  typographyDesktopH100TextTransform: 'var(--typography-desktop-h100-text-transform)',
-  typographyDesktopT300TextTransform: 'var(--typography-desktop-t300-text-transform)',
-  typographyDesktopT300StrongTextTransform: 'var(--typography-desktop-t300-strong-text-transform)',
-  typographyDesktopT200TextTransform: 'var(--typography-desktop-t200-text-transform)',
-  typographyDesktopT200StrongTextTransform: 'var(--typography-desktop-t200-strong-text-transform)',
-  typographyDesktopT100TextTransform: 'var(--typography-desktop-t100-text-transform)',
-  typographyDesktopT100StrongTextTransform: 'var(--typography-desktop-t100-strong-text-transform)',
-  typographyMobileH900TextTransform: 'var(--typography-mobile-h900-text-transform)',
-  typographyMobileH800TextTransform: 'var(--typography-mobile-h800-text-transform)',
-  typographyMobileH700TextTransform: 'var(--typography-mobile-h700-text-transform)',
-  typographyMobileH600TextTransform: 'var(--typography-mobile-h600-text-transform)',
-  typographyMobileH500TextTransform: 'var(--typography-mobile-h500-text-transform)',
-  typographyMobileH400TextTransform: 'var(--typography-mobile-h400-text-transform)',
-  typographyMobileH300TextTransform: 'var(--typography-mobile-h300-text-transform)',
-  typographyMobileH200TextTransform: 'var(--typography-mobile-h200-text-transform)',
-  typographyMobileH100TextTransform: 'var(--typography-mobile-h100-text-transform)',
-  typographyMobileT300TextTransform: 'var(--typography-mobile-t300-text-transform)',
-  typographyMobileT300StrongTextTransform: 'var(--typography-mobile-t300-strong-text-transform)',
-  typographyMobileT200TextTransform: 'var(--typography-mobile-t200-text-transform)',
-  typographyMobileT200StrongTextTransform: 'var(--typography-mobile-t200-strong-text-transform)',
-  typographyMobileT100TextTransform: 'var(--typography-mobile-t100-text-transform)',
-  typographyMobileT100StrongTextTransform: 'var(--typography-mobile-t100-strong-text-transform)',
+  animationTimingFast: { variable: 'var(--animation-timing-fast)', value: '150ms' },
+  animationTimingMedium: { variable: 'var(--animation-timing-medium)', value: '250ms' },
+  animationTimingSlow: { variable: 'var(--animation-timing-slow)', value: '500ms' },
+  animationEasingFast: { variable: 'var(--animation-easing-fast)', value: 'cubic-bezier(0,0,0.3,1)' },
+  animationEasingMedium: { variable: 'var(--animation-easing-medium)', value: 'cubic-bezier(0.03,0.5,0.25,1)' },
+  animationEasingBounce: { variable: 'var(--animation-easing-bounce)', value: 'cubic-bezier(0.3,1.5,0.6,0.95)' },
+  animationTransitionFast: { variable: 'var(--animation-transition-fast)', value: '150ms cubic-bezier(0,0,0.3,1)' },
+  animationTransitionMedium: {
+    variable: 'var(--animation-transition-medium)',
+    value: '250ms cubic-bezier(0.03,0.5,0.25,1)',
+  },
+  animationTransitionSlow: {
+    variable: 'var(--animation-transition-slow)',
+    value: '500ms cubic-bezier(0.03,0.5,0.25,1)',
+  },
+  animationTransitionCallout: {
+    variable: 'var(--animation-transition-callout)',
+    value: '250ms cubic-bezier(0.3,1.5,0.6,0.95)',
+  },
+  colorCoreNeutral50: { variable: 'var(--color-core-neutral-50)', value: '#F4F6F8' },
+  colorCoreNeutral50Lighten: { variable: 'var(--color-core-neutral-50-lighten)', value: '#FAFAFAFA' },
+  colorCoreNeutral50Darken: { variable: 'var(--color-core-neutral-50-darken)', value: '#234A710D' },
+  colorCoreNeutral100: { variable: 'var(--color-core-neutral-100)', value: '#DAE2EB' },
+  colorCoreNeutral100Lighten: { variable: 'var(--color-core-neutral-100-lighten)', value: '#F2F2F3ED' },
+  colorCoreNeutral100Darken: { variable: 'var(--color-core-neutral-100-darken)', value: '#083C7826' },
+  colorCoreNeutral200: { variable: 'var(--color-core-neutral-200)', value: '#B5C1C9' },
+  colorCoreNeutral200Lighten: { variable: 'var(--color-core-neutral-200-lighten)', value: '#F2F2F3C9' },
+  colorCoreNeutral200Darken: { variable: 'var(--color-core-neutral-200-darken)', value: '#082F4A4D' },
+  colorCoreNeutral300: { variable: 'var(--color-core-neutral-300)', value: '#7B8A95' },
+  colorCoreNeutral300Lighten: { variable: 'var(--color-core-neutral-300-lighten)', value: '#E4E6E796' },
+  colorCoreNeutral300Darken: { variable: 'var(--color-core-neutral-300-darken)', value: '#0A1C2985' },
+  colorCoreNeutral400: { variable: 'var(--color-core-neutral-400)', value: '#52616B' },
+  colorCoreNeutral400Lighten: { variable: 'var(--color-core-neutral-400-lighten)', value: '#DCE1E56B' },
+  colorCoreNeutral400Darken: { variable: 'var(--color-core-neutral-400-darken)', value: '#0C1317AD' },
+  colorCoreNeutral500: { variable: 'var(--color-core-neutral-500)', value: '#424E57' },
+  colorCoreNeutral500Lighten: { variable: 'var(--color-core-neutral-500-lighten)', value: '#D2DDE559' },
+  colorCoreNeutral500Darken: { variable: 'var(--color-core-neutral-500-darken)', value: '#101214BF' },
+  colorCoreNeutral600: { variable: 'var(--color-core-neutral-600)', value: '#343D44' },
+  colorCoreNeutral600Lighten: { variable: 'var(--color-core-neutral-600-lighten)', value: '#CBE0F145' },
+  colorCoreNeutral600Darken: { variable: 'var(--color-core-neutral-600-darken)', value: '#090A0BCC' },
+  colorCoreNeutral700: { variable: 'var(--color-core-neutral-700)', value: '#272D33' },
+  colorCoreNeutral700Lighten: { variable: 'var(--color-core-neutral-700-lighten)', value: '#C2E0FF33' },
+  colorCoreNeutral700Darken: { variable: 'var(--color-core-neutral-700-darken)', value: '#070808D9' },
+  colorCoreNeutral800: { variable: 'var(--color-core-neutral-800)', value: '#181C20' },
+  colorCoreNeutral800Lighten: { variable: 'var(--color-core-neutral-800-lighten)', value: '#BBD9F621' },
+  colorCoreNeutral800Darken: { variable: 'var(--color-core-neutral-800-darken)', value: '#050505E8' },
+  colorCoreNeutral900: { variable: 'var(--color-core-neutral-900)', value: '#0B0C0F' },
+  colorCoreNeutral900Lighten: { variable: 'var(--color-core-neutral-900-lighten)', value: '#B7C8FA0F' },
+  colorCoreNeutral900Darken: { variable: 'var(--color-core-neutral-900-darken)', value: '#010205F5' },
+  colorCoreBlue50: { variable: 'var(--color-core-blue-50)', value: '#BECAFF' },
+  colorCoreBlue100: { variable: 'var(--color-core-blue-100)', value: '#9FACFF' },
+  colorCoreBlue200: { variable: 'var(--color-core-blue-200)', value: '#8890FF' },
+  colorCoreBlue300: { variable: 'var(--color-core-blue-300)', value: '#7174FF' },
+  colorCoreBlue400: { variable: 'var(--color-core-blue-400)', value: '#5A58FF' },
+  colorCoreBlue500: { variable: 'var(--color-core-blue-500)', value: '#4038FF' },
+  colorCoreBlue600: { variable: 'var(--color-core-blue-600)', value: '#342ECF' },
+  colorCoreBlue700: { variable: 'var(--color-core-blue-700)', value: '#2823A0' },
+  colorCoreBlue800: { variable: 'var(--color-core-blue-800)', value: '#1B186C' },
+  colorCoreBlue900: { variable: 'var(--color-core-blue-900)', value: '#08071E' },
+  colorCoreGreen50: { variable: 'var(--color-core-green-50)', value: '#75E1A2' },
+  colorCoreGreen100: { variable: 'var(--color-core-green-100)', value: '#12CC60' },
+  colorCoreGreen200: { variable: 'var(--color-core-green-200)', value: '#0EB152' },
+  colorCoreGreen300: { variable: 'var(--color-core-green-300)', value: '#0C9846' },
+  colorCoreGreen400: { variable: 'var(--color-core-green-400)', value: '#0A823C' },
+  colorCoreGreen500: { variable: 'var(--color-core-green-500)', value: '#096C32' },
+  colorCoreGreen600: { variable: 'var(--color-core-green-600)', value: '#075829' },
+  colorCoreGreen700: { variable: 'var(--color-core-green-700)', value: '#05441F' },
+  colorCoreGreen800: { variable: 'var(--color-core-green-800)', value: '#042D15' },
+  colorCoreGreen900: { variable: 'var(--color-core-green-900)', value: '#010D06' },
+  colorCoreRed50: { variable: 'var(--color-core-red-50)', value: '#FFBBB7' },
+  colorCoreRed100: { variable: 'var(--color-core-red-100)', value: '#FF948D' },
+  colorCoreRed200: { variable: 'var(--color-core-red-200)', value: '#FF695F' },
+  colorCoreRed300: { variable: 'var(--color-core-red-300)', value: '#F34235' },
+  colorCoreRed400: { variable: 'var(--color-core-red-400)', value: '#CF382D' },
+  colorCoreRed500: { variable: 'var(--color-core-red-500)', value: '#AE2F26' },
+  colorCoreRed600: { variable: 'var(--color-core-red-600)', value: '#8D261F' },
+  colorCoreRed700: { variable: 'var(--color-core-red-700)', value: '#6D1E18' },
+  colorCoreRed800: { variable: 'var(--color-core-red-800)', value: '#4A1410' },
+  colorCoreRed900: { variable: 'var(--color-core-red-900)', value: '#150605' },
+  colorCoreYellow50: { variable: 'var(--color-core-yellow-50)', value: '#FEE879' },
+  colorCoreYellow100: { variable: 'var(--color-core-yellow-100)', value: '#ECC502' },
+  colorCoreYellow200: { variable: 'var(--color-core-yellow-200)', value: '#CAA802' },
+  colorCoreYellow300: { variable: 'var(--color-core-yellow-300)', value: '#AC9002' },
+  colorCoreYellow400: { variable: 'var(--color-core-yellow-400)', value: '#917901' },
+  colorCoreYellow500: { variable: 'var(--color-core-yellow-500)', value: '#786401' },
+  colorCoreYellow600: { variable: 'var(--color-core-yellow-600)', value: '#615001' },
+  colorCoreYellow700: { variable: 'var(--color-core-yellow-700)', value: '#4A3D01' },
+  colorCoreYellow800: { variable: 'var(--color-core-yellow-800)', value: '#302800' },
+  colorCoreYellow900: { variable: 'var(--color-core-yellow-900)', value: '#0A0900' },
+  colorTextMuted: { variable: 'var(--color-text-muted)', value: '#52616B' },
+  colorText: { variable: 'var(--color-text)', value: '#424E57' },
+  colorTextStrong: { variable: 'var(--color-text-strong)', value: '#343D44' },
+  colorTextPrimary: { variable: 'var(--color-text-primary)', value: '#7174FF' },
+  colorTextError: { variable: 'var(--color-text-error)', value: '#F34235' },
+  colorTextSuccess: { variable: 'var(--color-text-success)', value: '#0C9846' },
+  colorBorderMuted: { variable: 'var(--color-border-muted)', value: '#272D33' },
+  colorBorderMutedAlpha: { variable: 'var(--color-border-muted-alpha)', value: '#C2E0FF33' },
+  colorBorder: { variable: 'var(--color-border)', value: '#424E57' },
+  colorBorderAlpha: { variable: 'var(--color-border-alpha)', value: '#D2DDE559' },
+  colorBorderStrong: { variable: 'var(--color-border-strong)', value: '#7B8A95' },
+  colorBorderStrongAlpha: { variable: 'var(--color-border-strong-alpha)', value: '#E4E6E796' },
+  colorBackgroundMuted: { variable: 'var(--color-background-muted)', value: '#0B0C0F' },
+  colorBackgroundMutedAlpha: { variable: 'var(--color-background-muted-alpha)', value: '#B7C8FA0F' },
+  colorBackground: { variable: 'var(--color-background)', value: '#181C20' },
+  colorBackgroundAlpha: { variable: 'var(--color-background-alpha)', value: '#BBD9F621' },
+  colorBackgroundStrong: { variable: 'var(--color-background-strong)', value: '#272D33' },
+  colorBackgroundStrongAlpha: { variable: 'var(--color-background-strong-alpha)', value: '#C2E0FF33' },
+  colorBackgroundElevated: { variable: 'var(--color-background-elevated)', value: '#343D44' },
+  colorBackgroundElevatedAlpha: { variable: 'var(--color-background-elevated-alpha)', value: '#CBE0F145' },
+  colorBackgroundOverlay: { variable: 'var(--color-background-overlay)', value: '#101214BF' },
+  colorBackgroundPrimaryMuted: { variable: 'var(--color-background-primary-muted)', value: '#342ECF' },
+  colorBackgroundPrimary: { variable: 'var(--color-background-primary)', value: '#4038FF' },
+  colorBackgroundPrimaryStrong: { variable: 'var(--color-background-primary-strong)', value: '#5A58FF' },
+  colorBackgroundErrorMuted: { variable: 'var(--color-background-error-muted)', value: '#8D261F' },
+  colorBackgroundError: { variable: 'var(--color-background-error)', value: '#AE2F26' },
+  colorBackgroundErrorStrong: { variable: 'var(--color-background-error-strong)', value: '#CF382D' },
+  colorBackgroundSuccessMuted: { variable: 'var(--color-background-success-muted)', value: '#075829' },
+  colorBackgroundSuccess: { variable: 'var(--color-background-success)', value: '#096C32' },
+  colorBackgroundSuccessStrong: { variable: 'var(--color-background-success-strong)', value: '#0A823C' },
+  effectDividersTop: { variable: 'var(--effect-dividers-top)', value: 'inset 0 1px 0 0 #C2E0FF33' },
+  effectDividersBottom: { variable: 'var(--effect-dividers-bottom)', value: 'inset 0 -1px 0 0 #C2E0FF33' },
+  effectDividersLeft: { variable: 'var(--effect-dividers-left)', value: 'inset 1px 0 0 0 #C2E0FF33' },
+  effectDividersRight: { variable: 'var(--effect-dividers-right)', value: 'inset -1px 0 0 0 #C2E0FF33' },
+  effectElevation8Layer1: { variable: 'var(--effect-elevation-8-layer1)', value: ' 0 8px 16px 0 #0000001F' },
+  effectElevation8Layer2: { variable: 'var(--effect-elevation-8-layer2)', value: ' 0 4px 4px 0 #0000001A' },
+  effectElevation16Layer1: { variable: 'var(--effect-elevation-16-layer1)', value: ' 0 16px 32px 0 #00000029' },
+  effectElevation16Layer2: { variable: 'var(--effect-elevation-16-layer2)', value: ' 0 4px 8px 0 #0000001A' },
+  effectElevation24Layer1: { variable: 'var(--effect-elevation-24-layer1)', value: ' 0 24px 40px 0 #00000029' },
+  effectElevation24Layer2: { variable: 'var(--effect-elevation-24-layer2)', value: ' 0 8px 8px 0 #0000001F' },
+  typographyFontsPrimary: {
+    variable: 'var(--typography-fonts-primary)',
+    value:
+      'IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyFontsSecondary: {
+    variable: 'var(--typography-fonts-secondary)',
+    value:
+      'Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyFontSizes1: { variable: 'var(--typography-font-sizes-1)', value: '0.75rem' },
+  typographyFontSizes2: { variable: 'var(--typography-font-sizes-2)', value: '0.875rem' },
+  typographyFontSizes3: { variable: 'var(--typography-font-sizes-3)', value: '1rem' },
+  typographyFontSizes4: { variable: 'var(--typography-font-sizes-4)', value: '1.125rem' },
+  typographyFontSizes5: { variable: 'var(--typography-font-sizes-5)', value: '1.3125rem' },
+  typographyFontSizes6: { variable: 'var(--typography-font-sizes-6)', value: '1.5rem' },
+  typographyFontSizes7: { variable: 'var(--typography-font-sizes-7)', value: '1.75rem' },
+  typographyFontSizes8: { variable: 'var(--typography-font-sizes-8)', value: '2rem' },
+  typographyFontSizes9: { variable: 'var(--typography-font-sizes-9)', value: '2.25rem' },
+  typographyFontSizes10: { variable: 'var(--typography-font-sizes-10)', value: '2.625rem' },
+  typographyFontSizes11: { variable: 'var(--typography-font-sizes-11)', value: '3rem' },
+  typographyFontSizes12: { variable: 'var(--typography-font-sizes-12)', value: '3.4375rem' },
+  typographyFontSizes13: { variable: 'var(--typography-font-sizes-13)', value: '3.9375rem' },
+  typographyFontSizes14: { variable: 'var(--typography-font-sizes-14)', value: '4.5625rem' },
+  typographyFontWeightsLight: { variable: 'var(--typography-font-weights-light)', value: '300' },
+  typographyFontWeightsNormal: { variable: 'var(--typography-font-weights-normal)', value: '400' },
+  typographyFontWeightsMedium: { variable: 'var(--typography-font-weights-medium)', value: '500' },
+  typographyFontWeightsSemibold: { variable: 'var(--typography-font-weights-semibold)', value: '600' },
+  typographyFontWeightsBold: { variable: 'var(--typography-font-weights-bold)', value: '700' },
+  typographyDesktopH900: {
+    variable: 'var(--typography-desktop-h900)',
+    value:
+      '600 4.5625rem/5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH800: {
+    variable: 'var(--typography-desktop-h800)',
+    value:
+      '600 3.4375rem/4rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH700: {
+    variable: 'var(--typography-desktop-h700)',
+    value:
+      '600 2.625rem/3.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH600: {
+    variable: 'var(--typography-desktop-h600)',
+    value:
+      '600 2rem/2.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH500: {
+    variable: 'var(--typography-desktop-h500)',
+    value:
+      '600 1.5rem/2rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH400: {
+    variable: 'var(--typography-desktop-h400)',
+    value:
+      '600 1.125rem/1.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH300: {
+    variable: 'var(--typography-desktop-h300)',
+    value:
+      '600 1rem/1.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH200: {
+    variable: 'var(--typography-desktop-h200)',
+    value:
+      '600 0.875rem/1.25rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH100: {
+    variable: 'var(--typography-desktop-h100)',
+    value:
+      '700 0.75rem/1rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT300: {
+    variable: 'var(--typography-desktop-t300)',
+    value:
+      '400 1rem/1.5rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT300Strong: {
+    variable: 'var(--typography-desktop-t300-strong)',
+    value:
+      '600 1rem/1.5rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT200: {
+    variable: 'var(--typography-desktop-t200)',
+    value:
+      '400 0.875rem/1.25rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT200Strong: {
+    variable: 'var(--typography-desktop-t200-strong)',
+    value:
+      '600 0.875rem/1.25rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT100: {
+    variable: 'var(--typography-desktop-t100)',
+    value:
+      '500 0.75rem/1rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopT100Strong: {
+    variable: 'var(--typography-desktop-t100-strong)',
+    value:
+      '700 0.75rem/1rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH900: {
+    variable: 'var(--typography-mobile-h900)',
+    value:
+      '600 2rem/2.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH800: {
+    variable: 'var(--typography-mobile-h800)',
+    value:
+      '600 1.75rem/2rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH700: {
+    variable: 'var(--typography-mobile-h700)',
+    value:
+      '600 1.5rem/2rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH600: {
+    variable: 'var(--typography-mobile-h600)',
+    value:
+      '600 1.3125rem/1.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH500: {
+    variable: 'var(--typography-mobile-h500)',
+    value:
+      '600 1.125rem/1.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH400: {
+    variable: 'var(--typography-mobile-h400)',
+    value:
+      '600 1rem/1.5rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH300: {
+    variable: 'var(--typography-mobile-h300)',
+    value:
+      '600 0.875rem/1.25rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH200: {
+    variable: 'var(--typography-mobile-h200)',
+    value:
+      '700 0.75rem/1rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileH100: {
+    variable: 'var(--typography-mobile-h100)',
+    value:
+      '700 0.75rem/1rem IBM Plex Sans,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT300: {
+    variable: 'var(--typography-mobile-t300)',
+    value:
+      '400 1rem/1.5rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT300Strong: {
+    variable: 'var(--typography-mobile-t300-strong)',
+    value:
+      '600 1rem/1.5rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT200: {
+    variable: 'var(--typography-mobile-t200)',
+    value:
+      '400 0.875rem/1.25rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT200Strong: {
+    variable: 'var(--typography-mobile-t200-strong)',
+    value:
+      '600 0.875rem/1.25rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT100: {
+    variable: 'var(--typography-mobile-t100)',
+    value:
+      '500 0.75rem/1rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyMobileT100Strong: {
+    variable: 'var(--typography-mobile-t100-strong)',
+    value:
+      '700 0.75rem/1rem Inter,-apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Segoe UI,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Arial,sans-serif',
+  },
+  typographyDesktopH900LetterSpacing: { variable: 'var(--typography-desktop-h900-letter-spacing)', value: '-0.01em' },
+  typographyDesktopH800LetterSpacing: { variable: 'var(--typography-desktop-h800-letter-spacing)', value: '-0.005em' },
+  typographyDesktopH700LetterSpacing: { variable: 'var(--typography-desktop-h700-letter-spacing)', value: '0' },
+  typographyDesktopH600LetterSpacing: { variable: 'var(--typography-desktop-h600-letter-spacing)', value: '0' },
+  typographyDesktopH500LetterSpacing: { variable: 'var(--typography-desktop-h500-letter-spacing)', value: '0' },
+  typographyDesktopH400LetterSpacing: { variable: 'var(--typography-desktop-h400-letter-spacing)', value: '0.005em' },
+  typographyDesktopH300LetterSpacing: { variable: 'var(--typography-desktop-h300-letter-spacing)', value: '0.01em' },
+  typographyDesktopH200LetterSpacing: { variable: 'var(--typography-desktop-h200-letter-spacing)', value: '0.01em' },
+  typographyDesktopH100LetterSpacing: { variable: 'var(--typography-desktop-h100-letter-spacing)', value: '0.07em' },
+  typographyDesktopT300LetterSpacing: { variable: 'var(--typography-desktop-t300-letter-spacing)', value: '0' },
+  typographyDesktopT300StrongLetterSpacing: {
+    variable: 'var(--typography-desktop-t300-strong-letter-spacing)',
+    value: '0',
+  },
+  typographyDesktopT200LetterSpacing: { variable: 'var(--typography-desktop-t200-letter-spacing)', value: '0.005em' },
+  typographyDesktopT200StrongLetterSpacing: {
+    variable: 'var(--typography-desktop-t200-strong-letter-spacing)',
+    value: '0.005em',
+  },
+  typographyDesktopT100LetterSpacing: { variable: 'var(--typography-desktop-t100-letter-spacing)', value: '0.01em' },
+  typographyDesktopT100StrongLetterSpacing: {
+    variable: 'var(--typography-desktop-t100-strong-letter-spacing)',
+    value: '0.01em',
+  },
+  typographyMobileH900LetterSpacing: { variable: 'var(--typography-mobile-h900-letter-spacing)', value: '0' },
+  typographyMobileH800LetterSpacing: { variable: 'var(--typography-mobile-h800-letter-spacing)', value: '0' },
+  typographyMobileH700LetterSpacing: { variable: 'var(--typography-mobile-h700-letter-spacing)', value: '0' },
+  typographyMobileH600LetterSpacing: { variable: 'var(--typography-mobile-h600-letter-spacing)', value: '0' },
+  typographyMobileH500LetterSpacing: { variable: 'var(--typography-mobile-h500-letter-spacing)', value: '0.005em' },
+  typographyMobileH400LetterSpacing: { variable: 'var(--typography-mobile-h400-letter-spacing)', value: '0.01em' },
+  typographyMobileH300LetterSpacing: { variable: 'var(--typography-mobile-h300-letter-spacing)', value: '0.01em' },
+  typographyMobileH200LetterSpacing: { variable: 'var(--typography-mobile-h200-letter-spacing)', value: '0.02em' },
+  typographyMobileH100LetterSpacing: { variable: 'var(--typography-mobile-h100-letter-spacing)', value: '0.07em' },
+  typographyMobileT300LetterSpacing: { variable: 'var(--typography-mobile-t300-letter-spacing)', value: '0' },
+  typographyMobileT300StrongLetterSpacing: {
+    variable: 'var(--typography-mobile-t300-strong-letter-spacing)',
+    value: '0',
+  },
+  typographyMobileT200LetterSpacing: { variable: 'var(--typography-mobile-t200-letter-spacing)', value: '0.005em' },
+  typographyMobileT200StrongLetterSpacing: {
+    variable: 'var(--typography-mobile-t200-strong-letter-spacing)',
+    value: '0.005em',
+  },
+  typographyMobileT100LetterSpacing: { variable: 'var(--typography-mobile-t100-letter-spacing)', value: '0.01em' },
+  typographyMobileT100StrongLetterSpacing: {
+    variable: 'var(--typography-mobile-t100-strong-letter-spacing)',
+    value: '0.01em',
+  },
+  typographyDesktopH900TextTransform: { variable: 'var(--typography-desktop-h900-text-transform)', value: 'none' },
+  typographyDesktopH800TextTransform: { variable: 'var(--typography-desktop-h800-text-transform)', value: 'none' },
+  typographyDesktopH700TextTransform: { variable: 'var(--typography-desktop-h700-text-transform)', value: 'none' },
+  typographyDesktopH600TextTransform: { variable: 'var(--typography-desktop-h600-text-transform)', value: 'none' },
+  typographyDesktopH500TextTransform: { variable: 'var(--typography-desktop-h500-text-transform)', value: 'none' },
+  typographyDesktopH400TextTransform: { variable: 'var(--typography-desktop-h400-text-transform)', value: 'none' },
+  typographyDesktopH300TextTransform: { variable: 'var(--typography-desktop-h300-text-transform)', value: 'none' },
+  typographyDesktopH200TextTransform: { variable: 'var(--typography-desktop-h200-text-transform)', value: 'none' },
+  typographyDesktopH100TextTransform: { variable: 'var(--typography-desktop-h100-text-transform)', value: 'uppercase' },
+  typographyDesktopT300TextTransform: { variable: 'var(--typography-desktop-t300-text-transform)', value: 'none' },
+  typographyDesktopT300StrongTextTransform: {
+    variable: 'var(--typography-desktop-t300-strong-text-transform)',
+    value: 'none',
+  },
+  typographyDesktopT200TextTransform: { variable: 'var(--typography-desktop-t200-text-transform)', value: 'none' },
+  typographyDesktopT200StrongTextTransform: {
+    variable: 'var(--typography-desktop-t200-strong-text-transform)',
+    value: 'none',
+  },
+  typographyDesktopT100TextTransform: { variable: 'var(--typography-desktop-t100-text-transform)', value: 'none' },
+  typographyDesktopT100StrongTextTransform: {
+    variable: 'var(--typography-desktop-t100-strong-text-transform)',
+    value: 'none',
+  },
+  typographyMobileH900TextTransform: { variable: 'var(--typography-mobile-h900-text-transform)', value: 'none' },
+  typographyMobileH800TextTransform: { variable: 'var(--typography-mobile-h800-text-transform)', value: 'none' },
+  typographyMobileH700TextTransform: { variable: 'var(--typography-mobile-h700-text-transform)', value: 'none' },
+  typographyMobileH600TextTransform: { variable: 'var(--typography-mobile-h600-text-transform)', value: 'none' },
+  typographyMobileH500TextTransform: { variable: 'var(--typography-mobile-h500-text-transform)', value: 'none' },
+  typographyMobileH400TextTransform: { variable: 'var(--typography-mobile-h400-text-transform)', value: 'none' },
+  typographyMobileH300TextTransform: { variable: 'var(--typography-mobile-h300-text-transform)', value: 'none' },
+  typographyMobileH200TextTransform: { variable: 'var(--typography-mobile-h200-text-transform)', value: 'none' },
+  typographyMobileH100TextTransform: { variable: 'var(--typography-mobile-h100-text-transform)', value: 'uppercase' },
+  typographyMobileT300TextTransform: { variable: 'var(--typography-mobile-t300-text-transform)', value: 'none' },
+  typographyMobileT300StrongTextTransform: {
+    variable: 'var(--typography-mobile-t300-strong-text-transform)',
+    value: 'none',
+  },
+  typographyMobileT200TextTransform: { variable: 'var(--typography-mobile-t200-text-transform)', value: 'none' },
+  typographyMobileT200StrongTextTransform: {
+    variable: 'var(--typography-mobile-t200-strong-text-transform)',
+    value: 'none',
+  },
+  typographyMobileT100TextTransform: { variable: 'var(--typography-mobile-t100-text-transform)', value: 'none' },
+  typographyMobileT100StrongTextTransform: {
+    variable: 'var(--typography-mobile-t100-strong-text-transform)',
+    value: 'none',
+  },
 }
-export const cVar = (key: keyof typeof theme) => {
-  return theme[key]
+export const cVar = (key: keyof typeof theme, returnValue?: boolean) => {
+  if (returnValue) return theme[key].value
+  return theme[key].variable
 }

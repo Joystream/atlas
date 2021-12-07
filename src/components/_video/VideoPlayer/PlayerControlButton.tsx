@@ -8,6 +8,7 @@ type PlayerControlButtonProps = {
   tooltipPosition?: 'left' | 'right'
   onClick?: (e: React.MouseEvent) => void
   tooltipText?: string
+  isDisabled?: boolean
 }
 
 export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
@@ -17,6 +18,7 @@ export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
   tooltipPosition,
   className,
   showTooltipOnlyOnFocus,
+  isDisabled,
 }) => {
   const [disableFocus, setDisableFocus] = useState(true)
 
@@ -32,6 +34,7 @@ export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
   const handleButtonFocus = () => setDisableFocus(false)
   return (
     <ControlButton
+      isDisabled={isDisabled}
       showTooltipOnlyOnFocus={showTooltipOnlyOnFocus}
       className={className}
       onFocus={handleButtonFocus}
@@ -39,9 +42,11 @@ export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
       onClick={onClick}
     >
       {children}
-      <ControlButtonTooltip tooltipPosition={tooltipPosition}>
-        <ControlButtonTooltipText variant="caption">{tooltipText}</ControlButtonTooltipText>
-      </ControlButtonTooltip>
+      {!isDisabled && (
+        <ControlButtonTooltip tooltipPosition={tooltipPosition}>
+          <ControlButtonTooltipText variant="t100">{tooltipText}</ControlButtonTooltipText>
+        </ControlButtonTooltip>
+      )}
     </ControlButton>
   )
 }

@@ -22,7 +22,7 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos,
           {loading ? (
             <SkeletonLoader width={200} height={16} bottomSpace={18} />
           ) : (
-            <SectionHeader variant="h5">Videos</SectionHeader>
+            <SectionHeader variant="h400">Videos</SectionHeader>
           )}
           <VideoGallery videos={allVideos} loading={loading} />
         </div>
@@ -32,7 +32,7 @@ export const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos,
           {loading ? (
             <SkeletonLoader width={200} height={16} bottomSpace={18} />
           ) : (
-            <SectionHeader variant="h5">Channels</SectionHeader>
+            <SectionHeader variant="h400">Channels</SectionHeader>
           )}
           <ChannelGallery channels={channels} loading={loading} />
         </div>

@@ -9,7 +9,7 @@ export const ModalBackdrop = styled.div`
   left: 0;
   right: 0;
   z-index: ${zIndex.globalOverlay};
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0 0 0 / 0.4);
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
 `
 
@@ -23,5 +23,5 @@ export const ModalContent = styled.div`
   max-height: 90vh;
   max-width: 90vw;
   overflow: hidden;
-  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 24px 40px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 8px rgba(0 0 0 / 0.12), 0 24px 40px rgba(0 0 0 / 0.16);
 `

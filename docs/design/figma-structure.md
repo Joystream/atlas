@@ -2,15 +2,15 @@
 
 ## Quick links
 
-1. [Viewer designs](https://www.figma.com/files/project/33106300/%F0%9F%91%A9%F0%9F%8F%BE%E2%80%8D%F0%9F%A6%B1-Viewer?fuid=730334878476004289),
-2. [Publisher designs](https://www.figma.com/files/project/33106318/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D-Publisher?fuid=730334878476004289),
+1. [Final designs](https://www.figma.com/files/project/33106318/%E2%9C%85-Final?fuid=1017378024164173256),
+2. [Work in progress designs](https://www.figma.com/files/project/33106300/%F0%9F%9A%A7-Work-in-progress?fuid=1017378024164173256),
 3. **["Joystream Atlas" legacy file](https://www.figma.com/file/Vk2Z4QOiVa5bB6q3cBIG5J/Joystream-Atlas)**,
 4. [Web Components](https://www.figma.com/file/Pf31tuYpozYmpq163U2ho8/Web-Components),
 5. [Foundation](https://www.figma.com/file/Cc3VDoK6qglJ617ChA2EMr/Foundation),
 
 
 ## Context
-![Figma Team structure](assets/figma-structure.png)
+![1](assets/figma-atlas-structure-1.png)
 
 Because Figma is a cloud-based tool, all our design files are stored in the cloud and are organized within a structure imposed by the tool. Figma allows for up to 4 layers of organization:
 ```
@@ -20,9 +20,8 @@ Organization Workspace (Org tier only) → Teams → Projects → Files → Page
 As an Atlas Design Team, we use Figma in the [Professional tier](https://www.figma.com/pricing/), which allows us to operate within **one Team**, have an **unlimited number of Projects** with an **unlimited number of Files** inside.
 
 ## Structure overview
-
-![Figma Atlas Team structure](assets/figma-atlas-structure.png)
-![Figma Atlas screenshot](assets/figma-screenshot.png)
+![2](assets/figma-atlas-structure-3.png)<br>
+![3](assets/figma-atlas-structure-2.png)<br><br>
 _💡 Tip: You can pin Projects to your sidebar in Figma, by clicking on the star next to the Project card. Pinned Projects can be rearranged._
 
 <!-- <style>
@@ -44,7 +43,7 @@ _💡 Tip: You can pin Projects to your sidebar in Figma, by clicking on the sta
   <tr>
     <td rowspan="12"><strong>Atlas<strong></td>
     <td rowspan="4">
-      <a href="https://www.figma.com/files/project/33106243/%F0%9F%8E%A8-Design-System?fuid=730334878476004289" target="_blank"><strong>🎨 Design System</strong></a>
+      <a href="https://www.figma.com/files/project/33106243/%F0%9F%8E%A8-Design-System?fuid=730334878476004289" target="_blank"><strong>🎨 Resources</strong></a>
       <br>
       <span class="caption">Contains libraries Figma files and other design resources</span>
     </td>
@@ -77,55 +76,44 @@ _💡 Tip: You can pin Projects to your sidebar in Figma, by clicking on the sta
   </tr>
   <tr>
     <td rowspan="3">
-      <a href="https://www.figma.com/files/project/33106300/%F0%9F%91%A9%F0%9F%8F%BE%E2%80%8D%F0%9F%A6%B1-Viewer?fuid=730334878476004289" target="_blank"><strong>👩🏾‍🦱 Viewer</strong></a>
+      <a href="https://www.figma.com/files/project/33106300/%F0%9F%91%A9%F0%9F%8F%BE%E2%80%8D%F0%9F%A6%B1-Viewer?fuid=730334878476004289" target="_blank"><strong>✅  Master</strong></a>
       <br>
-      <span class="caption">Designs, prototypes and flows for the Viewer experience</span>
-    </td>
-    <td>
-      <a href="https://www.figma.com/file/2tlBY1JQtRMoyjmjJQ9jam/Icons" target="_blank"><strong>📄 [Preview] All viewer pages</strong></a>
-      <br>
-      <span class="caption">Preview of all Viewer pages for a quick and easy access</span>
+      <span class="caption">Designs and prototypes ready for development</span>
     </td>
   </tr>
   <tr>
     <td>
-      <strong><i>[Page] Page name 1, [Page] Page 2...</i></strong>
+      <strong><i>Page name 1, Page 2...</i></strong>
       <br><br>
-      <span class="caption">For each page in the Viewer experience, there should be a separate Figma file with designs for the page itself, RWD and other design explorations. These files should be kept up-to-date. <br><br><strong>Because user flows can spread through multiple pages, please note these files do not include flows and prototypes</strong> (see below).</span>
+      <span class="caption">For each page there should be a separate Figma file with the following structure:
+<br><br>• Thumbnail
+<br> • 🖼 <strong>Design</strong>, with the designs of static pages themselves
+<br> • 📊 <strong>RWD</strong>, with responsive versions of those pages
+<br> • 💠 <strong>Local components</strong>
+<br> • 🔀 <strong>User stories</strong>, with a separate prototype for each user story. Each prototype should have it’s own “description” frame (see details below)
+<br><br>
+<strong>🚨 These files should be kept up-to-date.</strong></span>
     </td>
   </tr>
   <tr>
-    <td>
-      <strong><i>[#1] Sprint name 1, [#2] Sprint name 2...</i></strong>
-      <br><br>
-      <span class="caption">For each GitHub design sprint related to the Viewer experience, there should be a separate Figma file with flows and interactive prototypes.<br><br><strong>Please note, that numbers in square brackets should reference GitHub sprint numbers (in urls).</span>
-    </td>
   </tr>
   <tr>
     <td rowspan="3">
-      <a href="https://www.figma.com/files/project/33106318/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D-Publisher?fuid=730334878476004289" target="_blank"><strong>👨🏻‍ Publisher</strong></a>
+      <a href="https://www.figma.com/files/project/33106318/%F0%9F%91%A8%F0%9F%8F%BB%E2%80%8D-Publisher?fuid=730334878476004289" target="_blank"><strong>🛠  Work in Progress</strong></a>
       <br>
-      <span class="caption">Designs, prototypes and flows for the Publisher experience</span>
-    </td>
-    <td>
-      <a href="https://www.figma.com/file/RBAsRLWmOCm65Tdt9dOsPJ/Preview-All-publisher-pages" target="_blank"><strong>📄 [Preview] All publisher pages</strong></a>
-      <br>
-      <span class="caption">Preview of all Publisher pages for a quick and easy access</span>
+      <span class="caption">Designs and prototypes that designers are working on</span>
     </td>
   </tr>
   <tr>
     <td>
-    <strong><i>[Page] Page name 1, [Page] Page 2...</i></strong>
+    <strong><i>Page name 1, Page 2...</i></strong>
     <br><br>
-    <span class="caption">For each page in the Viewer experience, there should be a separate Figma file with designs for the page itself, RWD and other design explorations. These files should be kept up-to-date. <br><br><strong>Because user flows can spread through multiple pages, please note these files do not include flows and prototypes</strong> (see below).</span>
+    <span class="caption">The only rule here: For each page there should be a separate Figma file.
+
+<br> You can structure your files however you want. It’s your workspace. Adjust it however you feel most efficient.</span>
     </td>
   </tr>
   <tr>
-    <td>
-    <strong><i>[#1] Sprint name 1, [#2] Sprint name 2...</i></strong>
-    <br><br>
-    <span class="caption">For each GitHub design sprint related to the Viewer experience, there should be a separate Figma file with flows and interactive prototypes.<br><br><strong>Please note, that numbers in square brackets should reference GitHub sprint numbers (in urls).</span>
-    </td>
   </tr>
   <tr>
     <td>
@@ -149,3 +137,17 @@ _💡 Tip: You can pin Projects to your sidebar in Figma, by clicking on the sta
   </tr>
 </tbody>
 </table>
+
+# Ok, but how do I work with that?
+<ol><li>Create a file in <strong>Work in Progress</strong> project and do your explorations and iterations there</li>
+<li>When the designs are accepted, simply duplicate the file</li>
+<li>Do the clean-up:
+<ul>
+  <li>Delete unnecessary stuff (frames, elements, etc)</li>
+  <li> Move final static pages to Design page</li>
+  <li> Prepare RWD screens and keep them in RWD page</li>
+  <li>If local components exist, move them to Local components (if exist) page</li></ul></li>
+<li>Create user stories page and prepare prototypes</li>
+<li>Change the thumbnail from work in progress to “can be implemented”</li>
+<li>Move the file to <strong>Master</strong> project</li>
+</ol>

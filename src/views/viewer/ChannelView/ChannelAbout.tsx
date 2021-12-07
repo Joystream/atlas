@@ -28,25 +28,25 @@ export const ChannelAbout = () => {
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
         {!!channel?.description && (
           <TextContainer>
-            <Text variant="h4">Description</Text>
-            <Text variant="body1" secondary>
+            <Text variant="h500">Description</Text>
+            <Text variant="t300" secondary>
               {channel.description}
             </Text>
           </TextContainer>
         )}
       </GridItem>
       <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText variant="h4">Details</DetailsText>
+        <DetailsText variant="h500">Details</DetailsText>
 
         <Details>
-          <Text variant="caption" secondary>
+          <Text variant="t100" secondary>
             Owned by member
           </Text>
           <AvatarContainer>
             <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
             <Anchor
               as="a"
-              variant="body1"
+              variant="t300"
               href={`${PIONEER_URL}/#/members/${channel?.ownerMember?.handle}`}
               target="_blank"
             >
@@ -56,31 +56,31 @@ export const ChannelAbout = () => {
         </Details>
 
         <Details>
-          <Text variant="caption" secondary>
+          <Text variant="t100" secondary>
             Joined on
           </Text>
-          <Text variant="body1">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
+          <Text variant="t300">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
-          <Text variant="caption" secondary>
+          <Text variant="t100" secondary>
             Num. of views
           </Text>
-          <Text variant="body1">{typeof channel?.views === 'number' ? formatNumberShort(channel.views) : ''}</Text>
+          <Text variant="t300">{typeof channel?.views === 'number' ? formatNumberShort(channel.views) : ''}</Text>
         </Details>
 
         <Details>
-          <Text variant="caption" secondary>
+          <Text variant="t100" secondary>
             Num. of videos
           </Text>
-          <Text variant="body1">{videoCount}</Text>
+          <Text variant="t300">{videoCount}</Text>
         </Details>
 
         <Details>
-          <Text variant="caption" secondary>
+          <Text variant="t100" secondary>
             Language
           </Text>
-          <Text variant="body1">
+          <Text variant="t300">
             {channel?.language?.iso ? languages.find(({ value }) => value === channel.language?.iso)?.name : ''}
           </Text>
         </Details>

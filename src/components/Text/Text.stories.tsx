@@ -10,52 +10,52 @@ export default {
 
 const Template: Story<Omit<TextProps, 'ref' | 'variant'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
-    <Text {...args} variant="hero">
+    <Text {...args} variant="h900">
       Hero
     </Text>
-    <Text {...args} variant="h1">
+    <Text {...args} variant="h800">
       Heading 1
     </Text>
-    <Text {...args} variant="h2">
+    <Text {...args} variant="h700">
       Heading 2
     </Text>
-    <Text {...args} variant="h3">
+    <Text {...args} variant="h600">
       Heading 3
     </Text>
-    <Text {...args} variant="h4">
+    <Text {...args} variant="h500">
       Heading 4
     </Text>
-    <Text {...args} variant="h5">
+    <Text {...args} variant="h400">
       Heading 5
     </Text>
-    <Text {...args} variant="h6">
+    <Text {...args} variant="h300">
       Heading 6
     </Text>
-    <Text {...args} variant="subtitle1">
+    <Text {...args} variant="h400">
       Subtitle 1
     </Text>
-    <Text {...args} variant="subtitle2">
+    <Text {...args} variant="h400">
       Subtitle 2
     </Text>
-    <Text {...args} variant="body1">
+    <Text {...args} variant="t300">
       Body 1
     </Text>
-    <Text {...args} variant="body2">
+    <Text {...args} variant="t200">
       Body 2
     </Text>
-    <Text {...args} variant="caption">
+    <Text {...args} variant="t100">
       Caption
     </Text>
-    <Text {...args} variant="overhead">
+    <Text {...args} variant="h100">
       Overhead
     </Text>
-    <Text {...args} variant="button1">
+    <Text {...args} variant="t300-strong">
       Button 1
     </Text>
-    <Text {...args} variant="button2">
+    <Text {...args} variant="t200-strong">
       Button 2
     </Text>
-    <Text {...args} variant="button3">
+    <Text {...args} variant="t100-strong">
       Button 3
     </Text>
   </div>

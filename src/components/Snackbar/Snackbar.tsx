@@ -55,7 +55,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
       >
         <SnackbarHeader>
           {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
-          <SnackbarTitle variant="body2" hasDescription={!!description} colorVariant={variant}>
+          <SnackbarTitle variant="t200" hasDescription={!!description} colorVariant={variant}>
             {title}
           </SnackbarTitle>
           <SnackbarButtonsContainer>
@@ -69,7 +69,11 @@ export const Snackbar: React.FC<SnackbarProps> = ({
             </IconButton>
           </SnackbarButtonsContainer>
         </SnackbarHeader>
-        {description && <SnackbarDescription secondary>{description}</SnackbarDescription>}
+        {description && (
+          <SnackbarDescription variant="t200" secondary>
+            {description}
+          </SnackbarDescription>
+        )}
         {actionText && description && (
           <SnackbarActionButton
             variant="tertiary"

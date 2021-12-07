@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 
@@ -61,205 +61,226 @@ export type MultiFileSelectProps = {
 const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
 const VIDEO_SELECT_TITLE = 'Select video file'
 
-export const MultiFileSelect: React.FC<MultiFileSelectProps> = ({
-  onVideoChange,
-  onThumbnailChange,
-  files,
-  maxImageSize,
-  maxVideoSize,
-  editMode = false,
-  onError,
-  error,
-  className,
-}) => {
-  const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
-  const [step, setStep] = useState<FileType>('video')
-  const [isImgLoading, setIsImgLoading] = useState(false)
-  const [isVideoLoading, setIsVideoLoading] = useState(false)
-  const [rawImageFile, setRawImageFile] = useState<File | null>(null)
-  const thumbnailStepRef = useRef<HTMLDivElement>(null)
+export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
+  ({
+    onVideoChange,
+    onThumbnailChange,
+    files,
+    maxImageSize,
+    maxVideoSize,
+    editMode = false,
+    onError,
+    error,
+    className,
+  }) => {
+    const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
+    const [step, setStep] = useState<FileType>('video')
+    const [isImgLoading, setIsImgLoading] = useState(false)
+    const [isVideoLoading, setIsVideoLoading] = useState(false)
+    const [rawImageFile, setRawImageFile] = useState<File | null>(null)
+    const thumbnailStepRef = useRef<HTMLDivElement>(null)
+    const [underlineWidth, setUnderlineWidth] = useState(0)
 
-  useEffect(() => {
-    if (isImgLoading || isVideoLoading) {
-      return
-    }
-    if (editMode || files.video) {
-      setStep('image')
-    } else {
-      setStep('video')
-    }
-  }, [editMode, files.video, isImgLoading, isVideoLoading])
+    useLayoutEffect(() => {
+      if (thumbnailStepRef?.current?.offsetWidth) {
+        setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth)
+      }
+    }, [])
 
-  useEffect(() => {
-    if (!isVideoLoading && !isImgLoading) {
-      return
-    }
-    if (error) {
-      setIsVideoLoading(false)
-      return
-    }
-    const timeout = setTimeout(() => {
-      if (isVideoLoading) {
-        setIsVideoLoading(false)
+    useEffect(() => {
+      if (isImgLoading || isVideoLoading) {
+        return
+      }
+      if (editMode || files.video) {
         setStep('image')
+      } else {
+        setStep('video')
       }
-      if (isImgLoading) {
-        setIsImgLoading(false)
+    }, [editMode, files.video, isImgLoading, isVideoLoading])
+
+    useEffect(() => {
+      if (!isVideoLoading && !isImgLoading) {
+        return
       }
-    }, 1000)
-
-    return () => clearTimeout(timeout)
-  }, [error, isImgLoading, isVideoLoading])
-
-  const updateVideoFile = async (file: File) => {
-    try {
-      const videoMetadata = await getVideoMetadata(file)
-      const updatedVideo: VideoInputFile = {
-        duration: videoMetadata.duration,
-        mediaPixelHeight: videoMetadata.height,
-        mediaPixelWidth: videoMetadata.width,
-        size: videoMetadata.sizeInBytes,
-        mimeType: videoMetadata.mimeType,
-        blob: file,
-        title: file.name,
+      if (error) {
+        setIsVideoLoading(false)
+        return
       }
-      onVideoChange(updatedVideo)
-    } catch (e) {
-      onError?.('file-invalid-type', step)
-    }
-  }
+      const timeout = setTimeout(() => {
+        if (isVideoLoading) {
+          setIsVideoLoading(false)
+          setStep('image')
+        }
+        if (isImgLoading) {
+          setIsImgLoading(false)
+        }
+      }, 1000)
 
-  const updateThumbnailFile = (
-    croppedBlob: Blob,
-    croppedUrl: string,
-    assetDimensions: AssetDimensions,
-    imageCropData: ImageCropData
-  ) => {
-    const updatedThumbnail: ImageInputFile = {
-      originalBlob: rawImageFile,
-      blob: croppedBlob,
-      url: croppedUrl,
-      assetDimensions,
-      imageCropData,
-    }
-    onThumbnailChange(updatedThumbnail)
-    setIsImgLoading(true)
-  }
+      return () => clearTimeout(timeout)
+    }, [error, isImgLoading, isVideoLoading])
 
-  const handleUploadFile = async (file: File) => {
-    if (step === 'video') {
-      setIsVideoLoading(true)
-      updateVideoFile(file)
-    }
-    if (step === 'image') {
+    const updateVideoFile = async (file: File) => {
       try {
-        await validateImage(file)
-        setRawImageFile(file)
-        dialogRef.current?.open(file)
-      } catch (error) {
+        const videoMetadata = await getVideoMetadata(file)
+        const updatedVideo: VideoInputFile = {
+          duration: videoMetadata.duration,
+          mediaPixelHeight: videoMetadata.height,
+          mediaPixelWidth: videoMetadata.width,
+          size: videoMetadata.sizeInBytes,
+          mimeType: videoMetadata.mimeType,
+          blob: file,
+          title: file.name,
+        }
+        onVideoChange(updatedVideo)
+      } catch (e) {
         onError?.('file-invalid-type', step)
       }
     }
-  }
 
-  const handleReAdjustThumbnail = () => {
-    if (files.thumbnail?.originalBlob) {
-      dialogRef.current?.open(files.thumbnail.originalBlob)
-    }
-  }
-
-  const handleDeleteFile = (fileType: FileType) => {
-    if (fileType === 'video') {
-      onVideoChange(null)
-      setIsVideoLoading(false)
-    }
-    if (fileType === 'image') {
-      onThumbnailChange(null)
-      setIsImgLoading(false)
-    }
-  }
-
-  const handleFileRejections = async (fileRejections: FileRejection[]) => {
-    if (!fileRejections.length) {
-      return
+    const updateThumbnailFile = (
+      croppedBlob: Blob,
+      croppedUrl: string,
+      assetDimensions: AssetDimensions,
+      imageCropData: ImageCropData
+    ) => {
+      const updatedThumbnail: ImageInputFile = {
+        originalBlob: rawImageFile,
+        blob: croppedBlob,
+        url: croppedUrl,
+        assetDimensions,
+        imageCropData,
+      }
+      onThumbnailChange(updatedThumbnail)
+      setIsImgLoading(true)
     }
 
-    const { errors } = fileRejections[0]
-    if (!errors.length) {
-      return
-    }
-
-    const firstError = errors[0]
-    onError?.(firstError.code, step)
-  }
-  const stepsActive =
-    (editMode && !files.thumbnail?.url) || (!editMode && !(files.thumbnail?.originalBlob && files.video?.blob))
-
-  return (
-    <MultiFileSelectContainer className={className}>
-      <FileSelect
-        maxSize={step === 'video' ? maxVideoSize : maxImageSize}
-        onUploadFile={handleUploadFile}
-        onReAdjustThumbnail={handleReAdjustThumbnail}
-        isLoading={isVideoLoading || isImgLoading}
-        fileType={step}
-        title={step === 'video' ? VIDEO_SELECT_TITLE : THUMBNAIL_SELECT_TITLE}
-        thumbnailUrl={files.thumbnail?.url}
-        paragraph={
-          step === 'video'
-            ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
-            : `Preferred 16:9 image ratio`
+    const handleUploadFile = async (file: File) => {
+      if (step === 'video') {
+        setIsVideoLoading(true)
+        updateVideoFile(file)
+      }
+      if (step === 'image') {
+        try {
+          await validateImage(file)
+          setRawImageFile(file)
+          dialogRef.current?.open(file)
+        } catch (error) {
+          onError?.('file-invalid-type', step)
         }
-        onDropRejected={handleFileRejections}
-        onError={onError}
-        error={error}
-      />
-      <StepsContainer>
-        <Step
-          variant="file"
-          number={1}
-          title={
-            editMode ? 'Video file' : files.video ? (files.video.blob as File).name || 'Video file' : VIDEO_SELECT_TITLE
+      }
+    }
+
+    const handleReAdjustThumbnail = () => {
+      if (files.thumbnail?.originalBlob) {
+        dialogRef.current?.open(files.thumbnail.originalBlob)
+      }
+    }
+
+    const handleDeleteFile = useCallback(
+      (fileType: FileType) => {
+        if (fileType === 'video') {
+          onVideoChange(null)
+          setIsVideoLoading(false)
+        }
+        if (fileType === 'image') {
+          onThumbnailChange(null)
+          setIsImgLoading(false)
+        }
+      },
+      [onThumbnailChange, onVideoChange]
+    )
+
+    const handleFileRejections = async (fileRejections: FileRejection[]) => {
+      if (!fileRejections.length) {
+        return
+      }
+
+      const { errors } = fileRejections[0]
+      if (!errors.length) {
+        return
+      }
+
+      const firstError = errors[0]
+      onError?.(firstError.code, step)
+    }
+    const stepsActive =
+      (editMode && !files.thumbnail?.url) || (!editMode && !(files.thumbnail?.originalBlob && files.video?.blob))
+
+    const handleDeleteVideoFile = () => handleDeleteFile('video')
+    const handleDeleteImageFile = () => handleDeleteFile('image')
+
+    return (
+      <MultiFileSelectContainer className={className}>
+        <FileSelect
+          maxSize={step === 'video' ? maxVideoSize : maxImageSize}
+          onUploadFile={handleUploadFile}
+          onReAdjustThumbnail={handleReAdjustThumbnail}
+          isLoading={isVideoLoading || isImgLoading}
+          fileType={step}
+          title={step === 'video' ? VIDEO_SELECT_TITLE : THUMBNAIL_SELECT_TITLE}
+          thumbnailUrl={files.thumbnail?.url}
+          paragraph={
+            step === 'video'
+              ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
+              : `Preferred 16:9 image ratio`
           }
-          active={step === 'video' && stepsActive}
-          disabled={editMode}
-          completed={!!files.video}
-          onDelete={() => handleDeleteFile('video')}
-          isLoading={isVideoLoading}
+          onDropRejected={handleFileRejections}
+          onError={onError}
+          error={error}
         />
-        <StepDivider>
-          <SvgActionChevronR />
-        </StepDivider>
-        <Step
-          variant="file"
-          number={2}
-          title={
-            files.thumbnail
-              ? files.thumbnail.originalBlob
-                ? (files.thumbnail.originalBlob as File).name
-                : files.thumbnail.url
-                ? 'Thumbnail image'
+        <StepsContainer>
+          <Step
+            variant="file"
+            number={1}
+            title={
+              editMode
+                ? 'Video file'
+                : files.video
+                ? (files.video.blob as File).name || 'Video file'
+                : VIDEO_SELECT_TITLE
+            }
+            active={step === 'video' && stepsActive}
+            disabled={editMode}
+            completed={!!files.video}
+            onDelete={handleDeleteVideoFile}
+            isLoading={isVideoLoading}
+          />
+          <StepDivider>
+            <SvgActionChevronR />
+          </StepDivider>
+          <Step
+            variant="file"
+            number={2}
+            title={
+              files.thumbnail
+                ? files.thumbnail.originalBlob
+                  ? (files.thumbnail.originalBlob as File).name
+                  : files.thumbnail.url
+                  ? 'Thumbnail image'
+                  : THUMBNAIL_SELECT_TITLE
                 : THUMBNAIL_SELECT_TITLE
-              : THUMBNAIL_SELECT_TITLE
-          }
-          active={step === 'image' && stepsActive}
-          completed={!!files.thumbnail?.url}
-          onDelete={() => handleDeleteFile('image')}
-          ref={thumbnailStepRef}
-          isLoading={isImgLoading}
-        />
-        {stepsActive && (
-          <CSSTransition in={step === 'image'} timeout={400} classNames="underline">
-            <AnimatedUnderline
-              style={{
-                width: thumbnailStepRef?.current?.offsetWidth,
-                left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
-              }}
-            />
-          </CSSTransition>
-        )}
-      </StepsContainer>
-      <ImageCropModal ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
-    </MultiFileSelectContainer>
-  )
-}
+            }
+            active={step === 'image' && stepsActive}
+            completed={!!files.thumbnail?.url}
+            onDelete={handleDeleteImageFile}
+            ref={thumbnailStepRef}
+            isLoading={isImgLoading}
+          />
+          {stepsActive && (
+            <CSSTransition in={step === 'image'} timeout={400} classNames="underline">
+              <AnimatedUnderline
+                style={{
+                  width: underlineWidth,
+                  left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
+                }}
+              />
+            </CSSTransition>
+          )}
+        </StepsContainer>
+        <ImageCropModal ref={dialogRef} imageType="videoThumbnail" onConfirm={updateThumbnailFile} />
+      </MultiFileSelectContainer>
+    )
+  }
+)
+
+MultiFileSelect.displayName = 'MultiFileSelect'

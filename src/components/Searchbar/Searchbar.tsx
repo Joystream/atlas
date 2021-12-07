@@ -99,7 +99,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }, [onClick, onClose, query, searchOpen])
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && !selectedItem) {
+      if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && typeof selectedItem !== 'number') {
         event.preventDefault()
         addRecentSearch(query)
         handleClose()
@@ -137,7 +137,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }
 
     const onLastSelectedItem = useCallback(() => {
-      setSelectedItem(0)
+      setSelectedItem(null)
     }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -226,7 +226,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                 <SearchButton variant="tertiary" onClick={onClick}>
                   <SvgActionSearch />
                 </SearchButton>
-                <SearchHelper variant="caption" secondary>
+                <SearchHelper variant="t100" secondary>
                   Press <ShortcutIndicator>/</ShortcutIndicator>
                 </SearchHelper>
               </>
