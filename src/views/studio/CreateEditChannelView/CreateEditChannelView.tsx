@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import useMeasure from 'react-use-measure'
 
 import { useChannel } from '@/api/hooks'
 import { AssetAvailability } from '@/api/queries'
@@ -86,6 +87,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
+  const [actionBarRef, actionBarBounds] = useMeasure()
 
   const {
     channel,
@@ -454,7 +456,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         </TitleContainer>
       </StyledTitleSection>
       <LimitedWidthContainer>
-        <InnerFormContainer>
+        <InnerFormContainer actionBarHeight={actionBarBounds.height}>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
               <TextArea
@@ -513,7 +515,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             classNames={transitions.names.fade}
             unmountOnExit
           >
-            <ActionBarTransactionWrapper>
+            <ActionBarTransactionWrapper ref={actionBarRef}>
               {!activeChannelId && progressDrawerSteps?.length ? (
                 <StyledProgressDrawer steps={progressDrawerSteps} />
               ) : null}
