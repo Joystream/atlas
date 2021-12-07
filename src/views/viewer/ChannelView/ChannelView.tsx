@@ -49,6 +49,7 @@ import {
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
+  UtilitiesContainer,
   VideoSection,
 } from './ChannelView.styles'
 
@@ -269,32 +270,36 @@ export const ChannelView: React.FC = () => {
             initialIndex={0}
             tabs={mappedTabs}
             onSelectTab={handleSetCurrentTab}
+            additionalItems={
+              <UtilitiesContainer>
+                {currentTab === 'Videos' && (
+                  <Search
+                    searchInputRef={searchInputRef}
+                    isSearchInputOpen={isSearchInputOpen}
+                    setIsSearchingInputOpen={setIsSearchingInputOpen}
+                    setIsSearching={setIsSearching}
+                    search={search}
+                    isSearching={isSearching}
+                    setCurrentTab={setCurrentTab}
+                  />
+                )}
+                {currentTab === 'Videos' && (
+                  <SortContainer>
+                    <Select
+                      size="small"
+                      labelPosition="left"
+                      label="Sort by"
+                      disabled={isSearching}
+                      value={!isSearching ? sortVideosBy : 0}
+                      placeholder={isSearching ? 'Best match' : undefined}
+                      items={!isSearching ? SORT_OPTIONS : []}
+                      onChange={!isSearching ? handleSorting : undefined}
+                    />
+                  </SortContainer>
+                )}
+              </UtilitiesContainer>
+            }
           />
-          {currentTab === 'Videos' && (
-            <Search
-              searchInputRef={searchInputRef}
-              isSearchInputOpen={isSearchInputOpen}
-              setIsSearchingInputOpen={setIsSearchingInputOpen}
-              setIsSearching={setIsSearching}
-              search={search}
-              isSearching={isSearching}
-              setCurrentTab={setCurrentTab}
-            />
-          )}
-          {currentTab === 'Videos' && (
-            <SortContainer>
-              <Select
-                size="small"
-                labelPosition="left"
-                label="Sort by"
-                disabled={isSearching}
-                value={!isSearching ? sortVideosBy : 0}
-                placeholder={isSearching ? 'Best match' : undefined}
-                items={!isSearching ? SORT_OPTIONS : []}
-                onChange={!isSearching ? handleSorting : undefined}
-              />
-            </SortContainer>
-          )}
         </TabsContainer>
         {tabContent}
       </LimitedWidthContainer>

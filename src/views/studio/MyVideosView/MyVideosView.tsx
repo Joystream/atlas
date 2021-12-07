@@ -30,6 +30,7 @@ import {
   StyledPagination,
   StyledSelect,
   StyledText,
+  TabControlsWrapper,
   TabsContainer,
 } from './MyVideos.styles'
 import { NewVideoTile } from './NewVideoTile'
@@ -320,17 +321,25 @@ export const MyVideosView = () => {
       ) : (
         <>
           <TabsContainer>
-            <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={handleSetCurrentTab} />
-            {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
-            {smMatch && sortVisibleAndUploadButtonVisible && (
-              <Button
-                to={absoluteRoutes.studio.videoWorkspace()}
-                icon={<SvgActionAddVideo />}
-                onClick={handleAddVideoTab}
-              >
-                Upload video
-              </Button>
-            )}
+            <Tabs
+              initialIndex={0}
+              tabs={mappedTabs}
+              onSelectTab={handleSetCurrentTab}
+              additionalItems={
+                <TabControlsWrapper>
+                  {mdMatch && sortVisibleAndUploadButtonVisible && sortSelectNode}
+                  {smMatch && sortVisibleAndUploadButtonVisible && (
+                    <Button
+                      to={absoluteRoutes.studio.videoWorkspace()}
+                      icon={<SvgActionAddVideo />}
+                      onClick={handleAddVideoTab}
+                    >
+                      Upload video
+                    </Button>
+                  )}
+                </TabControlsWrapper>
+              }
+            />
           </TabsContainer>
           {isDraftTab && (
             <StyledDismissibleBanner

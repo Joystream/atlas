@@ -6,7 +6,7 @@ import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
-import { media, oldColors, sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const StyledText = styled(Text)`
   margin: ${sizes(12)} 0;
@@ -14,16 +14,21 @@ export const StyledText = styled(Text)`
 
 export const TabsContainer = styled.div`
   margin-bottom: ${sizes(12)};
-  border-bottom: solid 1px ${oldColors.gray[800]};
+`
+
+export const TabControlsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
 
   ${media.sm} {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto auto;
   }
   ${media.md} {
     gap: ${sizes(4)};
-    grid-template-columns: 1fr minmax(230px, 250px) max-content;
+    grid-template-columns: minmax(230px, 250px) max-content;
   }
 `
 

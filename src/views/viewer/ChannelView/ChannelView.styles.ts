@@ -130,19 +130,30 @@ export const PaginationContainer = styled.div`
 `
 
 export const TabsContainer = styled.div`
-  display: grid;
   margin-bottom: ${sizes(8)};
-  gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
-  align-items: baseline;
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${oldColors.gray[800]};
     gap: ${sizes(8)};
     grid-template: 1fr / auto 1fr 250px;
+  }
+`
+
+export const UtilitiesContainer = styled.div`
+  display: grid;
+  gap: ${sizes(2)};
+  grid-template: 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
+  align-items: baseline;
+  flex-basis: auto;
+  width: 100%;
+
+  ${media.sm} {
+    padding-left: ${sizes(8)};
+    align-items: center;
+    gap: ${sizes(8)};
+    grid-template: 1fr / 1fr 250px;
   }
 `
 
@@ -164,9 +175,8 @@ export const SearchContainer = styled.div<SearchContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[800]};
+
   ${media.sm} {
-    border-bottom: none;
     grid-area: initial;
   }
 `
