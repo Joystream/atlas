@@ -15,32 +15,18 @@ type JoystreamContextValue = {
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 
-const ATTEMPT_DELAY = 2000
-
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
-  const [reconnectAttempts, setReconnectAttempts] = useState<number>(0)
 
   const [joystream, setJoystream] = useState<JoystreamJs | null>(null)
 
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
-      if (connected) {
-        setNodeConnection('connected')
-        setReconnectAttempts(0)
-        return
-      }
-      // disconnected
-      if (reconnectAttempts === 0) {
-        setReconnectAttempts((attempts) => attempts + 1)
-      } else {
-        // disconnect only after second attempt, i.e reconnectAttempts needs to be 1
-        setNodeConnection('disconnected')
-      }
+      setNodeConnection(connected ? 'connected' : 'disconnected')
     },
-    [reconnectAttempts, setNodeConnection]
+    [setNodeConnection]
   )
 
   useEffect(() => {
@@ -61,18 +47,10 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
     init()
 
-    if (!reconnectAttempts) {
-      return
-    }
-    const timeout = window.setTimeout(() => {
-      init()
-    }, ATTEMPT_DELAY)
-
     return () => {
       joystream?.destroy()
-      window.clearTimeout(timeout)
     }
-  }, [handleNodeConnectionUpdate, nodeOverride, reconnectAttempts, setNodeConnection])
+  }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
   useEffect(() => {
     if (!joystream || !activeAccountId || !accounts) {
