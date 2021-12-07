@@ -127,7 +127,6 @@ export const StyledButton = styled(Button)`
 
 export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
-  padding-bottom: ${sizes(16)};
 `
 
 export const TabsContainer = styled.div`

@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgAlertsInformative24 } from '@/components/_icons'
-import { cVar, oldColors, sizes, transitions } from '@/styles'
+import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { SelectSizes } from '.'
 import { LabelText } from '../InputBase'
@@ -95,7 +95,7 @@ export const SelectMenu = styled.ul<SelectMenuProps>`
   max-height: 300px;
   position: absolute;
   overflow-y: auto;
-  z-index: 1;
+  z-index: ${zIndex.globalOverlay};
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
   background-color: ${oldColors.gray[700]};

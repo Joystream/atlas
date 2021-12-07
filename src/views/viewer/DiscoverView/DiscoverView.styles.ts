@@ -6,7 +6,7 @@ import { sizes } from '@/styles'
 
 export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
   margin: 0 auto;
-  padding: ${sizes(16)} 0;
+  padding-top: ${sizes(16)};
 `
 
 export const FeaturedCategoriesContainer = styled(LayoutGrid)`
@@ -14,5 +14,5 @@ export const FeaturedCategoriesContainer = styled(LayoutGrid)`
 `
 
 export const CategoriesContainer = styled(LayoutGrid)`
-  margin: ${sizes(12)} 0 ${sizes(16)} 0;
+  margin-top: ${sizes(12)};
 `

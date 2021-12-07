@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useVideosConnection } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -26,7 +27,6 @@ import {
   MobileButton,
   StyledDismissibleBanner,
   StyledGrid,
-  StyledLimitedWidthContainer,
   StyledPagination,
   StyledSelect,
   StyledText,
@@ -288,7 +288,7 @@ export const MyVideosView = () => {
 
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
-    <StyledLimitedWidthContainer>
+    <LimitedWidthContainer>
       <StyledText variant="h700">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
@@ -405,7 +405,7 @@ export const MyVideosView = () => {
           />
         </>
       )}
-    </StyledLimitedWidthContainer>
+    </LimitedWidthContainer>
   )
 }
 
