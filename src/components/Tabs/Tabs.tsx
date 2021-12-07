@@ -91,7 +91,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
     }
 
     return (
-      <TabsWrapper className={className}>
+      <TabsWrapper className={className} hasControls={!!controls}>
         <CSSTransition
           in={shadowsVisible.left && isContentOverflown && !smMatch}
           timeout={100}

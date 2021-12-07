@@ -11,9 +11,10 @@ type BackgroundGradientProps = {
   direction: 'prev' | 'next'
 }
 
-export const TabsWrapper = styled.div`
+export const TabsWrapper = styled.div<{ hasControls?: boolean }>`
   position: relative;
   width: 100%;
+  border-bottom: ${({ hasControls }) => (hasControls ? `1px solid ${oldColors.gray[700]}` : 0)};
 
   ${media.sm} {
     border-bottom: 1px solid ${oldColors.gray[700]};
@@ -46,8 +47,8 @@ export const TabsGroup = styled.div<{ hasControls?: boolean; borderBottom?: bool
   border-bottom: ${({ borderBottom }) => (borderBottom ? `1px solid ${oldColors.gray[700]}` : 0)};
 
   ${media.sm} {
-    width: ${({ hasControls }) => (hasControls ? '100%' : 'auto')};
     border-bottom: 0;
+    width: ${({ hasControls }) => (hasControls ? '100%' : 'auto')};
   }
 
   ::-webkit-scrollbar {
