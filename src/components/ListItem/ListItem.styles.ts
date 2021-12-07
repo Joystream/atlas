@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 import { ListItemSizes } from '.'
@@ -62,9 +63,26 @@ export const SelectedIcon = styled(SvgActionCheck)`
     fill: ${cVar('colorTextPrimary')};
   }
 `
+type CaptionPosition = {
+  captionPosition?: 'right' | 'bottom'
+}
+const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
+  captionPosition === 'right' &&
+  css`
+    text-align: right;
+  `
+export const Caption = styled(Text)<CaptionPosition>`
+  ${captionRightStyles}
+`
 
 export const LabelContainer = styled.div`
   display: flex;
   align-items: center;
   min-height: 24px;
+`
+
+export const NodeContainer = styled.div<{ destructive?: boolean }>`
+  * path {
+    fill: ${({ destructive }) => destructive && cVar('colorTextError')};
+  }
 `

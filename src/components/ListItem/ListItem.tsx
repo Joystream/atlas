@@ -3,7 +3,14 @@ import React from 'react'
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 
-import { Container, LabelCaptionContainer, LabelContainer, SelectedIcon } from './ListItem.styles'
+import {
+  Caption,
+  Container,
+  LabelCaptionContainer,
+  LabelContainer,
+  NodeContainer,
+  SelectedIcon,
+} from './ListItem.styles'
 
 export type ListItemSizes = 'small' | 'medium' | 'large'
 
@@ -39,19 +46,19 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
   ) => {
     return (
       <Container onClick={onClick} disabled={disabled} hasNodeStart={!!nodeStart} size={size} ref={ref}>
-        {nodeStart}
+        {!!nodeStart && <NodeContainer destructive={destructive}>{nodeStart}</NodeContainer>}
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
             <Text variant="t200-strong" color={destructive ? cVar('colorTextError') : undefined}>
               {label}
             </Text>
           </LabelContainer>
-          <Text secondary variant="t100">
+          <Caption captionPosition={captionPosition} secondary variant="t100">
             {caption}
-          </Text>
+          </Caption>
         </LabelCaptionContainer>
         {selected && <SelectedIcon />}
-        {nodeEnd}
+        {!!nodeEnd && <NodeContainer destructive={destructive}>{nodeEnd}</NodeContainer>}
       </Container>
     )
   }
