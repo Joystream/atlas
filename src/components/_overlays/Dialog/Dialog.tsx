@@ -94,14 +94,15 @@ export const Dialog: React.FC<DialogProps> = ({
         <Footer dividers={dividers} hasAdditionalActions={!!additionalActionsNode}>
           {additionalActionsNode}
           <FooterButtonsContainer>
-            {secondaryButton && (
-              <Button variant="secondary" {...buttonProps} {...secondaryButton}>
-                {secondaryButton.text}
-              </Button>
-            )}
+            {/* order of buttons on desktop is reversed via CSS direction property */}
             {primaryButton && (
               <Button variant="primary" {...buttonProps} {...primaryButton}>
                 {primaryButton.text}
+              </Button>
+            )}
+            {secondaryButton && (
+              <Button variant="secondary" {...buttonProps} {...secondaryButton}>
+                {secondaryButton.text}
               </Button>
             )}
           </FooterButtonsContainer>

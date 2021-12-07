@@ -114,6 +114,9 @@ export const FooterButtonsContainer = styled.div`
   ${media.sm} {
     grid-auto-flow: column;
     grid-auto-columns: auto;
-    justify-content: end;
+
+    /* those two properties below will reverse order of button */
+    direction: rtl;
+    justify-content: flex-start;
   }
 `
