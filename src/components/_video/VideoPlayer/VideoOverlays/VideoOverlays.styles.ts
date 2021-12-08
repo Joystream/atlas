@@ -23,6 +23,7 @@ export const InnerContainer = styled.div`
   padding: ${sizes(4)};
   overflow-y: auto;
   width: 100%;
+  text-align: center;
 
   ${media.sm} {
     padding: ${sizes(6)};
