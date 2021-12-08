@@ -47,7 +47,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       onEditClick(event)
     }
   }
-  const isEditable = !loading && editable && size !== 'default'
+  const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
   return (
     <Container onClick={onClick} size={size} className={className} editable={!!isEditable}>
       <Outline />

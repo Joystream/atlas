@@ -7,10 +7,19 @@ export default {
   title: 'other/Avatar',
   component: Avatar,
   argTypes: {
-    size: {
-      control: { type: 'select', options: ['preview', 'cover', 'view', 'default', 'fill', 'bar'] },
-      defaultValue: 'cover',
+    assetUrl: {
+      type: 'string',
+      defaultValue: 'https://picsum.photos/200/300',
     },
+    size: {
+      control: {
+        type: 'select',
+        options: ['preview', 'cover', 'default', 'fill', 'bid', 'small', 'channel', 'channel-card'],
+      },
+      defaultValue: 'channel',
+    },
+    editable: { type: 'boolean', defaultValue: false },
+    loading: { type: 'boolean', defaultValue: false },
   },
 } as Meta
 
