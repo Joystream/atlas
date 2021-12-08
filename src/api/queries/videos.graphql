@@ -100,24 +100,6 @@ query GetBasicVideos($where: VideoWhereInput) {
   }
 }
 
-### Orion
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetVideoViews($videoId: ID!) {
-  videoViews(videoId: $videoId) {
-    id
-    views
-  }
-}
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetBatchedVideoViews($videoIdList: [ID!]!) {
-  batchedVideoViews(videoIdList: $videoIdList) {
-    id
-    views
-  }
-}
-
 query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
   mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
     ...BasicVideoFields

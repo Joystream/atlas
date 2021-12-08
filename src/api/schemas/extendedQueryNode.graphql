@@ -368,17 +368,7 @@ type Query {
 
   allCategoriesFeaturedVideos: [CategoryFeaturedVideos!]!
 
-  batchedChannelFollows(channelIdList: [ID!]!): [ChannelFollowsInfo]!
-
-  batchedChannelsViews(channelIdList: [ID!]!): [EntityViewsInfo]!
-
-  batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
-
   categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
-
-  channelFollows(channelId: ID!): ChannelFollowsInfo
-
-  channelViews(channelId: ID!): EntityViewsInfo
 
   mostFollowedChannels(limit: Int, timePeriodDays: Int!): [Channel!]!
 
@@ -395,8 +385,6 @@ type Query {
   mostViewedVideos(limit: Int, timePeriodDays: Int!): [Video!]
 
   mostViewedVideosAllTime(limit: Int!): [Video!]
-
-  videoViews(videoId: ID!): EntityViewsInfo
 }
 
 type Subscription {

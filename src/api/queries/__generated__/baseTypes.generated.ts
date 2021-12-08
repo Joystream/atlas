@@ -226,12 +226,7 @@ export type Query = {
   dataObjects: Array<DataObject>
   videoHero: VideoHero
   allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
-  batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
-  batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
-  batchedVideoViews: Array<Maybe<EntityViewsInfo>>
   categoryFeaturedVideos: Array<FeaturedVideo>
-  channelFollows?: Maybe<ChannelFollowsInfo>
-  channelViews?: Maybe<EntityViewsInfo>
   mostFollowedChannels: Array<Channel>
   mostFollowedChannelsAllTime?: Maybe<Array<Channel>>
   mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
@@ -240,7 +235,6 @@ export type Query = {
   mostViewedChannelsAllTime?: Maybe<Array<Channel>>
   mostViewedVideos?: Maybe<Array<Video>>
   mostViewedVideosAllTime?: Maybe<Array<Video>>
-  videoViews?: Maybe<EntityViewsInfo>
 }
 
 export type QueryMembershipByUniqueInputArgs = {
@@ -309,28 +303,8 @@ export type QueryDataObjectsArgs = {
   where?: Maybe<DataObjectWhereInput>
 }
 
-export type QueryBatchedChannelFollowsArgs = {
-  channelIdList: Array<Scalars['ID']>
-}
-
-export type QueryBatchedChannelsViewsArgs = {
-  channelIdList: Array<Scalars['ID']>
-}
-
-export type QueryBatchedVideoViewsArgs = {
-  videoIdList: Array<Scalars['ID']>
-}
-
 export type QueryCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
-}
-
-export type QueryChannelFollowsArgs = {
-  channelId: Scalars['ID']
-}
-
-export type QueryChannelViewsArgs = {
-  channelId: Scalars['ID']
 }
 
 export type QueryMostFollowedChannelsArgs = {
@@ -367,10 +341,6 @@ export type QueryMostViewedVideosArgs = {
 
 export type QueryMostViewedVideosAllTimeArgs = {
   limit: Scalars['Int']
-}
-
-export type QueryVideoViewsArgs = {
-  videoId: Scalars['ID']
 }
 
 export type SearchFtsOutput = {

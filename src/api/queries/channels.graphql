@@ -78,38 +78,6 @@ query GetChannelsConnection(
   }
 }
 
-### Orion
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelViews($channelId: ID!) {
-  channelViews(channelId: $channelId) {
-    id
-    views
-  }
-}
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelFollows($channelId: ID!) {
-  channelFollows(channelId: $channelId) {
-    id
-    follows
-  }
-}
-
-query GetBatchedChannelFollows($channelIdList: [ID!]!) {
-  batchedChannelFollows(channelIdList: $channelIdList) {
-    id
-    follows
-  }
-}
-
-query GetBatchedChannelViews($channelIdList: [ID!]!) {
-  batchedChannelsViews(channelIdList: $channelIdList) {
-    id
-    views
-  }
-}
-
 mutation FollowChannel($channelId: ID!) {
   followChannel(channelId: $channelId) {
     id
