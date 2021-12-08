@@ -167,7 +167,7 @@ export const ChannelView: React.FC = () => {
   )
 
   const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
-  const mappedTabs = TABS.map((tab) => ({ name: tab }))
+  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
   const tabContent =
     currentTab === 'Videos' ? (
       <>
