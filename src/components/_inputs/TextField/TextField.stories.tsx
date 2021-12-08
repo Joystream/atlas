@@ -45,8 +45,8 @@ export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
 
-export const withIcons = Template.bind({})
-withIcons.args = {
+export const WithIcons = Template.bind({})
+WithIcons.args = {
   nodeStart: <SvgActionCancel />,
   nodeEnd: <Button variant="tertiary">button</Button>,
 }
