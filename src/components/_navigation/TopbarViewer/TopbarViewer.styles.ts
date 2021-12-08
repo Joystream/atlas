@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { cVar } from '@/styles'
 import { media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
@@ -92,6 +92,6 @@ export const Overlay = styled.div`
   }
 `
 
-export const StyledIconButton = styled(IconButton)`
+export const StyledIconButton = styled(Button)`
   margin-left: ${sizes(2)};
 `

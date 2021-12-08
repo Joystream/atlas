@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo } from '@/components/_icons'
+import { SvgActionAddVideo, SvgMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -14,6 +14,8 @@ import { useSearchStore } from '@/providers/search'
 import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
+  // TODO: This needs to be replaced by real logging mechanism
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const location = useLocation()
   const mdMatch = useMediaMatch('md')
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
@@ -22,6 +24,10 @@ export const TopbarViewer: React.FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+
+  const handleLogging = () => {
+    setIsLoggedIn((prevState) => !prevState)
+  }
 
   useEffect(() => {
     if (searchOpen) {
@@ -81,21 +87,26 @@ export const TopbarViewer: React.FC = () => {
         </CSSTransition>
       </SearchbarContainer>
       <ButtonWrapper>
-        {mdMatch && (
-          <Button
-            to={absoluteRoutes.studio.index()}
-            newTab
-            icon={<SvgActionAddVideo />}
-            iconPlacement="left"
-            size="medium"
-          >
-            Start publishing
-          </Button>
-        )}
-        {!searchQuery && !mdMatch && (
-          <StyledIconButton to={absoluteRoutes.studio.index()} newTab>
-            <SvgActionAddVideo />
-          </StyledIconButton>
+        {mdMatch &&
+          (isLoggedIn ? (
+            <Button
+              icon={<SvgActionAddVideo />}
+              iconPlacement="left"
+              size="medium"
+              onClick={handleLogging}
+              variant="secondary"
+            >
+              Upload video
+            </Button>
+          ) : (
+            <Button icon={<SvgMember />} iconPlacement="left" size="medium" onClick={handleLogging}>
+              Sign up
+            </Button>
+          ))}
+        {!searchQuery && !mdMatch && !isLoggedIn && (
+          <>
+            <StyledIconButton onClick={handleLogging}>Sign up</StyledIconButton>
+          </>
         )}
       </ButtonWrapper>
       <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>

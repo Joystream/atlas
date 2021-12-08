@@ -22,6 +22,9 @@ export const Header = styled.header`
     calc(${sizes(4)} + 48px + ${sizes(2)});
 
   ${media.md} {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto 480px 146px;
     padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
       calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }
