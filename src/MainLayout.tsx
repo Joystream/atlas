@@ -1,11 +1,13 @@
 import loadable from '@loadable/component'
-import React, { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { AdminOverlay } from '@/components/_overlays/AdminOverlay'
 import { BASE_PATHS, absoluteRoutes } from '@/config/routes'
+import { transitions } from '@/styles'
+import { RoutingState } from '@/types/routing'
 import { isBrowserOutdated } from '@/utils/browser'
 
 import { TopbarBase } from './components/_navigation/TopbarBase'
@@ -13,6 +15,9 @@ import { useConfirmationModal } from './providers/confirmationModal'
 import { LegalLayout } from './views/legal'
 import { EmbeddedView } from './views/viewer'
 import { ViewerLayout } from './views/viewer/ViewerLayout'
+
+history.scrollRestoration = 'manual'
+const ROUTING_ANIMATION_OFFSET = 100
 
 const LoadableStudioLayout = loadable(() => import('./views/studio/StudioLayout'), {
   fallback: (
@@ -28,6 +33,11 @@ const LoadablePlaygroundLayout = loadable(() => import('./views/playground/Playg
 })
 
 export const MainLayout: React.FC = () => {
+  const scrollPosition = useRef<number>(0)
+  const location = useLocation()
+  const navigationType = useNavigationType()
+  const [cachedLocation, setCachedLocation] = useState(location)
+  const locationState = location.state as RoutingState
   const [openDialog, closeDialog] = useConfirmationModal({
     title: 'Outdated browser detected',
     description:
@@ -45,6 +55,26 @@ export const MainLayout: React.FC = () => {
       openDialog()
     }
   }, [openDialog])
+
+  useEffect(() => {
+    if (location.pathname === cachedLocation.pathname) {
+      return
+    }
+
+    setCachedLocation(location)
+
+    if (locationState?.overlaidLocation?.pathname === location.pathname) {
+      // if exiting routing overlay, skip scroll to top
+      return
+    }
+    if (navigationType !== 'POP') {
+      scrollPosition.current = window.scrollY
+    }
+    // delay scroll to allow transition to finish first
+    setTimeout(() => {
+      window.scrollTo(0, navigationType !== 'POP' ? 0 : scrollPosition.current)
+    }, parseInt(transitions.timings.routing) + ROUTING_ANIMATION_OFFSET)
+  }, [location, cachedLocation, locationState, navigationType])
 
   return (
     <>
