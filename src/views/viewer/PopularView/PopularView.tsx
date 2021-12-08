@@ -22,22 +22,24 @@ export const PopularView: FC = () => {
     {
       limit: 200,
     },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'PopularView', error) }
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos all time', 'PopularView', error) }
   )
-  const mostViewedVideosIds = mostViewedVideosAllTime?.map((item) => item.id)
+  const mostViewedVideosAllTimeIds = mostViewedVideosAllTime?.map((item) => item.id)
+
   const { channels, error: mostViewedChannelsError } = useMostViewedChannelsAllTime(
     { limit: 15 },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels IDs', 'PopularView', error) }
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels', 'PopularView', error) }
   )
   const mostViewedChannelsAllTimeIds = channels?.map((item) => item.id)
-  const videoWhereInput = useMemo(() => ({ id_in: mostViewedVideosIds }), [mostViewedVideosIds])
+
+  const videoWhereInput = useMemo(() => ({ id_in: mostViewedVideosAllTimeIds }), [mostViewedVideosAllTimeIds])
   const {
     videos,
     loading,
     error: mostViewedVideosError,
   } = useMostViewedVideos(
     { timePeriodDays: 30, limit: 10 },
-    { onError: (error) => SentryLogger.error('Failed to fetch videos', 'PopularView', error) }
+    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos', 'PopularView', error) }
   )
 
   if (mostViewedVideosIdsError || mostViewedVideosError || mostViewedChannelsError) {
