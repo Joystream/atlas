@@ -229,7 +229,7 @@ export type Query = {
   batchedChannelFollows: Array<Maybe<ChannelFollowsInfo>>
   batchedChannelsViews: Array<Maybe<EntityViewsInfo>>
   batchedVideoViews: Array<Maybe<EntityViewsInfo>>
-  categoryFeaturedVideos: CategoryFeaturedVideos
+  categoryFeaturedVideos: Array<FeaturedVideo>
   channelFollows?: Maybe<ChannelFollowsInfo>
   channelViews?: Maybe<EntityViewsInfo>
   mostFollowedChannels: Array<Channel>

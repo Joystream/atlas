@@ -226,40 +226,78 @@ export type GetCategoriesFeaturedVideosQueryVariables = Types.Exact<{
 
 export type GetCategoriesFeaturedVideosQuery = {
   __typename?: 'Query'
-  categoryFeaturedVideos: {
-    __typename?: 'CategoryFeaturedVideos'
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; name?: Types.Maybe<string> }>
-    videos: Array<{
-      __typename?: 'FeaturedVideo'
-      videoId: string
-      videoCutUrl?: Types.Maybe<string>
-      video: {
-        __typename?: 'Video'
+  categoryFeaturedVideos: Array<{
+    __typename?: 'FeaturedVideo'
+    videoId: string
+    videoCutUrl?: Types.Maybe<string>
+    video: {
+      __typename?: 'Video'
+      id: string
+      title?: Types.Maybe<string>
+      description?: Types.Maybe<string>
+      views?: Types.Maybe<number>
+      duration?: Types.Maybe<number>
+      createdAt: Date
+      isPublic?: Types.Maybe<boolean>
+      isExplicit?: Types.Maybe<boolean>
+      isFeatured: boolean
+      hasMarketing?: Types.Maybe<boolean>
+      isCensored: boolean
+      publishedBeforeJoystream?: Types.Maybe<Date>
+      mediaUrls: Array<string>
+      mediaAvailability: Types.AssetAvailability
+      thumbnailPhotoUrls: Array<string>
+      thumbnailPhotoAvailability: Types.AssetAvailability
+      category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+      language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+      mediaMetadata: {
+        __typename?: 'VideoMediaMetadata'
+        id: string
+        pixelHeight?: Types.Maybe<number>
+        pixelWidth?: Types.Maybe<number>
+      }
+      mediaDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+      thumbnailPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+      channel: {
+        __typename?: 'Channel'
         id: string
         title?: Types.Maybe<string>
-        description?: Types.Maybe<string>
-        views?: Types.Maybe<number>
-        duration?: Types.Maybe<number>
         createdAt: Date
-        isPublic?: Types.Maybe<boolean>
-        isExplicit?: Types.Maybe<boolean>
-        isFeatured: boolean
-        hasMarketing?: Types.Maybe<boolean>
-        isCensored: boolean
-        publishedBeforeJoystream?: Types.Maybe<Date>
-        mediaUrls: Array<string>
-        mediaAvailability: Types.AssetAvailability
-        thumbnailPhotoUrls: Array<string>
-        thumbnailPhotoAvailability: Types.AssetAvailability
-        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-        mediaMetadata: {
-          __typename?: 'VideoMediaMetadata'
-          id: string
-          pixelHeight?: Types.Maybe<number>
-          pixelWidth?: Types.Maybe<number>
-        }
-        mediaDataObject?: Types.Maybe<{
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        avatarPhotoDataObject?: Types.Maybe<{
           __typename?: 'DataObject'
           id: string
           createdAt: Date
@@ -275,59 +313,17 @@ export type GetCategoriesFeaturedVideosQuery = {
             isActive: boolean
             type: Types.WorkerType
           }>
-        }>
-        thumbnailPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
-          id: string
-          createdAt: Date
-          size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
-        }>
-        channel: {
-          __typename?: 'Channel'
-          id: string
-          title?: Types.Maybe<string>
-          createdAt: Date
-          avatarPhotoUrls: Array<string>
-          avatarPhotoAvailability: Types.AssetAvailability
-          avatarPhotoDataObject?: Types.Maybe<{
-            __typename?: 'DataObject'
-            id: string
-            createdAt: Date
-            size: number
-            liaisonJudgement: Types.LiaisonJudgement
-            ipfsContentId: string
-            joystreamContentId: string
-            liaison?: Types.Maybe<{
-              __typename?: 'Worker'
-              id: string
-              workerId: string
-              metadata?: Types.Maybe<string>
-              isActive: boolean
-              type: Types.WorkerType
-            }>
-          }>
-        }
-        license?: Types.Maybe<{
-          __typename?: 'License'
-          id: string
-          code?: Types.Maybe<number>
-          attribution?: Types.Maybe<string>
-          customText?: Types.Maybe<string>
         }>
       }
-    }>
-  }
+      license?: Types.Maybe<{
+        __typename?: 'License'
+        id: string
+        code?: Types.Maybe<number>
+        attribution?: Types.Maybe<string>
+        customText?: Types.Maybe<string>
+      }>
+    }
+  }>
 }
 
 export const GetVideoHeroDocument = gql`
@@ -444,15 +440,10 @@ export type GetAllCategoriesFeaturedVideosQueryResult = Apollo.QueryResult<
 export const GetCategoriesFeaturedVideosDocument = gql`
   query GetCategoriesFeaturedVideos($categoryId: ID!) {
     categoryFeaturedVideos(categoryId: $categoryId) {
-      category {
-        name
-      }
-      videos {
-        videoId
-        videoCutUrl
-        video {
-          ...VideoFields
-        }
+      videoId
+      videoCutUrl
+      video {
+        ...VideoFields
       }
     }
   }

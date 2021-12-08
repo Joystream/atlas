@@ -28,15 +28,10 @@ query GetAllCategoriesFeaturedVideos {
 
 query GetCategoriesFeaturedVideos($categoryId: ID!) {
   categoryFeaturedVideos(categoryId: $categoryId) {
-    category {
-      name
-    }
-    videos {
-      videoId
-      videoCutUrl
-      video {
-        ...VideoFields
-      }
+    videoId
+    videoCutUrl
+    video {
+      ...VideoFields
     }
   }
 }

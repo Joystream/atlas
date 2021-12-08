@@ -374,7 +374,7 @@ type Query {
 
   batchedVideoViews(videoIdList: [ID!]!): [EntityViewsInfo]!
 
-  categoryFeaturedVideos(categoryId: ID!): CategoryFeaturedVideos!
+  categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
 
   channelFollows(channelId: ID!): ChannelFollowsInfo
 

@@ -45,7 +45,7 @@ export const CategoryView = () => {
   const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
 
   const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(id)
-  const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos?.videos)
+  const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
   const { videoCount, error } = useVideoCount(
     {},
@@ -71,7 +71,7 @@ export const CategoryView = () => {
         <Text variant="h500">Featured category videos</Text>
       </TitleContainer>
       <Grid>
-        {categoriesFeaturedVideos?.videos.map((featuredVideo, idx) => (
+        {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
           <VideoTile id={featuredVideo.video.id} key={idx} showChannel />
         ))}
       </Grid>
@@ -109,9 +109,7 @@ export const CategoryView = () => {
   )
 }
 
-const useVideoHeroVideos = (
-  featuredVideos: GetCategoriesFeaturedVideosQuery['categoryFeaturedVideos']['videos'] = []
-) => {
+const useVideoHeroVideos = (featuredVideos: GetCategoriesFeaturedVideosQuery['categoryFeaturedVideos'] = []) => {
   const videoHeroVideos = featuredVideos
     .filter((vid) => !!vid.videoCutUrl)
     .slice(0, 3)
