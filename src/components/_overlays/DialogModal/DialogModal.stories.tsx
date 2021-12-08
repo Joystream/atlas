@@ -27,8 +27,7 @@ export default {
 
 const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
   return (
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    <DialogModal {...args} show={true} onExitClick={() => {}}>
+    <DialogModal {...args} show={true} onExitClick={() => null}>
       <p>Content spanning multiple lines</p>
       <p>Content spanning multiple lines</p>
       <p>Content spanning multiple lines</p>
@@ -66,3 +65,12 @@ const ToggleableTemplate: Story<DialogModalProps> = ({ ...args }) => {
   )
 }
 export const Toggleable = ToggleableTemplate.bind({})
+
+export const WithLink = OpenTemplate.bind({})
+
+WithLink.args = {
+  primaryButton: {
+    text: 'Go to google',
+    to: 'https://google.com',
+  },
+}

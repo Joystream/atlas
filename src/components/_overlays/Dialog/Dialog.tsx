@@ -15,6 +15,7 @@ import {
   Header,
   HeaderContent,
   HeaderIconContainer,
+  StyledPrimaryButton,
 } from './Dialog.styles'
 
 type DialogButtonProps = {
@@ -94,16 +95,15 @@ export const Dialog: React.FC<DialogProps> = ({
         <Footer dividers={dividers} hasAdditionalActions={!!additionalActionsNode}>
           {additionalActionsNode}
           <FooterButtonsContainer>
-            {/* order of buttons on desktop is reversed via CSS order property */}
-            {primaryButton && (
-              <Button variant="primary" {...buttonProps} {...primaryButton}>
-                {primaryButton.text}
-              </Button>
-            )}
             {secondaryButton && (
               <Button variant="secondary" {...buttonProps} {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
+            )}
+            {primaryButton && (
+              <StyledPrimaryButton variant="primary" {...buttonProps} {...primaryButton}>
+                {primaryButton.text}
+              </StyledPrimaryButton>
             )}
           </FooterButtonsContainer>
         </Footer>
