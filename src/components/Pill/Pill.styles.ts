@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { cVar } from '@/styles'
 import { sizes } from '@/styles/sizes'
 
-import { PillProps } from './types'
+import { PillProps, Sizes } from './types'
 
 const sizeStyles = ({ size, hasLabel, iconPlacement }: PillProps & { hasLabel: boolean }) => {
   const leftMarignActive = hasLabel && iconPlacement === 'right'
@@ -77,4 +77,27 @@ export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
 
   ${sizeStyles}
   ${variantStyles}
+`
+
+const gapStyles = ({ size }: PillProps) => {
+  switch (size) {
+    case 'large':
+      return css`
+        gap: ${sizes(2)};
+      `
+    case 'medium':
+      return css`
+        gap: ${sizes(1.5)};
+      `
+    case 'small':
+      return css`
+        gap: ${sizes(1)};
+      `
+  }
+}
+
+export const PillGroupWrapper = styled.div<{ size: Sizes }>`
+  display: flex;
+
+  ${gapStyles}
 `

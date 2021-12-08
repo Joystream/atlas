@@ -4,6 +4,7 @@ import React from 'react'
 import { SvgActionAddVideo } from '@/components/_icons'
 
 import { Pill } from './Pill'
+import { PillGroup } from './PillGroup'
 import { PillProps } from './types'
 
 export default {
@@ -33,9 +34,13 @@ export default {
 } as Meta
 
 const Template: Story<PillProps> = (args) => <Pill {...args} />
+const TemplateGroup: Story<PillProps> = (args) => (
+  <PillGroup items={Array.from({ length: 6 }).map(() => args)} size={args.size} />
+)
 
 export const Default = Template.bind({})
 export const Icon = Template.bind({})
+export const Group = TemplateGroup.bind({})
 Icon.args = {
   icon: <SvgActionAddVideo />,
 }

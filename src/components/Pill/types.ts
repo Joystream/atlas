@@ -1,6 +1,6 @@
 import React from 'react'
 
-type Sizes = 'small' | 'medium' | 'large'
+export type Sizes = 'small' | 'medium' | 'large'
 type Variants = 'default' | 'overlay' | 'danger'
 
 export type PillProps = {
