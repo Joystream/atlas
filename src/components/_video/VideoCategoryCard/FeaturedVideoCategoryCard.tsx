@@ -41,7 +41,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
   const isTouchDevice = useTouchDevice()
   const [hoverRef, isVideoHovering] = useHover<HTMLAnchorElement>()
   const isLoading = !title && !videoUrl && !icon
-  const isPlaying = !isTouchDevice ? isVideoHovering : true
+  const isPlaying = isTouchDevice ? true : isVideoHovering && !isLoading
   const categoryUrl = id ? absoluteRoutes.viewer.category(id) : ''
 
   return (
