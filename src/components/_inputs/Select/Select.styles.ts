@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Pill } from '@/components/Pill'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
 
@@ -132,4 +133,7 @@ export const StyledSvgGlyphInfo = styled(SvgAlertsInformative24)`
   &:hover {
     opacity: 1;
   }
+`
+export const StyledPill = styled(Pill)`
+  margin-left: ${sizes(3)};
 `
