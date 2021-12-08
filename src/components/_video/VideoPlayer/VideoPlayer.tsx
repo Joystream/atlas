@@ -416,13 +416,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   }, [currentVolume, volumeToSave, player, setCachedVolume])
 
   // button/input handlers
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
+    if (playerState === 'error') {
+      return
+    }
     if (isPlaying) {
       pauseVideo(player, true, () => setIsPlaying(false))
     } else {
       playVideo(player, true, () => setIsPlaying(true))
     }
-  }
+  }, [isPlaying, pauseVideo, playVideo, player, playerState])
 
   const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
@@ -463,6 +466,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
+  const onVideoClick = useCallback(
+    () =>
+      player?.paused()
+        ? player?.trigger(CustomVideojsEvents.PauseControl)
+        : player?.trigger(CustomVideojsEvents.PlayControl),
+    [player]
+  )
+
   const renderVolumeButton = () => {
     if (currentVolume === 0) {
       return <StyledSvgPlayerSoundOff />
@@ -484,16 +495,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
             </BigPlayButton>
           </BigPlayButtonOverlay>
         )}
-        <video
-          style={videoStyle}
-          ref={playerRef}
-          className="video-js"
-          onClick={() =>
-            player?.paused()
-              ? player?.trigger(CustomVideojsEvents.PauseControl)
-              : player?.trigger(CustomVideojsEvents.PlayControl)
-          }
-        />
+        <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
           <>
             <ControlsOverlay isFullScreen={isFullScreen}>
