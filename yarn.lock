@@ -7504,7 +7504,7 @@ __metadata:
     eslint-plugin-react: ^7.27.1
     eslint-plugin-react-hooks: ^4.3.0
     glider-js: ^1.7.7
-    graphql: ^15.5.2 
+    graphql: ^15.5.2
     graphql-tag: ^2.12.5
     history: ^5.1.0
     husky: ^7.0.4
