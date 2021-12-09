@@ -382,9 +382,9 @@ type Query {
 
   mostViewedChannelsAllTime(limit: Int!): [Channel!]
 
-  mostViewedVideos(limit: Int, timePeriodDays: Int!): [Video!]
+  mostViewedVideos(limit: Int, timePeriodDays: Int!): VideoConnection!
 
-  mostViewedVideosAllTime(limit: Int!): [Video!]
+  mostViewedVideosAllTime(limit: Int!): VideoConnection!
 }
 
 type Subscription {

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useMostViewedVideosIds, useVideoHeroData, useVideosConnection } from '@/api/hooks'
+import { useMostViewedVideos, useVideoHeroData, useVideosConnection } from '@/api/hooks'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
@@ -23,17 +23,17 @@ export const HomeView: React.FC = () => {
   const { videoHero } = useVideoHeroData()
 
   const {
-    mostViewedVideos,
+    videos,
     loading: mostViewedVideosLoading,
     error: mostViewedVideosError,
-  } = useMostViewedVideosIds(
+  } = useMostViewedVideos(
     {
       limit: 200,
       timePeriodDays: 30,
     },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'HomeView', error) }
   )
-  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+  const mostViewedVideosIds = videos?.map((video) => video.id)
 
   const {
     videosConnection,

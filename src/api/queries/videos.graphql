@@ -102,13 +102,33 @@ query GetBasicVideos($where: VideoWhereInput) {
 
 query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
   mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-    ...BasicVideoFields
+    edges {
+      cursor
+      node {
+        ...VideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
 query GetMostViewedVideosAllTime($limit: Int!) {
   mostViewedVideosAllTime(limit: $limit) {
-    ...BasicVideoFields
+    edges {
+      cursor
+      node {
+        ...VideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 

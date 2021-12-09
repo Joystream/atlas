@@ -112,7 +112,7 @@ export const useMostViewedVideosIds = (
 ) => {
   const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
   return {
-    mostViewedVideos: data?.mostViewedVideos,
+    mostViewedVideos: data?.mostViewedVideos.edges.map((node) => node.node.id),
     ...rest,
   }
 }
@@ -122,9 +122,8 @@ export const useMostViewedVideos = (
   opts?: MostViewedVideosQueryOpts
 ) => {
   const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
-
   return {
-    videos: data?.mostViewedVideos,
+    videos: data?.mostViewedVideos.edges.map((edge) => edge.node),
     ...rest,
   }
 }
@@ -158,7 +157,7 @@ export const useMostViewedVideosAllTimeIds = (
 ) => {
   const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
   return {
-    mostViewedVideosAllTime: data?.mostViewedVideosAllTime,
+    mostViewedVideosAllTime: data?.mostViewedVideosAllTime.edges.map((edge) => edge.node),
     ...rest,
   }
 }

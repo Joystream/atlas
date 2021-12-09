@@ -233,8 +233,8 @@ export type Query = {
   mostViewedCategoriesAllTime?: Maybe<Array<EntityViewsInfo>>
   mostViewedChannels?: Maybe<Array<Channel>>
   mostViewedChannelsAllTime?: Maybe<Array<Channel>>
-  mostViewedVideos?: Maybe<Array<Video>>
-  mostViewedVideosAllTime?: Maybe<Array<Video>>
+  mostViewedVideos: VideoConnection
+  mostViewedVideosAllTime: VideoConnection
 }
 
 export type QueryMembershipByUniqueInputArgs = {

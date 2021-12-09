@@ -501,32 +501,108 @@ export type GetMostViewedVideosQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosQuery = {
   __typename?: 'Query'
-  mostViewedVideos?: Types.Maybe<
-    Array<{
-      __typename?: 'Video'
-      id: string
-      title?: Types.Maybe<string>
-      thumbnailPhotoUrls: Array<string>
-      thumbnailPhotoAvailability: Types.AssetAvailability
-      thumbnailPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+  mostViewedVideos: {
+    __typename?: 'VideoConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
         id: string
+        title?: Types.Maybe<string>
+        description?: Types.Maybe<string>
+        views?: Types.Maybe<number>
+        duration?: Types.Maybe<number>
         createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
+        isPublic?: Types.Maybe<boolean>
+        isExplicit?: Types.Maybe<boolean>
+        isFeatured: boolean
+        hasMarketing?: Types.Maybe<boolean>
+        isCensored: boolean
+        publishedBeforeJoystream?: Types.Maybe<Date>
+        mediaUrls: Array<string>
+        mediaAvailability: Types.AssetAvailability
+        thumbnailPhotoUrls: Array<string>
+        thumbnailPhotoAvailability: Types.AssetAvailability
+        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+        mediaMetadata: {
+          __typename?: 'VideoMediaMetadata'
           id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
+          pixelHeight?: Types.Maybe<number>
+          pixelWidth?: Types.Maybe<number>
+        }
+        mediaDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
         }>
-      }>
+        thumbnailPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: Types.Maybe<string>
+          createdAt: Date
+          avatarPhotoUrls: Array<string>
+          avatarPhotoAvailability: Types.AssetAvailability
+          avatarPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+        }
+        license?: Types.Maybe<{
+          __typename?: 'License'
+          id: string
+          code?: Types.Maybe<number>
+          attribution?: Types.Maybe<string>
+          customText?: Types.Maybe<string>
+        }>
+      }
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
@@ -535,32 +611,108 @@ export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
 
 export type GetMostViewedVideosAllTimeQuery = {
   __typename?: 'Query'
-  mostViewedVideosAllTime?: Types.Maybe<
-    Array<{
-      __typename?: 'Video'
-      id: string
-      title?: Types.Maybe<string>
-      thumbnailPhotoUrls: Array<string>
-      thumbnailPhotoAvailability: Types.AssetAvailability
-      thumbnailPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+  mostViewedVideosAllTime: {
+    __typename?: 'VideoConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
         id: string
+        title?: Types.Maybe<string>
+        description?: Types.Maybe<string>
+        views?: Types.Maybe<number>
+        duration?: Types.Maybe<number>
         createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
+        isPublic?: Types.Maybe<boolean>
+        isExplicit?: Types.Maybe<boolean>
+        isFeatured: boolean
+        hasMarketing?: Types.Maybe<boolean>
+        isCensored: boolean
+        publishedBeforeJoystream?: Types.Maybe<Date>
+        mediaUrls: Array<string>
+        mediaAvailability: Types.AssetAvailability
+        thumbnailPhotoUrls: Array<string>
+        thumbnailPhotoAvailability: Types.AssetAvailability
+        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+        mediaMetadata: {
+          __typename?: 'VideoMediaMetadata'
           id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
+          pixelHeight?: Types.Maybe<number>
+          pixelWidth?: Types.Maybe<number>
+        }
+        mediaDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
         }>
-      }>
+        thumbnailPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        channel: {
+          __typename?: 'Channel'
+          id: string
+          title?: Types.Maybe<string>
+          createdAt: Date
+          avatarPhotoUrls: Array<string>
+          avatarPhotoAvailability: Types.AssetAvailability
+          avatarPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+        }
+        license?: Types.Maybe<{
+          __typename?: 'License'
+          id: string
+          code?: Types.Maybe<number>
+          attribution?: Types.Maybe<string>
+          customText?: Types.Maybe<string>
+        }>
+      }
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -833,10 +985,20 @@ export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, 
 export const GetMostViewedVideosDocument = gql`
   query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
     mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-      ...BasicVideoFields
+      edges {
+        cursor
+        node {
+          ...VideoFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicVideoFieldsFragmentDoc}
+  ${VideoFieldsFragmentDoc}
 `
 
 /**
@@ -883,10 +1045,20 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
 export const GetMostViewedVideosAllTimeDocument = gql`
   query GetMostViewedVideosAllTime($limit: Int!) {
     mostViewedVideosAllTime(limit: $limit) {
-      ...BasicVideoFields
+      edges {
+        cursor
+        node {
+          ...VideoFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicVideoFieldsFragmentDoc}
+  ${VideoFieldsFragmentDoc}
 `
 
 /**
