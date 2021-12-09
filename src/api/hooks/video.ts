@@ -106,17 +106,6 @@ export const useBasicVideos = (
 }
 
 type MostViewedVideosQueryOpts = QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
-export const useMostViewedVideosIds = (
-  variables?: GetMostViewedVideosQueryVariables,
-  opts?: MostViewedVideosQueryOpts
-) => {
-  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
-  return {
-    mostViewedVideos: data?.mostViewedVideos.edges.map((node) => node.node.id),
-    ...rest,
-  }
-}
-
 export const useMostViewedVideos = (
   variables?: GetMostViewedVideosQueryVariables,
   opts?: MostViewedVideosQueryOpts
