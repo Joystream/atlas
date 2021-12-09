@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
+import { DISTRIBUTOR_ASSET_PATH } from '@/config/urls'
 import { useDistributors } from '@/providers/distributors'
 import { DistributorInfo } from '@/types/storage'
 import { joinUrlFragments } from '@/utils/asset'
@@ -103,7 +104,7 @@ const sortDistributors = (
 }
 
 const createDistributorDataObjectUrl = (distributor: DistributorInfo, dataObject: StorageDataObjectFieldsFragment) => {
-  return joinUrlFragments(distributor.endpoint, 'api/v1/assets', dataObject.id)
+  return joinUrlFragments(distributor.endpoint, DISTRIBUTOR_ASSET_PATH, dataObject.id)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

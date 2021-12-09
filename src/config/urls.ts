@@ -11,6 +11,7 @@ export const SENTRY_DSN = readEnv('SENTRY_DSN', false)
 
 export const WEB3_APP_NAME = 'Joystream Atlas'
 export const STORAGE_URL_PATH = 'asset/v0'
+export const DISTRIBUTOR_ASSET_PATH = 'api/v1/assets'
 
 export const JOYSTREAM_DISCORD_URL = 'https://discord.gg/DE9UN3YpRP'
 export const JOYSTREAM_STORAGE_DISCORD_URL = 'https://discord.gg/WUb7XwW72a'

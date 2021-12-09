@@ -5,7 +5,7 @@ import {
   GetDistributionBucketsWithOperatorsDocument,
   GetDistributionBucketsWithOperatorsQuery,
   GetDistributionBucketsWithOperatorsQueryVariables,
-} from '@/api/queries/__generated__/storage.generated'
+} from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DistributorInfo } from '@/types/storage'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -24,35 +24,36 @@ export const DistributorsContextProvider: React.FC = ({ children }) => {
 
   const client = useApolloClient()
 
+  // runs once - fetch all the distributors and create DistributorsMapping
   useEffect(() => {
-    const promise = client.query<
+    const distributorsPromise = client.query<
       GetDistributionBucketsWithOperatorsQuery,
       GetDistributionBucketsWithOperatorsQueryVariables
     >({
       query: GetDistributionBucketsWithOperatorsDocument,
       fetchPolicy: 'network-only',
     })
-    distributorsMappingPromiseRef.current = promise.then((result) => {
+    distributorsMappingPromiseRef.current = distributorsPromise.then((result) => {
       const mapping: DistributorsMapping = {}
       const buckets = result.data.distributionBuckets
       buckets.forEach((bucket) => {
-        const bags = bucket.bags.map((bag) => bag.id)
+        const bagIds = bucket.bags.map((bag) => bag.id)
         const endpoints: DistributorInfo[] = bucket.operators
           .filter((operator) => operator && operator.metadata)
           .map((operator) => ({ id: operator.id, endpoint: operator.metadata?.nodeEndpoint || '' }))
 
-        bags.forEach((bag) => {
-          if (!mapping[bag]) {
-            mapping[bag] = endpoints
+        bagIds.forEach((bagId) => {
+          if (!mapping[bagId]) {
+            mapping[bagId] = endpoints
           } else {
             // TODO: make sure endpoints are unique
-            mapping[bag] = [...mapping[bag], ...endpoints]
+            mapping[bagId] = [...mapping[bagId], ...endpoints]
           }
         })
       })
       return mapping
     })
-    promise.catch((error) => {
+    distributorsPromise.catch((error) => {
       SentryLogger.error('Failed to fetch storage providers list', 'StorageProvidersProvider', error)
       setDistributorsError(error)
     })
