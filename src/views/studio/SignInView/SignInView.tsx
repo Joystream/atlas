@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { SignInStepsStepper } from '@/components/SignInSteps'
+import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'

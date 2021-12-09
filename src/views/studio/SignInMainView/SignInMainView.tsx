@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { SignInStepsStepper } from '@/components/SignInSteps'
 import { Text } from '@/components/Text'
+import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
