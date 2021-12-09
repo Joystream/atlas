@@ -7528,7 +7528,6 @@ __metadata:
     react-spring: ^9.3.2
     react-textarea-autosize: ^8.3.3
     react-transition-group: ^4.4.2
-    react-use-hotjar: ^1.2.0
     react-use-measure: ^2.1.0
     retry-axios: ^2.4.0
     rollup-plugin-visualizer: ^5.5.2
@@ -18168,15 +18167,6 @@ fsevents@^1.2.7:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: b67bf5b3e86dbab72d658b9a52a3589e5960583ab28c7c66272427d8fe30d4c7de422d5046ae96bd2683cdf80cc3264b2516f5ce80cae1dbe6cf3ca6dda392c5
-  languageName: node
-  linkType: hard
-
-"react-use-hotjar@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "react-use-hotjar@npm:1.2.0"
-  peerDependencies:
-    react: ^17.0.2
-  checksum: 0406ccb8b59ba66133157c02fbfbfe0df6c729ece194e352f2f8a2f4f480fb36a20948b537f06b085efe24946f6aaeb7410b19e12c3cfb99337bfecfc9a355ec
   languageName: node
   linkType: hard
 
