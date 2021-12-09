@@ -35,7 +35,7 @@ const IconContainer = styled.div<IconContainerProps>`
   justify-content: center;
   align-items: center;
   width: min-content;
-  border-radius: 9999px;
+  border-radius: 100%;
   background: ${cVar('colorBackgroundAlpha')};
 
   ${getIconContainerPaddingStyles}

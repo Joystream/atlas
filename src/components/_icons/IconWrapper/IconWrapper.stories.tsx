@@ -16,11 +16,7 @@ export default {
   },
 } as Meta
 
-const TemplateSingle: Story<IconWrapperProps> = (args) => (
-  <div>
-    <IconWrapper {...args} />
-  </div>
-)
+const TemplateSingle: Story<IconWrapperProps> = (args) => <IconWrapper {...args} />
 
 export const ActionIcon = TemplateSingle.bind({})
 ActionIcon.args = {
