@@ -17,7 +17,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchResults } from '@/hooks/useSearchResults'
 import { useSearchStore } from '@/providers/search'
 
-import { PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
+import { FiltersWrapper, PaddingWrapper, Results, SearchControls, StyledSelect } from './SearchResults.styles'
 
 type SearchResultsProps = {
   query: string
@@ -76,35 +76,28 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     <ViewWrapper>
       <SearchControls>
         <PaddingWrapper filtersOpen={isFiltersOpen}>
-          <Tabs
-            tabs={mappedTabs}
-            onSelectTab={setSelectedTabIndex}
-            initialIndex={0}
-            horizontalPadding
-            controls={
-              <>
-                {smMatch && selectedTabIndex === 0 && (
-                  <StyledSelect
-                    onChange={handleSelectLanguage}
-                    size="small"
-                    value={language}
-                    items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
-                  />
-                )}
-                {selectedTabIndex === 0 && (
-                  <Button
-                    icon={<SvgActionFilters />}
-                    iconPlacement="left"
-                    variant="secondary"
-                    badge={canClearAllFilters}
-                    onClick={toggleFilters}
-                  >
-                    {smMatch && 'Filters'}
-                  </Button>
-                )}
-              </>
-            }
-          />
+          <Tabs tabs={mappedTabs} onSelectTab={setSelectedTabIndex} initialIndex={0} />
+          <FiltersWrapper>
+            {smMatch && selectedTabIndex === 0 && (
+              <StyledSelect
+                onChange={handleSelectLanguage}
+                size="small"
+                value={language}
+                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+              />
+            )}
+            {selectedTabIndex === 0 && (
+              <Button
+                icon={<SvgActionFilters />}
+                iconPlacement="left"
+                variant="secondary"
+                badge={canClearAllFilters}
+                onClick={toggleFilters}
+              >
+                {smMatch && 'Filters'}
+              </Button>
+            )}
+          </FiltersWrapper>
         </PaddingWrapper>
         <FiltersBar {...filtersBarLogic} categories={categories} />
       </SearchControls>

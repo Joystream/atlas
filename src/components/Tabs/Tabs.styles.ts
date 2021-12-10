@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, media, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, zIndex } from '@/styles'
 
 type TabProps = {
   selected: boolean
@@ -11,50 +11,20 @@ type BackgroundGradientProps = {
   direction: 'prev' | 'next'
 }
 
-export const TabsWrapper = styled.div<{ hasControls?: boolean }>`
+export const TabsWrapper = styled.div`
   position: relative;
   width: 100%;
-  border-bottom: ${({ hasControls }) => (hasControls ? `1px solid ${oldColors.gray[700]}` : 0)};
-
-  ${media.sm} {
-    border-bottom: 1px solid ${oldColors.gray[700]};
-  }
 `
 
-export const Container = styled.div<{ horizontalPadding?: boolean }>`
-  display: flex;
-  flex-wrap: wrap;
-  padding: ${({ horizontalPadding }) => (horizontalPadding ? '0 var(--size-global-horizontal-padding)' : 0)};
-
-  ${media.sm} {
-    flex-wrap: nowrap;
-  }
-`
-
-export const Controls = styled.div`
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-`
-
-export const TabsGroup = styled.div<{ hasControls?: boolean; borderBottom?: boolean }>`
+export const TabsGroup = styled.div`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
-  overflow-x: auto;
-  width: 100%;
-  flex-shrink: 0;
-  border-bottom: ${({ borderBottom }) => (borderBottom ? `1px solid ${oldColors.gray[700]}` : 0)};
-
-  ${media.sm} {
-    border-bottom: 0;
-    width: ${({ hasControls }) => (hasControls ? '100%' : 'auto')};
-  }
+  overflow: auto;
 
   ::-webkit-scrollbar {
     display: none;
   }
-
   scrollbar-width: none;
 `
 

@@ -34,7 +34,6 @@ export const TitleSection = styled.div`
   align-items: center;
   width: 100%;
   margin: ${sizes(8)} 0 ${sizes(14)} 0;
-
   ${media.xs} {
     grid-template-columns: auto 1fr auto;
   }
@@ -42,11 +41,9 @@ export const TitleSection = styled.div`
 export const TitleContainer = styled.div`
   max-width: 100%;
   overflow: hidden;
-
   ${media.md} {
     max-width: 60%;
   }
-
   z-index: 2;
 `
 
@@ -62,7 +59,6 @@ export const Title = styled(Text)`
 export const SortContainer = styled.div`
   grid-area: sort;
   grid-gap: 8px;
-
   ${media.sm} {
     grid-area: initial;
   }
@@ -82,7 +78,6 @@ export const VideoSection = styled.section`
 export const StyledChannelLink = styled(ChannelLink)`
   margin: 0 ${sizes(5)} ${sizes(3)} 0;
   position: relative;
-
   ${media.sm} {
     margin: 0 ${sizes(5)} 0 0;
   }
@@ -91,7 +86,6 @@ export const StyledChannelLink = styled(ChannelLink)`
 export const TitleSkeletonLoader = styled(SkeletonLoader)`
   width: 300px;
   height: ${SM_TITLE_HEIGHT};
-
   ${media.md} {
     height: ${TITLE_HEIGHT};
   }
@@ -101,7 +95,6 @@ export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   width: 140px;
   margin-top: ${sizes(2)};
   height: ${SM_SUBTITLE_HEIGHT};
-
   ${media.md} {
     height: ${SUBTITLE_HEIGHT};
   }
@@ -112,7 +105,6 @@ export const StyledButtonContainer = styled.div`
   background-color: ${oldColors.transparentBlack[54]};
   grid-column: 1 / span 2;
   width: 100%;
-
   ${media.xs} {
     grid-column: initial;
     margin-top: 0;
@@ -130,30 +122,19 @@ export const PaginationContainer = styled.div`
 `
 
 export const TabsContainer = styled.div`
+  display: grid;
   margin-bottom: ${sizes(8)};
+  gap: ${sizes(2)};
+  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
+  align-items: baseline;
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
   ${media.sm} {
     align-items: center;
+    border-bottom: solid 1px ${oldColors.gray[800]};
     gap: ${sizes(8)};
     grid-template: 1fr / auto 1fr 250px;
-  }
-`
-
-export const UtilitiesContainer = styled.div`
-  display: grid;
-  gap: ${sizes(2)};
-  grid-template: 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
-  align-items: baseline;
-  flex-basis: auto;
-  width: 100%;
-
-  ${media.sm} {
-    padding-left: ${sizes(8)};
-    align-items: center;
-    gap: ${sizes(8)};
-    grid-template: 1fr / 1fr 250px;
   }
 `
 
@@ -175,8 +156,9 @@ export const SearchContainer = styled.div<SearchContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-
+  border-bottom: solid 1px ${oldColors.gray[800]};
   ${media.sm} {
+    border-bottom: none;
     grid-area: initial;
   }
 `
@@ -190,13 +172,10 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   will-change: max-width;
   align-items: center;
   position: relative;
-
   ${media.sm} {
     max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
   }
-
   ${({ isSearching }) => isSearching && activeUnderline}
-
   > input {
     height: 40px;
     padding: 10px 16px 10px 42px;
@@ -204,7 +183,6 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     font: ${cVar('typographyDesktopT200')};
     letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
-
     ${media.sm} {
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
     }
@@ -233,7 +211,6 @@ export const NotFoundChannelContainer = styled.div`
 
 export const SearchButton = styled(IconButton)<SearchButttonProps>`
   position: absolute;
-
   ${media.sm} {
     ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
   }
