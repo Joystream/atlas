@@ -350,143 +350,309 @@ export type UnfollowChannelMutation = {
 }
 
 export type GetMostViewedChannelsQueryVariables = Types.Exact<{
-  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
+  timePeriodDays: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostViewedChannelsQuery = {
   __typename?: 'Query'
-  mostViewedChannels?: Types.Maybe<
-    Array<{
-      __typename?: 'Channel'
-      id: string
-      title?: Types.Maybe<string>
-      createdAt: Date
-      avatarPhotoUrls: Array<string>
-      avatarPhotoAvailability: Types.AssetAvailability
-      avatarPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+  mostViewedChannels: {
+    __typename?: 'ChannelConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'ChannelEdge'
+      cursor: string
+      node: {
+        __typename?: 'Channel'
+        description?: Types.Maybe<string>
+        follows?: Types.Maybe<number>
+        views?: Types.Maybe<number>
+        isPublic?: Types.Maybe<boolean>
+        isCensored: boolean
+        coverPhotoUrls: Array<string>
+        coverPhotoAvailability: Types.AssetAvailability
         id: string
+        title?: Types.Maybe<string>
         createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+        ownerMember?: Types.Maybe<{
+          __typename?: 'Membership'
           id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
+          handle: string
+          avatarUri?: Types.Maybe<string>
         }>
-      }>
+        coverPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostViewedChannelsAllTimeQuery = {
   __typename?: 'Query'
-  mostViewedChannelsAllTime?: Types.Maybe<
-    Array<{
-      __typename?: 'Channel'
-      id: string
-      title?: Types.Maybe<string>
-      createdAt: Date
-      avatarPhotoUrls: Array<string>
-      avatarPhotoAvailability: Types.AssetAvailability
-      avatarPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+  mostViewedChannelsAllTime: {
+    __typename?: 'ChannelConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'ChannelEdge'
+      cursor: string
+      node: {
+        __typename?: 'Channel'
+        description?: Types.Maybe<string>
+        follows?: Types.Maybe<number>
+        views?: Types.Maybe<number>
+        isPublic?: Types.Maybe<boolean>
+        isCensored: boolean
+        coverPhotoUrls: Array<string>
+        coverPhotoAvailability: Types.AssetAvailability
         id: string
+        title?: Types.Maybe<string>
         createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+        ownerMember?: Types.Maybe<{
+          __typename?: 'Membership'
           id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
+          handle: string
+          avatarUri?: Types.Maybe<string>
         }>
-      }>
+        coverPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
-  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
+  timePeriodDays: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostFollowedChannelsQuery = {
   __typename?: 'Query'
-  mostFollowedChannels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: Types.Maybe<string>
-    createdAt: Date
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
-      id: string
-      createdAt: Date
-      size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
+  mostFollowedChannels: {
+    __typename?: 'ChannelConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'ChannelEdge'
+      cursor: string
+      node: {
+        __typename?: 'Channel'
+        description?: Types.Maybe<string>
+        follows?: Types.Maybe<number>
+        views?: Types.Maybe<number>
+        isPublic?: Types.Maybe<boolean>
+        isCensored: boolean
+        coverPhotoUrls: Array<string>
+        coverPhotoAvailability: Types.AssetAvailability
         id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+        title?: Types.Maybe<string>
+        createdAt: Date
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+        ownerMember?: Types.Maybe<{
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          avatarUri?: Types.Maybe<string>
+        }>
+        coverPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
     }>
-  }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostFollowedChannelsAllTimeQuery = {
   __typename?: 'Query'
-  mostFollowedChannelsAllTime?: Types.Maybe<
-    Array<{
-      __typename?: 'Channel'
-      id: string
-      title?: Types.Maybe<string>
-      createdAt: Date
-      avatarPhotoUrls: Array<string>
-      avatarPhotoAvailability: Types.AssetAvailability
-      avatarPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+  mostFollowedChannelsAllTime: {
+    __typename?: 'ChannelConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'ChannelEdge'
+      cursor: string
+      node: {
+        __typename?: 'Channel'
+        description?: Types.Maybe<string>
+        follows?: Types.Maybe<number>
+        views?: Types.Maybe<number>
+        isPublic?: Types.Maybe<boolean>
+        isCensored: boolean
+        coverPhotoUrls: Array<string>
+        coverPhotoAvailability: Types.AssetAvailability
         id: string
+        title?: Types.Maybe<string>
         createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
+        avatarPhotoUrls: Array<string>
+        avatarPhotoAvailability: Types.AssetAvailability
+        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+        ownerMember?: Types.Maybe<{
+          __typename?: 'Membership'
           id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
+          handle: string
+          avatarUri?: Types.Maybe<string>
         }>
-      }>
+        coverPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        avatarPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+      }
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
 export const BasicChannelFieldsFragmentDoc = gql`
@@ -836,12 +1002,28 @@ export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
   UnfollowChannelMutationVariables
 >
 export const GetMostViewedChannelsDocument = gql`
-  query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
-    mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-      ...BasicChannelFields
+  query GetMostViewedChannels(
+    $limit: Int
+    $timePeriodDays: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedAndMostFollowedWhereInput
+  ) {
+    mostViewedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+      edges {
+        cursor
+        node {
+          ...AllChannelFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${AllChannelFieldsFragmentDoc}
 `
 
 /**
@@ -856,8 +1038,11 @@ export const GetMostViewedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedChannelsQuery({
  *   variables: {
- *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
+ *      timePeriodDays: // value for 'timePeriodDays'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -886,12 +1071,27 @@ export type GetMostViewedChannelsQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsQueryVariables
 >
 export const GetMostViewedChannelsAllTimeDocument = gql`
-  query GetMostViewedChannelsAllTime($limit: Int!) {
-    mostViewedChannelsAllTime(limit: $limit) {
-      ...BasicChannelFields
+  query GetMostViewedChannelsAllTime(
+    $limit: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedAndMostFollowedWhereInput
+  ) {
+    mostViewedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
+      edges {
+        cursor
+        node {
+          ...AllChannelFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${AllChannelFieldsFragmentDoc}
 `
 
 /**
@@ -907,6 +1107,9 @@ export const GetMostViewedChannelsAllTimeDocument = gql`
  * const { data, loading, error } = useGetMostViewedChannelsAllTimeQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -940,12 +1143,28 @@ export type GetMostViewedChannelsAllTimeQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsAllTimeQueryVariables
 >
 export const GetMostFollowedChannelsDocument = gql`
-  query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
-    mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-      ...BasicChannelFields
+  query GetMostFollowedChannels(
+    $limit: Int
+    $timePeriodDays: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedAndMostFollowedWhereInput
+  ) {
+    mostFollowedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+      edges {
+        cursor
+        node {
+          ...AllChannelFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${AllChannelFieldsFragmentDoc}
 `
 
 /**
@@ -960,8 +1179,11 @@ export const GetMostFollowedChannelsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostFollowedChannelsQuery({
  *   variables: {
- *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
+ *      timePeriodDays: // value for 'timePeriodDays'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -990,12 +1212,27 @@ export type GetMostFollowedChannelsQueryResult = Apollo.QueryResult<
   GetMostFollowedChannelsQueryVariables
 >
 export const GetMostFollowedChannelsAllTimeDocument = gql`
-  query GetMostFollowedChannelsAllTime($limit: Int!) {
-    mostFollowedChannelsAllTime(limit: $limit) {
-      ...BasicChannelFields
+  query GetMostFollowedChannelsAllTime(
+    $limit: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedAndMostFollowedWhereInput
+  ) {
+    mostFollowedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
+      edges {
+        cursor
+        node {
+          ...AllChannelFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
-  ${BasicChannelFieldsFragmentDoc}
+  ${AllChannelFieldsFragmentDoc}
 `
 
 /**
@@ -1011,6 +1248,9 @@ export const GetMostFollowedChannelsAllTimeDocument = gql`
  * const { data, loading, error } = useGetMostFollowedChannelsAllTimeQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */

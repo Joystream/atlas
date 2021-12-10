@@ -499,7 +499,7 @@ export type GetMostViewedVideosQueryVariables = Types.Exact<{
   timePeriodDays: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedVideosWhereInput>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostViewedVideosQuery = {
@@ -612,7 +612,7 @@ export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedVideosWhereInput>
+  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
 }>
 
 export type GetMostViewedVideosAllTimeQuery = {
@@ -994,7 +994,7 @@ export const GetMostViewedVideosDocument = gql`
     $timePeriodDays: Int!
     $first: Int
     $after: String
-    $where: MostViewedVideosWhereInput
+    $where: MostViewedAndMostFollowedWhereInput
   ) {
     mostViewedVideos(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
       edges {
@@ -1058,7 +1058,12 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
   GetMostViewedVideosQueryVariables
 >
 export const GetMostViewedVideosAllTimeDocument = gql`
-  query GetMostViewedVideosAllTime($limit: Int!, $first: Int, $after: String, $where: MostViewedVideosWhereInput) {
+  query GetMostViewedVideosAllTime(
+    $limit: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedAndMostFollowedWhereInput
+  ) {
     mostViewedVideosAllTime(limit: $limit, first: $first, after: $after, where: $where) {
       edges {
         cursor

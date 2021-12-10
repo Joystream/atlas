@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
 import { useMostViewedChannelsAllTime, useMostViewedVideos } from '@/api/hooks'
-import { GetMostViewedVideosAllTimeDocument } from '@/api/queries'
+import { GetMostViewedChannelsAllTimeDocument, GetMostViewedVideosAllTimeDocument } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -14,12 +14,6 @@ const CTA: CtaData[] = ['new', 'home', 'channels']
 const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PopularView: FC = () => {
-  const { channels, error: mostViewedChannelsError } = useMostViewedChannelsAllTime(
-    { limit: 15 },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels', 'PopularView', error) }
-  )
-  const mostViewedChannelsAllTimeIds = channels?.map((item) => item.id)
-
   const {
     videos,
     loading,
@@ -29,7 +23,7 @@ export const PopularView: FC = () => {
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos', 'PopularView', error) }
   )
 
-  if (mostViewedVideosError || mostViewedChannelsError) {
+  if (mostViewedVideosError) {
     return <ViewErrorFallback />
   }
 
@@ -42,7 +36,7 @@ export const PopularView: FC = () => {
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand
-        idIn={mostViewedChannelsAllTimeIds}
+        query={GetMostViewedChannelsAllTimeDocument}
         additionalLink={ADDITIONAL_LINK}
       />
     </VideoContentTemplate>

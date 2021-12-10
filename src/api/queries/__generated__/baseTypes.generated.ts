@@ -161,7 +161,7 @@ export type MembershipWhereUniqueInput = {
   handle?: Maybe<Scalars['String']>
 }
 
-export type MostViewedVideosWhereInput = {
+export type MostViewedAndMostFollowedWhereInput = {
   categoryId_eq?: Maybe<Scalars['ID']>
   categoryId_in?: Maybe<Array<Scalars['ID']>>
   channelId_in?: Maybe<Array<Scalars['ID']>>
@@ -245,12 +245,12 @@ export type Query = {
   videoHero: VideoHero
   allCategoriesFeaturedVideos: Array<CategoryFeaturedVideos>
   categoryFeaturedVideos: Array<FeaturedVideo>
-  mostFollowedChannels: Array<Channel>
-  mostFollowedChannelsAllTime?: Maybe<Array<Channel>>
   mostViewedCategories?: Maybe<Array<EntityViewsInfo>>
   mostViewedCategoriesAllTime?: Maybe<Array<EntityViewsInfo>>
-  mostViewedChannels?: Maybe<Array<Channel>>
-  mostViewedChannelsAllTime?: Maybe<Array<Channel>>
+  mostFollowedChannels: ChannelConnection
+  mostFollowedChannelsAllTime: ChannelConnection
+  mostViewedChannels: ChannelConnection
+  mostViewedChannelsAllTime: ChannelConnection
   mostViewedVideos: VideoConnection
   mostViewedVideosAllTime: VideoConnection
 }
@@ -325,15 +325,6 @@ export type QueryCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
 }
 
-export type QueryMostFollowedChannelsArgs = {
-  limit?: Maybe<Scalars['Int']>
-  timePeriodDays: Scalars['Int']
-}
-
-export type QueryMostFollowedChannelsAllTimeArgs = {
-  limit: Scalars['Int']
-}
-
 export type QueryMostViewedCategoriesArgs = {
   limit?: Maybe<Scalars['Int']>
   timePeriodDays: Scalars['Int']
@@ -343,13 +334,34 @@ export type QueryMostViewedCategoriesAllTimeArgs = {
   limit: Scalars['Int']
 }
 
-export type QueryMostViewedChannelsArgs = {
-  limit?: Maybe<Scalars['Int']>
+export type QueryMostFollowedChannelsArgs = {
   timePeriodDays: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
+}
+
+export type QueryMostFollowedChannelsAllTimeArgs = {
+  limit: Scalars['Int']
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
+}
+
+export type QueryMostViewedChannelsArgs = {
+  timePeriodDays: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
 }
 
 export type QueryMostViewedChannelsAllTimeArgs = {
   limit: Scalars['Int']
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
 }
 
 export type QueryMostViewedVideosArgs = {
@@ -357,14 +369,14 @@ export type QueryMostViewedVideosArgs = {
   timePeriodDays: Scalars['Int']
   first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
-  where?: Maybe<MostViewedVideosWhereInput>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
 }
 
 export type QueryMostViewedVideosAllTimeArgs = {
   limit: Scalars['Int']
   first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
-  where?: Maybe<MostViewedVideosWhereInput>
+  where?: Maybe<MostViewedAndMostFollowedWhereInput>
 }
 
 export type SearchFtsOutput = {

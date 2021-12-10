@@ -1,3 +1,4 @@
+import { DocumentNode } from 'graphql'
 import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
 
 import {
@@ -6,6 +7,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  GetMostViewedChannelsQuery,
   VideoEdge,
 } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -23,6 +25,7 @@ import { SentryLogger } from '@/utils/logs'
 import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator } from './InfiniteGrid.styles'
 
 type InfiniteChannelWithVideosGridProps = {
+  query?: DocumentNode
   onDemand?: boolean
   title?: string
   skipCount?: number
@@ -44,6 +47,7 @@ const INITIAL_ROWS = 3
 const INITIAL_CHANNELS_PER_ROW = 1
 
 export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProps> = ({
+  query,
   onDemand = false,
   title,
   skipCount = 0,
@@ -78,17 +82,27 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   )
 
   const { displayedItems, placeholdersCount, loading, error, totalCount } = useInfiniteGrid<
-    GetChannelsConnectionQuery,
+    GetChannelsConnectionQuery | GetMostViewedChannelsQuery,
     GetChannelsConnectionQuery['channelsConnection'],
     GetChannelsConnectionQueryVariables
   >({
-    query: GetChannelsConnectionDocument,
+    query: query || GetChannelsConnectionDocument,
     isReady: languageSelector ? isReady && !!selectedLanguage : isReady,
     skipCount,
     orderBy,
     queryVariables,
     targetRowsCount,
-    dataAccessor: (rawData) => rawData?.channelsConnection,
+    dataAccessor: (rawData) => {
+      if (!rawData) {
+        return
+      }
+      if ('channelsConnection' in rawData) {
+        return rawData.channelsConnection
+      }
+      if ('mostViewedChannels' in rawData) {
+        return rawData.mostViewedChannels
+      }
+    },
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
     additionalSortFn,
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'InfiniteChannelWithVideosGrid', error),

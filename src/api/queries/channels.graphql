@@ -92,26 +92,88 @@ mutation UnfollowChannel($channelId: ID!) {
   }
 }
 
-query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
-  mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    ...BasicChannelFields
+query GetMostViewedChannels(
+  $limit: Int
+  $timePeriodDays: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedAndMostFollowedWhereInput
+) {
+  mostViewedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-query GetMostViewedChannelsAllTime($limit: Int!) {
-  mostViewedChannelsAllTime(limit: $limit) {
-    ...BasicChannelFields
+query GetMostViewedChannelsAllTime(
+  $limit: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedAndMostFollowedWhereInput
+) {
+  mostViewedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
-  mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    ...BasicChannelFields
+query GetMostFollowedChannels(
+  $limit: Int
+  $timePeriodDays: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedAndMostFollowedWhereInput
+) {
+  mostFollowedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-query GetMostFollowedChannelsAllTime($limit: Int!) {
-  mostFollowedChannelsAllTime(limit: $limit) {
-    ...BasicChannelFields
+query GetMostFollowedChannelsAllTime(
+  $limit: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedAndMostFollowedWhereInput
+) {
+  mostFollowedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }

@@ -152,7 +152,7 @@ export const useMostFollowedChannels = (
 ) => {
   const { data, ...rest } = useGetMostFollowedChannelsQuery({ ...opts, variables })
   return {
-    channels: data?.mostFollowedChannels,
+    channels: data?.mostFollowedChannels.edges.map((edge) => edge.node),
     ...rest,
   }
 }
@@ -164,7 +164,7 @@ export const useMostViewedChannels = (
 ) => {
   const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
   return {
-    channels: data?.mostViewedChannels,
+    channels: data?.mostViewedChannels.edges.map((edge) => edge.node),
     ...rest,
   }
 }
@@ -179,7 +179,7 @@ export const useMostFollowedChannelsAllTime = (
 ) => {
   const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
   return {
-    channels: data?.mostFollowedChannelsAllTime,
+    channels: data?.mostFollowedChannelsAllTime.edges.map((edge) => edge.node),
     ...rest,
   }
 }
@@ -194,7 +194,7 @@ export const useMostViewedChannelsAllTime = (
 ) => {
   const { data, ...rest } = useGetMostViewedChannelsAllTimeQuery({ ...opts, variables })
   return {
-    channels: data?.mostViewedChannelsAllTime,
+    channels: data?.mostViewedChannelsAllTime.edges.map((edge) => edge.node),
     ...rest,
   }
 }

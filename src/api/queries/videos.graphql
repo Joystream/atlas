@@ -105,7 +105,7 @@ query GetMostViewedVideos(
   $timePeriodDays: Int!
   $first: Int
   $after: String
-  $where: MostViewedVideosWhereInput
+  $where: MostViewedAndMostFollowedWhereInput
 ) {
   mostViewedVideos(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
     edges {
@@ -122,7 +122,12 @@ query GetMostViewedVideos(
   }
 }
 
-query GetMostViewedVideosAllTime($limit: Int!, $first: Int, $after: String, $where: MostViewedVideosWhereInput) {
+query GetMostViewedVideosAllTime(
+  $limit: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedAndMostFollowedWhereInput
+) {
   mostViewedVideosAllTime(limit: $limit, first: $first, after: $after, where: $where) {
     edges {
       cursor

@@ -258,7 +258,7 @@ input VideoWhereInput {
   id_eq: ID
 }
 
-input MostViewedVideosWhereInput {
+input MostViewedAndMostFollowedWhereInput {
   categoryId_eq: ID
   categoryId_in: [ID!]
   channelId_in: [ID!]
@@ -275,7 +275,6 @@ input MostViewedVideosWhereInput {
   isCensored_eq: Boolean
   isExplicit_eq: Boolean
 }
-
 input VideoWhereUniqueInput {
   id: ID!
 }
@@ -388,27 +387,54 @@ type Query {
 
   categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
 
-  mostFollowedChannels(limit: Int, timePeriodDays: Int!): [Channel!]!
-
-  mostFollowedChannelsAllTime(limit: Int!): [Channel!]
-
   mostViewedCategories(limit: Int, timePeriodDays: Int!): [EntityViewsInfo!]
 
   mostViewedCategoriesAllTime(limit: Int!): [EntityViewsInfo!]
 
-  mostViewedChannels(limit: Int, timePeriodDays: Int!): [Channel!]
+  mostFollowedChannels(
+    timePeriodDays: Int!
+    limit: Int
+    first: Int
+    after: String
+    where: MostViewedAndMostFollowedWhereInput
+  ): ChannelConnection!
 
-  mostViewedChannelsAllTime(limit: Int!): [Channel!]
+  mostFollowedChannelsAllTime(
+    limit: Int!
+    first: Int
+    after: String
+    where: MostViewedAndMostFollowedWhereInput
+  ): ChannelConnection!
+
+  mostViewedChannels(
+    timePeriodDays: Int!
+    limit: Int
+    first: Int
+    after: String
+    where: MostViewedAndMostFollowedWhereInput
+  ): ChannelConnection!
+
+  mostViewedChannelsAllTime(
+    limit: Int!
+    first: Int
+    after: String
+    where: MostViewedAndMostFollowedWhereInput
+  ): ChannelConnection!
 
   mostViewedVideos(
     limit: Int
     timePeriodDays: Int!
     first: Int
     after: String
-    where: MostViewedVideosWhereInput
+    where: MostViewedAndMostFollowedWhereInput
   ): VideoConnection!
 
-  mostViewedVideosAllTime(limit: Int!, first: Int, after: String, where: MostViewedVideosWhereInput): VideoConnection!
+  mostViewedVideosAllTime(
+    limit: Int!
+    first: Int
+    after: String
+    where: MostViewedAndMostFollowedWhereInput
+  ): VideoConnection!
 }
 
 type Subscription {
