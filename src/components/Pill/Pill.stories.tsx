@@ -22,11 +22,6 @@ export default {
     icon: {
       control: false,
     },
-    iconPlacement: {
-      options: ['left', 'right'],
-      control: { type: 'inline-radio' },
-      defaultValue: 'left',
-    },
   },
   args: {
     label: 'Pill Component',
@@ -43,4 +38,11 @@ export const Icon = Template.bind({})
 export const Group = TemplateGroup.bind({})
 Icon.args = {
   icon: <SvgActionAddVideo />,
+}
+Icon.argTypes = {
+  iconPlacement: {
+    options: ['left', 'right'],
+    control: { type: 'inline-radio' },
+    defaultValue: 'left',
+  },
 }

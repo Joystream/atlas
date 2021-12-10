@@ -9,7 +9,7 @@ export const Pill: React.FC<PillProps> = ({ label, icon, iconPlacement = 'left',
   return (
     <StyledPill {...props} hasLabel={!!(label && label.length)} iconPlacement={iconPlacement}>
       {icon && iconPlacement === 'left' && icon}
-      <Text variant="t100">{label}</Text>
+      {label && <Text variant="t100">{label}</Text>}
       {icon && iconPlacement === 'right' && icon}
     </StyledPill>
   )
