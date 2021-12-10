@@ -258,6 +258,24 @@ input VideoWhereInput {
   id_eq: ID
 }
 
+input MostViewedVideosWhereInput {
+  categoryId_eq: ID
+  categoryId_in: [ID!]
+  channelId_in: [ID!]
+  channelId_eq: ID
+  duration_lte: Int
+  duration_gte: Int
+  thumbnailPhotoAvailability_eq: AssetAvailability
+  mediaAvailability_eq: AssetAvailability
+  licenseId_in: [ID!]
+  languageId_eq: ID
+  hasMarketing_eq: Boolean
+  isFeatured_eq: Boolean
+  isPublic_eq: Boolean
+  isCensored_eq: Boolean
+  isExplicit_eq: Boolean
+}
+
 input VideoWhereUniqueInput {
   id: ID!
 }
@@ -382,9 +400,15 @@ type Query {
 
   mostViewedChannelsAllTime(limit: Int!): [Channel!]
 
-  mostViewedVideos(limit: Int, timePeriodDays: Int!): VideoConnection!
+  mostViewedVideos(
+    limit: Int
+    timePeriodDays: Int!
+    first: Int
+    after: String
+    where: MostViewedVideosWhereInput
+  ): VideoConnection!
 
-  mostViewedVideosAllTime(limit: Int!): VideoConnection!
+  mostViewedVideosAllTime(limit: Int!, first: Int, after: String, where: MostViewedVideosWhereInput): VideoConnection!
 }
 
 type Subscription {

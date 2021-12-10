@@ -495,8 +495,11 @@ export type GetBasicVideosQuery = {
 }
 
 export type GetMostViewedVideosQueryVariables = Types.Exact<{
-  timePeriodDays: Types.Scalars['Int']
   limit?: Types.Maybe<Types.Scalars['Int']>
+  timePeriodDays: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedVideosWhereInput>
 }>
 
 export type GetMostViewedVideosQuery = {
@@ -607,6 +610,9 @@ export type GetMostViewedVideosQuery = {
 
 export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  where?: Types.Maybe<Types.MostViewedVideosWhereInput>
 }>
 
 export type GetMostViewedVideosAllTimeQuery = {
@@ -983,8 +989,14 @@ export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQ
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 export const GetMostViewedVideosDocument = gql`
-  query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
-    mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
+  query GetMostViewedVideos(
+    $limit: Int
+    $timePeriodDays: Int!
+    $first: Int
+    $after: String
+    $where: MostViewedVideosWhereInput
+  ) {
+    mostViewedVideos(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
       edges {
         cursor
         node {
@@ -1013,8 +1025,11 @@ export const GetMostViewedVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetMostViewedVideosQuery({
  *   variables: {
- *      timePeriodDays: // value for 'timePeriodDays'
  *      limit: // value for 'limit'
+ *      timePeriodDays: // value for 'timePeriodDays'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -1043,8 +1058,8 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
   GetMostViewedVideosQueryVariables
 >
 export const GetMostViewedVideosAllTimeDocument = gql`
-  query GetMostViewedVideosAllTime($limit: Int!) {
-    mostViewedVideosAllTime(limit: $limit) {
+  query GetMostViewedVideosAllTime($limit: Int!, $first: Int, $after: String, $where: MostViewedVideosWhereInput) {
+    mostViewedVideosAllTime(limit: $limit, first: $first, after: $after, where: $where) {
       edges {
         cursor
         node {
@@ -1074,6 +1089,9 @@ export const GetMostViewedVideosAllTimeDocument = gql`
  * const { data, loading, error } = useGetMostViewedVideosAllTimeQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      where: // value for 'where'
  *   },
  * });
  */

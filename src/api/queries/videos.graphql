@@ -100,8 +100,14 @@ query GetBasicVideos($where: VideoWhereInput) {
   }
 }
 
-query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
-  mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
+query GetMostViewedVideos(
+  $limit: Int
+  $timePeriodDays: Int!
+  $first: Int
+  $after: String
+  $where: MostViewedVideosWhereInput
+) {
+  mostViewedVideos(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
     edges {
       cursor
       node {
@@ -116,8 +122,8 @@ query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
   }
 }
 
-query GetMostViewedVideosAllTime($limit: Int!) {
-  mostViewedVideosAllTime(limit: $limit) {
+query GetMostViewedVideosAllTime($limit: Int!, $first: Int, $after: String, $where: MostViewedVideosWhereInput) {
+  mostViewedVideosAllTime(limit: $limit, first: $first, after: $after, where: $where) {
     edges {
       cursor
       node {

@@ -94,8 +94,8 @@ export const useInfiniteGrid = <
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
-      orderBy,
       ...queryVariables,
+      orderBy,
       first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,

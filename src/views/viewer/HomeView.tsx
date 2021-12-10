@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useMostViewedVideos, useVideoHeroData, useVideosConnection } from '@/api/hooks'
+import { useVideoHeroData, useVideosConnection } from '@/api/hooks'
+import { GetMostViewedVideosDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
@@ -23,19 +24,6 @@ export const HomeView: React.FC = () => {
   const { videoHero } = useVideoHeroData()
 
   const {
-    videos,
-    loading: mostViewedVideosLoading,
-    error: mostViewedVideosError,
-  } = useMostViewedVideos(
-    {
-      limit: 200,
-      timePeriodDays: 30,
-    },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'HomeView', error) }
-  )
-  const mostViewedVideosIds = videos?.map((video) => video.id)
-
-  const {
     videosConnection,
     loading: followedLoading,
     error: followedError,
@@ -50,7 +38,7 @@ export const HomeView: React.FC = () => {
 
   const followedChannelsVideosCount = videosConnection?.totalCount
 
-  if (mostViewedVideosError || followedError) {
+  if (followedError) {
     return <ViewErrorFallback />
   }
 
@@ -68,9 +56,9 @@ export const HomeView: React.FC = () => {
           />
         ) : null}
         <InfiniteVideoGrid
+          timePeriodDays={7}
+          query={GetMostViewedVideosDocument}
           title="Popular on Joystream"
-          videoWhereInput={{ id_in: mostViewedVideosIds }}
-          ready={!mostViewedVideosLoading}
           onDemand
           titleLoader
         />

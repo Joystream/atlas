@@ -1,7 +1,7 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC } from 'react'
 
-import { useMostViewedChannelsAllTime, useMostViewedVideosAllTimeIds } from '@/api/hooks'
-import { useMostViewedVideos } from '@/api/hooks'
+import { useMostViewedChannelsAllTime, useMostViewedVideos } from '@/api/hooks'
+import { GetMostViewedVideosAllTimeDocument } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -14,25 +14,12 @@ const CTA: CtaData[] = ['new', 'home', 'channels']
 const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PopularView: FC = () => {
-  const {
-    mostViewedVideosAllTime,
-    loading: mostViewedVideosLoading,
-    error: mostViewedVideosIdsError,
-  } = useMostViewedVideosAllTimeIds(
-    {
-      limit: 200,
-    },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos all time', 'PopularView', error) }
-  )
-  const mostViewedVideosAllTimeIds = mostViewedVideosAllTime?.map((item) => item.id)
-
   const { channels, error: mostViewedChannelsError } = useMostViewedChannelsAllTime(
     { limit: 15 },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed channels', 'PopularView', error) }
   )
   const mostViewedChannelsAllTimeIds = channels?.map((item) => item.id)
 
-  const videoWhereInput = useMemo(() => ({ id_in: mostViewedVideosAllTimeIds }), [mostViewedVideosAllTimeIds])
   const {
     videos,
     loading,
@@ -42,19 +29,16 @@ export const PopularView: FC = () => {
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos', 'PopularView', error) }
   )
 
-  if (mostViewedVideosIdsError || mostViewedVideosError || mostViewedChannelsError) {
+  if (mostViewedVideosError || mostViewedChannelsError) {
     return <ViewErrorFallback />
   }
 
+  const sortedTopTenVideos = videos && [...videos]?.sort((a, b) => (b.views || 0) - (a.views || 0))
+
   return (
     <VideoContentTemplate title="Popular on Joystream" cta={CTA}>
-      <VideoGallery hasRanking title="Top 10 this month" videos={videos} loading={loading} />
-      <InfiniteVideoGrid
-        title="Popular videos"
-        videoWhereInput={videoWhereInput}
-        ready={!mostViewedVideosLoading}
-        onDemand
-      />
+      <VideoGallery hasRanking title="Top 10 this month" videos={sortedTopTenVideos} loading={loading} />
+      <InfiniteVideoGrid title="Popular videos" query={GetMostViewedVideosAllTimeDocument} limit={50} onDemand />
       <InfiniteChannelWithVideosGrid
         title="Popular channels"
         onDemand

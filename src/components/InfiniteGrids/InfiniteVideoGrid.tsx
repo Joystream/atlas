@@ -1,8 +1,11 @@
+import { DocumentNode } from 'graphql'
 import React, { useCallback, useState } from 'react'
 
 import {
   AssetAvailability,
   ChannelOrderByInput,
+  GetMostViewedVideosAllTimeQuery,
+  GetMostViewedVideosQuery,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
@@ -23,6 +26,9 @@ import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
+  query?: DocumentNode
+  timePeriodDays?: number
+  limit?: number
   title?: string
   titleLoader?: boolean
   videoWhereInput?: VideoWhereInput
@@ -46,6 +52,9 @@ const INITIAL_VIDEOS_PER_ROW = 4
 export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
+      query = GetVideosConnectionDocument,
+      timePeriodDays,
+      limit,
       title,
       videoWhereInput,
       orderBy,
@@ -68,7 +77,9 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
-    const queryVariables: { where: VideoWhereInput } = {
+    const queryVariables = {
+      timePeriodDays,
+      limit,
       where: {
         isPublic_eq: true,
         thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
@@ -82,11 +93,11 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     }, [targetRowsCount, rowsToLoad])
 
     const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
-      GetVideosConnectionQuery,
+      GetMostViewedVideosQuery | GetVideosConnectionQuery | GetMostViewedVideosAllTimeQuery,
       GetVideosConnectionQuery['videosConnection'],
       GetVideosConnectionQueryVariables
     >({
-      query: GetVideosConnectionDocument,
+      query: query || GetVideosConnectionDocument,
       isReady: ready,
       skipCount,
       queryVariables,
@@ -97,16 +108,45 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       activatedInfinteGrid,
       onScrollToBottom: !onDemand ? fetchMore : undefined,
       dataAccessor: (rawData) => {
-        if (currentlyWatchedVideoId) {
-          return (
-            rawData?.videosConnection && {
-              ...rawData.videosConnection,
-              totalCount: rawData.videosConnection.totalCount - 1,
-              edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
-            }
-          )
+        if (!rawData) {
+          return
         }
-        return rawData?.videosConnection
+        if ('mostViewedVideos' in rawData) {
+          if (currentlyWatchedVideoId) {
+            return (
+              rawData?.mostViewedVideos && {
+                ...rawData.mostViewedVideos,
+                totalCount: rawData.mostViewedVideos.totalCount - 1,
+                edges: rawData.mostViewedVideos.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
+              }
+            )
+          }
+          return rawData.mostViewedVideos
+        }
+        if ('videosConnection' in rawData) {
+          if (currentlyWatchedVideoId) {
+            return (
+              rawData?.videosConnection && {
+                ...rawData.videosConnection,
+                totalCount: rawData.videosConnection.totalCount - 1,
+                edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
+              }
+            )
+          }
+          return rawData.videosConnection
+        }
+        if ('mostViewedVideosAllTime' in rawData) {
+          if (currentlyWatchedVideoId) {
+            return (
+              rawData?.mostViewedVideosAllTime && {
+                ...rawData.mostViewedVideosAllTime,
+                totalCount: rawData.mostViewedVideosAllTime.totalCount - 1,
+                edges: rawData.mostViewedVideosAllTime.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
+              }
+            )
+          }
+          return rawData.mostViewedVideosAllTime
+        }
       },
       itemsPerRow: videosPerRow,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),

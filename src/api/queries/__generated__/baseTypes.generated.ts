@@ -161,6 +161,24 @@ export type MembershipWhereUniqueInput = {
   handle?: Maybe<Scalars['String']>
 }
 
+export type MostViewedVideosWhereInput = {
+  categoryId_eq?: Maybe<Scalars['ID']>
+  categoryId_in?: Maybe<Array<Scalars['ID']>>
+  channelId_in?: Maybe<Array<Scalars['ID']>>
+  channelId_eq?: Maybe<Scalars['ID']>
+  duration_lte?: Maybe<Scalars['Int']>
+  duration_gte?: Maybe<Scalars['Int']>
+  thumbnailPhotoAvailability_eq?: Maybe<AssetAvailability>
+  mediaAvailability_eq?: Maybe<AssetAvailability>
+  licenseId_in?: Maybe<Array<Scalars['ID']>>
+  languageId_eq?: Maybe<Scalars['ID']>
+  hasMarketing_eq?: Maybe<Scalars['Boolean']>
+  isFeatured_eq?: Maybe<Scalars['Boolean']>
+  isPublic_eq?: Maybe<Scalars['Boolean']>
+  isCensored_eq?: Maybe<Scalars['Boolean']>
+  isExplicit_eq?: Maybe<Scalars['Boolean']>
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   setVideoHero: VideoHero
@@ -337,10 +355,16 @@ export type QueryMostViewedChannelsAllTimeArgs = {
 export type QueryMostViewedVideosArgs = {
   limit?: Maybe<Scalars['Int']>
   timePeriodDays: Scalars['Int']
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedVideosWhereInput>
 }
 
 export type QueryMostViewedVideosAllTimeArgs = {
   limit: Scalars['Int']
+  first?: Maybe<Scalars['Int']>
+  after?: Maybe<Scalars['String']>
+  where?: Maybe<MostViewedVideosWhereInput>
 }
 
 export type SearchFtsOutput = {
