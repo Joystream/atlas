@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import { useMostViewedChannelsAllTime, useMostViewedVideos } from '@/api/hooks'
+import { useMostViewedVideos } from '@/api/hooks'
 import { GetMostViewedChannelsAllTimeDocument, GetMostViewedVideosAllTimeDocument } from '@/api/queries'
 import { InfiniteChannelWithVideosGrid, InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
