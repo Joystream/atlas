@@ -10,7 +10,7 @@ export const useDataObjectsAvailabilityLazy = (opts?: QueryHookOptions<GetDataOb
     (ids: string[]) => {
       getDataObjectsAvailability({
         variables: {
-          joystreamContentIdIn: ids,
+          id_in: ids,
         },
       })
     },
@@ -19,7 +19,7 @@ export const useDataObjectsAvailabilityLazy = (opts?: QueryHookOptions<GetDataOb
 
   return {
     getDataObjectsAvailability: _getDataObjectsAvailability,
-    dataObjects: data?.dataObjects,
+    dataObjects: data?.storageDataObjects,
     ...rest,
   }
 }

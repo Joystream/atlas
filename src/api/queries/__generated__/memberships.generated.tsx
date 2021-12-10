@@ -19,24 +19,20 @@ export type BasicMembershipFieldsFragment = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -61,24 +57,20 @@ export type GetMembershipQuery = {
       createdAt: Date
       views: number
       follows: number
-      avatarPhotoUrls: Array<string>
-      avatarPhotoAvailability: Types.AssetAvailability
-      avatarPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+      avatarPhoto?: Types.Maybe<{
+        __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
         size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
-          id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
-        }>
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | { __typename: 'DataObjectTypeUnknown' }
       }>
     }>
   }>
@@ -104,24 +96,20 @@ export type GetMembershipsQuery = {
       createdAt: Date
       views: number
       follows: number
-      avatarPhotoUrls: Array<string>
-      avatarPhotoAvailability: Types.AssetAvailability
-      avatarPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+      avatarPhoto?: Types.Maybe<{
+        __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
         size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
-          id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
-        }>
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+          | { __typename: 'DataObjectTypeUnknown' }
       }>
     }>
   }>

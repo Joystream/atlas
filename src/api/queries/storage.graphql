@@ -1,0 +1,32 @@
+fragment StorageDataObjectFields on StorageDataObject {
+  id
+  createdAt
+  size
+  isAccepted
+  ipfsHash
+  storageBag {
+    id
+  }
+  type {
+    __typename
+  }
+}
+
+fragment DistributionBucketOperatorField on DistributionBucketOperator {
+  id
+  metadata {
+    nodeEndpoint
+  }
+}
+
+query GetDistributionBucketsWithOperators {
+  distributionBuckets(limit: 50) {
+    id
+    bags {
+      id
+    }
+    operators {
+      ...DistributionBucketOperatorField
+    }
+  }
+}

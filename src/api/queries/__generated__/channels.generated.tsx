@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { DataObjectFieldsFragmentDoc } from './shared.generated'
+import { StorageDataObjectFieldsFragmentDoc } from './storage.generated'
 
 const defaultOptions = {}
 export type BasicChannelFieldsFragment = {
@@ -12,24 +12,20 @@ export type BasicChannelFieldsFragment = {
   createdAt: Date
   views: number
   follows: number
-  avatarPhotoUrls: Array<string>
-  avatarPhotoAvailability: Types.AssetAvailability
-  avatarPhotoDataObject?: Types.Maybe<{
-    __typename?: 'DataObject'
+  avatarPhoto?: Types.Maybe<{
+    __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
     size: number
-    liaisonJudgement: Types.LiaisonJudgement
-    ipfsContentId: string
-    joystreamContentId: string
-    liaison?: Types.Maybe<{
-      __typename?: 'Worker'
-      id: string
-      workerId: string
-      metadata?: Types.Maybe<string>
-      isActive: boolean
-      type: Types.WorkerType
-    }>
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | { __typename: 'DataObjectTypeUnknown' }
   }>
 }
 
@@ -38,50 +34,42 @@ export type AllChannelFieldsFragment = {
   description?: Types.Maybe<string>
   isPublic?: Types.Maybe<boolean>
   isCensored: boolean
-  coverPhotoUrls: Array<string>
-  coverPhotoAvailability: Types.AssetAvailability
   id: string
   title?: Types.Maybe<string>
   createdAt: Date
   views: number
   follows: number
-  avatarPhotoUrls: Array<string>
-  avatarPhotoAvailability: Types.AssetAvailability
   language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
   ownerMember?: Types.Maybe<{ __typename?: 'Membership'; id: string; handle: string; avatarUri?: Types.Maybe<string> }>
-  coverPhotoDataObject?: Types.Maybe<{
-    __typename?: 'DataObject'
+  coverPhoto?: Types.Maybe<{
+    __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
     size: number
-    liaisonJudgement: Types.LiaisonJudgement
-    ipfsContentId: string
-    joystreamContentId: string
-    liaison?: Types.Maybe<{
-      __typename?: 'Worker'
-      id: string
-      workerId: string
-      metadata?: Types.Maybe<string>
-      isActive: boolean
-      type: Types.WorkerType
-    }>
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | { __typename: 'DataObjectTypeUnknown' }
   }>
-  avatarPhotoDataObject?: Types.Maybe<{
-    __typename?: 'DataObject'
+  avatarPhoto?: Types.Maybe<{
+    __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
     size: number
-    liaisonJudgement: Types.LiaisonJudgement
-    ipfsContentId: string
-    joystreamContentId: string
-    liaison?: Types.Maybe<{
-      __typename?: 'Worker'
-      id: string
-      workerId: string
-      metadata?: Types.Maybe<string>
-      isActive: boolean
-      type: Types.WorkerType
-    }>
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+      | { __typename: 'DataObjectTypeUnknown' }
   }>
 }
 
@@ -98,24 +86,20 @@ export type GetBasicChannelQuery = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -131,15 +115,11 @@ export type GetChannelQuery = {
     description?: Types.Maybe<string>
     isPublic?: Types.Maybe<boolean>
     isCensored: boolean
-    coverPhotoUrls: Array<string>
-    coverPhotoAvailability: Types.AssetAvailability
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
     language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
     ownerMember?: Types.Maybe<{
       __typename?: 'Membership'
@@ -147,39 +127,35 @@ export type GetChannelQuery = {
       handle: string
       avatarUri?: Types.Maybe<string>
     }>
-    coverPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    coverPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -206,15 +182,11 @@ export type GetChannelsQuery = {
     description?: Types.Maybe<string>
     isPublic?: Types.Maybe<boolean>
     isCensored: boolean
-    coverPhotoUrls: Array<string>
-    coverPhotoAvailability: Types.AssetAvailability
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
     language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
     ownerMember?: Types.Maybe<{
       __typename?: 'Membership'
@@ -222,39 +194,35 @@ export type GetChannelsQuery = {
       handle: string
       avatarUri?: Types.Maybe<string>
     }>
-    coverPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    coverPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -279,15 +247,11 @@ export type GetChannelsConnectionQuery = {
         description?: Types.Maybe<string>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
-        coverPhotoUrls: Array<string>
-        coverPhotoAvailability: Types.AssetAvailability
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
         views: number
         follows: number
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
         ownerMember?: Types.Maybe<{
           __typename?: 'Membership'
@@ -295,39 +259,35 @@ export type GetChannelsConnectionQuery = {
           handle: string
           avatarUri?: Types.Maybe<string>
         }>
-        coverPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        coverPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
-        avatarPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        avatarPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
       }
     }>
@@ -374,15 +334,11 @@ export type GetMostViewedChannelsConnectionQuery = {
         description?: Types.Maybe<string>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
-        coverPhotoUrls: Array<string>
-        coverPhotoAvailability: Types.AssetAvailability
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
         views: number
         follows: number
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
         ownerMember?: Types.Maybe<{
           __typename?: 'Membership'
@@ -390,39 +346,35 @@ export type GetMostViewedChannelsConnectionQuery = {
           handle: string
           avatarUri?: Types.Maybe<string>
         }>
-        coverPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        coverPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
-        avatarPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        avatarPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
       }
     }>
@@ -451,15 +403,11 @@ export type GetMostFollowedChannelsConnectionQuery = {
         description?: Types.Maybe<string>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
-        coverPhotoUrls: Array<string>
-        coverPhotoAvailability: Types.AssetAvailability
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
         views: number
         follows: number
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
         ownerMember?: Types.Maybe<{
           __typename?: 'Membership'
@@ -467,39 +415,35 @@ export type GetMostFollowedChannelsConnectionQuery = {
           handle: string
           avatarUri?: Types.Maybe<string>
         }>
-        coverPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        coverPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
-        avatarPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
+        avatarPhoto?: Types.Maybe<{
+          __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
           size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
+          isAccepted: boolean
+          ipfsHash: string
+          storageBag: { __typename?: 'StorageBag'; id: string }
+          type:
+            | { __typename: 'DataObjectTypeChannelAvatar' }
+            | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeVideoMedia' }
+            | { __typename: 'DataObjectTypeVideoThumbnail' }
+            | { __typename: 'DataObjectTypeUnknown' }
         }>
       }
     }>
@@ -520,24 +464,20 @@ export type GetTop10ChannelsQuery = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -555,24 +495,20 @@ export type GetPromisingChannelsQuery = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -590,24 +526,20 @@ export type GetDiscoverChannelsQuery = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -625,24 +557,20 @@ export type GetPopularChannelsQuery = {
     createdAt: Date
     views: number
     follows: number
-    avatarPhotoUrls: Array<string>
-    avatarPhotoAvailability: Types.AssetAvailability
-    avatarPhotoDataObject?: Types.Maybe<{
-      __typename?: 'DataObject'
+    avatarPhoto?: Types.Maybe<{
+      __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
       size: number
-      liaisonJudgement: Types.LiaisonJudgement
-      ipfsContentId: string
-      joystreamContentId: string
-      liaison?: Types.Maybe<{
-        __typename?: 'Worker'
-        id: string
-        workerId: string
-        metadata?: Types.Maybe<string>
-        isActive: boolean
-        type: Types.WorkerType
-      }>
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+        | { __typename: 'DataObjectTypeUnknown' }
     }>
   }>
 }
@@ -654,13 +582,11 @@ export const BasicChannelFieldsFragmentDoc = gql`
     createdAt
     views
     follows
-    avatarPhotoUrls
-    avatarPhotoAvailability
-    avatarPhotoDataObject {
-      ...DataObjectFields
+    avatarPhoto {
+      ...StorageDataObjectFields
     }
   }
-  ${DataObjectFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
@@ -677,14 +603,12 @@ export const AllChannelFieldsFragmentDoc = gql`
       handle
       avatarUri
     }
-    coverPhotoUrls
-    coverPhotoAvailability
-    coverPhotoDataObject {
-      ...DataObjectFields
+    coverPhoto {
+      ...StorageDataObjectFields
     }
   }
   ${BasicChannelFieldsFragmentDoc}
-  ${DataObjectFieldsFragmentDoc}
+  ${StorageDataObjectFieldsFragmentDoc}
 `
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {

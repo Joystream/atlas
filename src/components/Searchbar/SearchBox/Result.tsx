@@ -4,7 +4,7 @@ import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { ResultTitle } from '@/components/Searchbar/SearchBox/ResultTitle'
 import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 
 import { ResultWrapper } from './ResultWrapper'
 import {
@@ -33,14 +33,8 @@ export const Result: React.FC<ResultProps> = ({
   selectedItem,
 }) => {
   const title = video ? video.title : channel?.title
-  const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset({
-    entity: channel,
-    assetType: AssetType.AVATAR,
-  })
-  const { url: videoThumbnail, isLoadingAsset: videoThumbnailLoading } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
+  const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset(channel?.avatarPhoto)
+  const { url: videoThumbnail, isLoadingAsset: videoThumbnailLoading } = useAsset(video?.thumbnailPhoto)
   const to = useMemo(() => {
     if (video) {
       return absoluteRoutes.viewer.video(video.id)

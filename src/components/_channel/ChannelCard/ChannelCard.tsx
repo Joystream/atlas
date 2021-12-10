@@ -6,7 +6,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
@@ -38,7 +38,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
   const mdMatch = useMediaMatch('md')
   const [activeDisabled, setActiveDisabled] = useState(false)
 
-  const { url, isLoadingAsset } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
