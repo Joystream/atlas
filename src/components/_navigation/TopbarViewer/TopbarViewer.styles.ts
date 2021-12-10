@@ -53,7 +53,7 @@ export const SearchbarContainer = styled.div`
   ${media.md} {
     max-width: 480px;
     justify-content: center;
-    margin: 0;
+    margin: 0 auto;
 
     > svg {
       display: none;

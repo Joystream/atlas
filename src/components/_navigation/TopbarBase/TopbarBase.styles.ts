@@ -24,7 +24,7 @@ export const Header = styled.header`
   ${media.md} {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: auto 480px 146px;
+    grid-template-columns: 1fr minmax(480px, 1fr) 1fr;
     padding: ${sizes(4)} calc(${sizes(8)} + var(--size-scrollbar-width)) ${sizes(4)}
       calc(var(--size-sidenav-width-collapsed) + ${sizes(8)});
   }

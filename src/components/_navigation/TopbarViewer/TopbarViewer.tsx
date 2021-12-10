@@ -104,9 +104,7 @@ export const TopbarViewer: React.FC = () => {
             </Button>
           ))}
         {!searchQuery && !mdMatch && !isLoggedIn && (
-          <>
-            <StyledIconButton onClick={handleLogging}>Sign up</StyledIconButton>
-          </>
+          <StyledIconButton onClick={handleLogging}>Sign up</StyledIconButton>
         )}
       </ButtonWrapper>
       <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
