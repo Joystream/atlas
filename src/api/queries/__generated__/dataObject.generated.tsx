@@ -5,40 +5,20 @@ import * as Types from './baseTypes.generated'
 
 const defaultOptions = {}
 export type GetDataObjectAvailabilityQueryVariables = Types.Exact<{
-  joystreamContentIdEq?: Types.Maybe<Types.Scalars['String']>
-  joystreamContentIdIn?: Types.Maybe<Array<Types.Scalars['String']> | Types.Scalars['String']>
+  id_eq?: Types.Maybe<Types.Scalars['ID']>
+  id_in?: Types.Maybe<Array<Types.Scalars['ID']> | Types.Scalars['ID']>
 }>
 
 export type GetDataObjectAvailabilityQuery = {
   __typename?: 'Query'
-  dataObjects: Array<{
-    __typename?: 'DataObject'
-    id: string
-    liaisonJudgement: Types.LiaisonJudgement
-    joystreamContentId: string
-    videomediaDataObject?: Types.Maybe<
-      Array<{ __typename?: 'Video'; id: string; mediaAvailability: Types.AssetAvailability }>
-    >
-    videothumbnailPhotoDataObject?: Types.Maybe<
-      Array<{ __typename?: 'Video'; id: string; thumbnailPhotoAvailability: Types.AssetAvailability }>
-    >
-  }>
+  storageDataObjects: Array<{ __typename?: 'StorageDataObject'; id: string; isAccepted: boolean }>
 }
 
 export const GetDataObjectAvailabilityDocument = gql`
-  query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContentIdIn: [String!]) {
-    dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
+  query GetDataObjectAvailability($id_eq: ID, $id_in: [ID!]) {
+    storageDataObjects(where: { id_eq: $id_eq, id_in: $id_in }) {
       id
-      liaisonJudgement
-      joystreamContentId
-      videomediaDataObject {
-        id
-        mediaAvailability
-      }
-      videothumbnailPhotoDataObject {
-        id
-        thumbnailPhotoAvailability
-      }
+      isAccepted
     }
   }
 `
@@ -55,8 +35,8 @@ export const GetDataObjectAvailabilityDocument = gql`
  * @example
  * const { data, loading, error } = useGetDataObjectAvailabilityQuery({
  *   variables: {
- *      joystreamContentIdEq: // value for 'joystreamContentIdEq'
- *      joystreamContentIdIn: // value for 'joystreamContentIdIn'
+ *      id_eq: // value for 'id_eq'
+ *      id_in: // value for 'id_in'
  *   },
  * });
  */

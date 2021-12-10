@@ -41,7 +41,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)
   const drawer = useRef<HTMLDivElement>(null)
-  const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.contentId], shallow))
+  const uploadsStatuses = useUploadsStore((state) => uploads.map((u) => state.uploadsStatus[u.id], shallow))
   const location = useLocation()
 
   const locationState = location.state as RoutingState
@@ -116,13 +116,13 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
       ? uploads
       : uploads.map((asset) => {
           const typeToAsset = {
-            'video': video?.mediaDataObject,
-            'thumbnail': video?.thumbnailPhotoDataObject,
-            'avatar': channel?.avatarPhotoDataObject,
-            'cover': channel?.coverPhotoDataObject,
+            'video': video?.media,
+            'thumbnail': video?.thumbnailPhoto,
+            'avatar': channel?.avatarPhoto,
+            'cover': channel?.coverPhoto,
           }
           const fetchedAsset = typeToAsset[asset.type]
-          return { ...asset, ipfsContentId: fetchedAsset?.ipfsContentId }
+          return { ...asset, ipfsContentId: fetchedAsset?.ipfsHash }
         })
 
   if (videoLoading || channelLoading) {
@@ -189,7 +189,7 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
       </UploadStatusGroupContainer>
       <AssetsDrawerContainer isActive={isAssetsDrawerActive} ref={drawer} maxHeight={drawer?.current?.scrollHeight}>
         {enrichedUploadData.map((file, idx) => (
-          <UploadStatus size={size} key={file.contentId} asset={file} isLast={uploads.length === idx + 1} />
+          <UploadStatus size={size} key={file.id} asset={file} isLast={uploads.length === idx + 1} />
         ))}
       </AssetsDrawerContainer>
     </Container>

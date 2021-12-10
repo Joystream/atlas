@@ -2,7 +2,6 @@ import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
 
 import {
   AddVideoViewMutation,
-  AssetAvailability,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
   GetTop10VideosThisMonthQuery,
@@ -43,11 +42,17 @@ export const useChannelPreviewVideos = (
     ...opts,
     variables: {
       where: {
-        channelId_eq: channelId,
+        channel: {
+          id_eq: channelId,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
       },
       orderBy: VideoOrderByInput.CreatedAtDesc,
       offset: 0,
@@ -105,8 +110,12 @@ export const useTop10VideosThisWeek = (
         ...variables?.where,
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
       },
     },
   })
@@ -128,8 +137,12 @@ export const useTop10VideosThisMonth = (
         ...variables?.where,
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
       },
     },
   })
@@ -148,10 +161,14 @@ export const useVideoCount = (
     variables: {
       ...variables,
       where: {
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
         isPublic_eq: true,
         isCensored_eq: false,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         ...variables?.where,
       },
     },

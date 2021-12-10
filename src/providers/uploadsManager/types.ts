@@ -1,13 +1,13 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
-import { UploadStatus } from '@/types/uploads'
+import { UploadStatus } from '@/types/storage'
 
 type AssetType = 'video' | 'thumbnail' | 'cover' | 'avatar'
 export type AssetParent = 'video' | 'channel'
 
 export type AssetUpload = {
-  contentId: string
-  ipfsContentId?: string
+  id: string
+  ipfsHash?: string
   parentObject: {
     type: AssetParent
     id: ChannelId | VideoId

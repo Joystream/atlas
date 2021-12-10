@@ -5,7 +5,6 @@ import { CSSTransition } from 'react-transition-group'
 import useMeasure from 'react-use-measure'
 
 import { useChannel } from '@/api/hooks'
-import { AssetAvailability } from '@/api/queries'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tooltip } from '@/components/Tooltip'
@@ -24,7 +23,7 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
-import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
+import { useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -104,15 +103,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const startFileUpload = useStartFileUpload()
 
   // trigger use asset to make sure the channel assets get resolved
-  // useRawAsset is used for display to support local assets as well
-  useAsset({
-    entity: channel,
-    assetType: AssetType.AVATAR,
-  })
-  useAsset({
-    entity: channel,
-    assetType: AssetType.COVER,
-  })
+  useAsset(channel?.avatarPhoto)
+  useAsset(channel?.coverPhoto)
 
   const {
     register,
@@ -166,12 +158,12 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
     reset({
       avatar: {
-        contentId: channel.avatarPhotoDataObject?.joystreamContentId,
+        contentId: channel.avatarPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
       },
       cover: {
-        contentId: channel.coverPhotoDataObject?.joystreamContentId,
+        contentId: channel.coverPhoto?.id,
         assetDimensions: null,
         imageCropData: null,
       },
@@ -272,7 +264,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       const uploadPromises: Promise<unknown>[] = []
       if (avatarAsset?.blob && avatarContentId) {
         const uploadPromise = startFileUpload(avatarAsset.blob, {
-          contentId: avatarContentId,
+          id: avatarContentId,
           owner: channelId,
           parentObject: {
             type: 'channel',
@@ -286,7 +278,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
       if (coverAsset?.blob && coverContentId) {
         const uploadPromise = startFileUpload(coverAsset.blob, {
-          contentId: coverContentId,
+          id: coverContentId,
           owner: channelId,
           parentObject: {
             type: 'channel',
@@ -367,8 +359,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     },
   ]
 
-  const hasAvatarUploadFailed = channel?.avatarPhotoAvailability === AssetAvailability.Pending
-  const hasCoverUploadFailed = channel?.coverPhotoAvailability === AssetAvailability.Pending
+  const hasAvatarUploadFailed = (channel?.avatarPhoto && !channel.avatarPhoto.isAccepted) || false
+  const hasCoverUploadFailed = (channel?.coverPhoto && !channel.coverPhoto.isAccepted) || false
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
   return (
     <form onSubmit={handleSubmit}>

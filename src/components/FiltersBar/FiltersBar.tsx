@@ -243,8 +243,17 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                 : undefined,
               hasMarketing_eq: excludePaidPromotionalMaterialFilter ? !excludePaidPromotionalMaterialFilter : undefined,
               isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
-              categoryId_in: categoriesFilter,
-              languageId_eq: language === 'undefined' ? undefined : language,
+              category: categoriesFilter
+                ? {
+                    id_in: categoriesFilter,
+                  }
+                : undefined,
+              language:
+                language !== 'undefined'
+                  ? {
+                      iso_eq: language as string,
+                    }
+                  : undefined,
               ...getDurationRules(),
             }))
             setIsFiltersOpen(false)
@@ -287,7 +296,9 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   categoriesPopoverRef.current?.hide()
                   setVideoWhereInput((value) => ({
                     ...value,
-                    categoryId_in: categoriesFilter,
+                    category: {
+                      id_in: categoriesFilter,
+                    },
                   }))
                 },
               }}

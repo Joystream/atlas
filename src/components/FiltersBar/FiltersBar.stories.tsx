@@ -55,7 +55,9 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
   useEffect(() => {
     setVideoWhereInput((value) => ({
       ...value,
-      languageId_eq: selectedLanguage,
+      language: {
+        iso_eq: selectedLanguage,
+      },
     }))
   }, [selectedLanguage, setVideoWhereInput])
 

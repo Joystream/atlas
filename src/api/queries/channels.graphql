@@ -5,10 +5,8 @@ fragment BasicChannelFields on Channel {
   views
   follows
 
-  avatarPhotoUrls
-  avatarPhotoAvailability
-  avatarPhotoDataObject {
-    ...DataObjectFields
+  avatarPhoto {
+    ...StorageDataObjectFields
   }
 }
 
@@ -26,10 +24,8 @@ fragment AllChannelFields on Channel {
     handle
     avatarUri
   }
-  coverPhotoUrls
-  coverPhotoAvailability
-  coverPhotoDataObject {
-    ...DataObjectFields
+  coverPhoto {
+    ...StorageDataObjectFields
   }
 }
 

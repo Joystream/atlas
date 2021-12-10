@@ -7,7 +7,7 @@ import { AvatarSize } from '@/components/Avatar'
 import { TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
@@ -45,10 +45,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
-  const { url: avatarPhotoUrl } = useAsset({
-    entity: channel,
-    assetType: AssetType.AVATAR,
-  })
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
 
   const displayedChannel = overrideChannel || channel
 

@@ -339,7 +339,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           if (videoAsset?.blob && videoContentId) {
             const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
             const uploadPromise = startFileUpload(videoAsset.blob, {
-              contentId: videoContentId,
+              id: videoContentId,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',
@@ -353,7 +353,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           }
           if (thumbnailAsset?.blob && thumbnailContentId) {
             const uploadPromise = startFileUpload(thumbnailAsset.blob, {
-              contentId: thumbnailContentId,
+              id: thumbnailContentId,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',

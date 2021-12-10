@@ -1,6 +1,6 @@
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 type UseVideoSharedLogicOpts = {
@@ -14,14 +14,8 @@ export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSha
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
-  const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset({
-    entity: video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: avatarPhotoUrl, isLoadingAsset: isLoadingAvatar } = useAsset({
-    entity: video?.channel,
-    assetType: AssetType.AVATAR,
-  })
+  const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset(video?.thumbnailPhoto)
+  const { url: avatarPhotoUrl, isLoadingAsset: isLoadingAvatar } = useAsset(video?.channel?.avatarPhoto)
 
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined

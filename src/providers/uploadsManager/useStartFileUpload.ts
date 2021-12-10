@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router'
 import * as rax from 'retry-axios'
 
 import { absoluteRoutes } from '@/config/routes'
-import { ResolvedAssetDetails } from '@/types/assets'
-import { UploadStatus } from '@/types/uploads'
+import { UploadStatus } from '@/types/storage'
 import { createStorageNodeUrl } from '@/utils/asset'
-import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useUploadsStore } from './store'
 import { InputAssetUpload, StartFileUploadOptions } from './types'
@@ -74,29 +73,21 @@ export const useStartFileUpload = () => {
       }
 
       ConsoleLogger.debug('Starting file upload', {
-        contentId: asset.contentId,
+        contentId: asset.id,
         storageProviderId,
         storageProviderUrl: storageUrl,
       })
 
       const setAssetStatus = (status: Partial<UploadStatus>) => {
-        setUploadStatus(asset.contentId, status)
+        setUploadStatus(asset.id, status)
       }
-      const fileInState = assetsFiles?.find((file) => file.contentId === asset.contentId)
+      const fileInState = assetsFiles?.find((file) => file.contentId === asset.id)
       if (!fileInState && file) {
-        addAssetFile({ contentId: asset.contentId, blob: file })
+        addAssetFile({ contentId: asset.id, blob: file })
       }
 
       const assetKey = `${asset.parentObject.type}-${asset.parentObject.id}`
-      const assetUrl = createStorageNodeUrl(asset.contentId, storageUrl)
-
-      const assetDetails: ResolvedAssetDetails = {
-        contentId: asset.contentId,
-        assetType: asset.type,
-        assetUrl,
-        storageProviderId,
-        storageProviderUrl: storageUrl,
-      }
+      const assetUrl = createStorageNodeUrl(asset.id, storageUrl)
 
       try {
         if (!fileInState && !file) {
@@ -148,20 +139,21 @@ export const useStartFileUpload = () => {
         })
 
         setAssetStatus({ lastStatus: 'processing', progress: 100 })
-        addProcessingAssetId(asset.contentId)
+        addProcessingAssetId(asset.id)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
 
         const performanceEntries = performance.getEntriesByName(assetUrl)
         if (performanceEntries.length === 1) {
-          AssetLogger.uploadRequestMetric(assetDetails, performanceEntries[0].duration, file?.size || 0)
+          // TODO: enable back
+          // AssetLogger.uploadRequestMetric(assetDetails, performanceEntries[0].duration, file?.size || 0)
         }
       } catch (e) {
         SentryLogger.error('Failed to upload asset', 'UploadsManager', e, {
-          asset: { contentId: asset.contentId, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
+          asset: { contentId: asset.id, storageProviderId, storageProviderUrl: storageUrl, assetUrl },
         })
-        AssetLogger.uploadError(assetDetails)
+        // AssetLogger.uploadError(assetDetails)
 
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 
