@@ -2,13 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannel, useVideosConnection } from '@/api/hooks'
-import {
-  AssetAvailability,
-  SearchQuery,
-  VideoFieldsFragment,
-  VideoOrderByInput,
-  useSearchLazyQuery,
-} from '@/api/queries'
+import { SearchQuery, VideoFieldsFragment, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -25,7 +19,7 @@ import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
@@ -87,10 +81,7 @@ export const ChannelView: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
-  const { url: coverPhotoUrl } = useAsset({
-    entity: channel,
-    assetType: AssetType.COVER,
-  })
+  const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const {
     edges,
@@ -106,11 +97,17 @@ export const ChannelView: React.FC = () => {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
-        channelId_eq: id,
+        channel: {
+          id_eq: id,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
       },
     },
     {
@@ -341,10 +338,17 @@ const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
         variables: {
           text: searchQuery,
           whereVideo: {
+            channel: {
+              id_eq: id,
+            },
             isPublic_eq: true,
-            mediaAvailability_eq: AssetAvailability.Accepted,
-            thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-            channelId_eq: id,
+            isCensored_eq: false,
+            thumbnailPhoto: {
+              isAccepted_eq: true,
+            },
+            media: {
+              isAccepted_eq: true,
+            },
           },
           limit: 100,
         },

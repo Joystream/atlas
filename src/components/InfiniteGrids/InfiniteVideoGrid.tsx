@@ -2,7 +2,6 @@ import { DocumentNode } from 'graphql'
 import React, { useCallback, useState } from 'react'
 
 import {
-  AssetAvailability,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
   GetVideosConnectionDocument,
@@ -89,8 +88,12 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       where: {
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         ...videoWhereInput,
       },
     }

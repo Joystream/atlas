@@ -2,7 +2,6 @@ import { ApolloClient } from '@apollo/client'
 
 import {
   AllChannelFieldsFragment,
-  AssetAvailability,
   GetChannelDocument,
   GetChannelQuery,
   GetChannelQueryVariables,
@@ -19,13 +18,21 @@ export const fetchMissingAssets = async (
 ): Promise<[VideoFieldsFragment[], AllChannelFieldsFragment | null | undefined, Record<string, boolean>]> => {
   const videosMediaPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
     query: GetVideosDocument,
-    variables: { where: { mediaAvailability_eq: AssetAvailability.Pending, channelId_eq: activeChannelId } },
+    variables: {
+      where: {
+        media: { isAccepted_eq: false },
+        channel: { id_eq: activeChannelId },
+      },
+    },
   })
 
   const videosThumbnailPromise = client.query<GetVideosQuery, GetVideosQueryVariables>({
     query: GetVideosDocument,
     variables: {
-      where: { thumbnailPhotoAvailability_eq: AssetAvailability.Pending, channelId_eq: activeChannelId },
+      where: {
+        thumbnailPhoto: { isAccepted_eq: false },
+        channel: { id_eq: activeChannelId },
+      },
     },
   })
 
@@ -53,27 +60,21 @@ export const fetchMissingAssets = async (
   })
 
   const pendingVideoAssetsLookup = fetchedVideos.reduce((acc, cur) => {
-    if (cur.mediaAvailability === AssetAvailability.Pending && cur.mediaDataObject?.joystreamContentId) {
-      acc[cur.mediaDataObject.joystreamContentId] = true
+    if (cur.media && !cur.media.isAccepted) {
+      acc[cur.media.id] = true
     }
-    if (
-      cur.thumbnailPhotoAvailability === AssetAvailability.Pending &&
-      cur.thumbnailPhotoDataObject?.joystreamContentId
-    ) {
-      acc[cur.thumbnailPhotoDataObject.joystreamContentId] = true
+    if (cur.thumbnailPhoto && !cur.thumbnailPhoto.isAccepted) {
+      acc[cur.thumbnailPhoto.id] = true
     }
     return acc
   }, {} as Record<string, boolean>)
 
-  const pendingChannelAssetsLookup = {
-    ...(fetchedChannel?.avatarPhotoAvailability === AssetAvailability.Pending &&
-    fetchedChannel.avatarPhotoDataObject?.joystreamContentId
-      ? { [fetchedChannel.avatarPhotoDataObject.joystreamContentId]: true }
-      : {}),
-    ...(fetchedChannel?.coverPhotoAvailability === AssetAvailability.Pending &&
-    fetchedChannel.coverPhotoDataObject?.joystreamContentId
-      ? { [fetchedChannel.coverPhotoDataObject.joystreamContentId]: true }
-      : {}),
+  const pendingChannelAssetsLookup: Record<string, boolean> = {}
+  if (fetchedChannel?.avatarPhoto && !fetchedChannel?.avatarPhoto.isAccepted) {
+    pendingChannelAssetsLookup[fetchedChannel.avatarPhoto.id] = true
+  }
+  if (fetchedChannel?.coverPhoto && !fetchedChannel?.coverPhoto.isAccepted) {
+    pendingChannelAssetsLookup[fetchedChannel.coverPhoto.id] = true
   }
   const pendingAssetsLookup = {
     ...pendingVideoAssetsLookup,

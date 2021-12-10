@@ -1,6 +1,6 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { createStore } from '@/store'
-import { UploadStatus } from '@/types/uploads'
+import { UploadStatus } from '@/types/storage'
 
 import { AssetParent, AssetUpload, UploadsStatusRecord } from './types'
 
@@ -50,7 +50,7 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       },
       removeAssetFromUploads: (contentId) => {
         set((state) => {
-          state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
+          state.uploads = state.uploads.filter((asset) => asset.id !== contentId)
         })
       },
       removeAssetsWithParentFromUploads: (type, id) => {

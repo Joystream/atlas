@@ -23,7 +23,7 @@ export const UploadFiles = () => {
       return
     }
     startFileUpload(file, {
-      contentId: contentId,
+      id: contentId,
       type: 'avatar',
       parentObject: {
         type: 'channel',

@@ -14,7 +14,7 @@ import {
 } from '@/components/_icons'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { UploadStatus } from '@/types/uploads'
+import { UploadStatus } from '@/types/storage'
 import { getLinkPropsFromTo } from '@/utils/button'
 import { formatDurationShort } from '@/utils/time'
 

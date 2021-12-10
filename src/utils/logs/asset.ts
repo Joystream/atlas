@@ -1,16 +1,30 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { ResolvedAssetDetails } from '@/types/assets'
+import { DataObjectType } from '@/types/storage'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
 
-export type AssetEvent = {
-  type: string
+type DistributorEventDetails = {
+  distributorId: string
+  distributorUrl?: string | null
+}
+
+type StorageProviderEventDetails = {
   storageProviderId: string
   storageProviderUrl?: string | null
-} & Record<string, unknown>
+}
+
+type StorageEvent = {
+  type: string
+  [x: string]: unknown
+} & (DistributorEventDetails | StorageProviderEventDetails)
+
+export type DistributorEventEntry = {
+  dataObjectId: string
+  dataObjectType: DataObjectType
+} & DistributorEventDetails
 
 class _AssetLogger {
   private logUrl = ''
@@ -24,7 +38,7 @@ class _AssetLogger {
     this.user = user
   }
 
-  private pendingEvents: AssetEvent[] = []
+  private pendingEvents: StorageEvent[] = []
 
   private sendEvents = debounce(async () => {
     if (!this.pendingEvents.length) return
@@ -44,7 +58,7 @@ class _AssetLogger {
     }
   }, 2000)
 
-  private addEvent(event: AssetEvent) {
+  private addEvent(event: StorageEvent) {
     const eventWithUser = {
       ...event,
       user: this.user,
@@ -53,48 +67,48 @@ class _AssetLogger {
     this.sendEvents()
   }
 
-  assetResponseMetric(assetDetails: ResolvedAssetDetails, responseTime: number) {
-    const event: AssetEvent = {
+  assetResponseMetric(entry: DistributorEventEntry, responseTime: number) {
+    const event: StorageEvent = {
       type: 'asset-download-response-time',
       responseTime,
-      ...assetDetails,
+      ...entry,
     }
     this.addEvent(event)
   }
 
-  assetError(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
+  assetError(entry: DistributorEventEntry) {
+    const event: StorageEvent = {
       type: 'asset-download-failure',
-      ...assetDetails,
+      ...entry,
     }
     this.addEvent(event)
   }
 
-  assetTimeout(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
+  assetTimeout(entry: DistributorEventEntry) {
+    const event: StorageEvent = {
       type: 'asset-download-timeout',
-      ...assetDetails,
+      ...entry,
     }
     this.addEvent(event)
   }
 
-  uploadError(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
-      type: 'asset-upload-failure',
-      ...assetDetails,
-    }
-    this.addEvent(event)
-  }
-
-  uploadRequestMetric(assetDetails: ResolvedAssetDetails, uploadTime: number, fileSize: number) {
-    const event: AssetEvent = {
-      type: 'asset-upload-request-time',
-      ...assetDetails,
-      uploadTime,
-      fileSize,
-    }
-    this.addEvent(event)
-  }
+  // uploadError(entry: DistributorEventEntry) {
+  //   const event: StorageEvent = {
+  //     type: 'asset-upload-failure',
+  //     ...entry,
+  //   }
+  //   this.addEvent(event)
+  // }
+  //
+  // uploadRequestMetric(assetDetails: ResolvedAssetDetails, uploadTime: number, fileSize: number) {
+  //   const event: StorageEvent = {
+  //     type: 'asset-upload-request-time',
+  //     ...assetDetails,
+  //     uploadTime,
+  //     fileSize,
+  //   }
+  //   this.addEvent(event)
+  // }
 }
 
 export const AssetLogger = new _AssetLogger()

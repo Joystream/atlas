@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 
-import { AssetAvailability } from '@/api/queries'
 import { VideoTileProps, useVideoSharedLogic } from '@/components/_video/VideoTile'
 import { absoluteRoutes } from '@/config/routes'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
@@ -22,12 +21,10 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo
 
     const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
-    const uploadStatus = useUploadsStore(
-      (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
-    )
+    const uploadStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
 
-    const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
-    const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
+    const hasThumbnailUploadFailed = (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted) || false
+    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted) || false
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
     const handleCopyVideoURLClick = useCallback(() => {
       copyToClipboard(videoHref ? location.origin + videoHref : '')

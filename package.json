@@ -34,7 +34,7 @@
     "svgs:icons-import": "node ./scripts/figma-import",
     "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs && prettier --write src/components/_icons",
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
-    "graphql": "graphql-codegen --config codegen.config.yml",
+    "graphql": "rimraf src/api/queries/__generated__ && graphql-codegen --config codegen.config.yml",
     "postinstall": "husky install"
   },
   "lint-staged": {
@@ -50,7 +50,7 @@
     "@emotion/styled": "^11.6.0",
     "@joystream/content-metadata-protobuf": "~1.1.0",
     "@joystream/prettier-config": "^1.0.0",
-    "@joystream/types": "0.16.1",
+    "@joystream/types": "file:./../monorepo/types",
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.0",
     "@polkadot/extension-dapp": "~0.37.3-17",
@@ -141,6 +141,7 @@
     "lint-staged": "^12.1.2",
     "postcss-syntax": "^0.36.2",
     "prettier": "~2.5.0",
+    "rimraf": "^3.0.2",
     "rollup-plugin-visualizer": "^5.5.2",
     "storybook-builder-vite": "^0.1.10",
     "style-dictionary": "^3.0.3",

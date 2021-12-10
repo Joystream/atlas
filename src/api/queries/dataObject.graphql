@@ -1,15 +1,6 @@
-query GetDataObjectAvailability($joystreamContentIdEq: String, $joystreamContentIdIn: [String!]) {
-  dataObjects(where: { joystreamContentId_eq: $joystreamContentIdEq, joystreamContentId_in: $joystreamContentIdIn }) {
+query GetDataObjectAvailability($id_eq: ID, $id_in: [ID!]) {
+  storageDataObjects(where: { id_eq: $id_eq, id_in: $id_in }) {
     id
-    liaisonJudgement
-    joystreamContentId
-    videomediaDataObject {
-      id
-      mediaAvailability
-    }
-    videothumbnailPhotoDataObject {
-      id
-      thumbnailPhotoAvailability
-    }
+    isAccepted
   }
 }
