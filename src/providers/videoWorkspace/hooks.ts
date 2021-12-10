@@ -60,10 +60,10 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
       }
     : {
         video: {
-          contentId: video?.mediaDataObject?.joystreamContentId ?? null,
+          contentId: video?.media?.id ?? null,
         },
         thumbnail: {
-          cropContentId: video?.thumbnailPhotoDataObject?.joystreamContentId ?? null,
+          cropContentId: video?.thumbnailPhoto?.id ?? null,
           originalContentId: null,
         },
       }

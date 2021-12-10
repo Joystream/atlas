@@ -84,7 +84,9 @@ export const MyVideosView = () => {
       first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
-        channelId_eq: activeChannelId,
+        channel: {
+          id_eq: activeChannelId,
+        },
         isPublic_eq,
       },
     },

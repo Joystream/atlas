@@ -1,6 +1,5 @@
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { createStore } from '@/store'
-
-import { AssetResolutionData } from './types'
 
 type ResolvedAsset = {
   url?: string | null
@@ -9,13 +8,13 @@ type ResolvedAsset = {
 
 type AssetStoreState = {
   assets: Record<string, ResolvedAsset> // mapping of content ID to resolved assets
-  pendingAssets: Record<string, AssetResolutionData> // list of content IDs pending resolution
+  pendingAssets: Record<string, StorageDataObjectFieldsFragment> // list of content IDs pending resolution
   assetIdsBeingResolved: Set<string> // list of content IDs being currently resolved
 }
 
 type AssetStoreActions = {
   addAsset: (contentId: string, asset: ResolvedAsset) => void
-  addPendingAsset: (contentId: string, resolutionData: AssetResolutionData) => void
+  addPendingAsset: (contentId: string, storageDataObject: StorageDataObjectFieldsFragment) => void
   removePendingAsset: (contentId: string) => void
   addAssetBeingResolved: (contentId: string) => void
   removeAssetBeingResolved: (contentId: string) => void
@@ -33,10 +32,10 @@ export const useAssetStore = createStore<AssetStoreState, AssetStoreActions>({
         state.assets[contentId] = asset
       })
     },
-    addPendingAsset: (contentId, resolutionData) => {
+    addPendingAsset: (contentId, storageDataObject) => {
       set((state) => {
         if (state.pendingAssets[contentId]) return
-        state.pendingAssets[contentId] = resolutionData
+        state.pendingAssets[contentId] = storageDataObject
       })
     },
     removePendingAsset: (contentId) => {

@@ -49,7 +49,7 @@ type UploadStatusProps = {
 export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
-  const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.contentId])
+  const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.id])
   const { setUploadStatus } = useUploadsStore((state) => state.actions)
 
   const thumbnailDialogRef = useRef<ImageCropModalImperativeHandle>(null)
@@ -98,16 +98,16 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
       const [file] = acceptedFiles
-      setUploadStatus(asset.contentId, { lastStatus: 'inProgress', progress: 0 })
+      setUploadStatus(asset.id, { lastStatus: 'inProgress', progress: 0 })
       const fileHash = await computeFileHash(file)
-      if (fileHash !== asset.ipfsContentId) {
-        setUploadStatus(asset.contentId, { lastStatus: undefined })
+      if (fileHash !== asset.ipfsHash) {
+        setUploadStatus(asset.id, { lastStatus: undefined })
         openDifferentFileDialog()
       } else {
         startFileUpload(
           file,
           {
-            contentId: asset.contentId,
+            id: asset.id,
             owner: asset.owner,
             parentObject: {
               type: asset.parentObject.type,
@@ -144,7 +144,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     startFileUpload(
       null,
       {
-        contentId: asset.contentId,
+        id: asset.id,
         owner: asset.owner,
         parentObject: {
           type: asset.parentObject.type,
@@ -160,13 +160,13 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
 
   const handleCropConfirm = async (croppedBlob: Blob) => {
     const fileHash = await computeFileHash(croppedBlob)
-    if (fileHash !== asset.ipfsContentId) {
+    if (fileHash !== asset.ipfsHash) {
       openDifferentFileDialog()
     } else {
       startFileUpload(
         croppedBlob,
         {
-          contentId: asset.contentId,
+          id: asset.id,
           owner: asset.owner,
           parentObject: {
             type: asset.parentObject.type,

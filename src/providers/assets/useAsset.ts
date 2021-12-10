@@ -1,23 +1,22 @@
 import { useEffect } from 'react'
 
-import { readAssetData } from './helpers'
-import { useAssetStore } from './store'
-import { UseAssetDataArgs } from './types'
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 
-export const useAsset = ({ entity, assetType }: UseAssetDataArgs) => {
-  const assetData = readAssetData(entity, assetType)
-  const contentId = assetData?.dataObject?.joystreamContentId ?? assetData?.urls?.[0] ?? null
+import { useAssetStore } from './store'
+
+export const useAsset = (dataObject: StorageDataObjectFieldsFragment | null | undefined) => {
+  const contentId = dataObject?.id ?? null
   const asset = useAssetStore((state) => (contentId ? state.assets[contentId] : null))
   const pendingAsset = useAssetStore((state) => (contentId ? state.pendingAssets[contentId] : null))
   const addPendingAsset = useAssetStore((state) => state.actions.addPendingAsset)
 
   useEffect(() => {
-    if (asset || pendingAsset || !contentId || !assetData) return
+    if (asset || pendingAsset || !contentId || !dataObject) return
 
-    addPendingAsset(contentId, assetData)
-  }, [addPendingAsset, asset, assetData, contentId, pendingAsset])
+    addPendingAsset(contentId, dataObject)
+  }, [addPendingAsset, asset, dataObject, contentId, pendingAsset])
 
-  return { url: asset?.url, isLoadingAsset: !assetData || (!!contentId && !asset) }
+  return { url: asset?.url, isLoadingAsset: !dataObject || (!!contentId && !asset) }
 }
 
 export const useRawAsset = (contentId: string | null) => {

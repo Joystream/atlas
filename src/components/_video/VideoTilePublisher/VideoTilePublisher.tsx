@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { AssetAvailability } from '@/api/queries'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -43,10 +42,10 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     })
 
     const uploadVideoStatus = useUploadsStore(
-      (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
+      (state) => state.uploadsStatus[video?.media?.id || '']
     )
     const uploadThumbnailStatus = useUploadsStore(
-      (state) => state.uploadsStatus[video?.thumbnailPhotoDataObject?.joystreamContentId || '']
+      (state) => state.uploadsStatus[video?.thumbnailPhoto?.id || '']
     )
 
     const isVideoUploading =
@@ -61,14 +60,8 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     const isUploading = isVideoUploading || isThumbnailUploading
 
-    const hasThumbnailUploadFailed =
-      video?.thumbnailPhotoAvailability === AssetAvailability.Pending &&
-      (!uploadThumbnailStatus || uploadThumbnailStatus?.lastStatus === 'error')
-
-    const hasVideoUploadFailed =
-      video?.mediaAvailability === AssetAvailability.Pending &&
-      (!uploadVideoStatus || uploadVideoStatus.lastStatus === 'error')
-
+    const hasThumbnailUploadFailed = (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted) || false
+    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted) || false
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const isUnlisted = video?.isPublic === false
