@@ -29,9 +29,9 @@ export const NodeContainer = styled.div<PlacementProps>`
   position: absolute;
   display: flex;
   align-items: center;
-  height: 50px;
   z-index: 2;
   top: 0;
+  bottom: 0;
   padding: 0 ${sizes(4)};
   ${nodePlacementStyles};
 `
