@@ -7531,6 +7531,7 @@ __metadata:
     react-use-hotjar: ^1.2.0
     react-use-measure: ^2.1.0
     retry-axios: ^2.4.0
+    rimraf: ^3.0.2
     rollup-plugin-visualizer: ^5.5.2
     scroll-lock: ^2.1.5
     storybook-builder-vite: ^0.1.10
