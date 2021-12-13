@@ -10,7 +10,6 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 
 type ContainerProps = {
   size: AvatarSize
-  editable: boolean
 }
 
 type EditButtonProps = {
@@ -100,15 +99,6 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
   }
 }
 
-export const Outline = styled.div`
-  ${square('100%')};
-
-  border: 1px solid ${cVar('colorBorderAlpha')};
-  border-radius: 50%;
-  z-index: ${zIndex.overlay};
-  pointer-events: none;
-`
-
 export const Container = styled.div<ContainerProps>`
   ${({ size }) => getAvatarSizeCss(size)};
 
@@ -118,21 +108,28 @@ export const Container = styled.div<ContainerProps>`
   align-items: center;
   position: relative;
 
-  ${({ editable }) =>
-    editable &&
-    css`
-      :hover {
-        ${Outline} {
-          border: 2px solid ${cVar('colorCoreNeutral200')};
-        }
+  ::after {
+    ${square('100%')};
 
-        :active {
-          ${Outline} {
-            border: 2px solid ${cVar('colorCoreBlue500')};
-          }
-        }
-      }
-    `}
+    content: '';
+    display: block;
+    border-radius: 50%;
+    z-index: ${zIndex.overlay};
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px ${cVar('colorBorderAlpha')};
+  }
+
+  :hover {
+    ::after {
+      box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
+    }
+  }
+
+  :active {
+    ::after {
+      box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
+    }
+  }
 `
 
 export const EditButton = styled.button<EditButtonProps>`

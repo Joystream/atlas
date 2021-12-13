@@ -49,8 +49,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   }
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
   return (
-    <Container onClick={onClick} size={size} className={className} editable={!!isEditable}>
-      <Outline />
+    <Container onClick={onClick} size={size} className={className}>
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
           <SvgActionImage />
