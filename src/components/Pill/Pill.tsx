@@ -7,7 +7,7 @@ import { PillProps } from './types'
 
 export const Pill: React.FC<PillProps> = ({ label, icon, iconPlacement = 'left', ...props }) => {
   return (
-    <StyledPill {...props} hasLabel={!!(label && label === 0)} iconPlacement={iconPlacement}>
+    <StyledPill {...props} hasLabel={!!label} iconPlacement={iconPlacement}>
       {icon && iconPlacement === 'left' && icon}
       {label && <Text variant="t100">{label}</Text>}
       {icon && iconPlacement === 'right' && icon}
