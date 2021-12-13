@@ -9,7 +9,6 @@ import {
   Container,
   EditButton,
   NewChannelAvatar,
-  Outline,
   SilhouetteAvatar,
   StyledImage,
   StyledSkeletonLoader,
