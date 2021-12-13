@@ -15,10 +15,9 @@ import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { ConnectionStatusManager, useConnectionStatusStore } from '@/providers/connectionStatus'
-import { JoystreamProvider } from '@/providers/joystream'
 import { TransactionManager } from '@/providers/transactionManager'
 import { UploadsManager } from '@/providers/uploadsManager'
-import { ActiveUserProvider, useUser } from '@/providers/user'
+import { useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
@@ -183,16 +182,12 @@ const StudioLayoutWrapper: React.FC = () => {
         navigate(absoluteRoutes.studio.index())
       }}
     >
-      <ActiveUserProvider>
-        <VideoWorkspaceProvider>
-          <JoystreamProvider>
-            <ConnectionStatusManager />
-            <UploadsManager />
-            <TransactionManager />
-            <StudioLayout />
-          </JoystreamProvider>
-        </VideoWorkspaceProvider>
-      </ActiveUserProvider>
+      <VideoWorkspaceProvider>
+        <ConnectionStatusManager />
+        <UploadsManager />
+        <TransactionManager />
+        <StudioLayout />
+      </VideoWorkspaceProvider>
     </ErrorBoundary>
   )
 }

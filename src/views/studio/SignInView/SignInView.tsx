@@ -1,9 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { CreateMemberDialog } from '@/components/_auth/CreateMemberDialog'
-import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -23,6 +21,7 @@ import {
 
 export const SignInView = () => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { activeChannelId, setActiveUser, memberships } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
@@ -73,13 +72,11 @@ export const SignInView = () => {
           icon={<SvgActionNewChannel />}
           size="large"
           variant="secondary"
-          to={absoluteRoutes.studio.signIn({ step: '1' })}
+          to={`${pathname}?step=1`}
         >
           New membership
         </StyledButton>
       </Wrapper>
-      <CreateMemberDialog />
-      <SignInStepsStepper />
     </>
   )
 }
