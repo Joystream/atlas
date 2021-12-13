@@ -116,17 +116,21 @@ export const CreateMemberDialog = () => {
     }
   })
 
-  const debouncedHandleAvatarChange = useRef(debouncePromise((value: string) => setAvatarImageUrl(value), 100))
-
   const debouncedAvatarValidation = useRef(
     debouncePromise(
       async (value: string): Promise<string | boolean> =>
         new Promise((resolve) => {
           const image = new Image()
-          image.onload = () => resolve(true)
+          image.onload = () => {
+            setAvatarImageUrl(value)
+            resolve(true)
+          }
           image.onerror = () => resolve('Image not found')
           image.src = value
-          if (!value) resolve(true)
+          if (!value) {
+            setAvatarImageUrl(value)
+            resolve(true)
+          }
         }),
       100
     )
@@ -177,6 +181,7 @@ export const CreateMemberDialog = () => {
         </Text>
         <StyledAvatar size="view" assetUrl={errors.avatar ? undefined : avatarImageUrl} />
         <StyledTextField
+          autoComplete="off"
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
           {...register(
@@ -190,11 +195,11 @@ export const CreateMemberDialog = () => {
               validate: debouncedAvatarValidation.current,
             })
           )}
-          onChange={(e) => debouncedHandleAvatarChange.current(e.target.value)}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
         <StyledTextField
+          autoComplete="off"
           placeholder="johnnysmith"
           label="Member handle"
           {...register(
