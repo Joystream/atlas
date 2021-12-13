@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { CreateMemberDialog } from '@/components/_auth/CreateMemberDialog'
 import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -77,6 +78,7 @@ export const SignInView = () => {
           New membership
         </StyledButton>
       </Wrapper>
+      <CreateMemberDialog />
       <SignInStepsStepper />
     </>
   )

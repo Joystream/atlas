@@ -54,7 +54,7 @@ export const TermsStep: React.FC = () => {
         </TermsOverlay>
       </TermsBox>
       <StepFooter>
-        <ContinueButton to={absoluteRoutes.studio.newMembership()} disabled={!hasScrolledToBottom}>
+        <ContinueButton to={absoluteRoutes.studio.signIn({ step: 'membership' })} disabled={!hasScrolledToBottom}>
           Accept terms
         </ContinueButton>
       </StepFooter>

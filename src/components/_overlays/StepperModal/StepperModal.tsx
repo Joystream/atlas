@@ -25,6 +25,9 @@ export const StepperModal: React.FC<StepperModalProps> = ({
   onExitClick,
   ...modalProps
 }) => {
+  if (isNaN(currentStepIdx)) {
+    return null
+  }
   return (
     <StyledModal {...modalProps}>
       <StyledHeader>
