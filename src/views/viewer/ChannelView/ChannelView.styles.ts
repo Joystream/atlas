@@ -190,7 +190,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
 
   ${({ isSearching }) => isSearching && activeUnderline}
 
-  > input {
+  input {
     height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${oldColors.blue[500]};
@@ -202,7 +202,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
     }
 
-    &:focus {
+    :focus {
       border: 1px solid ${oldColors.white};
     }
 
