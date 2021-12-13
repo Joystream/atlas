@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo, SvgMember } from '@/components/_icons'
+import { SvgActionAddVideo, SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -99,7 +99,7 @@ export const TopbarViewer: React.FC = () => {
               Upload video
             </Button>
           ) : (
-            <Button icon={<SvgMember />} iconPlacement="left" size="medium" onClick={handleLogging}>
+            <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={handleLogging}>
               Sign up
             </Button>
           ))}
