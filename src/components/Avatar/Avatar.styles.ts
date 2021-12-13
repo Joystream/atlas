@@ -1,16 +1,16 @@
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { TransitionGroup } from 'react-transition-group'
 
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, transitions } from '@/styles'
+import { cVar, media, oldColors, square, transitions, zIndex } from '@/styles'
 
-export type AvatarSize = 'preview' | 'cover' | 'view' | 'default' | 'fill' | 'small' | 'channel' | 'channel-card'
+export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'small' | 'channel' | 'channel-card'
 
 type ContainerProps = {
   size: AvatarSize
+  loading?: boolean
 }
 
 type EditButtonProps = {
@@ -18,9 +18,9 @@ type EditButtonProps = {
 }
 
 const previewAvatarCss = css`
-  width: 156px;
-  min-width: 156px;
-  height: 156px;
+  width: 136px;
+  min-width: 136px;
+  height: 136px;
 `
 
 const coverAvatarCss = css`
@@ -56,15 +56,10 @@ const channelCardAvatarCss = css`
   }
 `
 
-const viewAvatarCss = css`
-  width: 128px;
-  min-width: 128px;
-  height: 128px;
-  ${media.md} {
-    width: 136px;
-    min-width: 136px;
-    height: 136px;
-  }
+const bidAvatarCss = css`
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
 `
 
 const smallAvatarCss = css`
@@ -84,20 +79,20 @@ const fillAvatarCss = css`
   height: 100%;
 `
 
-const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
+const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   switch (size) {
     case 'preview':
       return previewAvatarCss
     case 'cover':
       return coverAvatarCss
-    case 'view':
-      return viewAvatarCss
     case 'channel':
       return channelAvatarCss
     case 'channel-card':
       return channelCardAvatarCss
     case 'fill':
       return fillAvatarCss
+    case 'bid':
+      return bidAvatarCss
     case 'small':
       return smallAvatarCss
     default:
@@ -105,15 +100,34 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
   }
 }
 
-export const Container = styled.div<ContainerProps>`
-  ${({ size }) => getAvatarSizeCss(size)};
+const getBorderStyles = ({ loading }: ContainerProps) => {
+  if (!loading) {
+    return css`
+      ::after {
+        ${square('100%')};
 
-  border-radius: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`
+        content: '';
+        display: block;
+        border-radius: 50%;
+        z-index: ${zIndex.overlay};
+        pointer-events: none;
+        box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+      }
+
+      :hover {
+        ::after {
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
+        }
+      }
+
+      :active {
+        ::after {
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
+        }
+      }
+    `
+  }
+}
 
 export const EditButton = styled.button<EditButtonProps>`
   width: 100%;
@@ -144,25 +158,25 @@ export const EditButton = styled.button<EditButtonProps>`
     opacity: 1;
   }
 
-  :active {
-    border: 2px solid ${oldColors.blue[500]};
-  }
-
   span {
     ${({ size }) => size === 'small' && 'display: none'};
   }
 `
 
-export const StyledSkeletonLoader = styled(SkeletonLoader)`
-  position: absolute;
-  left: 0;
-`
+export const Container = styled.div<ContainerProps>`
+  ${getAvatarSizeCss};
+  ${getBorderStyles};
 
-export const StyledTransitionGroup = styled(TransitionGroup)`
-  height: 100%;
+  border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+`
+
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
+  position: absolute;
+  left: 0;
 `
 
 export const StyledImage = styled.img`
