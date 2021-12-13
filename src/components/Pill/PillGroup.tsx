@@ -1,0 +1,20 @@
+import React from 'react'
+
+import { Pill } from './Pill'
+import { PillGroupWrapper } from './Pill.styles'
+import { PillProps, Sizes } from './types'
+
+type PillGroupProps = {
+  size?: Sizes
+  items: PillProps[]
+}
+
+export const PillGroup: React.FC<PillGroupProps> = ({ items, size = 'small' }) => {
+  return (
+    <PillGroupWrapper size={size}>
+      {items.map((item, idx) => (
+        <Pill key={`pill-${idx}`} size={size} {...item} />
+      ))}
+    </PillGroupWrapper>
+  )
+}
