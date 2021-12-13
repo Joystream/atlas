@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
+import { SvgActionCancel } from '@/components/_icons'
 
 import { TextField, TextFieldProps } from '.'
 
@@ -43,3 +44,9 @@ Default.argTypes = {
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
+
+export const WithIcons = Template.bind({})
+WithIcons.args = {
+  nodeStart: <SvgActionCancel />,
+  nodeEnd: <Button variant="tertiary">button</Button>,
+}
