@@ -16,6 +16,7 @@ export type ListItemSizes = 'small' | 'medium' | 'large'
 
 export type ListItemProps = {
   label: string
+  caption?: string
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
@@ -23,7 +24,6 @@ export type ListItemProps = {
   size?: ListItemSizes
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
-  caption?: string
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
 }
