@@ -4,7 +4,7 @@ export type Sizes = 'small' | 'medium' | 'large'
 type Variants = 'default' | 'overlay' | 'danger'
 
 export type PillProps = {
-  label?: string
+  label?: string | number
   icon?: React.ReactNode
   iconPlacement?: 'left' | 'right'
   size?: Sizes

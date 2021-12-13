@@ -76,7 +76,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
     <ViewWrapper>
       <SearchControls>
         <PaddingWrapper filtersOpen={isFiltersOpen}>
-          <Tabs tabs={mappedTabs} onSelectTab={setSelectedTabIndex} initialIndex={0} variant="large" />
+          <Tabs tabs={mappedTabs} onSelectTab={setSelectedTabIndex} initialIndex={0} />
           <FiltersWrapper>
             {smMatch && selectedTabIndex === 0 && (
               <StyledSelect

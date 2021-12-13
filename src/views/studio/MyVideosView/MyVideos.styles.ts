@@ -15,7 +15,6 @@ export const StyledText = styled(Text)`
 export const TabsContainer = styled.div`
   margin-bottom: ${sizes(12)};
   border-bottom: solid 1px ${oldColors.gray[800]};
-
   ${media.sm} {
     display: grid;
     align-items: center;

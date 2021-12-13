@@ -20,7 +20,6 @@ export const SearchControls = styled.div`
   width: 100%;
   background-color: ${oldColors.gray[900]};
   z-index: ${zIndex.nearOverlay};
-
   ${media.md} {
     width: calc(100% - var(--size-sidenav-width-collapsed));
   }
@@ -29,7 +28,6 @@ export const SearchControls = styled.div`
 export const Results = styled.div<{ filtersOpen: boolean }>`
   padding-top: ${sizes(30)};
   padding-bottom: ${sizes(12)};
-
   ${media.sm} {
     padding-top: ${({ filtersOpen }) => sizes(filtersOpen ? 48 : 30)};
     transition: padding-top ${transitions.timings.routing} ${transitions.easing};

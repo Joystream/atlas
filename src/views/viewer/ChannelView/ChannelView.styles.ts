@@ -135,12 +135,14 @@ export const TabsContainer = styled.div`
   gap: ${sizes(2)};
   grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
   align-items: baseline;
+
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
+
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${oldColors.gray[800]};
+    border-bottom: solid 1px ${oldColors.gray[700]};
     gap: ${sizes(8)};
     grid-template: 1fr / auto 1fr 250px;
   }
@@ -164,7 +166,8 @@ export const SearchContainer = styled.div<SearchContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[800]};
+  border-bottom: solid 1px ${oldColors.gray[700]};
+
   ${media.sm} {
     border-bottom: none;
     grid-area: initial;
