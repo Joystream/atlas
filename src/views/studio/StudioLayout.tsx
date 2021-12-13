@@ -123,16 +123,6 @@ const StudioLayout = () => {
                   />
                 }
               />
-              {/* <Route
-                path={relativeRoutes.studio.signIn({ step: 'membership' })}
-                element={
-                  <PrivateRoute
-                    element={<CreateMemberView />}
-                    isAuth={accountSet && !memberSet}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
-                }
-              /> */}
               <Route
                 path={relativeRoutes.studio.uploads()}
                 element={

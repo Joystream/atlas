@@ -31,10 +31,12 @@ type Inputs = {
 }
 
 export const CreateMemberDialog = () => {
-  const { activeAccountId, refetchMemberships } = useUser()
+  const { activeAccountId, refetchMemberships, extensionConnected, memberships } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const step = useRouterQuery('step')
   const navigate = useNavigate()
+
+  const accountSet = !!activeAccountId && !!extensionConnected && !!memberships?.length
 
   const {
     register,
@@ -157,7 +159,7 @@ export const CreateMemberDialog = () => {
   return (
     <StyledDialogModal
       title="Create Membership"
-      show={step === 'membership' && !isCreatingMembership}
+      show={step === 'membership' && !isCreatingMembership && accountSet}
       dividers
       as="form"
       onSubmit={handleCreateMember}
