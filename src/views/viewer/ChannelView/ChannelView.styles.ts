@@ -127,7 +127,6 @@ export const StyledButton = styled(Button)`
 
 export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
-  padding-bottom: ${sizes(16)};
 `
 
 export const TabsContainer = styled.div`
@@ -136,12 +135,14 @@ export const TabsContainer = styled.div`
   gap: ${sizes(2)};
   grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
   align-items: baseline;
+
   ${media.xs} {
     padding-top: ${sizes(8)};
   }
+
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${oldColors.gray[800]};
+    border-bottom: solid 1px ${oldColors.gray[700]};
     gap: ${sizes(8)};
     grid-template: 1fr / auto 1fr 250px;
   }
@@ -165,7 +166,8 @@ export const SearchContainer = styled.div<SearchContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[800]};
+  border-bottom: solid 1px ${oldColors.gray[700]};
+
   ${media.sm} {
     border-bottom: none;
     grid-area: initial;
@@ -188,7 +190,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
 
   ${({ isSearching }) => isSearching && activeUnderline}
 
-  > input {
+  input {
     height: 40px;
     padding: 10px 16px 10px 42px;
     caret-color: ${oldColors.blue[500]};
@@ -200,7 +202,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
     }
 
-    &:focus {
+    :focus {
       border: 1px solid ${oldColors.white};
     }
 

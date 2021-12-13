@@ -2,19 +2,11 @@ import styled from '@emotion/styled'
 
 import { DismissibleBanner } from '@/components/DismissibleBanner'
 import { Grid } from '@/components/Grid'
-import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { Select } from '@/components/_inputs/Select'
 import { media, oldColors, sizes } from '@/styles'
-
-export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 120px;
-`
 
 export const StyledText = styled(Text)`
   margin: ${sizes(12)} 0;
@@ -23,7 +15,6 @@ export const StyledText = styled(Text)`
 export const TabsContainer = styled.div`
   margin-bottom: ${sizes(12)};
   border-bottom: solid 1px ${oldColors.gray[800]};
-
   ${media.sm} {
     display: grid;
     align-items: center;
@@ -41,7 +32,6 @@ export const StyledGrid = styled(Grid)`
 
 export const StyledPagination = styled(Pagination)`
   padding-top: ${sizes(12)};
-  padding-bottom: ${sizes(16)};
 `
 
 export const StyledDismissibleBanner = styled(DismissibleBanner)`

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { media, oldColors, sizes } from '@/styles'
 
@@ -93,4 +94,8 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   border-left: 1px solid ${oldColors.gray[700]};
   background-color: ${oldColors.gray[900]};
   margin-left: ${sizes(2)};
+`
+
+export const StyledPill = styled(Pill)`
+  margin-left: ${sizes(3)};
 `

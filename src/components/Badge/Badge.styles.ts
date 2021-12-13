@@ -1,7 +1,5 @@
 import { css } from '@emotion/react'
-import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, oldColors, sizes } from '@/styles'
 
 export const smallBadgeStyles = css`
@@ -18,6 +16,8 @@ export const smallBadgeStyles = css`
     text-transform: ${cVar('typographyDesktopT100TextTransform')};
     padding-top: 1px;
     text-align: center;
+    line-height: 14px;
+    font-weight: normal;
   }
 
   &[data-badge^='-']::after,
@@ -25,10 +25,4 @@ export const smallBadgeStyles = css`
   &[data-badge='']::after {
     display: none;
   }
-`
-
-export const Badge = styled(Text)`
-  margin-left: ${sizes(3)};
-  background-color: ${oldColors.gray[700]};
-  padding: 2px ${sizes(1)};
 `

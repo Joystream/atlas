@@ -4,9 +4,15 @@ import { CSSTransition } from 'react-transition-group'
 import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
 import { ConnectionStatus } from '@/providers/connectionStatus'
-import { transitions } from '@/styles'
+import { cVar } from '@/styles'
 
-import { IconWrapper, IndicatorWrapper, TextWrapper } from './NoConnectionIndicator.styles'
+import {
+  CONNECTION_INDICATOR_CLASSNAME,
+  ENTER_TRANSITION_DELAY,
+  IconWrapper,
+  IndicatorWrapper,
+  TextWrapper,
+} from './NoConnectionIndicator.styles'
 
 export type NoConnectionIndicatorProps = {
   nodeConnectionStatus: ConnectionStatus
@@ -20,8 +26,11 @@ export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
   return (
     <CSSTransition
       in={nodeConnectionStatus === 'disconnected' || !isConnectedToInternet}
-      timeout={200}
-      classNames={transitions.names.fade}
+      timeout={{
+        enter: parseInt(cVar('animationTimingMedium', true)) + ENTER_TRANSITION_DELAY,
+        exit: parseInt(cVar('animationTimingMedium', true)),
+      }}
+      classNames={CONNECTION_INDICATOR_CLASSNAME}
       mountOnEnter
       unmountOnExit
     >

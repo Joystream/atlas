@@ -35,10 +35,10 @@ export const TitleContainer = styled.div`
   align-items: flex-start;
 `
 
-export const InnerFormContainer = styled.div`
+export const InnerFormContainer = styled.div<{ actionBarHeight: number }>`
   width: 100%;
   margin-top: 50px;
-  padding-bottom: 250px;
+  padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 
 export const StyledAvatar = styled(Avatar)`

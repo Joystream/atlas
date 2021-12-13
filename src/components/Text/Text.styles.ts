@@ -4,12 +4,13 @@ import styled from '@emotion/styled'
 import { cVar } from '@/styles'
 
 type TextProps = {
+  color?: string
   isSecondary?: boolean
 }
 
-const baseStyles = (props: TextProps) => css`
+const baseStyles = ({ color, isSecondary }: TextProps) => css`
   margin: 0;
-  color: ${props.isSecondary ? cVar('colorCoreNeutral300') : cVar('colorCoreNeutral50')};
+  color: ${color ? color : isSecondary ? cVar('colorCoreNeutral300') : cVar('colorCoreNeutral50')};
 `
 
 export const styledVariants = {

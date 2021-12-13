@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_buttons/Button'
 import { media, oldColors, sizes } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
@@ -108,16 +109,20 @@ export const Footer = styled.div<FooterProps>`
 `
 
 export const FooterButtonsContainer = styled.div`
-  display: grid;
-  gap: ${sizes(2)};
+  display: flex;
+  flex-direction: column-reverse;
 
   ${media.sm} {
+    display: grid;
+    gap: ${sizes(2)};
     grid-auto-flow: column;
+    justify-content: flex-end;
     grid-auto-columns: auto;
-    justify-content: end;
-
-    > :first-of-type {
-      order: 2;
-    }
+  }
+`
+export const StyledPrimaryButton = styled(Button)`
+  margin-bottom: ${sizes(2)};
+  ${media.sm} {
+    margin-bottom: unset;
   }
 `
