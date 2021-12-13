@@ -6,12 +6,12 @@ import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionAddVideo, SvgActionCheck, SvgActionLogOut, SvgActionNewChannel } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
@@ -67,6 +67,7 @@ type NavDrawerProps = {
 
 export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
   const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+  const mdMatch = useMediaMatch('md')
 
   const navigate = useNavigate()
 
@@ -147,9 +148,15 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
               timeout={parseInt(transitions.timings.loading)}
               classNames={transitions.names.fade}
             >
-              <IconButton to={absoluteRoutes.studio.videoWorkspace()} onClick={() => addVideoTab()}>
-                <SvgActionAddVideo />
-              </IconButton>
+              <Button
+                to={absoluteRoutes.studio.videoWorkspace()}
+                onClick={() => addVideoTab()}
+                variant="secondary"
+                icon={<SvgActionAddVideo />}
+                iconPlacement="left"
+              >
+                {mdMatch && 'Upload video'}
+              </Button>
             </CSSTransition>
             {activeMembershipLoading ? (
               <ChannelInfoSkeletonLoader />
