@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -10,13 +10,15 @@ import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
+import { useUser } from '@/providers/user'
 
 import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
-  // TODO: This needs to be replaced by real logging mechanism
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const location = useLocation()
+  const { activeAccountId, extensionConnected, activeMemberId } = useUser()
+  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+
+  const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const {
@@ -24,10 +26,6 @@ export const TopbarViewer: React.FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-
-  const handleLogging = () => {
-    setIsLoggedIn((prevState) => !prevState)
-  }
 
   useEffect(() => {
     if (searchOpen) {
@@ -39,14 +37,14 @@ export const TopbarViewer: React.FC = () => {
 
   // set input search query on results page
   useEffect(() => {
-    if (location.pathname.includes(absoluteRoutes.viewer.search())) {
-      if (location.search) {
-        const params = new URLSearchParams(location.search)
+    if (pathname.includes(absoluteRoutes.viewer.search())) {
+      if (search) {
+        const params = new URLSearchParams(search)
         const query = params.get(QUERY_PARAMS.SEARCH)
         setSearchQuery(query || '')
       }
     }
-  }, [location.pathname, location.search, setSearchQuery])
+  }, [pathname, search, setSearchQuery])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchOpen(true)
@@ -93,18 +91,19 @@ export const TopbarViewer: React.FC = () => {
               icon={<SvgActionAddVideo />}
               iconPlacement="left"
               size="medium"
-              onClick={handleLogging}
+              newTab
+              to={absoluteRoutes.studio.videoWorkspace()}
               variant="secondary"
             >
               Upload video
             </Button>
           ) : (
-            <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={handleLogging}>
+            <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" to={`${pathname}?step=1`}>
               Sign up
             </Button>
           ))}
         {!searchQuery && !mdMatch && !isLoggedIn && (
-          <StyledIconButton onClick={handleLogging}>Sign up</StyledIconButton>
+          <StyledIconButton to={`${pathname}?step=1`}>Sign up</StyledIconButton>
         )}
       </ButtonWrapper>
       <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
