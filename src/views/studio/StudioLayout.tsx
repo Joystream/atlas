@@ -22,14 +22,7 @@ import { ActiveUserProvider, useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import {
-  CreateEditChannelView,
-  CreateMemberView,
-  MyUploadsView,
-  MyVideosView,
-  SignInView,
-  VideoWorkspace,
-} from '@/views/studio'
+import { CreateEditChannelView, MyUploadsView, MyVideosView, SignInView, VideoWorkspace } from '@/views/studio'
 
 import { SignInMainView } from './SignInMainView'
 
@@ -130,8 +123,8 @@ const StudioLayout = () => {
                   />
                 }
               />
-              <Route
-                path={relativeRoutes.studio.newMembership()}
+              {/* <Route
+                path={relativeRoutes.studio.signIn({ step: 'membership' })}
                 element={
                   <PrivateRoute
                     element={<CreateMemberView />}
@@ -139,7 +132,7 @@ const StudioLayout = () => {
                     redirectTo={ENTRY_POINT_ROUTE}
                   />
                 }
-              />
+              /> */}
               <Route
                 path={relativeRoutes.studio.uploads()}
                 element={
