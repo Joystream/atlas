@@ -10,6 +10,7 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 
 type ContainerProps = {
   size: AvatarSize
+  loading?: boolean
 }
 
 type EditButtonProps = {
@@ -78,7 +79,7 @@ const fillAvatarCss = css`
   height: 100%;
 `
 
-const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
+const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   switch (size) {
     case 'preview':
       return previewAvatarCss
@@ -99,38 +100,34 @@ const getAvatarSizeCss = (size: AvatarSize): SerializedStyles => {
   }
 }
 
-export const Container = styled.div<ContainerProps>`
-  ${({ size }) => getAvatarSizeCss(size)};
+const getBorderStyles = ({ loading }: ContainerProps) => {
+  if (!loading) {
+    return css`
+      ::after {
+        ${square('100%')};
 
-  border-radius: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+        content: '';
+        display: block;
+        border-radius: 50%;
+        z-index: ${zIndex.overlay};
+        pointer-events: none;
+        box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+      }
 
-  ::after {
-    ${square('100%')};
+      :hover {
+        ::after {
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
+        }
+      }
 
-    content: '';
-    display: block;
-    border-radius: 50%;
-    z-index: ${zIndex.overlay};
-    pointer-events: none;
-    box-shadow: inset 0 0 0 1px ${cVar('colorBorderAlpha')};
+      :active {
+        ::after {
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
+        }
+      }
+    `
   }
-
-  :hover {
-    ::after {
-      box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
-    }
-  }
-
-  :active {
-    ::after {
-      box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
-    }
-  }
-`
+}
 
 export const EditButton = styled.button<EditButtonProps>`
   width: 100%;
@@ -164,6 +161,17 @@ export const EditButton = styled.button<EditButtonProps>`
   span {
     ${({ size }) => size === 'small' && 'display: none'};
   }
+`
+
+export const Container = styled.div<ContainerProps>`
+  ${getAvatarSizeCss};
+  ${getBorderStyles};
+
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 `
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
