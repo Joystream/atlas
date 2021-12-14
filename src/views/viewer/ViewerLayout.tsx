@@ -54,7 +54,7 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
-      <Modal show={!userInitialized}>
+      <Modal show={!userInitialized} noBoxShadow>
         <Loader variant="xlarge" />
       </Modal>
       <TopbarViewer />
