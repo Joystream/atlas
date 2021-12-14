@@ -7,6 +7,7 @@ import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import {
   SvgActionAddVideo,
+  SvgActionJoyToken,
   SvgActionMember,
   SvgActionNewChannel,
   SvgActionPlay,
@@ -17,17 +18,22 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
+import { cVar } from '@/styles'
 
 import {
+  BalanceContainer,
   BlurredBG,
   ChannelsSectionTitle,
   Container,
+  Divider,
+  Filter,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
   StyledSvgActionChevronL,
   StyledSvgActionChevronR,
   SwitchMemberItemListContainer,
+  TjoyContainer,
 } from './MemberDropdown.styles'
 
 export type MemberDropdownProps = { publisher?: boolean }
@@ -94,15 +100,34 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => 
         </div>
       ) : (
         <div>
-          <MemberInfoContainer>
-            <BlurredBG url={activeMembership?.avatarUri}></BlurredBG>
-            <StyledAvatar
-              size="fill"
-              assetUrl={activeMembership?.avatarUri}
-              loading={!activeMembership?.avatarUri}
-            ></StyledAvatar>
-            <Text variant="h400">{activeMembership?.handle}</Text>
-          </MemberInfoContainer>
+          <BlurredBG url={activeMembership?.avatarUri}>
+            <Filter />
+            <MemberInfoContainer>
+              <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri}></StyledAvatar>
+              <div>
+                <Text variant="h400">{activeMembership?.handle}</Text>
+                <TjoyContainer>
+                  <BalanceContainer>
+                    <SvgActionJoyToken />
+                    <Text variant="t200-strong">12.5K</Text>
+                  </BalanceContainer>
+                  <Divider />
+                  <Text
+                    variant="t100"
+                    as="a"
+                    // @ts-ignore our types don't allow this but its fine here
+                    href="https://www.joystream.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    secondary
+                    color={cVar('colorCoreNeutral200Lighten')}
+                  >
+                    Learn about tJOY
+                  </Text>
+                </TjoyContainer>
+              </div>
+            </MemberInfoContainer>
+          </BlurredBG>
           <SectionContainer>
             {publisher ? (
               <ListItem

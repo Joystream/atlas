@@ -34,12 +34,19 @@ export const BlurredBG = styled.div<{ url?: string | null }>`
     background-repeat: no-repeat;
     background-position: center;
     content: '';
-    filter: blur(32px);
-    opacity: 0.2;
   }
 `
 
+export const Filter = styled.div`
+  position: absolute;
+  backdrop-filter: blur(32px);
+  background: ${cVar('colorBackgroundOverlay')};
+  width: 280px;
+  height: 100%;
+`
+
 export const MemberInfoContainer = styled.div`
+  position: relative;
   display: grid;
   gap: ${sizes(4)};
   ${paddingStyles}
@@ -69,4 +76,27 @@ export const StyledSvgActionChevronL = styled(SvgActionChevronL)`
 
 export const SwitchMemberItemListContainer = styled.div`
   padding: ${sizes(2)} 0;
+`
+
+export const BalanceContainer = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  align-items: center;
+  gap: 5px;
+`
+
+export const TjoyContainer = styled.div`
+  margin-top: ${sizes(1)};
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items: center;
+  gap: 8px;
+`
+
+export const Divider = styled.div`
+  width: 1px;
+  height: 16px;
+  background: ${cVar('colorBorderMutedAlpha')};
 `
