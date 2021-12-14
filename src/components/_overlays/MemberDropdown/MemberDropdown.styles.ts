@@ -2,6 +2,8 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
+import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 const paddingStyles = css`
@@ -32,7 +34,7 @@ export const BlurredBG = styled.div<{ url?: string | null }>`
     background-repeat: no-repeat;
     background-position: center;
     content: '';
-    filter: blur(8px);
+    filter: blur(32px);
     opacity: 0.2;
   }
 `
@@ -43,11 +45,28 @@ export const MemberInfoContainer = styled.div`
   ${paddingStyles}
 `
 
-export const ActionsContainer = styled.div`
+export const SectionContainer = styled.div`
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  height: 100px;
+  padding: ${sizes(2)} 0;
 `
 
-export const ChannelsContainer = styled.div`
-  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
+export const ChannelsSectionTitle = styled(Text)`
+  padding: ${sizes(2)} ${sizes(4)};
+  display: block;
+`
+
+export const StyledSvgActionChevronR = styled(SvgActionChevronR)`
+  & > path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
+`
+
+export const StyledSvgActionChevronL = styled(SvgActionChevronL)`
+  & > path {
+    fill: ${cVar('colorCoreNeutral300')};
+  }
+`
+
+export const SwitchMemberItemListContainer = styled.div`
+  padding: ${sizes(2)} 0;
 `

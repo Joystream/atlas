@@ -1,78 +1,179 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router'
 
-import { useMemberships } from '@/api/hooks'
-import { Channel } from '@/api/queries'
+import { useChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
+import {
+  SvgActionAddVideo,
+  SvgActionMember,
+  SvgActionNewChannel,
+  SvgActionPlay,
+  SvgActionPlus,
+} from '@/components/_icons'
+import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
+import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 
 import {
-  ActionsContainer,
   BlurredBG,
-  ChannelsContainer,
+  ChannelsSectionTitle,
   Container,
   MemberInfoContainer,
+  SectionContainer,
   StyledAvatar,
+  StyledSvgActionChevronL,
+  StyledSvgActionChevronR,
+  SwitchMemberItemListContainer,
 } from './MemberDropdown.styles'
 
-export type MemberDropdownProps = {
-  // joyAmount: number
-}
+export type MemberDropdownProps = { publisher?: boolean }
 
-export const MemberDropdown: React.FC<MemberDropdownProps> = () => {
-  const { activeAccountId, activeMemberId, activeChannelId, activeMembership, setActiveUser, resetActiveUser } =
-    useUser()
+export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => {
+  const [isSwitchingMember, setIsSwitchingMember] = useState(false)
+  const navigate = useNavigate()
+  const { activeChannelId, activeMembership, setActiveUser, memberships } = useUser()
 
-  // const { url: avatarPhotoUrl } = useAsset({
-  //   entity: activeMembership,
-  //   assetType: AssetType.AVATAR,
-  // })
+  const hasOneMember = memberships?.length === 1
 
-  // const {
-  //   memberships,
-  //   loading: membershipsLoading,
-  //   error: membershipsError,
-  // } = useMemberships({
-  //   where: { controllerAccount_eq: account },
-  // })
-
-  console.log({ channels: activeMembership?.channels })
+  const handleAddNewMember = () => {
+    navigate(absoluteRoutes.studio.newMembership())
+  }
+  const handleSwitchMemberMode = () => {
+    setIsSwitchingMember(true)
+  }
+  const handleAddNewChannel = () => {
+    navigate(absoluteRoutes.studio.newChannel())
+  }
+  const handleGoToJoystream = () => {
+    navigate(absoluteRoutes.viewer.index())
+  }
+  const handleGoToStudio = () => {
+    navigate(absoluteRoutes.studio.index())
+  }
+  const handleGoToMyProfile = () => null
+  const handleChannelChange = (channelId: string) => {
+    setActiveUser({ channelId })
+  }
+  const handleMemberChange = (memberId: string) => {
+    setActiveUser({ memberId })
+    setIsSwitchingMember(false)
+  }
 
   return (
     <Container>
-      <BlurredBG url={activeMembership?.avatarUri}>
-        <MemberInfoContainer>
-          <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri}></StyledAvatar>
-          <Text variant="h400">{activeMembership?.handle}</Text>
-        </MemberInfoContainer>
-      </BlurredBG>
+      {isSwitchingMember ? (
+        <div>
+          <SwitchMemberItemListContainer>
+            <ListItem
+              onClick={() => setIsSwitchingMember(false)}
+              nodeStart={<StyledSvgActionChevronL />}
+              label="Switch member"
+            />
+          </SwitchMemberItemListContainer>
 
-      <ActionsContainer>click clock</ActionsContainer>
-      <ChannelsContainer>
-        {activeMembership?.channels.map((channel) => (
-          <ChannelListItem key={channel.id} channel={channel} activeChannelId={activeChannelId} />
-        ))}
-      </ChannelsContainer>
+          <SectionContainer>
+            {memberships?.map((member) => (
+              <ListItem
+                key={member.id}
+                onClick={() => handleMemberChange(member.id)}
+                nodeStart={<Avatar assetUrl={member.avatarUri} />}
+                label={member.handle ?? ''}
+                selected={member.id === activeMembership?.id}
+              />
+            ))}
+            <ListItem
+              nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
+              onClick={() => handleAddNewMember()}
+              label={'Add new member...'}
+            />
+          </SectionContainer>
+        </div>
+      ) : (
+        <div>
+          <MemberInfoContainer>
+            <BlurredBG url={activeMembership?.avatarUri}></BlurredBG>
+            <StyledAvatar
+              size="fill"
+              assetUrl={activeMembership?.avatarUri}
+              loading={!activeMembership?.avatarUri}
+            ></StyledAvatar>
+            <Text variant="h400">{activeMembership?.handle}</Text>
+          </MemberInfoContainer>
+          <SectionContainer>
+            {publisher ? (
+              <ListItem
+                onClick={handleGoToJoystream}
+                nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
+                label="Go to Joystream"
+              />
+            ) : (
+              <>
+                <ListItem
+                  onClick={handleGoToStudio}
+                  nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
+                  label="Go to Studio"
+                />
+                <ListItem
+                  onClick={handleGoToMyProfile}
+                  nodeStart={<IconWrapper icon={<SvgActionMember />} />}
+                  label="My profile"
+                />
+              </>
+            )}
+            <ListItem
+              nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
+              onClick={() => (hasOneMember ? handleAddNewMember() : handleSwitchMemberMode())}
+              label={hasOneMember ? 'Add new member...' : 'Switch member'}
+              nodeEnd={hasOneMember === false && <StyledSvgActionChevronR />}
+            />
+          </SectionContainer>
+          {publisher && (
+            <SectionContainer>
+              <ChannelsSectionTitle variant="t100" secondary>
+                Your channels
+              </ChannelsSectionTitle>
+              {activeMembership?.channels.map((channel) => (
+                <ChannelListItem
+                  key={channel.id}
+                  onClick={() => handleChannelChange(channel.id)}
+                  channelId={channel.id}
+                  activeChannelId={activeChannelId}
+                />
+              ))}
+              <ListItem
+                onClick={handleAddNewChannel}
+                nodeStart={<IconWrapper icon={<SvgActionPlus />} />}
+                label="Add new channel..."
+              />
+            </SectionContainer>
+          )}
+        </div>
+      )}
     </Container>
   )
 }
 
-const ChannelListItem: React.FC<{ channel: Channel; activeChannelId: string | null }> = ({
+const ChannelListItem: React.FC<{ channelId: string; activeChannelId: string | null; onClick: () => void }> = ({
   activeChannelId,
-  channel,
+  channelId,
+  onClick,
 }) => {
-  const { url: avatarPhotoUrl } = useAsset({
+  const { channel } = useChannel(channelId)
+  const { url: avatarPhotoUrl, isLoadingAsset } = useAsset({
     entity: channel,
     assetType: AssetType.AVATAR,
   })
   return (
     <ListItem
-      nodeStart={<Avatar assetUrl={avatarPhotoUrl} />}
-      label={channel.title ?? ''}
-      caption={`${channel.follows} followers`}
-      selected={activeChannelId === channel.id}
+      onClick={onClick}
+      nodeStart={<Avatar assetUrl={avatarPhotoUrl} loading={isLoadingAsset} />}
+      label={channel?.title ?? ''}
+      caption={channel ? `${channel?.follows} followers` : undefined}
+      selected={activeChannelId === channel?.id}
     />
   )
 }

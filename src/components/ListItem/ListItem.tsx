@@ -26,6 +26,7 @@ export type ListItemProps = {
   nodeEnd?: React.ReactNode
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
+  className?: string
 }
 
 export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
@@ -41,11 +42,19 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
       nodeStart,
       nodeEnd,
       onClick,
+      className,
     },
     ref
   ) => {
     return (
-      <Container onClick={onClick} disabled={disabled} hasNodeStart={!!nodeStart} size={size} ref={ref}>
+      <Container
+        className={className}
+        onClick={onClick}
+        disabled={disabled}
+        hasNodeStart={!!nodeStart}
+        size={size}
+        ref={ref}
+      >
         {!!nodeStart && <NodeContainer destructive={destructive}>{nodeStart}</NodeContainer>}
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
