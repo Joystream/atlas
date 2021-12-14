@@ -132,7 +132,7 @@ export const CreateMemberDialog = () => {
             resolve(true)
           }
         }),
-      100
+      500
     )
   )
 
@@ -149,7 +149,7 @@ export const CreateMemberDialog = () => {
       } else {
         return true
       }
-    }, 100)
+    }, 500)
   )
 
   const handleExitClick = () => {
@@ -179,7 +179,11 @@ export const CreateMemberDialog = () => {
           Membership represents you as a member of the Joystream community. You can use it to create a channel and
           publish content. It also allows you to participate in the platform governance, shaping its future.
         </Text>
-        <StyledAvatar size="view" assetUrl={errors.avatar ? undefined : avatarImageUrl} />
+        <StyledAvatar
+          size="channel-card"
+          assetUrl={errors.avatar ? undefined : avatarImageUrl}
+          hasAvatarUploadFailed={!!errors.avatar}
+        />
         <StyledTextField
           autoComplete="off"
           label="Avatar URL"

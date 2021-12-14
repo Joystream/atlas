@@ -24,7 +24,7 @@ export const StyledTextField = styled(TextField)`
 export const StyledAvatar = styled(Avatar)`
   margin-top: ${sizes(9)};
   margin-bottom: ${sizes(6)};
-  width: 104px;
+  pointer-events: none;
 `
 
 export const StyledButton = styled(Button)`
