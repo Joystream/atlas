@@ -1,9 +1,10 @@
+// import Identicon from '@polkadot/react-identicon'
 import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { SvgActionChannel, SvgControlsConnect } from '@/components/_icons'
+import { SvgControlsConnect } from '@/components/_icons'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
@@ -14,10 +15,10 @@ import {
   AccountWrapper,
   AccountsWrapper,
   IconGroup,
-  IconWrapper,
   OrderedStep,
   OrderedSteps,
   StyledButton,
+  StyledPolkadotIdenticon,
   StyledRadioButton,
   StyledSpinner,
   StyledStepWrapper,
@@ -127,10 +128,9 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
     </SwitchTransition>
   )
 }
-
 export type AccountBarProps = {
   name?: string
-  id?: string
+  id: string
   onSelect?: () => void
   selectedValue?: string
 }
@@ -139,9 +139,7 @@ export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, sele
   return (
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>
-        <IconWrapper>
-          <SvgActionChannel />
-        </IconWrapper>
+        <StyledPolkadotIdenticon id={id} />
         <div>
           <Text variant="t300-strong">{name}</Text>
           <AccountAddress secondary variant="t100">
