@@ -609,7 +609,7 @@ export type GetMostViewedVideosQuery = {
 }
 
 export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
+  limit?: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
   where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
@@ -990,7 +990,7 @@ export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVid
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 export const GetMostViewedVideosDocument = gql`
   query GetMostViewedVideos(
-    $limit: Int
+    $limit: Int = 50
     $timePeriodDays: Int!
     $first: Int
     $after: String
@@ -1059,7 +1059,7 @@ export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
 >
 export const GetMostViewedVideosAllTimeDocument = gql`
   query GetMostViewedVideosAllTime(
-    $limit: Int!
+    $limit: Int! = 50
     $first: Int
     $after: String
     $where: MostViewedAndMostFollowedWhereInput
@@ -1101,7 +1101,7 @@ export const GetMostViewedVideosAllTimeDocument = gql`
  * });
  */
 export function useGetMostViewedVideosAllTimeQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>(

@@ -93,7 +93,7 @@ mutation UnfollowChannel($channelId: ID!) {
 }
 
 query GetMostViewedChannels(
-  $limit: Int
+  $limit: Int = 50
   $timePeriodDays: Int!
   $first: Int
   $after: String
@@ -115,7 +115,7 @@ query GetMostViewedChannels(
 }
 
 query GetMostViewedChannelsAllTime(
-  $limit: Int!
+  $limit: Int! = 50
   $first: Int
   $after: String
   $where: MostViewedAndMostFollowedWhereInput

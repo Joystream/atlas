@@ -427,7 +427,7 @@ export type GetMostViewedChannelsQuery = {
 }
 
 export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
+  limit?: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
   where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
@@ -1003,7 +1003,7 @@ export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
 >
 export const GetMostViewedChannelsDocument = gql`
   query GetMostViewedChannels(
-    $limit: Int
+    $limit: Int = 50
     $timePeriodDays: Int!
     $first: Int
     $after: String
@@ -1072,7 +1072,7 @@ export type GetMostViewedChannelsQueryResult = Apollo.QueryResult<
 >
 export const GetMostViewedChannelsAllTimeDocument = gql`
   query GetMostViewedChannelsAllTime(
-    $limit: Int!
+    $limit: Int! = 50
     $first: Int
     $after: String
     $where: MostViewedAndMostFollowedWhereInput
@@ -1114,7 +1114,7 @@ export const GetMostViewedChannelsAllTimeDocument = gql`
  * });
  */
 export function useGetMostViewedChannelsAllTimeQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>
+  baseOptions?: Apollo.QueryHookOptions<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(

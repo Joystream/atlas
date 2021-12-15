@@ -101,7 +101,7 @@ query GetBasicVideos($where: VideoWhereInput) {
 }
 
 query GetMostViewedVideos(
-  $limit: Int
+  $limit: Int = 50
   $timePeriodDays: Int!
   $first: Int
   $after: String
@@ -123,7 +123,7 @@ query GetMostViewedVideos(
 }
 
 query GetMostViewedVideosAllTime(
-  $limit: Int!
+  $limit: Int! = 50
   $first: Int
   $after: String
   $where: MostViewedAndMostFollowedWhereInput
