@@ -118,6 +118,30 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   mostFollowedChannelsAllTime: relayStylePagination(getChannelKeyArgs),
   mostViewedChannels: relayStylePagination(getChannelKeyArgs),
   mostViewedChannelsAllTime: relayStylePagination(getChannelKeyArgs),
+  videosConnection: {
+    ...relayStylePagination(getVideoKeyArgs),
+    read(
+      existing: VideoConnection,
+      { args, readField }: { args: GetVideosConnectionQueryVariables | null; readField: ReadFieldFunction }
+    ) {
+      const isPublic = args?.where?.isPublic_eq
+      const filteredEdges =
+        existing?.edges.filter((edge) => readField('isPublic', edge.node) === isPublic || isPublic === undefined) ?? []
+
+      const sortingASC = args?.orderBy?.[0] === VideoOrderByInput.CreatedAtAsc
+      const preSortedDESC = (filteredEdges || []).slice().sort((a, b) => {
+        return (readField('createdAt', b.node) as Date).getTime() - (readField('createdAt', a.node) as Date).getTime()
+      })
+      const sortedEdges = sortingASC ? preSortedDESC.reverse() : preSortedDESC
+
+      return (
+        existing && {
+          ...existing,
+          edges: sortedEdges,
+        }
+      )
+    },
+  },
   mostViewedVideos: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
@@ -166,7 +190,6 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       )
     },
   },
-  // videosConnection: {}
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, opts) {
