@@ -147,10 +147,20 @@ type MostFollowedChannelsQueryOpts = QueryHookOptions<
   GetMostFollowedChannelsQueryVariables
 >
 export const useMostFollowedChannels = (
-  variables?: GetMostFollowedChannelsQueryVariables,
+  variables: GetMostFollowedChannelsQueryVariables,
   opts?: MostFollowedChannelsQueryOpts
 ) => {
-  const { data, ...rest } = useGetMostFollowedChannelsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetMostFollowedChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables.where,
+        isCensored_eq: false,
+        isPublic_eq: true,
+      },
+    },
+  })
   return {
     channels: data?.mostFollowedChannels.edges.map((edge) => edge.node),
     ...rest,

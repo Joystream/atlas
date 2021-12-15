@@ -5,8 +5,6 @@ import {
   AssetAvailability,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
-  GetMostViewedVideosAllTimeQuery,
-  GetMostViewedVideosAllTimeQueryVariables,
   GetMostViewedVideosQuery,
   GetMostViewedVideosQueryVariables,
   GetVideoCountQuery,
@@ -18,7 +16,6 @@ import {
   VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
-  useGetMostViewedVideosAllTimeQuery,
   useGetMostViewedVideosQuery,
   useGetVideoCountQuery,
   useGetVideoQuery,
@@ -106,11 +103,20 @@ export const useBasicVideos = (
 }
 
 type MostViewedVideosQueryOpts = QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
-export const useMostViewedVideos = (
-  variables?: GetMostViewedVideosQueryVariables,
-  opts?: MostViewedVideosQueryOpts
-) => {
-  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
+export const useMostViewedVideos = (variables: GetMostViewedVideosQueryVariables, opts?: MostViewedVideosQueryOpts) => {
+  const { data, ...rest } = useGetMostViewedVideosQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+      },
+    },
+  })
   return {
     videos: data?.mostViewedVideos.edges.map((edge) => edge.node),
     ...rest,
@@ -136,17 +142,6 @@ export const useVideoCount = (
   })
   return {
     videoCount: data?.videosConnection.totalCount,
-    ...rest,
-  }
-}
-
-export const useMostViewedVideosAllTimeIds = (
-  variables?: GetMostViewedVideosAllTimeQueryVariables,
-  opts?: QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
-) => {
-  const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
-  return {
-    mostViewedVideosAllTime: data?.mostViewedVideosAllTime.edges.map((edge) => edge.node),
     ...rest,
   }
 }
