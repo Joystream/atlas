@@ -7,6 +7,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  GetMostFollowedChannelsQuery,
   GetMostViewedChannelsAllTimeQuery,
   GetMostViewedChannelsQuery,
   VideoEdge,
@@ -27,6 +28,8 @@ import { AdditionalLink, LanguageSelectWrapper, LoadMoreButtonWrapper, Separator
 
 type InfiniteChannelWithVideosGridProps = {
   query?: DocumentNode
+  timePeriodDays?: number
+  limit?: number
   onDemand?: boolean
   title?: string
   skipCount?: number
@@ -44,11 +47,19 @@ type InfiniteChannelWithVideosGridProps = {
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
+type ChannelQuery =
+  | GetChannelsConnectionQuery
+  | GetMostViewedChannelsQuery
+  | GetMostViewedChannelsAllTimeQuery
+  | GetMostFollowedChannelsQuery
+
 const INITIAL_ROWS = 3
 const INITIAL_CHANNELS_PER_ROW = 1
 
 export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProps> = ({
   query,
+  timePeriodDays,
+  limit,
   onDemand = false,
   title,
   skipCount = 0,
@@ -68,8 +79,10 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     setTargetRowsCount((prevState) => prevState + 3)
   }, [])
 
-  const queryVariables: GetChannelsConnectionQueryVariables = useMemo(
+  const queryVariables = useMemo(
     () => ({
+      timePeriodDays,
+      limit,
       ...(first ? { first } : {}),
       ...(orderBy ? { orderBy } : {}),
       where: {
@@ -79,11 +92,11 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
         isCensored_eq: false,
       },
     }),
-    [first, idIn, orderBy, selectedLanguage]
+    [first, idIn, limit, orderBy, selectedLanguage, timePeriodDays]
   )
 
   const { displayedItems, placeholdersCount, loading, error, totalCount } = useInfiniteGrid<
-    GetChannelsConnectionQuery | GetMostViewedChannelsQuery | GetMostViewedChannelsAllTimeQuery,
+    ChannelQuery,
     GetChannelsConnectionQuery['channelsConnection'],
     GetChannelsConnectionQueryVariables
   >({
@@ -93,20 +106,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     orderBy,
     queryVariables,
     targetRowsCount,
-    dataAccessor: (rawData) => {
-      if (!rawData) {
-        return
-      }
-      if ('channelsConnection' in rawData) {
-        return rawData.channelsConnection
-      }
-      if ('mostViewedChannels' in rawData) {
-        return rawData.mostViewedChannels
-      }
-      if ('mostViewedChannelsAllTime' in rawData) {
-        return rawData.mostViewedChannelsAllTime
-      }
-    },
+    dataAccessor: createRawDataAccessor,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
     additionalSortFn,
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'InfiniteChannelWithVideosGrid', error),
@@ -175,4 +175,31 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       )}
     </section>
   )
+}
+
+const createRawDataAccessor = (rawData?: ChannelQuery) => {
+  if (!rawData) {
+    return
+  }
+
+  const queryResult =
+    'channelsConnection' in rawData
+      ? rawData.channelsConnection
+      : 'mostViewedChannels' in rawData
+      ? rawData.mostViewedChannels
+      : 'mostViewedChannelsAllTime' in rawData
+      ? rawData.mostViewedChannelsAllTime
+      : 'mostFollowedChannels' in rawData
+      ? rawData.mostFollowedChannels
+      : null
+  if (!queryResult) {
+    SentryLogger.error('Unknown property in query data', 'InfiniteChannelWithVideoGrid', null, { query: { rawData } })
+    throw new Error("Couldn't access data for video grid")
+  }
+
+  return {
+    ...queryResult,
+    totalCount: queryResult.totalCount - 1,
+    edges: queryResult.edges,
+  }
 }

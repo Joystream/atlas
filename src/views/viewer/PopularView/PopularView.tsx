@@ -19,7 +19,10 @@ export const PopularView: FC = () => {
     loading,
     error: mostViewedVideosError,
   } = useMostViewedVideos(
-    { timePeriodDays: 30, limit: 10 },
+    {
+      timePeriodDays: 30,
+      limit: 10,
+    },
     { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos', 'PopularView', error) }
   )
 
