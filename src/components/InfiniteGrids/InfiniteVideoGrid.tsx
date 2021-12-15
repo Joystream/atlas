@@ -36,7 +36,7 @@ type InfiniteVideoGridProps = {
   ready?: boolean
   showChannel?: boolean
   className?: string
-  currentlyWatchedVideoId?: string
+  excludeId?: string
   onDemand?: boolean
   onDemandInfinite?: boolean
   orderBy?: ChannelOrderByInput | VideoOrderByInput
@@ -48,6 +48,8 @@ type InfiniteVideoGridProps = {
 }
 
 const INITIAL_VIDEOS_PER_ROW = 4
+
+type VideoQuery = GetMostViewedVideosQuery | GetVideosConnectionQuery | GetMostViewedVideosAllTimeQuery
 
 export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
@@ -62,7 +64,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       ready = true,
       showChannel = true,
       className,
-      currentlyWatchedVideoId,
+      excludeId,
       onDemand = false,
       onDemandInfinite = false,
       additionalLink,
@@ -94,7 +96,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     }, [targetRowsCount, rowsToLoad])
 
     const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
-      GetMostViewedVideosQuery | GetVideosConnectionQuery | GetMostViewedVideosAllTimeQuery,
+      VideoQuery,
       GetVideosConnectionQuery['videosConnection'],
       GetVideosConnectionQueryVariables
     >({
@@ -110,47 +112,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       onScrollToBottom: !onDemand ? fetchMore : undefined,
       itemsPerRow: videosPerRow,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
-      dataAccessor: (rawData) => {
-        if (!rawData) {
-          return
-        }
-        if ('mostViewedVideos' in rawData) {
-          if (currentlyWatchedVideoId) {
-            return (
-              rawData?.mostViewedVideos && {
-                ...rawData.mostViewedVideos,
-                totalCount: rawData.mostViewedVideos.totalCount - 1,
-                edges: rawData.mostViewedVideos.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
-              }
-            )
-          }
-          return rawData.mostViewedVideos
-        }
-        if ('videosConnection' in rawData) {
-          if (currentlyWatchedVideoId) {
-            return (
-              rawData?.videosConnection && {
-                ...rawData.videosConnection,
-                totalCount: rawData.videosConnection.totalCount - 1,
-                edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
-              }
-            )
-          }
-          return rawData.videosConnection
-        }
-        if ('mostViewedVideosAllTime' in rawData) {
-          if (currentlyWatchedVideoId) {
-            return (
-              rawData?.mostViewedVideosAllTime && {
-                ...rawData.mostViewedVideosAllTime,
-                totalCount: rawData.mostViewedVideosAllTime.totalCount - 1,
-                edges: rawData.mostViewedVideosAllTime.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
-              }
-            )
-          }
-          return rawData.mostViewedVideosAllTime
-        }
-      },
+      dataAccessor: createRawDataAccessor(excludeId),
     })
 
     const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
@@ -231,3 +193,32 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
   }
 )
 InfiniteVideoGrid.displayName = 'InfiniteVideoGrid'
+
+const createRawDataAccessor = (excludeId?: string) => (rawData?: VideoQuery) => {
+  if (!rawData) {
+    return
+  }
+
+  const queryResult =
+    'videosConnection' in rawData
+      ? rawData.videosConnection
+      : 'mostViewedVideos' in rawData
+      ? rawData.mostViewedVideos
+      : 'mostViewedVideosAllTime' in rawData
+      ? rawData.mostViewedVideosAllTime
+      : null
+  if (!queryResult) {
+    SentryLogger.error('Unknown property in query data', 'InfiniteVideoGrid', null, { query: { rawData } })
+    throw new Error("Couldn't access data for video grid")
+  }
+
+  if (!excludeId) {
+    return queryResult
+  }
+
+  return {
+    ...queryResult,
+    totalCount: queryResult.totalCount - 1,
+    edges: queryResult.edges.filter((edge) => edge.node.id !== excludeId),
+  }
+}

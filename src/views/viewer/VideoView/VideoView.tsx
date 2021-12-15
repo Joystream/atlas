@@ -215,7 +215,7 @@ export const VideoView: React.FC = () => {
             ready={!loading}
             videoWhereInput={{ channelId_eq: channelId }}
             showChannel={false}
-            currentlyWatchedVideoId={video?.id}
+            excludeId={video?.id}
           />
         </MoreVideosContainer>
       </InfoContainer>
