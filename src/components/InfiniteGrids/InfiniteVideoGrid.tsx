@@ -128,7 +128,8 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       return null
     }
 
-    if (displayedItems.length <= 0 && placeholdersCount <= 0 && !emptyFallback) {
+    const hasNoItems = ready && initialGridResizeDone && !loading && totalCount === 0
+    if (hasNoItems && !emptyFallback) {
       return null
     }
 
@@ -137,7 +138,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
 
     return (
       <section ref={ref} className={className}>
-        {totalCount === 0 && !loading && !!emptyFallback ? (
+        {hasNoItems && !!emptyFallback ? (
           emptyFallback
         ) : (
           <>
