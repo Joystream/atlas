@@ -7,6 +7,7 @@ import {
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
   GetChannelsConnectionQueryVariables,
+  GetMostViewedChannelsAllTimeQuery,
   GetMostViewedChannelsQuery,
   VideoEdge,
 } from '@/api/queries'
@@ -82,7 +83,7 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   )
 
   const { displayedItems, placeholdersCount, loading, error, totalCount } = useInfiniteGrid<
-    GetChannelsConnectionQuery | GetMostViewedChannelsQuery,
+    GetChannelsConnectionQuery | GetMostViewedChannelsQuery | GetMostViewedChannelsAllTimeQuery,
     GetChannelsConnectionQuery['channelsConnection'],
     GetChannelsConnectionQueryVariables
   >({
@@ -101,6 +102,9 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
       }
       if ('mostViewedChannels' in rawData) {
         return rawData.mostViewedChannels
+      }
+      if ('mostViewedChannelsAllTime' in rawData) {
+        return rawData.mostViewedChannelsAllTime
       }
     },
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
