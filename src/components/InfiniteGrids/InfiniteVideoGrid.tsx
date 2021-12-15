@@ -75,6 +75,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
     const rowsToLoad = useVideoGridRows()
     const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
+    const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
     const queryVariables = {
@@ -98,7 +99,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       GetVideosConnectionQueryVariables
     >({
       query: query || GetVideosConnectionDocument,
-      isReady: ready,
+      isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,
       orderBy,
@@ -107,6 +108,8 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       onDemandInfinite,
       activatedInfinteGrid,
       onScrollToBottom: !onDemand ? fetchMore : undefined,
+      itemsPerRow: videosPerRow,
+      onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
       dataAccessor: (rawData) => {
         if (!rawData) {
           return
@@ -148,8 +151,6 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
           return rawData.mostViewedVideosAllTime
         }
       },
-      itemsPerRow: videosPerRow,
-      onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
     })
 
     const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
@@ -171,8 +172,6 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
 
     const shouldShowLoadMoreButton =
       (onDemand || (onDemandInfinite && !activatedInfinteGrid)) && !loading && displayedItems.length < totalCount
-    // TODO: We should probably postpone doing first fetch until `onResize` gets called.
-    // Right now we'll make the first request and then right after another one based on the resized columns
 
     return (
       <section ref={ref} className={className}>
@@ -202,7 +201,16 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
                 </TitleContainer>
               </GridHeadingContainer>
             )}
-            <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
+            <Grid
+              onResize={(sizes) => {
+                setVideosPerRow(sizes.length)
+                if (!initialGridResizeDone) {
+                  setInitialGridResizeDone(true)
+                }
+              }}
+            >
+              {gridContent}
+            </Grid>
             {shouldShowLoadMoreButton && (
               <LoadMoreButtonWrapper>
                 <LoadMoreButton
