@@ -43,3 +43,13 @@ export type ExtrinsicResult<T> = {
   block: number
   data: T
 }
+
+export type InputAssets = {
+  video?: AssetMetadata
+  thumbnail?: AssetMetadata
+}
+
+export type ContentIdCbArgs = {
+  videoId: string
+  thumbnailId: string
+}

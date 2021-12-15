@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { proxy } from 'comlink'
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -29,7 +30,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+import { CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -306,29 +307,28 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
         }
 
-        const assets: VideoAssets = {}
+        const assets: InputAssets = {
+          video: undefined,
+          thumbnail: undefined,
+        }
         let videoContentId = ''
         let thumbnailContentId = ''
 
         const processAssets = async () => {
           if (videoAsset?.blob && videoHashPromise) {
-            const [asset, contentId] = joystream.createFileAsset({
+            assets.video = {
               size: videoAsset.blob.size,
               ipfsContentId: await videoHashPromise,
-            })
-            assets.video = asset
-            videoContentId = contentId
+            }
           } else if (dirtyFields.assets?.video) {
             ConsoleLogger.warn('Missing video data')
           }
 
           if (thumbnailAsset?.blob && thumbnailHashPromise) {
-            const [asset, contentId] = joystream.createFileAsset({
+            assets.thumbnail = {
               size: thumbnailAsset.blob.size,
               ipfsContentId: await thumbnailHashPromise,
-            })
-            assets.thumbnail = asset
-            thumbnailContentId = contentId
+            }
           } else if (dirtyFields.assets?.thumbnail) {
             ConsoleLogger.warn('Missing thumbnail data')
           }
@@ -405,21 +405,36 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             callback?.()
           })
         }
-
+        const setContentIds = async ({ videoId, thumbnailId }: { videoId: string; thumbnailId: string }) => {
+          videoContentId = videoId
+          thumbnailContentId = thumbnailId
+        }
         const completed = await handleTransaction({
           preProcess: processAssets,
-          txFactory: (updateStatus) =>
+          txFactory: async (updateStatus) =>
             isNew
-              ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-              : joystream.updateVideo(
+              ? await (
+                  await joystream
+                ).createVideo(
+                  activeMemberId,
+                  activeChannelId,
+                  metadata,
+                  assets,
+                  proxy(updateStatus),
+                  proxy(setContentIds)
+                )
+              : await (
+                  await joystream
+                ).updateVideo(
                   selectedVideoTab.id,
                   activeMemberId,
                   activeChannelId,
                   metadata,
                   assets,
-                  updateStatus
+                  proxy(updateStatus),
+                  proxy(setContentIds)
                 ),
-          onTxFinalize: uploadAssets,
+          onTxFinalize: await uploadAssets,
           onTxSync: refetchDataAndCacheAssets,
           successMessage: {
             title: isNew ? 'Video successfully created!' : 'Video successfully updated!',

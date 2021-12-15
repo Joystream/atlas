@@ -250,7 +250,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
     const processAssets = async () => {
       if (dirtyFields.avatar && avatarAsset?.blob && avatarHashPromise) {
-        const [asset, contentId] = joystream.createFileAsset({
+        const [asset, contentId] = await joystream.createFileAsset({
           size: avatarAsset.blob.size,
           ipfsContentId: await avatarHashPromise,
         })
@@ -259,7 +259,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
 
       if (dirtyFields.cover && coverAsset?.blob && coverHashPromise) {
-        const [asset, contentId] = joystream.createFileAsset({
+        const [asset, contentId] = await joystream.createFileAsset({
           size: coverAsset?.blob.size,
           ipfsContentId: await coverHashPromise,
         })

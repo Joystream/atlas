@@ -46,11 +46,13 @@ import {
   AssetMetadata,
   ChannelAssets,
   ChannelId,
+  ContentIdCbArgs,
   CreateChannelMetadata,
   CreateVideoMetadata,
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  InputAssets,
   MemberId,
   VideoAssets,
   VideoId,
@@ -65,20 +67,20 @@ export class JoystreamJs {
   }
 
   // if needed these could become some kind of event emitter
-  public onNodeConnectionUpdate?: (connected: boolean) => unknown
+  public onNodeConnectionUpdate?: (connected: boolean) => void
 
   /* Lifecycle */
-  constructor(endpoint: string) {
+  constructor(endpoint: string, onNodeConnectionUpdate: (connected: boolean) => void) {
     const provider = new WsProvider(endpoint)
     provider.on('connected', () => {
       this.logConnectionData(endpoint)
-      this.onNodeConnectionUpdate?.(true)
+      onNodeConnectionUpdate?.(true)
     })
     provider.on('disconnected', () => {
-      this.onNodeConnectionUpdate?.(false)
+      onNodeConnectionUpdate?.(false)
     })
     provider.on('error', () => {
-      this.onNodeConnectionUpdate?.(false)
+      onNodeConnectionUpdate?.(false)
     })
 
     this.api = new ApiPromise({ provider, types })
@@ -389,6 +391,7 @@ export class JoystreamJs {
   }
 
   /* Public */
+  // @ts-ignore test
   async setActiveAccount(accountId: AccountId | null, signer?: Signer) {
     if (!accountId) {
       this._selectedAccountId = null
@@ -398,7 +401,6 @@ export class JoystreamJs {
       SentryLogger.error('Missing signer for setActiveAccount', 'JoystreamJs')
       return
     }
-
     this._selectedAccountId = accountId
     this.api.setSigner(signer)
   }
@@ -447,29 +449,45 @@ export class JoystreamJs {
     return this._createOrUpdateChannel(channelId, memberId, inputMetadata, inputAssets, cb)
   }
 
+  private _prepareAssets(inputAssets: InputAssets) {
+    // @ts-ignore test
+    const [video, videoId] = this.createFileAsset(inputAssets.video)
+    // @ts-ignore test
+    const [thumbnail, thumbnailId] = this.createFileAsset(inputAssets.thumbnail)
+    const assets: VideoAssets = {
+      video,
+      thumbnail,
+    }
+    return { assets, thumbnailId, videoId }
+  }
+
   async createVideo(
     memberId: MemberId,
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
-    inputAssets: VideoAssets,
-    cb?: ExtrinsicStatusCallbackFn
+    inputAssets: InputAssets,
+    cb?: ExtrinsicStatusCallbackFn,
+    contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<VideoId>> {
+    const { assets, videoId, thumbnailId } = this._prepareAssets(inputAssets)
+    await contentIdCb?.({ videoId, thumbnailId })
     await this.ensureApi()
-
-    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, inputAssets, cb)
+    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, assets, cb)
   }
 
   async updateVideo(
-    videoId: VideoId,
+    updatedVideoId: VideoId,
     memberId: MemberId,
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
-    inputAssets: VideoAssets,
-    cb?: ExtrinsicStatusCallbackFn
+    inputAssets: InputAssets,
+    cb?: ExtrinsicStatusCallbackFn,
+    contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<VideoId>> {
+    const { assets, videoId, thumbnailId } = this._prepareAssets(inputAssets)
+    await contentIdCb?.({ videoId, thumbnailId })
     await this.ensureApi()
-
-    return this._createOrUpdateVideo(videoId, memberId, channelId, inputMetadata, inputAssets, cb)
+    return this._createOrUpdateVideo(updatedVideoId, memberId, channelId, inputMetadata, assets, cb)
   }
 
   async deleteVideo(
