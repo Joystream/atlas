@@ -105,7 +105,7 @@ export const TopbarViewer: React.FC = () => {
             onClick={handleFocus}
           />
         </CSSTransition>
-        {!mdMatch && isLoggedIn && <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />}
+        {!mdMatch && isLoggedIn && !searchOpen && <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />}
       </SearchbarContainer>
       <ButtonWrapper>
         {mdMatch &&
