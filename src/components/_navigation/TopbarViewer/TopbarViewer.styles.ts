@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
 import { cVar } from '@/styles'
 import { media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
@@ -65,6 +66,13 @@ export const ButtonWrapper = styled.div`
   align-self: center;
   justify-self: flex-end;
   flex-shrink: 0;
+`
+
+export const SignedButtonsWrapper = styled.div`
+  display: flex;
+`
+export const StyledAvatar = styled(Avatar)`
+  margin-left: ${sizes(4)};
 `
 
 export const Overlay = styled.div`

@@ -12,10 +12,31 @@ import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 
-import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.styles'
+import {
+  ButtonWrapper,
+  Overlay,
+  SearchbarContainer,
+  SignedButtonsWrapper,
+  StyledAvatar,
+  StyledIconButton,
+  StyledTopbarBase,
+} from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
-  const { activeAccountId, extensionConnected, activeMemberId } = useUser()
+  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, setActiveUser, memberships } =
+    useUser()
+
+  const firstMembership = memberships?.length && memberships[0]
+
+  useEffect(() => {
+    if (!extensionConnected) {
+      return
+    }
+    if (!activeMemberId && firstMembership) {
+      setActiveUser({ memberId: firstMembership.id, accountId: firstMembership.controllerAccount })
+    }
+  }, [activeMemberId, extensionConnected, firstMembership, memberships, setActiveUser])
+
   const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
 
   const { pathname, search } = useLocation()
@@ -84,20 +105,24 @@ export const TopbarViewer: React.FC = () => {
             onClick={handleFocus}
           />
         </CSSTransition>
+        {!mdMatch && isLoggedIn && <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />}
       </SearchbarContainer>
       <ButtonWrapper>
         {mdMatch &&
           (isLoggedIn ? (
-            <Button
-              icon={<SvgActionAddVideo />}
-              iconPlacement="left"
-              size="medium"
-              newTab
-              to={absoluteRoutes.studio.videoWorkspace()}
-              variant="secondary"
-            >
-              Upload video
-            </Button>
+            <SignedButtonsWrapper>
+              <Button
+                icon={<SvgActionAddVideo />}
+                iconPlacement="left"
+                size="medium"
+                newTab
+                to={absoluteRoutes.studio.videoWorkspace()}
+                variant="secondary"
+              >
+                Upload video
+              </Button>
+              <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />
+            </SignedButtonsWrapper>
           ) : (
             <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" to={`${pathname}?step=1`}>
               Sign up
