@@ -4,15 +4,29 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
-import { cVar, sizes } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 const paddingStyles = css`
   padding: ${sizes(6)} ${sizes(4)};
 `
 
-export const Container = styled.div`
+export const Container = styled.div<{ isActive: boolean }>`
+  position: fixed;
+  right: ${sizes(4)};
+  top: 0;
   width: 280px;
+  max-height: calc(${window.innerHeight - sizes(4, true)}px - var(--size-topbar-height));
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: ${cVar('colorCoreNeutral700')};
+
+  transform: translateY(${({ isActive }) => (isActive ? 'var(--size-topbar-height)' : '-100%')});
+  transition: transform ${transitions.timings.loading} ${transitions.easing};
+  z-index: ${zIndex.nearOverlay};
+
+  ${media.md} {
+    right: ${sizes(8)};
+  }
 `
 
 export const StyledAvatar = styled(Avatar)`

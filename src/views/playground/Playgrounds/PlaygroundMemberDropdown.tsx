@@ -7,10 +7,7 @@ export const PlaygroundMemberDropdown = () => {
   return (
     <Container>
       <div>
-        <MemberDropdown publisher />
-      </div>
-      <div>
-        <MemberDropdown />
+        <MemberDropdown isActive publisher />
       </div>
     </Container>
   )

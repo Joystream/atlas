@@ -16,8 +16,10 @@ import {
 import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
+import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
+import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 
 import {
@@ -36,20 +38,19 @@ import {
   TjoyContainer,
 } from './MemberDropdown.styles'
 
-export type MemberDropdownProps = { publisher?: boolean }
+export type MemberDropdownProps = { isActive: boolean; publisher?: boolean }
 
-export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => {
+export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(({ publisher, isActive }, ref) => {
   const [isSwitchingMember, setIsSwitchingMember] = useState(false)
   const navigate = useNavigate()
   const { activeChannelId, activeMembership, setActiveUser, memberships } = useUser()
+  const { setVideoWorkspaceState, anyVideoTabsCachedAssets } = useVideoWorkspace()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const hasOneMember = memberships?.length === 1
 
   const handleAddNewMember = () => {
     navigate(absoluteRoutes.studio.newMembership())
-  }
-  const handleSwitchMemberMode = () => {
-    setIsSwitchingMember(true)
   }
   const handleAddNewChannel = () => {
     navigate(absoluteRoutes.studio.newChannel())
@@ -61,16 +62,33 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => 
     navigate(absoluteRoutes.studio.index())
   }
   const handleGoToMyProfile = () => null
-  const handleChannelChange = (channelId: string) => {
-    setActiveUser({ channelId })
-  }
   const handleMemberChange = (memberId: string) => {
     setActiveUser({ memberId })
     setIsSwitchingMember(false)
   }
+  const handleChannelChange = (channelId: string) => {
+    if (publisher) {
+      const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
+      if (!channel) {
+        return
+      }
+      // setMemberDropdownActive(false)
+      if (anyVideoTabsCachedAssets) {
+        openWarningDialog({
+          onConfirm: () => {
+            setActiveUser({ channelId })
+            setVideoWorkspaceState('closed')
+          },
+        })
+      } else {
+        setActiveUser({ channelId })
+        setVideoWorkspaceState('closed')
+      }
+    }
+  }
 
   return (
-    <Container>
+    <Container isActive={isActive} ref={ref}>
       {isSwitchingMember ? (
         <div>
           <SwitchMemberItemListContainer>
@@ -94,18 +112,20 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => 
             <ListItem
               nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
               onClick={() => handleAddNewMember()}
-              label={'Add new member...'}
+              label="Add new member..."
             />
           </SectionContainer>
         </div>
       ) : (
-        <div>
+        <>
           <BlurredBG url={activeMembership?.avatarUri}>
             <Filter />
             <MemberInfoContainer>
-              <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri}></StyledAvatar>
+              <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri} />
               <div>
-                <Text variant="h400">{activeMembership?.handle}</Text>
+                {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) 
+                \ to preserve the space while member handle loads */}
+                <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
                 <TjoyContainer>
                   <BalanceContainer>
                     <SvgActionJoyToken />
@@ -151,7 +171,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => 
             )}
             <ListItem
               nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
-              onClick={() => (hasOneMember ? handleAddNewMember() : handleSwitchMemberMode())}
+              onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
               label={hasOneMember ? 'Add new member...' : 'Switch member'}
               nodeEnd={hasOneMember === false && <StyledSvgActionChevronR />}
             />
@@ -176,11 +196,12 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({ publisher }) => 
               />
             </SectionContainer>
           )}
-        </div>
+        </>
       )}
     </Container>
   )
-}
+})
+MemberDropdown.displayName = 'MemberDropdown'
 
 const ChannelListItem: React.FC<{ channelId: string; activeChannelId: string | null; onClick: () => void }> = ({
   activeChannelId,
