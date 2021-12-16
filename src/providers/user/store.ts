@@ -31,9 +31,9 @@ export const useActiveUserStore = createStore<ActiveUserState, ActiveUserStoreAc
       },
       setActiveUser: (activeUserChanges) => {
         set((state) => {
-          state.accountId = activeUserChanges.accountId || state.accountId
-          state.memberId = activeUserChanges.memberId || state.memberId
-          state.channelId = activeUserChanges.channelId || state.channelId
+          state.accountId = activeUserChanges.accountId !== undefined ? activeUserChanges.accountId : state.accountId
+          state.memberId = activeUserChanges.memberId !== undefined ? activeUserChanges.memberId : state.memberId
+          state.channelId = activeUserChanges.channelId !== undefined ? activeUserChanges.channelId : state.channelId
         })
       },
     }),

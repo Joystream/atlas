@@ -61,9 +61,10 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
   const handleGoToStudio = () => {
     navigate(absoluteRoutes.studio.index())
   }
+  // TODO: add navigation
   const handleGoToMyProfile = () => null
   const handleMemberChange = (memberId: string) => {
-    setActiveUser({ memberId })
+    setActiveUser({ memberId, channelId: null })
     setIsSwitchingMember(false)
   }
   const handleChannelChange = (channelId: string) => {
@@ -72,7 +73,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       if (!channel) {
         return
       }
-      // setMemberDropdownActive(false)
       if (anyVideoTabsCachedAssets) {
         openWarningDialog({
           onConfirm: () => {
