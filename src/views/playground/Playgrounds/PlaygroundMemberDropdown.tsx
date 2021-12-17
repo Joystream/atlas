@@ -2,14 +2,15 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
+import { VideoWorkspaceProvider } from '@/providers/videoWorkspace'
 
 export const PlaygroundMemberDropdown = () => {
   return (
-    <Container>
-      <div>
+    <VideoWorkspaceProvider>
+      <Container>
         <MemberDropdown isActive />
-      </div>
-    </Container>
+      </Container>
+    </VideoWorkspaceProvider>
   )
 }
 
