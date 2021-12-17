@@ -45,11 +45,9 @@ export type ExtrinsicResult<T> = {
 }
 
 export type InputAssets = {
-  video?: AssetMetadata
-  thumbnail?: AssetMetadata
+  [fieldName: string]: AssetMetadata
 }
 
 export type ContentIdCbArgs = {
-  videoId: string
-  thumbnailId: string
+  [fieldName: string]: string
 }

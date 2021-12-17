@@ -31,6 +31,7 @@ import {
 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
+import { transfer } from 'comlink'
 
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -391,7 +392,6 @@ export class JoystreamJs {
   }
 
   /* Public */
-  // @ts-ignore test
   async setActiveAccount(accountId: AccountId | null, signer?: Signer) {
     if (!accountId) {
       this._selectedAccountId = null
@@ -413,7 +413,7 @@ export class JoystreamJs {
     return new BN(balance.freeBalance).toNumber()
   }
 
-  createFileAsset({ ipfsContentId, size }: AssetMetadata): [NewAsset, string] {
+  private _createFileAsset({ ipfsContentId, size }: AssetMetadata): [NewAsset, string] {
     const contentId = ContentId.generate(this.api.registry)
     const b = new Bytes(this.api.registry, ipfsContentId)
     const content = new ContentParameters(this.api.registry, {
@@ -421,44 +421,68 @@ export class JoystreamJs {
       // hardcoded type_id - it's not used but needs to be one of the allowed values
       type_id: new U64(this.api.registry, 1),
       size: new U64(this.api.registry, size),
-      ipfs_content_id: b,
+      ipfs_content_id: transfer(b, [b.buffer]),
     })
     return [new NewAsset(this.api.registry, { upload: content }), contentId.encode()]
+  }
+
+  private _prepareChannelAssets(inputAssets: InputAssets) {
+    return {
+      avatarContent: inputAssets.avatar && this._createFileAsset(inputAssets.avatar),
+      coverContent: inputAssets.cover && this._createFileAsset(inputAssets.cover),
+    }
   }
 
   async createChannel(
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
-    inputAssets: ChannelAssets,
-    cb?: ExtrinsicStatusCallbackFn
+    inputAssets: InputAssets,
+    cb?: ExtrinsicStatusCallbackFn,
+    contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<ChannelId>> {
+    const {
+      avatarContent: [avatar, avatarId],
+      coverContent: [cover, coverId],
+    } = this._prepareChannelAssets(inputAssets)
+    await contentIdCb?.({ avatarId, coverId })
     await this.ensureApi()
 
-    return this._createOrUpdateChannel(null, memberId, inputMetadata, inputAssets, cb)
+    return this._createOrUpdateChannel(null, memberId, inputMetadata, { avatar, cover }, cb)
   }
 
   async updateChannel(
     channelId: ChannelId,
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
-    inputAssets: ChannelAssets,
-    cb?: ExtrinsicStatusCallbackFn
+    inputAssets: InputAssets,
+    cb?: ExtrinsicStatusCallbackFn,
+    contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<ChannelId>> {
+    const { avatarContent, coverContent } = this._prepareChannelAssets(inputAssets)
+    const assets: { [field: string]: [NewAsset, string] | undefined } = {
+      avatarAsset: avatarContent || undefined,
+      coverAsset: coverContent || undefined,
+    }
+    await contentIdCb?.({
+      avatarId: assets.avatarAsset ? assets.avatarAsset[1] : '',
+      coverId: assets.avatarAsset ? assets.avatarAsset[1] : '',
+    })
     await this.ensureApi()
 
-    return this._createOrUpdateChannel(channelId, memberId, inputMetadata, inputAssets, cb)
+    return this._createOrUpdateChannel(
+      channelId,
+      memberId,
+      inputMetadata,
+      { avatar: assets.avatarAsset && assets.avatarAsset[0], cover: assets.coverAssets && assets.coverAssets[0] },
+      cb
+    )
   }
 
-  private _prepareAssets(inputAssets: InputAssets) {
-    // @ts-ignore test
-    const [video, videoId] = this.createFileAsset(inputAssets.video)
-    // @ts-ignore test
-    const [thumbnail, thumbnailId] = this.createFileAsset(inputAssets.thumbnail)
-    const assets: VideoAssets = {
-      video,
-      thumbnail,
+  private _prepareVideoAssets(inputAssets: InputAssets) {
+    return {
+      videoContent: inputAssets.video && this._createFileAsset(inputAssets.video),
+      thumbnailContent: inputAssets.thumbnail && this._createFileAsset(inputAssets.thumbnail),
     }
-    return { assets, thumbnailId, videoId }
   }
 
   async createVideo(
@@ -469,10 +493,14 @@ export class JoystreamJs {
     cb?: ExtrinsicStatusCallbackFn,
     contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<VideoId>> {
-    const { assets, videoId, thumbnailId } = this._prepareAssets(inputAssets)
+    const {
+      videoContent: [video, videoId],
+      thumbnailContent: [thumbnail, thumbnailId],
+    } = this._prepareVideoAssets(inputAssets)
     await contentIdCb?.({ videoId, thumbnailId })
     await this.ensureApi()
-    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, assets, cb)
+
+    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, { video, thumbnail }, cb)
   }
 
   async updateVideo(
@@ -484,10 +512,28 @@ export class JoystreamJs {
     cb?: ExtrinsicStatusCallbackFn,
     contentIdCb?: (contentId: ContentIdCbArgs) => void
   ): Promise<ExtrinsicResult<VideoId>> {
-    const { assets, videoId, thumbnailId } = this._prepareAssets(inputAssets)
-    await contentIdCb?.({ videoId, thumbnailId })
+    const { videoContent, thumbnailContent } = this._prepareVideoAssets(inputAssets)
+    const assets: { [field: string]: [NewAsset, string] | undefined } = {
+      videoAsset: videoContent || undefined,
+      thumbnailAsset: thumbnailContent || undefined,
+    }
+    await contentIdCb?.({
+      videoId: assets.videoAsset ? assets.videoAsset[1] : '',
+      thumbnailId: assets.thumbnailAsset ? assets.thumbnailAsset[1] : '',
+    })
     await this.ensureApi()
-    return this._createOrUpdateVideo(updatedVideoId, memberId, channelId, inputMetadata, assets, cb)
+
+    return this._createOrUpdateVideo(
+      updatedVideoId,
+      memberId,
+      channelId,
+      inputMetadata,
+      {
+        video: assets.videoAsset && assets.videoAsset[0],
+        thumbnail: assets.thumbnailAsset && assets.thumbnailAsset[0],
+      },
+      cb
+    )
   }
 
   async deleteVideo(

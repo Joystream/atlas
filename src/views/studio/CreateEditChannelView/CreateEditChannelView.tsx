@@ -1,3 +1,4 @@
+import { proxy } from 'comlink'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +24,7 @@ import {
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { ChannelAssets, ChannelId, CreateChannelMetadata } from '@/joystream-lib'
+import { ChannelId, ContentIdCbArgs, CreateChannelMetadata, InputAssets } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
@@ -244,27 +245,23 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
     }
 
-    const assets: ChannelAssets = {}
+    const assets: InputAssets = {}
     let avatarContentId = ''
     let coverContentId = ''
 
     const processAssets = async () => {
       if (dirtyFields.avatar && avatarAsset?.blob && avatarHashPromise) {
-        const [asset, contentId] = await joystream.createFileAsset({
+        assets.avatar = {
           size: avatarAsset.blob.size,
           ipfsContentId: await avatarHashPromise,
-        })
-        assets.avatar = asset
-        avatarContentId = contentId
+        }
       }
 
       if (dirtyFields.cover && coverAsset?.blob && coverHashPromise) {
-        const [asset, contentId] = await joystream.createFileAsset({
-          size: coverAsset?.blob.size,
+        assets.cover = {
+          size: coverAsset.blob.size,
           ipfsContentId: await coverHashPromise,
-        })
-        assets.cover = asset
-        coverContentId = contentId
+        }
       }
     }
 
@@ -319,21 +316,37 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const completed = await handleTransaction({
-      preProcess: processAssets,
-      txFactory: (updateStatus) =>
-        newChannel
-          ? joystream.createChannel(activeMemberId, metadata, assets, updateStatus)
-          : joystream.updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, updateStatus),
-      onTxFinalize: uploadAssets,
-      onTxSync: refetchDataAndCacheAssets,
-      successMessage: {
-        title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
-        description: newChannel
-          ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
-          : 'Changes to your channel were saved on the blockchain.',
-      },
-    })
+    const setContentIds = async ({ avatarId, coverId }: ContentIdCbArgs) => {
+      avatarContentId = avatarId
+      coverContentId = coverId
+    }
+
+    const instance = await joystream
+
+    const completed =
+      instance &&
+      (await handleTransaction({
+        preProcess: processAssets,
+        txFactory: async (updateStatus) =>
+          newChannel
+            ? await instance.createChannel(activeMemberId, metadata, assets, proxy(updateStatus), proxy(setContentIds))
+            : await instance.updateChannel(
+                activeChannelId ?? '',
+                activeMemberId,
+                metadata,
+                assets,
+                proxy(updateStatus),
+                proxy(setContentIds)
+              ),
+        onTxFinalize: uploadAssets,
+        onTxSync: refetchDataAndCacheAssets,
+        successMessage: {
+          title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
+          description: newChannel
+            ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
+            : 'Changes to your channel were saved on the blockchain.',
+        },
+      }))
 
     if (completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())

@@ -1,5 +1,5 @@
 import { web3FromAddress } from '@polkadot/extension-dapp'
-import { ProxyMethods, RemoteObject, proxy, wrap } from 'comlink'
+import { Remote, proxy, wrap } from 'comlink'
 import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { NODE_URL } from '@/config/urls'
@@ -12,7 +12,7 @@ import { useConnectionStatusStore } from '../connectionStatus'
 import { useUser } from '../user'
 
 type JoystreamContextValue = {
-  joystream: (RemoteObject<JoystreamJs> & ProxyMethods) | null
+  joystream: Promise<Remote<JoystreamJs> | undefined>
 }
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
@@ -30,7 +30,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     [setNodeConnection]
   )
 
-  const apiInstance = useMemo(() => {
+  const joystream = useMemo(() => {
     const getInstance = async () => {
       try {
         setNodeConnection('connecting')
@@ -46,18 +46,18 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   useEffect(() => {
     return () => {
       const destroy = async () => {
-        const instance = await apiInstance
+        const instance = await joystream
         if (instance) {
           await instance.destroy()
         }
       }
       destroy()
     }
-  }, [apiInstance])
+  }, [joystream])
 
   useEffect(() => {
     const init = async () => {
-      const instance = await apiInstance
+      const instance = await joystream
       const accountId = await instance?.selectedAccountId
       if (!instance || !activeAccountId || !accounts) {
         return
@@ -78,7 +78,6 @@ export const JoystreamProvider: React.FC = ({ children }) => {
             proxy({ signRaw: proxy(signRaw), signPayload: proxy(signPayload) })
           )
         } else {
-          // @ts-ignore test
           await instance.setActiveAccount(activeAccountId)
         }
       }
@@ -86,8 +85,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
       setActiveAccount()
     }
     init()
-  }, [activeAccountId, accounts, apiInstance])
+  }, [activeAccountId, accounts, joystream])
 
-  // @ts-ignore test
-  return <JoystreamContext.Provider value={{ joystream: apiInstance }}>{children}</JoystreamContext.Provider>
+  return <JoystreamContext.Provider value={{ joystream }}>{children}</JoystreamContext.Provider>
 }

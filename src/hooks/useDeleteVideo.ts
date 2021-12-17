@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { proxy } from 'comlink'
 import { useCallback } from 'react'
 
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -19,12 +20,13 @@ export const useDeleteVideo = () => {
 
   const confirmDeleteVideo = useCallback(
     async (videoId: string, onTxSync?: () => void) => {
-      if (!joystream) {
+      const instance = await joystream
+      if (!instance) {
         return
       }
 
       handleTransaction({
-        txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
+        txFactory: async (updateStatus) => await instance.deleteVideo(videoId, activeMemberId, proxy(updateStatus)),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)

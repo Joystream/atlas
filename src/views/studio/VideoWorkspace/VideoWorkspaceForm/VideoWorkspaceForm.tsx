@@ -30,7 +30,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
+import { ContentIdCbArgs, CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -307,10 +307,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
         }
 
-        const assets: InputAssets = {
-          video: undefined,
-          thumbnail: undefined,
-        }
+        const assets: InputAssets = {}
         let videoContentId = ''
         let thumbnailContentId = ''
 
@@ -405,17 +402,21 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             callback?.()
           })
         }
-        const setContentIds = async ({ videoId, thumbnailId }: { videoId: string; thumbnailId: string }) => {
+
+        const setContentIds = async ({ videoId, thumbnailId }: ContentIdCbArgs) => {
           videoContentId = videoId
           thumbnailContentId = thumbnailId
         }
-        const completed = await handleTransaction({
-          preProcess: processAssets,
-          txFactory: async (updateStatus) =>
-            isNew
-              ? await (
-                  await joystream
-                ).createVideo(
+
+        const instance = await joystream
+
+        const completed =
+          instance &&
+          (await handleTransaction({
+            preProcess: processAssets,
+            txFactory: async (updateStatus) => {
+              if (isNew) {
+                return await instance.createVideo(
                   activeMemberId,
                   activeChannelId,
                   metadata,
@@ -423,9 +424,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                   proxy(updateStatus),
                   proxy(setContentIds)
                 )
-              : await (
-                  await joystream
-                ).updateVideo(
+              } else {
+                return await instance.updateVideo(
                   selectedVideoTab.id,
                   activeMemberId,
                   activeChannelId,
@@ -433,16 +433,18 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                   assets,
                   proxy(updateStatus),
                   proxy(setContentIds)
-                ),
-          onTxFinalize: await uploadAssets,
-          onTxSync: refetchDataAndCacheAssets,
-          successMessage: {
-            title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-            description: isNew
-              ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-              : 'Changes to your video were saved on the blockchain.',
-          },
-        })
+                )
+              }
+            },
+            onTxFinalize: await uploadAssets,
+            onTxSync: refetchDataAndCacheAssets,
+            successMessage: {
+              title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+              description: isNew
+                ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+                : 'Changes to your video were saved on the blockchain.',
+            },
+          }))
 
         if (completed) {
           setVideoWorkspaceState('minimized')
