@@ -354,7 +354,7 @@ export type GetMostViewedChannelsQueryVariables = Types.Exact<{
   timePeriodDays: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostViewedChannelsQuery = {
@@ -430,7 +430,7 @@ export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
   limit?: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostViewedChannelsAllTimeQuery = {
@@ -507,7 +507,7 @@ export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
   timePeriodDays: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostFollowedChannelsQuery = {
@@ -583,7 +583,7 @@ export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.MostViewedAndMostFollowedWhereInput>
+  where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostFollowedChannelsAllTimeQuery = {
@@ -1071,7 +1071,7 @@ export const GetMostViewedChannelsDocument = gql`
     $timePeriodDays: Int!
     $first: Int
     $after: String
-    $where: MostViewedAndMostFollowedWhereInput
+    $where: ChannelWhereInput
   ) {
     mostViewedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
       edges {
@@ -1135,12 +1135,7 @@ export type GetMostViewedChannelsQueryResult = Apollo.QueryResult<
   GetMostViewedChannelsQueryVariables
 >
 export const GetMostViewedChannelsAllTimeDocument = gql`
-  query GetMostViewedChannelsAllTime(
-    $limit: Int! = 50
-    $first: Int
-    $after: String
-    $where: MostViewedAndMostFollowedWhereInput
-  ) {
+  query GetMostViewedChannelsAllTime($limit: Int! = 50, $first: Int, $after: String, $where: ChannelWhereInput) {
     mostViewedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
       edges {
         cursor
@@ -1212,7 +1207,7 @@ export const GetMostFollowedChannelsDocument = gql`
     $timePeriodDays: Int!
     $first: Int
     $after: String
-    $where: MostViewedAndMostFollowedWhereInput
+    $where: ChannelWhereInput
   ) {
     mostFollowedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
       edges {
@@ -1276,12 +1271,7 @@ export type GetMostFollowedChannelsQueryResult = Apollo.QueryResult<
   GetMostFollowedChannelsQueryVariables
 >
 export const GetMostFollowedChannelsAllTimeDocument = gql`
-  query GetMostFollowedChannelsAllTime(
-    $limit: Int!
-    $first: Int
-    $after: String
-    $where: MostViewedAndMostFollowedWhereInput
-  ) {
+  query GetMostFollowedChannelsAllTime($limit: Int!, $first: Int, $after: String, $where: ChannelWhereInput) {
     mostFollowedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
       edges {
         cursor

@@ -97,7 +97,7 @@ query GetMostViewedChannels(
   $timePeriodDays: Int!
   $first: Int
   $after: String
-  $where: MostViewedAndMostFollowedWhereInput
+  $where: ChannelWhereInput
 ) {
   mostViewedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
     edges {
@@ -114,12 +114,7 @@ query GetMostViewedChannels(
   }
 }
 
-query GetMostViewedChannelsAllTime(
-  $limit: Int! = 50
-  $first: Int
-  $after: String
-  $where: MostViewedAndMostFollowedWhereInput
-) {
+query GetMostViewedChannelsAllTime($limit: Int! = 50, $first: Int, $after: String, $where: ChannelWhereInput) {
   mostViewedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
     edges {
       cursor
@@ -140,7 +135,7 @@ query GetMostFollowedChannels(
   $timePeriodDays: Int!
   $first: Int
   $after: String
-  $where: MostViewedAndMostFollowedWhereInput
+  $where: ChannelWhereInput
 ) {
   mostFollowedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
     edges {
@@ -157,12 +152,7 @@ query GetMostFollowedChannels(
   }
 }
 
-query GetMostFollowedChannelsAllTime(
-  $limit: Int!
-  $first: Int
-  $after: String
-  $where: MostViewedAndMostFollowedWhereInput
-) {
+query GetMostFollowedChannelsAllTime($limit: Int!, $first: Int, $after: String, $where: ChannelWhereInput) {
   mostFollowedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
     edges {
       cursor

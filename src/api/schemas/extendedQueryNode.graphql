@@ -258,23 +258,6 @@ input VideoWhereInput {
   id_eq: ID
 }
 
-input MostViewedAndMostFollowedWhereInput {
-  categoryId_eq: ID
-  categoryId_in: [ID!]
-  channelId_in: [ID!]
-  channelId_eq: ID
-  duration_lte: Int
-  duration_gte: Int
-  thumbnailPhotoAvailability_eq: AssetAvailability
-  mediaAvailability_eq: AssetAvailability
-  licenseId_in: [ID!]
-  languageId_eq: ID
-  hasMarketing_eq: Boolean
-  isFeatured_eq: Boolean
-  isPublic_eq: Boolean
-  isCensored_eq: Boolean
-  isExplicit_eq: Boolean
-}
 input VideoWhereUniqueInput {
   id: ID!
 }
@@ -416,15 +399,10 @@ type Query {
     timePeriodDays: Int!
     first: Int
     after: String
-    where: MostViewedAndMostFollowedWhereInput
+    where: VideoWhereInput
   ): VideoConnection!
 
-  mostViewedVideosAllTime(
-    limit: Int!
-    first: Int
-    after: String
-    where: MostViewedAndMostFollowedWhereInput
-  ): VideoConnection!
+  mostViewedVideosAllTime(limit: Int!, first: Int, after: String, where: VideoWhereInput): VideoConnection!
 
   promisingChannels(where: ChannelWhereInput): [Channel!]!
 }
