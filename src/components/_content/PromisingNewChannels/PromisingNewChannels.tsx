@@ -1,22 +1,20 @@
 import React from 'react'
 
 import { usePromisingChannels } from '@/api/hooks'
-import { ChannelOrderByInput } from '@/api/queries'
-import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
+import { PopularChannelsWithVideoGrid } from '@/components/InfiniteGrids/PopularChannelsWithVideoGrid'
 import { absoluteRoutes } from '@/config/routes'
 
 const ADDITIONAL_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 export const PromisingNewChannels = () => {
-  const { channels } = usePromisingChannels()
+  const { channels, loading } = usePromisingChannels()
 
   return (
-    <InfiniteChannelWithVideosGrid
+    <PopularChannelsWithVideoGrid
       title="Promising new channels"
-      onDemand
-      first={100}
-      orderBy={ChannelOrderByInput.CreatedAtDesc}
+      loading={loading}
       additionalLink={ADDITIONAL_LINK}
+      channels={channels}
     />
   )
 }

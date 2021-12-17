@@ -99,9 +99,18 @@ export const usePromisingChannels = (
   variables?: GetPromisingChannelsQueryVariables,
   opts?: QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetPromisingChannelsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetPromisingChannelsQuery({
+    ...opts,
+    variables: {
+      where: {
+        ...variables?.where,
+        isCensored_eq: false,
+        isPublic_eq: true,
+      },
+    },
+  })
   return {
-    channels: data?.channels,
+    channels: data?.promisingChannels,
     ...rest,
   }
 }

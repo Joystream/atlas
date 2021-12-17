@@ -661,7 +661,7 @@ export type GetPromisingChannelsQueryVariables = Types.Exact<{
 
 export type GetPromisingChannelsQuery = {
   __typename?: 'Query'
-  channels: Array<{
+  promisingChannels: Array<{
     __typename?: 'Channel'
     description?: Types.Maybe<string>
     follows?: Types.Maybe<number>
@@ -1342,7 +1342,7 @@ export type GetMostFollowedChannelsAllTimeQueryResult = Apollo.QueryResult<
 >
 export const GetPromisingChannelsDocument = gql`
   query GetPromisingChannels($where: ChannelWhereInput) {
-    channels(where: $where) {
+    promisingChannels(where: $where) {
       ...AllChannelFields
     }
   }

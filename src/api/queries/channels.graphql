@@ -169,7 +169,7 @@ query GetMostFollowedChannelsAllTime($limit: Int!, $first: Int, $after: String, 
 }
 
 query GetPromisingChannels($where: ChannelWhereInput) {
-  channels(where: $where) {
+  promisingChannels(where: $where) {
     ...AllChannelFields
   }
 }
