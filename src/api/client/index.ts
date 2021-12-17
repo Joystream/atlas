@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, split } from '@apollo/client'
+import { BatchHttpLink } from '@apollo/client/link/batch-http'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 
@@ -16,17 +17,26 @@ const createApolloClient = () => {
   })
 
   const orionLink = new HttpLink({ uri: ORION_GRAPHQL_URL })
+  const batchedOrionLink = new BatchHttpLink({ uri: ORION_GRAPHQL_URL, batchMax: 10 })
 
-  const splitLink = split(
+  const orionSplitLink = split(
+    ({ operationName }) => {
+      return operationName === 'GetVideos' || operationName === 'GetVideoCount'
+    },
+    batchedOrionLink,
+    orionLink
+  )
+
+  const operationSplitLink = split(
     ({ query }) => {
       const definition = getMainDefinition(query)
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
     },
     subscriptionLink,
-    orionLink
+    orionSplitLink
   )
 
-  return new ApolloClient({ cache, link: splitLink })
+  return new ApolloClient({ cache, link: operationSplitLink })
 }
 
 export default createApolloClient
