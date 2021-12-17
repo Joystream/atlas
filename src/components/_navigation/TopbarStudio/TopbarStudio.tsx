@@ -127,7 +127,12 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
           </StudioTopbarContainer>
         )}
       </StyledTopbarBase>
-      <MemberDropdown isActive={isMemberDropdownActive} publisher ref={memberDropdownRef} />
+      <MemberDropdown
+        isActive={isMemberDropdownActive}
+        publisher
+        ref={memberDropdownRef}
+        closeDropdown={() => setIsMemberDropdownActive(false)}
+      />
     </>
   )
 }

@@ -10,7 +10,7 @@ export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
   border-top: 1px solid ${oldColors.gray[700]};
   display: grid;
   padding: ${sizes(4)};
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.transactionBar};
   transform: translateY(${({ isActive }) => (isActive ? '0' : '100%')});
   transition: transform ${transitions.timings.regular} ${transitions.easing};
   grid-template: 'primary-text badge' auto 'primary-button primary-button' auto / 1fr;

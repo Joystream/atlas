@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { SvgActionChevronL, SvgActionChevronR } from '@/components/_icons'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 const paddingStyles = css`
@@ -22,7 +21,7 @@ export const Container = styled.div<{ isActive: boolean }>`
 
   transform: translateY(${({ isActive }) => (isActive ? 'var(--size-topbar-height)' : '-100%')});
   transition: transform ${transitions.timings.loading} ${transitions.easing};
-  z-index: ${zIndex.nearOverlay};
+  z-index: ${zIndex.nearTransactionBar};
 
   ${media.md} {
     right: ${sizes(8)};
@@ -76,18 +75,6 @@ export const ChannelsSectionTitle = styled(Text)`
   display: block;
 `
 
-export const StyledSvgActionChevronR = styled(SvgActionChevronR)`
-  & > path {
-    fill: ${cVar('colorCoreNeutral300')};
-  }
-`
-
-export const StyledSvgActionChevronL = styled(SvgActionChevronL)`
-  & > path {
-    fill: ${cVar('colorCoreNeutral300')};
-  }
-`
-
 export const SwitchMemberItemListContainer = styled.div`
   padding: ${sizes(2)} 0;
 `
@@ -113,4 +100,12 @@ export const Divider = styled.div`
   width: 1px;
   height: 16px;
   background: ${cVar('colorBorderMutedAlpha')};
+`
+
+export const LearnAboutTjoyLink = styled(Text)`
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
