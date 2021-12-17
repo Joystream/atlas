@@ -7,12 +7,12 @@ export const GridTesting = () => {
   return (
     <div>
       <LayoutGrid>
-        <StyledGridItem></StyledGridItem>
-        <StyledGridItem></StyledGridItem>
-        <StyledGridItem></StyledGridItem>
-        <StyledGridItem></StyledGridItem>
-        <StyledGridItem></StyledGridItem>
-        <StyledGridItem colStart={{ xl: 7 }} colSpan={{ sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }}></StyledGridItem>
+        <StyledGridItem />
+        <StyledGridItem />
+        <StyledGridItem />
+        <StyledGridItem />
+        <StyledGridItem />
+        <StyledGridItem colStart={{ xl: 7 }} colSpan={{ sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }} />
       </LayoutGrid>
     </div>
   )
