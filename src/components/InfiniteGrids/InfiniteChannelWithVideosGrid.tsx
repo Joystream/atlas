@@ -2,7 +2,6 @@ import { DocumentNode } from 'graphql'
 import React, { FC, Fragment, useCallback, useMemo, useState } from 'react'
 
 import {
-  ChannelEdge,
   ChannelOrderByInput,
   GetChannelsConnectionDocument,
   GetChannelsConnectionQuery,
@@ -10,7 +9,6 @@ import {
   GetMostFollowedChannelsQuery,
   GetMostViewedChannelsAllTimeQuery,
   GetMostViewedChannelsQuery,
-  VideoEdge,
 } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridHeadingContainer, TitleContainer } from '@/components/GridHeading'
@@ -44,7 +42,6 @@ type InfiniteChannelWithVideosGridProps = {
     url: string
   }
   maximumCount?: number
-  additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
 type ChannelQuery =
@@ -71,7 +68,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
   idIn = null,
   additionalLink,
   maximumCount,
-  additionalSortFn,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
   const [targetRowsCount, setTargetRowsCount] = useState(INITIAL_ROWS)
@@ -108,7 +104,6 @@ export const InfiniteChannelWithVideosGrid: FC<InfiniteChannelWithVideosGridProp
     targetRowsCount,
     dataAccessor: createRawDataAccessor,
     itemsPerRow: INITIAL_CHANNELS_PER_ROW,
-    additionalSortFn,
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'InfiniteChannelWithVideosGrid', error),
   })
 

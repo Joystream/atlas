@@ -76,7 +76,6 @@ export const useInfiniteGrid = <
   onDemandInfinite,
   activatedInfinteGrid,
   orderBy = ChannelOrderByInput.CreatedAtDesc,
-  additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -96,7 +95,7 @@ export const useInfiniteGrid = <
     variables: {
       ...queryVariables,
       orderBy,
-      first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
+      first: targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,
   })
@@ -160,7 +159,7 @@ export const useInfiniteGrid = <
     return () => window.removeEventListener('scroll', scrollHandler)
   }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand, onDemandInfinite, activatedInfinteGrid])
 
-  const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
+  const edges = data?.edges
 
   const isRefetching = networkStatus === NetworkStatus.refetch
 
