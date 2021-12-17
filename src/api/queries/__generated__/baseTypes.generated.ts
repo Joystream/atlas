@@ -253,6 +253,7 @@ export type Query = {
   mostViewedChannelsAllTime: ChannelConnection
   mostViewedVideos: VideoConnection
   mostViewedVideosAllTime: VideoConnection
+  promisingChannels: Array<Channel>
 }
 
 export type QueryMembershipByUniqueInputArgs = {
@@ -377,6 +378,10 @@ export type QueryMostViewedVideosAllTimeArgs = {
   first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
   where?: Maybe<MostViewedAndMostFollowedWhereInput>
+}
+
+export type QueryPromisingChannelsArgs = {
+  where?: Maybe<ChannelWhereInput>
 }
 
 export type SearchFtsOutput = {

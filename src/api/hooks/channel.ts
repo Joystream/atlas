@@ -17,6 +17,8 @@ import {
   GetMostViewedChannelsAllTimeQueryVariables,
   GetMostViewedChannelsQuery,
   GetMostViewedChannelsQueryVariables,
+  GetPromisingChannelsQuery,
+  GetPromisingChannelsQueryVariables,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   UnfollowChannelMutation,
@@ -28,6 +30,7 @@ import {
   useGetMostFollowedChannelsQuery,
   useGetMostViewedChannelsAllTimeQuery,
   useGetMostViewedChannelsQuery,
+  useGetPromisingChannelsQuery,
   useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
@@ -86,6 +89,17 @@ export const useChannels = (
   opts?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) => {
   const { data, ...rest } = useGetChannelsQuery({ ...opts, variables })
+  return {
+    channels: data?.channels,
+    ...rest,
+  }
+}
+
+export const usePromisingChannels = (
+  variables?: GetPromisingChannelsQueryVariables,
+  opts?: QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
+) => {
+  const { data, ...rest } = useGetPromisingChannelsQuery({ ...opts, variables })
   return {
     channels: data?.channels,
     ...rest,

@@ -655,6 +655,70 @@ export type GetMostFollowedChannelsAllTimeQuery = {
   }
 }
 
+export type GetPromisingChannelsQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.ChannelWhereInput>
+}>
+
+export type GetPromisingChannelsQuery = {
+  __typename?: 'Query'
+  channels: Array<{
+    __typename?: 'Channel'
+    description?: Types.Maybe<string>
+    follows?: Types.Maybe<number>
+    views?: Types.Maybe<number>
+    isPublic?: Types.Maybe<boolean>
+    isCensored: boolean
+    coverPhotoUrls: Array<string>
+    coverPhotoAvailability: Types.AssetAvailability
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
+    ownerMember?: Types.Maybe<{
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      avatarUri?: Types.Maybe<string>
+    }>
+    coverPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
+}
+
 export const BasicChannelFieldsFragmentDoc = gql`
   fragment BasicChannelFields on Channel {
     id
@@ -1285,4 +1349,53 @@ export type GetMostFollowedChannelsAllTimeLazyQueryHookResult = ReturnType<
 export type GetMostFollowedChannelsAllTimeQueryResult = Apollo.QueryResult<
   GetMostFollowedChannelsAllTimeQuery,
   GetMostFollowedChannelsAllTimeQueryVariables
+>
+export const GetPromisingChannelsDocument = gql`
+  query GetPromisingChannels($where: ChannelWhereInput) {
+    channels(where: $where) {
+      ...AllChannelFields
+    }
+  }
+  ${AllChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetPromisingChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetPromisingChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPromisingChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPromisingChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPromisingChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>(
+    GetPromisingChannelsDocument,
+    options
+  )
+}
+export function useGetPromisingChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>(
+    GetPromisingChannelsDocument,
+    options
+  )
+}
+export type GetPromisingChannelsQueryHookResult = ReturnType<typeof useGetPromisingChannelsQuery>
+export type GetPromisingChannelsLazyQueryHookResult = ReturnType<typeof useGetPromisingChannelsLazyQuery>
+export type GetPromisingChannelsQueryResult = Apollo.QueryResult<
+  GetPromisingChannelsQuery,
+  GetPromisingChannelsQueryVariables
 >

@@ -396,30 +396,20 @@ type Query {
     limit: Int
     first: Int
     after: String
-    where: MostViewedAndMostFollowedWhereInput
+    where: ChannelWhereInput
   ): ChannelConnection!
 
-  mostFollowedChannelsAllTime(
-    limit: Int!
-    first: Int
-    after: String
-    where: MostViewedAndMostFollowedWhereInput
-  ): ChannelConnection!
+  mostFollowedChannelsAllTime(limit: Int!, first: Int, after: String, where: ChannelWhereInput): ChannelConnection!
 
   mostViewedChannels(
     timePeriodDays: Int!
     limit: Int
     first: Int
     after: String
-    where: MostViewedAndMostFollowedWhereInput
+    where: ChannelWhereInput
   ): ChannelConnection!
 
-  mostViewedChannelsAllTime(
-    limit: Int!
-    first: Int
-    after: String
-    where: MostViewedAndMostFollowedWhereInput
-  ): ChannelConnection!
+  mostViewedChannelsAllTime(limit: Int!, first: Int, after: String, where: ChannelWhereInput): ChannelConnection!
 
   mostViewedVideos(
     limit: Int
@@ -435,6 +425,8 @@ type Query {
     after: String
     where: MostViewedAndMostFollowedWhereInput
   ): VideoConnection!
+
+  promisingChannels(where: ChannelWhereInput): [Channel!]!
 }
 
 type Subscription {

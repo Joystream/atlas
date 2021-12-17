@@ -177,3 +177,9 @@ query GetMostFollowedChannelsAllTime(
     totalCount
   }
 }
+
+query GetPromisingChannels($where: ChannelWhereInput) {
+  channels(where: $where) {
+    ...AllChannelFields
+  }
+}
