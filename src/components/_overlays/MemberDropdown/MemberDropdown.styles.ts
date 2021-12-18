@@ -23,6 +23,8 @@ export const Container = styled.div<{ isActive: boolean }>`
   transition: transform ${transitions.timings.loading} ${transitions.easing};
   z-index: ${zIndex.nearTransactionBar};
 
+  box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+
   ${media.md} {
     right: ${sizes(8)};
   }
