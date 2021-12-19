@@ -14,7 +14,10 @@ export const Default = Template.bind({})
 
 Default.args = {
   avatars: [
-    { size: 'small', assetUrl: 'https://picsum.photos/200/300' },
-    { size: 'small', assetUrl: 'https://picsum.photos/200/300' },
+    { assetUrl: 'https://picsum.photos/200/300' },
+    { assetUrl: 'https://picsum.photos/200/300' },
+    { assetUrl: 'https://picsum.photos/200/300' },
+    { assetUrl: 'https://picsum.photos/200/300' },
   ],
+  size: 'small',
 }
