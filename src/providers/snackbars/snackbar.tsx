@@ -42,7 +42,7 @@ export const Snackbars: React.FC = () => {
     <SnackbarsContainer>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
-          <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames={'snackbar'}>
+          <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames="snackbar">
             <Snackbar
               {...snackbarProps}
               onActionClick={() => {

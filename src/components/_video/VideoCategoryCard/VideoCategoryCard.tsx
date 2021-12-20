@@ -98,7 +98,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
                 <>
                   <PieChart>
                     <CircleDefaultBackground />
-                    <PieSegment value={pieChartValue}></PieSegment>
+                    <PieSegment value={pieChartValue} />
                   </PieChart>
                   <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
                     {videoCount} videos
@@ -110,7 +110,7 @@ export const VideoCategoryCard: React.FC<VideoCategoryCardProps> = ({
 
           {variant === 'default' && !loading && (
             <CoverImgContainer>
-              <CoverImgOverlay></CoverImgOverlay>
+              <CoverImgOverlay />
               <CoverImg bgImgUrl={coverImg} />
             </CoverImgContainer>
           )}

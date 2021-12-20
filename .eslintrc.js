@@ -32,8 +32,16 @@ module.exports = {
       'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true },
     ],
-
+    'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
+    'react/self-closing-comp': [
+      'warn',
+      {
+        'component': true,
+        'html': true,
+      },
+    ],
     '@typescript-eslint/no-empty-function': 'warn',
+    'react/no-unescaped-entities': 'off',
     '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/ban-ts-comment': [
       'error',

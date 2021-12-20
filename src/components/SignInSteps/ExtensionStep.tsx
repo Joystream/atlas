@@ -72,7 +72,7 @@ export const PolkadotExtensionRejected: React.FC = () => (
         Open the extension popup with the icon in your browser bar
       </StyledListItem>
       <StyledListItem secondary as="li" variant="t100">
-        Use cog icon in upper right corner to open settings and select {'"Manage Website Access"'}
+        Use cog icon in upper right corner to open settings and select "Manage Website Access"
       </StyledListItem>
       <StyledListItem secondary as="li" variant="t100">
         Find play.joystream.org address and switch it to allowed
