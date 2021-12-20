@@ -15,6 +15,7 @@ import {
   FileHashing,
   GridTesting,
   ImageDownsizing,
+  IndirectSignInDialog,
   Modals,
   OrionTesting,
   PlaygroundBreakpoints,
@@ -44,6 +45,7 @@ const playgroundRoutes = [
   { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
   { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
+  { path: 'indirect-signin-dialog', element: <IndirectSignInDialog />, name: 'Indirect sign in dialog' },
 ]
 
 const PlaygroundLayout = () => {
