@@ -74,6 +74,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }
     const handleMemberChange = (memberId: string) => {
       setActiveUser({ memberId, channelId: null })
+      closeDropdown?.()
       setIsSwitchingMember(false)
     }
     const handleChannelChange = (channelId: string) => {

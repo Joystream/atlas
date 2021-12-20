@@ -74,20 +74,6 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
     }
   }, [isMemberDropdownActive])
 
-  // const handleLogout = () => {
-  //   const logout = () => {
-  //     setVideoWorkspaceState('closed')
-  //     resetActiveUser()
-  //     navigate(absoluteRoutes.studio.index())
-  //   }
-  //   setIsMemberDropdownActive(false)
-  //   if (anyVideoTabsCachedAssets) {
-  //     openWarningDialog({ onConfirm: () => logout() })
-  //   } else {
-  //     logout()
-  //   }
-  // }
-
   return (
     <>
       <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoStudio />} logoLinkUrl={absoluteRoutes.studio.index()}>
