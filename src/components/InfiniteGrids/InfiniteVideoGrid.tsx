@@ -26,7 +26,9 @@ import { useInfiniteGrid } from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
   query?: DocumentNode
+  // `periodDays` argument to be passed to the most viewed connection query - it will let you set the time period of most views
   periodDays?: number
+  // `limit` argument to be passed to the most viewed connection query - it will let you cap the number of videos in the connection
   limit?: number
   title?: string
   titleLoader?: boolean
@@ -35,6 +37,7 @@ type InfiniteVideoGridProps = {
   ready?: boolean
   showChannel?: boolean
   className?: string
+  // exclude a specific video from the result
   excludeId?: string
   onDemand?: boolean
   onDemandInfinite?: boolean

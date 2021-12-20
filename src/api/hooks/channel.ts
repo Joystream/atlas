@@ -90,9 +90,9 @@ export const useChannels = (
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
+        ...variables?.where,
       },
     },
   })
@@ -161,9 +161,9 @@ export const useTop10Channels = (
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
+        ...variables?.where,
       },
     },
   })
@@ -182,9 +182,9 @@ export const useDiscoverChannels = (
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
+        ...variables?.where,
       },
     },
   })
@@ -203,9 +203,9 @@ export const usePromisingChannels = (
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
+        ...variables?.where,
       },
     },
   })
@@ -224,9 +224,9 @@ export const usePopularChannels = (
     variables: {
       ...variables,
       where: {
-        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
+        ...variables?.where,
       },
     },
   })
