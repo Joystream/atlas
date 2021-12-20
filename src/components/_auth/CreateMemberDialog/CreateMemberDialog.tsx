@@ -31,12 +31,12 @@ type Inputs = {
 }
 
 export const CreateMemberDialog = () => {
-  const { activeAccountId, refetchMemberships, extensionConnected, memberships } = useUser()
+  const { activeAccountId, refetchMemberships, extensionConnected } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const step = useRouterQuery('step')
   const navigate = useNavigate()
 
-  const accountSet = !!activeAccountId && !!extensionConnected && !!memberships?.length
+  const accountSet = !!activeAccountId && !!extensionConnected
 
   const {
     register,
