@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { cVar, zIndex } from '@/styles'
@@ -28,5 +29,8 @@ export const ModalContent = styled.div<ModalContentProps>`
   max-width: 90vw;
   overflow: hidden;
   ${({ noBoxShadow }) =>
-    !noBoxShadow && `box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')}`};
+    !noBoxShadow &&
+    css`
+      box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+    `};
 `

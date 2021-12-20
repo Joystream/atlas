@@ -22,7 +22,7 @@ import { useUser } from '@/providers/user'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
 
-import { StyledAvatar, StyledButton, StyledDialogModal, StyledTextField, Wrapper } from './CreateMemberDialog.styles'
+import { StyledAvatar, StyledButton, StyledDialogModal, StyledTextField, Wrapper } from './CreateMemberModal.styles'
 
 type Inputs = {
   handle: string
@@ -30,7 +30,7 @@ type Inputs = {
   about: string
 }
 
-export const CreateMemberDialog = () => {
+export const CreateMemberModal: React.FC = () => {
   const { activeAccountId, refetchMemberships, extensionConnected } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const step = useRouterQuery('step')

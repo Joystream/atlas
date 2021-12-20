@@ -6,9 +6,6 @@
 // https://github.com/paritytech/oo7/blob/251ba2b7c45503b68eab4320c270b5afa9bccb60/packages/polkadot-identicon/src/index.jsx
 import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto'
 
-// Copyright 2018-2021 @polkadot/ui-shared authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 type Circle = {
   cx: number
   cy: number

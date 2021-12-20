@@ -1,4 +1,3 @@
-// import Identicon from '@polkadot/react-identicon'
 import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'

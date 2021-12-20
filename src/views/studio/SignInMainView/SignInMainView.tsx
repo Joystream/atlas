@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
-import { CreateMemberDialog } from '@/components/_auth/CreateMemberDialog'
+import { CreateMemberModal } from '@/components/_auth/CreateMemberModal'
 import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
@@ -55,7 +55,7 @@ export const SignInMainView: React.FC = () => {
       </Header>
       <StyledSignInIllustrationSVG />
       <SignInStepsStepper />
-      <CreateMemberDialog />
+      <CreateMemberModal />
     </StyledContainer>
   )
 }
