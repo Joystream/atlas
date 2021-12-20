@@ -23,7 +23,7 @@ export const VideoMetaData = () => {
             }
           }
         }}
-      ></input>
+      />
       <Text variant="t200">{error?.message}</Text>
       <h2>Metadata:</h2>
       <p>type: {metadata?.mimeType}</p>

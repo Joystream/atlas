@@ -21,7 +21,7 @@ const SingleTemplate: Story<ProgressDrawerProps> = (args) => {
     { title: 'Add Avatar', onClick: () => setaddAvatar((value) => !value), completed: addAvatar },
     { title: 'Add Cover Image', onClick: () => setaddCoverImage((value) => !value), completed: addCoverImage },
   ]
-  return <ProgressDrawer {...args} steps={steps}></ProgressDrawer>
+  return <ProgressDrawer {...args} steps={steps} />
 }
 
 export const Single = SingleTemplate.bind({})

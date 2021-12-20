@@ -27,20 +27,20 @@ export default {
 
 const SingleTemplate: Story<CheckboxProps> = (args) => (
   <WithValue initial={true} actionName="onChange">
-    {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue}></Checkbox>}
+    {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
   </WithValue>
 )
 
 const Template: Story<CheckboxProps> = (args) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr', gridGap: '12px' }}>
     <WithValue initial={false} actionName="onChange">
-      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue}></Checkbox>}
+      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
     </WithValue>
     <WithValue initial={true} actionName="onChange">
-      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue}></Checkbox>}
+      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} />}
     </WithValue>
     <WithValue initial={true} actionName="onChange">
-      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} indeterminate></Checkbox>}
+      {(value, setValue) => <Checkbox {...args} value={value} onChange={setValue} indeterminate />}
     </WithValue>
   </div>
 )

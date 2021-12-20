@@ -121,7 +121,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               value={countdownProgress}
               maxValue={NEXT_VIDEO_TIMEOUT}
               strokeWidth={8}
-              variant={'player'}
+              variant="player"
               noTrail={isCountDownStarted}
             />
             <CountDownButton variant="tertiary" onClick={handleCountDownButton}>
