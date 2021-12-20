@@ -23,6 +23,7 @@ import {
   PlaygroundConnectionState,
   PlaygroundDrafts,
   PlaygroundMemberChannel,
+  PlaygroundMemberDropdown,
   PlaygroundValidationForm,
   UploadFiles,
   VideoMetaData,
@@ -46,6 +47,7 @@ const playgroundRoutes = [
   { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
   { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
   { path: 'indirect-signin-dialog', element: <IndirectSignInDialog />, name: 'Indirect sign in dialog' },
+  { path: 'member-dropdown', element: <PlaygroundMemberDropdown />, name: 'Member dropdown' },
 ]
 
 const PlaygroundLayout = () => {
