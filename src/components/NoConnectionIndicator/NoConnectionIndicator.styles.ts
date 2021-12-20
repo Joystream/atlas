@@ -35,7 +35,7 @@ export const IndicatorWrapper = styled.div`
   padding: ${sizes(3)} ${sizes(5)};
 
   ${media.md} {
-    margin-left: calc(var(--size-sidenav-width-collapsed) / 2);
+    margin-left: calc(var(--size-sidenav-width) / 2);
   }
 
   &.${CONNECTION_INDICATOR_CLASSNAME}-enter {
