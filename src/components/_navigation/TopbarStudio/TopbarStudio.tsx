@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
-import { SvgActionAddVideo, SvgActionCheck, SvgActionLogOut, SvgActionNewChannel } from '@/components/_icons'
+import { SvgActionAddVideo, SvgActionCheck } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -20,21 +19,11 @@ import { transitions } from '@/styles'
 import {
   AvatarSkeletonLoader,
   ChannelInfoContainer,
-  DrawerChannelsContainer,
-  DrawerContainer,
-  DrawerMemberText,
-  DrawerMemberTitleText,
   GlyphCheckContainer,
-  MemberInfoContainer,
-  MemberInnerContainer,
-  MemberTextContainer,
-  NewChannel,
   NewChannelAvatar,
-  NewChannelIconContainer,
   StudioTopbarContainer,
   StyledAvatar,
   StyledChannelInfoText,
-  StyledLink,
   StyledTopbarBase,
   TextContainer,
 } from './TopbarStudio.styles'
@@ -50,91 +39,40 @@ type ChannelInfoProps = {
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
-type MemberInfoProps = {
-  hasChannels?: boolean
-} & Pick<NavDrawerProps, 'memberAvatar' | 'memberName' | 'onLogoutClick'>
-
-type NavDrawerProps = {
-  active?: boolean
-  channels?: BasicChannelFieldsFragment[]
-  memberName?: string
-  memberAvatar?: string | null
-  currentChannel?: BasicChannelFieldsFragment
-  onCurrentChannelChange: (channelId: string) => void
-  onLogoutClick: () => void
-  handleClose: () => void
-}
-
 export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { activeChannelId, setActiveUser, resetActiveUser, activeMembership, activeMembershipLoading } = useUser()
+  const { activeChannelId, activeMembership, activeMembershipLoading } = useUser()
   const mdMatch = useMediaMatch('md')
 
-  const navigate = useNavigate()
-
-  const { videoWorkspaceState, setVideoWorkspaceState, anyVideoTabsCachedAssets, addVideoTab } = useVideoWorkspace()
-  const { openWarningDialog } = useDisplayDataLostWarning()
+  const { videoWorkspaceState, addVideoTab } = useVideoWorkspace()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
-  const [isDrawerActive, setDrawerActive] = useState(false)
-  const drawerRef = useRef<HTMLDivElement | null>(null)
-
-  const handleCurrentChannelChange: (channelId: string) => void = (channelId) => {
-    const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
-    if (!channel) {
-      return
-    }
-    setDrawerActive(false)
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({ onConfirm: () => changeChannel(channelId) })
-    } else {
-      changeChannel(channelId)
-    }
-  }
-
-  const changeChannel = (channelId: string) => {
-    setActiveUser({ channelId })
-    setVideoWorkspaceState('closed')
-  }
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+  const memberDropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
     e.stopPropagation()
-    setDrawerActive(!isDrawerActive)
+    setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
   useEffect(() => {
-    if (!isDrawerActive) {
+    if (!isMemberDropdownActive) {
       return
     }
     const handleClickOutside = (event: Event) => {
-      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+      if (memberDropdownRef.current && !memberDropdownRef.current.contains(event.target as Node)) {
         // stop propagation so drawer doesn't get triggered again on button click
         // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
         event.preventDefault()
         event.stopPropagation()
-        setDrawerActive(false)
+        setIsMemberDropdownActive(false)
       }
     }
     document.addEventListener('click', handleClickOutside, true)
     return () => {
       document.removeEventListener('click', handleClickOutside, true)
     }
-  }, [isDrawerActive])
-
-  const handleLogout = () => {
-    setDrawerActive(false)
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({ onConfirm: () => logout() })
-    } else {
-      logout()
-    }
-  }
-
-  const logout = () => {
-    setVideoWorkspaceState('closed')
-    resetActiveUser()
-    navigate(absoluteRoutes.studio.index())
-  }
+  }, [isMemberDropdownActive])
 
   return (
     <>
@@ -171,39 +109,17 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
                 </TextContainer>
               </ChannelInfoContainer>
             )}
-            <ExpandButton expanded={isDrawerActive} onClick={handleDrawerToggle} />
+            <ExpandButton expanded={isMemberDropdownActive} onClick={handleDrawerToggle} />
           </StudioTopbarContainer>
         )}
       </StyledTopbarBase>
-      <NavDrawer
-        ref={drawerRef}
-        active={isDrawerActive}
-        memberName={activeMembership?.handle}
-        memberAvatar={activeMembership?.avatarUri}
-        channels={activeMembership?.channels}
-        currentChannel={currentChannel}
-        onCurrentChannelChange={handleCurrentChannelChange}
-        onLogoutClick={handleLogout}
-        handleClose={() => setDrawerActive(false)}
+      <MemberDropdown
+        isActive={isMemberDropdownActive}
+        publisher
+        ref={memberDropdownRef}
+        closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>
-  )
-}
-
-const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasChannels, onLogoutClick }) => {
-  return (
-    <MemberInfoContainer hasChannels={hasChannels}>
-      <MemberInnerContainer>
-        <StyledAvatar assetUrl={memberAvatar} />
-        <MemberTextContainer>
-          <DrawerMemberText variant="t200">{memberName}</DrawerMemberText>
-          <DrawerMemberTitleText variant="t100">Member</DrawerMemberTitleText>
-        </MemberTextContainer>
-      </MemberInnerContainer>
-      <Button icon={<SvgActionLogOut />} variant="secondary" onClick={onLogoutClick}>
-        Log out
-      </Button>
-    </MemberInfoContainer>
   )
 }
 
@@ -235,48 +151,6 @@ const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   }
 )
 ChannelInfo.displayName = 'ChannelInfo'
-
-const NavDrawer = React.forwardRef<HTMLDivElement, NavDrawerProps>(
-  (
-    { active, memberName, memberAvatar, channels, currentChannel, onCurrentChannelChange, onLogoutClick, handleClose },
-    ref
-  ) => {
-    const hasChannels = !!channels?.length
-    return (
-      <DrawerContainer ref={ref} isActive={active} hasChannels={hasChannels}>
-        {hasChannels && (
-          <>
-            <DrawerChannelsContainer>
-              {channels?.map((channel) => (
-                <ChannelInfo
-                  key={channel.id}
-                  channel={channel}
-                  active={channel.id === currentChannel?.id}
-                  onClick={() => onCurrentChannelChange(channel.id)}
-                />
-              ))}
-            </DrawerChannelsContainer>
-            <StyledLink to={absoluteRoutes.studio.newChannel()} onClick={handleClose}>
-              <NewChannel>
-                <NewChannelIconContainer>
-                  <SvgActionNewChannel />
-                </NewChannelIconContainer>
-                <Text variant="t200">Add new channel</Text>
-              </NewChannel>
-            </StyledLink>
-          </>
-        )}
-        <MemberInfo
-          memberName={memberName}
-          memberAvatar={memberAvatar}
-          hasChannels={hasChannels}
-          onLogoutClick={onLogoutClick}
-        />
-      </DrawerContainer>
-    )
-  }
-)
-NavDrawer.displayName = 'NavDrawer'
 
 const ChannelInfoSkeletonLoader = () => {
   return (

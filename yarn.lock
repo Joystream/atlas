@@ -7388,6 +7388,7 @@ __metadata:
     react-hook-form: ^7.8.1
     react-intersection-observer: ^8.32.5
     react-lottie-player: ^1.4.1
+    react-merge-refs: ^1.1.0
     react-number-format: ^4.8.0
     react-router: ^6.0.2
     react-router-dom: ^6.0.2
@@ -17872,6 +17873,13 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0
   checksum: 1d75c104cd479863d57deced5d767a6425e476eaac8b1b40f7b753467b90cc618abfa6c13236ade8d69a79ec84058b84ca155d1be71c5a43d4e386f09a80a9a5
+  languageName: node
+  linkType: hard
+
+"react-merge-refs@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "react-merge-refs@npm:1.1.0"
+  checksum: 90884352999002d868ab9f1bcfe3222fb0f2178ed629f1da7e98e5a9b02a2c96b4aa72800db92aabd69d2483211b4be57a2088e89a11a0b660e7ada744d4ddf7
   languageName: node
   linkType: hard
 

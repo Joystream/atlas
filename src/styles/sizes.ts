@@ -14,6 +14,8 @@ export const zIndex = {
   farBackground: -20,
   overlay: 10,
   nearOverlay: 20,
+  transactionBar: 80,
+  nearTransactionBar: 81,
   header: 100,
   videoWorkspaceOverlay: 150,
   nearVideoWorkspaceOverlay: 160,
