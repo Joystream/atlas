@@ -1,4 +1,3 @@
-import { Global, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
 import React, { useEffect, useState } from 'react'
@@ -74,9 +73,8 @@ const StudioLayout = () => {
 
   return (
     <>
-      <GlobalStyles hasSidebar={channelSet} />
-
       <NoConnectionIndicator
+        hasSidebar={channelSet}
         nodeConnectionStatus={nodeConnectionStatus}
         isConnectedToInternet={internetConnectionStatus === 'connected'}
       />
@@ -94,7 +92,7 @@ const StudioLayout = () => {
         <StudioLoading />
       ) : (
         <>
-          <MainContainer>
+          <MainContainer hasSidebar={channelSet}>
             <Routes location={displayedLocation}>
               <Route
                 path={relativeRoutes.studio.index()}
@@ -163,7 +161,8 @@ const StudioLayout = () => {
 
 StudioLayout.displayName = 'StudioLayout'
 
-const MainContainer = styled.main`
+const MainContainer = styled.main<{ hasSidebar: boolean }>`
+  --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
   position: relative;
   height: 100%;
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
@@ -214,12 +213,5 @@ const StudioLayoutWrapper: React.FC = () => {
     </ErrorBoundary>
   )
 }
-
-const SideNavWidthStyles = (hasSidebar: boolean) => css`
-  --size-sidenav-width: ${hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0};
-`
-const GlobalStyles: React.FC<{ hasSidebar: boolean }> = ({ hasSidebar }) => (
-  <Global styles={[SideNavWidthStyles(hasSidebar)]} />
-)
 
 export default StudioLayoutWrapper
