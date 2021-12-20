@@ -1,6 +1,8 @@
 import React from 'react'
+import mergeRefs from 'react-merge-refs'
 
 import { Text } from '@/components/Text'
+import { useHover } from '@/hooks/useHover'
 import { cVar } from '@/styles'
 
 import {
@@ -16,6 +18,7 @@ export type ListItemSizes = 'small' | 'medium' | 'large'
 
 export type ListItemProps = {
   label: string
+  caption?: string
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
@@ -23,9 +26,11 @@ export type ListItemProps = {
   size?: ListItemSizes
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
-  caption?: string
+  applyIconStylesNodeStart?: boolean
+  applyIconStylesNodeEnd?: boolean
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
+  className?: string
 }
 
 export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
@@ -40,16 +45,46 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
       selected,
       nodeStart,
       nodeEnd,
+      applyIconStylesNodeStart,
+      applyIconStylesNodeEnd,
       onClick,
+      className,
     },
     ref
   ) => {
+    const [hoverRef, isHovering] = useHover<HTMLDivElement>()
     return (
-      <Container onClick={onClick} disabled={disabled} hasNodeStart={!!nodeStart} size={size} ref={ref}>
-        {!!nodeStart && <NodeContainer destructive={destructive}>{nodeStart}</NodeContainer>}
+      <Container
+        className={className}
+        onClick={onClick}
+        disabled={disabled}
+        hasNodeStart={!!nodeStart}
+        size={size}
+        ref={mergeRefs([hoverRef, ref])}
+      >
+        {!!nodeStart && (
+          <NodeContainer
+            isSelected={selected}
+            isHovering={isHovering}
+            applyIconStyles={applyIconStylesNodeStart}
+            destructive={destructive}
+          >
+            {nodeStart}
+          </NodeContainer>
+        )}
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
-            <Text variant="t200-strong" color={destructive ? cVar('colorTextError') : undefined}>
+            <Text
+              variant="t200-strong"
+              secondary={!selected}
+              color={
+                destructive
+                  ? cVar('colorTextError')
+                  : isHovering || selected
+                  ? cVar('colorCoreNeutral50')
+                  : cVar('colorCoreNeutral300')
+              }
+            >
               {label}
             </Text>
           </LabelContainer>
@@ -58,7 +93,16 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
           </Caption>
         </LabelCaptionContainer>
         {selected && <SelectedIcon />}
-        {!!nodeEnd && <NodeContainer destructive={destructive}>{nodeEnd}</NodeContainer>}
+        {!!nodeEnd && (
+          <NodeContainer
+            isSelected={selected}
+            isHovering={isHovering}
+            applyIconStyles={applyIconStylesNodeEnd}
+            destructive={destructive}
+          >
+            {nodeEnd}
+          </NodeContainer>
+        )}
       </Container>
     )
   }

@@ -82,8 +82,24 @@ export const LabelContainer = styled.div`
   min-height: 24px;
 `
 
-export const NodeContainer = styled.div<{ destructive?: boolean }>`
-  * path {
-    fill: ${({ destructive }) => destructive && cVar('colorTextError')};
-  }
+const IconStyles = ({ destructive, applyIconStyles, isHovering, isSelected }: NodeContainerProps) =>
+  applyIconStyles &&
+  css`
+    * path {
+      fill: ${destructive
+        ? cVar('colorTextError')
+        : isHovering || isSelected
+        ? cVar('colorCoreNeutral50')
+        : cVar('colorCoreNeutral300')};
+    }
+  `
+
+type NodeContainerProps = {
+  destructive?: boolean
+  applyIconStyles?: boolean
+  isHovering?: boolean
+  isSelected?: boolean
+}
+export const NodeContainer = styled.div<NodeContainerProps>`
+  ${IconStyles}
 `
