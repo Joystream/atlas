@@ -125,11 +125,11 @@ export const TopbarViewer: React.FC = () => {
             </SignedButtonsWrapper>
           ) : (
             <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" to={`${pathname}?step=1`}>
-              Sign up
+              Go to Studio
             </Button>
           ))}
         {!searchQuery && !mdMatch && !isLoggedIn && (
-          <StyledIconButton to={`${pathname}?step=1`}>Sign up</StyledIconButton>
+          <StyledIconButton to={`${pathname}?step=1`}>Go to Studio</StyledIconButton>
         )}
       </ButtonWrapper>
       <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
