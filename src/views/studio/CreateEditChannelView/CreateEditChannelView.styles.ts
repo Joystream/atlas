@@ -59,7 +59,7 @@ export const ActionBarTransactionWrapper = styled.div`
   bottom: 0;
   left: var(--size-sidenav-width);
   right: 0;
-  z-index: ${zIndex.header};
+  z-index: ${zIndex.transactionBar};
 
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
