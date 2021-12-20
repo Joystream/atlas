@@ -100,14 +100,15 @@ query GetBasicVideos($where: VideoWhereInput) {
   }
 }
 
-query GetMostViewedVideos(
+query GetMostViewedVideosConnection(
   $limit: Int = 50
-  $timePeriodDays: Int!
+  $periodDays: Int
   $first: Int
   $after: String
+  $orderBy: VideoOrderByInput! = createdAt_DESC
   $where: VideoWhereInput
 ) {
-  mostViewedVideos(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+  mostViewedVideosConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, orderBy: [$orderBy], where: $where) {
     edges {
       cursor
       node {
@@ -122,19 +123,15 @@ query GetMostViewedVideos(
   }
 }
 
-query GetMostViewedVideosAllTime($limit: Int! = 50, $first: Int, $after: String, $where: VideoWhereInput) {
-  mostViewedVideosAllTime(limit: $limit, first: $first, after: $after, where: $where) {
-    edges {
-      cursor
-      node {
-        ...VideoFields
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    totalCount
+query GetTop10VideosThisWeek($where: VideoWhereInput) {
+  top10VideosThisWeek(where: $where) {
+    ...VideoFields
+  }
+}
+
+query GetTop10VideosThisMonth($where: VideoWhereInput) {
+  top10VideosThisMonth(where: $where) {
+    ...VideoFields
   }
 }
 

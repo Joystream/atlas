@@ -3,9 +3,8 @@ import React, { useCallback, useState } from 'react'
 
 import {
   AssetAvailability,
-  ChannelOrderByInput,
-  GetMostViewedVideosAllTimeQuery,
-  GetMostViewedVideosQuery,
+  GetMostViewedVideosConnectionQuery,
+  GetMostViewedVideosConnectionQueryVariables,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
@@ -27,7 +26,7 @@ import { useInfiniteGrid } from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
   query?: DocumentNode
-  timePeriodDays?: number
+  periodDays?: number
   limit?: number
   title?: string
   titleLoader?: boolean
@@ -39,7 +38,7 @@ type InfiniteVideoGridProps = {
   excludeId?: string
   onDemand?: boolean
   onDemandInfinite?: boolean
-  orderBy?: ChannelOrderByInput | VideoOrderByInput
+  orderBy?: VideoOrderByInput
   emptyFallback?: React.ReactNode
   additionalLink?: {
     name: string
@@ -49,13 +48,13 @@ type InfiniteVideoGridProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
-type VideoQuery = GetMostViewedVideosQuery | GetVideosConnectionQuery | GetMostViewedVideosAllTimeQuery
+type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
 
 export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
       query = GetVideosConnectionDocument,
-      timePeriodDays,
+      periodDays,
       limit,
       title,
       videoWhereInput,
@@ -80,11 +79,13 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
-    const queryVariables = {
-      timePeriodDays,
+    const queryVariables: GetVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
+      periodDays,
       limit,
+      orderBy,
       where: {
         isPublic_eq: true,
+        isCensored_eq: false,
         thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
         mediaAvailability_eq: AssetAvailability.Accepted,
         ...videoWhereInput,
@@ -104,7 +105,6 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,
-      orderBy,
       targetRowsCount,
       onDemand,
       onDemandInfinite,
@@ -203,10 +203,8 @@ const createRawDataAccessor = (excludeId?: string) => (rawData?: VideoQuery) => 
   const queryResult =
     'videosConnection' in rawData
       ? rawData.videosConnection
-      : 'mostViewedVideos' in rawData
-      ? rawData.mostViewedVideos
-      : 'mostViewedVideosAllTime' in rawData
-      ? rawData.mostViewedVideosAllTime
+      : 'mostViewedVideosConnection' in rawData
+      ? rawData.mostViewedVideosConnection
       : null
   if (!queryResult) {
     SentryLogger.error('Unknown property in query data', 'InfiniteVideoGrid', null, { query: { rawData } })

@@ -3,7 +3,7 @@ import {
   AssetAvailability,
   BasicChannelFieldsFragment,
   BasicVideoFieldsFragment,
-  DataObject,
+  DataObjectFieldsFragment,
   VideoFieldsFragment,
 } from '@/api/queries'
 
@@ -29,6 +29,6 @@ export type UseAsset = (args: UseAssetDataArgs) => UseAssetData
 export type AssetResolutionData = {
   availability: AssetAvailability
   urls?: string[]
-  dataObject?: DataObject | null
+  dataObject?: DataObjectFieldsFragment | null
   assetType: AssetType
 }

@@ -15,12 +15,12 @@ export type GetVideoHeroQuery = {
     heroTitle: string
     heroVideoCutUrl: string
     heroPosterUrl: string
-    video?: Types.Maybe<{
+    video: {
       __typename?: 'Video'
       id: string
       title?: Types.Maybe<string>
       description?: Types.Maybe<string>
-      views?: Types.Maybe<number>
+      views: number
       duration?: Types.Maybe<number>
       createdAt: Date
       isPublic?: Types.Maybe<boolean>
@@ -35,12 +35,12 @@ export type GetVideoHeroQuery = {
       thumbnailPhotoAvailability: Types.AssetAvailability
       category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
       language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-      mediaMetadata: {
+      mediaMetadata?: Types.Maybe<{
         __typename?: 'VideoMediaMetadata'
         id: string
         pixelHeight?: Types.Maybe<number>
         pixelWidth?: Types.Maybe<number>
-      }
+      }>
       mediaDataObject?: Types.Maybe<{
         __typename?: 'DataObject'
         id: string
@@ -75,11 +75,13 @@ export type GetVideoHeroQuery = {
           type: Types.WorkerType
         }>
       }>
-      channel: {
+      channel?: Types.Maybe<{
         __typename?: 'Channel'
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
+        views: number
+        follows: number
         avatarPhotoUrls: Array<string>
         avatarPhotoAvailability: Types.AssetAvailability
         avatarPhotoDataObject?: Types.Maybe<{
@@ -99,7 +101,7 @@ export type GetVideoHeroQuery = {
             type: Types.WorkerType
           }>
         }>
-      }
+      }>
       license?: Types.Maybe<{
         __typename?: 'License'
         id: string
@@ -107,7 +109,7 @@ export type GetVideoHeroQuery = {
         attribution?: Types.Maybe<string>
         customText?: Types.Maybe<string>
       }>
-    }>
+    }
   }
 }
 
@@ -118,7 +120,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
   allCategoriesFeaturedVideos: Array<{
     __typename?: 'CategoryFeaturedVideos'
     categoryId: string
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; name?: Types.Maybe<string> }>
+    category: { __typename?: 'VideoCategory'; name?: Types.Maybe<string> }
     videos: Array<{
       __typename?: 'FeaturedVideo'
       videoId: string
@@ -128,7 +130,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         id: string
         title?: Types.Maybe<string>
         description?: Types.Maybe<string>
-        views?: Types.Maybe<number>
+        views: number
         duration?: Types.Maybe<number>
         createdAt: Date
         isPublic?: Types.Maybe<boolean>
@@ -143,12 +145,12 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         thumbnailPhotoAvailability: Types.AssetAvailability
         category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
         language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-        mediaMetadata: {
+        mediaMetadata?: Types.Maybe<{
           __typename?: 'VideoMediaMetadata'
           id: string
           pixelHeight?: Types.Maybe<number>
           pixelWidth?: Types.Maybe<number>
-        }
+        }>
         mediaDataObject?: Types.Maybe<{
           __typename?: 'DataObject'
           id: string
@@ -183,11 +185,13 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             type: Types.WorkerType
           }>
         }>
-        channel: {
+        channel?: Types.Maybe<{
           __typename?: 'Channel'
           id: string
           title?: Types.Maybe<string>
           createdAt: Date
+          views: number
+          follows: number
           avatarPhotoUrls: Array<string>
           avatarPhotoAvailability: Types.AssetAvailability
           avatarPhotoDataObject?: Types.Maybe<{
@@ -207,7 +211,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
               type: Types.WorkerType
             }>
           }>
-        }
+        }>
         license?: Types.Maybe<{
           __typename?: 'License'
           id: string
@@ -235,7 +239,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       id: string
       title?: Types.Maybe<string>
       description?: Types.Maybe<string>
-      views?: Types.Maybe<number>
+      views: number
       duration?: Types.Maybe<number>
       createdAt: Date
       isPublic?: Types.Maybe<boolean>
@@ -250,12 +254,12 @@ export type GetCategoriesFeaturedVideosQuery = {
       thumbnailPhotoAvailability: Types.AssetAvailability
       category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
       language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-      mediaMetadata: {
+      mediaMetadata?: Types.Maybe<{
         __typename?: 'VideoMediaMetadata'
         id: string
         pixelHeight?: Types.Maybe<number>
         pixelWidth?: Types.Maybe<number>
-      }
+      }>
       mediaDataObject?: Types.Maybe<{
         __typename?: 'DataObject'
         id: string
@@ -290,11 +294,13 @@ export type GetCategoriesFeaturedVideosQuery = {
           type: Types.WorkerType
         }>
       }>
-      channel: {
+      channel?: Types.Maybe<{
         __typename?: 'Channel'
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
+        views: number
+        follows: number
         avatarPhotoUrls: Array<string>
         avatarPhotoAvailability: Types.AssetAvailability
         avatarPhotoDataObject?: Types.Maybe<{
@@ -314,7 +320,7 @@ export type GetCategoriesFeaturedVideosQuery = {
             type: Types.WorkerType
           }>
         }>
-      }
+      }>
       license?: Types.Maybe<{
         __typename?: 'License'
         id: string

@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: './src/api/schemas/**/*.graphql'
+schema: './src/api/schemas/orion.graphql'
 
 documents:
   - './src/api/queries/**/*.graphql'

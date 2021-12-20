@@ -1,0 +1,15 @@
+{
+  "name": "Orion schema",
+  "schemaPath": "./src/api/schemas/orion.graphql",
+  "extensions": {
+    "endpoints": {
+      "Orion experimental": {
+        "url": "https://sumer-dev-2.joystream.app/orion-experimental/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

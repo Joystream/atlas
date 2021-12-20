@@ -68,7 +68,7 @@ export const VideoView: React.FC = () => {
     setStartTimestamp(timestampFromQuery)
   }, [video?.duration, timestampFromQuery])
 
-  const channelId = video?.channel.id
+  const channelId = video?.channel?.id
   const videoId = video?.id
   const categoryId = video?.category?.id
 
@@ -150,7 +150,7 @@ export const VideoView: React.FC = () => {
           {!isMediaLoading && video ? (
             <VideoPlayer
               isVideoPending={video?.mediaAvailability === 'PENDING'}
-              channelId={video.channel.id}
+              channelId={video.channel?.id}
               videoId={video.id}
               autoplay
               src={mediaUrl}
@@ -178,7 +178,7 @@ export const VideoView: React.FC = () => {
           )}
         </Meta>
         <ChannelContainer>
-          <ChannelLink id={video?.channel.id} />
+          <ChannelLink id={video?.channel?.id} />
         </ChannelContainer>
         <DescriptionContainer>
           {video ? (
@@ -210,7 +210,7 @@ export const VideoView: React.FC = () => {
         </LicenseContainer>
         <MoreVideosContainer>
           <InfiniteVideoGrid
-            title={`More from ${video?.channel.title}`}
+            title={`More from ${video?.channel?.title}`}
             titleLoader
             ready={!loading}
             videoWhereInput={{ channelId_eq: channelId }}

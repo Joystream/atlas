@@ -1,0 +1,2401 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+interface BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+interface DeleteResponse {
+    id: ID!
+}
+
+union ChannelCategoriesByNameSearchResult = ChannelCategory
+
+union DataObjectOwner = DataObjectOwnerChannel | DataObjectOwnerCouncil | DataObjectOwnerDao | DataObjectOwnerMember | DataObjectOwnerWorkingGroup
+
+union MembersByHandleSearchResult = Membership
+
+union SearchSearchResult = Channel | Video
+
+union VideoCategoriesByNameSearchResult = VideoCategory
+
+type BaseModel implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type BaseModelUUID implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type CategoryFeaturedVideos {
+    category: VideoCategory!
+    categoryId: ID!
+    videos: [FeaturedVideo!]!
+}
+
+type Channel implements BaseGraphQLObject {
+    "Availability meta information"
+    avatarPhotoAvailability: AssetAvailability!
+    avatarPhotoDataObject: DataObject
+    avatarPhotoDataObjectId: String
+    "URLs where the asset content can be accessed (if any)"
+    avatarPhotoUrls: [String!]!
+    category: ChannelCategory
+    categoryId: String
+    "Availability meta information"
+    coverPhotoAvailability: AssetAvailability!
+    coverPhotoDataObject: DataObject
+    coverPhotoDataObjectId: String
+    "URLs where the asset content can be accessed (if any)"
+    coverPhotoUrls: [String!]!
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    "The description of a Channel"
+    description: String
+    follows: Int!
+    id: ID!
+    "Flag signaling whether a channel is censored."
+    isCensored: Boolean!
+    "Flag signaling whether a channel is public."
+    isPublic: Boolean
+    language: Language
+    languageId: String
+    ownerCuratorGroup: CuratorGroup
+    ownerCuratorGroupId: String
+    ownerMember: Membership
+    ownerMemberId: String
+    "Reward account where revenue is sent if set."
+    rewardAccount: String
+    "The title of the Channel"
+    title: String
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videos: [Video!]!
+    views: Int!
+}
+
+type ChannelCategoriesByNameFTSOutput {
+    highlight: String!
+    isTypeOf: String!
+    item: ChannelCategoriesByNameSearchResult!
+    rank: Float!
+}
+
+"Category of media channel"
+type ChannelCategory implements BaseGraphQLObject {
+    channels: [Channel!]!
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "The name of the category"
+    name: String
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type ChannelCategoryConnection {
+    edges: [ChannelCategoryEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type ChannelCategoryEdge {
+    cursor: String!
+    node: ChannelCategory!
+}
+
+type ChannelConnection {
+    edges: [ChannelEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type ChannelEdge {
+    cursor: String!
+    node: Channel!
+}
+
+type ChannelFollowsInfo {
+    follows: Int!
+    id: ID!
+}
+
+type CuratorGroup implements BaseGraphQLObject {
+    channels: [Channel!]!
+    createdAt: DateTime!
+    createdById: String!
+    "Curators belonging to this group"
+    curatorIds: [Int!]!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "Is group active or not"
+    isActive: Boolean!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type CuratorGroupConnection {
+    edges: [CuratorGroupEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type CuratorGroupEdge {
+    cursor: String!
+    node: CuratorGroup!
+}
+
+"Manages content ids, type and storage provider decision about it"
+type DataObject implements BaseGraphQLObject {
+    channelavatarPhotoDataObject: [Channel!]
+    channelcoverPhotoDataObject: [Channel!]
+    createdAt: DateTime!
+    createdById: String!
+    "Content added at"
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "IPFS content id"
+    ipfsContentId: String!
+    "Joystream runtime content"
+    joystreamContentId: String!
+    liaison: Worker
+    liaisonId: String
+    "Storage provider as liaison judgment"
+    liaisonJudgement: LiaisonJudgement!
+    "Content owner"
+    owner: DataObjectOwner!
+    "Content size in bytes"
+    size: Float!
+    "Content type id"
+    typeId: Int!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videomediaDataObject: [Video!]
+    videothumbnailPhotoDataObject: [Video!]
+}
+
+type DataObjectConnection {
+    edges: [DataObjectEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type DataObjectEdge {
+    cursor: String!
+    node: DataObject!
+}
+
+type DataObjectOwnerChannel {
+    "Channel identifier"
+    channel: Int!
+    "Variant needs to have at least one property. This value is not used."
+    dummy: Int
+}
+
+type DataObjectOwnerCouncil {
+    "Variant needs to have at least one property. This value is not used."
+    dummy: Int
+}
+
+type DataObjectOwnerDao {
+    "DAO identifier"
+    dao: Int!
+}
+
+type DataObjectOwnerMember {
+    "Variant needs to have at least one property. This value is not used."
+    dummy: Int
+    "Member identifier"
+    member: Int!
+}
+
+type DataObjectOwnerWorkingGroup {
+    "Working group identifier"
+    workingGroup: Int!
+}
+
+type EntityViewsInfo {
+    id: ID!
+    views: Int!
+}
+
+type FeaturedVideo {
+    video: Video!
+    videoCutUrl: String
+    videoId: ID!
+}
+
+type Language implements BaseGraphQLObject {
+    channellanguage: [Channel!]
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "Language identifier ISO 639-1"
+    iso: String!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videolanguage: [Video!]
+}
+
+type LanguageConnection {
+    edges: [LanguageEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type LanguageEdge {
+    cursor: String!
+    node: Language!
+}
+
+type License implements BaseGraphQLObject {
+    "Attribution (if required by the license)"
+    attribution: String
+    "License code defined by Joystream"
+    code: Int
+    createdAt: DateTime!
+    createdById: String!
+    "Custom license content"
+    customText: String
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videolicense: [Video!]
+}
+
+type LicenseConnection {
+    edges: [LicenseEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type LicenseEdge {
+    cursor: String!
+    node: License!
+}
+
+type MembersByHandleFTSOutput {
+    highlight: String!
+    isTypeOf: String!
+    item: MembersByHandleSearchResult!
+    rank: Float!
+}
+
+"Stored information about a registered user"
+type Membership implements BaseGraphQLObject {
+    "Short text chosen by member to share information about themselves"
+    about: String
+    "A Url to member's Avatar image"
+    avatarUri: String
+    channels: [Channel!]!
+    "Member's controller account id"
+    controllerAccount: String!
+    createdAt: DateTime!
+    createdById: String!
+    "Blocknumber when member was registered"
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    "How the member was registered"
+    entry: MembershipEntryMethod!
+    "The unique handle chosen by member"
+    handle: String!
+    id: ID!
+    "Member's root account id"
+    rootAccount: String!
+    "The type of subscription the member has purchased if any."
+    subscription: Int
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type MembershipConnection {
+    edges: [MembershipEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type MembershipEdge {
+    cursor: String!
+    node: Membership!
+}
+
+type Mutation {
+    "Add a single view to the target video's count"
+    addVideoView(categoryId: ID, channelId: ID!, videoId: ID!): EntityViewsInfo!
+    "Add a single follow to the target channel"
+    followChannel(channelId: ID!): ChannelFollowsInfo!
+    setCategoryFeaturedVideos(categoryId: ID!, videos: [FeaturedVideoInput!]!): [FeaturedVideo!]!
+    setVideoHero(newVideoHero: VideoHeroInput!): VideoHero!
+    "Remove a single follow from the target channel"
+    unfollowChannel(channelId: ID!): ChannelFollowsInfo!
+}
+
+type NextEntityId implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "Next deterministic id for entities without custom id"
+    nextId: Float!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+}
+
+type NextEntityIdConnection {
+    edges: [NextEntityIdEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type NextEntityIdEdge {
+    cursor: String!
+    node: NextEntityId!
+}
+
+type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+}
+
+type ProcessorState {
+    chainHead: Float!
+    indexerHead: Float!
+    lastCompleteBlock: Float!
+    lastProcessedEvent: String!
+}
+
+type Query {
+    "Get featured videos for all categories"
+    allCategoriesFeaturedVideos: [CategoryFeaturedVideos!]!
+    "Get featured videos for a given video category"
+    categoryFeaturedVideos(categoryId: ID!): [FeaturedVideo!]!
+    channelByUniqueInput(where: ChannelWhereUniqueInput!): Channel
+    channelCategories(limit: Int = 50, offset: Int, orderBy: [ChannelCategoryOrderByInput!], where: ChannelCategoryWhereInput): [ChannelCategory!]!
+    channelCategoriesByName(limit: Int = 5, skip: Int = 0, text: String!, whereChannelCategory: ChannelCategoryWhereInput): [ChannelCategoriesByNameFTSOutput!]!
+    channelCategoriesConnection(after: String, before: String, first: Int, last: Int, orderBy: [ChannelCategoryOrderByInput!], where: ChannelCategoryWhereInput): ChannelCategoryConnection!
+    channelCategoryByUniqueInput(where: ChannelCategoryWhereUniqueInput!): ChannelCategory
+    channels(limit: Int = 50, offset: Int, orderBy: [ChannelOrderByInput!], where: ChannelWhereInput): [Channel!]!
+    channelsConnection(after: String, before: String, first: Int, last: Int, orderBy: [ChannelOrderByInput!], where: ChannelWhereInput): ChannelConnection!
+    curatorGroupByUniqueInput(where: CuratorGroupWhereUniqueInput!): CuratorGroup
+    curatorGroups(limit: Int = 50, offset: Int, orderBy: [CuratorGroupOrderByInput!], where: CuratorGroupWhereInput): [CuratorGroup!]!
+    curatorGroupsConnection(after: String, before: String, first: Int, last: Int, orderBy: [CuratorGroupOrderByInput!], where: CuratorGroupWhereInput): CuratorGroupConnection!
+    dataObjectByUniqueInput(where: DataObjectWhereUniqueInput!): DataObject
+    dataObjects(limit: Int = 50, offset: Int, orderBy: [DataObjectOrderByInput!], where: DataObjectWhereInput): [DataObject!]!
+    dataObjectsConnection(after: String, before: String, first: Int, last: Int, orderBy: [DataObjectOrderByInput!], where: DataObjectWhereInput): DataObjectConnection!
+    "Get list of 15 most followed channels out of 100 newest channels in random order"
+    discoverChannels(where: ChannelWhereInput): [Channel!]!
+    languageByUniqueInput(where: LanguageWhereUniqueInput!): Language
+    languages(limit: Int = 50, offset: Int, orderBy: [LanguageOrderByInput!], where: LanguageWhereInput): [Language!]!
+    languagesConnection(after: String, before: String, first: Int, last: Int, orderBy: [LanguageOrderByInput!], where: LanguageWhereInput): LanguageConnection!
+    licenseByUniqueInput(where: LicenseWhereUniqueInput!): License
+    licenses(limit: Int = 50, offset: Int, orderBy: [LicenseOrderByInput!], where: LicenseWhereInput): [License!]!
+    licensesConnection(after: String, before: String, first: Int, last: Int, orderBy: [LicenseOrderByInput!], where: LicenseWhereInput): LicenseConnection!
+    membersByHandle(limit: Int = 5, skip: Int = 0, text: String!, whereMembership: MembershipWhereInput): [MembersByHandleFTSOutput!]!
+    membershipByUniqueInput(where: MembershipWhereUniqueInput!): Membership
+    memberships(limit: Int = 50, offset: Int, orderBy: [MembershipOrderByInput!], where: MembershipWhereInput): [Membership!]!
+    membershipsConnection(after: String, before: String, first: Int, last: Int, orderBy: [MembershipOrderByInput!], where: MembershipWhereInput): MembershipConnection!
+    "Get connection of most followed channels in a given period or of all time"
+    mostFollowedChannelsConnection(
+        after: String,
+        before: String,
+        first: Int,
+        last: Int,
+        "`limit` indicates on how many channels the connection should be capped."
+        limit: Int!,
+        orderBy: [ChannelOrderByInput!],
+        """
+
+        `periodDays` indicates from which time period the follows should be taken from. Can be 7 or 30.
+        If not provided, follows from all time will be used.
+        """
+        periodDays: Int,
+        where: ChannelWhereInput
+    ): ChannelConnection!
+    "Get list of most viewed categories in a given time period"
+    mostViewedCategories(
+        limit: Int,
+        "timePeriodDays must take one of the following values: 7, 30"
+        timePeriodDays: Int!
+    ): [EntityViewsInfo!]
+    "Get list of most viewed categories of all time"
+    mostViewedCategoriesAllTime(limit: Int!): [EntityViewsInfo!]
+    "Get connection of most viewed channels in a given period or of all time"
+    mostViewedChannelsConnection(
+        after: String,
+        before: String,
+        first: Int,
+        last: Int,
+        "`limit` indicates on how many channels the connection should be capped."
+        limit: Int!,
+        orderBy: [ChannelOrderByInput!],
+        """
+
+        `periodDays` indicates from which time period the views should be taken from. Can be 7 or 30.
+        If not provided, views from all time will be used.
+        """
+        periodDays: Int,
+        where: ChannelWhereInput
+    ): ChannelConnection!
+    "Get connection of most viewed videos in a given period or of all time"
+    mostViewedVideosConnection(
+        after: String,
+        before: String,
+        first: Int,
+        last: Int,
+        "`limit` indicates on how many videos the connection should be capped."
+        limit: Int!,
+        orderBy: [VideoOrderByInput!],
+        """
+
+        `periodDays` indicates from which time period the views should be taken from. Can be 7 or 30.
+        If not provided, views from all time will be used.
+        """
+        periodDays: Int,
+        where: VideoWhereInput
+    ): VideoConnection!
+    nextEntityIdByUniqueInput(where: NextEntityIdWhereUniqueInput!): NextEntityId
+    nextEntityIds(limit: Int = 50, offset: Int, orderBy: [NextEntityIdOrderByInput!], where: NextEntityIdWhereInput): [NextEntityId!]!
+    nextEntityIdsConnection(after: String, before: String, first: Int, last: Int, orderBy: [NextEntityIdOrderByInput!], where: NextEntityIdWhereInput): NextEntityIdConnection!
+    "Get list of 15 most watched channels in random order"
+    popularChannels(where: ChannelWhereInput): [Channel!]!
+    "Get list of 15 most watched channels out of 100 newest channels in random order"
+    promisingChannels(where: ChannelWhereInput): [Channel!]!
+    search(limit: Int = 5, skip: Int = 0, text: String!, whereChannel: ChannelWhereInput, whereVideo: VideoWhereInput): [SearchFTSOutput!]!
+    "Get list of 10 most followed channels of all time"
+    top10Channels(where: ChannelWhereInput): [Channel!]!
+    "Get list of 10 most watched videos in last month"
+    top10VideosThisMonth(where: VideoWhereInput): [Video!]!
+    "Get list of 10 most watched videos in last week"
+    top10VideosThisWeek(where: VideoWhereInput): [Video!]!
+    videoByUniqueInput(where: VideoWhereUniqueInput!): Video
+    videoCategories(limit: Int = 50, offset: Int, orderBy: [VideoCategoryOrderByInput!], where: VideoCategoryWhereInput): [VideoCategory!]!
+    videoCategoriesByName(limit: Int = 5, skip: Int = 0, text: String!, whereVideoCategory: VideoCategoryWhereInput): [VideoCategoriesByNameFTSOutput!]!
+    videoCategoriesConnection(after: String, before: String, first: Int, last: Int, orderBy: [VideoCategoryOrderByInput!], where: VideoCategoryWhereInput): VideoCategoryConnection!
+    videoCategoryByUniqueInput(where: VideoCategoryWhereUniqueInput!): VideoCategory
+    "Get current video hero"
+    videoHero: VideoHero!
+    videoMediaEncodingByUniqueInput(where: VideoMediaEncodingWhereUniqueInput!): VideoMediaEncoding
+    videoMediaEncodings(limit: Int = 50, offset: Int, orderBy: [VideoMediaEncodingOrderByInput!], where: VideoMediaEncodingWhereInput): [VideoMediaEncoding!]!
+    videoMediaEncodingsConnection(after: String, before: String, first: Int, last: Int, orderBy: [VideoMediaEncodingOrderByInput!], where: VideoMediaEncodingWhereInput): VideoMediaEncodingConnection!
+    videoMediaMetadata(limit: Int = 50, offset: Int, orderBy: [VideoMediaMetadataOrderByInput!], where: VideoMediaMetadataWhereInput): [VideoMediaMetadata!]!
+    videoMediaMetadataByUniqueInput(where: VideoMediaMetadataWhereUniqueInput!): VideoMediaMetadata
+    videoMediaMetadataConnection(after: String, before: String, first: Int, last: Int, orderBy: [VideoMediaMetadataOrderByInput!], where: VideoMediaMetadataWhereInput): VideoMediaMetadataConnection!
+    videos(limit: Int = 50, offset: Int, orderBy: [VideoOrderByInput!], where: VideoWhereInput): [Video!]!
+    videosConnection(after: String, before: String, first: Int, last: Int, orderBy: [VideoOrderByInput!], where: VideoWhereInput): VideoConnection!
+    workerByUniqueInput(where: WorkerWhereUniqueInput!): Worker
+    workers(limit: Int = 50, offset: Int, orderBy: [WorkerOrderByInput!], where: WorkerWhereInput): [Worker!]!
+    workersConnection(after: String, before: String, first: Int, last: Int, orderBy: [WorkerOrderByInput!], where: WorkerWhereInput): WorkerConnection!
+}
+
+type SearchFTSOutput {
+    highlight: String!
+    isTypeOf: String!
+    item: SearchSearchResult!
+    rank: Float!
+}
+
+type StandardDeleteResponse {
+    id: ID!
+}
+
+type Subscription {
+    stateSubscription: ProcessorState!
+}
+
+type Video implements BaseGraphQLObject {
+    category: VideoCategory
+    categoryId: String
+    channel: Channel
+    channelId: String
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    "The description of the Video"
+    description: String
+    "Video duration in seconds"
+    duration: Int
+    "Whether or not Video contains marketing"
+    hasMarketing: Boolean
+    id: ID!
+    "Flag signaling whether a video is censored."
+    isCensored: Boolean!
+    "Whether the Video contains explicit material."
+    isExplicit: Boolean
+    "Is video featured or not"
+    isFeatured: Boolean!
+    "Whether the Video is supposed to be publically displayed"
+    isPublic: Boolean
+    language: Language
+    languageId: String
+    license: License
+    licenseId: String
+    "Availability meta information"
+    mediaAvailability: AssetAvailability!
+    mediaDataObject: DataObject
+    mediaDataObjectId: String
+    mediaMetadata: VideoMediaMetadata
+    mediaMetadataId: String
+    "URLs where the asset content can be accessed (if any)"
+    mediaUrls: [String!]!
+    "If the Video was published on other platform before beeing published on Joystream - the original publication date"
+    publishedBeforeJoystream: DateTime
+    "Availability meta information"
+    thumbnailPhotoAvailability: AssetAvailability!
+    thumbnailPhotoDataObject: DataObject
+    thumbnailPhotoDataObjectId: String
+    "URLs where the asset content can be accessed (if any)"
+    thumbnailPhotoUrls: [String!]!
+    "The title of the video"
+    title: String
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    views: Int!
+}
+
+type VideoCategoriesByNameFTSOutput {
+    highlight: String!
+    isTypeOf: String!
+    item: VideoCategoriesByNameSearchResult!
+    rank: Float!
+}
+
+type VideoCategory implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "The name of the category"
+    name: String
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videos: [Video!]!
+}
+
+type VideoCategoryConnection {
+    edges: [VideoCategoryEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type VideoCategoryEdge {
+    cursor: String!
+    node: VideoCategory!
+}
+
+type VideoConnection {
+    edges: [VideoEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type VideoEdge {
+    cursor: String!
+    node: Video!
+}
+
+type VideoHero {
+    heroPosterUrl: String!
+    heroTitle: String!
+    heroVideoCutUrl: String!
+    video: Video!
+    videoId: ID!
+}
+
+type VideoMediaEncoding implements BaseGraphQLObject {
+    "Encoding of the video media object"
+    codecName: String
+    "Media container format"
+    container: String
+    createdAt: DateTime!
+    createdById: String!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "Content MIME type"
+    mimeMediaType: String
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    videomediametadataencoding: [VideoMediaMetadata!]
+}
+
+type VideoMediaEncodingConnection {
+    edges: [VideoMediaEncodingEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type VideoMediaEncodingEdge {
+    cursor: String!
+    node: VideoMediaEncoding!
+}
+
+type VideoMediaMetadata implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    createdInBlock: Int!
+    deletedAt: DateTime
+    deletedById: String
+    encoding: VideoMediaEncoding
+    encodingId: String
+    id: ID!
+    "Video media height in pixels"
+    pixelHeight: Int
+    "Video media width in pixels"
+    pixelWidth: Int
+    "Video media size in bytes"
+    size: Float
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    video: Video
+}
+
+type VideoMediaMetadataConnection {
+    edges: [VideoMediaMetadataEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type VideoMediaMetadataEdge {
+    cursor: String!
+    node: VideoMediaMetadata!
+}
+
+type Worker implements BaseGraphQLObject {
+    createdAt: DateTime!
+    createdById: String!
+    dataObjects: [DataObject!]!
+    deletedAt: DateTime
+    deletedById: String
+    id: ID!
+    "Sign of worker still being active"
+    isActive: Boolean!
+    "Custom metadata set by provider"
+    metadata: String
+    "Associated working group"
+    type: WorkerType!
+    updatedAt: DateTime
+    updatedById: String
+    version: Int!
+    "Runtime identifier"
+    workerId: String!
+}
+
+type WorkerConnection {
+    edges: [WorkerEdge!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type WorkerEdge {
+    cursor: String!
+    node: Worker!
+}
+
+enum AssetAvailability {
+    ACCEPTED
+    INVALID
+    PENDING
+}
+
+enum ChannelCategoryOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    name_ASC
+    name_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum ChannelOrderByInput {
+    avatarPhotoAvailability_ASC
+    avatarPhotoAvailability_DESC
+    avatarPhotoDataObjectId_ASC
+    avatarPhotoDataObjectId_DESC
+    avatarPhotoDataObject_ASC
+    avatarPhotoDataObject_DESC
+    categoryId_ASC
+    categoryId_DESC
+    category_ASC
+    category_DESC
+    coverPhotoAvailability_ASC
+    coverPhotoAvailability_DESC
+    coverPhotoDataObjectId_ASC
+    coverPhotoDataObjectId_DESC
+    coverPhotoDataObject_ASC
+    coverPhotoDataObject_DESC
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    description_ASC
+    description_DESC
+    isCensored_ASC
+    isCensored_DESC
+    isPublic_ASC
+    isPublic_DESC
+    languageId_ASC
+    languageId_DESC
+    language_ASC
+    language_DESC
+    ownerCuratorGroupId_ASC
+    ownerCuratorGroupId_DESC
+    ownerCuratorGroup_ASC
+    ownerCuratorGroup_DESC
+    ownerMemberId_ASC
+    ownerMemberId_DESC
+    ownerMember_ASC
+    ownerMember_DESC
+    rewardAccount_ASC
+    rewardAccount_DESC
+    title_ASC
+    title_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum CuratorGroupOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    isActive_ASC
+    isActive_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum DataObjectOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    ipfsContentId_ASC
+    ipfsContentId_DESC
+    joystreamContentId_ASC
+    joystreamContentId_DESC
+    liaisonId_ASC
+    liaisonId_DESC
+    liaisonJudgement_ASC
+    liaisonJudgement_DESC
+    liaison_ASC
+    liaison_DESC
+    size_ASC
+    size_DESC
+    typeId_ASC
+    typeId_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum LanguageOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    iso_ASC
+    iso_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum LiaisonJudgement {
+    ACCEPTED
+    PENDING
+}
+
+enum LicenseOrderByInput {
+    attribution_ASC
+    attribution_DESC
+    code_ASC
+    code_DESC
+    createdAt_ASC
+    createdAt_DESC
+    customText_ASC
+    customText_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum MembershipEntryMethod {
+    GENESIS
+    PAID
+    SCREENING
+}
+
+enum MembershipOrderByInput {
+    about_ASC
+    about_DESC
+    avatarUri_ASC
+    avatarUri_DESC
+    controllerAccount_ASC
+    controllerAccount_DESC
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    entry_ASC
+    entry_DESC
+    handle_ASC
+    handle_DESC
+    rootAccount_ASC
+    rootAccount_DESC
+    subscription_ASC
+    subscription_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum NextEntityIdOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    nextId_ASC
+    nextId_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum VideoCategoryOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    name_ASC
+    name_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum VideoMediaEncodingOrderByInput {
+    codecName_ASC
+    codecName_DESC
+    container_ASC
+    container_DESC
+    createdAt_ASC
+    createdAt_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    mimeMediaType_ASC
+    mimeMediaType_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum VideoMediaMetadataOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    encodingId_ASC
+    encodingId_DESC
+    encoding_ASC
+    encoding_DESC
+    pixelHeight_ASC
+    pixelHeight_DESC
+    pixelWidth_ASC
+    pixelWidth_DESC
+    size_ASC
+    size_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum VideoOrderByInput {
+    categoryId_ASC
+    categoryId_DESC
+    category_ASC
+    category_DESC
+    channelId_ASC
+    channelId_DESC
+    channel_ASC
+    channel_DESC
+    createdAt_ASC
+    createdAt_DESC
+    createdInBlock_ASC
+    createdInBlock_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    description_ASC
+    description_DESC
+    duration_ASC
+    duration_DESC
+    hasMarketing_ASC
+    hasMarketing_DESC
+    isCensored_ASC
+    isCensored_DESC
+    isExplicit_ASC
+    isExplicit_DESC
+    isFeatured_ASC
+    isFeatured_DESC
+    isPublic_ASC
+    isPublic_DESC
+    languageId_ASC
+    languageId_DESC
+    language_ASC
+    language_DESC
+    licenseId_ASC
+    licenseId_DESC
+    license_ASC
+    license_DESC
+    mediaAvailability_ASC
+    mediaAvailability_DESC
+    mediaDataObjectId_ASC
+    mediaDataObjectId_DESC
+    mediaDataObject_ASC
+    mediaDataObject_DESC
+    mediaMetadataId_ASC
+    mediaMetadataId_DESC
+    mediaMetadata_ASC
+    mediaMetadata_DESC
+    publishedBeforeJoystream_ASC
+    publishedBeforeJoystream_DESC
+    thumbnailPhotoAvailability_ASC
+    thumbnailPhotoAvailability_DESC
+    thumbnailPhotoDataObjectId_ASC
+    thumbnailPhotoDataObjectId_DESC
+    thumbnailPhotoDataObject_ASC
+    thumbnailPhotoDataObject_DESC
+    title_ASC
+    title_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum WorkerOrderByInput {
+    createdAt_ASC
+    createdAt_DESC
+    deletedAt_ASC
+    deletedAt_DESC
+    isActive_ASC
+    isActive_DESC
+    metadata_ASC
+    metadata_DESC
+    type_ASC
+    type_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+    workerId_ASC
+    workerId_DESC
+}
+
+enum WorkerType {
+    GATEWAY
+    STORAGE
+}
+
+"The javascript `Date` as string. Type represents date and time as the ISO Date string."
+scalar DateTime
+
+"The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar JSONObject
+
+input BaseWhereInput {
+    createdAt_eq: String
+    createdAt_gt: String
+    createdAt_gte: String
+    createdAt_lt: String
+    createdAt_lte: String
+    createdById_eq: String
+    deletedAt_all: Boolean
+    deletedAt_eq: String
+    deletedAt_gt: String
+    deletedAt_gte: String
+    deletedAt_lt: String
+    deletedAt_lte: String
+    deletedById_eq: String
+    id_eq: String
+    id_in: [String!]
+    updatedAt_eq: String
+    updatedAt_gt: String
+    updatedAt_gte: String
+    updatedAt_lt: String
+    updatedAt_lte: String
+    updatedById_eq: String
+}
+
+input ChannelCategoryCreateInput {
+    createdInBlock: Float!
+    name: String
+}
+
+input ChannelCategoryUpdateInput {
+    createdInBlock: Float
+    name: String
+}
+
+input ChannelCategoryWhereInput {
+    AND: [ChannelCategoryWhereInput!]
+    OR: [ChannelCategoryWhereInput!]
+    channels_every: ChannelWhereInput
+    channels_none: ChannelWhereInput
+    channels_some: ChannelWhereInput
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    name_contains: String
+    name_endsWith: String
+    name_eq: String
+    name_in: [String!]
+    name_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input ChannelCategoryWhereUniqueInput {
+    id: ID!
+}
+
+input ChannelCreateInput {
+    avatarPhotoAvailability: AssetAvailability!
+    avatarPhotoDataObject: ID
+    avatarPhotoDataObjectId: ID
+    avatarPhotoUrls: [String!]!
+    category: ID
+    categoryId: ID
+    coverPhotoAvailability: AssetAvailability!
+    coverPhotoDataObject: ID
+    coverPhotoDataObjectId: ID
+    coverPhotoUrls: [String!]!
+    createdInBlock: Float!
+    description: String
+    isCensored: Boolean!
+    isPublic: Boolean
+    language: ID
+    languageId: ID
+    ownerCuratorGroup: ID
+    ownerCuratorGroupId: ID
+    ownerMember: ID
+    ownerMemberId: ID
+    rewardAccount: String
+    title: String
+}
+
+input ChannelUpdateInput {
+    avatarPhotoAvailability: AssetAvailability
+    avatarPhotoDataObject: ID
+    avatarPhotoDataObjectId: ID
+    avatarPhotoUrls: [String!]
+    category: ID
+    categoryId: ID
+    coverPhotoAvailability: AssetAvailability
+    coverPhotoDataObject: ID
+    coverPhotoDataObjectId: ID
+    coverPhotoUrls: [String!]
+    createdInBlock: Float
+    description: String
+    isCensored: Boolean
+    isPublic: Boolean
+    language: ID
+    languageId: ID
+    ownerCuratorGroup: ID
+    ownerCuratorGroupId: ID
+    ownerMember: ID
+    ownerMemberId: ID
+    rewardAccount: String
+    title: String
+}
+
+input ChannelWhereInput {
+    AND: [ChannelWhereInput!]
+    OR: [ChannelWhereInput!]
+    avatarPhotoAvailability_eq: AssetAvailability
+    avatarPhotoAvailability_in: [AssetAvailability!]
+    avatarPhotoDataObject: DataObjectWhereInput
+    avatarPhotoDataObjectId_eq: ID
+    avatarPhotoDataObjectId_in: [ID!]
+    avatarPhotoUrls_containsAll: [String!]
+    avatarPhotoUrls_containsAny: [String!]
+    avatarPhotoUrls_containsNone: [String!]
+    category: ChannelCategoryWhereInput
+    categoryId_eq: ID
+    categoryId_in: [ID!]
+    coverPhotoAvailability_eq: AssetAvailability
+    coverPhotoAvailability_in: [AssetAvailability!]
+    coverPhotoDataObject: DataObjectWhereInput
+    coverPhotoDataObjectId_eq: ID
+    coverPhotoDataObjectId_in: [ID!]
+    coverPhotoUrls_containsAll: [String!]
+    coverPhotoUrls_containsAny: [String!]
+    coverPhotoUrls_containsNone: [String!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    description_contains: String
+    description_endsWith: String
+    description_eq: String
+    description_in: [String!]
+    description_startsWith: String
+    id_eq: ID
+    id_in: [ID!]
+    isCensored_eq: Boolean
+    isCensored_in: [Boolean!]
+    isPublic_eq: Boolean
+    isPublic_in: [Boolean!]
+    language: LanguageWhereInput
+    languageId_eq: ID
+    languageId_in: [ID!]
+    ownerCuratorGroup: CuratorGroupWhereInput
+    ownerCuratorGroupId_eq: ID
+    ownerCuratorGroupId_in: [ID!]
+    ownerMember: MembershipWhereInput
+    ownerMemberId_eq: ID
+    ownerMemberId_in: [ID!]
+    rewardAccount_contains: String
+    rewardAccount_endsWith: String
+    rewardAccount_eq: String
+    rewardAccount_in: [String!]
+    rewardAccount_startsWith: String
+    title_contains: String
+    title_endsWith: String
+    title_eq: String
+    title_in: [String!]
+    title_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videos_every: VideoWhereInput
+    videos_none: VideoWhereInput
+    videos_some: VideoWhereInput
+}
+
+input ChannelWhereUniqueInput {
+    id: ID!
+}
+
+input CuratorGroupCreateInput {
+    curatorIds: [Int!]!
+    isActive: Boolean!
+}
+
+input CuratorGroupUpdateInput {
+    curatorIds: [Int!]
+    isActive: Boolean
+}
+
+input CuratorGroupWhereInput {
+    AND: [CuratorGroupWhereInput!]
+    OR: [CuratorGroupWhereInput!]
+    channels_every: ChannelWhereInput
+    channels_none: ChannelWhereInput
+    channels_some: ChannelWhereInput
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    curatorIds_containsAll: [Int!]
+    curatorIds_containsAny: [Int!]
+    curatorIds_containsNone: [Int!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    isActive_eq: Boolean
+    isActive_in: [Boolean!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input CuratorGroupWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectCreateInput {
+    createdInBlock: Float!
+    ipfsContentId: String!
+    joystreamContentId: String!
+    liaison: ID
+    liaisonId: ID
+    liaisonJudgement: LiaisonJudgement!
+    owner: JSONObject!
+    size: Float!
+    typeId: Float!
+}
+
+input DataObjectOwnerChannelCreateInput {
+    channel: Float!
+    dummy: Float
+}
+
+input DataObjectOwnerChannelUpdateInput {
+    channel: Float
+    dummy: Float
+}
+
+input DataObjectOwnerChannelWhereInput {
+    AND: [DataObjectOwnerChannelWhereInput!]
+    OR: [DataObjectOwnerChannelWhereInput!]
+    channel_eq: Int
+    channel_gt: Int
+    channel_gte: Int
+    channel_in: [Int!]
+    channel_lt: Int
+    channel_lte: Int
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    dummy_eq: Int
+    dummy_gt: Int
+    dummy_gte: Int
+    dummy_in: [Int!]
+    dummy_lt: Int
+    dummy_lte: Int
+    id_eq: ID
+    id_in: [ID!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input DataObjectOwnerChannelWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectOwnerCouncilCreateInput {
+    dummy: Float
+}
+
+input DataObjectOwnerCouncilUpdateInput {
+    dummy: Float
+}
+
+input DataObjectOwnerCouncilWhereInput {
+    AND: [DataObjectOwnerCouncilWhereInput!]
+    OR: [DataObjectOwnerCouncilWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    dummy_eq: Int
+    dummy_gt: Int
+    dummy_gte: Int
+    dummy_in: [Int!]
+    dummy_lt: Int
+    dummy_lte: Int
+    id_eq: ID
+    id_in: [ID!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input DataObjectOwnerCouncilWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectOwnerDaoCreateInput {
+    dao: Float!
+}
+
+input DataObjectOwnerDaoUpdateInput {
+    dao: Float
+}
+
+input DataObjectOwnerDaoWhereInput {
+    AND: [DataObjectOwnerDaoWhereInput!]
+    OR: [DataObjectOwnerDaoWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    dao_eq: Int
+    dao_gt: Int
+    dao_gte: Int
+    dao_in: [Int!]
+    dao_lt: Int
+    dao_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input DataObjectOwnerDaoWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectOwnerMemberCreateInput {
+    dummy: Float
+    member: Float!
+}
+
+input DataObjectOwnerMemberUpdateInput {
+    dummy: Float
+    member: Float
+}
+
+input DataObjectOwnerMemberWhereInput {
+    AND: [DataObjectOwnerMemberWhereInput!]
+    OR: [DataObjectOwnerMemberWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    dummy_eq: Int
+    dummy_gt: Int
+    dummy_gte: Int
+    dummy_in: [Int!]
+    dummy_lt: Int
+    dummy_lte: Int
+    id_eq: ID
+    id_in: [ID!]
+    member_eq: Int
+    member_gt: Int
+    member_gte: Int
+    member_in: [Int!]
+    member_lt: Int
+    member_lte: Int
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input DataObjectOwnerMemberWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectOwnerWorkingGroupCreateInput {
+    workingGroup: Float!
+}
+
+input DataObjectOwnerWorkingGroupUpdateInput {
+    workingGroup: Float
+}
+
+input DataObjectOwnerWorkingGroupWhereInput {
+    AND: [DataObjectOwnerWorkingGroupWhereInput!]
+    OR: [DataObjectOwnerWorkingGroupWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    workingGroup_eq: Int
+    workingGroup_gt: Int
+    workingGroup_gte: Int
+    workingGroup_in: [Int!]
+    workingGroup_lt: Int
+    workingGroup_lte: Int
+}
+
+input DataObjectOwnerWorkingGroupWhereUniqueInput {
+    id: ID!
+}
+
+input DataObjectUpdateInput {
+    createdInBlock: Float
+    ipfsContentId: String
+    joystreamContentId: String
+    liaison: ID
+    liaisonId: ID
+    liaisonJudgement: LiaisonJudgement
+    owner: JSONObject
+    size: Float
+    typeId: Float
+}
+
+input DataObjectWhereInput {
+    AND: [DataObjectWhereInput!]
+    OR: [DataObjectWhereInput!]
+    channelavatarPhotoDataObject_every: ChannelWhereInput
+    channelavatarPhotoDataObject_none: ChannelWhereInput
+    channelavatarPhotoDataObject_some: ChannelWhereInput
+    channelcoverPhotoDataObject_every: ChannelWhereInput
+    channelcoverPhotoDataObject_none: ChannelWhereInput
+    channelcoverPhotoDataObject_some: ChannelWhereInput
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    ipfsContentId_contains: String
+    ipfsContentId_endsWith: String
+    ipfsContentId_eq: String
+    ipfsContentId_in: [String!]
+    ipfsContentId_startsWith: String
+    joystreamContentId_contains: String
+    joystreamContentId_endsWith: String
+    joystreamContentId_eq: String
+    joystreamContentId_in: [String!]
+    joystreamContentId_startsWith: String
+    liaison: WorkerWhereInput
+    liaisonId_eq: ID
+    liaisonId_in: [ID!]
+    liaisonJudgement_eq: LiaisonJudgement
+    liaisonJudgement_in: [LiaisonJudgement!]
+    owner_json: JSONObject
+    size_eq: Float
+    size_gt: Float
+    size_gte: Float
+    size_in: [Float!]
+    size_lt: Float
+    size_lte: Float
+    typeId_eq: Int
+    typeId_gt: Int
+    typeId_gte: Int
+    typeId_in: [Int!]
+    typeId_lt: Int
+    typeId_lte: Int
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videomediaDataObject_every: VideoMediaMetadataWhereInput
+    videomediaDataObject_none: VideoMediaMetadataWhereInput
+    videomediaDataObject_some: VideoMediaMetadataWhereInput
+    videothumbnailPhotoDataObject_every: VideoMediaMetadataWhereInput
+    videothumbnailPhotoDataObject_none: VideoMediaMetadataWhereInput
+    videothumbnailPhotoDataObject_some: VideoMediaMetadataWhereInput
+}
+
+input DataObjectWhereUniqueInput {
+    id: ID!
+}
+
+input FeaturedVideoInput {
+    videoCutUrl: String
+    videoId: ID!
+}
+
+input LanguageCreateInput {
+    createdInBlock: Float!
+    iso: String!
+}
+
+input LanguageUpdateInput {
+    createdInBlock: Float
+    iso: String
+}
+
+input LanguageWhereInput {
+    AND: [LanguageWhereInput!]
+    OR: [LanguageWhereInput!]
+    channellanguage_every: ChannelWhereInput
+    channellanguage_none: ChannelWhereInput
+    channellanguage_some: ChannelWhereInput
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    iso_contains: String
+    iso_endsWith: String
+    iso_eq: String
+    iso_in: [String!]
+    iso_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videolanguage_every: VideoWhereInput
+    videolanguage_none: VideoWhereInput
+    videolanguage_some: VideoWhereInput
+}
+
+input LanguageWhereUniqueInput {
+    id: ID!
+}
+
+input LicenseCreateInput {
+    attribution: String
+    code: Float
+    customText: String
+}
+
+input LicenseUpdateInput {
+    attribution: String
+    code: Float
+    customText: String
+}
+
+input LicenseWhereInput {
+    AND: [LicenseWhereInput!]
+    OR: [LicenseWhereInput!]
+    attribution_contains: String
+    attribution_endsWith: String
+    attribution_eq: String
+    attribution_in: [String!]
+    attribution_startsWith: String
+    code_eq: Int
+    code_gt: Int
+    code_gte: Int
+    code_in: [Int!]
+    code_lt: Int
+    code_lte: Int
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    customText_contains: String
+    customText_endsWith: String
+    customText_eq: String
+    customText_in: [String!]
+    customText_startsWith: String
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videolanguage_every: VideoWhereInput
+    videolanguage_none: VideoWhereInput
+    videolanguage_some: VideoWhereInput
+}
+
+input LicenseWhereUniqueInput {
+    id: ID!
+}
+
+input MembershipCreateInput {
+    about: String
+    avatarUri: String
+    controllerAccount: String!
+    createdInBlock: Float!
+    entry: MembershipEntryMethod!
+    handle: String!
+    rootAccount: String!
+    subscription: Float
+}
+
+input MembershipUpdateInput {
+    about: String
+    avatarUri: String
+    controllerAccount: String
+    createdInBlock: Float
+    entry: MembershipEntryMethod
+    handle: String
+    rootAccount: String
+    subscription: Float
+}
+
+input MembershipWhereInput {
+    AND: [MembershipWhereInput!]
+    OR: [MembershipWhereInput!]
+    about_contains: String
+    about_endsWith: String
+    about_eq: String
+    about_in: [String!]
+    about_startsWith: String
+    avatarUri_contains: String
+    avatarUri_endsWith: String
+    avatarUri_eq: String
+    avatarUri_in: [String!]
+    avatarUri_startsWith: String
+    channels_every: ChannelWhereInput
+    channels_none: ChannelWhereInput
+    channels_some: ChannelWhereInput
+    controllerAccount_contains: String
+    controllerAccount_endsWith: String
+    controllerAccount_eq: String
+    controllerAccount_in: [String!]
+    controllerAccount_startsWith: String
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    entry_eq: MembershipEntryMethod
+    entry_in: [MembershipEntryMethod!]
+    handle_contains: String
+    handle_endsWith: String
+    handle_eq: String
+    handle_in: [String!]
+    handle_startsWith: String
+    id_eq: ID
+    id_in: [ID!]
+    rootAccount_contains: String
+    rootAccount_endsWith: String
+    rootAccount_eq: String
+    rootAccount_in: [String!]
+    rootAccount_startsWith: String
+    subscription_eq: Int
+    subscription_gt: Int
+    subscription_gte: Int
+    subscription_in: [Int!]
+    subscription_lt: Int
+    subscription_lte: Int
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input MembershipWhereUniqueInput {
+    handle: String
+    id: ID
+}
+
+input NextEntityIdCreateInput {
+    nextId: Float!
+}
+
+input NextEntityIdUpdateInput {
+    nextId: Float
+}
+
+input NextEntityIdWhereInput {
+    AND: [NextEntityIdWhereInput!]
+    OR: [NextEntityIdWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    nextId_eq: Float
+    nextId_gt: Float
+    nextId_gte: Float
+    nextId_in: [Float!]
+    nextId_lt: Float
+    nextId_lte: Float
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input NextEntityIdWhereUniqueInput {
+    id: ID!
+}
+
+input VideoCategoryCreateInput {
+    createdInBlock: Float!
+    name: String
+}
+
+input VideoCategoryUpdateInput {
+    createdInBlock: Float
+    name: String
+}
+
+input VideoCategoryWhereInput {
+    AND: [VideoCategoryWhereInput!]
+    OR: [VideoCategoryWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    name_contains: String
+    name_endsWith: String
+    name_eq: String
+    name_in: [String!]
+    name_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videos_every: VideoWhereInput
+    videos_none: VideoWhereInput
+    videos_some: VideoWhereInput
+}
+
+input VideoCategoryWhereUniqueInput {
+    id: ID!
+}
+
+input VideoCreateInput {
+    category: ID
+    categoryId: ID
+    channel: ID
+    channelId: ID
+    createdInBlock: Float!
+    description: String
+    duration: Float
+    hasMarketing: Boolean
+    isCensored: Boolean!
+    isExplicit: Boolean
+    isFeatured: Boolean!
+    isPublic: Boolean
+    language: ID
+    languageId: ID
+    license: ID
+    licenseId: ID
+    mediaAvailability: AssetAvailability!
+    mediaDataObject: ID
+    mediaDataObjectId: ID
+    mediaMetadata: ID
+    mediaMetadataId: ID
+    mediaUrls: [String!]!
+    publishedBeforeJoystream: DateTime
+    thumbnailPhotoAvailability: AssetAvailability!
+    thumbnailPhotoDataObject: ID
+    thumbnailPhotoDataObjectId: ID
+    thumbnailPhotoUrls: [String!]!
+    title: String
+}
+
+input VideoHeroInput {
+    heroPosterUrl: String!
+    heroTitle: String!
+    heroVideoCutUrl: String!
+    videoId: ID!
+}
+
+input VideoMediaEncodingCreateInput {
+    codecName: String
+    container: String
+    mimeMediaType: String
+}
+
+input VideoMediaEncodingUpdateInput {
+    codecName: String
+    container: String
+    mimeMediaType: String
+}
+
+input VideoMediaEncodingWhereInput {
+    AND: [VideoMediaEncodingWhereInput!]
+    OR: [VideoMediaEncodingWhereInput!]
+    codecName_contains: String
+    codecName_endsWith: String
+    codecName_eq: String
+    codecName_in: [String!]
+    codecName_startsWith: String
+    container_contains: String
+    container_endsWith: String
+    container_eq: String
+    container_in: [String!]
+    container_startsWith: String
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    mimeMediaType_contains: String
+    mimeMediaType_endsWith: String
+    mimeMediaType_eq: String
+    mimeMediaType_in: [String!]
+    mimeMediaType_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    videomediametadataencoding_every: VideoMediaMetadataWhereInput
+    videomediametadataencoding_none: VideoMediaMetadataWhereInput
+    videomediametadataencoding_some: VideoMediaMetadataWhereInput
+}
+
+input VideoMediaEncodingWhereUniqueInput {
+    id: ID!
+}
+
+input VideoMediaMetadataCreateInput {
+    createdInBlock: Float!
+    encoding: ID
+    encodingId: ID
+    pixelHeight: Float
+    pixelWidth: Float
+    size: Float
+}
+
+input VideoMediaMetadataUpdateInput {
+    createdInBlock: Float
+    encoding: ID
+    encodingId: ID
+    pixelHeight: Float
+    pixelWidth: Float
+    size: Float
+}
+
+input VideoMediaMetadataWhereInput {
+    AND: [VideoMediaMetadataWhereInput!]
+    OR: [VideoMediaMetadataWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    encoding: VideoMediaEncodingWhereInput
+    encodingId_eq: ID
+    encodingId_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    pixelHeight_eq: Int
+    pixelHeight_gt: Int
+    pixelHeight_gte: Int
+    pixelHeight_in: [Int!]
+    pixelHeight_lt: Int
+    pixelHeight_lte: Int
+    pixelWidth_eq: Int
+    pixelWidth_gt: Int
+    pixelWidth_gte: Int
+    pixelWidth_in: [Int!]
+    pixelWidth_lt: Int
+    pixelWidth_lte: Int
+    size_eq: Float
+    size_gt: Float
+    size_gte: Float
+    size_in: [Float!]
+    size_lt: Float
+    size_lte: Float
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    video: VideoWhereInput
+}
+
+input VideoMediaMetadataWhereUniqueInput {
+    id: ID!
+}
+
+input VideoUpdateInput {
+    category: ID
+    categoryId: ID
+    channel: ID
+    channelId: ID
+    createdInBlock: Float
+    description: String
+    duration: Float
+    hasMarketing: Boolean
+    isCensored: Boolean
+    isExplicit: Boolean
+    isFeatured: Boolean
+    isPublic: Boolean
+    language: ID
+    languageId: ID
+    license: ID
+    licenseId: ID
+    mediaAvailability: AssetAvailability
+    mediaDataObject: ID
+    mediaDataObjectId: ID
+    mediaMetadata: ID
+    mediaMetadataId: ID
+    mediaUrls: [String!]
+    publishedBeforeJoystream: DateTime
+    thumbnailPhotoAvailability: AssetAvailability
+    thumbnailPhotoDataObject: ID
+    thumbnailPhotoDataObjectId: ID
+    thumbnailPhotoUrls: [String!]
+    title: String
+}
+
+input VideoWhereInput {
+    AND: [VideoWhereInput!]
+    OR: [VideoWhereInput!]
+    category: VideoCategoryWhereInput
+    categoryId_eq: ID
+    categoryId_in: [ID!]
+    channel: ChannelWhereInput
+    channelId_eq: ID
+    channelId_in: [ID!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    createdInBlock_eq: Int
+    createdInBlock_gt: Int
+    createdInBlock_gte: Int
+    createdInBlock_in: [Int!]
+    createdInBlock_lt: Int
+    createdInBlock_lte: Int
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    description_contains: String
+    description_endsWith: String
+    description_eq: String
+    description_in: [String!]
+    description_startsWith: String
+    duration_eq: Int
+    duration_gt: Int
+    duration_gte: Int
+    duration_in: [Int!]
+    duration_lt: Int
+    duration_lte: Int
+    hasMarketing_eq: Boolean
+    hasMarketing_in: [Boolean!]
+    id_eq: ID
+    id_in: [ID!]
+    isCensored_eq: Boolean
+    isCensored_in: [Boolean!]
+    isExplicit_eq: Boolean
+    isExplicit_in: [Boolean!]
+    isFeatured_eq: Boolean
+    isFeatured_in: [Boolean!]
+    isPublic_eq: Boolean
+    isPublic_in: [Boolean!]
+    language: LanguageWhereInput
+    languageId_eq: ID
+    languageId_in: [ID!]
+    license: LicenseWhereInput
+    licenseId_eq: ID
+    licenseId_in: [ID!]
+    mediaAvailability_eq: AssetAvailability
+    mediaAvailability_in: [AssetAvailability!]
+    mediaDataObject: DataObjectWhereInput
+    mediaDataObjectId_eq: ID
+    mediaDataObjectId_in: [ID!]
+    mediaMetadata: VideoMediaMetadataWhereInput
+    mediaMetadataId_eq: ID
+    mediaMetadataId_in: [ID!]
+    mediaUrls_containsAll: [String!]
+    mediaUrls_containsAny: [String!]
+    mediaUrls_containsNone: [String!]
+    publishedBeforeJoystream_eq: DateTime
+    publishedBeforeJoystream_gt: DateTime
+    publishedBeforeJoystream_gte: DateTime
+    publishedBeforeJoystream_lt: DateTime
+    publishedBeforeJoystream_lte: DateTime
+    thumbnailPhotoAvailability_eq: AssetAvailability
+    thumbnailPhotoAvailability_in: [AssetAvailability!]
+    thumbnailPhotoDataObject: DataObjectWhereInput
+    thumbnailPhotoDataObjectId_eq: ID
+    thumbnailPhotoDataObjectId_in: [ID!]
+    thumbnailPhotoUrls_containsAll: [String!]
+    thumbnailPhotoUrls_containsAny: [String!]
+    thumbnailPhotoUrls_containsNone: [String!]
+    title_contains: String
+    title_endsWith: String
+    title_eq: String
+    title_in: [String!]
+    title_startsWith: String
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+}
+
+input VideoWhereUniqueInput {
+    id: ID!
+}
+
+input WorkerCreateInput {
+    isActive: Boolean!
+    metadata: String
+    type: WorkerType!
+    workerId: String!
+}
+
+input WorkerUpdateInput {
+    isActive: Boolean
+    metadata: String
+    type: WorkerType
+    workerId: String
+}
+
+input WorkerWhereInput {
+    AND: [WorkerWhereInput!]
+    OR: [WorkerWhereInput!]
+    createdAt_eq: DateTime
+    createdAt_gt: DateTime
+    createdAt_gte: DateTime
+    createdAt_lt: DateTime
+    createdAt_lte: DateTime
+    createdById_eq: ID
+    createdById_in: [ID!]
+    dataObjects_every: DataObjectWhereInput
+    dataObjects_none: DataObjectWhereInput
+    dataObjects_some: DataObjectWhereInput
+    deletedAt_all: Boolean
+    deletedAt_eq: DateTime
+    deletedAt_gt: DateTime
+    deletedAt_gte: DateTime
+    deletedAt_lt: DateTime
+    deletedAt_lte: DateTime
+    deletedById_eq: ID
+    deletedById_in: [ID!]
+    id_eq: ID
+    id_in: [ID!]
+    isActive_eq: Boolean
+    isActive_in: [Boolean!]
+    metadata_contains: String
+    metadata_endsWith: String
+    metadata_eq: String
+    metadata_in: [String!]
+    metadata_startsWith: String
+    type_eq: WorkerType
+    type_in: [WorkerType!]
+    updatedAt_eq: DateTime
+    updatedAt_gt: DateTime
+    updatedAt_gte: DateTime
+    updatedAt_lt: DateTime
+    updatedAt_lte: DateTime
+    updatedById_eq: ID
+    updatedById_in: [ID!]
+    workerId_contains: String
+    workerId_endsWith: String
+    workerId_eq: String
+    workerId_in: [String!]
+    workerId_startsWith: String
+}
+
+input WorkerWhereUniqueInput {
+    id: ID!
+}

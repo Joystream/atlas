@@ -78,7 +78,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       <InfoContainer isCategory={isCategory}>
         <StyledLayoutGrid>
           <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
-            <StyledChannelLink textSecondary id={videoHeroData?.video?.channel.id} />
+            <StyledChannelLink textSecondary id={videoHeroData?.video?.channel?.id} />
             <TitleContainer>
               <SwitchTransition>
                 <CSSTransition

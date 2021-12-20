@@ -112,6 +112,7 @@ export const CategoryView = () => {
 const useVideoHeroVideos = (featuredVideos: GetCategoriesFeaturedVideosQuery['categoryFeaturedVideos'] = []) => {
   const videoHeroVideos = featuredVideos
     .filter((vid) => !!vid.videoCutUrl)
+    .filter((vid) => !!vid.video)
     .slice(0, 3)
     .map((featuredVideo) => ({
       video: featuredVideo.video,

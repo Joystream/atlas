@@ -1,34 +1,20 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
-import { ChannelOrderByInput, GetMostFollowedChannelsDocument } from '@/api/queries'
-import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
-import { sizes } from '@/styles'
+import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
+import { absoluteRoutes } from '@/config/routes'
+
+const BROWSE_CHANNELS_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 type DiscoverChannelsProps = {
-  additionalLink?: {
-    name: string
-    url: string
-  }
+  withLink?: boolean
 }
 
-export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ additionalLink }) => {
+export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ withLink }) => {
   return (
-    <StyledInfiniteChannelWithVideosGrid
+    <ExpandableChannelsList
       title="Discover new channels"
-      query={GetMostFollowedChannelsDocument}
-      onDemand
-      first={10}
-      limit={30}
-      timePeriodDays={30}
-      orderBy={ChannelOrderByInput.CreatedAtDesc}
-      additionalLink={additionalLink}
+      additionalLink={withLink ? BROWSE_CHANNELS_LINK : undefined}
+      queryType="discover"
     />
   )
 }
-
-const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
-  :not(:last-of-type) {
-    margin-bottom: ${sizes(38)};
-  }
-`

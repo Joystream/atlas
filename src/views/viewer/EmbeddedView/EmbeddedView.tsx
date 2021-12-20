@@ -35,7 +35,7 @@ export const EmbeddedView: React.FC = () => {
     setStartTimestamp(timestampFromQuery)
   }, [video?.duration, timestampFromQuery])
 
-  const channelId = video?.channel.id
+  const channelId = video?.channel?.id
   const videoId = video?.id
   const categoryId = video?.category?.id
 
@@ -80,7 +80,7 @@ export const EmbeddedView: React.FC = () => {
         {!isMediaLoading && video ? (
           <VideoPlayer
             isVideoPending={video?.mediaAvailability === 'PENDING'}
-            channelId={video.channel.id}
+            channelId={video.channel?.id}
             videoId={video.id}
             autoplay
             src={mediaUrl}

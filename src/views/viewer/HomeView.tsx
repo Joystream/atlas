@@ -2,15 +2,14 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 import { useVideoHeroData, useVideosConnection } from '@/api/hooks'
-import { GetMostViewedVideosDocument } from '@/api/queries'
+import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
 import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystreamUpdate'
-import { TopTenThisWeek } from '@/components/_content/TopTenThisWeek'
+import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
-import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -56,15 +55,15 @@ export const HomeView: React.FC = () => {
           />
         ) : null}
         <InfiniteVideoGrid
-          timePeriodDays={7}
-          query={GetMostViewedVideosDocument}
+          periodDays={7}
+          query={GetMostViewedVideosConnectionDocument}
           title="Popular on Joystream"
           onDemand
           titleLoader
         />
-        <TopTenThisWeek />
+        <TopTenVideos period="week" />
         <OfficialJoystreamUpdate />
-        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
+        <DiscoverChannels withLink />
         <InfiniteVideoGrid title="All content" onDemand />
       </Container>
     </VideoContentTemplate>

@@ -9,16 +9,14 @@ import {
   GetChannelQueryVariables,
   GetChannelsQuery,
   GetChannelsQueryVariables,
-  GetMostFollowedChannelsAllTimeQuery,
-  GetMostFollowedChannelsAllTimeQueryVariables,
-  GetMostFollowedChannelsQuery,
-  GetMostFollowedChannelsQueryVariables,
-  GetMostViewedChannelsAllTimeQuery,
-  GetMostViewedChannelsAllTimeQueryVariables,
-  GetMostViewedChannelsQuery,
-  GetMostViewedChannelsQueryVariables,
+  GetDiscoverChannelsQuery,
+  GetDiscoverChannelsQueryVariables,
+  GetPopularChannelsQuery,
+  GetPopularChannelsQueryVariables,
   GetPromisingChannelsQuery,
   GetPromisingChannelsQueryVariables,
+  GetTop10ChannelsQuery,
+  GetTop10ChannelsQueryVariables,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   UnfollowChannelMutation,
@@ -26,11 +24,10 @@ import {
   useGetBasicChannelQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
-  useGetMostFollowedChannelsAllTimeQuery,
-  useGetMostFollowedChannelsQuery,
-  useGetMostViewedChannelsAllTimeQuery,
-  useGetMostViewedChannelsQuery,
+  useGetDiscoverChannelsQuery,
+  useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
+  useGetTop10ChannelsQuery,
   useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
@@ -88,20 +85,10 @@ export const useChannels = (
   variables?: GetChannelsQueryVariables,
   opts?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetChannelsQuery({ ...opts, variables })
-  return {
-    channels: data?.channels,
-    ...rest,
-  }
-}
-
-export const usePromisingChannels = (
-  variables?: GetPromisingChannelsQueryVariables,
-  opts?: QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
-) => {
-  const { data, ...rest } = useGetPromisingChannelsQuery({
+  const { data, ...rest } = useGetChannelsQuery({
     ...opts,
     variables: {
+      ...variables,
       where: {
         ...variables?.where,
         isCensored_eq: false,
@@ -110,7 +97,7 @@ export const usePromisingChannels = (
     },
   })
   return {
-    channels: data?.promisingChannels,
+    channels: data?.channels,
     ...rest,
   }
 }
@@ -165,69 +152,86 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
   }
 }
 
-type MostFollowedChannelsQueryOpts = QueryHookOptions<
-  GetMostFollowedChannelsQuery,
-  GetMostFollowedChannelsQueryVariables
->
-export const useMostFollowedChannels = (
-  variables: GetMostFollowedChannelsQueryVariables,
-  opts?: MostFollowedChannelsQueryOpts
+export const useTop10Channels = (
+  variables?: GetTop10ChannelsQueryVariables,
+  opts?: QueryHookOptions<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostFollowedChannelsQuery({
+  const { data, ...rest } = useGetTop10ChannelsQuery({
     ...opts,
     variables: {
       ...variables,
       where: {
-        ...variables.where,
+        ...variables?.where,
         isCensored_eq: false,
         isPublic_eq: true,
       },
     },
   })
   return {
-    channels: data?.mostFollowedChannels.edges.map((edge) => edge.node),
+    channels: data?.top10Channels,
     ...rest,
   }
 }
 
-type MostViewedChannelsQueryOpts = QueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
-export const useMostViewedChannels = (
-  variables?: GetMostViewedChannelsQueryVariables,
-  opts?: MostViewedChannelsQueryOpts
+export const useDiscoverChannels = (
+  variables?: GetDiscoverChannelsQueryVariables,
+  opts?: QueryHookOptions<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetDiscoverChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isCensored_eq: false,
+        isPublic_eq: true,
+      },
+    },
+  })
   return {
-    channels: data?.mostViewedChannels.edges.map((edge) => edge.node),
+    channels: data?.discoverChannels,
     ...rest,
   }
 }
 
-type MostFollowedChannelsAllTimeQueryOpts = QueryHookOptions<
-  GetMostFollowedChannelsAllTimeQuery,
-  GetMostFollowedChannelsAllTimeQueryVariables
->
-export const useMostFollowedChannelsAllTime = (
-  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
-  opts?: MostFollowedChannelsAllTimeQueryOpts
+export const usePromisingChannels = (
+  variables?: GetPromisingChannelsQueryVariables,
+  opts?: QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
+  const { data, ...rest } = useGetPromisingChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isCensored_eq: false,
+        isPublic_eq: true,
+      },
+    },
+  })
   return {
-    channels: data?.mostFollowedChannelsAllTime.edges.map((edge) => edge.node),
+    channels: data?.promisingChannels,
     ...rest,
   }
 }
 
-type MostViewedChannelsAllTimeQueryOpts = QueryHookOptions<
-  GetMostViewedChannelsAllTimeQuery,
-  GetMostViewedChannelsAllTimeQueryVariables
->
-export const useMostViewedChannelsAllTime = (
-  variables?: GetMostViewedChannelsAllTimeQueryVariables,
-  opts?: MostViewedChannelsAllTimeQueryOpts
+export const usePopularChannels = (
+  variables?: GetPopularChannelsQueryVariables,
+  opts?: QueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostViewedChannelsAllTimeQuery({ ...opts, variables })
+  const { data, ...rest } = useGetPopularChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isCensored_eq: false,
+        isPublic_eq: true,
+      },
+    },
+  })
   return {
-    channels: data?.mostViewedChannelsAllTime.edges.map((edge) => edge.node),
+    channels: data?.popularChannels,
     ...rest,
   }
 }

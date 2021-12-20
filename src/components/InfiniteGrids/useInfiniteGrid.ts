@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
-import { ChannelEdge, ChannelOrderByInput, VideoEdge, VideoOrderByInput } from '@/api/queries'
+import { ChannelEdge, VideoEdge } from '@/api/queries'
 
 export type PaginatedData<T> = {
   edges: {
@@ -45,7 +45,6 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onDemandInfinite?: boolean
   activatedInfinteGrid?: boolean
   onScrollToBottom?: () => void
-  orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -75,7 +74,6 @@ export const useInfiniteGrid = <
   onDemand,
   onDemandInfinite,
   activatedInfinteGrid,
-  orderBy = ChannelOrderByInput.CreatedAtDesc,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -94,7 +92,6 @@ export const useInfiniteGrid = <
     skip: !isReady,
     variables: {
       ...queryVariables,
-      orderBy,
       first: targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,

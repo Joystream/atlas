@@ -10,6 +10,8 @@ export type BasicChannelFieldsFragment = {
   id: string
   title?: Types.Maybe<string>
   createdAt: Date
+  views: number
+  follows: number
   avatarPhotoUrls: Array<string>
   avatarPhotoAvailability: Types.AssetAvailability
   avatarPhotoDataObject?: Types.Maybe<{
@@ -34,8 +36,6 @@ export type BasicChannelFieldsFragment = {
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
   description?: Types.Maybe<string>
-  follows?: Types.Maybe<number>
-  views?: Types.Maybe<number>
   isPublic?: Types.Maybe<boolean>
   isCensored: boolean
   coverPhotoUrls: Array<string>
@@ -43,6 +43,8 @@ export type AllChannelFieldsFragment = {
   id: string
   title?: Types.Maybe<string>
   createdAt: Date
+  views: number
+  follows: number
   avatarPhotoUrls: Array<string>
   avatarPhotoAvailability: Types.AssetAvailability
   language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -94,6 +96,8 @@ export type GetBasicChannelQuery = {
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
     avatarPhotoDataObject?: Types.Maybe<{
@@ -125,8 +129,6 @@ export type GetChannelQuery = {
   channelByUniqueInput?: Types.Maybe<{
     __typename?: 'Channel'
     description?: Types.Maybe<string>
-    follows?: Types.Maybe<number>
-    views?: Types.Maybe<number>
     isPublic?: Types.Maybe<boolean>
     isCensored: boolean
     coverPhotoUrls: Array<string>
@@ -134,6 +136,8 @@ export type GetChannelQuery = {
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
     language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -200,8 +204,6 @@ export type GetChannelsQuery = {
   channels: Array<{
     __typename?: 'Channel'
     description?: Types.Maybe<string>
-    follows?: Types.Maybe<number>
-    views?: Types.Maybe<number>
     isPublic?: Types.Maybe<boolean>
     isCensored: boolean
     coverPhotoUrls: Array<string>
@@ -209,6 +211,8 @@ export type GetChannelsQuery = {
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
     language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -273,8 +277,6 @@ export type GetChannelsConnectionQuery = {
       node: {
         __typename?: 'Channel'
         description?: Types.Maybe<string>
-        follows?: Types.Maybe<number>
-        views?: Types.Maybe<number>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
         coverPhotoUrls: Array<string>
@@ -282,6 +284,8 @@ export type GetChannelsConnectionQuery = {
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
+        views: number
+        follows: number
         avatarPhotoUrls: Array<string>
         avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -349,17 +353,17 @@ export type UnfollowChannelMutation = {
   unfollowChannel: { __typename?: 'ChannelFollowsInfo'; id: string; follows: number }
 }
 
-export type GetMostViewedChannelsQueryVariables = Types.Exact<{
+export type GetMostViewedChannelsConnectionQueryVariables = Types.Exact<{
   limit?: Types.Maybe<Types.Scalars['Int']>
-  timePeriodDays: Types.Scalars['Int']
+  periodDays?: Types.Maybe<Types.Scalars['Int']>
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
   where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
-export type GetMostViewedChannelsQuery = {
+export type GetMostViewedChannelsConnectionQuery = {
   __typename?: 'Query'
-  mostViewedChannels: {
+  mostViewedChannelsConnection: {
     __typename?: 'ChannelConnection'
     totalCount: number
     edges: Array<{
@@ -368,8 +372,6 @@ export type GetMostViewedChannelsQuery = {
       node: {
         __typename?: 'Channel'
         description?: Types.Maybe<string>
-        follows?: Types.Maybe<number>
-        views?: Types.Maybe<number>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
         coverPhotoUrls: Array<string>
@@ -377,6 +379,8 @@ export type GetMostViewedChannelsQuery = {
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
+        views: number
+        follows: number
         avatarPhotoUrls: Array<string>
         avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -426,169 +430,17 @@ export type GetMostViewedChannelsQuery = {
   }
 }
 
-export type GetMostViewedChannelsAllTimeQueryVariables = Types.Exact<{
-  limit?: Types.Scalars['Int']
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.ChannelWhereInput>
-}>
-
-export type GetMostViewedChannelsAllTimeQuery = {
-  __typename?: 'Query'
-  mostViewedChannelsAllTime: {
-    __typename?: 'ChannelConnection'
-    totalCount: number
-    edges: Array<{
-      __typename?: 'ChannelEdge'
-      cursor: string
-      node: {
-        __typename?: 'Channel'
-        description?: Types.Maybe<string>
-        follows?: Types.Maybe<number>
-        views?: Types.Maybe<number>
-        isPublic?: Types.Maybe<boolean>
-        isCensored: boolean
-        coverPhotoUrls: Array<string>
-        coverPhotoAvailability: Types.AssetAvailability
-        id: string
-        title?: Types.Maybe<string>
-        createdAt: Date
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
-        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-        ownerMember?: Types.Maybe<{
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          avatarUri?: Types.Maybe<string>
-        }>
-        coverPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
-          id: string
-          createdAt: Date
-          size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
-        }>
-        avatarPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
-          id: string
-          createdAt: Date
-          size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
-        }>
-      }
-    }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
-  }
-}
-
-export type GetMostFollowedChannelsQueryVariables = Types.Exact<{
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  timePeriodDays: Types.Scalars['Int']
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.ChannelWhereInput>
-}>
-
-export type GetMostFollowedChannelsQuery = {
-  __typename?: 'Query'
-  mostFollowedChannels: {
-    __typename?: 'ChannelConnection'
-    totalCount: number
-    edges: Array<{
-      __typename?: 'ChannelEdge'
-      cursor: string
-      node: {
-        __typename?: 'Channel'
-        description?: Types.Maybe<string>
-        follows?: Types.Maybe<number>
-        views?: Types.Maybe<number>
-        isPublic?: Types.Maybe<boolean>
-        isCensored: boolean
-        coverPhotoUrls: Array<string>
-        coverPhotoAvailability: Types.AssetAvailability
-        id: string
-        title?: Types.Maybe<string>
-        createdAt: Date
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
-        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-        ownerMember?: Types.Maybe<{
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          avatarUri?: Types.Maybe<string>
-        }>
-        coverPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
-          id: string
-          createdAt: Date
-          size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
-        }>
-        avatarPhotoDataObject?: Types.Maybe<{
-          __typename?: 'DataObject'
-          id: string
-          createdAt: Date
-          size: number
-          liaisonJudgement: Types.LiaisonJudgement
-          ipfsContentId: string
-          joystreamContentId: string
-          liaison?: Types.Maybe<{
-            __typename?: 'Worker'
-            id: string
-            workerId: string
-            metadata?: Types.Maybe<string>
-            isActive: boolean
-            type: Types.WorkerType
-          }>
-        }>
-      }
-    }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
-  }
-}
-
-export type GetMostFollowedChannelsAllTimeQueryVariables = Types.Exact<{
+export type GetMostFollowedChannelsConnectionQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
+  periodDays?: Types.Maybe<Types.Scalars['Int']>
   first?: Types.Maybe<Types.Scalars['Int']>
   after?: Types.Maybe<Types.Scalars['String']>
   where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
-export type GetMostFollowedChannelsAllTimeQuery = {
+export type GetMostFollowedChannelsConnectionQuery = {
   __typename?: 'Query'
-  mostFollowedChannelsAllTime: {
+  mostFollowedChannelsConnection: {
     __typename?: 'ChannelConnection'
     totalCount: number
     edges: Array<{
@@ -597,8 +449,6 @@ export type GetMostFollowedChannelsAllTimeQuery = {
       node: {
         __typename?: 'Channel'
         description?: Types.Maybe<string>
-        follows?: Types.Maybe<number>
-        views?: Types.Maybe<number>
         isPublic?: Types.Maybe<boolean>
         isCensored: boolean
         coverPhotoUrls: Array<string>
@@ -606,6 +456,8 @@ export type GetMostFollowedChannelsAllTimeQuery = {
         id: string
         title?: Types.Maybe<string>
         createdAt: Date
+        views: number
+        follows: number
         avatarPhotoUrls: Array<string>
         avatarPhotoAvailability: Types.AssetAvailability
         language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
@@ -655,34 +507,22 @@ export type GetMostFollowedChannelsAllTimeQuery = {
   }
 }
 
-export type GetPromisingChannelsQueryVariables = Types.Exact<{
+export type GetTop10ChannelsQueryVariables = Types.Exact<{
   where?: Types.Maybe<Types.ChannelWhereInput>
 }>
 
-export type GetPromisingChannelsQuery = {
+export type GetTop10ChannelsQuery = {
   __typename?: 'Query'
-  promisingChannels: Array<{
+  top10Channels: Array<{
     __typename?: 'Channel'
-    description?: Types.Maybe<string>
-    follows?: Types.Maybe<number>
-    views?: Types.Maybe<number>
-    isPublic?: Types.Maybe<boolean>
-    isCensored: boolean
-    coverPhotoUrls: Array<string>
-    coverPhotoAvailability: Types.AssetAvailability
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
-    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-    ownerMember?: Types.Maybe<{
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      avatarUri?: Types.Maybe<string>
-    }>
-    coverPhotoDataObject?: Types.Maybe<{
+    avatarPhotoDataObject?: Types.Maybe<{
       __typename?: 'DataObject'
       id: string
       createdAt: Date
@@ -699,6 +539,94 @@ export type GetPromisingChannelsQuery = {
         type: Types.WorkerType
       }>
     }>
+  }>
+}
+
+export type GetPromisingChannelsQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.ChannelWhereInput>
+}>
+
+export type GetPromisingChannelsQuery = {
+  __typename?: 'Query'
+  promisingChannels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    views: number
+    follows: number
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
+}
+
+export type GetDiscoverChannelsQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.ChannelWhereInput>
+}>
+
+export type GetDiscoverChannelsQuery = {
+  __typename?: 'Query'
+  discoverChannels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    views: number
+    follows: number
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
+    avatarPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+  }>
+}
+
+export type GetPopularChannelsQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.ChannelWhereInput>
+}>
+
+export type GetPopularChannelsQuery = {
+  __typename?: 'Query'
+  popularChannels: Array<{
+    __typename?: 'Channel'
+    id: string
+    title?: Types.Maybe<string>
+    createdAt: Date
+    views: number
+    follows: number
+    avatarPhotoUrls: Array<string>
+    avatarPhotoAvailability: Types.AssetAvailability
     avatarPhotoDataObject?: Types.Maybe<{
       __typename?: 'DataObject'
       id: string
@@ -724,6 +652,8 @@ export const BasicChannelFieldsFragmentDoc = gql`
     id
     title
     createdAt
+    views
+    follows
     avatarPhotoUrls
     avatarPhotoAvailability
     avatarPhotoDataObject {
@@ -736,8 +666,6 @@ export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
     description
-    follows
-    views
     isPublic
     isCensored
     language {
@@ -1065,15 +993,15 @@ export type UnfollowChannelMutationOptions = Apollo.BaseMutationOptions<
   UnfollowChannelMutation,
   UnfollowChannelMutationVariables
 >
-export const GetMostViewedChannelsDocument = gql`
-  query GetMostViewedChannels(
+export const GetMostViewedChannelsConnectionDocument = gql`
+  query GetMostViewedChannelsConnection(
     $limit: Int = 50
-    $timePeriodDays: Int!
+    $periodDays: Int
     $first: Int
     $after: String
     $where: ChannelWhereInput
   ) {
-    mostViewedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+    mostViewedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
       edges {
         cursor
         node {
@@ -1091,125 +1019,72 @@ export const GetMostViewedChannelsDocument = gql`
 `
 
 /**
- * __useGetMostViewedChannelsQuery__
+ * __useGetMostViewedChannelsConnectionQuery__
  *
- * To run a query within a React component, call `useGetMostViewedChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostViewedChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMostViewedChannelsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostViewedChannelsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetMostViewedChannelsQuery({
+ * const { data, loading, error } = useGetMostViewedChannelsConnectionQuery({
  *   variables: {
  *      limit: // value for 'limit'
- *      timePeriodDays: // value for 'timePeriodDays'
+ *      periodDays: // value for 'periodDays'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetMostViewedChannelsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>(
-    GetMostViewedChannelsDocument,
-    options
-  )
-}
-export function useGetMostViewedChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>(
-    GetMostViewedChannelsDocument,
-    options
-  )
-}
-export type GetMostViewedChannelsQueryHookResult = ReturnType<typeof useGetMostViewedChannelsQuery>
-export type GetMostViewedChannelsLazyQueryHookResult = ReturnType<typeof useGetMostViewedChannelsLazyQuery>
-export type GetMostViewedChannelsQueryResult = Apollo.QueryResult<
-  GetMostViewedChannelsQuery,
-  GetMostViewedChannelsQueryVariables
->
-export const GetMostViewedChannelsAllTimeDocument = gql`
-  query GetMostViewedChannelsAllTime($limit: Int! = 50, $first: Int, $after: String, $where: ChannelWhereInput) {
-    mostViewedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
-      edges {
-        cursor
-        node {
-          ...AllChannelFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-    }
-  }
-  ${AllChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetMostViewedChannelsAllTimeQuery__
- *
- * To run a query within a React component, call `useGetMostViewedChannelsAllTimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostViewedChannelsAllTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostViewedChannelsAllTimeQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *      first: // value for 'first'
- *      after: // value for 'after'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetMostViewedChannelsAllTimeQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
-    GetMostViewedChannelsAllTimeDocument,
-    options
-  )
-}
-export function useGetMostViewedChannelsAllTimeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMostViewedChannelsAllTimeQuery,
-    GetMostViewedChannelsAllTimeQueryVariables
+export function useGetMostViewedChannelsConnectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMostViewedChannelsConnectionQuery,
+    GetMostViewedChannelsConnectionQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostViewedChannelsAllTimeQuery, GetMostViewedChannelsAllTimeQueryVariables>(
-    GetMostViewedChannelsAllTimeDocument,
+  return Apollo.useQuery<GetMostViewedChannelsConnectionQuery, GetMostViewedChannelsConnectionQueryVariables>(
+    GetMostViewedChannelsConnectionDocument,
     options
   )
 }
-export type GetMostViewedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostViewedChannelsAllTimeQuery>
-export type GetMostViewedChannelsAllTimeLazyQueryHookResult = ReturnType<
-  typeof useGetMostViewedChannelsAllTimeLazyQuery
+export function useGetMostViewedChannelsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostViewedChannelsConnectionQuery,
+    GetMostViewedChannelsConnectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetMostViewedChannelsConnectionQuery, GetMostViewedChannelsConnectionQueryVariables>(
+    GetMostViewedChannelsConnectionDocument,
+    options
+  )
+}
+export type GetMostViewedChannelsConnectionQueryHookResult = ReturnType<typeof useGetMostViewedChannelsConnectionQuery>
+export type GetMostViewedChannelsConnectionLazyQueryHookResult = ReturnType<
+  typeof useGetMostViewedChannelsConnectionLazyQuery
 >
-export type GetMostViewedChannelsAllTimeQueryResult = Apollo.QueryResult<
-  GetMostViewedChannelsAllTimeQuery,
-  GetMostViewedChannelsAllTimeQueryVariables
+export type GetMostViewedChannelsConnectionQueryResult = Apollo.QueryResult<
+  GetMostViewedChannelsConnectionQuery,
+  GetMostViewedChannelsConnectionQueryVariables
 >
-export const GetMostFollowedChannelsDocument = gql`
-  query GetMostFollowedChannels(
-    $limit: Int
-    $timePeriodDays: Int!
+export const GetMostFollowedChannelsConnectionDocument = gql`
+  query GetMostFollowedChannelsConnection(
+    $limit: Int!
+    $periodDays: Int
     $first: Int
     $after: String
     $where: ChannelWhereInput
   ) {
-    mostFollowedChannels(limit: $limit, first: $first, after: $after, timePeriodDays: $timePeriodDays, where: $where) {
+    mostFollowedChannelsConnection(
+      limit: $limit
+      first: $first
+      after: $after
+      periodDays: $periodDays
+      where: $where
+    ) {
       edges {
         cursor
         node {
@@ -1227,126 +1102,106 @@ export const GetMostFollowedChannelsDocument = gql`
 `
 
 /**
- * __useGetMostFollowedChannelsQuery__
+ * __useGetMostFollowedChannelsConnectionQuery__
  *
- * To run a query within a React component, call `useGetMostFollowedChannelsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostFollowedChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMostFollowedChannelsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostFollowedChannelsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetMostFollowedChannelsQuery({
+ * const { data, loading, error } = useGetMostFollowedChannelsConnectionQuery({
  *   variables: {
  *      limit: // value for 'limit'
- *      timePeriodDays: // value for 'timePeriodDays'
+ *      periodDays: // value for 'periodDays'
  *      first: // value for 'first'
  *      after: // value for 'after'
  *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetMostFollowedChannelsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
-    GetMostFollowedChannelsDocument,
-    options
-  )
-}
-export function useGetMostFollowedChannelsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostFollowedChannelsQuery, GetMostFollowedChannelsQueryVariables>(
-    GetMostFollowedChannelsDocument,
-    options
-  )
-}
-export type GetMostFollowedChannelsQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsQuery>
-export type GetMostFollowedChannelsLazyQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsLazyQuery>
-export type GetMostFollowedChannelsQueryResult = Apollo.QueryResult<
-  GetMostFollowedChannelsQuery,
-  GetMostFollowedChannelsQueryVariables
->
-export const GetMostFollowedChannelsAllTimeDocument = gql`
-  query GetMostFollowedChannelsAllTime($limit: Int!, $first: Int, $after: String, $where: ChannelWhereInput) {
-    mostFollowedChannelsAllTime(limit: $limit, first: $first, after: $after, where: $where) {
-      edges {
-        cursor
-        node {
-          ...AllChannelFields
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      totalCount
-    }
-  }
-  ${AllChannelFieldsFragmentDoc}
-`
-
-/**
- * __useGetMostFollowedChannelsAllTimeQuery__
- *
- * To run a query within a React component, call `useGetMostFollowedChannelsAllTimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostFollowedChannelsAllTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostFollowedChannelsAllTimeQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *      first: // value for 'first'
- *      after: // value for 'after'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetMostFollowedChannelsAllTimeQuery(
+export function useGetMostFollowedChannelsConnectionQuery(
   baseOptions: Apollo.QueryHookOptions<
-    GetMostFollowedChannelsAllTimeQuery,
-    GetMostFollowedChannelsAllTimeQueryVariables
+    GetMostFollowedChannelsConnectionQuery,
+    GetMostFollowedChannelsConnectionQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
-    GetMostFollowedChannelsAllTimeDocument,
+  return Apollo.useQuery<GetMostFollowedChannelsConnectionQuery, GetMostFollowedChannelsConnectionQueryVariables>(
+    GetMostFollowedChannelsConnectionDocument,
     options
   )
 }
-export function useGetMostFollowedChannelsAllTimeLazyQuery(
+export function useGetMostFollowedChannelsConnectionLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMostFollowedChannelsAllTimeQuery,
-    GetMostFollowedChannelsAllTimeQueryVariables
+    GetMostFollowedChannelsConnectionQuery,
+    GetMostFollowedChannelsConnectionQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostFollowedChannelsAllTimeQuery, GetMostFollowedChannelsAllTimeQueryVariables>(
-    GetMostFollowedChannelsAllTimeDocument,
+  return Apollo.useLazyQuery<GetMostFollowedChannelsConnectionQuery, GetMostFollowedChannelsConnectionQueryVariables>(
+    GetMostFollowedChannelsConnectionDocument,
     options
   )
 }
-export type GetMostFollowedChannelsAllTimeQueryHookResult = ReturnType<typeof useGetMostFollowedChannelsAllTimeQuery>
-export type GetMostFollowedChannelsAllTimeLazyQueryHookResult = ReturnType<
-  typeof useGetMostFollowedChannelsAllTimeLazyQuery
+export type GetMostFollowedChannelsConnectionQueryHookResult = ReturnType<
+  typeof useGetMostFollowedChannelsConnectionQuery
 >
-export type GetMostFollowedChannelsAllTimeQueryResult = Apollo.QueryResult<
-  GetMostFollowedChannelsAllTimeQuery,
-  GetMostFollowedChannelsAllTimeQueryVariables
+export type GetMostFollowedChannelsConnectionLazyQueryHookResult = ReturnType<
+  typeof useGetMostFollowedChannelsConnectionLazyQuery
 >
+export type GetMostFollowedChannelsConnectionQueryResult = Apollo.QueryResult<
+  GetMostFollowedChannelsConnectionQuery,
+  GetMostFollowedChannelsConnectionQueryVariables
+>
+export const GetTop10ChannelsDocument = gql`
+  query GetTop10Channels($where: ChannelWhereInput) {
+    top10Channels(where: $where) {
+      ...BasicChannelFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTop10ChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetTop10ChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTop10ChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTop10ChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTop10ChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>(GetTop10ChannelsDocument, options)
+}
+export function useGetTop10ChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>(GetTop10ChannelsDocument, options)
+}
+export type GetTop10ChannelsQueryHookResult = ReturnType<typeof useGetTop10ChannelsQuery>
+export type GetTop10ChannelsLazyQueryHookResult = ReturnType<typeof useGetTop10ChannelsLazyQuery>
+export type GetTop10ChannelsQueryResult = Apollo.QueryResult<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
 export const GetPromisingChannelsDocument = gql`
   query GetPromisingChannels($where: ChannelWhereInput) {
     promisingChannels(where: $where) {
-      ...AllChannelFields
+      ...BasicChannelFields
     }
   }
-  ${AllChannelFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
 `
 
 /**
@@ -1388,4 +1243,99 @@ export type GetPromisingChannelsLazyQueryHookResult = ReturnType<typeof useGetPr
 export type GetPromisingChannelsQueryResult = Apollo.QueryResult<
   GetPromisingChannelsQuery,
   GetPromisingChannelsQueryVariables
+>
+export const GetDiscoverChannelsDocument = gql`
+  query GetDiscoverChannels($where: ChannelWhereInput) {
+    discoverChannels(where: $where) {
+      ...BasicChannelFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetDiscoverChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetDiscoverChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDiscoverChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDiscoverChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetDiscoverChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>(
+    GetDiscoverChannelsDocument,
+    options
+  )
+}
+export function useGetDiscoverChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>(
+    GetDiscoverChannelsDocument,
+    options
+  )
+}
+export type GetDiscoverChannelsQueryHookResult = ReturnType<typeof useGetDiscoverChannelsQuery>
+export type GetDiscoverChannelsLazyQueryHookResult = ReturnType<typeof useGetDiscoverChannelsLazyQuery>
+export type GetDiscoverChannelsQueryResult = Apollo.QueryResult<
+  GetDiscoverChannelsQuery,
+  GetDiscoverChannelsQueryVariables
+>
+export const GetPopularChannelsDocument = gql`
+  query GetPopularChannels($where: ChannelWhereInput) {
+    popularChannels(where: $where) {
+      ...BasicChannelFields
+    }
+  }
+  ${BasicChannelFieldsFragmentDoc}
+`
+
+/**
+ * __useGetPopularChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetPopularChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPopularChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPopularChannelsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPopularChannelsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>(GetPopularChannelsDocument, options)
+}
+export function useGetPopularChannelsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>(
+    GetPopularChannelsDocument,
+    options
+  )
+}
+export type GetPopularChannelsQueryHookResult = ReturnType<typeof useGetPopularChannelsQuery>
+export type GetPopularChannelsLazyQueryHookResult = ReturnType<typeof useGetPopularChannelsLazyQuery>
+export type GetPopularChannelsQueryResult = Apollo.QueryResult<
+  GetPopularChannelsQuery,
+  GetPopularChannelsQueryVariables
 >
