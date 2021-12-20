@@ -1,6 +1,6 @@
 {
   "name": "Orion schema",
-  "schemaPath": "./src/api/schemas/orion.graphql",
+  "schemaPath": "./src/api/schemas/orion.json",
   "extensions": {
     "endpoints": {
       "Orion experimental": {

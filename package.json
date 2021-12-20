@@ -101,6 +101,7 @@
     "@emotion/babel-plugin": "^11.3.0",
     "@emotion/eslint-plugin": "^11.5.0",
     "@graphql-codegen/cli": "^2.1.1",
+    "@graphql-codegen/introspection": "^2.1.0",
     "@graphql-codegen/near-operation-file-preset": "^2.1.2",
     "@graphql-codegen/typescript": "^2.1.2",
     "@graphql-codegen/typescript-operations": "^2.1.2",

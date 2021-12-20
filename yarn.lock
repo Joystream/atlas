@@ -2432,6 +2432,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-codegen/introspection@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@graphql-codegen/introspection@npm:2.1.0"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^2.1.0
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: b13e769c4001801b74e5a6a125b7abeceed8b05dccbcb26931f3d85cde4a74d8915d5a0a557d925aaf02921bb87f9958e2b9c0e6f9de6cde854cfa6406a7b884
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/near-operation-file-preset@npm:^2.1.2":
   version: 2.1.2
   resolution: "@graphql-codegen/near-operation-file-preset@npm:2.1.2"
@@ -7303,6 +7315,7 @@ __metadata:
     "@emotion/react": ^11.7.0
     "@emotion/styled": ^11.6.0
     "@graphql-codegen/cli": ^2.1.1
+    "@graphql-codegen/introspection": ^2.1.0
     "@graphql-codegen/near-operation-file-preset": ^2.1.2
     "@graphql-codegen/typescript": ^2.1.2
     "@graphql-codegen/typescript-operations": ^2.1.2
