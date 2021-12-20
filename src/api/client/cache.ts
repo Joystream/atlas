@@ -114,6 +114,8 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
+  mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
+  mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
@@ -138,6 +140,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       )
     },
   },
+  mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, opts) {

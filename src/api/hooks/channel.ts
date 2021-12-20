@@ -1,5 +1,4 @@
 import { MutationHookOptions, QueryHookOptions } from '@apollo/client'
-import { useMemo } from 'react'
 
 import {
   AssetAvailability,
@@ -10,14 +9,14 @@ import {
   GetChannelQueryVariables,
   GetChannelsQuery,
   GetChannelsQueryVariables,
-  GetMostFollowedChannelsAllTimeQuery,
-  GetMostFollowedChannelsAllTimeQueryVariables,
-  GetMostFollowedChannelsQuery,
-  GetMostFollowedChannelsQueryVariables,
-  GetMostViewedChannelsAllTimeQuery,
-  GetMostViewedChannelsAllTimeQueryVariables,
-  GetMostViewedChannelsQuery,
-  GetMostViewedChannelsQueryVariables,
+  GetDiscoverChannelsQuery,
+  GetDiscoverChannelsQueryVariables,
+  GetPopularChannelsQuery,
+  GetPopularChannelsQueryVariables,
+  GetPromisingChannelsQuery,
+  GetPromisingChannelsQueryVariables,
+  GetTop10ChannelsQuery,
+  GetTop10ChannelsQueryVariables,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   UnfollowChannelMutation,
@@ -25,10 +24,10 @@ import {
   useGetBasicChannelQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
-  useGetMostFollowedChannelsAllTimeQuery,
-  useGetMostFollowedChannelsQuery,
-  useGetMostViewedChannelsAllTimeQuery,
-  useGetMostViewedChannelsQuery,
+  useGetDiscoverChannelsQuery,
+  useGetPopularChannelsQuery,
+  useGetPromisingChannelsQuery,
+  useGetTop10ChannelsQuery,
   useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
@@ -86,7 +85,17 @@ export const useChannels = (
   variables?: GetChannelsQueryVariables,
   opts?: QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetChannelsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        isCensored_eq: false,
+        isPublic_eq: true,
+        ...variables?.where,
+      },
+    },
+  })
   return {
     channels: data?.channels,
     ...rest,
@@ -143,165 +152,86 @@ export const useUnfollowChannel = (opts?: MutationHookOptions<UnfollowChannelMut
   }
 }
 
-type MostFollowedChannelsQueryOpts = QueryHookOptions<
-  GetMostFollowedChannelsQuery,
-  GetMostFollowedChannelsQueryVariables
->
-export const useMostFollowedChannelsIds = (
-  variables?: GetMostFollowedChannelsQueryVariables,
-  opts?: MostFollowedChannelsQueryOpts
+export const useTop10Channels = (
+  variables?: GetTop10ChannelsQueryVariables,
+  opts?: QueryHookOptions<GetTop10ChannelsQuery, GetTop10ChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostFollowedChannelsQuery({ ...opts, variables })
-  return {
-    mostFollowedChannels: data?.mostFollowedChannels,
-    ...rest,
-  }
-}
-
-export const useMostFollowedChannels = (
-  variables?: GetMostFollowedChannelsQueryVariables,
-  opts?: MostFollowedChannelsQueryOpts
-) => {
-  const { mostFollowedChannels } = useMostFollowedChannelsIds(variables, opts)
-
-  const mostFollowedChannelsIds = mostFollowedChannels?.map((item) => item.id)
-
-  const { channels, ...rest } = useChannels(
-    {
+  const { data, ...rest } = useGetTop10ChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
       where: {
-        id_in: mostFollowedChannelsIds,
+        isCensored_eq: false,
+        isPublic_eq: true,
+        ...variables?.where,
       },
     },
-    { skip: !mostFollowedChannelsIds }
-  )
-
+  })
   return {
-    channels,
+    channels: data?.top10Channels,
     ...rest,
   }
 }
 
-type MostViewedChannelsQueryOpts = QueryHookOptions<GetMostViewedChannelsQuery, GetMostViewedChannelsQueryVariables>
-export const useMostViewedChannelsIds = (
-  variables?: GetMostViewedChannelsQueryVariables,
-  opts?: MostViewedChannelsQueryOpts
+export const useDiscoverChannels = (
+  variables?: GetDiscoverChannelsQueryVariables,
+  opts?: QueryHookOptions<GetDiscoverChannelsQuery, GetDiscoverChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostViewedChannelsQuery({ ...opts, variables })
-  return {
-    mostViewedChannels: data?.mostViewedChannels,
-    ...rest,
-  }
-}
-
-export const useMostViewedChannels = (
-  variables?: GetMostViewedChannelsQueryVariables,
-  opts?: MostViewedChannelsQueryOpts
-) => {
-  const { mostViewedChannels } = useMostViewedChannelsIds(variables, opts)
-
-  const mostViewedChannelsIds = mostViewedChannels?.map((item) => item.id)
-
-  const { channels, ...rest } = useChannels(
-    {
+  const { data, ...rest } = useGetDiscoverChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
       where: {
-        id_in: mostViewedChannelsIds,
+        isCensored_eq: false,
+        isPublic_eq: true,
+        ...variables?.where,
       },
     },
-    { skip: !mostViewedChannelsIds }
-  )
-
-  const sortedChannels = useMemo(() => {
-    if (channels) {
-      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
-    }
-    return null
-  }, [channels])
-
+  })
   return {
-    channels: sortedChannels,
+    channels: data?.discoverChannels,
     ...rest,
   }
 }
 
-type MostFollowedChannelsAllTimeQueryOpts = QueryHookOptions<
-  GetMostFollowedChannelsAllTimeQuery,
-  GetMostFollowedChannelsAllTimeQueryVariables
->
-export const useMostFollowedChannelsAllTimeIds = (
-  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
-  opts?: MostFollowedChannelsAllTimeQueryOpts
+export const usePromisingChannels = (
+  variables?: GetPromisingChannelsQueryVariables,
+  opts?: QueryHookOptions<GetPromisingChannelsQuery, GetPromisingChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostFollowedChannelsAllTimeQuery({ ...opts, variables })
-  return {
-    mostFollowedChannelsAllTime: data?.mostFollowedChannelsAllTime,
-    ...rest,
-  }
-}
-
-export const useMostFollowedChannelsAllTime = (
-  variables?: GetMostFollowedChannelsAllTimeQueryVariables,
-  opts?: MostFollowedChannelsAllTimeQueryOpts
-) => {
-  const { mostFollowedChannelsAllTime } = useMostFollowedChannelsAllTimeIds(variables, opts)
-
-  const mostFollowedChannelsAllTimeIds = mostFollowedChannelsAllTime?.map((item) => item.id)
-
-  const { channels, ...rest } = useChannels(
-    {
+  const { data, ...rest } = useGetPromisingChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
       where: {
-        id_in: mostFollowedChannelsAllTimeIds,
+        isCensored_eq: false,
+        isPublic_eq: true,
+        ...variables?.where,
       },
     },
-    { skip: !mostFollowedChannelsAllTimeIds }
-  )
-
-  const sortedChannels = useMemo(() => {
-    if (channels) {
-      return [...channels].sort((a, b) => (b.follows || 0) - (a.follows || 0))
-    }
-    return null
-  }, [channels])
-
+  })
   return {
-    channels: sortedChannels,
+    channels: data?.promisingChannels,
     ...rest,
   }
 }
 
-type MostViewedChannelsAllTimeQueryOpts = QueryHookOptions<
-  GetMostViewedChannelsAllTimeQuery,
-  GetMostViewedChannelsAllTimeQueryVariables
->
-export const useMostViewedChannelsAllTimeIds = (
-  variables?: GetMostViewedChannelsAllTimeQueryVariables,
-  opts?: MostViewedChannelsAllTimeQueryOpts
+export const usePopularChannels = (
+  variables?: GetPopularChannelsQueryVariables,
+  opts?: QueryHookOptions<GetPopularChannelsQuery, GetPopularChannelsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostViewedChannelsAllTimeQuery({ ...opts, variables })
-  return {
-    mostViewedChannelsAllTime: data?.mostViewedChannelsAllTime,
-    ...rest,
-  }
-}
-
-export const useMostViewedChannelsAllTime = (
-  variables?: GetMostViewedChannelsAllTimeQueryVariables,
-  opts?: MostViewedChannelsAllTimeQueryOpts
-) => {
-  const { mostViewedChannelsAllTime } = useMostViewedChannelsAllTimeIds(variables, opts)
-
-  const mostViewedChannelsIds = mostViewedChannelsAllTime?.map((item) => item.id)
-
-  const { channels, ...rest } = useChannels(
-    {
+  const { data, ...rest } = useGetPopularChannelsQuery({
+    ...opts,
+    variables: {
+      ...variables,
       where: {
-        id_in: mostViewedChannelsIds,
+        isCensored_eq: false,
+        isPublic_eq: true,
+        ...variables?.where,
       },
     },
-    { skip: !mostViewedChannelsIds }
-  )
-
+  })
   return {
-    channels,
+    channels: data?.popularChannels,
     ...rest,
   }
 }

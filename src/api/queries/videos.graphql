@@ -100,35 +100,45 @@ query GetBasicVideos($where: VideoWhereInput) {
   }
 }
 
-### Orion
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetVideoViews($videoId: ID!) {
-  videoViews(videoId: $videoId) {
-    id
-    views
+query GetMostViewedVideosConnection(
+  $limit: Int = 50
+  $periodDays: Int
+  $first: Int
+  $after: String
+  $orderBy: VideoOrderByInput! = createdAt_DESC
+  $where: VideoWhereInput
+) {
+  mostViewedVideosConnection(
+    limit: $limit
+    first: $first
+    after: $after
+    periodDays: $periodDays
+    orderBy: [$orderBy]
+    where: $where
+  ) {
+    edges {
+      cursor
+      node {
+        ...VideoFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetBatchedVideoViews($videoIdList: [ID!]!) {
-  batchedVideoViews(videoIdList: $videoIdList) {
-    id
-    views
+query GetTop10VideosThisWeek($where: VideoWhereInput) {
+  top10VideosThisWeek(where: $where) {
+    ...VideoFields
   }
 }
 
-query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
-  mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    views
-  }
-}
-
-query GetMostViewedVideosAllTime($limit: Int!) {
-  mostViewedVideosAllTime(limit: $limit) {
-    id
-    views
+query GetTop10VideosThisMonth($where: VideoWhereInput) {
+  top10VideosThisMonth(where: $where) {
+    ...VideoFields
   }
 }
 

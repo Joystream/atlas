@@ -5,21 +5,20 @@ import {
   AssetAvailability,
   GetBasicVideosQuery,
   GetBasicVideosQueryVariables,
-  GetMostViewedVideosAllTimeQuery,
-  GetMostViewedVideosAllTimeQueryVariables,
-  GetMostViewedVideosQuery,
-  GetMostViewedVideosQueryVariables,
+  GetTop10VideosThisMonthQuery,
+  GetTop10VideosThisMonthQueryVariables,
+  GetTop10VideosThisWeekQuery,
+  GetTop10VideosThisWeekQueryVariables,
   GetVideoCountQuery,
   GetVideoCountQueryVariables,
   GetVideoQuery,
   GetVideoQueryVariables,
   GetVideosQuery,
-  GetVideosQueryVariables,
   VideoOrderByInput,
   useAddVideoViewMutation,
   useGetBasicVideosQuery,
-  useGetMostViewedVideosAllTimeQuery,
-  useGetMostViewedVideosQuery,
+  useGetTop10VideosThisMonthQuery,
+  useGetTop10VideosThisWeekQuery,
   useGetVideoCountQuery,
   useGetVideoQuery,
   useGetVideosQuery,
@@ -33,17 +32,6 @@ export const useVideo = (id: string, opts?: QueryHookOptions<GetVideoQuery, GetV
   return {
     video: data?.videoByUniqueInput,
     ...queryRest,
-  }
-}
-
-export const useVideos = (
-  variables?: GetVideosQueryVariables,
-  opts?: QueryHookOptions<GetVideosQuery, GetVideosQueryVariables>
-) => {
-  const { data, ...rest } = useGetVideosQuery({ ...opts, variables })
-  return {
-    videos: data?.videos,
-    ...rest,
   }
 }
 
@@ -105,48 +93,49 @@ export const useBasicVideos = (
   }
 }
 
-type MostViewedVideosQueryOpts = QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
-export const useMostViewedVideosIds = (
-  variables?: GetMostViewedVideosQueryVariables,
-  opts?: MostViewedVideosQueryOpts
+export const useTop10VideosThisWeek = (
+  variables?: GetTop10VideosThisWeekQueryVariables,
+  opts?: QueryHookOptions<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>
 ) => {
-  const { data, ...rest } = useGetMostViewedVideosQuery({ ...opts, variables })
+  const { data, ...rest } = useGetTop10VideosThisWeekQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
+      },
+    },
+  })
   return {
-    mostViewedVideos: data?.mostViewedVideos,
+    videos: data?.top10VideosThisWeek,
     ...rest,
   }
 }
 
-export const useMostViewedVideos = (
-  variables?: GetMostViewedVideosQueryVariables,
-  opts?: MostViewedVideosQueryOpts
+export const useTop10VideosThisMonth = (
+  variables?: GetTop10VideosThisMonthQueryVariables,
+  opts?: QueryHookOptions<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>
 ) => {
-  const { mostViewedVideos, loading, error } = useMostViewedVideosIds(variables, opts)
-
-  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
-
-  const { videos, ...rest } = useVideos(
-    {
+  const { data, ...rest } = useGetTop10VideosThisMonthQuery({
+    ...opts,
+    variables: {
+      ...variables,
       where: {
-        id_in: mostViewedVideosIds,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        ...variables?.where,
         isPublic_eq: true,
         isCensored_eq: false,
+        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        mediaAvailability_eq: AssetAvailability.Accepted,
       },
     },
-    { skip: !mostViewedVideosIds }
-  )
-
-  const sortedVideos = videos
-    ? videos.map((video) => ({ ...video, views: video.views || 0 })).sort((a, b) => b.views - a.views)
-    : null
-
+  })
   return {
-    videos: sortedVideos,
+    videos: data?.top10VideosThisMonth,
     ...rest,
-    error: error || rest.error,
-    loading: loading || rest.loading,
   }
 }
 
@@ -169,17 +158,6 @@ export const useVideoCount = (
   })
   return {
     videoCount: data?.videosConnection.totalCount,
-    ...rest,
-  }
-}
-
-export const useMostViewedVideosAllTimeIds = (
-  variables?: GetMostViewedVideosAllTimeQueryVariables,
-  opts?: QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
-) => {
-  const { data, ...rest } = useGetMostViewedVideosAllTimeQuery({ ...opts, variables })
-  return {
-    mostViewedVideosAllTime: data?.mostViewedVideosAllTime,
     ...rest,
   }
 }

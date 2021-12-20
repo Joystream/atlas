@@ -46,12 +46,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
-  const { videoCount } = useVideoCount(
-    { where: videoWhereInput },
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  )
+  const { videoCount } = useVideoCount({ where: videoWhereInput })
 
   useEffect(() => {
     setVideoWhereInput({

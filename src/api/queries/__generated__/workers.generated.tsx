@@ -37,16 +37,14 @@ export type GetWorkersQueryVariables = Types.Exact<{
 
 export type GetWorkersQuery = {
   __typename?: 'Query'
-  workers?: Types.Maybe<
-    Array<{
-      __typename?: 'Worker'
-      id: string
-      workerId: string
-      metadata?: Types.Maybe<string>
-      isActive: boolean
-      type: Types.WorkerType
-    }>
-  >
+  workers: Array<{
+    __typename?: 'Worker'
+    id: string
+    workerId: string
+    metadata?: Types.Maybe<string>
+    isActive: boolean
+    type: Types.WorkerType
+  }>
 }
 
 export const BasicWorkerFieldsFragmentDoc = gql`
