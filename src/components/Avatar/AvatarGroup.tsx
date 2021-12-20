@@ -1,21 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { AvatarProps } from './Avatar'
 import { AvatarGroupContainer, AvatarOverlay, AvatarWrapper, StyledAvatar } from './AvatarGroup.styles'
 
+import { Tooltip } from '../Tooltip'
+
 export type AvatarGroupProps = {
-  avatars: Omit<AvatarProps, 'size' | 'className'>[]
+  avatars: (Omit<AvatarProps, 'size' | 'className'> & { tooltipText?: string })[]
   size: 'bid' | 'small' | 'default'
 }
 
 export const AvatarGroup: React.FC<AvatarGroupProps> = ({ avatars, size = 'default' }) => {
+  const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   return (
     <AvatarGroupContainer>
       {avatars.map((avatarProps, idx) => (
-        <AvatarWrapper key={idx} idx={idx} size={size}>
-          <StyledAvatar size={size} {...avatarProps} />
-          <AvatarOverlay />
-        </AvatarWrapper>
+        <Tooltip key={idx} text={avatarProps.tooltipText} arrowDisabled placement="top">
+          <AvatarWrapper
+            onMouseEnter={() => setHoveredAvatarIdx(idx)}
+            onMouseLeave={() => setHoveredAvatarIdx(null)}
+            idx={idx}
+            size={size}
+            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+          >
+            <StyledAvatar size={size} {...avatarProps} />
+            <AvatarOverlay />
+          </AvatarWrapper>
+        </Tooltip>
       ))}
     </AvatarGroupContainer>
   )

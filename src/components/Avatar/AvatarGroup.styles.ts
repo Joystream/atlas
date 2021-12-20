@@ -22,7 +22,7 @@ export const AvatarWrapper = styled.div<{ idx: number; size: AvatarSize }>`
   z-index: 1;
   border-radius: 50%;
   transition: clip-path 200ms, transform 200ms;
-  left: ${({ idx }) => idx * -8}px;
+  left: ${({ idx, size }) => idx * (size === 'bid' ? 0 : -4)}px;
 
   :hover {
     z-index: 2;
