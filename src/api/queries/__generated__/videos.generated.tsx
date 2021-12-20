@@ -51,7 +51,7 @@ export type VideoFieldsFragment = {
   id: string
   title?: Types.Maybe<string>
   description?: Types.Maybe<string>
-  views?: Types.Maybe<number>
+  views: number
   duration?: Types.Maybe<number>
   createdAt: Date
   isPublic?: Types.Maybe<boolean>
@@ -66,12 +66,12 @@ export type VideoFieldsFragment = {
   thumbnailPhotoAvailability: Types.AssetAvailability
   category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
   language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-  mediaMetadata: {
+  mediaMetadata?: Types.Maybe<{
     __typename?: 'VideoMediaMetadata'
     id: string
     pixelHeight?: Types.Maybe<number>
     pixelWidth?: Types.Maybe<number>
-  }
+  }>
   mediaDataObject?: Types.Maybe<{
     __typename?: 'DataObject'
     id: string
@@ -106,11 +106,13 @@ export type VideoFieldsFragment = {
       type: Types.WorkerType
     }>
   }>
-  channel: {
+  channel?: Types.Maybe<{
     __typename?: 'Channel'
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
     avatarPhotoDataObject?: Types.Maybe<{
@@ -130,7 +132,7 @@ export type VideoFieldsFragment = {
         type: Types.WorkerType
       }>
     }>
-  }
+  }>
   license?: Types.Maybe<{
     __typename?: 'License'
     id: string
@@ -151,7 +153,7 @@ export type GetVideoQuery = {
     id: string
     title?: Types.Maybe<string>
     description?: Types.Maybe<string>
-    views?: Types.Maybe<number>
+    views: number
     duration?: Types.Maybe<number>
     createdAt: Date
     isPublic?: Types.Maybe<boolean>
@@ -166,12 +168,12 @@ export type GetVideoQuery = {
     thumbnailPhotoAvailability: Types.AssetAvailability
     category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
     language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-    mediaMetadata: {
+    mediaMetadata?: Types.Maybe<{
       __typename?: 'VideoMediaMetadata'
       id: string
       pixelHeight?: Types.Maybe<number>
       pixelWidth?: Types.Maybe<number>
-    }
+    }>
     mediaDataObject?: Types.Maybe<{
       __typename?: 'DataObject'
       id: string
@@ -206,11 +208,13 @@ export type GetVideoQuery = {
         type: Types.WorkerType
       }>
     }>
-    channel: {
+    channel?: Types.Maybe<{
       __typename?: 'Channel'
       id: string
       title?: Types.Maybe<string>
       createdAt: Date
+      views: number
+      follows: number
       avatarPhotoUrls: Array<string>
       avatarPhotoAvailability: Types.AssetAvailability
       avatarPhotoDataObject?: Types.Maybe<{
@@ -230,7 +234,7 @@ export type GetVideoQuery = {
           type: Types.WorkerType
         }>
       }>
-    }
+    }>
     license?: Types.Maybe<{
       __typename?: 'License'
       id: string
@@ -261,7 +265,7 @@ export type GetVideosConnectionQuery = {
         id: string
         title?: Types.Maybe<string>
         description?: Types.Maybe<string>
-        views?: Types.Maybe<number>
+        views: number
         duration?: Types.Maybe<number>
         createdAt: Date
         isPublic?: Types.Maybe<boolean>
@@ -276,12 +280,12 @@ export type GetVideosConnectionQuery = {
         thumbnailPhotoAvailability: Types.AssetAvailability
         category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
         language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-        mediaMetadata: {
+        mediaMetadata?: Types.Maybe<{
           __typename?: 'VideoMediaMetadata'
           id: string
           pixelHeight?: Types.Maybe<number>
           pixelWidth?: Types.Maybe<number>
-        }
+        }>
         mediaDataObject?: Types.Maybe<{
           __typename?: 'DataObject'
           id: string
@@ -316,11 +320,13 @@ export type GetVideosConnectionQuery = {
             type: Types.WorkerType
           }>
         }>
-        channel: {
+        channel?: Types.Maybe<{
           __typename?: 'Channel'
           id: string
           title?: Types.Maybe<string>
           createdAt: Date
+          views: number
+          follows: number
           avatarPhotoUrls: Array<string>
           avatarPhotoAvailability: Types.AssetAvailability
           avatarPhotoDataObject?: Types.Maybe<{
@@ -340,7 +346,7 @@ export type GetVideosConnectionQuery = {
               type: Types.WorkerType
             }>
           }>
-        }
+        }>
         license?: Types.Maybe<{
           __typename?: 'License'
           id: string
@@ -363,34 +369,76 @@ export type GetVideosQueryVariables = Types.Exact<{
 
 export type GetVideosQuery = {
   __typename?: 'Query'
-  videos?: Types.Maybe<
-    Array<{
-      __typename?: 'Video'
+  videos: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: Types.Maybe<string>
+    description?: Types.Maybe<string>
+    views: number
+    duration?: Types.Maybe<number>
+    createdAt: Date
+    isPublic?: Types.Maybe<boolean>
+    isExplicit?: Types.Maybe<boolean>
+    isFeatured: boolean
+    hasMarketing?: Types.Maybe<boolean>
+    isCensored: boolean
+    publishedBeforeJoystream?: Types.Maybe<Date>
+    mediaUrls: Array<string>
+    mediaAvailability: Types.AssetAvailability
+    thumbnailPhotoUrls: Array<string>
+    thumbnailPhotoAvailability: Types.AssetAvailability
+    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+    mediaMetadata?: Types.Maybe<{
+      __typename?: 'VideoMediaMetadata'
+      id: string
+      pixelHeight?: Types.Maybe<number>
+      pixelWidth?: Types.Maybe<number>
+    }>
+    mediaDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    thumbnailPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    channel?: Types.Maybe<{
+      __typename?: 'Channel'
       id: string
       title?: Types.Maybe<string>
-      description?: Types.Maybe<string>
-      views?: Types.Maybe<number>
-      duration?: Types.Maybe<number>
       createdAt: Date
-      isPublic?: Types.Maybe<boolean>
-      isExplicit?: Types.Maybe<boolean>
-      isFeatured: boolean
-      hasMarketing?: Types.Maybe<boolean>
-      isCensored: boolean
-      publishedBeforeJoystream?: Types.Maybe<Date>
-      mediaUrls: Array<string>
-      mediaAvailability: Types.AssetAvailability
-      thumbnailPhotoUrls: Array<string>
-      thumbnailPhotoAvailability: Types.AssetAvailability
-      category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-      language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-      mediaMetadata: {
-        __typename?: 'VideoMediaMetadata'
-        id: string
-        pixelHeight?: Types.Maybe<number>
-        pixelWidth?: Types.Maybe<number>
-      }
-      mediaDataObject?: Types.Maybe<{
+      views: number
+      follows: number
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
         __typename?: 'DataObject'
         id: string
         createdAt: Date
@@ -407,31 +455,93 @@ export type GetVideosQuery = {
           type: Types.WorkerType
         }>
       }>
-      thumbnailPhotoDataObject?: Types.Maybe<{
-        __typename?: 'DataObject'
+    }>
+    license?: Types.Maybe<{
+      __typename?: 'License'
+      id: string
+      code?: Types.Maybe<number>
+      attribution?: Types.Maybe<string>
+      customText?: Types.Maybe<string>
+    }>
+  }>
+}
+
+export type GetBasicVideosQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.VideoWhereInput>
+}>
+
+export type GetBasicVideosQuery = {
+  __typename?: 'Query'
+  videos: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: Types.Maybe<string>
+    thumbnailPhotoUrls: Array<string>
+    thumbnailPhotoAvailability: Types.AssetAvailability
+    thumbnailPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
         id: string
-        createdAt: Date
-        size: number
-        liaisonJudgement: Types.LiaisonJudgement
-        ipfsContentId: string
-        joystreamContentId: string
-        liaison?: Types.Maybe<{
-          __typename?: 'Worker'
-          id: string
-          workerId: string
-          metadata?: Types.Maybe<string>
-          isActive: boolean
-          type: Types.WorkerType
-        }>
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
       }>
-      channel: {
-        __typename?: 'Channel'
+    }>
+  }>
+}
+
+export type GetMostViewedVideosConnectionQueryVariables = Types.Exact<{
+  limit?: Types.Maybe<Types.Scalars['Int']>
+  periodDays?: Types.Maybe<Types.Scalars['Int']>
+  first?: Types.Maybe<Types.Scalars['Int']>
+  after?: Types.Maybe<Types.Scalars['String']>
+  orderBy?: Types.VideoOrderByInput
+  where?: Types.Maybe<Types.VideoWhereInput>
+}>
+
+export type GetMostViewedVideosConnectionQuery = {
+  __typename?: 'Query'
+  mostViewedVideosConnection: {
+    __typename?: 'VideoConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'VideoEdge'
+      cursor: string
+      node: {
+        __typename?: 'Video'
         id: string
         title?: Types.Maybe<string>
+        description?: Types.Maybe<string>
+        views: number
+        duration?: Types.Maybe<number>
         createdAt: Date
-        avatarPhotoUrls: Array<string>
-        avatarPhotoAvailability: Types.AssetAvailability
-        avatarPhotoDataObject?: Types.Maybe<{
+        isPublic?: Types.Maybe<boolean>
+        isExplicit?: Types.Maybe<boolean>
+        isFeatured: boolean
+        hasMarketing?: Types.Maybe<boolean>
+        isCensored: boolean
+        publishedBeforeJoystream?: Types.Maybe<Date>
+        mediaUrls: Array<string>
+        mediaAvailability: Types.AssetAvailability
+        thumbnailPhotoUrls: Array<string>
+        thumbnailPhotoAvailability: Types.AssetAvailability
+        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+        mediaMetadata?: Types.Maybe<{
+          __typename?: 'VideoMediaMetadata'
+          id: string
+          pixelHeight?: Types.Maybe<number>
+          pixelWidth?: Types.Maybe<number>
+        }>
+        mediaDataObject?: Types.Maybe<{
           __typename?: 'DataObject'
           id: string
           createdAt: Date
@@ -448,32 +558,139 @@ export type GetVideosQuery = {
             type: Types.WorkerType
           }>
         }>
+        thumbnailPhotoDataObject?: Types.Maybe<{
+          __typename?: 'DataObject'
+          id: string
+          createdAt: Date
+          size: number
+          liaisonJudgement: Types.LiaisonJudgement
+          ipfsContentId: string
+          joystreamContentId: string
+          liaison?: Types.Maybe<{
+            __typename?: 'Worker'
+            id: string
+            workerId: string
+            metadata?: Types.Maybe<string>
+            isActive: boolean
+            type: Types.WorkerType
+          }>
+        }>
+        channel?: Types.Maybe<{
+          __typename?: 'Channel'
+          id: string
+          title?: Types.Maybe<string>
+          createdAt: Date
+          views: number
+          follows: number
+          avatarPhotoUrls: Array<string>
+          avatarPhotoAvailability: Types.AssetAvailability
+          avatarPhotoDataObject?: Types.Maybe<{
+            __typename?: 'DataObject'
+            id: string
+            createdAt: Date
+            size: number
+            liaisonJudgement: Types.LiaisonJudgement
+            ipfsContentId: string
+            joystreamContentId: string
+            liaison?: Types.Maybe<{
+              __typename?: 'Worker'
+              id: string
+              workerId: string
+              metadata?: Types.Maybe<string>
+              isActive: boolean
+              type: Types.WorkerType
+            }>
+          }>
+        }>
+        license?: Types.Maybe<{
+          __typename?: 'License'
+          id: string
+          code?: Types.Maybe<number>
+          attribution?: Types.Maybe<string>
+          customText?: Types.Maybe<string>
+        }>
       }
-      license?: Types.Maybe<{
-        __typename?: 'License'
-        id: string
-        code?: Types.Maybe<number>
-        attribution?: Types.Maybe<string>
-        customText?: Types.Maybe<string>
-      }>
     }>
-  >
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+  }
 }
 
-export type GetBasicVideosQueryVariables = Types.Exact<{
+export type GetTop10VideosThisWeekQueryVariables = Types.Exact<{
   where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
-export type GetBasicVideosQuery = {
+export type GetTop10VideosThisWeekQuery = {
   __typename?: 'Query'
-  videos?: Types.Maybe<
-    Array<{
-      __typename?: 'Video'
+  top10VideosThisWeek: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: Types.Maybe<string>
+    description?: Types.Maybe<string>
+    views: number
+    duration?: Types.Maybe<number>
+    createdAt: Date
+    isPublic?: Types.Maybe<boolean>
+    isExplicit?: Types.Maybe<boolean>
+    isFeatured: boolean
+    hasMarketing?: Types.Maybe<boolean>
+    isCensored: boolean
+    publishedBeforeJoystream?: Types.Maybe<Date>
+    mediaUrls: Array<string>
+    mediaAvailability: Types.AssetAvailability
+    thumbnailPhotoUrls: Array<string>
+    thumbnailPhotoAvailability: Types.AssetAvailability
+    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+    mediaMetadata?: Types.Maybe<{
+      __typename?: 'VideoMediaMetadata'
+      id: string
+      pixelHeight?: Types.Maybe<number>
+      pixelWidth?: Types.Maybe<number>
+    }>
+    mediaDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    thumbnailPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    channel?: Types.Maybe<{
+      __typename?: 'Channel'
       id: string
       title?: Types.Maybe<string>
-      thumbnailPhotoUrls: Array<string>
-      thumbnailPhotoAvailability: Types.AssetAvailability
-      thumbnailPhotoDataObject?: Types.Maybe<{
+      createdAt: Date
+      views: number
+      follows: number
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
         __typename?: 'DataObject'
         id: string
         createdAt: Date
@@ -491,44 +708,117 @@ export type GetBasicVideosQuery = {
         }>
       }>
     }>
-  >
+    license?: Types.Maybe<{
+      __typename?: 'License'
+      id: string
+      code?: Types.Maybe<number>
+      attribution?: Types.Maybe<string>
+      customText?: Types.Maybe<string>
+    }>
+  }>
 }
 
-export type GetVideoViewsQueryVariables = Types.Exact<{
-  videoId: Types.Scalars['ID']
+export type GetTop10VideosThisMonthQueryVariables = Types.Exact<{
+  where?: Types.Maybe<Types.VideoWhereInput>
 }>
 
-export type GetVideoViewsQuery = {
+export type GetTop10VideosThisMonthQuery = {
   __typename?: 'Query'
-  videoViews?: Types.Maybe<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>
-}
-
-export type GetBatchedVideoViewsQueryVariables = Types.Exact<{
-  videoIdList: Array<Types.Scalars['ID']> | Types.Scalars['ID']
-}>
-
-export type GetBatchedVideoViewsQuery = {
-  __typename?: 'Query'
-  batchedVideoViews: Array<Types.Maybe<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
-}
-
-export type GetMostViewedVideosQueryVariables = Types.Exact<{
-  timePeriodDays: Types.Scalars['Int']
-  limit?: Types.Maybe<Types.Scalars['Int']>
-}>
-
-export type GetMostViewedVideosQuery = {
-  __typename?: 'Query'
-  mostViewedVideos?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
-}
-
-export type GetMostViewedVideosAllTimeQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
-}>
-
-export type GetMostViewedVideosAllTimeQuery = {
-  __typename?: 'Query'
-  mostViewedVideosAllTime?: Types.Maybe<Array<{ __typename?: 'EntityViewsInfo'; id: string; views: number }>>
+  top10VideosThisMonth: Array<{
+    __typename?: 'Video'
+    id: string
+    title?: Types.Maybe<string>
+    description?: Types.Maybe<string>
+    views: number
+    duration?: Types.Maybe<number>
+    createdAt: Date
+    isPublic?: Types.Maybe<boolean>
+    isExplicit?: Types.Maybe<boolean>
+    isFeatured: boolean
+    hasMarketing?: Types.Maybe<boolean>
+    isCensored: boolean
+    publishedBeforeJoystream?: Types.Maybe<Date>
+    mediaUrls: Array<string>
+    mediaAvailability: Types.AssetAvailability
+    thumbnailPhotoUrls: Array<string>
+    thumbnailPhotoAvailability: Types.AssetAvailability
+    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
+    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
+    mediaMetadata?: Types.Maybe<{
+      __typename?: 'VideoMediaMetadata'
+      id: string
+      pixelHeight?: Types.Maybe<number>
+      pixelWidth?: Types.Maybe<number>
+    }>
+    mediaDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    thumbnailPhotoDataObject?: Types.Maybe<{
+      __typename?: 'DataObject'
+      id: string
+      createdAt: Date
+      size: number
+      liaisonJudgement: Types.LiaisonJudgement
+      ipfsContentId: string
+      joystreamContentId: string
+      liaison?: Types.Maybe<{
+        __typename?: 'Worker'
+        id: string
+        workerId: string
+        metadata?: Types.Maybe<string>
+        isActive: boolean
+        type: Types.WorkerType
+      }>
+    }>
+    channel?: Types.Maybe<{
+      __typename?: 'Channel'
+      id: string
+      title?: Types.Maybe<string>
+      createdAt: Date
+      views: number
+      follows: number
+      avatarPhotoUrls: Array<string>
+      avatarPhotoAvailability: Types.AssetAvailability
+      avatarPhotoDataObject?: Types.Maybe<{
+        __typename?: 'DataObject'
+        id: string
+        createdAt: Date
+        size: number
+        liaisonJudgement: Types.LiaisonJudgement
+        ipfsContentId: string
+        joystreamContentId: string
+        liaison?: Types.Maybe<{
+          __typename?: 'Worker'
+          id: string
+          workerId: string
+          metadata?: Types.Maybe<string>
+          isActive: boolean
+          type: Types.WorkerType
+        }>
+      }>
+    }>
+    license?: Types.Maybe<{
+      __typename?: 'License'
+      id: string
+      code?: Types.Maybe<number>
+      attribution?: Types.Maybe<string>
+      customText?: Types.Maybe<string>
+    }>
+  }>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
@@ -798,193 +1088,186 @@ export function useGetBasicVideosLazyQuery(
 export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQuery>
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
-export const GetVideoViewsDocument = gql`
-  query GetVideoViews($videoId: ID!) {
-    videoViews(videoId: $videoId) {
-      id
-      views
+export const GetMostViewedVideosConnectionDocument = gql`
+  query GetMostViewedVideosConnection(
+    $limit: Int = 50
+    $periodDays: Int
+    $first: Int
+    $after: String
+    $orderBy: VideoOrderByInput! = createdAt_DESC
+    $where: VideoWhereInput
+  ) {
+    mostViewedVideosConnection(
+      limit: $limit
+      first: $first
+      after: $after
+      periodDays: $periodDays
+      orderBy: [$orderBy]
+      where: $where
+    ) {
+      edges {
+        cursor
+        node {
+          ...VideoFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
     }
   }
+  ${VideoFieldsFragmentDoc}
 `
 
 /**
- * __useGetVideoViewsQuery__
+ * __useGetMostViewedVideosConnectionQuery__
  *
- * To run a query within a React component, call `useGetVideoViewsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVideoViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMostViewedVideosConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMostViewedVideosConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetVideoViewsQuery({
- *   variables: {
- *      videoId: // value for 'videoId'
- *   },
- * });
- */
-export function useGetVideoViewsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, options)
-}
-export function useGetVideoViewsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetVideoViewsQuery, GetVideoViewsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetVideoViewsQuery, GetVideoViewsQueryVariables>(GetVideoViewsDocument, options)
-}
-export type GetVideoViewsQueryHookResult = ReturnType<typeof useGetVideoViewsQuery>
-export type GetVideoViewsLazyQueryHookResult = ReturnType<typeof useGetVideoViewsLazyQuery>
-export type GetVideoViewsQueryResult = Apollo.QueryResult<GetVideoViewsQuery, GetVideoViewsQueryVariables>
-export const GetBatchedVideoViewsDocument = gql`
-  query GetBatchedVideoViews($videoIdList: [ID!]!) {
-    batchedVideoViews(videoIdList: $videoIdList) {
-      id
-      views
-    }
-  }
-`
-
-/**
- * __useGetBatchedVideoViewsQuery__
- *
- * To run a query within a React component, call `useGetBatchedVideoViewsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBatchedVideoViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBatchedVideoViewsQuery({
- *   variables: {
- *      videoIdList: // value for 'videoIdList'
- *   },
- * });
- */
-export function useGetBatchedVideoViewsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
-    GetBatchedVideoViewsDocument,
-    options
-  )
-}
-export function useGetBatchedVideoViewsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetBatchedVideoViewsQuery, GetBatchedVideoViewsQueryVariables>(
-    GetBatchedVideoViewsDocument,
-    options
-  )
-}
-export type GetBatchedVideoViewsQueryHookResult = ReturnType<typeof useGetBatchedVideoViewsQuery>
-export type GetBatchedVideoViewsLazyQueryHookResult = ReturnType<typeof useGetBatchedVideoViewsLazyQuery>
-export type GetBatchedVideoViewsQueryResult = Apollo.QueryResult<
-  GetBatchedVideoViewsQuery,
-  GetBatchedVideoViewsQueryVariables
->
-export const GetMostViewedVideosDocument = gql`
-  query GetMostViewedVideos($timePeriodDays: Int!, $limit: Int) {
-    mostViewedVideos(timePeriodDays: $timePeriodDays, limit: $limit) {
-      id
-      views
-    }
-  }
-`
-
-/**
- * __useGetMostViewedVideosQuery__
- *
- * To run a query within a React component, call `useGetMostViewedVideosQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostViewedVideosQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostViewedVideosQuery({
- *   variables: {
- *      timePeriodDays: // value for 'timePeriodDays'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useGetMostViewedVideosQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>(
-    GetMostViewedVideosDocument,
-    options
-  )
-}
-export function useGetMostViewedVideosLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostViewedVideosQuery, GetMostViewedVideosQueryVariables>(
-    GetMostViewedVideosDocument,
-    options
-  )
-}
-export type GetMostViewedVideosQueryHookResult = ReturnType<typeof useGetMostViewedVideosQuery>
-export type GetMostViewedVideosLazyQueryHookResult = ReturnType<typeof useGetMostViewedVideosLazyQuery>
-export type GetMostViewedVideosQueryResult = Apollo.QueryResult<
-  GetMostViewedVideosQuery,
-  GetMostViewedVideosQueryVariables
->
-export const GetMostViewedVideosAllTimeDocument = gql`
-  query GetMostViewedVideosAllTime($limit: Int!) {
-    mostViewedVideosAllTime(limit: $limit) {
-      id
-      views
-    }
-  }
-`
-
-/**
- * __useGetMostViewedVideosAllTimeQuery__
- *
- * To run a query within a React component, call `useGetMostViewedVideosAllTimeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMostViewedVideosAllTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMostViewedVideosAllTimeQuery({
+ * const { data, loading, error } = useGetMostViewedVideosConnectionQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      periodDays: // value for 'periodDays'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      orderBy: // value for 'orderBy'
+ *      where: // value for 'where'
  *   },
  * });
  */
-export function useGetMostViewedVideosAllTimeQuery(
-  baseOptions: Apollo.QueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
+export function useGetMostViewedVideosConnectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetMostViewedVideosConnectionQuery, GetMostViewedVideosConnectionQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>(
-    GetMostViewedVideosAllTimeDocument,
+  return Apollo.useQuery<GetMostViewedVideosConnectionQuery, GetMostViewedVideosConnectionQueryVariables>(
+    GetMostViewedVideosConnectionDocument,
     options
   )
 }
-export function useGetMostViewedVideosAllTimeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>
+export function useGetMostViewedVideosConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMostViewedVideosConnectionQuery,
+    GetMostViewedVideosConnectionQueryVariables
+  >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetMostViewedVideosAllTimeQuery, GetMostViewedVideosAllTimeQueryVariables>(
-    GetMostViewedVideosAllTimeDocument,
+  return Apollo.useLazyQuery<GetMostViewedVideosConnectionQuery, GetMostViewedVideosConnectionQueryVariables>(
+    GetMostViewedVideosConnectionDocument,
     options
   )
 }
-export type GetMostViewedVideosAllTimeQueryHookResult = ReturnType<typeof useGetMostViewedVideosAllTimeQuery>
-export type GetMostViewedVideosAllTimeLazyQueryHookResult = ReturnType<typeof useGetMostViewedVideosAllTimeLazyQuery>
-export type GetMostViewedVideosAllTimeQueryResult = Apollo.QueryResult<
-  GetMostViewedVideosAllTimeQuery,
-  GetMostViewedVideosAllTimeQueryVariables
+export type GetMostViewedVideosConnectionQueryHookResult = ReturnType<typeof useGetMostViewedVideosConnectionQuery>
+export type GetMostViewedVideosConnectionLazyQueryHookResult = ReturnType<
+  typeof useGetMostViewedVideosConnectionLazyQuery
+>
+export type GetMostViewedVideosConnectionQueryResult = Apollo.QueryResult<
+  GetMostViewedVideosConnectionQuery,
+  GetMostViewedVideosConnectionQueryVariables
+>
+export const GetTop10VideosThisWeekDocument = gql`
+  query GetTop10VideosThisWeek($where: VideoWhereInput) {
+    top10VideosThisWeek(where: $where) {
+      ...VideoFields
+    }
+  }
+  ${VideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTop10VideosThisWeekQuery__
+ *
+ * To run a query within a React component, call `useGetTop10VideosThisWeekQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTop10VideosThisWeekQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTop10VideosThisWeekQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTop10VideosThisWeekQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>(
+    GetTop10VideosThisWeekDocument,
+    options
+  )
+}
+export function useGetTop10VideosThisWeekLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTop10VideosThisWeekQuery, GetTop10VideosThisWeekQueryVariables>(
+    GetTop10VideosThisWeekDocument,
+    options
+  )
+}
+export type GetTop10VideosThisWeekQueryHookResult = ReturnType<typeof useGetTop10VideosThisWeekQuery>
+export type GetTop10VideosThisWeekLazyQueryHookResult = ReturnType<typeof useGetTop10VideosThisWeekLazyQuery>
+export type GetTop10VideosThisWeekQueryResult = Apollo.QueryResult<
+  GetTop10VideosThisWeekQuery,
+  GetTop10VideosThisWeekQueryVariables
+>
+export const GetTop10VideosThisMonthDocument = gql`
+  query GetTop10VideosThisMonth($where: VideoWhereInput) {
+    top10VideosThisMonth(where: $where) {
+      ...VideoFields
+    }
+  }
+  ${VideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetTop10VideosThisMonthQuery__
+ *
+ * To run a query within a React component, call `useGetTop10VideosThisMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTop10VideosThisMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTop10VideosThisMonthQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetTop10VideosThisMonthQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>(
+    GetTop10VideosThisMonthDocument,
+    options
+  )
+}
+export function useGetTop10VideosThisMonthLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetTop10VideosThisMonthQuery, GetTop10VideosThisMonthQueryVariables>(
+    GetTop10VideosThisMonthDocument,
+    options
+  )
+}
+export type GetTop10VideosThisMonthQueryHookResult = ReturnType<typeof useGetTop10VideosThisMonthQuery>
+export type GetTop10VideosThisMonthLazyQueryHookResult = ReturnType<typeof useGetTop10VideosThisMonthLazyQuery>
+export type GetTop10VideosThisMonthQueryResult = Apollo.QueryResult<
+  GetTop10VideosThisMonthQuery,
+  GetTop10VideosThisMonthQueryVariables
 >
 export const AddVideoViewDocument = gql`
   mutation AddVideoView($videoId: ID!, $channelId: ID!, $categoryId: ID) {

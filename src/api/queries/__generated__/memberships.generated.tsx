@@ -17,6 +17,8 @@ export type BasicMembershipFieldsFragment = {
     id: string
     title?: Types.Maybe<string>
     createdAt: Date
+    views: number
+    follows: number
     avatarPhotoUrls: Array<string>
     avatarPhotoAvailability: Types.AssetAvailability
     avatarPhotoDataObject?: Types.Maybe<{
@@ -57,6 +59,8 @@ export type GetMembershipQuery = {
       id: string
       title?: Types.Maybe<string>
       createdAt: Date
+      views: number
+      follows: number
       avatarPhotoUrls: Array<string>
       avatarPhotoAvailability: Types.AssetAvailability
       avatarPhotoDataObject?: Types.Maybe<{
@@ -98,6 +102,8 @@ export type GetMembershipsQuery = {
       id: string
       title?: Types.Maybe<string>
       createdAt: Date
+      views: number
+      follows: number
       avatarPhotoUrls: Array<string>
       avatarPhotoAvailability: Types.AssetAvailability
       avatarPhotoDataObject?: Types.Maybe<{

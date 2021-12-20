@@ -1,44 +1,20 @@
-import styled from '@emotion/styled'
 import React from 'react'
 
-import { ChannelEdge, ChannelOrderByInput, VideoEdge } from '@/api/queries'
-import { InfiniteChannelWithVideosGrid } from '@/components/InfiniteGrids'
-import { sizes } from '@/styles'
+import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
+import { absoluteRoutes } from '@/config/routes'
+
+const BROWSE_CHANNELS_LINK = { name: 'Browse channels', url: absoluteRoutes.viewer.channels() }
 
 type DiscoverChannelsProps = {
-  additionalLink?: {
-    name: string
-    url: string
-  }
+  withLink?: boolean
 }
 
-export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ additionalLink }) => {
-  const sortChannelsByFollowsDesc = (edges?: ChannelEdge[] | VideoEdge[]) => {
-    if (!edges) {
-      return []
-    }
-    return [...edges].sort((a, b) => {
-      if ('follows' in b.node && 'follows' in a.node) {
-        return (b.node.follows || 0) - (a.node.follows || 0)
-      } else {
-        return 0
-      }
-    })
-  }
-
+export const DiscoverChannels: React.FC<DiscoverChannelsProps> = ({ withLink }) => {
   return (
-    <StyledInfiniteChannelWithVideosGrid
+    <ExpandableChannelsList
       title="Discover new channels"
-      onDemand
-      orderBy={ChannelOrderByInput.CreatedAtDesc}
-      additionalSortFn={sortChannelsByFollowsDesc}
-      additionalLink={additionalLink}
+      additionalLink={withLink ? BROWSE_CHANNELS_LINK : undefined}
+      queryType="discover"
     />
   )
 }
-
-const StyledInfiniteChannelWithVideosGrid = styled(InfiniteChannelWithVideosGrid)`
-  :not(:last-of-type) {
-    margin-bottom: ${sizes(38)};
-  }
-`

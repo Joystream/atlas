@@ -1,8 +1,10 @@
+import { DocumentNode } from 'graphql'
 import React, { useCallback, useState } from 'react'
 
 import {
   AssetAvailability,
-  ChannelOrderByInput,
+  GetMostViewedVideosConnectionQuery,
+  GetMostViewedVideosConnectionQueryVariables,
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
   GetVideosConnectionQueryVariables,
@@ -23,6 +25,11 @@ import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
 
 type InfiniteVideoGridProps = {
+  query?: DocumentNode
+  // `periodDays` argument to be passed to the most viewed connection query - it will let you set the time period of most views
+  periodDays?: number
+  // `limit` argument to be passed to the most viewed connection query - it will let you cap the number of videos in the connection
+  limit?: number
   title?: string
   titleLoader?: boolean
   videoWhereInput?: VideoWhereInput
@@ -30,10 +37,11 @@ type InfiniteVideoGridProps = {
   ready?: boolean
   showChannel?: boolean
   className?: string
-  currentlyWatchedVideoId?: string
+  // exclude a specific video from the result
+  excludeId?: string
   onDemand?: boolean
   onDemandInfinite?: boolean
-  orderBy?: ChannelOrderByInput | VideoOrderByInput
+  orderBy?: VideoOrderByInput
   emptyFallback?: React.ReactNode
   additionalLink?: {
     name: string
@@ -43,9 +51,14 @@ type InfiniteVideoGridProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
+type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
+
 export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
+      query = GetVideosConnectionDocument,
+      periodDays,
+      limit,
       title,
       videoWhereInput,
       orderBy,
@@ -53,7 +66,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       ready = true,
       showChannel = true,
       className,
-      currentlyWatchedVideoId,
+      excludeId,
       onDemand = false,
       onDemandInfinite = false,
       additionalLink,
@@ -66,11 +79,16 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
     const rowsToLoad = useVideoGridRows()
     const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
+    const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
-    const queryVariables: { where: VideoWhereInput } = {
+    const queryVariables: GetVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
+      periodDays,
+      limit,
+      orderBy,
       where: {
         isPublic_eq: true,
+        isCensored_eq: false,
         thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
         mediaAvailability_eq: AssetAvailability.Accepted,
         ...videoWhereInput,
@@ -82,34 +100,22 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     }, [targetRowsCount, rowsToLoad])
 
     const { placeholdersCount, displayedItems, error, totalCount, loading } = useInfiniteGrid<
-      GetVideosConnectionQuery,
+      VideoQuery,
       GetVideosConnectionQuery['videosConnection'],
       GetVideosConnectionQueryVariables
     >({
-      query: GetVideosConnectionDocument,
-      isReady: ready,
+      query: query || GetVideosConnectionDocument,
+      isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,
-      orderBy,
       targetRowsCount,
       onDemand,
       onDemandInfinite,
       activatedInfinteGrid,
       onScrollToBottom: !onDemand ? fetchMore : undefined,
-      dataAccessor: (rawData) => {
-        if (currentlyWatchedVideoId) {
-          return (
-            rawData?.videosConnection && {
-              ...rawData.videosConnection,
-              totalCount: rawData.videosConnection.totalCount - 1,
-              edges: rawData.videosConnection.edges.filter((edge) => edge.node.id !== currentlyWatchedVideoId),
-            }
-          )
-        }
-        return rawData?.videosConnection
-      },
       itemsPerRow: videosPerRow,
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'InfiniteVideoGrid', error),
+      dataAccessor: createRawDataAccessor(excludeId),
     })
 
     const placeholderItems = Array.from({ length: placeholdersCount }, () => ({ id: undefined }))
@@ -125,18 +131,17 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       return null
     }
 
-    if (displayedItems.length <= 0 && placeholdersCount <= 0 && !emptyFallback) {
+    const hasNoItems = ready && initialGridResizeDone && !loading && totalCount === 0
+    if (hasNoItems && !emptyFallback) {
       return null
     }
 
     const shouldShowLoadMoreButton =
       (onDemand || (onDemandInfinite && !activatedInfinteGrid)) && !loading && displayedItems.length < totalCount
-    // TODO: We should probably postpone doing first fetch until `onResize` gets called.
-    // Right now we'll make the first request and then right after another one based on the resized columns
 
     return (
       <section ref={ref} className={className}>
-        {totalCount === 0 && !loading && !!emptyFallback ? (
+        {hasNoItems && !!emptyFallback ? (
           emptyFallback
         ) : (
           <>
@@ -162,7 +167,16 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
                 </TitleContainer>
               </GridHeadingContainer>
             )}
-            <Grid onResize={(sizes) => setVideosPerRow(sizes.length)}>{gridContent}</Grid>
+            <Grid
+              onResize={(sizes) => {
+                setVideosPerRow(sizes.length)
+                if (!initialGridResizeDone) {
+                  setInitialGridResizeDone(true)
+                }
+              }}
+            >
+              {gridContent}
+            </Grid>
             {shouldShowLoadMoreButton && (
               <LoadMoreButtonWrapper>
                 <LoadMoreButton
@@ -183,3 +197,30 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
   }
 )
 InfiniteVideoGrid.displayName = 'InfiniteVideoGrid'
+
+const createRawDataAccessor = (excludeId?: string) => (rawData?: VideoQuery) => {
+  if (!rawData) {
+    return
+  }
+
+  const queryResult =
+    'videosConnection' in rawData
+      ? rawData.videosConnection
+      : 'mostViewedVideosConnection' in rawData
+      ? rawData.mostViewedVideosConnection
+      : null
+  if (!queryResult) {
+    SentryLogger.error('Unknown property in query data', 'InfiniteVideoGrid', null, { query: { rawData } })
+    throw new Error("Couldn't access data for video grid")
+  }
+
+  if (!excludeId) {
+    return queryResult
+  }
+
+  return {
+    ...queryResult,
+    totalCount: queryResult.totalCount - 1,
+    edges: queryResult.edges.filter((edge) => edge.node.id !== excludeId),
+  }
+}
