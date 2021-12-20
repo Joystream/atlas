@@ -41,7 +41,6 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
   queryType,
   title,
   className,
-  // channels,
   additionalLink,
   languageSelector,
 }) => {
