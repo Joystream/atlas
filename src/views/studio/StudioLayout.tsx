@@ -76,7 +76,10 @@ const StudioLayout = () => {
     <>
       <GlobalStyles hasSidebar={channelSet} />
 
-      <NoConnectionIndicator nodeConnectionStatus={nodeConnectionStatus} isConnectedToInternet={false} />
+      <NoConnectionIndicator
+        nodeConnectionStatus={nodeConnectionStatus}
+        isConnectedToInternet={internetConnectionStatus === 'connected'}
+      />
       <TopbarStudio hideChannelInfo={!memberSet} />
       <CSSTransition
         in={channelSet}
