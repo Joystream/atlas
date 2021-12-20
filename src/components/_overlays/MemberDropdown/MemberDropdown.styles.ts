@@ -14,7 +14,7 @@ export const Container = styled.div<{ isActive: boolean }>`
   right: ${sizes(4)};
   top: 0;
   width: 280px;
-  max-height: calc(${window.innerHeight - sizes(4, true)}px - var(--size-topbar-height));
+  max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
   overflow-x: hidden;
   overflow-y: auto;
   background-color: ${cVar('colorCoreNeutral700')};
