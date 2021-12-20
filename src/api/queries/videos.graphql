@@ -108,7 +108,14 @@ query GetMostViewedVideosConnection(
   $orderBy: VideoOrderByInput! = createdAt_DESC
   $where: VideoWhereInput
 ) {
-  mostViewedVideosConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, orderBy: [$orderBy], where: $where) {
+  mostViewedVideosConnection(
+    limit: $limit
+    first: $first
+    after: $after
+    periodDays: $periodDays
+    orderBy: [$orderBy]
+    where: $where
+  ) {
     edges {
       cursor
       node {
