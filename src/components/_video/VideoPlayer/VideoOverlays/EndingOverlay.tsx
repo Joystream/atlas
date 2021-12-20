@@ -102,12 +102,12 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
 
+  const stopPropagationx = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   return (
-    <OverlayBackground
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
-    >
+    <OverlayBackground onClick={stopPropagationx}>
       {randomNextVideo ? (
         <Container isFullScreen={isFullScreen}>
           <InnerContainer
@@ -122,9 +122,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               </Text>
               <Heading variant={mdMatch ? 'h500' : 'h400'}>{randomNextVideo.title}</Heading>
               <StyledChannelLink
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
+                onClick={stopPropagationx}
                 id={channelId}
                 avatarSize="default"
                 textVariant={mdMatch ? 't300' : 't200'}
