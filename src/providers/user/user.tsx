@@ -1,6 +1,6 @@
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -18,7 +18,7 @@ export type Account = {
 type ActiveUserContextValue = ActiveUserStoreActions & {
   activeUserState: ActiveUserState
   accounts: Account[] | null
-  extensionConnected: boolean | null
+  extensionConnected: boolean | null | 'pending'
 
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
@@ -29,6 +29,7 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
 
   userInitialized: boolean
+  signIn: () => Promise<void>
 }
 
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
@@ -81,41 +82,45 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
-  // handle polkadot extension
-  useEffect(() => {
-    let unsub: () => void
+  const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
+    const mappedAccounts = accounts.map((a) => ({
+      id: a.address,
+      name: a.meta.name || 'Unnamed',
+    }))
+    setAccounts(mappedAccounts)
+  }
 
-    const initPolkadotExtension = async () => {
-      try {
-        const enabledExtensions = await web3Enable(WEB3_APP_NAME)
+  const signIn = useCallback(async () => {
+    try {
+      const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
-        if (!enabledExtensions.length) {
-          ConsoleLogger.warn('No Polkadot extension detected')
-          setExtensionConnected(false)
-          return
-        }
-
-        const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
-          const mappedAccounts = accounts.map((a) => ({
-            id: a.address,
-            name: a.meta.name || 'Unnamed',
-          }))
-          setAccounts(mappedAccounts)
-        }
-
-        // subscribe to changes to the accounts list
-        unsub = await web3AccountsSubscribe(handleAccountsChange)
-        const accounts = await web3Accounts()
-        handleAccountsChange(accounts)
-
-        setExtensionConnected(true)
-      } catch (e) {
+      if (!enabledExtensions.length) {
+        ConsoleLogger.warn('No Polkadot extension detected')
         setExtensionConnected(false)
-        SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
+        return
       }
-    }
 
-    initPolkadotExtension()
+      const accounts = await web3Accounts()
+      handleAccountsChange(accounts)
+      setExtensionConnected(true)
+    } catch (e) {
+      setExtensionConnected(false)
+      SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeMembership?.id) {
+      signIn()
+    }
+  }, [activeMembership?.id, signIn])
+
+  useEffect(() => {
+    // subscribe to changes to the account list
+    const unsub = async () => {
+      await web3Accounts()
+      await web3AccountsSubscribe(handleAccountsChange)
+    }
 
     return () => {
       unsub?.()
@@ -165,6 +170,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       activeMembershipLoading,
       refetchActiveMembership,
 
+      signIn,
+
       userInitialized,
     }),
     [
@@ -179,6 +186,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       refetchMemberships,
       resetActiveUser,
       setActiveUser,
+      signIn,
       userInitialized,
     ]
   )

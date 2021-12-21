@@ -32,7 +32,7 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, signIn, userInitialized } =
     useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
@@ -42,6 +42,10 @@ const StudioLayout = () => {
   const accountSet = !!activeAccountId && !!extensionConnected
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
+
+  useEffect(() => {
+    signIn()
+  }, [signIn])
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
