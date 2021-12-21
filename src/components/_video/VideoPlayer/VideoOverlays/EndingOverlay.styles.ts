@@ -47,6 +47,7 @@ export const InnerContainer = styled.div`
   overflow-y: auto;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   ${media.md} {
     width: 100%;

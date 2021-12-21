@@ -32,7 +32,7 @@ type EndingOverlayProps = {
   isEnded: boolean
 }
 // 10 seconds
-const NEXT_VIDEO_TIMEOUT = 10000
+const NEXT_VIDEO_TIMEOUT = 10 * 1000
 
 export const EndingOverlay: React.FC<EndingOverlayProps> = ({
   onPlayAgain,
@@ -102,18 +102,31 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     }
   }, [currentThumbnailUrl, randomNextVideo, randomNextVideoThumbnailUrl])
 
+  const stopPropagationx = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
   return (
-    <OverlayBackground>
+    <OverlayBackground onClick={stopPropagationx}>
       {randomNextVideo ? (
         <Container isFullScreen={isFullScreen}>
-          <InnerContainer>
+          <InnerContainer
+            onClick={() => {
+              navigate(absoluteRoutes.viewer.video(randomNextVideo.id))
+            }}
+          >
             <VideoThumbnail src={thumbnailUrl} />
             <VideoInfo>
               <Text variant={mdMatch ? 't300' : 't200'} secondary>
                 Up next
               </Text>
               <Heading variant={mdMatch ? 'h500' : 'h400'}>{randomNextVideo.title}</Heading>
-              <StyledChannelLink id={channelId} avatarSize="default" textVariant={mdMatch ? 't300' : 't200'} />
+              <StyledChannelLink
+                onClick={stopPropagationx}
+                id={channelId}
+                avatarSize="default"
+                textVariant={mdMatch ? 't300' : 't200'}
+              />
             </VideoInfo>
           </InnerContainer>
           <CountDownWrapper>
