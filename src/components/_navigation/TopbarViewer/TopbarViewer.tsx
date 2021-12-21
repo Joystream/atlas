@@ -7,6 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { Loader } from '@/components/_loaders/Loader'
+import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { Modal } from '@/components/_overlays/Modal'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -85,6 +86,13 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery('')
   }
 
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+
+  const handleDrawerToggle = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation()
+    setIsMemberDropdownActive(!isMemberDropdownActive)
+  }
+
   return (
     <>
       <Modal show={isLoading} noBoxShadow>
@@ -128,7 +136,7 @@ export const TopbarViewer: React.FC = () => {
                 >
                   Go to Studio
                 </Button>
-                <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />
+                <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
               </SignedButtonsWrapper>
             ) : (
               <Button
@@ -149,6 +157,7 @@ export const TopbarViewer: React.FC = () => {
           <Overlay onClick={onClose} />
         </CSSTransition>
       </StyledTopbarBase>
+      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
     </>
   )
 }

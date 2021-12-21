@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
@@ -10,6 +10,7 @@ import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
+import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -40,39 +41,38 @@ type ChannelInfoProps = {
 }
 
 export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
-  const { activeChannelId, activeMembership, activeMembershipLoading } = useUser()
+  const { activeChannelId, activeMembership, activeMembershipLoading, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
-  const { videoWorkspaceState, addVideoTab } = useVideoWorkspace()
+  const { videoWorkspaceState, addVideoTab, setVideoWorkspaceState, anyVideoTabsCachedAssets } = useVideoWorkspace()
+  const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const memberDropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
     e.stopPropagation()
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  useEffect(() => {
-    if (!isMemberDropdownActive) {
+  const handleChannelChange = (channelId: string) => {
+    const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
+    if (!channel) {
       return
     }
-    const handleClickOutside = (event: Event) => {
-      if (memberDropdownRef.current && !memberDropdownRef.current.contains(event.target as Node)) {
-        // stop propagation so drawer doesn't get triggered again on button click
-        // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
-        event.preventDefault()
-        event.stopPropagation()
-        setIsMemberDropdownActive(false)
-      }
+    if (anyVideoTabsCachedAssets) {
+      openWarningDialog({
+        onConfirm: () => {
+          setActiveUser({ channelId })
+          setVideoWorkspaceState('closed')
+        },
+      })
+    } else {
+      setActiveUser({ channelId })
+      setVideoWorkspaceState('closed')
     }
-    document.addEventListener('click', handleClickOutside, true)
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true)
-    }
-  }, [isMemberDropdownActive])
+  }
 
   return (
     <>
@@ -114,9 +114,9 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
         )}
       </StyledTopbarBase>
       <MemberDropdown
+        onChannelChange={handleChannelChange}
         isActive={isMemberDropdownActive}
         publisher
-        ref={memberDropdownRef}
         closeDropdown={() => setIsMemberDropdownActive(false)}
       />
     </>

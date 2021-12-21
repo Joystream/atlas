@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useChannel } from '@/api/hooks'
@@ -18,10 +18,8 @@ import {
 import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { AssetType, useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
-import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 
 import {
@@ -39,182 +37,188 @@ import {
   TjoyContainer,
 } from './MemberDropdown.styles'
 
-export type MemberDropdownProps = { isActive: boolean; publisher?: boolean; closeDropdown?: () => void }
+export type MemberDropdownProps = {
+  isActive: boolean
+  publisher?: boolean
+  closeDropdown?: () => void
+  onChannelChange?: (channelId: string) => void
+}
 
-export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
-  ({ publisher, isActive, closeDropdown }, ref) => {
-    const [isSwitchingMember, setIsSwitchingMember] = useState(false)
-    const navigate = useNavigate()
-    const { activeChannelId, activeMembership, setActiveUser, memberships } = useUser()
-    const { setVideoWorkspaceState, anyVideoTabsCachedAssets } = useVideoWorkspace()
-    const { openWarningDialog } = useDisplayDataLostWarning()
+export const MemberDropdown: React.FC<MemberDropdownProps> = ({
+  publisher,
+  isActive,
+  closeDropdown,
+  onChannelChange,
+}) => {
+  const [isSwitchingMember, setIsSwitchingMember] = useState(false)
+  const navigate = useNavigate()
+  const { activeChannelId, activeMembership, setActiveUser, memberships } = useUser()
+  const containerRef = useRef<HTMLDivElement>(null)
 
-    const hasOneMember = memberships?.length === 1
+  const hasOneMember = memberships?.length === 1
 
-    const handleAddNewChannel = () => {
-      navigate(absoluteRoutes.studio.newChannel())
-      closeDropdown?.()
+  const handleAddNewChannel = () => {
+    navigate(absoluteRoutes.studio.newChannel())
+    closeDropdown?.()
+  }
+  const handleGoToJoystream = () => {
+    navigate(absoluteRoutes.viewer.index())
+    closeDropdown?.()
+  }
+  const handleGoToStudio = () => {
+    navigate(absoluteRoutes.studio.index())
+    closeDropdown?.()
+  }
+  // TODO: add navigation
+  const handleGoToMyProfile = () => {
+    closeDropdown?.()
+  }
+  const handleAddNewMember = () => {
+    navigate(absoluteRoutes.studio.newMembership())
+    closeDropdown?.()
+    setIsSwitchingMember(false)
+  }
+  const handleMemberChange = (memberId: string) => {
+    setActiveUser({ memberId, channelId: null })
+    closeDropdown?.()
+    setIsSwitchingMember(false)
+  }
+
+  useEffect(() => {
+    if (!isActive) {
+      return
     }
-    const handleGoToJoystream = () => {
-      navigate(absoluteRoutes.viewer.index())
-      closeDropdown?.()
-    }
-    const handleGoToStudio = () => {
-      navigate(absoluteRoutes.studio.index())
-      closeDropdown?.()
-    }
-    // TODO: add navigation
-    const handleGoToMyProfile = () => {
-      closeDropdown?.()
-    }
-    const handleAddNewMember = () => {
-      navigate(absoluteRoutes.studio.newMembership())
-      closeDropdown?.()
-      setIsSwitchingMember(false)
-    }
-    const handleMemberChange = (memberId: string) => {
-      setActiveUser({ memberId, channelId: null })
-      closeDropdown?.()
-      setIsSwitchingMember(false)
-    }
-    const handleChannelChange = (channelId: string) => {
-      if (publisher) {
-        const channel = activeMembership?.channels.find((channel) => channel.id === channelId)
-        if (!channel) {
-          return
-        }
-        if (anyVideoTabsCachedAssets) {
-          openWarningDialog({
-            onConfirm: () => {
-              setActiveUser({ channelId })
-              setVideoWorkspaceState('closed')
-            },
-          })
-        } else {
-          setActiveUser({ channelId })
-          setVideoWorkspaceState('closed')
-        }
+    const handleClickOutside = (event: Event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        // stop propagation so drawer doesn't get triggered again on button click
+        // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
+        event.preventDefault()
+        event.stopPropagation()
+        closeDropdown?.()
       }
     }
+    document.addEventListener('click', handleClickOutside, true)
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
+    }
+  }, [closeDropdown, isActive])
 
-    return (
-      <Container isActive={isActive} ref={ref}>
-        {isSwitchingMember ? (
-          <div>
-            <SwitchMemberItemListContainer>
+  return (
+    <Container isActive={isActive} ref={containerRef}>
+      {isSwitchingMember ? (
+        <div>
+          <SwitchMemberItemListContainer>
+            <ListItem
+              onClick={() => setIsSwitchingMember(false)}
+              nodeStart={<SvgActionChevronL />}
+              label="Switch member"
+              applyIconStylesNodeStart
+            />
+          </SwitchMemberItemListContainer>
+
+          <SectionContainer>
+            {memberships?.map((member) => (
               <ListItem
-                onClick={() => setIsSwitchingMember(false)}
-                nodeStart={<SvgActionChevronL />}
-                label="Switch member"
-                applyIconStylesNodeStart
+                key={member.id}
+                onClick={() => handleMemberChange(member.id)}
+                nodeStart={<Avatar assetUrl={member.avatarUri} />}
+                label={member.handle ?? ''}
+                selected={member.id === activeMembership?.id}
               />
-            </SwitchMemberItemListContainer>
-
-            <SectionContainer>
-              {memberships?.map((member) => (
+            ))}
+            <ListItem
+              nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
+              onClick={() => handleAddNewMember()}
+              label="Add new member..."
+            />
+          </SectionContainer>
+        </div>
+      ) : (
+        <>
+          <BlurredBG url={activeMembership?.avatarUri}>
+            <Filter />
+            <MemberInfoContainer>
+              <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri} />
+              <div>
+                {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) 
+                \ to preserve the space while member handle loads */}
+                <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
+                <TjoyContainer>
+                  <BalanceContainer>
+                    <SvgActionJoyToken />
+                    <Text variant="t200-strong">12.5K</Text>
+                  </BalanceContainer>
+                  <Divider />
+                  <LearnAboutTjoyLink
+                    variant="t100"
+                    as="a"
+                    // @ts-ignore our types don't allow this but its fine here
+                    href="https://www.joystream.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    secondary
+                    color={cVar('colorCoreNeutral200Lighten')}
+                  >
+                    Learn about tJOY
+                  </LearnAboutTjoyLink>
+                </TjoyContainer>
+              </div>
+            </MemberInfoContainer>
+          </BlurredBG>
+          <SectionContainer>
+            {publisher ? (
+              <ListItem
+                onClick={handleGoToJoystream}
+                nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
+                label="Go to Joystream"
+              />
+            ) : (
+              <>
                 <ListItem
-                  key={member.id}
-                  onClick={() => handleMemberChange(member.id)}
-                  nodeStart={<Avatar assetUrl={member.avatarUri} />}
-                  label={member.handle ?? ''}
-                  selected={member.id === activeMembership?.id}
+                  onClick={handleGoToStudio}
+                  nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
+                  label="Go to Studio"
+                />
+                <ListItem
+                  onClick={handleGoToMyProfile}
+                  nodeStart={<IconWrapper icon={<SvgActionMember />} />}
+                  label="My profile"
+                />
+              </>
+            )}
+            <ListItem
+              nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
+              onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
+              label={hasOneMember ? 'Add new member...' : 'Switch member'}
+              nodeEnd={hasOneMember === false && <SvgActionChevronR />}
+              applyIconStylesNodeEnd
+            />
+          </SectionContainer>
+          {publisher && (
+            <SectionContainer>
+              <ChannelsSectionTitle variant="t100" secondary>
+                Your channels
+              </ChannelsSectionTitle>
+              {activeMembership?.channels.map((channel) => (
+                <ChannelListItem
+                  key={channel.id}
+                  onClick={() => onChannelChange?.(channel.id)}
+                  channelId={channel.id}
+                  activeChannelId={activeChannelId}
                 />
               ))}
               <ListItem
-                nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
-                onClick={() => handleAddNewMember()}
-                label="Add new member..."
+                onClick={handleAddNewChannel}
+                nodeStart={<IconWrapper icon={<SvgActionPlus />} />}
+                label="Add new channel..."
               />
             </SectionContainer>
-          </div>
-        ) : (
-          <>
-            <BlurredBG url={activeMembership?.avatarUri}>
-              <Filter />
-              <MemberInfoContainer>
-                <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri} />
-                <div>
-                  {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) 
-                \ to preserve the space while member handle loads */}
-                  <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
-                  <TjoyContainer>
-                    <BalanceContainer>
-                      <SvgActionJoyToken />
-                      <Text variant="t200-strong">12.5K</Text>
-                    </BalanceContainer>
-                    <Divider />
-                    <LearnAboutTjoyLink
-                      variant="t100"
-                      as="a"
-                      // @ts-ignore our types don't allow this but its fine here
-                      href="https://www.joystream.org/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      secondary
-                      color={cVar('colorCoreNeutral200Lighten')}
-                    >
-                      Learn about tJOY
-                    </LearnAboutTjoyLink>
-                  </TjoyContainer>
-                </div>
-              </MemberInfoContainer>
-            </BlurredBG>
-            <SectionContainer>
-              {publisher ? (
-                <ListItem
-                  onClick={handleGoToJoystream}
-                  nodeStart={<IconWrapper icon={<SvgActionPlay />} />}
-                  label="Go to Joystream"
-                />
-              ) : (
-                <>
-                  <ListItem
-                    onClick={handleGoToStudio}
-                    nodeStart={<IconWrapper icon={<SvgActionAddVideo />} />}
-                    label="Go to Studio"
-                  />
-                  <ListItem
-                    onClick={handleGoToMyProfile}
-                    nodeStart={<IconWrapper icon={<SvgActionMember />} />}
-                    label="My profile"
-                  />
-                </>
-              )}
-              <ListItem
-                nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
-                onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
-                label={hasOneMember ? 'Add new member...' : 'Switch member'}
-                nodeEnd={hasOneMember === false && <SvgActionChevronR />}
-                applyIconStylesNodeEnd
-              />
-            </SectionContainer>
-            {publisher && (
-              <SectionContainer>
-                <ChannelsSectionTitle variant="t100" secondary>
-                  Your channels
-                </ChannelsSectionTitle>
-                {activeMembership?.channels.map((channel) => (
-                  <ChannelListItem
-                    key={channel.id}
-                    onClick={() => handleChannelChange(channel.id)}
-                    channelId={channel.id}
-                    activeChannelId={activeChannelId}
-                  />
-                ))}
-                <ListItem
-                  onClick={handleAddNewChannel}
-                  nodeStart={<IconWrapper icon={<SvgActionPlus />} />}
-                  label="Add new channel..."
-                />
-              </SectionContainer>
-            )}
-          </>
-        )}
-      </Container>
-    )
-  }
-)
-MemberDropdown.displayName = 'MemberDropdown'
+          )}
+        </>
+      )}
+    </Container>
+  )
+}
 
 const ChannelListItem: React.FC<{ channelId: string; activeChannelId: string | null; onClick: () => void }> = ({
   activeChannelId,
