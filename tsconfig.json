@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/global"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -25,5 +25,5 @@
       "@polkadot/api/augment": ["./node_modules/@joystream/types/augment-codec/augment-api.ts"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "vitest-setup.ts"]
 }
