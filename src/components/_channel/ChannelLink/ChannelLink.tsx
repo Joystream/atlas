@@ -15,7 +15,7 @@ import { Container, StyledAvatar, StyledText } from './ChannelLink.styles'
 
 type ChannelLinkProps = {
   id?: string
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
   hideHandle?: boolean
   hideAvatar?: boolean
   noLink?: boolean
@@ -29,6 +29,7 @@ type ChannelLinkProps = {
 
 export const ChannelLink: React.FC<ChannelLinkProps> = ({
   id,
+  onClick,
   hideHandle,
   hideAvatar,
   noLink,
@@ -53,7 +54,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const _textVariant = textVariant ?? textSecondary ? 't200-strong' : 't300-strong'
   return (
-    <Container to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
+    <Container onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
         <StyledAvatar
           withHandle={!hideHandle}
