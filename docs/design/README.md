@@ -1,9 +1,5 @@
 # Atlas design docs
 
-All kinds of docs related to Atlas design are placed in this directory.
+As of December 2021, all kinds of docs related to Atlas design have been moved and are being maintained in Notion:
 
-Relevant links:
-
-- [Figma structure](figma-structure.md)
-- [Contributing to the Atlas design system](contributing-to-the-atlas-design-system.md)
-- [Figma guidelines for designers](figma-guidelines-for-designers.md)
+https://grizzled-corleggy-af8.notion.site/Design-Space-487ed84966fa495a8c037935639ca681
