@@ -17,11 +17,13 @@ import {
 export type NoConnectionIndicatorProps = {
   nodeConnectionStatus: ConnectionStatus
   isConnectedToInternet: boolean
+  hasSidebar: boolean
 }
 
 export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
   nodeConnectionStatus,
   isConnectedToInternet,
+  hasSidebar,
 }) => {
   return (
     <CSSTransition
@@ -34,7 +36,7 @@ export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
       mountOnEnter
       unmountOnExit
     >
-      <IndicatorWrapper>
+      <IndicatorWrapper hasSidebar={hasSidebar}>
         <IconWrapper>
           <SvgAlertsWarning24 />
         </IconWrapper>
