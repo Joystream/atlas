@@ -15,6 +15,7 @@ import { StorageProvidersProvider } from './providers/storageProviders'
 
 export const App = () => {
   // App doesn't accept props and doesn't contain state so should never rerender
+  // test
   const apolloClient = createApolloClient()
 
   return (
