@@ -23,19 +23,7 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
-  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, setActiveUser, memberships } =
-    useUser()
-
-  const firstMembership = memberships?.length && memberships[0]
-
-  useEffect(() => {
-    if (!extensionConnected) {
-      return
-    }
-    if (!activeMemberId && firstMembership) {
-      setActiveUser({ memberId: firstMembership.id, accountId: firstMembership.controllerAccount })
-    }
-  }, [activeMemberId, extensionConnected, firstMembership, memberships, setActiveUser])
+  const { activeAccountId, extensionConnected, activeMemberId, activeMembership } = useUser()
 
   const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
 

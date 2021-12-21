@@ -135,6 +135,16 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
 
+  const firstMembership = memberships?.length && memberships[0]
+  useEffect(() => {
+    if (!extensionConnected || !firstMembership) {
+      return
+    }
+    if (!activeUserState.memberId && firstMembership) {
+      setActiveUser({ memberId: firstMembership.id, accountId: firstMembership.controllerAccount })
+    }
+  }, [activeUserState.memberId, extensionConnected, firstMembership, memberships, setActiveUser])
+
   const userInitialized =
     (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
 

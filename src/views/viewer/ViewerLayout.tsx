@@ -44,7 +44,7 @@ const viewerRoutes = [
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { userInitialized } = useUser()
+  // const { userInitialized } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -54,9 +54,9 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
-      <Modal show={!userInitialized} noBoxShadow>
+      {/* <Modal show={!userInitialized} noBoxShadow>
         <Loader variant="xlarge" />
-      </Modal>
+      </Modal> */}
       <TopbarViewer />
       <SidenavViewer />
       <MainContainer>
