@@ -16,7 +16,6 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
     activeAccountId,
     activeMemberId,
     activeChannelId,
-    setActiveUser,
     extensionConnected,
     memberships,
     membershipsLoading,
@@ -36,11 +35,10 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   }
 
   // signed users
-  if (!activeMembershipLoading && memberSet && !channelSet && hasMemberships) {
+  if (!activeMembershipLoading && !membershipsLoading && memberSet && !channelSet && hasMemberships) {
     if (!activeMembership?.channels.length) {
       return <Navigate to={absoluteRoutes.studio.newChannel()} replace />
     }
-    setActiveUser({ channelId: activeMembership.channels[0].id })
     return <Navigate to={enterLocation} replace />
   }
 
