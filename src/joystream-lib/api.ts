@@ -33,7 +33,7 @@ import BN from 'bn.js'
 
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import { AccountNotSelectedError, ApiNotConnectedError, ExtrinsicSignCancelledError } from './errors'
+import { JoystreamLibError } from './errors'
 import { sendExtrinsicAndParseEvents } from './helpers'
 import {
   AccountId,
@@ -88,7 +88,7 @@ export class JoystreamJs {
       await this.api.isReady
     } catch (e) {
       SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamJs', e)
-      throw new ApiNotConnectedError()
+      throw new JoystreamLibError({ name: 'ApiNotConnectedError' })
     }
   }
 
@@ -103,7 +103,7 @@ export class JoystreamJs {
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<GenericEvent[]>> {
     if (!this.selectedAccountId) {
-      throw new AccountNotSelectedError()
+      throw new JoystreamLibError({ name: 'AccountNotSelectedError' })
     }
 
     try {
@@ -119,11 +119,11 @@ export class JoystreamJs {
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
 
       return { data: events, block: blockHeader.number.toNumber() }
-    } catch (e) {
-      if (e?.message === 'Cancelled') {
-        throw new ExtrinsicSignCancelledError()
+    } catch (error) {
+      if (error?.message === 'Cancelled') {
+        throw new JoystreamLibError({ name: 'SignCancelledError' })
       }
-      throw e
+      throw error
     }
   }
 

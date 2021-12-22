@@ -1,12 +1,6 @@
 import { useCallback } from 'react'
 
-import {
-  ExtrinsicContentIds,
-  ExtrinsicFailedError,
-  ExtrinsicResult,
-  ExtrinsicSignCancelledError,
-  ExtrinsicStatus,
-} from '@/joystream-lib'
+import { ExtrinsicContentIds, ExtrinsicResult, ExtrinsicStatus, JoystreamLibErrorType } from '@/joystream-lib'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
@@ -85,7 +79,8 @@ export const useTransaction = (): HandleTransactionFn => {
           })
         })
       } catch (error) {
-        if (error instanceof ExtrinsicSignCancelledError) {
+        const errorName = error.name as JoystreamLibErrorType
+        if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           setDialogStep(null)
           displaySnackbar({
@@ -95,13 +90,12 @@ export const useTransaction = (): HandleTransactionFn => {
           })
           return false
         }
-
-        if (error instanceof ExtrinsicFailedError && !error.voucherSizeLimitExceeded) {
+        if (errorName === 'FailedError' && !error.details.voucherSizeLimitExceeded) {
           SentryLogger.error('Extrinsic failed', 'TransactionManager', error)
         } else {
           SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
         }
-        if (error.voucherSizeLimitExceeded) {
+        if (error.details.voucherSizeLimitExceeded) {
           SentryLogger.message('Voucher size limit exceeded', 'TransactionManager', error)
           setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
         } else {

@@ -5,7 +5,7 @@ import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/sy
 
 import { SentryLogger } from '@/utils/logs'
 
-import { ExtrinsicFailedError, ExtrinsicUnknownError } from './errors'
+import { JoystreamLibError } from './errors'
 import { ExtrinsicStatus, ExtrinsicStatusCallbackFn } from './types'
 
 export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: EventRecord[]): Event[] => {
@@ -15,7 +15,11 @@ export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: Event
   for (const event of systemEvents) {
     if (event.method === 'ExtrinsicFailed') {
       const errorMsg = extractExtrinsicErrorMsg(registry, event)
-      throw new ExtrinsicFailedError(event, errorMsg, errorMsg.includes('VoucherSizeLimitExceeded'))
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: errorMsg,
+        details: { voucherSizeLimitExceeded: errorMsg.includes('VoucherSizeLimitExceeded') },
+      })
     } else if (event.method === 'ExtrinsicSuccess') {
       return events
     } else {
@@ -25,7 +29,11 @@ export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: Event
     }
   }
 
-  throw new ExtrinsicUnknownError("Finalized extrinsic didn't fail or succeed", events)
+  throw new JoystreamLibError({
+    name: 'UnknownError',
+    message: "Finalized extrinsic didn't fail or succeed",
+    details: events,
+  })
 }
 
 const extractExtrinsicErrorMsg = (registry: TypeRegistry, event: Event) => {
@@ -57,15 +65,19 @@ export const sendExtrinsicAndParseEvents = (
       if (isError) {
         unsub()
 
-        reject(new ExtrinsicUnknownError('Unknown extrinsic error!'))
+        reject(new JoystreamLibError({ name: 'UnknownError', message: 'Unknown extrinsic error!' }))
         return
       }
 
       if (status.isFinalized) {
         unsub()
 
-        const events = parseExtrinsicEvents(registry, rawEvents)
-        resolve({ events, blockHash: status.asFinalized })
+        try {
+          const events = parseExtrinsicEvents(registry, rawEvents)
+          resolve({ events, blockHash: status.asFinalized })
+        } catch (error) {
+          reject(error)
+        }
       }
     })
       .then((unsubFn) => {
@@ -73,5 +85,7 @@ export const sendExtrinsicAndParseEvents = (
         cb?.(ExtrinsicStatus.Signed)
         unsub = unsubFn
       })
-      .catch((e) => reject(e))
+      .catch((e) => {
+        reject(e)
+      })
   })
