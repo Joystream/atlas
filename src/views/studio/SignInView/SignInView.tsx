@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
+import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
-import { Loader } from '@/components/_loaders/Loader'
-import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user'
 
@@ -30,24 +27,9 @@ export type Membership = {
 }
 
 export const SignInView: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const { activeAccountId, extensionConnected, activeMemberId, signIn } = useUser()
-  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
-  const navigate = useNavigate()
-
-  const handleSignIn = async () => {
-    setIsLoading(true)
-    await signIn()
-    setIsLoading(false)
-    if (!isLoggedIn) {
-      navigate(`?step=1`)
-    }
-  }
+  const { signIn } = useUser()
   return (
     <>
-      <Modal show={isLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </Modal>
       <StyledContainer>
         <Header>
           <LogoContainer>
@@ -58,7 +40,7 @@ export const SignInView: React.FC = () => {
             Start your journey as a Video Publisher. Publish and manage your channel and video content.
           </SubTitle>
           <ButtonGroup>
-            <SignInButton icon={<SvgActionChannel />} size="large" onClick={handleSignIn}>
+            <SignInButton icon={<SvgActionChannel />} size="large" onClick={signIn}>
               Sign in
             </SignInButton>
             <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">

@@ -27,9 +27,9 @@ export const App = () => {
       <AnalyticsManager />
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
-          <ActiveUserProvider>
-            <JoystreamProvider>
-              <OverlayManagerProvider>
+          <OverlayManagerProvider>
+            <ActiveUserProvider>
+              <JoystreamProvider>
                 <StorageProvidersProvider>
                   <ConfirmationModalProvider>
                     <MainLayout />
@@ -39,9 +39,9 @@ export const App = () => {
                     <CreateMemberModal />
                   </ConfirmationModalProvider>
                 </StorageProvidersProvider>
-              </OverlayManagerProvider>
-            </JoystreamProvider>
-          </ActiveUserProvider>
+              </JoystreamProvider>
+            </ActiveUserProvider>
+          </OverlayManagerProvider>
         </BrowserRouter>
       </ApolloProvider>
     </>

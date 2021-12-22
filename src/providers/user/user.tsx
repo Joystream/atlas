@@ -1,9 +1,12 @@
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { Loader } from '@/components/_loaders/Loader'
+import { Modal } from '@/components/_overlays/Modal'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -36,7 +39,9 @@ const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false)
   const activeUserState = useActiveUserStore((state) => state)
+  const navigate = useNavigate()
   const unsubscribeRef = React.useRef<(() => void) | null>()
   const {
     actions: { setActiveUser, resetActiveUser },
@@ -83,7 +88,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
-  const signIn = useCallback(async () => {
+  const initPolkadotExtension = useCallback(async () => {
     try {
       const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
@@ -115,7 +120,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (activeMembership?.id) {
-      signIn()
+      initPolkadotExtension()
     }
     return () => {
       if (unsubscribeRef.current) {
@@ -123,7 +128,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         unsubscribeRef.current = null
       }
     }
-  }, [activeMembership?.id, signIn])
+  }, [activeMembership?.id, initPolkadotExtension])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
@@ -150,6 +155,17 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   const userInitialized =
     (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
+
+  const signIn = useCallback(async () => {
+    setIsLoading(true)
+    await initPolkadotExtension()
+    setIsLoading(false)
+    if (!extensionConnected) {
+      navigate(`?step=1`)
+    } else {
+      navigate(`?step=2`)
+    }
+  }, [extensionConnected, initPolkadotExtension, navigate])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
@@ -193,7 +209,14 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     return <ViewErrorFallback />
   }
 
-  return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>
+  return (
+    <ActiveUserContext.Provider value={contextValue}>
+      <Modal show={isLoading} noBoxShadow>
+        <Loader variant="xlarge" />
+      </Modal>
+      {children}
+    </ActiveUserContext.Provider>
+  )
 }
 
 const useActiveUserContext = () => {

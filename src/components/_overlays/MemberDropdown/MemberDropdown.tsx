@@ -52,7 +52,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
 }) => {
   const [isSwitchingMember, setIsSwitchingMember] = useState(false)
   const navigate = useNavigate()
-  const { activeChannelId, activeMembership, setActiveUser, memberships } = useUser()
+  const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
   const containerRef = useRef<HTMLDivElement>(null)
 
   const hasOneMember = memberships?.length === 1
@@ -74,7 +74,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     closeDropdown?.()
   }
   const handleAddNewMember = () => {
-    // navigate(absoluteRoutes.studio.newMembership())
+    signIn()
     closeDropdown?.()
     setIsSwitchingMember(false)
   }
