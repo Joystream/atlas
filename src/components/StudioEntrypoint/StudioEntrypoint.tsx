@@ -30,9 +30,8 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   const memberSet = accountSet && !!activeMemberId
   const channelSet = memberSet && !!activeChannelId
 
-  // not signed user with not created memberships and/or no extension
-  if (!hasMemberships) {
-    // go to /signin/join
+  // not signed user with not account set and/or no extension
+  if (!accountSet) {
     return <Navigate to={absoluteRoutes.studio.signIn()} replace />
   }
 

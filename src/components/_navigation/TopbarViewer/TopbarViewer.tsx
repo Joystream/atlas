@@ -129,7 +129,6 @@ export const TopbarViewer: React.FC = () => {
                   icon={<SvgActionAddVideo />}
                   iconPlacement="left"
                   size="medium"
-                  newTab
                   to={absoluteRoutes.studio.index()}
                   variant="secondary"
                 >

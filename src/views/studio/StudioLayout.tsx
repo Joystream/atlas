@@ -8,7 +8,6 @@ import { CSSTransition } from 'react-transition-group'
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
 import { StudioEntrypoint } from '@/components/StudioEntrypoint'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
-import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
@@ -32,8 +31,7 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, signIn, userInitialized } =
-    useUser()
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships } = useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
@@ -42,10 +40,6 @@ const StudioLayout = () => {
   const accountSet = !!activeAccountId && !!extensionConnected
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
-
-  useEffect(() => {
-    signIn()
-  }, [signIn])
 
   useEffect(() => {
     if (!isAllowedBrowser()) {
@@ -84,57 +78,40 @@ const StudioLayout = () => {
       >
         <StyledSidenavStudio />
       </CSSTransition>
-      {!userInitialized ? (
-        <StudioLoading />
-      ) : (
-        <>
-          <MainContainer hasSidebar={channelSet}>
-            <Routes location={displayedLocation}>
-              <Route
-                path={relativeRoutes.studio.index()}
-                element={<StudioEntrypoint enterLocation={enterLocation} />}
+      <MainContainer hasSidebar={channelSet}>
+        <Routes location={displayedLocation}>
+          <Route path={relativeRoutes.studio.index()} element={<StudioEntrypoint enterLocation={enterLocation} />} />
+          <Route
+            path={relativeRoutes.studio.signIn()}
+            element={<PrivateRoute element={<SignInView />} isAuth={!hasMembership} redirectTo={ENTRY_POINT_ROUTE} />}
+          />
+          <Route
+            path={relativeRoutes.studio.newChannel()}
+            element={
+              <PrivateRoute
+                element={<CreateEditChannelView newChannel />}
+                isAuth={memberSet}
+                redirectTo={ENTRY_POINT_ROUTE}
               />
-              <Route
-                path={relativeRoutes.studio.signIn()}
-                element={
-                  <PrivateRoute element={<SignInView />} isAuth={hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.newChannel()}
-                element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView newChannel />}
-                    isAuth={memberSet}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.editChannel()}
-                element={
-                  <PrivateRoute
-                    element={<CreateEditChannelView />}
-                    isAuth={channelSet}
-                    redirectTo={ENTRY_POINT_ROUTE}
-                  />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.uploads()}
-                element={
-                  <PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.videos()}
-                element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
-              />
-            </Routes>
-          </MainContainer>
-          {channelSet && <VideoWorkspace />}
-        </>
-      )}
+            }
+          />
+          <Route
+            path={relativeRoutes.studio.editChannel()}
+            element={
+              <PrivateRoute element={<CreateEditChannelView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+            }
+          />
+          <Route
+            path={relativeRoutes.studio.uploads()}
+            element={<PrivateRoute element={<MyUploadsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+          />
+          <Route
+            path={relativeRoutes.studio.videos()}
+            element={<PrivateRoute element={<MyVideosView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+          />
+        </Routes>
+      </MainContainer>
+      {channelSet && <VideoWorkspace />}
     </>
   )
 }
