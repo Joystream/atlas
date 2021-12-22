@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { proxy } from 'comlink'
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -30,7 +29,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { ContentIdCbArgs, CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
+import { ContentIdArgs, CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -103,7 +102,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const mdMatch = useMediaMatch('md')
-    const { joystream } = useJoystream()
+    const { joystream, proxyCallback } = useJoystream()
     const resolveAsset = useRawAssetResolver()
     const startFileUpload = useStartFileUpload()
     const client = useApolloClient()
@@ -308,8 +307,6 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         }
 
         const assets: InputAssets = {}
-        let videoContentId = ''
-        let thumbnailContentId = ''
 
         const processAssets = async () => {
           if (videoAsset?.blob && videoHashPromise) {
@@ -331,12 +328,12 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           }
         }
 
-        const uploadAssets = async (videoId: VideoId) => {
+        const uploadAssets = async (videoId: VideoId, contentIds?: ContentIdArgs) => {
           const uploadPromises: Promise<unknown>[] = []
-          if (videoAsset?.blob && videoContentId) {
+          if (videoAsset?.blob && contentIds?.videoId) {
             const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
             const uploadPromise = startFileUpload(videoAsset.blob, {
-              contentId: videoContentId,
+              contentId: contentIds.videoId,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',
@@ -348,9 +345,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             })
             uploadPromises.push(uploadPromise)
           }
-          if (thumbnailAsset?.blob && thumbnailContentId) {
+          if (thumbnailAsset?.blob && contentIds?.thumbnailId) {
             const uploadPromise = startFileUpload(thumbnailAsset.blob, {
-              contentId: thumbnailContentId,
+              contentId: contentIds.thumbnailId,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',
@@ -365,9 +362,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
         }
 
-        const refetchDataAndCacheAssets = async (videoId: VideoId) => {
+        const refetchDataAndCacheAssets = async (videoId: VideoId, contentIds?: ContentIdArgs) => {
           // add resolution for newly created asset
-          addAsset(thumbnailContentId, { url: thumbnailAsset?.url })
+          contentIds?.thumbnailId && addAsset(contentIds.thumbnailId, { url: thumbnailAsset?.url })
 
           const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
             query: GetVideosConnectionDocument,
@@ -403,41 +400,32 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           })
         }
 
-        const setContentIds = async ({ videoId, thumbnailId }: ContentIdCbArgs) => {
-          videoContentId = videoId
-          thumbnailContentId = thumbnailId
-        }
-
-        const instance = await joystream
-
         const completed =
-          instance &&
+          joystream &&
           (await handleTransaction({
             preProcess: processAssets,
             txFactory: async (updateStatus) => {
               if (isNew) {
-                return await instance.createVideo(
+                return await joystream.createVideo(
                   activeMemberId,
                   activeChannelId,
                   metadata,
                   assets,
-                  proxy(updateStatus),
-                  proxy(setContentIds)
+                  proxyCallback(updateStatus)
                 )
               } else {
-                return await instance.updateVideo(
+                return await joystream.updateVideo(
                   selectedVideoTab.id,
                   activeMemberId,
                   activeChannelId,
                   metadata,
                   assets,
-                  proxy(updateStatus),
-                  proxy(setContentIds)
+                  proxyCallback(updateStatus)
                 )
               }
             },
             onTxFinalize: await uploadAssets,
-            onTxSync: refetchDataAndCacheAssets,
+            onTxSync: await refetchDataAndCacheAssets,
             successMessage: {
               title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
               description: isNew
@@ -459,6 +447,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         handleTransaction,
         isEdit,
         joystream,
+        proxyCallback,
         removeDrafts,
         removeVideoTab,
         resolveAsset,

@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { proxy } from 'comlink'
 import { useCallback } from 'react'
 
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -10,7 +9,7 @@ import { useAuthorizedUser } from '@/providers/user'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
 
 export const useDeleteVideo = () => {
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
   const removeAssetsWithParentFromUploads = useUploadsStore((state) => state.actions.removeAssetsWithParentFromUploads)
@@ -20,13 +19,13 @@ export const useDeleteVideo = () => {
 
   const confirmDeleteVideo = useCallback(
     async (videoId: string, onTxSync?: () => void) => {
-      const instance = await joystream
-      if (!instance) {
+      if (!joystream) {
         return
       }
 
       handleTransaction({
-        txFactory: async (updateStatus) => await instance.deleteVideo(videoId, activeMemberId, proxy(updateStatus)),
+        txFactory: async (updateStatus) =>
+          await joystream.deleteVideo(videoId, activeMemberId, proxyCallback(updateStatus)),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)
@@ -38,7 +37,7 @@ export const useDeleteVideo = () => {
         },
       })
     },
-    [activeMemberId, client, handleTransaction, joystream, removeAssetsWithParentFromUploads]
+    [activeMemberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]
   )
 
   const deleteVideo = useCallback(

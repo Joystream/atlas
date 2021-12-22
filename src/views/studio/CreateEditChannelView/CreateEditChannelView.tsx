@@ -1,4 +1,3 @@
-import { proxy } from 'comlink'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -24,7 +23,7 @@ import {
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { ChannelId, ContentIdCbArgs, CreateChannelMetadata, InputAssets } from '@/joystream-lib'
+import { ChannelId, ContentIdArgs, CreateChannelMetadata, InputAssets } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
@@ -83,7 +82,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -246,8 +245,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     }
 
     const assets: InputAssets = {}
-    let avatarContentId = ''
-    let coverContentId = ''
 
     const processAssets = async () => {
       if (dirtyFields.avatar && avatarAsset?.blob && avatarHashPromise) {
@@ -265,11 +262,11 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const uploadAssets = async (channelId: ChannelId) => {
+    const uploadAssets = async (channelId: ChannelId, contentIds?: ContentIdArgs) => {
       const uploadPromises: Promise<unknown>[] = []
-      if (avatarAsset?.blob && avatarContentId) {
+      if (avatarAsset?.blob && contentIds?.avatarId) {
         const uploadPromise = startFileUpload(avatarAsset.blob, {
-          contentId: avatarContentId,
+          contentId: contentIds.avatarId,
           owner: channelId,
           parentObject: {
             type: 'channel',
@@ -281,9 +278,9 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         })
         uploadPromises.push(uploadPromise)
       }
-      if (coverAsset?.blob && coverContentId) {
+      if (coverAsset?.blob && contentIds?.coverId) {
         const uploadPromise = startFileUpload(coverAsset.blob, {
-          contentId: coverContentId,
+          contentId: contentIds?.coverId,
           owner: channelId,
           parentObject: {
             type: 'channel',
@@ -300,12 +297,12 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       )
     }
 
-    const refetchDataAndCacheAssets = async (channelId: ChannelId) => {
-      if (avatarContentId && avatarAsset?.url) {
-        addAsset(avatarContentId, { url: avatarAsset.url })
+    const refetchDataAndCacheAssets = async (channelId: ChannelId, contentIds?: ContentIdArgs) => {
+      if (contentIds?.avatarId && avatarAsset?.url) {
+        addAsset(contentIds?.avatarId, { url: avatarAsset.url })
       }
-      if (coverContentId && coverAsset?.url) {
-        addAsset(coverContentId, { url: coverAsset.url })
+      if (contentIds?.coverId && coverAsset?.url) {
+        addAsset(contentIds?.coverId, { url: coverAsset.url })
       }
 
       const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
@@ -316,30 +313,22 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const setContentIds = async ({ avatarId, coverId }: ContentIdCbArgs) => {
-      avatarContentId = avatarId
-      coverContentId = coverId
-    }
-
-    const instance = await joystream
-
     const completed =
-      instance &&
+      joystream &&
       (await handleTransaction({
         preProcess: processAssets,
         txFactory: async (updateStatus) =>
           newChannel
-            ? await instance.createChannel(activeMemberId, metadata, assets, proxy(updateStatus), proxy(setContentIds))
-            : await instance.updateChannel(
+            ? await joystream.createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+            : await joystream.updateChannel(
                 activeChannelId ?? '',
                 activeMemberId,
                 metadata,
                 assets,
-                proxy(updateStatus),
-                proxy(setContentIds)
+                proxyCallback(updateStatus)
               ),
-        onTxFinalize: uploadAssets,
-        onTxSync: refetchDataAndCacheAssets,
+        onTxFinalize: await uploadAssets,
+        onTxSync: await refetchDataAndCacheAssets,
         successMessage: {
           title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
           description: newChannel

@@ -29,6 +29,10 @@ export type VideoAssets = {
   video?: NewAsset
 }
 
+export type ContentIdArgs = {
+  [fieldName: string]: string
+}
+
 export enum ExtrinsicStatus {
   ProcessingAssets,
   Unsigned,
@@ -42,12 +46,9 @@ export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus.Unsigned | Extr
 export type ExtrinsicResult<T> = {
   block: number
   data: T
+  contentIds?: ContentIdArgs
 }
 
 export type InputAssets = {
   [fieldName: string]: AssetMetadata
-}
-
-export type ContentIdCbArgs = {
-  [fieldName: string]: string
 }

@@ -31,7 +31,6 @@ import {
 } from '@polkadot/types'
 import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
-import { transfer } from 'comlink'
 
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -47,7 +46,7 @@ import {
   AssetMetadata,
   ChannelAssets,
   ChannelId,
-  ContentIdCbArgs,
+  ContentIdArgs,
   CreateChannelMetadata,
   CreateVideoMetadata,
   ExtrinsicResult,
@@ -187,6 +186,7 @@ export class JoystreamJs {
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
     inputAssets: VideoAssets,
+    contentIds?: ContentIdArgs,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<VideoId>> {
     const newVideo = updatedVideoId === null
@@ -304,6 +304,7 @@ export class JoystreamJs {
     return {
       data: new BN(videoId as never).toString(),
       block,
+      contentIds,
     }
   }
 
@@ -312,6 +313,7 @@ export class JoystreamJs {
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
     inputAssets: ChannelAssets,
+    contentIds?: ContentIdArgs,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<ChannelId>> {
     const newChannel = updatedChannelId == null
@@ -388,6 +390,7 @@ export class JoystreamJs {
     return {
       data: new BN(channelId as never).toString(),
       block,
+      contentIds,
     }
   }
 
@@ -421,7 +424,7 @@ export class JoystreamJs {
       // hardcoded type_id - it's not used but needs to be one of the allowed values
       type_id: new U64(this.api.registry, 1),
       size: new U64(this.api.registry, size),
-      ipfs_content_id: transfer(b, [b.buffer]),
+      ipfs_content_id: b,
     })
     return [new NewAsset(this.api.registry, { upload: content }), contentId.encode()]
   }
@@ -437,17 +440,27 @@ export class JoystreamJs {
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
     inputAssets: InputAssets,
-    cb?: ExtrinsicStatusCallbackFn,
-    contentIdCb?: (contentId: ContentIdCbArgs) => void
+    cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<ChannelId>> {
-    const {
-      avatarContent: [avatar, avatarId],
-      coverContent: [cover, coverId],
-    } = this._prepareChannelAssets(inputAssets)
-    await contentIdCb?.({ avatarId, coverId })
+    const { avatarContent, coverContent } = this._prepareChannelAssets(inputAssets)
+    const assets: { [field: string]: [NewAsset, string] | undefined } = {
+      avatarAsset: avatarContent || undefined,
+      coverAsset: coverContent || undefined,
+    }
+    const contentIds = {
+      avatarId: assets.avatarAsset ? assets.avatarAsset[1] : '',
+      coverId: assets.coverAsset ? assets.coverAsset[1] : '',
+    }
     await this.ensureApi()
 
-    return this._createOrUpdateChannel(null, memberId, inputMetadata, { avatar, cover }, cb)
+    return this._createOrUpdateChannel(
+      null,
+      memberId,
+      inputMetadata,
+      { avatar: assets.avatarAsset && assets.avatarAsset[0], cover: assets.coverAssets && assets.coverAssets[0] },
+      contentIds,
+      cb
+    )
   }
 
   async updateChannel(
@@ -455,18 +468,17 @@ export class JoystreamJs {
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
     inputAssets: InputAssets,
-    cb?: ExtrinsicStatusCallbackFn,
-    contentIdCb?: (contentId: ContentIdCbArgs) => void
+    cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<ChannelId>> {
     const { avatarContent, coverContent } = this._prepareChannelAssets(inputAssets)
     const assets: { [field: string]: [NewAsset, string] | undefined } = {
       avatarAsset: avatarContent || undefined,
       coverAsset: coverContent || undefined,
     }
-    await contentIdCb?.({
+    const contentIds = {
       avatarId: assets.avatarAsset ? assets.avatarAsset[1] : '',
-      coverId: assets.avatarAsset ? assets.avatarAsset[1] : '',
-    })
+      coverId: assets.coverAsset ? assets.coverAsset[1] : '',
+    }
     await this.ensureApi()
 
     return this._createOrUpdateChannel(
@@ -474,6 +486,7 @@ export class JoystreamJs {
       memberId,
       inputMetadata,
       { avatar: assets.avatarAsset && assets.avatarAsset[0], cover: assets.coverAssets && assets.coverAssets[0] },
+      contentIds,
       cb
     )
   }
@@ -490,17 +503,23 @@ export class JoystreamJs {
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
     inputAssets: InputAssets,
-    cb?: ExtrinsicStatusCallbackFn,
-    contentIdCb?: (contentId: ContentIdCbArgs) => void
+    cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<VideoId>> {
     const {
       videoContent: [video, videoId],
       thumbnailContent: [thumbnail, thumbnailId],
     } = this._prepareVideoAssets(inputAssets)
-    await contentIdCb?.({ videoId, thumbnailId })
     await this.ensureApi()
 
-    return this._createOrUpdateVideo(null, memberId, channelId, inputMetadata, { video, thumbnail }, cb)
+    return this._createOrUpdateVideo(
+      null,
+      memberId,
+      channelId,
+      inputMetadata,
+      { video, thumbnail },
+      { videoId, thumbnailId },
+      cb
+    )
   }
 
   async updateVideo(
@@ -509,18 +528,17 @@ export class JoystreamJs {
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
     inputAssets: InputAssets,
-    cb?: ExtrinsicStatusCallbackFn,
-    contentIdCb?: (contentId: ContentIdCbArgs) => void
+    cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<VideoId>> {
     const { videoContent, thumbnailContent } = this._prepareVideoAssets(inputAssets)
     const assets: { [field: string]: [NewAsset, string] | undefined } = {
       videoAsset: videoContent || undefined,
       thumbnailAsset: thumbnailContent || undefined,
     }
-    await contentIdCb?.({
+    const contentIds = {
       videoId: assets.videoAsset ? assets.videoAsset[1] : '',
       thumbnailId: assets.thumbnailAsset ? assets.thumbnailAsset[1] : '',
-    })
+    }
     await this.ensureApi()
 
     return this._createOrUpdateVideo(
@@ -532,6 +550,7 @@ export class JoystreamJs {
         video: assets.videoAsset && assets.videoAsset[0],
         thumbnail: assets.thumbnailAsset && assets.thumbnailAsset[0],
       },
+      contentIds,
       cb
     )
   }
