@@ -57,6 +57,14 @@ export type ExtrinsicResult<T> = {
   contentIds?: ExtrinsicContentIds
 }
 
-export type InputAssets = {
-  [fieldName: string]: AssetMetadata
+type VideoInputAssets = {
+  video?: AssetMetadata
+  thumbnail?: AssetMetadata
 }
+
+type ChannelInputAssets = {
+  avatar?: AssetMetadata
+  cover?: AssetMetadata
+}
+
+export type InputAssets = VideoInputAssets & ChannelInputAssets

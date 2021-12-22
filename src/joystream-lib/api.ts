@@ -491,8 +491,8 @@ export class JoystreamJs {
 
   private _prepareVideoAssets(inputAssets: InputAssets) {
     return {
-      videoContent: inputAssets.video && this._createFileAsset(inputAssets.video),
-      thumbnailContent: inputAssets.thumbnail && this._createFileAsset(inputAssets.thumbnail),
+      videoContent: inputAssets.video ? this._createFileAsset(inputAssets.video) : [],
+      thumbnailContent: inputAssets.thumbnail ? this._createFileAsset(inputAssets.thumbnail) : [],
     }
   }
 
@@ -507,7 +507,6 @@ export class JoystreamJs {
       videoContent: [video, videoId],
       thumbnailContent: [thumbnail, thumbnailId],
     } = this._prepareVideoAssets(inputAssets)
-    await this.ensureApi()
 
     return this._createOrUpdateVideo(
       null,
@@ -529,9 +528,9 @@ export class JoystreamJs {
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<VideoId>> {
     const { videoContent, thumbnailContent } = this._prepareVideoAssets(inputAssets)
-    const assets: { [field: string]: [NewAsset, string] | undefined } = {
-      videoAsset: videoContent || undefined,
-      thumbnailAsset: thumbnailContent || undefined,
+    const assets: { [field: string]: [NewAsset, string] | never[] } = {
+      videoAsset: videoContent || [],
+      thumbnailAsset: thumbnailContent || [],
     }
     const contentIds = {
       videoId: assets.videoAsset ? assets.videoAsset[1] : '',

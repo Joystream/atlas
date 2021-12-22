@@ -402,9 +402,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
         const completed = await handleTransaction({
           preProcess: processAssets,
-          txFactory: async (updateStatus) => {
+          txFactory: (updateStatus) => {
             if (isNew) {
-              return await joystream.createVideo(
+              return joystream.createVideo(
                 activeMemberId,
                 activeChannelId,
                 metadata,
@@ -412,7 +412,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                 proxyCallback(updateStatus)
               )
             } else {
-              return await joystream.updateVideo(
+              return joystream.updateVideo(
                 selectedVideoTab.id,
                 activeMemberId,
                 activeChannelId,

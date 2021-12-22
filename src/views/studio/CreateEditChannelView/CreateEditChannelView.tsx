@@ -315,10 +315,10 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
     const completed = await handleTransaction({
       preProcess: processAssets,
-      txFactory: async (updateStatus) =>
+      txFactory: (updateStatus) =>
         newChannel
-          ? await joystream.createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
-          : await joystream.updateChannel(
+          ? joystream.createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+          : joystream.updateChannel(
               activeChannelId ?? '',
               activeMemberId,
               metadata,
