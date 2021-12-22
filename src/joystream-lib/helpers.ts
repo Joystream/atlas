@@ -18,7 +18,6 @@ export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: Event
       throw new JoystreamLibError({
         name: 'FailedError',
         message: errorMsg,
-        details: { voucherSizeLimitExceeded: errorMsg.includes('VoucherSizeLimitExceeded') },
       })
     } else if (event.method === 'ExtrinsicSuccess') {
       return events

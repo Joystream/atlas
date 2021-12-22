@@ -80,6 +80,7 @@ export const useTransaction = (): HandleTransactionFn => {
         })
       } catch (error) {
         const errorName = error.name as JoystreamLibErrorType
+        const voucherSizeLimitExceeded = error.message.includes('VoucherSizeLimitExceeded')
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           setDialogStep(null)
@@ -90,12 +91,12 @@ export const useTransaction = (): HandleTransactionFn => {
           })
           return false
         }
-        if (errorName === 'FailedError' && !error.details.voucherSizeLimitExceeded) {
+        if (errorName === 'FailedError' && !voucherSizeLimitExceeded) {
           SentryLogger.error('Extrinsic failed', 'TransactionManager', error)
         } else {
           SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
         }
-        if (error.details.voucherSizeLimitExceeded) {
+        if (voucherSizeLimitExceeded) {
           SentryLogger.message('Voucher size limit exceeded', 'TransactionManager', error)
           setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
         } else {
