@@ -31,10 +31,10 @@ import {
 } from '@polkadot/types'
 import BN from 'bn.js'
 
-import { sendExtrinsicAndParseEvents } from '@/joystream-lib/helpers'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { AccountNotSelectedError, ApiNotConnectedError, ExtrinsicSignCancelledError } from './errors'
+import { sendExtrinsicAndParseEvents } from './helpers'
 import {
   AccountId,
   AssetMetadata,

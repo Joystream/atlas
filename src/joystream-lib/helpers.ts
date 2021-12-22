@@ -3,9 +3,10 @@ import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { GenericEvent, TypeRegistry } from '@polkadot/types'
 import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/system'
 
-import { ExtrinsicFailedError, ExtrinsicUnknownError } from '@/joystream-lib/errors'
-import { ExtrinsicStatus, ExtrinsicStatusCallbackFn } from '@/joystream-lib/types'
 import { SentryLogger } from '@/utils/logs'
+
+import { ExtrinsicFailedError, ExtrinsicUnknownError } from './errors'
+import { ExtrinsicStatus, ExtrinsicStatusCallbackFn } from './types'
 
 export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: EventRecord[]): Event[] => {
   const events = eventRecords.map((record) => record.event)
