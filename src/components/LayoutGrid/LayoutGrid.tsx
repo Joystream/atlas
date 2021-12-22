@@ -42,7 +42,11 @@ const createBreakpointGridItemRules =
       }
     `
 
-export const GridItem = styled.div<GridItemProps>`
+const filteredProps = ['colStart', 'colSpan', 'rowStart', 'rowSpan']
+
+export const GridItem = styled('div', {
+  shouldForwardProp: (prop) => !filteredProps.includes(prop as string),
+})<GridItemProps>`
   ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
   ${({ colSpan }) => !isResponsivenessObject(colSpan) && colSpan && `grid-column-end: span ${colSpan};`}
   ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}
