@@ -37,6 +37,7 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const activeUserState = useActiveUserStore((state) => state)
+  const unsubscribeRef = React.useRef<(() => void) | null>()
   const {
     actions: { setActiveUser, resetActiveUser },
   } = activeUserState
@@ -82,14 +83,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
-  const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
-    const mappedAccounts = accounts.map((a) => ({
-      id: a.address,
-      name: a.meta.name || 'Unnamed',
-    }))
-    setAccounts(mappedAccounts)
-  }
-
   const signIn = useCallback(async () => {
     try {
       const enabledExtensions = await web3Enable(WEB3_APP_NAME)
@@ -100,8 +93,19 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         return
       }
 
+      const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
+        const mappedAccounts = accounts.map((a) => ({
+          id: a.address,
+          name: a.meta.name || 'Unnamed',
+        }))
+        setAccounts(mappedAccounts)
+      }
+
+      // subscribe to changes to the accounts list
+      unsubscribeRef.current = await web3AccountsSubscribe(handleAccountsChange)
       const accounts = await web3Accounts()
       handleAccountsChange(accounts)
+
       setExtensionConnected(true)
     } catch (e) {
       setExtensionConnected(false)
@@ -113,19 +117,13 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (activeMembership?.id) {
       signIn()
     }
-  }, [activeMembership?.id, signIn])
-
-  useEffect(() => {
-    // subscribe to changes to the account list
-    const unsub = async () => {
-      await web3Accounts()
-      await web3AccountsSubscribe(handleAccountsChange)
-    }
-
     return () => {
-      unsub?.()
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current()
+        unsubscribeRef.current = null
+      }
     }
-  }, [])
+  }, [activeMembership?.id, signIn])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {

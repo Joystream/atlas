@@ -12,7 +12,6 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { Loader } from '@/components/_loaders/Loader'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
-import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
@@ -82,9 +81,7 @@ export const CreateMemberModal: React.FC = () => {
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
       closeCreatingMemberDialog()
-      refetchMemberships().then(() => {
-        navigate(absoluteRoutes.studio.signIn())
-      })
+      refetchMemberships()
     }
   }, [activeAccountId, closeCreatingMemberDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
 

@@ -19,7 +19,7 @@ export const StyledStepWrapper = styled(StepWrapper)`
 `
 
 export const StyledSpinner = styled(Spinner)`
-  margin: ${sizes(20)} auto;
+  margin: ${sizes(50)} auto;
 `
 
 export const IconGroup = styled.div`
