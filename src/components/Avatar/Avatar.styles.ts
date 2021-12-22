@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -10,7 +11,7 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 
 type ContainerProps = {
   size: AvatarSize
-  loading?: boolean
+  isLoading?: boolean
 }
 
 type EditButtonProps = {
@@ -100,8 +101,8 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   }
 }
 
-const getBorderStyles = ({ loading }: ContainerProps) => {
-  if (!loading) {
+const getBorderStyles = ({ isLoading }: ContainerProps) => {
+  if (!isLoading) {
     return css`
       ::after {
         ${square('100%')};
@@ -163,7 +164,7 @@ export const EditButton = styled.button<EditButtonProps>`
   }
 `
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   ${getAvatarSizeCss};
   ${getBorderStyles};
 
