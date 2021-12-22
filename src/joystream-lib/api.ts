@@ -29,18 +29,12 @@ import {
   u64 as U64,
   Vec,
 } from '@polkadot/types'
-import { DispatchError } from '@polkadot/types/interfaces/system'
 import BN from 'bn.js'
 
+import { sendExtrinsicAndParseEvents } from '@/joystream-lib/helpers'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
-import {
-  AccountNotSelectedError,
-  ApiNotConnectedError,
-  ExtrinsicFailedError,
-  ExtrinsicSignCancelledError,
-  ExtrinsicUnknownError,
-} from './errors'
+import { AccountNotSelectedError, ApiNotConnectedError, ExtrinsicSignCancelledError } from './errors'
 import {
   AccountId,
   AssetMetadata,
@@ -108,74 +102,29 @@ export class JoystreamJs {
     tx: SubmittableExtrinsic<'promise'>,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<GenericEvent[]>> {
-    // async executor necessary here since we're listening for a callback
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise<ExtrinsicResult<GenericEvent[]>>(async (resolve, reject) => {
-      if (!this.selectedAccountId) {
-        reject(new AccountNotSelectedError())
-        return
+    if (!this.selectedAccountId) {
+      throw new AccountNotSelectedError()
+    }
+
+    try {
+      cb?.(ExtrinsicStatus.Unsigned)
+
+      const { events, blockHash } = await sendExtrinsicAndParseEvents(
+        tx,
+        this.selectedAccountId,
+        this.api.registry as TypeRegistry,
+        cb
+      )
+
+      const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
+
+      return { data: events, block: blockHeader.number.toNumber() }
+    } catch (e) {
+      if (e?.message === 'Cancelled') {
+        throw new ExtrinsicSignCancelledError()
       }
-      try {
-        cb?.(ExtrinsicStatus.Unsigned)
-        const unsubscribe = await tx.signAndSend(this.selectedAccountId, (result) => {
-          const { status, isError, events } = result
-
-          if (isError) {
-            reject(new ExtrinsicUnknownError('Unknown extrinsic error!'))
-            unsubscribe()
-            return
-          }
-
-          if (status.isFinalized) {
-            unsubscribe()
-
-            const unpackedEvents = events.map((e) => e.event)
-
-            unpackedEvents
-              .filter((event) => event.section === 'system')
-              .forEach((event) => {
-                if (event.method === 'ExtrinsicFailed') {
-                  const dispatchError = event.data[0] as DispatchError
-                  let errorMsg = dispatchError.toString()
-                  if (dispatchError.isModule) {
-                    try {
-                      // Need to assert that registry is of TypeRegistry type, since Registry interface
-                      // seems outdated and doesn't include DispatchErrorModule as possible argument for "findMetaError"
-                      const { name, documentation } = (this.api.registry as TypeRegistry).findMetaError(
-                        dispatchError.asModule
-                      )
-                      errorMsg = `${name} (${documentation})`
-                    } catch (e) {
-                      // This probably means we don't have this error in the metadata
-                      // In this case - continue (we'll just display dispatchError.toString())
-                    }
-                  }
-                  reject(new ExtrinsicFailedError(event, errorMsg, errorMsg.includes('VoucherSizeLimitExceeded')))
-                } else if (event.method === 'ExtrinsicSuccess') {
-                  const blockHash = status.asFinalized
-                  this.api.rpc.chain
-                    .getHeader(blockHash)
-                    .then(({ number }) => resolve({ block: number.toNumber(), data: unpackedEvents }))
-                    .catch((reason) => reject(new ExtrinsicFailedError(reason)))
-                } else {
-                  SentryLogger.message('Unknown extrinsic event', 'JoystreamJs', 'warning', {
-                    event: { method: event.method },
-                  })
-                }
-              })
-          }
-        })
-
-        // if signAndSend succeeded, report back to the caller with the update
-        cb?.(ExtrinsicStatus.Signed)
-      } catch (e) {
-        if (e?.message === 'Cancelled') {
-          reject(new ExtrinsicSignCancelledError())
-          return
-        }
-        reject(e)
-      }
-    })
+      throw e
+    }
   }
 
   private async _createOrUpdateVideo(

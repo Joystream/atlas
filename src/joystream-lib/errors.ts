@@ -2,7 +2,14 @@ import { GenericEvent } from '@polkadot/types'
 
 export class ApiNotConnectedError extends Error {}
 
-export class ExtrinsicUnknownError extends Error {}
+export class ExtrinsicUnknownError extends Error {
+  details: unknown
+
+  constructor(message: string, details?: unknown) {
+    super(message)
+    this.details = details
+  }
+}
 export class ExtrinsicFailedError extends Error {
   extrinsicFailedEvent: GenericEvent
   voucherSizeLimitExceeded: boolean
