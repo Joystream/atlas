@@ -8,7 +8,6 @@ import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyles } from '@/styles'
 
 import { MainLayout } from './MainLayout'
-import { CreateMemberModal } from './components/_auth/CreateMemberModal'
 import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
 import { JoystreamProvider } from './providers/joystream'
@@ -36,7 +35,6 @@ export const App = () => {
                     <Snackbars />
                     <AssetsManager />
                     <SignInStepsStepper />
-                    <CreateMemberModal />
                   </ConfirmationModalProvider>
                 </StorageProvidersProvider>
               </JoystreamProvider>

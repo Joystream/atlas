@@ -7,6 +7,7 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { urlParams } from '@/utils/url'
 
 import { AccountStep } from './AccountStep'
+import { CreateMemberModal } from './CreateMemberModal'
 import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
 
@@ -29,11 +30,14 @@ export const SignInStepsStepper: React.FC = () => {
   ]
 
   return (
-    <StepperModal
-      currentStepIdx={step <= 0 ? 0 : step - 1}
-      steps={steps}
-      show={step >= 1}
-      onExitClick={() => navigate({ search: '' })}
-    />
+    <>
+      <StepperModal
+        currentStepIdx={step <= 0 ? 0 : step - 1}
+        steps={steps}
+        show={step >= 1}
+        onExitClick={() => navigate({ search: '' })}
+      />
+      <CreateMemberModal />
+    </>
   )
 }
