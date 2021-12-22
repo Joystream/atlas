@@ -46,12 +46,13 @@ import {
   AssetMetadata,
   ChannelAssets,
   ChannelId,
-  ContentIdArgs,
   CreateChannelMetadata,
   CreateVideoMetadata,
+  ExtrinsicChannelContentIds,
   ExtrinsicResult,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  ExtrinsicVideoContentIds,
   InputAssets,
   MemberId,
   VideoAssets,
@@ -65,9 +66,6 @@ export class JoystreamJs {
   get selectedAccountId() {
     return this._selectedAccountId
   }
-
-  // if needed these could become some kind of event emitter
-  public onNodeConnectionUpdate?: (connected: boolean) => void
 
   /* Lifecycle */
   constructor(endpoint: string, onNodeConnectionUpdate: (connected: boolean) => void) {
@@ -186,7 +184,7 @@ export class JoystreamJs {
     channelId: ChannelId,
     inputMetadata: CreateVideoMetadata,
     inputAssets: VideoAssets,
-    contentIds?: ContentIdArgs,
+    contentIds?: ExtrinsicVideoContentIds,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<VideoId>> {
     const newVideo = updatedVideoId === null
@@ -313,7 +311,7 @@ export class JoystreamJs {
     memberId: MemberId,
     inputMetadata: CreateChannelMetadata,
     inputAssets: ChannelAssets,
-    contentIds?: ContentIdArgs,
+    contentIds?: ExtrinsicChannelContentIds,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<ExtrinsicResult<ChannelId>> {
     const newChannel = updatedChannelId == null

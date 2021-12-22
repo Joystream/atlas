@@ -29,7 +29,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { ContentIdArgs, CreateVideoMetadata, InputAssets, VideoId } from '@/joystream-lib'
+import { CreateVideoMetadata, ExtrinsicVideoContentIds, InputAssets, VideoId } from '@/joystream-lib'
 import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -328,7 +328,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           }
         }
 
-        const uploadAssets = async (videoId: VideoId, contentIds?: ContentIdArgs) => {
+        const uploadAssets = async (videoId: VideoId, contentIds?: ExtrinsicVideoContentIds) => {
           const uploadPromises: Promise<unknown>[] = []
           if (videoAsset?.blob && contentIds?.videoId) {
             const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
@@ -362,7 +362,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
         }
 
-        const refetchDataAndCacheAssets = async (videoId: VideoId, contentIds?: ContentIdArgs) => {
+        const refetchDataAndCacheAssets = async (videoId: VideoId, contentIds?: ExtrinsicVideoContentIds) => {
           // add resolution for newly created asset
           contentIds?.thumbnailId && addAsset(contentIds.thumbnailId, { url: thumbnailAsset?.url })
 
@@ -400,39 +400,37 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           })
         }
 
-        const completed =
-          joystream &&
-          (await handleTransaction({
-            preProcess: processAssets,
-            txFactory: async (updateStatus) => {
-              if (isNew) {
-                return await joystream.createVideo(
-                  activeMemberId,
-                  activeChannelId,
-                  metadata,
-                  assets,
-                  proxyCallback(updateStatus)
-                )
-              } else {
-                return await joystream.updateVideo(
-                  selectedVideoTab.id,
-                  activeMemberId,
-                  activeChannelId,
-                  metadata,
-                  assets,
-                  proxyCallback(updateStatus)
-                )
-              }
-            },
-            onTxFinalize: await uploadAssets,
-            onTxSync: await refetchDataAndCacheAssets,
-            successMessage: {
-              title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-              description: isNew
-                ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-                : 'Changes to your video were saved on the blockchain.',
-            },
-          }))
+        const completed = await handleTransaction({
+          preProcess: processAssets,
+          txFactory: async (updateStatus) => {
+            if (isNew) {
+              return await joystream.createVideo(
+                activeMemberId,
+                activeChannelId,
+                metadata,
+                assets,
+                proxyCallback(updateStatus)
+              )
+            } else {
+              return await joystream.updateVideo(
+                selectedVideoTab.id,
+                activeMemberId,
+                activeChannelId,
+                metadata,
+                assets,
+                proxyCallback(updateStatus)
+              )
+            }
+          },
+          onTxFinalize: uploadAssets,
+          onTxSync: refetchDataAndCacheAssets,
+          successMessage: {
+            title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
+            description: isNew
+              ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
+              : 'Changes to your video were saved on the blockchain.',
+          },
+        })
 
         if (completed) {
           setVideoWorkspaceState('minimized')

@@ -33,27 +33,23 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   )
   const joystream = useRef<Remote<JoystreamJs> | undefined>()
 
-  const proxyCallback = <T extends object>(callback: T) => proxy(callback)
+  const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
   useEffect(() => {
-    const getjoystream = async () => {
+    const getJoystream = async () => {
       try {
         setNodeConnection('connecting')
         joystream.current = await new api(nodeOverride ?? NODE_URL, proxy(handleNodeConnectionUpdate))
         setInitialized(true)
       } catch (e) {
         handleNodeConnectionUpdate(false)
-        SentryLogger.error('Failed to create JoystreamJS joystream', 'JoystreamProvider', e)
+        SentryLogger.error('Failed to create JoystreamJS instance', 'JoystreamProvider', e)
       }
     }
-    getjoystream()
+    getJoystream()
+
     return () => {
-      const destroy = async () => {
-        if (joystream.current) {
-          await joystream.current.destroy()
-        }
-      }
-      destroy()
+      joystream.current?.destroy()
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
@@ -63,10 +59,11 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     }
     const init = async () => {
       const instance = joystream.current
-      const accountId = await instance?.selectedAccountId
       if (!instance || !activeAccountId || !accounts) {
         return
       }
+
+      const accountId = await instance?.selectedAccountId
       if (accountId === activeAccountId) {
         return
       }
@@ -75,13 +72,10 @@ export const JoystreamProvider: React.FC = ({ children }) => {
         if (activeAccountId) {
           const { signer } = await web3FromAddress(activeAccountId)
           if (!signer) {
+            SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
             return
           }
-          const { signRaw, signPayload } = signer
-          await instance.setActiveAccount(
-            activeAccountId,
-            proxy({ signRaw: proxy(signRaw), signPayload: proxy(signPayload) })
-          )
+          await instance.setActiveAccount(activeAccountId, proxy(signer))
         } else {
           await instance.setActiveAccount(activeAccountId)
         }

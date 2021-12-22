@@ -23,7 +23,7 @@ import {
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { ChannelId, ContentIdArgs, CreateChannelMetadata, InputAssets } from '@/joystream-lib'
+import { ChannelId, CreateChannelMetadata, ExtrinsicContentIds, InputAssets } from '@/joystream-lib'
 import { AssetType, useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
@@ -262,7 +262,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const uploadAssets = async (channelId: ChannelId, contentIds?: ContentIdArgs) => {
+    const uploadAssets = async (channelId: ChannelId, contentIds?: ExtrinsicContentIds) => {
       const uploadPromises: Promise<unknown>[] = []
       if (avatarAsset?.blob && contentIds?.avatarId) {
         const uploadPromise = startFileUpload(avatarAsset.blob, {
@@ -297,7 +297,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       )
     }
 
-    const refetchDataAndCacheAssets = async (channelId: ChannelId, contentIds?: ContentIdArgs) => {
+    const refetchDataAndCacheAssets = async (channelId: ChannelId, contentIds?: ExtrinsicContentIds) => {
       if (contentIds?.avatarId && avatarAsset?.url) {
         addAsset(contentIds?.avatarId, { url: avatarAsset.url })
       }
@@ -313,29 +313,27 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       }
     }
 
-    const completed =
-      joystream &&
-      (await handleTransaction({
-        preProcess: processAssets,
-        txFactory: async (updateStatus) =>
-          newChannel
-            ? await joystream.createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
-            : await joystream.updateChannel(
-                activeChannelId ?? '',
-                activeMemberId,
-                metadata,
-                assets,
-                proxyCallback(updateStatus)
-              ),
-        onTxFinalize: await uploadAssets,
-        onTxSync: await refetchDataAndCacheAssets,
-        successMessage: {
-          title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
-          description: newChannel
-            ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
-            : 'Changes to your channel were saved on the blockchain.',
-        },
-      }))
+    const completed = await handleTransaction({
+      preProcess: processAssets,
+      txFactory: async (updateStatus) =>
+        newChannel
+          ? await joystream.createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+          : await joystream.updateChannel(
+              activeChannelId ?? '',
+              activeMemberId,
+              metadata,
+              assets,
+              proxyCallback(updateStatus)
+            ),
+      onTxFinalize: uploadAssets,
+      onTxSync: refetchDataAndCacheAssets,
+      successMessage: {
+        title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
+        description: newChannel
+          ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
+          : 'Changes to your channel were saved on the blockchain.',
+      },
+    })
 
     if (completed && newChannel) {
       navigate(absoluteRoutes.studio.videos())

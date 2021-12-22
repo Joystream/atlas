@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import {
-  ContentIdArgs,
+  ExtrinsicContentIds,
   ExtrinsicFailedError,
   ExtrinsicResult,
   ExtrinsicSignCancelledError,
@@ -22,8 +22,8 @@ type SuccessMessage = {
 type HandleTransactionOpts<T> = {
   txFactory: (updateStatus: UpdateStatusFn) => Promise<ExtrinsicResult<T>>
   preProcess?: () => void | Promise<void>
-  onTxFinalize?: (data: T, contentIds?: ContentIdArgs) => Promise<unknown>
-  onTxSync?: (data: T, contentIds?: ContentIdArgs) => Promise<unknown>
+  onTxFinalize?: (data: T, contentIds?: ExtrinsicContentIds) => Promise<unknown>
+  onTxSync?: (data: T, contentIds?: ExtrinsicContentIds) => Promise<unknown>
   successMessage: SuccessMessage
 }
 type HandleTransactionFn = <T>(opts: HandleTransactionOpts<T>) => Promise<boolean>
