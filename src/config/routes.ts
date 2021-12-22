@@ -43,7 +43,7 @@ export const relativeRoutes = {
     videos: () => 'videos',
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
-    signIn: (query?: { step?: string }) => withQueryParameters('signin', query),
+    signIn: () => 'signin',
   },
   playground: {
     index: () => '',
@@ -71,5 +71,5 @@ export const absoluteRoutes = Object.entries(BASE_PATHS).reduce((absoluteRoutesA
 
 export const QUERY_PARAMS = {
   SEARCH: 'query',
-  JOIN: 'step',
+  LOGIN: 'loginStep',
 }

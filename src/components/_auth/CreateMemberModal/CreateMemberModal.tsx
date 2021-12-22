@@ -12,6 +12,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { Loader } from '@/components/_loaders/Loader'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { QUERY_PARAMS } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
@@ -32,7 +33,7 @@ type Inputs = {
 export const CreateMemberModal: React.FC = () => {
   const { activeAccountId, refetchMemberships, extensionConnected } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const step = useRouterQuery('step')
+  const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
 
   const accountSet = !!activeAccountId && !!extensionConnected
@@ -151,16 +152,17 @@ export const CreateMemberModal: React.FC = () => {
 
   const handleExitClick = () => {
     reset()
-    navigate('?step=0')
+    navigate({ search: '' })
   }
 
   if (queryNodeStateError) {
     return <ViewErrorFallback />
   }
+
   return (
     <StyledDialogModal
       title="Create Membership"
-      show={step === 'membership' && !isCreatingMembership && accountSet}
+      show={step === 'member' && !isCreatingMembership && accountSet}
       dividers
       as="form"
       onSubmit={handleCreateMember}

@@ -7,9 +7,11 @@ import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
 import { Modal } from '@/components/_overlays/Modal'
+import { QUERY_PARAMS } from '@/config/routes'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { urlParams } from '@/utils/url'
 
 import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
@@ -168,9 +170,9 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     await initPolkadotExtension()
     setIsLoading(false)
     if (!extensionConnected) {
-      navigate(`?step=1`)
+      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 1 }) })
     } else {
-      navigate(`?step=2`)
+      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
   }, [extensionConnected, initPolkadotExtension, navigate])
 

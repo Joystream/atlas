@@ -51,7 +51,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
       return
     }
     setActiveUser({ accountId: selectedAccountAddress })
-    navigate(nextStepPath)
+    navigate({ search: nextStepPath })
   }
 
   const handleSelect = (id: string) => {
