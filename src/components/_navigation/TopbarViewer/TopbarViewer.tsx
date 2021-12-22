@@ -28,6 +28,7 @@ import {
 export const TopbarViewer: React.FC = () => {
   const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn } = useUser()
   const [isLoading, setIsLoading] = useState(false)
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   const navigate = useNavigate()
 
   const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
@@ -69,7 +70,7 @@ export const TopbarViewer: React.FC = () => {
     setIsLoading(true)
     await signIn()
     setIsLoading(false)
-    if (!activeAccountId && !activeMemberId) {
+    if (!isLoggedIn) {
       navigate(`${pathname}?step=1`)
     }
   }
@@ -85,8 +86,6 @@ export const TopbarViewer: React.FC = () => {
   const handleCancel = () => {
     setSearchQuery('')
   }
-
-  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const handleDrawerToggle = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation()
@@ -119,7 +118,7 @@ export const TopbarViewer: React.FC = () => {
             />
           </CSSTransition>
           {!mdMatch && isLoggedIn && !searchOpen && (
-            <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} />
+            <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
           )}
         </SearchbarContainer>
         <ButtonWrapper>
@@ -139,13 +138,7 @@ export const TopbarViewer: React.FC = () => {
                 <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
               </SignedButtonsWrapper>
             ) : (
-              <Button
-                icon={<SvgActionMember />}
-                iconPlacement="left"
-                size="medium"
-                onClick={handleSignIn}
-                // to={`${pathname}?step=1`}
-              >
+              <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={handleSignIn}>
                 Sign In
               </Button>
             ))}

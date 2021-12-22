@@ -1,6 +1,5 @@
 export * from './CreateEditChannelView'
 export * from './VideoWorkspace'
 export * from './MyUploadsView'
-export * from './SignInView'
 export * from './MyVideosView'
-export * from './SignInMainView'
+export * from './SignInView'

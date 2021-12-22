@@ -74,7 +74,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     closeDropdown?.()
   }
   const handleAddNewMember = () => {
-    navigate(absoluteRoutes.studio.newMembership())
+    // navigate(absoluteRoutes.studio.newMembership())
     closeDropdown?.()
     setIsSwitchingMember(false)
   }

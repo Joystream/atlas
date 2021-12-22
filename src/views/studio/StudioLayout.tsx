@@ -21,9 +21,9 @@ import { useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import { CreateEditChannelView, MyUploadsView, MyVideosView, SignInView, VideoWorkspace } from '@/views/studio'
+import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } from '@/views/studio'
 
-import { SignInMainView } from './SignInMainView'
+import { SignInView } from './SignInView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -98,12 +98,6 @@ const StudioLayout = () => {
                 path={relativeRoutes.studio.signIn()}
                 element={
                   <PrivateRoute element={<SignInView />} isAuth={hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
-                }
-              />
-              <Route
-                path={relativeRoutes.studio.signInJoin()}
-                element={
-                  <PrivateRoute element={<SignInMainView />} isAuth={!hasMembership} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
               <Route

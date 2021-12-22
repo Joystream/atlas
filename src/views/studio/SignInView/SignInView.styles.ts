@@ -1,79 +1,100 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
-import { Avatar } from '@/components/Avatar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { oldColors, sizes, transitions } from '@/styles'
+import { SvgSigninIllustration } from '@/components/_illustrations'
+import { media, oldColors, sizes } from '@/styles'
 
-export const Header = styled.header`
-  margin: 0 auto;
-  text-align: center;
-  max-width: 600px;
-  margin-bottom: ${sizes(12)};
-`
-
-export const Hero = styled(Text)`
-  word-break: break-word;
-`
-
-export const SubTitle = styled(Text)`
-  margin-top: ${sizes(6)};
-`
-
-export const Wrapper = styled(LimitedWidthContainer)`
-  margin: ${sizes(16)} auto;
-  max-width: 600px;
-  text-align: center;
-`
-
-export const MemberGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 272px);
-  gap: ${sizes(8)};
-  justify-content: center;
-`
-
-export const StyledButton = styled(Button)`
-  margin-top: ${sizes(8)};
-`
-
-export const CardWrapper = styled.button`
-  padding: ${sizes(8)};
-  border: none;
-  width: 272px;
-  height: 272px;
-  cursor: pointer;
+export const StyledContainer = styled(LimitedWidthContainer)`
+  margin-top: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background-color: ${oldColors.gray[900]};
-  text-decoration: none;
-  transition: background-color ${transitions.timings.routing} ${transitions.easing};
-
-  &:disabled,
-  &[aria-disabled='true'] {
-    pointer-events: none;
-    opacity: 0.5;
+  padding-bottom: 100px;
+  ${media.md} {
+    flex-direction: row;
+    justify-content: space-between;
   }
-
-  :hover {
-    background-color: ${oldColors.gray[800]};
+  ${media.xl} {
+    max-width: 1400px;
+    left: 150px;
+  }
+  ${media.xxl} {
+    max-width: 1700px;
+    margin-top: 128px;
   }
 `
 
-export const HandleText = styled(Text)`
-  margin-top: ${sizes(6)};
+export const LogoContainer = styled.div`
+  display: inline-flex;
+
+  ::after {
+    align-self: center;
+    padding: 2px 4px;
+    margin-left: ${sizes(3)};
+    background-color: ${oldColors.gray[600]};
+    font-size: 10px;
+    content: 'studio';
+  }
+`
+
+export const Header = styled.header`
+  max-width: 550px;
+`
+
+export const StyledHero = styled(Text)`
+  margin-top: ${sizes(8)};
+`
+
+export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
+  margin-top: 60px;
+  align-self: center;
   width: 100%;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  ${media.md} {
+    position: relative;
+    left: -50px;
+    margin-top: 0;
+  }
+  ${media.lg} {
+    max-width: 1000px;
+  }
+  ${media.xxl} {
+    max-width: unset;
+  }
 `
 
-export const StyledAvatar = styled(Avatar)`
-  width: 104px;
-  height: 104px;
+export const ButtonGroup = styled.div`
+  margin-top: ${sizes(12)};
+  display: flex;
+  flex-direction: column;
+  ${media.sm} {
+    flex-direction: row;
+  }
+`
+export const SignInButton = styled(Button)`
+  margin-bottom: ${sizes(4)};
+  ${media.sm} {
+    margin-bottom: unset;
+    margin-right: ${sizes(4)};
+  }
+`
+
+export const SubTitle = styled(Text)`
+  margin-top: ${sizes(4)};
+  color: ${oldColors.gray[200]};
+`
+
+export const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  text-decoration: none;
+  margin-top: ${sizes(5)};
+
+  path {
+    stroke: ${oldColors.gray[300]};
+  }
 `

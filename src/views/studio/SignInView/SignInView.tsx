@@ -1,99 +1,61 @@
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router'
 
-import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { SvgActionNewChannel } from '@/components/_icons'
+import { Text } from '@/components/Text'
+import { CreateMemberModal } from '@/components/_auth/CreateMemberModal'
+import { SignInStepsStepper } from '@/components/_auth/SignInSteps'
+import { Button } from '@/components/_buttons/Button'
+import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
+import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatusStore } from '@/providers/connectionStatus'
-import { useUser } from '@/providers/user'
 
 import {
-  CardWrapper,
-  HandleText,
+  BackLink,
+  ButtonGroup,
   Header,
-  Hero,
-  MemberGrid,
-  StyledAvatar,
-  StyledButton,
+  LogoContainer,
+  SignInButton,
+  StyledContainer,
+  StyledHero,
+  StyledSignInIllustrationSVG,
   SubTitle,
-  Wrapper,
 } from './SignInView.styles'
 
-export const SignInView = () => {
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
-  const { activeChannelId, setActiveUser, memberships } = useUser()
-  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
-
-  const handlePickMembership = async (membership: BasicMembershipFieldsFragment) => {
-    const newActiveUser = {
-      accountId: membership.controllerAccount,
-      memberId: membership.id,
-      channelId: activeChannelId,
-    }
-
-    if (membership.channels.length) {
-      if (!activeChannelId) {
-        newActiveUser.channelId = membership.channels[0].id
-      }
-      setActiveUser(newActiveUser)
-      navigate(absoluteRoutes.studio.videos())
-    } else {
-      setActiveUser(newActiveUser)
-      navigate(absoluteRoutes.studio.newChannel())
-    }
-  }
-
-  return (
-    <>
-      <Wrapper>
-        <Header>
-          <Hero variant="h900">Sign in</Hero>
-          <SubTitle variant="t300" secondary>
-            Select the membership you want to use. Each membership can have an unlimited number of channels and is
-            independent of other memberships you control.
-          </SubTitle>
-        </Header>
-
-        <MemberGrid>
-          {memberships?.map((membership) => (
-            <MembershipCard
-              onClick={() => handlePickMembership(membership)}
-              key={membership.id}
-              handle={membership.handle}
-              avatarUri={membership.avatarUri}
-              disabled={nodeConnectionStatus !== 'connected' || internetConnectionStatus !== 'connected'}
-            />
-          ))}
-        </MemberGrid>
-        <StyledButton
-          disabled={nodeConnectionStatus !== 'connected' || internetConnectionStatus !== 'connected'}
-          icon={<SvgActionNewChannel />}
-          size="large"
-          variant="secondary"
-          to={`${pathname}?step=1`}
-        >
-          New membership
-        </StyledButton>
-      </Wrapper>
-    </>
-  )
+export type Membership = {
+  id: string
+  handle: string
+  about?: string
+  avatarUri?: string
 }
 
-export type MembershipCardProps = {
-  handle?: string
-  follows?: number
-  avatarUri?: string | null
-  onClick: () => void
-  disabled?: boolean
-}
-
-export const MembershipCard: React.FC<MembershipCardProps> = ({ handle, avatarUri, onClick, disabled }) => {
+export const SignInView: React.FC = () => {
   return (
-    <CardWrapper onClick={onClick} disabled={disabled}>
-      <StyledAvatar assetUrl={avatarUri} />
-      <HandleText variant="h500">{handle}</HandleText>
-    </CardWrapper>
+    <StyledContainer>
+      <Header>
+        <LogoContainer>
+          <SvgJoystreamLogoFull />
+        </LogoContainer>
+        <StyledHero variant="h900">Welcome to Joystream Studio</StyledHero>
+        <SubTitle variant="t300">
+          Start your journey as a Video Publisher. Publish and manage your channel and video content.
+        </SubTitle>
+        <ButtonGroup>
+          <SignInButton icon={<SvgActionChannel />} size="large" to={absoluteRoutes.studio.signIn({ step: '1' })}>
+            Sign in
+          </SignInButton>
+          <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">
+            How it works?
+          </Button>
+        </ButtonGroup>
+        <BackLink to={absoluteRoutes.viewer.index()}>
+          <SvgActionChevronL />
+          <Text variant="t200" secondary>
+            Go back
+          </Text>
+        </BackLink>
+      </Header>
+      <StyledSignInIllustrationSVG />
+      <SignInStepsStepper />
+      <CreateMemberModal />
+    </StyledContainer>
   )
 }

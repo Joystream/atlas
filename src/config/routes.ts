@@ -44,8 +44,6 @@ export const relativeRoutes = {
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: (query?: { step?: string }) => withQueryParameters('signin', query),
-    signInJoin: (query?: { step?: string }) => withQueryParameters('signin/join', query),
-    newMembership: () => 'membership/new',
   },
   playground: {
     index: () => '',
