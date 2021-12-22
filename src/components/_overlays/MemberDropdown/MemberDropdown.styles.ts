@@ -15,7 +15,7 @@ export const Container = styled.div`
   right: ${sizes(4)};
   top: 0;
   width: 280px;
-
+  height: 0;
   z-index: ${zIndex.nearTransactionBar};
 
   ${media.md} {
