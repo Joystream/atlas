@@ -1,9 +1,10 @@
-import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
+import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
+import { useGetMembershipsLazyQuery } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
 import { Modal } from '@/components/_overlays/Modal'
@@ -28,6 +29,8 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
   refetchMemberships: ReturnType<typeof useMemberships>['refetch']
+
+  getMembershipsLazy: ReturnType<typeof useGetMembershipsLazyQuery>[0]
 
   activeMembership: ReturnType<typeof useMembership>['membership']
   activeMembershipLoading: boolean
@@ -73,6 +76,15 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         }),
     }
   )
+  const [getMembershipsLazy] = useGetMembershipsLazyQuery({
+    onError: (error) =>
+      SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error, {
+        accounts: { ids: accountsIds },
+      }),
+    variables: {
+      where: { controllerAccount_in: accountsIds },
+    },
+  })
 
   // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
   const memberships = membershipsData || membershipPreviousData?.memberships
@@ -107,11 +119,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         }))
         setAccounts(mappedAccounts)
       }
-
       // subscribe to changes to the accounts list
       unsubscribeRef.current = await web3AccountsSubscribe(handleAccountsChange)
-      const accounts = await web3Accounts()
-      handleAccountsChange(accounts)
 
       setExtensionConnected(true)
     } catch (e) {
@@ -145,36 +154,33 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
 
-  const firstMembership = memberships?.length && memberships[0]
-  useEffect(() => {
-    if (!extensionConnected || !firstMembership) {
-      return
-    }
-    if (!activeUserState.memberId && firstMembership) {
-      setActiveUser({ memberId: firstMembership.id, accountId: firstMembership.controllerAccount })
-    }
-  }, [activeUserState.memberId, extensionConnected, firstMembership, memberships, setActiveUser])
-
-  useEffect(() => {
-    if (!activeMembership?.channels.length) {
-      return
-    }
-    setActiveUser({ channelId: activeMembership.channels[0].id })
-  }, [activeMembership?.channels, setActiveUser])
-
   const userInitialized =
     (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
 
   const signIn = useCallback(async () => {
     setIsLoading(true)
     await initPolkadotExtension()
+    const membershipsResponse = await getMembershipsLazy()
+    const memberships = membershipsResponse.data?.memberships
     setIsLoading(false)
+
+    if (!activeUserState.memberId && memberships?.length) {
+      const firstMembership = memberships[0]
+      setActiveUser({
+        memberId: firstMembership.id,
+        accountId: firstMembership.controllerAccount,
+        channelId: firstMembership.channels[0].id || null,
+      })
+      return
+    }
+
     if (!extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 1 }) })
-    } else {
+    }
+    if (extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
-  }, [extensionConnected, initPolkadotExtension, navigate])
+  }, [activeUserState.memberId, extensionConnected, getMembershipsLazy, initPolkadotExtension, navigate, setActiveUser])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
@@ -188,6 +194,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       memberships,
       membershipsLoading,
       refetchMemberships,
+      getMembershipsLazy,
 
       activeMembership,
       activeMembershipLoading,
@@ -203,6 +210,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       activeMembershipLoading,
       activeUserState,
       extensionConnected,
+      getMembershipsLazy,
       memberships,
       membershipsLoading,
       refetchActiveMembership,
