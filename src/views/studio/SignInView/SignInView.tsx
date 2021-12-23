@@ -27,7 +27,9 @@ export type Membership = {
 }
 
 export const SignInView: React.FC = () => {
-  const { signIn } = useUser()
+  const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
+
+  const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
   return (
     <>
       <StyledContainer>
@@ -40,9 +42,15 @@ export const SignInView: React.FC = () => {
             Start your journey as a Video Publisher. Publish and manage your channel and video content.
           </SubTitle>
           <ButtonGroup>
-            <SignInButton icon={<SvgActionChannel />} size="large" onClick={signIn}>
-              Sign in
-            </SignInButton>
+            {memberSet ? (
+              <SignInButton size="large" to={absoluteRoutes.studio.newChannel()}>
+                Create first channel
+              </SignInButton>
+            ) : (
+              <SignInButton icon={<SvgActionChannel />} size="large" onClick={signIn}>
+                Sign in
+              </SignInButton>
+            )}
             <Button variant="secondary" icon={<SvgActionInformative />} size="large" to="https://www.joystream.org/">
               How it works?
             </Button>
