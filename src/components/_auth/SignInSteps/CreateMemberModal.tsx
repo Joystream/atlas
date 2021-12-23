@@ -18,6 +18,7 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
+import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import { textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
@@ -63,6 +64,7 @@ export const CreateMemberModal: React.FC = () => {
   })
   const [isCreatingMembership, setIsCreatingMembership] = useState(false)
   const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
+  const { displaySnackbar } = useSnackbar()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
   // subscription doesn't allow 'onError' callback
@@ -83,8 +85,22 @@ export const CreateMemberModal: React.FC = () => {
       // trigger membership refetch
       closeCreatingMemberDialog()
       refetchMemberships()
+      setMembershipBlock(null)
+      displaySnackbar({
+        title: 'Your membership has been created',
+        description: 'Your membership has been created',
+        iconType: 'success',
+      })
     }
-  }, [activeAccountId, closeCreatingMemberDialog, membershipBlock, navigate, queryNodeState, refetchMemberships])
+  }, [
+    activeAccountId,
+    closeCreatingMemberDialog,
+    displaySnackbar,
+    membershipBlock,
+    navigate,
+    queryNodeState,
+    refetchMemberships,
+  ])
 
   const handleCreateMember = handleSubmit(async (data) => {
     if (!activeAccountId) {
