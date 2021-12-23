@@ -169,7 +169,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       setActiveUser({
         memberId: firstMembership.id,
         accountId: firstMembership.controllerAccount,
-        channelId: firstMembership.channels[0].id || null,
+        channelId: firstMembership.channels[0]?.id || null,
       })
       return
     }
