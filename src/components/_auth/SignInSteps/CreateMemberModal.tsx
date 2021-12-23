@@ -32,7 +32,7 @@ type Inputs = {
 }
 
 export const CreateMemberModal: React.FC = () => {
-  const { activeAccountId, refetchMemberships, extensionConnected } = useUser()
+  const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
@@ -84,7 +84,12 @@ export const CreateMemberModal: React.FC = () => {
     if (queryNodeState.indexerHead >= membershipBlock) {
       // trigger membership refetch
       closeCreatingMemberDialog()
-      refetchMemberships()
+      refetchMemberships().then(({ data }) => {
+        const lastCreatedMembership = data.memberships[data.memberships.length - 1]
+        if (lastCreatedMembership) {
+          setActiveUser({ memberId: lastCreatedMembership.id })
+        }
+      })
       setMembershipBlock(null)
       displaySnackbar({
         title: 'Your membership has been created',
@@ -100,6 +105,7 @@ export const CreateMemberModal: React.FC = () => {
     navigate,
     queryNodeState,
     refetchMemberships,
+    setActiveUser,
   ])
 
   const handleCreateMember = handleSubmit(async (data) => {
