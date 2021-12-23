@@ -4,7 +4,6 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
-import { useGetMembershipsLazyQuery } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
 import { Modal } from '@/components/_overlays/Modal'
@@ -31,8 +30,6 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
   refetchMemberships: ReturnType<typeof useMemberships>['refetch']
-
-  getMembershipsLazy: ReturnType<typeof useGetMembershipsLazyQuery>[0]
 
   activeMembership: ReturnType<typeof useMembership>['membership']
   activeMembershipLoading: boolean
@@ -79,15 +76,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         }),
     }
   )
-  const [getMembershipsLazy] = useGetMembershipsLazyQuery({
-    onError: (error) =>
-      SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error, {
-        accounts: { ids: accountsIds },
-      }),
-    variables: {
-      where: { controllerAccount_in: accountsIds },
-    },
-  })
 
   useEffect(() => {
     if (!isLoading) {
@@ -194,7 +182,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   const signIn = useCallback(async () => {
     setIsLoading(true)
     await initPolkadotExtension()
-    const membershipsResponse = await getMembershipsLazy()
+    const membershipsResponse = await refetchMemberships()
     const memberships = membershipsResponse.data?.memberships
     setIsLoading(false)
 
@@ -214,7 +202,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
-  }, [activeUserState.memberId, extensionConnected, getMembershipsLazy, initPolkadotExtension, navigate, setActiveUser])
+  }, [activeUserState.memberId, extensionConnected, initPolkadotExtension, navigate, refetchMemberships, setActiveUser])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
@@ -228,7 +216,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       memberships,
       membershipsLoading,
       refetchMemberships,
-      getMembershipsLazy,
 
       activeMembership,
       activeMembershipLoading,
@@ -244,7 +231,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       activeMembershipLoading,
       activeUserState,
       extensionConnected,
-      getMembershipsLazy,
       memberships,
       membershipsLoading,
       refetchActiveMembership,
