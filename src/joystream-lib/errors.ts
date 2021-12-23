@@ -4,12 +4,12 @@ export type JoystreamLibErrorType =
   | 'FailedError'
   | 'SignCancelledError'
   | 'AccountNotSelectedError'
+  | 'VoucherLimitError'
 
 type JoystreamLibErrorArgs = {
   name: JoystreamLibErrorType
   message?: string
   details?: unknown
-  voucherSizeLimitExceeded?: boolean
 }
 
 export class JoystreamLibError extends Error {

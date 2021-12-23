@@ -16,7 +16,7 @@ export const parseExtrinsicEvents = (registry: TypeRegistry, eventRecords: Event
     if (event.method === 'ExtrinsicFailed') {
       const errorMsg = extractExtrinsicErrorMsg(registry, event)
       throw new JoystreamLibError({
-        name: 'FailedError',
+        name: 'VoucherLimitError',
         message: errorMsg,
       })
     } else if (event.method === 'ExtrinsicSuccess') {
