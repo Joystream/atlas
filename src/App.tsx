@@ -27,18 +27,18 @@ export const App = () => {
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>
-            <ActiveUserProvider>
-              <JoystreamProvider>
-                <StorageProvidersProvider>
-                  <ConfirmationModalProvider>
+            <ConfirmationModalProvider>
+              <ActiveUserProvider>
+                <JoystreamProvider>
+                  <StorageProvidersProvider>
                     <MainLayout />
                     <Snackbars />
                     <AssetsManager />
                     <SignInStepsStepper />
-                  </ConfirmationModalProvider>
-                </StorageProvidersProvider>
-              </JoystreamProvider>
-            </ActiveUserProvider>
+                  </StorageProvidersProvider>
+                </JoystreamProvider>
+              </ActiveUserProvider>
+            </ConfirmationModalProvider>
           </OverlayManagerProvider>
         </BrowserRouter>
       </ApolloProvider>

@@ -16,6 +16,8 @@ import { urlParams } from '@/utils/url'
 
 import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
 
+import { useConfirmationModal } from '../confirmationModal'
+
 export type Account = {
   id: AccountId
   name: string
@@ -45,6 +47,7 @@ ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
   const activeUserState = useActiveUserStore((state) => state)
   const navigate = useNavigate()
   const unsubscribeRef = React.useRef<(() => void) | null>()
@@ -85,6 +88,37 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       where: { controllerAccount_in: accountsIds },
     },
   })
+
+  useEffect(() => {
+    if (!isLoading) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      openLongLoadingModal({
+        iconType: 'warning',
+        title: 'Something went wrong',
+        description: `Check out your Polkadot extension and allow app the access. If you can't do that, reload page and try again.`,
+        primaryButton: {
+          text: 'Reload page',
+          onClick: () => {
+            window.location.reload()
+            closeLongLoadingModal()
+            setIsLoading(false)
+          },
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => {
+            closeLongLoadingModal()
+            setIsLoading(false)
+          },
+        },
+      })
+    }, 5000)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [isLoading, openLongLoadingModal, closeLongLoadingModal])
 
   // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
   const memberships = membershipsData || membershipPreviousData?.memberships

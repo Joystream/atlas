@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import { useChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
@@ -51,6 +51,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
   onChannelChange,
 }) => {
   const [isSwitchingMember, setIsSwitchingMember] = useState(false)
+  const { pathname } = useLocation()
   const navigate = useNavigate()
   const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -78,8 +79,11 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     closeDropdown?.()
     setIsSwitchingMember(false)
   }
-  const handleMemberChange = (memberId: string) => {
-    setActiveUser({ memberId, channelId: null })
+  const handleMemberChange = (memberId: string, accountId: string, channelId: string | null) => {
+    setActiveUser({ accountId, memberId, channelId })
+    if (channelId && pathname === absoluteRoutes.studio.newChannel()) {
+      navigate(absoluteRoutes.studio.editChannel())
+    }
     closeDropdown?.()
     setIsSwitchingMember(false)
   }
@@ -120,7 +124,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
             {memberships?.map((member) => (
               <ListItem
                 key={member.id}
-                onClick={() => handleMemberChange(member.id)}
+                onClick={() => handleMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)}
                 nodeStart={<Avatar assetUrl={member.avatarUri} />}
                 label={member.handle ?? ''}
                 selected={member.id === activeMembership?.id}

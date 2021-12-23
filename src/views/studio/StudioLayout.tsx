@@ -8,6 +8,7 @@ import { CSSTransition } from 'react-transition-group'
 import { NoConnectionIndicator } from '@/components/NoConnectionIndicator'
 import { StudioEntrypoint } from '@/components/StudioEntrypoint'
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavStudio } from '@/components/_navigation/SidenavStudio'
 import { TopbarStudio } from '@/components/_navigation/TopbarStudio'
@@ -31,7 +32,8 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships } = useUser()
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
+    useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
@@ -61,7 +63,9 @@ const StudioLayout = () => {
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
-  return (
+  return !userInitialized ? (
+    <StudioLoading />
+  ) : (
     <>
       <NoConnectionIndicator
         hasSidebar={channelSet}
