@@ -1,9 +1,11 @@
 import { useApolloClient } from '@apollo/client'
+import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
 import axios, { AxiosError } from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import * as z from 'zod'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
@@ -20,7 +22,6 @@ import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
-import { textFieldValidation } from '@/utils/formValidationOptions'
 import { SentryLogger } from '@/utils/logs'
 
 import { StyledAvatar, StyledButton, StyledDialogModal, StyledTextField, Wrapper } from './CreateMemberModal.styles'
@@ -37,6 +38,41 @@ export const CreateMemberModal: React.FC = () => {
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
 
+  const schema = z.object({
+    handle: z
+      .string()
+      .nonempty({ message: 'Member handle cannot be empty' })
+      .min(5, {
+        message: 'Member handle must be at least 5 characters',
+      })
+      .max(40, {
+        message: `Member handle cannot be longer than 40 characters`,
+      })
+      .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
+        message: 'Member handle may contain only lowercase letters, numbers and underscores',
+      })
+      .refine(
+        async (val) => {
+          const isValid = await debouncedHandleUniqueValidation.current(val)
+          return isValid
+        },
+        { message: 'Member handle already in use' }
+      ),
+    avatar: z
+      .string()
+      .max(400)
+      .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
+      .refine(
+        async (val) => {
+          const isValid = await debouncedAvatarValidation.current(val)
+          return isValid
+        },
+        { message: 'Image not found' }
+      )
+      .optional(),
+    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }).optional(),
+  })
+
   const accountSet = !!activeAccountId && !!extensionConnected
 
   const {
@@ -46,6 +82,7 @@ export const CreateMemberModal: React.FC = () => {
     formState: { errors, isValid },
   } = useForm<Inputs>({
     mode: 'onChange',
+    resolver: zodResolver(schema, { async: true }),
     shouldFocusError: true,
     defaultValues: {
       handle: '',
@@ -145,7 +182,7 @@ export const CreateMemberModal: React.FC = () => {
             setAvatarImageUrl(value)
             resolve(true)
           }
-          image.onerror = () => resolve('Image not found')
+          image.onerror = () => resolve(false)
           image.src = value
           if (!value) {
             setAvatarImageUrl(value)
@@ -165,7 +202,7 @@ export const CreateMemberModal: React.FC = () => {
         variables: { where: { handle: value } },
       })
       if (membershipByUniqueInput) {
-        return 'Member handle already in use'
+        return false
       } else {
         return true
       }
@@ -209,17 +246,7 @@ export const CreateMemberModal: React.FC = () => {
           autoComplete="off"
           label="Avatar URL"
           placeholder="https://example.com/avatar.jpeg"
-          {...register(
-            'avatar',
-            textFieldValidation({
-              name: 'Avatar URL',
-              pattern: URL_PATTERN,
-              patternMessage: 'must be a valid url',
-              maxLength: 200,
-              required: false,
-              validate: debouncedAvatarValidation.current,
-            })
-          )}
+          {...register('avatar')}
           error={!!errors.avatar}
           helperText={errors.avatar?.message}
         />
@@ -227,18 +254,7 @@ export const CreateMemberModal: React.FC = () => {
           autoComplete="off"
           placeholder="johnnysmith"
           label="Member handle"
-          {...register(
-            'handle',
-            textFieldValidation({
-              name: 'Member handle',
-              maxLength: 40,
-              minLength: 5,
-              required: true,
-              pattern: MEMBERSHIP_NAME_PATTERN,
-              patternMessage: 'may contain only lowercase letters, numbers and underscores',
-              validate: debouncedHandleUniqueValidation.current,
-            })
-          )}
+          {...register('handle')}
           error={!!errors.handle}
           helperText={
             errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
@@ -248,7 +264,7 @@ export const CreateMemberModal: React.FC = () => {
           label="About"
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
-          {...register('about', textFieldValidation({ name: 'About', maxLength: 1000 }))}
+          {...register('about')}
           error={!!errors.about}
           helperText={errors.about?.message}
         />
