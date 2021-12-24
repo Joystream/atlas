@@ -14,10 +14,21 @@ export default {
       },
       defaultValue: 'default',
     },
+    clickable: {
+      control: {
+        type: 'radio',
+        options: [true, false],
+      },
+      defaultValue: true,
+    },
   },
 } as Meta
 
-const Template: Story<AvatarGroupProps> = (args) => <AvatarGroup {...args} />
+const Template: Story<AvatarGroupProps> = (args) => (
+  <div style={{ marginTop: '30px' }}>
+    <AvatarGroup {...args} />
+  </div>
+)
 
 export const Default = Template.bind({})
 
