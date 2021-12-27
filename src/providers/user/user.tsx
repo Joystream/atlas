@@ -4,6 +4,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
+import { useGetMembershipsLazyQuery } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
 import { Modal } from '@/components/_overlays/Modal'
@@ -76,6 +77,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         }),
     }
   )
+
+  const [fetchMemberShips] = useGetMembershipsLazyQuery({ variables: { where: { controllerAccount_in: accountsIds } } })
 
   useEffect(() => {
     if (!isLoading) {
@@ -176,14 +179,13 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
 
-  const userInitialized =
-    (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
+  const userInitialized = !!memberships || membershipsLoading || !accounts?.length
 
   const signIn = useCallback(async () => {
     setIsLoading(true)
     await initPolkadotExtension()
-    const membershipsResponse = await refetchMemberships()
-    const memberships = membershipsResponse.data?.memberships
+    const membershipsResponse = await fetchMemberShips()
+    const memberships = membershipsResponse?.data?.memberships
     setIsLoading(false)
 
     if (!activeUserState.memberId && memberships?.length) {
@@ -202,7 +204,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
-  }, [activeUserState.memberId, extensionConnected, initPolkadotExtension, navigate, refetchMemberships, setActiveUser])
+  }, [activeUserState.memberId, extensionConnected, fetchMemberShips, initPolkadotExtension, navigate, setActiveUser])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
