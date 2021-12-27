@@ -48,6 +48,11 @@ export default {
       center: <SvgIllustrativePlay />,
     },
   },
+  argTypes: {
+    defaultOverlaySlots: { table: { disable: true } },
+    hoverOverlaySlots: { table: { disable: true } },
+    contentOverlaySlot: { table: { disable: true } },
+  },
 } as Meta<VideoThumbnailProps>
 
 const Template: Story<VideoThumbnailProps> = (args) => <VideoThumbnail {...args} />
@@ -76,7 +81,7 @@ Draft.args = {
   ...Draft.args,
   defaultOverlaySlots: {
     topRight: (
-      <IconButton>
+      <IconButton size="small">
         <SvgActionEdit />
       </IconButton>
     ),
