@@ -2,6 +2,9 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
+import { IconButton } from '@/components/_buttons/IconButton'
+import { SvgActionBid, SvgIllustrativePlay } from '@/components/_icons'
+
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
 
 export default {
@@ -10,6 +13,24 @@ export default {
   args: {
     clickable: true,
     loading: false,
+    thumbnailUrl: 'https://thispersondoesnotexist.com/image',
+    thumbnailAlt: 'This person does not exist',
+    defaultSlots: [
+      {
+        position: 'top-right',
+        element: (
+          <IconButton size="small">
+            <SvgActionBid />
+          </IconButton>
+        ),
+      },
+    ],
+    hoverSlots: [
+      {
+        position: 'center',
+        element: <SvgIllustrativePlay />,
+      },
+    ],
   },
 } as Meta<VideoThumbnailProps>
 
