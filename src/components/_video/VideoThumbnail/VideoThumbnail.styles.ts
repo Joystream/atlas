@@ -54,7 +54,7 @@ export const SlotContainer = styled.div<{ position: SlotPosition }>`
   ${({ position }) => getSlotPosition(position)};
 `
 
-export const DefaultSlot = styled.div``
+export const ContentSlot = styled.div``
 
 export const ContentOverlay = styled.div`
   ${sharedOverlayStyles}
@@ -66,6 +66,7 @@ export const ContentOverlay = styled.div`
 `
 export const ThumbnailImage = styled.img`
   position: absolute;
+  user-select: none;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -86,9 +87,11 @@ export const HoverOverlay = styled.div`
 
 type VideoThumbnailContainerProps = {
   clickable: boolean
+  activeDisabled: boolean
 }
 export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
   max-width: 320px;
+  display: block;
   max-height: 180px;
   position: relative;
   background-color: black;
@@ -108,13 +111,17 @@ export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
           opacity: 1;
         }
       }
-
-      :active:not(:focus):not(:focus-within) {
+    `}
+  ${({ clickable, activeDisabled }) =>
+    clickable &&
+    !activeDisabled &&
+    css`
+      :active {
         ${ContentOverlay}, ${HoverOverlay}, ${DefaultOverlay} {
           transform: translate(0, 0);
         }
       }
-    `}
+    `};
 `
 
 export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
