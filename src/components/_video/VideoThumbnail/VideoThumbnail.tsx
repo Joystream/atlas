@@ -17,9 +17,8 @@ import {
   VideoThumbnailContainer,
 } from './VideoThumbnail.styles'
 
-type Slot = {
-  element: React.ReactNode
-  position: SlotPosition
+export type SlotsObject = {
+  [Property in SlotPosition]?: React.ReactNode
 }
 
 export type VideoThumbnailProps = {
@@ -29,9 +28,9 @@ export type VideoThumbnailProps = {
   thumbnailAlt?: string
   onClick?: () => void
   clickable?: boolean
-  contentSlot?: React.ReactNode
-  defaultSlots?: Slot[]
-  hoverSlots?: Slot[]
+  contentOverlaySlot?: React.ReactNode
+  defaultOverlaySlots?: SlotsObject
+  hoverOverlaySlots?: SlotsObject
 }
 
 export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
@@ -41,47 +40,62 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   thumbnailAlt,
   onClick,
   clickable = true,
-  contentSlot,
-  defaultSlots,
-  hoverSlots,
+  contentOverlaySlot,
+  defaultOverlaySlots,
+  hoverOverlaySlots,
 }) => {
   const [activeDisabled, setActiveDisabled] = useState(false)
+  const defaultSlotsArray = defaultOverlaySlots && Object.entries(defaultOverlaySlots)
+  const hoverSlotsArray = hoverOverlaySlots && Object.entries(hoverOverlaySlots)
+
   const linkProps = to ? { to: to, as: Link } : undefined
   return (
     <VideoThumbnailContainer onClick={onClick} clickable={clickable} activeDisabled={activeDisabled} {...linkProps}>
       <ContentOverlay>
-        <SwitchTransition>
-          <CSSTransition
-            key={String(loading)}
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            classNames={transitions.names.fade}
-          >
-            {loading ? <ThumbnailSkeletonLoader /> : <ThumbnailImage src={thumbnailUrl} alt={thumbnailAlt} />}
-          </CSSTransition>
-        </SwitchTransition>
-        {contentSlot && <ContentSlot>{contentSlot}</ContentSlot>}
+        {!contentOverlaySlot && (
+          <SwitchTransition>
+            <CSSTransition
+              key={String(loading)}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+              classNames={transitions.names.fade}
+            >
+              {loading ? <ThumbnailSkeletonLoader /> : <ThumbnailImage src={thumbnailUrl} alt={thumbnailAlt} />}
+            </CSSTransition>
+          </SwitchTransition>
+        )}
+        {contentOverlaySlot && (
+          <SwitchTransition>
+            <CSSTransition
+              key={String(loading)}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+              classNames={transitions.names.fade}
+            >
+              {loading ? <ThumbnailSkeletonLoader /> : <ContentSlot>{contentOverlaySlot}</ContentSlot>}
+            </CSSTransition>
+          </SwitchTransition>
+        )}
       </ContentOverlay>
       <HoverOverlay>
-        {hoverSlots?.map(({ position, element }, idx) => (
+        {hoverSlotsArray?.map(([position, component]) => (
           <SlotContainer
-            key={idx}
-            position={position}
+            key={position}
+            position={position as keyof SlotsObject}
             onMouseMove={() => setActiveDisabled(true)}
             onMouseOut={() => setActiveDisabled(false)}
           >
-            {element}
+            {component}
           </SlotContainer>
         ))}
       </HoverOverlay>
       <DefaultOverlay>
-        {defaultSlots?.map(({ position, element }, idx) => (
+        {defaultSlotsArray?.map(([position, component]) => (
           <SlotContainer
-            key={idx}
-            position={position}
+            key={position}
+            position={position as keyof SlotsObject}
             onMouseMove={() => setActiveDisabled(true)}
             onMouseOut={() => setActiveDisabled(false)}
           >
-            {element}
+            {component}
           </SlotContainer>
         ))}
       </DefaultOverlay>

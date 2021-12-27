@@ -23,39 +23,30 @@ export default {
     loading: false,
     thumbnailUrl: 'https://thispersondoesnotexist.com/image',
     thumbnailAlt: 'This person does not exist',
-    defaultSlots: [
-      {
-        position: 'bottom-left',
-        element: (
-          <PillGroup
-            size="small"
-            items={[
-              {
-                label: 'NFT',
-              },
-              {
-                icon: <SvgActionJoyToken />,
-                label: '24K tJOY',
-              },
-            ]}
-          />
-        ),
-      },
-      {
-        position: 'top-right',
-        element: (
-          <IconButton size="small">
-            <SvgActionBid />
-          </IconButton>
-        ),
-      },
-    ],
-    hoverSlots: [
-      {
-        position: 'center',
-        element: <SvgIllustrativePlay />,
-      },
-    ],
+    defaultOverlaySlots: {
+      bottomLeft: (
+        <PillGroup
+          size="small"
+          items={[
+            {
+              label: 'NFT',
+            },
+            {
+              icon: <SvgActionJoyToken />,
+              label: '24K tJOY',
+            },
+          ]}
+        />
+      ),
+      topRight: (
+        <IconButton size="small">
+          <SvgActionBid />
+        </IconButton>
+      ),
+    },
+    hoverOverlaySlots: {
+      center: <SvgIllustrativePlay />,
+    },
   },
 } as Meta<VideoThumbnailProps>
 
@@ -65,52 +56,34 @@ export const Default = Template.bind({})
 export const UploadProgress = Template.bind({})
 UploadProgress.args = {
   ...UploadProgress.args,
-  defaultSlots: [],
+  defaultOverlaySlots: {},
   clickable: false,
-  contentSlot: <UploadProgressBar progress={40} lastStatus="processing" withLoadingIndicator />,
+  contentOverlaySlot: <UploadProgressBar progress={40} lastStatus="processing" withLoadingIndicator />,
 }
 
 export const FailedUpload = Template.bind({})
 FailedUpload.args = {
   ...FailedUpload.args,
-  defaultSlots: [
-    {
-      position: 'bottom-right',
-      element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
-    },
-  ],
-  hoverSlots: [
-    {
-      position: 'center',
-      element: <SvgIllustrativeReupload />,
-    },
-  ],
+  defaultOverlaySlots: {
+    bottomRight: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
+  },
+  hoverOverlaySlots: {
+    center: <SvgIllustrativeReupload />,
+  },
 }
 export const Draft = Template.bind({})
 Draft.args = {
   ...Draft.args,
-  defaultSlots: [
-    {
-      position: 'top-right',
-      element: (
-        <IconButton>
-          <SvgActionEdit />
-        </IconButton>
-      ),
-    },
-    {
-      position: 'bottom-right',
-      element: <Pill label="8:24" />,
-    },
-    {
-      position: 'bottom-left',
-      element: <Pill label="Draft" />,
-    },
-  ],
-  hoverSlots: [
-    {
-      position: 'center',
-      element: <SvgIllustrativePlay />,
-    },
-  ],
+  defaultOverlaySlots: {
+    topRight: (
+      <IconButton>
+        <SvgActionEdit />
+      </IconButton>
+    ),
+    bottomRight: <Pill label="8:24" />,
+    bottomLeft: <Pill label="Draft" />,
+  },
+  hoverOverlaySlots: {
+    center: <SvgIllustrativePlay />,
+  },
 }

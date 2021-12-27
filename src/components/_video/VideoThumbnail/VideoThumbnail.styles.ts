@@ -16,16 +16,16 @@ const sharedOverlayStyles = css`
   transition: ${cVar('animationTransitionFast')};
 `
 
-export type SlotPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center'
+export type SlotPosition = 'topLeft' | 'topRight' | 'center' | 'bottomLeft' | 'bottomRight'
 
 const getSlotPosition = (slotPosition: SlotPosition) => {
   switch (slotPosition) {
-    case 'top-left':
+    case 'topLeft':
       return css`
         top: 8px;
         left: 8px;
       `
-    case 'top-right':
+    case 'topRight':
       return css`
         top: 8px;
         right: 8px;
@@ -36,12 +36,12 @@ const getSlotPosition = (slotPosition: SlotPosition) => {
         left: 50%;
         transform: translate(-50%, -50%);
       `
-    case 'bottom-left':
+    case 'bottomLeft':
       return css`
         bottom: 8px;
         left: 8px;
       `
-    case 'bottom-right':
+    case 'bottomRight':
       return css`
         bottom: 8px;
         right: 8px;
