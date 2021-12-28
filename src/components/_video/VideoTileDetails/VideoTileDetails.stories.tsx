@@ -1,23 +1,54 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { VideoTileDetails, VideoTileDetailsProps } from '.'
+import { SvgActionReupload, SvgActionTrash } from '@/components/_icons'
+
+import { VideoDetailsVariant, VideoTileDetails, VideoTileDetailsProps } from '.'
 
 export default {
   title: 'video/VideoTileDetails',
   component: VideoTileDetails,
   args: {
+    channelAvatarUrl: 'https://thispersondoesnotexist.com/image',
+    loading: false,
     video: {
-      title: 'Example video',
-      views: 20000,
-      createdAt: new Date(Date.now() - 30000),
+      title:
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto.',
+      views: 20000000,
+      createdAt: new Date(Date.now() - 1000000),
       id: '4300',
       channel: {
         title: 'Channel title',
       },
     },
+    kebabMenuItems: [
+      {
+        icon: <SvgActionTrash />,
+        title: 'Delete video',
+      },
+      {
+        icon: <SvgActionReupload />,
+        title: 'Reupload file',
+      },
+    ],
   },
-} as Meta<VideoTileDetailsProps>
+  argTypes: {
+    kebabMenuItems: { table: { disable: true } },
+    video: { table: { disable: true } },
+    variant: {
+      options: ['withChannelNameAndAvatar', 'withChannelName', 'withoutChannel'] as VideoDetailsVariant[],
+      control: {
+        type: 'radio',
+      },
+    },
+    size: {
+      options: ['medium', 'small'],
+      control: {
+        type: 'radio',
+      },
+    },
+  },
+} as Meta
 
 const Template: Story<VideoTileDetailsProps> = (args) => <VideoTileDetails {...args} />
 
