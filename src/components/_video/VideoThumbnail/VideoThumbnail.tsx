@@ -75,7 +75,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
           </SwitchTransition>
         )}
       </ContentOverlay>
-      <HoverOverlay>
+      <HoverOverlay loading={loading}>
         {hoverSlotsArray?.map(([position, { element }]) => (
           <SlotContainer
             key={position}

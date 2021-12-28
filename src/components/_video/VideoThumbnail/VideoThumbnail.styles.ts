@@ -77,9 +77,13 @@ export const DefaultOverlay = styled.div`
   ${sharedOverlayStyles}
 `
 
-export const HoverOverlay = styled.div`
+type HoverOverlayProps = {
+  loading?: boolean
+}
+
+export const HoverOverlay = styled.div<HoverOverlayProps>`
   ${sharedOverlayStyles}
-  background: ${cVar('colorBackgroundOverlay')};
+  background: ${({ loading }) => (loading ? 'none ' : cVar('colorBackgroundOverlay'))};
   opacity: 0;
 `
 
