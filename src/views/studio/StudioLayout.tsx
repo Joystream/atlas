@@ -32,14 +32,14 @@ const StudioLayout = () => {
   const displayedLocation = useVideoWorkspaceRouting()
   const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, userInitialized } =
+  const { activeAccountId, activeMemberId, activeChannelId, extensionConnected, memberships, membershipsLoading } =
     useUser()
 
   const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
-  const accountSet = !!activeAccountId && !!extensionConnected
+  const accountSet = !membershipsLoading && !!activeAccountId
   const memberSet = accountSet && !!activeMemberId && hasMembership
   const channelSet = memberSet && !!activeChannelId && hasMembership
 
@@ -63,7 +63,7 @@ const StudioLayout = () => {
     }
   }, [closeUnsupportedBrowserDialog, openUnsupportedBrowserDialog])
 
-  return !userInitialized ? (
+  return membershipsLoading || extensionConnected === 'pending' ? (
     <StudioLoading />
   ) : (
     <>

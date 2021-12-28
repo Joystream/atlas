@@ -37,7 +37,6 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   activeMembershipLoading: boolean
   refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
 
-  userInitialized: boolean
   signIn: () => Promise<void>
 }
 
@@ -59,7 +58,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   }, [activeUserState])
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
-  const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
+  const [extensionConnected, setExtensionConnected] = useState<boolean | null | 'pending'>(null)
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
@@ -129,6 +128,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   const initPolkadotExtension = useCallback(async () => {
     try {
+      setExtensionConnected('pending')
       const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
       if (!enabledExtensions.length) {
@@ -158,7 +158,10 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (activeMembership?.id) {
+    if (extensionConnected === true) {
+      return
+    }
+    if (!activeMembership?.id) {
       initPolkadotExtension()
     }
     return () => {
@@ -167,7 +170,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         unsubscribeRef.current = null
       }
     }
-  }, [activeMembership?.id, initPolkadotExtension])
+  }, [activeMembership?.id, extensionConnected, initPolkadotExtension])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
@@ -181,8 +184,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       resetActiveUser()
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
-
-  const userInitialized = !!memberships || membershipsLoading || !accounts?.length
 
   const signIn = useCallback(async () => {
     setIsLoading(true)
@@ -227,8 +228,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       refetchActiveMembership,
 
       signIn,
-
-      userInitialized,
     }),
     [
       accounts,
@@ -243,7 +242,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       resetActiveUser,
       setActiveUser,
       signIn,
-      userInitialized,
     ]
   )
 
