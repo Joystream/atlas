@@ -54,8 +54,6 @@ export const SlotContainer = styled.div<{ position: SlotPosition }>`
   ${({ position }) => getSlotPosition(position)};
 `
 
-export const ContentSlot = styled.div``
-
 export const ContentOverlay = styled.div`
   ${sharedOverlayStyles}
   position: relative;
@@ -91,8 +89,8 @@ type VideoThumbnailContainerProps = {
 }
 export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
   max-width: 320px;
+  min-width: 166px;
   display: block;
-  max-height: 180px;
   position: relative;
   background-color: black;
   transition: background-color ${cVar('animationTransitionFast')};
