@@ -1,10 +1,9 @@
-import { web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
+import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
-import { useGetMembershipsLazyQuery } from '@/api/queries'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
 import { Modal } from '@/components/_overlays/Modal'
@@ -22,6 +21,8 @@ export type Account = {
   id: AccountId
   name: string
 }
+
+const ACCESS_TIMEOUT = 10000
 
 type ActiveUserContextValue = ActiveUserStoreActions & {
   activeUserState: ActiveUserState
@@ -78,8 +79,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
-  const [fetchMemberShips] = useGetMembershipsLazyQuery({ variables: { where: { controllerAccount_in: accountsIds } } })
-
   useEffect(() => {
     if (!isLoading) {
       closeLongLoadingModal()
@@ -106,7 +105,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
           },
         },
       })
-    }, 5000)
+    }, ACCESS_TIMEOUT)
     return () => {
       clearTimeout(timeout)
     }
@@ -145,6 +144,9 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
         }))
         setAccounts(mappedAccounts)
       }
+
+      const accounts = await web3Accounts()
+      handleAccountsChange(accounts)
       // subscribe to changes to the accounts list
       unsubscribeRef.current = await web3AccountsSubscribe(handleAccountsChange)
 
@@ -185,7 +187,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   const signIn = useCallback(async () => {
     setIsLoading(true)
     await initPolkadotExtension()
-    const membershipsResponse = await fetchMemberShips()
+    const membershipsResponse = await refetchMemberships()
     const memberships = membershipsResponse?.data?.memberships
     setIsLoading(false)
 
@@ -205,7 +207,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
-  }, [activeUserState.memberId, extensionConnected, fetchMemberShips, initPolkadotExtension, navigate, setActiveUser])
+  }, [activeUserState.memberId, extensionConnected, initPolkadotExtension, navigate, refetchMemberships, setActiveUser])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({

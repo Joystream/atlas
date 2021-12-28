@@ -130,7 +130,7 @@ export const CreateMemberModal: React.FC = () => {
       setMembershipBlock(null)
       displaySnackbar({
         title: 'Your membership has been created',
-        description: 'Your membership has been created',
+        description: 'Browse, watch, create, collect videos across the platform and have fun!',
         iconType: 'success',
       })
     }
