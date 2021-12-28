@@ -82,6 +82,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading) {
+      closeLongLoadingModal()
       return
     }
     const timeout = setTimeout(() => {
