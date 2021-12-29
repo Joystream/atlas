@@ -15,12 +15,19 @@ export type VideoTileProps = {
 }
 
 export const VideoTile: React.FC<VideoTileProps> = React.memo(({ direction = 'vertical' }) => {
-  const { video, avatarPhotoUrl, thumbnailPhotoUrl, loading } = useVideoSharedLogic({ id: '10' })
+  const { video, avatarPhotoUrl, thumbnailPhotoUrl, loading, isLoadingThumbnail } = useVideoSharedLogic({ id: '10' })
 
   return (
     <VideoTileContainer direction={direction}>
-      <VideoThumbnail thumbnailUrl={thumbnailPhotoUrl} />
-      <VideoTileDetails channelAvatarUrl={avatarPhotoUrl} video={video} loading={loading} />
+      <VideoThumbnail thumbnailUrl={thumbnailPhotoUrl} loading={isLoadingThumbnail} />
+      <VideoTileDetails
+        channelAvatarUrl={avatarPhotoUrl}
+        videoTitle={video?.title}
+        views={video?.views}
+        createdAt={video?.createdAt}
+        channelTitle={video?.channel?.title}
+        loading={loading}
+      />
     </VideoTileContainer>
   )
 })

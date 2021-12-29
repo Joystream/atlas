@@ -34,6 +34,12 @@ export const VideoTitle = styled(Text)`
   overflow-wrap: break-word;
 `
 
+export const ChannelTitle = styled(Text)`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
 export const StyledAvatar = styled(Avatar)`
   margin-right: ${sizes(4)};
 `

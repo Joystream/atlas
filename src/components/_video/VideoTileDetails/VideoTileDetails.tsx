@@ -1,7 +1,6 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -10,6 +9,7 @@ import { cVar, transitions } from '@/styles'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import {
+  ChannelTitle,
   KebabMenuButtonIcon,
   StyledAvatar,
   VideoDetailsContainer,
@@ -21,7 +21,10 @@ import {
 export type VideoDetailsVariant = 'withoutChannel' | 'withChannelName' | 'withChannelNameAndAvatar'
 
 export type VideoTileDetailsProps = {
-  video?: VideoFieldsFragment | null
+  videoTitle?: string | null
+  views?: number | null
+  createdAt?: Date | null
+  channelTitle?: string | null
   channelAvatarUrl?: string | null
   loading?: boolean
   size?: 'small' | 'medium'
@@ -30,7 +33,10 @@ export type VideoTileDetailsProps = {
 }
 
 export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
-  video,
+  videoTitle,
+  views,
+  createdAt,
+  channelTitle,
   size = 'medium',
   channelAvatarUrl,
   loading,
@@ -50,23 +56,23 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
             {loading ? (
               <SkeletonLoader height={size === 'medium' ? 24 : 20} width="60%" />
             ) : (
-              <VideoTitle variant={size === 'medium' ? 'h400' : 'h200'}>{video?.title}</VideoTitle>
+              <VideoTitle variant={size === 'medium' ? 'h400' : 'h200'}>{videoTitle}</VideoTitle>
             )}
             <VideoMetaContainer>
               {variant !== 'withoutChannel' &&
                 (loading ? (
                   <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
                 ) : (
-                  <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                    {video?.channel?.title}
-                  </Text>
+                  <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
+                    {channelTitle}
+                  </ChannelTitle>
                 ))}
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
-                video?.createdAt && (
+                createdAt && (
                   <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                    {formatVideoViewsAndDate(video?.views || 0, video?.createdAt)}
+                    {formatVideoViewsAndDate(views || 0, createdAt)}
                   </Text>
                 )
               )}

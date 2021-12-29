@@ -11,16 +11,12 @@ export default {
   args: {
     channelAvatarUrl: 'https://thispersondoesnotexist.com/image',
     loading: false,
-    video: {
-      title:
-        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto.',
-      views: 20000000,
-      createdAt: new Date(Date.now() - 1000000),
-      id: '4300',
-      channel: {
-        title: 'Channel title',
-      },
-    },
+    videoTitle:
+      'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto.',
+    views: 20000000,
+    createdAt: new Date(Date.now() - 1000000),
+    channelTitle:
+      'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [
       {
         icon: <SvgActionTrash />,
