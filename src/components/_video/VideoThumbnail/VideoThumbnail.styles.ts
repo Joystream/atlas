@@ -50,14 +50,14 @@ const getSlotPosition = (slotPosition: SlotPosition) => {
 
 type SlotsContainerProps = {
   position: SlotPosition
-  type: 'default' | 'hover'
+  type?: 'default' | 'hover'
 }
 
 export const SlotContainer = styled.div<SlotsContainerProps>`
   position: absolute;
   user-select: none;
   ${({ position }) => getSlotPosition(position)};
-  opacity: ${({ type }) => (type === 'hover' ? 0 : 1)};
+  opacity: ${({ type = 'default' }) => (type === 'hover' ? 0 : 1)};
   transition: opacity ${cVar('animationTransitionFast')};
 `
 
@@ -80,13 +80,10 @@ export const ContentContainer = styled.div`
 
 export const ThumbnailImage = styled.img`
   position: absolute;
-  user-select: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  right: 0;
-  bottom: 0;
-  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: contain;
+  ${square('100%')}
 `
 
 export const SlotsOverlay = styled.div`

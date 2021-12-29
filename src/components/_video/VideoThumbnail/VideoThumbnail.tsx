@@ -20,7 +20,7 @@ import {
 export type SlotsObject = {
   [Property in SlotPosition]?: {
     element: React.ReactNode
-    type: 'default' | 'hover'
+    type?: 'default' | 'hover'
     clickable?: boolean
   }
 }
@@ -82,7 +82,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
       </ContentOverlay>
       <HoverOverlay loading={loading} />
       <SlotsOverlay>
-        {slotsArray?.map(([position, { element, type, clickable = false }]) => (
+        {slotsArray?.map(([position, { element, type = 'default', clickable = false }]) => (
           <SlotContainer
             key={position}
             type={type}
