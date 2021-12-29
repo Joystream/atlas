@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { Video } from '@/api/queries'
+import { VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -21,8 +21,8 @@ import {
 export type VideoDetailsVariant = 'withoutChannel' | 'withChannelName' | 'withChannelNameAndAvatar'
 
 export type VideoTileDetailsProps = {
-  video: Video
-  channelAvatarUrl?: string
+  video?: VideoFieldsFragment | null
+  channelAvatarUrl?: string | null
   loading?: boolean
   size?: 'small' | 'medium'
   kebabMenuItems?: MenuItemProps[]
@@ -50,7 +50,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
             {loading ? (
               <SkeletonLoader height={size === 'medium' ? 24 : 20} width="60%" />
             ) : (
-              <VideoTitle variant={size === 'medium' ? 'h400' : 'h200'}>{video.title}</VideoTitle>
+              <VideoTitle variant={size === 'medium' ? 'h400' : 'h200'}>{video?.title}</VideoTitle>
             )}
             <VideoMetaContainer>
               {variant !== 'withoutChannel' &&
@@ -58,15 +58,17 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                   <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
                 ) : (
                   <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                    {video.channel?.title}
+                    {video?.channel?.title}
                   </Text>
                 ))}
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
-                <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                  {formatVideoViewsAndDate(video.views, video.createdAt)}
-                </Text>
+                video?.createdAt && (
+                  <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
+                    {formatVideoViewsAndDate(video?.views || 0, video?.createdAt)}
+                  </Text>
+                )
               )}
             </VideoMetaContainer>
           </VideoInfoContainer>

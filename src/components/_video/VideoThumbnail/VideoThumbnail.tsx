@@ -28,7 +28,7 @@ export type SlotsObject = {
 export type VideoThumbnailProps = {
   loading?: boolean
   to?: To
-  thumbnailUrl?: string
+  thumbnailUrl?: string | null
   thumbnailAlt?: string
   onClick?: () => void
   clickable?: boolean
@@ -64,7 +64,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
               timeout={parseInt(cVar('animationTimingFast', true))}
               classNames={transitions.names.fade}
             >
-              {loading ? <ThumbnailSkeletonLoader /> : <ThumbnailImage src={thumbnailUrl} alt={thumbnailAlt} />}
+              {loading ? <ThumbnailSkeletonLoader /> : <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt} />}
             </CSSTransition>
           </SwitchTransition>
         )}

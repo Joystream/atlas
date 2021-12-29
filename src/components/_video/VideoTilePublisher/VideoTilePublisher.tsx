@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 
 import { AssetAvailability } from '@/api/queries'
-import { VideoTileProps, useVideoSharedLogic } from '@/components/_video/VideoTile'
+import { VideoTileProps, useVideoSharedLogic } from '@/components/_video/VideoTile_deprecated'
 import { absoluteRoutes } from '@/config/routes'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'

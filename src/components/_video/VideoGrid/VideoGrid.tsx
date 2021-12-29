@@ -3,7 +3,7 @@ import React from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
-import { VideoTile } from '@/components/_video/VideoTile'
+import { VideoTile } from '@/components/_video/VideoTile_deprecated'
 
 const StyledVideoTile = styled(VideoTile)`
   margin: 0 auto;

@@ -1,49 +1,27 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import { useVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { AssetType, useAsset } from '@/providers/assets'
-import { copyToClipboard } from '@/utils/browser'
 import { SentryLogger } from '@/utils/logs'
 
-import { VideoTileBase, VideoTileBaseMetaProps, VideoTileBaseProps } from '../VideoTileBase'
+import { VideoTileContainer } from './VideoTile.styles'
+
+import { VideoThumbnail } from '../VideoThumbnail'
+import { VideoTileDetails } from '../VideoTileDetails'
 
 export type VideoTileProps = {
-  id?: string
-  onNotFound?: () => void
-} & VideoTileBaseMetaProps &
-  Pick<VideoTileBaseProps, 'progress' | 'className'>
+  direction: 'vertical' | 'horizontal'
+}
 
-export const VideoTile: React.FC<VideoTileProps> = React.memo(({ id, onNotFound, ...metaProps }) => {
-  const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
-    useVideoSharedLogic({
-      id,
-      isDraft: false,
-      onNotFound,
-    })
-
-  const handleCopyVideoURLClick = useCallback(() => {
-    copyToClipboard(videoHref ? location.origin + videoHref : '')
-  }, [videoHref])
+export const VideoTile: React.FC<VideoTileProps> = React.memo(({ direction = 'vertical' }) => {
+  const { video, avatarPhotoUrl, thumbnailPhotoUrl, loading } = useVideoSharedLogic({ id: '10' })
 
   return (
-    <VideoTileBase
-      isLoadingThumbnail={isLoadingThumbnail}
-      isLoadingAvatar={isLoadingAvatar}
-      publisherMode={false}
-      title={video?.title}
-      channelTitle={video?.channel?.title}
-      channelAvatarUrl={avatarPhotoUrl}
-      createdAt={video?.createdAt}
-      duration={video?.duration}
-      views={video?.views}
-      videoHref={videoHref}
-      channelHref={id ? absoluteRoutes.viewer.channel(video?.channel?.id) : undefined}
-      onCopyVideoURLClick={handleCopyVideoURLClick}
-      thumbnailUrl={thumbnailPhotoUrl}
-      isLoading={loading}
-      {...metaProps}
-    />
+    <VideoTileContainer direction={direction}>
+      <VideoThumbnail thumbnailUrl={thumbnailPhotoUrl} />
+      <VideoTileDetails channelAvatarUrl={avatarPhotoUrl} video={video} loading={loading} />
+    </VideoTileContainer>
   )
 })
 
