@@ -6,11 +6,12 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { cVar, transitions } from '@/styles'
 
 import {
+  ContentContainer,
   ContentOverlay,
-  DefaultOverlay,
   HoverOverlay,
   SlotContainer,
   SlotPosition,
+  SlotsOverlay,
   ThumbnailImage,
   ThumbnailSkeletonLoader,
   VideoThumbnailContainer,
@@ -46,8 +47,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   contentSlot,
 }) => {
   const [activeDisabled, setActiveDisabled] = useState(false)
-  const defaultSlotsArray = slots && Object.entries(slots).filter(([_, { type }]) => type === 'default')
-  const hoverSlotsArray = slots && Object.entries(slots).filter(([_, { type }]) => type === 'hover')
+  const slotsArray = slots && Object.entries(slots)
 
   const handleClick = () => {
     clickable && onClick?.()
@@ -75,22 +75,17 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
               timeout={parseInt(cVar('animationTimingFast', true))}
               classNames={transitions.names.fade}
             >
-              {loading ? <ThumbnailSkeletonLoader /> : contentSlot}
+              {loading ? <ThumbnailSkeletonLoader /> : <ContentContainer>{contentSlot}</ContentContainer>}
             </CSSTransition>
           </SwitchTransition>
         )}
       </ContentOverlay>
-      <HoverOverlay loading={loading}>
-        {hoverSlotsArray?.map(([position, { element }]) => (
-          <SlotContainer key={position} position={position as keyof SlotsObject}>
-            {element}
-          </SlotContainer>
-        ))}
-      </HoverOverlay>
-      <DefaultOverlay>
-        {defaultSlotsArray?.map(([position, { element, clickable = true }]) => (
+      <HoverOverlay loading={loading} />
+      <SlotsOverlay>
+        {slotsArray?.map(([position, { element, type, clickable = false }]) => (
           <SlotContainer
             key={position}
+            type={type}
             position={position as keyof SlotsObject}
             onMouseMove={() => clickable && setActiveDisabled(true)}
             onMouseOut={() => clickable && setActiveDisabled(false)}
@@ -98,7 +93,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
             {element}
           </SlotContainer>
         ))}
-      </DefaultOverlay>
+      </SlotsOverlay>
     </VideoThumbnailContainer>
   )
 }

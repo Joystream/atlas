@@ -48,10 +48,17 @@ const getSlotPosition = (slotPosition: SlotPosition) => {
   }
 }
 
-export const SlotContainer = styled.div<{ position: SlotPosition }>`
+type SlotsContainerProps = {
+  position: SlotPosition
+  type: 'default' | 'hover'
+}
+
+export const SlotContainer = styled.div<SlotsContainerProps>`
   position: absolute;
-  ${({ position }) => getSlotPosition(position)};
   user-select: none;
+  ${({ position }) => getSlotPosition(position)};
+  opacity: ${({ type }) => (type === 'hover' ? 0 : 1)};
+  transition: opacity ${cVar('animationTransitionFast')};
 `
 
 export const ContentOverlay = styled.div`
@@ -62,6 +69,15 @@ export const ContentOverlay = styled.div`
   display: flex;
   justify-content: center;
 `
+
+export const ContentContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+`
+
 export const ThumbnailImage = styled.img`
   position: absolute;
   user-select: none;
@@ -73,7 +89,7 @@ export const ThumbnailImage = styled.img`
   height: 100%;
 `
 
-export const DefaultOverlay = styled.div`
+export const SlotsOverlay = styled.div`
   ${sharedOverlayStyles}
 `
 
@@ -106,10 +122,10 @@ export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
         cursor: pointer;
         background-color: ${cVar('colorBackgroundPrimary')};
 
-        ${ContentOverlay}, ${HoverOverlay}, ${DefaultOverlay} {
+        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(-8px, -8px);
         }
-        ${HoverOverlay} {
+        ${HoverOverlay}, ${SlotContainer} {
           opacity: 1;
         }
       }
@@ -119,7 +135,7 @@ export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
     !activeDisabled &&
     css`
       :active {
-        ${ContentOverlay}, ${HoverOverlay}, ${DefaultOverlay} {
+        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(0, 0);
         }
       }

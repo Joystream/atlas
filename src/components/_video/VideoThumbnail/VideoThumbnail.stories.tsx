@@ -12,6 +12,7 @@ import {
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
 } from '@/components/_icons'
+import { cVar } from '@/styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
 
@@ -40,7 +41,6 @@ export default {
           />
         ),
         type: 'default',
-        clickable: false,
       },
       topRight: {
         element: (
@@ -49,6 +49,7 @@ export default {
           </IconButton>
         ),
         type: 'default',
+        clickable: true,
       },
       center: {
         element: <SvgIllustrativePlay />,
@@ -81,7 +82,6 @@ FailedUpload.args = {
     bottomRight: {
       element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
       type: 'default',
-      clickable: false,
     },
     center: {
       element: <SvgIllustrativeReupload />,
@@ -95,21 +95,52 @@ Draft.args = {
   slots: {
     topRight: {
       element: (
-        <IconButton size="small">
+        <IconButton size="small" variant="tertiary">
           <SvgActionEdit />
         </IconButton>
       ),
-      type: 'default',
+      type: 'hover',
+      clickable: true,
     },
     bottomRight: {
       element: <Pill label="8:24" />,
       type: 'default',
-      clickable: false,
     },
     bottomLeft: {
       element: <Pill label="Draft" />,
       type: 'default',
-      clickable: false,
+    },
+    center: {
+      element: <SvgIllustrativePlay />,
+      type: 'hover',
+    },
+  },
+}
+
+export const CustomContent = Template.bind({})
+CustomContent.args = {
+  ...CustomContent.args,
+  contentSlot: (
+    <div
+      style={{
+        backgroundColor: cVar('colorCoreGreen700'),
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+      }}
+    >
+      Hello world!
+    </div>
+  ),
+  slots: {
+    bottomRight: {
+      element: <Pill label="8:24" />,
+      type: 'default',
+    },
+    bottomLeft: {
+      element: <Pill label="Draft" />,
+      type: 'default',
     },
     center: {
       element: <SvgIllustrativePlay />,
