@@ -22,19 +22,20 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   return (
     <AvatarGroupContainer>
       {avatars.map((avatarProps, idx) => (
-        <Tooltip key={idx} text={avatarProps.tooltipText} arrowDisabled placement="top" offsetY={clickable ? 16 : 8}>
-          <AvatarWrapper
-            clickable={clickable}
-            onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
-            onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
-            idx={idx}
-            size={size}
-            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
-          >
+        <AvatarWrapper
+          key={idx}
+          clickable={clickable}
+          onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
+          onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
+          idx={idx}
+          size={size}
+          style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+        >
+          <Tooltip text={avatarProps.tooltipText} arrowDisabled placement="top" offsetY={clickable ? 16 : 8}>
             <StyledAvatar size={size} avatarStrokeColor={avatarStrokeColor} {...avatarProps} />
-            <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
-          </AvatarWrapper>
-        </Tooltip>
+          </Tooltip>
+          <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
+        </AvatarWrapper>
       ))}
     </AvatarGroupContainer>
   )

@@ -53,7 +53,7 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
   transition: transform ${cVar('animationTransitionFast')};
-  left: ${({ idx, size }) => idx * (size === 'bid' ? 0 : -4)}px;
+  left: ${({ idx, size }) => idx * (size === 'bid' ? -5 : -8)}px;
   ${({ clickable }) =>
     clickable &&
     css`

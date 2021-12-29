@@ -14,13 +14,10 @@ export default {
       },
       defaultValue: 'default',
     },
-    clickable: {
-      control: {
-        type: 'radio',
-        options: [true, false],
-      },
-      defaultValue: true,
-    },
+    avatars: { table: { disable: true } },
+  },
+  args: {
+    clickable: true,
   },
 } as Meta
 
