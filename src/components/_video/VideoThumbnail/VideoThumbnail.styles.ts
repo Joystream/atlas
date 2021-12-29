@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -8,10 +9,8 @@ const sharedOverlayStyles = css`
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 0;
-  right: 0;
   width: 100%;
-  height: 0;
+  height: 100%;
   padding-top: 56.25%;
   transition: ${cVar('animationTransitionFast')};
 `
@@ -52,6 +51,7 @@ const getSlotPosition = (slotPosition: SlotPosition) => {
 export const SlotContainer = styled.div<{ position: SlotPosition }>`
   position: absolute;
   ${({ position }) => getSlotPosition(position)};
+  user-select: none;
 `
 
 export const ContentOverlay = styled.div`
@@ -81,7 +81,7 @@ type HoverOverlayProps = {
   loading?: boolean
 }
 
-export const HoverOverlay = styled.div<HoverOverlayProps>`
+export const HoverOverlay = styled('div', { shouldForwardProp: isPropValid })<HoverOverlayProps>`
   ${sharedOverlayStyles}
   background: ${({ loading }) => (loading ? 'none ' : cVar('colorBackgroundOverlay'))};
   opacity: 0;

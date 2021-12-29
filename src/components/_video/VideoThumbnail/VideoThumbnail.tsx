@@ -20,6 +20,7 @@ export type SlotsObject = {
   [Property in SlotPosition]?: {
     element: React.ReactNode
     type: 'default' | 'hover'
+    clickable?: boolean
   }
 }
 
@@ -48,9 +49,13 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   const defaultSlotsArray = slots && Object.entries(slots).filter(([_, { type }]) => type === 'default')
   const hoverSlotsArray = slots && Object.entries(slots).filter(([_, { type }]) => type === 'hover')
 
+  const handleClick = () => {
+    clickable && onClick?.()
+  }
+
   const linkProps = to ? { to: to, as: Link } : undefined
   return (
-    <VideoThumbnailContainer onClick={onClick} clickable={clickable} activeDisabled={activeDisabled} {...linkProps}>
+    <VideoThumbnailContainer onClick={handleClick} clickable={clickable} activeDisabled={activeDisabled} {...linkProps}>
       <ContentOverlay>
         {!contentSlot && (
           <SwitchTransition>
@@ -77,23 +82,18 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
       </ContentOverlay>
       <HoverOverlay loading={loading}>
         {hoverSlotsArray?.map(([position, { element }]) => (
-          <SlotContainer
-            key={position}
-            position={position as keyof SlotsObject}
-            onMouseMove={() => setActiveDisabled(true)}
-            onMouseOut={() => setActiveDisabled(false)}
-          >
+          <SlotContainer key={position} position={position as keyof SlotsObject}>
             {element}
           </SlotContainer>
         ))}
       </HoverOverlay>
       <DefaultOverlay>
-        {defaultSlotsArray?.map(([position, { element }]) => (
+        {defaultSlotsArray?.map(([position, { element, clickable = true }]) => (
           <SlotContainer
             key={position}
             position={position as keyof SlotsObject}
-            onMouseMove={() => setActiveDisabled(true)}
-            onMouseOut={() => setActiveDisabled(false)}
+            onMouseMove={() => clickable && setActiveDisabled(true)}
+            onMouseOut={() => clickable && setActiveDisabled(false)}
           >
             {element}
           </SlotContainer>

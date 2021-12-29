@@ -40,6 +40,7 @@ export default {
           />
         ),
         type: 'default',
+        clickable: false,
       },
       topRight: {
         element: (
@@ -58,6 +59,7 @@ export default {
   argTypes: {
     slots: { table: { disable: true } },
     contentSlot: { table: { disable: true } },
+    onClick: { action: 'clicked' },
   },
 } as Meta<VideoThumbnailProps>
 
@@ -79,6 +81,7 @@ FailedUpload.args = {
     bottomRight: {
       element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
       type: 'default',
+      clickable: false,
     },
     center: {
       element: <SvgIllustrativeReupload />,
@@ -101,10 +104,12 @@ Draft.args = {
     bottomRight: {
       element: <Pill label="8:24" />,
       type: 'default',
+      clickable: false,
     },
     bottomLeft: {
       element: <Pill label="Draft" />,
       type: 'default',
+      clickable: false,
     },
     center: {
       element: <SvgIllustrativePlay />,
