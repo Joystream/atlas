@@ -32,6 +32,7 @@ export const VideoTitle = styled(Text)`
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: break-word;
+  word-break: break-word;
 `
 
 export const ChannelTitle = styled(Text)`

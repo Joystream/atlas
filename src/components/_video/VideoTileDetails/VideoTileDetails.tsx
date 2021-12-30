@@ -22,6 +22,7 @@ export type VideoDetailsVariant = 'withoutChannel' | 'withChannelName' | 'withCh
 
 export type VideoTileDetailsProps = {
   videoTitle?: string | null
+  videoSubTitle?: string | null
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
@@ -36,11 +37,12 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   videoTitle,
   views,
   createdAt,
+  videoSubTitle,
   channelTitle,
   size = 'medium',
   channelAvatarUrl,
   loading,
-  kebabMenuItems,
+  kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
 }) => {
   return (
@@ -70,17 +72,15 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
-                createdAt && (
-                  <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                    {formatVideoViewsAndDate(views || 0, createdAt)}
-                  </Text>
-                )
+                <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
+                  {videoSubTitle ? videoSubTitle : formatVideoViewsAndDate(views || 0, createdAt!)}
+                </Text>
               )}
             </VideoMetaContainer>
           </VideoInfoContainer>
         </CSSTransition>
       </SwitchTransition>
-      {kebabMenuItems?.length && (
+      {kebabMenuItems.length > 0 && (
         <ContextMenu
           placement="bottom-end"
           items={kebabMenuItems}
