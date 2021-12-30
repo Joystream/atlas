@@ -58,7 +58,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const getSlots = useCallback<() => undefined | SlotsObject>(() => {
-      if (isUploading) {
+      if (isUploading || loading) {
         return
       }
       const slots: SlotsObject = {

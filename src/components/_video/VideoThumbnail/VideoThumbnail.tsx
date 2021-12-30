@@ -1,6 +1,6 @@
 import { To } from 'history'
 import React, { useState } from 'react'
-import { Link, LinkProps } from 'react-router-dom'
+import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { cVar, transitions } from '@/styles'
@@ -55,9 +55,14 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
     clickable && onClick?.()
   }
 
-  const linkProps = to ? { to: to, as: Link, state: linkState } : undefined
   return (
-    <VideoThumbnailContainer onClick={handleClick} clickable={clickable} activeDisabled={activeDisabled} {...linkProps}>
+    <VideoThumbnailContainer
+      onClick={handleClick}
+      clickable={clickable}
+      activeDisabled={activeDisabled}
+      to={to ? to : ''}
+      state={linkState}
+    >
       <ContentOverlay>
         <SwitchTransition>
           <CSSTransition
@@ -75,15 +80,13 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
           </CSSTransition>
         </SwitchTransition>
         {contentSlot && (
-          <SwitchTransition>
-            <CSSTransition
-              key={String(loading)}
-              timeout={parseInt(cVar('animationTimingFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {loading ? <ThumbnailSkeletonLoader /> : <ContentContainer>{contentSlot}</ContentContainer>}
-            </CSSTransition>
-          </SwitchTransition>
+          <CSSTransition
+            in={!!contentSlot}
+            timeout={parseInt(cVar('animationTimingFast', true))}
+            classNames={transitions.names.fade}
+          >
+            <ContentContainer>{contentSlot}</ContentContainer>
+          </CSSTransition>
         )}
       </ContentOverlay>
       <HoverOverlay loading={loading} />

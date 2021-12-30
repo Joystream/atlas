@@ -1,6 +1,6 @@
-import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, square } from '@/styles'
@@ -94,7 +94,7 @@ type HoverOverlayProps = {
   loading?: boolean
 }
 
-export const HoverOverlay = styled('div', { shouldForwardProp: isPropValid })<HoverOverlayProps>`
+export const HoverOverlay = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<HoverOverlayProps>`
   ${sharedOverlayStyles}
   background: ${({ loading }) => (loading ? 'none ' : cVar('colorBackgroundOverlay'))};
   opacity: 0;
@@ -104,7 +104,16 @@ type VideoThumbnailContainerProps = {
   clickable: boolean
   activeDisabled: boolean
 }
-export const VideoThumbnailContainer = styled('div', { shouldForwardProp: isPropValid })<VideoThumbnailContainerProps>`
+
+export const VideoThumbnailContainer = styled(Link, {
+  shouldForwardProp: (prop) => {
+    if (prop === 'clickable' || prop === 'activeDisabled') {
+      return false
+    }
+    return true
+  },
+})<VideoThumbnailContainerProps>`
+  max-width: 320px;
   min-width: 166px;
   display: block;
   position: relative;
