@@ -1,72 +1,233 @@
+import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
 import { AssetAvailability } from '@/api/queries'
-import { VideoTileProps, useVideoSharedLogic } from '@/components/_video/VideoTile_deprecated'
+import { StyledSvgIllustrativeFileFailed } from '@/components/Avatar/Avatar.styles'
+import { Pill } from '@/components/Pill'
+import { Text } from '@/components/Text'
+import { UploadProgressBar } from '@/components/UploadProgressBar'
+import {
+  SvgActionCopy,
+  SvgActionEdit,
+  SvgActionHide,
+  SvgActionPlay,
+  SvgActionReupload,
+  SvgActionTrash,
+  SvgIllustrativePlay,
+  SvgIllustrativeReupload,
+} from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
+import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { copyToClipboard, openInNewTab } from '@/utils/browser'
+import { cVar, square } from '@/styles'
+import { formatDurationShort } from '@/utils/time'
 
-import { VideoTileBase, VideoTilePublisherProps } from '../VideoTileBase'
+import { SlotsObject } from '../VideoThumbnail'
+import { VideoTile } from '../VideoTile'
+import { PullUp } from '../VideoTileBase/PullUp'
 
-export type VideoTileWPublisherProps = VideoTileProps &
-  Omit<VideoTilePublisherProps, 'publisherMode' | 'videoPublishState'>
-export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo(
-  ({ id, isDraft, onNotFound, ...metaProps }) => {
-    const { video, loading, videoHref, thumbnailPhotoUrl, avatarPhotoUrl, isLoadingThumbnail, isLoadingAvatar } =
-      useVideoSharedLogic({
+type VideoTilePublisherProps = {
+  id?: string
+  onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
+  onDeleteVideoClick?: () => void
+  onReuploadVideoClick?: () => void
+  onOpenInTabClick?: () => void
+  onCopyVideoURLClick?: () => void
+}
+
+export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
+
+export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, onCopyVideoURLClick }) => {
+    const { avatarPhotoUrl, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
+      useVideoTileSharedLogic({
         id,
-        isDraft,
-        onNotFound,
       })
-
-    const draft = useDraftStore(singleDraftSelector(id ?? ''))
 
     const uploadStatus = useUploadsStore(
       (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
     )
 
+    const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
+
+    const isUnlisted = video?.isPublic === false
+
     const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
     const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
-    const handleCopyVideoURLClick = useCallback(() => {
-      copyToClipboard(videoHref ? location.origin + videoHref : '')
-    }, [videoHref])
+
+    const getSlots = useCallback<() => undefined | SlotsObject>(() => {
+      if (isUploading) {
+        return
+      }
+      const slots: SlotsObject = {
+        bottomRight: {
+          element: <Pill variant="overlay" label={formatDurationShort(video?.duration || 0)} />,
+        },
+        topRight: { element: <PullUp tooltipText="Edit" onClick={onEditClick} />, clickable: true, type: 'hover' },
+        center: {
+          element: <SvgIllustrativePlay />,
+          type: 'hover',
+        },
+      }
+      if (hasAssetUploadFailed) {
+        return {
+          bottomRight: {
+            element: <Pill variant="danger" label="Failed upload" />,
+          },
+          center: {
+            element: <SvgIllustrativeReupload />,
+            type: 'hover' as const,
+          },
+        }
+      }
+      if (isUnlisted) {
+        return {
+          ...slots,
+          bottomLeft: {
+            element: <Pill variant="overlay" label="Unlisted" icon={<SvgActionHide />} />,
+          },
+        }
+      }
+      return slots
+    }, [hasAssetUploadFailed, isUnlisted, isUploading, onEditClick, video?.duration])
+
+    const getPublisherKebabMenuItems = useCallback(() => {
+      const assetFailedKebabItems = [
+        {
+          icon: <SvgActionTrash />,
+          onClick: onDeleteVideoClick,
+          title: 'Delete video',
+        },
+        {
+          icon: <SvgActionReupload />,
+          onClick: onReuploadVideoClick,
+          title: 'Reupload file',
+        },
+      ]
+
+      const publisherBasicKebabItems = [
+        {
+          icon: <SvgActionPlay />,
+          onClick: onOpenInTabClick,
+          title: 'Play in Joystream',
+        },
+        {
+          icon: <SvgActionCopy />,
+          onClick: onCopyVideoURLClick,
+          title: 'Copy video URL',
+        },
+        {
+          icon: <SvgActionEdit />,
+          onClick: onEditClick,
+          title: 'Edit video',
+        },
+        {
+          icon: <SvgActionTrash />,
+          onClick: onDeleteVideoClick,
+          title: 'Delete video',
+        },
+      ]
+
+      return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
+    }, [
+      hasAssetUploadFailed,
+      onCopyVideoURLClick,
+      onDeleteVideoClick,
+      onEditClick,
+      onOpenInTabClick,
+      onReuploadVideoClick,
+    ])
+
+    const getVideoSubtitle = useCallback(() => {
+      if (uploadStatus?.lastStatus === 'inProgress') {
+        return 'Uploading...'
+      }
+      if (uploadStatus?.lastStatus === 'processing') {
+        return 'Processing...'
+      }
+      if (hasAssetUploadFailed) {
+        return 'Upload failed...'
+      }
+      return
+    }, [hasAssetUploadFailed, uploadStatus?.lastStatus])
+
+    const getContentSlot = () => {
+      if (!isUploading && hasThumbnailUploadFailed) {
+        return (
+          <CoverThumbnailUploadFailed>
+            <StyledSvgIllustrativeFileFailed />
+            <Text variant="t100" secondary>
+              Asset upload failed
+            </Text>
+          </CoverThumbnailUploadFailed>
+        )
+      }
+      return (
+        <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
+          <UploadProgressTransition>
+            <UploadProgressBar
+              progress={uploadStatus?.progress}
+              lastStatus={uploadStatus?.lastStatus}
+              withLoadingIndicator
+            />
+          </UploadProgressTransition>
+        </CSSTransition>
+      )
+    }
 
     return (
-      <VideoTileBase
-        uploadStatus={uploadStatus}
-        videoHref={
-          !isDraft
-            ? hasAssetUploadFailed
-              ? {
-                  pathname: absoluteRoutes.studio.uploads(),
-                  state: { highlightFailed: true },
-                }
-              : absoluteRoutes.viewer.video(video?.id)
-            : undefined
-        }
-        openInNewBrowserTab={!isDraft && !hasAssetUploadFailed}
-        isLoadingThumbnail={isLoadingThumbnail}
-        isLoadingAvatar={isLoadingAvatar}
-        publisherMode
-        title={isDraft ? draft?.title : video?.title}
-        channelTitle={video?.channel?.title}
-        channelAvatarUrl={avatarPhotoUrl}
-        createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
-        duration={video?.duration}
-        views={video?.views}
+      <VideoTile
+        clickable={!isUploading}
+        slots={getSlots()}
+        contentSlot={getContentSlot()}
+        to={hasVideoUploadFailed ? absoluteRoutes.studio.uploads() : videoHref}
+        linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
+        videoSubTitle={getVideoSubtitle()}
+        detailsVariant="withoutChannel"
+        loadingDetails={loading}
+        loadingThumbnail={isLoadingThumbnail}
         thumbnailUrl={thumbnailPhotoUrl}
-        hasAssetUploadFailed={hasAssetUploadFailed}
-        channelHref={id ? absoluteRoutes.viewer.channel(video?.channel?.id) : undefined}
-        isLoading={loading}
-        onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
-        onCopyVideoURLClick={isDraft ? undefined : handleCopyVideoURLClick}
-        isUnlisted={!video?.isPublic || !video?.isPublic === undefined}
-        isDraft={isDraft}
-        {...metaProps}
+        channelAvatarUrl={avatarPhotoUrl}
+        createdAt={video?.createdAt}
+        channelTitle={video?.channel?.title}
+        videoTitle={video?.title}
+        views={video?.views}
+        kebabMenuItems={getPublisherKebabMenuItems()}
       />
     )
   }
 )
+
+export const CoverThumbnailUploadFailed = styled.div`
+  ${square('100%')}
+
+  background:${cVar('colorCoreNeutral900')};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+export const UploadProgressTransition = styled.div`
+  &.${DELAYED_FADE_CLASSNAME}-enter {
+    opacity: 0;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit {
+    opacity: 1;
+  }
+
+  &.${DELAYED_FADE_CLASSNAME}-exit-active {
+    opacity: 0;
+    transition: opacity 400ms ease-out 600ms;
+  }
+`
+
 VideoTilePublisher.displayName = 'VideoTilePublisher'

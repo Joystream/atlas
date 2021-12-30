@@ -239,12 +239,13 @@ export const MyVideosView = () => {
           return (
             <VideoTilePublisher
               key={`draft-${idx}`}
+              onEditClick={() => console.log('hello')}
               id={draft.id}
-              showChannel={false}
-              isDraft
-              onClick={() => handleVideoClick(draft.id, { draft: true })}
-              onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-              onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+              // showChannel={false}
+              // isDraft
+              // onClick={() => handleVideoClick(draft.id, { draft: true })}
+              // onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+              // onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
           )
         })
@@ -256,13 +257,11 @@ export const MyVideosView = () => {
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
             id={video.id}
-            showChannel={false}
-            onPullupClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
+            onEditClick={(e) => {
+              e?.stopPropagation()
+              e?.preventDefault()
               handleVideoClick(video.id)
             }}
-            onEditVideoClick={() => handleVideoClick(video.id)}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}
           />

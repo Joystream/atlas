@@ -2,17 +2,16 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 export const VideoTileContainer = styled.div<{ direction: 'vertical' | 'horizontal' }>`
-  display: grid;
+  display: flex;
   gap: 16px;
   ${({ direction }) =>
     direction === 'vertical'
       ? css`
-          grid-auto-flow: row;
+          flex-direction: column;
           max-width: 320px;
         `
       : css`
-          grid-auto-flow: column;
+          flex-direction: row;
           max-width: 656px;
-          grid-template-columns: 1fr 1fr;
         `};
 `
