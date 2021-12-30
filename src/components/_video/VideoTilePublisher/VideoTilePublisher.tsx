@@ -40,10 +40,9 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, onCopyVideoURLClick }) => {
-    const { avatarPhotoUrl, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
-      useVideoTileSharedLogic({
-        id,
-      })
+    const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
+      id,
+    })
 
     const uploadStatus = useUploadsStore(
       (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
@@ -91,7 +90,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         }
       }
       return slots
-    }, [hasAssetUploadFailed, isUnlisted, isUploading, onEditClick, video?.duration])
+    }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, video?.duration])
 
     const getPublisherKebabMenuItems = useCallback(() => {
       const assetFailedKebabItems = [
@@ -189,9 +188,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         loadingDetails={loading}
         loadingThumbnail={isLoadingThumbnail}
         thumbnailUrl={thumbnailPhotoUrl}
-        channelAvatarUrl={avatarPhotoUrl}
         createdAt={video?.createdAt}
-        channelTitle={video?.channel?.title}
         videoTitle={video?.title}
         views={video?.views}
         kebabMenuItems={getPublisherKebabMenuItems()}

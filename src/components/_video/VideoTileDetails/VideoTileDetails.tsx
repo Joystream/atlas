@@ -73,7 +73,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
                 <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                  {videoSubTitle ? videoSubTitle : formatVideoViewsAndDate(views || 0, createdAt!)}
+                  {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt!)}
                 </Text>
               )}
             </VideoMetaContainer>

@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionUpload } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
+import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
@@ -237,15 +238,11 @@ export const MyVideosView = () => {
             return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
           }
           return (
-            <VideoTilePublisher
+            <VideoTileDraft
               key={`draft-${idx}`}
-              onEditClick={() => console.log('hello')}
+              onClick={() => handleVideoClick(draft.id, { draft: true })}
               id={draft.id}
-              // showChannel={false}
-              // isDraft
-              // onClick={() => handleVideoClick(draft.id, { draft: true })}
-              // onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
-              // onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
+              onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
           )
         })

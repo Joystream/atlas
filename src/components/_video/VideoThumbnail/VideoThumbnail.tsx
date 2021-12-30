@@ -51,7 +51,10 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   const [activeDisabled, setActiveDisabled] = useState(false)
   const slotsArray = slots && Object.entries(slots)
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (!to) {
+      e.preventDefault()
+    }
     clickable && onClick?.()
   }
 

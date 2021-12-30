@@ -9,7 +9,6 @@ export type VideoTileProps = {
   direction?: 'vertical' | 'horizontal'
   detailsVariant?: VideoDetailsVariant
   className?: string
-  videoSubtitle?: string
   loadingDetails?: boolean
   loadingThumbnail?: boolean
 } & VideoThumbnailProps &
