@@ -104,7 +104,7 @@ type VideoThumbnailContainerProps = {
   clickable: boolean
   activeDisabled: boolean
 }
-export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
+export const VideoThumbnailContainer = styled('div', { shouldForwardProp: isPropValid })<VideoThumbnailContainerProps>`
   min-width: 166px;
   display: block;
   position: relative;

@@ -1,6 +1,6 @@
 import { To } from 'history'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { cVar, transitions } from '@/styles'
@@ -28,8 +28,9 @@ export type SlotsObject = {
 export type VideoThumbnailProps = {
   loading?: boolean
   to?: To
+  linkState?: LinkProps['state']
   thumbnailUrl?: string | null
-  thumbnailAlt?: string
+  thumbnailAlt?: string | null
   onClick?: () => void
   clickable?: boolean
   contentSlot?: React.ReactNode
@@ -39,6 +40,7 @@ export type VideoThumbnailProps = {
 export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   loading,
   to,
+  linkState,
   slots,
   thumbnailUrl,
   thumbnailAlt,
@@ -53,21 +55,25 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
     clickable && onClick?.()
   }
 
-  const linkProps = to ? { to: to, as: Link } : undefined
+  const linkProps = to ? { to: to, as: Link, state: linkState } : undefined
   return (
     <VideoThumbnailContainer onClick={handleClick} clickable={clickable} activeDisabled={activeDisabled} {...linkProps}>
       <ContentOverlay>
-        {!contentSlot && (
-          <SwitchTransition>
-            <CSSTransition
-              key={String(loading)}
-              timeout={parseInt(cVar('animationTimingFast', true))}
-              classNames={transitions.names.fade}
-            >
-              {loading ? <ThumbnailSkeletonLoader /> : <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt} />}
-            </CSSTransition>
-          </SwitchTransition>
-        )}
+        <SwitchTransition>
+          <CSSTransition
+            key={String(loading)}
+            timeout={parseInt(cVar('animationTimingFast', true))}
+            classNames={transitions.names.fade}
+          >
+            {loading ? (
+              <ThumbnailSkeletonLoader />
+            ) : thumbnailUrl ? (
+              <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />
+            ) : (
+              <div />
+            )}
+          </CSSTransition>
+        </SwitchTransition>
         {contentSlot && (
           <SwitchTransition>
             <CSSTransition
