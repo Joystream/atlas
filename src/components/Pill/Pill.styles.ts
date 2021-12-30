@@ -68,7 +68,6 @@ export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
   align-items: center;
   padding: ${sizes(2)};
   border-radius: 2px;
-  margin-left: ${sizes(2)};
 
   svg {
     > * {
