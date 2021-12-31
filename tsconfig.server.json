@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./server/dist",
+    "target": "esnext",
+    "lib": ["dom", "esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "sourceMap": true,
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
+  },
+  "files": ["./server/index.ts"],
+  "include": ["./server"],
+  "exclude": ["node_modules", "dist"]
+}
