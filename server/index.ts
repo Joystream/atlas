@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express'
 import { Response } from 'express-serve-static-core'
 import * as fs from 'fs'
@@ -61,7 +62,7 @@ app.get('/video/:id', (req, res) => {
 })
 
 app.get('/channel/:id', (req, res) => {
-  fs.readFile(indexPath, 'utf8', async (err: any, htmlData: any) => {
+  fs.readFile(indexPath, 'utf8', async (err, htmlData) => {
     if (err) {
       console.error('Error during file reading', err)
       return res.status(404).end()

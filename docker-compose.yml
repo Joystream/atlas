@@ -5,7 +5,7 @@ services:
       context: .
       target: nginx
     ports:
-      - "80:80"
+      - '80:80'
     restart: always
   node:
     build:
@@ -14,4 +14,4 @@ services:
     environment:
       - PORT=3000
     ports:
-      - "3000:3000"
+      - '3000:3000'
