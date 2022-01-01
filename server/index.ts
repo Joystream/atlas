@@ -3,11 +3,10 @@ import express from 'express'
 import { Response } from 'express-serve-static-core'
 import * as fs from 'fs'
 import { GraphQLClient } from 'graphql-request'
-import parseHtml from 'node-html-parser'
 import * as path from 'path'
 
 import { channelsQuery, videoQuery, workerQuery } from './queries'
-import { joinUrlFragments } from './utils'
+import { generateChannelMetadata, generateVideoMetadata } from './utils'
 
 const app = express()
 
@@ -20,7 +19,7 @@ const getWorker = async (res: Response) => {
   if (!workers.length) return res.status(500)
   const random = Math.floor(Math.random() * workers.length)
 
-  return workers[random]
+  return workers[random].metadata
 }
 
 app.use(express.static(path.resolve('dist'), { maxAge: '30d' }))
@@ -34,30 +33,11 @@ app.get('/video/:id', (req, res) => {
 
     const id = req.params['id']
     const { videos } = await client.request(videoQuery(id))
-    const { metadata } = await getWorker(res)
+    const metadata = await getWorker(res)
     if (!videos.length) return res.status(404).send('Video not found')
     const video = videos[0]
-    const assetUrl = joinUrlFragments(metadata, '/asset/v0', video.thumbnailPhotoDataObject.joystreamContentId)
-    const videoUrl = joinUrlFragments(metadata, '/asset/v0', video.mediaDataObject.joystreamContentId)
-    const html = parseHtml(htmlData)
-    const head = html.querySelector('head')
-    const title = html.querySelector('title') || { innerHTML: undefined }
 
-    title.innerHTML = `Joystream - ${video.title}`
-    head?.insertAdjacentHTML(
-      'beforeend',
-      `
-      <meta name="description" content="${video.description}">
-      <meta name="og:url" content="https://play.joystream.org/video/${id}">
-      <meta name="og:title" content="${video.title}">
-      <meta name="og:description" content="${video.description}">
-      <meta name="og:image" content="${assetUrl}">
-      <meta name="og:video" content=${videoUrl}">
-      <meta name="og:video:width" content="${video.mediaMetadata.pixelWidth}">
-      <meta name="og:video:height" content="${video.mediaMetadata.pixelHeight}">
-    `
-    )
-    return res.send(html.toString())
+    return res.send(generateVideoMetadata(htmlData, video, metadata))
   })
 })
 
@@ -69,26 +49,11 @@ app.get('/channel/:id', (req, res) => {
     }
     const id = req.params['id']
     const { channels } = await client.request(channelsQuery(id))
-    const { metadata } = await getWorker(res)
+    const metadata = await getWorker(res)
     if (!channels || !channels.length) return res.status(404).send('Channel not found')
     const channel = channels[0]
-    const assetUrl = joinUrlFragments(metadata, '/asset/v0', channel.avatarPhotoDataObject.joystreamContentId)
-    const html = parseHtml(htmlData)
-    const head = html.querySelector('head')
-    const title = html.querySelector('title') || { innerHTML: undefined }
 
-    title.innerHTML = `Joystream - ${channel.title}`
-    head?.insertAdjacentHTML(
-      'beforeend',
-      `
-      <meta name="description" content="${channel.description}">
-      <meta name="og:url" content="https://play.joystream.org/channel/${id}">
-      <meta name="og:title" content="${channel.title}">
-      <meta name="og:description" content="${channel.description}">
-      <meta name="og:image" content="${assetUrl}">
-    `
-    )
-    return res.send(html.toString())
+    return res.send(generateChannelMetadata(htmlData, channel, metadata))
   })
 })
 
