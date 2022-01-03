@@ -24,7 +24,7 @@ export default {
   args: {
     clickable: true,
     loading: false,
-    thumbnailUrl: 'https://thispersondoesnotexist.com/image',
+    thumbnailUrl: 'https://picsum.photos/320/180',
     thumbnailAlt: 'This person does not exist',
     slots: {
       bottomLeft: {

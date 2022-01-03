@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { SvgActionEdit, SvgActionTrash, SvgIllustrativeEdit } from '@/components/_icons'
+import { Pill } from '@/components/Pill'
+import { SvgActionDraft, SvgActionEdit, SvgActionTrash, SvgIllustrativeEdit } from '@/components/_icons'
 import { singleDraftSelector, useDraftStore } from '@/providers/drafts'
 import { square } from '@/styles'
 import { formatDateAgo } from '@/utils/time'
@@ -38,6 +39,9 @@ export const VideoTileDraft: React.FC<VideoTilePublisherProps> = React.memo(({ i
         center: {
           element: <SvgIllustrativeEdit />,
           type: 'hover',
+        },
+        bottomLeft: {
+          element: <Pill icon={<SvgActionDraft />} label="Draft" />,
         },
       }}
       detailsVariant="withoutChannel"

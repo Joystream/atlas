@@ -1,22 +1,21 @@
-import { ApolloProvider } from '@apollo/client'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { createApolloClient } from '@/api'
-import { PillGroup } from '@/components/Pill'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Pill, PillGroup } from '@/components/Pill'
 import {
-  SvgActionBid,
+  SvgActionDraft,
+  SvgActionEdit,
   SvgActionJoyToken,
   SvgActionReupload,
   SvgActionTrash,
+  SvgIllustrativeEdit,
   SvgIllustrativePlay,
 } from '@/components/_icons'
-import { AssetsManager } from '@/providers/assets'
-import { StorageProvidersProvider } from '@/providers/storageProviders'
+import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
+import { PullUp } from '../VideoTilePublisher/PullUp'
 
 export default {
   title: 'video/VideoTile',
@@ -30,7 +29,8 @@ export default {
     },
   },
   args: {
-    thumbnailUrl: 'https://thispersondoesnotexist.com/image',
+    direction: 'vertical',
+    thumbnailUrl: 'https://picsum.photos/320/180',
     slots: {
       bottomLeft: {
         element: (
@@ -50,11 +50,6 @@ export default {
         type: 'default',
       },
       topRight: {
-        element: (
-          <IconButton size="small">
-            <SvgActionBid />
-          </IconButton>
-        ),
         type: 'default',
         clickable: true,
       },
@@ -84,16 +79,10 @@ export default {
   },
   decorators: [
     (Story) => {
-      const apolloClient = createApolloClient()
       return (
-        <ApolloProvider client={apolloClient}>
-          <BrowserRouter>
-            <StorageProvidersProvider>
-              <AssetsManager />
-              <Story />
-            </StorageProvidersProvider>
-          </BrowserRouter>
-        </ApolloProvider>
+        <BrowserRouter>
+          <Story />
+        </BrowserRouter>
       )
     },
   ],
@@ -108,3 +97,56 @@ const Template: Story<VideoTileProps> = (args) => {
 }
 
 export const Default = Template.bind({})
+
+export const Draft = Template.bind({})
+
+Draft.args = {
+  detailsVariant: 'withoutChannel',
+  videoTitle: 'Draft',
+  kebabMenuItems: [
+    {
+      icon: <SvgActionEdit />,
+      title: 'Edit draft',
+    },
+    {
+      icon: <SvgActionTrash />,
+      title: 'Delete draft',
+    },
+  ],
+  slots: {
+    center: {
+      element: <SvgIllustrativeEdit />,
+      type: 'hover',
+    },
+    bottomLeft: {
+      element: <Pill icon={<SvgActionDraft />} label="Draft" />,
+      type: 'default',
+    },
+  },
+  videoSubTitle: `Last updated ${formatDateAgo(new Date(Date.now() - 3000000))}`,
+  contentSlot: (
+    <div
+      style={{
+        background: 'linear-gradient(125deg, rgb(16 18 20) 30%, rgb(34 36 38) 65%, rgb(16 18 20) 100%)',
+        width: '100%',
+        height: '100%',
+      }}
+    />
+  ),
+}
+
+export const Publisher = Template.bind({})
+
+Publisher.args = {
+  slots: {
+    bottomRight: {
+      element: <Pill variant="overlay" label="30:12" />,
+    },
+    topRight: { element: <PullUp tooltipText="Edit" />, clickable: true, type: 'hover' },
+    center: {
+      element: <SvgIllustrativePlay />,
+      type: 'hover',
+    },
+  },
+  detailsVariant: 'withoutChannel',
+}

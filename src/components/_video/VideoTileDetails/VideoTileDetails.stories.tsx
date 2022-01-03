@@ -10,6 +10,8 @@ export default {
   component: VideoTileDetails,
   args: {
     channelAvatarUrl: 'https://thispersondoesnotexist.com/image',
+    variant: 'withChannelNameAndAvatar',
+    size: 'medium',
     loading: false,
     videoTitle:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto.',
