@@ -10,19 +10,24 @@ export default {
     size: {
       control: {
         type: 'select',
-        options: ['default', 'bid', 'small'],
+        options: ['small', 'medium', 'large'],
       },
-      defaultValue: 'default',
+    },
+    avatarStrokeColor: {
+      control: {
+        type: 'color',
+      },
     },
     avatars: { table: { disable: true } },
   },
   args: {
     clickable: true,
+    size: 'medium',
   },
 } as Meta
 
 const Template: Story<AvatarGroupProps> = (args) => (
-  <div style={{ marginTop: '30px' }}>
+  <div style={{ width: '500px', height: '500px', background: args.avatarStrokeColor, paddingTop: '30px' }}>
     <AvatarGroup {...args} />
   </div>
 )
