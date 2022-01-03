@@ -18,6 +18,7 @@ export const generateVideoMetadata = (htmlData: string, video: Video, metadata: 
   head?.insertAdjacentHTML(
     'beforeend',
     `
+      <meta name="twitter:card" content="player" />
       <meta name="description" content="${video.description}">
       <meta name="og:url" content="https://play.joystream.org/video/${video.id}">
       <meta name="og:title" content="${video.title}">
@@ -42,6 +43,7 @@ export const generateChannelMetadata = (htmlData: string, channel: Channel, meta
   head?.insertAdjacentHTML(
     'beforeend',
     `
+      <meta name="twitter:card" content="summary" />
       <meta name="description" content="${channel.description}">
       <meta name="og:url" content="https://play.joystream.org/channel/${channel.id}">
       <meta name="og:title" content="${channel.title}">
