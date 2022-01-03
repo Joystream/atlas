@@ -90,7 +90,7 @@ Every reusable component should be placed inside `src/components`. If any of the
   - _(optional)_ `Component.styles.ts` - any styles needed for the component
   - _(optional)_ `Component.stories.tsx` - Storybook stories exploring different use cases/variants of the component
 
-## Component structure
+### Component structure
 
 In the main component file, we try to preserve a following structure:
 
@@ -146,6 +146,24 @@ export const Component: React.FC<ComponentProps> = ({ hidden, otherProp, ...rest
     </div>
   )
 }
+```
+
+## Typescript
+
+We try to leverage type-safety whenever possible, to reduce potential of human error. We use `type` instead of `interface` as it's usually easier to work with and compose. Another good practice is to avoid general types like `unknown` or `object` or types allowing any property name, because those can easily introduce errors that won't be caught by the compiler. Example:
+
+```ts
+// bad example
+type BadFnInput = {
+  [key: string]: string
+}
+
+const fn = (input: BadFnInput) => {
+  console.log(input.hello)
+}
+
+// no TS error, result will be unexpected
+fn({ h3ll0: 'hi' })
 ```
 
 ## Naming
