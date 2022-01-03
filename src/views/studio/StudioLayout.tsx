@@ -23,7 +23,7 @@ import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
 import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } from '@/views/studio'
 
-import { SignInView } from './SignInView'
+import { StudioWelcomeView } from './StudioWelcomeView'
 
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
@@ -87,7 +87,9 @@ const StudioLayout = () => {
           <Route path={relativeRoutes.studio.index()} element={<StudioEntrypoint enterLocation={enterLocation} />} />
           <Route
             path={relativeRoutes.studio.signIn()}
-            element={<PrivateRoute element={<SignInView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />}
+            element={
+              <PrivateRoute element={<StudioWelcomeView />} isAuth={!channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+            }
           />
           <Route
             path={relativeRoutes.studio.newChannel()}

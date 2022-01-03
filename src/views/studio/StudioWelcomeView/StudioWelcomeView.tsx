@@ -1,23 +1,19 @@
 import React from 'react'
 
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChannel, SvgActionChevronL, SvgActionInformative } from '@/components/_icons'
-import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SvgActionChannel, SvgActionInformative } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user'
 
 import {
-  BackLink,
   ButtonGroup,
   Header,
-  LogoContainer,
   SignInButton,
   StyledContainer,
   StyledHero,
   StyledSignInIllustrationSVG,
   SubTitle,
-} from './SignInView.styles'
+} from './StudioWelcomeView.styles'
 
 export type Membership = {
   id: string
@@ -26,7 +22,7 @@ export type Membership = {
   avatarUri?: string
 }
 
-export const SignInView: React.FC = () => {
+export const StudioWelcomeView: React.FC = () => {
   const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
 
   const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
@@ -34,12 +30,10 @@ export const SignInView: React.FC = () => {
     <>
       <StyledContainer>
         <Header>
-          <LogoContainer>
-            <SvgJoystreamLogoFull />
-          </LogoContainer>
-          <StyledHero variant="h900">Welcome to Joystream Studio</StyledHero>
-          <SubTitle variant="t300">
-            Start your journey as a Video Publisher. Publish and manage your channel and video content.
+          <StyledHero variant="h800">Welcome to Joystream Studio</StyledHero>
+          <SubTitle variant="t300" secondary>
+            Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
+            and more!
           </SubTitle>
           <ButtonGroup>
             {memberSet ? (
@@ -55,12 +49,6 @@ export const SignInView: React.FC = () => {
               How it works?
             </Button>
           </ButtonGroup>
-          <BackLink to={absoluteRoutes.viewer.index()}>
-            <SvgActionChevronL />
-            <Text variant="t200" secondary>
-              Go back
-            </Text>
-          </BackLink>
         </Header>
         <StyledSignInIllustrationSVG />
       </StyledContainer>

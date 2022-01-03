@@ -38,6 +38,65 @@ export const CreateMemberModal: React.FC = () => {
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
 
+  const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
+  const [avatarImageUrl, setAvatarImageUrl] = useState('')
+  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
+    headerIcon: <Loader variant="medium" />,
+    title: 'Creating membership...',
+    description:
+      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+  })
+  const [isCreatingMembership, setIsCreatingMembership] = useState(false)
+  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
+  const { displaySnackbar } = useSnackbar()
+
+  const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
+  // subscription doesn't allow 'onError' callback
+  useEffect(() => {
+    if (!queryNodeStateError) return
+    SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
+  }, [queryNodeStateError])
+
+  const client = useApolloClient()
+
+  const accountSet = !!activeAccountId && !!extensionConnected
+
+  const debouncedAvatarValidation = useRef(
+    debouncePromise(
+      async (value: string): Promise<string | boolean> =>
+        new Promise((resolve) => {
+          const image = new Image()
+          image.onload = () => {
+            setAvatarImageUrl(value)
+            resolve(true)
+          }
+          image.onerror = () => resolve(false)
+          image.src = value
+          if (!value) {
+            setAvatarImageUrl(value)
+            resolve(true)
+          }
+        }),
+      500
+    )
+  )
+
+  const debouncedHandleUniqueValidation = useRef(
+    debouncePromise(async (value: string) => {
+      const {
+        data: { membershipByUniqueInput },
+      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+        query: GetMembershipDocument,
+        variables: { where: { handle: value } },
+      })
+      if (membershipByUniqueInput) {
+        return false
+      } else {
+        return true
+      }
+    }, 500)
+  )
+
   const schema = z.object({
     handle: z
       .string()
@@ -73,8 +132,6 @@ export const CreateMemberModal: React.FC = () => {
     about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }).optional(),
   })
 
-  const accountSet = !!activeAccountId && !!extensionConnected
-
   const {
     register,
     handleSubmit,
@@ -90,27 +147,6 @@ export const CreateMemberModal: React.FC = () => {
       about: '',
     },
   })
-
-  const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [avatarImageUrl, setAvatarImageUrl] = useState('')
-  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
-    headerIcon: <Loader variant="medium" />,
-    title: 'Creating membership...',
-    description:
-      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
-  })
-  const [isCreatingMembership, setIsCreatingMembership] = useState(false)
-  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
-  const { displaySnackbar } = useSnackbar()
-
-  const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
-  // subscription doesn't allow 'onError' callback
-  useEffect(() => {
-    if (!queryNodeStateError) return
-    SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
-  }, [queryNodeStateError])
-
-  const client = useApolloClient()
 
   // success
   useEffect(() => {
@@ -172,42 +208,6 @@ export const CreateMemberModal: React.FC = () => {
       })
     }
   })
-
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(
-      async (value: string): Promise<string | boolean> =>
-        new Promise((resolve) => {
-          const image = new Image()
-          image.onload = () => {
-            setAvatarImageUrl(value)
-            resolve(true)
-          }
-          image.onerror = () => resolve(false)
-          image.src = value
-          if (!value) {
-            setAvatarImageUrl(value)
-            resolve(true)
-          }
-        }),
-      500
-    )
-  )
-
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string) => {
-      const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
-      })
-      if (membershipByUniqueInput) {
-        return false
-      } else {
-        return true
-      }
-    }, 500)
-  )
 
   const handleExitClick = () => {
     reset()

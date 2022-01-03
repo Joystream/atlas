@@ -132,7 +132,7 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
             ))}
             <ListItem
               nodeStart={<IconWrapper icon={<SvgActionNewChannel />} />}
-              onClick={() => handleAddNewMember()}
+              onClick={handleAddNewMember}
               label="Add new member..."
             />
           </SectionContainer>
