@@ -23,9 +23,10 @@ import { useUploadsStore } from '@/providers/uploadsManager'
 import { cVar, square } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
+import { PullUp } from './PullUp'
+
 import { SlotsObject } from '../VideoThumbnail'
 import { VideoTile } from '../VideoTile'
-import { PullUp } from '../VideoTileBase/PullUp'
 
 type VideoTilePublisherProps = {
   id?: string
