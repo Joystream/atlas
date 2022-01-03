@@ -27,6 +27,7 @@ export type VideoTileDetailsProps = {
   createdAt?: Date | null
   channelTitle?: string | null
   channelAvatarUrl?: string | null
+  loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
   kebabMenuItems?: MenuItemProps[]
@@ -41,17 +42,18 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   channelTitle,
   size = 'medium',
   channelAvatarUrl,
+  loadingAvatar,
   loading,
   kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
 }) => {
   return (
     <VideoDetailsContainer>
-      {variant === 'withChannelNameAndAvatar' && <StyledAvatar assetUrl={channelAvatarUrl} loading={loading} />}
+      {variant === 'withChannelNameAndAvatar' && <StyledAvatar assetUrl={channelAvatarUrl} loading={loadingAvatar} />}
       <SwitchTransition>
         <CSSTransition
-          key={String(loading)}
           timeout={parseInt(cVar('animationTimingFast', true))}
+          key={String(loading)}
           classNames={transitions.names.fade}
         >
           <VideoInfoContainer>
@@ -73,7 +75,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
                 <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
-                  {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt!)}
+                  {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt)}
                 </Text>
               )}
             </VideoMetaContainer>

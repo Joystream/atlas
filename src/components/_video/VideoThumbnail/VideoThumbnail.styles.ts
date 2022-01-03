@@ -113,7 +113,6 @@ export const VideoThumbnailContainer = styled(Link, {
     return true
   },
 })<VideoThumbnailContainerProps>`
-  max-width: 320px;
   min-width: 166px;
   display: block;
   position: relative;

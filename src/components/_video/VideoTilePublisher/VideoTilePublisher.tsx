@@ -63,7 +63,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       }
       const slots: SlotsObject = {
         bottomRight: {
-          element: <Pill variant="overlay" label={formatDurationShort(video?.duration || 0)} />,
+          element: video?.duration && <Pill variant="overlay" label={formatDurationShort(video?.duration)} />,
         },
         topRight: { element: <PullUp tooltipText="Edit" onClick={onEditClick} />, clickable: true, type: 'hover' },
         center: {

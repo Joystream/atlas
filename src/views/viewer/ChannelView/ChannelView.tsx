@@ -19,7 +19,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
-import { VideoTile } from '@/components/_video/VideoTile_deprecated'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
@@ -180,7 +180,7 @@ export const ChannelView: React.FC = () => {
           )}
           <Grid maxColumns={null} onResize={handleOnResizeGrid}>
             {videosWithPlaceholders.map((video, idx) => (
-              <VideoTile key={idx} id={video.id} showChannel={false} />
+              <VideoTileViewer key={idx} id={video.id} detailsVariant="withoutChannel" />
             ))}
           </Grid>
         </VideoSection>

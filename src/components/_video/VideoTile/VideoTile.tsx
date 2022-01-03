@@ -36,6 +36,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     createdAt,
     views,
     loadingThumbnail,
+    loadingAvatar,
   }) => {
     return (
       <VideoTileContainer direction={direction} className={className}>
@@ -60,6 +61,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           createdAt={createdAt}
           channelTitle={channelTitle}
           loading={loadingDetails}
+          loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}
         />
       </VideoTileContainer>

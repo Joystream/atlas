@@ -16,7 +16,6 @@ export const KebabMenuButtonIcon = styled(IconButton)`
 
 export const VideoDetailsContainer = styled.div`
   display: flex;
-  max-width: 320px;
 
   :hover {
     ${KebabMenuButtonIcon} {
