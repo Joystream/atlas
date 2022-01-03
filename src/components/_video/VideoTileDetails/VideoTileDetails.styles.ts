@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -32,6 +33,11 @@ export const VideoTitle = styled(Text)`
   overflow: hidden;
   overflow-wrap: break-word;
   word-break: break-word;
+  cursor: pointer;
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `
 
 export const ChannelTitle = styled(Text)`
@@ -42,6 +48,7 @@ export const ChannelTitle = styled(Text)`
 
 export const StyledAvatar = styled(Avatar)`
   margin-right: ${sizes(4)};
+  cursor: pointer;
 `
 
 export const VideoInfoContainer = styled.div`

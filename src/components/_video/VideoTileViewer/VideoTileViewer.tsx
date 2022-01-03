@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react'
+import { useNavigate } from 'react-router'
 
 import { Pill } from '@/components/Pill'
 import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
+import { absoluteRoutes } from '@/config/routes'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { copyToClipboard } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
@@ -16,6 +18,7 @@ type VideoTileViewerProps = {
 }
 
 export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant }) => {
+  const navigate = useNavigate()
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
     useVideoTileSharedLogic({
       id,
@@ -29,8 +32,11 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
     <VideoTile
       onClick={onClick}
       detailsVariant={detailsVariant}
-      to={videoHref}
+      videoHref={videoHref}
+      channelHref={absoluteRoutes.viewer.channel(video?.category?.id)}
+      onChannelAvatarClick={() => navigate(absoluteRoutes.viewer.channel(video?.category?.id))}
       loadingDetails={loading}
+      channelId={video?.channel?.id}
       thumbnailUrl={thumbnailPhotoUrl}
       loadingThumbnail={isLoadingThumbnail}
       views={video?.views}

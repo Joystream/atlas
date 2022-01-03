@@ -1,4 +1,5 @@
 import React from 'react'
+import { To } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -12,6 +13,7 @@ import {
   ChannelTitle,
   KebabMenuButtonIcon,
   StyledAvatar,
+  StyledLink,
   VideoDetailsContainer,
   VideoInfoContainer,
   VideoMetaContainer,
@@ -22,11 +24,16 @@ export type VideoDetailsVariant = 'withoutChannel' | 'withChannelName' | 'withCh
 
 export type VideoTileDetailsProps = {
   videoTitle?: string | null
+  onVideoTitleClick?: () => void
   videoSubTitle?: string | null
+  videoHref?: string
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
+  channelId?: string | null
   channelAvatarUrl?: string | null
+  channelHref?: string
+  onChannelAvatarClick?: () => void
   loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
@@ -36,10 +43,15 @@ export type VideoTileDetailsProps = {
 
 export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   videoTitle,
+  onVideoTitleClick,
+  videoSubTitle,
+  videoHref,
   views,
   createdAt,
-  videoSubTitle,
   channelTitle,
+  channelId,
+  channelHref,
+  onChannelAvatarClick,
   size = 'medium',
   channelAvatarUrl,
   loadingAvatar,
@@ -49,7 +61,9 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
 }) => {
   return (
     <VideoDetailsContainer>
-      {variant === 'withChannelNameAndAvatar' && <StyledAvatar assetUrl={channelAvatarUrl} loading={loadingAvatar} />}
+      {variant === 'withChannelNameAndAvatar' && (
+        <StyledAvatar assetUrl={channelAvatarUrl} loading={loadingAvatar} onClick={onChannelAvatarClick} />
+      )}
       <SwitchTransition>
         <CSSTransition
           timeout={parseInt(cVar('animationTimingFast', true))}
@@ -60,16 +74,24 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
             {loading ? (
               <SkeletonLoader height={size === 'medium' ? 24 : 20} width="60%" />
             ) : (
-              <VideoTitle variant={size === 'medium' ? 'h400' : 'h200'}>{videoTitle}</VideoTitle>
+              <LinkWrapper to={videoHref}>
+                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h200'}>
+                  {videoTitle}
+                </VideoTitle>
+              </LinkWrapper>
             )}
             <VideoMetaContainer>
               {variant !== 'withoutChannel' &&
                 (loading ? (
                   <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
                 ) : (
-                  <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
-                    {channelTitle}
-                  </ChannelTitle>
+                  channelId && (
+                    <LinkWrapper to={channelHref}>
+                      <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
+                        {channelTitle}
+                      </ChannelTitle>
+                    </LinkWrapper>
+                  )
                 ))}
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
@@ -95,4 +117,14 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
       )}
     </VideoDetailsContainer>
   )
+}
+
+type LinkWrapperProps = {
+  to?: To
+}
+const LinkWrapper: React.FC<LinkWrapperProps> = ({ children, to }) => {
+  if (to) {
+    return <StyledLink to={to}>{children}</StyledLink>
+  }
+  return <>{children}</>
 }

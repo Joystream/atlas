@@ -27,7 +27,7 @@ export type SlotsObject = {
 
 export type VideoThumbnailProps = {
   loading?: boolean
-  to?: To
+  videoHref?: To
   linkState?: LinkProps['state']
   thumbnailUrl?: string | null
   thumbnailAlt?: string | null
@@ -39,7 +39,7 @@ export type VideoThumbnailProps = {
 
 export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   loading,
-  to,
+  videoHref,
   linkState,
   slots,
   thumbnailUrl,
@@ -52,7 +52,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
   const slotsArray = slots && Object.entries(slots)
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!to) {
+    if (!videoHref) {
       e.preventDefault()
     }
     clickable && onClick?.()
@@ -63,7 +63,7 @@ export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
       onClick={handleClick}
       clickable={clickable}
       activeDisabled={activeDisabled}
-      to={to ? to : ''}
+      to={videoHref ? videoHref : ''}
       state={linkState}
     >
       <ContentOverlay>

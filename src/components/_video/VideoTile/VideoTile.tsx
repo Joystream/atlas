@@ -11,8 +11,8 @@ export type VideoTileProps = {
   className?: string
   loadingDetails?: boolean
   loadingThumbnail?: boolean
-} & VideoThumbnailProps &
-  VideoTileDetailsProps
+} & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt'> &
+  Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant'>
 
 export const VideoTile: React.FC<VideoTileProps> = React.memo(
   ({
@@ -24,11 +24,14 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     videoTitle,
     videoSubTitle,
     channelTitle,
+    channelId,
+    channelHref,
+    onChannelAvatarClick,
     kebabMenuItems,
     onClick,
     size,
     slots,
-    to,
+    videoHref,
     linkState,
     thumbnailUrl,
     loadingDetails,
@@ -41,7 +44,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     return (
       <VideoTileContainer direction={direction} className={className}>
         <VideoThumbnail
-          to={to}
+          videoHref={videoHref}
           linkState={linkState}
           thumbnailUrl={thumbnailUrl}
           loading={loadingThumbnail}
@@ -52,7 +55,11 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           thumbnailAlt={videoTitle && `${videoTitle} by ${channelTitle} thumbnail`}
         />
         <VideoTileDetails
+          onVideoTitleClick={onClick}
           size={size}
+          videoHref={videoHref}
+          channelHref={channelHref}
+          onChannelAvatarClick={onChannelAvatarClick}
           variant={detailsVariant}
           channelAvatarUrl={channelAvatarUrl}
           videoTitle={videoTitle}
@@ -60,6 +67,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           views={views}
           createdAt={createdAt}
           channelTitle={channelTitle}
+          channelId={channelId}
           loading={loadingDetails}
           loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}
