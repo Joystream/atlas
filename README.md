@@ -1,5 +1,5 @@
 <div align="center">
-    <img lt="Banner: Atlas — UI for consuming and interacting
+    <img alt="Banner: Atlas — UI for consuming and interacting
 with the Joystream network" src="https://user-images.githubusercontent.com/35307309/147933610-9cce95b7-e6b9-4fb1-aee6-111d7efc5304.png"/>
 </div>
 
@@ -38,7 +38,6 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
 ![image](https://user-images.githubusercontent.com/35307309/147930535-9082f52b-6b34-45e1-b627-4d8372b0163b.png)
 ![image](https://user-images.githubusercontent.com/35307309/147930541-c2f75fe5-ddba-48de-9536-eac228961757.png)
 
-
 ## Contributing
 
 All community contributions to the project are welcome. Before starting any work, it's a good idea to get familiar with the following additional documents:
@@ -62,10 +61,9 @@ yarn start
 
 This will start the development server on `localhost:3000`.
 
-## Design
+### Design
 
-To get started working with Atlas designs in Figma, visit [Joystream's official Figma Community profile](figma.com/@joystream
-) (available early 2022) and duplicate files you're interested in remixing or using as a base for your work. 
+To get started working with Atlas designs in Figma, visit [Joystream's official Figma Community profile](https://figma.com/@joystream) (available early 2022) and duplicate files you're interested in remixing or using as a base for your work.
 
 While most of the Atlas design documentation is kept within Figma files, for meta documentation visit [Atlas Design Space on Notion](https://grizzled-corleggy-af8.notion.site/Design-Space-487ed84966fa495a8c037935639ca681).
 
