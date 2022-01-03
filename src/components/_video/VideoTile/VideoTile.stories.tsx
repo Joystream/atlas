@@ -3,6 +3,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Pill, PillGroup } from '@/components/Pill'
+import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionDraft,
   SvgActionEdit,
@@ -15,7 +16,6 @@ import {
 import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
-import { PullUp } from '../VideoTilePublisher/PullUp'
 
 export default {
   title: 'video/VideoTile',
@@ -142,7 +142,15 @@ Publisher.args = {
     bottomRight: {
       element: <Pill variant="overlay" label="30:12" />,
     },
-    topRight: { element: <PullUp tooltipText="Edit" />, clickable: true, type: 'hover' },
+    topRight: {
+      element: (
+        <IconButton size="small">
+          <SvgActionEdit />
+        </IconButton>
+      ),
+      clickable: true,
+      type: 'hover',
+    },
     center: {
       element: <SvgIllustrativePlay />,
       type: 'hover',

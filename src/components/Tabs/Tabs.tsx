@@ -106,7 +106,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
             >
               <span data-badge={tab.badgeNumber}>
                 {tab.name}
-                {tab.pillText && <Pill label={tab.pillText} />}
+                {tab.pillText && <Pill size="small" label={tab.pillText} />}
               </span>
             </Tab>
           ))}

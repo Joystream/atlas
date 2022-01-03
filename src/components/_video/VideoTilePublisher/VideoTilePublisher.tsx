@@ -7,6 +7,7 @@ import { StyledSvgIllustrativeFileFailed } from '@/components/Avatar/Avatar.styl
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionCopy,
   SvgActionEdit,
@@ -22,8 +23,6 @@ import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { cVar, square } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
-
-import { PullUp } from './PullUp'
 
 import { SlotsObject } from '../VideoThumbnail'
 import { VideoTile } from '../VideoTile'
@@ -65,7 +64,15 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         bottomRight: {
           element: video?.duration && <Pill variant="overlay" label={formatDurationShort(video?.duration)} />,
         },
-        topRight: { element: <PullUp tooltipText="Edit" onClick={onEditClick} />, clickable: true, type: 'hover' },
+        topRight: {
+          element: (
+            <IconButton size="small" onClick={onEditClick}>
+              <SvgActionEdit />
+            </IconButton>
+          ),
+          clickable: true,
+          type: 'hover',
+        },
         center: {
           element: <SvgIllustrativePlay />,
           type: 'hover',
