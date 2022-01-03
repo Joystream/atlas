@@ -19,6 +19,9 @@ export const generateVideoMetadata = (htmlData: string, video: Video, metadata: 
     'beforeend',
     `
       <meta name="twitter:card" content="player" />
+      <meta name="twitter:player" content="https://play.joystream.org/embedded/video/${video.id}" />
+      <meta name="twitter:player:width" content="1280">
+      <meta name="twitter:player:height" content="720">
       <meta name="description" content="${video.description}">
       <meta name="og:url" content="https://play.joystream.org/video/${video.id}">
       <meta name="og:title" content="${video.title}">
