@@ -161,7 +161,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     if (extensionConnected === true) {
       return
     }
-    if (!activeMembership?.id) {
+    if (activeMembership?.id) {
       initPolkadotExtension()
     }
     return () => {
