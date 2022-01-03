@@ -46,6 +46,10 @@ export default {
   },
 } as Meta
 
-const Template: Story<VideoTileDetailsProps> = (args) => <VideoTileDetails {...args} />
+const Template: Story<VideoTileDetailsProps> = (args) => (
+  <div style={{ maxWidth: '320px' }}>
+    <VideoTileDetails {...args} />
+  </div>
+)
 
 export const Default = Template.bind({})
