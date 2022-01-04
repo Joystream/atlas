@@ -4,7 +4,7 @@ import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { cVar, media, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 const paddingStyles = css`
   padding: ${sizes(6)} ${sizes(4)};
@@ -32,8 +32,7 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   transform: translateY(
     ${({ isActive, containerHeight }) => (isActive ? 'var(--size-topbar-height)' : -containerHeight + 'px')}
   );
-  transition: transform ${transitions.timings.loading} ${transitions.easing},
-    height ${cVar('animationTransitionMedium')};
+  transition: transform ${cVar('animationTransitionSlow')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
 
