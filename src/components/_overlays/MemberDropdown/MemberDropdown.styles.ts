@@ -33,7 +33,7 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
     ${({ isActive, containerHeight }) => (isActive ? 'var(--size-topbar-height)' : -containerHeight + 'px')}
   );
   transition: transform ${transitions.timings.loading} ${transitions.easing},
-    height ${cVar('animationTimingMedium')} ${cVar('animationEasingMedium')};
+    height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
 
