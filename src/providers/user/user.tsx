@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { Loader } from '@/components/_loaders/Loader'
-import { Modal } from '@/components/_overlays/Modal'
 import { QUERY_PARAMS } from '@/config/routes'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
@@ -38,6 +36,7 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
 
   signIn: () => Promise<void>
+  isLoading: boolean
 }
 
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
@@ -134,6 +133,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       if (!enabledExtensions.length) {
         ConsoleLogger.warn('No Polkadot extension detected')
         setExtensionConnected(false)
+        resetActiveUser()
         return
       }
 
@@ -155,7 +155,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       setExtensionConnected(false)
       SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
     }
-  }, [])
+  }, [resetActiveUser])
 
   useEffect(() => {
     if (extensionConnected === true) {
@@ -228,6 +228,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       refetchActiveMembership,
 
       signIn,
+      isLoading,
     }),
     [
       accounts,
@@ -242,6 +243,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       resetActiveUser,
       setActiveUser,
       signIn,
+      isLoading,
     ]
   )
 
@@ -249,14 +251,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     return <ViewErrorFallback />
   }
 
-  return (
-    <ActiveUserContext.Provider value={contextValue}>
-      <Modal show={isLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </Modal>
-      {children}
-    </ActiveUserContext.Provider>
-  )
+  return <ActiveUserContext.Provider value={contextValue}>{children}</ActiveUserContext.Provider>
 }
 
 const useActiveUserContext = () => {
