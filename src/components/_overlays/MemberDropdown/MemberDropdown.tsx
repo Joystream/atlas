@@ -128,7 +128,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     useEffect(() => {
       transRef.start()
     }, [isSwitchingMember, transRef])
-
     return (
       <Container ref={ref}>
         {/* 9999 prevents containerHeight from being 0 at when the component mounts */}

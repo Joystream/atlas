@@ -34,7 +34,7 @@ export const InnerContainer = styled.div<{
   height: ${({ containerHeight }) => containerHeight}px;
   transform: translateY(
     ${({ isActive, containerHeight }) =>
-      isActive ? 'var(--size-topbar-height)' : `calc(-${containerHeight}px + var(--size-topbar-height))`}
+      isActive ? 'var(--size-topbar-height)' : `calc(-${containerHeight}px + var(--size-topbar-height)) `}
   );
   transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
@@ -127,7 +127,9 @@ export const LearnAboutTjoyLink = styled(Text)`
   }
 `
 
-export const AnimatedContainer = styled(animated.div)<{
+export const AnimatedContainer = styled(animated.div, {
+  shouldForwardProp: (prop) => prop !== 'isAnimatingSwitchMember',
+})<{
   isAnimatingSwitchMember: boolean
 }>`
   position: absolute;
