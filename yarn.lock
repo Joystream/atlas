@@ -2949,6 +2949,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/types@npm:^24.9.0":
+  version: 24.9.0
+  resolution: "@jest/types@npm:24.9.0"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^1.1.1
+    "@types/yargs": ^13.0.0
+  checksum: 603698f774cf22f9d16a0e0fac9e10e7db21052aebfa33db154c8a5940e0eb1fa9c079a8c91681041ad3aeee2adfa950608dd0c663130316ba034b8bca7b301c
+  languageName: node
+  linkType: hard
+
 "@jest/types@npm:^26.6.2":
   version: 26.6.2
   resolution: "@jest/types@npm:26.6.2"
@@ -2996,9 +3007,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@patch:@joystream/types@npm:0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb::locator=atlas-app%40workspace%3A.":
+"@joystream/types@patch:@joystream/types@npm:0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb::locator=atlas%40workspace%3A.":
   version: 0.16.1
-  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb::version=0.16.1&hash=96f5d5&locator=atlas-app%40workspace%3A."
+  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb::version=0.16.1&hash=96f5d5&locator=atlas%40workspace%3A."
   dependencies:
     "@polkadot/api": 4.2.1
     "@polkadot/keyring": ^6.0.5
@@ -5548,6 +5559,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/istanbul-reports@npm:^1.1.1":
+  version: 1.1.2
+  resolution: "@types/istanbul-reports@npm:1.1.2"
+  dependencies:
+    "@types/istanbul-lib-coverage": "*"
+    "@types/istanbul-lib-report": "*"
+  checksum: 00866e815d1e68d0a590d691506937b79d8d65ad8eab5ed34dbfee66136c7c0f4ea65327d32046d5fe469f22abea2b294987591dc66365ebc3991f7e413b2d78
+  languageName: node
+  linkType: hard
+
 "@types/istanbul-reports@npm:^3.0.0":
   version: 3.0.1
   resolution: "@types/istanbul-reports@npm:3.0.1"
@@ -5937,6 +5958,15 @@ __metadata:
   version: 20.2.1
   resolution: "@types/yargs-parser@npm:20.2.1"
   checksum: 1d039e64494a7a61ddd278349a3dc60b19f99ff0517425696e796f794e4252452b9d62178e69755ad03f439f9dc0c8c3d7b3a1201b3a24e134bac1a09fa11eaa
+  languageName: node
+  linkType: hard
+
+"@types/yargs@npm:^13.0.0":
+  version: 13.0.12
+  resolution: "@types/yargs@npm:13.0.12"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 4eb34d8c071892299646e5a3fb02a643f5a5ea8da8f4d1817001882ebbcfa4fbda235b8978732f8eb55fa16433296e2087907fe69678a69125f0dca627a91426
   languageName: node
   linkType: hard
 
@@ -7046,6 +7076,90 @@ __metadata:
   languageName: node
   linkType: hard
 
+"app@workspace:packages/app":
+  version: 0.0.0-use.local
+  resolution: "app@workspace:packages/app"
+  dependencies:
+    "@apollo/client": ^3.4.17
+    "@babel/core": ^7.15.0
+    "@emotion/babel-plugin": ^11.3.0
+    "@emotion/react": ^11.7.0
+    "@emotion/styled": ^11.6.0
+    "@graphql-codegen/cli": ^2.1.1
+    "@graphql-codegen/introspection": ^2.1.0
+    "@graphql-codegen/near-operation-file-preset": ^2.1.2
+    "@graphql-codegen/typescript": ^2.1.2
+    "@graphql-codegen/typescript-operations": ^2.1.2
+    "@graphql-codegen/typescript-react-apollo": ^3.1.2
+    "@livesession/sdk": ^1.1.4
+    "@loadable/component": ^5.15.0
+    "@mdx-js/react": ^1.6.22
+    "@rollup/plugin-babel": ^5.3.0
+    "@rollup/plugin-graphql": ^1.1.0
+    "@rollup/plugin-inject": ^4.0.3
+    "@sentry/react": ^6.15.0
+    "@storybook/addon-actions": ^6.3.7
+    "@storybook/addon-docs": ^6.3.7
+    "@storybook/addon-essentials": ^6.3.7
+    "@storybook/addon-links": ^6.3.7
+    "@storybook/react": ^6.3.7
+    "@storybook/theming": ^6.3.7
+    "@svgr/cli": ^5.5.0
+    "@tippyjs/react": ^4.2.6
+    "@types/glider-js": ^1.7.4
+    "@types/loadable__component": ^5.13.4
+    "@types/lodash-es": ^4.17.5
+    "@types/react": ^17.0.37
+    "@types/react-dom": ^17.0.11
+    "@types/react-transition-group": ^4.4.4
+    "@types/scroll-lock": ^2.1.0
+    "@types/video.js": ^7.3.27
+    "@vitejs/plugin-react": ^1.1.0
+    apollo: ^2.33.9
+    awesome-debounce-promise: ^2.1.0
+    axios: ^0.24.0
+    babel-loader: ^8.2.3
+    bezier-easing: ^2.1.0
+    cropperjs: ^1.5.12
+    date-fns: ^2.26.0
+    downshift: ^6.1.7
+    emotion-normalize: ^11.0.1
+    esbuild-register: ^3.2.0
+    glider-js: ^1.7.7
+    graphql: ^15.5.2
+    graphql-tag: ^2.12.5
+    history: ^5.1.0
+    immer: ^9.0.5
+    localforage: ^1.10.0
+    postcss-syntax: ^0.36.2
+    rc-slider: ^9.7.4
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    react-dropzone: ^11.4.2
+    react-hook-form: ^7.8.1
+    react-intersection-observer: ^8.32.5
+    react-lottie-player: ^1.4.1
+    react-number-format: ^4.8.0
+    react-router: ^6.0.2
+    react-router-dom: ^6.0.2
+    react-spring: ^9.3.2
+    react-textarea-autosize: ^8.3.3
+    react-transition-group: ^4.4.2
+    react-use-hotjar: ^1.2.0
+    react-use-measure: ^2.1.0
+    retry-axios: ^2.4.0
+    rollup-plugin-visualizer: ^5.5.2
+    scroll-lock: ^2.1.5
+    storybook-builder-vite: ^0.1.10
+    style-dictionary: ^3.0.3
+    use-resize-observer: ^8.0.0
+    video.js: ^7.17.0
+    vite: ^2.6.14
+    vite-plugin-checker: ^0.3.4
+    zustand: ^3.5.10
+  languageName: unknown
+  linkType: soft
+
 "aproba@npm:^1.0.3, aproba@npm:^1.1.1":
   version: 1.2.0
   resolution: "aproba@npm:1.2.0"
@@ -7304,100 +7418,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"atlas-app@workspace:.":
+"atlas@workspace:.":
   version: 0.0.0-use.local
-  resolution: "atlas-app@workspace:."
+  resolution: "atlas@workspace:."
   dependencies:
-    "@apollo/client": ^3.4.17
-    "@babel/core": ^7.15.0
-    "@emotion/babel-plugin": ^11.3.0
     "@emotion/eslint-plugin": ^11.5.0
-    "@emotion/react": ^11.7.0
-    "@emotion/styled": ^11.6.0
-    "@graphql-codegen/cli": ^2.1.1
-    "@graphql-codegen/introspection": ^2.1.0
-    "@graphql-codegen/near-operation-file-preset": ^2.1.2
-    "@graphql-codegen/typescript": ^2.1.2
-    "@graphql-codegen/typescript-operations": ^2.1.2
-    "@graphql-codegen/typescript-react-apollo": ^3.1.2
     "@joystream/content-metadata-protobuf": ~1.1.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.16.1
-    "@livesession/sdk": ^1.1.4
-    "@loadable/component": ^5.15.0
-    "@mdx-js/react": ^1.6.22
     "@polkadot/extension-dapp": ~0.37.3-17
-    "@rollup/plugin-babel": ^5.3.0
-    "@rollup/plugin-graphql": ^1.1.0
-    "@rollup/plugin-inject": ^4.0.3
-    "@sentry/react": ^6.15.0
-    "@storybook/addon-actions": ^6.3.7
-    "@storybook/addon-docs": ^6.3.7
-    "@storybook/addon-essentials": ^6.3.7
-    "@storybook/addon-links": ^6.3.7
-    "@storybook/react": ^6.3.7
-    "@storybook/theming": ^6.3.7
     "@stylelint/postcss-css-in-js": ^0.37.2
-    "@svgr/cli": ^5.5.0
-    "@tippyjs/react": ^4.2.6
     "@trivago/prettier-plugin-sort-imports": ^3.1.1
-    "@types/glider-js": ^1.7.4
-    "@types/loadable__component": ^5.13.4
     "@types/lodash-es": ^4.17.5
     "@types/node": ^14
-    "@types/react": ^17.0.37
-    "@types/react-dom": ^17.0.11
-    "@types/react-transition-group": ^4.4.4
-    "@types/scroll-lock": ^2.1.0
-    "@types/video.js": ^7.3.27
     "@typescript-eslint/eslint-plugin": ^5.4.0
     "@typescript-eslint/parser": ^5.4.0
-    "@vitejs/plugin-react": ^1.1.0
-    apollo: ^2.33.9
-    awesome-debounce-promise: ^2.1.0
-    axios: ^0.24.0
-    babel-loader: ^8.2.3
-    bezier-easing: ^2.1.0
     bn.js: ^4.12.0
     buffer: ^5.7.1
-    cropperjs: ^1.5.12
-    date-fns: ^2.26.0
-    downshift: ^6.1.7
-    emotion-normalize: ^11.0.1
-    esbuild-register: ^3.2.0
     eslint: ^8.3.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-react: ^7.27.1
     eslint-plugin-react-hooks: ^4.3.0
-    glider-js: ^1.7.7
-    graphql: ^15.5.2
-    graphql-tag: ^2.12.5
-    history: ^5.1.0
     husky: ^7.0.4
-    immer: ^9.0.5
     ipfs-only-hash: ^4.0.0
     lint-staged: ^12.1.2
-    localforage: ^1.10.0
     lodash-es: ^4.17.21
     postcss-syntax: ^0.36.2
     prettier: ~2.5.0
-    rc-slider: ^9.7.4
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    react-dropzone: ^11.4.2
-    react-hook-form: ^7.8.1
-    react-intersection-observer: ^8.32.5
-    react-lottie-player: ^1.4.1
-    react-number-format: ^4.8.0
-    react-router: ^6.0.2
-    react-router-dom: ^6.0.2
-    react-spring: ^9.3.2
-    react-textarea-autosize: ^8.3.3
-    react-transition-group: ^4.4.2
-    react-use-measure: ^2.1.0
-    retry-axios: ^2.4.0
     rollup-plugin-visualizer: ^5.5.2
-    scroll-lock: ^2.1.5
     storybook-builder-vite: ^0.1.10
     style-dictionary: ^3.0.3
     stylelint: ^14.1.0
@@ -7405,11 +7453,9 @@ __metadata:
     stylelint-config-standard: ^24.0.0
     subscriptions-transport-ws: ^0.11.0
     typescript: ^4.5.2
-    use-resize-observer: ^8.0.0
-    video.js: ^7.17.0
     vite: ^2.6.14
     vite-plugin-checker: ^0.3.4
-    zustand: ^3.5.10
+    wsrun: ^5.2.4
   languageName: unknown
   linkType: soft
 
@@ -7866,7 +7912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.3.5, bluebird@npm:^3.5.5":
+"bluebird@npm:^3.3.5, bluebird@npm:^3.5.1, bluebird@npm:^3.5.5":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
   checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
@@ -8442,7 +8488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:2.4.2, chalk@npm:^2.0.0, chalk@npm:^2.4.1, chalk@npm:^2.4.2":
+"chalk@npm:2.4.2, chalk@npm:^2.0.0, chalk@npm:^2.3.0, chalk@npm:^2.4.1, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -8834,6 +8880,17 @@ __metadata:
   version: 3.0.0
   resolution: "cli-width@npm:3.0.0"
   checksum: 4c94af3769367a70e11ed69aa6095f1c600c0ff510f3921ab4045af961820d57c0233acfa8b6396037391f31b4c397e1f614d234294f979ff61430a6c166c3f6
+  languageName: node
+  linkType: hard
+
+"cliui@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "cliui@npm:5.0.0"
+  dependencies:
+    string-width: ^3.1.0
+    strip-ansi: ^5.2.0
+    wrap-ansi: ^5.1.0
+  checksum: 0bb8779efe299b8f3002a73619eaa8add4081eb8d1c17bc4fedc6240557fb4eacdc08fe87c39b002eacb6cfc117ce736b362dbfd8bf28d90da800e010ee97df4
   languageName: node
   linkType: hard
 
@@ -12111,7 +12168,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"glob@npm:7.2.0, glob@npm:^7.2.0":
+"glob@npm:7.2.0, glob@npm:^7.1.2, glob@npm:^7.2.0":
   version: 7.2.0
   resolution: "glob@npm:7.2.0"
   dependencies:
@@ -14058,6 +14115,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"jest-changed-files@npm:^24.9.0":
+  version: 24.9.0
+  resolution: "jest-changed-files@npm:24.9.0"
+  dependencies:
+    "@jest/types": ^24.9.0
+    execa: ^1.0.0
+    throat: ^4.0.0
+  checksum: f40e901e6ac2e6f47730b610c3dbef44a9235d556ba53b23926d45e6334c1c5989fd255140753d3270d5e63371ae69084e0867c11b8322030edab51e1ff1b8b7
+  languageName: node
+  linkType: hard
+
 "jest-haste-map@npm:^26.6.2":
   version: 26.6.2
   resolution: "jest-haste-map@npm:26.6.2"
@@ -14867,7 +14935,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.21, lodash@npm:^4.17.11, lodash@npm:^4.17.13, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:~4.17.0, lodash@npm:~4.17.10":
+"lodash@npm:4.17.21, lodash@npm:^4.17.11, lodash@npm:^4.17.13, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.4, lodash@npm:~4.17.0, lodash@npm:~4.17.10":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -18027,6 +18095,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-use-hotjar@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "react-use-hotjar@npm:1.2.0"
+  peerDependencies:
+    react: ^17.0.2
+  checksum: 0406ccb8b59ba66133157c02fbfbfe0df6c729ece194e352f2f8a2f4f480fb36a20948b537f06b085efe24946f6aaeb7410b19e12c3cfb99337bfecfc9a355ec
+  languageName: node
+  linkType: hard
+
 "react-use-measure@npm:^2.1.0":
   version: 2.1.0
   resolution: "react-use-measure@npm:2.1.0"
@@ -19473,6 +19550,15 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"split@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "split@npm:1.0.1"
+  dependencies:
+    through: 2
+  checksum: 12f4554a5792c7e98bb3e22b53c63bfa5ef89aa704353e1db608a55b51f5b12afaad6e4a8ecf7843c15f273f43cdadd67b3705cc43d48a75c2cf4641d51f7e7a
+  languageName: node
+  linkType: hard
+
 "sponge-case@npm:^1.0.1":
   version: 1.0.1
   resolution: "sponge-case@npm:1.0.1"
@@ -19675,7 +19761,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"string-width@npm:^3.0.0":
+"string-width@npm:^3.0.0, string-width@npm:^3.1.0":
   version: 3.1.0
   resolution: "string-width@npm:3.1.0"
   dependencies:
@@ -20156,7 +20242,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"svgo@npm:1.3.2":
+"svgo@npm:^1.2.2":
   version: 1.3.2
   resolution: "svgo@npm:1.3.2"
   dependencies:
@@ -20176,29 +20262,6 @@ resolve@^2.0.0-next.3:
   bin:
     svgo: ./bin/svgo
   checksum: 28a5680a61245eb4a1603bc03459095bb01ad5ebd23e95882d886c3c81752313c0a9a9fe48dd0bcbb9a27c52e11c603640df952971573b2b550d9e15a9ee6116
-  languageName: node
-  linkType: hard
-
-"svgo@patch:svgo@npm:1.3.2#.yarn/patches/svgo-npm-1.3.2-4cceb54daa::locator=atlas-app%40workspace%3A.":
-  version: 1.3.2
-  resolution: "svgo@patch:svgo@npm%3A1.3.2#.yarn/patches/svgo-npm-1.3.2-4cceb54daa::version=1.3.2&hash=44e07c&locator=atlas-app%40workspace%3A."
-  dependencies:
-    chalk: ^2.4.1
-    coa: ^2.0.2
-    css-select: ^2.0.0
-    css-select-base-adapter: ^0.1.1
-    css-tree: 1.0.0-alpha.37
-    csso: ^4.0.2
-    js-yaml: ^3.13.1
-    mkdirp: ~0.5.1
-    object.values: ^1.1.0
-    sax: ~1.2.4
-    stable: ^0.1.8
-    unquote: ~1.1.1
-    util.promisify: ~1.0.0
-  bin:
-    svgo: ./bin/svgo
-  checksum: af9166a0a5913f704a5f0bdd72586809a7449352b62d69bd9b5aacb3a17a0ea4c09c0a643a13d15e1fb4a6fa88f669b9bcb9211f8c43c8d89bbe37dafb5b378d
   languageName: node
   linkType: hard
 
@@ -20386,6 +20449,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"throat@npm:^4.0.0, throat@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "throat@npm:4.1.0"
+  checksum: 43519b0cea6d3b2a8fe056fcbc319e289037be67d2204d4d33513d20d6ee9da6255f7ba8c89e2ec8c97b0f188a910b8666def38d1058d2bf4a39613812c36d98
+  languageName: node
+  linkType: hard
+
 "throttle-debounce@npm:^3.0.1":
   version: 3.0.1
   resolution: "throttle-debounce@npm:3.0.1"
@@ -20403,7 +20473,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"through@npm:^2.3.6, through@npm:^2.3.8":
+"through@npm:2, through@npm:^2.3.6, through@npm:^2.3.8":
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
@@ -22019,6 +22089,17 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
+"wrap-ansi@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "wrap-ansi@npm:5.1.0"
+  dependencies:
+    ansi-styles: ^3.2.0
+    string-width: ^3.0.0
+    strip-ansi: ^5.0.0
+  checksum: 9b48c862220e541eb0daa22661b38b947973fc57054e91be5b0f2dcc77741a6875ccab4ebe970a394b4682c8dfc17e888266a105fb8b0a9b23c19245e781ceae
+  languageName: node
+  linkType: hard
+
 "wrap-ansi@npm:^6.2.0":
   version: 6.2.0
   resolution: "wrap-ansi@npm:6.2.0"
@@ -22090,6 +22171,25 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
+"wsrun@npm:^5.2.4":
+  version: 5.2.4
+  resolution: "wsrun@npm:5.2.4"
+  dependencies:
+    bluebird: ^3.5.1
+    chalk: ^2.3.0
+    glob: ^7.1.2
+    jest-changed-files: ^24.9.0
+    lodash: ^4.17.4
+    minimatch: ^3.0.4
+    split: ^1.0.1
+    throat: ^4.1.0
+    yargs: ^13.0.0
+  bin:
+    wsrun: bin/wsrun.js
+  checksum: b89cb436c3463e7bd3020cb00f29ae3448f5cf26ad6a0eaaff4733020ae9b1b9080eb85dca86baf2eab6d975a638ab44265f84477621443091af4c27c4b11b19
+  languageName: node
+  linkType: hard
+
 "xtend@npm:^4.0.0, xtend@npm:^4.0.1, xtend@npm:~4.0.1":
   version: 4.0.2
   resolution: "xtend@npm:4.0.2"
@@ -22155,6 +22255,16 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
+"yargs-parser@npm:^13.1.2":
+  version: 13.1.2
+  resolution: "yargs-parser@npm:13.1.2"
+  dependencies:
+    camelcase: ^5.0.0
+    decamelize: ^1.2.0
+  checksum: c8bb6f44d39a4acd94462e96d4e85469df865de6f4326e0ab1ac23ae4a835e5dd2ddfe588317ebf80c3a7e37e741bd5cb0dc8d92bcc5812baefb7df7c885e86b
+  languageName: node
+  linkType: hard
+
 "yargs-parser@npm:^18.1.2":
   version: 18.1.3
   resolution: "yargs-parser@npm:18.1.3"
@@ -22169,6 +22279,24 @@ typescript@^4.5.2:
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^13.0.0":
+  version: 13.3.2
+  resolution: "yargs@npm:13.3.2"
+  dependencies:
+    cliui: ^5.0.0
+    find-up: ^3.0.0
+    get-caller-file: ^2.0.1
+    require-directory: ^2.1.1
+    require-main-filename: ^2.0.0
+    set-blocking: ^2.0.0
+    string-width: ^3.0.0
+    which-module: ^2.0.0
+    y18n: ^4.0.0
+    yargs-parser: ^13.1.2
+  checksum: 75c13e837eb2bb25717957ba58d277e864efc0cca7f945c98bdf6477e6ec2f9be6afa9ed8a876b251a21423500c148d7b91e88dee7adea6029bdec97af1ef3e8
   languageName: node
   linkType: hard
 

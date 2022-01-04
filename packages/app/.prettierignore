@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.yarn/
+storybook-static/
+.coverage
+tsconfig.json
+public/mockServiceWorker.js
+.history
+docs/
+
+# don't prettify minified animation JSONs
+src/assets/animations
+
+src/api/schemas
