@@ -1,5 +1,4 @@
 {
-  "name": "atlas",
   "description": "UI for consuming Joystream - a user governed video platform",
   "license": "GPL-3.0",
   "workspaces": {
@@ -7,12 +6,6 @@
       "packages/*"
     ]
   },
-  "directories": {
-    "src": "src"
-  },
-  "files": [
-    "src"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Joystream/atlas.git"
@@ -21,10 +14,10 @@
     "url": "https://github.com/Joystream/atlas/issues"
   },
   "scripts": {
-    "dev:app": "wsrun --no-prefix --package app -c dev",
-    "lint:app": "wsrun --no-prefix --package app -c lint",
-    "build:app": "wsrun --no-prefix --fast-exit --stages --package app -c build",
-    "storybook:app": "wsrun --no-prefix --package app -c storybook",
+    "dev:atlas": "yarn workspace @joystream/atlas dev",
+    "lint:atlas": "yarn workspace @joystream/atlas lint",
+    "build:atlas": "yarn workspace @joystream/atlas build",
+    "storybook:atlas": "yarn workspace @joystream/atlas storybook",
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
@@ -35,50 +28,22 @@
       "stylelint --fix"
     ]
   },
-  "dependencies": {
-    "@joystream/content-metadata-protobuf": "~1.1.0",
-    "@joystream/prettier-config": "^1.0.0",
-    "@joystream/types": "0.16.1",
-    "@polkadot/extension-dapp": "~0.37.3-17",
-    "bn.js": "^4.12.0",
-    "buffer": "^5.7.1",
-    "ipfs-only-hash": "^4.0.0",
-    "lodash-es": "^4.17.21",
-    "subscriptions-transport-ws": "^0.11.0",
-    "wsrun": "^5.2.4"
-  },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.5.0",
     "@stylelint/postcss-css-in-js": "^0.37.2",
     "@trivago/prettier-plugin-sort-imports": "^3.1.1",
-    "@types/lodash-es": "^4.17.5",
     "@types/node": "^14",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "^7.27.1",
-    "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
-    "postcss-syntax": "^0.36.2",
     "prettier": "~2.5.0",
-    "rollup-plugin-visualizer": "^5.5.2",
-    "storybook-builder-vite": "^0.1.10",
-    "style-dictionary": "^3.0.3",
     "stylelint": "^14.1.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^24.0.0",
-    "typescript": "^4.5.2",
-    "vite": "^2.6.14",
-    "vite-plugin-checker": "^0.3.4"
-  },
-  "resolutions": {
-    "bn.js": "4.12.0",
-    "@polkadot/wasm-crypto": "4.2.1",
-    "@polkadot/wasm-crypto-wasm": "4.2.1",
-    "@polkadot/wasm-crypto-asmjs": "4.2.1",
-    "@joystream/types": "patch:@joystream/types@npm:0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb"
+    "typescript": "^4.5.2"
   },
   "engines": {
     "node": ">=14"
