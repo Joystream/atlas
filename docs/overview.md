@@ -98,3 +98,9 @@ const Component = styled.div`
   background-color: ${cVar('colorBackground')}; // this will translate into var(--color-background)
 `
 ```
+
+## Icons & illustrations
+
+Atlas uses a bunch of different SVG files for icons and illustrations. All of those are pre-processed via a `yarn svgs:illustrations` / `yarn svgs:icons-generate` script that generates React components out of SVGs using [svgr](https://github.com/gregberge/svgr). Then we import those components inside our code.
+
+All icons used in the app are created by the Atlas design team and come from Figma. To make the workflow easier, we have created a script that fetches all the icons directly from Figma and saves them in the repo. This way we can make always keep Figma and the app up to date. The script can be found in `scripts/figma-import` and can be run with `yarn svgs:icons-import`.
