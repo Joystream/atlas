@@ -27,9 +27,19 @@ export default {
         type: 'radio',
       },
     },
+    detailsVariant: {
+      options: ['withoutChannel', 'withChannelName', 'withChannelNameAndAvatar'],
+      control: {
+        type: 'radio',
+      },
+    },
+    slots: { table: { disable: true } },
+    contentSlot: { table: { disable: true } },
+    kebabMenuItems: { table: { disable: true } },
   },
   args: {
     direction: 'vertical',
+    clickable: true,
     thumbnailUrl: 'https://picsum.photos/320/180',
     slots: {
       bottomLeft: {
@@ -59,11 +69,13 @@ export default {
       },
     },
     channelAvatarUrl: 'https://thispersondoesnotexist.com/image',
-    loading: false,
+    loadingDetails: false,
+    loadingThumbnail: false,
     videoTitle:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto.',
     views: 20000000,
     createdAt: new Date(Date.now() - 1000000),
+    detailsVariant: 'withChannelNameAndAvatar',
     channelTitle:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [

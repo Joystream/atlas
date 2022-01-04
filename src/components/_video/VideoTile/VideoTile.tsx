@@ -24,7 +24,6 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     videoTitle,
     videoSubTitle,
     channelTitle,
-    channelId,
     channelHref,
     onChannelAvatarClick,
     kebabMenuItems,
@@ -67,7 +66,6 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           views={views}
           createdAt={createdAt}
           channelTitle={channelTitle}
-          channelId={channelId}
           loading={loadingDetails}
           loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}

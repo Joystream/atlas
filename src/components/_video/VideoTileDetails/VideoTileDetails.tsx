@@ -30,7 +30,6 @@ export type VideoTileDetailsProps = {
   views?: number | null
   createdAt?: Date | null
   channelTitle?: string | null
-  channelId?: string | null
   channelAvatarUrl?: string | null
   channelHref?: string
   onChannelAvatarClick?: () => void
@@ -49,7 +48,6 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   views,
   createdAt,
   channelTitle,
-  channelId,
   channelHref,
   onChannelAvatarClick,
   size = 'medium',
@@ -85,13 +83,11 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                 (loading ? (
                   <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
                 ) : (
-                  channelId && (
-                    <LinkWrapper to={channelHref}>
-                      <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
-                        {channelTitle}
-                      </ChannelTitle>
-                    </LinkWrapper>
-                  )
+                  <LinkWrapper to={channelHref}>
+                    <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
+                      {channelTitle}
+                    </ChannelTitle>
+                  </LinkWrapper>
                 ))}
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />

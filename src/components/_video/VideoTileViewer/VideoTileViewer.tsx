@@ -36,7 +36,6 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
       channelHref={absoluteRoutes.viewer.channel(video?.category?.id)}
       onChannelAvatarClick={() => navigate(absoluteRoutes.viewer.channel(video?.category?.id))}
       loadingDetails={loading}
-      channelId={video?.channel?.id}
       thumbnailUrl={thumbnailPhotoUrl}
       loadingThumbnail={isLoadingThumbnail}
       views={video?.views}
