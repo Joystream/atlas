@@ -19,6 +19,7 @@ const config: CustomizedStorybookConfig = {
   'core': {
     'builder': 'storybook-builder-vite',
   },
+
   viteFinal(storybookConfig) {
     const viteConfig = _viteConfig as UserConfig
     const vitePlugins = Array.isArray(viteConfig.plugins) ? viteConfig.plugins.flat() : []
