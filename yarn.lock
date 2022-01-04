@@ -12,15 +12,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@antfu/utils@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@antfu/utils@npm:0.3.0"
-  dependencies:
-    "@types/throttle-debounce": ^2.1.0
-  checksum: 1f42790560e1768e16d05e302c9f1a69e64c3e048ab5a79d2d9f5c0d92d350e910f54c097475a0ed702a576ce0d306a6af68c7b0c53335df109358cf13f0cd0c
-  languageName: node
-  linkType: hard
-
 "@apollo/client@npm:^3.4.17":
   version: 3.5.3
   resolution: "@apollo/client@npm:3.5.3"
@@ -4013,16 +4004,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "@rollup/pluginutils@npm:4.1.2"
-  dependencies:
-    estree-walker: ^2.0.1
-    picomatch: ^2.2.2
-  checksum: 498d67e7b48c707e3e0d9f7ddaa405833d77575b2d9607cd1914be40455ed534235e0512f9d046bf0e4ed1740e7816fd32ab1c673195e897c4fa180bcbfd7283
-  languageName: node
-  linkType: hard
-
 "@samverschueren/stream-to-observable@npm:^0.3.0":
   version: 0.3.1
   resolution: "@samverschueren/stream-to-observable@npm:0.3.1"
@@ -6072,13 +6053,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/throttle-debounce@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@types/throttle-debounce@npm:2.1.0"
-  checksum: 70e219d000595108fce0dc624c8296e37cdb174b528e09c939da18e619da1c6df86b088659f5eb93cb146bd5fe2954597823c2e1f0849dc8f6585d87cbbf71b7
-  languageName: node
-  linkType: hard
-
 "@types/uglify-js@npm:*":
   version: 3.13.1
   resolution: "@types/uglify-js@npm:3.13.1"
@@ -7679,12 +7653,11 @@ __metadata:
     stylelint-config-standard: ^24.0.0
     subscriptions-transport-ws: ^0.11.0
     typescript: ^4.5.2
-    unplugin-auto-import: ^0.5.4
     use-resize-observer: ^8.0.0
     video.js: ^7.17.0
     vite: ^2.7.4
     vite-plugin-checker: ^0.3.4
-    vitest: ^0.0.104
+    vitest: ^0.0.131
     zustand: ^3.5.10
   languageName: unknown
   linkType: soft
@@ -21039,17 +21012,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tinypool@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "tinypool@npm:0.0.3"
-  checksum: 61b98eba7928d2b364c817b6d1e1dadd65695c77c8ecf57b5dca9679e1ba7614189d0089f052e82c5cfe1d1dcd75cbd8346d5548aeb1bcd72b0d6900d163d824
+"tinypool@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "tinypool@npm:0.1.0"
+  checksum: 79b7136d905ad41f88a2d00c2d6b225dae14ce29ac7f41ee673baf9da6da2855c000a49797b4cce56b3554bc77464069a2557d2f4fc0a2d7e6a3edccf695b1c9
   languageName: node
   linkType: hard
 
-"tinyspy@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "tinyspy@npm:0.2.4"
-  checksum: fa1a27afff754744699c57fe3212694c877f210e2fec5beb16d144a25a09da90a49cb03115281e7fb86c38c5944209f9201f3bae5584cb759e5b4559cdb2e202
+"tinyspy@npm:^0.2.6":
+  version: 0.2.7
+  resolution: "tinyspy@npm:0.2.7"
+  checksum: a495ffec748a9c1d1ffd83c58d5269efb15f177298d6f79ecb373af14b8693443bb5ac8a015b15ac98d1931d0de54cc30167f74191db3e87be6d5dabf5234cbc
   languageName: node
   linkType: hard
 
@@ -21748,45 +21721,6 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
-"unplugin-auto-import@npm:^0.5.4":
-  version: 0.5.4
-  resolution: "unplugin-auto-import@npm:0.5.4"
-  dependencies:
-    "@antfu/utils": ^0.3.0
-    "@rollup/pluginutils": ^4.1.2
-    local-pkg: ^0.4.0
-    magic-string: ^0.25.7
-    resolve: ^1.20.0
-    unplugin: ^0.2.21
-  peerDependencies:
-    "@vueuse/core": "*"
-  peerDependenciesMeta:
-    "@vueuse/core":
-      optional: true
-  checksum: 78ec60082c80d1d8141da6d768808fa603fff15daea17c89be76ff2cc9b730572ef51dcc33cb38f3e99cc545152c3a3a175bbd67d78bbe502e7f2bf4d438f92a
-  languageName: node
-  linkType: hard
-
-"unplugin@npm:^0.2.21":
-  version: 0.2.21
-  resolution: "unplugin@npm:0.2.21"
-  dependencies:
-    webpack-virtual-modules: ^0.4.3
-  peerDependencies:
-    rollup: ^2.50.0
-    vite: ^2.3.0
-    webpack: 4 || 5
-  peerDependenciesMeta:
-    rollup:
-      optional: true
-    vite:
-      optional: true
-    webpack:
-      optional: true
-  checksum: 8f04d3939c0c8fa53e44b942650d1886034af3d74396b57fd7e9ba24774e75ff67036fcfc29531ae0669414f2a301a299168c2505278a48d8aec3281aac99393
-  languageName: node
-  linkType: hard
-
 "unquote@npm:^1.1.0, unquote@npm:~1.1.1":
   version: 1.1.1
   resolution: "unquote@npm:1.1.1"
@@ -22258,9 +22192,9 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.7.4":
-  version: 2.7.4
-  resolution: "vite@npm:2.7.4"
+"vite@npm:>=2.7.10, vite@npm:^2.7.4":
+  version: 2.7.10
+  resolution: "vite@npm:2.7.10"
   dependencies:
     esbuild: ^0.13.12
     fsevents: ~2.3.2
@@ -22283,26 +22217,29 @@ typescript@^4.5.2:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 7e2ee43688a7ee8ef46b9d3a9469a7f3c70f134302e5c71ecc06adc2e88a9e9139c5c3d36c83f355a0fa6038bfc6250d07cb88ddfcfa2af8fc18b9444686cc34
+  checksum: 1757108547ca34bd01a8ee3973cb04b484492c9e5690fc75f54bbcbde5965ab6e0a5b8355c336adf0a9117aa0fdae3053af3aafa9e5eb783282fffa948cfbe11
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.0.104":
-  version: 0.0.104
-  resolution: "vitest@npm:0.0.104"
+"vitest@npm:^0.0.131":
+  version: 0.0.131
+  resolution: "vitest@npm:0.0.131"
   dependencies:
     "@types/chai": ^4.3.0
     "@types/chai-subset": ^1.3.3
     chai: ^4.3.4
     local-pkg: ^0.4.0
-    tinypool: ^0.0.3
-    tinyspy: ^0.2.4
+    tinypool: ^0.1.0
+    tinyspy: ^0.2.6
+    vite: ">=2.7.10"
   peerDependencies:
+    "@vitest/ui": "*"
     c8: "*"
     happy-dom: "*"
     jsdom: "*"
-    vite: ^2.7.1
   peerDependenciesMeta:
+    "@vitest/ui":
+      optional: true
     c8:
       optional: true
     happy-dom:
@@ -22311,7 +22248,7 @@ typescript@^4.5.2:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 15cdf7c1201691886260e75ea46b7b61831891448fc2ae2c3c4a920546f73fb58410272dc723c570f0e6c0e9b7f4576c109919c13a75c1c680151f868201a99c
+  checksum: b794ca5dce7d95be451702126df878573bb29cbe873b60de907f45d2a9987c39138e2e0392303a8447217ee4e62699befda2703c7c13f24d08f19d5fbcf25b87
   languageName: node
   linkType: hard
 
@@ -22552,13 +22489,6 @@ typescript@^4.5.2:
   dependencies:
     debug: ^3.0.0
   checksum: 38706eb5ffd7a5120a731c2d35d4de5714cb16dcc87076276d7b130e3221d2665f5c30696bfde5edfddc6b7ae40d772096a0019202260a9d4e19df43b7cf9c95
-  languageName: node
-  linkType: hard
-
-"webpack-virtual-modules@npm:^0.4.3":
-  version: 0.4.3
-  resolution: "webpack-virtual-modules@npm:0.4.3"
-  checksum: 158d30633e0d9be3cfcde10fe959b28df5d5adb1068e0f057fcfb10b0b16ede6c892eba438f6ced089c7c442087748c2fcd1e3f035e4e2dc6760517a8c227714
   languageName: node
   linkType: hard
 

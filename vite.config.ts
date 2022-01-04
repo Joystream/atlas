@@ -5,7 +5,6 @@ import inject from '@rollup/plugin-inject'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig } from 'vite'
 import checker from 'vite-plugin-checker'
 
@@ -17,10 +16,6 @@ export default defineConfig({
     setupFiles: ['vitest-setup.ts'],
   },
   plugins: [
-    AutoImport({
-      imports: ['vitest'],
-      dts: true, // generate TypeScript declaration
-    }),
     react({
       exclude: /\.stories\.(t|j)sx?$/,
     }),
