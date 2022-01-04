@@ -1,6 +1,6 @@
-# Atlas overview
+# Atlas technical overview
 
-Atlas is a content consumption and publication app for the Joystream platform. This document outlines conventions/tools/services used to make Atlas work.
+This document tries to outline all the conventions/tools/services used to make Atlas work.
 
 ## Conventions
 
@@ -8,37 +8,32 @@ Atlas is a content consumption and publication app for the Joystream platform. T
 
 - React
 - Typescript
-- GraphQL (+ [Relay-style pagination](https://graphql.org/learn/pagination/))
-- ESLint, Prettier - for enforcing common code style
+- GraphQL (+ [Relay-style pagination](https://graphql.org/learn/pagination/)) with [Apollo Client](https://www.apollographql.com/docs/react/)
+- Prettier, ESLint, Stylelint - for enforcing common code style
 - [Emotion](https://emotion.sh/) - for all the styling
-- [Apollo Client](https://www.apollographql.com/docs/react/) - for communications with GraphQL-based external services
-
+- [Zustand](https://github.com/pmndrs/zustand) - for simple local state management
 
 ### Repo structure
 
 - `.github/` - GitHub stuff - currently PR checks actions
-- `docs/` - developer documentation
+- `.storybook/` - Storybook configuration
+- `docs/` - Atlas-related documentation - technical & community
 - `public/` - static assets used to build the app
-- `scripts/` - some helper scripts for common tasks
-- `config-overrides.js` - rules to modify CRA config with `customize-cra`
+- `scripts/` - some helper scripts for common
 - `src/` - the source code
-    - `api/` - everything related to integrations with external services
-    - `assets/` - assets to be used from withing source code - images/fonts/etc.
-    - `components/` - components specific to Atlas
-    - `config/` - everything related to config - route URLs, env variables, etc.
-    - `shared/` - [reusable code](#shared-folder)
-      - `components` - reusable components
-      - `theme` - all the theme stuff used by Atlas
-    - `styles/` - app wide styles
-    - `types/` - global Typescript related code
-    - `utils/` - common utilities - e.g. for formatting dates etc.
-    - `views/` - all the top-level views displayed by the router
-    - `main.tsx` - app entry-point
-    - `App.tsx` - React entry-point
-
-### Shared folder
-
-Historically, Atlas codebase was split between two packages - `app` and `@joystream/components`. Due to build process and developer experience issues it was decided to merge those packages into one until the separation is actually needed. Hence the `shared/` directory in `src/`. This folder is what used to be `@joystream/components` and it's intended to be application-agnostic. That means no Atlas-specific logic (like routing) should be put there, only atomic UI components.
+  - `api/` - everything related to integrations with external services
+  - `assets/` - assets to be used from within the source code - images/animations/etc.
+  - `components/` - components used by Atlas
+  - `config/` - everything related to config - route URLs, env variables, etc.
+  - `hooks/` - hooks for reusable functionalities
+  - `joystream-lib/` - code for interacting with the Joystream blockchain
+  - `providers/` - contexts, stores and logic for different features
+  - `styles/` - theme for styling the app - design tokens, global styles
+  - `types/` - global Typescript related code
+  - `utils/` - common utilities - e.g. for formatting dates etc.
+  - `views/` - all the top-level views displayed by the router
+  - `main.tsx` - app entry-point
+  - `App.tsx` - React entry-point
 
 ### DevOps
 
@@ -64,10 +59,12 @@ _Source code:_ https://github.com/Joystream/hydra
 
 Even though the query node serves most of Atlas' data needs, it'd be impractical to save all the necessary data into the blockchain. Actions like increasing a video's view count shouldn't require user authentication and happen in background, which makes them a poor match for saving in the blockchain. To allow functionalities like this to exist, another service was created - Orion. Orion is a trusted and trusting service at the moment - it doesn't verify the data supplied to it and Atlas doesn't verify the data it gets from Orion. Anyone can read the data from Orion and modify it using GraphQL. This is a temporary solution and will need to be addressed at some point. The currently deployed instance of Orion can be found [here](https://orion.joystream.org/graphql).
 
-Currently Orion saves:
+Currently, Orion saves:
+
 - video view counts
 - aggregated channel view counts
 - channel followers counts
+- IDs of featured content, handled by the community, see more [here](community/featured-content.md)
 
 _Source code:_ https://github.com/Joystream/orion
 
@@ -82,6 +79,7 @@ _Source code:_ https://github.com/Joystream/joystream/tree/master/storage-node
 ### Client-side data stitching
 
 To display information about a video in Atlas, data from 2 data sources is required:
+
 - All the metadata from the query node (content directory)
 - Views count from Orion
 
@@ -89,3 +87,20 @@ We could treat those sources as separate, but they describe the same asset - one
 
 _Source code:_ https://github.com/Joystream/atlas/blob/master/src/api/client/resolvers.ts
 
+## Styling
+
+All styles for components/views used in Atlas should use design tokens defined by the designers. You can find the raw tokens [inside the atlas-resources repo](https://github.com/Joystream/atlas-resources/tree/main/design_tokens). The tokens define things like colors, typography, borders, etc. There is a script called `tokens` (`yarn tokens`) that will fetch the latest tokens from the resources repo and build them into usable CSS variables. Then in any place in the code you can import the `cVar` function from `@/styles` and use any of the tokens. Example:
+
+```tsx
+import { cVar } from '@/styles'
+
+const Component = styled.div`
+  background-color: ${cVar('colorBackground')}; // this will translate into var(--color-background)
+`
+```
+
+## Icons & illustrations
+
+Atlas uses a bunch of different SVG files for icons and illustrations. All of those are pre-processed via a `yarn svgs:illustrations` / `yarn svgs:icons-generate` script that generates React components out of SVGs using [svgr](https://github.com/gregberge/svgr). Then we import those components inside our code.
+
+All icons used in the app are created by the Atlas design team and come from Figma. To make the workflow easier, we have created a script that fetches all the icons directly from Figma and saves them in the repo. This way we can make always keep Figma and the app up to date. The script can be found in `scripts/figma-import` and can be run with `yarn svgs:icons-import`.

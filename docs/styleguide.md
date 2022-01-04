@@ -1,78 +1,179 @@
 # Atlas Style document
-Almost all style conventions we use in Atlas are taken care by ESLint and Prettier,  this document is meant to fill in the gap between the unspoken conventions the ones enforced by ESLint.
 
+Almost all style conventions we use in Atlas are taken care by ESLint and Prettier, this document is meant to fill in the gap between the unspoken conventions and the ones enforced by tooling.
 
+## Styling
 
+We do all the styling using the `emotion` library, mostly using the `styled` syntax. (Check [here](overview.md#Styling) for more details on `cVar`) Quick example:
 
-## Writing Components
+```tsx
+import styled from '@emotion/styled'
 
-We like to separate what a component does from how it looks like, and so when we have more than a couple of styled components in the same file, we move those to another file called `[Component].styles.ts` and import them from `[Component].tsx`, when then group those files in a folder called `[Component]` and export as default the Component from an `index.ts`.
-Where it is clear what each styled component does, but the styled details are hidden.
+import { cVar } from '@/styles'
 
-When writing a component, we like to put hooks at the top of the function body, followed by derived state and only after that event handlers. There are of course exceptions like if you need some piece of derived state inside an hook, in this case is fine to declare it where it logically makes sense.
-We write components as arrow functions since that improves type safety.
-
-Here is an example: 
-
-
-```javascript
-// FancySection.tsx
-import React, {useState, useEffect} from "react";
-
-import {someSideEffect} from "@/utils";
-
-type FancySectionProps = {
-    // ... types for your props here.
-}
-const FancySection: React.FC<FancySectionProps> = ({firstProps, secondProp, ...etc}) => {
-    // hooks first
-    const [pressed, setPressed] = useState(false);
-    const [count, setCount] = useState(0);
-
-    useEffect(() => {
-        someSideEffect(count);
-    }, [count])
-    // derived State
-    const countedAndPressed = count > 0 && pressed
-
-    const handleClick =() => {
-       // do something here...
-    }
-    return (
-        <Container>
-            <Button pressed={pressed} onClick={handleClick}>Count: {count}</Button>
-        </Container>
-    )
-}
-
+export const StyledContainer = styled.div`
+  background-color: ${cVar('colorBackground')};
+`
 ```
 
-## Styling components
+### Spacing
 
-We mainly use `@emotion/styled` to style components, if there is some style pattern or "snippet" that is repeated between multiple components, we like to use the `css` prop from `@emotion/react` to do so.
-When possible, we like to use variables from our theme, which is imported from `@/shared/theme`, theme components should be distructured before being used. When possible, *always* use values from the theme as it helps keep the app consistent.
+When defining spacing (padding/margin), we use `sizes` helper imported from `@/styles`. You provide a multiplier of base spacing (4px) and get back string with pixels value. For example `sizes(2)` will produce `"8px"`.
 
-Here is a kitchen sink example:
+### Reusability
 
-```javascript
-// YourComponent.styles.tsx
-import styled from "@emotion/styled"
-import { css } from "@emotion/react"
+If a given piece of CSS is repeated multiple times inside a single file, it may make sense to extract that into a separate `css` block to be reused by different components:
 
-import { colors, sizes } from "@/shared/theme"
+```tsx
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 
+import { cVar, sizes } from '@/styles'
 
-const blueIfPressed = (props) => css`
- Background-color: ${props => props.pressed ? colors.blue[500] : ''};
+type Props = {
+  pressed: boolean
+}
 
-`
-export const Container = styled.div`
-	display: flex;
-	background-color: ${colors.gray[500]};
+const blueIfPressed = ({ pressed }: Props) => css`
+  background-color: ${pressed ? cVar('colorBackgroundPrimary') : 'initial'};
 `
 
-export const Button = styled.button`
-    padding: ${sizes(4)};
-    ${blueOnIfPressed};
-` 
+const Container = styled.div<Props>`
+  display: flex;
+  ${blueIfPressed};
+`
+
+const Button = styled.button<Props>`
+  padding: ${sizes(4)};
+  ${blueIfPressed};
+`
+```
+
+### Conditional styles
+
+In a lot of cases, styles need to be based on some condition, for example different colors based on component variant, etc. In those cases we use props provided by the `emotion` library. One important aspect to keep an eye on is to avoid keeping conditional styles inside raw string - this will make our tooling not properly understand the style, disabling benefits of linters, IDE features, etc. Example:
+
+```tsx
+import { css } from '@emotion/react'
+import styled from '@emotion/styled'
+
+type Props = {
+  enabled: boolean
+}
+
+// don't do this:
+const BadExample = styled.div<Props>`
+  // in this example opacity is passed in a raw string and will not be properly interpreted by tooling
+  ${({ enabled }) => (!enabled ? 'opacity: 0.5;' : '')};
+`
+
+// do this:
+const disabledCss = css`
+  opacity: 0.5;
+`
+
+const GoodExample = styled.div<Props>`
+  // in this example conditional style is defined in a separate css block and will be properly parsed by tooling
+  ${({ enabled }) => !enabled && disabledCss};
+`
+```
+
+## Components
+
+### Directory structure
+
+Every reusable component should be placed inside `src/components`. If any of the component categories (directories starting with underscore, e.g. `_buttons`) is a good fit, the component should be placed there. Every component should have its own directory named the same as the component. The directory should contain the following files:
+
+- `Component/`
+  - `index.ts` - re-exporting anything needed
+  - `Component.tsx` - component code
+  - _(optional)_ `Component.styles.ts` - any styles needed for the component
+  - _(optional)_ `Component.stories.tsx` - Storybook stories exploring different use cases/variants of the component
+
+### Component structure
+
+In the main component file, we try to preserve a following structure:
+
+1. Hook calls
+2. Derived state
+3. Event handlers
+4. Conditional returns
+
+Here is an example of a nicely written component:
+
+```tsx
+// Component.tsx
+import React, { useEffect, useState } from 'react'
+
+import { Button } from '@/components/_buttons/Button'
+import { someSideEffect } from '@/utils'
+
+type ComponentProps = {
+  hidden?: boolean
+  otherProp?: number
+}
+
+// all components should use named exports
+export const Component: React.FC<ComponentProps> = ({ hidden, otherProp, ...rest }) => {
+  // hooks first
+  const [pressed, setPressed] = useState(false)
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    someSideEffect(count)
+  }, [count])
+
+  // derived state
+  const countedAndPressed = count > 0 && pressed
+
+  // event handlers
+  const handleClick = () => {
+    setCount((count) => count + 1)
+    setPressed(true)
+  }
+
+  // conditional return
+  if (hidden) {
+    return null
+  }
+
+  return (
+    <div>
+      <Button pressed={pressed} onClick={handleClick}>
+        Count: {count}
+      </Button>
+      {countedAndPressed && <span>Great job!</span>}
+    </div>
+  )
+}
+```
+
+## Typescript
+
+We try to leverage type-safety whenever possible, to reduce potential of human error. We use `type` instead of `interface` as it's usually easier to work with and compose. Another good practice is to avoid general types like `unknown` or `object` or types allowing any property name, because those can easily introduce errors that won't be caught by the compiler. Example:
+
+```ts
+// bad example
+type BadFnInput = {
+  [key: string]: string
+}
+
+const fn = (input: BadFnInput) => {
+  console.log(input.hello)
+}
+
+// no TS error, result will be unexpected
+fn({ h3ll0: 'hi' })
+```
+
+## Naming
+
+In terms of naming, `PascalCase` should be used for component names and Typescript types. Constants should be named using `UPPER_CASE`. Everything else should use `camelCase`.
+
+Also, to stay consistent, all event handlers used in components should be named with `handle` prefix followed by the name of the event handled. So for example:
+
+```tsx
+const handleClick = () => console.log('Clicked!')
+
+return <Button onClick={handleClick} />
 ```
