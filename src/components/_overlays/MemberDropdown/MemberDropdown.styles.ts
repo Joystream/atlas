@@ -23,20 +23,24 @@ export const Container = styled.div`
   }
 `
 
-export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: number }>`
+export const InnerContainer = styled.div<{
+  isActive: boolean
+  containerHeight: number
+}>`
   width: 280px;
   position: 'relative';
   max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
 
   height: ${({ containerHeight }) => containerHeight}px;
   transform: translateY(
-    ${({ isActive, containerHeight }) => (isActive ? 'var(--size-topbar-height)' : -containerHeight + 'px')}
+    ${({ isActive, containerHeight }) =>
+      isActive ? 'var(--size-topbar-height)' : `calc(-${containerHeight}px + var(--size-topbar-height))`}
   );
-  transition: transform ${cVar('animationTransitionSlow')}, height ${cVar('animationTransitionMedium')};
+  transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
 
-  background-color: ${cVar('colorCoreNeutral700')};
+  background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;
 `
@@ -123,11 +127,13 @@ export const LearnAboutTjoyLink = styled(Text)`
   }
 `
 
-export const AnimatedContainer = styled(animated.div)`
+export const AnimatedContainer = styled(animated.div)<{
+  isAnimatingSwitchMember: boolean
+}>`
   position: absolute;
   height: 100%;
   width: 280px;
   will-change: transform, opacity;
-  overflow-y: auto;
+  overflow-y: ${({ isAnimatingSwitchMember }) => (isAnimatingSwitchMember ? 'hidden' : 'auto')};
   overflow-x: hidden;
 `
