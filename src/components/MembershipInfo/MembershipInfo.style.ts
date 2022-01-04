@@ -5,6 +5,17 @@ import { cVar, media, sizes } from '@/styles'
 import { Text } from '../Text'
 import { SvgActionCopy } from '../_icons'
 
+export const MembershipHeader = styled.header`
+  display: flex;
+  flex-direction: column;
+  gap: ${sizes(6)};
+  align-items: center;
+  ${media.sm} {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`
+
 export const MembershipInfoContainer = styled.div`
   display: grid;
   grid-template-rows: repeat(2, auto);

@@ -11,6 +11,7 @@ export default {
     avatarUrl: 'https://thispersondoesnotexist.com/image',
     handle: 'doesnotexist',
     loading: false,
+    isOwner: false,
   },
 } as Meta
 
