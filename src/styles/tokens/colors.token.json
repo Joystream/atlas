@@ -252,11 +252,11 @@
           "description": "Disabled text, placeholders, etc."
         },
         "default": {
-          "value": "{color.core.neutral.500.default}",
+          "value": "{color.core.neutral.300.default}",
           "description": "Paragraphs, captions, etc."
         },
         "strong": {
-          "value": "{color.core.neutral.600.default}",
+          "value": "{color.core.neutral.50.default}",
           "description": "Headlines, component labels, etc."
         }
       },
