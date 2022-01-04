@@ -11,6 +11,7 @@ This document tries to outline all the conventions/tools/services used to make A
 - GraphQL (+ [Relay-style pagination](https://graphql.org/learn/pagination/)) with [Apollo Client](https://www.apollographql.com/docs/react/)
 - Prettier, ESLint, Stylelint - for enforcing common code style
 - [Emotion](https://emotion.sh/) - for all the styling
+- [Zustand](https://github.com/pmndrs/zustand) - for simple local state management
 
 ### Repo structure
 

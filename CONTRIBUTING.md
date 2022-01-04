@@ -4,7 +4,7 @@
 
 ### Contributing TL;DR
 
-1. Always make sure to create an issue or comment on an existing issue before you start any work.
+1. Always make sure to create an issue or comment on an existing issue before you start any work
 2. Make sure to follow [Atlas styleguide](docs/styleguide.md)
 3. Once you have a change ready, push to a branch on your own fork
 4. Open a PR from your fork to the `dev` branch on the main repo

@@ -30,7 +30,7 @@ IMPORTANT NOTE 1: for `category featured videos` the order of these will be the 
 - This means the first featured video (with an accompanying video file) will take the first spot in videos that show a preview.
 - For videos submitted with only an ID (and no video file) they will occupy the section below in the order submitted.
 
-IMPORTANT NOTE 2: Anytime a mutation is submitted, it will override whatever was previously set. So if you want to add/remove featured videos from categories--you must list all the ones you do want listed and remove those that you do not want listed anymore.
+IMPORTANT NOTE 2: Anytime a mutation is submitted, it will override whatever was previously set. So if you want to add/remove featured videos from categories, you must list all the ones you do want listed and remove those that you do not want listed anymore.
 
 ## Metadata structure
 

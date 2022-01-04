@@ -10,7 +10,7 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
   <a alt="Contributors" href="https://github.com/Joystream/atlas/graphs/contributors">
     <img alt="Contributors badge" src="https://img.shields.io/github/contributors/joystream/atlas?label=%F0%9F%91%A5%20contributors">
   </a>
-  <a alt="Styleguide" href="https://github.com/Joystream/atlas/graphs/contributors">
+  <a alt="Styleguide" href="https://github.com/Joystream/atlas/blob/master/docs/styleguide.md">
     <img alt="Styleguide badge" src="https://img.shields.io/badge/%F0%9F%92%85%20style-prettier-brightgreen">
   </a>
   <a alt="Netlify production deployment" href="https://play.joystream.org">
