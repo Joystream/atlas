@@ -83,8 +83,8 @@ export const variables = css`
     --color-core-yellow-800: #302800;
     --color-core-yellow-900: #0a0900;
     --color-text-muted: var(--color-core-neutral-400);
-    --color-text: var(--color-core-neutral-500);
-    --color-text-strong: var(--color-core-neutral-600);
+    --color-text: var(--color-core-neutral-300);
+    --color-text-strong: var(--color-core-neutral-50);
     --color-text-primary: var(--color-core-blue-300);
     --color-text-error: var(--color-core-red-300);
     --color-text-success: var(--color-core-green-300);
@@ -358,8 +358,8 @@ export const theme = {
   colorCoreYellow800: { variable: 'var(--color-core-yellow-800)', value: '#302800' },
   colorCoreYellow900: { variable: 'var(--color-core-yellow-900)', value: '#0A0900' },
   colorTextMuted: { variable: 'var(--color-text-muted)', value: '#52616B' },
-  colorText: { variable: 'var(--color-text)', value: '#424E57' },
-  colorTextStrong: { variable: 'var(--color-text-strong)', value: '#343D44' },
+  colorText: { variable: 'var(--color-text)', value: '#7B8A95' },
+  colorTextStrong: { variable: 'var(--color-text-strong)', value: '#F4F6F8' },
   colorTextPrimary: { variable: 'var(--color-text-primary)', value: '#7174FF' },
   colorTextError: { variable: 'var(--color-text-error)', value: '#F34235' },
   colorTextSuccess: { variable: 'var(--color-text-success)', value: '#0C9846' },
