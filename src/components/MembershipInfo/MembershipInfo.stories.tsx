@@ -1,0 +1,18 @@
+import { Meta, Story } from '@storybook/react'
+import React from 'react'
+
+import { MembershipInfo, MembershipInfoProps } from './'
+
+export default {
+  title: 'other/MembershipInfo',
+  component: MembershipInfo,
+  args: {
+    address: '5CrLvuj3zAVYNYSUSiScr5gH9sLrcgME4oKjQf4xu1Zj5B7e',
+    avatarUrl: 'https://thispersondoesnotexist.com/image',
+    handle: 'doesnotexist',
+  },
+} as Meta
+
+const Template: Story<MembershipInfoProps> = (args) => <MembershipInfo {...args} />
+
+export const Default = Template.bind({})
