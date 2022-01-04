@@ -10,6 +10,7 @@ export default {
     address: '5CrLvuj3zAVYNYSUSiScr5gH9sLrcgME4oKjQf4xu1Zj5B7e',
     avatarUrl: 'https://thispersondoesnotexist.com/image',
     handle: 'doesnotexist',
+    loading: false,
   },
 } as Meta
 
