@@ -4,7 +4,7 @@ import debouncePromise from 'awesome-debounce-promise'
 import axios, { AxiosError } from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import * as z from 'zod'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
@@ -37,6 +37,7 @@ export const CreateMemberModal: React.FC = () => {
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [avatarImageUrl, setAvatarImageUrl] = useState('')
@@ -160,15 +161,18 @@ export const CreateMemberModal: React.FC = () => {
       refetchMemberships().then(({ data }) => {
         const lastCreatedMembership = data.memberships[data.memberships.length - 1]
         if (lastCreatedMembership) {
-          setActiveUser({ memberId: lastCreatedMembership.id })
+          setActiveUser({ memberId: lastCreatedMembership.id, channelId: null })
         }
       })
+      setIsCreatingMembership(false)
+      reset()
       setMembershipBlock(null)
       displaySnackbar({
         title: 'Your membership has been created',
         description: 'Browse, watch, create, collect videos across the platform and have fun!',
         iconType: 'success',
       })
+      navigate(pathname)
     }
   }, [
     activeAccountId,
@@ -176,8 +180,10 @@ export const CreateMemberModal: React.FC = () => {
     displaySnackbar,
     membershipBlock,
     navigate,
+    pathname,
     queryNodeState,
     refetchMemberships,
+    reset,
     setActiveUser,
   ])
 
@@ -221,7 +227,7 @@ export const CreateMemberModal: React.FC = () => {
   return (
     <StyledDialogModal
       title="Create Membership"
-      show={step === 'member' && !isCreatingMembership && accountSet}
+      show={step === 'member' && accountSet && !isCreatingMembership}
       dividers
       as="form"
       onSubmit={handleCreateMember}
