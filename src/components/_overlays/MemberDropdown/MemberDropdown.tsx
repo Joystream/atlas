@@ -122,19 +122,18 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
     }
   }, [closeDropdown, isActive])
 
-<<<<<<< HEAD
   useEffect(() => {
     transRef.start()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSwitchingMember])
+  }, [isSwitchingMember, transRef])
 
   return (
     <Container>
-      <InnerContainer isActive={isActive} containerHeight={containerHeight}>
+      {/* 9999 prevents containerHeight from being 0 at when the component mounts */}
+      <InnerContainer isActive={isActive} containerHeight={containerHeight || 9999}>
         {transitions((style, isSwitchingMemberMode) =>
           isSwitchingMemberMode ? (
             <AnimatedContainer style={style}>
-              <div ref={mergeRefs([containerRef, containerMeasureRef])}>
+              <div ref={containerRef}>
                 <SwitchMemberItemListContainer>
                   <ListItem
                     onClick={() => setIsSwitchingMember(false)}
@@ -143,28 +142,6 @@ export const MemberDropdown: React.FC<MemberDropdownProps> = ({
                     applyIconStylesNodeStart
                   />
                 </SwitchMemberItemListContainer>
-=======
-    useEffect(() => {
-      transRef.start()
-    }, [isSwitchingMember, transRef])
-
-    return (
-      <Container ref={ref}>
-        {/* 9999 prevents containerHeight from being 0 at when the component mounts */}
-        <InnerContainer isActive={isActive} containerHeight={containerHeight || 9999}>
-          {transitions((style, isSwitchingMemberMode) =>
-            isSwitchingMemberMode ? (
-              <AnimatedContainer style={style}>
-                <div ref={containerRef}>
-                  <SwitchMemberItemListContainer>
-                    <ListItem
-                      onClick={() => setIsSwitchingMember(false)}
-                      nodeStart={<SvgActionChevronL />}
-                      label="Switch member"
-                      applyIconStylesNodeStart
-                    />
-                  </SwitchMemberItemListContainer>
->>>>>>> 237d269d... cr
 
                 <SectionContainer>
                   {memberships?.map((member) => (
