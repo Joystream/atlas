@@ -45,14 +45,15 @@ export default {
       bottomLeft: {
         element: (
           <PillGroup
-            size="small"
             items={[
               {
                 label: 'NFT',
+                variant: 'overlay',
               },
               {
                 icon: <SvgActionJoyToken />,
                 label: '24K tJOY',
+                variant: 'overlay',
               },
             ]}
           />
@@ -62,6 +63,9 @@ export default {
       topRight: {
         type: 'default',
         clickable: true,
+      },
+      bottomRight: {
+        element: <Pill variant="overlay" label="30:12" />,
       },
       center: {
         element: <SvgIllustrativePlay />,
