@@ -226,7 +226,7 @@ export const CreateMemberModal: React.FC = () => {
 
   return (
     <StyledDialogModal
-      title="Create Membership"
+      title="Create a Joystream membership"
       show={step === 'member' && accountSet && !isCreatingMembership}
       dividers
       as="form"
@@ -240,8 +240,9 @@ export const CreateMemberModal: React.FC = () => {
     >
       <Wrapper>
         <Text variant="t200" secondary>
-          Membership represents you as a member of the Joystream community. You can use it to create a channel and
-          publish content. It also allows you to participate in the platform governance, shaping its future.
+          Membership represents you as a member of the Joystream community - it's your on-chain identity. It lets you
+          interact with the network - create a channel, publish content, issue and trade NFTs. It also lets you to
+          participate in the platform governance, shaping its future.
         </Text>
         <StyledAvatar
           size="channel-card"
