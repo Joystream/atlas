@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import { VideoTileContainer } from './VideoTile.styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from '../VideoThumbnail'
 import { VideoDetailsVariant, VideoTileDetails, VideoTileDetailsProps } from '../VideoTileDetails'
+
+const SMALL_SIZE_WIDTH = 300
 
 export type VideoTileProps = {
   direction?: 'vertical' | 'horizontal'
@@ -12,7 +15,7 @@ export type VideoTileProps = {
   loadingDetails?: boolean
   loadingThumbnail?: boolean
 } & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt'> &
-  Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant'>
+  Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant' | 'size'>
 
 export const VideoTile: React.FC<VideoTileProps> = React.memo(
   ({
@@ -28,7 +31,6 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     onChannelAvatarClick,
     kebabMenuItems,
     onClick,
-    size,
     slots,
     videoHref,
     linkState,
@@ -40,9 +42,25 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     loadingThumbnail,
     loadingAvatar,
   }) => {
+    const [tileSize, setTileSize] = useState<'small' | 'medium'>()
+    const { ref: thumbnailRef } = useResizeObserver<HTMLAnchorElement>({
+      onResize: (size) => {
+        const { width: videoTileWidth } = size
+        if (videoTileWidth) {
+          if (tileSize !== 'small' && videoTileWidth < SMALL_SIZE_WIDTH) {
+            setTileSize('small')
+          }
+          if (tileSize !== 'medium' && videoTileWidth >= SMALL_SIZE_WIDTH) {
+            setTileSize('medium')
+          }
+        }
+      },
+    })
+
     return (
       <VideoTileContainer direction={direction} className={className}>
         <VideoThumbnail
+          ref={thumbnailRef}
           videoHref={videoHref}
           linkState={linkState}
           thumbnailUrl={thumbnailUrl}
@@ -55,7 +73,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
         />
         <VideoTileDetails
           onVideoTitleClick={onClick}
-          size={size}
+          size={tileSize}
           videoHref={videoHref}
           channelHref={channelHref}
           onChannelAvatarClick={onChannelAvatarClick}

@@ -1,5 +1,5 @@
 import { To } from 'history'
-import React, { useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { LinkProps } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -37,75 +37,73 @@ export type VideoThumbnailProps = {
   slots?: SlotsObject
 }
 
-export const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
-  loading,
-  videoHref,
-  linkState,
-  slots,
-  thumbnailUrl,
-  thumbnailAlt,
-  onClick,
-  clickable = true,
-  contentSlot,
-}) => {
-  const [activeDisabled, setActiveDisabled] = useState(false)
-  const slotsArray = slots && Object.entries(slots)
+export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
+  (
+    { loading, videoHref, linkState, slots, thumbnailUrl, thumbnailAlt, onClick, clickable = true, contentSlot },
+    ref
+  ) => {
+    const [activeDisabled, setActiveDisabled] = useState(false)
+    const slotsArray = slots && Object.entries(slots)
 
-  const handleClick = (e: React.MouseEvent) => {
-    if (!videoHref) {
-      e.preventDefault()
+    const handleClick = (e: React.MouseEvent) => {
+      if (!videoHref) {
+        e.preventDefault()
+      }
+      clickable && onClick?.()
     }
-    clickable && onClick?.()
-  }
 
-  return (
-    <VideoThumbnailContainer
-      onClick={handleClick}
-      clickable={clickable}
-      activeDisabled={activeDisabled}
-      to={videoHref ? videoHref : ''}
-      state={linkState}
-    >
-      <ContentOverlay>
-        <SwitchTransition>
-          <CSSTransition
-            key={String(loading)}
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            classNames={transitions.names.fade}
-          >
-            {loading ? (
-              <ThumbnailSkeletonLoader />
-            ) : thumbnailUrl ? (
-              <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />
-            ) : (
-              <div />
-            )}
-          </CSSTransition>
-        </SwitchTransition>
-        {contentSlot && (
-          <CSSTransition
-            in={!!contentSlot}
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            classNames={transitions.names.fade}
-          >
-            <ContentContainer>{contentSlot}</ContentContainer>
-          </CSSTransition>
-        )}
-      </ContentOverlay>
-      <HoverOverlay loading={loading} />
-      <SlotsOverlay>
-        {slotsArray?.map(([position, { element, type = 'default', clickable = false }]) => (
-          <SlotContainer
-            key={position}
-            type={type}
-            position={position as keyof SlotsObject}
-            onMouseMove={() => clickable && setActiveDisabled(true)}
-            onMouseOut={() => clickable && setActiveDisabled(false)}
-          >
-            {element}
-          </SlotContainer>
-        ))}
-      </SlotsOverlay>
-    </VideoThumbnailContainer>
-  )
-}
+    return (
+      <VideoThumbnailContainer
+        ref={ref}
+        onClick={handleClick}
+        clickable={clickable}
+        activeDisabled={activeDisabled}
+        to={videoHref ? videoHref : ''}
+        state={linkState}
+      >
+        <ContentOverlay>
+          <SwitchTransition>
+            <CSSTransition
+              key={String(loading)}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+              classNames={transitions.names.fade}
+            >
+              {loading ? (
+                <ThumbnailSkeletonLoader />
+              ) : thumbnailUrl ? (
+                <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />
+              ) : (
+                <div />
+              )}
+            </CSSTransition>
+          </SwitchTransition>
+          {contentSlot && (
+            <CSSTransition
+              in={!!contentSlot}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+              classNames={transitions.names.fade}
+            >
+              <ContentContainer>{contentSlot}</ContentContainer>
+            </CSSTransition>
+          )}
+        </ContentOverlay>
+        <HoverOverlay loading={loading} />
+        <SlotsOverlay>
+          {slotsArray?.map(([position, { element, type = 'default', clickable = false }]) => (
+            <SlotContainer
+              key={position}
+              type={type}
+              position={position as keyof SlotsObject}
+              onMouseMove={() => clickable && setActiveDisabled(true)}
+              onMouseOut={() => clickable && setActiveDisabled(false)}
+            >
+              {element}
+            </SlotContainer>
+          ))}
+        </SlotsOverlay>
+      </VideoThumbnailContainer>
+    )
+  }
+)
+
+VideoThumbnail.displayName = 'VideoThumbnail'
