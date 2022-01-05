@@ -72,18 +72,25 @@ export const ContentOverlay = styled.div`
 
 export const ContentContainer = styled.div`
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
+  ${square('100%')};
 `
 
 export const ThumbnailImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
+  ${square('100%')};
   object-fit: contain;
-  ${square('100%')}
+`
+
+export const ThumbnailBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  ${square('100%')};
+  background: ${cVar('colorBackground')};
 `
 
 export const SlotsOverlay = styled.div`

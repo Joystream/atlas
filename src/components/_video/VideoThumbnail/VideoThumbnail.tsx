@@ -12,6 +12,7 @@ import {
   SlotContainer,
   SlotPosition,
   SlotsOverlay,
+  ThumbnailBackground,
   ThumbnailImage,
   ThumbnailSkeletonLoader,
   VideoThumbnailContainer,
@@ -70,10 +71,10 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
             >
               {loading ? (
                 <ThumbnailSkeletonLoader />
-              ) : thumbnailUrl ? (
-                <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />
               ) : (
-                <div />
+                <ThumbnailBackground>
+                  {thumbnailUrl && <ThumbnailImage src={thumbnailUrl || ''} alt={thumbnailAlt || ''} />}
+                </ThumbnailBackground>
               )}
             </CSSTransition>
           </SwitchTransition>
