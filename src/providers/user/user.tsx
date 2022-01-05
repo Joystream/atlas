@@ -187,11 +187,23 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
 
   const signIn = useCallback(async () => {
-    setIsLoading(true)
-    await initPolkadotExtension()
-    const membershipsResponse = await refetchMemberships()
-    const memberships = membershipsResponse?.data?.memberships
-    setIsLoading(false)
+    if (!extensionConnected) {
+      setIsLoading(true)
+      await initPolkadotExtension()
+      const membershipsResponse = await refetchMemberships()
+      const refetchedMemberships = membershipsResponse?.data?.memberships
+      setIsLoading(false)
+
+      if (!activeUserState.memberId && refetchedMemberships?.length) {
+        const firstMembership = refetchedMemberships[0]
+        setActiveUser({
+          memberId: firstMembership.id,
+          accountId: firstMembership.controllerAccount,
+          channelId: firstMembership.channels[0]?.id || null,
+        })
+        return
+      }
+    }
 
     if (!activeUserState.memberId && memberships?.length) {
       const firstMembership = memberships[0]
@@ -202,14 +214,21 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       })
       return
     }
-
     if (!extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 1 }) })
     }
     if (extensionConnected) {
       navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
     }
-  }, [activeUserState.memberId, extensionConnected, initPolkadotExtension, navigate, refetchMemberships, setActiveUser])
+  }, [
+    activeUserState.memberId,
+    extensionConnected,
+    initPolkadotExtension,
+    memberships,
+    navigate,
+    refetchMemberships,
+    setActiveUser,
+  ])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
