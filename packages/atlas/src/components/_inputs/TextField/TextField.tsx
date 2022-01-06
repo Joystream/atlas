@@ -19,6 +19,7 @@ export type TextFieldProps = {
   defaultValue?: string
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
+  autoComplete?: 'off'
 } & InputBaseProps
 
 const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
@@ -37,6 +38,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
     defaultValue,
     nodeStart,
     nodeEnd,
+    autoComplete,
     ...inputBaseProps
   },
   ref
@@ -54,6 +56,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
         <TextInput
           leftNodeWidth={nodeLeftBounds.width}
           rightNodeWidth={nodeRightBounds.width}
+          autoComplete={autoComplete}
           ref={ref}
           name={name}
           value={value}

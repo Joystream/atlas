@@ -3532,6 +3532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "@hookform/resolvers@npm:2.8.5"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 0751f0561e00415040e45759d28378fa90b7b9482e7e112feae5fdcaf2c0e18384d2ee15b7ce444dbc2f716dcd3c5f696efaf66f5f5f37add4d9bf9c43a5fa42
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.6.0":
   version: 0.6.0
   resolution: "@humanwhocodes/config-array@npm:0.6.0"
@@ -23883,6 +23892,13 @@ typescript@4.5.2:
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: b7289084bc1fc74a559b7259faa23d3214b14b538a8843d2b001a35e27147833f4107590b1b44bf5bc7f6dfe6f488660d3a3725f268e09b3925b3476153b7821
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.11.6":
+  version: 3.11.6
+  resolution: "zod@npm:3.11.6"
+  checksum: 044ac416450f179a0c88240f27849d2886c777cebade42df10e5f04125b0265cec82d9bd741a7dcb11796b2ea88b32c86be7d36932a4bed6af57002560359db1
   languageName: node
   linkType: hard
 
