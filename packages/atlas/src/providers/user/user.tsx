@@ -1,24 +1,31 @@
 import { web3Accounts, web3AccountsSubscribe, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useMembership, useMemberships } from '@/api/hooks'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
+import { QUERY_PARAMS } from '@/config/routes'
 import { WEB3_APP_NAME } from '@/config/urls'
 import { AccountId } from '@/joystream-lib'
 import { AssetLogger, ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { urlParams } from '@/utils/url'
 
 import { ActiveUserState, ActiveUserStoreActions, useActiveUserStore } from './store'
+
+import { useConfirmationModal } from '../confirmationModal'
 
 export type Account = {
   id: AccountId
   name: string
 }
 
+const ACCESS_TIMEOUT = 10000
+
 type ActiveUserContextValue = ActiveUserStoreActions & {
   activeUserState: ActiveUserState
   accounts: Account[] | null
-  extensionConnected: boolean | null
+  extensionConnected: boolean | null | 'pending'
 
   memberships: ReturnType<typeof useMemberships>['memberships']
   membershipsLoading: boolean
@@ -28,14 +35,19 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
   activeMembershipLoading: boolean
   refetchActiveMembership: ReturnType<typeof useMembership>['refetch']
 
-  userInitialized: boolean
+  signIn: () => Promise<void>
+  isLoading: boolean
 }
 
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
   const activeUserState = useActiveUserStore((state) => state)
+  const navigate = useNavigate()
+  const unsubscribeRef = React.useRef<(() => void) | null>()
   const {
     actions: { setActiveUser, resetActiveUser },
   } = activeUserState
@@ -45,7 +57,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   }, [activeUserState])
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
-  const [extensionConnected, setExtensionConnected] = useState<boolean | null>(null)
+  const [extensionConnected, setExtensionConnected] = useState<boolean | null | 'pending'>(null)
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
@@ -65,6 +77,39 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
+  useEffect(() => {
+    if (!isLoading) {
+      closeLongLoadingModal()
+      return
+    }
+    const timeout = setTimeout(() => {
+      openLongLoadingModal({
+        iconType: 'warning',
+        title: 'Failed to connect with extension',
+        description:
+          "Seems you didn't enable the Polkadot extension and we cannot access your accounts. You can do that by clicking the extension icon in your browser toolbar. If you cannot do that, please reload the page and try again.",
+        primaryButton: {
+          text: 'Reload page',
+          onClick: () => {
+            window.location.reload()
+            closeLongLoadingModal()
+            setIsLoading(false)
+          },
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => {
+            closeLongLoadingModal()
+            setIsLoading(false)
+          },
+        },
+      })
+    }, ACCESS_TIMEOUT)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [isLoading, openLongLoadingModal, closeLongLoadingModal])
+
   // use previous values when doing the refetch, so the app doesn't think we don't have any memberships
   const memberships = membershipsData || membershipPreviousData?.memberships
 
@@ -81,46 +126,52 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   )
 
-  // handle polkadot extension
-  useEffect(() => {
-    let unsub: () => void
+  const initPolkadotExtension = useCallback(async () => {
+    try {
+      setExtensionConnected('pending')
+      const enabledExtensions = await web3Enable(WEB3_APP_NAME)
 
-    const initPolkadotExtension = async () => {
-      try {
-        const enabledExtensions = await web3Enable(WEB3_APP_NAME)
-
-        if (!enabledExtensions.length) {
-          ConsoleLogger.warn('No Polkadot extension detected')
-          setExtensionConnected(false)
-          return
-        }
-
-        const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
-          const mappedAccounts = accounts.map((a) => ({
-            id: a.address,
-            name: a.meta.name || 'Unnamed',
-          }))
-          setAccounts(mappedAccounts)
-        }
-
-        // subscribe to changes to the accounts list
-        unsub = await web3AccountsSubscribe(handleAccountsChange)
-        const accounts = await web3Accounts()
-        handleAccountsChange(accounts)
-
-        setExtensionConnected(true)
-      } catch (e) {
+      if (!enabledExtensions.length) {
+        ConsoleLogger.warn('No Polkadot extension detected')
         setExtensionConnected(false)
-        SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
+        resetActiveUser()
+        return
+      }
+
+      const handleAccountsChange = (accounts: InjectedAccountWithMeta[]) => {
+        const mappedAccounts = accounts.map((a) => ({
+          id: a.address,
+          name: a.meta.name || 'Unnamed',
+        }))
+        setAccounts(mappedAccounts)
+      }
+
+      const accounts = await web3Accounts()
+      handleAccountsChange(accounts)
+      // subscribe to changes to the accounts list
+      unsubscribeRef.current = await web3AccountsSubscribe(handleAccountsChange)
+
+      setExtensionConnected(true)
+    } catch (e) {
+      setExtensionConnected(false)
+      SentryLogger.error('Failed to initialize Polkadot signer extension', 'ActiveUserProvider', e)
+    }
+  }, [resetActiveUser])
+
+  useEffect(() => {
+    if (extensionConnected === true) {
+      return
+    }
+    if (activeMembership?.id) {
+      initPolkadotExtension()
+    }
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current()
+        unsubscribeRef.current = null
       }
     }
-
-    initPolkadotExtension()
-
-    return () => {
-      unsub?.()
-    }
-  }, [])
+  }, [activeMembership?.id, extensionConnected, initPolkadotExtension])
 
   useEffect(() => {
     if (!accounts || !activeUserState.accountId || extensionConnected !== true) {
@@ -135,8 +186,49 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
   }, [accounts, activeUserState.accountId, extensionConnected, resetActiveUser])
 
-  const userInitialized =
-    (extensionConnected === true && (!!memberships || !accounts?.length)) || extensionConnected === false
+  const signIn = useCallback(async () => {
+    if (!extensionConnected) {
+      setIsLoading(true)
+      await initPolkadotExtension()
+      const membershipsResponse = await refetchMemberships()
+      const refetchedMemberships = membershipsResponse?.data?.memberships
+      setIsLoading(false)
+
+      if (!activeUserState.memberId && refetchedMemberships?.length) {
+        const firstMembership = refetchedMemberships[0]
+        setActiveUser({
+          memberId: firstMembership.id,
+          accountId: firstMembership.controllerAccount,
+          channelId: firstMembership.channels[0]?.id || null,
+        })
+        return
+      }
+    }
+
+    if (!activeUserState.memberId && memberships?.length) {
+      const firstMembership = memberships[0]
+      setActiveUser({
+        memberId: firstMembership.id,
+        accountId: firstMembership.controllerAccount,
+        channelId: firstMembership.channels[0]?.id || null,
+      })
+      return
+    }
+    if (!extensionConnected) {
+      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 1 }) })
+    }
+    if (extensionConnected) {
+      navigate({ search: urlParams({ [QUERY_PARAMS.LOGIN]: 2 }) })
+    }
+  }, [
+    activeUserState.memberId,
+    extensionConnected,
+    initPolkadotExtension,
+    memberships,
+    navigate,
+    refetchMemberships,
+    setActiveUser,
+  ])
 
   const contextValue: ActiveUserContextValue = useMemo(
     () => ({
@@ -155,7 +247,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       activeMembershipLoading,
       refetchActiveMembership,
 
-      userInitialized,
+      signIn,
+      isLoading,
     }),
     [
       accounts,
@@ -169,7 +262,8 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
       refetchMemberships,
       resetActiveUser,
       setActiveUser,
-      userInitialized,
+      signIn,
+      isLoading,
     ]
   )
 

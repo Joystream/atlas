@@ -9,10 +9,11 @@ import { ModalBackdrop, ModalContent } from './Modal.styles'
 
 export type ModalProps = {
   show?: boolean
+  noBoxShadow?: boolean
   className?: string
 }
 
-export const Modal: React.FC<ModalProps> = ({ children, show, className }) => {
+export const Modal: React.FC<ModalProps> = ({ children, show, className, noBoxShadow }) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -36,7 +37,9 @@ export const Modal: React.FC<ModalProps> = ({ children, show, className }) => {
         onEnter={incrementOverlaysOpenCount}
         onExited={decrementOverlaysOpenCount}
       >
-        <ModalContent className={className}>{children}</ModalContent>
+        <ModalContent noBoxShadow={noBoxShadow} className={className}>
+          {children}
+        </ModalContent>
       </CSSTransition>
     </Portal>
   )

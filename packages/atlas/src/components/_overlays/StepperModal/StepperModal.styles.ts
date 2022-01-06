@@ -7,7 +7,7 @@ import { media, oldColors, sizes } from '@/styles'
 import { Modal } from '../Modal'
 
 export const StyledModal = styled(Modal)`
-  width: 740px;
+  width: 690px;
   background-color: ${oldColors.gray[700]};
   display: flex;
   flex-direction: column;
