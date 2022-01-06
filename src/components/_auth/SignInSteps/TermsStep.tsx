@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { SvgActionChevronB } from '@/components/_icons'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS } from '@/config/routes'
 import { transitions } from '@/styles'
+import { urlParams } from '@/utils/url'
 
 import { StepFooter, StepWrapper } from './SignInSteps.styles'
 import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.styles'
 
-import { TermsOfService } from '../TermsOfService'
+import { TermsOfService } from '../../TermsOfService'
 
 export const TermsStep: React.FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
@@ -54,7 +55,7 @@ export const TermsStep: React.FC = () => {
         </TermsOverlay>
       </TermsBox>
       <StepFooter>
-        <ContinueButton to={absoluteRoutes.studio.newMembership()} disabled={!hasScrolledToBottom}>
+        <ContinueButton to={{ search: urlParams({ [QUERY_PARAMS.LOGIN]: 'member' }) }} disabled={!hasScrolledToBottom}>
           Accept terms
         </ContinueButton>
       </StepFooter>

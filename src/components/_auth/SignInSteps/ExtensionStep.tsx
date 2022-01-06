@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionNewTab } from '@/components/_icons'
+import { QUERY_PARAMS } from '@/config/routes'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
@@ -22,16 +23,15 @@ type ExtensionStepProps = {
 
 export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
-  const step = useRouterQuery('step')
+  const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const { extensionConnected } = useUser()
   const [openEnableExtensionDialog, closeEnableExtensionDialog] = useConfirmationModal({
     children: <PolkadotExtensionRejected />,
     onExitClick: () => closeEnableExtensionDialog(),
   })
-
   useEffect(() => {
     if (extensionConnected && step === '1') {
-      navigate(nextStepPath)
+      navigate({ search: nextStepPath })
     }
   }, [extensionConnected, navigate, nextStepPath, step])
 

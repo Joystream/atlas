@@ -1,6 +1,7 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { zIndex } from '@/styles'
+import { cVar, zIndex } from '@/styles'
 
 export const ModalBackdrop = styled.div`
   position: fixed;
@@ -13,7 +14,11 @@ export const ModalBackdrop = styled.div`
   transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
 `
 
-export const ModalContent = styled.div`
+type ModalContentProps = {
+  noBoxShadow?: boolean
+}
+
+export const ModalContent = styled.div<ModalContentProps>`
   display: flex;
   z-index: ${zIndex.globalOverlay};
   position: fixed;
@@ -23,5 +28,9 @@ export const ModalContent = styled.div`
   max-height: 90vh;
   max-width: 90vw;
   overflow: hidden;
-  box-shadow: 0 8px 8px rgba(0 0 0 / 0.12), 0 24px 40px rgba(0 0 0 / 0.16);
+  ${({ noBoxShadow }) =>
+    !noBoxShadow &&
+    css`
+      box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+    `};
 `

@@ -9,9 +9,12 @@ import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyles } from '@/styles'
 
 import { MainLayout } from './MainLayout'
+import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
+import { JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
+import { ActiveUserProvider } from './providers/user'
 
 export const App = () => {
   // App doesn't accept props and doesn't contain state so should never rerender
@@ -23,15 +26,20 @@ export const App = () => {
       <AnalyticsManager />
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
-          <OverlayManagerProvider>
-            <OperatorsContextProvider>
+          <OperatorsContextProvider>
+            <OverlayManagerProvider>
               <ConfirmationModalProvider>
-                <MainLayout />
-                <Snackbars />
-                <AssetsManager />
+                <ActiveUserProvider>
+                  <JoystreamProvider>
+                    <MainLayout />
+                    <Snackbars />
+                    <AssetsManager />
+                    <SignInStepsStepper />
+                  </JoystreamProvider>
+                </ActiveUserProvider>
               </ConfirmationModalProvider>
-            </OperatorsContextProvider>
-          </OverlayManagerProvider>
+            </OverlayManagerProvider>
+          </OperatorsContextProvider>
         </BrowserRouter>
       </ApolloProvider>
     </>

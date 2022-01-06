@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
@@ -39,6 +39,8 @@ export type DialogProps = {
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
   children?: React.ReactNode
+  as?: React.ElementType
+  onSubmit?: (e?: FormEvent) => void
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
@@ -60,6 +62,8 @@ export const Dialog: React.FC<DialogProps> = ({
   onExitClick,
   children,
   className,
+  as,
+  onSubmit,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -69,7 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const iconNode = headerIcon || (iconType && TYPE_TO_ICON[iconType]) || null
 
   return (
-    <DialogContainer size={size} className={className}>
+    <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>

@@ -6,28 +6,39 @@ import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
+import { useUser } from '@/providers/user'
+import { cVar, transitions } from '@/styles'
 
-import { ButtonWrapper, Overlay, SearchbarContainer, StyledIconButton, StyledTopbarBase } from './TopbarViewer.styles'
+import {
+  ButtonWrapper,
+  Overlay,
+  SearchbarContainer,
+  SignedButtonsWrapper,
+  StyledAvatar,
+  StyledIconButton,
+  StyledTopbarBase,
+} from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
-  // TODO: This needs to be replaced by real logging mechanism
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const location = useLocation()
+  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn, activeMembershipLoading } =
+    useUser()
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+
+  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+
+  const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount, overlaysOpenCount } = useOverlayManager()
   const {
     searchOpen,
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-
-  const handleLogging = () => {
-    setIsLoggedIn((prevState) => !prevState)
-  }
 
   useEffect(() => {
     if (searchOpen) {
@@ -39,14 +50,14 @@ export const TopbarViewer: React.FC = () => {
 
   // set input search query on results page
   useEffect(() => {
-    if (location.pathname.includes(absoluteRoutes.viewer.search())) {
-      if (location.search) {
-        const params = new URLSearchParams(location.search)
+    if (pathname.includes(absoluteRoutes.viewer.search())) {
+      if (search) {
+        const params = new URLSearchParams(search)
         const query = params.get(QUERY_PARAMS.SEARCH)
         setSearchQuery(query || '')
       }
     }
-  }, [location.pathname, location.search, setSearchQuery])
+  }, [pathname, search, setSearchQuery])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchOpen(true)
@@ -65,51 +76,71 @@ export const TopbarViewer: React.FC = () => {
     setSearchQuery('')
   }
 
+  const handleDrawerToggle = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation()
+    setIsMemberDropdownActive(!isMemberDropdownActive)
+  }
+
   return (
-    <StyledTopbarBase
-      hasFocus={searchOpen}
-      noLogo={!mdMatch && !!searchQuery}
-      fullLogoNode={<SvgJoystreamLogoFull />}
-      logoLinkUrl={absoluteRoutes.viewer.index()}
-    >
-      <SearchbarContainer>
-        <CSSTransition classNames="searchbar" in={searchOpen} timeout={0}>
-          <Searchbar
-            placeholder="Search..."
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onCancel={handleCancel}
-            showCancelButton={!!searchQuery}
-            onClose={onClose}
-            controlled
-            onClick={handleFocus}
-          />
+    <>
+      <StyledTopbarBase
+        hasFocus={searchOpen}
+        noLogo={!mdMatch && !!searchQuery}
+        fullLogoNode={<SvgJoystreamLogoFull />}
+        logoLinkUrl={absoluteRoutes.viewer.index()}
+      >
+        <SearchbarContainer>
+          <CSSTransition classNames="searchbar" in={searchOpen} timeout={0}>
+            <Searchbar
+              hotkeysDisabled={overlaysOpenCount === 1}
+              placeholder="Search..."
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onCancel={handleCancel}
+              showCancelButton={!!searchQuery}
+              onClose={onClose}
+              controlled
+              onClick={handleFocus}
+            />
+          </CSSTransition>
+          {!mdMatch && isLoggedIn && !searchOpen && (
+            <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
+          )}
+        </SearchbarContainer>
+        <CSSTransition
+          in={!activeMembershipLoading}
+          mountOnEnter
+          classNames={transitions.names.fade}
+          timeout={parseInt(cVar('animationTimingFast', true))}
+        >
+          <ButtonWrapper>
+            {mdMatch &&
+              (isLoggedIn ? (
+                <SignedButtonsWrapper>
+                  <Button
+                    icon={<SvgActionAddVideo />}
+                    iconPlacement="left"
+                    size="medium"
+                    to={absoluteRoutes.studio.index()}
+                    variant="secondary"
+                  >
+                    Go to Studio
+                  </Button>
+                  <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
+                </SignedButtonsWrapper>
+              ) : (
+                <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
+                  Sign In
+                </Button>
+              ))}
+            {!searchQuery && !mdMatch && !isLoggedIn && <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>}
+          </ButtonWrapper>
         </CSSTransition>
-      </SearchbarContainer>
-      <ButtonWrapper>
-        {mdMatch &&
-          (isLoggedIn ? (
-            <Button
-              icon={<SvgActionAddVideo />}
-              iconPlacement="left"
-              size="medium"
-              onClick={handleLogging}
-              variant="secondary"
-            >
-              Upload video
-            </Button>
-          ) : (
-            <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={handleLogging}>
-              Sign up
-            </Button>
-          ))}
-        {!searchQuery && !mdMatch && !isLoggedIn && (
-          <StyledIconButton onClick={handleLogging}>Sign up</StyledIconButton>
-        )}
-      </ButtonWrapper>
-      <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
-        <Overlay onClick={onClose} />
-      </CSSTransition>
-    </StyledTopbarBase>
+        <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
+          <Overlay onClick={onClose} />
+        </CSSTransition>
+      </StyledTopbarBase>
+      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
+    </>
   )
 }

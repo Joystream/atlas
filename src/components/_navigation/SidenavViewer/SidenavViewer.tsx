@@ -44,7 +44,6 @@ export const SidenavViewer: React.FC = () => {
           <Button
             variant="secondary"
             to={absoluteRoutes.studio.index()}
-            newTab
             onClick={() => setExpanded(false)}
             icon={<SvgActionNewTab />}
           >

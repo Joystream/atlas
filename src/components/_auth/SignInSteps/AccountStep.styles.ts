@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { PolkadotIdenticon } from '@/components/PolkadotIdenticon'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgAccountCreationIllustration } from '@/components/_illustrations'
@@ -18,7 +19,7 @@ export const StyledStepWrapper = styled(StepWrapper)`
 `
 
 export const StyledSpinner = styled(Spinner)`
-  margin: ${sizes(20)} auto;
+  margin: ${sizes(50)} auto;
 `
 
 export const IconGroup = styled.div`
@@ -46,36 +47,33 @@ export const AccountsWrapper = styled.div`
 `
 
 export const AccountWrapper = styled.label<AccountWrapperProps>`
-  background-color: ${oldColors.transparentPrimary[6]};
+  &:first-of-type {
+    margin-top: ${sizes(2)};
+  }
   cursor: pointer;
   text-align: left;
   display: flex;
-  width: 100%;
   justify-content: space-between;
-  margin-top: ${sizes(4)};
-  padding: ${sizes(2)};
-  border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : 'transparent')};
+  margin-bottom: ${sizes(4)};
+  margin-right: ${sizes(4)};
+  padding: ${sizes(2)} ${sizes(6)} ${sizes(2)} ${sizes(2)};
+  border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : cVar('colorBackgroundElevated'))};
+  background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral800Lighten') : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
     background-color ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
     border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : oldColors.gray[50])};
-    background-color: ${oldColors.transparentPrimary[12]};
+    background-color: ${cVar('colorCoreNeutral700Lighten')};
   }
 `
 export const AccountInfo = styled.div`
   display: flex;
   align-items: center;
 `
-export const IconWrapper = styled.div`
-  background-color: ${oldColors.transparentWhite[6]};
-  border-radius: 100%;
-  margin-right: ${sizes(3)};
-  width: ${sizes(12)};
-  height: ${sizes(12)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+export const StyledPolkadotIdenticon = styled(PolkadotIdenticon)`
+  margin-right: ${sizes(4)};
 `
 
 export const AccountAddress = styled(Text)`
@@ -83,7 +81,7 @@ export const AccountAddress = styled(Text)`
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 170px;
+  max-width: 120px;
   ${media.xs} {
     max-width: 220px;
   }
@@ -95,7 +93,6 @@ export const AccountAddress = styled(Text)`
 export const StyledRadioButton = styled(RadioButton)`
   align-self: center;
   margin: 0;
-  margin-right: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
