@@ -15,7 +15,7 @@ export const TermsBox = styled.div`
   overflow: auto;
 `
 export const TextWrapper = styled.div`
-  margin: ${sizes(9)} ${sizes(17)} ${sizes(9)} ${sizes(8)};
+  margin: ${sizes(9)} ${sizes(36)} ${sizes(9)} ${sizes(8)};
 
   a {
     text-decoration: none;

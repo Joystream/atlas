@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgSigninIllustration } from '@/components/_illustrations'
-import { media, oldColors, sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const StyledContainer = styled(LimitedWidthContainer)`
   margin-top: 64px;
@@ -25,19 +24,6 @@ export const StyledContainer = styled(LimitedWidthContainer)`
   ${media.xxl} {
     max-width: 1700px;
     margin-top: 128px;
-  }
-`
-
-export const LogoContainer = styled.div`
-  display: inline-flex;
-
-  ::after {
-    align-self: center;
-    padding: 2px 4px;
-    margin-left: ${sizes(3)};
-    background-color: ${oldColors.gray[600]};
-    font-size: 10px;
-    content: 'studio';
   }
 `
 
@@ -83,18 +69,6 @@ export const SignInButton = styled(Button)`
 `
 
 export const SubTitle = styled(Text)`
+  display: block;
   margin-top: ${sizes(4)};
-  color: ${oldColors.gray[200]};
-`
-
-export const BackLink = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  flex-direction: row;
-  text-decoration: none;
-  margin-top: ${sizes(5)};
-
-  path {
-    stroke: ${oldColors.gray[300]};
-  }
 `

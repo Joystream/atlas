@@ -24,6 +24,7 @@ import {
 } from './Searchbar.styles'
 
 type SearchbarProps = {
+  hotkeysDisabled?: boolean
   onCancel?: () => void
   showCancelButton?: boolean
   controlled?: boolean
@@ -32,7 +33,22 @@ type SearchbarProps = {
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
 export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
-  ({ placeholder, onChange, onFocus, onCancel, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps }, ref) => {
+  (
+    {
+      placeholder,
+      hotkeysDisabled,
+      onChange,
+      onFocus,
+      onCancel,
+      onBlur,
+      onSubmit,
+      onClick,
+      onClose,
+      onKeyDown,
+      ...htmlProps
+    },
+    ref
+  ) => {
     const mdMatch = useMediaMatch('md')
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -85,6 +101,9 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
     }, [selectedItem, searchOpen])
 
     useEffect(() => {
+      if (hotkeysDisabled) {
+        return
+      }
       const onKeyPress = (event: KeyboardEvent) => {
         if (event.key === '/' && !searchOpen) {
           event.preventDefault()
@@ -96,7 +115,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       return () => {
         window.removeEventListener('keydown', onKeyPress)
       }
-    }, [onClick, onClose, query, searchOpen])
+    }, [hotkeysDisabled, onClick, onClose, query, searchOpen])
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && typeof selectedItem !== 'number') {
