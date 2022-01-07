@@ -12,7 +12,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import {
   ChannelAssets,
-  ChannelAssetstIds,
+  ChannelAssetsIds,
   ChannelInputAssets,
   DataObjectMetadata,
   ExtractChannelResultsAssetsIdsFn,
@@ -161,7 +161,7 @@ const getResultVideoDataObjectsIds = (
 const getResultChannelDataObjectsIds = (
   assets: ChannelAssets<unknown>,
   dataObjectsIds: Vec<DataObjectId>
-): ChannelAssetstIds => {
+): ChannelAssetsIds => {
   const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
 
   const hasAvatar = !!assets.avatarPhoto

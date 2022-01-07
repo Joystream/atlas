@@ -2982,9 +2982,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@npm:0.17.0":
-  version: 0.17.0
-  resolution: "@joystream/types@npm:0.17.0"
+"@joystream/types@npm:0.17.1":
+  version: 0.17.1
+  resolution: "@joystream/types@npm:0.17.1"
   dependencies:
     "@polkadot/api": 5.9.1
     "@polkadot/keyring": 7.3.1
@@ -2994,13 +2994,13 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: 3a78431b89a6289478ddf7d355931d39de5342a4b88e088b96085a3fbd1ec9994828e4f1b41fb7e5456b49d315bb9ed048e48586f9d3cccd535447211f0e9fc6
+  checksum: 929efe0690f6039490c5e472d89d4697a2cd0eab014ea8ef452e4b789cdd17c77de2ae69b9dc514d05310d21483304d29dd924032bd4895a1ad0752844613f2a
   languageName: node
   linkType: hard
 
-"@joystream/types@patch:@joystream/types@npm:0.17.0#.yarn/patches/@joystream-types-npm-0.17.0-68be8f05c1::locator=atlas-app%40workspace%3A.":
-  version: 0.17.0
-  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.17.0#.yarn/patches/@joystream-types-npm-0.17.0-68be8f05c1::version=0.17.0&hash=1160be&locator=atlas-app%40workspace%3A."
+"@joystream/types@patch:@joystream/types@npm:0.17.1#.yarn/patches/@joystream-types-npm-0.17.1-872c8bbe09::locator=atlas-app%40workspace%3A.":
+  version: 0.17.1
+  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.17.1#.yarn/patches/@joystream-types-npm-0.17.1-872c8bbe09::version=0.17.1&hash=8b36ac&locator=atlas-app%40workspace%3A."
   dependencies:
     "@polkadot/api": 5.9.1
     "@polkadot/keyring": 7.3.1
@@ -3010,7 +3010,7 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: bf57fbc07218b72968c39671b72d5f6b54fb2f62b4990ad40fed374549a6d8ae4faedb575541206611ebea0d0006e3a3004603a33a5aba018a37a1fd0bc085ab
+  checksum: bbc5aa8d1cc27ffc79e1cf9a0286d541359ca094bf1ed5b4300a44e06ea4416269f5433964150073a9718d515ecab068918a00b03ac826a24d102b2672bd9b97
   languageName: node
   linkType: hard
 
@@ -7329,7 +7329,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.1.2
     "@joystream/content-metadata-protobuf": ~1.1.0
     "@joystream/prettier-config": ^1.0.0
-    "@joystream/types": ^0.17.0
+    "@joystream/types": ^0.17.1
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22

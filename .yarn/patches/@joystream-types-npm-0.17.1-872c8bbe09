@@ -21,31 +21,6 @@ index f4721ca8e7b5b4e8d524031351e1ad1ac3bc4ddb..12ff513972901dfcf7ff0427954b08dd
      };
  }
 -exports.JoyEnum = JoyEnum;
-diff --git a/augment-codec/augment-types.ts b/augment-codec/augment-types.ts
-index bf863366adc49970703f8784ae3730df106b300c..388c2f8409d15f9038d8a06c39ae49d7639cb8c7 100644
---- a/augment-codec/augment-types.ts
-+++ b/augment-codec/augment-types.ts
-@@ -2,7 +2,7 @@
- /* eslint-disable */
-
- import type { BitVec, Bool, Bytes, Data, I128, I16, I256, I32, I64, I8, Json, Null, Raw, StorageKey, Text, Type, U128, U16, U256, U32, U64, U8, USize, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types';
--import type { AcceptingApplications, ActivateOpeningAt, ActiveOpeningStage, ActiveOpeningStageVariant, ActiveStake, ActorId, AddOpeningParameters, AdjustCapacityBy, AdjustOnInterval, Application, ApplicationDeactivationCause, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationOf, ApplicationRationingPolicy, ApplicationStage, Approved, Backer, Backers, Bag, BagId, BagIdType, BalanceOfMint, BlockAndTime, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelMigrationConfig, ChannelOwner, ChannelOwnershipTransferRequest, ChannelOwnershipTransferRequestId, ChannelUpdateParameters, ChildPositionInParentCategory, Cid, ContentActor, ContentId, ContentIdSet, ContentParameters, CuratorGroup, CuratorGroupId, CuratorId, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DataObjectStorageRelationship, DataObjectStorageRelationshipId, DataObjectType, DataObjectTypeId, Deactivated, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIdSet, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, ElectionParameters, ElectionStage, ElectionStake, EntryMethod, EpisodeParemters, ExecutionFailed, FillOpeningParameters, Finalized, HiringApplicationId, InactiveApplicationStage, InputValidationLengthConstraint, IsCensored, MaxNumber, MemberId, Membership, MemoText, Mint, MintBalanceOf, MintId, ModerationAction, NewAsset, NextAdjustment, ObjectOwner, Opening, OpeningDeactivationCause, OpeningId, OpeningOf, OpeningPolicyCommitment, OpeningStage, OpeningType, PaidMembershipTerms, PaidTermId, Person, PersonActor, PersonController, PersonCreationParameters, PersonId, PersonUpdateParameters, Playlist, PlaylistCreationParameters, PlaylistId, PlaylistUpdateParameters, Post, PostId, PostTextChange, ProposalDecisionStatus, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, RationaleText, Recipient, RecipientId, Reply, ReplyId, ReviewPeriod, RewardPolicy, RewardRelationship, RewardRelationshipId, RoleParameters, RoleStakeProfile, SealedVote, Season, SeasonParameters, Seat, Seats, Series, SeriesId, SeriesParameters, SetLeadParams, Slash, SlashableTerms, SlashingTerms, Stake, StakeId, Staked, StakedStatus, StakingAmountLimitMode, StakingPolicy, StakingStatus, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageObjectOwner, StorageProviderId, SubscriptionId, TerminateRoleParameters, Thread, ThreadCounter, ThreadId, TransferableStake, Unstaking, UnstakingApplicationStage, UploadParameters, UploadingStatus, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoMigrationConfig, VideoUpdateParameters, VoteKind, VotingResults, Voucher, VoucherLimit, WaitingToBeingOpeningStageVariant, WorkerId, WorkerOf, WorkingGroup } from './all';
-+import type { AcceptingApplications, ActivateOpeningAt, ActiveOpeningStage, ActiveOpeningStageVariant, ActiveStake, ActorId, AddOpeningParameters, AdjustCapacityBy, AdjustOnInterval, Application, ApplicationDeactivationCause, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationOf, ApplicationRationingPolicy, ApplicationStage, Approved, Backer, Backers, Bag, BagId, BagIdType, BalanceOfMint, BlockAndTime, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelMigrationConfig, ChannelOwner, ChannelOwnershipTransferRequest, ChannelOwnershipTransferRequestId, ChannelUpdateParameters, ChildPositionInParentCategory, Cid, ContentActor, ContentId, ContentIdSet, ContentParameters, CuratorGroup, CuratorGroupId, CuratorId, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DataObjectStorageRelationship, DataObjectStorageRelationshipId, DataObjectType, DataObjectTypeId, Deactivated, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, ElectionParameters, ElectionStage, ElectionStake, EntryMethod, EpisodeParemters, ExecutionFailed, FillOpeningParameters, Finalized, HiringApplicationId, InactiveApplicationStage, InputValidationLengthConstraint, IsCensored, MaxNumber, MemberId, Membership, MemoText, Mint, MintBalanceOf, MintId, ModerationAction, NewAsset, NextAdjustment, ObjectOwner, Opening, OpeningDeactivationCause, OpeningId, OpeningOf, OpeningPolicyCommitment, OpeningStage, OpeningType, PaidMembershipTerms, PaidTermId, Person, PersonActor, PersonController, PersonCreationParameters, PersonId, PersonUpdateParameters, Playlist, PlaylistCreationParameters, PlaylistId, PlaylistUpdateParameters, Post, PostId, PostTextChange, ProposalDecisionStatus, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, RationaleText, Recipient, RecipientId, Reply, ReplyId, ReviewPeriod, RewardPolicy, RewardRelationship, RewardRelationshipId, RoleParameters, RoleStakeProfile, SealedVote, Season, SeasonParameters, Seat, Seats, Series, SeriesId, SeriesParameters, SetLeadParams, Slash, SlashableTerms, SlashingTerms, Stake, StakeId, Staked, StakedStatus, StakingAmountLimitMode, StakingPolicy, StakingStatus, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageObjectOwner, StorageProviderId, SubscriptionId, TerminateRoleParameters, Thread, ThreadCounter, ThreadId, TransferableStake, Unstaking, UnstakingApplicationStage, UploadParameters, UploadingStatus, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoMigrationConfig, VideoUpdateParameters, VoteKind, VotingResults, Voucher, VoucherLimit, WaitingToBeingOpeningStageVariant, WorkerId, WorkerOf, WorkingGroup } from './all';
- import type { AssetApproval, AssetApprovalKey, AssetBalance, AssetDestroyWitness, AssetDetails, AssetMetadata, TAssetBalance, TAssetDepositBalance } from '@polkadot/types/interfaces/assets';
- import type { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
- import type { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
-diff --git a/augment-codec/augment-types.ts b/augment-codec/augment-types.ts
-index 388c2f8409d15f9038d8a06c39ae49d7639cb8c7..97270084fdae25f3a0b258a9d8e885e34b316d73 100644
---- a/augment-codec/augment-types.ts
-+++ b/augment-codec/augment-types.ts
-@@ -344,7 +344,6 @@ declare module '@polkadot/types/types/registry' {
-     DistributionBucketFamily: DistributionBucketFamily;
-     DistributionBucketFamilyId: DistributionBucketFamilyId;
-     DistributionBucketId: DistributionBucketId;
--    DistributionBucketIdSet: DistributionBucketIdSet;
-     DoubleEncodedCall: DoubleEncodedCall;
-     DoubleVoteReport: DoubleVoteReport;
-     DownwardMessage: DownwardMessage;
 diff --git a/JoyStruct.js b/JoyStruct.js
 index fa92f70e04dd5478faa62347438f4dbd01ed104b..4cdee39c5cab174fc9e480c091f58f25ee6d8441 100644
 --- a/JoyStruct.js
@@ -79,267 +54,6 @@ index fa92f70e04dd5478faa62347438f4dbd01ed104b..4cdee39c5cab174fc9e480c091f58f25
      return JoyStructCustom(fields);
  }
 -exports.JoyStructDecorated = JoyStructDecorated;
-diff --git a/augment/all/defs.json b/augment/all/defs.json
-index 068332cd4ef2c9c5861ccea261417ad53358ee9e..0f17667fb8db2512712bae6f92db0f2aab5960dc 100644
---- a/augment/all/defs.json
-+++ b/augment/all/defs.json
-@@ -469,8 +469,7 @@
-     "StorageBucket": {
-         "operator_status": "StorageBucketOperatorStatus",
-         "accepting_new_bags": "bool",
--        "voucher": "Voucher",
--        "metadata": "Bytes"
-+        "voucher": "Voucher"
-     },
-     "StaticBagId": {
-         "_enum": {
-@@ -520,7 +519,7 @@
-         "_enum": {
-             "Missing": "Null",
-             "InvitedStorageWorker": "WorkerId",
--            "StorageWorker": "WorkerId"
-+            "StorageWorker": "(WorkerId,GenericAccountId)"
-         }
-     },
-     "DataObject": {
-@@ -529,7 +528,11 @@
-         "size": "u64",
-         "ipfsContentId": "Bytes"
-     },
--    "DistributionBucketId": "u64",
-+    "DistributionBucketId": {
-+        "distribution_bucket_family_id": "DistributionBucketFamilyId",
-+        "distribution_bucket_index": "DistributionBucketIndex"
-+    },
-+    "DistributionBucketIndex": "u64",
-     "DistributionBucketFamilyId": "u64",
-     "DistributionBucket": {
-         "accepting_new_bags": "bool",
-@@ -539,10 +542,10 @@
-         "assigned_bags": "u64"
-     },
-     "DistributionBucketFamily": {
--        "distribution_buckets": "BTreeMap<DistributionBucketId,DistributionBucket>"
-+        "next_distribution_bucket_index": "DistributionBucketIndex"
-     },
-     "DataObjectIdMap": "BTreeMap<DataObjectId,DataObject>",
--    "DistributionBucketIdSet": "BTreeSet<DistributionBucketId>",
-+    "DistributionBucketIndexSet": "BTreeSet<DistributionBucketIndex>",
-     "DynamicBagCreationPolicyDistributorFamiliesMap": "BTreeMap<DistributionBucketFamilyId,u32>",
-     "ProposalId": "u32",
-     "ProposalStatus": {
-@@ -554,15 +557,15 @@
-     "ProposalOf": {
-         "parameters": "ProposalParameters",
-         "proposerId": "MemberId",
--        "title": "Text",
--        "description": "Text",
-+        "title": "Bytes",
-+        "description": "Bytes",
-         "createdAt": "u32",
-         "status": "ProposalStatus",
-         "votingResults": "VotingResults"
-     },
-     "ProposalDetails": {
-         "_enum": {
--            "Text": "Text",
-+            "Text": "Bytes",
-             "RuntimeUpgrade": "Bytes",
-             "SetElectionParameters": "ElectionParameters",
-             "Spending": "(Balance,AccountId)",
-@@ -583,7 +586,7 @@
-     },
-     "ProposalDetailsOf": {
-         "_enum": {
--            "Text": "Text",
-+            "Text": "Bytes",
-             "RuntimeUpgrade": "Bytes",
-             "SetElectionParameters": "ElectionParameters",
-             "Spending": "(Balance,AccountId)",
-@@ -681,7 +684,7 @@
-         }
-     },
-     "ExecutionFailed": {
--        "error": "Text"
-+        "error": "Bytes"
-     },
-     "Approved": {
-         "_enum": {
-@@ -701,7 +704,8 @@
-         "_enum": {
-             "Curator": "(CuratorGroupId,CuratorId)",
-             "Member": "MemberId",
--            "Lead": "Null"
-+            "Lead": "Null",
-+            "Collaborator": "MemberId"
-         }
-     },
-     "StorageAssets": {
-@@ -713,7 +717,7 @@
-         "num_videos": "u64",
-         "is_censored": "bool",
-         "reward_account": "Option<GenericAccountId>",
--        "deletion_prize_source_account_id": "GenericAccountId"
-+        "collaborators": "BTreeSet<MemberId>"
-     },
-     "ChannelOwner": {
-         "_enum": {
-@@ -732,13 +736,15 @@
-     "ChannelCreationParameters": {
-         "assets": "Option<StorageAssets>",
-         "meta": "Option<Bytes>",
--        "reward_account": "Option<GenericAccountId>"
-+        "reward_account": "Option<GenericAccountId>",
-+        "collaborators": "BTreeSet<MemberId>"
-     },
-     "ChannelUpdateParameters": {
-         "assets_to_upload": "Option<StorageAssets>",
-         "new_meta": "Option<Bytes>",
-         "reward_account": "Option<Option<GenericAccountId>>",
--        "assets_to_remove": "BTreeSet<DataObjectId>"
-+        "assets_to_remove": "BTreeSet<DataObjectId>",
-+        "collaborators": "Option<BTreeSet<MemberId>>"
-     },
-     "ChannelOwnershipTransferRequestId": "u64",
-     "ChannelOwnershipTransferRequest": {
-diff --git a/augment/all/types.ts b/augment/all/types.ts
-index 10d2bab08b3e62e7aa760d0b6002d116425ed802..3e95e56ef210251b8f108722acf85e4f7f3e57f6 100644
---- a/augment/all/types.ts
-+++ b/augment/all/types.ts
-@@ -204,7 +204,7 @@ export interface Channel extends Struct {
-   readonly num_videos: u64;
-   readonly is_censored: bool;
-   readonly reward_account: Option<GenericAccountId>;
--  readonly deletion_prize_source_account_id: GenericAccountId;
-+  readonly collaborators: BTreeSet<MemberId>;
- }
-
- /** @name ChannelCategory */
-@@ -228,6 +228,7 @@ export interface ChannelCreationParameters extends Struct {
-   readonly assets: Option<StorageAssets>;
-   readonly meta: Option<Bytes>;
-   readonly reward_account: Option<GenericAccountId>;
-+  readonly collaborators: BTreeSet<MemberId>;
- }
-
- /** @name ChannelId */
-@@ -264,6 +265,7 @@ export interface ChannelUpdateParameters extends Struct {
-   readonly new_meta: Option<Bytes>;
-   readonly reward_account: Option<Option<GenericAccountId>>;
-   readonly assets_to_remove: BTreeSet<DataObjectId>;
-+  readonly collaborators: Option<BTreeSet<MemberId>>;
- }
-
- /** @name ChildPositionInParentCategory */
-@@ -282,6 +284,8 @@ export interface ContentActor extends Enum {
-   readonly isMember: boolean;
-   readonly asMember: MemberId;
-   readonly isLead: boolean;
-+  readonly isCollaborator: boolean;
-+  readonly asCollaborator: MemberId;
- }
-
- /** @name ContentId */
-@@ -374,17 +378,23 @@ export interface DistributionBucket extends Struct {
-
- /** @name DistributionBucketFamily */
- export interface DistributionBucketFamily extends Struct {
--  readonly distribution_buckets: BTreeMap<DistributionBucketId, DistributionBucket>;
-+  readonly next_distribution_bucket_index: DistributionBucketIndex;
- }
-
- /** @name DistributionBucketFamilyId */
- export interface DistributionBucketFamilyId extends u64 {}
-
- /** @name DistributionBucketId */
--export interface DistributionBucketId extends u64 {}
-+export interface DistributionBucketId extends Struct {
-+  readonly distribution_bucket_family_id: DistributionBucketFamilyId;
-+  readonly distribution_bucket_index: DistributionBucketIndex;
-+}
-+
-+/** @name DistributionBucketIndex */
-+export interface DistributionBucketIndex extends u64 {}
-
--/** @name DistributionBucketIdSet */
--export interface DistributionBucketIdSet extends BTreeSet<DistributionBucketId> {}
-+/** @name DistributionBucketIndexSet */
-+export interface DistributionBucketIndexSet extends BTreeSet<DistributionBucketIndex> {}
-
- /** @name Dynamic */
- export interface Dynamic extends Enum {
-@@ -476,7 +486,7 @@ export interface EpisodeParemters extends Enum {
-
- /** @name ExecutionFailed */
- export interface ExecutionFailed extends Struct {
--  readonly error: Text;
-+  readonly error: Bytes;
- }
-
- /** @name FillOpeningParameters */
-@@ -731,7 +741,7 @@ export interface ProposalDecisionStatus extends Enum {
- /** @name ProposalDetails */
- export interface ProposalDetails extends Enum {
-   readonly isText: boolean;
--  readonly asText: Text;
-+  readonly asText: Bytes;
-   readonly isRuntimeUpgrade: boolean;
-   readonly asRuntimeUpgrade: Bytes;
-   readonly isSetElectionParameters: boolean;
-@@ -769,7 +779,7 @@ export interface ProposalDetails extends Enum {
- /** @name ProposalDetailsOf */
- export interface ProposalDetailsOf extends Enum {
-   readonly isText: boolean;
--  readonly asText: Text;
-+  readonly asText: Bytes;
-   readonly isRuntimeUpgrade: boolean;
-   readonly asRuntimeUpgrade: Bytes;
-   readonly isSetElectionParameters: boolean;
-@@ -811,8 +821,8 @@ export interface ProposalId extends u32 {}
- export interface ProposalOf extends Struct {
-   readonly parameters: ProposalParameters;
-   readonly proposerId: MemberId;
--  readonly title: Text;
--  readonly description: Text;
-+  readonly title: Bytes;
-+  readonly description: Bytes;
-   readonly createdAt: u32;
-   readonly status: ProposalStatus;
-   readonly votingResults: VotingResults;
-@@ -1049,7 +1059,6 @@ export interface StorageBucket extends Struct {
-   readonly operator_status: StorageBucketOperatorStatus;
-   readonly accepting_new_bags: bool;
-   readonly voucher: Voucher;
--  readonly metadata: Bytes;
- }
-
- /** @name StorageBucketId */
-@@ -1064,7 +1073,7 @@ export interface StorageBucketOperatorStatus extends Enum {
-   readonly isInvitedStorageWorker: boolean;
-   readonly asInvitedStorageWorker: WorkerId;
-   readonly isStorageWorker: boolean;
--  readonly asStorageWorker: WorkerId;
-+  readonly asStorageWorker: ITuple<[WorkerId, GenericAccountId]>;
- }
-
- /** @name StorageBucketsPerBagValueConstraint */
-diff --git a/augment-codec/all.ts b/augment-codec/all.ts
-index 4026d9ecaf6344142e5e9b8b955fde8450ab7b0e..27ecc5bdeaad211c66256291fe8b95bbfe78531a 100644
---- a/augment-codec/all.ts
-+++ b/augment-codec/all.ts
-@@ -10,8 +10,8 @@ import { MintId, Mint, MintBalanceOf, BalanceOfMint, NextAdjustment, AdjustOnInt
- import { RecipientId, RewardRelationshipId, Recipient, RewardRelationship } from '../recurring-rewards';
- import { ApplicationId, OpeningId, Application, ApplicationStage, ActivateOpeningAt, ApplicationRationingPolicy, OpeningStage, StakingPolicy, Opening, WaitingToBeingOpeningStageVariant, ActiveOpeningStageVariant, ActiveOpeningStage, AcceptingApplications, ReviewPeriod, Deactivated, OpeningDeactivationCause, InactiveApplicationStage, UnstakingApplicationStage, ApplicationDeactivationCause, StakingAmountLimitMode } from '../hiring';
- import { RationaleText, Application as ApplicationOf, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, Worker as WorkerOf, Opening as OpeningOf, StorageProviderId, OpeningType, ApplicationId as HiringApplicationId, RewardPolicy, OpeningPolicyCommitment, RoleStakeProfile } from '../working-group';
--import { StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIdSet, DynamicBagCreationPolicyDistributorFamiliesMap } from '../storage';
-+import { StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketIndex, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIndexSet, DynamicBagCreationPolicyDistributorFamiliesMap } from '../storage';
- import { ProposalId, ProposalStatus, Proposal as ProposalOf, ProposalDetails, ProposalDetails as ProposalDetailsOf, VotingResults, ProposalParameters, VoteKind, ThreadCounter, DiscussionThread, DiscussionPost, AddOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ActiveStake, Finalized, ProposalDecisionStatus, ExecutionFailed, Approved, SetLeadParams } from '../proposals';
- import { CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, ChannelOwnershipTransferRequestId, ChannelOwnershipTransferRequest, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, Person, PersonId, PersonController, PersonActor, PersonCreationParameters, PersonUpdateParameters, Playlist, PlaylistId, PlaylistCreationParameters, PlaylistUpdateParameters, SeriesId, Series, Season, SeriesParameters, SeasonParameters, EpisodeParemters, MaxNumber, IsCensored, VideoMigrationConfig, ChannelMigrationConfig } from '../content';
-
--export { ContentId, ContentParameters, DataObjectStorageRelationship, DataObjectStorageRelationshipId, DataObjectType, DataObjectTypeId, NewAsset, ObjectOwner, StorageObjectOwner, UploadingStatus, VoucherLimit, BlockAndTime, ThreadId, PostId, InputValidationLengthConstraint, WorkingGroup, SlashingTerms, SlashableTerms, MemoText, Address, LookupSource, ChannelId, Url, EntryMethod, MemberId, PaidTermId, SubscriptionId, Membership, PaidMembershipTerms, ActorId, ElectionStage, ElectionStake, SealedVote, TransferableStake, ElectionParameters, Seat, Seats, Backer, Backers, RoleParameters, PostTextChange, ModerationAction, ChildPositionInParentCategory, CategoryId, Category, Thread, Post, ReplyId, Reply, StakeId, Stake, StakingStatus, Staked, StakedStatus, Unstaking, Slash, MintId, Mint, MintBalanceOf, BalanceOfMint, NextAdjustment, AdjustOnInterval, AdjustCapacityBy, RecipientId, RewardRelationshipId, Recipient, RewardRelationship, ApplicationId, OpeningId, Application, ApplicationStage, ActivateOpeningAt, ApplicationRationingPolicy, OpeningStage, StakingPolicy, Opening, WaitingToBeingOpeningStageVariant, ActiveOpeningStageVariant, ActiveOpeningStage, AcceptingApplications, ReviewPeriod, Deactivated, OpeningDeactivationCause, InactiveApplicationStage, UnstakingApplicationStage, ApplicationDeactivationCause, StakingAmountLimitMode, RationaleText, ApplicationOf, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, WorkerOf, OpeningOf, StorageProviderId, OpeningType, HiringApplicationId, RewardPolicy, OpeningPolicyCommitment, RoleStakeProfile, StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIdSet, DynamicBagCreationPolicyDistributorFamiliesMap, ProposalId, ProposalStatus, ProposalOf, ProposalDetails, ProposalDetailsOf, VotingResults, ProposalParameters, VoteKind, ThreadCounter, DiscussionThread, DiscussionPost, AddOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ActiveStake, Finalized, ProposalDecisionStatus, ExecutionFailed, Approved, SetLeadParams, CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, ChannelOwnershipTransferRequestId, ChannelOwnershipTransferRequest, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, Person, PersonId, PersonController, PersonActor, PersonCreationParameters, PersonUpdateParameters, Playlist, PlaylistId, PlaylistCreationParameters, PlaylistUpdateParameters, SeriesId, Series, Season, SeriesParameters, SeasonParameters, EpisodeParemters, MaxNumber, IsCensored, VideoMigrationConfig, ChannelMigrationConfig };
-\ No newline at end of file
-+export { ContentId, ContentParameters, DataObjectStorageRelationship, DataObjectStorageRelationshipId, DataObjectType, DataObjectTypeId, NewAsset, ObjectOwner, StorageObjectOwner, UploadingStatus, VoucherLimit, BlockAndTime, ThreadId, PostId, InputValidationLengthConstraint, WorkingGroup, SlashingTerms, SlashableTerms, MemoText, Address, LookupSource, ChannelId, Url, EntryMethod, MemberId, PaidTermId, SubscriptionId, Membership, PaidMembershipTerms, ActorId, ElectionStage, ElectionStake, SealedVote, TransferableStake, ElectionParameters, Seat, Seats, Backer, Backers, RoleParameters, PostTextChange, ModerationAction, ChildPositionInParentCategory, CategoryId, Category, Thread, Post, ReplyId, Reply, StakeId, Stake, StakingStatus, Staked, StakedStatus, Unstaking, Slash, MintId, Mint, MintBalanceOf, BalanceOfMint, NextAdjustment, AdjustOnInterval, AdjustCapacityBy, RecipientId, RewardRelationshipId, Recipient, RewardRelationship, ApplicationId, OpeningId, Application, ApplicationStage, ActivateOpeningAt, ApplicationRationingPolicy, OpeningStage, StakingPolicy, Opening, WaitingToBeingOpeningStageVariant, ActiveOpeningStageVariant, ActiveOpeningStage, AcceptingApplications, ReviewPeriod, Deactivated, OpeningDeactivationCause, InactiveApplicationStage, UnstakingApplicationStage, ApplicationDeactivationCause, StakingAmountLimitMode, RationaleText, ApplicationOf, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, WorkerOf, OpeningOf, StorageProviderId, OpeningType, HiringApplicationId, RewardPolicy, OpeningPolicyCommitment, RoleStakeProfile, StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketIndex, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIndexSet, DynamicBagCreationPolicyDistributorFamiliesMap, ProposalId, ProposalStatus, ProposalOf, ProposalDetails, ProposalDetailsOf, VotingResults, ProposalParameters, VoteKind, ThreadCounter, DiscussionThread, DiscussionPost, AddOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ActiveStake, Finalized, ProposalDecisionStatus, ExecutionFailed, Approved, SetLeadParams, CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, ChannelOwnershipTransferRequestId, ChannelOwnershipTransferRequest, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, Person, PersonId, PersonController, PersonActor, PersonCreationParameters, PersonUpdateParameters, Playlist, PlaylistId, PlaylistCreationParameters, PlaylistUpdateParameters, SeriesId, Series, Season, SeriesParameters, SeasonParameters, EpisodeParemters, MaxNumber, IsCensored, VideoMigrationConfig, ChannelMigrationConfig };
-\ No newline at end of file
 diff --git a/common.js b/common.js
 index 8ff8b73e0155c6a386201255eb0268fa162da2df..53022173764a1729286b97c48dee04db125fef50 100644
 --- a/common.js
@@ -499,48 +213,11 @@ index 8ff8b73e0155c6a386201255eb0268fa162da2df..53022173764a1729286b97c48dee04db
  };
 -exports.default = exports.commonTypes;
 +export default commonTypes;
-diff --git a/content/index.d.ts b/content/index.d.ts
-index aa70c0d2a80e8ee37b95cdaf85b4d68343247b60..f28a645c291c05f70d3560dd74ec639564fefec7 100644
---- a/content/index.d.ts
-+++ b/content/index.d.ts
-@@ -42,6 +42,7 @@ declare const ContentActor_base: import("../JoyEnum").ExtendedEnumConstructor<{
-     Curator: import("@polkadot/types/types").Constructor<Tuple>;
-     Member: typeof MemberId;
-     Lead: typeof Null;
-+    Collaborator: typeof MemberId;
- }>;
- export declare class ContentActor extends ContentActor_base {
- }
-@@ -56,7 +57,7 @@ declare const Channel_base: import("../JoyStruct").ExtendedStructDecoratedConstr
-     num_videos: typeof u64;
-     is_censored: typeof bool;
-     reward_account: import("@polkadot/types/types").Constructor<Option<AccountId>>;
--    deletion_prize_source_account_id: typeof AccountId;
-+    collaborators: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
- }>;
- export declare class Channel extends Channel_base {
- }
-@@ -64,6 +65,7 @@ declare const ChannelCreationParameters_base: import("../JoyStruct").ExtendedStr
-     assets: import("@polkadot/types/types").Constructor<Option<StorageAssets>>;
-     meta: import("@polkadot/types/types").Constructor<Option<Bytes>>;
-     reward_account: import("@polkadot/types/types").Constructor<Option<AccountId>>;
-+    collaborators: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
- }>;
- export declare class ChannelCreationParameters extends ChannelCreationParameters_base {
- }
-@@ -72,6 +74,7 @@ declare const ChannelUpdateParameters_base: import("../JoyStruct").ExtendedStruc
-     new_meta: import("@polkadot/types/types").Constructor<Option<Bytes>>;
-     reward_account: import("@polkadot/types/types").Constructor<Option<Option<AccountId>>>;
-     assets_to_remove: import("@polkadot/types/types").Constructor<BTreeSet<DataObjectId>>;
-+    collaborators: import("@polkadot/types/types").Constructor<Option<BTreeSet<MemberId>>>;
- }>;
- export declare class ChannelUpdateParameters extends ChannelUpdateParameters_base {
- }
 diff --git a/content/index.js b/content/index.js
-index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701ed0319cb3 100644
+index fbd64f8b04a4d804b943a2b1861f692313d5edd0..e10cd21d4c22226cb2da840bd573701ed0319cb3 100644
 --- a/content/index.js
 +++ b/content/index.js
-@@ -1,240 +1,197 @@
+@@ -1,243 +1,197 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
 -exports.contentTypes = exports.ChannelMigrationConfig = exports.VideoMigrationConfig = exports.PersonActor = exports.PersonUpdateParameters = exports.PersonCreationParameters = exports.Person = exports.PersonController = exports.SeriesParameters = exports.Series = exports.SeasonParameters = exports.Season = exports.EpisodeParemters = exports.PlaylistUpdateParameters = exports.PlaylistCreationParameters = exports.Playlist = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.IsCensored = exports.MaxNumber = exports.ChannelOwnershipTransferRequestId = exports.SeriesId = exports.PersonId = exports.PlaylistId = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
@@ -622,6 +299,7 @@ index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701e
 -    Curator: types_1.Tuple.with([CuratorGroupId, CuratorId]),
 -    Member: members_1.MemberId,
 -    Lead: primitive_1.Null,
+-    Collaborator: members_1.MemberId,
 +export class ContentActor extends JoyEnum({
 +    Curator: Tuple.with([CuratorGroupId, CuratorId]),
 +    Member: MemberId,
@@ -644,7 +322,7 @@ index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701e
 -    num_videos: primitive_1.u64,
 -    is_censored: primitive_1.bool,
 -    reward_account: types_1.Option.with(AccountId_1.GenericAccountId),
--    deletion_prize_source_account_id: AccountId_1.GenericAccountId,
+-    collaborators: types_1.BTreeSet.with(members_1.MemberId),
 +    num_videos: u64,
 +    is_censored: bool,
 +    reward_account: Option.with(AccountId),
@@ -656,6 +334,7 @@ index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701e
 -    assets: types_1.Option.with(StorageAssets),
 -    meta: types_1.Option.with(primitive_1.Bytes),
 -    reward_account: types_1.Option.with(AccountId_1.GenericAccountId),
+-    collaborators: types_1.BTreeSet.with(members_1.MemberId),
 +export class ChannelCreationParameters extends JoyStructDecorated({
 +    assets: Option.with(StorageAssets),
 +    meta: Option.with(Bytes),
@@ -669,6 +348,7 @@ index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701e
 -    new_meta: types_1.Option.with(primitive_1.Bytes),
 -    reward_account: types_1.Option.with(types_1.Option.with(AccountId_1.GenericAccountId)),
 -    assets_to_remove: types_1.BTreeSet.with(storage_1.DataObjectId),
+-    collaborators: types_1.Option.with(types_1.BTreeSet.with(members_1.MemberId)),
 +export class ChannelUpdateParameters extends JoyStructDecorated({
 +    assets_to_upload: Option.with(StorageAssets),
 +    new_meta: Option.with(Bytes),
@@ -888,7 +568,7 @@ index d36217217d1f224932d070b6685dabdfd6e43c0f..e10cd21d4c22226cb2da840bd573701e
      CuratorId,
      CuratorGroupId,
      CuratorGroup,
-@@ -279,4 +236,4 @@ exports.contentTypes = {
+@@ -282,4 +236,4 @@ exports.contentTypes = {
      VideoMigrationConfig,
      ChannelMigrationConfig,
  };
@@ -1717,7 +1397,7 @@ index 326d371dc55457ce8487df7b8c66386bbdfafd9e..eac9d78e6030ff6cc8e838bbfa57f731
 -"use strict";
  /*
    Legacy types from sumer runtime.
-
+ 
 @@ -9,44 +8,31 @@
    Important Note: When new modules are added and happen to use type names that match the ones defined here
    make sure to remove them from this file!
@@ -1957,11 +1637,11 @@ index 657da58a13fe97d36a56c0abd1206d05c3fb9e01..f41a28446255dfc113e7150e7946a4ea
 -exports.default = exports.mintTypes;
 +export default mintTypes;
 diff --git a/package.json b/package.json
-index fab9fc7632848ee9faebd2b6136fd925fca2e6ea..d96575267c106686ce025a5ddb8c8ef745084a29 100644
+index 68dd6c28d79cc80de528fd97b8ff34a7cc103df0..5188ab5479b37ebc6d6e9c11dd45fadb10d49768 100644
 --- a/package.json
 +++ b/package.json
 @@ -3,6 +3,8 @@
-   "version": "0.17.0",
+   "version": "0.17.1",
    "description": "Types for Joystream Substrate Runtime - Giza release",
    "main": "index.js",
 +  "type": "module",
@@ -1969,58 +1649,8 @@ index fab9fc7632848ee9faebd2b6136fd925fca2e6ea..d96575267c106686ce025a5ddb8c8ef7
    "types": "index.d.ts",
    "scripts": {
      "prepublishOnly": "npm run build",
-diff --git a/proposals.d.ts b/proposals.d.ts
-index 73beb474c5be673b8ed0cddfc987b18455dce4c9..e9bd3240e8dde1589c37c2b8ccdb3cbc03403386 100644
---- a/proposals.d.ts
-+++ b/proposals.d.ts
-@@ -1,4 +1,4 @@
--import { Text, u32, Tuple, u8, Vec, Option, Null, Bytes } from '@polkadot/types';
-+import { u32, Tuple, u8, Vec, Option, Null, Bytes } from '@polkadot/types';
- import { bool, u128 } from '@polkadot/types/primitive';
- import { BlockNumber, Balance } from '@polkadot/types/interfaces';
- import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
-@@ -46,8 +46,8 @@ export declare class ProposalParameters extends ProposalParameters_base implemen
- export declare type IProposal = {
-     parameters: ProposalParameters;
-     proposerId: MemberId;
--    title: Text;
--    description: Text;
-+    title: Bytes;
-+    description: Bytes;
-     createdAt: BlockNumber;
-     status: ProposalStatus;
-     votingResults: VotingResults;
-@@ -66,7 +66,7 @@ declare const ActiveStake_base: import("./JoyStruct").ExtendedStructDecoratedCon
- export declare class ActiveStake extends ActiveStake_base implements IActiveStake {
- }
- declare const ExecutionFailedStatus_base: import("./JoyStruct").ExtendedStructDecoratedConstructor<{
--    error: typeof Text;
-+    error: typeof Bytes;
- }>;
- export declare class ExecutionFailedStatus extends ExecutionFailedStatus_base {
- }
-@@ -162,8 +162,8 @@ export declare class SetLead extends SetLead_base {
- declare const Proposal_base: import("./JoyStruct").ExtendedStructDecoratedConstructor<{
-     parameters: typeof ProposalParameters;
-     proposerId: typeof MemberId;
--    title: typeof Text;
--    description: typeof Text;
-+    title: typeof Bytes;
-+    description: typeof Bytes;
-     createdAt: typeof u32;
-     status: typeof ProposalStatus;
-     votingResults: typeof VotingResults;
-@@ -236,7 +236,7 @@ declare const TerminateRoleParameters_base: import("./JoyStruct").ExtendedStruct
- export declare class TerminateRoleParameters extends TerminateRoleParameters_base implements ITerminateRoleParameters {
- }
- declare const ProposalDetails_base: import("./JoyEnum").ExtendedEnumConstructor<{
--    readonly Text: typeof Text;
-+    readonly Text: typeof Bytes;
-     readonly RuntimeUpgrade: typeof Bytes;
-     readonly SetElectionParameters: typeof ElectionParameters;
-     readonly Spending: typeof SpendingParams;
 diff --git a/proposals.js b/proposals.js
-index 800bdd96cf37b52253b489997acb74a895df7814..cecd11cc8e620895c3c240ac5a7e843529592d99 100644
+index 313adc5ebac5072d90b2502d034ab111369b33e0..cecd11cc8e620895c3c240ac5a7e843529592d99 100644
 --- a/proposals.js
 +++ b/proposals.js
 @@ -1,36 +1,31 @@
@@ -2093,7 +1723,7 @@ index 800bdd96cf37b52253b489997acb74a895df7814..cecd11cc8e620895c3c240ac5a7e8435
  }
 -exports.ActiveStake = ActiveStake;
 -class ExecutionFailedStatus extends (0, common_1.JoyStructDecorated)({
--    error: types_1.Text,
+-    error: types_1.Bytes,
 +export class ExecutionFailedStatus extends JoyStructDecorated({
 +    error: Bytes,
  }) {
@@ -2213,10 +1843,10 @@ index 800bdd96cf37b52253b489997acb74a895df7814..cecd11cc8e620895c3c240ac5a7e8435
 -    proposerId: members_1.MemberId,
 +    proposerId: MemberId,
      // Proposal description
--    title: types_1.Text,
+-    title: types_1.Bytes,
 +    title: Bytes,
      // Proposal body
--    description: types_1.Text,
+-    description: types_1.Bytes,
 +    description: Bytes,
      // When it was created.
 -    createdAt: types_1.u32,
@@ -2310,7 +1940,7 @@ index 800bdd96cf37b52253b489997acb74a895df7814..cecd11cc8e620895c3c240ac5a7e8435
  }
 -exports.TerminateRoleParameters = TerminateRoleParameters;
 -class ProposalDetails extends (0, common_1.JoyEnum)({
--    Text: types_1.Text,
+-    Text: types_1.Bytes,
 -    RuntimeUpgrade: types_1.Bytes,
 -    SetElectionParameters: council_1.ElectionParameters,
 +export class ProposalDetails extends JoyEnum({
@@ -2462,193 +2092,6 @@ index f09fdbcd80333b146a2a556a61b62846ccbfbb02..3cc1bd3fe22d8c06ca0e960ffcb102f2
  };
 -exports.default = exports.rolesTypes;
 +export default rolesTypes;
-diff --git a/src/content/index.ts b/src/content/index.ts
-index 3e9365ada445e5b9afc70c459ee0ca89e609ec5e..22401267a3fa0710fb786a2596f148b5db773c28 100644
---- a/src/content/index.ts
-+++ b/src/content/index.ts
-@@ -2,6 +2,7 @@ import { Vec, Option, Tuple, BTreeSet } from '@polkadot/types'
- import { bool, u64, u32, u128, Null, Bytes } from '@polkadot/types/primitive'
- import { MemberId } from '../members'
- import { JoyStructDecorated, JoyEnum, ChannelId } from '../common'
-+
- import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId'
- import { DataObjectId, DataObjectCreationParameters } from '../storage'
-
-@@ -31,6 +32,7 @@ export class ContentActor extends JoyEnum({
-   Curator: Tuple.with([CuratorGroupId, CuratorId]),
-   Member: MemberId,
-   Lead: Null,
-+  Collaborator: MemberId,
- }) {}
-
- export class ChannelOwner extends JoyEnum({
-@@ -43,13 +45,14 @@ export class Channel extends JoyStructDecorated({
-   num_videos: u64,
-   is_censored: bool,
-   reward_account: Option.with(AccountId),
--  deletion_prize_source_account_id: AccountId,
-+  collaborators: BTreeSet.with(MemberId),
- }) {}
-
- export class ChannelCreationParameters extends JoyStructDecorated({
-   assets: Option.with(StorageAssets),
-   meta: Option.with(Bytes),
-   reward_account: Option.with(AccountId),
-+  collaborators: BTreeSet.with(MemberId),
- }) {}
-
- export class ChannelUpdateParameters extends JoyStructDecorated({
-@@ -57,6 +60,7 @@ export class ChannelUpdateParameters extends JoyStructDecorated({
-   new_meta: Option.with(Bytes),
-   reward_account: Option.with(Option.with(AccountId)),
-   assets_to_remove: BTreeSet.with(DataObjectId),
-+  collaborators: Option.with(BTreeSet.with(MemberId)),
- }) {}
-
- export class ChannelOwnershipTransferRequest extends JoyStructDecorated({
-diff --git a/src/proposals.ts b/src/proposals.ts
-index cb77b0504eafb11bdf3a7fa10b963ab5ffa28b4a..38883856db2eac96ecbe4f3d4247ba50a088f20f 100644
---- a/src/proposals.ts
-+++ b/src/proposals.ts
-@@ -1,4 +1,4 @@
--import { Text, u32, Tuple, u8, Vec, Option, Null, Bytes } from '@polkadot/types'
-+import { u32, Tuple, u8, Vec, Option, Null, Bytes } from '@polkadot/types'
- import { bool, u128 } from '@polkadot/types/primitive'
- import { BlockNumber, Balance } from '@polkadot/types/interfaces'
- import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId'
-@@ -57,8 +57,8 @@ export class ProposalParameters
- export type IProposal = {
-   parameters: ProposalParameters
-   proposerId: MemberId
--  title: Text
--  description: Text
-+  title: Bytes
-+  description: Bytes
-   createdAt: BlockNumber
-   status: ProposalStatus
-   votingResults: VotingResults
-@@ -87,7 +87,7 @@ export class ActiveStake
-   implements IActiveStake {}
-
- export class ExecutionFailedStatus extends JoyStructDecorated({
--  error: Text,
-+  error: Bytes,
- }) {}
-
- export class ExecutionFailed extends ExecutionFailedStatus {}
-@@ -166,9 +166,9 @@ export class Proposal
-     // Identifier of member proposing.
-     proposerId: MemberId,
-     // Proposal description
--    title: Text,
-+    title: Bytes,
-     // Proposal body
--    description: Text,
-+    description: Bytes,
-     // When it was created.
-     createdAt: u32, // BlockNumber
-     /// Current proposal status
-@@ -251,7 +251,7 @@ export class TerminateRoleParameters
-   implements ITerminateRoleParameters {}
-
- export class ProposalDetails extends JoyEnum({
--  Text: Text,
-+  Text: Bytes,
-   RuntimeUpgrade: Bytes,
-   SetElectionParameters: ElectionParameters,
-   Spending: SpendingParams,
-diff --git a/src/storage.ts b/src/storage.ts
-index bc7a69cc4d3b2f565ea7cd3bff8ce44e873e2a66..590bc340bb1a3ff9a59aa65a9440132286854a20 100644
---- a/src/storage.ts
-+++ b/src/storage.ts
-@@ -10,6 +10,7 @@ import {
-   Option,
-   u32,
-   u128,
-+  Tuple,
- } from '@polkadot/types'
- import { Balance } from '@polkadot/types/interfaces'
- import { RegistryTypes } from '@polkadot/types/types'
-@@ -50,10 +51,22 @@ export class DataObject
-
- export class DataObjectIdSet extends BTreeSet.with(DataObjectId) {}
- export class DataObjectIdMap extends BTreeMap.with(DataObjectId, DataObject) {}
--export class DistributionBucketId extends u64 {}
-+export class DistributionBucketIndex extends u64 {}
- export class DistributionBucketFamilyId extends u64 {}
- export class StorageBucketIdSet extends BTreeSet.with(StorageBucketId) {}
--export class DistributionBucketIdSet extends BTreeSet.with(DistributionBucketId) {}
-+export class DistributionBucketIndexSet extends BTreeSet.with(DistributionBucketIndex) {}
-+
-+export type IDistributionBucketId = {
-+  distribution_bucket_family_id: DistributionBucketFamilyId
-+  distribution_bucket_index: DistributionBucketIndex
-+}
-+
-+export class DistributionBucketId
-+  extends JoyStructDecorated({
-+    distribution_bucket_family_id: DistributionBucketFamilyId,
-+    distribution_bucket_index: DistributionBucketIndex,
-+  })
-+  implements IDistributionBucketId {}
-
- export type IDynamicBagDeletionPrize = {
-   account_id: AccountId
-@@ -151,7 +164,7 @@ export class Voucher
- export const StorageBucketOperatorStatusDef = {
-   Missing: Null,
-   InvitedStorageWorker: WorkerId,
--  StorageWorker: WorkerId,
-+  StorageWorker: Tuple.with([WorkerId, AccountId]),
- } as const
- export class StorageBucketOperatorStatus extends JoyEnum(StorageBucketOperatorStatusDef) {}
-
-@@ -159,7 +172,6 @@ export type IStorageBucket = {
-   operator_status: StorageBucketOperatorStatus
-   accepting_new_bags: bool
-   voucher: Voucher
--  metadata: Bytes
- }
-
- export class StorageBucket
-@@ -167,7 +179,6 @@ export class StorageBucket
-     operator_status: StorageBucketOperatorStatus,
-     accepting_new_bags: bool,
-     voucher: Voucher,
--    metadata: Bytes,
-   })
-   implements IStorageBucket {}
-
-@@ -221,12 +232,12 @@ export class DistributionBucket
-   implements IDistributionBucket {}
-
- export type IDistributionBucketFamily = {
--  distribution_buckets: BTreeMap<DistributionBucketId, DistributionBucket>
-+  next_distribution_bucket_index: DistributionBucketIndex
- }
-
- export class DistributionBucketFamily
-   extends JoyStructDecorated({
--    distribution_buckets: BTreeMap.with(DistributionBucketId, DistributionBucket),
-+    next_distribution_bucket_index: DistributionBucketIndex,
-   })
-   implements IDistributionBucketFamily {}
-
-@@ -258,12 +269,13 @@ export const storageTypes: RegistryTypes = {
-   StorageBucketOperatorStatus,
-   DataObject,
-   DistributionBucketId,
-+  DistributionBucketIndex,
-   DistributionBucketFamilyId,
-   DistributionBucket,
-   DistributionBucketFamily,
-   // Utility types:
-   DataObjectIdMap,
--  DistributionBucketIdSet,
-+  DistributionBucketIndexSet,
-   DynamicBagCreationPolicyDistributorFamiliesMap,
- }
- export default storageTypes
 diff --git a/stake/index.js b/stake/index.js
 index 471c1eb9fd8f2a2a44007b57f8442cb99e349c15..ce47dcc2fd0ce9cf9d5568fea9c6914b21bdfbeb 100644
 --- a/stake/index.js
@@ -2757,95 +2200,14 @@ index 471c1eb9fd8f2a2a44007b57f8442cb99e349c15..ce47dcc2fd0ce9cf9d5568fea9c6914b
  };
 -exports.default = exports.stakeTypes;
 +export default stakeTypes;
-diff --git a/storage.d.ts b/storage.d.ts
-index 63ad218b30493d9411e3282f2cf3fedcb9063e23..0389310fc691be93fecc92c726ca76454fefb393 100644
---- a/storage.d.ts
-+++ b/storage.d.ts
-@@ -1,4 +1,4 @@
--import { Null, u64, Bytes, Vec, bool, GenericAccountId as AccountId, BTreeSet, BTreeMap, Option, u32, u128 } from '@polkadot/types';
-+import { Null, u64, Bytes, Vec, bool, GenericAccountId as AccountId, BTreeSet, BTreeMap, Option, u32, u128, Tuple } from '@polkadot/types';
- import { Balance } from '@polkadot/types/interfaces';
- import { RegistryTypes } from '@polkadot/types/types';
- import { WorkingGroup, BalanceOf } from './common';
-@@ -38,15 +38,25 @@ export declare class DataObjectIdSet extends DataObjectIdSet_base {
- declare const DataObjectIdMap_base: import("@polkadot/types/types").Constructor<import("@polkadot/types").CodecMap<DataObjectId, DataObject>>;
- export declare class DataObjectIdMap extends DataObjectIdMap_base {
- }
--export declare class DistributionBucketId extends u64 {
-+export declare class DistributionBucketIndex extends u64 {
- }
- export declare class DistributionBucketFamilyId extends u64 {
- }
- declare const StorageBucketIdSet_base: import("@polkadot/types/types").Constructor<BTreeSet<StorageBucketId>>;
- export declare class StorageBucketIdSet extends StorageBucketIdSet_base {
- }
--declare const DistributionBucketIdSet_base: import("@polkadot/types/types").Constructor<BTreeSet<DistributionBucketId>>;
--export declare class DistributionBucketIdSet extends DistributionBucketIdSet_base {
-+declare const DistributionBucketIndexSet_base: import("@polkadot/types/types").Constructor<BTreeSet<DistributionBucketIndex>>;
-+export declare class DistributionBucketIndexSet extends DistributionBucketIndexSet_base {
-+}
-+export declare type IDistributionBucketId = {
-+    distribution_bucket_family_id: DistributionBucketFamilyId;
-+    distribution_bucket_index: DistributionBucketIndex;
-+};
-+declare const DistributionBucketId_base: import("./JoyStruct").ExtendedStructDecoratedConstructor<{
-+    distribution_bucket_family_id: typeof DistributionBucketFamilyId;
-+    distribution_bucket_index: typeof DistributionBucketIndex;
-+}>;
-+export declare class DistributionBucketId extends DistributionBucketId_base implements IDistributionBucketId {
- }
- export declare type IDynamicBagDeletionPrize = {
-     account_id: AccountId;
-@@ -152,12 +162,12 @@ export declare class Voucher extends Voucher_base implements IVoucher {
- export declare const StorageBucketOperatorStatusDef: {
-     readonly Missing: typeof Null;
-     readonly InvitedStorageWorker: typeof WorkerId;
--    readonly StorageWorker: typeof WorkerId;
-+    readonly StorageWorker: import("@polkadot/types/types").Constructor<Tuple>;
- };
- declare const StorageBucketOperatorStatus_base: import("./JoyEnum").ExtendedEnumConstructor<{
-     readonly Missing: typeof Null;
-     readonly InvitedStorageWorker: typeof WorkerId;
--    readonly StorageWorker: typeof WorkerId;
-+    readonly StorageWorker: import("@polkadot/types/types").Constructor<Tuple>;
- }>;
- export declare class StorageBucketOperatorStatus extends StorageBucketOperatorStatus_base {
- }
-@@ -165,13 +175,11 @@ export declare type IStorageBucket = {
-     operator_status: StorageBucketOperatorStatus;
-     accepting_new_bags: bool;
-     voucher: Voucher;
--    metadata: Bytes;
- };
- declare const StorageBucket_base: import("./JoyStruct").ExtendedStructDecoratedConstructor<{
-     operator_status: typeof StorageBucketOperatorStatus;
-     accepting_new_bags: typeof bool;
-     voucher: typeof Voucher;
--    metadata: typeof Bytes;
- }>;
- export declare class StorageBucket extends StorageBucket_base implements IStorageBucket {
- }
-@@ -221,10 +229,10 @@ declare const DistributionBucket_base: import("./JoyStruct").ExtendedStructDecor
- export declare class DistributionBucket extends DistributionBucket_base implements IDistributionBucket {
- }
- export declare type IDistributionBucketFamily = {
--    distribution_buckets: BTreeMap<DistributionBucketId, DistributionBucket>;
-+    next_distribution_bucket_index: DistributionBucketIndex;
- };
- declare const DistributionBucketFamily_base: import("./JoyStruct").ExtendedStructDecoratedConstructor<{
--    distribution_buckets: import("@polkadot/types/types").Constructor<import("@polkadot/types").CodecMap<DistributionBucketId, DistributionBucket>>;
-+    next_distribution_bucket_index: typeof DistributionBucketIndex;
- }>;
- export declare class DistributionBucketFamily extends DistributionBucketFamily_base implements IDistributionBucketFamily {
- }
 diff --git a/storage.js b/storage.js
-index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a16795e28 100644
+index 44160956b71341f260f8ccd1295035ac4cb5a925..0f3dd3d9474f1f2f2c65f01553f4757a16795e28 100644
 --- a/storage.js
 +++ b/storage.js
-@@ -1,176 +1,145 @@
+@@ -1,181 +1,145 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
--exports.storageTypes = exports.DynamicBagCreationPolicyDistributorFamiliesMap = exports.DistributionBucketFamily = exports.DistributionBucket = exports.ContentIdSet = exports.Cid = exports.UploadParameters = exports.DataObjectCreationParameters = exports.StorageBucket = exports.StorageBucketOperatorStatus = exports.StorageBucketOperatorStatusDef = exports.Voucher = exports.BagIdType = exports.BagId = exports.BagIdDef = exports.Dynamic = exports.DynamicBagId = exports.DynamicBagIdDef = exports.ChannelId = exports.Static = exports.StaticBagId = exports.StaticBagIdDef = exports.DynamicBagType = exports.DynamicBagTypeDef = exports.DynamicBagCreationPolicy = exports.Bag = exports.DynamicBagDeletionPrizeRecord = exports.DynamicBagDeletionPrize = exports.DistributionBucketIdSet = exports.StorageBucketIdSet = exports.DistributionBucketFamilyId = exports.DistributionBucketId = exports.DataObjectIdMap = exports.DataObjectIdSet = exports.DataObject = exports.StorageBucketsPerBagValueConstraint = exports.StorageBucketId = exports.DataObjectId = void 0;
+-exports.storageTypes = exports.DynamicBagCreationPolicyDistributorFamiliesMap = exports.DistributionBucketFamily = exports.DistributionBucket = exports.ContentIdSet = exports.Cid = exports.UploadParameters = exports.DataObjectCreationParameters = exports.StorageBucket = exports.StorageBucketOperatorStatus = exports.StorageBucketOperatorStatusDef = exports.Voucher = exports.BagIdType = exports.BagId = exports.BagIdDef = exports.Dynamic = exports.DynamicBagId = exports.DynamicBagIdDef = exports.ChannelId = exports.Static = exports.StaticBagId = exports.StaticBagIdDef = exports.DynamicBagType = exports.DynamicBagTypeDef = exports.DynamicBagCreationPolicy = exports.Bag = exports.DynamicBagDeletionPrizeRecord = exports.DynamicBagDeletionPrize = exports.DistributionBucketId = exports.DistributionBucketIndexSet = exports.StorageBucketIdSet = exports.DistributionBucketFamilyId = exports.DistributionBucketIndex = exports.DataObjectIdMap = exports.DataObjectIdSet = exports.DataObject = exports.StorageBucketsPerBagValueConstraint = exports.StorageBucketId = exports.DataObjectId = void 0;
 -const types_1 = require("@polkadot/types");
 -const common_1 = require("./common");
 -const members_1 = require("./members");
@@ -2894,10 +2256,10 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
 +export class DataObjectIdMap extends BTreeMap.with(DataObjectId, DataObject) {
  }
 -exports.DataObjectIdMap = DataObjectIdMap;
--class DistributionBucketId extends types_1.u64 {
+-class DistributionBucketIndex extends types_1.u64 {
 +export class DistributionBucketIndex extends u64 {
  }
--exports.DistributionBucketId = DistributionBucketId;
+-exports.DistributionBucketIndex = DistributionBucketIndex;
 -class DistributionBucketFamilyId extends types_1.u64 {
 +export class DistributionBucketFamilyId extends u64 {
  }
@@ -2906,24 +2268,28 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
 +export class StorageBucketIdSet extends BTreeSet.with(StorageBucketId) {
  }
 -exports.StorageBucketIdSet = StorageBucketIdSet;
--class DistributionBucketIdSet extends types_1.BTreeSet.with(DistributionBucketId) {
+-class DistributionBucketIndexSet extends types_1.BTreeSet.with(DistributionBucketIndex) {
 +export class DistributionBucketIndexSet extends BTreeSet.with(DistributionBucketIndex) {
  }
--exports.DistributionBucketIdSet = DistributionBucketIdSet;
+-exports.DistributionBucketIndexSet = DistributionBucketIndexSet;
+-class DistributionBucketId extends (0, common_1.JoyStructDecorated)({
++export class DistributionBucketId extends JoyStructDecorated({
+     distribution_bucket_family_id: DistributionBucketFamilyId,
+     distribution_bucket_index: DistributionBucketIndex,
+ }) {
+ }
+-exports.DistributionBucketId = DistributionBucketId;
 -class DynamicBagDeletionPrize extends (0, common_1.JoyStructDecorated)({
 -    account_id: types_1.GenericAccountId,
 -    prize: common_1.BalanceOf,
-+export class DistributionBucketId extends JoyStructDecorated({
-+    distribution_bucket_family_id: DistributionBucketFamilyId,
-+    distribution_bucket_index: DistributionBucketIndex,
++export class DynamicBagDeletionPrize extends JoyStructDecorated({
++    account_id: AccountId,
++    prize: BalanceOf,
  }) {
  }
 -exports.DynamicBagDeletionPrize = DynamicBagDeletionPrize;
 -class DynamicBagDeletionPrizeRecord extends DynamicBagDeletionPrize {
-+export class DynamicBagDeletionPrize extends JoyStructDecorated({
-+    account_id: AccountId,
-+    prize: BalanceOf,
-+}) {
++export class DynamicBagDeletionPrizeRecord extends DynamicBagDeletionPrize {
  }
 -exports.DynamicBagDeletionPrizeRecord = DynamicBagDeletionPrizeRecord;
 -class Bag extends (0, common_1.JoyStructDecorated)({
@@ -2932,8 +2298,6 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
 -    deletion_prize: types_1.Option.with(types_1.u128),
 -    objects_total_size: types_1.u64,
 -    objects_number: types_1.u64,
-+export class DynamicBagDeletionPrizeRecord extends DynamicBagDeletionPrize {
-+}
 +export class Bag extends JoyStructDecorated({
 +    stored_by: BTreeSet.with(StorageBucketId),
 +    distributed_by: BTreeSet.with(DistributionBucketId),
@@ -3028,7 +2392,7 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
 -exports.StorageBucketOperatorStatusDef = {
 -    Missing: types_1.Null,
 -    InvitedStorageWorker: working_group_1.WorkerId,
--    StorageWorker: working_group_1.WorkerId,
+-    StorageWorker: types_1.Tuple.with([working_group_1.WorkerId, types_1.GenericAccountId]),
 +export const StorageBucketOperatorStatusDef = {
 +    Missing: Null,
 +    InvitedStorageWorker: WorkerId,
@@ -3044,7 +2408,6 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
 -    accepting_new_bags: types_1.bool,
 +    accepting_new_bags: bool,
      voucher: Voucher,
--    metadata: types_1.Bytes,
  }) {
  }
 -exports.StorageBucket = StorageBucket;
@@ -3093,9 +2456,8 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
  }
 -exports.DistributionBucket = DistributionBucket;
 -class DistributionBucketFamily extends (0, common_1.JoyStructDecorated)({
--    distribution_buckets: types_1.BTreeMap.with(DistributionBucketId, DistributionBucket),
 +export class DistributionBucketFamily extends JoyStructDecorated({
-+    next_distribution_bucket_index: DistributionBucketIndex,
+     next_distribution_bucket_index: DistributionBucketIndex,
  }) {
  }
 -exports.DistributionBucketFamily = DistributionBucketFamily;
@@ -3108,18 +2470,8 @@ index 75c110f9b2b8d3c115b59daf9a4343ecfba62873..0f3dd3d9474f1f2f2c65f01553f4757a
      StorageBucketId,
      StorageBucketsPerBagValueConstraint,
      DataObjectId,
-@@ -196,12 +165,13 @@ exports.storageTypes = {
-     StorageBucketOperatorStatus,
-     DataObject,
-     DistributionBucketId,
-+    DistributionBucketIndex,
-     DistributionBucketFamilyId,
-     DistributionBucket,
-     DistributionBucketFamily,
-     // Utility types:
-     DataObjectIdMap,
--    DistributionBucketIdSet,
-+    DistributionBucketIndexSet,
+@@ -210,4 +174,4 @@ exports.storageTypes = {
+     DistributionBucketIndexSet,
      DynamicBagCreationPolicyDistributorFamiliesMap,
  };
 -exports.default = exports.storageTypes;

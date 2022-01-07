@@ -25,7 +25,7 @@ export type ChannelAssets<T> = {
   [key in ChannelAssetsKey]?: T
 }
 export type ChannelInputAssets = ChannelAssets<DataObjectMetadata>
-export type ChannelAssetstIds = ChannelAssets<string>
+export type ChannelAssetsIds = ChannelAssets<string>
 
 export enum ExtrinsicStatus {
   ProcessingAssets,
@@ -61,11 +61,11 @@ export type GetEventDataFn = <TSection extends keyof JoystreamEvents, TMethod ex
 export type ExtractChannelResultsAssetsIdsFn = (
   inputAssets: ChannelInputAssets,
   getEventData: GetEventDataFn
-) => ChannelAssetstIds
+) => ChannelAssetsIds
 export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,
   getEventData: GetEventDataFn
 ) => VideoAssetsIds
 export type SendExtrinsicResult = ExtrinsicResult<{ events: GenericEvent[]; getEventData: GetEventDataFn }>
-export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetstIds }>
+export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetsIds }>
 export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
