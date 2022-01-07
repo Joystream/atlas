@@ -1,33 +1,48 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { cVar, media, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 const paddingStyles = css`
   padding: ${sizes(6)} ${sizes(4)};
 `
 
-export const Container = styled.div<{ isActive: boolean }>`
+export const Container = styled.div`
   position: fixed;
   right: ${sizes(4)};
   top: 0;
   width: 280px;
-  max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: ${cVar('colorCoreNeutral700')};
-
-  transform: translateY(${({ isActive }) => (isActive ? 'var(--size-topbar-height)' : '-100%')});
-  transition: transform ${transitions.timings.loading} ${transitions.easing};
+  height: 0;
   z-index: ${zIndex.nearTransactionBar};
-
-  box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
 
   ${media.md} {
     right: ${sizes(8)};
   }
+`
+
+export const InnerContainer = styled.div<{
+  isActive: boolean
+  containerHeight: number
+}>`
+  width: 280px;
+  position: 'relative';
+  max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
+
+  height: ${({ containerHeight }) => containerHeight}px;
+  transform: translateY(
+    ${({ isActive, containerHeight }) =>
+      isActive ? 'var(--size-topbar-height)' : `calc(-${containerHeight}px + var(--size-topbar-height)) `}
+  );
+  transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
+  will-change: height, transform;
+  box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
+
+  background-color: ${cVar('colorBackgroundStrong')};
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 export const StyledAvatar = styled(Avatar)`
@@ -110,4 +125,17 @@ export const LearnAboutTjoyLink = styled(Text)`
   &:hover {
     text-decoration: underline;
   }
+`
+
+export const AnimatedContainer = styled(animated.div, {
+  shouldForwardProp: (prop) => prop !== 'isAnimatingSwitchMember',
+})<{
+  isAnimatingSwitchMember: boolean
+}>`
+  position: absolute;
+  height: 100%;
+  width: 280px;
+  will-change: transform, opacity;
+  overflow-y: ${({ isAnimatingSwitchMember }) => (isAnimatingSwitchMember ? 'hidden' : 'auto')};
+  overflow-x: hidden;
 `
