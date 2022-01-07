@@ -3,11 +3,11 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
-import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const ActionBarContainer = styled.div<{ isActive?: boolean }>`
-  background-color: ${oldColors.gray[900]};
-  border-top: 1px solid ${oldColors.gray[700]};
+  background-color: ${cVar('colorBackground')};
+  box-shadow: ${cVar('effectDividersTop')};
   display: grid;
   padding: ${sizes(4)};
   z-index: ${zIndex.header};

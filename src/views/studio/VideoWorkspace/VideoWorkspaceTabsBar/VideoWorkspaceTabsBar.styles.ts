@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, oldColors, sizes } from '@/styles'
 
 type AddDraftButtonContainerProps = {
   hasOverflow?: boolean
@@ -15,7 +15,8 @@ export const Topbar = styled.div`
   justify-content: space-between;
   height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
   min-height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
-  border-bottom: solid 1px ${oldColors.gray[700]};
+  box-shadow: ${cVar('effectDividersBottom')};
+  background-color: ${cVar('colorBackground')};
   padding: 0 ${sizes(4)};
   ${media.sm} {
     padding: 0 ${sizes(8)};
@@ -41,7 +42,7 @@ export const ButtonsContainer = styled.div`
   grid-auto-flow: column;
   grid-gap: ${sizes(1)};
   padding: 0 ${sizes(3)};
-  border-left: solid 1px ${oldColors.gray[700]};
+  box-shadow: ${cVar('effectDividersLeft')};
   ${media.sm} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
@@ -91,8 +92,8 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   height: 100%;
   max-width: ${sizes(14)};
   padding: 0 ${sizes(2)};
-  border-left: 1px solid ${oldColors.gray[700]};
-  background-color: ${oldColors.gray[900]};
+  box-shadow: ${cVar('effectDividersLeft')}, ${cVar('effectDividersBottom')};
+  background-color: ${cVar('colorBackground')};
   margin-left: ${sizes(2)};
 `
 

@@ -59,7 +59,7 @@ export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
   height: calc(100vh - var(--size-topbar-height));
   display: flex;
   flex-direction: column;
-  background-color: ${oldColors.gray[900]};
+  background-color: ${cVar('colorBackground')};
   box-shadow: 0 4px 52px ${oldColors.black};
   transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
   will-change: transform, opacity;
