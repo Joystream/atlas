@@ -24,7 +24,7 @@ export const useDeleteVideo = () => {
       }
 
       handleTransaction({
-        txFactory: (updateStatus) => joystream.deleteVideo(videoId, activeMemberId, updateStatus),
+        txFactory: (updateStatus) => joystream.extrinsics.deleteVideo(videoId, activeMemberId, updateStatus),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)

@@ -9,9 +9,12 @@ import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
+  },
   plugins: [
     react({
-      exclude: /\.stories\.(t|j)sx?$/,
+      exclude: /\.stories\.[tj]sx?$/,
     }),
     checker({
       typescript: true,

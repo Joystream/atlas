@@ -1,3 +1,5 @@
 export * from './useAsset'
 export * from './assetsManager'
 export * from './store'
+export * from './operatorsProvider'
+export * from './types'
