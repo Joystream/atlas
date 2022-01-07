@@ -11,7 +11,6 @@ export const TextContainer = styled.div`
   grid-gap: ${sizes(4)};
   padding-bottom: ${sizes(8)};
   margin-bottom: ${sizes(8)};
-  border-bottom: 1px solid ${oldColors.gray[600]};
 `
 
 export const LinksContainer = styled.div`

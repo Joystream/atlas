@@ -43,7 +43,7 @@ export const ChannelAbout = () => {
             Owned by member
           </Text>
           <AvatarContainer>
-            <StyledAvatar assetUrl={channel?.ownerMember?.avatarUri} />
+            <StyledAvatar size="small" assetUrl={channel?.ownerMember?.avatarUri} />
             <Anchor
               as="a"
               variant="t300"
