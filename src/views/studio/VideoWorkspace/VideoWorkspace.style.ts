@@ -54,7 +54,7 @@ export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);
-  left: var(--size-sidenav-width-collapsed);
+  left: 0;
   right: 0;
   height: calc(100vh - var(--size-topbar-height));
   display: flex;

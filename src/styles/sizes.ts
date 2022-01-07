@@ -15,9 +15,9 @@ export const zIndex = {
   overlay: 10,
   nearOverlay: 20,
   header: 100,
-  videoWorkspaceOverlay: 150,
-  nearVideoWorkspaceOverlay: 160,
   sideNav: 200,
+  videoWorkspaceOverlay: 250,
+  nearVideoWorkspaceOverlay: 260,
   globalOverlay: 999,
 }
 
