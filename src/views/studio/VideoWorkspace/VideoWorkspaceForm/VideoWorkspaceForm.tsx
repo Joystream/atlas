@@ -540,22 +540,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           onVideoFileChange(video.blob)
         }
 
-        if (!dirtyFields.title && video?.title) {
-          // TODO: don't change it if the draft was saved and reloaded
-          const videoNameWithoutExtension = video.title.replace(/\.[^.]+$/, '')
-          setValue('title', videoNameWithoutExtension, { shouldDirty: true })
-        }
         setFileSelectError(null)
       },
-      [
-        addAsset,
-        dirtyFields.title,
-        getValues,
-        onVideoFileChange,
-        selectedVideoTab?.isDraft,
-        setSelectedVideoTabCachedAssets,
-        setValue,
-      ]
+      [addAsset, getValues, onVideoFileChange, selectedVideoTab?.isDraft, setSelectedVideoTabCachedAssets, setValue]
     )
 
     const handleThumbnailFileChange = useCallback(

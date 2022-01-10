@@ -82,7 +82,6 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   }
 `
 
-// TODO: remove override on viewer update
 export const StyledSvgOutlineSearch = styled(SvgControlsSearchAlt, { shouldForwardProp: isPropValid })<{
   highlighted?: boolean
 }>`
