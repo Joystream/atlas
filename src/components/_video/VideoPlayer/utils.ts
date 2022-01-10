@@ -15,11 +15,16 @@ export enum CustomVideojsEvents {
   PauseControl = 'PAUSE_CONTROL',
 }
 
+const isIphone = /iPhone/.test(window.navigator.userAgent)
+
 export const isFullScreenEnabled =
   document.fullscreenEnabled ||
   document.webkitFullscreenEnabled ||
   document.mozFullScreenEnabled ||
-  document.msFullscreenEnabled
+  document.msFullscreenEnabled ||
+  // these properties above are not available on iphone, so these checks will always return undefined.
+  // it looks like we can't fully disable fullscreen on embedded view on iphone with `allowfullscreen` property on iframe, that's why we always return true if device is `iPhone`
+  isIphone
 
 export const hotkeysHandler = (
   event: KeyboardEvent,
