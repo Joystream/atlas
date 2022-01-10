@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { uniqBy } from 'lodash-es'
 import React, { SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import {
@@ -59,12 +60,11 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
           if (!mapping[bagId]) {
             mapping[bagId] = operatorsInfos
           } else {
-            // TODO: make sure endpoints are unique
             mapping[bagId] = [...mapping[bagId], ...operatorsInfos]
           }
         })
       })
-      return mapping
+      return removeBagOperatorsDuplicates(mapping)
     })
     distributionOperatorsPromise.catch((error) => {
       SentryLogger.error('Failed to fetch distribution operators', 'OperatorsContextProvider', error)
@@ -97,12 +97,11 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
           if (!mapping[bagId]) {
             mapping[bagId] = [operatorInfo]
           } else {
-            // TODO: make sure endpoints are unique
             mapping[bagId] = [...mapping[bagId], operatorInfo]
           }
         })
       })
-      return mapping
+      return removeBagOperatorsDuplicates(mapping)
     })
     storageOperatorsPromise.catch((error) => {
       SentryLogger.error('Failed to fetch storage operators', 'OperatorsContextProvider', error)
@@ -206,4 +205,11 @@ export const useStorageOperators = () => {
   )
 
   return { getAllStorageOperatorsForBag, getRandomStorageOperatorForBag, markStorageOperatorFailed }
+}
+
+const removeBagOperatorsDuplicates = (mapping: BagOperatorsMapping): BagOperatorsMapping => {
+  return Object.entries(mapping).reduce((acc, [bagId, operators]) => {
+    acc[bagId] = uniqBy(operators, (operator) => operator.id)
+    return acc
+  }, {} as BagOperatorsMapping)
 }
