@@ -60,8 +60,8 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     const isUploading = isVideoUploading || isThumbnailUploading
 
-    const hasThumbnailUploadFailed = (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted) || false
-    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted) || false
+    const hasThumbnailUploadFailed = (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted) && !isThumbnailUploading || false
+    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted) && !isVideoUploading || false
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const isUnlisted = video?.isPublic === false
