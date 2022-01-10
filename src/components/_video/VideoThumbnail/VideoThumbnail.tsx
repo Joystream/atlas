@@ -18,13 +18,14 @@ import {
   VideoThumbnailContainer,
 } from './VideoThumbnail.styles'
 
-export type SlotsObject = {
-  [Property in SlotPosition]?: {
-    element: React.ReactNode
-    type?: 'default' | 'hover'
-    clickable?: boolean
-  }
-}
+export type SlotsObject =
+  | {
+      [Property in SlotPosition]?: {
+        element: React.ReactNode
+        type?: 'default' | 'hover'
+        clickable?: boolean
+      } | null
+    }
 
 export type VideoThumbnailProps = {
   loading?: boolean
@@ -90,17 +91,20 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
         </ContentOverlay>
         <HoverOverlay loading={loading} />
         <SlotsOverlay>
-          {slotsArray?.map(([position, { element, type = 'default', clickable = false }]) => (
-            <SlotContainer
-              key={position}
-              type={type}
-              position={position as keyof SlotsObject}
-              onMouseMove={() => clickable && setActiveDisabled(true)}
-              onMouseOut={() => clickable && setActiveDisabled(false)}
-            >
-              {element}
-            </SlotContainer>
-          ))}
+          {slotsArray?.map(
+            ([position, properties]) =>
+              properties && (
+                <SlotContainer
+                  key={position}
+                  type={properties.type}
+                  position={position as keyof SlotsObject}
+                  onMouseMove={() => clickable && setActiveDisabled(true)}
+                  onMouseOut={() => clickable && setActiveDisabled(false)}
+                >
+                  {properties.element}
+                </SlotContainer>
+              )
+          )}
         </SlotsOverlay>
       </VideoThumbnailContainer>
     )

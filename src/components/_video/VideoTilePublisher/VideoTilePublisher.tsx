@@ -3,9 +3,7 @@ import React, { useCallback } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { AssetAvailability } from '@/api/queries'
-import { StyledSvgIllustrativeFileFailed } from '@/components/Avatar/Avatar.styles'
 import { Pill } from '@/components/Pill'
-import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { IconButton } from '@/components/_buttons/IconButton'
 import {
@@ -15,13 +13,13 @@ import {
   SvgActionPlay,
   SvgActionReupload,
   SvgActionTrash,
+  SvgActionWarning,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { cVar, square } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -44,20 +42,39 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       id,
     })
 
-    const uploadStatus = useUploadsStore(
+    const uploadVideoStatus = useUploadsStore(
       (state) => state.uploadsStatus[video?.mediaDataObject?.joystreamContentId || '']
     )
+    const uploadThumbnailStatus = useUploadsStore(
+      (state) => state.uploadsStatus[video?.thumbnailPhotoDataObject?.joystreamContentId || '']
+    )
 
-    const isUploading = uploadStatus && uploadStatus.lastStatus !== 'completed'
+    const isVideoUploading =
+      uploadVideoStatus?.lastStatus === 'inProgress' ||
+      uploadVideoStatus?.lastStatus === 'processing' ||
+      uploadVideoStatus?.lastStatus === 'reconnecting'
+
+    const isThumbnailUploading =
+      uploadThumbnailStatus?.lastStatus === 'inProgress' ||
+      uploadThumbnailStatus?.lastStatus === 'processing' ||
+      uploadThumbnailStatus?.lastStatus === 'reconnecting'
+
+    const isUploading = isVideoUploading || isThumbnailUploading
+
+    const hasThumbnailUploadFailed =
+      video?.thumbnailPhotoAvailability === AssetAvailability.Pending &&
+      (!uploadThumbnailStatus || uploadThumbnailStatus?.lastStatus === 'error')
+
+    const hasVideoUploadFailed =
+      video?.mediaAvailability === AssetAvailability.Pending &&
+      (!uploadVideoStatus || uploadVideoStatus.lastStatus === 'error')
+
+    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const isUnlisted = video?.isPublic === false
 
-    const hasThumbnailUploadFailed = video?.thumbnailPhotoAvailability === AssetAvailability.Pending
-    const hasVideoUploadFailed = video?.mediaAvailability === AssetAvailability.Pending
-    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
-
     const getSlots = useCallback<() => undefined | SlotsObject>(() => {
-      if (isUploading || loading) {
+      if ((isUploading && !hasAssetUploadFailed) || loading) {
         return
       }
       const slots: SlotsObject = {
@@ -79,22 +96,18 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
       }
       if (hasAssetUploadFailed) {
-        return {
-          bottomRight: {
-            element: <Pill variant="danger" label="Failed upload" />,
-          },
-          center: {
-            element: <SvgIllustrativeReupload />,
-            type: 'hover' as const,
-          },
+        slots.bottomRight = {
+          element: <Pill variant="danger" label="Failed upload" icon={<SvgActionWarning />} />,
         }
+        slots.center = {
+          element: <SvgIllustrativeReupload />,
+          type: 'hover',
+        }
+        slots.topRight = null
       }
       if (isUnlisted) {
-        return {
-          ...slots,
-          bottomLeft: {
-            element: <Pill variant="overlay" label="Unlisted" icon={<SvgActionHide />} />,
-          },
+        slots.bottomLeft = {
+          element: <Pill variant="overlay" label="Unlisted" icon={<SvgActionHide />} />,
         }
       }
       return slots
@@ -148,35 +161,28 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     ])
 
     const getVideoSubtitle = useCallback(() => {
-      if (uploadStatus?.lastStatus === 'inProgress') {
-        return 'Uploading...'
-      }
-      if (uploadStatus?.lastStatus === 'processing') {
-        return 'Processing...'
-      }
       if (hasAssetUploadFailed) {
         return 'Upload failed...'
       }
+      if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
+        return 'Uploading...'
+      }
+      if (uploadVideoStatus?.lastStatus === 'processing' || uploadThumbnailStatus?.lastStatus === 'processing') {
+        return 'Processing...'
+      }
       return
-    }, [hasAssetUploadFailed, uploadStatus?.lastStatus])
+    }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
     const getContentSlot = () => {
-      if (!isUploading && hasThumbnailUploadFailed) {
-        return (
-          <CoverThumbnailUploadFailed>
-            <StyledSvgIllustrativeFileFailed />
-            <Text variant="t100" secondary>
-              Asset upload failed
-            </Text>
-          </CoverThumbnailUploadFailed>
-        )
+      if (hasAssetUploadFailed) {
+        return
       }
       return (
         <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
           <UploadProgressTransition>
             <UploadProgressBar
-              progress={uploadStatus?.progress}
-              lastStatus={uploadStatus?.lastStatus}
+              progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
+              lastStatus={uploadVideoStatus?.lastStatus || uploadThumbnailStatus?.lastStatus}
               withLoadingIndicator
             />
           </UploadProgressTransition>
@@ -186,7 +192,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     return (
       <VideoTile
-        clickable={!isUploading}
+        clickable={!isUploading || hasAssetUploadFailed}
         slots={getSlots()}
         contentSlot={getContentSlot()}
         videoHref={hasVideoUploadFailed ? absoluteRoutes.studio.uploads() : videoHref}
@@ -204,16 +210,6 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     )
   }
 )
-
-export const CoverThumbnailUploadFailed = styled.div`
-  ${square('100%')}
-
-  background:${cVar('colorCoreNeutral900')};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
 
 export const UploadProgressTransition = styled.div`
   &.${DELAYED_FADE_CLASSNAME}-enter {
