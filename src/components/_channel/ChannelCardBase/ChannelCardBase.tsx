@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { transitions } from '@/styles'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -24,9 +25,9 @@ export type ChannelCardBaseProps = {
   avatarUrl?: string | null
   isLoadingAvatar?: boolean
   isFollowing?: boolean
-  onFollow?: (event: React.MouseEvent) => void
   className?: string
   onClick?: () => void
+  onFollowButton?: (event: React.MouseEvent) => void
 }
 
 export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
@@ -37,36 +38,46 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   avatarUrl,
   isLoadingAvatar,
   isFollowing,
-  onFollow,
   className,
   onClick,
+  onFollowButton: onButtonClick,
 }) => {
+  const mdMatch = useMediaMatch('md')
+  const [activeDisabled, setActiveDisabled] = useState(false)
   return (
-    <ChannelCardArticle className={className}>
+    <ChannelCardArticle className={className} activeDisabled={activeDisabled}>
       <ChannelCardAnchor onClick={onClick} to={id ? absoluteRoutes.viewer.channel(id) : ''}>
         <StyledAvatar size="channel-card" loading={isLoadingAvatar} assetUrl={avatarUrl} />
         <SwitchTransition>
           <CSSTransition
             key={isLoading ? 'placeholder' : 'content'}
-            timeout={parseInt(transitions.timings.sharp)}
+            timeout={parseInt(cVar('animationTransitionFast', true))}
             classNames={transitions.names.fade}
           >
             <InfoWrapper>
               {isLoading ? (
                 <>
-                  <SkeletonLoader width="100px" height="20px" bottomSpace="4px" />
-                  <SkeletonLoader width="70px" height="20px" bottomSpace="16px" />
-                  <SkeletonLoader width="60px" height="30px" />
+                  <SkeletonLoader width={100} height={mdMatch ? 24 : 20} bottomSpace={mdMatch ? 4 : 8} />
+                  <SkeletonLoader width={70} height={mdMatch ? 20 : 16} bottomSpace={onButtonClick && 16} />
+                  {onButtonClick && <SkeletonLoader width={60} height={32} />}
                 </>
               ) : (
                 <>
-                  <ChannelTitle variant="h300">{title}</ChannelTitle>
-                  <ChannelFollows variant="t200" secondary>
+                  <ChannelTitle variant={mdMatch ? 'h300' : 't200-strong'}>{title}</ChannelTitle>
+                  <ChannelFollows variant={mdMatch ? 't200' : 't100'} secondary>
                     {formatNumberShort(follows || 0)} followers
                   </ChannelFollows>
-                  <FollowButton variant="secondary" size="small" onClick={onFollow}>
-                    {isFollowing ? 'Unfollow' : 'Follow'}
-                  </FollowButton>
+                  {onButtonClick && (
+                    <FollowButton
+                      variant="secondary"
+                      size="small"
+                      onClick={onButtonClick}
+                      onMouseOut={() => setActiveDisabled(false)}
+                      onMouseMove={() => setActiveDisabled(true)}
+                    >
+                      {isFollowing ? 'Unfollow' : 'Follow'}
+                    </FollowButton>
+                  )}
                 </>
               )}
             </InfoWrapper>

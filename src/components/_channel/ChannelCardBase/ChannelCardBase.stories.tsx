@@ -2,6 +2,8 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { Grid } from '@/components/Grid'
+
 import { ChannelCardBase, ChannelCardBaseProps } from './ChannelCardBase'
 
 export default {
@@ -12,6 +14,8 @@ export default {
     title: 'Example Channel',
     id: '3',
     follows: 200,
+    isLoading: false,
+    isLoadingAvatar: false,
   },
   decorators: [
     (Story) => (
@@ -22,12 +26,23 @@ export default {
   ],
 } as Meta
 
-const Template: Story<ChannelCardBaseProps> = (args) => {
-  return (
-    <>
-      <ChannelCardBase {...args} />
-    </>
-  )
-}
+const Template: Story<ChannelCardBaseProps> = (args) => <ChannelCardBase {...args} />
 
 export const Default = Template.bind({})
+export const WithButton = Template.bind({})
+WithButton.args = {
+  onFollowButton: () => null,
+}
+
+const WithinGrid: Story<ChannelCardBaseProps> = (args) => (
+  <Grid>
+    <ChannelCardBase {...args} />
+    <ChannelCardBase {...args} />
+    <ChannelCardBase {...args} />
+    <ChannelCardBase {...args} />
+    <ChannelCardBase {...args} />
+    <ChannelCardBase {...args} />
+  </Grid>
+)
+
+export const InsideGrid = WithinGrid.bind({})

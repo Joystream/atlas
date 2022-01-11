@@ -31,7 +31,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
       id={channel?.id}
       avatarUrl={url}
       follows={channel?.follows}
-      onFollow={handleFollow}
+      onFollowButton={handleFollow}
       isFollowing={isFollowing}
       title={channel?.title}
     />
