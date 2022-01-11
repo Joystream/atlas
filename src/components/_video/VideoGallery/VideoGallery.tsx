@@ -6,8 +6,6 @@ import { Gallery } from '@/components/Gallery'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
 import { VideoTile } from '@/components/_video/VideoTile'
-import { media } from '@/styles'
-import { AvatarContainer } from '@/views/viewer/ChannelView/ChannelAbout.styles'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -111,12 +109,4 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
 
 const StyledVideoTile = styled(VideoTile)`
   justify-content: flex-start;
-
-  ${AvatarContainer} {
-    display: none;
-
-    ${media.md} {
-      display: block;
-    }
-  }
 `
