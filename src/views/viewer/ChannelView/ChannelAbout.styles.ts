@@ -29,11 +29,15 @@ export const Links = styled.div`
 `
 
 export const Details = styled.div`
-  display: flex;
+  display: grid;
   gap: ${sizes(2)};
-  margin-bottom: ${sizes(4)};
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${oldColors.gray[600]};
+  margin-bottom: ${sizes(4)};
+`
+
+export const DetailsMember = styled(Details)`
+  display: flex;
 `
 
 export const DetailsText = styled(Text)`

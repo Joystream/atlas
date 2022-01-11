@@ -12,6 +12,7 @@ import { formatDate } from '@/utils/time'
 import {
   Anchor,
   Details,
+  DetailsMember,
   DetailsText,
   MemberContainer,
   StyledAvatar,
@@ -38,7 +39,7 @@ export const ChannelAbout = () => {
       <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
         <DetailsText variant="h400">Details</DetailsText>
 
-        <Details>
+        <DetailsMember>
           <StyledAvatar size="small" assetUrl={channel?.ownerMember?.avatarUri} />
           <MemberContainer>
             <Text variant="t100" secondary>
@@ -53,7 +54,7 @@ export const ChannelAbout = () => {
               {channel?.ownerMember?.handle}
             </Anchor>
           </MemberContainer>
-        </Details>
+        </DetailsMember>
 
         <Details>
           <Text variant="t100" secondary>
