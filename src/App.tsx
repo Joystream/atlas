@@ -4,15 +4,14 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
+import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
-import { DistributorsContextProvider } from '@/providers/distributors'
 import { GlobalStyles } from '@/styles'
 
 import { MainLayout } from './MainLayout'
 import { AssetsManager } from './providers/assets'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
-import { StorageProvidersProvider } from './providers/storageProviders'
 
 export const App = () => {
   // App doesn't accept props and doesn't contain state so should never rerender
@@ -25,15 +24,13 @@ export const App = () => {
       <ApolloProvider client={apolloClient}>
         <BrowserRouter>
           <OverlayManagerProvider>
-            <DistributorsContextProvider>
-              <StorageProvidersProvider>
-                <ConfirmationModalProvider>
-                  <MainLayout />
-                  <Snackbars />
-                  <AssetsManager />
-                </ConfirmationModalProvider>
-              </StorageProvidersProvider>
-            </DistributorsContextProvider>
+            <OperatorsContextProvider>
+              <ConfirmationModalProvider>
+                <MainLayout />
+                <Snackbars />
+                <AssetsManager />
+              </ConfirmationModalProvider>
+            </OperatorsContextProvider>
           </OverlayManagerProvider>
         </BrowserRouter>
       </ApolloProvider>

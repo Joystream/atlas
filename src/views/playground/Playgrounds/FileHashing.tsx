@@ -16,14 +16,14 @@ export const FileHashing: React.FC = () => {
     setFile(file)
   }
 
-  const handleCompute = async (chunkSize: number) => {
+  const handleCompute = async () => {
     if (!file || computedHash === 'computing') {
       return
     }
     setComputedHash('computing')
     setDuration('')
     const start = new Date()
-    const hash = await computeFileHash(file, chunkSize)
+    const hash = await computeFileHash(file)
     setComputedHash(hash)
 
     const end = new Date()
@@ -39,12 +39,7 @@ export const FileHashing: React.FC = () => {
   return (
     <div>
       <input type="file" accept="*" onChange={handleFileChange} />
-      <button onClick={() => handleCompute(64 * 1024)}>Test 64K</button>
-      <button onClick={() => handleCompute(512 * 1024)}>Test 512K</button>
-      <button onClick={() => handleCompute(32 * 1024 * 1024)}>Test 32M</button>
-      <button onClick={() => handleCompute(64 * 1024 * 1024)}>Test 64M</button>
-      <button onClick={() => handleCompute(128 * 1024 * 1024)}>Test 128M</button>
-      <button onClick={() => handleCompute(512 * 1024 * 1024)}>Test 512M</button>
+      <button onClick={handleCompute}>Test</button>
       {computedHash && <div>{computedHash}</div>}
       {duration && <div>{duration}</div>}
     </div>

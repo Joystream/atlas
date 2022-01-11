@@ -1,4 +1,4 @@
-import { STORAGE_URL_PATH } from '@/config/urls'
+import { STORAGE_UPLOAD_PATH } from '@/config/urls'
 
 export const joinUrlFragments = (...fragments: string[]) => {
   // remove trailing/leading slashes
@@ -6,5 +6,5 @@ export const joinUrlFragments = (...fragments: string[]) => {
   return strippedFragments.join('/')
 }
 
-export const createStorageNodeUrl = (contentId: string, storageMetadataUrl: string) =>
-  joinUrlFragments(storageMetadataUrl, STORAGE_URL_PATH, contentId)
+export const createAssetUploadEndpoint = (operatorEndpoint: string) =>
+  joinUrlFragments(operatorEndpoint, STORAGE_UPLOAD_PATH)
