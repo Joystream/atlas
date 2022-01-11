@@ -83,7 +83,7 @@ export type BaseWhereInput = {
 export type CategoryFeaturedVideos = {
   __typename?: 'CategoryFeaturedVideos'
   categoryId: Scalars['ID']
-  videos: Array<FeaturedVideo>
+  categoryFeaturedVideos: Array<FeaturedVideo>
   category: VideoCategory
 }
 
@@ -1653,6 +1653,10 @@ export type QueryMostViewedCategoriesAllTimeArgs = {
 
 export type QueryCategoryFeaturedVideosArgs = {
   categoryId: Scalars['ID']
+}
+
+export type QueryAllCategoriesFeaturedVideosArgs = {
+  videosLimit: Scalars['Int']
 }
 
 export type QueryChannelCategoriesArgs = {
