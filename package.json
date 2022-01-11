@@ -34,7 +34,7 @@
     "svgs:icons-import": "node ./scripts/figma-import",
     "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs && prettier --write src/components/_icons",
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
-    "graphql": "graphql-codegen --config codegen.config.yml",
+    "graphql": "graphql-codegen --config codegen.config.yml  -r dotenv/config",
     "postinstall": "husky install"
   },
   "lint-staged": {
