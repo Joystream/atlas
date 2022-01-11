@@ -15,7 +15,7 @@ export const Topbar = styled.div`
   justify-content: space-between;
   height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
   min-height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
-  box-shadow: ${cVar('effectDividersBottom')};
+  box-shadow: ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
   background-color: ${cVar('colorBackground')};
   padding: 0 ${sizes(4)};
   ${media.sm} {
@@ -92,7 +92,7 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   height: 100%;
   max-width: ${sizes(14)};
   padding: 0 ${sizes(2)};
-  box-shadow: ${cVar('effectDividersLeft')}, ${cVar('effectDividersBottom')};
+  box-shadow: ${cVar('effectDividersLeft')}, ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
   background-color: ${cVar('colorBackground')};
   margin-left: ${sizes(2)};
 `
