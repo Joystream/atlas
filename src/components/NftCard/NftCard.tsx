@@ -11,11 +11,12 @@ export type NftCardProps = {
   creator: Member
   supporters?: Member[]
   owner: Member
+  fullWidth?: boolean
 }
 
-export const NftCard: React.FC<NftCardProps> = ({ title, creator, supporters, owner, thumbnail }) => {
+export const NftCard: React.FC<NftCardProps> = ({ title, creator, supporters, owner, thumbnail, fullWidth }) => {
   return (
-    <Container>
+    <Container fullWidth={fullWidth}>
       <VideoThumbnail clickable={false} thumbnailUrl={thumbnail.thumbnailUrl} />
       <Details>
         <Title variant="h400">{title}</Title>

@@ -30,12 +30,13 @@ export const Members: React.FC<MembersProps> = ({ caption, members }) => {
       ? members.map((member) => ({ assetUrl: member.assetUrl, tooltipText: member.name }))
       : null
   const smMatch = useMediaMatch('sm')
+  const isArray = Array.isArray(members)
   return (
     <MembersWrapper>
       <Caption variant="t200" secondary>
         {caption}
       </Caption>
-      {Array.isArray(members) && avatars && (
+      {isArray && avatars && (
         <AvatarGroupWrapper>
           <StyledAvatarGroup
             direction={smMatch ? 'right' : 'left'}
@@ -48,7 +49,7 @@ export const Members: React.FC<MembersProps> = ({ caption, members }) => {
           </Text>
         </AvatarGroupWrapper>
       )}
-      {!Array.isArray(members) && (
+      {!isArray && (
         <AvatarWrapper>
           <StyledAvatar size="bid" assetUrl={members.assetUrl} />
           <Text variant="h300">{members.name}</Text>

@@ -19,6 +19,7 @@ export default {
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
+    fullWidth: { type: 'boolean', defaultValue: false },
   },
   args: {
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
@@ -35,10 +36,11 @@ export default {
   },
 } as Meta
 
-const Template: Story<NftCardProps> = (args) => (
-  <div style={{ width: '360px' }}>
-    <NftCard {...args} />
-  </div>
-)
+const Template: Story<NftCardProps> = (args) => <NftCard {...args} />
 
 export const Default = Template.bind({})
+export const NoSupporters = Template.bind({})
+
+NoSupporters.args = {
+  supporters: undefined,
+}

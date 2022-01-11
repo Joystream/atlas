@@ -5,7 +5,8 @@ import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
-export const Container = styled.div`
+export const Container = styled.div<{ fullWidth?: boolean }>`
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
   background-color: ${cVar('colorBackground')};
 `
 
