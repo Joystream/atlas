@@ -4,17 +4,17 @@ import React, { useEffect } from 'react'
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
 import { DISTRIBUTOR_ASSET_PATH } from '@/config/urls'
-import { useDistributors } from '@/providers/distributors'
-import { DistributorInfo } from '@/types/storage'
 import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DistributorEventEntry, SentryLogger } from '@/utils/logs'
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
 import { testAssetDownload } from './helpers'
+import { useDistributionOperators } from './operatorsProvider'
 import { useAssetStore } from './store'
+import { OperatorInfo } from './types'
 
 export const AssetsManager: React.FC = () => {
-  const { getAllDistributors } = useDistributors()
+  const { getAllDistributionOperatorsForBag } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
   const assetIdsBeingResolved = useAssetStore((state) => state.assetIdsBeingResolved)
   const { addAsset, addAssetBeingResolved, removeAssetBeingResolved, removePendingAsset } = useAssetStore(
@@ -29,10 +29,10 @@ export const AssetsManager: React.FC = () => {
       }
       addAssetBeingResolved(dataObject.id)
 
-      const distributors = await getAllDistributors(dataObject.storageBag.id)
-      if (!distributors) {
+      const distributionOperators = await getAllDistributionOperatorsForBag(dataObject.storageBag.id)
+      if (!distributionOperators) {
         // TODO: potentially try to fetch distributors again
-        SentryLogger.error('No distributor was found for the storage bag', 'AssetsManager', null, {
+        SentryLogger.error('No distribution operator was found for the storage bag', 'AssetsManager', null, {
           asset: {
             id: dataObject.id,
             storageBagId: dataObject.storageBag.id,
@@ -42,10 +42,10 @@ export const AssetsManager: React.FC = () => {
         return
       }
 
-      const sortedDistributors = sortDistributors(distributors, dataObject)
+      const sortedDistributionOperators = sortDistributionOperators(distributionOperators, dataObject)
 
-      for (const distributor of sortedDistributors) {
-        const assetUrl = createDistributorDataObjectUrl(distributor, dataObject)
+      for (const distributionOperator of sortedDistributionOperators) {
+        const assetUrl = createDistributionOperatorDataObjectUrl(distributionOperator, dataObject)
 
         const assetTestPromise = testAssetDownload(assetUrl, dataObject)
         const assetTestPromiseWithTimeout = withTimeout(assetTestPromise, ASSET_RESPONSE_TIMEOUT)
@@ -63,25 +63,25 @@ export const AssetsManager: React.FC = () => {
             // AssetLogger.assetTimeout(assetDetails)
             ConsoleLogger.warn(`Distributor didn't respond in ${ASSET_RESPONSE_TIMEOUT} seconds`, {
               dataObject,
-              distributor,
+              distributionOperator,
             })
           } else {
             SentryLogger.error('Error during asset download test', 'AssetsManager', err, {
-              asset: { dataObject, distributor },
+              asset: { dataObject, distributionOperator },
             })
           }
         }
       }
 
       SentryLogger.error('None of the distributors provided the asset', 'AssetsManager', null, {
-        asset: { dataObject, sortedDistributors },
+        asset: { dataObject, sortedDistributionOperators },
       })
     })
   }, [
     addAsset,
     addAssetBeingResolved,
     assetIdsBeingResolved,
-    getAllDistributors,
+    getAllDistributionOperatorsForBag,
     pendingAssets,
     removeAssetBeingResolved,
     removePendingAsset,
@@ -93,24 +93,30 @@ export const AssetsManager: React.FC = () => {
 // deterministically sort distributors for a given dataObject
 // this is important for caching, if we pick the distributor at random, clients will end up caching [distributors.length] copies of each asset (all have unique URL)
 // TODO: geographical locations into the account, to offer a distributor physically closest to the client, this should ensure best response times
-const sortDistributors = (
-  distributors: DistributorInfo[],
+const sortDistributionOperators = (
+  distributionOperators: OperatorInfo[],
   dataObject: StorageDataObjectFieldsFragment
-): DistributorInfo[] => {
+): OperatorInfo[] => {
   const dataObjectIdBn = new BN(dataObject.id)
-  const distributorsCountBn = new BN(distributors.length)
-  const firstDistributorIndex = dataObjectIdBn.mod(distributorsCountBn).toNumber()
-  return [...distributors.slice(firstDistributorIndex), ...distributors.slice(0, firstDistributorIndex)]
+  const distributionOperatorsCountBn = new BN(distributionOperators.length)
+  const firstDistributorIndex = dataObjectIdBn.mod(distributionOperatorsCountBn).toNumber()
+  return [
+    ...distributionOperators.slice(firstDistributorIndex),
+    ...distributionOperators.slice(0, firstDistributorIndex),
+  ]
 }
 
-const createDistributorDataObjectUrl = (distributor: DistributorInfo, dataObject: StorageDataObjectFieldsFragment) => {
-  return joinUrlFragments(distributor.endpoint, DISTRIBUTOR_ASSET_PATH, dataObject.id)
+const createDistributionOperatorDataObjectUrl = (
+  distributionOperator: OperatorInfo,
+  dataObject: StorageDataObjectFieldsFragment
+) => {
+  return joinUrlFragments(distributionOperator.endpoint, DISTRIBUTOR_ASSET_PATH, dataObject.id)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const logDistributorPerformance = (
   downloadTestPromise: Promise<number>,
-  distributor: DistributorInfo,
+  distributor: OperatorInfo,
   dataObject: StorageDataObjectFieldsFragment
 ) => {
   const eventEntry: DistributorEventEntry = {

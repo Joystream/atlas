@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { DataObjectType } from '@/types/storage'
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
@@ -23,7 +23,7 @@ type StorageEvent = {
 
 export type DistributorEventEntry = {
   dataObjectId: string
-  dataObjectType: DataObjectType
+  dataObjectType: StorageDataObjectFieldsFragment['type']['__typename']
 } & DistributorEventDetails
 
 class _AssetLogger {

@@ -17,6 +17,7 @@ fragment DistributionBucketOperatorField on DistributionBucketOperator {
   metadata {
     nodeEndpoint
   }
+  status
 }
 
 query GetDistributionBucketsWithOperators {
@@ -27,6 +28,24 @@ query GetDistributionBucketsWithOperators {
     }
     operators {
       ...DistributionBucketOperatorField
+    }
+  }
+}
+
+query GetStorageBuckets {
+  storageBuckets(
+    limit: 50
+    where: {
+      operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+      operatorMetadata: { nodeEndpoint_contains: "http" }
+    }
+  ) {
+    id
+    operatorMetadata {
+      nodeEndpoint
+    }
+    bags {
+      id
     }
   }
 }
