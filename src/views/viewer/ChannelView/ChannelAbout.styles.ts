@@ -38,6 +38,7 @@ export const Details = styled.div`
 
 export const DetailsMember = styled(Details)`
   display: flex;
+  align-items: center;
 `
 
 export const DetailsText = styled(Text)`
