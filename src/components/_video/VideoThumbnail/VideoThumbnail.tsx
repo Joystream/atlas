@@ -18,14 +18,13 @@ import {
   VideoThumbnailContainer,
 } from './VideoThumbnail.styles'
 
-export type SlotsObject =
-  | {
-      [Property in SlotPosition]?: {
-        element: React.ReactNode
-        type?: 'default' | 'hover'
-        clickable?: boolean
-      } | null
-    }
+export type SlotsObject = {
+  [Property in SlotPosition]?: {
+    element: React.ReactNode
+    type?: 'default' | 'hover'
+    clickable?: boolean
+  }
+}
 
 export type VideoThumbnailProps = {
   loading?: boolean

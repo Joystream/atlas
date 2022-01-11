@@ -100,7 +100,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
           </VideoInfoContainer>
         </CSSTransition>
       </SwitchTransition>
-      {kebabMenuItems.length > 0 && (
+      {kebabMenuItems.length > 0 && !loading && (
         <ContextMenu
           placement="bottom-end"
           items={kebabMenuItems}

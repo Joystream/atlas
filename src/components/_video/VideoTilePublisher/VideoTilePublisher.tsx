@@ -103,7 +103,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           element: <SvgIllustrativeReupload />,
           type: 'hover',
         }
-        slots.topRight = null
+        slots.topRight = undefined
       }
       if (isUnlisted) {
         slots.bottomLeft = {
