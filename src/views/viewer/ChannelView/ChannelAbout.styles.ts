@@ -29,21 +29,21 @@ export const Links = styled.div`
 `
 
 export const Details = styled.div`
-  display: grid;
+  display: flex;
   gap: ${sizes(2)};
+  margin-bottom: ${sizes(4)};
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${oldColors.gray[600]};
-  margin-bottom: ${sizes(4)};
 `
 
 export const DetailsText = styled(Text)`
   margin-bottom: ${sizes(4)};
 `
 
-export const AvatarContainer = styled.div`
+export const MemberContainer = styled.div`
   display: flex;
-  align-items: center;
-  margin-top: ${sizes(2)};
+  flex-direction: column;
+  gap: ${sizes(2)};
 `
 
 export const StyledAvatar = styled(Avatar)`

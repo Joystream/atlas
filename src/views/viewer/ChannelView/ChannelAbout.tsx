@@ -11,9 +11,9 @@ import { formatDate } from '@/utils/time'
 
 import {
   Anchor,
-  AvatarContainer,
   Details,
   DetailsText,
+  MemberContainer,
   StyledAvatar,
   StyledLayoutGrid,
   TextContainer,
@@ -36,23 +36,23 @@ export const ChannelAbout = () => {
         )}
       </GridItem>
       <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText variant="h500">Details</DetailsText>
+        <DetailsText variant="h400">Details</DetailsText>
 
         <Details>
-          <Text variant="t100" secondary>
-            Owned by member
-          </Text>
-          <AvatarContainer>
-            <StyledAvatar size="small" assetUrl={channel?.ownerMember?.avatarUri} />
+          <StyledAvatar size="small" assetUrl={channel?.ownerMember?.avatarUri} />
+          <MemberContainer>
+            <Text variant="t100" secondary>
+              Owned by member
+            </Text>
             <Anchor
               as="a"
-              variant="t300"
+              variant="t300-strong"
               href={`${PIONEER_URL}/#/members/${channel?.ownerMember?.handle}`}
               target="_blank"
             >
               {channel?.ownerMember?.handle}
             </Anchor>
-          </AvatarContainer>
+          </MemberContainer>
         </Details>
 
         <Details>
