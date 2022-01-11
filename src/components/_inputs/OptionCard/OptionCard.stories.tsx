@@ -1,6 +1,8 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { SvgActionTrash } from '@/components/_icons'
+
 import { OptionCard, OptionCardProps } from './OptionCard'
 
 export default {
@@ -21,9 +23,10 @@ const Template: Story<OptionCardProps> = (args) => {
     setSelected(element.value)
   }
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: '16px' }}>
-      <OptionCard {...args} value="1" selectedValue={selected} onClick={handleClick} />
+    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto', gap: '16px' }}>
+      <OptionCard {...args} icon={<SvgActionTrash />} value="1" selectedValue={selected} onClick={handleClick} />
       <OptionCard {...args} value="2" selectedValue={selected} onClick={handleClick} />
+      <OptionCard {...args} value="3" selectedValue={selected} onClick={handleClick} />
     </div>
   )
 }
