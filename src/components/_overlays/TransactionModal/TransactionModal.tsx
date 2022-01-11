@@ -6,6 +6,7 @@ import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
 import { ExtrinsicStatus } from '@/joystream-lib'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
 import { TRANSACTION_STEPS_DETAILS } from './TransactionModal.constants'
@@ -37,6 +38,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
     status != null
       ? TRANSACTION_STEPS_DETAILS[status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status]
       : null
+  const { activeChannelId } = useUser()
 
   useEffect(() => {
     if (status !== null && initialStatus === null) {
@@ -148,7 +150,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
           onClick: onClose,
           disabled: !canCancel,
         }}
-        description={stepDetails?.description}
+        description={
+          status === ExtrinsicStatus.VoucherSizeLimitExceeded && activeChannelId
+            ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
+            : stepDetails?.description
+        }
       />
     </StyledModal>
   )
