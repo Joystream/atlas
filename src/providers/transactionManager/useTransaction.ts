@@ -57,6 +57,10 @@ export const useTransaction = (): HandleTransactionFn => {
           )
         }
 
+        // TODO: remove
+        // eslint-disable-next-line no-console
+        console.log('transaction finalized in: ', result.block)
+
         setDialogStep(ExtrinsicStatus.Syncing)
         const queryNodeSyncPromise = new Promise<void>((resolve) => {
           const syncCallback = async () => {
