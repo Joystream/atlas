@@ -40,9 +40,9 @@ export const StyledText = styled(Text)`
   margin-top: ${sizes(2)};
   display: flex;
   align-items: center;
+  cursor: pointer;
 `
 export const StyledSvgActionCopy = styled(SvgActionCopy)`
-  cursor: pointer;
   margin-left: ${sizes(2)};
 
   path {

@@ -3,6 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
+import { shortenAddress } from '@/utils/address'
 import { copyToClipboard } from '@/utils/browser'
 
 import {
@@ -49,10 +50,10 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarU
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" secondary>
+                <StyledText variant="t300" secondary onClick={() => copyToClipboard(address)}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy address" arrowDisabled placement="top">
-                    <StyledSvgActionCopy onClick={() => copyToClipboard(address)} />
+                    <StyledSvgActionCopy />
                   </Tooltip>
                 </StyledText>
               )}
@@ -70,11 +71,4 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarU
       </CSSTransition>
     </SwitchTransition>
   )
-}
-
-export const shortenAddress = (text: string, firstLettersAmount: number, lastLettersAmount: number) => {
-  const arrayFromString = text.split('')
-  const firstLetters = arrayFromString.slice(0, firstLettersAmount).join('')
-  const lastLetters = arrayFromString.slice(arrayFromString.length - 1 - lastLettersAmount).join('')
-  return `${firstLetters}...${lastLetters}`
 }
