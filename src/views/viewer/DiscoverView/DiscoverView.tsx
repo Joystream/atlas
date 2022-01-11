@@ -30,7 +30,9 @@ export const DiscoverView: React.FC = () => {
     const _featuredVideoCategoryCardsData =
       categories
         ?.map((category) => {
-          const video = categoriesFeaturedVideos?.[category.id]?.videos.find((video) => !!video.videoCutUrl)
+          const video = categoriesFeaturedVideos?.[category.id]?.categoryFeaturedVideos.find(
+            (video) => !!video.videoCutUrl
+          )
 
           if (!video) return null
 

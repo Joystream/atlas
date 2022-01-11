@@ -121,7 +121,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
     __typename?: 'CategoryFeaturedVideos'
     categoryId: string
     category: { __typename?: 'VideoCategory'; name?: Types.Maybe<string> }
-    videos: Array<{
+    categoryFeaturedVideos: Array<{
       __typename?: 'FeaturedVideo'
       videoId: string
       videoCutUrl?: Types.Maybe<string>
@@ -379,12 +379,12 @@ export type GetVideoHeroLazyQueryHookResult = ReturnType<typeof useGetVideoHeroL
 export type GetVideoHeroQueryResult = Apollo.QueryResult<GetVideoHeroQuery, GetVideoHeroQueryVariables>
 export const GetAllCategoriesFeaturedVideosDocument = gql`
   query GetAllCategoriesFeaturedVideos {
-    allCategoriesFeaturedVideos {
+    allCategoriesFeaturedVideos(videosLimit: 3) {
       categoryId
       category {
         name
       }
-      videos {
+      categoryFeaturedVideos {
         videoId
         videoCutUrl
         video {

@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: 'https://orion.joystream.org/graphql'
+schema: ${VITE_DEVELOPMENT_ORION_URL}
 
 documents:
   - './src/api/queries/**/*.graphql'

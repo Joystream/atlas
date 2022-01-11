@@ -11,12 +11,12 @@ query GetVideoHero {
 }
 
 query GetAllCategoriesFeaturedVideos {
-  allCategoriesFeaturedVideos {
+  allCategoriesFeaturedVideos(videosLimit: 3) {
     categoryId
     category {
       name
     }
-    videos {
+    categoryFeaturedVideos {
       videoId
       videoCutUrl
       video {
