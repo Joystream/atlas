@@ -11,7 +11,6 @@ export const TextContainer = styled.div`
   grid-gap: ${sizes(4)};
   padding-bottom: ${sizes(8)};
   margin-bottom: ${sizes(8)};
-  border-bottom: 1px solid ${oldColors.gray[600]};
 `
 
 export const LinksContainer = styled.div`
@@ -37,14 +36,19 @@ export const Details = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
+export const DetailsMember = styled(Details)`
+  display: flex;
+  align-items: center;
+`
+
 export const DetailsText = styled(Text)`
   margin-bottom: ${sizes(4)};
 `
 
-export const AvatarContainer = styled.div`
+export const MemberContainer = styled.div`
   display: flex;
-  align-items: center;
-  margin-top: ${sizes(2)};
+  flex-direction: column;
+  gap: ${sizes(2)};
 `
 
 export const StyledAvatar = styled(Avatar)`
