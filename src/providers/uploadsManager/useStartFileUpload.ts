@@ -147,7 +147,6 @@ export const useStartFileUpload = () => {
           onUploadProgress: setUploadProgress,
         })
 
-        // TODO: remove assets from the same parent if all finished
         setAssetStatus({ lastStatus: 'processing', progress: 100 })
         addProcessingAssetId(asset.contentId)
 

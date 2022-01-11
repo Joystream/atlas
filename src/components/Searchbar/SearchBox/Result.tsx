@@ -77,7 +77,7 @@ export const Result: React.FC<ResultProps> = ({
             <ResultTitle title={title} query={query} />
           </Title>
           <Text secondary variant="t100">
-            {video ? video.channel.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
+            {video ? video.channel?.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
           </Text>
         </div>
       </ResultContent>

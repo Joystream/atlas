@@ -2,6 +2,8 @@ fragment BasicChannelFields on Channel {
   id
   title
   createdAt
+  views
+  follows
 
   avatarPhotoUrls
   avatarPhotoAvailability
@@ -13,8 +15,6 @@ fragment BasicChannelFields on Channel {
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
   description
-  follows
-  views
   isPublic
   isCensored
   language {
@@ -78,38 +78,6 @@ query GetChannelsConnection(
   }
 }
 
-### Orion
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelViews($channelId: ID!) {
-  channelViews(channelId: $channelId) {
-    id
-    views
-  }
-}
-
-# modyfying this query name will need a sync-up in `src/api/client/resolvers.ts`
-query GetChannelFollows($channelId: ID!) {
-  channelFollows(channelId: $channelId) {
-    id
-    follows
-  }
-}
-
-query GetBatchedChannelFollows($channelIdList: [ID!]!) {
-  batchedChannelFollows(channelIdList: $channelIdList) {
-    id
-    follows
-  }
-}
-
-query GetBatchedChannelViews($channelIdList: [ID!]!) {
-  batchedChannelsViews(channelIdList: $channelIdList) {
-    id
-    views
-  }
-}
-
 mutation FollowChannel($channelId: ID!) {
   followChannel(channelId: $channelId) {
     id
@@ -124,30 +92,70 @@ mutation UnfollowChannel($channelId: ID!) {
   }
 }
 
-query GetMostViewedChannels($timePeriodDays: Int!, $limit: Int) {
-  mostViewedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    views
+query GetMostViewedChannelsConnection(
+  $limit: Int = 50
+  $periodDays: Int
+  $first: Int
+  $after: String
+  $where: ChannelWhereInput
+) {
+  mostViewedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-query GetMostViewedChannelsAllTime($limit: Int!) {
-  mostViewedChannelsAllTime(limit: $limit) {
-    id
-    views
+query GetMostFollowedChannelsConnection(
+  $limit: Int!
+  $periodDays: Int
+  $first: Int
+  $after: String
+  $where: ChannelWhereInput
+) {
+  mostFollowedChannelsConnection(limit: $limit, first: $first, after: $after, periodDays: $periodDays, where: $where) {
+    edges {
+      cursor
+      node {
+        ...AllChannelFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
   }
 }
 
-query GetMostFollowedChannels($timePeriodDays: Int!, $limit: Int) {
-  mostFollowedChannels(timePeriodDays: $timePeriodDays, limit: $limit) {
-    id
-    follows
+query GetTop10Channels($where: ChannelWhereInput) {
+  top10Channels(where: $where) {
+    ...BasicChannelFields
   }
 }
 
-query GetMostFollowedChannelsAllTime($limit: Int!) {
-  mostFollowedChannelsAllTime(limit: $limit) {
-    id
-    follows
+query GetPromisingChannels($where: ChannelWhereInput) {
+  promisingChannels(where: $where) {
+    ...BasicChannelFields
+  }
+}
+
+query GetDiscoverChannels($where: ChannelWhereInput) {
+  discoverChannels(where: $where) {
+    ...BasicChannelFields
+  }
+}
+
+query GetPopularChannels($where: ChannelWhereInput) {
+  popularChannels(where: $where) {
+    ...BasicChannelFields
   }
 }

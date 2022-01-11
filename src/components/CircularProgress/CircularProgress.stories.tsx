@@ -12,13 +12,13 @@ export default {
 const SingleTemplate: Story<CircularProgressProps> = (args) => (
   <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
     <div style={{ width: '24px', height: '24px' }}>
-      <CircularProgress {...args}></CircularProgress>
+      <CircularProgress {...args} />
     </div>
     <div style={{ width: '48px', height: '48px' }}>
-      <CircularProgress {...args}></CircularProgress>
+      <CircularProgress {...args} />
     </div>
     <div style={{ width: '96px', height: '96px' }}>
-      <CircularProgress {...args}></CircularProgress>
+      <CircularProgress {...args} />
     </div>
   </div>
 )

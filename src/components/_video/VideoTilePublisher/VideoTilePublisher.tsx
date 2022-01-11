@@ -51,14 +51,14 @@ export const VideoTilePublisher: React.FC<VideoTileWPublisherProps> = React.memo
         isLoadingAvatar={isLoadingAvatar}
         publisherMode
         title={isDraft ? draft?.title : video?.title}
-        channelTitle={video?.channel.title}
+        channelTitle={video?.channel?.title}
         channelAvatarUrl={avatarPhotoUrl}
         createdAt={isDraft ? new Date(draft?.updatedAt ?? '') : video?.createdAt}
         duration={video?.duration}
         views={video?.views}
         thumbnailUrl={thumbnailPhotoUrl}
         hasAssetUploadFailed={hasAssetUploadFailed}
-        channelHref={id ? absoluteRoutes.viewer.channel(video?.channel.id) : undefined}
+        channelHref={id ? absoluteRoutes.viewer.channel(video?.channel?.id) : undefined}
         isLoading={loading}
         onOpenInTabClick={isDraft || !id ? undefined : () => openInNewTab(absoluteRoutes.viewer.video(id), true)}
         onCopyVideoURLClick={isDraft ? undefined : handleCopyVideoURLClick}

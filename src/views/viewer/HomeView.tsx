@@ -1,16 +1,15 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { useVideoHeroData } from '@/api/featured'
-import { useMostViewedVideosIds, useVideosConnection } from '@/api/hooks'
+import { useVideoHeroData, useVideosConnection } from '@/api/hooks'
+import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
 import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystreamUpdate'
-import { TopTenThisWeek } from '@/components/_content/TopTenThisWeek'
+import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
-import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -21,20 +20,7 @@ export const HomeView: React.FC = () => {
   const channelIdIn = followedChannels.map((channel) => channel.id)
   const anyFollowedChannels = channelIdIn.length > 0
 
-  const videoHeroData = useVideoHeroData()
-
-  const {
-    mostViewedVideos,
-    loading: mostViewedVideosLoading,
-    error: mostViewedVideosError,
-  } = useMostViewedVideosIds(
-    {
-      limit: 200,
-      timePeriodDays: 30,
-    },
-    { onError: (error) => SentryLogger.error('Failed to fetch most viewed videos IDs', 'HomeView', error) }
-  )
-  const mostViewedVideosIds = mostViewedVideos?.map((item) => item.id)
+  const { videoHero } = useVideoHeroData()
 
   const {
     videosConnection,
@@ -51,13 +37,13 @@ export const HomeView: React.FC = () => {
 
   const followedChannelsVideosCount = videosConnection?.totalCount
 
-  if (mostViewedVideosError || followedError) {
+  if (followedError) {
     return <ViewErrorFallback />
   }
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
-      <VideoHero videoHeroData={videoHeroData} withMuteButton />
+      <VideoHero videoHeroData={videoHero} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
           <InfiniteVideoGrid
@@ -69,15 +55,15 @@ export const HomeView: React.FC = () => {
           />
         ) : null}
         <InfiniteVideoGrid
+          periodDays={7}
+          query={GetMostViewedVideosConnectionDocument}
           title="Popular on Joystream"
-          videoWhereInput={{ id_in: mostViewedVideosIds }}
-          ready={!mostViewedVideosLoading}
           onDemand
           titleLoader
         />
-        <TopTenThisWeek />
+        <TopTenVideos period="week" />
         <OfficialJoystreamUpdate />
-        <DiscoverChannels additionalLink={{ name: 'Browse channels', url: absoluteRoutes.viewer.channels() }} />
+        <DiscoverChannels withLink />
         <InfiniteVideoGrid title="All content" onDemand />
       </Container>
     </VideoContentTemplate>

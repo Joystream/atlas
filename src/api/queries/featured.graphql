@@ -4,15 +4,34 @@ query GetVideoHero {
     heroTitle
     heroVideoCutUrl
     heroPosterUrl
+    video {
+      ...VideoFields
+    }
   }
 }
 
-query GetCategoriesFeaturedVideos {
-  allCategoriesFeaturedVideos {
+query GetAllCategoriesFeaturedVideos {
+  allCategoriesFeaturedVideos(videosLimit: 3) {
     categoryId
-    videos {
+    category {
+      name
+    }
+    categoryFeaturedVideos {
       videoId
       videoCutUrl
+      video {
+        ...VideoFields
+      }
+    }
+  }
+}
+
+query GetCategoriesFeaturedVideos($categoryId: ID!) {
+  categoryFeaturedVideos(categoryId: $categoryId) {
+    videoId
+    videoCutUrl
+    video {
+      ...VideoFields
     }
   }
 }

@@ -10,7 +10,7 @@ type TextProps = {
 
 const baseStyles = ({ color, isSecondary }: TextProps) => css`
   margin: 0;
-  color: ${color ? color : isSecondary ? cVar('colorCoreNeutral300') : cVar('colorCoreNeutral50')};
+  color: ${color ? color : isSecondary ? cVar('colorText') : cVar('colorTextStrong')};
 `
 
 export const styledVariants = {

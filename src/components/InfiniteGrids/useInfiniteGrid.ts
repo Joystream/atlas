@@ -4,7 +4,7 @@ import { DocumentNode } from 'graphql'
 import { debounce, isEqual } from 'lodash-es'
 import { useEffect, useRef } from 'react'
 
-import { ChannelEdge, ChannelOrderByInput, VideoEdge, VideoOrderByInput } from '@/api/queries'
+import { ChannelEdge, VideoEdge } from '@/api/queries'
 
 export type PaginatedData<T> = {
   edges: {
@@ -45,7 +45,6 @@ type UseInfiniteGridParams<TRawData, TPaginatedData extends PaginatedData<unknow
   onDemandInfinite?: boolean
   activatedInfinteGrid?: boolean
   onScrollToBottom?: () => void
-  orderBy?: ChannelOrderByInput | VideoOrderByInput
   additionalSortFn?: (edge?: ChannelEdge[] | VideoEdge[]) => (ChannelEdge | VideoEdge)[]
 }
 
@@ -75,8 +74,6 @@ export const useInfiniteGrid = <
   onDemand,
   onDemandInfinite,
   activatedInfinteGrid,
-  orderBy = ChannelOrderByInput.CreatedAtDesc,
-  additionalSortFn,
 }: UseInfiniteGridParams<TRawData, TPaginatedData, TArgs>): UseInfiniteGridReturn<TPaginatedData> => {
   const targetDisplayedItemsCount = targetRowsCount * itemsPerRow
   const targetLoadedItemsCount = targetDisplayedItemsCount + skipCount
@@ -94,9 +91,8 @@ export const useInfiniteGrid = <
     notifyOnNetworkStatusChange: true,
     skip: !isReady,
     variables: {
-      orderBy,
       ...queryVariables,
-      first: additionalSortFn ? 100 : targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
+      first: targetDisplayedItemsCount + PREFETCHED_ITEMS_COUNT,
     },
     onError,
   })
@@ -160,7 +156,7 @@ export const useInfiniteGrid = <
     return () => window.removeEventListener('scroll', scrollHandler)
   }, [error, isReady, loading, allItemsLoaded, onScrollToBottom, onDemand, onDemandInfinite, activatedInfinteGrid])
 
-  const edges = additionalSortFn ? additionalSortFn(data?.edges as ChannelEdge[] | VideoEdge[]) : data?.edges
+  const edges = data?.edges
 
   const isRefetching = networkStatus === NetworkStatus.refetch
 

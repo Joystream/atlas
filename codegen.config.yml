@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: './src/api/schemas/**/*.graphql'
+schema: ${VITE_DEVELOPMENT_ORION_URL}
 
 documents:
   - './src/api/queries/**/*.graphql'
@@ -11,6 +11,9 @@ config:
   preResolveTypes: true # avoid using Pick
 
 generates:
+  src/api/schemas/orion.json:
+    plugins:
+      - introspection
   src/api/queries/__generated__/baseTypes.generated.ts:
     hooks:
       afterOneFileWrite:

@@ -122,21 +122,21 @@ const TextOnlyTemplate: Story<ButtonProps> = (args) => (
 
 const IconOnlyTemplate: Story<ButtonProps> = (args) => (
   <>
-    <Button {...args} size="large"></Button>
-    <Button {...args} size="medium"></Button>
-    <Button {...args} size="small"></Button>
-    <Button {...args} size="large" variant="secondary"></Button>
-    <Button {...args} size="medium" variant="secondary"></Button>
-    <Button {...args} size="small" variant="secondary"></Button>
-    <Button {...args} size="large" variant="tertiary"></Button>
-    <Button {...args} size="medium" variant="tertiary"></Button>
-    <Button {...args} size="small" variant="tertiary"></Button>
-    <Button {...args} size="large" variant="destructive-secondary"></Button>
-    <Button {...args} size="medium" variant="destructive-secondary"></Button>
-    <Button {...args} size="small" variant="destructive-secondary"></Button>
-    <Button {...args} size="large" variant="warning-secondary"></Button>
-    <Button {...args} size="medium" variant="warning-secondary"></Button>
-    <Button {...args} size="small" variant="warning-secondary"></Button>
+    <Button {...args} size="large" />
+    <Button {...args} size="medium" />
+    <Button {...args} size="small" />
+    <Button {...args} size="large" variant="secondary" />
+    <Button {...args} size="medium" variant="secondary" />
+    <Button {...args} size="small" variant="secondary" />
+    <Button {...args} size="large" variant="tertiary" />
+    <Button {...args} size="medium" variant="tertiary" />
+    <Button {...args} size="small" variant="tertiary" />
+    <Button {...args} size="large" variant="destructive-secondary" />
+    <Button {...args} size="medium" variant="destructive-secondary" />
+    <Button {...args} size="small" variant="destructive-secondary" />
+    <Button {...args} size="large" variant="warning-secondary" />
+    <Button {...args} size="medium" variant="warning-secondary" />
+    <Button {...args} size="small" variant="warning-secondary" />
   </>
 )
 

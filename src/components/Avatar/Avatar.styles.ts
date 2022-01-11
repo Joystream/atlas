@@ -1,16 +1,17 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, square, transitions, zIndex } from '@/styles'
+import { cVar, media, square, zIndex } from '@/styles'
 
 export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'small' | 'channel' | 'channel-card'
 
 type ContainerProps = {
   size: AvatarSize
-  loading?: boolean
+  isLoading?: boolean
 }
 
 type EditButtonProps = {
@@ -100,8 +101,8 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   }
 }
 
-const getBorderStyles = ({ loading }: ContainerProps) => {
-  if (!loading) {
+const getBorderStyles = ({ isLoading }: ContainerProps) => {
+  if (!isLoading) {
     return css`
       ::after {
         ${square('100%')};
@@ -138,7 +139,7 @@ export const EditButton = styled.button<EditButtonProps>`
   border: none;
   position: absolute;
   z-index: 3;
-  color: ${oldColors.gray[100]};
+  color: ${cVar('colorCoreNeutral100')};
 
   font: ${cVar('typographyDesktopT200Strong')};
   letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
@@ -150,11 +151,11 @@ export const EditButton = styled.button<EditButtonProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: background-color ${transitions.timings.loading} ${transitions.easing};
+  transition: background-color ${cVar('animationTransitionMedium')};
   opacity: 0;
 
   :hover {
-    background-color: ${oldColors.transparentBlack[54]};
+    background-color: ${cVar('colorCoreNeutral500Darken')};
     opacity: 1;
   }
 
@@ -163,7 +164,7 @@ export const EditButton = styled.button<EditButtonProps>`
   }
 `
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled('div', { shouldForwardProp: isPropValid })<ContainerProps>`
   ${getAvatarSizeCss};
   ${getBorderStyles};
 
@@ -172,6 +173,7 @@ export const Container = styled.div<ContainerProps>`
   justify-content: center;
   align-items: center;
   position: relative;
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
 `
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
@@ -201,7 +203,7 @@ export const NewChannelAvatar = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 100%;
-  background-color: ${oldColors.gray[800]};
+  background-color: ${cVar('colorCoreNeutral800')};
 `
 
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`

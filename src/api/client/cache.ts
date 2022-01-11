@@ -63,9 +63,6 @@ const getSearchKeyArgs = (args: Record<string, SearchQueryVariables['whereVideo'
 const createDateHandler = () => ({
   merge: (_: unknown, existingData: string | Date): Date => {
     if (typeof existingData !== 'string') {
-      // TODO: investigate further
-      // rarely, for some reason the object that arrives here is already a date object
-      // in this case parsing attempt will cause an error
       return existingData
     }
     return parseISO(existingData)
@@ -114,6 +111,8 @@ type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | Field
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
   channelsConnection: relayStylePagination(getChannelKeyArgs),
+  mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
+  mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   videosConnection: {
     ...relayStylePagination(getVideoKeyArgs),
     read(
@@ -138,6 +137,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       )
     },
   },
+  mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),
     read(existing, opts) {

@@ -4,3 +4,4 @@ storybook-static
 .coverage
 !.storybook/
 scripts
+__generated__/

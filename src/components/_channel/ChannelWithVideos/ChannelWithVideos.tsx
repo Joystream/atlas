@@ -1,6 +1,6 @@
 import React, { FC, useMemo, useState } from 'react'
 
-import { useChannel, useChannelPreviewVideos } from '@/api/hooks'
+import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTile } from '@/components/_video/VideoTile'
@@ -33,7 +33,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
     channel,
     loading: channelLoading,
     error: channelError,
-  } = useChannel(channelId || '', {
+  } = useBasicChannel(channelId || '', {
     skip: !channelId,
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelWithVideos', error),
   })

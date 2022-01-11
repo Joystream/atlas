@@ -55,16 +55,12 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
       isCategory
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
-      videoHeroData={
-        currentVideoData
-          ? {
-              video: currentVideoData.video,
-              heroTitle: currentVideoData.video.title || '',
-              heroVideoCutUrl: currentVideoData.videoCutUrl,
-              heroPosterUrl: null,
-            }
-          : null
-      }
+      videoHeroData={{
+        video: currentVideoData?.video,
+        heroTitle: currentVideoData?.video.title || '',
+        heroVideoCutUrl: currentVideoData?.videoCutUrl || '',
+        heroPosterUrl: null,
+      }}
       headerNode={
         !!header.title &&
         !!header.icon && <VideoHeroHeader icon={header.icon} title={header.title} loading={!videos?.[activeVideoIdx]} />
