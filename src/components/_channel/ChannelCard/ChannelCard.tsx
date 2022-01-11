@@ -18,11 +18,6 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
 
-  const handleFollow = (e: React.MouseEvent) => {
-    e.preventDefault()
-    toggleFollowing()
-  }
-
   return (
     <ChannelCardBase
       className={className}
@@ -31,7 +26,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className }) => {
       id={channel?.id}
       avatarUrl={url}
       follows={channel?.follows}
-      onFollowButton={handleFollow}
+      onFollow={toggleFollowing}
       isFollowing={isFollowing}
       title={channel?.title}
     />

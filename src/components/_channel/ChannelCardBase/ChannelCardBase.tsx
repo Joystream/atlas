@@ -27,7 +27,7 @@ export type ChannelCardBaseProps = {
   isFollowing?: boolean
   className?: string
   onClick?: () => void
-  onFollowButton?: (event: React.MouseEvent) => void
+  onFollow?: (event?: React.MouseEvent) => void
 }
 
 export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
@@ -40,10 +40,15 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
   isFollowing,
   className,
   onClick,
-  onFollowButton: onButtonClick,
+  onFollow,
 }) => {
   const mdMatch = useMediaMatch('md')
   const [activeDisabled, setActiveDisabled] = useState(false)
+
+  const handleFollowButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    onFollow?.(e)
+  }
   return (
     <ChannelCardArticle className={className} activeDisabled={activeDisabled}>
       <ChannelCardAnchor onClick={onClick} to={id ? absoluteRoutes.viewer.channel(id) : ''}>
@@ -58,8 +63,8 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
               {isLoading ? (
                 <>
                   <SkeletonLoader width={100} height={mdMatch ? 24 : 20} bottomSpace={mdMatch ? 4 : 8} />
-                  <SkeletonLoader width={70} height={mdMatch ? 20 : 16} bottomSpace={onButtonClick && 16} />
-                  {onButtonClick && <SkeletonLoader width={60} height={32} />}
+                  <SkeletonLoader width={70} height={mdMatch ? 20 : 16} bottomSpace={onFollow && 16} />
+                  {onFollow && <SkeletonLoader width={60} height={32} />}
                 </>
               ) : (
                 <>
@@ -67,11 +72,11 @@ export const ChannelCardBase: React.FC<ChannelCardBaseProps> = ({
                   <ChannelFollows variant={mdMatch ? 't200' : 't100'} secondary>
                     {formatNumberShort(follows || 0)} followers
                   </ChannelFollows>
-                  {onButtonClick && (
+                  {onFollow && (
                     <FollowButton
                       variant="secondary"
                       size="small"
-                      onClick={onButtonClick}
+                      onClick={handleFollowButtonClick}
                       onMouseOut={() => setActiveDisabled(false)}
                       onMouseMove={() => setActiveDisabled(true)}
                     >

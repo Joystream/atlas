@@ -31,7 +31,7 @@ const Template: Story<ChannelCardBaseProps> = (args) => <ChannelCardBase {...arg
 export const Default = Template.bind({})
 export const WithButton = Template.bind({})
 WithButton.args = {
-  onFollowButton: () => null,
+  onFollow: () => null,
 }
 
 const WithinGrid: Story<ChannelCardBaseProps> = (args) => (
