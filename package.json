@@ -50,10 +50,11 @@
     "@emotion/styled": "^11.6.0",
     "@joystream/content-metadata-protobuf": "~1.1.0",
     "@joystream/prettier-config": "^1.0.0",
-    "@joystream/types": "file:./../monorepo/types",
+    "@joystream/types": "^0.17.1",
     "@livesession/sdk": "^1.1.4",
     "@loadable/component": "^5.15.0",
-    "@polkadot/extension-dapp": "~0.37.3-17",
+    "@noble/hashes": "^0.5.7",
+    "@polkadot/extension-dapp": "~0.40.1",
     "@sentry/react": "^6.15.0",
     "@tippyjs/react": "^4.2.6",
     "apollo": "^2.33.9",
@@ -71,9 +72,9 @@
     "graphql-tag": "^2.12.5",
     "history": "^5.1.0",
     "immer": "^9.0.5",
-    "ipfs-only-hash": "^4.0.0",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
+    "multihashes": "^4.0.3",
     "rc-slider": "^9.7.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -154,11 +155,8 @@
   "resolutions": {
     "postcss-safe-parser": "4.0.2",
     "bn.js": "4.12.0",
-    "@polkadot/wasm-crypto": "4.2.1",
-    "@polkadot/wasm-crypto-wasm": "4.2.1",
-    "@polkadot/wasm-crypto-asmjs": "4.2.1",
     "svgo": "patch:svgo@npm:1.3.2#.yarn/patches/svgo-npm-1.3.2-4cceb54daa",
-    "@joystream/types": "patch:@joystream/types@npm:0.16.1#.yarn/patches/@joystream-types-npm-0.16.1-ff262063cb"
+    "@joystream/types": "patch:@joystream/types@npm:0.17.1#.yarn/patches/@joystream-types-npm-0.17.1-872c8bbe09"
   },
   "engines": {
     "node": ">=14"

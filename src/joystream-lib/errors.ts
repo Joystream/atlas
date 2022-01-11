@@ -1,18 +1,24 @@
-import { GenericEvent } from '@polkadot/types'
+export type JoystreamLibErrorType =
+  | 'ApiNotConnectedError'
+  | 'UnknownError'
+  | 'FailedError'
+  | 'SignCancelledError'
+  | 'AccountNotSelectedError'
+  | 'VoucherLimitError'
+  | 'MissingRequiredEventError'
 
-export class ApiNotConnectedError extends Error {}
+type JoystreamLibErrorArgs = {
+  name: JoystreamLibErrorType
+  message?: string
+  details?: unknown
+}
 
-export class ExtrinsicUnknownError extends Error {}
-export class ExtrinsicFailedError extends Error {
-  extrinsicFailedEvent: GenericEvent
-  voucherSizeLimitExceeded: boolean
-
-  constructor(event: GenericEvent, message?: string, voucherSizeLimitExceeded = false) {
+export class JoystreamLibError extends Error {
+  name: JoystreamLibErrorType
+  details: unknown
+  constructor({ name, message, details }: JoystreamLibErrorArgs) {
     super(message)
-    this.extrinsicFailedEvent = event
-    this.voucherSizeLimitExceeded = voucherSizeLimitExceeded
+    this.name = name
+    this.details = details
   }
 }
-export class ExtrinsicSignCancelledError extends Error {}
-
-export class AccountNotSelectedError extends Error {}

@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, DeepMap, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 
-import { useCategories } from '@/api/hooks'
+import { useCategories, useVideo } from '@/api/hooks'
 import {
   GetVideosConnectionDocument,
   GetVideosConnectionQuery,
@@ -29,7 +29,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { CreateVideoMetadata, VideoAssets, VideoId } from '@/joystream-lib'
+import { VideoExtrinsicResult, VideoInputAssets, VideoInputMetadata } from '@/joystream-lib'
 import { useAssetStore, useRawAsset, useRawAssetResolver } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { RawDraft, useDraftStore } from '@/providers/drafts'
@@ -119,6 +119,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       setSelectedVideoTabCachedDirtyFormData,
       videoWorkspaceState,
     } = useVideoWorkspace()
+    const { video } = useVideo(selectedVideoTab?.id || '', { fetchPolicy: 'cache-only', skip: !selectedVideoTab?.id })
     const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
 
     const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -280,7 +281,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         const anyLicenseFieldsDirty =
           dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
 
-        const metadata: CreateVideoMetadata = {
+        const metadata: VideoInputMetadata = {
           ...(isNew || dirtyFields.title ? { title: data.title } : {}),
           ...(isNew || dirtyFields.description ? { description: data.description } : {}),
           ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
@@ -306,40 +307,38 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           ...(isNew || dirtyFields.assets?.video ? { mediaPixelWidth: videoInputFile?.mediaPixelWidth } : {}),
         }
 
-        const assets: VideoAssets = {}
-        let videoContentId = ''
-        let thumbnailContentId = ''
+        const assets: VideoInputAssets = {}
 
         const processAssets = async () => {
           if (videoAsset?.blob && videoHashPromise) {
-            const [asset, contentId] = joystream.createFileAsset({
+            const ipfsHash = await videoHashPromise
+            assets.media = {
               size: videoAsset.blob.size,
-              ipfsContentId: await videoHashPromise,
-            })
-            assets.video = asset
-            videoContentId = contentId
+              ipfsHash,
+              replacedDataObjectId: video?.media?.id,
+            }
           } else if (dirtyFields.assets?.video) {
             ConsoleLogger.warn('Missing video data')
           }
 
           if (thumbnailAsset?.blob && thumbnailHashPromise) {
-            const [asset, contentId] = joystream.createFileAsset({
+            const ipfsHash = await thumbnailHashPromise
+            assets.thumbnailPhoto = {
               size: thumbnailAsset.blob.size,
-              ipfsContentId: await thumbnailHashPromise,
-            })
-            assets.thumbnail = asset
-            thumbnailContentId = contentId
+              ipfsHash,
+              replacedDataObjectId: video?.thumbnailPhoto?.id,
+            }
           } else if (dirtyFields.assets?.thumbnail) {
             ConsoleLogger.warn('Missing thumbnail data')
           }
         }
 
-        const uploadAssets = async (videoId: VideoId) => {
+        const uploadAssets = async ({ videoId, assetsIds }: VideoExtrinsicResult) => {
           const uploadPromises: Promise<unknown>[] = []
-          if (videoAsset?.blob && videoContentId) {
+          if (videoAsset?.blob && assetsIds.media) {
             const { mediaPixelWidth: width, mediaPixelHeight: height } = videoInputFile
             const uploadPromise = startFileUpload(videoAsset.blob, {
-              id: videoContentId,
+              id: assetsIds.media,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',
@@ -351,9 +350,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             })
             uploadPromises.push(uploadPromise)
           }
-          if (thumbnailAsset?.blob && thumbnailContentId) {
+          if (thumbnailAsset?.blob && assetsIds.thumbnailPhoto) {
             const uploadPromise = startFileUpload(thumbnailAsset.blob, {
-              id: thumbnailContentId,
+              id: assetsIds.thumbnailPhoto,
               owner: activeChannelId,
               parentObject: {
                 type: 'video',
@@ -368,9 +367,11 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
         }
 
-        const refetchDataAndCacheAssets = async (videoId: VideoId) => {
+        const refetchDataAndCacheAssets = async ({ videoId, assetsIds }: VideoExtrinsicResult) => {
           // add resolution for newly created asset
-          addAsset(thumbnailContentId, { url: thumbnailAsset?.url })
+          if (assetsIds.thumbnailPhoto) {
+            addAsset(assetsIds.thumbnailPhoto, { url: thumbnailAsset?.url })
+          }
 
           const fetchedVideo = await client.query<GetVideosConnectionQuery, GetVideosConnectionQueryVariables>({
             query: GetVideosConnectionDocument,
@@ -410,15 +411,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           preProcess: processAssets,
           txFactory: (updateStatus) =>
             isNew
-              ? joystream.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-              : joystream.updateVideo(
-                  selectedVideoTab.id,
-                  activeMemberId,
-                  activeChannelId,
-                  metadata,
-                  assets,
-                  updateStatus
-                ),
+              ? joystream.extrinsics.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
+              : joystream.extrinsics.updateVideo(selectedVideoTab.id, activeMemberId, metadata, assets, updateStatus),
           onTxFinalize: uploadAssets,
           onTxSync: refetchDataAndCacheAssets,
           successMessage: {
@@ -453,6 +447,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         startFileUpload,
         thumbnailHashPromise,
         updateSelectedVideoTab,
+        video?.media?.id,
+        video?.thumbnailPhoto?.id,
         videoHashPromise,
       ]
     )
