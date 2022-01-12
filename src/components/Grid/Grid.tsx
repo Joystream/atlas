@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import React, { useRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { MIN_VIDEO_TILE_WIDTH } from '@/components/_video/VideoTileBase/VideoTileCover'
 import { media, sizes } from '@/styles'
 import { toPx } from '@/utils/styles'
 
@@ -22,7 +21,7 @@ export const Grid: React.FC<GridProps> = ({
   onResize,
   repeat = 'fill',
   maxColumns = 6,
-  minWidth = MIN_VIDEO_TILE_WIDTH,
+  minWidth = 250,
   ...props
 }) => {
   const gridRef = useRef<HTMLImageElement>(null)

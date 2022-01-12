@@ -10,6 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionUpload } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
+import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
@@ -237,13 +238,10 @@ export const MyVideosView = () => {
             return <NewVideoTile loading={loading} key={`$draft-${idx}`} onClick={handleAddVideoTab} />
           }
           return (
-            <VideoTilePublisher
+            <VideoTileDraft
               key={`draft-${idx}`}
-              id={draft.id}
-              showChannel={false}
-              isDraft
               onClick={() => handleVideoClick(draft.id, { draft: true })}
-              onEditVideoClick={() => handleVideoClick(draft.id, { draft: true })}
+              id={draft.id}
               onDeleteVideoClick={() => handleDeleteDraft(draft.id)}
             />
           )
@@ -256,13 +254,11 @@ export const MyVideosView = () => {
           <VideoTilePublisher
             key={video.id ? `video-id-${video.id}` : `video-idx-${idx}`}
             id={video.id}
-            showChannel={false}
-            onPullupClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
+            onEditClick={(e) => {
+              e?.stopPropagation()
+              e?.preventDefault()
               handleVideoClick(video.id)
             }}
-            onEditVideoClick={() => handleVideoClick(video.id)}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}
           />

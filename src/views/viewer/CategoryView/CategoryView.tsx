@@ -14,7 +14,7 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
-import { VideoTile } from '@/components/_video/VideoTile'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { AssetType, useAsset } from '@/providers/assets'
@@ -72,7 +72,7 @@ export const CategoryView = () => {
       </TitleContainer>
       <Grid>
         {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
-          <VideoTile id={featuredVideo.video.id} key={idx} showChannel />
+          <VideoTileViewer id={featuredVideo.video.id} key={idx} />
         ))}
       </Grid>
 

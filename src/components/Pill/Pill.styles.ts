@@ -6,7 +6,7 @@ import { sizes } from '@/styles/sizes'
 
 import { PillProps, Sizes } from './types'
 
-const sizeStyles = ({ size, hasLabel, iconPlacement }: PillProps & { hasLabel: boolean }) => {
+const sizeStyles = ({ size = 'medium', hasLabel, iconPlacement }: PillProps & { hasLabel: boolean }) => {
   const leftMarignActive = hasLabel && iconPlacement === 'right'
   const rightMarginActive = hasLabel && iconPlacement === 'left'
   switch (size) {

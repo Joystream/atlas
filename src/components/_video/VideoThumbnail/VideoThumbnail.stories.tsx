@@ -1,8 +1,10 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 import { Pill, PillGroup } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
+import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionBid,
@@ -22,7 +24,7 @@ export default {
   args: {
     clickable: true,
     loading: false,
-    thumbnailUrl: 'https://thispersondoesnotexist.com/image',
+    thumbnailUrl: 'https://picsum.photos/320/180',
     thumbnailAlt: 'This person does not exist',
     slots: {
       bottomLeft: {
@@ -62,6 +64,15 @@ export default {
     contentSlot: { table: { disable: true } },
     onClick: { action: 'clicked' },
   },
+  decorators: [
+    (Story) => {
+      return (
+        <BrowserRouter>
+          <Story />
+        </BrowserRouter>
+      )
+    },
+  ],
 } as Meta<VideoThumbnailProps>
 
 const Template: Story<VideoThumbnailProps> = (args) => (
@@ -132,6 +143,7 @@ CustomContent.args = {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
+        color: 'white',
       }}
     >
       Hello world!
@@ -143,8 +155,9 @@ CustomContent.args = {
       type: 'default',
     },
     bottomLeft: {
-      element: <Pill label="Draft" />,
+      element: <Button size="small">Hello</Button>,
       type: 'default',
+      clickable: true,
     },
     center: {
       element: <SvgIllustrativePlay />,
