@@ -6,14 +6,12 @@ import { cVar } from '@/styles'
 import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
+export type AvatarGroupDirection = 'left' | 'right'
 
-export const AvatarGroupContainer = styled.div`
+export const AvatarGroupContainer = styled.div<{ direction: AvatarGroupDirection }>`
   position: relative;
-
-  /* account for stroke size  */
-  top: 4px;
-  left: 4px;
   display: flex;
+  justify-content: ${({ direction }) => (direction === 'left' ? 'flex-start' : 'flex-end')};
 `
 
 type StyledAvatarProps = {
@@ -53,13 +51,14 @@ type AvatarWrapperProps = {
   idx: number
   size: AvatarGroupSize
   clickable: boolean
+  direction: AvatarGroupDirection
 }
 
 export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
   transition: transform ${cVar('animationTransitionFast')};
-  left: ${({ idx, size }) => idx * (size === 'small' ? -4 : -8)}px;
+  left: ${({ idx, size, direction }) => (direction === 'left' ? '-' : '') + idx * (size === 'small' ? 4 : 8)}px;
   ${({ clickable }) =>
     clickable &&
     css`

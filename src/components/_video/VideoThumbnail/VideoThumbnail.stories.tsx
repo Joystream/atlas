@@ -64,7 +64,11 @@ export default {
   },
 } as Meta<VideoThumbnailProps>
 
-const Template: Story<VideoThumbnailProps> = (args) => <VideoThumbnail {...args} />
+const Template: Story<VideoThumbnailProps> = (args) => (
+  <div style={{ maxWidth: '320px' }}>
+    <VideoThumbnail {...args} />
+  </div>
+)
 export const Default = Template.bind({})
 
 export const UploadProgress = Template.bind({})

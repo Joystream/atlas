@@ -105,7 +105,6 @@ type VideoThumbnailContainerProps = {
   activeDisabled: boolean
 }
 export const VideoThumbnailContainer = styled.div<VideoThumbnailContainerProps>`
-  max-width: 320px;
   min-width: 166px;
   display: block;
   position: relative;
