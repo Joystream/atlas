@@ -9,11 +9,12 @@ import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventE
 import { TimeoutError, withTimeout } from '@/utils/misc'
 
 import { testAssetDownload } from './helpers'
-import { useDistributionOperators } from './operatorsProvider'
+import { useDistributionOperators, useOperatorsContext } from './operatorsProvider'
 import { useAssetStore } from './store'
 import { OperatorInfo } from './types'
 
 export const AssetsManager: React.FC = () => {
+  const { tryRefetchDistributionOperators } = useOperatorsContext()
   const { getAllDistributionOperatorsForBag } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)
   const assetIdsBeingResolved = useAssetStore((state) => state.assetIdsBeingResolved)
@@ -31,7 +32,13 @@ export const AssetsManager: React.FC = () => {
 
       const distributionOperators = await getAllDistributionOperatorsForBag(dataObject.storageBag.id)
       if (!distributionOperators) {
-        // TODO: potentially try to fetch distributors again
+        const refetching = await tryRefetchDistributionOperators()
+        if (refetching) {
+          // remove asset from being resolved list, so it can enter resolution again
+          removeAssetBeingResolved(dataObject.id)
+          return
+        }
+
         SentryLogger.error('No distribution operator was found for the storage bag', 'AssetsManager', null, {
           asset: {
             id: dataObject.id,
@@ -92,6 +99,7 @@ export const AssetsManager: React.FC = () => {
     pendingAssets,
     removeAssetBeingResolved,
     removePendingAsset,
+    tryRefetchDistributionOperators,
   ])
 
   return null

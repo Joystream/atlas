@@ -23,7 +23,7 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
-import { useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
+import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
@@ -133,6 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
+  const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
     if (newChannel) {
@@ -306,6 +307,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
       if (newChannel) {
         setActiveUser({ channelId })
+        // when creating a channel, refetch operators so that storage bag assignments gets populated for a new channel
+        fetchOperators()
       }
     }
 
