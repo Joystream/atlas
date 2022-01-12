@@ -60,7 +60,12 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   return (
     <VideoDetailsContainer>
       {variant === 'withChannelNameAndAvatar' && (
-        <StyledAvatar assetUrl={channelAvatarUrl} loading={loadingAvatar} onClick={onChannelAvatarClick} />
+        <StyledAvatar
+          assetUrl={channelAvatarUrl}
+          loading={loadingAvatar}
+          onClick={onChannelAvatarClick}
+          smallGap={size === 'small'}
+        />
       )}
       <SwitchTransition>
         <CSSTransition
@@ -84,7 +89,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                   <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
                 ) : (
                   <LinkWrapper to={channelHref}>
-                    <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary>
+                    <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary as="p">
                       {channelTitle}
                     </ChannelTitle>
                   </LinkWrapper>
@@ -92,7 +97,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               {loading ? (
                 <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
               ) : (
-                <Text variant={size === 'medium' ? 't200' : 't100'} secondary>
+                <Text variant={size === 'medium' ? 't200' : 't100'} secondary as="p">
                   {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt)}
                 </Text>
               )}
@@ -105,7 +110,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
           placement="bottom-end"
           items={kebabMenuItems}
           trigger={
-            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small">
+            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small" smallGap={size === 'small'}>
               <SvgActionMore />
             </KebabMenuButtonIcon>
           }

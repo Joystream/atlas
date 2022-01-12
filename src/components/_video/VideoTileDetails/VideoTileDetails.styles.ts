@@ -6,9 +6,9 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar, sizes } from '@/styles'
 
-export const KebabMenuButtonIcon = styled(IconButton)`
+export const KebabMenuButtonIcon = styled(IconButton)<{ smallGap: boolean }>`
   opacity: 0;
-  margin-left: ${sizes(2)};
+  margin-left: ${({ smallGap }) => (smallGap ? sizes(3) : sizes(4))};
   transition: opacity ${cVar('animationTransitionFast')};
   @media (any-pointer: coarse) {
     opacity: 1;
@@ -46,8 +46,8 @@ export const ChannelTitle = styled(Text)`
   text-overflow: ellipsis;
 `
 
-export const StyledAvatar = styled(Avatar)`
-  margin-right: ${sizes(4)};
+export const StyledAvatar = styled(Avatar)<{ smallGap: boolean }>`
+  margin-right: ${({ smallGap }) => (smallGap ? sizes(3) : sizes(4))};
   cursor: pointer;
 `
 
@@ -59,6 +59,4 @@ export const VideoInfoContainer = styled.div`
 export const VideoMetaContainer = styled.div`
   margin-top: ${sizes(2)};
   width: 100%;
-  display: flex;
-  flex-direction: column;
 `
