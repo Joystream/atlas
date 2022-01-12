@@ -170,7 +170,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
         }
         const url = URL.createObjectURL(blob)
         resolve([blob, url, assetDimensions, imageCropData])
-      }, 'image/webp')
+      }, getTargetImageType())
     })
   }
 
@@ -180,4 +180,26 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
 const normalizeZoomValue = (value: number) => {
   const base = 100
   return Math.floor(value * base) / base
+}
+
+// get target image type - we want to use WEBP where possible but Firefox started supporting it very recently
+// however, if you use webp, and it's not supported, it will fall back to PNG which is much worse than basic JPEG
+// this function tries to determine if the user browser supports export to WEBP
+const getTargetImageType = () => {
+  const WEBP = 'image/webp'
+  const JPEG = 'image/jpeg'
+
+  const firefoxVersionMatch = navigator.userAgent.match(/firefox\/(\d.+)/i)
+
+  if (!firefoxVersionMatch || firefoxVersionMatch.length < 2) {
+    // if not able to detect Firefox version, just use WEBP
+    return WEBP
+  }
+
+  const firefoxVersion = parseInt(firefoxVersionMatch[1])
+  if (Number.isNaN(firefoxVersion) || firefoxVersion >= 97) {
+    return WEBP
+  }
+
+  return JPEG
 }
