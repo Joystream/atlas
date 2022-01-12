@@ -1,5 +1,0 @@
-node_modules/
-__generated__/
-
-dist*/
-!.storybook/
