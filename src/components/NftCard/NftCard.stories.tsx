@@ -23,16 +23,16 @@ export default {
   },
   args: {
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
-    creator: { assetUrl: 'https://placedog.net/100/100?random=1', tooltipText: 'Jane' },
+    creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     supporters: [
-      { assetUrl: 'https://placedog.net/100/100?random=2', tooltipText: 'Kate' },
-      { assetUrl: 'https://placedog.net/100/100?random=3', tooltipText: 'Sue' },
-      { assetUrl: 'https://placedog.net/100/100?random=4', tooltipText: 'Morgan' },
-      { assetUrl: 'https://placedog.net/100/100?random=5', tooltipText: 'Jeff' },
-      { assetUrl: 'https://placedog.net/100/100?random=6', tooltipText: 'Alan' },
-      { assetUrl: 'https://placedog.net/100/100?random=7', tooltipText: 'Marietta' },
+      { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
+      { assetUrl: 'https://placedog.net/100/100?random=3', name: 'Sue' },
+      { assetUrl: 'https://placedog.net/100/100?random=4', name: 'Morgan' },
+      { assetUrl: 'https://placedog.net/100/100?random=5', name: 'Jeff' },
+      { assetUrl: 'https://placedog.net/100/100?random=6', name: 'Alan' },
+      { assetUrl: 'https://placedog.net/100/100?random=7', name: 'Marietta' },
     ],
-    owner: { assetUrl: 'https://placedog.net/100/100?random=8', tooltipText: 'John' },
+    owner: { assetUrl: 'https://placedog.net/100/100?random=8', name: 'John' },
   },
 } as Meta
 

@@ -1,5 +1,9 @@
 import React from 'react'
 
+import { Text } from '@/components/Text'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar } from '@/styles'
+
 import {
   AvatarGroupWrapper,
   AvatarWrapper,
@@ -7,10 +11,7 @@ import {
   MembersWrapper,
   StyledAvatar,
   StyledAvatarGroup,
-} from '@/components/NftCard/NftCard.styles'
-import { Text } from '@/components/Text'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { cVar } from '@/styles'
+} from './NftCard.styles'
 
 export type Member = {
   assetUrl?: string | null
