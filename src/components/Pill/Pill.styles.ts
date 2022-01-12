@@ -68,7 +68,6 @@ export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
   align-items: center;
   padding: ${sizes(2)};
   border-radius: 2px;
-  margin-left: ${sizes(2)};
 
   svg {
     > * {
@@ -98,7 +97,8 @@ const gapStyles = ({ size }: PillProps) => {
 }
 
 export const PillGroupWrapper = styled.div<{ size: Sizes }>`
-  display: flex;
+  display: inline-grid;
+  grid-auto-flow: column;
 
   ${gapStyles}
 `

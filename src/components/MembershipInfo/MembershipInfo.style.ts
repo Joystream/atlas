@@ -6,12 +6,12 @@ import { Text } from '../Text'
 import { SvgActionCopy } from '../_icons'
 
 export const MembershipHeader = styled.header`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: row;
   gap: ${sizes(6)};
   align-items: center;
   ${media.sm} {
-    flex-direction: row;
+    grid-auto-flow: column;
     justify-content: space-between;
   }
 `
