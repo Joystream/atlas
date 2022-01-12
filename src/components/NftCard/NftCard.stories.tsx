@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { NftCard, NftCardProps } from './NftCard'
 
 export default {
-  title: 'other/NFT Card',
+  title: 'NFT/Card',
   component: NftCard,
   argTypes: {
     title: {

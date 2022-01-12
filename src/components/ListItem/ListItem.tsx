@@ -26,6 +26,7 @@ export type ListItemProps = {
   caption?: string
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
+  color?: string
 }
 
 export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(

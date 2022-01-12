@@ -1,7 +1,7 @@
 import React from 'react'
 
 export type Sizes = 'small' | 'medium' | 'large'
-type Variants = 'default' | 'overlay' | 'danger'
+export type Variants = 'default' | 'overlay' | 'danger'
 
 export type PillProps = {
   label?: string | number

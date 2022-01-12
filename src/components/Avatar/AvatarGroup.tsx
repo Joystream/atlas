@@ -17,7 +17,8 @@ export type AvatarGroupProps = {
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean
-  direction: AvatarGroupDirection
+  loading?: boolean
+  direction?: AvatarGroupDirection
   className?: string
 }
 
@@ -39,6 +40,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   avatarStrokeColor,
   clickable = true,
   direction = 'left',
+  loading,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
@@ -54,9 +56,10 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
           idx={direction === 'left' ? idx : avatars.length - idx}
           size={size}
           style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+          avatarStrokeColor={avatarStrokeColor}
         >
           <Tooltip text={avatarProps.tooltipText} arrowDisabled placement="top" offsetY={clickable ? 16 : 8}>
-            <StyledAvatar size={getSizeofAvatar(size)} avatarStrokeColor={avatarStrokeColor} {...avatarProps} />
+            <StyledAvatar size={getSizeofAvatar(size)} {...avatarProps} loading={loading} />
           </Tooltip>
           <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
         </AvatarWrapper>
