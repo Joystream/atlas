@@ -46,8 +46,8 @@ export const DetailsText = styled(Text)`
 `
 
 export const MemberContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: row;
   gap: ${sizes(2)};
 `
 
