@@ -5,10 +5,11 @@ import { BrowserRouter } from 'react-router-dom'
 import { Pill, PillGroup } from '@/components/Pill'
 import { IconButton } from '@/components/_buttons/IconButton'
 import {
+  SvgActionCopy,
   SvgActionDraft,
   SvgActionEdit,
   SvgActionJoyToken,
-  SvgActionReupload,
+  SvgActionPlay,
   SvgActionTrash,
   SvgIllustrativeEdit,
   SvgIllustrativePlay,
@@ -84,12 +85,8 @@ export default {
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [
       {
-        icon: <SvgActionTrash />,
-        title: 'Delete video',
-      },
-      {
-        icon: <SvgActionReupload />,
-        title: 'Reupload file',
+        icon: <SvgActionCopy />,
+        title: 'Copy video URL',
       },
     ],
   },
@@ -172,5 +169,23 @@ Publisher.args = {
       type: 'hover',
     },
   },
+  kebabMenuItems: [
+    {
+      icon: <SvgActionPlay />,
+      title: 'Play in Joystream',
+    },
+    {
+      icon: <SvgActionCopy />,
+      title: 'Copy video URL',
+    },
+    {
+      icon: <SvgActionEdit />,
+      title: 'Edit video',
+    },
+    {
+      icon: <SvgActionTrash />,
+      title: 'Delete video',
+    },
+  ],
   detailsVariant: 'withoutChannel',
 }

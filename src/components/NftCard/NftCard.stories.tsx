@@ -1,5 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 import { NftCard, NftCardProps } from './NftCard'
 
@@ -34,6 +35,15 @@ export default {
     ],
     owner: { assetUrl: 'https://placedog.net/100/100?random=8', name: 'John' },
   },
+  decorators: [
+    (Story) => {
+      return (
+        <BrowserRouter>
+          <Story />
+        </BrowserRouter>
+      )
+    },
+  ],
 } as Meta
 
 const Template: Story<NftCardProps> = (args) => <NftCard {...args} />
