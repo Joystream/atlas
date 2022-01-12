@@ -183,7 +183,7 @@ const normalizeZoomValue = (value: number) => {
 }
 
 // get target image type - we want to use WEBP where possible but Firefox started supporting it very recently
-// however, if you use webp, and it's not supported, it will fall back to PNG which is much worse than basic JPEG
+// however, if you use WEBP, and it's not supported, it will fall back to PNG which is much worse than basic JPEG
 // this function tries to determine if the user browser supports export to WEBP
 const getTargetImageType = () => {
   const WEBP = 'image/webp'
@@ -197,7 +197,7 @@ const getTargetImageType = () => {
   }
 
   const firefoxVersion = parseInt(firefoxVersionMatch[1])
-  if (Number.isNaN(firefoxVersion) || firefoxVersion >= 97) {
+  if (Number.isNaN(firefoxVersion) || firefoxVersion >= 96) {
     return WEBP
   }
 
