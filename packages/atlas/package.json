@@ -2,17 +2,6 @@
   "name": "@joystream/atlas",
   "description": "UI for consuming Joystream - a user governed video platform",
   "license": "GPL-3.0",
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
-  "directories": {
-    "src": "src"
-  },
-  "files": [
-    "src"
-  ],
   "scripts": {
     "start": "vite",
     "dev": "vite",

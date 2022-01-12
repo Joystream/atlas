@@ -14,11 +14,11 @@
     "url": "https://github.com/Joystream/atlas/issues"
   },
   "scripts": {
-    "dev:atlas": "yarn workspace @joystream/atlas dev",
-    "lint:atlas": "yarn workspace @joystream/atlas lint",
-    "build:atlas": "yarn workspace @joystream/atlas build",
-    "storybook:atlas": "yarn workspace @joystream/atlas storybook",
-    "build-storybook:atlas": "yarn workspace @joystream/atlas build-storybook",
+    "atlas:dev": "yarn workspace @joystream/atlas dev",
+    "atlas:build": "yarn workspace @joystream/atlas build",
+    "atlas:lint": "yarn workspace @joystream/atlas lint",
+    "atlas:storybook": "yarn workspace @joystream/atlas storybook",
+    "atlas:build-storybook": "yarn workspace @joystream/atlas build-storybook",
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
