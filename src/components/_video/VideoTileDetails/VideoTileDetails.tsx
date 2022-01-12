@@ -75,10 +75,10 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
         >
           <VideoInfoContainer>
             {loading ? (
-              <SkeletonLoader height={size === 'medium' ? 24 : 20} width="60%" />
+              <SkeletonLoader height={24} width="60%" />
             ) : (
               <LinkWrapper to={videoHref}>
-                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h200'}>
+                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
                   {videoTitle}
                 </VideoTitle>
               </LinkWrapper>
@@ -86,18 +86,18 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
             <VideoMetaContainer>
               {variant !== 'withoutChannel' &&
                 (loading ? (
-                  <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" bottomSpace={8} />
+                  <SkeletonLoader height={16} width="100%" bottomSpace={8} />
                 ) : (
                   <LinkWrapper to={channelHref}>
-                    <ChannelTitle variant={size === 'medium' ? 't200' : 't100'} secondary as="p">
+                    <ChannelTitle variant="t200" secondary as="p">
                       {channelTitle}
                     </ChannelTitle>
                   </LinkWrapper>
                 ))}
               {loading ? (
-                <SkeletonLoader height={size === 'medium' ? 16 : 12} width="100%" />
+                <SkeletonLoader height={variant === 'withoutChannel' ? 20 : 16} width="100%" />
               ) : (
-                <Text variant={size === 'medium' ? 't200' : 't100'} secondary as="p">
+                <Text variant="t200" secondary as="p">
                   {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt)}
                 </Text>
               )}
