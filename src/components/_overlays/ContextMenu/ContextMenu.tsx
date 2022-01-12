@@ -4,7 +4,7 @@ import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.style
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-type MenuItemProps = {
+export type MenuItemProps = {
   icon: ReactNode
   title: string
   onClick?: () => void

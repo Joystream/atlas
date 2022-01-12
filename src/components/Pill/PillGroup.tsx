@@ -9,7 +9,7 @@ type PillGroupProps = {
   items: PillProps[]
 }
 
-export const PillGroup: React.FC<PillGroupProps> = ({ items, size = 'small' }) => {
+export const PillGroup: React.FC<PillGroupProps> = ({ items, size = 'medium' }) => {
   return (
     <PillGroupWrapper size={size}>
       {items.map((item, idx) => (

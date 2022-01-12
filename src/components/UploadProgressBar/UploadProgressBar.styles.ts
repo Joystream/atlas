@@ -1,8 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { SvgAlertsSuccess24 } from '@/components/_icons'
-import { Loader } from '@/components/_loaders/Loader'
 import { oldColors, sizes } from '@/styles'
 
 export const UploadProgressBarContainer = styled.div`
@@ -89,12 +87,7 @@ export const BottomProgressBar = styled.div<ProgressbarProps>`
   height: 4px;
 `
 
-export const StyledLoader = styled(Loader)`
-  position: absolute;
-  top: ${sizes(2)};
-  right: ${sizes(2)};
-`
-export const StyledSvgAlertSuccess = styled(SvgAlertsSuccess24)`
+export const LoaderWrapper = styled.div`
   position: absolute;
   top: ${sizes(2)};
   right: ${sizes(2)};

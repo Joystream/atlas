@@ -5,7 +5,8 @@ import { VideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/components/Gallery'
 import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
-import { VideoTile } from '@/components/_video/VideoTile'
+
+import { VideoTileViewer } from '../VideoTileViewer'
 
 interface VideoFieldsWithProgress extends VideoFieldsFragment {
   progress?: number
@@ -22,8 +23,6 @@ type VideoGalleryProps = {
   title?: string
   videos?: CustomVideosType | null
   loading?: boolean
-  removeButton?: boolean
-  onRemoveButtonClick?: (id: string) => void
   onVideoNotFound?: (id: string) => void
   onVideoClick?: (id: string) => void
   hasRanking?: boolean
@@ -41,7 +40,6 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,
-  removeButton,
   seeAllUrl,
   hasRanking = false,
   className,
@@ -92,21 +90,16 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
           <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
-            <StyledVideoTile id={video.id} progress={video?.progress} removeButton={video ? removeButton : false} />
+            <StyledVideoTile id={video.id} />
           </RankingNumberTile>
         ) : (
-          <StyledVideoTile
-            key={`${idx}-${video.id}`}
-            id={video.id}
-            progress={video?.progress}
-            removeButton={video ? removeButton : false}
-          />
+          <StyledVideoTile key={`${idx}-${video.id}`} id={video.id} />
         )
       )}
     </Gallery>
   )
 }
 
-const StyledVideoTile = styled(VideoTile)`
+const StyledVideoTile = styled(VideoTileViewer)`
   justify-content: flex-start;
 `
