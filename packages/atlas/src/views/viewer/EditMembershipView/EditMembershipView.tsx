@@ -16,8 +16,8 @@ import { StyledActionBar, StyledTextField, TextFieldsWrapper, Wrapper } from './
 
 type Inputs = {
   handle: string
-  avatar: string
-  about: string
+  avatar: string | null
+  about: string | null
 }
 
 export const EditMembershipView: React.FC = () => {
@@ -101,19 +101,29 @@ export const EditMembershipView: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<Inputs>({
     mode: 'onChange',
-    resolver: zodResolver(schema, { async: true }),
+    resolver: zodResolver(schema),
     shouldFocusError: true,
+    defaultValues: {
+      handle: '',
+      avatar: '',
+      about: '',
+    },
   })
 
   const resetForm = useCallback(() => {
-    reset({
-      handle: activeMembership?.handle,
-      avatar: activeMembership?.avatarUri || '',
-      about: activeMembership?.about || '',
-    })
+    reset(
+      {
+        handle: activeMembership?.handle,
+        avatar: activeMembership?.avatarUri,
+        about: activeMembership?.about,
+      },
+      {
+        keepDirty: false,
+      }
+    )
   }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
 
   useEffect(() => {
@@ -169,6 +179,7 @@ export const EditMembershipView: React.FC = () => {
         primaryText="Fee: 0 Joy"
         secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
         primaryButton={{
+          disabled: !isDirty,
           text: 'Publish changes',
           onClick: handleEditMember,
         }}
