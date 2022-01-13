@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import useMeasure from 'react-use-measure'
 import * as z from 'zod'
 
 import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
@@ -22,6 +23,7 @@ type Inputs = {
 
 export const EditMembershipView: React.FC = () => {
   const { activeAccountId, activeMembership, activeMembershipLoading } = useUser()
+  const [actionBarRef, actionBarBounds] = useMeasure()
 
   const client = useApolloClient()
 
@@ -101,15 +103,15 @@ export const EditMembershipView: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     mode: 'onChange',
     resolver: zodResolver(schema),
     shouldFocusError: true,
     defaultValues: {
-      handle: '',
-      avatar: '',
-      about: '',
+      handle: activeMembership?.handle,
+      avatar: activeMembership?.avatarUri,
+      about: activeMembership?.about,
     },
   })
 
@@ -122,6 +124,8 @@ export const EditMembershipView: React.FC = () => {
       },
       {
         keepDirty: false,
+        keepTouched: false,
+        keepDefaultValues: true,
       }
     )
   }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
@@ -138,7 +142,7 @@ export const EditMembershipView: React.FC = () => {
   })
 
   return (
-    <form>
+    <form onClick={handleEditMember}>
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}
@@ -146,7 +150,7 @@ export const EditMembershipView: React.FC = () => {
           loading={activeMembershipLoading}
           handle={activeMembership?.handle}
         />
-        <Wrapper>
+        <Wrapper actionBarHeight={actionBarBounds.height}>
           <TextFieldsWrapper>
             <StyledTextField
               label="Avatar URL"
@@ -174,21 +178,22 @@ export const EditMembershipView: React.FC = () => {
             />
           </TextFieldsWrapper>
         </Wrapper>
+        <StyledActionBar
+          ref={actionBarRef}
+          primaryText="Fee: 0 Joy"
+          secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+          primaryButton={{
+            disabled: !isDirty || !isValid,
+            text: 'Publish changes',
+            type: 'submit',
+          }}
+          secondaryButton={{
+            visible: true,
+            text: 'Cancel',
+            onClick: resetForm,
+          }}
+        />
       </LimitedWidthContainer>
-      <StyledActionBar
-        primaryText="Fee: 0 Joy"
-        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-        primaryButton={{
-          disabled: !isDirty,
-          text: 'Publish changes',
-          onClick: handleEditMember,
-        }}
-        secondaryButton={{
-          visible: true,
-          text: 'Cancel',
-          onClick: resetForm,
-        }}
-      />
     </form>
   )
 }

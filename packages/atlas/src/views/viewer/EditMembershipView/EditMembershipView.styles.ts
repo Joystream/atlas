@@ -4,8 +4,9 @@ import { ActionBar } from '@/components/ActionBar'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar, sizes, zIndex } from '@/styles'
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ actionBarHeight: number }>`
   border-top: 1px solid ${cVar('colorCoreNeutral700')};
+  padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 export const TextFieldsWrapper = styled.div`
   max-width: 640px;
