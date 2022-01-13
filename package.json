@@ -29,12 +29,6 @@
       "stylelint --fix"
     ]
   },
-  "dependencies": {
-    "@types/express": "^4.17.13",
-    "express": "^4.17.2",
-    "graphql-request": "^3.7.0",
-    "node-html-parser": "^5.2.0"
-  },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.5.0",
     "@stylelint/postcss-css-in-js": "^0.37.2",
@@ -63,14 +57,5 @@
   },
   "engines": {
     "node": ">=14"
-  },
-  "madge": {
-    "tsConfig": "./tsconfig.json",
-    "fileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx"
-    ]
   }
 }

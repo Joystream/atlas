@@ -10,9 +10,9 @@ import { generateChannelMetadata, generateVideoMetadata } from './utils'
 
 const app = express()
 
-const PORT = process.env.PORT || 3000
-const indexPath = path.resolve('dist', 'index.html')
-const client = new GraphQLClient('https://hydra.joystream.org/graphql')
+const PORT = process.env.NGINX_PORT || 3000
+const indexPath = path.resolve('packages', 'atlas-meta-server', 'dist', 'index.html')
+const client = new GraphQLClient(process.env.GRAPHQL_URL || '')
 
 const getWorker = async (res: Response) => {
   const { workers } = await client.request(workerQuery)
@@ -22,13 +22,11 @@ const getWorker = async (res: Response) => {
   return workers[random].metadata
 }
 
-app.use(express.static(path.resolve('dist'), { maxAge: '30d' }))
-
 app.get('/video/:id', (req, res) => {
   fs.readFile(indexPath, 'utf8', async (err, htmlData) => {
     if (err) {
       console.error('Error during file reading', err)
-      return res.status(404).end()
+      return res.status(500).end()
     }
 
     const id = req.params['id']
@@ -45,7 +43,7 @@ app.get('/channel/:id', (req, res) => {
   fs.readFile(indexPath, 'utf8', async (err, htmlData) => {
     if (err) {
       console.error('Error during file reading', err)
-      return res.status(404).end()
+      return res.status(500).end()
     }
     const id = req.params['id']
     const { channels } = await client.request(channelsQuery(id))

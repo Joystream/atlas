@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./server/dist",
+    "outDir": "./dist",
     "target": "esnext",
     "lib": ["dom", "esnext"],
     "esModuleInterop": true,
@@ -16,7 +16,7 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true
   },
-  "files": ["./server/index.ts"],
-  "include": ["./server"],
+  "files": ["./index.ts"],
+  "include": ["."],
   "exclude": ["node_modules", "dist"]
 }
