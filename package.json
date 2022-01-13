@@ -36,8 +36,8 @@
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
     "graphql": "graphql-codegen --config codegen.config.yml  -r dotenv/config",
     "postinstall": "husky install",
-    "test:watch": "vitest -w",
-    "test:run": "vitest -w"
+    "test": "vitest",
+    "test:dev": "vitest dev"
   },
   "lint-staged": {
     "*.{tsx,ts}": [
@@ -157,7 +157,7 @@
     "typescript": "^4.5.2",
     "vite": "^2.7.10",
     "vite-plugin-checker": "^0.3.4",
-    "vitest": "^0.0.131"
+    "vitest": "^0.1.12"
   },
   "resolutions": {
     "postcss-safe-parser": "4.0.2",

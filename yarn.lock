@@ -7657,7 +7657,7 @@ __metadata:
     video.js: ^7.17.0
     vite: ^2.7.10
     vite-plugin-checker: ^0.3.4
-    vitest: ^0.0.131
+    vitest: ^0.1.12
     zustand: ^3.5.10
   languageName: unknown
   linkType: soft
@@ -8413,15 +8413,6 @@ __metadata:
   version: 3.0.0
   resolution: "builtin-status-codes@npm:3.0.0"
   checksum: 1119429cf4b0d57bf76b248ad6f529167d343156ebbcc4d4e4ad600484f6bc63002595cbb61b67ad03ce55cd1d3c4711c03bbf198bf24653b8392420482f3773
-  languageName: node
-  linkType: hard
-
-"builtins@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "builtins@npm:4.0.0"
-  dependencies:
-    semver: ^7.0.0
-  checksum: 3c8b3b96ed88dd8e21286a3590292862ad62a59085bbcd77a4470848fed0f59fcd67f366afdf9ca8d7e77abce7ccf336bf662c12ead949294aa03bc563a57a1c
   languageName: node
   linkType: hard
 
@@ -13420,15 +13411,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"import-meta-resolve@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "import-meta-resolve@npm:1.1.1"
-  dependencies:
-    builtins: ^4.0.0
-  checksum: 2024161e169c45ed25a9f51d984a432a9cc342c35737f9410266bab237ca2f756c1f80c15e2297df83c92f585743d5105291f2ad24094a513f804c6023ea1472
-  languageName: node
-  linkType: hard
-
 "imurmurhash@npm:^0.1.4":
   version: 0.1.4
   resolution: "imurmurhash@npm:0.1.4"
@@ -15106,12 +15088,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"local-pkg@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "local-pkg@npm:0.4.0"
-  dependencies:
-    mlly: ^0.2.2
-  checksum: 46964cea4b5a2c83d4206cd2e8ea72a4caed444ac1ef51a27c6b545457cb734005768534032a67bca4249f50ee2d557dba2aa027eb594c409d1169f984dc89f8
+"local-pkg@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "local-pkg@npm:0.4.1"
+  checksum: 4ab3b4853ffbc3b292a3ae2e22618dbc348418a2ebf60ada55fdcc5a8583f9167c89fc7977194ffa39d0a4c5078f9c421d246afdd252fea7a840f7a8f3b5f96b
   languageName: node
   linkType: hard
 
@@ -16077,15 +16057,6 @@ fsevents@^1.2.7:
   bin:
     mkdirp: bin/cmd.js
   checksum: 3bce20ea525f9477befe458ab85284b0b66c8dc3812f94155af07c827175948cdd8114852ac6c6d82009b13c1048c37f6d98743eb019651ee25c39acc8aabe7d
-  languageName: node
-  linkType: hard
-
-"mlly@npm:^0.2.2":
-  version: 0.2.10
-  resolution: "mlly@npm:0.2.10"
-  dependencies:
-    import-meta-resolve: ^1.1.1
-  checksum: a7b9f9e046389eb8263ae57bf6738084dd40319ce1608b31dd66a72baf15e35bfb9d8a7dcde33f4c6f3b5da4788b8e94c65e9fa519c508ab5b339f4e6de255bc
   languageName: node
   linkType: hard
 
@@ -19484,7 +19455,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.0.0, semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5":
+"semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5":
   version: 7.3.5
   resolution: "semver@npm:7.3.5"
   dependencies:
@@ -21012,17 +20983,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tinypool@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "tinypool@npm:0.1.0"
-  checksum: 79b7136d905ad41f88a2d00c2d6b225dae14ce29ac7f41ee673baf9da6da2855c000a49797b4cce56b3554bc77464069a2557d2f4fc0a2d7e6a3edccf695b1c9
+"tinypool@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "tinypool@npm:0.1.1"
+  checksum: 92653fb8f97f6b919d548269bcb0ac70cb3a52bdf2da7b39c3d97432c161ab6418295f9c755acc603b20cf9de4b7f37fad9ee436afc6d0927a4ef336f9ca3c3a
   languageName: node
   linkType: hard
 
-"tinyspy@npm:^0.2.6":
-  version: 0.2.7
-  resolution: "tinyspy@npm:0.2.7"
-  checksum: a495ffec748a9c1d1ffd83c58d5269efb15f177298d6f79ecb373af14b8693443bb5ac8a015b15ac98d1931d0de54cc30167f74191db3e87be6d5dabf5234cbc
+"tinyspy@npm:^0.2.8":
+  version: 0.2.8
+  resolution: "tinyspy@npm:0.2.8"
+  checksum: bbdca68172c3c580e9d4d570f37fb7470db5922531e9db0e5025556524a1a339b3adb0f7ac9d69d26029a24959db2b74487f778921c813d96f24185f2f1fefb6
   languageName: node
   linkType: hard
 
@@ -22221,16 +22192,16 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.0.131":
-  version: 0.0.131
-  resolution: "vitest@npm:0.0.131"
+"vitest@npm:^0.1.12":
+  version: 0.1.12
+  resolution: "vitest@npm:0.1.12"
   dependencies:
     "@types/chai": ^4.3.0
     "@types/chai-subset": ^1.3.3
     chai: ^4.3.4
-    local-pkg: ^0.4.0
-    tinypool: ^0.1.0
-    tinyspy: ^0.2.6
+    local-pkg: ^0.4.1
+    tinypool: ^0.1.1
+    tinyspy: ^0.2.8
     vite: ">=2.7.10"
   peerDependencies:
     "@vitest/ui": "*"
@@ -22248,7 +22219,7 @@ typescript@^4.5.2:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: b794ca5dce7d95be451702126df878573bb29cbe873b60de907f45d2a9987c39138e2e0392303a8447217ee4e62699befda2703c7c13f24d08f19d5fbcf25b87
+  checksum: 49ede6ed05d793a66063dbce8c148a26871ed6bb6d691e8188d3eb456228415c616e8e96068c48e30d6403e5fd4d6dfea1da50b4d6ec7ac53b1aa595f96e83be
   languageName: node
   linkType: hard
 

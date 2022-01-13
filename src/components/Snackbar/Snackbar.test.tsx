@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
+import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
@@ -25,7 +25,7 @@ const TestElement = () => {
 
 describe('Snackar', async () => {
   it('Display snackbar', async () => {
-    const { getByText, getByRole } = render(<TestElement />, {
+    const { getByText } = render(<TestElement />, {
       wrapper: ({ children }) => (
         <BrowserRouter>
           {children}
@@ -33,7 +33,6 @@ describe('Snackar', async () => {
         </BrowserRouter>
       ),
     })
-    await waitFor(() => getByRole('button'))
 
     fireEvent.click(screen.getByRole('button'))
 
