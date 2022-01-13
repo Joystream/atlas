@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -11,7 +11,6 @@ import { MembershipInfo } from '@/components/MembershipInfo'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { useUser } from '@/providers/user'
-import { ActionBarTransactionWrapper } from '@/views/studio/CreateEditChannelView/CreateEditChannelView.styles'
 
 import { StyledActionBar, StyledTextField, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
@@ -45,7 +44,10 @@ export const EditMembershipView: React.FC = () => {
   )
 
   const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string) => {
+    debouncePromise(async (value: string, prevValue?: string) => {
+      if (value === prevValue) {
+        return true
+      }
       const {
         data: { membershipByUniqueInput },
       } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
@@ -75,7 +77,7 @@ export const EditMembershipView: React.FC = () => {
       })
       .refine(
         async (val) => {
-          const isValid = await debouncedHandleUniqueValidation.current(val)
+          const isValid = await debouncedHandleUniqueValidation.current(val, activeMembership?.handle)
           return isValid
         },
         { message: 'Member handle already in use' }
@@ -104,18 +106,21 @@ export const EditMembershipView: React.FC = () => {
     mode: 'onChange',
     resolver: zodResolver(schema, { async: true }),
     shouldFocusError: true,
-    defaultValues: {
+  })
+
+  const resetForm = useCallback(() => {
+    reset({
       handle: activeMembership?.handle,
       avatar: activeMembership?.avatarUri || '',
       about: activeMembership?.about || '',
-    },
-  })
+    })
+  }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
 
   useEffect(() => {
-    if (!activeMembershipLoading) {
-      reset()
+    if (!activeMembershipLoading && activeMembership) {
+      resetForm()
     }
-  }, [activeMembershipLoading, reset])
+  }, [activeMembership, activeMembershipLoading, resetForm])
 
   const handleEditMember = handleSubmit(async () => {
     // TODO
@@ -159,23 +164,20 @@ export const EditMembershipView: React.FC = () => {
             />
           </TextFieldsWrapper>
         </Wrapper>
-        <ActionBarTransactionWrapper>
-          <StyledActionBar
-            primaryText="Fee: 0 Joy"
-            secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-            isEdit={true}
-            primaryButton={{
-              text: 'Publish changes',
-
-              onClick: handleEditMember,
-            }}
-            secondaryButton={{
-              text: 'Cancel',
-              onClick: () => reset(),
-            }}
-          />
-        </ActionBarTransactionWrapper>
       </LimitedWidthContainer>
+      <StyledActionBar
+        primaryText="Fee: 0 Joy"
+        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+        primaryButton={{
+          text: 'Publish changes',
+          onClick: handleEditMember,
+        }}
+        secondaryButton={{
+          visible: true,
+          text: 'Cancel',
+          onClick: resetForm,
+        }}
+      />
     </form>
   )
 }
