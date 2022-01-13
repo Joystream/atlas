@@ -24,6 +24,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { AssetType, useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
@@ -56,6 +57,7 @@ const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
+  useRedirectMigratedGizaContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
   const xsMatch = useMediaMatch('xs')
   const { id } = useParams()
