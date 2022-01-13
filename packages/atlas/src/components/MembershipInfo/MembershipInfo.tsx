@@ -22,9 +22,9 @@ import { SvgActionEdit } from '../_icons'
 import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {
-  avatarUrl?: string
-  handle?: string
-  address?: string
+  avatarUrl?: string | null
+  handle?: string | null
+  address?: string | null
   loading?: boolean
   isOwner?: boolean
 }

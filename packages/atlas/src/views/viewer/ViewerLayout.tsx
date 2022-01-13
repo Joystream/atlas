@@ -25,6 +25,7 @@ import {
 } from '@/views/viewer'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
+import { EditMembershipView } from './EditMembershipView/EditMembershipView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -36,6 +37,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
+  { path: relativeRoutes.viewer.editMembership(), element: <EditMembershipView /> },
 ]
 
 export const ViewerLayout: React.FC = () => {

@@ -14,6 +14,7 @@ export const MembershipHeader = styled.header`
     grid-auto-flow: column;
     justify-content: space-between;
   }
+  margin: ${sizes(8)} 0;
 `
 
 export const MembershipInfoContainer = styled.div`
