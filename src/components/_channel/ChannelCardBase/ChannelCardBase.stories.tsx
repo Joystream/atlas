@@ -17,6 +17,9 @@ export default {
     isLoading: false,
     isLoadingAvatar: false,
   },
+  argTypes: {
+    onFollow: { table: { disable: true } },
+  },
   decorators: [
     (Story) => (
       <BrowserRouter>
