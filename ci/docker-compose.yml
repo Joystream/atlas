@@ -9,6 +9,7 @@ services:
       - GRAPHQL_URL=https://hydra.joystream.org/graphql
     ports:
       - '${DOCKER_NODE_PORT}:${DOCKER_NODE_PORT}'
+    restart: always
   atlas:
     depends_on:
       - node
