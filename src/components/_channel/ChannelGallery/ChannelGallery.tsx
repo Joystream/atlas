@@ -56,10 +56,10 @@ export const ChannelGallery: React.FC<ChannelGalleryProps> = ({ title, channels 
       {[...(channels ? channels : []), ...placeholderItems].map((channel, idx) =>
         hasRanking ? (
           <RankingNumberTile variant="channel" rankingNumber={idx + 1} key={idx}>
-            <ChannelCard id={channel.id} />
+            <ChannelCard channel={!channel.id ? undefined : channel} />
           </RankingNumberTile>
         ) : (
-          <ChannelCard key={idx} id={channel.id} />
+          <ChannelCard key={idx} channel={!channel.id ? undefined : channel} />
         )
       )}
     </Gallery>
