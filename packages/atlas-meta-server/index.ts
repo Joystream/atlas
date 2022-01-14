@@ -10,8 +10,8 @@ import { generateChannelMetadata, generateVideoMetadata } from './utils'
 
 const app = express()
 
-const PORT = process.env.NGINX_PORT || 3000
-const indexPath = path.resolve('packages', 'atlas-meta-server', 'dist', 'index.html')
+const PORT = 80
+const indexPath = path.resolve(__dirname, 'index.html')
 const client = new GraphQLClient(process.env.GRAPHQL_URL || '')
 
 const getWorker = async (res: Response) => {

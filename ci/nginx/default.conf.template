@@ -18,7 +18,7 @@ server {
 
     location / {
         if ($http_user_agent ~* "baiduspider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator") {
-            proxy_pass http://node:${NODE_PORT};
+            proxy_pass http://${META_SERVER_HOSTNAME};
             break;
         }
 

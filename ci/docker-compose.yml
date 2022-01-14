@@ -1,26 +1,16 @@
 version: '3.7'
 services:
-  node:
-    build:
-      context: ../
-      dockerfile: ./packages/atlas-meta-server/Dockerfile
+  atlas-meta-server:
+    image: joystream/atlas-meta-server
     environment:
-      - PORT=${DOCKER_NODE_PORT}
-      - GRAPHQL_URL=https://hydra.joystream.org/graphql
-    ports:
-      - '${DOCKER_NODE_PORT}:${DOCKER_NODE_PORT}'
+      - GRAPHQL_URL=https://orion.joystream.org/graphql
     restart: always
-  atlas:
+  atlas-nginx:
+    image: joystream/atlas
     depends_on:
-      - node
-    volumes:
-      - ../packages/atlas/nginx:/etc/nginx/templates
-    build:
-      context: ../
-      target: nginx
-      dockerfile: ./packages/atlas/Dockerfile
+      - atlas-meta-server
     environment:
-      - NODE_PORT=${DOCKER_NODE_PORT}
+      - META_SERVER_HOSTNAME=atlas-meta-server
     ports:
       - '80:80'
     restart: always

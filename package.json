@@ -1,11 +1,10 @@
 {
   "description": "UI for consuming Joystream - a user governed video platform",
   "license": "GPL-3.0",
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/Joystream/atlas.git"
@@ -19,6 +18,9 @@
     "atlas:lint": "yarn workspace @joystream/atlas lint",
     "atlas:storybook": "yarn workspace @joystream/atlas storybook",
     "atlas:build-storybook": "yarn workspace @joystream/atlas build-storybook",
+    "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
+    "docker:atlas": "ci/build-docker-atlas.sh",
+    "docker:meta-server": "ci/build-docker-meta-server.sh",
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
