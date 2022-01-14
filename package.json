@@ -35,7 +35,9 @@
     "svgs:icons-generate": "svgr --config-file svgr.config.js -d src/components/_icons src/components/_icons/svgs && prettier --write src/components/_icons",
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
     "graphql": "graphql-codegen --config codegen.config.yml  -r dotenv/config",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "test": "vitest",
+    "test:dev": "vitest dev"
   },
   "lint-staged": {
     "*.{tsx,ts}": [
@@ -117,6 +119,9 @@
     "@storybook/theming": "^6.3.7",
     "@stylelint/postcss-css-in-js": "^0.37.2",
     "@svgr/cli": "^5.5.0",
+    "@testing-library/dom": "^8.11.1",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
     "@trivago/prettier-plugin-sort-imports": "^3.1.1",
     "@types/glider-js": "^1.7.4",
     "@types/loadable__component": "^5.13.4",
@@ -134,21 +139,25 @@
     "esbuild-register": "^3.2.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest-dom": "^3.9.2",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "happy-dom": "^2.25.1",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
     "postcss-syntax": "^0.36.2",
     "prettier": "~2.5.0",
+    "react-hooks-testing-library": "^0.6.0",
     "rollup-plugin-visualizer": "^5.5.2",
-    "storybook-builder-vite": "^0.1.10",
+    "storybook-builder-vite": "^0.1.13",
     "style-dictionary": "^3.0.3",
     "stylelint": "^14.1.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^24.0.0",
     "typescript": "^4.5.2",
-    "vite": "^2.6.14",
-    "vite-plugin-checker": "^0.3.4"
+    "vite": "^2.7.10",
+    "vite-plugin-checker": "^0.3.4",
+    "vitest": "^0.1.12"
   },
   "resolutions": {
     "postcss-safe-parser": "4.0.2",

@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { babel } from '@rollup/plugin-babel'
 import graphql from '@rollup/plugin-graphql'
 import inject from '@rollup/plugin-inject'
@@ -9,6 +10,11 @@ import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    global: true,
+    environment: 'happy-dom',
+    setupFiles: ['vitest-setup.ts'],
+  },
   plugins: [
     react({
       exclude: /\.stories\.(t|j)sx?$/,

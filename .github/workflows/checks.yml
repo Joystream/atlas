@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    name: Linting
+    name: Tests and Linting
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,3 +20,5 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run ESLint
         run: yarn lint
+      - name: Run Tests
+        run: yarn test
