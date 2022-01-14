@@ -6,11 +6,13 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { BottomNav } from '@/components/_navigation/BottomNav'
+import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import {
@@ -27,7 +29,7 @@ import {
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
 
-const viewerRoutes = [
+const viewerRoutes = (isActiveMember: boolean) => [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
@@ -37,12 +39,22 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
-  { path: relativeRoutes.viewer.editMembership(), element: <EditMembershipView /> },
+  {
+    path: relativeRoutes.viewer.editMembership(),
+    element: (
+      <PrivateRoute
+        isAuth={isActiveMember}
+        element={<EditMembershipView />}
+        redirectTo={absoluteRoutes.viewer.index()}
+      />
+    ),
+  },
 ]
 
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
+  const { activeMemberId } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -68,7 +80,7 @@ export const ViewerLayout: React.FC = () => {
               key={displayedLocation.pathname}
             >
               <Routes location={displayedLocation}>
-                {viewerRoutes.map((route) => (
+                {viewerRoutes(!!activeMemberId).map((route) => (
                   <Route key={route.path} {...route} />
                 ))}
               </Routes>
