@@ -24,7 +24,7 @@ type OperatorsContextValue = {
   storageOperatorsMappingPromiseRef: React.MutableRefObject<Promise<BagOperatorsMapping> | undefined>
   failedStorageOperatorIds: string[]
   setFailedStorageOperatorIds: React.Dispatch<SetStateAction<string[]>>
-  fetchOperators: () => void
+  fetchOperators: () => Promise<void>
   tryRefetchDistributionOperators: () => Promise<boolean>
 }
 const OperatorsContext = React.createContext<OperatorsContextValue | undefined>(undefined)
@@ -78,6 +78,7 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
       setDistributionOperatorsError(error)
       isFetchingDistributionOperatorsRef.current = false
     })
+    return distributionOperatorsMappingPromiseRef.current
   }, [client])
 
   const fetchStorageOperators = useCallback(() => {
@@ -114,11 +115,11 @@ export const OperatorsContextProvider: React.FC = ({ children }) => {
       SentryLogger.error('Failed to fetch storage operators', 'OperatorsContextProvider', error)
       setStorageOperatorsError(error)
     })
+    return storageOperatorsMappingPromiseRef.current
   }, [client])
 
-  const fetchOperators = useCallback(() => {
-    fetchDistributionOperators()
-    fetchStorageOperators()
+  const fetchOperators = useCallback(async () => {
+    await Promise.all([fetchDistributionOperators(), fetchStorageOperators()])
   }, [fetchDistributionOperators, fetchStorageOperators])
 
   const tryRefetchDistributionOperators = useCallback(async () => {

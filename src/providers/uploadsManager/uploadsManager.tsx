@@ -29,16 +29,18 @@ export const UploadsManager: React.FC = () => {
   const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
-  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds } = useUploadsStore(
-    (state) => ({
-      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
-      isSyncing: state.isSyncing,
-      assetsFiles: state.assetsFiles,
-      processingAssetsIds: state.processingAssetsIds,
-      uploadStatuses: state.uploadsStatus,
-    }),
-    shallow
-  )
+  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds, newChannelsIds } =
+    useUploadsStore(
+      (state) => ({
+        channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+        isSyncing: state.isSyncing,
+        assetsFiles: state.assetsFiles,
+        processingAssetsIds: state.processingAssetsIds,
+        uploadStatuses: state.uploadsStatus,
+        newChannelsIds: state.newChannelsIds,
+      }),
+      shallow
+    )
   const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
     useUploadsStore((state) => state.actions)
   const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
@@ -112,7 +114,12 @@ export const UploadsManager: React.FC = () => {
 
   useEffect(() => {
     // do this only on first render or when active channel changes
-    if (!activeChannelId || cachedActiveChannelId === activeChannelId || isSyncing) {
+    if (
+      !activeChannelId ||
+      cachedActiveChannelId === activeChannelId ||
+      newChannelsIds.includes(activeChannelId) ||
+      isSyncing
+    ) {
       return
     }
     setCachedActiveChannelId(activeChannelId)
@@ -236,6 +243,7 @@ export const UploadsManager: React.FC = () => {
     setIsSyncing,
     processingAssetsIds,
     processingAssetsLookup,
+    newChannelsIds,
   ])
 
   return null

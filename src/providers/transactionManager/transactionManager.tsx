@@ -21,9 +21,6 @@ export const TransactionManager: React.FC = () => {
 
       const indexerHead = subscriptionData.data.stateSubscription.indexerHead
 
-      // TODO: remove
-      // eslint-disable-next-line no-console
-      console.log('got QN block: ', indexerHead)
       setLastIndexedBlock(indexerHead)
     },
   })
