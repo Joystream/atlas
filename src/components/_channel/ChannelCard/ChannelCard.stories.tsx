@@ -19,8 +19,8 @@ export default {
     loading: false,
     withFollowButton: true,
     channel: {
-      id: '3',
       title: 'my channel',
+      id: '3',
       follows: 4,
       avatarPhotoAvailability: 'ACCEPTED',
       avatarPhotoDataObject: {
@@ -28,9 +28,6 @@ export default {
       },
       __typename: 'Channel',
     },
-  },
-  argTypes: {
-    channel: { table: { disable: true } },
   },
   decorators: [
     (Story) => {
