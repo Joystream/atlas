@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 import * as z from 'zod'
@@ -27,42 +27,35 @@ export const EditMembershipView: React.FC = () => {
 
   const client = useApolloClient()
 
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(
-      async (value: string): Promise<string | boolean> =>
-        new Promise((resolve) => {
-          const image = new Image()
-          image.onload = () => {
-            resolve(true)
-          }
-          image.onerror = () => resolve(false)
-          image.src = value
-          if (!value) {
-            resolve(true)
-          }
-        }),
-      500
-    )
-  )
+  const avatarValidation = async (value: string): Promise<string | boolean> =>
+    new Promise((resolve) => {
+      const image = new Image()
+      image.onload = () => {
+        resolve(true)
+      }
+      image.onerror = () => resolve(false)
+      image.src = value
+      if (!value) {
+        resolve(true)
+      }
+    })
 
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string, prevValue?: string) => {
-      if (value === prevValue) {
-        return true
-      }
-      const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
-      })
-      if (membershipByUniqueInput) {
-        return false
-      } else {
-        return true
-      }
-    }, 500)
-  )
+  const handleUniqueValidation = async (value: string, prevValue?: string) => {
+    if (value === prevValue) {
+      return true
+    }
+    const {
+      data: { membershipByUniqueInput },
+    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+      query: GetMembershipDocument,
+      variables: { where: { handle: value } },
+    })
+    if (membershipByUniqueInput) {
+      return false
+    } else {
+      return true
+    }
+  }
 
   const schema = z.object({
     handle: z
@@ -79,7 +72,8 @@ export const EditMembershipView: React.FC = () => {
       })
       .refine(
         async (val) => {
-          const isValid = await debouncedHandleUniqueValidation.current(val, activeMembership?.handle)
+          const debouncedHandleUniqueValidation = debouncePromise(handleUniqueValidation, 500)
+          const isValid = await debouncedHandleUniqueValidation(val, activeMembership?.handle)
           return isValid
         },
         { message: 'Member handle already in use' }
@@ -90,7 +84,8 @@ export const EditMembershipView: React.FC = () => {
       .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
       .refine(
         async (val) => {
-          const isValid = await debouncedAvatarValidation.current(val)
+          const debouncedValidation = debouncePromise(avatarValidation, 500)
+          const isValid = await debouncedValidation(val)
           return isValid
         },
         { message: 'Image not found' }
@@ -124,8 +119,6 @@ export const EditMembershipView: React.FC = () => {
       },
       {
         keepDirty: false,
-        keepTouched: false,
-        keepDefaultValues: true,
       }
     )
   }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
