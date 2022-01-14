@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useChannel } from '@/api/hooks'
+import { BasicChannelFieldsFragment } from '@/api/queries'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
@@ -21,20 +21,26 @@ import {
 } from './ChannelCard.styles'
 
 export type ChannelCardProps = {
-  id?: string
   withFollowButton?: boolean
   className?: string
   onClick?: () => void
+  loading?: boolean
+  channel?: BasicChannelFieldsFragment
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick, withFollowButton = true }) => {
+export const ChannelCard: React.FC<ChannelCardProps> = ({
+  className,
+  onClick,
+  withFollowButton = true,
+  channel,
+  loading,
+}) => {
   const mdMatch = useMediaMatch('md')
   const [activeDisabled, setActiveDisabled] = useState(false)
 
-  const { channel, loading } = useChannel(id ?? '', { skip: !id })
   const { url, isLoadingAsset } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
 
-  const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
+  const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
   const handleFollowButtonClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -42,8 +48,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({ id, className, onClick
   }
   return (
     <ChannelCardArticle className={className} activeDisabled={activeDisabled}>
-      <ChannelCardAnchor onClick={onClick} to={id ? absoluteRoutes.viewer.channel(id) : ''}>
-        <StyledAvatar size="channel-card" loading={isLoadingAsset} assetUrl={url} />
+      <ChannelCardAnchor onClick={onClick} to={channel?.id ? absoluteRoutes.viewer.channel(channel.id) : ''}>
+        <StyledAvatar size="channel-card" loading={isLoadingAsset || loading} assetUrl={url} />
         <SwitchTransition>
           <CSSTransition
             key={loading ? 'placeholder' : 'content'}

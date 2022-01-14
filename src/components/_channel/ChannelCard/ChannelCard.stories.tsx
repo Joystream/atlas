@@ -16,8 +16,21 @@ export default {
   title: 'channel/ChannelCard',
   component: ChannelCard,
   args: {
-    id: '3',
+    loading: false,
     withFollowButton: true,
+    channel: {
+      id: '3',
+      title: 'my channel',
+      follows: 4,
+      avatarPhotoAvailability: 'ACCEPTED',
+      avatarPhotoDataObject: {
+        joystreamContentId: '5EUQ14Zi3R4DnQPipoMbxzBnCgdFSPqBY15w9Uu5dQEEVnG3',
+      },
+      __typename: 'Channel',
+    },
+  },
+  argTypes: {
+    channel: { table: { disable: true } },
   },
   decorators: [
     (Story) => {
@@ -40,7 +53,11 @@ export default {
   ],
 } as Meta
 
-const Template: Story<ChannelCardProps> = (args) => <ChannelCard {...args} />
+const Template: Story<ChannelCardProps> = (args) => (
+  <div style={{ maxWidth: 400 }}>
+    <ChannelCard {...args} />
+  </div>
+)
 
 export const Default = Template.bind({})
 
