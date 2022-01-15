@@ -3121,13 +3121,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:^0.5.7":
-  version: 0.5.7
-  resolution: "@noble/hashes@npm:0.5.7"
-  checksum: d7c86669b326da14f0e68d77f8f5c2888c0ca910830a9d2d40a7f6364a76d9b194bb4afda36a2d0ff8cb4ef1a1c023efd4c261276b15a5a88fcfb45f5cc49a85
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -7333,7 +7326,6 @@ __metadata:
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22
-    "@noble/hashes": ^0.5.7
     "@polkadot/extension-dapp": ~0.40.1
     "@rollup/plugin-babel": ^5.3.0
     "@rollup/plugin-graphql": ^1.1.0
@@ -7366,6 +7358,7 @@ __metadata:
     axios: ^0.24.0
     babel-loader: ^8.2.3
     bezier-easing: ^2.1.0
+    blake3: 2.1.7
     bn.js: ^4.12.0
     buffer: ^5.7.1
     cropperjs: ^1.5.12
@@ -7854,6 +7847,20 @@ __metadata:
   dependencies:
     file-uri-to-path: 1.0.0
   checksum: 65b6b48095717c2e6105a021a7da4ea435aa8d3d3cd085cb9e85bcb6e5773cf318c4745c3f7c504412855940b585bdf9b918236612a1c7a7942491de176f1ae7
+  languageName: node
+  linkType: hard
+
+"blake3@npm:2.1.7":
+  version: 2.1.7
+  resolution: "blake3@npm:2.1.7"
+  checksum: 5960e1cb36866edb718566684e5899323d7ee22e76e9e741c9d6b21f1957f7fd151c5642f67ee4e4901f8e4973c442fe9c2cb05175bd20c13c3744a15c748e69
+  languageName: node
+  linkType: hard
+
+"blake3@patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4::locator=atlas-app%40workspace%3A.":
+  version: 2.1.7
+  resolution: "blake3@patch:blake3@npm%3A2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4::version=2.1.7&hash=47c7b8&locator=atlas-app%40workspace%3A."
+  checksum: ac4201982c920539510fe7e30566c244df9bbd523bb629dd2894493be6c7fbf262f33cfcf839f99f197969a69abfbdaf49bff980f0d8f7b4692acb51ade878e8
   languageName: node
   linkType: hard
 
