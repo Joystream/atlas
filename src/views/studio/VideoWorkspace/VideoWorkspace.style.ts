@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { VideoWorkspaceState } from '@/providers/videoWorkspace'
-import { oldColors, zIndex } from '@/styles'
+import { zIndex } from '@/styles'
 import { cVar } from '@/styles'
 
 import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
@@ -14,7 +14,7 @@ export const DrawerOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: ${oldColors.transparentBlack[54]};
+  background-color: ${cVar('colorCoreNeutral500Darken')};
   transition: opacity ${cVar('animationTransitionSlow')};
 
   &.video-workspace-drawer-enter-active,
@@ -60,7 +60,7 @@ export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
-  box-shadow: 0 4px 52px ${oldColors.black};
+  box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
   transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
   will-change: transform, opacity;
 
