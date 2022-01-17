@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 type AddDraftButtonContainerProps = {
   hasOverflow?: boolean
@@ -73,12 +73,12 @@ export const Tab = styled.div<{ selected: boolean }>`
   user-select: none;
   padding-right: ${sizes(3)};
   transition: box-shadow 0.125s ease;
-  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${oldColors.blue[500]};`}
+  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${cVar('colorCoreBlue500')};`}
 
   :hover {
-    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${oldColors.gray[300]};`}
+    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${cVar('colorCoreNeutral300')};`}
     ${TabTitle} {
-      color: ${oldColors.gray[50]};
+      color: ${cVar('colorCoreNeutral50')};
     }
   }
 `
