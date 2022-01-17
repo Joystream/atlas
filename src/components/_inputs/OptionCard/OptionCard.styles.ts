@@ -87,7 +87,8 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
 `
 
 export const InputAndTitleWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   justify-content: space-between;
   margin-bottom: ${sizes(4)};
@@ -98,6 +99,7 @@ export const TitleIconWrapper = styled.div`
   gap: 0 ${sizes(2)};
   align-items: center;
   margin-right: ${sizes(4)};
+  min-width: 0;
 `
 
 export const OptionCardTitle = styled(Text)`

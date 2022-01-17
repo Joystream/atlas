@@ -65,6 +65,7 @@ export const OptionCardRadio = React.forwardRef<HTMLInputElement, OptionCardProp
   ({ helperText, label, selectedValue, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
+        icon={icon}
         label={label}
         helperText={helperText}
         disabled={disabled}
@@ -90,6 +91,7 @@ export const OptionCardCheckbox = React.forwardRef<HTMLInputElement, OptionCardP
   ({ helperText, label, className, value, onChange, icon, disabled, error, ...props }, ref) => {
     return (
       <OptionCardBase
+        icon={icon}
         label={label}
         helperText={helperText}
         disabled={disabled}
