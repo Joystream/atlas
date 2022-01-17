@@ -22,8 +22,8 @@ export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSha
   return {
     video,
     loading: internalIsLoadingState,
-    isLoadingThumbnail,
-    isLoadingAvatar,
+    isLoadingThumbnail: isLoadingThumbnail || internalIsLoadingState,
+    isLoadingAvatar: isLoadingAvatar || internalIsLoadingState,
     thumbnailPhotoUrl,
     avatarPhotoUrl,
     videoHref,
