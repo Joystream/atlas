@@ -122,7 +122,8 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
             'cover': channel?.coverPhoto,
           }
           const fetchedAsset = typeToAsset[asset.type]
-          return { ...asset, ipfsContentId: fetchedAsset?.ipfsHash }
+          const enrichedAsset: AssetUpload = { ...asset, ipfsHash: fetchedAsset?.ipfsHash }
+          return enrichedAsset
         })
 
   if (videoLoading || channelLoading) {

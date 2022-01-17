@@ -26,6 +26,14 @@ export type DistributorEventEntry = {
   dataObjectType: StorageDataObjectFieldsFragment['type']['__typename']
 } & DistributorEventDetails
 
+export type DataObjectResponseMetric = {
+  initialResponseTime: number
+  fullResponseTime?: number
+}
+
+// increase the size of performance entry buffer on file load, so we don't skip any assets
+window.performance.setResourceTimingBufferSize(1000)
+
 class _AssetLogger {
   private logUrl = ''
   private user?: Record<string, unknown>
@@ -67,48 +75,30 @@ class _AssetLogger {
     this.sendEvents()
   }
 
-  assetResponseMetric(entry: DistributorEventEntry, responseTime: number) {
+  logDistributorResponseTime(entry: DistributorEventEntry, metric: DataObjectResponseMetric) {
     const event: StorageEvent = {
-      type: 'asset-download-response-time',
-      responseTime,
+      type: 'distributor-response-time',
+      ...entry,
+      ...metric,
+    }
+    this.addEvent(event)
+  }
+
+  logDistributorError(entry: DistributorEventEntry) {
+    const event: StorageEvent = {
+      type: 'distributor-response-error',
       ...entry,
     }
     this.addEvent(event)
   }
 
-  assetError(entry: DistributorEventEntry) {
+  logDistributorResponseTimeout(entry: DistributorEventEntry) {
     const event: StorageEvent = {
-      type: 'asset-download-failure',
+      type: 'distributor-response-timeout',
       ...entry,
     }
     this.addEvent(event)
   }
-
-  assetTimeout(entry: DistributorEventEntry) {
-    const event: StorageEvent = {
-      type: 'asset-download-timeout',
-      ...entry,
-    }
-    this.addEvent(event)
-  }
-
-  // uploadError(entry: DistributorEventEntry) {
-  //   const event: StorageEvent = {
-  //     type: 'asset-upload-failure',
-  //     ...entry,
-  //   }
-  //   this.addEvent(event)
-  // }
-  //
-  // uploadRequestMetric(assetDetails: ResolvedAssetDetails, uploadTime: number, fileSize: number) {
-  //   const event: StorageEvent = {
-  //     type: 'asset-upload-request-time',
-  //     ...assetDetails,
-  //     uploadTime,
-  //     fileSize,
-  //   }
-  //   this.addEvent(event)
-  // }
 }
 
 export const AssetLogger = new _AssetLogger()

@@ -16,7 +16,7 @@ export const useAsset = (dataObject: StorageDataObjectFieldsFragment | null | un
     addPendingAsset(contentId, dataObject)
   }, [addPendingAsset, asset, dataObject, contentId, pendingAsset])
 
-  return { url: asset?.url, isLoadingAsset: !dataObject || (!!contentId && !asset) }
+  return { url: asset?.url, isLoadingAsset: !!dataObject && !!contentId && !asset }
 }
 
 export const useRawAsset = (contentId: string | null) => {

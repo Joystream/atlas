@@ -23,11 +23,12 @@ import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
-import { useAsset, useAssetStore, useRawAsset } from '@/providers/assets'
+import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
+import { useUploadsStore } from '@/providers/uploadsManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
@@ -85,6 +86,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
+  const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const navigate = useNavigate()
   const [actionBarRef, actionBarBounds] = useMeasure()
 
@@ -133,6 +135,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
   const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
+  const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
     if (newChannel) {
@@ -293,7 +296,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       )
     }
 
-    const refetchDataAndCacheAssets = async ({ channelId, assetsIds }: ChannelExtrinsicResult) => {
+    const refetchDataAndUploadAssets = async (result: ChannelExtrinsicResult) => {
+      const { channelId, assetsIds } = result
       if (assetsIds.avatarPhoto && avatarAsset?.url) {
         addAsset(assetsIds.avatarPhoto, { url: avatarAsset.url })
       }
@@ -301,11 +305,22 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         addAsset(assetsIds.coverPhoto, { url: coverAsset.url })
       }
 
+      if (newChannel) {
+        // add channel to new channels list before refetching membership to make sure UploadsManager doesn't complain about missing assets
+        addNewChannelIdToUploadsStore(channelId)
+      }
+
       const refetchPromiseList = [refetchActiveMembership(), ...(!newChannel ? [refetchChannel()] : [])]
       await Promise.all(refetchPromiseList)
 
       if (newChannel) {
+        // when creating a channel, refetch operators before uploading so that storage bag assignments gets populated for a new channel
         setActiveUser({ channelId })
+        fetchOperators().then(() => {
+          uploadAssets(result)
+        })
+      } else {
+        uploadAssets(result)
       }
     }
 
@@ -315,8 +330,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         newChannel
           ? joystream.extrinsics.createChannel(activeMemberId, metadata, assets, updateStatus)
           : joystream.extrinsics.updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, updateStatus),
-      onTxFinalize: uploadAssets,
-      onTxSync: refetchDataAndCacheAssets,
+      onTxSync: refetchDataAndUploadAssets,
       successMessage: {
         title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
         description: newChannel

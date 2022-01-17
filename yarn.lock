@@ -3153,13 +3153,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:^0.5.7":
-  version: 0.5.7
-  resolution: "@noble/hashes@npm:0.5.7"
-  checksum: d7c86669b326da14f0e68d77f8f5c2888c0ca910830a9d2d40a7f6364a76d9b194bb4afda36a2d0ff8cb4ef1a1c023efd4c261276b15a5a88fcfb45f5cc49a85
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -7575,7 +7568,6 @@ __metadata:
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.0
     "@mdx-js/react": ^1.6.22
-    "@noble/hashes": ^0.5.7
     "@polkadot/extension-dapp": ~0.40.1
     "@rollup/plugin-babel": ^5.3.0
     "@rollup/plugin-graphql": ^1.1.0
@@ -7611,6 +7603,7 @@ __metadata:
     axios: ^0.24.0
     babel-loader: ^8.2.3
     bezier-easing: ^2.1.0
+    blake3: 2.1.7
     bn.js: ^4.12.0
     buffer: ^5.7.1
     cropperjs: ^1.5.12
@@ -7664,7 +7657,7 @@ __metadata:
     typescript: ^4.5.2
     use-resize-observer: ^8.0.0
     video.js: ^7.17.0
-    vite: ^2.7.10
+    vite: ^2.7.12
     vite-plugin-checker: ^0.3.4
     vitest: ^0.1.12
     zustand: ^3.5.10
@@ -8103,6 +8096,20 @@ __metadata:
   dependencies:
     file-uri-to-path: 1.0.0
   checksum: 65b6b48095717c2e6105a021a7da4ea435aa8d3d3cd085cb9e85bcb6e5773cf318c4745c3f7c504412855940b585bdf9b918236612a1c7a7942491de176f1ae7
+  languageName: node
+  linkType: hard
+
+"blake3@npm:2.1.7":
+  version: 2.1.7
+  resolution: "blake3@npm:2.1.7"
+  checksum: 5960e1cb36866edb718566684e5899323d7ee22e76e9e741c9d6b21f1957f7fd151c5642f67ee4e4901f8e4973c442fe9c2cb05175bd20c13c3744a15c748e69
+  languageName: node
+  linkType: hard
+
+"blake3@patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4::locator=atlas-app%40workspace%3A.":
+  version: 2.1.7
+  resolution: "blake3@patch:blake3@npm%3A2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4::version=2.1.7&hash=47c7b8&locator=atlas-app%40workspace%3A."
+  checksum: ac4201982c920539510fe7e30566c244df9bbd523bb629dd2894493be6c7fbf262f33cfcf839f99f197969a69abfbdaf49bff980f0d8f7b4692acb51ade878e8
   languageName: node
   linkType: hard
 
@@ -19021,8 +19028,8 @@ resolve@^2.0.0-next.3:
   linkType: hard
 
 "rollup@npm:^2.59.0":
-  version: 2.61.1
-  resolution: "rollup@npm:2.61.1"
+  version: 2.64.0
+  resolution: "rollup@npm:2.64.0"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -19030,7 +19037,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: a41bd821c1d9f296e71e867828150080fb05d08cbdff9b6b5c0e3642da4d0723f7a847189f197c2a695a8a353d968ad89ebd54a4228dc3e92765c00e6bbadf87
+  checksum: dc5b28538002ed635ea54af4c2ced05c52146322c61dbe0e84f294ee62e4f232a15760fdcef9bbeb742883edf9bf093ace5389bbdd816d18b9f5740555135180
   languageName: node
   linkType: hard
 
@@ -21973,7 +21980,7 @@ typescript@^4.5.2:
   languageName: node
   linkType: hard
 
-"vite@npm:>=2.7.10, vite@npm:^2.7.10":
+"vite@npm:>=2.7.10":
   version: 2.7.10
   resolution: "vite@npm:2.7.10"
   dependencies:
@@ -21999,6 +22006,35 @@ typescript@^4.5.2:
   bin:
     vite: bin/vite.js
   checksum: 1757108547ca34bd01a8ee3973cb04b484492c9e5690fc75f54bbcbde5965ab6e0a5b8355c336adf0a9117aa0fdae3053af3aafa9e5eb783282fffa948cfbe11
+  languageName: node
+  linkType: hard
+
+"vite@npm:^2.7.12":
+  version: 2.7.12
+  resolution: "vite@npm:2.7.12"
+  dependencies:
+    esbuild: ^0.13.12
+    fsevents: ~2.3.2
+    postcss: ^8.4.5
+    resolve: ^1.20.0
+    rollup: ^2.59.0
+  peerDependencies:
+    less: "*"
+    sass: "*"
+    stylus: "*"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 56d62ae8131b02891f2dbd81f26a3ca28a02bfe390f9cb4e0c2d8dc831c2e2f8264dd3c45b14c7dd48e79d83d323a35148f92729e1f3385fae04fcd691f3f985
   languageName: node
   linkType: hard
 
