@@ -25,9 +25,12 @@ export const useRedirectMigratedGizaContent = ({ type }: { type: 'channel' | 'vi
     } else if (type === 'embedded-video' || type === 'video') {
       const migratedNewId: string | undefined =
         migratedGizaIdMappings.videoIdsMapEntries[id as keyof typeof migratedGizaIdMappings.videoIdsMapEntries]
-      type === 'embedded-video'
-        ? navigate(absoluteRoutes.embedded.video(migratedNewId))
-        : navigate(absoluteRoutes.viewer.video(migratedNewId))
+
+      if (type === 'embedded-video') {
+        navigate(absoluteRoutes.embedded.video(migratedNewId))
+      } else {
+        navigate(absoluteRoutes.viewer.video(migratedNewId))
+      }
     }
   }, [id, navigate, type])
 }
