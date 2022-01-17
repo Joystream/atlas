@@ -101,7 +101,9 @@ export const TitleIconWrapper = styled.div`
 `
 
 export const OptionCardTitle = styled(Text)`
-  display: box;
+  /* stylelint-disable */
+  display: -webkit-box;
+  /* stylelint-enable */
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
