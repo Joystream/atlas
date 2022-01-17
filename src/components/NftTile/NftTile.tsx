@@ -9,8 +9,6 @@ import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
 
-import Timeout = NodeJS.Timeout
-
 export type Member = {
   assetUrl?: string | null
   name: string
@@ -55,18 +53,19 @@ export const NftTile: React.FC<NftTileProps> = ({
   const [calculatedTimeLeft, setCalculatedTimeLeft] = useState(0)
 
   useEffect(() => {
-    let timeLeftInterval: Timeout
-    if (timeLeft) {
-      setCalculatedTimeLeft(timeLeft)
-      timeLeftInterval = setInterval(() => {
-        setCalculatedTimeLeft((prevState) => {
-          if (prevState <= 1) {
-            clearInterval(timeLeftInterval)
-          }
-          return --prevState
-        })
-      }, 1000)
+    if (!timeLeft) {
+      return
     }
+
+    setCalculatedTimeLeft(timeLeft)
+    const timeLeftInterval = setInterval(() => {
+      setCalculatedTimeLeft((prevState) => {
+        if (prevState <= 1) {
+          clearInterval(timeLeftInterval)
+        }
+        return --prevState
+      })
+    }, 1000)
 
     return () => {
       clearInterval(timeLeftInterval)
