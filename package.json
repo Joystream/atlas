@@ -143,13 +143,13 @@
     "prettier": "~2.5.0",
     "rimraf": "^3.0.2",
     "rollup-plugin-visualizer": "^5.5.2",
-    "storybook-builder-vite": "^0.1.10",
+    "storybook-builder-vite": "^0.1.13",
     "style-dictionary": "^3.0.3",
     "stylelint": "^14.1.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^24.0.0",
     "typescript": "^4.5.2",
-    "vite": "^2.6.14",
+    "vite": "^2.7.12",
     "vite-plugin-checker": "^0.3.4"
   },
   "resolutions": {
