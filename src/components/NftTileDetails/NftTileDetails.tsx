@@ -20,7 +20,6 @@ import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
 import {
-  CaptionSkeleton,
   CaptionSkeletonWrapper,
   Content,
   Details,
@@ -163,7 +162,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     if (loading) {
       return (
         <CaptionSkeletonWrapper>
-          <CaptionSkeleton width="17%" height={tileSize === 'medium' ? 20 : 16} />
+          <SkeletonLoader width="17%" height={tileSize === 'medium' ? 20 : 16} bottomSpace={4} />
           <SkeletonLoader width="28%" height={tileSize === 'medium' ? 24 : 20} />
         </CaptionSkeletonWrapper>
       )
@@ -193,7 +192,9 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     >
       <Header>
         <StyledAvatarGroup
-          avatarStrokeColor={contentHovered && !contextMenuHovered ? cVar('colorBackground', true) : undefined}
+          avatarStrokeColor={
+            contentHovered && !contextMenuHovered ? cVar('colorBackground', true) : cVar('colorBackgroundMuted', true)
+          }
           loading={loading}
           avatars={[
             { assetUrl: creator.assetUrl, tooltipText: creator.name },

@@ -76,7 +76,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   const getBottomLeft = useMemo(() => {
     switch (auction) {
       case 'none':
-        return <Pill icon={buyNow ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" />
+        return <Pill icon={buyNow ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" variant="overlay" />
       case 'minBid':
       case 'topBid':
       case 'waiting':
@@ -90,7 +90,7 @@ export const NftTile: React.FC<NftTileProps> = ({
                     ? 'Less than a minute'
                     : formatDurationShort(calculatedTimeLeft, true)
                   : undefined,
-                variant: timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'default',
+                variant: timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -107,7 +107,7 @@ export const NftTile: React.FC<NftTileProps> = ({
                 : undefined
             }
             size="medium"
-            variant={timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'default'}
+            variant={timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
@@ -121,10 +121,16 @@ export const NftTile: React.FC<NftTileProps> = ({
         clickable={false}
         slots={{
           topLeft: views
-            ? { element: <Pill label={formatNumberShort(views)} size="medium" icon={<SvgActionShow />} /> }
+            ? {
+                element: (
+                  <Pill label={formatNumberShort(views)} size="medium" icon={<SvgActionShow />} variant="overlay" />
+                ),
+              }
             : undefined,
           bottomLeft: { element: getBottomLeft },
-          bottomRight: duration ? { element: <Pill label={formatDurationShort(duration)} size="medium" /> } : undefined,
+          bottomRight: duration
+            ? { element: <Pill label={formatDurationShort(duration)} size="medium" variant="overlay" /> }
+            : undefined,
         }}
       />
       <NftTileDetails

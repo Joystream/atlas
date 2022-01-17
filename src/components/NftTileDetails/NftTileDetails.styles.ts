@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes, square } from '@/styles'
 
 export const Header = styled.div`
@@ -89,6 +88,7 @@ export const Title = styled(Text)`
   min-height: 48px;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
   /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -121,8 +121,4 @@ export const DetailsContentWrapper = styled.div<{ secondary?: boolean }>`
 
 export const CaptionSkeletonWrapper = styled.div`
   width: 100%;
-`
-
-export const CaptionSkeleton = styled(SkeletonLoader)`
-  margin-bottom: ${sizes(1)};
 `
