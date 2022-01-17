@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { CustomRadioInput, activeState, hoverState } from '@/components/_inputs/RadioInput/RadioInput.styles'
-import { cVar, oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 type OptionCardLabelProps = {
   checked?: boolean
@@ -13,21 +13,41 @@ type OptionCardLabelProps = {
 
 const getOptionCardBorderColor = ({ checked, error }: OptionCardLabelProps) => {
   if (error) {
-    return oldColors.secondary.alert[100]
+    return cVar('colorCoreRed500')
   } else if (checked && !error) {
-    return oldColors.blue[500]
+    return cVar('colorCoreBlue500')
   }
-  return oldColors.gray[500]
+  return cVar('colorBorderAlpha')
+}
+
+const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardLabelProps) => {
+  if (disabled) {
+    return 'inherit'
+  }
+  if (error) {
+    return cVar('colorCoreRed300')
+  } else if (checked && !error) {
+    return cVar('colorCoreBlue300')
+  }
+  return cVar('colorBorderStrongAlpha')
+}
+
+const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCardLabelProps) => {
+  if (disabled) {
+    return 'inherit'
+  }
+  if (error) {
+    return cVar('colorCoreRed700')
+  } else if (checked && !error) {
+    return cVar('colorCoreBlue700')
+  }
+  return cVar('colorBorderMutedAlpha')
 }
 
 const IconStyles = ({ error, checked, disabled }: OptionCardLabelProps) => css`
   * path {
     transition: fill ${cVar('animationTransitionFast')};
-    fill: ${error
-      ? cVar('colorTextError')
-      : checked && !disabled
-      ? cVar('colorCoreNeutral50')
-      : cVar('colorCoreNeutral300')};
+    fill: ${error ? cVar('colorTextError') : checked && !disabled ? cVar('colorTextStrong') : cVar('colorText')};
   }
 `
 
@@ -45,7 +65,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   :hover {
-    border: ${({ checked, disabled, error }) => !checked && !disabled && !error && `1px solid ${oldColors.gray[300]}`};
+    border: 1px solid ${getOptionCardBorderColorHover};
     ${CustomRadioInput} {
       ${({ checked, disabled, error }) => !disabled && !error && hoverState(checked)};
     }
@@ -53,13 +73,13 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
     ${IconContainer} {
       * path {
         fill: ${({ error, disabled }) =>
-          error ? cVar('colorTextError') : !disabled ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral300')};
+          error ? cVar('colorTextError') : !disabled ? cVar('colorTextStrong') : cVar('colorText')};
       }
     }
   }
 
   :active {
-    border: ${({ checked, disabled, error }) => !checked && !disabled && !error && `1px solid ${oldColors.gray[50]}`};
+    border: 1px solid ${getOptionCardBorderColorActive};
     ${CustomRadioInput} {
       ${({ checked, disabled, error }) => !disabled && !error && activeState(checked)};
     }
@@ -77,8 +97,12 @@ export const TitleIconWrapper = styled.div`
   display: flex;
   gap: 0 ${sizes(2)};
   align-items: center;
+  margin-right: ${sizes(4)};
 `
 
 export const OptionCardTitle = styled(Text)`
-  margin-right: ${sizes(2)};
+  display: box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `
