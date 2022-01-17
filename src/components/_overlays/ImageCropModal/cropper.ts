@@ -25,26 +25,26 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
   avatar: {
     minWidth: 128,
     minHeight: 128,
-    width: 256,
-    height: 256,
-    maxWidth: 1024,
-    maxHeight: 1024,
+    width: 192,
+    height: 192,
+    maxWidth: 192,
+    maxHeight: 192,
   },
   videoThumbnail: {
-    minWidth: 1280,
-    minHeight: 720,
-    width: 1280,
-    height: 720,
-    maxWidth: 1920,
-    maxHeight: 1080,
+    minWidth: 640,
+    minHeight: 360,
+    width: 640,
+    height: 360,
+    maxWidth: 640,
+    maxHeight: 360,
   },
   cover: {
     minWidth: 1920,
     minHeight: 480,
     width: 1920,
     height: 480,
-    maxWidth: 3840,
-    maxHeight: 960,
+    maxWidth: 1920,
+    maxHeight: 480,
   },
 }
 
@@ -170,7 +170,7 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
         }
         const url = URL.createObjectURL(blob)
         resolve([blob, url, assetDimensions, imageCropData])
-      }, 'image/webp')
+      }, getTargetImageType())
     })
   }
 
@@ -180,4 +180,26 @@ export const useCropper = ({ imageEl, imageType, cropData }: UseCropperOpts) => 
 const normalizeZoomValue = (value: number) => {
   const base = 100
   return Math.floor(value * base) / base
+}
+
+// get target image type - we want to use WEBP where possible but Firefox started supporting it very recently
+// however, if you use WEBP, and it's not supported, it will fall back to PNG which is much worse than basic JPEG
+// this function tries to determine if the user browser supports export to WEBP
+const getTargetImageType = () => {
+  const WEBP = 'image/webp'
+  const JPEG = 'image/jpeg'
+
+  const firefoxVersionMatch = navigator.userAgent.match(/firefox\/(\d.+)/i)
+
+  if (!firefoxVersionMatch || firefoxVersionMatch.length < 2) {
+    // if not able to detect Firefox version, just use WEBP
+    return WEBP
+  }
+
+  const firefoxVersion = parseInt(firefoxVersionMatch[1])
+  if (Number.isNaN(firefoxVersion) || firefoxVersion >= 96) {
+    return WEBP
+  }
+
+  return JPEG
 }

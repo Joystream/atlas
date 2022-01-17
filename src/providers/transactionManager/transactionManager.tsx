@@ -20,6 +20,7 @@ export const TransactionManager: React.FC = () => {
       if (!subscriptionData.data) return
 
       const indexerHead = subscriptionData.data.stateSubscription.indexerHead
+
       setLastIndexedBlock(indexerHead)
     },
   })

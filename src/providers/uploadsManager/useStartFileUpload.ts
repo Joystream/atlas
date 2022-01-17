@@ -140,17 +140,10 @@ export const useStartFileUpload = () => {
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1
-
-        // TODO: enable back
-        // const performanceEntries = performance.getEntriesByName(assetUrl)
-        // if (performanceEntries.length === 1) {
-        // AssetLogger.uploadRequestMetric(assetDetails, performanceEntries[0].duration, file?.size || 0)
-        // }
       } catch (e) {
         SentryLogger.error('Failed to upload asset', 'useStartFileUpload', e, {
           asset: { dataObjectId: asset.id, uploadOperator },
         })
-        // AssetLogger.uploadError(assetDetails)
 
         setAssetStatus({ lastStatus: 'error', progress: 0 })
 

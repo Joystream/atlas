@@ -367,7 +367,12 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           Promise.all(uploadPromises).catch((e) => SentryLogger.error('Unexpected upload failure', 'VideoWorkspace', e))
         }
 
-        const refetchDataAndCacheAssets = async ({ videoId, assetsIds }: VideoExtrinsicResult) => {
+        const refetchDataAndUploadAssets = async (result: VideoExtrinsicResult) => {
+          const { assetsIds, videoId } = result
+
+          // start asset upload
+          uploadAssets(result)
+
           // add resolution for newly created asset
           if (assetsIds.thumbnailPhoto) {
             addAsset(assetsIds.thumbnailPhoto, { url: thumbnailAsset?.url })
@@ -413,8 +418,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             isNew
               ? joystream.extrinsics.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
               : joystream.extrinsics.updateVideo(selectedVideoTab.id, activeMemberId, metadata, assets, updateStatus),
-          onTxFinalize: uploadAssets,
-          onTxSync: refetchDataAndCacheAssets,
+          onTxSync: refetchDataAndUploadAssets,
           successMessage: {
             title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
             description: isNew
