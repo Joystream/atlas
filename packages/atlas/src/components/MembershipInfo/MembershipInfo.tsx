@@ -10,12 +10,12 @@ import {
   MembershipDetails,
   MembershipHeader,
   MembershipInfoContainer,
+  StyledHandle,
   StyledSvgActionCopy,
   StyledText,
 } from './MembershipInfo.style'
 
 import { Avatar } from '../Avatar'
-import { Text } from '../Text'
 import { Tooltip } from '../Tooltip'
 import { Button } from '../_buttons/Button'
 import { SvgActionEdit } from '../_icons'
@@ -62,7 +62,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
               {loading || !handle ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <Text variant={smMatch ? 'h700' : 'h600'}>{handle}</Text>
+                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle}</StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />

@@ -36,7 +36,15 @@ export const MembershipDetails = styled.div`
   ${media.sm} {
     align-items: unset;
   }
+  overflow: hidden;
+  max-width: 100%;
 `
+export const StyledHandle = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+`
+
 export const StyledText = styled(Text)`
   margin-top: ${sizes(2)};
   display: flex;
