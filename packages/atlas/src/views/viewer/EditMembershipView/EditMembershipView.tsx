@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useCallback, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { UseFormWatch, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 import * as z from 'zod'
 
@@ -25,46 +25,48 @@ type Inputs = {
 
 export const EditMembershipView: React.FC = () => {
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
-  const [headerState, setHeaderState] = useState<Inputs>({
-    handle: '',
-    avatar: '',
-    about: '',
-  })
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
 
   const client = useApolloClient()
 
-  const avatarValidation = async (value: string): Promise<string | boolean> =>
-    new Promise((resolve) => {
-      const image = new Image()
-      image.onload = () => {
-        resolve(true)
-      }
-      image.onerror = () => resolve(false)
-      image.src = value
-      if (!value) {
-        resolve(true)
-      }
-    })
+  const debouncedAvatarValidation = useRef(
+    debouncePromise(
+      async (value: string): Promise<string | boolean> =>
+        new Promise((resolve) => {
+          const image = new Image()
+          image.onload = () => {
+            resolve(true)
+          }
+          image.onerror = () => resolve(false)
+          image.src = value
+          if (!value) {
+            resolve(true)
+          }
+        }),
+      500
+    )
+  )
 
-  const handleUniqueValidation = async (value: string, prevValue?: string) => {
-    if (value === prevValue) {
-      return true
-    }
-    const {
-      data: { membershipByUniqueInput },
-    } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-      query: GetMembershipDocument,
-      variables: { where: { handle: value } },
-    })
-    if (membershipByUniqueInput) {
-      return false
-    } else {
-      return true
-    }
-  }
+  const debouncedHandleUniqueValidation = useRef(
+    debouncePromise(async (value: string, prevValue?: string) => {
+      if (value === prevValue) {
+        return true
+      }
+      const {
+        data: { membershipByUniqueInput },
+      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
+        query: GetMembershipDocument,
+        variables: { where: { handle: value } },
+      })
+      if (membershipByUniqueInput) {
+        return false
+      } else {
+        return true
+      }
+    }, 500)
+  )
 
   const schema = z.object({
     handle: z
@@ -79,35 +81,28 @@ export const EditMembershipView: React.FC = () => {
       .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
         message: 'Member handle may contain only lowercase letters, numbers and underscores',
       })
-      .refine(
-        async (val) => {
-          const debouncedHandleUniqueValidation = debouncePromise(handleUniqueValidation, 500)
-          const isValid = await debouncedHandleUniqueValidation(val, activeMembership?.handle)
-          return isValid
-        },
-        { message: 'Member handle already in use' }
-      ),
+      .refine((val) => debouncedHandleUniqueValidation.current(val, activeMembership?.handle), {
+        message: 'Member handle already in use',
+      })
+      .transform(() => watchFunction('handle')),
     avatar: z
       .string()
       .max(400)
       .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
-      .refine(
-        async (val) => {
-          const debouncedValidation = debouncePromise(avatarValidation, 500)
-          const isValid = await debouncedValidation(val)
-          return isValid
-        },
-        { message: 'Image not found' }
-      )
-      .optional(),
-    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }).optional(),
+      .refine((val) => debouncedAvatarValidation.current(val), { message: 'Image not found' })
+      .transform(() => watchFunction('avatar')),
+    about: z
+      .string()
+      .max(1000, { message: 'About cannot be longer than 1000 characters' })
+      .transform(() => watchFunction('about')),
   })
 
   const {
     register,
     handleSubmit,
-    control,
+    getValues,
     reset,
+    watch,
     formState: { errors, isDirty, isValid, dirtyFields },
   } = useForm<Inputs>({
     mode: 'onChange',
@@ -120,6 +115,8 @@ export const EditMembershipView: React.FC = () => {
     },
   })
 
+  const watchFunction: UseFormWatch<Inputs> = watch
+
   const resetForm = useCallback(() => {
     reset(
       {
@@ -131,11 +128,6 @@ export const EditMembershipView: React.FC = () => {
         keepDirty: false,
       }
     )
-    setHeaderState({
-      handle: activeMembership?.handle || '',
-      avatar: activeMembership?.avatarUri || '',
-      about: activeMembership?.about || '',
-    })
   }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
 
   useEffect(() => {
@@ -171,55 +163,33 @@ export const EditMembershipView: React.FC = () => {
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}
-          avatarUrl={headerState.avatar || activeMembership?.avatarUri}
+          avatarUrl={getValues('avatar')}
           loading={activeMembershipLoading}
-          handle={headerState.handle || activeMembership?.handle}
+          handle={getValues('handle')}
         />
         <Wrapper actionBarHeight={actionBarBounds.height}>
           <TextFieldsWrapper>
-            <Controller
-              control={control}
-              name="avatar"
-              render={({ field: { onChange, value } }) => (
-                <StyledTextField
-                  label="Avatar URL"
-                  placeholder="https://example.com/avatar.jpeg"
-                  value={value || ''}
-                  onChange={(e) => {
-                    setHeaderState((headerState) => ({ ...headerState, avatar: e.target.value }))
-                    onChange(e)
-                  }}
-                  error={!!errors.avatar}
-                  helperText={errors.avatar?.message}
-                />
-              )}
+            <StyledTextField
+              label="Avatar URL"
+              placeholder="https://example.com/avatar.jpeg"
+              {...register('avatar')}
+              error={!!errors.avatar}
+              helperText={errors.avatar?.message}
             />
-            <Controller
-              control={control}
-              name="handle"
-              render={({ field: { onChange, value } }) => (
-                <StyledTextField
-                  placeholder="johnnysmith"
-                  label="Member handle"
-                  {...register('handle')}
-                  error={!!errors.handle}
-                  onChange={(e) => {
-                    setHeaderState((headerState) => ({ ...headerState, handle: e.target.value }))
-                    onChange(e)
-                  }}
-                  value={value || ''}
-                  helperText={
-                    errors.handle?.message ||
-                    'Member handle may contain only lowercase letters, numbers and underscores'
-                  }
-                />
-              )}
+            <StyledTextField
+              placeholder="johnnysmith"
+              label="Member handle"
+              {...register('handle')}
+              error={!!errors.handle}
+              helperText={
+                errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
+              }
             />
             <TextArea
               label="About"
+              {...register('about')}
               placeholder="Anything you'd like to share about yourself with the Joystream community"
               maxLength={1000}
-              {...register('about')}
               error={!!errors.about}
               helperText={errors.about?.message}
             />
