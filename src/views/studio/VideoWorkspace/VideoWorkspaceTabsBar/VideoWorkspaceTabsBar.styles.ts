@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 type AddDraftButtonContainerProps = {
   hasOverflow?: boolean
@@ -15,7 +15,8 @@ export const Topbar = styled.div`
   justify-content: space-between;
   height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
   min-height: ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px;
-  border-bottom: solid 1px ${oldColors.gray[700]};
+  box-shadow: ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
+  background-color: ${cVar('colorBackground')};
   padding: 0 ${sizes(4)};
   ${media.sm} {
     padding: 0 ${sizes(8)};
@@ -41,7 +42,7 @@ export const ButtonsContainer = styled.div`
   grid-auto-flow: column;
   grid-gap: ${sizes(1)};
   padding: 0 ${sizes(3)};
-  border-left: solid 1px ${oldColors.gray[700]};
+  box-shadow: ${cVar('effectDividersLeft')};
   ${media.sm} {
     grid-gap: ${sizes(4)};
     padding: 0 ${sizes(6)};
@@ -72,12 +73,12 @@ export const Tab = styled.div<{ selected: boolean }>`
   user-select: none;
   padding-right: ${sizes(3)};
   transition: box-shadow 0.125s ease;
-  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${oldColors.blue[500]};`}
+  ${({ selected }) => selected && `box-shadow: inset 0px -4px 0px ${cVar('colorCoreBlue500')};`}
 
   :hover {
-    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${oldColors.gray[300]};`}
+    ${({ selected }) => !selected && `box-shadow: inset 0px -4px 0px ${cVar('colorCoreNeutral300')};`}
     ${TabTitle} {
-      color: ${oldColors.gray[50]};
+      color: ${cVar('colorCoreNeutral50')};
     }
   }
 `
@@ -91,8 +92,8 @@ export const AddDraftButtonContainer = styled.div<AddDraftButtonContainerProps>`
   height: 100%;
   max-width: ${sizes(14)};
   padding: 0 ${sizes(2)};
-  border-left: 1px solid ${oldColors.gray[700]};
-  background-color: ${oldColors.gray[900]};
+  box-shadow: ${cVar('effectDividersLeft')}, ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
+  background-color: ${cVar('colorBackground')};
   margin-left: ${sizes(2)};
 `
 
