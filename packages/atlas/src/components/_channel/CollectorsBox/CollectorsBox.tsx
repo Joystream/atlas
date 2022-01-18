@@ -49,24 +49,25 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
 
   const avatars: Collector[] =
     sortedCollectors.length < MAX_SHOWED_COLLECTORS ? sortedCollectors : avatarsWhenCollectorsMoreThan5
-
   return (
-    <CollectorsBoxWrapper
-      onClick={() => {
-        setOpen(true)
-        setIsHovered(false)
-      }}
-      onMouseMove={() => !open && setIsHovered(true)}
-      onMouseOut={() => !open && setIsHovered(false)}
-    >
-      <Text variant="t200" secondary={!isHovered}>
-        NFTs collected by
-      </Text>
-      <AvatarGroup
-        avatars={avatars}
-        direction="right"
-        avatarStrokeColor={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}
-      />
+    <>
+      <CollectorsBoxWrapper
+        onClick={() => {
+          setOpen(true)
+          setIsHovered(false)
+        }}
+        onMouseMove={() => !open && setIsHovered(true)}
+        onMouseOut={() => !open && setIsHovered(false)}
+      >
+        <Text variant="t200" secondary={!isHovered}>
+          NFTs collected by
+        </Text>
+        <AvatarGroup
+          avatars={avatars}
+          direction="right"
+          avatarStrokeColor={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}
+        />
+      </CollectorsBoxWrapper>
       <DialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
         {sortedCollectors.map((collector, idx) => (
           <ListItem
@@ -81,6 +82,6 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
           />
         ))}
       </DialogModal>
-    </CollectorsBoxWrapper>
+    </>
   )
 }
