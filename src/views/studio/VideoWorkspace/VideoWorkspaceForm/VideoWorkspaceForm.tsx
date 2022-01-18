@@ -20,7 +20,7 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { FileErrorType, ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
-import { OptionCard } from '@/components/_inputs/OptionCard'
+import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -754,14 +754,14 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                     }}
                     render={({ field: { value, onChange } }) => (
                       <RadioCardButtonsContainer>
-                        <OptionCard
+                        <OptionCardRadio
                           value="true"
                           label="Public"
                           onChange={() => onChange(true)}
                           selectedValue={value?.toString()}
                           helperText="Visible to all"
                         />
-                        <OptionCard
+                        <OptionCardRadio
                           value="false"
                           label="Unlisted"
                           onChange={() => onChange(false)}
