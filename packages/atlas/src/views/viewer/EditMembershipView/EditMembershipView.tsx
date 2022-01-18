@@ -65,21 +65,21 @@ export const EditMembershipView: React.FC = () => {
       .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
         message: 'Member handle may contain only lowercase letters, numbers and underscores',
       })
-      .refine(
-        (val) => {
-          if (!val) return true
-          return debouncedHandleUniqueValidation.current(val, activeMembership?.handle)
-        },
-        {
-          message: 'Member handle already in use',
-        }
-      )
+      .refine((val) => debouncedHandleUniqueValidation.current(val, activeMembership?.handle), {
+        message: 'Member handle already in use',
+      })
       .transform(() => watchFunction('handle')),
     avatar: z
       .string()
       .max(400)
       .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
-      .refine((val) => debouncedAvatarValidation.current(val), { message: 'Image not found' })
+      .refine(
+        (val) => {
+          if (!val) return true
+          return debouncedAvatarValidation.current(val)
+        },
+        { message: 'Image not found' }
+      )
       .transform(() => watchFunction('avatar')),
     about: z
       .string()
