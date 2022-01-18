@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 import * as z from 'zod'
 
@@ -25,6 +25,11 @@ type Inputs = {
 
 export const EditMembershipView: React.FC = () => {
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
+  const [headerState, setHeaderState] = useState<Inputs>({
+    handle: '',
+    avatar: '',
+    about: '',
+  })
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
@@ -101,6 +106,7 @@ export const EditMembershipView: React.FC = () => {
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors, isDirty, isValid, dirtyFields },
   } = useForm<Inputs>({
@@ -125,6 +131,11 @@ export const EditMembershipView: React.FC = () => {
         keepDirty: false,
       }
     )
+    setHeaderState({
+      handle: activeMembership?.handle || '',
+      avatar: activeMembership?.avatarUri || '',
+      about: activeMembership?.about || '',
+    })
   }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
 
   useEffect(() => {
@@ -160,27 +171,49 @@ export const EditMembershipView: React.FC = () => {
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}
-          avatarUrl={activeMembership?.avatarUri}
+          avatarUrl={headerState.avatar || activeMembership?.avatarUri}
           loading={activeMembershipLoading}
-          handle={activeMembership?.handle}
+          handle={headerState.handle || activeMembership?.handle}
         />
         <Wrapper actionBarHeight={actionBarBounds.height}>
           <TextFieldsWrapper>
-            <StyledTextField
-              label="Avatar URL"
-              placeholder="https://example.com/avatar.jpeg"
-              {...register('avatar')}
-              error={!!errors.avatar}
-              helperText={errors.avatar?.message}
+            <Controller
+              control={control}
+              name="avatar"
+              render={({ field: { onChange, value } }) => (
+                <StyledTextField
+                  label="Avatar URL"
+                  placeholder="https://example.com/avatar.jpeg"
+                  value={value || ''}
+                  onChange={(e) => {
+                    setHeaderState((headerState) => ({ ...headerState, avatar: e.target.value }))
+                    onChange(e)
+                  }}
+                  error={!!errors.avatar}
+                  helperText={errors.avatar?.message}
+                />
+              )}
             />
-            <StyledTextField
-              placeholder="johnnysmith"
-              label="Member handle"
-              {...register('handle')}
-              error={!!errors.handle}
-              helperText={
-                errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
-              }
+            <Controller
+              control={control}
+              name="handle"
+              render={({ field: { onChange, value } }) => (
+                <StyledTextField
+                  placeholder="johnnysmith"
+                  label="Member handle"
+                  {...register('handle')}
+                  error={!!errors.handle}
+                  onChange={(e) => {
+                    setHeaderState((headerState) => ({ ...headerState, handle: e.target.value }))
+                    onChange(e)
+                  }}
+                  value={value || ''}
+                  helperText={
+                    errors.handle?.message ||
+                    'Member handle may contain only lowercase letters, numbers and underscores'
+                  }
+                />
+              )}
             />
             <TextArea
               label="About"
