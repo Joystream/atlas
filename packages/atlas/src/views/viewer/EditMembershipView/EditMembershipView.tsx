@@ -11,6 +11,8 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 
 import { StyledActionBar, StyledTextField, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
@@ -22,8 +24,10 @@ type Inputs = {
 }
 
 export const EditMembershipView: React.FC = () => {
-  const { activeAccountId, activeMembership, activeMembershipLoading } = useUser()
+  const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const [actionBarRef, actionBarBounds] = useMeasure()
+  const { joystream } = useJoystream()
+  const handleTransaction = useTransaction()
 
   const client = useApolloClient()
 
@@ -98,7 +102,7 @@ export const EditMembershipView: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty, isValid, dirtyFields },
   } = useForm<Inputs>({
     mode: 'onChange',
     resolver: zodResolver(schema),
@@ -129,13 +133,30 @@ export const EditMembershipView: React.FC = () => {
     }
   }, [activeMembership, activeMembershipLoading, resetForm])
 
-  const handleEditMember = handleSubmit(async () => {
-    // TODO
-    // handle submiting edited member
+  const handleEditMember = handleSubmit(async (data) => {
+    if (!joystream || !activeMembership) {
+      return
+    }
+
+    await handleTransaction({
+      txFactory: (updateStatus) =>
+        joystream.extrinsics.updateMember(
+          activeMembership?.id,
+          dirtyFields.handle ? data.handle : null,
+          dirtyFields.avatar ? data?.avatar : null,
+          dirtyFields.about ? data.about : null,
+          updateStatus
+        ),
+      successMessage: {
+        title: 'Member successfully updated',
+        description: 'Lorem ipsum',
+      },
+    })
+    refetchActiveMembership()
   })
 
   return (
-    <form onClick={handleEditMember}>
+    <form onSubmit={handleEditMember}>
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}

@@ -38,6 +38,8 @@ import {
   VideoInputMetadata,
 } from './types'
 
+import { MemberExtrisincResult } from '.'
+
 type AccountIdAccessor = () => AccountId | null
 
 export class JoystreamLibExtrinsics {
@@ -234,6 +236,23 @@ export class JoystreamLibExtrinsics {
     return {
       videoId,
       block,
+    }
+  }
+  async updateMember(
+    memberId: MemberId,
+    handle: string | null,
+    avatarUri: string | null,
+    about: string | null,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MemberExtrisincResult> {
+    await this.ensureApi()
+    const tx = this.api.tx.members.updateMembership(memberId, handle || null, avatarUri || null, about || null)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+      memberId,
     }
   }
 }
