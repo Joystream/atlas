@@ -52,7 +52,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
 
   return (
     <CollectorsBoxWrapper
-      onClick={(e) => {
+      onClick={() => {
         setOpen(true)
         setIsHovered(false)
       }}
