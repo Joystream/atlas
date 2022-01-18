@@ -246,7 +246,7 @@ export class JoystreamLibExtrinsics {
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<MemberExtrisincResult> {
     await this.ensureApi()
-    const tx = this.api.tx.members.updateMembership(memberId, handle || null, avatarUri || null, about || null)
+    const tx = this.api.tx.members.updateMembership(memberId, handle, avatarUri, about)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
