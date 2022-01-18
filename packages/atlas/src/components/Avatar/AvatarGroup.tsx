@@ -12,8 +12,13 @@ import {
 
 import { Tooltip } from '../Tooltip'
 
+export type AvatarGroupSingleAvatar = Omit<AvatarProps, 'size' | 'className'> & {
+  tooltipText?: string
+  children?: React.ReactNode
+}
+
 export type AvatarGroupProps = {
-  avatars: (Omit<AvatarProps, 'size' | 'className'> & { tooltipText?: string })[]
+  avatars: AvatarGroupSingleAvatar[]
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean

@@ -69,7 +69,6 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
         }
       }
     `};
-
   ${StyledAvatar} {
     box-shadow: 0 0 0 4px ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
   }
