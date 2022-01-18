@@ -14,6 +14,7 @@ import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
+import { imageUrlValidation } from '@/utils/asset'
 
 import { StyledActionBar, StyledTextField, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
@@ -28,27 +29,9 @@ export const EditMembershipView: React.FC = () => {
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
-
   const client = useApolloClient()
 
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(
-      async (value: string): Promise<string | boolean> =>
-        new Promise((resolve) => {
-          const image = new Image()
-          image.onload = () => {
-            resolve(true)
-          }
-          image.onerror = () => resolve(false)
-          image.src = value
-          if (!value) {
-            resolve(true)
-          }
-        }),
-      500
-    )
-  )
-
+  const debouncedAvatarValidation = useRef(debouncePromise(imageUrlValidation, 500))
   const debouncedHandleUniqueValidation = useRef(
     debouncePromise(async (value: string, prevValue?: string) => {
       if (value === prevValue) {
@@ -67,6 +50,7 @@ export const EditMembershipView: React.FC = () => {
       }
     }, 500)
   )
+  const avatarInputRef = useRef<HTMLInputElement | null>(null)
 
   const schema = z.object({
     handle: z
@@ -81,9 +65,15 @@ export const EditMembershipView: React.FC = () => {
       .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
         message: 'Member handle may contain only lowercase letters, numbers and underscores',
       })
-      .refine((val) => debouncedHandleUniqueValidation.current(val, activeMembership?.handle), {
-        message: 'Member handle already in use',
-      })
+      .refine(
+        (val) => {
+          if (!val) return true
+          return debouncedHandleUniqueValidation.current(val, activeMembership?.handle)
+        },
+        {
+          message: 'Member handle already in use',
+        }
+      )
       .transform(() => watchFunction('handle')),
     avatar: z
       .string()
@@ -115,6 +105,7 @@ export const EditMembershipView: React.FC = () => {
     },
   })
 
+  const { ref, ...avataRegisterRest } = register('avatar')
   const watchFunction: UseFormWatch<Inputs> = watch
 
   const resetForm = useCallback(() => {
@@ -163,7 +154,9 @@ export const EditMembershipView: React.FC = () => {
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}
-          avatarUrl={getValues('avatar')}
+          avatarUrl={errors.avatar ? '' : getValues('avatar')}
+          onAvatarEditClick={() => avatarInputRef.current?.focus()}
+          hasAvatarUploadFailed={!!errors.avatar}
           loading={activeMembershipLoading}
           handle={getValues('handle')}
         />
@@ -172,7 +165,12 @@ export const EditMembershipView: React.FC = () => {
             <StyledTextField
               label="Avatar URL"
               placeholder="https://example.com/avatar.jpeg"
-              {...register('avatar')}
+              {...avataRegisterRest}
+              name="avatar"
+              ref={(e) => {
+                ref(e)
+                avatarInputRef.current = e
+              }}
               error={!!errors.avatar}
               helperText={errors.avatar?.message}
             />

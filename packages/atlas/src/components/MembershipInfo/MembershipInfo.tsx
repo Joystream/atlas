@@ -23,13 +23,23 @@ import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {
   avatarUrl?: string | null
+  hasAvatarUploadFailed?: boolean
+  onAvatarEditClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   handle?: string | null
   address?: string | null
   loading?: boolean
   isOwner?: boolean
 }
 
-export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarUrl, handle, loading, isOwner }) => {
+export const MembershipInfo: React.FC<MembershipInfoProps> = ({
+  address,
+  avatarUrl,
+  hasAvatarUploadFailed,
+  onAvatarEditClick,
+  handle,
+  loading,
+  isOwner,
+}) => {
   const smMatch = useMediaMatch('sm')
   return (
     <SwitchTransition>
@@ -40,7 +50,14 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarU
       >
         <MembershipHeader>
           <MembershipInfoContainer>
-            <Avatar size={smMatch ? 'preview' : 'channel-card'} assetUrl={avatarUrl} loading={loading} />
+            <Avatar
+              size={smMatch ? 'preview' : 'channel-card'}
+              editable
+              onEditClick={onAvatarEditClick}
+              assetUrl={avatarUrl}
+              loading={loading}
+              hasAvatarUploadFailed={hasAvatarUploadFailed}
+            />
             <MembershipDetails>
               {loading || !handle ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
