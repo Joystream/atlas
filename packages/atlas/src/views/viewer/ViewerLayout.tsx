@@ -29,7 +29,7 @@ import {
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
 
-const viewerRoutes = (isActiveMember: boolean) => [
+const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
   { path: relativeRoutes.viewer.index(), element: <HomeView /> },
   { path: relativeRoutes.viewer.popular(), element: <PopularView /> },
@@ -39,16 +39,6 @@ const viewerRoutes = (isActiveMember: boolean) => [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
-  {
-    path: relativeRoutes.viewer.editMembership(),
-    element: (
-      <PrivateRoute
-        isAuth={isActiveMember}
-        element={<EditMembershipView />}
-        redirectTo={absoluteRoutes.viewer.index()}
-      />
-    ),
-  },
 ]
 
 export const ViewerLayout: React.FC = () => {
@@ -80,9 +70,19 @@ export const ViewerLayout: React.FC = () => {
               key={displayedLocation.pathname}
             >
               <Routes location={displayedLocation}>
-                {viewerRoutes(!!activeMemberId).map((route) => (
+                {viewerRoutes.map((route) => (
                   <Route key={route.path} {...route} />
                 ))}
+                <Route
+                  path={relativeRoutes.viewer.editMembership()}
+                  element={
+                    <PrivateRoute
+                      isAuth={!!activeMemberId}
+                      element={<EditMembershipView />}
+                      redirectTo={absoluteRoutes.viewer.index()}
+                    />
+                  }
+                />
               </Routes>
             </CSSTransition>
           </SwitchTransition>
