@@ -58,7 +58,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
           clickable={clickable}
           onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
           onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
-          idx={direction === 'left' ? idx : avatars.length - idx}
+          idx={direction === 'left' ? idx : avatars.length - 1 - idx}
           size={size}
           style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
           avatarStrokeColor={avatarStrokeColor}

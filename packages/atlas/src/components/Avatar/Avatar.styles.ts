@@ -214,8 +214,7 @@ export const ChildrenWrapper = styled.div`
   overflow: hidden;
   position: absolute;
   border-radius: 100%;
-  width: 100%;
-  height: 100%;
+  ${square('100%')};
 `
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
   path {

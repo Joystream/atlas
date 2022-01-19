@@ -8,6 +8,7 @@ export const CollectorsBoxWrapper = styled.div`
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  transition: background ${cVar('animationTransitionFast')};
 
   :hover {
     background: ${cVar('colorBackgroundStrong')};
@@ -20,6 +21,7 @@ export const PlusIconBackground = styled.div<{ background: string }>`
   width: 100%;
   height: 100%;
   background: ${({ background }) => background};
+  transition: background ${cVar('animationTransitionFast')};
 `
 
 export const PlusIconWrapper = styled.div<{ isHovered?: boolean }>`

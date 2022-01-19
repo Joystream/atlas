@@ -15,7 +15,7 @@ export const AvatarGroupContainer = styled.div<{ direction: AvatarGroupDirection
 `
 
 export const StyledAvatar = styled(Avatar)`
-  transition: transform ${cVar('animationTransitionFast')};
+  transition: transform ${cVar('animationTransitionFast')}, box-shadow ${cVar('animationTransitionFast')};
 
   :hover {
     ::after {
@@ -53,9 +53,20 @@ type AvatarWrapperProps = {
 export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
-  transition: transform ${cVar('animationTransitionFast')};
   background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
-  left: ${({ idx, size, direction }) => (direction === 'left' ? '-' : '') + idx * (size === 'small' ? 4 : 8)}px;
+
+  ${({ direction, idx, size }) => {
+    if (direction === 'left') {
+      return css`
+        left: ${-idx * (size === 'small' ? 4 : 8)}px;
+      `
+    }
+    if (direction === 'right') {
+      return css`
+        right: ${-idx * (size === 'small' ? 4 : 8)}px;
+      `
+    }
+  }};
   ${({ clickable }) =>
     clickable &&
     css`
