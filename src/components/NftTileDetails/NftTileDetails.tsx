@@ -173,9 +173,17 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           !buyNow && <DetailsContent caption="Status" content="Not for sale" icon={<SvgActionNotForSale />} secondary />
         )
       case 'minBid':
-        return <DetailsContent caption="Min bid" content={minBid || ''} icon={<SvgActionJoyToken />} />
+        return (
+          minBid && (
+            <DetailsContent caption="Min bid" content={formatNumberShort(minBid)} icon={<SvgActionJoyToken />} />
+          )
+        )
       case 'topBid':
-        return <DetailsContent caption="Top bid" content={topBid || ''} icon={<SvgActionJoyToken />} />
+        return (
+          topBid && (
+            <DetailsContent caption="Top bid" content={formatNumberShort(topBid)} icon={<SvgActionJoyToken />} />
+          )
+        )
       case 'waiting':
         return <DetailsContent caption="Status" content="Place first bid" icon={<SvgActionJoyToken />} secondary />
     }
@@ -221,7 +229,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       {loading ? (
         <SkeletonLoader width="55.6%" height={24} />
       ) : (
-        <Title variant={tileSize === 'medium' ? 'h400' : 'h200'}>{title}</Title>
+        <Title variant={tileSize === 'medium' ? 'h400' : 'h300'}>{title}</Title>
       )}
       <Details>
         {getDetails}

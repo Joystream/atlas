@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 import { sizes } from '@/styles/sizes'
 
@@ -101,4 +102,8 @@ export const PillGroupWrapper = styled.div<{ size: Sizes }>`
   grid-auto-flow: column;
 
   ${gapStyles}
+`
+
+export const StyledLabel = styled(Text)`
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `
