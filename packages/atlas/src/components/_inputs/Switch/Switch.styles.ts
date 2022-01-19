@@ -1,15 +1,22 @@
 import styled from '@emotion/styled'
 
-import { cVar } from '@/styles'
+import { Text } from '@/components/Text'
+import { cVar, sizes } from '@/styles'
 
-export const SwitchLabel = styled.label`
+export const SwitchLabel = styled.label<{ disabled?: boolean }>`
+  display: inline-flex;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`
+
+export const SwitchWrapper = styled.div`
   position: relative;
   display: inline-block;
   width: 40px;
   height: 24px;
 `
 
-export const SwitchSlider = styled.div`
+export const SwitchSlider = styled.div<{ disabled?: boolean }>`
   box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
   position: absolute;
   cursor: pointer;
@@ -19,7 +26,8 @@ export const SwitchSlider = styled.div`
   bottom: 0;
   background-color: transparent;
   border-radius: 24px;
-  transition: all 200ms;
+  transition: box-shadow ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   /* slider thumb */
 
@@ -32,11 +40,12 @@ export const SwitchSlider = styled.div`
     left: 4px;
     bottom: 4px;
     background-color: ${cVar('colorCoreNeutral400')};
-    transition: all 200ms;
+    transition: transform ${cVar('animationTransitionFast')}, width ${cVar('animationTransitionFast')},
+      background-color ${cVar('animationTransitionFast')};
   }
 
   :hover {
-    box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral400')};
+    box-shadow: inset 0 0 0 ${({ disabled }) => (disabled ? 1 : 2)}px ${cVar('colorCoreNeutral400')};
   }
 `
 
@@ -45,7 +54,7 @@ export const SwitchCheckbox = styled.input`
   width: 0;
   height: 0;
 
-  :active {
+  :active:not(:disabled) {
     + ${SwitchSlider} {
       ::before {
         width: 20px;
@@ -68,7 +77,7 @@ export const SwitchCheckbox = styled.input`
       }
     }
 
-    :active {
+    :active:not(:disabled) {
       + ${SwitchSlider} {
         ::before {
           transform: translateX(12px);
@@ -77,4 +86,7 @@ export const SwitchCheckbox = styled.input`
       }
     }
   }
+`
+export const LabelText = styled(Text)`
+  margin-left: ${sizes(2)};
 `
