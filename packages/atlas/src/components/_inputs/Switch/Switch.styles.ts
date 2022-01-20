@@ -20,7 +20,6 @@ export const SwitchWrapper = styled.div`
 export const SwitchSlider = styled.div<{ disabled?: boolean }>`
   box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
   position: absolute;
-  cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
@@ -55,14 +54,6 @@ export const SwitchCheckbox = styled.input`
   width: 0;
   height: 0;
 
-  :active:not(:disabled) {
-    + ${SwitchSlider} {
-      ::before {
-        width: 20px;
-      }
-    }
-  }
-
   :checked {
     + ${SwitchSlider} {
       box-shadow: unset;
@@ -77,13 +68,21 @@ export const SwitchCheckbox = styled.input`
         background-color: ${cVar('colorCoreNeutral50')};
       }
     }
+  }
 
-    :active:not(:disabled) {
-      + ${SwitchSlider} {
-        ::before {
-          transform: translateX(12px);
-          width: 20px;
-        }
+  :active:not(:disabled) {
+    + ${SwitchSlider} {
+      ::before {
+        width: 20px;
+      }
+    }
+  }
+
+  :checked:active:not(:disabled) {
+    + ${SwitchSlider} {
+      ::before {
+        transform: translateX(12px);
+        width: 20px;
       }
     }
   }
