@@ -13,14 +13,14 @@ with the Joystream network" src="https://user-images.githubusercontent.com/35307
   <a alt="Styleguide" href="https://github.com/Joystream/atlas/blob/master/docs/styleguide.md">
     <img alt="Styleguide badge" src="https://img.shields.io/badge/%F0%9F%92%85%20style-prettier-brightgreen">
   </a>
-  <a alt="Netlify production deployment" href="https://play.joystream.org">
-    <img alt="Netlify production badge" src="https://img.shields.io/netlify/ad6abced-bae3-4ccd-9d2e-e80e95c92830?label=netlify%20prod&logo=netlify">
+  <a alt="Vercel production deployment" href="https://play.joystream.org">
+    <img alt="Vercel production badge" src="https://img.shields.io/badge/vercel%20prod-live-brightgreen?logo=vercel">
   </a>
-  <a alt="Netlify development deployment" href="https://atlas-dev.netlify.app">
-    <img alt="Netlify development badge" src="https://img.shields.io/netlify/962c8d74-489d-4f37-9842-f1db389ab6b2?label=%F0%9F%9B%A0%20netlify%20dev">
+  <a alt="Vercel development deployment" href="https://atlas-git-dev-joystream.vercel.app/">
+    <img alt="Vercel development badge" src="https://img.shields.io/badge/%F0%9F%9B%A0%20vercel%20dev-live-brightgreen">
   </a>
-  <a alt="Storybook deployment" href="https://atlas-storybook.netlify.app">
-    <img alt="Storybook badge" src="https://img.shields.io/netlify/45fc8d08-f25d-40a0-b853-92a107e603e1?label=storybook&logo=storybook">
+  <a alt="Storybook deployment" href="https://atlas-storybook.vercel.app/">
+    <img alt="Storybook badge" src="https://img.shields.io/badge/storybook-live-brightgreen?logo=storybook">
   </a>
 </p>
 
