@@ -5,10 +5,10 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
 import { Grid } from '@/components/Grid'
+import { OperatorsContextProvider } from '@/providers/assets'
 import { AssetsManager } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
-import { StorageProvidersProvider } from '@/providers/storageProviders'
 
 import { ChannelCard, ChannelCardProps } from './ChannelCard'
 
@@ -22,9 +22,8 @@ export default {
       title: 'my channel',
       id: '3',
       follows: 4,
-      avatarPhotoAvailability: 'ACCEPTED',
-      avatarPhotoDataObject: {
-        joystreamContentId: '5EUQ14Zi3R4DnQPipoMbxzBnCgdFSPqBY15w9Uu5dQEEVnG3',
+      avatarPhoto: {
+        id: '1',
       },
       __typename: 'Channel',
     },
@@ -36,12 +35,12 @@ export default {
         <BrowserRouter>
           <ApolloProvider client={apolloClient}>
             <OverlayManagerProvider>
-              <StorageProvidersProvider>
+              <OperatorsContextProvider>
                 <ConfirmationModalProvider>
                   <AssetsManager />
                   <Story />
                 </ConfirmationModalProvider>
-              </StorageProvidersProvider>
+              </OperatorsContextProvider>
             </OverlayManagerProvider>
           </ApolloProvider>
         </BrowserRouter>

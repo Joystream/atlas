@@ -1,5 +1,5 @@
 import { Global } from '@emotion/react'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'

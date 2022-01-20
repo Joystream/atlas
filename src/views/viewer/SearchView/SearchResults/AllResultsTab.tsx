@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 
-import { Channel, VideoFieldsFragment } from '@/api/queries'
+import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { ChannelGallery } from '@/components/_channel/ChannelGallery'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -10,7 +10,7 @@ import { sizes } from '@/styles'
 
 type AllResultsTabProps = {
   videos: VideoFieldsFragment[]
-  channels: Channel[]
+  channels: BasicChannelFieldsFragment[]
   loading: boolean
 }
 

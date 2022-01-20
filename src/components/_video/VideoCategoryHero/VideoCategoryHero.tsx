@@ -1,4 +1,4 @@
-import { round } from 'lodash'
+import { round } from 'lodash-es'
 import React, { ReactNode, useState } from 'react'
 
 import { VideoHeroHeader } from './VideoHereoHeader'
