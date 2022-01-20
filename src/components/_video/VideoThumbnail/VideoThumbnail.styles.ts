@@ -117,7 +117,7 @@ type VideoThumbnailContainerProps = {
 export const VideoThumbnailContainer = styled(Link, {
   shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled'),
 })<VideoThumbnailContainerProps>`
-  min-width: 320px;
+  min-width: 166px;
   display: block;
   position: relative;
   background-color: black;
