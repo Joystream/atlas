@@ -1,7 +1,9 @@
+import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
+import { createApolloClient } from '@/api'
 import { VideoOrderByInput } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -21,16 +23,24 @@ import { useFiltersBar } from './useFiltersBar'
 export default {
   title: 'other/FiltersBar',
   component: FiltersBar,
+  args: {
+    activeFilters: ['date', 'other', 'categories', 'length', 'nftStatus', 'language'],
+  },
   decorators: [
-    (Story) => (
-      <OverlayManagerProvider>
-        <Story />
-      </OverlayManagerProvider>
-    ),
+    (Story) => {
+      const apolloClient = createApolloClient()
+      return (
+        <ApolloProvider client={apolloClient}>
+          <OverlayManagerProvider>
+            <Story />
+          </OverlayManagerProvider>
+        </ApolloProvider>
+      )
+    },
   ],
 } as Meta
 
-const RegularTemplate: Story<FiltersBarProps> = () => {
+const RegularTemplate: Story<FiltersBarProps> = (args) => {
   const mdMatch = useMediaMatch('md')
   const lgMatch = useMediaMatch('lg')
   const betweenMdAndLgMatch = mdMatch && !lgMatch
@@ -103,7 +113,7 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
           </SortContainer>
         )}
       </ControlsContainer>
-      <FiltersBar {...filtersBarLogic} />
+      <FiltersBar {...filtersBarLogic} {...args} />
     </Container>
   )
 }

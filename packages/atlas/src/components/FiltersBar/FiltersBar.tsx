@@ -1,7 +1,8 @@
 import { add } from 'date-fns'
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { useCategories } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
@@ -26,19 +27,35 @@ import {
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
 
-type FilterCategory = {
-  id: string
-  name?: string | null
-}
+type Filters = 'date' | 'other' | 'categories' | 'length' | 'nftStatus' | 'language'
 
 export type FiltersBarProps = {
-  categories?: FilterCategory[]
+  activeFilters: Filters[]
 }
+
+const nftStatuses = [
+  {
+    id: '0',
+    name: 'Open auction',
+  },
+  {
+    id: '1',
+    name: 'English auction',
+  },
+  {
+    id: '2',
+    name: 'Fixed price',
+  },
+  {
+    id: '3',
+    name: 'Not for sale',
+  },
+]
 
 export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> = ({
   setVideoWhereInput,
   videoWhereInput,
-  categories,
+  activeFilters,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
@@ -50,6 +67,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     setExcludePaidPromotionalMaterialFilter,
     videoLengthFilter,
     setVideoLengthFilter,
+    nftStatusFilter,
+    setNftStatusFilter,
     categoriesFilter,
     setCategoriesFilter,
     language,
@@ -60,6 +79,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     canClearDateUploadedFilter,
     canClearVideoLengthFilter,
     canClearAllFilters,
+    canClearNftStatusFilter,
+    clearNftStatusFilter,
     clearCategoriesFilter,
     clearAllFilters,
     clearDateUploadedFilter,
@@ -74,112 +95,153 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const datePopoverRef = useRef<PopoverImperativeHandle>(null)
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
+  const { categories } = useCategories()
 
-  const categoriesInputs = (
-    <FilterContentContainer>
-      {categories &&
-        categories.map((category) => (
+  const nftStatusInputs = useMemo(
+    () => (
+      <FilterContentContainer>
+        {nftStatuses.map((status) => (
           <Checkbox
-            name="category-filter"
-            label={category.name as string}
-            key={`category-filter-${category.id}`}
-            value={!!categoriesFilter?.includes(category.id)}
+            name="nft-status"
+            label={status.name as string}
+            key={`nft-status-${status.id}`}
+            value={!!nftStatusFilter?.includes(status.id)}
             onChange={(value) => {
-              setCategoriesFilter((categories) =>
-                value ? [...(categories ?? []), category.id] : categories?.filter((id) => id !== category.id)
+              setNftStatusFilter((statuses) =>
+                value ? [...(statuses ?? []), status.id] : statuses?.filter((id) => id !== status.id)
               )
             }}
           />
         ))}
-    </FilterContentContainer>
+      </FilterContentContainer>
+    ),
+    [nftStatusFilter, setNftStatusFilter]
   )
 
-  const dateUploadedInputs = (
-    <FilterContentContainer>
-      <RadioButton
-        onChange={() => {
-          setDateUploadedFilter(1)
-        }}
-        name="date-uploaded"
-        label="Last 24 hours"
-        value={1}
-        selectedValue={dateUploadedFilter}
-      />
-      <RadioButton
-        onChange={() => {
-          setDateUploadedFilter(7)
-        }}
-        name="date-uploaded"
-        label="Last 7 days"
-        value={7}
-        selectedValue={dateUploadedFilter}
-      />
-      <RadioButton
-        onChange={() => {
-          setDateUploadedFilter(30)
-        }}
-        name="date-uploaded"
-        label="Last 30 days"
-        value={30}
-        selectedValue={dateUploadedFilter}
-      />
-      <RadioButton
-        onChange={() => {
-          setDateUploadedFilter(365)
-        }}
-        name="date-uploaded"
-        label="Last 365 days"
-        value={365}
-        selectedValue={dateUploadedFilter}
-      />
-    </FilterContentContainer>
+  const categoriesInputs = useMemo(
+    () => (
+      <FilterContentContainer>
+        {categories &&
+          categories.map((category) => (
+            <Checkbox
+              name="category-filter"
+              label={category.name as string}
+              key={`category-filter-${category.id}`}
+              value={!!categoriesFilter?.includes(category.id)}
+              onChange={(value) => {
+                setCategoriesFilter((categories) =>
+                  value ? [...(categories ?? []), category.id] : categories?.filter((id) => id !== category.id)
+                )
+              }}
+            />
+          ))}
+      </FilterContentContainer>
+    ),
+    [categories, categoriesFilter, setCategoriesFilter]
   )
-  const videoLengthInputs = (
-    <FilterContentContainer>
-      <RadioButton
-        onChange={() => {
-          setVideoLengthFilter('0-to-4')
-        }}
-        name="length"
-        label="Less than 4 minutes"
-        value="0-to-4"
-        selectedValue={videoLengthFilter}
-      />
-      <RadioButton
-        onChange={() => {
-          setVideoLengthFilter('4-to-10')
-        }}
-        name="length"
-        label="4 to 10 minutes"
-        value="4-to-10"
-        selectedValue={videoLengthFilter}
-      />
-      <RadioButton
-        onChange={() => {
-          setVideoLengthFilter('10-to-9999')
-        }}
-        name="length"
-        label="More than 10 minutes"
-        value="10-to-9999"
-        selectedValue={videoLengthFilter}
-      />
-    </FilterContentContainer>
+
+  const dateUploadedInputs = useMemo(
+    () => (
+      <FilterContentContainer>
+        <RadioButton
+          onChange={() => {
+            setDateUploadedFilter(1)
+          }}
+          name="date-uploaded"
+          label="Last 24 hours"
+          value={1}
+          selectedValue={dateUploadedFilter}
+        />
+        <RadioButton
+          onChange={() => {
+            setDateUploadedFilter(7)
+          }}
+          name="date-uploaded"
+          label="Last 7 days"
+          value={7}
+          selectedValue={dateUploadedFilter}
+        />
+        <RadioButton
+          onChange={() => {
+            setDateUploadedFilter(30)
+          }}
+          name="date-uploaded"
+          label="Last 30 days"
+          value={30}
+          selectedValue={dateUploadedFilter}
+        />
+        <RadioButton
+          onChange={() => {
+            setDateUploadedFilter(365)
+          }}
+          name="date-uploaded"
+          label="Last 365 days"
+          value={365}
+          selectedValue={dateUploadedFilter}
+        />
+      </FilterContentContainer>
+    ),
+    [dateUploadedFilter, setDateUploadedFilter]
   )
-  const otherFiltersInputs = (
-    <FilterContentContainer>
-      <Checkbox
-        onChange={setExcludePaidPromotionalMaterialFilter}
-        name="other-filters"
-        label="Paid promotional material"
-        value={!!excludePaidPromotionalMaterialFilter}
-      />
-      <Checkbox
-        onChange={setExcludeMatureContentRatingFilter}
-        name="other-filters"
-        label="Mature content rating"
-        value={!!excludeMatureContentRatingFilter}
-      />
-    </FilterContentContainer>
+
+  const videoLengthInputs = useMemo(
+    () => (
+      <FilterContentContainer>
+        <RadioButton
+          onChange={() => {
+            setVideoLengthFilter('0-to-4')
+          }}
+          name="length"
+          label="Less than 4 minutes"
+          value="0-to-4"
+          selectedValue={videoLengthFilter}
+        />
+        <RadioButton
+          onChange={() => {
+            setVideoLengthFilter('4-to-10')
+          }}
+          name="length"
+          label="4 to 10 minutes"
+          value="4-to-10"
+          selectedValue={videoLengthFilter}
+        />
+        <RadioButton
+          onChange={() => {
+            setVideoLengthFilter('10-to-9999')
+          }}
+          name="length"
+          label="More than 10 minutes"
+          value="10-to-9999"
+          selectedValue={videoLengthFilter}
+        />
+      </FilterContentContainer>
+    ),
+    [setVideoLengthFilter, videoLengthFilter]
+  )
+
+  const otherFiltersInputs = useMemo(
+    () => (
+      <FilterContentContainer>
+        <Checkbox
+          onChange={setExcludePaidPromotionalMaterialFilter}
+          name="other-filters"
+          label="Paid promotional material"
+          value={!!excludePaidPromotionalMaterialFilter}
+        />
+        <Checkbox
+          onChange={setExcludeMatureContentRatingFilter}
+          name="other-filters"
+          label="Mature content rating"
+          value={!!excludeMatureContentRatingFilter}
+        />
+      </FilterContentContainer>
+    ),
+    [
+      excludeMatureContentRatingFilter,
+      excludePaidPromotionalMaterialFilter,
+      setExcludeMatureContentRatingFilter,
+      setExcludePaidPromotionalMaterialFilter,
+    ]
   )
 
   if (betweenBaseAndSMMatch) {
@@ -190,19 +252,29 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         title="Filters"
         content={
           <>
-            <MobileFilterContainer>
-              <Text secondary variant="h100">
-                Language
-              </Text>
-              <Select
-                items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
-                placeholder="Any language"
-                size="small"
-                value={language}
-                onChange={setLanguage}
-              />
-            </MobileFilterContainer>
-            {categories && (
+            {activeFilters.includes('language') && (
+              <MobileFilterContainer>
+                <Text secondary variant="h100">
+                  Language
+                </Text>
+                <Select
+                  items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
+                  placeholder="Any language"
+                  size="small"
+                  value={language}
+                  onChange={setLanguage}
+                />
+              </MobileFilterContainer>
+            )}
+            {activeFilters.includes('nftStatus') && (
+              <MobileFilterContainer>
+                <Text secondary variant="h100">
+                  Status
+                </Text>
+                {nftStatusInputs}
+              </MobileFilterContainer>
+            )}
+            {categories && activeFilters.includes('categories') && (
               <MobileFilterContainer>
                 <Text secondary variant="h100">
                   Categories
@@ -210,25 +282,31 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                 {categoriesInputs}
               </MobileFilterContainer>
             )}
-            <MobileFilterContainer>
-              <Text secondary variant="h100">
-                Date uploaded
-              </Text>
-              {dateUploadedInputs}
-            </MobileFilterContainer>
-            <MobileFilterContainer>
-              <Text secondary variant="h100">
-                Length
-              </Text>
-              {videoLengthInputs}
-            </MobileFilterContainer>
-            <MobileFilterContainer>
-              <OtherFilterStyledText secondary variant="h100">
-                <OtherFilterStyledIcon />
-                Exclude:
-              </OtherFilterStyledText>
-              {otherFiltersInputs}
-            </MobileFilterContainer>
+            {activeFilters.includes('date') && (
+              <MobileFilterContainer>
+                <Text secondary variant="h100">
+                  Date uploaded
+                </Text>
+                {dateUploadedInputs}
+              </MobileFilterContainer>
+            )}
+            {activeFilters.includes('length') && (
+              <MobileFilterContainer>
+                <Text secondary variant="h100">
+                  Length
+                </Text>
+                {videoLengthInputs}
+              </MobileFilterContainer>
+            )}
+            {activeFilters.includes('other') && (
+              <MobileFilterContainer>
+                <OtherFilterStyledText secondary variant="h100">
+                  <OtherFilterStyledIcon />
+                  Exclude:
+                </OtherFilterStyledText>
+                {otherFiltersInputs}
+              </MobileFilterContainer>
+            )}
           </>
         }
         primaryButton={{
@@ -280,7 +358,32 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     >
       <FiltersContainer open={true}>
         <FiltersInnerContainer>
-          {categories && (
+          {activeFilters.includes('nftStatus') && (
+            <DialogPopover
+              ref={categoriesPopoverRef}
+              trigger={
+                <Button variant="secondary" badge={canClearNftStatusFilter && nftStatusFilter?.length}>
+                  Status
+                </Button>
+              }
+              dividers
+              primaryButton={{
+                text: 'Apply',
+                disabled: (!nftStatusFilter || !nftStatusFilter.length) && !canClearNftStatusFilter,
+                onClick: () => {
+                  categoriesPopoverRef.current?.hide()
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearNftStatusFilter,
+                disabled: nftStatusFilter === undefined,
+              }}
+            >
+              {nftStatusInputs}
+            </DialogPopover>
+          )}
+          {categories && activeFilters.includes('categories') && (
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
@@ -311,99 +414,105 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               {categoriesInputs}
             </DialogPopover>
           )}
-          <DialogPopover
-            ref={datePopoverRef}
-            trigger={
-              <Button badge={canClearDateUploadedFilter} variant="secondary">
-                Date uploaded
-              </Button>
-            }
-            primaryButton={{
-              text: 'Apply',
-              disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
-              onClick: () => {
-                datePopoverRef.current?.hide()
-                setVideoWhereInput((value) => ({
-                  ...value,
-                  createdAt_gte: dateUploadedFilter
-                    ? add(new Date(), {
-                        days: -dateUploadedFilter,
-                      })
-                    : undefined,
-                }))
-              },
-            }}
-            secondaryButton={{
-              text: 'Clear',
-              onClick: clearDateUploadedFilter,
-              disabled: dateUploadedFilter === undefined,
-            }}
-          >
-            {dateUploadedInputs}
-          </DialogPopover>
-          <DialogPopover
-            ref={lengthPopoverRef}
-            trigger={
-              <Button badge={canClearVideoLengthFilter} variant="secondary">
-                Length
-              </Button>
-            }
-            primaryButton={{
-              text: 'Apply',
-              disabled: !videoLengthFilter && !canClearVideoLengthFilter,
-              onClick: () => {
-                lengthPopoverRef.current?.hide()
-                setVideoWhereInput((value) => ({
-                  ...value,
-                  ...getDurationRules(videoLengthFilter),
-                }))
-              },
-            }}
-            secondaryButton={{
-              text: 'Clear',
-              onClick: clearVideoLengthFilter,
-              disabled: videoLengthFilter === undefined,
-            }}
-          >
-            {videoLengthInputs}
-          </DialogPopover>
-          <DialogPopover
-            ref={othersPopoverRef}
-            trigger={
-              <Button
-                badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
-                variant="secondary"
-              >
-                Other filters
-              </Button>
-            }
-            primaryButton={{
-              text: 'Apply',
-              disabled:
-                !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
-              onClick: () => {
-                othersPopoverRef.current?.hide()
-                setVideoWhereInput((value) => ({
-                  ...value,
-                  hasMarketing_eq: excludePaidPromotionalMaterialFilter
-                    ? !excludePaidPromotionalMaterialFilter
-                    : undefined,
-                  isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
-                }))
-              },
-            }}
-            secondaryButton={{
-              text: 'Clear',
-              onClick: clearOtherFilters,
-              disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
-            }}
-          >
-            <OtherFilterStyledText secondary variant="h100">
-              <OtherFilterStyledIcon />
-              Exclude:
-            </OtherFilterStyledText>
-            {otherFiltersInputs}
-          </DialogPopover>
+          {activeFilters.includes('date') && (
+            <DialogPopover
+              ref={datePopoverRef}
+              trigger={
+                <Button badge={canClearDateUploadedFilter} variant="secondary">
+                  Date uploaded
+                </Button>
+              }
+              primaryButton={{
+                text: 'Apply',
+                disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
+                onClick: () => {
+                  datePopoverRef.current?.hide()
+                  setVideoWhereInput((value) => ({
+                    ...value,
+                    createdAt_gte: dateUploadedFilter
+                      ? add(new Date(), {
+                          days: -dateUploadedFilter,
+                        })
+                      : undefined,
+                  }))
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearDateUploadedFilter,
+                disabled: dateUploadedFilter === undefined,
+              }}
+            >
+              {dateUploadedInputs}
+            </DialogPopover>
+          )}
+          {activeFilters.includes('length') && (
+            <DialogPopover
+              ref={lengthPopoverRef}
+              trigger={
+                <Button badge={canClearVideoLengthFilter} variant="secondary">
+                  Length
+                </Button>
+              }
+              primaryButton={{
+                text: 'Apply',
+                disabled: !videoLengthFilter && !canClearVideoLengthFilter,
+                onClick: () => {
+                  lengthPopoverRef.current?.hide()
+                  setVideoWhereInput((value) => ({
+                    ...value,
+                    ...getDurationRules(videoLengthFilter),
+                  }))
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearVideoLengthFilter,
+                disabled: videoLengthFilter === undefined,
+              }}
+            >
+              {videoLengthInputs}
+            </DialogPopover>
+          )}
+          {activeFilters.includes('other') && (
+            <DialogPopover
+              ref={othersPopoverRef}
+              trigger={
+                <Button
+                  badge={+(videoWhereInput?.hasMarketing_eq === false) + +(videoWhereInput?.isExplicit_eq === false)}
+                  variant="secondary"
+                >
+                  Other filters
+                </Button>
+              }
+              primaryButton={{
+                text: 'Apply',
+                disabled:
+                  !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter && !canClearOtherFilters,
+                onClick: () => {
+                  othersPopoverRef.current?.hide()
+                  setVideoWhereInput((value) => ({
+                    ...value,
+                    hasMarketing_eq: excludePaidPromotionalMaterialFilter
+                      ? !excludePaidPromotionalMaterialFilter
+                      : undefined,
+                    isExplicit_eq: excludeMatureContentRatingFilter ? !excludeMatureContentRatingFilter : undefined,
+                  }))
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearOtherFilters,
+                disabled: !excludePaidPromotionalMaterialFilter && !excludeMatureContentRatingFilter,
+              }}
+            >
+              <OtherFilterStyledText secondary variant="h100">
+                <OtherFilterStyledIcon />
+                Exclude:
+              </OtherFilterStyledText>
+              {otherFiltersInputs}
+            </DialogPopover>
+          )}
         </FiltersInnerContainer>
 
         {canClearAllFilters && (

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import { useCategories } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -31,7 +30,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen, isFiltersOpen, setLanguage, language },
-    canClearFilters: { canClearAllFilters, clearAllFilters },
+    canClearFilters: { canClearAllFilters },
     videoWhereInput,
   } = filtersBarLogic
   const { videos, channels, loading, error } = useSearchResults({
@@ -41,13 +40,12 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
   const {
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-  const { categories } = useCategories()
 
   useEffect(() => {
     if (selectedTabIndex === 1) {
       setIsFiltersOpen(false)
     }
-  }, [clearAllFilters, selectedTabIndex, setIsFiltersOpen, setLanguage])
+  }, [selectedTabIndex, setIsFiltersOpen])
 
   const handleSelectLanguage = (selectedLanguage: unknown) => {
     setLanguage(selectedLanguage as string | null | undefined)
@@ -101,7 +99,7 @@ export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }
             )}
           </FiltersWrapper>
         </PaddingWrapper>
-        <FiltersBar {...filtersBarLogic} categories={categories} />
+        <FiltersBar {...filtersBarLogic} activeFilters={['date', 'length', 'other', 'language']} />
       </SearchControls>
       <Results filtersOpen={isFiltersOpen}>
         <LimitedWidthContainer big>
