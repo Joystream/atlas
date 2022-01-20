@@ -175,13 +175,13 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         )
       case 'minBid':
         return (
-          minBid && (
+          !!minBid && (
             <DetailsContent caption="Min bid" content={formatNumberShort(minBid)} icon={<SvgActionJoyToken />} />
           )
         )
       case 'topBid':
         return (
-          topBid && (
+          !!topBid && (
             <DetailsContent caption="Top bid" content={formatNumberShort(topBid)} icon={<SvgActionJoyToken />} />
           )
         )
@@ -227,7 +227,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       )}
       <Details>
         {getDetails}
-        {buyNow && !loading && (
+        {!!bid && buyNow && !loading && (
           <DetailsContent caption="Buy now" content={formatNumberShort(bid)} icon={<SvgActionJoyToken />} />
         )}
       </Details>

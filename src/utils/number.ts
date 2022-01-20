@@ -23,7 +23,8 @@ export const formatNumberShort = (num: number): string => {
 
   if (Number(formattedValue) >= 1000) {
     const tempNumber: string[] = []
-    ;[...formattedValue].forEach((value, idx) => {
+    const formattedValueAsArray = [...formattedValue]
+    formattedValueAsArray.forEach((value, idx) => {
       tempNumber.push(value)
       if (idx === 0 || (formattedValue.length - idx > 5 && idx % 3 === 0)) {
         tempNumber.push(' ')
