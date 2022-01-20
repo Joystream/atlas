@@ -33,7 +33,7 @@ const stepperVariantStyles = (variant: 'file' | 'default', stepType?: StepType) 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border-color: ${stepType === 'current' ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
+        border-color: ${stepType === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundElevated')};
         border-width: 1px 1px ${stepType === 'current' ? '4px' : '1px'} 1px;
         border-style: solid;
 
@@ -76,7 +76,7 @@ export const StepStatus = styled.div`
 
 export const StepNumber = styled.div<StepWrapperProps>`
   background-color: ${({ stepType }) =>
-    stepType === 'current' ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
+    stepType === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundElevated')};
   border-radius: 100%;
   height: ${sizes(7)};
   width: ${sizes(7)};
