@@ -51,6 +51,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   fullWidth,
 }) => {
   const [calculatedTimeLeft, setCalculatedTimeLeft] = useState(0)
+  const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
     if (!timeLeft) {
@@ -115,6 +116,8 @@ export const NftTile: React.FC<NftTileProps> = ({
   return (
     <Container fullWidth={fullWidth}>
       <VideoThumbnail
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         loading={loading}
         thumbnailUrl={thumbnail.thumbnailUrl}
         clickable={false}
@@ -133,6 +136,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         }}
       />
       <NftTileDetails
+        hovered={hovered}
         owner={owner}
         auction={auction}
         bid={bid}

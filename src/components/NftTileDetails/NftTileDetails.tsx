@@ -41,6 +41,7 @@ export type NftTileDetailsProps = {
   minBid?: number
   topBid?: number
   title: string
+  hovered?: boolean
 }
 
 type TileSize = 'small' | 'medium'
@@ -66,8 +67,8 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   topBid,
   bid,
   title,
+  hovered,
 }) => {
-  const [contextMenuHovered, setContextMenuHovered] = useState(false)
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
   const [tileSize, setTileSize] = useState<TileSize>()
@@ -195,13 +196,12 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       loading={loading}
       onMouseEnter={toggleContentHover}
       onMouseLeave={toggleContentHover}
-      contextMenuHovered={contextMenuHovered}
       tileSize={tileSize}
     >
       <Header>
         <StyledAvatarGroup
           avatarStrokeColor={
-            contentHovered && !contextMenuHovered ? cVar('colorBackground', true) : cVar('colorBackgroundMuted', true)
+            contentHovered || hovered ? cVar('colorBackground', true) : cVar('colorBackgroundMuted', true)
           }
           loading={loading}
           avatars={[
@@ -210,17 +210,11 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           ]}
         />
         <ContextMenu
-          onHide={() => setContextMenuHovered(false)}
           placement="bottom-end"
           disabled={loading}
           items={getContextMenuContent}
           trigger={
-            <KebabMenuButtonIcon
-              onClick={() => setContextMenuHovered(true)}
-              variant="tertiary"
-              size="small"
-              isActive={!loading}
-            >
+            <KebabMenuButtonIcon variant="tertiary" size="small" isActive={!loading}>
               <SvgActionMore />
             </KebabMenuButtonIcon>
           }

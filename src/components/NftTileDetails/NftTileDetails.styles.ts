@@ -29,28 +29,19 @@ export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
 
 type ContentProps = {
   loading?: boolean
-  contextMenuHovered: boolean
   tileSize?: 'small' | 'medium'
 }
 
-const containerHoverStyles = ({ loading, contextMenuHovered }: ContentProps) => {
+const containerHoverStyles = ({ loading }: ContentProps) => {
   if (!loading) {
-    if (!contextMenuHovered) {
-      return css`
-        :hover {
-          background-color: ${cVar('colorBackground')};
-
-          ${KebabMenuButtonIcon} {
-            opacity: 1;
-            pointer-events: auto;
-          }
-        }
-      `
-    }
     return css`
-      ${KebabMenuButtonIcon} {
-        opacity: 1;
-        pointer-events: auto;
+      :hover {
+        background-color: ${cVar('colorBackground')};
+
+        ${KebabMenuButtonIcon} {
+          opacity: 1;
+          pointer-events: auto;
+        }
       }
     `
   }
