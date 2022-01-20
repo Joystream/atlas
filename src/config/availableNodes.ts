@@ -20,8 +20,8 @@ export const availableNodes = [
     value: 'wss://testnet-rpc-2-singapore.joystream.org',
   },
   {
-    name: 'sumer-dev-2',
-    value: 'wss://sumer-dev-2.joystream.app/rpc',
+    name: 'Atlas Dev',
+    value: import.meta.env.VITE_DEVELOPMENT_NODE_URL as string,
   },
   {
     name: 'Local node',

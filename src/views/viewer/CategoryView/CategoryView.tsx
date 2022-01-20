@@ -1,4 +1,4 @@
-import { sampleSize } from 'lodash'
+import { sampleSize } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router'
 

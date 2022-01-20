@@ -31,15 +31,16 @@ export type DataObjectResponseMetric = {
   fullResponseTime?: number
 }
 
-// increase the size of performance entry buffer on file load, so we don't skip any assets
-window.performance.setResourceTimingBufferSize(1000)
-
 class _AssetLogger {
   private logUrl = ''
   private user?: Record<string, unknown>
 
   initialize(logUrl: string | null) {
-    if (logUrl) this.logUrl = logUrl
+    if (!logUrl) return
+
+    this.logUrl = logUrl
+    // increase the size of performance entry buffer, so we don't skip any assets
+    window.performance.setResourceTimingBufferSize(1000)
   }
 
   setUser(user?: Record<string, unknown>) {
