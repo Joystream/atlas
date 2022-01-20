@@ -1,14 +1,18 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { TooltipProps } from '@/components/Tooltip'
 
 import {
   ChildrenWrapper,
   FormFieldDescription,
   FormFieldHeader,
-  FormFieldTitle,
   FormFieldWrapper,
+  OptionalText,
+  StyledInformationButton,
 } from './FormField.styles'
+
+import { Switch, SwitchProps } from '../Switch'
 
 export type FormFieldProps = {
   title: string
@@ -16,18 +20,21 @@ export type FormFieldProps = {
   description?: string | string[]
   dense?: boolean
   className?: string
+  switchProps?: Omit<SwitchProps, 'label' | 'isLabelTitle'>
+  infoTooltip?: TooltipProps
 }
 
 export const FormField: React.FC<FormFieldProps> = React.memo(
-  ({ children, title, description, className, optional, dense }) => {
+  ({ children, title, description, className, optional, dense, switchProps, infoTooltip }) => {
     return (
       <FormFieldWrapper className={className} dense={dense}>
         <FormFieldHeader>
-          <FormFieldTitle variant="h300">{title}</FormFieldTitle>
+          {switchProps ? <Switch {...switchProps} isLabelTitle label={title} /> : <Text variant="h300">{title}</Text>}
+          {infoTooltip && <StyledInformationButton tooltip={infoTooltip} />}
           {optional && (
-            <Text variant="t200" secondary>
+            <OptionalText variant="t200" secondary>
               (Optional)
-            </Text>
+            </OptionalText>
           )}
         </FormFieldHeader>
         {description &&

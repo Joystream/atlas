@@ -5,6 +5,7 @@ import { cVar, sizes } from '@/styles'
 
 export const SwitchLabel = styled.label<{ disabled?: boolean }>`
   display: inline-flex;
+  align-items: center;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `

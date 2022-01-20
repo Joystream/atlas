@@ -7,18 +7,19 @@ export type SwitchProps = {
   disabled?: boolean
   name?: string
   onChange?: (e?: React.ChangeEvent<HTMLInputElement>) => void
-  value: boolean
+  value?: boolean
   label?: string
+  isLabelTitle?: boolean
 }
 
-export const Switch: React.FC<SwitchProps> = ({ className, disabled, name, onChange, value, label }) => {
+export const Switch: React.FC<SwitchProps> = ({ className, disabled, name, onChange, value, label, isLabelTitle }) => {
   return (
     <SwitchLabel disabled={disabled} className={className}>
       <SwitchWrapper>
         <SwitchCheckbox type="checkbox" name={name} disabled={disabled} onChange={onChange} checked={value} />
         <SwitchSlider disabled={disabled} />
       </SwitchWrapper>
-      <LabelText variant="t200">{label}</LabelText>
+      <LabelText variant={isLabelTitle ? 't300-strong' : 't200'}>{label}</LabelText>
     </SwitchLabel>
   )
 }
