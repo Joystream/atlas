@@ -3,23 +3,33 @@ import React, { forwardRef, useEffect, useState } from 'react'
 import { CircularProgress } from '@/components/CircularProgress'
 import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/components/_icons'
 
-import { Overhead, ProgressContainer, StepDetails, StepNumber, StepStatus, StepTitle, StepWrapper } from './Step.styles'
+import {
+  Overhead,
+  ProgressContainer,
+  StepDetails,
+  StepNumber,
+  StepStatus,
+  StepTitle,
+  StepType,
+  StepWrapper,
+} from './Step.styles'
 
+import { Text } from '../Text'
 import { IconButton } from '../_buttons/IconButton'
 
 export type StepProps = {
   title: string
   variant?: 'file' | 'default'
-  completed?: boolean
+  stepType?: StepType
   isLoading?: boolean
   disabled?: boolean
-  active?: boolean
   number?: number
   onDelete?: () => void
   className?: string
 }
+
 export const Step = forwardRef<HTMLDivElement, StepProps>(
-  ({ variant = 'default', isLoading, disabled, active, completed, title, number, onDelete, className }, ref) => {
+  ({ variant = 'default', isLoading, disabled, title, number, onDelete, className, stepType = 'current' }, ref) => {
     const [circularProgress, setCircularProgress] = useState(0)
 
     useEffect(() => {
@@ -35,14 +45,22 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
     }, [circularProgress, isLoading])
 
     return (
-      <StepWrapper aria-disabled={disabled} active={active} variant={variant} ref={ref} className={className}>
+      <StepWrapper aria-disabled={disabled} stepType={stepType} variant={variant} ref={ref} className={className}>
         <StepStatus>
           {isLoading ? (
             <ProgressContainer>
               <CircularProgress value={circularProgress} maxValue={100} />
             </ProgressContainer>
           ) : (
-            <StepNumber active={completed}>{completed || disabled ? <SvgActionCheck /> : number}</StepNumber>
+            <StepNumber stepType={stepType}>
+              {stepType === 'completed' || disabled ? (
+                <SvgActionCheck />
+              ) : (
+                <Text variant="t200" secondary={stepType === 'future'}>
+                  {number}
+                </Text>
+              )}
+            </StepNumber>
           )}
           <StepDetails>
             <Overhead variant="t100" secondary>
@@ -51,7 +69,7 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             <StepTitle variant="t100-strong">{title}</StepTitle>
           </StepDetails>
         </StepStatus>
-        {((onDelete && completed && !isLoading) || disabled) && (
+        {((onDelete && stepType === 'completed' && !isLoading) || disabled) && (
           <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
             {disabled ? <SvgActionLock /> : <SvgActionTrash />}
           </IconButton>

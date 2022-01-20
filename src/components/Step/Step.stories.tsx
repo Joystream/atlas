@@ -9,7 +9,10 @@ export default {
   args: {
     number: 1,
     title: 'Step title',
-    thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
+    stepType: 'current',
+  },
+  argTypes: {
+    stepType: { type: 'select', options: ['current', 'future', 'completed'] },
   },
 } as Meta
 

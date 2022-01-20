@@ -30,13 +30,12 @@ export const StepperModal: React.FC<StepperModalProps> = ({
       <StyledHeader>
         <StyledStepsInfoContainer>
           {steps.map((step, idx) => {
-            const isActive = idx === currentStepIdx
-            const isCompleted = currentStepIdx > idx
+            const stepType = getStepType(currentStepIdx, idx)
             const isLast = idx === steps.length - 1
 
             return (
               <Fragment key={idx}>
-                <StyledStop title={step.title} number={idx + 1} active={isActive} completed={isCompleted} />
+                <StyledStop title={step.title} number={idx + 1} stepType={stepType} />
                 {!isLast && <StyledChevron />}
               </Fragment>
             )
@@ -49,4 +48,14 @@ export const StepperModal: React.FC<StepperModalProps> = ({
       {steps[currentStepIdx].element}
     </StyledModal>
   )
+}
+
+const getStepType = (currentStepIdx: number, idx: number) => {
+  if (currentStepIdx === idx) {
+    return 'current'
+  }
+  if (currentStepIdx > idx) {
+    return 'completed'
+  }
+  return 'future'
 }

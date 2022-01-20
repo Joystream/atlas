@@ -2,12 +2,14 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
+
+export type StepType = 'current' | 'future' | 'completed'
 
 type StepWrapperProps = {
-  active?: boolean
   disabled?: boolean
   variant?: 'file' | 'default'
+  stepType?: StepType
 }
 
 const truncateText = css`
@@ -16,12 +18,12 @@ const truncateText = css`
   text-overflow: ellipsis;
 `
 
-const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
+const stepperVariantStyles = (variant: 'file' | 'default', stepType?: StepType) => {
   switch (variant) {
     case 'default':
       return css`
         padding: 0;
-        display: ${active ? 'flex' : 'none'};
+        display: ${stepType === 'current' ? 'flex' : 'none'};
         align-items: center;
 
         ${media.sm} {
@@ -31,8 +33,8 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border-color: ${active ? oldColors.blue[500] : oldColors.gray[500]};
-        border-width: 1px 1px ${active ? '4px' : '1px'} 1px;
+        border-color: ${stepType === 'current' ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
+        border-width: 1px 1px ${stepType === 'current' ? '4px' : '1px'} 1px;
         border-style: solid;
 
         ${media.sm} {
@@ -55,7 +57,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
     background-color ${transitions.timings.routing} ${transitions.easing};
   ${truncateText}
 
-  ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
+  ${({ variant = 'default', stepType }) => stepperVariantStyles(variant, stepType)};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
@@ -73,11 +75,8 @@ export const StepStatus = styled.div`
 `
 
 export const StepNumber = styled.div<StepWrapperProps>`
-  background-color: ${({ active }) => (active ? oldColors.blue[500] : oldColors.gray[500])};
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-  color: ${oldColors.white};
+  background-color: ${({ stepType }) =>
+    stepType === 'current' ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
   border-radius: 100%;
   height: ${sizes(7)};
   width: ${sizes(7)};
