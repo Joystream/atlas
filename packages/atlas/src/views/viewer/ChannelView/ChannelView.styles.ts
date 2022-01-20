@@ -28,31 +28,36 @@ const activeUnderline = css`
 `
 
 export const TitleSection = styled.div`
+  margin-top: -${sizes(6)};
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-row-gap: ${sizes(4)};
-  align-items: center;
+  grid-template-rows: repeat(auto, 3);
+  grid-template-columns: 1fr;
+  grid-row-gap: ${sizes(6)};
+  justify-items: center;
   width: 100%;
-  margin: ${sizes(8)} 0 ${sizes(14)} 0;
 
-  ${media.xs} {
-    grid-template-columns: auto 1fr auto;
+  ${media.sm} {
+    margin-top: 0;
+    grid-template-columns: min-content max-content auto;
   }
 `
+
 export const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: 100%;
   overflow: hidden;
-
-  ${media.md} {
-    max-width: 60%;
-  }
-
   z-index: 2;
+
+  ${media.sm} {
+    align-items: normal;
+    justify-content: center;
+  }
 `
 
 export const Title = styled(Text)`
   margin-bottom: 0;
-  padding: ${sizes(1)} ${sizes(2)} 5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -69,8 +74,7 @@ export const SortContainer = styled.div`
 `
 
 export const SubTitle = styled(Text)`
-  padding: ${sizes(1)} ${sizes(2)};
-  margin-top: ${sizes(1)};
+  margin: ${sizes(2)} 0;
   color: ${oldColors.gray[300]};
   display: inline-block;
 `
@@ -80,11 +84,12 @@ export const VideoSection = styled.section`
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
-  margin: 0 ${sizes(5)} ${sizes(3)} 0;
   position: relative;
-
+  border: solid 8px black;
+  border-radius: 100%;
   ${media.sm} {
-    margin: 0 ${sizes(5)} 0 0;
+    border: none;
+    margin: 0 ${sizes(8)} 0 0;
   }
 `
 
@@ -107,13 +112,11 @@ export const SubTitleSkeletonLoader = styled(SkeletonLoader)`
   }
 `
 export const StyledButtonContainer = styled.div`
-  margin-top: ${sizes(2)};
   z-index: 2;
-  background-color: ${oldColors.transparentBlack[54]};
-  grid-column: 1 / span 2;
   width: 100%;
 
-  ${media.xs} {
+  ${media.sm} {
+    width: auto;
     grid-column: initial;
     margin-top: 0;
     margin-left: auto;
@@ -131,20 +134,17 @@ export const PaginationContainer = styled.div`
 
 export const TabsContainer = styled.div`
   display: grid;
+  padding-top: ${sizes(8)};
   margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
   grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
   align-items: baseline;
 
-  ${media.xs} {
-    padding-top: ${sizes(8)};
-  }
-
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${oldColors.gray[700]};
+    box-shadow: ${cVar('effectDividersBottom')};
     gap: ${sizes(8)};
-    grid-template: 1fr / auto 1fr 250px;
+    grid-template: 1fr / auto 1fr 193.333px;
   }
 `
 
@@ -230,4 +230,10 @@ export const SearchButton = styled(IconButton)<SearchButttonProps>`
   ${media.sm} {
     ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
   }
+`
+export const CollectorsBoxContainer = styled.div`
+  display: flex;
+  height: 64px;
+  flex-direction: row-reverse;
+  margin-top: -${sizes(8)};
 `

@@ -27,6 +27,7 @@ import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
 import {
+  CollectorsBoxContainer,
   NotFoundChannelContainer,
   PaginationContainer,
   SearchButton,
@@ -47,13 +48,13 @@ import {
   VideoSection,
 } from './ChannelView.styles'
 
-const TABS = ['Videos', 'Information'] as const
+const TABS = ['Videos', 'NFTs', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
   useRedirectMigratedGizaContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
-  const xsMatch = useMediaMatch('xs')
+  const smMatch = useMediaMatch('sm')
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
@@ -193,6 +194,8 @@ export const ChannelView: React.FC = () => {
           />
         </PaginationContainer>
       </>
+    ) : currentTab === 'NFTs' ? (
+      <div>NFT Tiles</div>
     ) : (
       <ChannelAbout />
     )
@@ -236,12 +239,20 @@ export const ChannelView: React.FC = () => {
     <ViewWrapper>
       <ChannelCover assetUrl={coverPhotoUrl} />
       <LimitedWidthContainer>
+        {smMatch ? (
+          <CollectorsBoxContainer>
+            {
+              /* TODO: CollectorsBox goes here */
+              null
+            }
+          </CollectorsBoxContainer>
+        ) : null}
         <TitleSection className={transitions.names.slide}>
           <StyledChannelLink id={channel?.id} avatarSize="channel" hideHandle noLink />
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant={xsMatch ? 'h700' : 'h500'}>{channel.title}</Title>
+                <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
                 <SubTitle variant="t300">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
               </>
             ) : (
@@ -251,6 +262,7 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TitleContainer>
+          {smMatch ? null : /* TODO: CollectorsBox goes here */ null}
           <StyledButtonContainer>
             <StyledButton
               icon={isFollowing ? <SvgActionCheck /> : <SvgActionPlus />}
@@ -285,7 +297,7 @@ export const ChannelView: React.FC = () => {
               <Select
                 size="small"
                 labelPosition="left"
-                label="Sort by"
+                valueLabel="Sort by: "
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
                 placeholder={isSearching ? 'Best match' : undefined}
