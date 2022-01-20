@@ -66,7 +66,9 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             <Overhead variant="t100" secondary>
               Step {number}
             </Overhead>
-            <StepTitle variant="t100-strong">{title}</StepTitle>
+            <StepTitle variant="t100-strong" secondary={stepType === 'future'}>
+              {title}
+            </StepTitle>
           </StepDetails>
         </StepStatus>
         {((onDelete && stepType === 'completed' && !isLoading) || disabled) && (
