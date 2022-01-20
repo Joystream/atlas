@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { InformationButton } from '@/components/_buttons/InformationButton'
-import { oldColors, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 type DenseProps = {
   dense?: boolean
@@ -31,7 +31,6 @@ export const OptionalText = styled(Text)`
 export const FormFieldDescription = styled(Text)`
   width: 85%;
   padding: ${sizes(2)} 0;
-  color: ${oldColors.gray[300]};
   word-wrap: break-word;
 `
 

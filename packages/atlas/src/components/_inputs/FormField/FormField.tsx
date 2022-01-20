@@ -40,12 +40,14 @@ export const FormField: React.FC<FormFieldProps> = React.memo(
         {description &&
           (description instanceof Array ? (
             description.map((p, idx) => (
-              <FormFieldDescription key={idx} variant="t200">
+              <FormFieldDescription secondary key={idx} variant="t200">
                 {p}
               </FormFieldDescription>
             ))
           ) : (
-            <FormFieldDescription variant="t200">{description}</FormFieldDescription>
+            <FormFieldDescription secondary variant="t200">
+              {description}
+            </FormFieldDescription>
           ))}
         <ChildrenWrapper>{children}</ChildrenWrapper>
       </FormFieldWrapper>
