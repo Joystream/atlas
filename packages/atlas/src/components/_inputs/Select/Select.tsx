@@ -23,9 +23,11 @@ export type SelectSizes = 'regular' | 'small'
 export type SelectItem<T = string> = {
   value: T
   name: string
+  menuName?: string
   tooltipHeaderText?: string
   tooltipText?: string
   badgeText?: string
+  onClick?: () => void
 }
 
 export type SelectProps<T = string> = {
@@ -108,26 +110,33 @@ export const _Select = <T extends unknown>(
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>
             {isOpen &&
-              items.map((item, index) => (
-                <SelectOption
-                  isSelected={highlightedIndex === index}
-                  key={`${item.name}-${index}`}
-                  {...getItemProps({ item: item.value, index })}
-                >
-                  {item.tooltipText && (
-                    <Tooltip
-                      headerText={item.tooltipHeaderText}
-                      text={item.tooltipText}
-                      placement="top-end"
-                      offsetX={6}
-                      offsetY={12}
-                    >
-                      <StyledSvgGlyphInfo />
-                    </Tooltip>
-                  )}
-                  {item?.name}
-                </SelectOption>
-              ))}
+              items.map((item, index) => {
+                const itemProps = { ...getItemProps({ item: item.value, index }) }
+                return (
+                  <SelectOption
+                    isSelected={highlightedIndex === index}
+                    key={`${item.name}-${index}`}
+                    {...itemProps}
+                    onClick={(e) => {
+                      item.onClick?.()
+                      itemProps.onClick(e)
+                    }}
+                  >
+                    {item.tooltipText && (
+                      <Tooltip
+                        headerText={item.tooltipHeaderText}
+                        text={item.tooltipText}
+                        placement="top-end"
+                        offsetX={6}
+                        offsetY={12}
+                      >
+                        <StyledSvgGlyphInfo />
+                      </Tooltip>
+                    )}
+                    {item?.menuName ?? item?.name}
+                  </SelectOption>
+                )
+              })}
           </SelectMenu>
         </SelectMenuWrapper>
       </SelectWrapper>
