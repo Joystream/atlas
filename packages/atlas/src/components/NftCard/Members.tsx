@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar } from '@/styles'
 
 import {
@@ -30,7 +29,6 @@ export const Members: React.FC<MembersProps> = ({ caption, members }) => {
     members && Array.isArray(members)
       ? members.map((member) => ({ assetUrl: member.assetUrl, tooltipText: member.name }))
       : null
-  const smMatch = useMediaMatch('sm')
   const isArray = Array.isArray(members)
   return (
     <MembersWrapper>
@@ -40,7 +38,6 @@ export const Members: React.FC<MembersProps> = ({ caption, members }) => {
       {isArray && avatars && (
         <AvatarGroupWrapper>
           <StyledAvatarGroup
-            direction={smMatch ? 'right' : 'left'}
             avatars={avatars.slice(0, 3)}
             size="small"
             avatarStrokeColor={cVar('colorBackground', true)}

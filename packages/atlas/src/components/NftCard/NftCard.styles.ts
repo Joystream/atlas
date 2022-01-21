@@ -86,9 +86,7 @@ export const AvatarWrapper = styled.div`
 `
 
 export const StyledAvatarGroup = styled(AvatarGroup)`
-  ${media.sm} {
-    left: -8px;
-  }
+  margin-right: ${sizes(1)};
 `
 
 export const StyledAvatar = styled(Avatar)`
