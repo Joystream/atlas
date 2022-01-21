@@ -48,6 +48,10 @@ class _AssetLogger {
     this.user = user
   }
 
+  get isEnabled() {
+    return !!this.logUrl
+  }
+
   private pendingEvents: StorageEvent[] = []
 
   private sendEvents = debounce(async () => {
