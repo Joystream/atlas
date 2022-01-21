@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import debouncePromise from 'awesome-debounce-promise'
 import React, { useCallback, useEffect, useRef } from 'react'
-import { UseFormWatch, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 import * as z from 'zod'
 
@@ -67,8 +67,7 @@ export const EditMembershipView: React.FC = () => {
       })
       .refine((val) => debouncedHandleUniqueValidation.current(val, activeMembership?.handle), {
         message: 'Member handle already in use',
-      })
-      .transform(() => watchFunction('handle')),
+      }),
     avatar: z
       .string()
       .max(400)
@@ -79,12 +78,8 @@ export const EditMembershipView: React.FC = () => {
           return debouncedAvatarValidation.current(val)
         },
         { message: 'Image not found' }
-      )
-      .transform(() => watchFunction('avatar')),
-    about: z
-      .string()
-      .max(1000, { message: 'About cannot be longer than 1000 characters' })
-      .transform(() => watchFunction('about')),
+      ),
+    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }),
   })
 
   const {
@@ -106,7 +101,6 @@ export const EditMembershipView: React.FC = () => {
   })
 
   const { ref, ...avataRegisterRest } = register('avatar')
-  const watchFunction: UseFormWatch<Inputs> = watch
 
   const resetForm = useCallback(() => {
     reset(
@@ -171,6 +165,7 @@ export const EditMembershipView: React.FC = () => {
                 ref(e)
                 avatarInputRef.current = e
               }}
+              value={watch('avatar') || ''}
               error={!!errors.avatar}
               helperText={errors.avatar?.message}
             />
@@ -179,6 +174,7 @@ export const EditMembershipView: React.FC = () => {
               label="Member handle"
               {...register('handle')}
               error={!!errors.handle}
+              value={watch('handle') || ''}
               helperText={
                 errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
               }
@@ -189,6 +185,7 @@ export const EditMembershipView: React.FC = () => {
               placeholder="Anything you'd like to share about yourself with the Joystream community"
               maxLength={1000}
               error={!!errors.about}
+              value={watch('about') || ''}
               helperText={errors.about?.message}
             />
           </TextFieldsWrapper>
