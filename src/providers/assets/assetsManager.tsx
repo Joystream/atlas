@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
+import { BUILD_ENV } from '@/config/envs'
 import { DISTRIBUTOR_ASSET_PATH } from '@/config/urls'
 import { joinUrlFragments } from '@/utils/asset'
 import { AssetLogger, ConsoleLogger, DataObjectResponseMetric, DistributorEventEntry, SentryLogger } from '@/utils/logs'
@@ -129,13 +130,15 @@ const createDistributionOperatorDataObjectUrl = (
 }
 
 const logDistributorPerformance = async (assetUrl: string, eventEntry: DistributorEventEntry) => {
+  if (!AssetLogger.isEnabled) return
+
   // delay execution for 1s to make sure performance entries get populated
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
   const performanceEntries = window.performance.getEntriesByName(assetUrl)
   const performanceEntry = performanceEntries[0] as PerformanceResourceTiming
 
-  if (!performanceEntry) {
+  if (!performanceEntry && BUILD_ENV === 'production') {
     ConsoleLogger.debug('Performance entry not found', { assetUrl })
     return
   }
