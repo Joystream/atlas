@@ -36,11 +36,12 @@ class _AssetLogger {
   private user?: Record<string, unknown>
 
   initialize(logUrl: string | null) {
+    // increase the size of performance entry buffer, so we don't skip any assets
+    window.performance.setResourceTimingBufferSize(1000)
+
     if (!logUrl) return
 
     this.logUrl = logUrl
-    // increase the size of performance entry buffer, so we don't skip any assets
-    window.performance.setResourceTimingBufferSize(1000)
   }
 
   setUser(user?: Record<string, unknown>) {
