@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { addMonths } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 import React, { useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -12,6 +12,7 @@ export type AuctionDatePickerProps = SelectProps<string>
 
 const PICK_DATE = 'pick-date'
 
+// TODO: add calendar icon node
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({ items, onChange, ...rest }) => {
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
@@ -29,7 +30,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({ items, onC
           ...items,
           {
             value: PICK_DATE,
-            name: startDate?.toString() ?? 'Pick specific date',
+            name: (startDate && format(startDate, 'd MMM yyyy, HH:mm')) ?? 'Pick specific date',
             menuName: 'Pick specific date',
             onClick: () => popOverRef.current?.show(),
           },
