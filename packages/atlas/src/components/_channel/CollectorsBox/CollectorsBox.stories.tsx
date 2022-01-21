@@ -26,6 +26,7 @@ export default {
       },
       { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
     ],
+    maxShowedCollectors: 5,
   },
   argTypes: {
     collectors: { table: { disable: true } },

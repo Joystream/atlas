@@ -14,11 +14,10 @@ type Collector = AvatarGroupSingleAvatar & { nftsAmount?: number }
 
 export type CollectorsBoxProps = {
   collectors: Collector[]
+  maxShowedCollectors?: number
 }
 
-const MAX_SHOWED_COLLECTORS = 5
-
-export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
+export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxShowedCollectors = 5 }) => {
   const [open, setOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
@@ -33,7 +32,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
     }))
 
   const avatarsWhenCollectorsMoreThan5: Collector[] = [
-    ...sortedCollectors.slice(0, MAX_SHOWED_COLLECTORS - 1),
+    ...sortedCollectors.slice(0, maxShowedCollectors - 1),
     {
       children: (
         <PlusIconBackground background={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}>
@@ -48,7 +47,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
   ]
 
   const avatars: Collector[] =
-    sortedCollectors.length < MAX_SHOWED_COLLECTORS ? sortedCollectors : avatarsWhenCollectorsMoreThan5
+    sortedCollectors.length < maxShowedCollectors ? sortedCollectors : avatarsWhenCollectorsMoreThan5
   return (
     <>
       <CollectorsBoxWrapper
@@ -64,7 +63,6 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors }) => {
         </Text>
         <AvatarGroup
           avatars={avatars}
-          direction="right"
           avatarStrokeColor={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}
         />
       </CollectorsBoxWrapper>

@@ -5,7 +5,9 @@ import { cVar, sizes } from '@/styles'
 export const CollectorsBoxWrapper = styled.div`
   background: ${cVar('colorBackground')};
   padding: ${sizes(4)};
-  display: inline-flex;
+  display: inline-grid;
+  gap: ${sizes(4)};
+  grid-template-columns: auto auto;
   align-items: center;
   cursor: pointer;
   transition: background ${cVar('animationTransitionFast')};
