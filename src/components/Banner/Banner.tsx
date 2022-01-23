@@ -9,17 +9,7 @@ import {
   SvgAlertsWarning24,
 } from '@/components/_icons'
 
-import {
-  BannerActionButton,
-  BannerButtonsContainer,
-  BannerDescription,
-  BannerHeader,
-  BannerIconContainer,
-  BannerTitle,
-  BannerWrapper,
-} from './Banner.styles'
-
-export type BannerVariant = 'primary' | 'secondary' | 'tertiary'
+import { BannerDescription, BannerHeader, BannerTitle, BannerWrapper } from './Banner.styles'
 
 type BannerIconType = 'success' | 'error' | 'info' | 'warning'
 
@@ -34,40 +24,26 @@ export type BannerProps = {
   title?: string
   description?: string
   className?: string
-  variant?: BannerVariant
   icon?: BannerIconType
   onExitClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  actionText?: string
-  onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const Banner: React.FC<BannerProps> = ({
-  title,
-  description,
-  className,
-  variant = 'primary',
-  icon,
-  actionText,
-  onExitClick,
-  onActionClick,
-}) => {
+export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, onExitClick }) => {
   return (
-    <BannerWrapper className={className} variant={variant}>
+    <BannerWrapper className={className}>
       <BannerHeader>
-        {icon && <BannerIconContainer>{ICON_TYPE_TO_ICON[icon]}</BannerIconContainer>}
+        {icon && ICON_TYPE_TO_ICON[icon]}
         <BannerTitle variant="h400">{title}</BannerTitle>
-        <BannerButtonsContainer>
-          {actionText && (
-            <BannerActionButton variant="tertiary" onClick={onActionClick}>
-              {actionText}
-            </BannerActionButton>
-          )}
-          <IconButton aria-label="close dialog" onClick={onExitClick} variant="tertiary" size="small">
-            <SvgActionClose />
-          </IconButton>
-        </BannerButtonsContainer>
+        <IconButton aria-label="close dialog" onClick={onExitClick} variant="tertiary" size="small">
+          <SvgActionClose />
+        </IconButton>
       </BannerHeader>
-      {description && <BannerDescription variant="t200">{description}</BannerDescription>}
+      {description && (
+        <BannerDescription as="p" variant="t200" secondary>
+          {icon && !title && ICON_TYPE_TO_ICON[icon]}
+          {description}
+        </BannerDescription>
+      )}
     </BannerWrapper>
   )
 }
