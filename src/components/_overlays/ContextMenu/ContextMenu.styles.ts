@@ -1,25 +1,13 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 export const StyledContainer = styled.div`
-  background-color: ${oldColors.gray[800]};
+  background-color: ${cVar('colorBackgroundStrong')};
   width: 200px;
-  color: ${oldColors.white};
+  color: ${cVar('colorText')};
   word-break: break-all;
-`
-
-export const StyledMenuItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: ${sizes(4)};
-  transition: background-color 200ms ${transitions.easing};
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${oldColors.gray[700]};
-  }
 `
 
 export const StyledText = styled(Text)`
