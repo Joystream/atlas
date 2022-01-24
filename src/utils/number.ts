@@ -19,13 +19,9 @@ export const formatNumberShort = (num: number): string => {
     suffix = 'K'
   }
 
-  let formattedValue = value.toLocaleString('no', { maximumFractionDigits: 1 })
+  const formattedValue = value.toLocaleString('no', { maximumFractionDigits: 1 })
 
-  if (formattedValue.endsWith('.0')) {
-    formattedValue = formattedValue.slice(0, formattedValue.length - 2)
-  }
-
-  return `${formattedValue.replace('.', ',')}${suffix}`
+  return `${formattedValue}${suffix}`
 }
 
 export const getRandomIntInclusive = (min: number, max: number) => {
