@@ -14,13 +14,8 @@ export const AvatarGroupContainer = styled.div<{ direction: AvatarGroupDirection
   justify-content: ${({ direction }) => (direction === 'left' ? 'flex-start' : 'flex-end')};
 `
 
-type StyledAvatarProps = {
-  avatarStrokeColor?: string
-}
-
-export const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
+export const StyledAvatar = styled(Avatar)`
   transition: transform ${cVar('animationTransitionFast')};
-  box-shadow: 0 0 0 4px ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
 
   :hover {
     ::after {
@@ -51,6 +46,7 @@ type AvatarWrapperProps = {
   idx: number
   size: AvatarGroupSize
   clickable: boolean
+  avatarStrokeColor?: string
   direction: AvatarGroupDirection
 }
 
@@ -58,6 +54,7 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
   transition: transform ${cVar('animationTransitionFast')};
+  background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
   left: ${({ idx, size, direction }) => (direction === 'left' ? '-' : '') + idx * (size === 'small' ? 4 : 8)}px;
   ${({ clickable }) =>
     clickable &&
@@ -72,4 +69,8 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
         }
       }
     `};
+
+  ${StyledAvatar} {
+    box-shadow: 0 0 0 4px ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
+  }
 `

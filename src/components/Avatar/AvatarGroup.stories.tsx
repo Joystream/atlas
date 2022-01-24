@@ -27,6 +27,7 @@ export default {
     },
   },
   args: {
+    loading: false,
     clickable: true,
     size: 'medium',
     direction: 'left',

@@ -62,7 +62,8 @@ export const SlotContainer = styled.div<SlotsContainerProps>`
 `
 
 export const ContentOverlay = styled.div`
-  ${sharedOverlayStyles}
+  ${sharedOverlayStyles};
+
   position: relative;
   background: black;
   transition: transform ${cVar('animationTransitionFast')};
@@ -102,7 +103,8 @@ type HoverOverlayProps = {
 }
 
 export const HoverOverlay = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<HoverOverlayProps>`
-  ${sharedOverlayStyles}
+  ${sharedOverlayStyles};
+
   background: ${({ loading }) => (loading ? 'none ' : cVar('colorBackgroundOverlay'))};
   opacity: 0;
 `
@@ -113,12 +115,7 @@ type VideoThumbnailContainerProps = {
 }
 
 export const VideoThumbnailContainer = styled(Link, {
-  shouldForwardProp: (prop) => {
-    if (prop === 'clickable' || prop === 'activeDisabled') {
-      return false
-    }
-    return true
-  },
+  shouldForwardProp: (prop) => !(prop === 'clickable' || prop === 'activeDisabled'),
 })<VideoThumbnailContainerProps>`
   min-width: 166px;
   display: block;

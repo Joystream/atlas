@@ -36,11 +36,25 @@ export type VideoThumbnailProps = {
   clickable?: boolean
   contentSlot?: React.ReactNode
   slots?: SlotsObject
+  onMouseEnter?: (event: React.MouseEvent<HTMLAnchorElement>) => void
+  onMouseLeave?: (event: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
 export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>(
   (
-    { loading, videoHref, linkState, slots, thumbnailUrl, thumbnailAlt, onClick, clickable = true, contentSlot },
+    {
+      loading,
+      videoHref,
+      linkState,
+      slots,
+      thumbnailUrl,
+      thumbnailAlt,
+      onClick,
+      clickable = true,
+      contentSlot,
+      onMouseEnter,
+      onMouseLeave,
+    },
     ref
   ) => {
     const [activeDisabled, setActiveDisabled] = useState(false)
@@ -56,6 +70,8 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
     return (
       <VideoThumbnailContainer
         ref={ref}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         onClick={handleClick}
         clickable={clickable}
         activeDisabled={activeDisabled}

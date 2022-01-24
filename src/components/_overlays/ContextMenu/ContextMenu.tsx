@@ -11,6 +11,7 @@ export type MenuItemProps = {
   title: string
   onClick?: () => void
   disabled?: boolean
+  destructive?: boolean
 }
 
 type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
@@ -29,6 +30,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...re
             }}
             label={item.title}
             nodeStart={item.icon}
+            destructive={item.destructive}
           />
         ))}
       </StyledContainer>

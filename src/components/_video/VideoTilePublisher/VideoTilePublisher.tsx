@@ -112,6 +112,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           icon: <SvgActionTrash />,
           onClick: onDeleteVideoClick,
           title: 'Delete video',
+          destructive: true,
         },
         {
           icon: <SvgActionReupload />,
@@ -140,6 +141,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           icon: <SvgActionTrash />,
           onClick: onDeleteVideoClick,
           title: 'Delete video',
+          destructive: true,
         },
       ]
 
