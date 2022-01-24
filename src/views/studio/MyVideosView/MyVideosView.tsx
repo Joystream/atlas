@@ -8,7 +8,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo, SvgActionUpload } from '@/components/_icons'
+import { SvgActionAddVideo, SvgActionUpload, SvgAlertsInformative24 } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
@@ -26,7 +26,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import {
   MobileButton,
-  StyledDismissibleBanner,
+  StyledBanner,
   StyledGrid,
   StyledPagination,
   StyledSelect,
@@ -331,18 +331,18 @@ export const MyVideosView = () => {
             )}
           </TabsContainer>
           {isDraftTab && (
-            <StyledDismissibleBanner
+            <StyledBanner
               id="video-draft-saved-locally-warning"
               title="Video drafts are saved locally"
-              icon="info"
+              icon={<SvgAlertsInformative24 />}
               description="You will only be able to access drafts on the device you used to create them. Clearing your browser history will delete all your drafts."
             />
           )}
           {isUnlistedTab && (
-            <StyledDismissibleBanner
+            <StyledBanner
               id="unlisted-video-link-info"
               title="Unlisted videos can be seen only with direct link"
-              icon="info"
+              icon={<SvgAlertsInformative24 />}
               description="You can share a private video with others by sharing a direct link to it. Unlisted video is not going to be searchable on our platform."
             />
           )}

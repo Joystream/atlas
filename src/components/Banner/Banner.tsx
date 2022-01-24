@@ -1,47 +1,62 @@
 import React, { ReactNode } from 'react'
 
-import { IconButton } from '@/components/_buttons/IconButton'
-import {
-  SvgActionClose,
-  SvgAlertsError24,
-  SvgAlertsInformative24,
-  SvgAlertsSuccess24,
-  SvgAlertsWarning24,
-} from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
+import { usePersonalDataStore } from '@/providers/personalData'
 
-import { BannerDescription, BannerHeader, BannerTitle, BannerWrapper } from './Banner.styles'
-
-type BannerIconType = 'success' | 'error' | 'info' | 'warning'
-
-const ICON_TYPE_TO_ICON: Record<BannerIconType, ReactNode> = {
-  info: <SvgAlertsInformative24 />,
-  success: <SvgAlertsSuccess24 />,
-  error: <SvgAlertsError24 />,
-  warning: <SvgAlertsWarning24 />,
-}
+import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton, IconWrapper } from './Banner.styles'
 
 export type BannerProps = {
+  id: string
   title?: string
   description?: string
   className?: string
-  icon?: BannerIconType
-  onExitClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  dismissable?: boolean
+  icon?: ReactNode
 }
 
-export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, onExitClick }) => {
+export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, id, dismissable = true }) => {
+  const isDismissedMessage = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === id)
+  )
+  const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
+
+  if (isDismissedMessage) {
+    return null
+  }
   return (
     <BannerWrapper className={className}>
-      <BannerHeader>
-        {icon && ICON_TYPE_TO_ICON[icon]}
-        <BannerTitle variant="h400">{title}</BannerTitle>
-        <IconButton aria-label="close dialog" onClick={onExitClick} variant="tertiary" size="small">
-          <SvgActionClose />
-        </IconButton>
-      </BannerHeader>
+      {title && (
+        <BannerHeader>
+          {icon && <IconWrapper>{icon}</IconWrapper>}
+          <BannerText variant="h400">{title}</BannerText>
+          {dismissable && (
+            <CloseButton
+              aria-label="close dialog"
+              onClick={() => updateDismissedMessages(id)}
+              variant="tertiary"
+              size="small"
+            >
+              <SvgActionClose />
+            </CloseButton>
+          )}
+        </BannerHeader>
+      )}
       {description && (
-        <BannerDescription as="p" variant="t200" secondary>
-          {icon && !title && ICON_TYPE_TO_ICON[icon]}
-          {description}
+        <BannerDescription withTitle={!!title}>
+          {icon && !title && <IconWrapper>{icon}</IconWrapper>}
+          <BannerText as="p" variant="t200" secondary>
+            {description}
+          </BannerText>
+          {!title && dismissable && (
+            <CloseButton
+              aria-label="close dialog"
+              onClick={() => updateDismissedMessages(id)}
+              variant="tertiary"
+              size="small"
+            >
+              <SvgActionClose />
+            </CloseButton>
+          )}
         </BannerDescription>
       )}
     </BannerWrapper>
