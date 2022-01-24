@@ -124,6 +124,7 @@ Draft.args = {
     {
       icon: <SvgActionTrash />,
       title: 'Delete draft',
+      destructive: true,
     },
   ],
   slots: {

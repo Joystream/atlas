@@ -28,6 +28,7 @@ export const VideoTileDraft: React.FC<VideoTilePublisherProps> = React.memo(({ i
       icon: <SvgActionTrash />,
       onClick: onDeleteVideoClick,
       title: 'Delete draft',
+      destructive: true,
     },
   ]
 
