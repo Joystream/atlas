@@ -4,7 +4,7 @@ import React from 'react'
 import { Information, InformationProps } from '.'
 
 export default {
-  title: 'button/Information',
+  title: 'other/Information',
   component: Information,
   args: {
     placement: 'top',

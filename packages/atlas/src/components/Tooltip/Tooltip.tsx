@@ -15,6 +15,7 @@ export type TooltipProps = {
   placement?: Placement
   offsetX?: number
   offsetY?: number
+  hideOnClick?: boolean | 'toggle'
   arrowDisabled?: boolean
   reference?: Element | React.RefObject<Element> | null | undefined
   className?: string
@@ -26,6 +27,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   icon,
   children,
   reference,
+  hideOnClick,
   placement = 'bottom-start',
   offsetX = 0,
   offsetY = 8,
@@ -39,7 +41,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return (
     <Tippy
       onMount={() => setIsVisible(true)}
-      hideOnClick={false}
+      hideOnClick={hideOnClick}
       touch="hold"
       onHide={() => setIsVisible(false)}
       placement={placement}
