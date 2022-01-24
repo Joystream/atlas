@@ -4,8 +4,6 @@ import styled from '@emotion/styled'
 import { SvgActionInformative } from '@/components/_icons'
 import { cVar, square } from '@/styles'
 
-export const InformationWrapper = styled.div``
-
 export const StyledSvgActionInformative = styled(SvgActionInformative)`
   path {
     transition: fill ${cVar('animationTransitionFast')};
@@ -43,6 +41,8 @@ export const IconWrapper = styled.div`
 `
 
 export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
   display: inline-flex;
   ${({ isMobile }) =>
     isMobile &&
