@@ -19,6 +19,7 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
+import { copyToClipboard } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -30,13 +31,12 @@ type VideoTilePublisherProps = {
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
   onOpenInTabClick?: () => void
-  onCopyVideoURLClick?: () => void
 }
 
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, onCopyVideoURLClick }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick }) => {
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
@@ -104,6 +104,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, video?.duration])
 
     const getPublisherKebabMenuItems = useCallback(() => {
+      if (isUploading && !hasAssetUploadFailed) {
+        return
+      }
       const assetFailedKebabItems = [
         {
           icon: <SvgActionTrash />,
@@ -125,7 +128,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
         {
           icon: <SvgActionCopy />,
-          onClick: onCopyVideoURLClick,
+          onClick: () => copyToClipboard(videoHref ? location.origin + videoHref : ''),
           title: 'Copy video URL',
         },
         {
@@ -143,11 +146,12 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
     }, [
       hasAssetUploadFailed,
-      onCopyVideoURLClick,
+      isUploading,
       onDeleteVideoClick,
       onEditClick,
       onOpenInTabClick,
       onReuploadVideoClick,
+      videoHref,
     ])
 
     const getVideoSubtitle = useCallback(() => {
@@ -185,7 +189,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         clickable={!isUploading || hasAssetUploadFailed}
         slots={getSlots()}
         contentSlot={getContentSlot()}
-        videoHref={hasVideoUploadFailed ? absoluteRoutes.studio.uploads() : videoHref}
+        videoHref={hasVideoUploadFailed || isUploading ? absoluteRoutes.studio.uploads() : videoHref}
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
