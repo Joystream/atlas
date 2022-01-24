@@ -4,6 +4,7 @@ import React, { useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
+import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 
 import { Select, SelectProps } from '../Select'
@@ -12,20 +13,18 @@ export type AuctionDatePickerProps = SelectProps<string>
 
 const PICK_DATE = 'pick-date'
 
-// TODO: add calendar icon node
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({ items, onChange, ...rest }) => {
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
-  const [isDatePickerMode, setIsDatePickerMode] = useState(false)
-  // const [isDatePickerOpen, setIsDatePickerOpen] = useState()
   const [startDate, setStartDate] = useState<Date | null>(null)
-  const [selectValue, setSelectValue] = useState<string | null>()
+  const [selectedValue, setSelectedValue] = useState<string | null>()
 
   return (
     <Container>
       <Select<string>
         size="small"
-        value={selectValue}
+        nodeStart={selectedValue === PICK_DATE ? <SvgControlsCalendar /> : undefined}
+        value={selectedValue}
         items={[
           ...items,
           {
@@ -37,6 +36,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({ items, onC
         ]}
         onChange={(value) => {
           onChange?.(value)
+          setSelectedValue(value)
         }}
         ref={selectRef}
         {...rest}
