@@ -19,19 +19,7 @@ export const formatNumberShort = (num: number): string => {
     suffix = 'K'
   }
 
-  let formattedValue = value.toFixed(1)
-
-  if (Number(formattedValue) >= 1000) {
-    const tempNumber: string[] = []
-    const formattedValueAsArray = [...formattedValue]
-    formattedValueAsArray.forEach((value, idx) => {
-      tempNumber.push(value)
-      if (idx === 0 || (formattedValue.length - idx > 5 && idx % 3 === 0)) {
-        tempNumber.push(' ')
-      }
-    })
-    formattedValue = tempNumber.join('')
-  }
+  let formattedValue = value.toLocaleString('no', { maximumFractionDigits: 1 })
 
   if (formattedValue.endsWith('.0')) {
     formattedValue = formattedValue.slice(0, formattedValue.length - 2)
