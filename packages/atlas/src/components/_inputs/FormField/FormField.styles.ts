@@ -21,7 +21,7 @@ export const FormFieldHeader = styled.header`
 `
 
 export const StyledInformation = styled(Information)`
-  margin-right: ${sizes(1)};
+  margin-left: ${sizes(1)};
 `
 
 export const OptionalText = styled(Text)`
