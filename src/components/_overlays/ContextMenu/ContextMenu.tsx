@@ -1,6 +1,8 @@
 import React, { ReactNode, useRef } from 'react'
 
-import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.styles'
+import { ListItem } from '@/components/ListItem'
+
+import { StyledContainer, StyledText } from './ContextMenu.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
@@ -12,12 +14,7 @@ export type MenuItemProps = {
 }
 
 export const ContextMenuItem: React.FC<MenuItemProps> = React.memo(({ icon, onClick, title }) => {
-  return (
-    <StyledMenuItem onClick={onClick}>
-      {icon}
-      <StyledText variant="t200">{title}</StyledText>
-    </StyledMenuItem>
-  )
+  return <ListItem onClick={onClick} label={title} nodeStart={icon} />
 })
 
 ContextMenuItem.displayName = 'ContextMenuItem'
