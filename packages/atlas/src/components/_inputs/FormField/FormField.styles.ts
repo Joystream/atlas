@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { InformationButton } from '@/components/_buttons/InformationButton'
+import { Information } from '@/components/_buttons/Information'
 import { sizes } from '@/styles'
 
 type DenseProps = {
@@ -20,7 +20,7 @@ export const FormFieldHeader = styled.header`
   word-wrap: break-word;
 `
 
-export const StyledInformationButton = styled(InformationButton)`
+export const StyledInformation = styled(Information)`
   margin-right: ${sizes(1)};
 `
 
