@@ -1,1 +1,1 @@
-export * from './InformationButton'
+export * from './Information'

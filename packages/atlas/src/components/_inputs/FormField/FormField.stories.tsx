@@ -116,6 +116,7 @@ SwitchableFormField.args = {
   title: 'Switchable form field',
   description: '',
   infoTooltip: {
+    placement: 'top',
     headerText: 'Some important information',
     text: 'Long description',
   },

@@ -1,7 +1,10 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionInformative } from '@/components/_icons'
 import { cVar, square } from '@/styles'
+
+export const InformationWrapper = styled.div``
 
 export const StyledSvgActionInformative = styled(SvgActionInformative)`
   path {
@@ -14,7 +17,7 @@ export const IconWrapper = styled.div`
   cursor: pointer;
   ${square(32)};
   border-radius: 50%;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   transition: background ${cVar('animationTransitionFast')};
@@ -39,15 +42,20 @@ export const IconWrapper = styled.div`
   }
 `
 
-export const TouchableWrapper = styled.div`
-  padding: 8px;
-  margin: -8px;
-  :active ${IconWrapper} {
-    background: ${cVar('colorBackgroundAlpha')};
-    ${StyledSvgActionInformative} {
-      path {
-        fill: ${cVar('colorTextStrong')};
+export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
+  display: inline-flex;
+  ${({ isMobile }) =>
+    isMobile &&
+    css`
+      padding: 8px;
+      margin: -8px;
+      :active ${IconWrapper} {
+        background: ${cVar('colorBackgroundAlpha')};
+        ${StyledSvgActionInformative} {
+          path {
+            fill: ${cVar('colorTextStrong')};
+          }
+        }
       }
-    }
-  }
+    `};
 `

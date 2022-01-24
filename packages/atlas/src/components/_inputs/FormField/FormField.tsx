@@ -30,7 +30,7 @@ export const FormField: React.FC<FormFieldProps> = React.memo(
       <FormFieldWrapper className={className} dense={dense}>
         <FormFieldHeader>
           {switchProps ? <Switch {...switchProps} isLabelTitle label={title} /> : <Text variant="h300">{title}</Text>}
-          {infoTooltip && <StyledInformation tooltip={infoTooltip} />}
+          {infoTooltip && <StyledInformation {...infoTooltip} />}
           {optional && (
             <OptionalText variant="t200" secondary>
               (Optional)
