@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionNewTab } from '@/components/_icons'
+import { SvgActionNewTab, SvgActionMember  } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger } from '@/utils/logs'
+import { useUser } from '@/providers/user';
 
 import { FollowedChannels } from './FollowedChannels'
 
@@ -21,6 +22,25 @@ export const SidenavViewer: React.FC = () => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
+
+  const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
+
+  const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
+
+  const buttonsContent = !memberSet ? (
+    <Button size="large" icon={<SvgActionMember />} onClick={signIn}>
+      Sign in
+    </Button>
+  ) : (
+    <Button
+      variant="secondary"
+      to={absoluteRoutes.studio.index()}
+      onClick={() => setExpanded(false)}
+      icon={<SvgActionNewTab />}
+    >
+      Go to Studio
+    </Button>
+  )
 
   return (
     <SidenavBase
@@ -39,19 +59,7 @@ export const SidenavViewer: React.FC = () => {
           />
         ) : null
       }
-      buttonsContent={
-        <>
-          <Button
-            variant="secondary"
-            to={absoluteRoutes.studio.index()}
-            newTab
-            onClick={() => setExpanded(false)}
-            icon={<SvgActionNewTab />}
-          >
-            Joystream Studio
-          </Button>
-        </>
-      }
+      buttonsContent={buttonsContent}
     />
   )
 }
