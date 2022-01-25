@@ -61,7 +61,6 @@ export const ButtonGroup = styled.div`
   }
 `
 
-// TODO abstract this out
 export const SignInButton = styled(Button)`
   margin-bottom: ${sizes(4)};
   ${media.sm} {

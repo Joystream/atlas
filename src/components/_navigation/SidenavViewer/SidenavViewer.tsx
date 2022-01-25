@@ -5,7 +5,6 @@ import { SvgActionMember, SvgActionNewTab } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
@@ -14,26 +13,15 @@ import { FollowedChannels } from './FollowedChannels'
 
 import { SidenavBase } from '../SidenavBase'
 
-//import { absoluteRoutes } from '@/config/routes'
-
 export const SidenavViewer: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
-  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
     updateChannelFollowing(id, false)
   }
-
-  // TODO how do I chose the right button?
-  // TODO how is it signed in?
-  //    const signedIn = nodeConnectionStatus === 'connected' || internetConnectionStatus === 'connected';
-
-  console.log('nodeConnectionStatus', nodeConnectionStatus)
-  console.log('internetConnectionStatus', internetConnectionStatus)
 
   const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
 
