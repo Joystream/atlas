@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { DismissibleBanner } from '@/components/DismissibleBanner'
+import { Banner } from '@/components/Banner'
 import { Grid } from '@/components/Grid'
 import { Pagination } from '@/components/Pagination'
 import { Text } from '@/components/Text'
@@ -34,7 +34,7 @@ export const StyledPagination = styled(Pagination)`
   padding-top: ${sizes(12)};
 `
 
-export const StyledDismissibleBanner = styled(DismissibleBanner)`
+export const StyledBanner = styled(Banner)`
   margin-bottom: ${sizes(12)};
 `
 
