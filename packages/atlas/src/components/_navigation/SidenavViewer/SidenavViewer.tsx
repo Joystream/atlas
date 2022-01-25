@@ -5,7 +5,6 @@ import { SvgActionMember, SvgActionNewTab } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
-import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
@@ -18,8 +17,6 @@ export const SidenavViewer: React.FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)
-  const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const internetConnectionStatus = useConnectionStatusStore((state) => state.internetConnectionStatus)
 
   const handleChannelNotFound = (id: string) => {
     ConsoleLogger.warn(`Followed channel not found, removing id: ${id}`)
