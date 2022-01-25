@@ -23,11 +23,11 @@ export const SidenavViewer: React.FC = () => {
     updateChannelFollowing(id, false)
   }
 
-  const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
+  const { signIn, activeMemberId, activeAccountId, extensionConnected } = useUser()
 
-  const memberSet = activeMemberId && activeAccountId && extensionConnected && !activeChannelId
+  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
 
-  const buttonsContent = !memberSet ? (
+  const buttonsContent = !isLoggedIn ? (
     <Button size="large" icon={<SvgActionMember />} onClick={signIn}>
       Sign in
     </Button>
