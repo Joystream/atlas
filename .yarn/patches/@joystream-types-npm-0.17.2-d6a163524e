@@ -1397,7 +1397,7 @@ index 326d371dc55457ce8487df7b8c66386bbdfafd9e..eac9d78e6030ff6cc8e838bbfa57f731
 -"use strict";
  /*
    Legacy types from sumer runtime.
- 
+
 @@ -9,44 +8,31 @@
    Important Note: When new modules are added and happen to use type names that match the ones defined here
    make sure to remove them from this file!
@@ -1637,11 +1637,11 @@ index 657da58a13fe97d36a56c0abd1206d05c3fb9e01..f41a28446255dfc113e7150e7946a4ea
 -exports.default = exports.mintTypes;
 +export default mintTypes;
 diff --git a/package.json b/package.json
-index 68dd6c28d79cc80de528fd97b8ff34a7cc103df0..5188ab5479b37ebc6d6e9c11dd45fadb10d49768 100644
+index e6fc77b698b37e25c0f182231b0fbef9ddccdc71..1a5e0e0be1e22129defa9269f28d1bc6d81686d5 100644
 --- a/package.json
 +++ b/package.json
 @@ -3,6 +3,8 @@
-   "version": "0.17.1",
+   "version": "0.17.2",
    "description": "Types for Joystream Substrate Runtime - Giza release",
    "main": "index.js",
 +  "type": "module",
@@ -2201,10 +2201,10 @@ index 471c1eb9fd8f2a2a44007b57f8442cb99e349c15..ce47dcc2fd0ce9cf9d5568fea9c6914b
 -exports.default = exports.stakeTypes;
 +export default stakeTypes;
 diff --git a/storage.js b/storage.js
-index 44160956b71341f260f8ccd1295035ac4cb5a925..0f3dd3d9474f1f2f2c65f01553f4757a16795e28 100644
+index 7f13dcc0e76bae02d240884ca21089dec7b240ec..3957559a432d6278b955a1a94ea461ebf459249b 100644
 --- a/storage.js
 +++ b/storage.js
-@@ -1,181 +1,145 @@
+@@ -1,182 +1,146 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
 -exports.storageTypes = exports.DynamicBagCreationPolicyDistributorFamiliesMap = exports.DistributionBucketFamily = exports.DistributionBucket = exports.ContentIdSet = exports.Cid = exports.UploadParameters = exports.DataObjectCreationParameters = exports.StorageBucket = exports.StorageBucketOperatorStatus = exports.StorageBucketOperatorStatusDef = exports.Voucher = exports.BagIdType = exports.BagId = exports.BagIdDef = exports.Dynamic = exports.DynamicBagId = exports.DynamicBagIdDef = exports.ChannelId = exports.Static = exports.StaticBagId = exports.StaticBagIdDef = exports.DynamicBagType = exports.DynamicBagTypeDef = exports.DynamicBagCreationPolicy = exports.Bag = exports.DynamicBagDeletionPrizeRecord = exports.DynamicBagDeletionPrize = exports.DistributionBucketId = exports.DistributionBucketIndexSet = exports.StorageBucketIdSet = exports.DistributionBucketFamilyId = exports.DistributionBucketIndex = exports.DataObjectIdMap = exports.DataObjectIdSet = exports.DataObject = exports.StorageBucketsPerBagValueConstraint = exports.StorageBucketId = exports.DataObjectId = void 0;
@@ -2408,6 +2408,8 @@ index 44160956b71341f260f8ccd1295035ac4cb5a925..0f3dd3d9474f1f2f2c65f01553f4757a
 -    accepting_new_bags: types_1.bool,
 +    accepting_new_bags: bool,
      voucher: Voucher,
+-    assigned_bags: types_1.u64,
++    assigned_bags: u64,
  }) {
  }
 -exports.StorageBucket = StorageBucket;
@@ -2470,7 +2472,7 @@ index 44160956b71341f260f8ccd1295035ac4cb5a925..0f3dd3d9474f1f2f2c65f01553f4757a
      StorageBucketId,
      StorageBucketsPerBagValueConstraint,
      DataObjectId,
-@@ -210,4 +174,4 @@ exports.storageTypes = {
+@@ -211,4 +175,4 @@ exports.storageTypes = {
      DistributionBucketIndexSet,
      DynamicBagCreationPolicyDistributorFamiliesMap,
  };
