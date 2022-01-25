@@ -23,28 +23,16 @@ const ASPECT_RATIO_PER_TYPE: Record<CropperImageType, number> = {
 
 const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOptions> = {
   avatar: {
-    minWidth: 128,
-    minHeight: 128,
     width: 192,
     height: 192,
-    maxWidth: 192,
-    maxHeight: 192,
   },
   videoThumbnail: {
-    minWidth: 640,
-    minHeight: 360,
     width: 640,
     height: 360,
-    maxWidth: 640,
-    maxHeight: 360,
   },
   cover: {
-    minWidth: 1920,
-    minHeight: 480,
     width: 1920,
     height: 480,
-    maxWidth: 1920,
-    maxHeight: 480,
   },
 }
 
