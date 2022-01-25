@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 
 import { AvatarProps } from './Avatar'
 import {
@@ -47,24 +47,32 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
   return (
     <AvatarGroupContainer size={size} className={className}>
       {avatars.map((avatarProps, idx) => (
-        <AvatarWrapper
-          key={idx}
-          clickable={clickable}
-          onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
-          onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
-          size={size}
-          style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
-          avatarStrokeColor={avatarStrokeColor}
-        >
-          <AvatarBackground avatarStrokeColor={avatarStrokeColor} />
-          <Tooltip text={avatarProps.tooltipText} arrowDisabled placement="top" offsetY={clickable ? 16 : 8}>
+        <Fragment key={idx}>
+          <AvatarWrapper
+            ref={ref}
+            clickable={clickable}
+            onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
+            onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
+            size={size}
+            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+            avatarStrokeColor={avatarStrokeColor}
+          >
+            <AvatarBackground avatarStrokeColor={avatarStrokeColor} />
             <StyledAvatar {...avatarProps} loading={loading} size={getSizeofAvatar(size)} />
-          </Tooltip>
-          <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
-        </AvatarWrapper>
+            <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
+          </AvatarWrapper>
+          <Tooltip
+            text={avatarProps.tooltipText}
+            arrowDisabled
+            placement="top"
+            offsetY={clickable ? 16 : 8}
+            reference={ref}
+          />
+        </Fragment>
       ))}
     </AvatarGroupContainer>
   )

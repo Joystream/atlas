@@ -16,6 +16,7 @@ export type TooltipProps = {
   offsetX?: number
   offsetY?: number
   arrowDisabled?: boolean
+  reference?: Element | React.RefObject<Element> | null | undefined
   className?: string
 }
 
@@ -24,6 +25,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   headerText,
   icon,
   children,
+  reference,
   placement = 'bottom-start',
   offsetX = 0,
   offsetY = 8,
@@ -39,6 +41,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       onMount={() => setIsVisible(true)}
       onHide={() => setIsVisible(false)}
       placement={placement}
+      reference={reference}
       offset={[offsetX, offsetY]}
       render={(attrs) => (
         <CSSTransition
