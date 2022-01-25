@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionNewTab, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/components/_icons'
+import { SvgActionPlay, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/components/_icons'
+import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
@@ -56,6 +57,22 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
     return item
   })
 
+  const buttons = (
+    <>
+      <Button icon={<SvgActionAddVideo />} to={absoluteRoutes.studio.videoWorkspace()}>
+        Upload video
+      </Button>
+      <Button
+        variant="secondary"
+        to={absoluteRoutes.viewer.index()}
+        onClick={() => setExpanded(false)}
+        icon={<SvgActionPlay />}
+      >
+        Go to Joystream
+      </Button>
+    </>
+  )
+
   return (
     <SidenavBase
       expanded={expanded}
@@ -63,17 +80,7 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
       logoNode={<SvgJoystreamLogoStudio />}
       logoLinkUrl={absoluteRoutes.studio.index()}
       items={studioNavbarItemsWithBadge}
-      buttonsContent={
-        <Button
-          variant="secondary"
-          to={absoluteRoutes.viewer.index()}
-          newTab
-          onClick={() => setExpanded(false)}
-          icon={<SvgActionNewTab />}
-        >
-          Joystream
-        </Button>
-      }
+      buttonsContent={buttons}
       className={className}
     />
   )
