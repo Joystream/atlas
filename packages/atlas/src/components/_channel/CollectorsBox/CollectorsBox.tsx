@@ -31,7 +31,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
       },
     }))
 
-  const avatarsWhenCollectorsMoreThan5: Collector[] = [
+  const avatarsWhenTooManyCollectors: Collector[] = [
     ...sortedCollectors.slice(0, maxShowedCollectors - 1),
     {
       children: (
@@ -47,7 +47,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
   ]
 
   const avatars: Collector[] =
-    sortedCollectors.length < maxShowedCollectors ? sortedCollectors : avatarsWhenCollectorsMoreThan5
+    sortedCollectors.length < maxShowedCollectors ? sortedCollectors : avatarsWhenTooManyCollectors
   return (
     <>
       <CollectorsBoxWrapper
