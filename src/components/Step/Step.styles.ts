@@ -4,13 +4,8 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes, transitions } from '@/styles'
 
-export type StepType = 'current' | 'future' | 'completed'
-
-type StepWrapperProps = {
-  disabled?: boolean
-  variant?: 'file' | 'default'
-  stepType?: StepType
-}
+export type StepVariant = 'current' | 'future' | 'completed'
+export type StepType = 'file' | 'default'
 
 const truncateText = css`
   white-space: nowrap;
@@ -18,12 +13,12 @@ const truncateText = css`
   text-overflow: ellipsis;
 `
 
-const stepperVariantStyles = (variant: 'file' | 'default', stepType?: StepType) => {
-  switch (variant) {
+const stepperVariantStyles = (stepType: StepType, stepVariant?: StepVariant) => {
+  switch (stepType) {
     case 'default':
       return css`
         padding: 0;
-        display: ${stepType === 'current' ? 'flex' : 'none'};
+        display: ${stepVariant === 'current' ? 'flex' : 'none'};
         align-items: center;
 
         ${media.sm} {
@@ -33,8 +28,10 @@ const stepperVariantStyles = (variant: 'file' | 'default', stepType?: StepType) 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border-color: ${stepType === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
-        border-width: 1px 1px ${stepType === 'current' ? '4px' : '1px'} 1px;
+        border-color: ${stepVariant === 'current'
+          ? cVar('colorBackgroundPrimary')
+          : cVar('colorBackgroundStrongAlpha')};
+        border-width: 1px 1px ${stepVariant === 'current' ? '4px' : '1px'} 1px;
         border-style: solid;
 
         ${media.sm} {
@@ -44,6 +41,12 @@ const stepperVariantStyles = (variant: 'file' | 'default', stepType?: StepType) 
     default:
       return
   }
+}
+
+type StepWrapperProps = {
+  disabled?: boolean
+  stepVariant?: StepVariant
+  stepType?: StepType
 }
 
 export const StepWrapper = styled.div<StepWrapperProps>`
@@ -57,7 +60,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
     background-color ${transitions.timings.routing} ${transitions.easing};
   ${truncateText}
 
-  ${({ variant = 'default', stepType }) => stepperVariantStyles(variant, stepType)};
+  ${({ stepType = 'default', stepVariant }) => stepperVariantStyles(stepType, stepVariant)};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
@@ -74,9 +77,13 @@ export const StepStatus = styled.div`
   ${truncateText}
 `
 
-export const StepNumber = styled.div<StepWrapperProps>`
-  background-color: ${({ stepType }) =>
-    stepType === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
+type StepNumberProps = {
+  stepVariant?: StepVariant
+}
+
+export const StepNumber = styled.div<StepNumberProps>`
+  background-color: ${({ stepVariant }) =>
+    stepVariant === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
   border-radius: 100%;
   height: ${sizes(7)};
   width: ${sizes(7)};

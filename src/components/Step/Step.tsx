@@ -11,6 +11,7 @@ import {
   StepStatus,
   StepTitle,
   StepType,
+  StepVariant,
   StepWrapper,
 } from './Step.styles'
 
@@ -19,8 +20,8 @@ import { IconButton } from '../_buttons/IconButton'
 
 export type StepProps = {
   title: string
-  variant?: 'file' | 'default'
-  stepType?: StepType
+  variant?: StepVariant
+  type?: StepType
   isLoading?: boolean
   disabled?: boolean
   number?: number
@@ -29,7 +30,7 @@ export type StepProps = {
 }
 
 export const Step = forwardRef<HTMLDivElement, StepProps>(
-  ({ variant = 'default', isLoading, disabled, title, number, onDelete, className, stepType = 'current' }, ref) => {
+  ({ type = 'default', isLoading, disabled, title, number, onDelete, className, variant = 'current' }, ref) => {
     const [circularProgress, setCircularProgress] = useState(0)
 
     useEffect(() => {
@@ -45,27 +46,27 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
     }, [circularProgress, isLoading])
 
     return (
-      <StepWrapper aria-disabled={disabled} stepType={stepType} variant={variant} ref={ref} className={className}>
+      <StepWrapper aria-disabled={disabled} stepVariant={variant} stepType={type} ref={ref} className={className}>
         <StepStatus>
           {isLoading ? (
             <ProgressContainer>
               <CircularProgress value={circularProgress} maxValue={100} />
             </ProgressContainer>
           ) : (
-            <StepNumber stepType={stepType}>
-              {stepType === 'completed' || disabled ? <SvgActionCheck /> : <Text variant="t200">{number}</Text>}
+            <StepNumber stepVariant={variant}>
+              {variant === 'completed' || disabled ? <SvgActionCheck /> : <Text variant="t200">{number}</Text>}
             </StepNumber>
           )}
           <StepDetails>
             <Overhead variant="t100" secondary>
               Step {number}
             </Overhead>
-            <StepTitle variant="t100-strong" secondary={stepType !== 'current'}>
+            <StepTitle variant="t100-strong" secondary={variant !== 'current'}>
               {title}
             </StepTitle>
           </StepDetails>
         </StepStatus>
-        {((onDelete && stepType === 'completed' && !isLoading) || disabled) && (
+        {((onDelete && variant === 'completed' && !isLoading) || disabled) && (
           <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
             {disabled ? <SvgActionLock /> : <SvgActionTrash />}
           </IconButton>

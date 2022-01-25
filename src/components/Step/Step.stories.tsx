@@ -9,10 +9,10 @@ export default {
   args: {
     number: 1,
     title: 'Step title',
-    stepType: 'current',
+    variant: 'current',
   },
   argTypes: {
-    stepType: { type: 'select', options: ['current', 'future', 'completed'] },
+    variant: { type: 'select', options: ['current', 'future', 'completed'] },
   },
 } as Meta
 
@@ -22,5 +22,5 @@ export const Default = Template.bind({})
 
 export const File = Template.bind({})
 File.args = {
-  variant: 'file',
+  type: 'file',
 }
