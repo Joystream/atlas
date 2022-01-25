@@ -24,13 +24,15 @@ const Template: Story<BannerProps> = (args) => {
   return (
     <>
       <Banner {...args} />
-      <Button
-        onClick={() => {
-          updateDismissedMessages(args.id, false)
-        }}
-      >
-        Reset
-      </Button>
+      <div style={{ marginTop: 16 }}>
+        <Button
+          onClick={() => {
+            updateDismissedMessages(args.id, false)
+          }}
+        >
+          Reset
+        </Button>
+      </div>
     </>
   )
 }
