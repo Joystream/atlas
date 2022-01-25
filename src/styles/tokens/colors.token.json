@@ -266,11 +266,15 @@
       },
       "error": {
         "value": "{color.core.red.300}",
-        "description": "Error, warning text etc."
+        "description": "Errors, destructive action labels etc."
       },
       "success": {
         "value": "{color.core.green.300}",
         "description": "Success, positive text, etc."
+      },
+      "caution": {
+        "value": "{color.core.yellow.200}",
+        "description": "Warnings, cautionary text, etc."
       }
     },
     "border": {
@@ -386,6 +390,20 @@
         },
         "strong": {
           "value": "{color.core.green.400}",
+          "description": "Component backgrounds on hover statess"
+        }
+      },
+      "caution": {
+        "muted": {
+          "value": "{color.core.yellow.300}",
+          "description": "Component backgrounds on pressed states"
+        },
+        "default": {
+          "value": "{color.core.yellow.200}",
+          "description": "Component backgrounds on default states, callouts, etc."
+        },
+        "strong": {
+          "value": "{color.core.yellow.100}",
           "description": "Component backgrounds on hover statess"
         }
       }
