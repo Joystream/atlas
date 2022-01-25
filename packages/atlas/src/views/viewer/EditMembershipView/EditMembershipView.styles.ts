@@ -10,7 +10,7 @@ export const Wrapper = styled.div<{ actionBarHeight: number }>`
 `
 export const TextFieldsWrapper = styled.div`
   max-width: 640px;
-  margin: ${sizes(12)} auto 0;
+  margin: ${sizes(8)} auto 0;
 `
 
 export const StyledTextField = styled(TextField)`

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -11,6 +11,7 @@ import {
   MembershipHeader,
   MembershipInfoContainer,
   StyledHandle,
+  StyledSvgActionCheck,
   StyledSvgActionCopy,
   StyledText,
 } from './MembershipInfo.style'
@@ -40,7 +41,17 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   loading,
   isOwner,
 }) => {
+  const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
+
+  const handleCopyAddress = () => {
+    if (!address) {
+      return
+    }
+    copyToClipboard(address)
+    setCopyButtonClicked(true)
+  }
+
   return (
     <SwitchTransition>
       <CSSTransition
@@ -59,18 +70,18 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
               hasAvatarUploadFailed={hasAvatarUploadFailed}
             />
             <MembershipDetails>
-              {loading || !handle ? (
+              {loading ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle}</StyledHandle>
+                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle || '\xa0'}</StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" secondary onClick={() => copyToClipboard(address)}>
+                <StyledText variant="t300" secondary onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy address" arrowDisabled placement="top">
-                    <StyledSvgActionCopy />
+                    {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
                   </Tooltip>
                 </StyledText>
               )}

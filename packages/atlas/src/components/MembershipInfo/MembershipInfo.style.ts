@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { cVar, media, sizes } from '@/styles'
 
 import { Text } from '../Text'
-import { SvgActionCopy } from '../_icons'
+import { SvgActionCheck, SvgActionCopy } from '../_icons'
 
 export const MembershipHeader = styled.header`
   display: grid;
@@ -25,6 +25,7 @@ export const MembershipInfoContainer = styled.div`
   ${media.sm} {
     gap: ${sizes(8)};
     grid-template-columns: repeat(2, auto);
+    grid-template-rows: unset;
     display: inline-grid;
   }
 `
@@ -64,4 +65,7 @@ export const StyledSvgActionCopy = styled(SvgActionCopy)`
       fill: ${cVar('colorCoreNeutral50')};
     }
   }
+`
+export const StyledSvgActionCheck = styled(SvgActionCheck)`
+  margin-left: ${sizes(2)};
 `

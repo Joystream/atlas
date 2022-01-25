@@ -30,6 +30,7 @@ import {
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
+  MemberExtrisincResult,
   MemberId,
   SendExtrinsicResult,
   VideoExtrinsicResult,
@@ -37,8 +38,6 @@ import {
   VideoInputAssets,
   VideoInputMetadata,
 } from './types'
-
-import { MemberExtrisincResult } from '.'
 
 type AccountIdAccessor = () => AccountId | null
 
