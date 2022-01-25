@@ -1,86 +1,21 @@
-import { useApolloClient } from '@apollo/client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import debouncePromise from 'awesome-debounce-promise'
-import React, { useCallback, useEffect, useRef } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useCallback, useEffect } from 'react'
 import useMeasure from 'react-use-measure'
-import * as z from 'zod'
 
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
-import { TextArea } from '@/components/_inputs/TextArea'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
+import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
+import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
-import { imageUrlValidation } from '@/utils/asset'
 
-import { StyledActionBar, StyledTextField, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
-
-type Inputs = {
-  handle: string
-  avatar: string | null
-  about: string | null
-}
+import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
 export const EditMembershipView: React.FC = () => {
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream } = useJoystream()
   const handleTransaction = useTransaction()
-  const client = useApolloClient()
-
-  const debouncedAvatarValidation = useRef(debouncePromise(imageUrlValidation, 500))
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string, prevValue?: string) => {
-      if (value === prevValue) {
-        return true
-      }
-      const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
-      })
-      if (membershipByUniqueInput) {
-        return false
-      } else {
-        return true
-      }
-    }, 500)
-  )
-  const avatarInputRef = useRef<HTMLInputElement | null>(null)
-
-  const schema = z.object({
-    handle: z
-      .string()
-      .nonempty({ message: 'Member handle cannot be empty' })
-      .min(5, {
-        message: 'Member handle must be at least 5 characters',
-      })
-      .max(40, {
-        message: `Member handle cannot be longer than 40 characters`,
-      })
-      .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
-        message: 'Member handle may contain only lowercase letters, numbers and underscores',
-      })
-      .refine((val) => debouncedHandleUniqueValidation.current(val, activeMembership?.handle), {
-        message: 'Member handle already in use',
-      }),
-    avatar: z
-      .string()
-      .max(400)
-      .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
-      .refine(
-        (val) => {
-          if (!val) return true
-          return debouncedAvatarValidation.current(val)
-        },
-        { message: 'Image not found' }
-      ),
-    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }),
-  })
 
   const {
     register,
@@ -88,19 +23,13 @@ export const EditMembershipView: React.FC = () => {
     getValues,
     reset,
     watch,
-    formState: { errors, isDirty, isValid, dirtyFields },
-  } = useForm<Inputs>({
-    mode: 'onChange',
-    resolver: zodResolver(schema),
-    shouldFocusError: true,
-    defaultValues: {
-      handle: activeMembership?.handle,
-      avatar: activeMembership?.avatarUri,
-      about: activeMembership?.about,
-    },
-  })
-
-  const { ref, ...avataRegisterRest } = register('avatar')
+    errors,
+    isDirty,
+    isValid,
+    dirtyFields,
+    isValidating,
+    setFocus,
+  } = useCreateEditMemberForm({ prevHandle: activeMembership?.handle })
 
   const resetForm = useCallback(() => {
     reset(
@@ -149,45 +78,14 @@ export const EditMembershipView: React.FC = () => {
         <MembershipInfo
           address={activeAccountId}
           avatarUrl={errors.avatar ? '' : getValues('avatar')}
-          onAvatarEditClick={() => avatarInputRef.current?.focus()}
+          onAvatarEditClick={() => setFocus('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
           loading={activeMembershipLoading}
           handle={getValues('handle')}
         />
         <Wrapper actionBarHeight={actionBarBounds.height}>
           <TextFieldsWrapper>
-            <StyledTextField
-              label="Avatar URL"
-              placeholder="https://example.com/avatar.jpeg"
-              {...avataRegisterRest}
-              name="avatar"
-              ref={(e) => {
-                ref(e)
-                avatarInputRef.current = e
-              }}
-              value={watch('avatar') || ''}
-              error={!!errors.avatar}
-              helperText={errors.avatar?.message}
-            />
-            <StyledTextField
-              placeholder="johnnysmith"
-              label="Member handle"
-              {...register('handle')}
-              error={!!errors.handle}
-              value={watch('handle') || ''}
-              helperText={
-                errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
-              }
-            />
-            <TextArea
-              label="About"
-              {...register('about')}
-              placeholder="Anything you'd like to share about yourself with the Joystream community"
-              maxLength={1000}
-              error={!!errors.about}
-              value={watch('about') || ''}
-              helperText={errors.about?.message}
-            />
+            <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
           </TextFieldsWrapper>
         </Wrapper>
         <StyledActionBar
@@ -195,7 +93,7 @@ export const EditMembershipView: React.FC = () => {
           primaryText="Fee: 0 Joy"
           secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
           primaryButton={{
-            disabled: !isDirty || !isValid,
+            disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',
             type: 'submit',
           }}
