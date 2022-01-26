@@ -8,6 +8,15 @@ type DenseProps = {
   dense?: boolean
 }
 
+export const SwitchLabel = styled.label`
+  display: inline-flex;
+  cursor: pointer;
+`
+
+export const SwitchTitle = styled(Text)`
+  margin-left: ${sizes(3)};
+`
+
 export const FormFieldWrapper = styled.div<DenseProps>`
   margin-top: ${({ dense }) => sizes(dense ? 4 : 10)};
   width: 100%;

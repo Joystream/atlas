@@ -10,6 +10,8 @@ import {
   FormFieldWrapper,
   OptionalText,
   StyledInformation,
+  SwitchLabel,
+  SwitchTitle,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
@@ -20,7 +22,7 @@ export type FormFieldProps = {
   description?: string | string[]
   dense?: boolean
   className?: string
-  switchProps?: Omit<SwitchProps, 'label' | 'isLabelTitle'>
+  switchProps?: Omit<SwitchProps, 'label'>
   infoTooltip?: TooltipProps
 }
 
@@ -29,7 +31,14 @@ export const FormField: React.FC<FormFieldProps> = React.memo(
     return (
       <FormFieldWrapper className={className} dense={dense}>
         <FormFieldHeader>
-          {switchProps ? <Switch {...switchProps} isLabelTitle label={title} /> : <Text variant="h300">{title}</Text>}
+          {switchProps ? (
+            <SwitchLabel>
+              <Switch {...switchProps} /> <SwitchTitle variant="h300">{title}</SwitchTitle>
+            </SwitchLabel>
+          ) : (
+            // <Switch {...switchProps} isLabelTitle label={title} />
+            <Text variant="h300">{title}</Text>
+          )}
           {infoTooltip && <StyledInformation {...infoTooltip} />}
           {optional && (
             <OptionalText variant="t200" secondary>

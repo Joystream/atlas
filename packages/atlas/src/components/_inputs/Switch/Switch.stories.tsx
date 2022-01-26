@@ -9,7 +9,6 @@ export default {
   args: {
     disabled: false,
     label: 'Switch button label',
-    isLabelTitle: false,
   },
 } as Meta
 
