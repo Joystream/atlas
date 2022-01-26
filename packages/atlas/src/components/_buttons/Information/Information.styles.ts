@@ -4,10 +4,6 @@ import styled from '@emotion/styled'
 import { SvgActionInformative } from '@/components/_icons'
 import { cVar, square } from '@/styles'
 
-export const InformationWrapper = styled.div`
-  display: inline-flex;
-`
-
 export const StyledSvgActionInformative = styled(SvgActionInformative)`
   path {
     transition: fill ${cVar('animationTransitionFast')};
@@ -55,4 +51,19 @@ export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
         }
       }
     `};
+`
+
+export const InformationWrapper = styled.div`
+  display: inline-flex;
+
+  & > span:focus {
+    ${IconWrapper} {
+      background: ${cVar('colorBackgroundAlpha')};
+    }
+    ${StyledSvgActionInformative} {
+      path {
+        fill: ${cVar('colorTextStrong')};
+      }
+    }
+  }
 `

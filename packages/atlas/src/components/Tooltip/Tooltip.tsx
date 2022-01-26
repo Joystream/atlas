@@ -42,7 +42,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
     <Tippy
       onMount={() => setIsVisible(true)}
       hideOnClick={hideOnClick}
-      touch="hold"
       onHide={() => setIsVisible(false)}
       placement={placement}
       reference={reference}
