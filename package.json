@@ -20,6 +20,9 @@
     "atlas:build-storybook": "yarn workspace @joystream/atlas build-storybook",
     "atlas:test": "yarn workspace @joystream/atlas test",
     "atlas:test:dev": "yarn workspace @joystream/atlas test:dev",
+    "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
+    "docker:atlas": "ci/build-docker-atlas.sh",
+    "docker:meta-server": "ci/build-docker-meta-server.sh",
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
