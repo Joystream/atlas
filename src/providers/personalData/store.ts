@@ -32,16 +32,18 @@ export type PersonalDataStoreActions = {
   setCachedVolume: (volume: number) => void
 }
 
+const initialState: PersonalDataStoreState = {
+  cachedVolume: 0,
+  watchedVideos: [],
+  followedChannels: [],
+  recentSearches: [],
+  dismissedMessages: [],
+  currentVolume: 1,
+}
+
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
   {
-    state: {
-      cachedVolume: 0,
-      watchedVideos: [],
-      followedChannels: [],
-      recentSearches: [],
-      dismissedMessages: [],
-      currentVolume: 1,
-    },
+    state: initialState,
     actionsFactory: (set) => ({
       updateWatchedVideos: (__typename, id, timestamp) => {
         set((state) => {
@@ -100,12 +102,11 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
     persist: {
       key: 'personalData',
       whitelist: WHITELIST,
-      version: 1,
-      migrate: (oldState) => ({
-        ...oldState,
-        recentSearches: oldState.recentSearches.filter(
-          (item: RecentSearch) => !Object.prototype.hasOwnProperty.call(item, 'type')
-        ),
+      version: 2,
+      // Remove all personal data state as part of Giza - some content has been removed, IDs of others has been changed.
+      // We are also not migrating channel follows in Orion so best to start with clean slate for all users.
+      migrate: () => ({
+        ...initialState,
       }),
     },
   }
