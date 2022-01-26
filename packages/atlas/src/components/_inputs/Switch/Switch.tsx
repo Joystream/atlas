@@ -15,11 +15,13 @@ export type SwitchProps = {
 export const Switch: React.FC<SwitchProps> = ({ className, disabled, name, onChange, value, label, isLabelTitle }) => {
   return (
     <SwitchLabel disabled={disabled} className={className}>
-      <SwitchWrapper>
+      <SwitchWrapper disabled={disabled}>
         <SwitchCheckbox type="checkbox" name={name} disabled={disabled} onChange={onChange} checked={value} />
-        <SwitchSlider disabled={disabled} />
+        <SwitchSlider />
       </SwitchWrapper>
-      <LabelText variant={isLabelTitle ? 't300-strong' : 't200'}>{label}</LabelText>
+      <LabelText variant={isLabelTitle ? 't300-strong' : 't200'} secondary={disabled}>
+        {label}
+      </LabelText>
     </SwitchLabel>
   )
 }
