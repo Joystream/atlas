@@ -7,13 +7,11 @@ import { media, sizes, transitions, zIndex } from '@/styles'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 export const StyledTitleSection = styled(TitleSection)`
+  margin-top: 0 !important;
+  padding-top: ${sizes(8)};
   display: inline-flex;
   width: auto;
   flex-direction: row;
-  padding-top: ${sizes(8)};
-  ${media.sm} {
-    padding-top: 0;
-  }
 
   /* Hidden visibility on container to not block hover state on Channel cover. 
   TitleArea, SubTitle and Avatar must be visible  */
@@ -22,7 +20,6 @@ export const StyledTitleSection = styled(TitleSection)`
 
 export const StyledTitleArea = styled(TitleArea)`
   visibility: visible;
-  margin-left: ${sizes(2)};
 `
 
 export const StyledSubTitle = styled(SubTitle)`

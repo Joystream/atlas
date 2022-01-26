@@ -41,7 +41,7 @@ const channelAvatarCss = css`
   width: 88px;
   min-width: 88px;
   height: 88px;
-  ${media.sm} {
+  ${media.md} {
     width: 136px;
     min-width: 136px;
     height: 136px;
