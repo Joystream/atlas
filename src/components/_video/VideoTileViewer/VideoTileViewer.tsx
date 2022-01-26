@@ -28,13 +28,15 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
     copyToClipboard(videoHref ? location.origin + videoHref : '')
   }, [videoHref])
 
+  const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
+
   return (
     <VideoTile
       onClick={onClick}
       detailsVariant={detailsVariant}
       videoHref={videoHref}
-      channelHref={absoluteRoutes.viewer.channel(video?.category?.id)}
-      onChannelAvatarClick={() => navigate(absoluteRoutes.viewer.channel(video?.category?.id))}
+      channelHref={channelHref}
+      onChannelAvatarClick={() => navigate(channelHref)}
       loadingDetails={loading}
       thumbnailUrl={thumbnailPhotoUrl}
       loadingThumbnail={isLoadingThumbnail}

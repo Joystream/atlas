@@ -19,6 +19,7 @@ export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSha
 
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
+
   return {
     video,
     loading: internalIsLoadingState,
