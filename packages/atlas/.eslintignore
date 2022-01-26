@@ -1,0 +1,4 @@
+!.storybook/
+__generated__/
+dist*/
+scripts/

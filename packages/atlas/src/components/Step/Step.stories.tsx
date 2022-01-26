@@ -12,7 +12,7 @@ export default {
     variant: 'current',
   },
   argTypes: {
-    variant: { type: 'select', options: ['current', 'future', 'completed'] },
+    variant: { controls: { type: 'select', options: ['current', 'future', 'completed'] } },
   },
 } as Meta
 
