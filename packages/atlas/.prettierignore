@@ -1,10 +1,8 @@
 node_modules/
 dist/
 .yarn/
-storybook-static/
 .coverage
 tsconfig.json
-public/mockServiceWorker.js
 .history
 
 # don't prettify minified animation JSONs
