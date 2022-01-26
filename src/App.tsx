@@ -7,7 +7,7 @@ import { createApolloClient } from '@/api'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyles } from '@/styles'
 
-import { MainLayout } from './MainLayout'
+import { Maintenance } from './Maintenance'
 import { AssetsManager } from './providers/assets'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
@@ -26,7 +26,7 @@ export const App = () => {
           <OverlayManagerProvider>
             <StorageProvidersProvider>
               <ConfirmationModalProvider>
-                <MainLayout />
+                <Maintenance />
                 <Snackbars />
                 <AssetsManager />
               </ConfirmationModalProvider>
