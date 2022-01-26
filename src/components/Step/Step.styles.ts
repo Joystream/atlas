@@ -2,13 +2,10 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
-type StepWrapperProps = {
-  active?: boolean
-  disabled?: boolean
-  variant?: 'file' | 'default'
-}
+export type StepVariant = 'current' | 'future' | 'completed'
+export type StepType = 'file' | 'default'
 
 const truncateText = css`
   white-space: nowrap;
@@ -16,12 +13,12 @@ const truncateText = css`
   text-overflow: ellipsis;
 `
 
-const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => {
-  switch (variant) {
+const stepperVariantStyles = (stepType: StepType, stepVariant?: StepVariant) => {
+  switch (stepType) {
     case 'default':
       return css`
         padding: 0;
-        display: ${active ? 'flex' : 'none'};
+        display: ${stepVariant === 'current' ? 'flex' : 'none'};
         align-items: center;
 
         ${media.sm} {
@@ -31,8 +28,10 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     case 'file':
       return css`
         padding: 0 ${sizes(4)};
-        border-color: ${active ? oldColors.blue[500] : oldColors.gray[500]};
-        border-width: 1px 1px ${active ? '4px' : '1px'} 1px;
+        border-color: ${stepVariant === 'current'
+          ? cVar('colorBackgroundPrimary')
+          : cVar('colorBackgroundStrongAlpha')};
+        border-width: 1px 1px ${stepVariant === 'current' ? '4px' : '1px'} 1px;
         border-style: solid;
 
         ${media.sm} {
@@ -42,6 +41,12 @@ const stepperVariantStyles = (variant: 'file' | 'default', active?: boolean) => 
     default:
       return
   }
+}
+
+type StepWrapperProps = {
+  disabled?: boolean
+  stepVariant?: StepVariant
+  stepType?: StepType
 }
 
 export const StepWrapper = styled.div<StepWrapperProps>`
@@ -55,7 +60,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
     background-color ${transitions.timings.routing} ${transitions.easing};
   ${truncateText}
 
-  ${({ variant = 'default', active }) => stepperVariantStyles(variant, active)};
+  ${({ stepType = 'default', stepVariant }) => stepperVariantStyles(stepType, stepVariant)};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
@@ -72,12 +77,13 @@ export const StepStatus = styled.div`
   ${truncateText}
 `
 
-export const StepNumber = styled.div<StepWrapperProps>`
-  background-color: ${({ active }) => (active ? oldColors.blue[500] : oldColors.gray[500])};
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-  color: ${oldColors.white};
+type StepNumberProps = {
+  stepVariant?: StepVariant
+}
+
+export const StepNumber = styled.div<StepNumberProps>`
+  background-color: ${({ stepVariant }) =>
+    stepVariant === 'current' ? cVar('colorBackgroundPrimary') : cVar('colorBackgroundStrongAlpha')};
   border-radius: 100%;
   height: ${sizes(7)};
   width: ${sizes(7)};

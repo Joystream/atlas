@@ -9,7 +9,10 @@ export default {
   args: {
     number: 1,
     title: 'Step title',
-    thumbnailUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/cover-video/thumbnail.jpg',
+    variant: 'current',
+  },
+  argTypes: {
+    variant: { type: 'select', options: ['current', 'future', 'completed'] },
   },
 } as Meta
 
@@ -19,5 +22,5 @@ export const Default = Template.bind({})
 
 export const File = Template.bind({})
 File.args = {
-  variant: 'file',
+  type: 'file',
 }
