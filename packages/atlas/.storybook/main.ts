@@ -1,7 +1,11 @@
 import { Options, StorybookConfig } from '@storybook/core-common'
+import path from 'path'
+import { cwd as _cwd } from 'process'
 import { UserConfig } from 'vite'
 
 import _viteConfig from '../vite.config'
+
+const cwd = _cwd()
 
 interface CustomizedStorybookConfig extends StorybookConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,11 +19,7 @@ const config: CustomizedStorybookConfig = {
   'core': {
     'builder': 'storybook-builder-vite',
   },
-  viteFinal(storybookConfig, { configType }) {
-    if (configType === 'DEVELOPMENT') {
-      storybookConfig.build = {}
-    }
-    storybookConfig.build.target = ''
+  viteFinal(storybookConfig) {
     const viteConfig = _viteConfig as UserConfig
     const vitePlugins = Array.isArray(viteConfig.plugins) ? viteConfig.plugins.flat() : []
     const filteredVitePlugins = vitePlugins.filter(
@@ -44,6 +44,10 @@ const config: CustomizedStorybookConfig = {
         alias: {
           ...storybookConfig.resolve?.alias,
           ...viteConfig.resolve?.alias,
+          '@emotion/core': path.join(cwd, 'node_modules', '@emotion', 'react'),
+          '@emotion/styled': path.join(cwd, 'node_modules', '@emotion', 'styled'),
+          '@emotion/styled-base': path.join(cwd, 'node_modules', '@emotion', 'styled'),
+          'emotion-theming': path.join(cwd, 'node_modules', '@emotion', 'react'),
         },
       },
     }
