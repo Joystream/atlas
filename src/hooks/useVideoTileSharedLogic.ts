@@ -19,6 +19,8 @@ export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSha
 
   const internalIsLoadingState = loading || !id
   const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
+  const videhChannelHref = video?.channel.id ? absoluteRoutes.viewer.channel(video.channel.id) : undefined
+
   return {
     video,
     loading: internalIsLoadingState,
@@ -27,5 +29,6 @@ export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSha
     thumbnailPhotoUrl,
     avatarPhotoUrl,
     videoHref,
+    videhChannelHref,
   }
 }
