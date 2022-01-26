@@ -9,13 +9,15 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
+import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
 export const EmbeddedView: React.FC = () => {
+  useRedirectMigratedGizaContent({ type: 'embedded-video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
@@ -24,7 +26,7 @@ export const EmbeddedView: React.FC = () => {
 
   const timestampFromQuery = Number(useRouterQuery('time'))
 
-  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -79,7 +81,7 @@ export const EmbeddedView: React.FC = () => {
       <Container>
         {!isMediaLoading && video ? (
           <VideoPlayer
-            isVideoPending={video?.mediaAvailability === 'PENDING'}
+            isVideoPending={!video?.media?.isAccepted}
             channelId={video.channel?.id}
             videoId={video.id}
             autoplay

@@ -12,7 +12,7 @@ import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -202,10 +202,7 @@ const MemberInfo: React.FC<MemberInfoProps> = ({ memberName, memberAvatar, hasCh
 
 const ChannelInfo = React.forwardRef<HTMLDivElement, ChannelInfoProps>(
   ({ active = false, channel, memberName, onClick }, ref) => {
-    const { url: avatarPhotoUrl } = useAsset({
-      entity: channel,
-      assetType: AssetType.AVATAR,
-    })
+    const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
 
     return (
       <ChannelInfoContainer onClick={onClick} isActive={active} ref={ref}>

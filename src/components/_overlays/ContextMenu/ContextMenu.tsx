@@ -1,26 +1,18 @@
 import React, { ReactNode, useRef } from 'react'
 
-import { StyledContainer, StyledMenuItem, StyledText } from './ContextMenu.styles'
+import { ListItem } from '@/components/ListItem'
+
+import { StyledContainer } from './ContextMenu.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-type MenuItemProps = {
+export type MenuItemProps = {
   icon: ReactNode
   title: string
   onClick?: () => void
   disabled?: boolean
+  destructive?: boolean
 }
-
-export const ContextMenuItem: React.FC<MenuItemProps> = React.memo(({ icon, onClick, title }) => {
-  return (
-    <StyledMenuItem onClick={onClick}>
-      {icon}
-      <StyledText variant="t200">{title}</StyledText>
-    </StyledMenuItem>
-  )
-})
-
-ContextMenuItem.displayName = 'ContextMenuItem'
 
 type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
 
@@ -30,14 +22,15 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...re
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
       <StyledContainer>
         {items.map((item, index) => (
-          <ContextMenuItem
+          <ListItem
             key={index}
-            icon={item.icon}
-            title={item.title}
             onClick={() => {
               item.onClick?.()
               contextMenuInstanceRef.current?.hide()
             }}
+            label={item.title}
+            nodeStart={item.icon}
+            destructive={item.destructive}
           />
         ))}
       </StyledContainer>

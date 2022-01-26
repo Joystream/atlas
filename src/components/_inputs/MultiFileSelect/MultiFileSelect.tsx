@@ -230,7 +230,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
         />
         <StepsContainer>
           <Step
-            variant="file"
+            type="file"
             number={1}
             title={
               editMode
@@ -239,9 +239,8 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
                 ? (files.video.blob as File).name || 'Video file'
                 : VIDEO_SELECT_TITLE
             }
-            active={step === 'video' && stepsActive}
+            variant={getStepVariant(step === 'video' && stepsActive, !!files.video)}
             disabled={editMode}
-            completed={!!files.video}
             onDelete={handleDeleteVideoFile}
             isLoading={isVideoLoading}
           />
@@ -249,7 +248,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
             <SvgActionChevronR />
           </StepDivider>
           <Step
-            variant="file"
+            type="file"
             number={2}
             title={
               files.thumbnail
@@ -260,8 +259,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
                   : THUMBNAIL_SELECT_TITLE
                 : THUMBNAIL_SELECT_TITLE
             }
-            active={step === 'image' && stepsActive}
-            completed={!!files.thumbnail?.url}
+            variant={getStepVariant(step === 'image' && stepsActive, !!files.thumbnail?.url)}
             onDelete={handleDeleteImageFile}
             ref={thumbnailStepRef}
             isLoading={isImgLoading}
@@ -282,5 +280,15 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
     )
   }
 )
+
+const getStepVariant = (current: boolean, completed: boolean) => {
+  if (current) {
+    return 'current'
+  }
+  if (completed) {
+    return 'completed'
+  }
+  return 'future'
+}
 
 MultiFileSelect.displayName = 'MultiFileSelect'

@@ -1,0 +1,44 @@
+diff --git a/browser-async.d.ts b/browser-async.d.ts
+index a5a04ce572f3c4540131331a04c97f45d5a83aec..6487148089fabdc490b38e4c8b1fa18fd948abc3 100644
+--- a/browser-async.d.ts
++++ b/browser-async.d.ts
+@@ -4,4 +4,4 @@ import * as blake3 from './esm/browser';
+  * Manually loads the WebAssembly module, returning a promise that resolves
+  * to the BLAKE3 implementation once available.
+  */
+-export default function load(module: string | URL | Request | object): Promise<typeof blake3>;
++export default function load(module: string | URL | Request | object | ((imports: unknown) => Promise<WebAssembly.Module>)): Promise<typeof blake3>;
+diff --git a/dist/wasm/web/blake3_js.d.ts b/dist/wasm/web/blake3_js.d.ts
+index cd566ed3396cb5c5e591b3f6206c032bfa80ace6..a892506a5b9b7d73750b6e193c692d843615af70 100644
+--- a/dist/wasm/web/blake3_js.d.ts
++++ b/dist/wasm/web/blake3_js.d.ts
+@@ -50,7 +50,7 @@ export class HashReader {
+   set_position(position: BigInt): void;
+ }
+ 
+-export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
++export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module | ((imports: unknown) => Promise<WebAssembly.Module>);
+ 
+ export interface InitOutput {
+   readonly memory: WebAssembly.Memory;
+diff --git a/dist/wasm/web/blake3_js.js b/dist/wasm/web/blake3_js.js
+index 4fa37747aa8b61fa8f29736871ec2c8d38ffcb3d..afa8d13e1d55092aa68d6867ca99238f519ec6b5 100644
+--- a/dist/wasm/web/blake3_js.js
++++ b/dist/wasm/web/blake3_js.js
+@@ -261,7 +261,15 @@ async function init(input) {
+         input = fetch(input);
+     }
+ 
+-    const { instance, module } = await load(await input, imports);
++    let result;
++
++    if (typeof input === 'function') {
++        result = await input(imports);
++    } else {
++        result = await load(await input, imports);
++    }
++
++    const { instance, module } = result;
+ 
+     wasm = instance.exports;
+     init.__wbindgen_wasm_module = module;

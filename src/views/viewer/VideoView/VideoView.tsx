@@ -13,8 +13,9 @@ import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -37,6 +38,7 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
+  useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
@@ -48,7 +50,7 @@ export const VideoView: React.FC = () => {
 
   const timestampFromQuery = Number(useRouterQuery('time'))
 
-  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset({ entity: video, assetType: AssetType.MEDIA })
+  const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -149,7 +151,7 @@ export const VideoView: React.FC = () => {
         <PlayerContainer>
           {!isMediaLoading && video ? (
             <VideoPlayer
-              isVideoPending={video?.mediaAvailability === 'PENDING'}
+              isVideoPending={!video.media?.isAccepted}
               channelId={video.channel?.id}
               videoId={video.id}
               autoplay
@@ -213,7 +215,7 @@ export const VideoView: React.FC = () => {
             title={`More from ${video?.channel?.title}`}
             titleLoader
             ready={!loading}
-            videoWhereInput={{ channelId_eq: channelId }}
+            videoWhereInput={{ channel: { id_eq: channelId } }}
             showChannel={false}
             excludeId={video?.id}
           />

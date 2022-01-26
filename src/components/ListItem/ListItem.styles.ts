@@ -45,6 +45,7 @@ export const Container = styled.div<ContainerProps>`
   grid-template-columns: ${({ hasNodeStart }) => (hasNodeStart ? 'auto 1fr' : '1fr')};
   align-items: center;
   user-select: none;
+  cursor: pointer;
 
   ${({ disabled }) => disabled && disabledStyles};
   ${({ size }) => getContainerPadding(size)};

@@ -2,7 +2,6 @@ import { DocumentNode } from 'graphql'
 import React, { useCallback, useState } from 'react'
 
 import {
-  AssetAvailability,
   GetMostViewedVideosConnectionQuery,
   GetMostViewedVideosConnectionQueryVariables,
   GetVideosConnectionDocument,
@@ -17,12 +16,13 @@ import { Text } from '@/components/Text'
 import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { SvgActionChevronR } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { VideoTile } from '@/components/_video/VideoTile'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
 
 import { AdditionalLink, LoadMoreButtonWrapper } from './InfiniteGrid.styles'
 import { useInfiniteGrid } from './useInfiniteGrid'
+
+import { VideoTileViewer } from '../_video/VideoTileViewer'
 
 type InfiniteVideoGridProps = {
   query?: DocumentNode
@@ -64,7 +64,6 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       orderBy,
       skipCount = 0,
       ready = true,
-      showChannel = true,
       className,
       excludeId,
       onDemand = false,
@@ -89,8 +88,12 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       where: {
         isPublic_eq: true,
         isCensored_eq: false,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
-        mediaAvailability_eq: AssetAvailability.Accepted,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
         ...videoWhereInput,
       },
     }
@@ -122,7 +125,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const gridContent = (
       <>
         {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
-          <VideoTile id={video.id} key={idx} showChannel={showChannel} />
+          <VideoTileViewer id={video.id} key={idx} />
         ))}
       </>
     )

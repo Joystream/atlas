@@ -2,15 +2,12 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
-import { AssetUploadStatus } from '@/types/uploads'
+import { AssetUploadStatus } from '@/types/storage'
 
-import {
-  BottomProgressBar,
-  ProgressBar,
-  StyledLoader,
-  StyledSvgAlertSuccess,
-  UploadProgressBarContainer,
-} from './UploadProgressBar.styles'
+import { BottomProgressBar, LoaderWrapper, ProgressBar, UploadProgressBarContainer } from './UploadProgressBar.styles'
+
+import { SvgAlertsSuccess24 } from '../_icons'
+import { Loader } from '../_loaders/Loader'
 
 export type UploadProgressBarProps = {
   progress?: number
@@ -43,11 +40,10 @@ export const UploadProgressBar: React.FC<UploadProgressBarProps> = ({
             classNames={transitions.names.fade}
             timeout={200}
           >
-            {lastStatus === 'inProgress' || lastStatus === 'processing' ? (
-              <StyledLoader variant="small" />
-            ) : (
-              <StyledSvgAlertSuccess />
-            )}
+            <LoaderWrapper>
+              {(lastStatus === 'inProgress' || lastStatus === 'processing') && <Loader variant="small" />}
+              {lastStatus === 'completed' && <SvgAlertsSuccess24 />}
+            </LoaderWrapper>
           </CSSTransition>
         </SwitchTransition>
       )}

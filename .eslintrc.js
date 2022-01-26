@@ -7,6 +7,7 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   extends: [
+    'plugin:jest-dom/recommended',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
@@ -30,7 +31,7 @@ module.exports = {
     // allow "_" prefixed function arguments
     '@typescript-eslint/no-unused-vars': [
       'warn',
-      { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true },
+      { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true, 'varsIgnorePattern': '^_+$' },
     ],
     'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
     'react/self-closing-comp': [

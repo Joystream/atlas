@@ -1,12 +1,13 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 import { sizes } from '@/styles/sizes'
 
 import { PillProps, Sizes } from './types'
 
-const sizeStyles = ({ size, hasLabel, iconPlacement }: PillProps & { hasLabel: boolean }) => {
+const sizeStyles = ({ size = 'medium', hasLabel, iconPlacement }: PillProps & { hasLabel: boolean }) => {
   const leftMarignActive = hasLabel && iconPlacement === 'right'
   const rightMarginActive = hasLabel && iconPlacement === 'left'
   switch (size) {
@@ -68,7 +69,6 @@ export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
   align-items: center;
   padding: ${sizes(2)};
   border-radius: 2px;
-  margin-left: ${sizes(2)};
 
   svg {
     > * {
@@ -98,7 +98,12 @@ const gapStyles = ({ size }: PillProps) => {
 }
 
 export const PillGroupWrapper = styled.div<{ size: Sizes }>`
-  display: flex;
+  display: inline-grid;
+  grid-auto-flow: column;
 
   ${gapStyles}
+`
+
+export const StyledLabel = styled(Text)`
+  font-feature-settings: 'tnum' on, 'lnum' on;
 `

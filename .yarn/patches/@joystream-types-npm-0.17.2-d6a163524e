@@ -1,0 +1,2674 @@
+diff --git a/JoyEnum.js b/JoyEnum.js
+index f4721ca8e7b5b4e8d524031351e1ad1ac3bc4ddb..12ff513972901dfcf7ff0427954b08ddd11798ea 100644
+--- a/JoyEnum.js
++++ b/JoyEnum.js
+@@ -1,10 +1,7 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.JoyEnum = void 0;
+-const codec_1 = require("@polkadot/types/codec");
++import { Enum } from '@polkadot/types/codec';
+ // Helper for creating extended Enum type with TS-compatible isOfType and asType helpers
+-function JoyEnum(types) {
+-    return class JoyEnumObject extends codec_1.Enum.with(types) {
++export function JoyEnum(types) {
++    return class JoyEnumObject extends Enum.with(types) {
+         static typeDefinitions = types;
+         typeDefinitions = JoyEnumObject.typeDefinitions; // Non-static version
+         static create(registry, typeKey, value) {
+@@ -25,4 +22,3 @@ function JoyEnum(types) {
+         }
+     };
+ }
+-exports.JoyEnum = JoyEnum;
+diff --git a/JoyStruct.js b/JoyStruct.js
+index fa92f70e04dd5478faa62347438f4dbd01ed104b..4cdee39c5cab174fc9e480c091f58f25ee6d8441 100644
+--- a/JoyStruct.js
++++ b/JoyStruct.js
+@@ -1,13 +1,10 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.JoyStructDecorated = exports.JoyStructCustom = void 0;
+-const codec_1 = require("@polkadot/types/codec");
++import { Struct } from '@polkadot/types/codec';
+ // Helper for creating extended Struct type with TS-compatible interface
+ // It's called JoyStructCustom, because eventually we'd want to migrate all structs to JoyStructDecorated,
+ // but the latter won't allow specifying getters that return different type than the original field type.
+ // (ie. by using getString() instead of getField())
+-function JoyStructCustom(fields) {
+-    return class JoyStructObject extends codec_1.Struct.with(fields) {
++export function JoyStructCustom(fields) {
++    return class JoyStructObject extends Struct.with(fields) {
+         static typeDefs = fields;
+         typeDefs = JoyStructObject.typeDefs;
+         // eslint-disable-next-line no-useless-constructor
+@@ -30,10 +27,8 @@ function JoyStructCustom(fields) {
+         }
+     };
+ }
+-exports.JoyStructCustom = JoyStructCustom;
+ // JoyStruct enriched with typescript definitions for getters automatically added by polkadot-js
+-function JoyStructDecorated(fields) {
++export function JoyStructDecorated(fields) {
+     // We need to cast here because there's no way to make TS aware of getters added with Object.defineProperty
+     return JoyStructCustom(fields);
+ }
+-exports.JoyStructDecorated = JoyStructDecorated;
+diff --git a/common.js b/common.js
+index 8ff8b73e0155c6a386201255eb0268fa162da2df..53022173764a1729286b97c48dee04db125fef50 100644
+--- a/common.js
++++ b/common.js
+@@ -1,35 +1,22 @@
+-"use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.commonTypes = exports.BalanceOf = exports.LookupSource = exports.Address = exports.MemoText = exports.SlashingTerms = exports.UnslashableTerms = exports.SlashableTerms = exports.WorkingGroup = exports.WorkingGroupDef = exports.InputValidationLengthConstraint = exports.OptionText = exports.getOptionPropOrUndefined = exports.getBoolPropAsBoolean = exports.getTextPropAsString = exports.BlockAndTime = exports.Hash = exports.PostId = exports.ThreadId = exports.ChannelId = exports.Url = exports.JoyStructDecorated = exports.JoyStructCustom = exports.JoyEnum = void 0;
+-const types_1 = require("@polkadot/types");
++import { Option, Text, u16, u32, u64, Null, U8aFixed, u128 } from '@polkadot/types';
+ // we get 'moment' because it is a dependency of @polkadot/util, via @polkadot/keyring
+-const moment_1 = __importDefault(require("moment"));
+-const JoyStruct_1 = require("./JoyStruct");
+-Object.defineProperty(exports, "JoyStructCustom", { enumerable: true, get: function () { return JoyStruct_1.JoyStructCustom; } });
+-Object.defineProperty(exports, "JoyStructDecorated", { enumerable: true, get: function () { return JoyStruct_1.JoyStructDecorated; } });
+-const JoyEnum_1 = require("./JoyEnum");
+-Object.defineProperty(exports, "JoyEnum", { enumerable: true, get: function () { return JoyEnum_1.JoyEnum; } });
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-class Url extends types_1.Text {
+-}
+-exports.Url = Url;
+-class ChannelId extends types_1.u64 {
+-}
+-exports.ChannelId = ChannelId;
++import moment from 'moment';
++import { JoyStructCustom, JoyStructDecorated } from './JoyStruct';
++import { JoyEnum } from './JoyEnum';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++export { JoyEnum, JoyStructCustom, JoyStructDecorated };
++export class Url extends Text {
++}
++export class ChannelId extends u64 {
++}
+ // common types between Forum and Proposal Discussions modules
+-class ThreadId extends types_1.u64 {
++export class ThreadId extends u64 {
+ }
+-exports.ThreadId = ThreadId;
+-class PostId extends types_1.u64 {
++export class PostId extends u64 {
+ }
+-exports.PostId = PostId;
+-class Hash extends types_1.U8aFixed {
++export class Hash extends U8aFixed {
+ }
+-exports.Hash = Hash;
+-class BlockAndTime extends (0, JoyStruct_1.JoyStructDecorated)({ block: types_1.u32, time: types_1.u64 }) {
++export class BlockAndTime extends JoyStructDecorated({ block: u32, time: u64 }) {
+     get momentDate() {
+         const YEAR_2000_MILLISECONDS = 946684801000;
+         // overflowing in ~270,000 years
+@@ -41,73 +28,59 @@ class BlockAndTime extends (0, JoyStruct_1.JoyStructDecorated)({ block: types_1.
+             // timestamp is in seconds
+             timestampInMillis = timestamp * 1000;
+         }
+-        return (0, moment_1.default)(timestampInMillis);
++        return moment(timestampInMillis);
+     }
+ }
+-exports.BlockAndTime = BlockAndTime;
+-function getTextPropAsString(struct, fieldName) {
++export function getTextPropAsString(struct, fieldName) {
+     return struct.get(fieldName).toString();
+ }
+-exports.getTextPropAsString = getTextPropAsString;
+-function getBoolPropAsBoolean(struct, fieldName) {
++export function getBoolPropAsBoolean(struct, fieldName) {
+     return struct.get(fieldName).valueOf();
+ }
+-exports.getBoolPropAsBoolean = getBoolPropAsBoolean;
+-function getOptionPropOrUndefined(struct, fieldName) {
++export function getOptionPropOrUndefined(struct, fieldName) {
+     return struct.get(fieldName).unwrapOr(undefined);
+ }
+-exports.getOptionPropOrUndefined = getOptionPropOrUndefined;
+-class OptionText extends types_1.Option.with(types_1.Text) {
++export class OptionText extends Option.with(Text) {
+ }
+-exports.OptionText = OptionText;
+-class InputValidationLengthConstraint extends (0, JoyStruct_1.JoyStructDecorated)({ min: types_1.u16, max_min_diff: types_1.u16 }) {
++export class InputValidationLengthConstraint extends JoyStructDecorated({ min: u16, max_min_diff: u16 }) {
+     get max() {
+         return this.registry.createType('u16', this.min.add(this.max_min_diff));
+     }
+ }
+-exports.InputValidationLengthConstraint = InputValidationLengthConstraint;
+-exports.WorkingGroupDef = {
+-    Storage: types_1.Null,
+-    Content: types_1.Null,
+-    OperationsAlpha: types_1.Null,
+-    Gateway: types_1.Null,
+-    Distribution: types_1.Null,
+-    OperationsBeta: types_1.Null,
+-    OperationsGamma: types_1.Null,
++export const WorkingGroupDef = {
++    Storage: Null,
++    Content: Null,
++    OperationsAlpha: Null,
++    Gateway: Null,
++    Distribution: Null,
++    OperationsBeta: Null,
++    OperationsGamma: Null,
+ };
+-class WorkingGroup extends (0, JoyEnum_1.JoyEnum)(exports.WorkingGroupDef) {
++export class WorkingGroup extends JoyEnum(WorkingGroupDef) {
+ }
+-exports.WorkingGroup = WorkingGroup;
+-class SlashableTerms extends (0, JoyStruct_1.JoyStructDecorated)({
+-    max_count: types_1.u16,
+-    max_percent_pts_per_time: types_1.u16,
++export class SlashableTerms extends JoyStructDecorated({
++    max_count: u16,
++    max_percent_pts_per_time: u16,
+ }) {
+ }
+-exports.SlashableTerms = SlashableTerms;
+-class UnslashableTerms extends types_1.Null {
++export class UnslashableTerms extends Null {
+ }
+-exports.UnslashableTerms = UnslashableTerms;
+-class SlashingTerms extends (0, JoyEnum_1.JoyEnum)({
++export class SlashingTerms extends JoyEnum({
+     Unslashable: UnslashableTerms,
+     Slashable: SlashableTerms,
+ }) {
+ }
+-exports.SlashingTerms = SlashingTerms;
+-class MemoText extends types_1.Text {
++export class MemoText extends Text {
+ }
+-exports.MemoText = MemoText;
+ // @polkadot/types overrides required since migration to Substrate 2.0,
+ // see: https://polkadot.js.org/api/start/FAQ.html#the-node-returns-a-could-not-convert-error-on-send
+-class Address extends AccountId_1.GenericAccountId {
++export class Address extends AccountId {
+ }
+-exports.Address = Address;
+-class LookupSource extends AccountId_1.GenericAccountId {
++export class LookupSource extends AccountId {
+ }
+-exports.LookupSource = LookupSource;
+-class BalanceOf extends types_1.u128 {
++export class BalanceOf extends u128 {
+ }
+-exports.BalanceOf = BalanceOf;
+-exports.commonTypes = {
++export const commonTypes = {
+     BlockAndTime,
+     ThreadId,
+     PostId,
+@@ -122,4 +95,4 @@ exports.commonTypes = {
+     ChannelId,
+     Url,
+ };
+-exports.default = exports.commonTypes;
++export default commonTypes;
+diff --git a/content/index.js b/content/index.js
+index fbd64f8b04a4d804b943a2b1861f692313d5edd0..e10cd21d4c22226cb2da840bd573701ed0319cb3 100644
+--- a/content/index.js
++++ b/content/index.js
+@@ -1,243 +1,197 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.contentTypes = exports.ChannelMigrationConfig = exports.VideoMigrationConfig = exports.PersonActor = exports.PersonUpdateParameters = exports.PersonCreationParameters = exports.Person = exports.PersonController = exports.SeriesParameters = exports.Series = exports.SeasonParameters = exports.Season = exports.EpisodeParemters = exports.PlaylistUpdateParameters = exports.PlaylistCreationParameters = exports.Playlist = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.IsCensored = exports.MaxNumber = exports.ChannelOwnershipTransferRequestId = exports.SeriesId = exports.PersonId = exports.PlaylistId = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
+-const types_1 = require("@polkadot/types");
+-const primitive_1 = require("@polkadot/types/primitive");
+-const members_1 = require("../members");
+-const common_1 = require("../common");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-const storage_1 = require("../storage");
+-class CuratorId extends primitive_1.u64 {
++import { Vec, Option, Tuple, BTreeSet } from '@polkadot/types';
++import { bool, u64, u32, u128, Null, Bytes } from '@polkadot/types/primitive';
++import { MemberId } from '../members';
++import { JoyStructDecorated, JoyEnum, ChannelId } from '../common';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++import { DataObjectId, DataObjectCreationParameters } from '../storage';
++export class CuratorId extends u64 {
+ }
+-exports.CuratorId = CuratorId;
+-class CuratorGroupId extends primitive_1.u64 {
++export class CuratorGroupId extends u64 {
+ }
+-exports.CuratorGroupId = CuratorGroupId;
+-class ChannelCategoryId extends primitive_1.u64 {
++export class ChannelCategoryId extends u64 {
+ }
+-exports.ChannelCategoryId = ChannelCategoryId;
+-class VideoId extends primitive_1.u64 {
++export class VideoId extends u64 {
+ }
+-exports.VideoId = VideoId;
+-class VideoCategoryId extends primitive_1.u64 {
++export class VideoCategoryId extends u64 {
+ }
+-exports.VideoCategoryId = VideoCategoryId;
+-class PlaylistId extends primitive_1.u64 {
++export class PlaylistId extends u64 {
+ }
+-exports.PlaylistId = PlaylistId;
+-class PersonId extends primitive_1.u64 {
++export class PersonId extends u64 {
+ }
+-exports.PersonId = PersonId;
+-class SeriesId extends primitive_1.u64 {
++export class SeriesId extends u64 {
+ }
+-exports.SeriesId = SeriesId;
+-class ChannelOwnershipTransferRequestId extends primitive_1.u64 {
++export class ChannelOwnershipTransferRequestId extends u64 {
+ }
+-exports.ChannelOwnershipTransferRequestId = ChannelOwnershipTransferRequestId;
+-class MaxNumber extends primitive_1.u32 {
++export class MaxNumber extends u32 {
+ }
+-exports.MaxNumber = MaxNumber;
+-class IsCensored extends primitive_1.bool {
++export class IsCensored extends bool {
+ }
+-exports.IsCensored = IsCensored;
+-class StorageAssets extends (0, common_1.JoyStructDecorated)({
+-    object_creation_list: types_1.Vec.with(storage_1.DataObjectCreationParameters),
+-    expected_data_size_fee: primitive_1.u128,
++export class StorageAssets extends JoyStructDecorated({
++    object_creation_list: Vec.with(DataObjectCreationParameters),
++    expected_data_size_fee: u128,
+ }) {
+ }
+-exports.StorageAssets = StorageAssets;
+-class CuratorGroup extends (0, common_1.JoyStructDecorated)({
+-    curators: types_1.BTreeSet.with(CuratorId),
+-    active: primitive_1.bool,
++export class CuratorGroup extends JoyStructDecorated({
++    curators: BTreeSet.with(CuratorId),
++    active: bool,
+ }) {
+ }
+-exports.CuratorGroup = CuratorGroup;
+-class ContentActor extends (0, common_1.JoyEnum)({
+-    Curator: types_1.Tuple.with([CuratorGroupId, CuratorId]),
+-    Member: members_1.MemberId,
+-    Lead: primitive_1.Null,
+-    Collaborator: members_1.MemberId,
++export class ContentActor extends JoyEnum({
++    Curator: Tuple.with([CuratorGroupId, CuratorId]),
++    Member: MemberId,
++    Lead: Null,
++    Collaborator: MemberId,
+ }) {
+ }
+-exports.ContentActor = ContentActor;
+-class ChannelOwner extends (0, common_1.JoyEnum)({
+-    Member: members_1.MemberId,
++export class ChannelOwner extends JoyEnum({
++    Member: MemberId,
+     Curators: CuratorGroupId,
+ }) {
+ }
+-exports.ChannelOwner = ChannelOwner;
+-class Channel extends (0, common_1.JoyStructDecorated)({
++export class Channel extends JoyStructDecorated({
+     owner: ChannelOwner,
+-    num_videos: primitive_1.u64,
+-    is_censored: primitive_1.bool,
+-    reward_account: types_1.Option.with(AccountId_1.GenericAccountId),
+-    collaborators: types_1.BTreeSet.with(members_1.MemberId),
++    num_videos: u64,
++    is_censored: bool,
++    reward_account: Option.with(AccountId),
++    collaborators: BTreeSet.with(MemberId),
+ }) {
+ }
+-exports.Channel = Channel;
+-class ChannelCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    assets: types_1.Option.with(StorageAssets),
+-    meta: types_1.Option.with(primitive_1.Bytes),
+-    reward_account: types_1.Option.with(AccountId_1.GenericAccountId),
+-    collaborators: types_1.BTreeSet.with(members_1.MemberId),
++export class ChannelCreationParameters extends JoyStructDecorated({
++    assets: Option.with(StorageAssets),
++    meta: Option.with(Bytes),
++    reward_account: Option.with(AccountId),
++    collaborators: BTreeSet.with(MemberId),
+ }) {
+ }
+-exports.ChannelCreationParameters = ChannelCreationParameters;
+-class ChannelUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    assets_to_upload: types_1.Option.with(StorageAssets),
+-    new_meta: types_1.Option.with(primitive_1.Bytes),
+-    reward_account: types_1.Option.with(types_1.Option.with(AccountId_1.GenericAccountId)),
+-    assets_to_remove: types_1.BTreeSet.with(storage_1.DataObjectId),
+-    collaborators: types_1.Option.with(types_1.BTreeSet.with(members_1.MemberId)),
++export class ChannelUpdateParameters extends JoyStructDecorated({
++    assets_to_upload: Option.with(StorageAssets),
++    new_meta: Option.with(Bytes),
++    reward_account: Option.with(Option.with(AccountId)),
++    assets_to_remove: BTreeSet.with(DataObjectId),
++    collaborators: Option.with(BTreeSet.with(MemberId)),
+ }) {
+ }
+-exports.ChannelUpdateParameters = ChannelUpdateParameters;
+-class ChannelOwnershipTransferRequest extends (0, common_1.JoyStructDecorated)({
+-    channel_id: common_1.ChannelId,
++export class ChannelOwnershipTransferRequest extends JoyStructDecorated({
++    channel_id: ChannelId,
+     new_owner: ChannelOwner,
+-    payment: primitive_1.u128,
+-    new_reward_account: types_1.Option.with(AccountId_1.GenericAccountId),
++    payment: u128,
++    new_reward_account: Option.with(AccountId),
+ }) {
+ }
+-exports.ChannelOwnershipTransferRequest = ChannelOwnershipTransferRequest;
+-class ChannelCategory extends (0, common_1.JoyStructDecorated)({
++export class ChannelCategory extends JoyStructDecorated({
+ // No runtime information is currently stored for a Category.
+ }) {
+ }
+-exports.ChannelCategory = ChannelCategory;
+-class ChannelCategoryCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    meta: primitive_1.Bytes,
++export class ChannelCategoryCreationParameters extends JoyStructDecorated({
++    meta: Bytes,
+ }) {
+ }
+-exports.ChannelCategoryCreationParameters = ChannelCategoryCreationParameters;
+-class ChannelCategoryUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    new_meta: primitive_1.Bytes,
++export class ChannelCategoryUpdateParameters extends JoyStructDecorated({
++    new_meta: Bytes,
+ }) {
+ }
+-exports.ChannelCategoryUpdateParameters = ChannelCategoryUpdateParameters;
+-class VideoCategory extends (0, common_1.JoyStructDecorated)({
++export class VideoCategory extends JoyStructDecorated({
+ // No runtime information is currently stored for a Category.
+ }) {
+ }
+-exports.VideoCategory = VideoCategory;
+-class VideoCategoryCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    meta: primitive_1.Bytes,
++export class VideoCategoryCreationParameters extends JoyStructDecorated({
++    meta: Bytes,
+ }) {
+ }
+-exports.VideoCategoryCreationParameters = VideoCategoryCreationParameters;
+-class VideoCategoryUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    new_meta: primitive_1.Bytes,
++export class VideoCategoryUpdateParameters extends JoyStructDecorated({
++    new_meta: Bytes,
+ }) {
+ }
+-exports.VideoCategoryUpdateParameters = VideoCategoryUpdateParameters;
+-class Video extends (0, common_1.JoyStructDecorated)({
+-    in_channel: common_1.ChannelId,
+-    in_series: types_1.Option.with(SeriesId),
+-    is_censored: primitive_1.bool,
++export class Video extends JoyStructDecorated({
++    in_channel: ChannelId,
++    in_series: Option.with(SeriesId),
++    is_censored: bool,
+ }) {
+ }
+-exports.Video = Video;
+-class VideoCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    assets: types_1.Option.with(StorageAssets),
+-    meta: types_1.Option.with(primitive_1.Bytes),
++export class VideoCreationParameters extends JoyStructDecorated({
++    assets: Option.with(StorageAssets),
++    meta: Option.with(Bytes),
+ }) {
+ }
+-exports.VideoCreationParameters = VideoCreationParameters;
+-class VideoUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    assets_to_upload: types_1.Option.with(StorageAssets),
+-    new_meta: types_1.Option.with(primitive_1.Bytes),
+-    assets_to_remove: types_1.BTreeSet.with(storage_1.DataObjectId),
++export class VideoUpdateParameters extends JoyStructDecorated({
++    assets_to_upload: Option.with(StorageAssets),
++    new_meta: Option.with(Bytes),
++    assets_to_remove: BTreeSet.with(DataObjectId),
+ }) {
+ }
+-exports.VideoUpdateParameters = VideoUpdateParameters;
+-class Playlist extends (0, common_1.JoyStructDecorated)({
+-    in_channel: common_1.ChannelId,
++export class Playlist extends JoyStructDecorated({
++    in_channel: ChannelId,
+ }) {
+ }
+-exports.Playlist = Playlist;
+-class PlaylistCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    meta: primitive_1.Bytes,
++export class PlaylistCreationParameters extends JoyStructDecorated({
++    meta: Bytes,
+ }) {
+ }
+-exports.PlaylistCreationParameters = PlaylistCreationParameters;
+-class PlaylistUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    new_meta: primitive_1.Bytes,
++export class PlaylistUpdateParameters extends JoyStructDecorated({
++    new_meta: Bytes,
+ }) {
+ }
+-exports.PlaylistUpdateParameters = PlaylistUpdateParameters;
+-class EpisodeParemters extends (0, common_1.JoyEnum)({
++export class EpisodeParemters extends JoyEnum({
+     NewVideo: VideoCreationParameters,
+     ExistingVideo: VideoId,
+ }) {
+ }
+-exports.EpisodeParemters = EpisodeParemters;
+-class Season extends (0, common_1.JoyStructDecorated)({
+-    episodes: types_1.Vec.with(VideoId),
++export class Season extends JoyStructDecorated({
++    episodes: Vec.with(VideoId),
+ }) {
+ }
+-exports.Season = Season;
+-class SeasonParameters extends (0, common_1.JoyStructDecorated)({
+-    assets: types_1.Option.with(StorageAssets),
+-    episodes: types_1.Option.with(types_1.Vec.with(types_1.Option.with(EpisodeParemters))),
+-    meta: types_1.Option.with(primitive_1.Bytes),
++export class SeasonParameters extends JoyStructDecorated({
++    assets: Option.with(StorageAssets),
++    episodes: Option.with(Vec.with(Option.with(EpisodeParemters))),
++    meta: Option.with(Bytes),
+ }) {
+ }
+-exports.SeasonParameters = SeasonParameters;
+-class Series extends (0, common_1.JoyStructDecorated)({
+-    in_channel: common_1.ChannelId,
+-    seasons: types_1.Vec.with(Season),
++export class Series extends JoyStructDecorated({
++    in_channel: ChannelId,
++    seasons: Vec.with(Season),
+ }) {
+ }
+-exports.Series = Series;
+-class SeriesParameters extends (0, common_1.JoyStructDecorated)({
+-    assets: types_1.Option.with(StorageAssets),
+-    seasons: types_1.Option.with(types_1.Vec.with(types_1.Option.with(SeasonParameters))),
+-    meta: types_1.Option.with(primitive_1.Bytes),
++export class SeriesParameters extends JoyStructDecorated({
++    assets: Option.with(StorageAssets),
++    seasons: Option.with(Vec.with(Option.with(SeasonParameters))),
++    meta: Option.with(Bytes),
+ }) {
+ }
+-exports.SeriesParameters = SeriesParameters;
+-class PersonController extends (0, common_1.JoyEnum)({
+-    Member: members_1.MemberId,
+-    Curators: primitive_1.Null,
++export class PersonController extends JoyEnum({
++    Member: MemberId,
++    Curators: Null,
+ }) {
+ }
+-exports.PersonController = PersonController;
+-class Person extends (0, common_1.JoyStructDecorated)({
++export class Person extends JoyStructDecorated({
+     controlled_by: PersonController,
+ }) {
+ }
+-exports.Person = Person;
+-class PersonCreationParameters extends (0, common_1.JoyStructDecorated)({
++export class PersonCreationParameters extends JoyStructDecorated({
+     assets: StorageAssets,
+-    meta: primitive_1.Bytes,
++    meta: Bytes,
+ }) {
+ }
+-exports.PersonCreationParameters = PersonCreationParameters;
+-class PersonUpdateParameters extends (0, common_1.JoyStructDecorated)({
+-    assets: types_1.Option.with(StorageAssets),
+-    meta: types_1.Option.with(primitive_1.Bytes),
++export class PersonUpdateParameters extends JoyStructDecorated({
++    assets: Option.with(StorageAssets),
++    meta: Option.with(Bytes),
+ }) {
+ }
+-exports.PersonUpdateParameters = PersonUpdateParameters;
+-class PersonActor extends (0, common_1.JoyEnum)({
+-    Member: members_1.MemberId,
++export class PersonActor extends JoyEnum({
++    Member: MemberId,
+     Curator: CuratorId,
+ }) {
+ }
+-exports.PersonActor = PersonActor;
+-class VideoMigrationConfig extends (0, common_1.JoyStructDecorated)({
++export class VideoMigrationConfig extends JoyStructDecorated({
+     current_id: VideoId,
+     final_id: VideoId,
+ }) {
+ }
+-exports.VideoMigrationConfig = VideoMigrationConfig;
+-class ChannelMigrationConfig extends (0, common_1.JoyStructDecorated)({
+-    current_id: common_1.ChannelId,
+-    final_id: common_1.ChannelId,
++export class ChannelMigrationConfig extends JoyStructDecorated({
++    current_id: ChannelId,
++    final_id: ChannelId,
+ }) {
+ }
+-exports.ChannelMigrationConfig = ChannelMigrationConfig;
+-exports.contentTypes = {
++export const contentTypes = {
+     CuratorId,
+     CuratorGroupId,
+     CuratorGroup,
+@@ -282,4 +236,4 @@ exports.contentTypes = {
+     VideoMigrationConfig,
+     ChannelMigrationConfig,
+ };
+-exports.default = exports.contentTypes;
++export default contentTypes;
+diff --git a/council/index.js b/council/index.js
+index 4b103bc39794064d514cff270a867af33d945c5c..89219e8475020b8488e1d32c60ecfaa3bb21e4f3 100644
+--- a/council/index.js
++++ b/council/index.js
+@@ -1,81 +1,66 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.councilTypes = exports.ElectionParameters = exports.ElectionStage = exports.Revealing = exports.Voting = exports.Announcing = exports.SealedVote = exports.Seats = exports.Seat = exports.Backers = exports.Backer = exports.ElectionStake = exports.TransferableStake = void 0;
+-const codec_1 = require("@polkadot/types/codec");
+-const types_1 = require("@polkadot/types");
+-const primitive_1 = require("@polkadot/types/primitive");
+-const JoyStruct_1 = require("../JoyStruct");
+-const JoyEnum_1 = require("../JoyEnum");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-const common_1 = require("../common");
+-class TransferableStake extends (0, JoyStruct_1.JoyStructDecorated)({
+-    seat: primitive_1.u128,
+-    backing: primitive_1.u128,
++import { Option } from '@polkadot/types/codec';
++import { Vec } from '@polkadot/types';
++import { u32, u128 } from '@polkadot/types/primitive';
++import { JoyStructDecorated } from '../JoyStruct';
++import { JoyEnum } from '../JoyEnum';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++import { Hash } from '../common';
++export class TransferableStake extends JoyStructDecorated({
++    seat: u128,
++    backing: u128,
+ }) {
+ }
+-exports.TransferableStake = TransferableStake;
+-class ElectionStake extends (0, JoyStruct_1.JoyStructDecorated)({
+-    new: primitive_1.u128,
+-    transferred: primitive_1.u128,
++export class ElectionStake extends JoyStructDecorated({
++    new: u128,
++    transferred: u128,
+ }) {
+ }
+-exports.ElectionStake = ElectionStake;
+-class Backer extends (0, JoyStruct_1.JoyStructDecorated)({
+-    member: AccountId_1.GenericAccountId,
+-    stake: primitive_1.u128, // Balance
++export class Backer extends JoyStructDecorated({
++    member: AccountId,
++    stake: u128, // Balance
+ }) {
+ }
+-exports.Backer = Backer;
+-class Backers extends types_1.Vec.with(Backer) {
++export class Backers extends Vec.with(Backer) {
+ }
+-exports.Backers = Backers;
+-class Seat extends (0, JoyStruct_1.JoyStructDecorated)({
+-    member: AccountId_1.GenericAccountId,
+-    stake: primitive_1.u128,
++export class Seat extends JoyStructDecorated({
++    member: AccountId,
++    stake: u128,
+     backers: Backers,
+ }) {
+ }
+-exports.Seat = Seat;
+-class Seats extends types_1.Vec.with(Seat) {
++export class Seats extends Vec.with(Seat) {
+ }
+-exports.Seats = Seats;
+-class SealedVote extends (0, JoyStruct_1.JoyStructDecorated)({
+-    voter: AccountId_1.GenericAccountId,
+-    commitment: common_1.Hash,
++export class SealedVote extends JoyStructDecorated({
++    voter: AccountId,
++    commitment: Hash,
+     stake: ElectionStake,
+-    vote: codec_1.Option.with(AccountId_1.GenericAccountId),
++    vote: Option.with(AccountId),
+ }) {
+ }
+-exports.SealedVote = SealedVote;
+-class Announcing extends primitive_1.u32 {
++export class Announcing extends u32 {
+ }
+-exports.Announcing = Announcing;
+-class Voting extends primitive_1.u32 {
++export class Voting extends u32 {
+ }
+-exports.Voting = Voting;
+-class Revealing extends primitive_1.u32 {
++export class Revealing extends u32 {
+ }
+-exports.Revealing = Revealing;
+-class ElectionStage extends (0, JoyEnum_1.JoyEnum)({
++export class ElectionStage extends JoyEnum({
+     Announcing,
+     Voting,
+     Revealing,
+ }) {
+ }
+-exports.ElectionStage = ElectionStage;
+-class ElectionParameters extends (0, JoyStruct_1.JoyStructDecorated)({
+-    announcing_period: primitive_1.u32,
+-    voting_period: primitive_1.u32,
+-    revealing_period: primitive_1.u32,
+-    council_size: primitive_1.u32,
+-    candidacy_limit: primitive_1.u32,
+-    new_term_duration: primitive_1.u32,
+-    min_council_stake: primitive_1.u128,
+-    min_voting_stake: primitive_1.u128, // Balance
++export class ElectionParameters extends JoyStructDecorated({
++    announcing_period: u32,
++    voting_period: u32,
++    revealing_period: u32,
++    council_size: u32,
++    candidacy_limit: u32,
++    new_term_duration: u32,
++    min_council_stake: u128,
++    min_voting_stake: u128, // Balance
+ }) {
+ }
+-exports.ElectionParameters = ElectionParameters;
+-exports.councilTypes = {
++export const councilTypes = {
+     ElectionStage,
+     ElectionStake,
+     SealedVote,
+@@ -86,4 +71,4 @@ exports.councilTypes = {
+     Backer,
+     Backers,
+ };
+-exports.default = exports.councilTypes;
++export default councilTypes;
+diff --git a/forum.js b/forum.js
+index dabda4312346b3ed3633b229f0cb1f6219e87d3c..c5754d9822148c82e0b51a2ef1d51acb4b59ce33 100644
+--- a/forum.js
++++ b/forum.js
+@@ -1,13 +1,10 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.forumTypes = exports.Reply = exports.Post = exports.Thread = exports.Category = exports.OptionChildPositionInParentCategory = exports.ChildPositionInParentCategory = exports.VecReplyId = exports.ReplyId = exports.VecPostId = exports.VecThreadId = exports.VecCategoryId = exports.OptionCategoryId = exports.CategoryId = exports.OptionModerationAction = exports.VecPostTextChange = exports.PostTextChange = exports.ModerationAction = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("./common");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-class ModerationAction extends (0, common_1.JoyStructCustom)({
+-    moderated_at: common_1.BlockAndTime,
+-    moderator_id: AccountId_1.GenericAccountId,
+-    rationale: types_1.Text,
++import { bool, u32, u64, Text, Option, Vec as Vector } from '@polkadot/types';
++import { BlockAndTime, ThreadId, PostId, JoyStructCustom, JoyStructDecorated } from './common';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++export class ModerationAction extends JoyStructCustom({
++    moderated_at: BlockAndTime,
++    moderator_id: AccountId,
++    rationale: Text,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+     get moderated_at() {
+@@ -20,10 +17,9 @@ class ModerationAction extends (0, common_1.JoyStructCustom)({
+         return this.getString('rationale');
+     }
+ }
+-exports.ModerationAction = ModerationAction;
+-class PostTextChange extends (0, common_1.JoyStructCustom)({
+-    expired_at: common_1.BlockAndTime,
+-    text: types_1.Text,
++export class PostTextChange extends JoyStructCustom({
++    expired_at: BlockAndTime,
++    text: Text,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+     get expired_at() {
+@@ -33,56 +29,44 @@ class PostTextChange extends (0, common_1.JoyStructCustom)({
+         return this.getString('text');
+     }
+ }
+-exports.PostTextChange = PostTextChange;
+-class VecPostTextChange extends types_1.Vec.with(PostTextChange) {
++export class VecPostTextChange extends Vector.with(PostTextChange) {
+ }
+-exports.VecPostTextChange = VecPostTextChange;
+-class OptionModerationAction extends types_1.Option.with(ModerationAction) {
++export class OptionModerationAction extends Option.with(ModerationAction) {
+ }
+-exports.OptionModerationAction = OptionModerationAction;
+-class CategoryId extends types_1.u64 {
++export class CategoryId extends u64 {
+ }
+-exports.CategoryId = CategoryId;
+-class OptionCategoryId extends types_1.Option.with(CategoryId) {
++export class OptionCategoryId extends Option.with(CategoryId) {
+ }
+-exports.OptionCategoryId = OptionCategoryId;
+-class VecCategoryId extends types_1.Vec.with(CategoryId) {
++export class VecCategoryId extends Vector.with(CategoryId) {
+ }
+-exports.VecCategoryId = VecCategoryId;
+-class VecThreadId extends types_1.Vec.with(common_1.ThreadId) {
++export class VecThreadId extends Vector.with(ThreadId) {
+ }
+-exports.VecThreadId = VecThreadId;
+-class VecPostId extends types_1.Vec.with(common_1.PostId) {
++export class VecPostId extends Vector.with(PostId) {
+ }
+-exports.VecPostId = VecPostId;
+ // TODO deprectated: replaced w/ PostId
+-class ReplyId extends types_1.u64 {
++export class ReplyId extends u64 {
+ }
+-exports.ReplyId = ReplyId;
+-class VecReplyId extends types_1.Vec.with(ReplyId) {
++export class VecReplyId extends Vector.with(ReplyId) {
+ }
+-exports.VecReplyId = VecReplyId;
+-class ChildPositionInParentCategory extends (0, common_1.JoyStructDecorated)({
++export class ChildPositionInParentCategory extends JoyStructDecorated({
+     parent_id: CategoryId,
+-    child_nr_in_parent_category: types_1.u32,
++    child_nr_in_parent_category: u32,
+ }) {
+ }
+-exports.ChildPositionInParentCategory = ChildPositionInParentCategory;
+-class OptionChildPositionInParentCategory extends types_1.Option.with(ChildPositionInParentCategory) {
++export class OptionChildPositionInParentCategory extends Option.with(ChildPositionInParentCategory) {
+ }
+-exports.OptionChildPositionInParentCategory = OptionChildPositionInParentCategory;
+-class Category extends (0, common_1.JoyStructCustom)({
++export class Category extends JoyStructCustom({
+     id: CategoryId,
+-    title: types_1.Text,
+-    description: types_1.Text,
+-    created_at: common_1.BlockAndTime,
+-    deleted: types_1.bool,
+-    archived: types_1.bool,
+-    num_direct_subcategories: types_1.u32,
+-    num_direct_unmoderated_threads: types_1.u32,
+-    num_direct_moderated_threads: types_1.u32,
++    title: Text,
++    description: Text,
++    created_at: BlockAndTime,
++    deleted: bool,
++    archived: bool,
++    num_direct_subcategories: u32,
++    num_direct_unmoderated_threads: u32,
++    num_direct_moderated_threads: u32,
+     position_in_parent_category: OptionChildPositionInParentCategory,
+-    moderator_id: AccountId_1.GenericAccountId,
++    moderator_id: AccountId,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+     get id() {
+@@ -139,17 +123,16 @@ class Category extends (0, common_1.JoyStructCustom)({
+         return this.getField('moderator_id');
+     }
+ }
+-exports.Category = Category;
+-class Thread extends (0, common_1.JoyStructCustom)({
+-    id: common_1.ThreadId,
+-    title: types_1.Text,
++export class Thread extends JoyStructCustom({
++    id: ThreadId,
++    title: Text,
+     category_id: CategoryId,
+-    nr_in_category: types_1.u32,
++    nr_in_category: u32,
+     moderation: OptionModerationAction,
+-    num_unmoderated_posts: types_1.u32,
+-    num_moderated_posts: types_1.u32,
+-    created_at: common_1.BlockAndTime,
+-    author_id: AccountId_1.GenericAccountId,
++    num_unmoderated_posts: u32,
++    num_moderated_posts: u32,
++    created_at: BlockAndTime,
++    author_id: AccountId,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+     get id() {
+@@ -186,17 +169,16 @@ class Thread extends (0, common_1.JoyStructCustom)({
+         return this.getField('author_id');
+     }
+ }
+-exports.Thread = Thread;
+ // TODO deprectated: replaced w/ Post
+-class Post extends (0, common_1.JoyStructCustom)({
+-    id: common_1.PostId,
+-    thread_id: common_1.ThreadId,
+-    nr_in_thread: types_1.u32,
+-    current_text: types_1.Text,
++export class Post extends JoyStructCustom({
++    id: PostId,
++    thread_id: ThreadId,
++    nr_in_thread: u32,
++    current_text: Text,
+     moderation: OptionModerationAction,
+     text_change_history: VecPostTextChange,
+-    created_at: common_1.BlockAndTime,
+-    author_id: AccountId_1.GenericAccountId,
++    created_at: BlockAndTime,
++    author_id: AccountId,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+     get id() {
+@@ -227,12 +209,11 @@ class Post extends (0, common_1.JoyStructCustom)({
+         return this.getField('author_id');
+     }
+ }
+-exports.Post = Post;
+ // TODO deprectated: replaced w/ Post
+-class Reply extends (0, common_1.JoyStructCustom)({
+-    owner: AccountId_1.GenericAccountId,
+-    thread_id: common_1.ThreadId,
+-    text: types_1.Text,
++export class Reply extends JoyStructCustom({
++    owner: AccountId,
++    thread_id: ThreadId,
++    text: Text,
+     moderation: OptionModerationAction,
+ }) {
+     // FIXME: Make it JoyStructDecorated compatible
+@@ -252,8 +233,7 @@ class Reply extends (0, common_1.JoyStructCustom)({
+         return this.moderation !== null;
+     }
+ }
+-exports.Reply = Reply;
+-exports.forumTypes = {
++export const forumTypes = {
+     PostTextChange,
+     ModerationAction,
+     ChildPositionInParentCategory,
+@@ -264,4 +244,4 @@ exports.forumTypes = {
+     ReplyId,
+     Reply,
+ };
+-exports.default = exports.forumTypes;
++export default forumTypes;
+diff --git a/hiring/index.js b/hiring/index.js
+index a58f7f9543ebf8832021ddc449d897f53b8ccad7..606773dd57a50f81d78ca413749211f268e5a142 100644
+--- a/hiring/index.js
++++ b/hiring/index.js
+@@ -1,58 +1,28 @@
+-"use strict";
+-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+-    if (k2 === undefined) k2 = k;
+-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+-}) : (function(o, m, k, k2) {
+-    if (k2 === undefined) k2 = k;
+-    o[k2] = m[k];
+-}));
+-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+-    Object.defineProperty(o, "default", { enumerable: true, value: v });
+-}) : function(o, v) {
+-    o["default"] = v;
+-});
+-var __importStar = (this && this.__importStar) || function (mod) {
+-    if (mod && mod.__esModule) return mod;
+-    var result = {};
+-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+-    __setModuleDefault(result, mod);
+-    return result;
+-};
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.hiringTypes = exports.Application = exports.Opening = exports.schemaValidator = exports.StakingPolicy = exports.StakingAmountLimitMode = exports.StakingAmountLimitModeDef = exports.StakingAmountLimitModeKeys = exports.OpeningStage = exports.OpeningStageDef = exports.OpeningStageKeys = exports.ActiveOpeningStageVariant = exports.ActiveOpeningStage = exports.ActiveOpeningStageDef = exports.Deactivated = exports.ReviewPeriod = exports.AcceptingApplications = exports.OpeningDeactivationCause = exports.OpeningDeactivationCauseKeys = exports.WaitingToBeingOpeningStageVariant = exports.ApplicationRationingPolicy = exports.ApplicationStage = exports.ApplicationStageDef = exports.ApplicationStageKeys = exports.ActiveApplicationStage = exports.InactiveApplicationStage = exports.UnstakingApplicationStage = exports.ApplicationDeactivationCause = exports.ApplicationDeactivationCauseKeys = exports.ActivateOpeningAt = exports.ActivateOpeningAtKeys = exports.ActivateOpeningAtDef = exports.ExactBlock = exports.CurrentBlock = exports.OpeningId = exports.ApplicationId = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("../common");
+-const stake_1 = require("../stake");
+-const ajv_1 = __importDefault(require("ajv"));
+-const role_schema_json = __importStar(require("./schemas/role.schema.json"));
+-class ApplicationId extends types_1.u64 {
++import { Null, u128, u64, u32, Option, Text, BTreeSet } from '@polkadot/types';
++import { JoyEnum, JoyStructDecorated } from '../common';
++import { StakeId } from '../stake';
++import Ajv from 'ajv';
++import * as role_schema_json from './schemas/role.schema.json';
++export class ApplicationId extends u64 {
+ }
+-exports.ApplicationId = ApplicationId;
+-class OpeningId extends types_1.u64 {
++export class OpeningId extends u64 {
+ }
+-exports.OpeningId = OpeningId;
+-class CurrentBlock extends types_1.Null {
++export class CurrentBlock extends Null {
+ }
+-exports.CurrentBlock = CurrentBlock;
+-class ExactBlock extends types_1.u32 {
++export class ExactBlock extends u32 {
+ } // BlockNumber
+-exports.ExactBlock = ExactBlock;
+-exports.ActivateOpeningAtDef = {
++export const ActivateOpeningAtDef = {
+     CurrentBlock,
+     ExactBlock,
+ };
+-exports.ActivateOpeningAtKeys = {
++export const ActivateOpeningAtKeys = {
+     CurrentBlock: 'CurrentBlock',
+     ExactBlock: 'ExactBlock',
+ };
+-class ActivateOpeningAt extends (0, common_1.JoyEnum)(exports.ActivateOpeningAtDef) {
++export class ActivateOpeningAt extends JoyEnum(ActivateOpeningAtDef) {
+ }
+-exports.ActivateOpeningAt = ActivateOpeningAt;
+ // FIXME: Replace usages with isOfType, asType wherever possible
+-var ApplicationDeactivationCauseKeys;
++export var ApplicationDeactivationCauseKeys;
+ (function (ApplicationDeactivationCauseKeys) {
+     ApplicationDeactivationCauseKeys["External"] = "External";
+     ApplicationDeactivationCauseKeys["Hired"] = "Hired";
+@@ -61,153 +31,137 @@ var ApplicationDeactivationCauseKeys;
+     ApplicationDeactivationCauseKeys["OpeningCancelled"] = "OpeningCancelled";
+     ApplicationDeactivationCauseKeys["ReviewPeriodExpired"] = "ReviewPeriodExpired";
+     ApplicationDeactivationCauseKeys["OpeningFilled"] = "OpeningFilled";
+-})(ApplicationDeactivationCauseKeys = exports.ApplicationDeactivationCauseKeys || (exports.ApplicationDeactivationCauseKeys = {}));
++})(ApplicationDeactivationCauseKeys || (ApplicationDeactivationCauseKeys = {}));
+ const ApplicationDeactivationCauseDef = {
+-    External: types_1.Null,
+-    Hired: types_1.Null,
+-    NotHired: types_1.Null,
+-    CrowdedOut: types_1.Null,
+-    OpeningCancelled: types_1.Null,
+-    ReviewPeriodExpired: types_1.Null,
+-    OpeningFilled: types_1.Null,
++    External: Null,
++    Hired: Null,
++    NotHired: Null,
++    CrowdedOut: Null,
++    OpeningCancelled: Null,
++    ReviewPeriodExpired: Null,
++    OpeningFilled: Null,
+ };
+-class ApplicationDeactivationCause extends (0, common_1.JoyEnum)(ApplicationDeactivationCauseDef) {
++export class ApplicationDeactivationCause extends JoyEnum(ApplicationDeactivationCauseDef) {
+ }
+-exports.ApplicationDeactivationCause = ApplicationDeactivationCause;
+-class UnstakingApplicationStage extends (0, common_1.JoyStructDecorated)({
+-    deactivation_initiated: types_1.u32,
++export class UnstakingApplicationStage extends JoyStructDecorated({
++    deactivation_initiated: u32,
+     cause: ApplicationDeactivationCause,
+ }) {
+ }
+-exports.UnstakingApplicationStage = UnstakingApplicationStage;
+-class InactiveApplicationStage extends (0, common_1.JoyStructDecorated)({
+-    deactivation_initiated: types_1.u32,
+-    deactivated: types_1.u32,
++export class InactiveApplicationStage extends JoyStructDecorated({
++    deactivation_initiated: u32,
++    deactivated: u32,
+     cause: ApplicationDeactivationCause,
+ }) {
+ }
+-exports.InactiveApplicationStage = InactiveApplicationStage;
+-class ActiveApplicationStage extends types_1.Null {
++export class ActiveApplicationStage extends Null {
+ }
+-exports.ActiveApplicationStage = ActiveApplicationStage;
+ // FIXME: Replace usages with isOfType, asType wherever possible
+-var ApplicationStageKeys;
++export var ApplicationStageKeys;
+ (function (ApplicationStageKeys) {
+     ApplicationStageKeys["Active"] = "Active";
+     ApplicationStageKeys["Unstaking"] = "Unstaking";
+     ApplicationStageKeys["Inactive"] = "Inactive";
+-})(ApplicationStageKeys = exports.ApplicationStageKeys || (exports.ApplicationStageKeys = {}));
+-exports.ApplicationStageDef = {
++})(ApplicationStageKeys || (ApplicationStageKeys = {}));
++export const ApplicationStageDef = {
+     Active: ActiveApplicationStage,
+     Unstaking: UnstakingApplicationStage,
+     Inactive: InactiveApplicationStage,
+ };
+-class ApplicationStage extends (0, common_1.JoyEnum)(exports.ApplicationStageDef) {
++export class ApplicationStage extends JoyEnum(ApplicationStageDef) {
+ }
+-exports.ApplicationStage = ApplicationStage;
+-class ApplicationRationingPolicy extends (0, common_1.JoyStructDecorated)({
+-    max_active_applicants: types_1.u32,
++export class ApplicationRationingPolicy extends JoyStructDecorated({
++    max_active_applicants: u32,
+ }) {
+ }
+-exports.ApplicationRationingPolicy = ApplicationRationingPolicy;
+-class WaitingToBeingOpeningStageVariant extends (0, common_1.JoyStructDecorated)({
+-    begins_at_block: types_1.u32,
++export class WaitingToBeingOpeningStageVariant extends JoyStructDecorated({
++    begins_at_block: u32,
+ }) {
+ }
+-exports.WaitingToBeingOpeningStageVariant = WaitingToBeingOpeningStageVariant;
+ // FIXME: Replace usages with isOfType, asType wherever possible
+-var OpeningDeactivationCauseKeys;
++export var OpeningDeactivationCauseKeys;
+ (function (OpeningDeactivationCauseKeys) {
+     OpeningDeactivationCauseKeys["CancelledBeforeActivation"] = "CancelledBeforeActivation";
+     OpeningDeactivationCauseKeys["CancelledAcceptingApplications"] = "CancelledAcceptingApplications";
+     OpeningDeactivationCauseKeys["CancelledInReviewPeriod"] = "CancelledInReviewPeriod";
+     OpeningDeactivationCauseKeys["ReviewPeriodExpired"] = "ReviewPeriodExpired";
+     OpeningDeactivationCauseKeys["Filled"] = "Filled";
+-})(OpeningDeactivationCauseKeys = exports.OpeningDeactivationCauseKeys || (exports.OpeningDeactivationCauseKeys = {}));
++})(OpeningDeactivationCauseKeys || (OpeningDeactivationCauseKeys = {}));
+ const OpeningDeactivationCauseDef = {
+-    CancelledBeforeActivation: types_1.Null,
+-    CancelledAcceptingApplications: types_1.Null,
+-    CancelledInReviewPeriod: types_1.Null,
+-    ReviewPeriodExpired: types_1.Null,
+-    Filled: types_1.Null,
++    CancelledBeforeActivation: Null,
++    CancelledAcceptingApplications: Null,
++    CancelledInReviewPeriod: Null,
++    ReviewPeriodExpired: Null,
++    Filled: Null,
+ };
+-class OpeningDeactivationCause extends (0, common_1.JoyEnum)(OpeningDeactivationCauseDef) {
++export class OpeningDeactivationCause extends JoyEnum(OpeningDeactivationCauseDef) {
+ }
+-exports.OpeningDeactivationCause = OpeningDeactivationCause;
+-class AcceptingApplications extends (0, common_1.JoyStructDecorated)({
+-    started_accepting_applicants_at_block: types_1.u32,
++export class AcceptingApplications extends JoyStructDecorated({
++    started_accepting_applicants_at_block: u32,
+ }) {
+ }
+-exports.AcceptingApplications = AcceptingApplications;
+-class ReviewPeriod extends (0, common_1.JoyStructDecorated)({
+-    started_accepting_applicants_at_block: types_1.u32,
+-    started_review_period_at_block: types_1.u32,
++export class ReviewPeriod extends JoyStructDecorated({
++    started_accepting_applicants_at_block: u32,
++    started_review_period_at_block: u32,
+ }) {
+ }
+-exports.ReviewPeriod = ReviewPeriod;
+-class Deactivated extends (0, common_1.JoyStructDecorated)({
++export class Deactivated extends JoyStructDecorated({
+     cause: OpeningDeactivationCause,
+-    deactivated_at_block: types_1.u32,
+-    started_accepting_applicants_at_block: types_1.u32,
+-    started_review_period_at_block: types_1.Option.with(types_1.u32),
++    deactivated_at_block: u32,
++    started_accepting_applicants_at_block: u32,
++    started_review_period_at_block: Option.with(u32),
+ }) {
+ }
+-exports.Deactivated = Deactivated;
+-exports.ActiveOpeningStageDef = {
++export const ActiveOpeningStageDef = {
+     AcceptingApplications: AcceptingApplications,
+     ReviewPeriod: ReviewPeriod,
+     Deactivated: Deactivated,
+ };
+-class ActiveOpeningStage extends (0, common_1.JoyEnum)(exports.ActiveOpeningStageDef) {
++export class ActiveOpeningStage extends JoyEnum(ActiveOpeningStageDef) {
+ }
+-exports.ActiveOpeningStage = ActiveOpeningStage;
+-class ActiveOpeningStageVariant extends (0, common_1.JoyStructDecorated)({
++export class ActiveOpeningStageVariant extends JoyStructDecorated({
+     stage: ActiveOpeningStage,
+-    applications_added: types_1.BTreeSet.with(ApplicationId),
+-    active_application_count: types_1.u32,
+-    unstaking_application_count: types_1.u32,
+-    deactivated_application_count: types_1.u32,
++    applications_added: BTreeSet.with(ApplicationId),
++    active_application_count: u32,
++    unstaking_application_count: u32,
++    deactivated_application_count: u32,
+ }) {
+     get is_active() {
+         return this.stage.isOfType('AcceptingApplications');
+     }
+ }
+-exports.ActiveOpeningStageVariant = ActiveOpeningStageVariant;
+ // FIXME: Replace usages with isOfType, asType wherever possible
+-var OpeningStageKeys;
++export var OpeningStageKeys;
+ (function (OpeningStageKeys) {
+     OpeningStageKeys["WaitingToBegin"] = "WaitingToBegin";
+     OpeningStageKeys["Active"] = "Active";
+-})(OpeningStageKeys = exports.OpeningStageKeys || (exports.OpeningStageKeys = {}));
+-exports.OpeningStageDef = {
++})(OpeningStageKeys || (OpeningStageKeys = {}));
++export const OpeningStageDef = {
+     WaitingToBegin: WaitingToBeingOpeningStageVariant,
+     Active: ActiveOpeningStageVariant,
+ };
+-class OpeningStage extends (0, common_1.JoyEnum)(exports.OpeningStageDef) {
++export class OpeningStage extends JoyEnum(OpeningStageDef) {
+ }
+-exports.OpeningStage = OpeningStage;
+ // FIXME: Replace usages with isOfType, asType wherever possible
+-var StakingAmountLimitModeKeys;
++export var StakingAmountLimitModeKeys;
+ (function (StakingAmountLimitModeKeys) {
+     StakingAmountLimitModeKeys["AtLeast"] = "AtLeast";
+     StakingAmountLimitModeKeys["Exact"] = "Exact";
+-})(StakingAmountLimitModeKeys = exports.StakingAmountLimitModeKeys || (exports.StakingAmountLimitModeKeys = {}));
+-exports.StakingAmountLimitModeDef = {
+-    AtLeast: types_1.Null,
+-    Exact: types_1.Null,
++})(StakingAmountLimitModeKeys || (StakingAmountLimitModeKeys = {}));
++export const StakingAmountLimitModeDef = {
++    AtLeast: Null,
++    Exact: Null,
+ };
+-class StakingAmountLimitMode extends (0, common_1.JoyEnum)(exports.StakingAmountLimitModeDef) {
++export class StakingAmountLimitMode extends JoyEnum(StakingAmountLimitModeDef) {
+ }
+-exports.StakingAmountLimitMode = StakingAmountLimitMode;
+-class StakingPolicy extends (0, common_1.JoyStructDecorated)({
+-    amount: types_1.u128,
++export class StakingPolicy extends JoyStructDecorated({
++    amount: u128,
+     amount_mode: StakingAmountLimitMode,
+-    crowded_out_unstaking_period_length: types_1.Option.with(types_1.u32),
+-    review_period_expired_unstaking_period_length: types_1.Option.with(types_1.u32),
++    crowded_out_unstaking_period_length: Option.with(u32),
++    review_period_expired_unstaking_period_length: Option.with(u32),
+ }) {
+ }
+-exports.StakingPolicy = StakingPolicy;
+-exports.schemaValidator = new ajv_1.default({ allErrors: true }).compile(role_schema_json);
++export const schemaValidator = new Ajv({ allErrors: true }).compile(role_schema_json);
+ function openingHRTFallback(title = 'Working Group Opening', description = '') {
+     return {
+         version: 1,
+@@ -225,14 +179,14 @@ function openingHRTFallback(title = 'Working Group Opening', description = '') {
+         },
+     };
+ }
+-class Opening extends (0, common_1.JoyStructDecorated)({
+-    created: types_1.u32,
++export class Opening extends JoyStructDecorated({
++    created: u32,
+     stage: OpeningStage,
+-    max_review_period_length: types_1.u32,
+-    application_rationing_policy: types_1.Option.with(ApplicationRationingPolicy),
+-    application_staking_policy: types_1.Option.with(StakingPolicy),
+-    role_staking_policy: types_1.Option.with(StakingPolicy),
+-    human_readable_text: types_1.Text, // Vec.with(u8),
++    max_review_period_length: u32,
++    application_rationing_policy: Option.with(ApplicationRationingPolicy),
++    application_staking_policy: Option.with(StakingPolicy),
++    role_staking_policy: Option.with(StakingPolicy),
++    human_readable_text: Text, // Vec.with(u8),
+ }) {
+     parse_human_readable_text() {
+         const hrt = this.human_readable_text;
+@@ -242,10 +196,10 @@ class Opening extends (0, common_1.JoyStructDecorated)({
+         const str = hrt.toString();
+         try {
+             const obj = JSON.parse(str);
+-            if ((0, exports.schemaValidator)(obj) === true) {
++            if (schemaValidator(obj) === true) {
+                 return obj;
+             }
+-            console.log('parse_human_readable_text JSON schema validation failed:', exports.schemaValidator.errors);
++            console.log('parse_human_readable_text JSON schema validation failed:', schemaValidator.errors);
+         }
+         catch (e) {
+             console.log('parse_human_readable_text JSON schema validation failed:', e instanceof Error ? e.toString() : e);
+@@ -276,19 +230,17 @@ class Opening extends (0, common_1.JoyStructDecorated)({
+         return false;
+     }
+ }
+-exports.Opening = Opening;
+-class Application extends (0, common_1.JoyStructDecorated)({
++export class Application extends JoyStructDecorated({
+     opening_id: OpeningId,
+-    application_index_in_opening: types_1.u32,
+-    add_to_opening_in_block: types_1.u32,
+-    active_role_staking_id: types_1.Option.with(stake_1.StakeId),
+-    active_application_staking_id: types_1.Option.with(stake_1.StakeId),
++    application_index_in_opening: u32,
++    add_to_opening_in_block: u32,
++    active_role_staking_id: Option.with(StakeId),
++    active_application_staking_id: Option.with(StakeId),
+     stage: ApplicationStage,
+-    human_readable_text: types_1.Text,
++    human_readable_text: Text,
+ }) {
+ }
+-exports.Application = Application;
+-exports.hiringTypes = {
++export const hiringTypes = {
+     ApplicationId,
+     OpeningId,
+     Application,
+@@ -311,4 +263,4 @@ exports.hiringTypes = {
+     ApplicationDeactivationCause,
+     StakingAmountLimitMode,
+ };
+-exports.default = exports.hiringTypes;
++export default hiringTypes;
+diff --git a/hiring/schemas/role.schema.typings.js b/hiring/schemas/role.schema.typings.js
+index 5383a370094cdf776e6fc467d970cdd536468f4d..284fca28184d8ecbf11cf13ea3675adf409d5917 100644
+--- a/hiring/schemas/role.schema.typings.js
++++ b/hiring/schemas/role.schema.typings.js
+@@ -1,8 +1,7 @@
+-"use strict";
+ /* tslint:disable */
+ /**
+  * This file was automatically generated by json-schema-to-typescript.
+  * DO NOT MODIFY IT BY HAND. Instead, modify the source JSONSchema file,
+  * and run json-schema-to-typescript to regenerate this file.
+  */
+-Object.defineProperty(exports, "__esModule", { value: true });
++export {};
+diff --git a/index.js b/index.js
+index 4df39ada16616449fa472b632c76eb2d1c3ea8fe..183136ef0a1cd0f0a44284869954a7bd2d5268b9 100644
+--- a/index.js
++++ b/index.js
+@@ -1,66 +1,46 @@
+-"use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.createTypeFromConstructor = exports.createType = exports.registry = exports.types = exports.content = exports.proposals = exports.storage = exports.workingGroup = exports.hiring = exports.recurringRewards = exports.mint = exports.stake = exports.forum = exports.roles = exports.council = exports.members = exports.common = void 0;
+-const common_1 = __importDefault(require("./common"));
+-exports.common = common_1.default;
+-const members_1 = __importDefault(require("./members"));
+-exports.members = members_1.default;
+-const council_1 = __importDefault(require("./council"));
+-exports.council = council_1.default;
+-const roles_1 = __importDefault(require("./roles"));
+-exports.roles = roles_1.default;
+-const forum_1 = __importDefault(require("./forum"));
+-exports.forum = forum_1.default;
+-const stake_1 = __importDefault(require("./stake"));
+-exports.stake = stake_1.default;
+-const mint_1 = __importDefault(require("./mint"));
+-exports.mint = mint_1.default;
+-const recurring_rewards_1 = __importDefault(require("./recurring-rewards"));
+-exports.recurringRewards = recurring_rewards_1.default;
+-const hiring_1 = __importDefault(require("./hiring"));
+-exports.hiring = hiring_1.default;
+-const working_group_1 = __importDefault(require("./working-group"));
+-exports.workingGroup = working_group_1.default;
+-const storage_1 = __importDefault(require("./storage"));
+-exports.storage = storage_1.default;
+-const proposals_1 = __importDefault(require("./proposals"));
+-exports.proposals = proposals_1.default;
+-const content_1 = __importDefault(require("./content"));
+-exports.content = content_1.default;
+-const legacy_1 = __importDefault(require("./legacy"));
+-const types_1 = require("@polkadot/types");
+-exports.types = {
++import common from './common';
++import members from './members';
++import council from './council';
++import roles from './roles';
++import forum from './forum';
++import stake from './stake';
++import mint from './mint';
++import recurringRewards from './recurring-rewards';
++import hiring from './hiring';
++import workingGroup from './working-group';
++import storage from './storage';
++import proposals from './proposals';
++import content from './content';
++import legacy from './legacy';
++import { TypeRegistry } from '@polkadot/types';
++export { common, members, council, roles, forum, stake, mint, recurringRewards, hiring, workingGroup, storage, proposals, content, };
++export const types = {
+     // legacy types comes first so they are overriden by proper definitions in new modules
+-    ...legacy_1.default,
+-    ...common_1.default,
+-    ...members_1.default,
+-    ...council_1.default,
+-    ...roles_1.default,
+-    ...forum_1.default,
+-    ...stake_1.default,
+-    ...mint_1.default,
+-    ...recurring_rewards_1.default,
+-    ...hiring_1.default,
+-    ...working_group_1.default,
+-    ...storage_1.default,
+-    ...proposals_1.default,
+-    ...content_1.default,
++    ...legacy,
++    ...common,
++    ...members,
++    ...council,
++    ...roles,
++    ...forum,
++    ...stake,
++    ...mint,
++    ...recurringRewards,
++    ...hiring,
++    ...workingGroup,
++    ...storage,
++    ...proposals,
++    ...content,
+     // https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#351-jan-18-2020
+     AccountInfo: 'AccountInfoWithRefCount',
+ };
+ // Allows creating types without api instance (it's not a recommended way though, so should be used just for mocks)
+-exports.registry = new types_1.TypeRegistry();
+-exports.registry.register(exports.types);
+-function createType(typeName, value) {
+-    return exports.registry.createType(typeName, value);
++export const registry = new TypeRegistry();
++registry.register(types);
++export function createType(typeName, value) {
++    return registry.createType(typeName, value);
+ }
+-exports.createType = createType;
+ // FIXME: Backward-compatibility. Use only one createType in the future!
+-function createTypeFromConstructor(type, value) {
++export function createTypeFromConstructor(type, value) {
+     const TypeConstructor = type;
+-    return new TypeConstructor(exports.registry, value);
++    return new TypeConstructor(registry, value);
+ }
+-exports.createTypeFromConstructor = createTypeFromConstructor;
+diff --git a/legacy.js b/legacy.js
+index 326d371dc55457ce8487df7b8c66386bbdfafd9e..eac9d78e6030ff6cc8e838bbfa57f7310e505c1a 100644
+--- a/legacy.js
++++ b/legacy.js
+@@ -1,4 +1,3 @@
+-"use strict";
+ /*
+   Legacy types from sumer runtime.
+
+@@ -9,44 +8,31 @@
+   Important Note: When new modules are added and happen to use type names that match the ones defined here
+   make sure to remove them from this file!
+ */
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.legacyTypes = exports.VoucherLimit = exports.UploadingStatus = exports.StorageObjectOwner = exports.ObjectOwner = exports.NewAsset = exports.DataObjectTypeId = exports.DataObjectType = exports.DataObjectStorageRelationshipId = exports.DataObjectStorageRelationship = exports.ContentParameters = exports.ContentId = void 0;
+-const types_1 = require("@polkadot/types");
++import { Null } from '@polkadot/types';
+ // From "sumer" data_directory (old storage modules)
+-class ContentId extends types_1.Null {
++export class ContentId extends Null {
+ }
+-exports.ContentId = ContentId;
+-class ContentParameters extends types_1.Null {
++export class ContentParameters extends Null {
+ }
+-exports.ContentParameters = ContentParameters;
+-class DataObjectStorageRelationship extends types_1.Null {
++export class DataObjectStorageRelationship extends Null {
+ }
+-exports.DataObjectStorageRelationship = DataObjectStorageRelationship;
+-class DataObjectStorageRelationshipId extends types_1.Null {
++export class DataObjectStorageRelationshipId extends Null {
+ }
+-exports.DataObjectStorageRelationshipId = DataObjectStorageRelationshipId;
+-class DataObjectType extends types_1.Null {
++export class DataObjectType extends Null {
+ }
+-exports.DataObjectType = DataObjectType;
+-class DataObjectTypeId extends types_1.Null {
++export class DataObjectTypeId extends Null {
+ }
+-exports.DataObjectTypeId = DataObjectTypeId;
+-class NewAsset extends types_1.Null {
++export class NewAsset extends Null {
+ }
+-exports.NewAsset = NewAsset;
+-class ObjectOwner extends types_1.Null {
++export class ObjectOwner extends Null {
+ }
+-exports.ObjectOwner = ObjectOwner;
+-class StorageObjectOwner extends types_1.Null {
++export class StorageObjectOwner extends Null {
+ }
+-exports.StorageObjectOwner = StorageObjectOwner;
+-class UploadingStatus extends types_1.Null {
++export class UploadingStatus extends Null {
+ }
+-exports.UploadingStatus = UploadingStatus;
+-class VoucherLimit extends types_1.Null {
++export class VoucherLimit extends Null {
+ }
+-exports.VoucherLimit = VoucherLimit;
+-exports.legacyTypes = {
++export const legacyTypes = {
+     ContentId,
+     ContentParameters,
+     DataObjectStorageRelationship,
+@@ -59,4 +45,4 @@ exports.legacyTypes = {
+     UploadingStatus,
+     VoucherLimit,
+ };
+-exports.default = exports.legacyTypes;
++export default legacyTypes;
+diff --git a/members.js b/members.js
+index ed3efe8c9c7a57aa3a1fef4c6bea943c9e6b638f..1ec3d6449967a5b7e903757d5f0f6ca2d46b4ea9 100644
+--- a/members.js
++++ b/members.js
+@@ -1,58 +1,45 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.membersTypes = exports.PaidMembershipTerms = exports.Membership = exports.EntryMethod = exports.Genesis = exports.Screening = exports.Paid = exports.ActorId = exports.SubscriptionId = exports.PaidTermId = exports.MemberId = void 0;
+-const types_1 = require("@polkadot/types");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-const common_1 = require("./common");
+-class MemberId extends types_1.u64 {
++import { Option, Null, bool, u32, u64, u128, Text } from '@polkadot/types';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++import { JoyEnum, JoyStructDecorated } from './common';
++export class MemberId extends u64 {
+ }
+-exports.MemberId = MemberId;
+-class PaidTermId extends types_1.u64 {
++export class PaidTermId extends u64 {
+ }
+-exports.PaidTermId = PaidTermId;
+-class SubscriptionId extends types_1.u64 {
++export class SubscriptionId extends u64 {
+ }
+-exports.SubscriptionId = SubscriptionId;
+-class ActorId extends types_1.u64 {
++export class ActorId extends u64 {
+ }
+-exports.ActorId = ActorId;
+-class Paid extends PaidTermId {
++export class Paid extends PaidTermId {
+ }
+-exports.Paid = Paid;
+-class Screening extends AccountId_1.GenericAccountId {
++export class Screening extends AccountId {
+ }
+-exports.Screening = Screening;
+-class Genesis extends types_1.Null {
++export class Genesis extends Null {
+ }
+-exports.Genesis = Genesis;
+-class EntryMethod extends (0, common_1.JoyEnum)({
++export class EntryMethod extends JoyEnum({
+     Paid,
+     Screening,
+     Genesis,
+ }) {
+ }
+-exports.EntryMethod = EntryMethod;
+-class Membership extends (0, common_1.JoyStructDecorated)({
+-    handle: types_1.Text,
+-    avatar_uri: types_1.Text,
+-    about: types_1.Text,
+-    registered_at_block: types_1.u32,
+-    registered_at_time: types_1.u64,
++export class Membership extends JoyStructDecorated({
++    handle: Text,
++    avatar_uri: Text,
++    about: Text,
++    registered_at_block: u32,
++    registered_at_time: u64,
+     entry: EntryMethod,
+-    suspended: types_1.bool,
+-    subscription: types_1.Option.with(SubscriptionId),
+-    root_account: AccountId_1.GenericAccountId,
+-    controller_account: AccountId_1.GenericAccountId,
++    suspended: bool,
++    subscription: Option.with(SubscriptionId),
++    root_account: AccountId,
++    controller_account: AccountId,
+ }) {
+ }
+-exports.Membership = Membership;
+-class PaidMembershipTerms extends (0, common_1.JoyStructDecorated)({
+-    fee: types_1.u128,
+-    text: types_1.Text,
++export class PaidMembershipTerms extends JoyStructDecorated({
++    fee: u128,
++    text: Text,
+ }) {
+ }
+-exports.PaidMembershipTerms = PaidMembershipTerms;
+-exports.membersTypes = {
++export const membersTypes = {
+     EntryMethod,
+     MemberId,
+     PaidTermId,
+@@ -61,4 +48,4 @@ exports.membersTypes = {
+     PaidMembershipTerms,
+     ActorId,
+ };
+-exports.default = exports.membersTypes;
++export default membersTypes;
+diff --git a/mint/index.js b/mint/index.js
+index 657da58a13fe97d36a56c0abd1206d05c3fb9e01..f41a28446255dfc113e7150e7946a4eac71e41c1 100644
+--- a/mint/index.js
++++ b/mint/index.js
+@@ -1,50 +1,37 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.mintTypes = exports.Mint = exports.NextAdjustment = exports.AdjustOnInterval = exports.AdjustCapacityBy = exports.BalanceOfMint = exports.MintBalanceOf = exports.Reducing = exports.Adding = exports.Setting = exports.MintId = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("../common");
+-class MintId extends types_1.u64 {
++import { u32, u64, u128, Option } from '@polkadot/types';
++import { JoyEnum, JoyStructDecorated } from '../common';
++export class MintId extends u64 {
+ }
+-exports.MintId = MintId;
+-class Setting extends types_1.u128 {
++export class Setting extends u128 {
+ }
+-exports.Setting = Setting;
+-class Adding extends types_1.u128 {
++export class Adding extends u128 {
+ }
+-exports.Adding = Adding;
+-class Reducing extends types_1.u128 {
++export class Reducing extends u128 {
+ }
+-exports.Reducing = Reducing;
+-class MintBalanceOf extends types_1.u128 {
++export class MintBalanceOf extends u128 {
+ }
+-exports.MintBalanceOf = MintBalanceOf;
+-class BalanceOfMint extends types_1.u128 {
++export class BalanceOfMint extends u128 {
+ }
+-exports.BalanceOfMint = BalanceOfMint;
+-class AdjustCapacityBy extends (0, common_1.JoyEnum)({ Setting, Adding, Reducing }) {
++export class AdjustCapacityBy extends JoyEnum({ Setting, Adding, Reducing }) {
+ }
+-exports.AdjustCapacityBy = AdjustCapacityBy;
+-class AdjustOnInterval extends (0, common_1.JoyStructDecorated)({
+-    block_interval: types_1.u32,
++export class AdjustOnInterval extends JoyStructDecorated({
++    block_interval: u32,
+     adjustment_type: AdjustCapacityBy,
+ }) {
+ }
+-exports.AdjustOnInterval = AdjustOnInterval;
+-class NextAdjustment extends (0, common_1.JoyStructDecorated)({
++export class NextAdjustment extends JoyStructDecorated({
+     adjustment: AdjustOnInterval,
+-    at_block: types_1.u32,
++    at_block: u32,
+ }) {
+ }
+-exports.NextAdjustment = NextAdjustment;
+-class Mint extends (0, common_1.JoyStructDecorated)({
+-    capacity: types_1.u128,
+-    next_adjustment: types_1.Option.with(NextAdjustment),
+-    created_at: types_1.u32,
+-    total_minted: types_1.u128,
++export class Mint extends JoyStructDecorated({
++    capacity: u128,
++    next_adjustment: Option.with(NextAdjustment),
++    created_at: u32,
++    total_minted: u128,
+ }) {
+ }
+-exports.Mint = Mint;
+-exports.mintTypes = {
++export const mintTypes = {
+     MintId,
+     Mint,
+     MintBalanceOf,
+@@ -54,4 +41,4 @@ exports.mintTypes = {
+     AdjustOnInterval,
+     AdjustCapacityBy,
+ };
+-exports.default = exports.mintTypes;
++export default mintTypes;
+diff --git a/package.json b/package.json
+index e6fc77b698b37e25c0f182231b0fbef9ddccdc71..1a5e0e0be1e22129defa9269f28d1bc6d81686d5 100644
+--- a/package.json
++++ b/package.json
+@@ -3,6 +3,8 @@
+   "version": "0.17.2",
+   "description": "Types for Joystream Substrate Runtime - Giza release",
+   "main": "index.js",
++  "type": "module",
++  "module": "index.js",
+   "types": "index.d.ts",
+   "scripts": {
+     "prepublishOnly": "npm run build",
+diff --git a/proposals.js b/proposals.js
+index 313adc5ebac5072d90b2502d034ab111369b33e0..cecd11cc8e620895c3c240ac5a7e843529592d99 100644
+--- a/proposals.js
++++ b/proposals.js
+@@ -1,36 +1,31 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.proposalsTypes = exports.ProposalDetails = exports.TerminateRoleParameters = exports.FillOpeningParameters = exports.AddOpeningParameters = exports.DiscussionPost = exports.DiscussionThread = exports.ThreadCounter = exports.Proposal = exports.SetLead = exports.SetLeadParams = exports.SpendingParams = exports.ProposalId = exports.VoteKind = exports.VoteKindDef = exports.VoteKinds = exports.ProposalStatus = exports.Finalized = exports.Active = exports.FinalizationData = exports.ProposalDecisionStatus = exports.ProposalDecisionStatusesDef = exports.Approved = exports.ApprovedProposalStatus = exports.ApprovedProposalDef = exports.ExecutionFailed = exports.ExecutionFailedStatus = exports.ActiveStake = exports.IProposalStatus = exports.ProposalParameters = exports.VotingResults = void 0;
+-const types_1 = require("@polkadot/types");
+-const primitive_1 = require("@polkadot/types/primitive");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-const common_1 = require("./common");
+-const members_1 = require("./members");
+-const roles_1 = require("./roles");
+-const stake_1 = require("./stake");
+-const council_1 = require("./council");
+-const hiring_1 = require("./hiring");
+-const working_group_1 = require("./working-group");
+-class VotingResults extends (0, common_1.JoyStructDecorated)({
+-    abstensions: types_1.u32,
+-    approvals: types_1.u32,
+-    rejections: types_1.u32,
+-    slashes: types_1.u32,
++import { u32, Tuple, u8, Vec, Option, Null, Bytes } from '@polkadot/types';
++import { bool, u128 } from '@polkadot/types/primitive';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++import { ThreadId, WorkingGroup, JoyEnum, JoyStructDecorated } from './common';
++import { MemberId } from './members';
++import { RoleParameters } from './roles';
++import { StakeId } from './stake';
++import { ElectionParameters } from './council';
++import { ActivateOpeningAt, OpeningId, ApplicationId } from './hiring';
++import { OpeningPolicyCommitment, WorkerId, RewardPolicy } from './working-group';
++export class VotingResults extends JoyStructDecorated({
++    abstensions: u32,
++    approvals: u32,
++    rejections: u32,
++    slashes: u32,
+ }) {
+ }
+-exports.VotingResults = VotingResults;
+-class ProposalParameters extends (0, common_1.JoyStructDecorated)({
+-    votingPeriod: types_1.u32,
+-    gracePeriod: types_1.u32,
+-    approvalQuorumPercentage: types_1.u32,
+-    approvalThresholdPercentage: types_1.u32,
+-    slashingQuorumPercentage: types_1.u32,
+-    slashingThresholdPercentage: types_1.u32,
+-    requiredStake: types_1.Option.with(primitive_1.u128),
++export class ProposalParameters extends JoyStructDecorated({
++    votingPeriod: u32,
++    gracePeriod: u32,
++    approvalQuorumPercentage: u32,
++    approvalThresholdPercentage: u32,
++    slashingQuorumPercentage: u32,
++    slashingThresholdPercentage: u32,
++    requiredStake: Option.with(u128),
+ }) {
+ }
+-exports.ProposalParameters = ProposalParameters;
+-exports.IProposalStatus = {
++export const IProposalStatus = {
+     Active: 'Active',
+     Canceled: 'Canceled',
+     Expired: 'Expired',
+@@ -43,178 +38,155 @@ exports.IProposalStatus = {
+     Finalized: 'Finalized',
+     Slashed: 'Slashed',
+ };
+-class ActiveStake extends (0, common_1.JoyStructDecorated)({ stake_id: stake_1.StakeId, source_account_id: AccountId_1.GenericAccountId }) {
++export class ActiveStake extends JoyStructDecorated({ stake_id: StakeId, source_account_id: AccountId }) {
+ }
+-exports.ActiveStake = ActiveStake;
+-class ExecutionFailedStatus extends (0, common_1.JoyStructDecorated)({
+-    error: types_1.Bytes,
++export class ExecutionFailedStatus extends JoyStructDecorated({
++    error: Bytes,
+ }) {
+ }
+-exports.ExecutionFailedStatus = ExecutionFailedStatus;
+-class ExecutionFailed extends ExecutionFailedStatus {
++export class ExecutionFailed extends ExecutionFailedStatus {
+ }
+-exports.ExecutionFailed = ExecutionFailed;
+-exports.ApprovedProposalDef = {
+-    PendingExecution: types_1.Null,
+-    Executed: types_1.Null,
++export const ApprovedProposalDef = {
++    PendingExecution: Null,
++    Executed: Null,
+     ExecutionFailed,
+ };
+-class ApprovedProposalStatus extends (0, common_1.JoyEnum)(exports.ApprovedProposalDef) {
+-}
+-exports.ApprovedProposalStatus = ApprovedProposalStatus;
+-class Approved extends ApprovedProposalStatus {
+-}
+-exports.Approved = Approved;
+-exports.ProposalDecisionStatusesDef = {
+-    Canceled: types_1.Null,
+-    Vetoed: types_1.Null,
+-    Rejected: types_1.Null,
+-    Slashed: types_1.Null,
+-    Expired: types_1.Null,
++export class ApprovedProposalStatus extends JoyEnum(ApprovedProposalDef) {
++}
++export class Approved extends ApprovedProposalStatus {
++}
++export const ProposalDecisionStatusesDef = {
++    Canceled: Null,
++    Vetoed: Null,
++    Rejected: Null,
++    Slashed: Null,
++    Expired: Null,
+     Approved,
+ };
+-class ProposalDecisionStatus extends (0, common_1.JoyEnum)(exports.ProposalDecisionStatusesDef) {
++export class ProposalDecisionStatus extends JoyEnum(ProposalDecisionStatusesDef) {
+ }
+-exports.ProposalDecisionStatus = ProposalDecisionStatus;
+-class FinalizationData
++export class FinalizationData
+ // FIXME: Snake case for consistency?
+- extends (0, common_1.JoyStructDecorated)({
++ extends JoyStructDecorated({
+     proposalStatus: ProposalDecisionStatus,
+-    finalizedAt: types_1.u32,
+-    encodedUnstakingErrorDueToBrokenRuntime: types_1.Option.with(types_1.Vec.with(types_1.u8)),
+-    stakeDataAfterUnstakingError: types_1.Option.with(ActiveStake),
++    finalizedAt: u32,
++    encodedUnstakingErrorDueToBrokenRuntime: Option.with(Vec.with(u8)),
++    stakeDataAfterUnstakingError: Option.with(ActiveStake),
+ }) {
+ }
+-exports.FinalizationData = FinalizationData;
+-class Active extends types_1.Option.with(ActiveStake) {
++export class Active extends Option.with(ActiveStake) {
+ }
+-exports.Active = Active;
+-class Finalized extends FinalizationData {
++export class Finalized extends FinalizationData {
+ }
+-exports.Finalized = Finalized;
+-class ProposalStatus extends (0, common_1.JoyEnum)({
++export class ProposalStatus extends JoyEnum({
+     Active,
+     Finalized,
+ }) {
+ }
+-exports.ProposalStatus = ProposalStatus;
+-exports.VoteKinds = ['Approve', 'Reject', 'Slash', 'Abstain'];
+-exports.VoteKindDef = {
+-    Approve: types_1.Null,
+-    Reject: types_1.Null,
+-    Slash: types_1.Null,
+-    Abstain: types_1.Null,
++export const VoteKinds = ['Approve', 'Reject', 'Slash', 'Abstain'];
++export const VoteKindDef = {
++    Approve: Null,
++    Reject: Null,
++    Slash: Null,
++    Abstain: Null,
+ };
+-class VoteKind extends (0, common_1.JoyEnum)(exports.VoteKindDef) {
++export class VoteKind extends JoyEnum(VoteKindDef) {
+ }
+-exports.VoteKind = VoteKind;
+-class ProposalId extends types_1.u32 {
++export class ProposalId extends u32 {
+ }
+-exports.ProposalId = ProposalId;
+-class SpendingParams extends types_1.Tuple.with(['Balance', 'AccountId']) {
++export class SpendingParams extends Tuple.with(['Balance', 'AccountId']) {
+ }
+-exports.SpendingParams = SpendingParams;
+-class SetLeadParams extends types_1.Tuple.with([members_1.MemberId, AccountId_1.GenericAccountId]) {
++export class SetLeadParams extends Tuple.with([MemberId, AccountId]) {
+ }
+-exports.SetLeadParams = SetLeadParams;
+-class SetLead extends types_1.Option.with(SetLeadParams) {
++export class SetLead extends Option.with(SetLeadParams) {
+ }
+-exports.SetLead = SetLead;
+-class Proposal
++export class Proposal
+ // FIXME: Snake case for consistency?
+- extends (0, common_1.JoyStructDecorated)({
++ extends JoyStructDecorated({
+     // Proposals parameter, characterize different proposal types.
+     parameters: ProposalParameters,
+     // Identifier of member proposing.
+-    proposerId: members_1.MemberId,
++    proposerId: MemberId,
+     // Proposal description
+-    title: types_1.Bytes,
++    title: Bytes,
+     // Proposal body
+-    description: types_1.Bytes,
++    description: Bytes,
+     // When it was created.
+-    createdAt: types_1.u32,
++    createdAt: u32,
+     /// Current proposal status
+     status: ProposalStatus,
+     /// Curring voting result for the proposal
+     votingResults: VotingResults,
+ }) {
+ }
+-exports.Proposal = Proposal;
+-class ThreadCounter extends (0, common_1.JoyStructDecorated)({
+-    author_id: members_1.MemberId,
+-    counter: types_1.u32,
++export class ThreadCounter extends JoyStructDecorated({
++    author_id: MemberId,
++    counter: u32,
+ }) {
+ }
+-exports.ThreadCounter = ThreadCounter;
+-class DiscussionThread extends (0, common_1.JoyStructDecorated)({
+-    title: types_1.Bytes,
+-    created_at: types_1.u32,
+-    author_id: members_1.MemberId,
++export class DiscussionThread extends JoyStructDecorated({
++    title: Bytes,
++    created_at: u32,
++    author_id: MemberId,
+ }) {
+ }
+-exports.DiscussionThread = DiscussionThread;
+-class DiscussionPost extends (0, common_1.JoyStructDecorated)({
+-    text: types_1.Bytes,
++export class DiscussionPost extends JoyStructDecorated({
++    text: Bytes,
+     /// When post was added.
+-    created_at: types_1.u32,
++    created_at: u32,
+     /// When post was updated last time.
+-    updated_at: types_1.u32,
++    updated_at: u32,
+     /// Author of the post.
+-    author_id: members_1.MemberId,
++    author_id: MemberId,
+     /// Parent thread id for this post
+-    thread_id: common_1.ThreadId,
++    thread_id: ThreadId,
+     /// Defines how many times this post was edited. Zero on creation.
+-    edition_number: types_1.u32,
++    edition_number: u32,
+ }) {
+ }
+-exports.DiscussionPost = DiscussionPost;
+-class AddOpeningParameters extends (0, common_1.JoyStructDecorated)({
+-    activate_at: hiring_1.ActivateOpeningAt,
+-    commitment: working_group_1.OpeningPolicyCommitment,
+-    human_readable_text: types_1.Bytes,
+-    working_group: common_1.WorkingGroup,
++export class AddOpeningParameters extends JoyStructDecorated({
++    activate_at: ActivateOpeningAt,
++    commitment: OpeningPolicyCommitment,
++    human_readable_text: Bytes,
++    working_group: WorkingGroup,
+ }) {
+ }
+-exports.AddOpeningParameters = AddOpeningParameters;
+-class FillOpeningParameters extends (0, common_1.JoyStructDecorated)({
+-    opening_id: hiring_1.OpeningId,
+-    successful_application_id: hiring_1.ApplicationId,
+-    reward_policy: types_1.Option.with(working_group_1.RewardPolicy),
+-    working_group: common_1.WorkingGroup,
++export class FillOpeningParameters extends JoyStructDecorated({
++    opening_id: OpeningId,
++    successful_application_id: ApplicationId,
++    reward_policy: Option.with(RewardPolicy),
++    working_group: WorkingGroup,
+ }) {
+ }
+-exports.FillOpeningParameters = FillOpeningParameters;
+-class TerminateRoleParameters extends (0, common_1.JoyStructDecorated)({
+-    worker_id: working_group_1.WorkerId,
+-    rationale: types_1.Bytes,
+-    slash: primitive_1.bool,
+-    working_group: common_1.WorkingGroup,
++export class TerminateRoleParameters extends JoyStructDecorated({
++    worker_id: WorkerId,
++    rationale: Bytes,
++    slash: bool,
++    working_group: WorkingGroup,
+ }) {
+ }
+-exports.TerminateRoleParameters = TerminateRoleParameters;
+-class ProposalDetails extends (0, common_1.JoyEnum)({
+-    Text: types_1.Bytes,
+-    RuntimeUpgrade: types_1.Bytes,
+-    SetElectionParameters: council_1.ElectionParameters,
++export class ProposalDetails extends JoyEnum({
++    Text: Bytes,
++    RuntimeUpgrade: Bytes,
++    SetElectionParameters: ElectionParameters,
+     Spending: SpendingParams,
+     SetLead: SetLead,
+-    SetContentWorkingGroupMintCapacity: primitive_1.u128,
+-    EvictStorageProvider: AccountId_1.GenericAccountId,
+-    SetValidatorCount: types_1.u32,
+-    SetStorageRoleParameters: roles_1.RoleParameters,
++    SetContentWorkingGroupMintCapacity: u128,
++    EvictStorageProvider: AccountId,
++    SetValidatorCount: u32,
++    SetStorageRoleParameters: RoleParameters,
+     AddWorkingGroupLeaderOpening: AddOpeningParameters,
+-    BeginReviewWorkingGroupLeaderApplication: types_1.Tuple.with([hiring_1.OpeningId, common_1.WorkingGroup]),
++    BeginReviewWorkingGroupLeaderApplication: Tuple.with([OpeningId, WorkingGroup]),
+     FillWorkingGroupLeaderOpening: FillOpeningParameters,
+-    SetWorkingGroupMintCapacity: types_1.Tuple.with(['Balance', common_1.WorkingGroup]),
+-    DecreaseWorkingGroupLeaderStake: types_1.Tuple.with([working_group_1.WorkerId, 'Balance', common_1.WorkingGroup]),
+-    SlashWorkingGroupLeaderStake: types_1.Tuple.with([working_group_1.WorkerId, 'Balance', common_1.WorkingGroup]),
+-    SetWorkingGroupLeaderReward: types_1.Tuple.with([working_group_1.WorkerId, 'Balance', common_1.WorkingGroup]),
++    SetWorkingGroupMintCapacity: Tuple.with(['Balance', WorkingGroup]),
++    DecreaseWorkingGroupLeaderStake: Tuple.with([WorkerId, 'Balance', WorkingGroup]),
++    SlashWorkingGroupLeaderStake: Tuple.with([WorkerId, 'Balance', WorkingGroup]),
++    SetWorkingGroupLeaderReward: Tuple.with([WorkerId, 'Balance', WorkingGroup]),
+     TerminateWorkingGroupLeaderRole: TerminateRoleParameters,
+ }) {
+ }
+-exports.ProposalDetails = ProposalDetails;
+ // export default proposalTypes;
+-exports.proposalsTypes = {
++export const proposalsTypes = {
+     ProposalId,
+     ProposalStatus,
+     ProposalOf: Proposal,
+@@ -237,4 +209,4 @@ exports.proposalsTypes = {
+     Approved,
+     SetLeadParams,
+ };
+-exports.default = exports.proposalsTypes;
++export default proposalsTypes;
+diff --git a/recurring-rewards/index.js b/recurring-rewards/index.js
+index b284120926204829abe37e5be1df27dcc8590e0f..b86f60bb02756de3d1b045da5e393762c82b3c4d 100644
+--- a/recurring-rewards/index.js
++++ b/recurring-rewards/index.js
+@@ -1,38 +1,31 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.recurringRewardsTypes = exports.RewardRelationship = exports.Recipient = exports.RewardRelationshipId = exports.RecipientId = void 0;
+-const types_1 = require("@polkadot/types");
+-const mint_1 = require("../mint");
+-const common_1 = require("../common");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-class RecipientId extends types_1.u64 {
++import { u64, u128, Option, u32 } from '@polkadot/types';
++import { MintId } from '../mint';
++import { JoyStructDecorated } from '../common';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++export class RecipientId extends u64 {
+ }
+-exports.RecipientId = RecipientId;
+-class RewardRelationshipId extends types_1.u64 {
++export class RewardRelationshipId extends u64 {
+ }
+-exports.RewardRelationshipId = RewardRelationshipId;
+-class Recipient extends (0, common_1.JoyStructDecorated)({
+-    total_reward_received: types_1.u128,
+-    total_reward_missed: types_1.u128,
++export class Recipient extends JoyStructDecorated({
++    total_reward_received: u128,
++    total_reward_missed: u128,
+ }) {
+ }
+-exports.Recipient = Recipient;
+-class RewardRelationship extends (0, common_1.JoyStructDecorated)({
++export class RewardRelationship extends JoyStructDecorated({
+     recipient: RecipientId,
+-    mint_id: mint_1.MintId,
+-    account: AccountId_1.GenericAccountId,
+-    amount_per_payout: types_1.u128,
+-    next_payment_at_block: types_1.Option.with(types_1.u32),
+-    payout_interval: types_1.Option.with(types_1.u32),
+-    total_reward_received: types_1.u128,
+-    total_reward_missed: types_1.u128, // Balance
++    mint_id: MintId,
++    account: AccountId,
++    amount_per_payout: u128,
++    next_payment_at_block: Option.with(u32),
++    payout_interval: Option.with(u32),
++    total_reward_received: u128,
++    total_reward_missed: u128, // Balance
+ }) {
+ }
+-exports.RewardRelationship = RewardRelationship;
+-exports.recurringRewardsTypes = {
++export const recurringRewardsTypes = {
+     RecipientId,
+     RewardRelationshipId,
+     Recipient,
+     RewardRelationship,
+ };
+-exports.default = exports.recurringRewardsTypes;
++export default recurringRewardsTypes;
+diff --git a/roles.js b/roles.js
+index f09fdbcd80333b146a2a556a61b62846ccbfbb02..3cc1bd3fe22d8c06ca0e960ffcb102f24b1b55ed 100644
+--- a/roles.js
++++ b/roles.js
+@@ -1,25 +1,21 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.rolesTypes = exports.RoleParameters = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("./common");
++import { u32, u128 } from '@polkadot/types';
++import { JoyStructDecorated } from './common';
+ // We only need this type for historic reasons to read old proposal state
+ // that was related to the now defunct actors module
+-class RoleParameters extends (0, common_1.JoyStructDecorated)({
+-    min_stake: types_1.u128,
+-    min_actors: types_1.u32,
+-    max_actors: types_1.u32,
+-    reward: types_1.u128,
+-    reward_period: types_1.u32,
+-    bonding_period: types_1.u32,
+-    unbonding_period: types_1.u32,
+-    min_service_period: types_1.u32,
+-    startup_grace_period: types_1.u32,
+-    entry_request_fee: types_1.u128, // Balance
++export class RoleParameters extends JoyStructDecorated({
++    min_stake: u128,
++    min_actors: u32,
++    max_actors: u32,
++    reward: u128,
++    reward_period: u32,
++    bonding_period: u32,
++    unbonding_period: u32,
++    min_service_period: u32,
++    startup_grace_period: u32,
++    entry_request_fee: u128, // Balance
+ }) {
+ }
+-exports.RoleParameters = RoleParameters;
+-exports.rolesTypes = {
++export const rolesTypes = {
+     RoleParameters,
+ };
+-exports.default = exports.rolesTypes;
++export default rolesTypes;
+diff --git a/stake/index.js b/stake/index.js
+index 471c1eb9fd8f2a2a44007b57f8442cb99e349c15..ce47dcc2fd0ce9cf9d5568fea9c6914b21bdfbeb 100644
+--- a/stake/index.js
++++ b/stake/index.js
+@@ -1,63 +1,49 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.stakeTypes = exports.Stake = exports.StakingStatus = exports.Staked = exports.NotStaked = exports.StakedState = exports.StakedStatus = exports.Unstaking = exports.Normal = exports.UnstakingState = exports.Slash = exports.SlashId = exports.StakeId = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("../common");
+-class StakeId extends types_1.u64 {
++import { u32, u64, u128, Null, BTreeMap, bool } from '@polkadot/types';
++import { JoyEnum, JoyStructDecorated } from '../common';
++export class StakeId extends u64 {
+ }
+-exports.StakeId = StakeId;
+-class SlashId extends types_1.u64 {
++export class SlashId extends u64 {
+ }
+-exports.SlashId = SlashId;
+-class Slash extends (0, common_1.JoyStructDecorated)({
+-    started_at_block: types_1.u32,
+-    is_active: types_1.bool,
+-    blocks_remaining_in_active_period_for_slashing: types_1.u32,
+-    slash_amount: types_1.u128,
++export class Slash extends JoyStructDecorated({
++    started_at_block: u32,
++    is_active: bool,
++    blocks_remaining_in_active_period_for_slashing: u32,
++    slash_amount: u128,
+ }) {
+ }
+-exports.Slash = Slash;
+-class UnstakingState extends (0, common_1.JoyStructDecorated)({
+-    started_at_block: types_1.u32,
+-    is_active: types_1.bool,
+-    blocks_remaining_in_active_period_for_unstaking: types_1.u32,
++export class UnstakingState extends JoyStructDecorated({
++    started_at_block: u32,
++    is_active: bool,
++    blocks_remaining_in_active_period_for_unstaking: u32,
+ }) {
+ }
+-exports.UnstakingState = UnstakingState;
+-class Normal extends types_1.Null {
++export class Normal extends Null {
+ }
+-exports.Normal = Normal;
+-class Unstaking extends UnstakingState {
++export class Unstaking extends UnstakingState {
+ }
+-exports.Unstaking = Unstaking;
+-class StakedStatus extends (0, common_1.JoyEnum)({
++export class StakedStatus extends JoyEnum({
+     Normal,
+     Unstaking,
+ }) {
+ }
+-exports.StakedStatus = StakedStatus;
+-class StakedState extends (0, common_1.JoyStructDecorated)({
+-    staked_amount: types_1.u128,
++export class StakedState extends JoyStructDecorated({
++    staked_amount: u128,
+     staked_status: StakedStatus,
+     next_slash_id: SlashId,
+-    ongoing_slashes: types_1.BTreeMap.with(SlashId, Slash),
++    ongoing_slashes: BTreeMap.with(SlashId, Slash),
+ }) {
+ }
+-exports.StakedState = StakedState;
+-class NotStaked extends types_1.Null {
++export class NotStaked extends Null {
+ }
+-exports.NotStaked = NotStaked;
+-class Staked extends StakedState {
++export class Staked extends StakedState {
+ }
+-exports.Staked = Staked;
+-class StakingStatus extends (0, common_1.JoyEnum)({
++export class StakingStatus extends JoyEnum({
+     NotStaked,
+     Staked,
+ }) {
+ }
+-exports.StakingStatus = StakingStatus;
+-class Stake extends (0, common_1.JoyStructDecorated)({
+-    created: types_1.u32,
++export class Stake extends JoyStructDecorated({
++    created: u32,
+     staking_status: StakingStatus,
+ }) {
+     get value() {
+@@ -67,8 +53,7 @@ class Stake extends (0, common_1.JoyStructDecorated)({
+         return this.registry.createType('Balance', 0);
+     }
+ }
+-exports.Stake = Stake;
+-exports.stakeTypes = {
++export const stakeTypes = {
+     StakeId,
+     Stake,
+     // Expose in registry for api.createType purposes:
+@@ -78,4 +63,4 @@ exports.stakeTypes = {
+     Unstaking,
+     Slash,
+ };
+-exports.default = exports.stakeTypes;
++export default stakeTypes;
+diff --git a/storage.js b/storage.js
+index 7f13dcc0e76bae02d240884ca21089dec7b240ec..3957559a432d6278b955a1a94ea461ebf459249b 100644
+--- a/storage.js
++++ b/storage.js
+@@ -1,182 +1,146 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.storageTypes = exports.DynamicBagCreationPolicyDistributorFamiliesMap = exports.DistributionBucketFamily = exports.DistributionBucket = exports.ContentIdSet = exports.Cid = exports.UploadParameters = exports.DataObjectCreationParameters = exports.StorageBucket = exports.StorageBucketOperatorStatus = exports.StorageBucketOperatorStatusDef = exports.Voucher = exports.BagIdType = exports.BagId = exports.BagIdDef = exports.Dynamic = exports.DynamicBagId = exports.DynamicBagIdDef = exports.ChannelId = exports.Static = exports.StaticBagId = exports.StaticBagIdDef = exports.DynamicBagType = exports.DynamicBagTypeDef = exports.DynamicBagCreationPolicy = exports.Bag = exports.DynamicBagDeletionPrizeRecord = exports.DynamicBagDeletionPrize = exports.DistributionBucketId = exports.DistributionBucketIndexSet = exports.StorageBucketIdSet = exports.DistributionBucketFamilyId = exports.DistributionBucketIndex = exports.DataObjectIdMap = exports.DataObjectIdSet = exports.DataObject = exports.StorageBucketsPerBagValueConstraint = exports.StorageBucketId = exports.DataObjectId = void 0;
+-const types_1 = require("@polkadot/types");
+-const common_1 = require("./common");
+-const members_1 = require("./members");
+-const working_group_1 = require("./working-group");
+-class DataObjectId extends types_1.u64 {
+-}
+-exports.DataObjectId = DataObjectId;
+-class StorageBucketId extends types_1.u64 {
+-}
+-exports.StorageBucketId = StorageBucketId;
+-class StorageBucketsPerBagValueConstraint extends (0, common_1.JoyStructDecorated)({
+-    min: types_1.u64,
+-    max_min_diff: types_1.u64,
++import { Null, u64, Bytes, Vec, bool, GenericAccountId as AccountId, BTreeSet, BTreeMap, Option, u32, u128, Tuple, } from '@polkadot/types';
++import { JoyEnum, JoyStructDecorated, WorkingGroup, BalanceOf } from './common';
++import { MemberId } from './members';
++import { WorkerId } from './working-group';
++export class DataObjectId extends u64 {
++}
++export class StorageBucketId extends u64 {
++}
++export class StorageBucketsPerBagValueConstraint extends JoyStructDecorated({
++    min: u64,
++    max_min_diff: u64,
+ }) {
+ }
+-exports.StorageBucketsPerBagValueConstraint = StorageBucketsPerBagValueConstraint;
+-class DataObject extends (0, common_1.JoyStructDecorated)({
+-    accepted: types_1.bool,
+-    deletion_prize: common_1.BalanceOf,
+-    size: types_1.u64,
+-    ipfsContentId: types_1.Bytes,
++export class DataObject extends JoyStructDecorated({
++    accepted: bool,
++    deletion_prize: BalanceOf,
++    size: u64,
++    ipfsContentId: Bytes,
+ }) {
+ }
+-exports.DataObject = DataObject;
+-class DataObjectIdSet extends types_1.BTreeSet.with(DataObjectId) {
++export class DataObjectIdSet extends BTreeSet.with(DataObjectId) {
+ }
+-exports.DataObjectIdSet = DataObjectIdSet;
+-class DataObjectIdMap extends types_1.BTreeMap.with(DataObjectId, DataObject) {
++export class DataObjectIdMap extends BTreeMap.with(DataObjectId, DataObject) {
+ }
+-exports.DataObjectIdMap = DataObjectIdMap;
+-class DistributionBucketIndex extends types_1.u64 {
++export class DistributionBucketIndex extends u64 {
+ }
+-exports.DistributionBucketIndex = DistributionBucketIndex;
+-class DistributionBucketFamilyId extends types_1.u64 {
++export class DistributionBucketFamilyId extends u64 {
+ }
+-exports.DistributionBucketFamilyId = DistributionBucketFamilyId;
+-class StorageBucketIdSet extends types_1.BTreeSet.with(StorageBucketId) {
++export class StorageBucketIdSet extends BTreeSet.with(StorageBucketId) {
+ }
+-exports.StorageBucketIdSet = StorageBucketIdSet;
+-class DistributionBucketIndexSet extends types_1.BTreeSet.with(DistributionBucketIndex) {
++export class DistributionBucketIndexSet extends BTreeSet.with(DistributionBucketIndex) {
+ }
+-exports.DistributionBucketIndexSet = DistributionBucketIndexSet;
+-class DistributionBucketId extends (0, common_1.JoyStructDecorated)({
++export class DistributionBucketId extends JoyStructDecorated({
+     distribution_bucket_family_id: DistributionBucketFamilyId,
+     distribution_bucket_index: DistributionBucketIndex,
+ }) {
+ }
+-exports.DistributionBucketId = DistributionBucketId;
+-class DynamicBagDeletionPrize extends (0, common_1.JoyStructDecorated)({
+-    account_id: types_1.GenericAccountId,
+-    prize: common_1.BalanceOf,
++export class DynamicBagDeletionPrize extends JoyStructDecorated({
++    account_id: AccountId,
++    prize: BalanceOf,
+ }) {
+ }
+-exports.DynamicBagDeletionPrize = DynamicBagDeletionPrize;
+-class DynamicBagDeletionPrizeRecord extends DynamicBagDeletionPrize {
++export class DynamicBagDeletionPrizeRecord extends DynamicBagDeletionPrize {
+ }
+-exports.DynamicBagDeletionPrizeRecord = DynamicBagDeletionPrizeRecord;
+-class Bag extends (0, common_1.JoyStructDecorated)({
+-    stored_by: types_1.BTreeSet.with(StorageBucketId),
+-    distributed_by: types_1.BTreeSet.with(DistributionBucketId),
+-    deletion_prize: types_1.Option.with(types_1.u128),
+-    objects_total_size: types_1.u64,
+-    objects_number: types_1.u64,
++export class Bag extends JoyStructDecorated({
++    stored_by: BTreeSet.with(StorageBucketId),
++    distributed_by: BTreeSet.with(DistributionBucketId),
++    deletion_prize: Option.with(u128),
++    objects_total_size: u64,
++    objects_number: u64,
+ }) {
+ }
+-exports.Bag = Bag;
+-class DynamicBagCreationPolicy extends (0, common_1.JoyStructDecorated)({
+-    numberOfStorageBuckets: types_1.u64,
+-    families: types_1.BTreeMap.with(DistributionBucketFamilyId, types_1.u32),
++export class DynamicBagCreationPolicy extends JoyStructDecorated({
++    numberOfStorageBuckets: u64,
++    families: BTreeMap.with(DistributionBucketFamilyId, u32),
+ }) {
+ }
+-exports.DynamicBagCreationPolicy = DynamicBagCreationPolicy;
+-exports.DynamicBagTypeDef = {
+-    Member: types_1.Null,
+-    Channel: types_1.Null,
++export const DynamicBagTypeDef = {
++    Member: Null,
++    Channel: Null,
+ };
+-class DynamicBagType extends (0, common_1.JoyEnum)(exports.DynamicBagTypeDef) {
++export class DynamicBagType extends JoyEnum(DynamicBagTypeDef) {
+ }
+-exports.DynamicBagType = DynamicBagType;
+-exports.StaticBagIdDef = {
+-    Council: types_1.Null,
+-    WorkingGroup: common_1.WorkingGroup,
++export const StaticBagIdDef = {
++    Council: Null,
++    WorkingGroup: WorkingGroup,
+ };
+-class StaticBagId extends (0, common_1.JoyEnum)(exports.StaticBagIdDef) {
++export class StaticBagId extends JoyEnum(StaticBagIdDef) {
+ }
+-exports.StaticBagId = StaticBagId;
+-class Static extends StaticBagId {
++export class Static extends StaticBagId {
+ }
+-exports.Static = Static;
+ // This type should be imported from content-directory/common types once the Olympia release is merged.
+-class ChannelId extends types_1.u64 {
++export class ChannelId extends u64 {
+ }
+-exports.ChannelId = ChannelId;
+-exports.DynamicBagIdDef = {
+-    Member: members_1.MemberId,
++export const DynamicBagIdDef = {
++    Member: MemberId,
+     Channel: ChannelId,
+ };
+-class DynamicBagId extends (0, common_1.JoyEnum)(exports.DynamicBagIdDef) {
++export class DynamicBagId extends JoyEnum(DynamicBagIdDef) {
+ }
+-exports.DynamicBagId = DynamicBagId;
+-class Dynamic extends DynamicBagId {
++export class Dynamic extends DynamicBagId {
+ }
+-exports.Dynamic = Dynamic;
+-exports.BagIdDef = {
++export const BagIdDef = {
+     Static,
+     Dynamic,
+ };
+-class BagId extends (0, common_1.JoyEnum)(exports.BagIdDef) {
++export class BagId extends JoyEnum(BagIdDef) {
+ }
+-exports.BagId = BagId;
+ // Alias
+-class BagIdType extends BagId {
+-}
+-exports.BagIdType = BagIdType;
+-class Voucher extends (0, common_1.JoyStructDecorated)({
+-    sizeLimit: types_1.u64,
+-    objectsLimit: types_1.u64,
+-    sizeUsed: types_1.u64,
+-    objectsUsed: types_1.u64,
++export class BagIdType extends BagId {
++}
++export class Voucher extends JoyStructDecorated({
++    sizeLimit: u64,
++    objectsLimit: u64,
++    sizeUsed: u64,
++    objectsUsed: u64,
+ }) {
+ }
+-exports.Voucher = Voucher;
+-exports.StorageBucketOperatorStatusDef = {
+-    Missing: types_1.Null,
+-    InvitedStorageWorker: working_group_1.WorkerId,
+-    StorageWorker: types_1.Tuple.with([working_group_1.WorkerId, types_1.GenericAccountId]),
++export const StorageBucketOperatorStatusDef = {
++    Missing: Null,
++    InvitedStorageWorker: WorkerId,
++    StorageWorker: Tuple.with([WorkerId, AccountId]),
+ };
+-class StorageBucketOperatorStatus extends (0, common_1.JoyEnum)(exports.StorageBucketOperatorStatusDef) {
++export class StorageBucketOperatorStatus extends JoyEnum(StorageBucketOperatorStatusDef) {
+ }
+-exports.StorageBucketOperatorStatus = StorageBucketOperatorStatus;
+-class StorageBucket extends (0, common_1.JoyStructDecorated)({
++export class StorageBucket extends JoyStructDecorated({
+     operator_status: StorageBucketOperatorStatus,
+-    accepting_new_bags: types_1.bool,
++    accepting_new_bags: bool,
+     voucher: Voucher,
+-    assigned_bags: types_1.u64,
++    assigned_bags: u64,
+ }) {
+ }
+-exports.StorageBucket = StorageBucket;
+-class DataObjectCreationParameters extends (0, common_1.JoyStructDecorated)({
+-    size: types_1.u64,
+-    ipfsContentId: types_1.Bytes,
++export class DataObjectCreationParameters extends JoyStructDecorated({
++    size: u64,
++    ipfsContentId: Bytes,
+ }) {
+ }
+-exports.DataObjectCreationParameters = DataObjectCreationParameters;
+-class UploadParameters extends (0, common_1.JoyStructDecorated)({
++export class UploadParameters extends JoyStructDecorated({
+     bagId: BagId,
+-    objectCreationList: types_1.Vec.with(DataObjectCreationParameters),
+-    deletionPrizeSourceAccountId: types_1.GenericAccountId,
+-    expectedDataSizeFee: common_1.BalanceOf,
++    objectCreationList: Vec.with(DataObjectCreationParameters),
++    deletionPrizeSourceAccountId: AccountId,
++    expectedDataSizeFee: BalanceOf,
+ }) {
+ }
+-exports.UploadParameters = UploadParameters;
+-class Cid extends types_1.Bytes {
++export class Cid extends Bytes {
+ }
+-exports.Cid = Cid;
+-class ContentIdSet extends types_1.BTreeSet.with(Cid) {
++export class ContentIdSet extends BTreeSet.with(Cid) {
+ }
+-exports.ContentIdSet = ContentIdSet;
+-class DistributionBucket extends (0, common_1.JoyStructDecorated)({
+-    accepting_new_bags: types_1.bool,
+-    distributing: types_1.bool,
+-    pending_invitations: types_1.BTreeSet.with(working_group_1.WorkerId),
+-    operators: types_1.BTreeSet.with(working_group_1.WorkerId),
+-    assigned_bags: types_1.u64,
++export class DistributionBucket extends JoyStructDecorated({
++    accepting_new_bags: bool,
++    distributing: bool,
++    pending_invitations: BTreeSet.with(WorkerId),
++    operators: BTreeSet.with(WorkerId),
++    assigned_bags: u64,
+ }) {
+ }
+-exports.DistributionBucket = DistributionBucket;
+-class DistributionBucketFamily extends (0, common_1.JoyStructDecorated)({
++export class DistributionBucketFamily extends JoyStructDecorated({
+     next_distribution_bucket_index: DistributionBucketIndex,
+ }) {
+ }
+-exports.DistributionBucketFamily = DistributionBucketFamily;
+-class DynamicBagCreationPolicyDistributorFamiliesMap extends types_1.BTreeMap.with(DistributionBucketFamilyId, types_1.u32) {
++export class DynamicBagCreationPolicyDistributorFamiliesMap extends BTreeMap.with(DistributionBucketFamilyId, u32) {
+ }
+-exports.DynamicBagCreationPolicyDistributorFamiliesMap = DynamicBagCreationPolicyDistributorFamiliesMap;
+-exports.storageTypes = {
++export const storageTypes = {
+     StorageBucketId,
+     StorageBucketsPerBagValueConstraint,
+     DataObjectId,
+@@ -211,4 +175,4 @@ exports.storageTypes = {
+     DistributionBucketIndexSet,
+     DynamicBagCreationPolicyDistributorFamiliesMap,
+ };
+-exports.default = exports.storageTypes;
++export default storageTypes;
+diff --git a/tsconfig-base.json b/tsconfig-base.json
+index 08092f4b25fe26d676df1fe35d2ad83f956bb61f..403c97e65bb63f846ca5efbd6462658a42ec4071 100644
+--- a/tsconfig-base.json
++++ b/tsconfig-base.json
+@@ -1,7 +1,7 @@
+ {
+   "compilerOptions": {
+     "target": "esnext",
+-    "module": "commonjs",
++    "module": "esnext",
+     "strict": true,
+     "noImplicitAny": true,
+     "noUnusedLocals": true,
+diff --git a/working-group/index.js b/working-group/index.js
+index 666a5e18970e1a2023c3a128c3fb673f562331b4..6797451672c08e520910977e7a5981a9a0be59f5 100644
+--- a/working-group/index.js
++++ b/working-group/index.js
+@@ -1,109 +1,92 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.workingGroupTypes = exports.ApplicationId = exports.OpeningId = exports.RewardPolicy = exports.Opening = exports.OpeningType = exports.OpeningTypeDef = exports.OpeningType_Worker = exports.OpeningType_Leader = exports.OpeningPolicyCommitment = exports.Worker = exports.RoleStakeProfile = exports.ApplicationIdToWorkerIdMap = exports.ApplicationIdSet = exports.StorageProviderId = exports.WorkerId = exports.Application = exports.RationaleText = void 0;
+-const types_1 = require("@polkadot/types");
+-const primitive_1 = require("@polkadot/types/primitive");
+-const AccountId_1 = require("@polkadot/types/generic/AccountId");
+-const members_1 = require("../members");
+-const recurring_rewards_1 = require("../recurring-rewards");
+-const stake_1 = require("../stake");
+-const hiring_1 = require("../hiring");
+-Object.defineProperty(exports, "ApplicationId", { enumerable: true, get: function () { return hiring_1.ApplicationId; } });
+-Object.defineProperty(exports, "OpeningId", { enumerable: true, get: function () { return hiring_1.OpeningId; } });
+-const common_1 = require("../common");
+-class RationaleText extends types_1.Bytes {
++import { Bytes, BTreeMap, BTreeSet, Option } from '@polkadot/types';
++import { Null, u32, u128 } from '@polkadot/types/primitive';
++import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
++import { MemberId, ActorId } from '../members';
++import { RewardRelationshipId } from '../recurring-rewards';
++import { StakeId } from '../stake';
++import { ApplicationId, OpeningId, ApplicationRationingPolicy, StakingPolicy } from '../hiring';
++import { JoyEnum, JoyStructDecorated, SlashingTerms } from '../common';
++export class RationaleText extends Bytes {
+ }
+-exports.RationaleText = RationaleText;
+ // This type is also defined in /hiring (and those are incosistent), but here
+ // it is beeing registered as "ApplicationOf" (which is an alias used by the runtime working-group module),
+ // so it shouldn't cause any conflicts
+-class Application extends (0, common_1.JoyStructDecorated)({
+-    role_account_id: AccountId_1.GenericAccountId,
+-    opening_id: hiring_1.OpeningId,
+-    member_id: members_1.MemberId,
+-    application_id: hiring_1.ApplicationId,
++export class Application extends JoyStructDecorated({
++    role_account_id: AccountId,
++    opening_id: OpeningId,
++    member_id: MemberId,
++    application_id: ApplicationId,
+ }) {
+ }
+-exports.Application = Application;
+-class WorkerId extends members_1.ActorId {
++export class WorkerId extends ActorId {
+ }
+-exports.WorkerId = WorkerId;
+-class StorageProviderId extends WorkerId {
++export class StorageProviderId extends WorkerId {
+ }
+-exports.StorageProviderId = StorageProviderId;
+-class ApplicationIdSet extends types_1.BTreeSet.with(hiring_1.ApplicationId) {
++export class ApplicationIdSet extends BTreeSet.with(ApplicationId) {
+ }
+-exports.ApplicationIdSet = ApplicationIdSet;
+-class ApplicationIdToWorkerIdMap extends types_1.BTreeMap.with(hiring_1.ApplicationId, WorkerId) {
++export class ApplicationIdToWorkerIdMap extends BTreeMap.with(ApplicationId, WorkerId) {
+ }
+-exports.ApplicationIdToWorkerIdMap = ApplicationIdToWorkerIdMap;
+-class RoleStakeProfile extends (0, common_1.JoyStructDecorated)({
+-    stake_id: stake_1.StakeId,
+-    termination_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    exit_unstaking_period: types_1.Option.with(primitive_1.u32), // Option<BlockNumber>
++export class RoleStakeProfile extends JoyStructDecorated({
++    stake_id: StakeId,
++    termination_unstaking_period: Option.with(u32),
++    exit_unstaking_period: Option.with(u32), // Option<BlockNumber>
+ }) {
+ }
+-exports.RoleStakeProfile = RoleStakeProfile;
+-class Worker extends (0, common_1.JoyStructDecorated)({
+-    member_id: members_1.MemberId,
+-    role_account_id: AccountId_1.GenericAccountId,
+-    reward_relationship: types_1.Option.with(recurring_rewards_1.RewardRelationshipId),
+-    role_stake_profile: types_1.Option.with(RoleStakeProfile),
++export class Worker extends JoyStructDecorated({
++    member_id: MemberId,
++    role_account_id: AccountId,
++    reward_relationship: Option.with(RewardRelationshipId),
++    role_stake_profile: Option.with(RoleStakeProfile),
+ }) {
+     // FIXME: Won't be needed soon?
+     get is_active() {
+         return !this.isEmpty;
+     }
+ }
+-exports.Worker = Worker;
+-class OpeningPolicyCommitment extends (0, common_1.JoyStructDecorated)({
+-    application_rationing_policy: types_1.Option.with(hiring_1.ApplicationRationingPolicy),
+-    max_review_period_length: primitive_1.u32,
+-    application_staking_policy: types_1.Option.with(hiring_1.StakingPolicy),
+-    role_staking_policy: types_1.Option.with(hiring_1.StakingPolicy),
+-    role_slashing_terms: common_1.SlashingTerms,
+-    fill_opening_successful_applicant_application_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    fill_opening_failed_applicant_application_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    fill_opening_failed_applicant_role_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    terminate_application_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    terminate_role_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    exit_role_application_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
+-    exit_role_stake_unstaking_period: types_1.Option.with(primitive_1.u32),
++export class OpeningPolicyCommitment extends JoyStructDecorated({
++    application_rationing_policy: Option.with(ApplicationRationingPolicy),
++    max_review_period_length: u32,
++    application_staking_policy: Option.with(StakingPolicy),
++    role_staking_policy: Option.with(StakingPolicy),
++    role_slashing_terms: SlashingTerms,
++    fill_opening_successful_applicant_application_stake_unstaking_period: Option.with(u32),
++    fill_opening_failed_applicant_application_stake_unstaking_period: Option.with(u32),
++    fill_opening_failed_applicant_role_stake_unstaking_period: Option.with(u32),
++    terminate_application_stake_unstaking_period: Option.with(u32),
++    terminate_role_stake_unstaking_period: Option.with(u32),
++    exit_role_application_stake_unstaking_period: Option.with(u32),
++    exit_role_stake_unstaking_period: Option.with(u32),
+ }) {
+ }
+-exports.OpeningPolicyCommitment = OpeningPolicyCommitment;
+-class OpeningType_Leader extends primitive_1.Null {
++export class OpeningType_Leader extends Null {
+ }
+-exports.OpeningType_Leader = OpeningType_Leader;
+-class OpeningType_Worker extends primitive_1.Null {
++export class OpeningType_Worker extends Null {
+ }
+-exports.OpeningType_Worker = OpeningType_Worker;
+-exports.OpeningTypeDef = {
++export const OpeningTypeDef = {
+     Leader: OpeningType_Leader,
+     Worker: OpeningType_Worker,
+ };
+-class OpeningType extends (0, common_1.JoyEnum)(exports.OpeningTypeDef) {
++export class OpeningType extends JoyEnum(OpeningTypeDef) {
+ }
+-exports.OpeningType = OpeningType;
+ // This type is also defined in /hiring (and those are incosistent), but here
+ // it is beeing registered as "OpeningOf" (which is an alias used by the runtime working-group module),
+ // so it shouldn't cause any conflicts
+-class Opening extends (0, common_1.JoyStructDecorated)({
+-    hiring_opening_id: hiring_1.OpeningId,
+-    applications: types_1.BTreeSet.with(hiring_1.ApplicationId),
++export class Opening extends JoyStructDecorated({
++    hiring_opening_id: OpeningId,
++    applications: BTreeSet.with(ApplicationId),
+     policy_commitment: OpeningPolicyCommitment,
+     opening_type: OpeningType,
+ }) {
+ }
+-exports.Opening = Opening;
+-class RewardPolicy extends (0, common_1.JoyStructDecorated)({
+-    amount_per_payout: primitive_1.u128,
+-    next_payment_at_block: primitive_1.u32,
+-    payout_interval: types_1.Option.with(primitive_1.u32), // Option<BlockNumber>
++export class RewardPolicy extends JoyStructDecorated({
++    amount_per_payout: u128,
++    next_payment_at_block: u32,
++    payout_interval: Option.with(u32), // Option<BlockNumber>
+ }) {
+ }
+-exports.RewardPolicy = RewardPolicy;
+-exports.workingGroupTypes = {
++// Needed for types augment tool
++export { OpeningId, ApplicationId };
++export const workingGroupTypes = {
+     RationaleText,
+     ApplicationOf: Application,
+     ApplicationIdSet,
+@@ -114,10 +97,10 @@ exports.workingGroupTypes = {
+     StorageProviderId,
+     OpeningType,
+     /// Alias used by the runtime working-group module
+-    HiringApplicationId: hiring_1.ApplicationId,
++    HiringApplicationId: ApplicationId,
+     RewardPolicy,
+     // Expose in registry for api.createType purposes:
+     OpeningPolicyCommitment,
+     RoleStakeProfile,
+ };
+-exports.default = exports.workingGroupTypes;
++export default workingGroupTypes;

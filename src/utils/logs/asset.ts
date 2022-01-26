@@ -1,30 +1,58 @@
 import axios from 'axios'
 import { debounce } from 'lodash-es'
 
-import { ResolvedAssetDetails } from '@/types/assets'
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 
 import { ConsoleLogger } from './console'
 import { SentryLogger } from './sentry'
 
-export type AssetEvent = {
-  type: string
+type DistributorEventDetails = {
+  distributorId: string
+  distributorUrl?: string | null
+}
+
+type StorageProviderEventDetails = {
   storageProviderId: string
   storageProviderUrl?: string | null
-} & Record<string, unknown>
+}
+
+type StorageEvent = {
+  type: string
+  [x: string]: unknown
+} & (DistributorEventDetails | StorageProviderEventDetails)
+
+export type DistributorEventEntry = {
+  dataObjectId: string
+  dataObjectType: StorageDataObjectFieldsFragment['type']['__typename']
+} & DistributorEventDetails
+
+export type DataObjectResponseMetric = {
+  initialResponseTime: number
+  fullResponseTime?: number
+}
 
 class _AssetLogger {
   private logUrl = ''
   private user?: Record<string, unknown>
 
   initialize(logUrl: string | null) {
-    if (logUrl) this.logUrl = logUrl
+    // increase the size of performance entry buffer, so we don't skip any assets
+    window.performance.setResourceTimingBufferSize(1000)
+
+    if (!logUrl) return
+
+    this.logUrl = logUrl
   }
 
   setUser(user?: Record<string, unknown>) {
     this.user = user
   }
 
-  private pendingEvents: AssetEvent[] = []
+  get isEnabled() {
+    return !!this.logUrl
+  }
+
+  private pendingEvents: StorageEvent[] = []
 
   private sendEvents = debounce(async () => {
     if (!this.pendingEvents.length) return
@@ -44,7 +72,7 @@ class _AssetLogger {
     }
   }, 2000)
 
-  private addEvent(event: AssetEvent) {
+  private addEvent(event: StorageEvent) {
     const eventWithUser = {
       ...event,
       user: this.user,
@@ -53,45 +81,27 @@ class _AssetLogger {
     this.sendEvents()
   }
 
-  assetResponseMetric(assetDetails: ResolvedAssetDetails, responseTime: number) {
-    const event: AssetEvent = {
-      type: 'asset-download-response-time',
-      responseTime,
-      ...assetDetails,
+  logDistributorResponseTime(entry: DistributorEventEntry, metric: DataObjectResponseMetric) {
+    const event: StorageEvent = {
+      type: 'distributor-response-time',
+      ...entry,
+      ...metric,
     }
     this.addEvent(event)
   }
 
-  assetError(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
-      type: 'asset-download-failure',
-      ...assetDetails,
+  logDistributorError(entry: DistributorEventEntry) {
+    const event: StorageEvent = {
+      type: 'distributor-response-error',
+      ...entry,
     }
     this.addEvent(event)
   }
 
-  assetTimeout(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
-      type: 'asset-download-timeout',
-      ...assetDetails,
-    }
-    this.addEvent(event)
-  }
-
-  uploadError(assetDetails: ResolvedAssetDetails) {
-    const event: AssetEvent = {
-      type: 'asset-upload-failure',
-      ...assetDetails,
-    }
-    this.addEvent(event)
-  }
-
-  uploadRequestMetric(assetDetails: ResolvedAssetDetails, uploadTime: number, fileSize: number) {
-    const event: AssetEvent = {
-      type: 'asset-upload-request-time',
-      ...assetDetails,
-      uploadTime,
-      fileSize,
+  logDistributorResponseTimeout(entry: DistributorEventEntry) {
+    const event: StorageEvent = {
+      type: 'distributor-response-timeout',
+      ...entry,
     }
     this.addEvent(event)
   }

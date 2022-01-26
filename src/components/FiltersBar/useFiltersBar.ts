@@ -21,7 +21,8 @@ export const useFiltersBar = () => {
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
   const canClearCategoriesFilter =
-    videoWhereInput?.categoryId_in !== undefined && videoWhereInput?.categoryId_in?.length !== 0
+    (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
+    false
   const canClearAllFilters =
     canClearDateUploadedFilter || canClearVideoLengthFilter || canClearOtherFilters || canClearCategoriesFilter
 
@@ -53,7 +54,7 @@ export const useFiltersBar = () => {
   const clearCategoriesFilter = () => {
     setCategoriesFilter(undefined)
     setVideoWhereInput((value) => {
-      delete value.categoryId_in
+      delete value.category
       return value
     })
   }

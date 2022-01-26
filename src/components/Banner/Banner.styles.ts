@@ -1,68 +1,41 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
-import { BannerVariant } from './Banner'
-
-type BannerProps = {
-  variant: BannerVariant
-}
+import { IconButton } from '../_buttons/IconButton'
 
 export const BannerHeader = styled.div`
   width: 100%;
-  height: ${sizes(8)};
   display: flex;
+  justify-content: space-between;
   align-items: center;
 `
 
-export const BannerIconContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  width: ${sizes(6)};
-  height: ${sizes(6)};
+export const IconWrapper = styled.div`
   margin-right: ${sizes(2)};
 `
 
-export const BannerTitle = styled(Text)`
-  display: flex;
-  align-items: center;
+export const BannerText = styled(Text)`
   word-break: break-word;
+  flex: 1;
 `
 
-export const BannerButtonsContainer = styled.div`
-  display: flex;
-  margin-left: auto;
+export const CloseButton = styled(IconButton)`
+  margin-left: ${sizes(2)};
 `
 
-export const BannerActionButton = styled(Button)`
+export const BannerDescription = styled.div<{ withTitle?: boolean }>`
+  margin-top: ${({ withTitle }) => (withTitle ? sizes(2) : 0)};
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: ${sizes(2)};
-  min-width: auto;
 `
 
-export const BannerDescription = styled(Text)`
-  margin-top: ${sizes(2)};
-  line-height: ${sizes(5)};
-  color: ${oldColors.gray[300]};
-  word-break: break-word;
-`
-
-export const BannerWrapper = styled.div<BannerProps>`
+export const BannerWrapper = styled.div`
   position: relative;
   padding: ${sizes(4)};
-  box-shadow: ${({ variant }) => variant === 'primary' && `inset 0 0 0 1px ${oldColors.gray[700]}`};
+  box-shadow: inset 0 0 0 1px ${cVar('colorBorder')};
   width: 100%;
-  background-color: ${({ variant }) =>
-    variant === 'tertiary'
-      ? oldColors.gray[700]
-      : variant === 'secondary'
-      ? oldColors.blue[500]
-      : oldColors.transparent};
-  ${BannerDescription} {
-    color: ${({ variant }) => variant === 'secondary' && oldColors.blue[200]};
-  }
 `

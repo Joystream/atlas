@@ -60,7 +60,7 @@ export const TRANSACTION_STEPS_DETAILS = {
   [ExtrinsicStatus.Error]: {
     title: 'Something went wrong...',
     description:
-      'An unexpected error was encountered. If this persists, our Discord community may be a good place to find some help.',
+      'An unexpected error was encountered. The transaction may have succeeded though, refreshing the page is the safest option. If this persists, our Discord community may be a good place to find some help.',
     animation: {
       data: errorAnimation,
       size: {

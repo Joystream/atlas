@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
 import { VideoWhereInput } from '@/api/queries'
-import { AssetAvailability, SearchQuery } from '@/api/queries'
+import { SearchQuery } from '@/api/queries'
 import { SentryLogger } from '@/utils/logs'
 
 type SearchResultData = {
@@ -34,8 +34,12 @@ export const useSearchResults = ({ searchQuery, limit = 50, videoWhereInput }: S
       text,
       limit,
       whereVideo: {
-        mediaAvailability_eq: AssetAvailability.Accepted,
-        thumbnailPhotoAvailability_eq: AssetAvailability.Accepted,
+        media: {
+          isAccepted_eq: true,
+        },
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
         isPublic_eq: true,
         isCensored_eq: false,
         ...videoWhereInput,

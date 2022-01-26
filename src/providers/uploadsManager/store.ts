@@ -1,6 +1,6 @@
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { createStore } from '@/store'
-import { UploadStatus } from '@/types/uploads'
+import { UploadStatus } from '@/types/storage'
 
 import { AssetParent, AssetUpload, UploadsStatusRecord } from './types'
 
@@ -15,6 +15,8 @@ type UploadStoreState = {
   assetsFiles: AssetFile[]
   isSyncing: boolean
   processingAssetsIds: string[]
+  // store ids of channels that were created as part of the session to ignore them when checking missing assets
+  newChannelsIds: string[]
 }
 
 type UploadStoreActions = {
@@ -26,6 +28,7 @@ type UploadStoreActions = {
   setIsSyncing: (isSyncing: boolean) => void
   removeProcessingAssetId: (contentId: string) => void
   addProcessingAssetId: (contentId: string) => void
+  addNewChannelId: (channelId: string) => void
 }
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
@@ -50,7 +53,7 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       },
       removeAssetFromUploads: (contentId) => {
         set((state) => {
-          state.uploads = state.uploads.filter((asset) => asset.contentId !== contentId)
+          state.uploads = state.uploads.filter((asset) => asset.id !== contentId)
         })
       },
       removeAssetsWithParentFromUploads: (type, id) => {
@@ -75,6 +78,11 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
           state.processingAssetsIds = state.processingAssetsIds.filter((id) => id !== contentId)
         })
       },
+      addNewChannelId: (channelId) => {
+        set((state) => {
+          state.newChannelsIds.push(channelId)
+        })
+      },
     }),
     state: {
       uploads: [],
@@ -82,6 +90,7 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       assetsFiles: [],
       isSyncing: false,
       processingAssetsIds: [],
+      newChannelsIds: [],
     },
   },
   {

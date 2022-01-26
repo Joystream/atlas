@@ -15,8 +15,6 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   error?: boolean
   className?: string
   onChange?: (value: boolean) => void
-  onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void
-  onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void
   label?: string
   helperText?: string
 }

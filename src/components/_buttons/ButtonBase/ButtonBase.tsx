@@ -8,6 +8,8 @@ import { BorderWrapper, ButtonBaseStyleProps, StyledButtonBase } from './ButtonB
 export type ButtonBaseProps = {
   disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseMove?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseOut?: (e: React.MouseEvent<HTMLButtonElement>) => void
   to?: To
   newTab?: boolean
   type?: 'button' | 'submit'

@@ -3,11 +3,11 @@ import React, { FC, useMemo, useState } from 'react'
 import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { VideoTile } from '@/components/_video/VideoTile'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
@@ -45,7 +45,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
     onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelWithVideos', error),
   })
 
-  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset({ entity: channel, assetType: AssetType.AVATAR })
+  const { url: avatarUrl, isLoadingAsset: isLoadingAvatar } = useAsset(channel?.avatarPhoto)
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channelId, channel?.title)
 
   const targetItemsCount = videosPerRow * videoRows
@@ -58,7 +58,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
   const gridContent = useMemo(
     () =>
       [...displayedVideos, ...placeholderItems].map((video, idx) => (
-        <VideoTile id={video.id} key={`channels-with-videos-${idx}`} showChannel />
+        <VideoTileViewer id={video.id} key={`channels-with-videos-${idx}`} />
       )),
     [displayedVideos, placeholderItems]
   )

@@ -19,10 +19,18 @@ export default {
       },
     },
     avatars: { table: { disable: true } },
+    direction: {
+      control: {
+        type: 'radio',
+        options: ['left', 'right'],
+      },
+    },
   },
   args: {
+    loading: false,
     clickable: true,
     size: 'medium',
+    direction: 'left',
   },
 } as Meta
 

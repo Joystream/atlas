@@ -1,10 +1,9 @@
-import { sampleSize } from 'lodash'
+import { sampleSize } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router'
 
 import { useCategories, useCategoriesFeaturedVideos, useVideoCount } from '@/api/hooks'
-import { VideoCategoryFieldsFragment } from '@/api/queries'
-import { GetCategoriesFeaturedVideosQuery } from '@/api/queries/__generated__/featured.generated'
+import { GetCategoriesFeaturedVideosQuery, VideoCategoryFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -14,10 +13,10 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
-import { VideoTile } from '@/components/_video/VideoTile'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { AssetType, useAsset } from '@/providers/assets'
+import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
@@ -72,7 +71,7 @@ export const CategoryView = () => {
       </TitleContainer>
       <Grid>
         {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
-          <VideoTile id={featuredVideo.video.id} key={idx} showChannel />
+          <VideoTileViewer id={featuredVideo.video.id} key={idx} />
         ))}
       </Grid>
 
@@ -121,18 +120,15 @@ const useVideoHeroVideos = (featuredVideos: GetCategoriesFeaturedVideosQuery['ca
       isLoadingThumbnail: true,
     }))
 
-  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset({
-    entity: videoHeroVideos?.[0]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset({
-    entity: videoHeroVideos?.[1]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
-  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset({
-    entity: videoHeroVideos?.[2]?.video,
-    assetType: AssetType.THUMBNAIL,
-  })
+  const { url: thumbnailPhotoUrl1, isLoadingAsset: isLoadingThumbnail1 } = useAsset(
+    videoHeroVideos?.[0]?.video?.thumbnailPhoto
+  )
+  const { url: thumbnailPhotoUrl2, isLoadingAsset: isLoadingThumbnail2 } = useAsset(
+    videoHeroVideos?.[1]?.video?.thumbnailPhoto
+  )
+  const { url: thumbnailPhotoUrl3, isLoadingAsset: isLoadingThumbnail3 } = useAsset(
+    videoHeroVideos?.[2]?.video?.thumbnailPhoto
+  )
 
   if (!videoHeroVideos) return [null, null, null]
 

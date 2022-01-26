@@ -1,4 +1,5 @@
 export * from './useAsset'
-export { AssetType } from './types'
 export * from './assetsManager'
 export * from './store'
+export * from './operatorsProvider'
+export * from './types'

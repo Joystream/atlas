@@ -24,8 +24,12 @@ export const ChannelGrid: React.FC<ChannelGridProps> = ({ channels, onChannelCli
 
   return (
     <Grid {...gridProps}>
-      {channels.map(({ id, title }) => (
-        <StyledChannelCard key={id} id={id} onClick={() => handleClick(id, title || undefined)} />
+      {channels.map((channel) => (
+        <StyledChannelCard
+          key={channel.id}
+          channel={channel}
+          onClick={() => handleClick(channel.id, channel.title || undefined)}
+        />
       ))}
     </Grid>
   )

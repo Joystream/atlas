@@ -8,7 +8,7 @@ import { SvgActionNewTab } from '@/components/_icons'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
-import { AssetUploadStatus } from '@/types/uploads'
+import { AssetUploadStatus } from '@/types/storage'
 import { openInNewTab } from '@/utils/browser'
 import { createLookup } from '@/utils/data'
 
@@ -29,23 +29,25 @@ export const UploadsManager: React.FC = () => {
   const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
-  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds } = useUploadsStore(
-    (state) => ({
-      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
-      isSyncing: state.isSyncing,
-      assetsFiles: state.assetsFiles,
-      processingAssetsIds: state.processingAssetsIds,
-      uploadStatuses: state.uploadsStatus,
-    }),
-    shallow
-  )
+  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds, newChannelsIds } =
+    useUploadsStore(
+      (state) => ({
+        channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+        isSyncing: state.isSyncing,
+        assetsFiles: state.assetsFiles,
+        processingAssetsIds: state.processingAssetsIds,
+        uploadStatuses: state.uploadsStatus,
+        newChannelsIds: state.newChannelsIds,
+      }),
+      shallow
+    )
   const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
     useUploadsStore((state) => state.actions)
   const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
 
   const videoAssets = channelUploads
     .filter((asset) => asset.type === 'video')
-    .map((asset) => ({ ...asset, uploadStatus: uploadStatuses[asset.contentId]?.lastStatus }))
+    .map((asset) => ({ ...asset, uploadStatus: uploadStatuses[asset.id]?.lastStatus }))
 
   const { getDataObjectsAvailability, dataObjects, startPolling, stopPolling } = useDataObjectsAvailabilityLazy({
     fetchPolicy: 'network-only',
@@ -59,11 +61,11 @@ export const UploadsManager: React.FC = () => {
     if (videoAssets.length) {
       videoAssets.forEach((video) => {
         const videoObject = videoAssetsRef.current.find(
-          (videoRef) => videoRef.uploadStatus !== 'completed' && videoRef.contentId === video.contentId
+          (videoRef) => videoRef.uploadStatus !== 'completed' && videoRef.id === video.id
         )
         if (videoObject && video.uploadStatus === 'completed') {
           displaySnackbar({
-            customId: video.contentId,
+            customId: video.id,
             title: 'Video ready to be viewed',
             description: video.parentObject?.title || '',
             iconType: 'success',
@@ -98,12 +100,12 @@ export const UploadsManager: React.FC = () => {
 
   useEffect(() => {
     dataObjects?.forEach((asset) => {
-      if (asset.liaisonJudgement === 'ACCEPTED') {
-        setUploadStatus(asset.joystreamContentId, { lastStatus: 'completed' })
-        removeProcessingAssetId(asset.joystreamContentId)
+      if (asset.isAccepted) {
+        setUploadStatus(asset.id, { lastStatus: 'completed' })
+        removeProcessingAssetId(asset.id)
       }
     })
-    if (dataObjects?.every((entry) => entry.liaisonJudgement === 'ACCEPTED')) {
+    if (dataObjects?.every((entry) => entry.isAccepted)) {
       stopPolling?.()
     }
   }, [dataObjects, removeProcessingAssetId, setUploadStatus, stopPolling])
@@ -112,7 +114,12 @@ export const UploadsManager: React.FC = () => {
 
   useEffect(() => {
     // do this only on first render or when active channel changes
-    if (!activeChannelId || cachedActiveChannelId === activeChannelId || isSyncing) {
+    if (
+      !activeChannelId ||
+      cachedActiveChannelId === activeChannelId ||
+      newChannelsIds.includes(activeChannelId) ||
+      isSyncing
+    ) {
       return
     }
     setCachedActiveChannelId(activeChannelId)
@@ -131,23 +138,23 @@ export const UploadsManager: React.FC = () => {
           return
         }
 
-        if (!pendingAssetsLookup[asset.contentId]) {
-          removeAssetFromUploads(asset.contentId)
+        if (!pendingAssetsLookup[asset.id]) {
+          removeAssetFromUploads(asset.id)
         } else {
           // mark asset as not missing from local state
-          delete missingLocalAssetsLookup[asset.contentId]
+          delete missingLocalAssetsLookup[asset.id]
         }
       })
 
       // add missing video assets
       fetchedVideos.forEach((video) => {
-        const media = video.mediaDataObject
-        const thumbnail = video.thumbnailPhotoDataObject
+        const media = video.media
+        const thumbnail = video.thumbnailPhoto
 
-        if (media && missingLocalAssetsLookup[media.joystreamContentId]) {
+        if (media && missingLocalAssetsLookup[media.id]) {
           addAssetToUploads({
-            contentId: media.joystreamContentId,
-            ipfsContentId: media.ipfsContentId,
+            id: media.id,
+            ipfsHash: media.ipfsHash,
             parentObject: {
               type: 'video',
               id: video.id,
@@ -158,10 +165,10 @@ export const UploadsManager: React.FC = () => {
           })
         }
 
-        if (thumbnail && missingLocalAssetsLookup[thumbnail.joystreamContentId]) {
+        if (thumbnail && missingLocalAssetsLookup[thumbnail.id]) {
           addAssetToUploads({
-            contentId: thumbnail.joystreamContentId,
-            ipfsContentId: thumbnail.ipfsContentId,
+            id: thumbnail.id,
+            ipfsHash: thumbnail.ipfsHash,
             parentObject: {
               type: 'video',
               id: video.id,
@@ -174,13 +181,13 @@ export const UploadsManager: React.FC = () => {
       })
 
       // add missing channel assets
-      const avatar = fetchedChannel?.avatarPhotoDataObject
-      const cover = fetchedChannel?.coverPhotoDataObject
+      const avatar = fetchedChannel?.avatarPhoto
+      const cover = fetchedChannel?.coverPhoto
 
-      if (avatar && missingLocalAssetsLookup[avatar.joystreamContentId]) {
+      if (avatar && missingLocalAssetsLookup[avatar.id]) {
         addAssetToUploads({
-          contentId: avatar.joystreamContentId,
-          ipfsContentId: avatar.ipfsContentId,
+          id: avatar.id,
+          ipfsHash: avatar.ipfsHash,
           parentObject: {
             type: 'channel',
             id: fetchedChannel?.id || '',
@@ -190,10 +197,10 @@ export const UploadsManager: React.FC = () => {
           size: avatar.size,
         })
       }
-      if (cover && missingLocalAssetsLookup[cover.joystreamContentId]) {
+      if (cover && missingLocalAssetsLookup[cover.id]) {
         addAssetToUploads({
-          contentId: cover.joystreamContentId,
-          ipfsContentId: cover.ipfsContentId,
+          id: cover.id,
+          ipfsHash: cover.ipfsHash,
           parentObject: {
             type: 'channel',
             id: fetchedChannel?.id || '',
@@ -236,6 +243,7 @@ export const UploadsManager: React.FC = () => {
     setIsSyncing,
     processingAssetsIds,
     processingAssetsLookup,
+    newChannelsIds,
   ])
 
   return null

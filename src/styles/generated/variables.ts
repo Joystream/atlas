@@ -88,6 +88,7 @@ export const variables = css`
     --color-text-primary: var(--color-core-blue-300);
     --color-text-error: var(--color-core-red-300);
     --color-text-success: var(--color-core-green-300);
+    --color-text-caution: var(--color-core-yellow-200);
     --color-border-muted: var(--color-core-neutral-700);
     --color-border-muted-alpha: var(--color-core-neutral-700-lighten);
     --color-border: var(--color-core-neutral-500);
@@ -112,6 +113,9 @@ export const variables = css`
     --color-background-success-muted: var(--color-core-green-600);
     --color-background-success: var(--color-core-green-500);
     --color-background-success-strong: var(--color-core-green-400);
+    --color-background-caution-muted: var(--color-core-yellow-300);
+    --color-background-caution: var(--color-core-yellow-200);
+    --color-background-caution-strong: var(--color-core-yellow-100);
     --effect-dividers-top: inset 0 1px 0 0 var(--color-border-muted-alpha);
     --effect-dividers-bottom: inset 0 -1px 0 0 var(--color-border-muted-alpha);
     --effect-dividers-left: inset 1px 0 0 0 var(--color-border-muted-alpha);
@@ -363,6 +367,7 @@ export const theme = {
   colorTextPrimary: { variable: 'var(--color-text-primary)', value: '#7174FF' },
   colorTextError: { variable: 'var(--color-text-error)', value: '#F34235' },
   colorTextSuccess: { variable: 'var(--color-text-success)', value: '#0C9846' },
+  colorTextCaution: { variable: 'var(--color-text-caution)', value: '#CAA802' },
   colorBorderMuted: { variable: 'var(--color-border-muted)', value: '#272D33' },
   colorBorderMutedAlpha: { variable: 'var(--color-border-muted-alpha)', value: '#C2E0FF33' },
   colorBorder: { variable: 'var(--color-border)', value: '#424E57' },
@@ -387,6 +392,9 @@ export const theme = {
   colorBackgroundSuccessMuted: { variable: 'var(--color-background-success-muted)', value: '#075829' },
   colorBackgroundSuccess: { variable: 'var(--color-background-success)', value: '#096C32' },
   colorBackgroundSuccessStrong: { variable: 'var(--color-background-success-strong)', value: '#0A823C' },
+  colorBackgroundCautionMuted: { variable: 'var(--color-background-caution-muted)', value: '#AC9002' },
+  colorBackgroundCaution: { variable: 'var(--color-background-caution)', value: '#CAA802' },
+  colorBackgroundCautionStrong: { variable: 'var(--color-background-caution-strong)', value: '#ECC502' },
   effectDividersTop: { variable: 'var(--effect-dividers-top)', value: 'inset 0 1px 0 0 #C2E0FF33' },
   effectDividersBottom: { variable: 'var(--effect-dividers-bottom)', value: 'inset 0 -1px 0 0 #C2E0FF33' },
   effectDividersLeft: { variable: 'var(--effect-dividers-left)', value: 'inset 1px 0 0 0 #C2E0FF33' },

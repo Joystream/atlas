@@ -1,5 +1,5 @@
 import { Global } from '@emotion/react'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'
@@ -50,7 +50,9 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   useEffect(() => {
     setVideoWhereInput({
-      categoryId_eq: categoryId,
+      category: {
+        id_eq: categoryId,
+      },
     })
   }, [categoryId, setVideoWhereInput])
 
@@ -79,7 +81,12 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
       setLanguage(language)
       setVideoWhereInput((value) => ({
         ...value,
-        languageId_eq: language === 'undefined' ? undefined : language,
+        language:
+          language === 'undefined'
+            ? undefined
+            : {
+                iso_eq: language,
+              },
       }))
     },
     [setLanguage, setVideoWhereInput]
