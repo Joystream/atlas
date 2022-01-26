@@ -19,6 +19,6 @@ jobs:
       - name: Install modules
         run: yarn install --frozen-lockfile
       - name: Run ESLint
-        run: yarn atals:lint
+        run: yarn atlas:lint
       - name: Run Tests
-        run: atlas:yarn test
+        run: yarn atlas:test
