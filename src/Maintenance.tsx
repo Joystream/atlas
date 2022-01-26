@@ -12,7 +12,7 @@ export const Maintenance = () => (
     <Text as="p" variant="t200" secondary>
       Atlas is currently undergoing maintenance work <br /> in order to ensure the best features <br /> and performance
       for our users. <br /> <br />
-      We should be back at around 1 PM CET. <br /> See you soon!
+      We should be back at around 2 PM CET. <br /> See you soon!
     </Text>
     <SvgJoystreamLogoFull />
   </Container>
