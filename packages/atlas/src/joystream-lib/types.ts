@@ -69,3 +69,4 @@ export type ExtractVideoResultsAssetsIdsFn = (
 export type SendExtrinsicResult = ExtrinsicResult<{ events: GenericEvent[]; getEventData: GetEventDataFn }>
 export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetsIds }>
 export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
+export type MemberExtrisincResult = ExtrinsicResult<{ memberId: MemberId }>
