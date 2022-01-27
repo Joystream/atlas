@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -10,27 +10,51 @@ import {
   MembershipDetails,
   MembershipHeader,
   MembershipInfoContainer,
+  StyledHandle,
+  StyledSvgActionCheck,
   StyledSvgActionCopy,
   StyledText,
 } from './MembershipInfo.style'
 
 import { Avatar } from '../Avatar'
-import { Text } from '../Text'
 import { Tooltip } from '../Tooltip'
 import { Button } from '../_buttons/Button'
 import { SvgActionEdit } from '../_icons'
 import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type MembershipInfoProps = {
-  avatarUrl?: string
-  handle?: string
-  address?: string
+  avatarUrl?: string | null
+  hasAvatarUploadFailed?: boolean
+  onAvatarEditClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  handle?: string | null
+  address?: string | null
   loading?: boolean
   isOwner?: boolean
 }
 
-export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarUrl, handle, loading, isOwner }) => {
+export const MembershipInfo: React.FC<MembershipInfoProps> = ({
+  address,
+  avatarUrl,
+  hasAvatarUploadFailed,
+  onAvatarEditClick,
+  handle,
+  loading,
+  isOwner,
+}) => {
+  const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
+
+  const handleCopyAddress = () => {
+    if (!address) {
+      return
+    }
+    copyToClipboard(address)
+    setCopyButtonClicked(true)
+    setTimeout(() => {
+      setCopyButtonClicked(false)
+    }, 3000)
+  }
+
   return (
     <SwitchTransition>
       <CSSTransition
@@ -40,20 +64,27 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({ address, avatarU
       >
         <MembershipHeader>
           <MembershipInfoContainer>
-            <Avatar size={smMatch ? 'preview' : 'channel-card'} assetUrl={avatarUrl} loading={loading} />
+            <Avatar
+              size={smMatch ? 'preview' : 'channel-card'}
+              editable
+              onEditClick={onAvatarEditClick}
+              assetUrl={avatarUrl}
+              loading={loading}
+              hasAvatarUploadFailed={hasAvatarUploadFailed}
+            />
             <MembershipDetails>
-              {loading || !handle ? (
+              {loading ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <Text variant={smMatch ? 'h700' : 'h600'}>{handle}</Text>
+                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle || '\xa0'}</StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" secondary onClick={() => copyToClipboard(address)}>
+                <StyledText variant="t300" secondary onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy address" arrowDisabled placement="top">
-                    <StyledSvgActionCopy />
+                    {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
                   </Tooltip>
                 </StyledText>
               )}

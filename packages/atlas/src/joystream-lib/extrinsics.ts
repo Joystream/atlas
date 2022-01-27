@@ -30,6 +30,7 @@ import {
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
+  MemberExtrisincResult,
   MemberId,
   SendExtrinsicResult,
   VideoExtrinsicResult,
@@ -234,6 +235,23 @@ export class JoystreamLibExtrinsics {
     return {
       videoId,
       block,
+    }
+  }
+  async updateMember(
+    memberId: MemberId,
+    handle: string | null,
+    avatarUri: string | null,
+    about: string | null,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MemberExtrisincResult> {
+    await this.ensureApi()
+    const tx = this.api.tx.members.updateMembership(memberId, handle, avatarUri, about)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+      memberId,
     }
   }
 }
