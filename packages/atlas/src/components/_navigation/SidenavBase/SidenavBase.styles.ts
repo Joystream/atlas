@@ -30,8 +30,8 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   z-index: ${zIndex.sideNav};
   width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   color: ${cVar('colorText')};
   background-color: ${cVar('colorBackground')};
@@ -223,4 +223,10 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   ${media.md} {
     top: ${sizes(4)};
   }
+`
+
+export const ScrollContainer = styled.div`
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 `
