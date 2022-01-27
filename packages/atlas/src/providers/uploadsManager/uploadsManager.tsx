@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
 import { useDataObjectsAvailabilityLazy } from '@/api/hooks'
-import { SvgActionNewTab } from '@/components/_icons'
 import { ASSET_POLLING_INTERVAL } from '@/config/assets'
 import { absoluteRoutes } from '@/config/routes'
 import { fetchMissingAssets } from '@/providers/uploadsManager/utils'
@@ -70,8 +69,7 @@ export const UploadsManager: React.FC = () => {
             description: video.parentObject?.title || '',
             iconType: 'success',
             timeout: UPLOADED_SNACKBAR_TIMEOUT,
-            actionText: 'See on Joystream',
-            actionIcon: <SvgActionNewTab />,
+            actionText: 'Watch',
             onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(video.parentObject.id), true),
           })
         }

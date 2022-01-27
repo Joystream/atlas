@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, sizes, transitions, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 type SnackbarWrapperProps = {
   snackbarHeight?: number
@@ -47,15 +47,14 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
-    transition: transform ${transitions.timings.regular} ${transitions.easing},
-      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
+    transition: transform ${cVar('animationTransitionFast')},
+      height ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')},
+      margin-bottom ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
   }
 
   &.snackbar-enter-active {
-    transition: height ${transitions.timings.regular} ${transitions.easing},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing},
-      transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
+    transition: height ${cVar('animationTransitionFast')}, margin-bottom ${cVar('animationTransitionFast')},
+      transform ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
   }
 `
 
@@ -93,7 +92,7 @@ export const SnackbarButtonsContainer = styled.div`
 `
 
 export const SnackbarActionButton = styled(Button)`
-  margin-left: ${sizes(2)};
+  margin-right: ${sizes(2)};
 `
 
 export const SnackbarIconContainer = styled.div`

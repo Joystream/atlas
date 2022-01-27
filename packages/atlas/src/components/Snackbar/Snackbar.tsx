@@ -23,7 +23,6 @@ export type SnackbarProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onMouseEnter?: (e: React.MouseEvent) => void
   onMouseLeave?: (e: React.MouseEvent) => void
-  actionIcon?: ReactNode
 }
 
 export const Snackbar: React.FC<SnackbarProps> = ({
@@ -35,7 +34,6 @@ export const Snackbar: React.FC<SnackbarProps> = ({
   onClick,
   onMouseEnter,
   onMouseLeave,
-  actionIcon,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
@@ -61,11 +59,9 @@ export const Snackbar: React.FC<SnackbarProps> = ({
           )}
         </SnackbarContent>
         <SnackbarButtonsContainer>
-          {description && (
-            <SnackbarActionButton textOnly onClick={onActionClick} iconPlacement="right" icon={actionIcon}>
-              {actionText}
-            </SnackbarActionButton>
-          )}
+          <SnackbarActionButton textOnly onClick={onActionClick}>
+            {actionText}
+          </SnackbarActionButton>
           <IconButton onClick={onClick} variant="tertiary" size="small">
             <SvgActionClose />
           </IconButton>
