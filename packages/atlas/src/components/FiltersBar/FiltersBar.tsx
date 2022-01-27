@@ -103,7 +103,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
         {nftStatuses.map((status) => (
           <Checkbox
             name="nft-status"
-            label={status.name as string}
+            label={status.name}
             key={`nft-status-${status.id}`}
             value={!!nftStatusFilter?.includes(status.id)}
             onChange={(value) => {
