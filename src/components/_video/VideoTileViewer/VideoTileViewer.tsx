@@ -44,7 +44,7 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
       createdAt={video?.createdAt}
       slots={{
         bottomRight: {
-          element: video?.duration && <Pill variant="overlay" label={formatDurationShort(video?.duration)} />,
+          element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
         center: {
           element: <SvgIllustrativePlay />,
