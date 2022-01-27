@@ -20,6 +20,7 @@ import {
   ChannelView,
   ChannelsView,
   HomeView,
+  MemberView,
   NewView,
   PopularView,
   SearchView,
@@ -39,6 +40,7 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.channels(), element: <ChannelsView /> },
   { path: relativeRoutes.viewer.channel(), element: <ChannelView /> },
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
+  { path: relativeRoutes.viewer.member(), element: <MemberView /> },
 ]
 
 export const ViewerLayout: React.FC = () => {

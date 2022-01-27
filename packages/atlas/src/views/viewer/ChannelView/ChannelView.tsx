@@ -79,8 +79,8 @@ export const ChannelView: React.FC = () => {
   })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const currentTabName = searchParams.get('tab')
-  const [currentTab, setCurrentTab] = useState<string | null>(null)
+  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
@@ -385,7 +385,7 @@ type SearchProps = {
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
   search: (searchQuery: string) => void
-  setCurrentTab: (tab: string) => void
+  setCurrentTab: (tab: typeof TABS[number] | null) => void
 }
 const Search: React.FC<SearchProps> = ({
   searchInputRef,
