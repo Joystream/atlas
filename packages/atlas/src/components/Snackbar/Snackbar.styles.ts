@@ -62,17 +62,17 @@ export const SnackbarContent = styled.div`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
+  padding: ${sizes(1.5)} 0;
   width: 100%;
 `
 
 export const SnackbarTitle = styled(Text)<TitleProps>`
-  min-height: 32px;
   display: flex;
   align-items: center;
 `
 
 export const SnackbarDescription = styled(Text)`
-  padding: ${sizes(1)} 0;
+  margin-top: ${sizes(2)};
 `
 
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
