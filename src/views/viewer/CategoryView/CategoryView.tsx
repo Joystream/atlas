@@ -66,14 +66,18 @@ export const CategoryView = () => {
         videos={videoHeroVideos}
       />
 
-      <TitleContainer>
-        <Text variant="h500">Featured category videos</Text>
-      </TitleContainer>
-      <Grid>
-        {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
-          <VideoTileViewer id={featuredVideo.video.id} key={idx} />
-        ))}
-      </Grid>
+      {categoriesFeaturedVideos?.length && (
+        <>
+          <TitleContainer>
+            <Text variant="h500">Featured category videos</Text>
+          </TitleContainer>
+          <Grid>
+            {categoriesFeaturedVideos?.map((featuredVideo, idx) => (
+              <VideoTileViewer id={featuredVideo.video.id} key={idx} />
+            ))}
+          </Grid>
+        </>
+      )}
 
       <CategoryVideos categoryId={id} />
 
