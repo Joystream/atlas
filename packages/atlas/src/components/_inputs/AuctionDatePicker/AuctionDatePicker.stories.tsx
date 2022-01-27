@@ -1,4 +1,5 @@
 import { Meta, Story } from '@storybook/react'
+import { isValid } from 'date-fns'
 import React, { useState } from 'react'
 
 import { AuctionDatePicker, AuctionDatePickerProps } from './AuctionDatePicker'
@@ -10,16 +11,17 @@ export default {
 } as Meta
 
 const Template: Story<AuctionDatePickerProps> = (args) => {
-  const [startDate, setStartDate] = useState<string | null>()
-  const [expirationDate, setExpirationDate] = useState<string | null>()
-
+  const [startDate, setStartDate] = useState<string | null>(null)
+  const [expirationDate, setExpirationDate] = useState<string | null>(null)
+  // eslint-disable-next-line no-console
+  console.log({ startDate, expirationDate })
   return (
     <div style={{ display: 'flex', gap: '8px', width: '652px' }}>
       <AuctionDatePicker
         {...args}
         items={[
           {
-            value: 'Fri Jan 21 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
+            value: 'Fri Jan 7 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
             name: 'Right after listing',
           },
         ]}
@@ -47,6 +49,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
             name: '7 days',
           },
         ]}
+        minDate={isValid(new Date(startDate ?? '')) ? new Date(startDate as string) : undefined}
         onChange={setExpirationDate}
         value={expirationDate}
         label="expiration date"

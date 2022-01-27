@@ -3922,8 +3922,9 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/glider-js": ^1.7.6
     "@types/loadable__component": ^5.13.4
-    "@types/lodash-es": ^4.17.6
-    "@types/react": ^17.0.39
+    "@types/lodash-es": ^4.17.5
+    "@types/react": ^17.0.37
+    "@types/react-datepicker": ^4.3.4
     "@types/react-dom": ^17.0.11
     "@types/react-helmet": ^6.1.5
     "@types/react-transition-group": ^4.4.4
@@ -3958,6 +3959,7 @@ __metadata:
     postcss-syntax: ^0.36.2
     rc-slider: ^9.7.5
     react: ^17.0.2
+    react-datepicker: ^4.6.0
     react-dom: ^17.0.2
     react-dropzone: ^11.7.1
     react-helmet: ^6.1.0
@@ -4641,7 +4643,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0":
+"@popperjs/core@npm:^2.5.4, @popperjs/core@npm:^2.6.0, @popperjs/core@npm:^2.9.2":
   version: 2.11.2
   resolution: "@popperjs/core@npm:2.11.2"
   checksum: 5695bf020eda54636e16a62dc9b5fdd92beaf7b2d19f62fcef049d57c5cff92773562d80cbf760b217c3ec928da310eb24994ab6a00fd39dffa0af9b5dfc01a6
@@ -4652,13 +4654,6 @@ __metadata:
   version: 2.10.0
   resolution: "@popperjs/core@npm:2.10.0"
   checksum: d1f07faa4bd01c38facf97ffa852fdd298a782fe7deace634c79e054a68dedc8f8a4d7e96b342efb6a42cc0042af7a65d5a0d132f760da5420cc7a860986fbcb
-  languageName: node
-  linkType: hard
-
-"@popperjs/core@npm:^2.9.2":
-  version: 2.11.2
-  resolution: "@popperjs/core@npm:2.11.2"
-  checksum: 5695bf020eda54636e16a62dc9b5fdd92beaf7b2d19f62fcef049d57c5cff92773562d80cbf760b217c3ec928da310eb24994ab6a00fd39dffa0af9b5dfc01a6
   languageName: node
   linkType: hard
 
@@ -18459,6 +18454,23 @@ fsevents@^1.2.7:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: e60811781716e57f0990379eff20d6f22d4d35b9e858c47ecf857c1dc1c1a2274c924ded7248bad5f1e2fbf2aab06e59b12852910c8dee5e6850f8e4df293670
+  languageName: node
+  linkType: hard
+
+"react-datepicker@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "react-datepicker@npm:4.6.0"
+  dependencies:
+    "@popperjs/core": ^2.9.2
+    classnames: ^2.2.6
+    date-fns: ^2.24.0
+    prop-types: ^15.7.2
+    react-onclickoutside: ^6.12.0
+    react-popper: ^2.2.5
+  peerDependencies:
+    react: ^16.9.0 || ^17
+    react-dom: ^16.9.0 || ^17
+  checksum: 30c9f04d4223326572ed9399b39834e1e7e3fcda52e4433adc5dc81e84d8d5cf9699bf728889a80098aea76637a7ff759f0a79ec053ccd61b707de0662612adf
   languageName: node
   linkType: hard
 

@@ -2,6 +2,7 @@ import { UseSelectStateChange, useSelect } from 'downshift'
 import React, { Ref, forwardRef, useMemo } from 'react'
 import useMeasure from 'react-use-measure'
 
+import { TextProps } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { SvgActionChevronB } from '@/components/_icons'
 
@@ -38,6 +39,7 @@ export type SelectProps<T = string> = {
   value?: T | null
   valueLabel?: string
   labelPosition?: 'top' | 'left'
+  labelTextProps?: Omit<TextProps, 'ref'>
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
@@ -51,6 +53,7 @@ export type SelectProps<T = string> = {
 export const _Select = <T extends unknown>(
   {
     label = '',
+    labelTextProps,
     labelPosition = 'top',
     items,
     placeholder = 'Select option',
@@ -94,7 +97,7 @@ export const _Select = <T extends unknown>(
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && (
-            <StyledLabelText variant="t200" labelPosition={labelPosition}>
+            <StyledLabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
               {label}
             </StyledLabelText>
           )}
