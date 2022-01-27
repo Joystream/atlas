@@ -32,9 +32,9 @@ const TABS = [
 
 export const MemberView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [sortActivityBy, setSortActivityBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
+  const [sortActivityBy, setSortActivityBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const { activeMemberId } = useUser()
   const { handle } = useParams()
   const {
