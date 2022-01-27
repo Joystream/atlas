@@ -69,7 +69,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       }
       const slots: SlotsObject = {
         bottomRight: {
-          element: video?.duration && <Pill variant="overlay" label={formatDurationShort(video?.duration)} />,
+          element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
         topRight: {
           element: (
