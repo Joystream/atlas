@@ -27,7 +27,7 @@ const SNACKBARS_LIMIT = 3
 export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 
 export const Snackbars: React.FC = () => {
-  const { closeSnackbar } = useSnackbar()
+  const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
 
   useEffect(() => {
@@ -48,6 +48,12 @@ export const Snackbars: React.FC = () => {
               onActionClick={() => {
                 onActionClick?.()
                 closeSnackbar(id)
+              }}
+              onMouseEnter={() => {
+                cancelSnackbarTimeout(id)
+              }}
+              onMouseLeave={() => {
+                restartSnackbarTimeout(id)
               }}
               icon={iconType && ICON_TYPE_TO_ICON[iconType]}
               onClick={() => {

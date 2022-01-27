@@ -8,7 +8,6 @@ export type SnackbarIconType = 'success' | 'error' | 'info' | 'warning' | 'uploa
 export type DisplaySnackbarArgs = {
   customId?: string
   timeout?: number
-  variant?: 'primary' | 'secondary'
   iconType?: SnackbarIconType
   title: string
   description?: string
@@ -20,6 +19,7 @@ export type DisplaySnackbarArgs = {
 
 type Snackbar = {
   id: string
+  timeoutId?: number
 } & DisplaySnackbarArgs
 
 export type SnackbarStoreState = {
@@ -31,13 +31,14 @@ type SnackbarStoreActions = {
   updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
   closeSnackbar: (id: string) => void
   cancelSnackbarTimeout: (id: string) => void
+  restartSnackbarTimeout: (id: string) => void
 }
 
 export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreActions>({
   state: {
     snackbars: [],
   },
-  actionsFactory: (set) => ({
+  actionsFactory: (set, get) => ({
     updateSnackbar: (id, opts) => {
       set((state) => {
         const snackbarIdx = state.snackbars.findIndex((s) => s.id === id)
@@ -49,25 +50,39 @@ export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreAct
       set((state) => {
         state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
       }),
-    cancelSnackbarTimeout: (id) => {
-      set((state) => {
-        state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
-      })
-    },
+
     displaySnackbar: ({ timeout, customId, onExit, ...args }) => {
       const id = customId ?? createId()
       set((state) => {
-        state.snackbars.push({ id, ...args })
+        state.snackbars.push({ id, timeout, ...args })
       })
       if (timeout) {
         onExit?.()
-        setTimeout(() => {
+        const timeoutId = window.setTimeout(() => {
           set((state) => {
-            state.snackbars.shift()
+            state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
           })
         }, timeout)
+        set((state) => {
+          const snackbarIdx = state.snackbars.findIndex((snackbar) => snackbar.id === id)
+          state.snackbars[snackbarIdx].timeoutId = timeoutId
+        })
       }
       return id
+    },
+    cancelSnackbarTimeout: (id) => {
+      const snackbar = get().snackbars.find((snackbar) => snackbar.id === id)
+      window.clearTimeout(snackbar?.timeoutId)
+    },
+    restartSnackbarTimeout: (id) => {
+      const snackbar = get().snackbars.find((snackbar) => snackbar.id === id)
+      if (snackbar?.timeout) {
+        window.setTimeout(() => {
+          set((state) => {
+            state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
+          })
+        }, snackbar.timeout)
+      }
     },
   }),
 })
