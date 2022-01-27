@@ -6,11 +6,13 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
 import { BottomNav } from '@/components/_navigation/BottomNav'
+import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
 import {
@@ -25,6 +27,7 @@ import {
 } from '@/views/viewer'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
+import { EditMembershipView } from './EditMembershipView/EditMembershipView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -41,6 +44,7 @@ const viewerRoutes = [
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
+  const { activeMemberId } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -69,6 +73,16 @@ export const ViewerLayout: React.FC = () => {
                 {viewerRoutes.map((route) => (
                   <Route key={route.path} {...route} />
                 ))}
+                <Route
+                  path={relativeRoutes.viewer.editMembership()}
+                  element={
+                    <PrivateRoute
+                      isAuth={!!activeMemberId}
+                      element={<EditMembershipView />}
+                      redirectTo={absoluteRoutes.viewer.index()}
+                    />
+                  }
+                />
               </Routes>
             </CSSTransition>
           </SwitchTransition>

@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { cVar, media, sizes } from '@/styles'
 
 import { Text } from '../Text'
-import { SvgActionCopy } from '../_icons'
+import { SvgActionCheck, SvgActionCopy } from '../_icons'
 
 export const MembershipHeader = styled.header`
   display: grid;
@@ -14,6 +14,7 @@ export const MembershipHeader = styled.header`
     grid-auto-flow: column;
     justify-content: space-between;
   }
+  margin: ${sizes(8)} 0;
 `
 
 export const MembershipInfoContainer = styled.div`
@@ -24,6 +25,7 @@ export const MembershipInfoContainer = styled.div`
   ${media.sm} {
     gap: ${sizes(8)};
     grid-template-columns: repeat(2, auto);
+    grid-template-rows: unset;
     display: inline-grid;
   }
 `
@@ -35,7 +37,15 @@ export const MembershipDetails = styled.div`
   ${media.sm} {
     align-items: unset;
   }
+  overflow: hidden;
+  max-width: 100%;
 `
+export const StyledHandle = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+`
+
 export const StyledText = styled(Text)`
   margin-top: ${sizes(2)};
   display: flex;
@@ -55,4 +65,7 @@ export const StyledSvgActionCopy = styled(SvgActionCopy)`
       fill: ${cVar('colorCoreNeutral50')};
     }
   }
+`
+export const StyledSvgActionCheck = styled(SvgActionCheck)`
+  margin-left: ${sizes(2)};
 `

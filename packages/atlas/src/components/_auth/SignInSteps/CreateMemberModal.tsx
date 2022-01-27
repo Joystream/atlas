@@ -1,21 +1,14 @@
-import { useApolloClient } from '@apollo/client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import debouncePromise from 'awesome-debounce-promise'
 import axios, { AxiosError } from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import * as z from 'zod'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
-import { GetMembershipDocument, GetMembershipQuery, GetMembershipQueryVariables } from '@/api/queries'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { TextArea } from '@/components/_inputs/TextArea'
 import { Loader } from '@/components/_loaders/Loader'
-import { MEMBERSHIP_NAME_PATTERN, URL_PATTERN } from '@/config/regex'
 import { QUERY_PARAMS } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
+import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
@@ -24,12 +17,14 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
-import { StyledAvatar, StyledButton, StyledDialogModal, StyledTextField, Wrapper } from './CreateMemberModal.styles'
+import { StyledAvatar, StyledButton, StyledDialogModal, Wrapper } from './CreateMemberModal.styles'
+
+import { CreateEditMemberInputs } from '../CreateEditMemberInputs'
 
 type Inputs = {
-  handle: string
-  avatar: string
-  about: string
+  handle: string | null
+  avatar: string | null
+  about: string | null
 }
 
 export const CreateMemberModal: React.FC = () => {
@@ -40,7 +35,6 @@ export const CreateMemberModal: React.FC = () => {
   const { pathname } = useLocation()
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [avatarImageUrl, setAvatarImageUrl] = useState('')
   const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
     headerIcon: <Loader variant="medium" />,
     title: 'Creating membership...',
@@ -58,96 +52,9 @@ export const CreateMemberModal: React.FC = () => {
     SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
   }, [queryNodeStateError])
 
-  const client = useApolloClient()
-
   const accountSet = !!activeAccountId && !!extensionConnected
 
-  const debouncedAvatarValidation = useRef(
-    debouncePromise(
-      async (value: string): Promise<string | boolean> =>
-        new Promise((resolve) => {
-          const image = new Image()
-          image.onload = () => {
-            setAvatarImageUrl(value)
-            resolve(true)
-          }
-          image.onerror = () => resolve(false)
-          image.src = value
-          if (!value) {
-            setAvatarImageUrl(value)
-            resolve(true)
-          }
-        }),
-      500
-    )
-  )
-
-  const debouncedHandleUniqueValidation = useRef(
-    debouncePromise(async (value: string) => {
-      const {
-        data: { membershipByUniqueInput },
-      } = await client.query<GetMembershipQuery, GetMembershipQueryVariables>({
-        query: GetMembershipDocument,
-        variables: { where: { handle: value } },
-      })
-      if (membershipByUniqueInput) {
-        return false
-      } else {
-        return true
-      }
-    }, 500)
-  )
-
-  const schema = z.object({
-    handle: z
-      .string()
-      .nonempty({ message: 'Member handle cannot be empty' })
-      .min(5, {
-        message: 'Member handle must be at least 5 characters',
-      })
-      .max(40, {
-        message: `Member handle cannot be longer than 40 characters`,
-      })
-      .refine((val) => (val ? MEMBERSHIP_NAME_PATTERN.test(val) : true), {
-        message: 'Member handle may contain only lowercase letters, numbers and underscores',
-      })
-      .refine(
-        async (val) => {
-          const isValid = await debouncedHandleUniqueValidation.current(val)
-          return isValid
-        },
-        { message: 'Member handle already in use' }
-      ),
-    avatar: z
-      .string()
-      .max(400)
-      .refine((val) => (val ? URL_PATTERN.test(val) : true), { message: 'Avatar URL must be a valid url' })
-      .refine(
-        async (val) => {
-          const isValid = await debouncedAvatarValidation.current(val)
-          return isValid
-        },
-        { message: 'Image not found' }
-      )
-      .optional(),
-    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }).optional(),
-  })
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<Inputs>({
-    mode: 'onChange',
-    resolver: zodResolver(schema, { async: true }),
-    shouldFocusError: true,
-    defaultValues: {
-      handle: '',
-      avatar: '',
-      about: '',
-    },
-  })
+  const { reset, register, errors, handleSubmit, isValid, getValues, watch } = useCreateEditMemberForm({})
 
   // success
   useEffect(() => {
@@ -223,7 +130,6 @@ export const CreateMemberModal: React.FC = () => {
   if (queryNodeStateError) {
     return <ViewErrorFallback />
   }
-
   return (
     <StyledDialogModal
       title="Create a Joystream membership"
@@ -246,36 +152,11 @@ export const CreateMemberModal: React.FC = () => {
         </Text>
         <StyledAvatar
           size="channel-card"
-          assetUrl={errors.avatar ? undefined : avatarImageUrl}
+          assetUrl={errors.avatar ? undefined : getValues('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
         />
-        <StyledTextField
-          autoComplete="off"
-          label="Avatar URL"
-          placeholder="https://example.com/avatar.jpeg"
-          {...register('avatar')}
-          error={!!errors.avatar}
-          helperText={errors.avatar?.message}
-        />
-        <StyledTextField
-          autoComplete="off"
-          placeholder="johnnysmith"
-          label="Member handle"
-          {...register('handle')}
-          error={!!errors.handle}
-          helperText={
-            errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
-          }
-        />
-        <TextArea
-          label="About"
-          placeholder="Anything you'd like to share about yourself with the Joystream community"
-          maxLength={1000}
-          {...register('about')}
-          error={!!errors.about}
-          helperText={errors.about?.message}
-        />
       </Wrapper>
+      <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
     </StyledDialogModal>
   )
 }
