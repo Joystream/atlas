@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import { VideoOrderByInput } from '@/api/queries'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Select } from '@/components/_inputs/Select'
 import { SORT_OPTIONS } from '@/config/sorting'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { MemberAbout } from './MemberAbout'
 import { SortContainer, StyledTabs, TabsContainer } from './MemberView.styles'
@@ -14,19 +13,17 @@ import { SortContainer, StyledTabs, TabsContainer } from './MemberView.styles'
 const TABS = ['NFTs', 'Activity', 'About'] as const
 
 export const MemberView: React.FC = () => {
-  const xsMatch = useMediaMatch('xs')
-  const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+  const [sortActivityBy, setSortActivityBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
   const handleSetCurrentTab = async (tab: number) => {
     setSearchParams({ 'tab': TABS[tab] }, { replace: true })
   }
   const handleSorting = (value?: unknown) => {
     if (value) {
-      setSortVideosBy(value as VideoOrderByInput)
+      setSortActivityBy(value as VideoOrderByInput)
     }
   }
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
@@ -57,22 +54,6 @@ export const MemberView: React.FC = () => {
     }
   }, [currentTabName])
 
-  // if (!loading && !member) {
-  //   return (
-  //     <NotFoundMemberContainer>
-  //       <EmptyFallback
-  //         title="Channel not found"
-  //         button={
-  //           <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
-  //             Go back to home page
-  //           </Button>
-  //         }
-  //       />
-  //     </NotFoundMemberContainer>
-  //   )
-  // }
-
-  console.log({})
   return (
     <ViewWrapper>
       <LimitedWidthContainer>
@@ -89,7 +70,7 @@ export const MemberView: React.FC = () => {
               <Select
                 size="small"
                 labelPosition="left"
-                value={sortVideosBy}
+                value={sortActivityBy}
                 items={SORT_OPTIONS}
                 onChange={handleSorting}
               />
