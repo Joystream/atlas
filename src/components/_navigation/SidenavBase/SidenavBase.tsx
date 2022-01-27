@@ -12,6 +12,7 @@ import {
   LegalLink,
   LegalLinksWrapper,
   LogoLink,
+  ScrollContainer,
   SidebarNav,
   SidebarNavFooter,
   SidebarNavItem,
@@ -68,23 +69,25 @@ const SidenavBase: React.FC<SidenavProps> = ({
         <LogoLink to={logoLinkUrl} onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
           {logoNode}
         </LogoLink>
-        <SidebarNavList>
-          {items.map((item) => (
-            <NavItem
-              key={item.name}
-              to={item.to}
-              expanded={expanded}
-              subitems={item.subitems}
-              itemName={item.name}
-              onClick={() => toggleSideNav(false)}
-              badgeNumber={item.badgeNumber}
-            >
-              {item.icon}
-              <span>{item.expandedName || item.name}</span>
-            </NavItem>
-          ))}
-        </SidebarNavList>
-        <div>{additionalContent}</div>
+        <ScrollContainer>
+          <SidebarNavList>
+            {items.map((item) => (
+              <NavItem
+                key={item.name}
+                to={item.to}
+                expanded={expanded}
+                subitems={item.subitems}
+                itemName={item.name}
+                onClick={() => toggleSideNav(false)}
+                badgeNumber={item.badgeNumber}
+              >
+                {item.icon}
+                <span>{item.expandedName || item.name}</span>
+              </NavItem>
+            ))}
+          </SidebarNavList>
+          <div>{additionalContent}</div>
+        </ScrollContainer>
         <CSSTransition
           in={expanded}
           unmountOnExit
