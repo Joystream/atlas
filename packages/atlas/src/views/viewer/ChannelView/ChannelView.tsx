@@ -11,7 +11,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { CollectorsBox } from '@/components/_channel/CollectorsBox'
+import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
@@ -217,6 +217,22 @@ export const ChannelView: React.FC = () => {
     }
   }, [currentTabName])
 
+  const collectors: Collector[] = [
+    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane', nftsAmount: 4 },
+    {
+      assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+      tooltipText: 'John',
+      nftsAmount: 2,
+    },
+    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
+    {
+      assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+      tooltipText: 'Someone',
+      nftsAmount: 1,
+    },
+    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
+  ]
+
   if (videosError || error || errorSearch) {
     return <ViewErrorFallback />
   }
@@ -242,23 +258,7 @@ export const ChannelView: React.FC = () => {
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>
-            <CollectorsBox
-              collectors={[
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane', nftsAmount: 4 },
-                {
-                  assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-                  tooltipText: 'John',
-                  nftsAmount: 2,
-                },
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
-                {
-                  assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-                  tooltipText: 'Someone',
-                  nftsAmount: 1,
-                },
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
-              ]}
-            />
+            {collectors.length > 0 && <CollectorsBox collectors={collectors} />}
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
@@ -276,24 +276,8 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TitleContainer>
-          {smMatch ? null : (
-            <CollectorsBox
-              collectors={[
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane', nftsAmount: 4 },
-                {
-                  assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-                  tooltipText: 'John',
-                  nftsAmount: 2,
-                },
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
-                {
-                  assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-                  tooltipText: 'Someone',
-                  nftsAmount: 1,
-                },
-                { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
-              ]}
-            />
+          {smMatch || collectors.length === 0 ? null : (
+            <CollectorsBox collectors={collectors} maxShowedCollectors={4} />
           )}
           <StyledButtonContainer>
             <StyledButton

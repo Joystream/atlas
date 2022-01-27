@@ -10,7 +10,7 @@ import { cVar } from '@/styles'
 
 import { CollectorsBoxWrapper, PlusIconBackground, PlusIconWrapper } from './CollectorsBox.styles'
 
-type Collector = AvatarGroupSingleAvatar & { nftsAmount?: number }
+export type Collector = AvatarGroupSingleAvatar & { nftsAmount?: number }
 
 export type CollectorsBoxProps = {
   collectors: Collector[]
