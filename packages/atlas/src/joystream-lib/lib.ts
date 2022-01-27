@@ -82,4 +82,12 @@ export class JoystreamLib {
 
     return new BN(balance.freeBalance).toNumber()
   }
+
+  async subscribeAccountBalance(accountId: AccountId): Promise<number> {
+    await this.ensureApi()
+
+    const { data } = await this.api.query.system.account(accountId)
+
+    return new BN(data.free).toNumber()
+  }
 }

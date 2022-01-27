@@ -22,8 +22,10 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
+import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
+import { formatNumberShort } from '@/utils/number'
 
 import {
   AnimatedContainer,
@@ -51,13 +53,14 @@ export type MemberDropdownProps = {
 
 export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
+    const [accountBalance, setAccountBalance] = useState<number | undefined>(undefined)
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const { pathname } = useLocation()
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
     const containerRef = useRef<HTMLDivElement>(null)
-
+    const { joystream } = useJoystream()
     const [measureContainerRef, { height: containerHeight }] = useMeasure()
     const transRef = useSpringRef()
     const transitions = useTransition(isSwitchingMember, {
@@ -105,6 +108,17 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       closeDropdown?.()
       setIsSwitchingMember(false)
     }
+
+    useEffect(() => {
+      if (!activeMembership) {
+        return
+      }
+
+      const init = async () => {
+        setAccountBalance(await joystream?.subscribeAccountBalance(activeMembership.controllerAccount))
+      }
+      init()
+    }, [activeMembership, joystream])
 
     useEffect(() => {
       if (!isActive) {
@@ -173,15 +187,19 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                     <MemberInfoContainer>
                       <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri} />
                       <div>
-                        {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) 
+                        {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C)
                 \ to preserve the space while member handle loads */}
                         <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
                         <TjoyContainer>
-                          <BalanceContainer>
-                            <SvgActionJoyToken />
-                            <Text variant="t200-strong">12.5K</Text>
-                          </BalanceContainer>
-                          <Divider />
+                          {accountBalance !== undefined && (
+                            <>
+                              <BalanceContainer>
+                                <SvgActionJoyToken />
+                                <Text variant="t200-strong">{formatNumberShort(accountBalance)}</Text>
+                              </BalanceContainer>
+                              <Divider />
+                            </>
+                          )}
                           <LearnAboutTjoyLink
                             variant="t100"
                             as="a"
@@ -223,7 +241,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       nodeStart={<IconWrapper icon={hasOneMember ? <SvgActionPlus /> : <SvgActionSwitchMember />} />}
                       onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
                       label={hasOneMember ? 'Add new member...' : 'Switch member'}
-                      nodeEnd={hasOneMember === false && <SvgActionChevronR />}
+                      nodeEnd={!hasOneMember && <SvgActionChevronR />}
                       applyIconStylesNodeEnd
                     />
                   </SectionContainer>
