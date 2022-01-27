@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
+import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { Information } from '@/components/_buttons/Information'
 import { sizes } from '@/styles'
 
 type DenseProps = {
