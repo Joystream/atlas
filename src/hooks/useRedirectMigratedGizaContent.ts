@@ -5,32 +5,32 @@ import { absoluteRoutes } from '@/config/routes'
 import migratedGizaIdMappings from '@/data/migratedGizaIdMappings.json'
 
 export const useRedirectMigratedGizaContent = ({ type }: { type: 'channel' | 'video' | 'embedded-video' }) => {
-  const { id } = useParams()
+  const { id } = useParams() as { id?: string }
   const navigate = useNavigate()
 
   useEffect(() => {
-    // early exit if id is not a Giza migrated one
-    if (
-      migratedGizaIdMappings[type === 'channel' ? 'channelIdsMapEntries' : 'videoIdsMapEntries'][
-        id as keyof typeof migratedGizaIdMappings.channelIdsMapEntries
-      ] === undefined
-    ) {
-      return
-    }
+    if (type !== 'channel' || !id) return
 
-    if (type === 'channel') {
-      const migratedNewId: string | undefined =
-        migratedGizaIdMappings.channelIdsMapEntries[id as keyof typeof migratedGizaIdMappings.channelIdsMapEntries]
-      navigate(absoluteRoutes.viewer.channel(migratedNewId))
-    } else if (type === 'embedded-video' || type === 'video') {
-      const migratedNewId: string | undefined =
-        migratedGizaIdMappings.videoIdsMapEntries[id as keyof typeof migratedGizaIdMappings.videoIdsMapEntries]
+    const mapping = migratedGizaIdMappings.channelIdsMapEntries
+    const migratedId = mapping[id as keyof typeof mapping]
 
-      if (type === 'embedded-video') {
-        navigate(absoluteRoutes.embedded.video(migratedNewId))
-      } else {
-        navigate(absoluteRoutes.viewer.video(migratedNewId))
-      }
+    if (!migratedId) return
+
+    navigate(absoluteRoutes.viewer.channel(migratedId))
+  }, [id, navigate, type])
+
+  useEffect(() => {
+    if ((type !== 'video' && type !== 'embedded-video') || !id) return
+
+    const mapping = migratedGizaIdMappings.videoIdsMapEntries
+    const migratedId = mapping[id as keyof typeof mapping]
+
+    if (!migratedId) return
+
+    if (type === 'embedded-video') {
+      navigate(absoluteRoutes.embedded.video(migratedId))
+    } else {
+      navigate(absoluteRoutes.viewer.video(migratedId))
     }
   }, [id, navigate, type])
 }
