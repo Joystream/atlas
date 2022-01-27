@@ -16,54 +16,30 @@ This document tries to outline all the conventions/tools/services used to make A
 ### Repo structure
 
 - `.github/` - GitHub stuff - currently PR checks actions
-- `ci/` - continuous integration stuff
-  - `nginx/` - nginx config directory
-  - `build-docker-atlas.sh` - build script for atlas app Docker
-  - `build-docker-meta-server.sh` - build script for meta server Docker
-  - `docker-compose.yml` - docker compose for meta server Dockers
+- `.storybook/` - Storybook configuration
 - `docs/` - Atlas-related documentation - technical & community
-- `packages/` - workspace apps
-    - `atlas/` - main app
-      - `.storybook/` - Storybook configuration
-      - `public/` - static assets used to build the app
-      - `scripts/` - some helper scripts for common
-      - `src/` - the source code
-        - `api/` - everything related to integrations with external services
-        - `assets/` - assets to be used from within the source code - images/animations/etc.
-        - `components/` - components used by Atlas
-        - `config/` - everything related to config - route URLs, env variables, etc.
-        - `hooks/` - hooks for reusable functionalities
-        - `joystream-lib/` - code for interacting with the Joystream blockchain
-        - `providers/` - contexts, stores and logic for different features
-        - `styles/` - theme for styling the app - design tokens, global styles
-        - `types/` - global Typescript related code
-        - `utils/` - common utilities - e.g. for formatting dates etc.
-        - `views/` - all the top-level views displayed by the router
-        - `main.tsx` - app entry-point
-        - `App.tsx` - React entry-point
-    - `atlas-meta-server` - meta tags pre-rendering server 
-      - `index.html` - main template
-      - `index.ts` - server entry point
-
+- `public/` - static assets used to build the app
+- `scripts/` - some helper scripts for common
+- `src/` - the source code
+    - `api/` - everything related to integrations with external services
+    - `assets/` - assets to be used from within the source code - images/animations/etc.
+    - `components/` - components used by Atlas
+    - `config/` - everything related to config - route URLs, env variables, etc.
+    - `hooks/` - hooks for reusable functionalities
+    - `joystream-lib/` - code for interacting with the Joystream blockchain
+    - `providers/` - contexts, stores and logic for different features
+    - `styles/` - theme for styling the app - design tokens, global styles
+    - `types/` - global Typescript related code
+    - `utils/` - common utilities - e.g. for formatting dates etc.
+    - `views/` - all the top-level views displayed by the router
+    - `main.tsx` - app entry-point
+    - `App.tsx` - React entry-point
 
 ### DevOps
 
 We currently use GitHub actions and Vercel for all our DevOps needs. On every PR we run GitHub actions to ensure the code follows the linting rules. Also, for every PR, Vercel previews are generated so that it's easy to explore the updated app.
 
 The deployed version of Atlas (at https://play.joystream.org) is also hosted by Vercel. This one gets redeployed on every push/merge to master.
-
-## Meta tags pre-rendering
-
-Because social media crawling bots can't handle SPA apps, we decided to pre-render html meta tags for social media previews purposes.
-Whenever user agent comes from social media bot, we serve pre rendered html, in any other case regular application is served.
-
-To run `atlas-meta-server`:
-```bash
-cd ci
-./build-docker-atlas.sh
-./build-docker-meta-server.sh
-docker-compose up -d
-```
 
 ## Architecture
 
