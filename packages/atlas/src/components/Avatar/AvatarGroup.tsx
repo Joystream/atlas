@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 
 import { AvatarProps } from './Avatar'
 import {
+  AvatarBackground,
   AvatarGroupContainer,
-  AvatarGroupDirection,
   AvatarGroupSize,
   AvatarOverlay,
   AvatarWrapper,
@@ -12,13 +12,17 @@ import {
 
 import { Tooltip } from '../Tooltip'
 
+export type AvatarGroupSingleAvatar = Omit<AvatarProps, 'size' | 'className'> & {
+  tooltipText?: string
+  children?: React.ReactNode
+}
+
 export type AvatarGroupProps = {
-  avatars: (Omit<AvatarProps, 'size' | 'className'> & { tooltipText?: string })[]
+  avatars: AvatarGroupSingleAvatar[]
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean
   loading?: boolean
-  direction?: AvatarGroupDirection
   className?: string
 }
 
@@ -39,30 +43,36 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   size = 'medium',
   avatarStrokeColor,
   clickable = true,
-  direction = 'left',
   loading,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
   return (
-    <AvatarGroupContainer direction={direction} className={className}>
+    <AvatarGroupContainer size={size} className={className}>
       {avatars.map((avatarProps, idx) => (
-        <AvatarWrapper
-          direction={direction}
-          key={idx}
-          clickable={clickable}
-          onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
-          onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
-          idx={direction === 'left' ? idx : avatars.length - idx}
-          size={size}
-          style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
-          avatarStrokeColor={avatarStrokeColor}
-        >
-          <Tooltip text={avatarProps.tooltipText} arrowDisabled placement="top" offsetY={clickable ? 16 : 8}>
-            <StyledAvatar size={getSizeofAvatar(size)} {...avatarProps} loading={loading} />
-          </Tooltip>
-          <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
-        </AvatarWrapper>
+        <Fragment key={idx}>
+          <AvatarWrapper
+            ref={ref}
+            clickable={clickable}
+            onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
+            onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
+            size={size}
+            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+            avatarStrokeColor={avatarStrokeColor}
+          >
+            <AvatarBackground avatarStrokeColor={avatarStrokeColor} />
+            <StyledAvatar {...avatarProps} loading={loading} size={getSizeofAvatar(size)} />
+            <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
+          </AvatarWrapper>
+          <Tooltip
+            text={avatarProps.tooltipText}
+            arrowDisabled
+            placement="top"
+            offsetY={clickable ? 16 : 8}
+            reference={ref}
+          />
+        </Fragment>
       ))}
     </AvatarGroupContainer>
   )

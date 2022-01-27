@@ -1,21 +1,45 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar } from '@/styles'
+import { cVar, square } from '@/styles'
 
 import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
-export type AvatarGroupDirection = 'left' | 'right'
 
-export const AvatarGroupContainer = styled.div<{ direction: AvatarGroupDirection }>`
-  position: relative;
-  display: flex;
-  justify-content: ${({ direction }) => (direction === 'left' ? 'flex-start' : 'flex-end')};
+export type AvatarGroupContainerProps = {
+  size?: AvatarGroupSize
+}
+
+const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
+  // grid-auto-columns = size of the avatar - offset
+  switch (size) {
+    case 'small':
+      return css`
+        grid-auto-columns: 20px;
+        padding-right: 4px;
+      `
+    case 'medium':
+      return css`
+        grid-auto-columns: 24px;
+        padding-right: 8px;
+      `
+    case 'large':
+      return css`
+        grid-auto-columns: 32px;
+        padding-right: 8px;
+      `
+  }
+}
+
+export const AvatarGroupContainer = styled.div<{ size: AvatarGroupSize }>`
+  display: inline-grid;
+  grid-row: auto;
+  ${getSizeOfGridColumn};
 `
 
 export const StyledAvatar = styled(Avatar)`
-  transition: transform ${cVar('animationTransitionFast')};
+  transition: transform ${cVar('animationTransitionFast')}, box-shadow ${cVar('animationTransitionFast')};
 
   :hover {
     ::after {
@@ -30,42 +54,55 @@ export const StyledAvatar = styled(Avatar)`
   }
 `
 
-export const AvatarOverlay = styled.div<{ dimmed?: boolean }>`
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
+type AvatatBackgroundProps = {
+  avatarStrokeColor?: string
+}
+
+export const AvatarBackground = styled.div<AvatatBackgroundProps>`
+  position: absolute;
+  ${square('100%')};
   border-radius: 50%;
+  top: 0;
+  background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
+  transition: transform ${cVar('animationTransitionFast')};
+`
+
+type AvatarOverlayProps = {
+  dimmed?: boolean
+}
+
+export const AvatarOverlay = styled.div<AvatarOverlayProps>`
+  pointer-events: none;
   position: absolute;
   top: 0;
+  ${square('100%')}
+  border-radius: 50%;
   background-color: black;
   opacity: ${({ dimmed }) => (dimmed ? 0.5 : 0)};
   transition: opacity ${cVar('animationTransitionFast')};
 `
 
 type AvatarWrapperProps = {
-  idx: number
   size: AvatarGroupSize
   clickable: boolean
   avatarStrokeColor?: string
-  direction: AvatarGroupDirection
 }
 
 export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   position: relative;
   border-radius: 50%;
-  transition: transform ${cVar('animationTransitionFast')};
-  background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
-  left: ${({ idx, size, direction }) => (direction === 'left' ? '-' : '') + idx * (size === 'small' ? 4 : 8)}px;
+  width: calc(100% + ${({ size }) => (size === 'small' ? 4 : 8)}px);
+  grid-row: 1;
+
   ${({ clickable }) =>
     clickable &&
     css`
       :hover {
-        ${StyledAvatar} {
+        ${StyledAvatar}, ${AvatarBackground}, ${AvatarOverlay} {
           transform: translateY(-8px);
         }
         ${AvatarOverlay} {
           opacity: 0;
-          transform: translateY(-8px);
         }
       }
     `};

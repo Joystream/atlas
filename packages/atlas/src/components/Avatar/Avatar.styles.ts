@@ -12,6 +12,7 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 type ContainerProps = {
   size: AvatarSize
   isLoading?: boolean
+  withoutOutline?: boolean
 }
 
 type EditButtonProps = {
@@ -101,7 +102,10 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   }
 }
 
-const getBorderStyles = ({ isLoading }: ContainerProps) => {
+const getBorderStyles = ({ isLoading, withoutOutline }: ContainerProps) => {
+  if (withoutOutline) {
+    return
+  }
   if (!isLoading) {
     return css`
       ::after {
@@ -206,6 +210,12 @@ export const NewChannelAvatar = styled.div`
   background-color: ${cVar('colorCoreNeutral800')};
 `
 
+export const ChildrenWrapper = styled.div`
+  overflow: hidden;
+  position: absolute;
+  border-radius: 100%;
+  ${square('100%')};
+`
 export const StyledSvgIllustrativeFileFailed = styled(SvgIllustrativeFileFailed)`
   path {
     fill: ${cVar('colorCoreNeutral300')};
