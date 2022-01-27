@@ -12,18 +12,16 @@ export default {
   title: 'other/Snackbar',
   component: Snackbar,
   argTypes: {
-    title: { defaultValue: 'Lorem ipsul dolor' },
-    description: { defaultValue: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!' },
-    actionText: { defaultValue: 'Action' },
-    variant: {
-      control: { type: 'select', options: ['primary', 'secondary'] },
-      defaultValue: 'secondary',
-    },
     iconType: {
       control: { type: 'select', options: [null, 'error', 'success', 'info', 'warning'] },
-      defaultValue: null,
     },
-    timeout: { control: { type: 'number' }, defaultValue: null },
+    timeout: { control: { type: 'number' } },
+  },
+  args: {
+    title: 'Lorem ipsul dolor',
+    description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
+    actionText: 'Action',
+    timeout: null,
   },
   decorators: [
     (Story) => (

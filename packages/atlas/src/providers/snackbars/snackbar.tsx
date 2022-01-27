@@ -62,7 +62,7 @@ export const Snackbars: React.FC = () => {
   )
 }
 
-const SnackbarsContainer = styled.div`
+export const SnackbarsContainer = styled.div`
   position: fixed;
   left: var(--size-sidenav-width-collapsed);
   bottom: ${sizes(18)};

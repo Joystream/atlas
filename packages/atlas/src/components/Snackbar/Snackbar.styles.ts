@@ -2,12 +2,9 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
-
-import { SnackbarVariant } from './Snackbar'
+import { cVar, sizes, transitions, zIndex } from '@/styles'
 
 type SnackbarWrapperProps = {
-  colorVariant?: SnackbarVariant
   snackbarHeight?: number
 }
 
@@ -22,7 +19,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
   width: 100%;
   height: 0;
-  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? oldColors.gray[700] : oldColors.blue[500])};
+  background-color: ${cVar('colorBackgroundStrong')};
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
@@ -62,15 +59,17 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   }
 `
 
-export const SnackbarHeader = styled.div`
+export const SnackbarContent = styled.div`
   display: flex;
-  align-items: center;
+  flex-grow: 1;
+  flex-direction: column;
   width: 100%;
 `
 
 export const SnackbarTitle = styled(Text)<TitleProps>`
-  color: ${({ colorVariant, hasDescription }) =>
-    hasDescription ? oldColors.white : colorVariant === 'primary' ? oldColors.blue[200] : oldColors.gray[300]};
+  min-height: 32px;
+  display: flex;
+  align-items: center;
 `
 
 export const SnackbarDescription = styled(Text)`
@@ -79,29 +78,30 @@ export const SnackbarDescription = styled(Text)`
 
 export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
   width: 100%;
+  display: flex;
+  align-items: flex-start;
   padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
   ${SnackbarDescription} {
     ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
-    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${oldColors.blue[200]}`};
   }
 `
 
 export const SnackbarButtonsContainer = styled.div`
   display: flex;
-  margin-left: auto;
+  align-items: center;
+  margin-left: ${sizes(4)};
 `
 
 export const SnackbarActionButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  padding: 0;
-  min-width: auto;
-  margin-right: ${sizes(2)};
-  font: ${cVar('typographyDesktopT300')};
-  letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT300TextTransform')};
+  margin-left: ${sizes(2)};
 `
 
-export const SnackbarIconContainer = styled.span`
+export const SnackbarIconContainer = styled.div`
   margin-right: ${sizes(2)};
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `

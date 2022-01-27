@@ -20,7 +20,7 @@ export type DisplaySnackbarArgs = {
 
 type Snackbar = {
   id: string
-} & Omit<DisplaySnackbarArgs, 'time'>
+} & DisplaySnackbarArgs
 
 export type SnackbarStoreState = {
   snackbars: Snackbar[]
@@ -30,6 +30,7 @@ type SnackbarStoreActions = {
   displaySnackbar: (args: DisplaySnackbarArgs, onActionClick?: () => void) => string
   updateSnackbar: (id: string, opts: Omit<DisplaySnackbarArgs, 'id'>) => void
   closeSnackbar: (id: string) => void
+  cancelSnackbarTimeout: (id: string) => void
 }
 
 export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreActions>({
@@ -48,6 +49,11 @@ export const useSnackbarStore = createStore<SnackbarStoreState, SnackbarStoreAct
       set((state) => {
         state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
       }),
+    cancelSnackbarTimeout: (id) => {
+      set((state) => {
+        state.snackbars = state.snackbars.filter((snackbar) => snackbar.id !== id)
+      })
+    },
     displaySnackbar: ({ timeout, customId, onExit, ...args }) => {
       const id = customId ?? createId()
       set((state) => {
