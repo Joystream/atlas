@@ -1,7 +1,6 @@
 node_modules
-dist
-storybook-static
+dist*/
 .coverage
 !.storybook/
-scripts
+scripts/
 __generated__/

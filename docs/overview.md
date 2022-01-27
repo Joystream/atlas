@@ -21,19 +21,19 @@ This document tries to outline all the conventions/tools/services used to make A
 - `public/` - static assets used to build the app
 - `scripts/` - some helper scripts for common
 - `src/` - the source code
-  - `api/` - everything related to integrations with external services
-  - `assets/` - assets to be used from within the source code - images/animations/etc.
-  - `components/` - components used by Atlas
-  - `config/` - everything related to config - route URLs, env variables, etc.
-  - `hooks/` - hooks for reusable functionalities
-  - `joystream-lib/` - code for interacting with the Joystream blockchain
-  - `providers/` - contexts, stores and logic for different features
-  - `styles/` - theme for styling the app - design tokens, global styles
-  - `types/` - global Typescript related code
-  - `utils/` - common utilities - e.g. for formatting dates etc.
-  - `views/` - all the top-level views displayed by the router
-  - `main.tsx` - app entry-point
-  - `App.tsx` - React entry-point
+    - `api/` - everything related to integrations with external services
+    - `assets/` - assets to be used from within the source code - images/animations/etc.
+    - `components/` - components used by Atlas
+    - `config/` - everything related to config - route URLs, env variables, etc.
+    - `hooks/` - hooks for reusable functionalities
+    - `joystream-lib/` - code for interacting with the Joystream blockchain
+    - `providers/` - contexts, stores and logic for different features
+    - `styles/` - theme for styling the app - design tokens, global styles
+    - `types/` - global Typescript related code
+    - `utils/` - common utilities - e.g. for formatting dates etc.
+    - `views/` - all the top-level views displayed by the router
+    - `main.tsx` - app entry-point
+    - `App.tsx` - React entry-point
 
 ### DevOps
 

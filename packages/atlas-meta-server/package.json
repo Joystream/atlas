@@ -1,0 +1,17 @@
+{
+  "name": "@joystream/atlas-meta-server",
+  "description": "Node server for pre rendering html meta tags",
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.13",
+    "express": "^4.17.2",
+    "graphql-request": "^3.7.0",
+    "node-html-parser": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

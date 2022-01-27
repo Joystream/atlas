@@ -56,7 +56,7 @@ To get started working with Atlas codebase, first clone the repo, install all de
 git clone https://github.com/Joystream/atlas
 cd atlas
 yarn install
-yarn start
+yarn atlas:dev
 ```
 
 This will start the development server on `localhost:3000`.
