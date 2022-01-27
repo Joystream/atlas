@@ -33,10 +33,11 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   overflow: hidden;
-  color: ${oldColors.gray[50]};
-  background-color: ${oldColors.gray[800]};
+  color: ${cVar('colorText')};
+  background-color: ${cVar('colorBackground')};
 `
 
+//  background-color: ${oldColors.gray[800]};
 export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
@@ -89,7 +90,7 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
 
 export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
   padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
-  color: ${oldColors.gray[50]};
+  color: ${cVar('colorText')};
   text-decoration: none;
   display: flex;
   position: relative;
@@ -97,12 +98,14 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
 
   &:hover,
   &:focus {
-    background-color: ${oldColors.transparentPrimary[18]};
+    color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundAlpha')};
   }
 
   &:active,
   &[data-active='true'] {
-    background-color: ${oldColors.transparentPrimary[10]};
+    color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundStrongAlpha')};
   }
 
   > svg {
@@ -135,6 +138,10 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
     }
   }
+`
+
+export const SecondarySidebarNavLink = styled(SidebarNavLink)`
+  font-size: ${cVar('typographyFontSizes5')};
 `
 
 export const DrawerOverlay = styled.div`
