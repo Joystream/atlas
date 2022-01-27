@@ -30,6 +30,7 @@ export type MembershipInfoProps = {
   address?: string | null
   loading?: boolean
   isOwner?: boolean
+  className?: string
 }
 
 export const MembershipInfo: React.FC<MembershipInfoProps> = ({
@@ -40,6 +41,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   handle,
   loading,
   isOwner,
+  className,
 }) => {
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
@@ -62,7 +64,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
         timeout={parseInt(cVar('animationTimingFast', true))}
         classNames={transitions.names.fade}
       >
-        <MembershipHeader>
+        <MembershipHeader className={className}>
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}

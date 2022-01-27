@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { MembershipInfo } from '@/components/MembershipInfo'
 import { Tabs } from '@/components/Tabs'
 import { media, oldColors, sizes } from '@/styles'
 
@@ -45,4 +46,8 @@ export const TabsContainer = styled.div`
     gap: ${sizes(8)};
     grid-template: 1fr / 1fr 193.333px;
   }
+`
+
+export const StyledMembershipInfo = styled(MembershipInfo)`
+  margin-top: ${sizes(8)};
 `

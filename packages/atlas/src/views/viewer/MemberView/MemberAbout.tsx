@@ -4,10 +4,8 @@ import { useParams } from 'react-router'
 import { useMemberships } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { PIONEER_URL } from '@/config/urls'
 import { cVar } from '@/styles'
-import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -22,33 +20,25 @@ import {
 
 export const MemberAbout = () => {
   const { handle } = useParams()
-  const { memberships, error, loading } = useMemberships(
-    { where: { handle_eq: handle } },
-    {
-      onError: (error) => SentryLogger.error('Failed to fetch memberships', 'ActiveUserProvider', error),
-    }
-  )
-  const activeMembership = memberships?.find((member) => member.handle === handle)
+  const { memberships } = useMemberships({ where: { handle_eq: handle } })
+  const member = memberships?.find((member) => member.handle === handle)
 
-  if (error) {
-    return <ViewErrorFallback />
-  }
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
-        {!!activeMembership?.about && (
+        {!!member?.about && (
           <TextContainer>
             <Text variant="h500">About me</Text>
             <Text variant="t300" secondary>
-              {activeMembership.about}
+              {member.about}
             </Text>
           </TextContainer>
         )}
-        {!!activeMembership?.channels.length && (
+        {!!member?.channels.length && (
           <div>
             <Text variant="h500">Channels owned</Text>
             <ChannelsOwnedContainerGrid>
-              {activeMembership?.channels.map((channel) => (
+              {member?.channels.map((channel) => (
                 <GridItem key={channel.id} colSpan={{ base: 6, lg: 3 }}>
                   <StyledChannelCard channel={channel} />
                 </GridItem>
@@ -66,7 +56,7 @@ export const MemberAbout = () => {
           </Text>
           <Text variant="t300">
             6 Jan 2019
-            {/* {activeMembership?.createdAt ? formatDate(new Date(activeMembership.createdAt)) : ''} */}
+            {/* {member?.createdAt ? formatDate(new Date(member.createdAt)) : ''} */}
           </Text>
         </Details>
 
@@ -75,9 +65,7 @@ export const MemberAbout = () => {
             Num. of channels
           </Text>
           <Text variant="t300">
-            {typeof activeMembership?.channels.length === 'number'
-              ? formatNumberShort(activeMembership?.channels.length)
-              : ''}
+            {typeof member?.channels.length === 'number' ? formatNumberShort(member?.channels.length) : ''}
           </Text>
         </Details>
 
