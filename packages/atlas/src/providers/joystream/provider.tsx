@@ -1,77 +1,94 @@
 import { web3FromAddress } from '@polkadot/extension-dapp'
-import React, { useCallback, useEffect, useState } from 'react'
+import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
 import { SentryLogger } from '@/utils/logs'
+import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 
 import { useConnectionStatusStore } from '../connectionStatus'
 import { useUser } from '../user'
 
 type JoystreamContextValue = {
-  joystream: JoystreamLib | null
+  joystream: Remote<JoystreamLib> | undefined
+  proxyCallback: <T extends object>(callback: T) => T & ProxyMarked
 }
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
+const worker = new JoystreamJsWorker()
+const api = wrap<typeof JoystreamLib>(worker)
 
 export const JoystreamProvider: React.FC = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
-
-  const [joystream, setJoystream] = useState<JoystreamLib | null>(null)
-
+  const [initialized, setInitialized] = useState(false)
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
       setNodeConnection(connected ? 'connected' : 'disconnected')
     },
     [setNodeConnection]
   )
+  const joystream = useRef<Remote<JoystreamLib> | undefined>()
+
+  const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
   useEffect(() => {
-    let joystream: JoystreamLib
-
-    const init = async () => {
+    const getJoystream = async () => {
       try {
         setNodeConnection('connecting')
-        joystream = new JoystreamLib(nodeOverride || NODE_URL)
-        setJoystream(joystream)
-
-        joystream.onNodeConnectionUpdate = handleNodeConnectionUpdate
+        joystream.current = await new api(nodeOverride ?? NODE_URL, proxy(handleNodeConnectionUpdate))
+        setInitialized(true)
       } catch (e) {
         handleNodeConnectionUpdate(false)
         SentryLogger.error('Failed to create JoystreamJS instance', 'JoystreamProvider', e)
       }
     }
-
-    init()
+    getJoystream()
 
     return () => {
-      joystream?.destroy()
+      joystream.current?.destroy()
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
   useEffect(() => {
-    if (!joystream || !activeAccountId || !accounts) {
+    if (!initialized) {
       return
     }
-
-    if (joystream.selectedAccountId === activeAccountId) {
-      return
-    }
-
-    const setActiveAccount = async () => {
-      if (activeAccountId) {
-        const accountInjector = await web3FromAddress(activeAccountId)
-        joystream.setActiveAccount(activeAccountId, accountInjector.signer)
-      } else {
-        joystream.setActiveAccount(activeAccountId)
+    const init = async () => {
+      const instance = joystream.current
+      if (!instance || !activeAccountId || !accounts) {
+        return
       }
+
+      const accountId = await instance?.selectedAccountId
+      if (accountId === activeAccountId) {
+        return
+      }
+
+      const setActiveAccount = async () => {
+        if (activeAccountId) {
+          const { signer } = await web3FromAddress(activeAccountId)
+          if (!signer) {
+            SentryLogger.error('Failed to get signer from web3FromAddress', 'JoystreamProvider')
+            return
+          }
+          await instance.setActiveAccount(activeAccountId, proxy(signer))
+        } else {
+          await instance.setActiveAccount(activeAccountId)
+        }
+      }
+
+      setActiveAccount()
     }
+    init()
+  }, [activeAccountId, accounts, initialized])
 
-    setActiveAccount()
-  }, [joystream, activeAccountId, accounts])
-
-  return <JoystreamContext.Provider value={{ joystream }}>{children}</JoystreamContext.Provider>
+  return (
+    <JoystreamContext.Provider value={{ joystream: initialized ? joystream.current : undefined, proxyCallback }}>
+      {children}
+    </JoystreamContext.Provider>
+  )
 }
