@@ -61,6 +61,8 @@ yarn atlas:dev
 
 This will start the development server on `localhost:3000`.
 
+Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/features/workspaces) and because of that, to install new dependency you need to use the following pattern: `yarn workspace [package_name] add [dependency_name]`
+
 ### Design
 
 To get started working with Atlas designs in Figma, visit [Joystream's official Figma Community profile](https://figma.com/@joystream) (available early 2022) and duplicate files you're interested in remixing or using as a base for your work.
