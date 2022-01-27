@@ -1,5 +1,6 @@
 import { round } from 'lodash-es'
 
+import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedGizaIdMappings.json'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'
@@ -103,11 +104,32 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       key: 'personalData',
       whitelist: WHITELIST,
       version: 2,
-      // Remove all personal data state as part of Giza - some content has been removed, IDs of others has been changed.
-      // We are also not migrating channel follows in Orion so best to start with clean slate for all users.
-      migrate: () => ({
-        ...initialState,
-      }),
+      migrate: (oldState) => {
+        const typedOldState = oldState as PersonalDataStoreState
+
+        const migratedWatchedVideos = typedOldState.watchedVideos.reduce((acc, cur) => {
+          const migratedId = (videoIdsMapEntries as Record<string, string>)[cur.id]
+          if (migratedId) {
+            return [...acc, { ...cur, id: migratedId }]
+          }
+          return acc
+        }, [] as WatchedVideo[])
+
+        const migratedFollowedChannels = typedOldState.followedChannels.reduce((acc, cur) => {
+          const migratedId = (channelIdsMapEntries as Record<string, string>)[cur.id]
+          if (migratedId) {
+            return [...acc, { ...cur, id: migratedId }]
+          }
+          return acc
+        }, [] as FollowedChannel[])
+
+        const migratedState: PersonalDataStoreState = {
+          ...typedOldState,
+          watchedVideos: migratedWatchedVideos,
+          followedChannels: migratedFollowedChannels,
+        }
+        return migratedState
+      },
     },
   }
 )
