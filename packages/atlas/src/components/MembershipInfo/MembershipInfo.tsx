@@ -50,6 +50,9 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
     }
     copyToClipboard(address)
     setCopyButtonClicked(true)
+    setTimeout(() => {
+      setCopyButtonClicked(false)
+    }, 3000)
   }
 
   return (
