@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { cVar, oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase'
 
@@ -17,10 +17,9 @@ export const ChannelsTitle = styled(Text)`
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  color: ${oldColors.gray[300]};
+  color: ${cVar('colorText')};
 `
 export const ChannelsWrapper = styled.div`
-  padding-left: ${NAVBAR_LEFT_PADDING}px;
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -28,20 +27,40 @@ export const ChannelsWrapper = styled.div`
 `
 
 export const ChannelsList = styled.ul`
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
+  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-x: hidden;
   padding: 0;
   margin: 0;
 `
+
 export const StyledChannelLink = styled(ChannelLink)`
+  width: 100%;
+
   > span {
-    margin-left: ${sizes(6)};
+    margin-left: ${sizes(2)};
   }
+
+  padding: ${sizes(4)} 0;
+  color: inherit;
 `
+/*
+ */
+//margin-top: ${sizes(5)};
 
 export const ChannelsItem = styled.li`
-  margin-top: ${sizes(5)};
-  list-style: none;
+  padding-left: ${NAVBAR_LEFT_PADDING}px;
+
+  &:hover,
+  &:focus {
+    background-color: ${cVar('colorBackgroundAlpha')};
+    color: ${cVar('colorTextStrong')};
+  }
+
+  &:active,
+  &[data-active='true'] {
+    color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundStrongAlpha')};
+  }
 `
 
 export const ShowMoreButton = styled.button`
@@ -54,7 +73,7 @@ export const ShowMoreButton = styled.button`
   padding: ${sizes(5)} 0;
   display: flex;
   align-items: center;
-  color: ${oldColors.white};
+  color: ${cVar('colorText')};
 `
 
 export const ShowMoreIconWrapper = styled.span`
