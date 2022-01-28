@@ -7,7 +7,7 @@ import { media, sizes, transitions, zIndex } from '@/styles'
 import { SubTitle, TitleSection } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 export const StyledTitleSection = styled(TitleSection)`
-  margin-top: 0 !important;
+  margin-top: 0;
   padding-top: ${sizes(8)};
   display: inline-flex;
   width: auto;
