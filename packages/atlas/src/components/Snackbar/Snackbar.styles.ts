@@ -4,16 +4,11 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
 
+import { IconButton } from '../_buttons/IconButton'
+
 type SnackbarWrapperProps = {
   snackbarHeight?: number
 }
-
-type InnerWrapperProps = {
-  hasDescription?: boolean
-  hasActionButton?: boolean
-} & Omit<SnackbarWrapperProps, 'snackbarHeight'>
-
-type TitleProps = Omit<InnerWrapperProps, 'hasActionButton'>
 
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
@@ -62,41 +57,32 @@ export const SnackbarContent = styled.div`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  padding: ${sizes(1.5)} 0;
+  padding: ${sizes(1.5)} 0 ${sizes(1.5)} ${sizes(1.5)};
   width: 100%;
-`
-
-export const SnackbarTitle = styled(Text)<TitleProps>`
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
 `
 
 export const SnackbarDescription = styled(Text)`
   margin-top: ${sizes(2)};
 `
 
-export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
+export const StyledInnerWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-start;
-  padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
-  ${SnackbarDescription} {
-    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
-  }
+  padding: ${sizes(3)};
 `
 
-export const SnackbarButtonsContainer = styled.div`
-  display: flex;
-  align-items: center;
+export const SnackbarCloseButton = styled(IconButton)`
   margin-left: ${sizes(4)};
 `
 
 export const SnackbarActionButton = styled(Button)`
+  margin-top: ${sizes(2)};
   margin-right: ${sizes(2)};
 `
 
 export const SnackbarIconContainer = styled.div`
-  margin-right: ${sizes(2)};
   width: 32px;
   height: 32px;
   flex-shrink: 0;

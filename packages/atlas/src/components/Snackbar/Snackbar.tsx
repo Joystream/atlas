@@ -1,24 +1,25 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionClose } from '@/components/_icons'
 
 import {
   SnackbarActionButton,
-  SnackbarButtonsContainer,
+  SnackbarCloseButton,
   SnackbarContent,
   SnackbarDescription,
   SnackbarIconContainer,
-  SnackbarTitle,
   SnackbarWrapper,
   StyledInnerWrapper,
 } from './Snackbar.styles'
+
+import { Text } from '../Text'
 
 export type SnackbarProps = {
   icon?: ReactNode
   title: string
   description?: string
   actionText?: string
+  actionIcon?: React.ReactNode
   onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onMouseEnter?: (e: React.MouseEvent) => void
@@ -30,6 +31,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
   title,
   description,
   actionText,
+  actionIcon,
   onActionClick,
   onClick,
   onMouseEnter,
@@ -46,26 +48,24 @@ export const Snackbar: React.FC<SnackbarProps> = ({
 
   return (
     <SnackbarWrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} snackbarHeight={height}>
-      <StyledInnerWrapper ref={ref} hasDescription={!!description} hasActionButton={!!actionText}>
+      <StyledInnerWrapper ref={ref}>
         {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
         <SnackbarContent>
-          <SnackbarTitle variant="h200" hasDescription={!!description}>
-            {title}
-          </SnackbarTitle>
+          <Text variant="h200">{title}</Text>
           {description && (
             <SnackbarDescription variant="t100" secondary>
               {description}
             </SnackbarDescription>
           )}
+          {actionText && (
+            <SnackbarActionButton textOnly onClick={onActionClick} icon={actionIcon}>
+              {actionText}
+            </SnackbarActionButton>
+          )}
         </SnackbarContent>
-        <SnackbarButtonsContainer>
-          <SnackbarActionButton textOnly onClick={onActionClick}>
-            {actionText}
-          </SnackbarActionButton>
-          <IconButton onClick={onClick} variant="tertiary" size="small">
-            <SvgActionClose />
-          </IconButton>
-        </SnackbarButtonsContainer>
+        <SnackbarCloseButton onClick={onClick} variant="tertiary" size="small">
+          <SvgActionClose />
+        </SnackbarCloseButton>
       </StyledInnerWrapper>
     </SnackbarWrapper>
   )
