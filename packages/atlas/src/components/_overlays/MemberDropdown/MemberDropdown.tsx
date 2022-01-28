@@ -113,7 +113,14 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       if (!activeMembership || !joystream) {
         return
       }
-      joystream.subscribeAccountBalance(activeMembership.controllerAccount, setAccountBalance)
+
+      let unsubscribe
+      const init = async () => {
+        unsubscribe = await joystream.subscribeAccountBalance(activeMembership.controllerAccount, setAccountBalance)
+      }
+      init()
+
+      return unsubscribe
     }, [activeMembership, joystream])
 
     useEffect(() => {
@@ -200,7 +207,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                             variant="t100"
                             as="a"
                             // @ts-ignore our types don't allow this but its fine here
-                            href="https://www.joystream.org/"
+                            href="https://www.joystream.org/token"
                             target="_blank"
                             rel="noopener noreferrer"
                             secondary
