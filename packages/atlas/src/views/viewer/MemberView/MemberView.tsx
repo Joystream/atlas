@@ -16,6 +16,7 @@ import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
 import { MemberAbout } from './MemberAbout'
+import { MemberActivity } from './MemberActivity'
 import {
   NotFoundMemberContainer,
   SortContainer,
@@ -61,7 +62,7 @@ export const MemberView: React.FC = () => {
   const tabContent = React.useMemo(() => {
     switch (currentTab) {
       case 'Activity':
-        return 'Activity'
+        return <MemberActivity />
       case 'About':
         return <MemberAbout />
     }
