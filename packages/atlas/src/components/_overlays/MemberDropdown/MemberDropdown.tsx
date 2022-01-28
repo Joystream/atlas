@@ -110,14 +110,10 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }
 
     useEffect(() => {
-      if (!activeMembership) {
+      if (!activeMembership || !joystream) {
         return
       }
-
-      const init = async () => {
-        setAccountBalance(await joystream?.subscribeAccountBalance(activeMembership.controllerAccount))
-      }
-      init()
+      joystream.subscribeAccountBalance(activeMembership.controllerAccount, setAccountBalance)
     }, [activeMembership, joystream])
 
     useEffect(() => {
