@@ -18,38 +18,28 @@ export const IconWrapper = styled.div`
   justify-content: center;
   align-items: center;
   transition: background ${cVar('animationTransitionFast')};
-
-  @media (hover: hover) {
-    cursor: pointer;
-
-    :hover {
-      background: ${cVar('colorBackgroundAlpha')};
-      ${StyledSvgActionInformative} {
-        path {
-          fill: ${cVar('colorTextStrong')};
-        }
-      }
-    }
-  }
+  cursor: pointer;
 `
 
 export const TouchableWrapper = styled.div<{ isMobile?: boolean }>`
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   display: inline-flex;
+
+  :hover ${IconWrapper} {
+    background: ${cVar('colorBackgroundAlpha')};
+    ${StyledSvgActionInformative} {
+      path {
+        fill: ${cVar('colorTextStrong')};
+      }
+    }
+  }
+
   ${({ isMobile }) =>
     isMobile &&
     css`
       padding: 8px;
       margin: -8px;
-      :active ${IconWrapper} {
-        background: ${cVar('colorBackgroundAlpha')};
-        ${StyledSvgActionInformative} {
-          path {
-            fill: ${cVar('colorTextStrong')};
-          }
-        }
-      }
     `};
 `
 
