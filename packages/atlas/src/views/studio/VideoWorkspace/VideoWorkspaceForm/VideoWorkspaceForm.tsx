@@ -102,7 +102,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const mdMatch = useMediaMatch('md')
-    const { joystream } = useJoystream()
+    const { joystream, proxyCallback } = useJoystream()
     const resolveAsset = useRawAssetResolver()
     const startFileUpload = useStartFileUpload()
     const client = useApolloClient()
@@ -414,10 +414,14 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
         const completed = await handleTransaction({
           preProcess: processAssets,
-          txFactory: (updateStatus) =>
+          txFactory: async (updateStatus) =>
             isNew
-              ? joystream.extrinsics.createVideo(activeMemberId, activeChannelId, metadata, assets, updateStatus)
-              : joystream.extrinsics.updateVideo(selectedVideoTab.id, activeMemberId, metadata, assets, updateStatus),
+              ? (
+                  await joystream.extrinsics
+                ).createVideo(activeMemberId, activeChannelId, metadata, assets, proxyCallback(updateStatus))
+              : (
+                  await joystream.extrinsics
+                ).updateVideo(selectedVideoTab.id, activeMemberId, metadata, assets, proxyCallback(updateStatus)),
           onTxSync: refetchDataAndUploadAssets,
           successMessage: {
             title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
@@ -440,6 +444,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         handleTransaction,
         isEdit,
         joystream,
+        proxyCallback,
         removeDrafts,
         removeVideoTab,
         resolveAsset,

@@ -82,7 +82,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
   const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -326,10 +326,12 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
 
     const completed = await handleTransaction({
       preProcess: processAssets,
-      txFactory: (updateStatus) =>
+      txFactory: async (updateStatus) =>
         newChannel
-          ? joystream.extrinsics.createChannel(activeMemberId, metadata, assets, updateStatus)
-          : joystream.extrinsics.updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, updateStatus),
+          ? (await joystream.extrinsics).createChannel(activeMemberId, metadata, assets, proxyCallback(updateStatus))
+          : (
+              await joystream.extrinsics
+            ).updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, proxyCallback(updateStatus)),
       onTxSync: refetchDataAndUploadAssets,
       successMessage: {
         title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',

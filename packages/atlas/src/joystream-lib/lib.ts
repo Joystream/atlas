@@ -3,6 +3,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api'
 import '@polkadot/api/augment'
 import { Signer } from '@polkadot/api/types'
 import BN from 'bn.js'
+import { proxy } from 'comlink'
 
 import { JoystreamLibError } from '@/joystream-lib/errors'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -20,24 +21,24 @@ export class JoystreamLib {
   }
 
   // if needed these could become some kind of event emitter
-  public onNodeConnectionUpdate?: (connected: boolean) => unknown
 
   /* Lifecycle */
-  constructor(endpoint: string) {
+  constructor(endpoint: string, onNodeConnectionUpdate?: (connected: boolean) => unknown) {
     const provider = new WsProvider(endpoint)
     provider.on('connected', () => {
       this.logConnectionData(endpoint)
-      this.onNodeConnectionUpdate?.(true)
+      onNodeConnectionUpdate?.(true)
     })
     provider.on('disconnected', () => {
-      this.onNodeConnectionUpdate?.(false)
+      onNodeConnectionUpdate?.(false)
     })
     provider.on('error', () => {
-      this.onNodeConnectionUpdate?.(false)
+      onNodeConnectionUpdate?.(false)
     })
 
     this.api = new ApiPromise({ provider, types })
-    this.extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId)
+    const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId)
+    this.extrinsics = proxy(extrinsics)
   }
 
   destroy() {

@@ -3612,6 +3612,7 @@ __metadata:
     blake3: 2.1.7
     bn.js: ^4.12.0
     buffer: ^5.7.1
+    comlink: ^4.3.1
     cropperjs: ^1.5.12
     date-fns: ^2.26.0
     downshift: ^6.1.7
@@ -10054,6 +10055,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"comlink@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "comlink@npm:4.3.1"
+  checksum: 557360a6558708c55aff74a25f834bfb9bfca8a42444682c4d5aead57681534a0206202be2a2760b4de124c3ba6d485b08978b6d5469cb3d26bf1438ee28a4f1
   languageName: node
   linkType: hard
 

@@ -24,7 +24,8 @@ export const useDeleteVideo = () => {
       }
 
       handleTransaction({
-        txFactory: (updateStatus) => joystream.extrinsics.deleteVideo(videoId, activeMemberId, updateStatus),
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).deleteVideo(videoId, activeMemberId, updateStatus),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)
@@ -39,7 +40,7 @@ export const useDeleteVideo = () => {
     [activeMemberId, client, handleTransaction, joystream, removeAssetsWithParentFromUploads]
   )
 
-  const deleteVideo = useCallback(
+  return useCallback(
     (videoId: string, onDeleteVideo?: () => void) => {
       openDeleteVideoDialog({
         title: 'Delete this video?',
@@ -64,6 +65,4 @@ export const useDeleteVideo = () => {
     },
     [closeDeleteVideoDialog, confirmDeleteVideo, openDeleteVideoDialog]
   )
-
-  return deleteVideo
 }
