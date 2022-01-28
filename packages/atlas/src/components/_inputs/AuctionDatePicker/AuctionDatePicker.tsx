@@ -15,7 +15,7 @@ export type AuctionDatePickerProps = {
   minDate?: Date | null
   value: string | null
   onChange: (value: string | null) => void
-} & Omit<SelectProps<string>, 'onChange'>
+} & Omit<SelectProps, 'onChange'>
 
 const PICK_DATE = 'pick-date'
 
@@ -60,7 +60,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
 
   return (
     <Container>
-      <Select<string>
+      <Select
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
