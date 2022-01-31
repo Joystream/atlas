@@ -87,8 +87,12 @@ export class JoystreamLib {
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
-    return this.api.query.system.account(accountId, ({ data: { free } }) => {
-      callback(new BN(free).toNumber())
-    })
+    const unsubscribe = await proxy(
+      this.api.query.system.account(accountId, ({ data: { free } }) => {
+        callback(new BN(free).toNumber())
+      })
+    )
+
+    return proxy(unsubscribe)
   }
 }
