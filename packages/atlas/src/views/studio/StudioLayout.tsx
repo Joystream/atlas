@@ -133,7 +133,7 @@ const StudioLayout = () => {
               />
             </Routes>
           </MainContainer>
-          {channelSet && <VideoWorkspace />}{' '}
+          {channelSet && <VideoWorkspace />}
         </>
       )}
     </>
