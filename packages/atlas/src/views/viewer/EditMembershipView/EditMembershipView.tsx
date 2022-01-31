@@ -58,7 +58,7 @@ export const EditMembershipView: React.FC = () => {
       return
     }
 
-    await handleTransaction({
+    const success = await handleTransaction({
       txFactory: async (updateStatus) =>
         (
           await joystream.extrinsics
@@ -75,7 +75,9 @@ export const EditMembershipView: React.FC = () => {
       },
     })
     refetchActiveMembership()
-    navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
+    if (success) {
+      navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
+    }
   })
 
   return (
