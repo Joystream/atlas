@@ -37,7 +37,7 @@ export const useDeleteVideo = () => {
         },
       })
     },
-    [activeMemberId, client, handleTransaction, joystream, removeAssetsWithParentFromUploads]
+    [activeMemberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]
   )
 
   return useCallback(
