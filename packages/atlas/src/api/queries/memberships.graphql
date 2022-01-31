@@ -4,6 +4,7 @@ fragment BasicMembershipFields on Membership {
   avatarUri
   about
   controllerAccount
+  createdAt
   channels {
     ...BasicChannelFields
   }

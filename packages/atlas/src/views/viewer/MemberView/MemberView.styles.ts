@@ -44,7 +44,7 @@ export const TabsContainer = styled.div`
     align-items: center;
     border-bottom: solid 1px ${oldColors.gray[700]};
     gap: ${sizes(8)};
-    grid-template: 1fr / 1fr 193.333px;
+    grid-template: 1fr / 1fr 160px;
   }
 `
 

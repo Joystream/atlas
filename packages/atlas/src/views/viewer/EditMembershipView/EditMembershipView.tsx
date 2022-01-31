@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import useMeasure from 'react-use-measure'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
+import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -12,6 +14,7 @@ import { useUser } from '@/providers/user'
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
 export const EditMembershipView: React.FC = () => {
+  const navigate = useNavigate()
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream, proxyCallback } = useJoystream()
@@ -72,6 +75,7 @@ export const EditMembershipView: React.FC = () => {
       },
     })
     refetchActiveMembership()
+    navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
   })
 
   return (
@@ -102,7 +106,10 @@ export const EditMembershipView: React.FC = () => {
           secondaryButton={{
             visible: true,
             text: 'Cancel',
-            onClick: resetForm,
+            onClick: () => {
+              resetForm()
+              navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
+            },
           }}
         />
       </LimitedWidthContainer>

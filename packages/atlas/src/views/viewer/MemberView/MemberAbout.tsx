@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { PIONEER_URL } from '@/config/urls'
 import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
+import { formatDate } from '@/utils/time'
 
 import {
   Anchor,
@@ -54,19 +55,14 @@ export const MemberAbout = () => {
           <Text variant="t100" secondary>
             Join date
           </Text>
-          <Text variant="t300">
-            6 Jan 2019
-            {/* {member?.createdAt ? formatDate(new Date(member.createdAt)) : ''} */}
-          </Text>
+          <Text variant="t300">{member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
           <Text variant="t100" secondary>
             Num. of channels
           </Text>
-          <Text variant="t300">
-            {typeof member?.channels.length === 'number' ? formatNumberShort(member?.channels.length) : ''}
-          </Text>
+          <Text variant="t300">{member?.channels.length ? formatNumberShort(member?.channels.length) : ''}</Text>
         </Details>
 
         <Anchor

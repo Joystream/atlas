@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
@@ -43,6 +45,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   isOwner,
   className,
 }) => {
+  const navigate = useNavigate()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -96,7 +99,13 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
             (loading ? (
               <SkeletonLoader width={smMatch ? 148 : '100%'} height={48} />
             ) : (
-              <Button icon={<SvgActionEdit />} size="large" variant="secondary" fullWidth={!smMatch}>
+              <Button
+                onClick={() => navigate(absoluteRoutes.viewer.editMembership())}
+                icon={<SvgActionEdit />}
+                size="large"
+                variant="secondary"
+                fullWidth={!smMatch}
+              >
                 Edit profile
               </Button>
             ))}
