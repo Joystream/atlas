@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
+import { Text } from '@/components/Text'
 import { SvgActionClose } from '@/components/_icons'
 
 import {
@@ -11,8 +12,6 @@ import {
   SnackbarWrapper,
   StyledInnerWrapper,
 } from './Snackbar.styles'
-
-import { Text } from '../Text'
 
 export type SnackbarProps = {
   icon?: ReactNode
