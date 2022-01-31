@@ -5,6 +5,7 @@ import parseHtml from 'node-html-parser'
 import * as path from 'path'
 
 import { getChannel, getVideo } from './api'
+import { PORT } from './config'
 import {
   generateChannelMetaTags,
   generateChannelSchemaTagsHtml,
@@ -16,7 +17,6 @@ import { generateAssetUrl } from './utils'
 
 const app = express()
 
-const PORT = 80
 const indexPath = path.resolve(__dirname, 'index.html')
 const indexHtml = fs.readFileSync(indexPath, 'utf8')
 

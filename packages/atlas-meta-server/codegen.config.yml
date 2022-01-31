@@ -1,6 +1,6 @@
 overwrite: true
 
-schema: https://atlas-dev.joystream.app/orion/graphql
+schema: ${GRAPHQL_URL}
 
 documents:
   - './src/api/*.graphql'
