@@ -14,7 +14,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 export const EditMembershipView: React.FC = () => {
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const [actionBarRef, actionBarBounds] = useMeasure()
-  const { joystream } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
   const {
@@ -56,13 +56,15 @@ export const EditMembershipView: React.FC = () => {
     }
 
     await handleTransaction({
-      txFactory: (updateStatus) =>
-        joystream.extrinsics.updateMember(
+      txFactory: async (updateStatus) =>
+        (
+          await joystream.extrinsics
+        ).updateMember(
           activeMembership?.id,
           dirtyFields.handle ? data.handle : null,
           dirtyFields.avatar ? data?.avatar : null,
           dirtyFields.about ? data.about : null,
-          updateStatus
+          proxyCallback(updateStatus)
         ),
       successMessage: {
         title: 'Member successfully updated',
