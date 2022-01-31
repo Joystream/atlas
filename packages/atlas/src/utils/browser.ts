@@ -19,3 +19,12 @@ export const openInNewTab = (url: string, local?: boolean) => {
   const origin = window.location.origin
   window.open(`${local ? origin : ''}${url}`, '_blank')?.focus()
 }
+
+export const isMobile = () => {
+  const match = window.matchMedia
+  if (match) {
+    const mq = match('(pointer:coarse)')
+    return mq.matches
+  }
+  return false
+}

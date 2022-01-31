@@ -1,14 +1,20 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { TooltipProps } from '@/components/Tooltip'
 
 import {
   ChildrenWrapper,
   FormFieldDescription,
   FormFieldHeader,
-  FormFieldTitle,
   FormFieldWrapper,
+  OptionalText,
+  StyledInformation,
+  SwitchLabel,
+  SwitchTitle,
 } from './FormField.styles'
+
+import { Switch, SwitchProps } from '../Switch'
 
 export type FormFieldProps = {
   title: string
@@ -16,29 +22,40 @@ export type FormFieldProps = {
   description?: string | string[]
   dense?: boolean
   className?: string
+  switchProps?: Omit<SwitchProps, 'label'>
+  infoTooltip?: TooltipProps
 }
 
 export const FormField: React.FC<FormFieldProps> = React.memo(
-  ({ children, title, description, className, optional, dense }) => {
+  ({ children, title, description, className, optional, dense, switchProps, infoTooltip }) => {
     return (
       <FormFieldWrapper className={className} dense={dense}>
         <FormFieldHeader>
-          <FormFieldTitle variant="h300">{title}</FormFieldTitle>
+          {switchProps ? (
+            <SwitchLabel>
+              <Switch {...switchProps} /> <SwitchTitle variant="h300">{title}</SwitchTitle>
+            </SwitchLabel>
+          ) : (
+            <Text variant="h300">{title}</Text>
+          )}
+          {infoTooltip && <StyledInformation {...infoTooltip} />}
           {optional && (
-            <Text variant="t200" secondary>
+            <OptionalText variant="t200" secondary>
               (Optional)
-            </Text>
+            </OptionalText>
           )}
         </FormFieldHeader>
         {description &&
           (description instanceof Array ? (
             description.map((p, idx) => (
-              <FormFieldDescription key={idx} variant="t200">
+              <FormFieldDescription secondary key={idx} variant="t200">
                 {p}
               </FormFieldDescription>
             ))
           ) : (
-            <FormFieldDescription variant="t200">{description}</FormFieldDescription>
+            <FormFieldDescription secondary variant="t200">
+              {description}
+            </FormFieldDescription>
           ))}
         <ChildrenWrapper>{children}</ChildrenWrapper>
       </FormFieldWrapper>
