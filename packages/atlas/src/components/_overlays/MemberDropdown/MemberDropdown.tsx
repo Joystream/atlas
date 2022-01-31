@@ -20,6 +20,7 @@ import {
 } from '@/components/_icons'
 import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
@@ -60,7 +61,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
     const containerRef = useRef<HTMLDivElement>(null)
-    const { joystream } = useJoystream()
+    const { joystream, proxyCallback } = useJoystream()
     const [measureContainerRef, { height: containerHeight }] = useMeasure()
     const transRef = useSpringRef()
     const transitions = useTransition(isSwitchingMember, {
@@ -116,12 +117,15 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
 
       let unsubscribe
       const init = async () => {
-        unsubscribe = await joystream.subscribeAccountBalance(activeMembership.controllerAccount, setAccountBalance)
+        unsubscribe = await joystream.subscribeAccountBalance(
+          activeMembership.controllerAccount,
+          proxyCallback(setAccountBalance)
+        )
       }
       init()
 
       return unsubscribe
-    }, [activeMembership, joystream])
+    }, [activeMembership, joystream, proxyCallback])
 
     useEffect(() => {
       if (!isActive) {
@@ -194,15 +198,17 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                 \ to preserve the space while member handle loads */}
                         <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
                         <TjoyContainer>
-                          {accountBalance !== undefined && (
+                          {accountBalance !== undefined ? (
                             <>
                               <BalanceContainer>
                                 <SvgActionJoyToken />
                                 <Text variant="t200-strong">{formatNumberShort(accountBalance)}</Text>
                               </BalanceContainer>
-                              <Divider />
                             </>
+                          ) : (
+                            <SkeletonLoader width={30} height={20} />
                           )}
+                          <Divider />
                           <LearnAboutTjoyLink
                             variant="t100"
                             as="a"
