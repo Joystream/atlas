@@ -56,6 +56,7 @@ type SlotsContainerProps = {
 export const SlotContainer = styled.div<SlotsContainerProps>`
   position: absolute;
   user-select: none;
+  max-width: 50%;
   ${({ position }) => getSlotPosition(position)};
   opacity: ${({ type = 'default' }) => (type === 'hover' ? 0 : 1)};
   transition: opacity ${cVar('animationTransitionFast')};

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -31,12 +32,16 @@ type VideoTilePublisherProps = {
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
   onOpenInTabClick?: () => void
+  owner?: {
+    handle: string
+    avatarUrl?: string
+  }
 }
 
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, owner }) => {
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
@@ -71,6 +76,10 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         bottomRight: {
           element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
+        topLeft: owner && {
+          element: <OwnerPill avatar={owner.avatarUrl} handle={owner.handle} />,
+          clickable: true,
+        },
         topRight: {
           element: (
             <IconButton size="small" onClick={onEditClick}>
@@ -101,7 +110,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         }
       }
       return slots
-    }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, video?.duration])
+    }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, owner, video?.duration])
 
     const getPublisherKebabMenuItems = useCallback(() => {
       if (isUploading && !hasAssetUploadFailed) {

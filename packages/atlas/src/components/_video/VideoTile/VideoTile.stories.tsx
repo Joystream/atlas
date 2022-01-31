@@ -2,6 +2,7 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { OwnerPill } from '@/components/OwnerPill'
 import { Pill, PillGroup } from '@/components/Pill'
 import { IconButton } from '@/components/_buttons/IconButton'
 import {
@@ -153,6 +154,10 @@ export const Publisher = Template.bind({})
 
 Publisher.args = {
   slots: {
+    topLeft: {
+      element: <OwnerPill avatar="https://thispersondoesnotexist.com/image" handle="thishandledoesntexists" />,
+      clickable: true,
+    },
     bottomRight: {
       element: <Pill variant="overlay" label="30:12" />,
     },
