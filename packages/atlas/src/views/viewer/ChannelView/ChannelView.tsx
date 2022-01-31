@@ -313,7 +313,6 @@ export const ChannelView: React.FC = () => {
               <Select
                 size="small"
                 labelPosition="left"
-                valueLabel="Sort by: "
                 disabled={isSearching}
                 value={!isSearching ? sortVideosBy : 0}
                 placeholder={isSearching ? 'Best match' : undefined}

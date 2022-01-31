@@ -144,7 +144,7 @@ export const TabsContainer = styled.div`
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
     gap: ${sizes(8)};
-    grid-template: 1fr / auto 1fr 193.333px;
+    grid-template: 1fr / auto 1fr 160px;
   }
 `
 
