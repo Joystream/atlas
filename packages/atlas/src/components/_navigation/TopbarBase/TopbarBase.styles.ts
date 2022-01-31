@@ -29,10 +29,11 @@ export const Header = styled.header`
 
 export const LogoLink = styled(Link)`
   display: flex;
-  align-items: center;
+  align-items: end;
   text-decoration: none;
 
   /* increase the clickable area */
   padding: 16px;
+  padding-bottom: 24px;
   margin: -16px;
 `

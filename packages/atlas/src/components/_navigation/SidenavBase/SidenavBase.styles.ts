@@ -37,7 +37,6 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   background-color: ${cVar('colorBackground')};
 `
 
-//  background-color: ${oldColors.gray[800]};
 export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
@@ -56,7 +55,8 @@ export const SidebarNavList = styled.ul`
 export const SidebarNavFooter = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 ${NAVBAR_LEFT_PADDING}px;
+  padding: ${sizes(3)} ${NAVBAR_LEFT_PADDING}px;
+  border-top: 2px solid ${cVar('colorBackgroundAlpha')};
 `
 
 export const ButtonGroup = styled.div`
@@ -96,16 +96,28 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
 
+  > svg > path {
+    fill: ${cVar('colorText')};
+  }
+
   &:hover,
   &:focus {
     color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundAlpha')};
+
+    path {
+      fill: ${cVar('colorTextStrong')};
+    }
   }
 
   &:active,
   &[data-active='true'] {
     color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundStrongAlpha')};
+
+    > svg > path {
+      fill: ${cVar('colorTextStrong')};
+    }
   }
 
   > svg {
@@ -180,13 +192,14 @@ export const SubItem = styled.li`
 
 export const LegalLinksWrapper = styled.span`
   display: flex;
+
   align-items: center;
-  margin-top: ${sizes(8)};
-  padding: ${sizes(4)} 0 ${sizes(6)};
-  border-top: 1px solid ${oldColors.gray[300]};
+  margin-top: ${sizes(6)};
+  padding: ${sizes(4)} 0 ${sizes(4)};
+  border-top: 2px solid ${cVar('colorBackgroundAlpha')};
 
   > * {
-    color: ${oldColors.gray[300]};
+    color: ${cVar('colorTextMuted')};
   }
 
   > * + * {
@@ -197,21 +210,10 @@ export const LegalLinksWrapper = styled.span`
 export const LegalLink = styled(Link)`
   text-decoration: none;
 
-  font: ${cVar('typographyDesktopT200Strong')};
+  color: ${cVar('colorTextMuted')};
+  font: ${cVar('typographyDesktopT100')};
   letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-
-  &:hover {
-    color: ${oldColors.gray[400]};
-  }
-
-  &:focus {
-    color: ${oldColors.gray[400]};
-  }
-
-  &:active {
-    color: ${oldColors.gray[500]};
-  }
 `
 
 export const StyledHamburgerButton = styled(HamburgerButton)`
@@ -226,7 +228,7 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
 `
 
 export const ScrollContainer = styled.div`
-  height: 100%;
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
+  flex-grow: 4;
 `
