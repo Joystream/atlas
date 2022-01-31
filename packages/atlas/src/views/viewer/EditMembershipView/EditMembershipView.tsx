@@ -56,8 +56,10 @@ export const EditMembershipView: React.FC = () => {
     }
 
     await handleTransaction({
-      txFactory: (updateStatus) =>
-        joystream.extrinsics.updateMember(
+      txFactory: async (updateStatus) =>
+        (
+          await joystream.extrinsics
+        ).updateMember(
           activeMembership?.id,
           dirtyFields.handle ? data.handle : null,
           dirtyFields.avatar ? data?.avatar : null,
