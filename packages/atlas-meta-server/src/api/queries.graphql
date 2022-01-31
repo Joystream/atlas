@@ -1,0 +1,57 @@
+fragment DataObjectFields on StorageDataObject {
+  id
+  storageBag {
+    distributionBuckets {
+      operators {
+        metadata {
+          nodeEndpoint
+        }
+      }
+    }
+  }
+}
+
+query GetChannel($id: ID!) {
+  channelByUniqueInput(where: { id: $id }) {
+    id
+    title
+    description
+    createdAt
+    avatarPhoto {
+      ...DataObjectFields
+    }
+  }
+}
+
+query GetVideo($id: ID!) {
+  videoByUniqueInput(where: { id: $id }) {
+    id
+    title
+    description
+    duration
+    isPublic
+    isExplicit
+    createdAt
+    channel {
+      id
+      title
+    }
+    category {
+      name
+    }
+    thumbnailPhoto {
+      ...DataObjectFields
+    }
+    media {
+      ...DataObjectFields
+    }
+    mediaMetadata {
+      pixelWidth
+
+      pixelHeight
+      encoding {
+        mimeMediaType
+      }
+    }
+  }
+}

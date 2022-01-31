@@ -16,7 +16,9 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true
   },
-  "files": ["./index.ts"],
+  "files": [
+    "./src/index.ts"
+  ],
   "include": ["."],
   "exclude": ["node_modules", "dist"]
 }
