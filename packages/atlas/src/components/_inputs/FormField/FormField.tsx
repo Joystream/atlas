@@ -36,7 +36,6 @@ export const FormField: React.FC<FormFieldProps> = React.memo(
               <Switch {...switchProps} /> <SwitchTitle variant="h300">{title}</SwitchTitle>
             </SwitchLabel>
           ) : (
-            // <Switch {...switchProps} isLabelTitle label={title} />
             <Text variant="h300">{title}</Text>
           )}
           {infoTooltip && <StyledInformation {...infoTooltip} />}
