@@ -57,6 +57,7 @@ export const SidebarNavFooter = styled.div`
   flex-direction: column;
   padding: ${sizes(3)} ${NAVBAR_LEFT_PADDING}px;
   border-top: 2px solid ${cVar('colorBackgroundAlpha')};
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px !important;
 `
 
 export const ButtonGroup = styled.div`
@@ -68,6 +69,7 @@ export const ButtonGroup = styled.div`
   > * + * {
     margin-top: ${sizes(4)};
   }
+  overflow-x: hidden;
 `
 
 export const SidebarNavItem = styled.li<ExpandableElementProps>`
@@ -170,6 +172,7 @@ export const SubItemsWrapper = styled.div<SubItemProps>`
   transition: height ${transitions.timings.regular} ${transitions.easing};
   overflow: hidden;
   height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px !important;
 
   > ul {
     display: flex;
