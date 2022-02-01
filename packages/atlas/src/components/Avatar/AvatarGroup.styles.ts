@@ -39,19 +39,7 @@ export const AvatarGroupContainer = styled.div<{ size: AvatarGroupSize }>`
 `
 
 export const StyledAvatar = styled(Avatar)`
-  transition: transform ${cVar('animationTransitionFast')}, box-shadow ${cVar('animationTransitionFast')};
-
-  :hover {
-    ::after {
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-    }
-  }
-
-  :active {
-    ::after {
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-    }
-  }
+  transition: transform ${cVar('animationTransitionFast')};
 `
 
 type AvatatBackgroundProps = {

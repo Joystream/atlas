@@ -22,6 +22,7 @@ export type AvatarGroupProps = {
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean
+  reverse?: boolean
   loading?: boolean
   className?: string
 }
@@ -44,6 +45,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   avatarStrokeColor,
   clickable = true,
   loading,
+  reverse,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
@@ -58,7 +60,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
             onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
             onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
             size={size}
-            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : reverse ? idx : avatars.length - idx }}
             avatarStrokeColor={avatarStrokeColor}
           >
             <AvatarBackground avatarStrokeColor={avatarStrokeColor} />
