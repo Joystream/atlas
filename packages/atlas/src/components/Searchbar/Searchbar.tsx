@@ -86,7 +86,8 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
 
     useEffect(() => {
       const onKeyPress = (event: KeyboardEvent) => {
-        const isEventTargetAnInput = event.target instanceof HTMLInputElement
+        const isEventTargetAnInput =
+          event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
 
         if (!isEventTargetAnInput && event.key === '/') {
           event.preventDefault()
