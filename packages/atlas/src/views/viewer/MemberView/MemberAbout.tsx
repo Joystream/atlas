@@ -41,7 +41,7 @@ export const MemberAbout = () => {
             <ChannelsOwnedContainerGrid>
               {member?.channels.map((channel) => (
                 <GridItem key={channel.id} colSpan={{ base: 6, lg: 3 }}>
-                  <StyledChannelCard channel={channel} />
+                  <StyledChannelCard withFollowButton={false} channel={channel} />
                 </GridItem>
               ))}
             </ChannelsOwnedContainerGrid>

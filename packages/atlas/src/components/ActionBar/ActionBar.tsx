@@ -72,9 +72,8 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
             unmountOnExit
           >
             <Button
+              {...secondaryButton}
               icon={!smMatch ? secondaryButton.icon : undefined}
-              disabled={secondaryButton.disabled}
-              onClick={secondaryButton.onClick}
               variant={!smMatch ? 'tertiary' : 'secondary'}
               size={!smMatch ? 'small' : 'large'}
               iconPlacement="right"
@@ -84,12 +83,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
           </CSSTransition>
         ) : null}
         <ActionButtonPrimaryTooltip arrowDisabled placement="top-end" {...primaryButton?.tooltip}>
-          <ActionButtonPrimary
-            disabled={primaryButton.disabled}
-            onClick={primaryButton.onClick}
-            size="large"
-            type="submit"
-          >
+          <ActionButtonPrimary {...primaryButton} size="large" type="submit">
             {primaryButton.text}
           </ActionButtonPrimary>
         </ActionButtonPrimaryTooltip>

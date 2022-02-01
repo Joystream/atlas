@@ -4,13 +4,13 @@ import { useParams } from 'react-router'
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { languages } from '@/config/languages'
-import { PIONEER_URL } from '@/config/urls'
+import { absoluteRoutes } from '@/config/routes'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
-  Anchor,
   Details,
   DetailsMember,
   DetailsText,
@@ -45,14 +45,9 @@ export const ChannelAbout = () => {
             <Text variant="t100" secondary>
               Owned by member
             </Text>
-            <Anchor
-              as="a"
-              variant="t300-strong"
-              href={`${PIONEER_URL}/#/members/${channel?.ownerMember?.handle}`}
-              target="_blank"
-            >
+            <Button to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary" textOnly>
               {channel?.ownerMember?.handle}
-            </Anchor>
+            </Button>
           </MemberContainer>
         </DetailsMember>
 
