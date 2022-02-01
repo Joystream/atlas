@@ -12,6 +12,7 @@ export type BasicMembershipFieldsFragment = {
   avatarUri?: Types.Maybe<string>
   about?: Types.Maybe<string>
   controllerAccount: string
+  createdAt: Date
   channels: Array<{
     __typename?: 'Channel'
     id: string
@@ -50,6 +51,7 @@ export type GetMembershipQuery = {
     avatarUri?: Types.Maybe<string>
     about?: Types.Maybe<string>
     controllerAccount: string
+    createdAt: Date
     channels: Array<{
       __typename?: 'Channel'
       id: string
@@ -89,6 +91,7 @@ export type GetMembershipsQuery = {
     avatarUri?: Types.Maybe<string>
     about?: Types.Maybe<string>
     controllerAccount: string
+    createdAt: Date
     channels: Array<{
       __typename?: 'Channel'
       id: string
@@ -122,6 +125,7 @@ export const BasicMembershipFieldsFragmentDoc = gql`
     avatarUri
     about
     controllerAccount
+    createdAt
     channels {
       ...BasicChannelFields
     }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
@@ -30,6 +31,7 @@ export type MembershipInfoProps = {
   address?: string | null
   loading?: boolean
   isOwner?: boolean
+  className?: string
 }
 
 export const MembershipInfo: React.FC<MembershipInfoProps> = ({
@@ -40,6 +42,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   handle,
   loading,
   isOwner,
+  className,
 }) => {
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
@@ -62,11 +65,11 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
         timeout={parseInt(cVar('animationTimingFast', true))}
         classNames={transitions.names.fade}
       >
-        <MembershipHeader>
+        <MembershipHeader className={className}>
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}
-              editable
+              editable={isOwner}
               onEditClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={loading}
@@ -94,7 +97,13 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
             (loading ? (
               <SkeletonLoader width={smMatch ? 148 : '100%'} height={48} />
             ) : (
-              <Button icon={<SvgActionEdit />} size="large" variant="secondary" fullWidth={!smMatch}>
+              <Button
+                to={absoluteRoutes.viewer.editMembership()}
+                icon={<SvgActionEdit />}
+                size="large"
+                variant="secondary"
+                fullWidth={!smMatch}
+              >
                 Edit profile
               </Button>
             ))}

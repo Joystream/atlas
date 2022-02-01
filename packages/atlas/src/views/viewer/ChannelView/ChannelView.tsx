@@ -57,11 +57,24 @@ const TABS = [
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+
+  // At mount set the tab from the search params
+  // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
+  const initialRender = useRef(true)
+  useEffect(() => {
+    if (initialRender.current) {
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
+
   useRedirectMigratedGizaContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
-  const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
@@ -85,8 +98,7 @@ export const ChannelView: React.FC = () => {
   })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const currentTabName = searchParams.get('tab')
-  const [currentTab, setCurrentTab] = useState<string | null>(null)
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
@@ -204,16 +216,6 @@ export const ChannelView: React.FC = () => {
     ) : (
       <ChannelAbout />
     )
-
-  // At mount set the tab from the search params
-  const initialRender = useRef(true)
-  useEffect(() => {
-    if (initialRender.current) {
-      const tabIndex = TABS.findIndex((t) => t === currentTabName)
-      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-      initialRender.current = false
-    }
-  })
 
   useEffect(() => {
     if (currentTabName) {
@@ -403,7 +405,7 @@ type SearchProps = {
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
   search: (searchQuery: string) => void
-  setCurrentTab: (tab: string) => void
+  setCurrentTab: (tab: typeof TABS[number] | null) => void
 }
 const Search: React.FC<SearchProps> = ({
   searchInputRef,
