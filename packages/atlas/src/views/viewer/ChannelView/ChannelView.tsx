@@ -51,6 +51,9 @@ const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+
   // At mount set the tab from the search params
   // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
   const initialRender = useRef(true)
@@ -66,7 +69,6 @@ export const ChannelView: React.FC = () => {
   const videoRows = useVideoGridRows('main')
   const xsMatch = useMediaMatch('xs')
   const { id } = useParams()
-  const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
@@ -90,7 +92,6 @@ export const ChannelView: React.FC = () => {
   })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
