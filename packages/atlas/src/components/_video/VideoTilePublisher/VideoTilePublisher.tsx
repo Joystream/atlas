@@ -118,15 +118,15 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       }
       const assetFailedKebabItems = [
         {
+          icon: <SvgActionReupload />,
+          onClick: onReuploadVideoClick,
+          title: 'Reupload file',
+        },
+        {
           icon: <SvgActionTrash />,
           onClick: onDeleteVideoClick,
           title: 'Delete video',
           destructive: true,
-        },
-        {
-          icon: <SvgActionReupload />,
-          onClick: onReuploadVideoClick,
-          title: 'Reupload file',
         },
       ]
 

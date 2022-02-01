@@ -26,8 +26,6 @@ export type ListItemProps = {
   size?: ListItemSizes
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
-  applyIconStylesNodeStart?: boolean
-  applyIconStylesNodeEnd?: boolean
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
   className?: string
@@ -45,8 +43,6 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
       selected,
       nodeStart,
       nodeEnd,
-      applyIconStylesNodeStart,
-      applyIconStylesNodeEnd,
       onClick,
       className,
     },
@@ -63,12 +59,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
         ref={mergeRefs([hoverRef, ref])}
       >
         {!!nodeStart && (
-          <NodeContainer
-            isSelected={selected}
-            isHovering={isHovering}
-            applyIconStyles={applyIconStylesNodeStart}
-            destructive={destructive}
-          >
+          <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
             {nodeStart}
           </NodeContainer>
         )}
@@ -94,12 +85,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
         </LabelCaptionContainer>
         {selected && <SelectedIcon />}
         {!!nodeEnd && (
-          <NodeContainer
-            isSelected={selected}
-            isHovering={isHovering}
-            applyIconStyles={applyIconStylesNodeEnd}
-            destructive={destructive}
-          >
+          <NodeContainer isSelected={selected} isHovering={isHovering} destructive={destructive}>
             {nodeEnd}
           </NodeContainer>
         )}

@@ -162,7 +162,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       onClick={() => setIsSwitchingMember(false)}
                       nodeStart={<SvgActionChevronL />}
                       label="Switch member"
-                      applyIconStylesNodeStart
                     />
                   </SwitchMemberItemListContainer>
 
@@ -251,7 +250,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
                       label={hasOneMember ? 'Add new member...' : 'Switch member'}
                       nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                      applyIconStylesNodeEnd
                     />
                   </SectionContainer>
                   {publisher && (
