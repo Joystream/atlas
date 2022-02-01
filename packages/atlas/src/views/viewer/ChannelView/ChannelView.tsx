@@ -49,7 +49,11 @@ import {
   VideoSection,
 } from './ChannelView.styles'
 
-const TABS = ['Videos', 'NFTs', 'Information'] as const
+const TABS = [
+  'Videos',
+  // 'NFTs',
+  'Information',
+] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
@@ -217,21 +221,8 @@ export const ChannelView: React.FC = () => {
     }
   }, [currentTabName])
 
-  const collectors: Collector[] = [
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane', nftsAmount: 4 },
-    {
-      assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-      tooltipText: 'John',
-      nftsAmount: 2,
-    },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
-    {
-      assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
-      tooltipText: 'Someone',
-      nftsAmount: 1,
-    },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
-  ]
+  // TODO: replace with real NFT collector data
+  const collectors: Collector[] = []
 
   if (videosError || error || errorSearch) {
     return <ViewErrorFallback />
