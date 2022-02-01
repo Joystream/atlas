@@ -33,7 +33,7 @@ export const TopbarViewer: React.FC = () => {
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount, overlaysOpenCount } = useOverlayManager()
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const {
     searchOpen,
     searchQuery,
@@ -92,7 +92,6 @@ export const TopbarViewer: React.FC = () => {
         <SearchbarContainer>
           <CSSTransition classNames="searchbar" in={searchOpen} timeout={0}>
             <Searchbar
-              hotkeysDisabled={overlaysOpenCount === 1}
               placeholder="Search..."
               onChange={handleChange}
               onFocus={handleFocus}
