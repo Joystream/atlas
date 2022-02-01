@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { cVar, square } from '@/styles'
 
-import { sharedAvataActiveStyles, sharedAvatarHoverStyles } from './Avatar.styles'
+import { sharedAvatarActiveStyles, sharedAvatarHoverStyles } from './Avatar.styles'
 
 import { Avatar } from '.'
 
@@ -49,7 +49,7 @@ export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
         ${sharedAvatarHoverStyles};
       }
       :active ${StyledAvatar} {
-        ${sharedAvataActiveStyles};
+        ${sharedAvatarActiveStyles};
       }
     `};
   ${getSizeOfGridColumn};

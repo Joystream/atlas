@@ -26,7 +26,7 @@ import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 export type MembershipInfoProps = {
   avatarUrl?: string | null
   hasAvatarUploadFailed?: boolean
-  onAvatarEditClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onAvatarEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   handle?: string | null
   address?: string | null
   loading?: boolean
@@ -72,7 +72,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}
               editable={editable}
-              onEditClick={onAvatarEditClick}
+              onClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={loading}
               hasAvatarUploadFailed={hasAvatarUploadFailed}

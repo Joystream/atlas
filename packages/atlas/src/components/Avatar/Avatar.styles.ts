@@ -12,6 +12,7 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 type ContainerProps = {
   size: AvatarSize
   isLoading?: boolean
+  isClickable: boolean
   withoutOutline?: boolean
 }
 
@@ -107,38 +108,37 @@ export const sharedAvatarHoverStyles = css`
     box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
   }
 `
-export const sharedAvataActiveStyles = css`
+export const sharedAvatarActiveStyles = css`
   ::after {
     box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
   }
 `
 
-const getBorderStyles = ({ isLoading, withoutOutline }: Omit<ContainerProps, 'size'>) => {
-  if (withoutOutline) {
+const getBorderStyles = ({ isLoading, isClickable, withoutOutline }: Omit<ContainerProps, 'size'>) => {
+  if (withoutOutline || isLoading) {
     return
   }
-  if (!isLoading) {
-    return css`
-      ::after {
-        ${square('100%')};
 
-        content: '';
-        display: block;
-        border-radius: 50%;
-        z-index: ${zIndex.overlay};
-        pointer-events: none;
-        box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-      }
+  return css`
+    ::after {
+      ${square('100%')};
 
-      :hover {
-        ${sharedAvatarHoverStyles};
-      }
+      content: '';
+      display: block;
+      border-radius: 50%;
+      z-index: ${zIndex.overlay};
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+    }
 
-      :active {
-        ${sharedAvataActiveStyles}
-      }
-    `
-  }
+    :hover {
+      ${isClickable && sharedAvatarHoverStyles};
+    }
+
+    :active {
+      ${isClickable && sharedAvatarActiveStyles};
+    }
+  `
 }
 
 export const EditButton = styled.button<EditButtonProps>`

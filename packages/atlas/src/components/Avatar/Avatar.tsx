@@ -18,7 +18,6 @@ import {
 
 export type AvatarProps = {
   onClick?: (event: React.MouseEvent<HTMLElement>) => void
-  onEditClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
   assetUrl?: string | null
   hasAvatarUploadFailed?: boolean
   withoutOutline?: boolean
@@ -38,7 +37,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   size = 'default',
   children,
   onClick,
-  onEditClick,
   className,
   editable,
   newChannel,
@@ -46,18 +44,25 @@ export const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
-    if (onEditClick) {
-      onEditClick(event)
+    if (onClick) {
+      onClick(event)
     }
   }
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
 
   return (
-    <Container onClick={onClick} size={size} className={className} isLoading={loading} withoutOutline={withoutOutline}>
+    <Container
+      onClick={onClick}
+      size={size}
+      className={className}
+      isLoading={loading}
+      withoutOutline={withoutOutline}
+      isClickable={!!onClick}
+    >
       {isEditable && (
         <EditButton size={size} onClick={handleEditClick} type="button">
           <SvgActionImage />
-          <span>{assetUrl ? 'Edit Avatar' : 'Add avatar'}</span>
+          <span>{assetUrl ? 'Edit avatar' : 'Add avatar'}</span>
         </EditButton>
       )}
       {!children &&
