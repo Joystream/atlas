@@ -51,6 +51,17 @@ const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
+  // At mount set the tab from the search params
+  // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
+  const initialRender = useRef(true)
+  useEffect(() => {
+    if (initialRender.current) {
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
+
   useRedirectMigratedGizaContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
   const xsMatch = useMediaMatch('xs')
@@ -196,16 +207,6 @@ export const ChannelView: React.FC = () => {
     ) : (
       <ChannelAbout />
     )
-
-  // At mount set the tab from the search params
-  const initialRender = useRef(true)
-  useEffect(() => {
-    if (initialRender.current) {
-      const tabIndex = TABS.findIndex((t) => t === currentTabName)
-      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-      initialRender.current = false
-    }
-  })
 
   useEffect(() => {
     if (currentTabName) {
