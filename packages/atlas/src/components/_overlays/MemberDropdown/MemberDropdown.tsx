@@ -92,8 +92,8 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       navigate(absoluteRoutes.studio.index())
       closeDropdown?.()
     }
-    // TODO: add navigation
     const handleGoToMyProfile = () => {
+      navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
       closeDropdown?.()
     }
     const handleAddNewMember = () => {
