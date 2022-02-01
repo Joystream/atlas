@@ -9,7 +9,6 @@ import { createId } from '@/utils/createId'
 type OverlayManagerContextValue = {
   scrollLocked: boolean
   setOverlaysSet: React.Dispatch<React.SetStateAction<Set<string>>>
-  overlaysOpenCount: number
   modalContainerRef: React.RefObject<HTMLDivElement>
 }
 
@@ -42,7 +41,6 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
-          overlaysOpenCount: overlaysSet.size,
           setOverlaysSet,
           modalContainerRef,
         }}
@@ -67,7 +65,7 @@ export const useOverlayManager = () => {
   if (!context) {
     throw new Error(`useOverlayManager must be used within a OverlayManagerProvider.`)
   }
-  const { setOverlaysSet, modalContainerRef, overlaysOpenCount } = context
+  const { setOverlaysSet, modalContainerRef } = context
 
   const overlayId = useRef(createId()).current
   const incrementOverlaysOpenCount = useCallback(() => {
@@ -85,7 +83,6 @@ export const useOverlayManager = () => {
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
     modalContainerRef,
-    overlaysOpenCount,
   }
 }
 
