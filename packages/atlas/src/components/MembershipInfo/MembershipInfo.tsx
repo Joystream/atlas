@@ -69,7 +69,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}
-              editable
+              editable={isOwner}
               onEditClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={loading}
