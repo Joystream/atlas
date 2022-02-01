@@ -4,7 +4,6 @@ import { useParams } from 'react-router'
 import { useChannel, useChannelVideoCount } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { formatNumberShort } from '@/utils/number'
@@ -15,6 +14,7 @@ import {
   DetailsMember,
   DetailsText,
   MemberContainer,
+  MemberLink,
   StyledAvatar,
   StyledLayoutGrid,
   TextContainer,
@@ -45,9 +45,9 @@ export const ChannelAbout = () => {
             <Text variant="t100" secondary>
               Owned by member
             </Text>
-            <Button to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary" textOnly>
+            <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary" textOnly>
               {channel?.ownerMember?.handle}
-            </Button>
+            </MemberLink>
           </MemberContainer>
         </DetailsMember>
 
