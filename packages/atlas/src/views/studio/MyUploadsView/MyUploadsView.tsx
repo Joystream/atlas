@@ -5,6 +5,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
@@ -21,6 +22,8 @@ type GroupByParentObjectIdAcc = {
 export const MyUploadsView: React.FC = () => {
   const lgMatch = useMediaMatch('lg')
   const { activeChannelId } = useUser()
+
+  const headTags = useHeadTags('My uploads')
 
   const channelUploads = useUploadsStore(
     (state) => state.uploads.filter((asset) => asset.owner === activeChannelId),
@@ -48,6 +51,7 @@ export const MyUploadsView: React.FC = () => {
 
   return (
     <UploadsContainer>
+      {headTags}
       <StyledText variant="h700">My uploads</StyledText>
       {isSyncing ? (
         placeholderItems

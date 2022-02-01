@@ -11,12 +11,41 @@ fragment DataObjectFields on StorageDataObject {
   }
 }
 
-query GetChannel($id: ID!) {
-  channelByUniqueInput(where: { id: $id }) {
+fragment BasicChannelFields on Channel {
+  id
+  title
+  description
+  createdAt
+}
+
+fragment BasicVideoFields on Video {
+  id
+  title
+  description
+  duration
+  isPublic
+  isExplicit
+  createdAt
+  channel {
     id
     title
-    description
-    createdAt
+  }
+  category {
+    name
+  }
+  mediaMetadata {
+    pixelWidth
+
+    pixelHeight
+    encoding {
+      mimeMediaType
+    }
+  }
+}
+
+query GetChannel($id: ID!) {
+  channelByUniqueInput(where: { id: $id }) {
+    ...BasicChannelFields
     avatarPhoto {
       ...DataObjectFields
     }
@@ -25,33 +54,12 @@ query GetChannel($id: ID!) {
 
 query GetVideo($id: ID!) {
   videoByUniqueInput(where: { id: $id }) {
-    id
-    title
-    description
-    duration
-    isPublic
-    isExplicit
-    createdAt
-    channel {
-      id
-      title
-    }
-    category {
-      name
-    }
+    ...BasicVideoFields
     thumbnailPhoto {
       ...DataObjectFields
     }
     media {
       ...DataObjectFields
-    }
-    mediaMetadata {
-      pixelWidth
-
-      pixelHeight
-      encoding {
-        mimeMediaType
-      }
     }
   }
 }

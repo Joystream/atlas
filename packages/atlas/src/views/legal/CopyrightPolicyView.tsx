@@ -2,10 +2,13 @@ import React from 'react'
 
 import { LegalListItem, LegalParagraph } from '@/components/LegalText'
 import { Text } from '@/components/Text'
+import { useHeadTags } from '@/hooks/useHeadTags'
 
 export const CopyrightPolicyView: React.FC = () => {
+  const headTags = useHeadTags('Copyright Policy')
   return (
     <div>
+      {headTags}
       <Text variant="h400">DMCA Policy For Content Takedown</Text>
       <LegalParagraph>
         Jsgenesis AS, the developers of the Joystream protocol, have established a copyright infringement policy in

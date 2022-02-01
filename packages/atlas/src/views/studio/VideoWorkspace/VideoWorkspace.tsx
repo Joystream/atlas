@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
@@ -11,6 +12,8 @@ import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
+  const headTags = useHeadTags('Edit video')
+
   // videoWorkspace state
   const {
     videoWorkspaceState,
@@ -110,6 +113,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   return (
     <>
+      {dialogState === 'open' && headTags}
       <CSSTransition
         in={['open', 'maximized'].includes(dialogState)}
         mountOnEnter

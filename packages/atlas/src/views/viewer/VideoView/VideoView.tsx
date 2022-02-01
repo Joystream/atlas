@@ -1,5 +1,6 @@
+import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -12,6 +13,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
@@ -51,6 +53,13 @@ export const VideoView: React.FC = () => {
   const timestampFromQuery = Number(useRouterQuery('time'))
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
+  const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
+
+  const videoMetaTags = useMemo(() => {
+    if (!video || !thumbnailUrl) return {}
+    return generateVideoMetaTags(video, thumbnailUrl)
+  }, [video, thumbnailUrl])
+  const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const [startTimestamp, setStartTimestamp] = useState<number>()
   useEffect(() => {
@@ -108,6 +117,27 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
+  // use Media Session API to provide rich metadata to the browser
+  useEffect(() => {
+    const supported = 'mediaSession' in navigator
+    if (!supported || !video) {
+      return
+    }
+
+    const artwork: MediaImage[] = thumbnailUrl ? [{ src: thumbnailUrl, type: 'image/webp', sizes: '640x360' }] : []
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: video.title || '',
+      artist: video.channel.title || '',
+      album: '',
+      artwork: artwork,
+    })
+
+    return () => {
+      navigator.mediaSession.metadata = null
+    }
+  }, [thumbnailUrl, video])
+
   const replaceUrls = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g
     const parts = text.split(urlRegex)
@@ -147,6 +177,7 @@ export const VideoView: React.FC = () => {
 
   return (
     <StyledViewWrapper>
+      {headTags}
       <PlayerWrapper>
         <PlayerContainer>
           {!isMediaLoading && video ? (

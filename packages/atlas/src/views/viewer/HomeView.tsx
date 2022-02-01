@@ -10,6 +10,7 @@ import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystream
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
 import { VideoHero } from '@/components/_video/VideoHero'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { sizes, transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -37,6 +38,8 @@ export const HomeView: React.FC = () => {
     { skip: !anyFollowedChannels, onError: (error) => SentryLogger.error('Failed to fetch videos', 'HomeView', error) }
   )
 
+  const headTags = useHeadTags()
+
   const followedChannelsVideosCount = videosConnection?.totalCount
 
   if (followedError) {
@@ -45,6 +48,7 @@ export const HomeView: React.FC = () => {
 
   return (
     <VideoContentTemplate cta={['popular', 'new', 'channels']}>
+      {headTags}
       <VideoHero videoHeroData={videoHero} withMuteButton />
       <Container className={transitions.names.slide}>
         {!followedLoading && followedChannelsVideosCount ? (
