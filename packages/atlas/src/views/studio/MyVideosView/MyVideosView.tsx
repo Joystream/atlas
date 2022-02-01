@@ -48,11 +48,10 @@ const SNACKBAR_TIMEOUT = 5000
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
-  const { setVideoWorkspaceState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
+  const { videoTab, addVideoTab } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [tabIdToRemoveViaSnackbar, setTabIdToRemoveViaSnackbar] = useState<string>()
   const videosPerPage = ROWS_AMOUNT * videosPerRow
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
@@ -162,32 +161,13 @@ export const MyVideosView = () => {
           iconType: 'success',
           actionText: 'Undo',
           timeout: SNACKBAR_TIMEOUT,
-          onActionClick: () => setTabIdToRemoveViaSnackbar(id),
           onExit: () => (addToTabNotificationsCount.current = 0),
         })
       }
-
-      setVideoWorkspaceState('minimized')
     } else {
-      const tabIdx = videoTabs.findIndex((t) => t.id === id)
-      if (tabIdx >= 0) setSelectedVideoTabIdx(tabIdx)
-      navigate(absoluteRoutes.studio.videoWorkspace())
+      if (videoTab) navigate(absoluteRoutes.studio.videoWorkspace())
     }
   }
-
-  // Workaround for removing drafts from video videoWorkspace tabs via snackbar
-  // Snackbar will probably need a refactor to handle actions that change state
-  useEffect(() => {
-    if (tabIdToRemoveViaSnackbar !== undefined) {
-      const tab = videoTabs.find((tab) => tab.id === tabIdToRemoveViaSnackbar)
-      if (!tab) {
-        return
-      }
-      const idx = videoTabs.indexOf(tab)
-      removeVideoTab(idx)
-      setTabIdToRemoveViaSnackbar(undefined)
-    }
-  }, [removeVideoTab, tabIdToRemoveViaSnackbar, videoTabs])
 
   const handleDeleteDraft = (draftId: string) => {
     openDeleteDraftDialog({

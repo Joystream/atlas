@@ -129,10 +129,7 @@ export const useVideoWorkspaceRouting = (): Location => {
     }
     setCachedVideoWorkspaceState(videoWorkspaceState)
 
-    if (
-      (videoWorkspaceState === 'minimized' && cachedVideoWorkspaceState === 'open') ||
-      (videoWorkspaceState === 'closed' && cachedVideoWorkspaceState !== 'minimized')
-    ) {
+    if (videoWorkspaceState === 'closed') {
       // restore the old location when videoWorkspace was minimized/closed
       const oldLocation = locationState?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)

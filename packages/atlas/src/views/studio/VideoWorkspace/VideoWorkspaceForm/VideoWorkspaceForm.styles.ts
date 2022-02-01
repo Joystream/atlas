@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
+import { DRAWER_HEADER_TABS_BAR_HEIGHT } from '@/components/DrawerHeader'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -8,8 +9,6 @@ import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleArea } from '@/components/_inputs/TitleArea'
 import { media, sizes } from '@/styles'
-
-import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from '../VideoWorkspaceTabsBar'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
@@ -37,7 +36,7 @@ type FormScrollingProps = {
 }
 export const FormScrolling = styled.div<FormScrollingProps>`
   height: ${({ actionBarHeight, isEdit }) =>
-    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px) `};
+    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${DRAWER_HEADER_TABS_BAR_HEIGHT}px) `};
   overflow-y: scroll;
   overflow-x: hidden;
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;

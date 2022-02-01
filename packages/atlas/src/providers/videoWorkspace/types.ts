@@ -20,12 +20,9 @@ export type VideoWorkspaceAssetsCache = Record<string, VideoWorkspaceAssets | nu
 export type VideoWorkspaceTabCachedDirtyFormData = Record<string, Partial<VideoWorkspaceFormFields>>
 
 export type ContextValue = {
-  videoTabs: VideoWorkspaceTab[]
+  videoTab: VideoWorkspaceTab
   addVideoTab: (tab?: VideoWorkspaceTab, shouldSelect?: boolean) => void
-  removeVideoTab: (tabIdx: number) => void
   updateSelectedVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
-  selectedVideoTabIdx: number
-  setSelectedVideoTabIdx: (tabIdx: number) => void
   selectedVideoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
   setSelectedVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
   selectedVideoTabCachedAssets: VideoWorkspaceAssets | null
@@ -51,4 +48,4 @@ export type VideoWorkspaceFormFields = {
   assets: VideoWorkspaceAssets
 }
 
-export type VideoWorkspaceState = 'closed' | 'open' | 'minimized' | 'maximized' | 'unset'
+export type VideoWorkspaceState = 'closed' | 'open' | 'unset'

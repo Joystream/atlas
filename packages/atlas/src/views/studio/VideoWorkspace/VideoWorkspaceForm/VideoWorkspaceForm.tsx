@@ -78,7 +78,6 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoWorkspaceFormProps = {
   onThumbnailFileChange: (file: Blob) => void
   onVideoFileChange: (file: Blob) => void
-  onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: VideoWorkspaceTab
   fee: number
   thumbnailHashPromise: Promise<string> | null
@@ -88,16 +87,8 @@ type VideoWorkspaceFormProps = {
 type ValueOf<T> = T[keyof T]
 
 export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
-  ({
-    selectedVideoTab,
-    onThumbnailFileChange,
-    onVideoFileChange,
-    onDeleteVideo,
-    fee,
-    thumbnailHashPromise,
-    videoHashPromise,
-  }) => {
-    const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
+  ({ selectedVideoTab, onThumbnailFileChange, onVideoFileChange, fee, thumbnailHashPromise, videoHashPromise }) => {
+    const { setVideoWorkspaceState } = useVideoWorkspace()
     const isEdit = !selectedVideoTab?.isDraft
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
@@ -432,8 +423,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         })
 
         if (completed) {
-          setVideoWorkspaceState('minimized')
-          removeVideoTab(selectedVideoTabIdx)
+          setVideoWorkspaceState('closed')
         }
       },
       [
@@ -446,10 +436,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         joystream,
         proxyCallback,
         removeDrafts,
-        removeVideoTab,
         resolveAsset,
         selectedVideoTab,
-        selectedVideoTabIdx,
         setSelectedVideoTabCachedAssets,
         setSelectedVideoTabCachedDirtyFormData,
         setVideoWorkspaceState,
@@ -608,7 +596,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     }, [])
 
     const handleDeleteVideo = () => {
-      selectedVideoTab && deleteVideo(selectedVideoTab.id, () => onDeleteVideo(selectedVideoTab.id))
+      selectedVideoTab && deleteVideo(selectedVideoTab.id)
     }
 
     const categoriesSelectItems: SelectItem[] =
