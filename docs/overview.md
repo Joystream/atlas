@@ -13,6 +13,9 @@ This document tries to outline all the conventions/tools/services used to make A
 - [Emotion](https://emotion.sh/) - for all the styling
 - [Zustand](https://github.com/pmndrs/zustand) - for simple local state management
 
+### Monorepo
+Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/features/workspaces) and because of that, to install new dependency from root, you need to use the following pattern: `yarn workspace [package_name] add [dependency_name]`. You also have the option to install dependencies directly from package directory using `yarn add [package_name]`
+
 ### Repo structure
 
 - `.github/` - GitHub stuff - currently PR checks actions
@@ -42,8 +45,6 @@ This document tries to outline all the conventions/tools/services used to make A
       - `main.tsx` - app entry-point
       - `App.tsx` - React entry-point
   - `atlas-meta-server` - meta tags pre-rendering server
-    - `index.html` - main template
-    - `index.ts` - server entry point
 
 ### DevOps
 
