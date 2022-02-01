@@ -2,27 +2,19 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
-import { SnackbarVariant } from './Snackbar'
+import { IconButton } from '../_buttons/IconButton'
 
 type SnackbarWrapperProps = {
-  colorVariant?: SnackbarVariant
   snackbarHeight?: number
 }
-
-type InnerWrapperProps = {
-  hasDescription?: boolean
-  hasActionButton?: boolean
-} & Omit<SnackbarWrapperProps, 'snackbarHeight'>
-
-type TitleProps = Omit<InnerWrapperProps, 'hasActionButton'>
 
 export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   position: relative;
   width: 100%;
   height: 0;
-  background-color: ${({ colorVariant }) => (colorVariant === 'secondary' ? oldColors.gray[700] : oldColors.blue[500])};
+  background-color: ${cVar('colorBackgroundStrong')};
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
@@ -50,58 +42,51 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
-    transition: transform ${transitions.timings.regular} ${transitions.easing},
-      height ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
+    transition: transform ${cVar('animationTransitionFast')},
+      height ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')},
+      margin-bottom ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
   }
 
   &.snackbar-enter-active {
-    transition: height ${transitions.timings.regular} ${transitions.easing},
-      margin-bottom ${transitions.timings.regular} ${transitions.easing},
-      transform ${transitions.timings.regular} ${transitions.easing} ${transitions.timings.regular};
+    transition: height ${cVar('animationTransitionFast')}, margin-bottom ${cVar('animationTransitionFast')},
+      transform ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
   }
 `
 
-export const SnackbarHeader = styled.div`
+export const SnackbarContent = styled.div`
   display: flex;
-  align-items: center;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: ${sizes(1.5)} 0 ${sizes(1.5)} ${sizes(1.5)};
   width: 100%;
-`
-
-export const SnackbarTitle = styled(Text)<TitleProps>`
-  color: ${({ colorVariant, hasDescription }) =>
-    hasDescription ? oldColors.white : colorVariant === 'primary' ? oldColors.blue[200] : oldColors.gray[300]};
+  align-items: flex-start;
 `
 
 export const SnackbarDescription = styled(Text)`
-  padding: ${sizes(1)} 0;
+  margin-top: ${sizes(2)};
 `
 
-export const StyledInnerWrapper = styled.div<InnerWrapperProps>`
+export const StyledInnerWrapper = styled.div`
   width: 100%;
-  padding: ${({ hasDescription }) => (hasDescription ? `${sizes(4)} ${sizes(5)}` : `${sizes(3)} ${sizes(5)}`)};
-  ${SnackbarDescription} {
-    ${({ hasActionButton }) => hasActionButton && `margin-bottom: ${sizes(3)}`};
-    ${({ colorVariant }) => colorVariant === 'primary' && `color: ${oldColors.blue[200]}`};
-  }
+  display: flex;
+  align-items: flex-start;
+  padding: ${sizes(3)};
 `
 
-export const SnackbarButtonsContainer = styled.div`
-  display: flex;
-  margin-left: auto;
+export const SnackbarCloseButton = styled(IconButton)`
+  margin-left: ${sizes(4)};
 `
 
 export const SnackbarActionButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  padding: 0;
-  min-width: auto;
+  margin-top: ${sizes(2)};
   margin-right: ${sizes(2)};
-  font: ${cVar('typographyDesktopT300')};
-  letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT300TextTransform')};
 `
 
-export const SnackbarIconContainer = styled.span`
-  margin-right: ${sizes(2)};
+export const SnackbarIconContainer = styled.div`
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `

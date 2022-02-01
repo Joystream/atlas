@@ -10,7 +10,7 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
 } from '@/components/_icons'
-import { sizes, transitions, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 
@@ -27,7 +27,7 @@ const SNACKBARS_LIMIT = 3
 export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 
 export const Snackbars: React.FC = () => {
-  const { closeSnackbar } = useSnackbar()
+  const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
 
   useEffect(() => {
@@ -42,12 +42,18 @@ export const Snackbars: React.FC = () => {
     <SnackbarsContainer>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
-          <CSSTransition key={id} timeout={2 * parseInt(transitions.timings.regular)} classNames="snackbar">
+          <CSSTransition key={id} timeout={parseInt(cVar('animationTimingFast', true)) * 2} classNames="snackbar">
             <Snackbar
               {...snackbarProps}
               onActionClick={() => {
                 onActionClick?.()
                 closeSnackbar(id)
+              }}
+              onMouseEnter={() => {
+                cancelSnackbarTimeout(id)
+              }}
+              onMouseLeave={() => {
+                restartSnackbarTimeout(id)
               }}
               icon={iconType && ICON_TYPE_TO_ICON[iconType]}
               onClick={() => {
@@ -62,7 +68,7 @@ export const Snackbars: React.FC = () => {
   )
 }
 
-const SnackbarsContainer = styled.div`
+export const SnackbarsContainer = styled.div`
   position: fixed;
   left: var(--size-sidenav-width-collapsed);
   bottom: ${sizes(18)};

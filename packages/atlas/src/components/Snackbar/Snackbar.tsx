@@ -1,40 +1,40 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Text } from '@/components/Text'
 import { SvgActionClose } from '@/components/_icons'
 
 import {
   SnackbarActionButton,
-  SnackbarButtonsContainer,
+  SnackbarCloseButton,
+  SnackbarContent,
   SnackbarDescription,
-  SnackbarHeader,
   SnackbarIconContainer,
-  SnackbarTitle,
   SnackbarWrapper,
   StyledInnerWrapper,
 } from './Snackbar.styles'
 
-export type SnackbarVariant = 'primary' | 'secondary'
 export type SnackbarProps = {
-  variant?: SnackbarVariant
   icon?: ReactNode
   title: string
   description?: string
   actionText?: string
+  actionIcon?: React.ReactNode
   onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  actionIcon?: ReactNode
+  onMouseEnter?: (e: React.MouseEvent) => void
+  onMouseLeave?: (e: React.MouseEvent) => void
 }
 
 export const Snackbar: React.FC<SnackbarProps> = ({
-  variant = 'secondary',
   icon,
   title,
   description,
   actionText,
+  actionIcon,
   onActionClick,
   onClick,
-  actionIcon,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
@@ -46,45 +46,25 @@ export const Snackbar: React.FC<SnackbarProps> = ({
   }, [])
 
   return (
-    <SnackbarWrapper colorVariant={variant} snackbarHeight={height}>
-      <StyledInnerWrapper
-        ref={ref}
-        hasDescription={!!description}
-        hasActionButton={!!actionText}
-        colorVariant={variant}
-      >
-        <SnackbarHeader>
-          {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
-          <SnackbarTitle variant="t200" hasDescription={!!description} colorVariant={variant}>
-            {title}
-          </SnackbarTitle>
-          <SnackbarButtonsContainer>
-            {actionText && !description && (
-              <SnackbarActionButton variant="tertiary" onClick={onActionClick}>
-                {actionText}
-              </SnackbarActionButton>
-            )}
-            <IconButton onClick={onClick} variant="tertiary" size="small">
-              <SvgActionClose />
-            </IconButton>
-          </SnackbarButtonsContainer>
-        </SnackbarHeader>
-        {description && (
-          <SnackbarDescription variant="t200" secondary>
-            {description}
-          </SnackbarDescription>
-        )}
-        {actionText && description && (
-          <SnackbarActionButton
-            variant="tertiary"
-            textOnly
-            onClick={onActionClick}
-            iconPlacement="right"
-            icon={actionIcon}
-          >
-            {actionText}
-          </SnackbarActionButton>
-        )}
+    <SnackbarWrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} snackbarHeight={height}>
+      <StyledInnerWrapper ref={ref}>
+        {icon && <SnackbarIconContainer>{icon}</SnackbarIconContainer>}
+        <SnackbarContent>
+          <Text variant="h200">{title}</Text>
+          {description && (
+            <SnackbarDescription variant="t100" secondary>
+              {description}
+            </SnackbarDescription>
+          )}
+          {actionText && (
+            <SnackbarActionButton textOnly onClick={onActionClick} icon={actionIcon}>
+              {actionText}
+            </SnackbarActionButton>
+          )}
+        </SnackbarContent>
+        <SnackbarCloseButton onClick={onClick} variant="tertiary" size="small">
+          <SvgActionClose />
+        </SnackbarCloseButton>
       </StyledInnerWrapper>
     </SnackbarWrapper>
   )
