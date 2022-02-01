@@ -43,9 +43,6 @@ export const StyledChannelLink = styled(ChannelLink)`
   padding: ${sizes(4)} 0;
   color: inherit;
 `
-/*
- */
-//margin-top: ${sizes(5)};
 
 export const ChannelsItem = styled.li`
   padding-left: ${NAVBAR_LEFT_PADDING}px;
