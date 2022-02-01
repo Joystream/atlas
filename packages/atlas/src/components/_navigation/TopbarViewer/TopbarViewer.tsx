@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -39,6 +39,8 @@ export const TopbarViewer: React.FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
+
+  const onMount = useRef(false)
 
   useEffect(() => {
     if (searchOpen) {
@@ -110,8 +112,11 @@ export const TopbarViewer: React.FC = () => {
         <CSSTransition
           in={!activeMembershipLoading}
           mountOnEnter
+          onExit={() => (onMount.current = false)}
           classNames={transitions.names.fade}
-          timeout={parseInt(cVar('animationTimingFast', true))}
+          // run this transition only once when entering an app
+          // we don't want this transition when user is switching a member or is signing in
+          timeout={onMount.current ? parseInt(cVar('animationTimingFast', true)) : 0}
         >
           <ButtonWrapper>
             {mdMatch &&
@@ -126,7 +131,12 @@ export const TopbarViewer: React.FC = () => {
                   >
                     Go to Studio
                   </Button>
-                  <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
+                  <StyledAvatar
+                    size="small"
+                    assetUrl={activeMembership?.avatarUri}
+                    onClick={handleDrawerToggle}
+                    loading={activeMembershipLoading}
+                  />
                 </SignedButtonsWrapper>
               ) : (
                 <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
