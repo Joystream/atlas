@@ -82,10 +82,9 @@ export const LabelContainer = styled.div`
   min-height: 24px;
 `
 
-const IconStyles = ({ destructive, applyIconStyles, isHovering, isSelected }: NodeContainerProps) =>
-  applyIconStyles &&
+const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) =>
   css`
-    * path {
+    > svg > path {
       fill: ${destructive
         ? cVar('colorTextError')
         : isHovering || isSelected
@@ -96,10 +95,9 @@ const IconStyles = ({ destructive, applyIconStyles, isHovering, isSelected }: No
 
 type NodeContainerProps = {
   destructive?: boolean
-  applyIconStyles?: boolean
   isHovering?: boolean
   isSelected?: boolean
 }
 export const NodeContainer = styled.div<NodeContainerProps>`
-  ${IconStyles}
+  ${iconStyles};
 `
