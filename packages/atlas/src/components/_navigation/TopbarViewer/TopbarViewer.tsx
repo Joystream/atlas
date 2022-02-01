@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -24,12 +24,15 @@ import {
   StyledTopbarBase,
 } from './TopbarViewer.styles'
 
+const EXTENSION_TIMEOUT = 1500
+
 export const TopbarViewer: React.FC = () => {
   const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn, activeMembershipLoading } =
     useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+  const [extensionTimeoutPassed, setExtensionTimeoutPassed] = useState(false)
 
-  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
@@ -40,7 +43,18 @@ export const TopbarViewer: React.FC = () => {
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
 
-  const onMount = useRef(false)
+  useEffect(() => {
+    if (extensionConnected) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setExtensionTimeoutPassed(true)
+    }, EXTENSION_TIMEOUT)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [extensionConnected])
 
   useEffect(() => {
     if (searchOpen) {
@@ -110,13 +124,10 @@ export const TopbarViewer: React.FC = () => {
           )}
         </SearchbarContainer>
         <CSSTransition
-          in={!activeMembershipLoading}
+          in={extensionConnected !== null || extensionTimeoutPassed}
           mountOnEnter
-          onExit={() => (onMount.current = false)}
           classNames={transitions.names.fade}
-          // run this transition only once when entering an app
-          // we don't want this transition when user is switching a member or is signing in
-          timeout={onMount.current ? parseInt(cVar('animationTimingFast', true)) : 0}
+          timeout={parseInt(cVar('animationTimingFast', true))}
         >
           <ButtonWrapper>
             {mdMatch &&
