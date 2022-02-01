@@ -3,14 +3,17 @@ import { useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMemberships } from '@/api/hooks'
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
+import { absoluteRoutes } from '@/config/routes'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
 import { MemberAbout } from './MemberAbout'
-import { StyledMembershipInfo, StyledTabs, TabsContainer } from './MemberView.styles'
+import { NotFoundMemberContainer, StyledMembershipInfo, StyledTabs, TabsContainer } from './MemberView.styles'
 
 const TABS = [
   // 'NFTs',
@@ -64,6 +67,20 @@ export const MemberView: React.FC = () => {
     }
   }, [currentTabName])
 
+  if (!loadingMember && !member) {
+    return (
+      <NotFoundMemberContainer>
+        <EmptyFallback
+          title="Member not found"
+          button={
+            <Button variant="secondary" size="large" to={absoluteRoutes.viewer.index()}>
+              Go back to home page
+            </Button>
+          }
+        />
+      </NotFoundMemberContainer>
+    )
+  }
   if (error) {
     return <ViewErrorFallback />
   }

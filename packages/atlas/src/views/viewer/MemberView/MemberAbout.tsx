@@ -62,7 +62,7 @@ export const MemberAbout = () => {
           <Text variant="t100" secondary>
             Num. of channels
           </Text>
-          <Text variant="t300">{member?.channels.length ? formatNumberShort(member?.channels.length) : ''}</Text>
+          <Text variant="t300">{member?.channels.length ? formatNumberShort(member?.channels.length) : '0'}</Text>
         </Details>
 
         <Anchor

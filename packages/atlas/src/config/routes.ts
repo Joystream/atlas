@@ -30,7 +30,7 @@ export const relativeRoutes = {
     channel: (id = ':id') => `channel/${id}`,
     channels: () => 'channels',
     video: (id = ':id') => `video/${id}`,
-    editMembership: () => 'member/edit',
+    editMembership: () => 'my-membership/edit',
     member: (handle = ':handle') => `member/${handle}`,
   },
   legal: {

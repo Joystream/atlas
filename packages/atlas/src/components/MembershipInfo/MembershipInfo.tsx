@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -45,7 +44,6 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   isOwner,
   className,
 }) => {
-  const navigate = useNavigate()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -100,7 +98,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
               <SkeletonLoader width={smMatch ? 148 : '100%'} height={48} />
             ) : (
               <Button
-                onClick={() => navigate(absoluteRoutes.viewer.editMembership())}
+                to={absoluteRoutes.viewer.editMembership()}
                 icon={<SvgActionEdit />}
                 size="large"
                 variant="secondary"
