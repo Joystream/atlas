@@ -151,8 +151,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }, [isSwitchingMember, transRef])
     return (
       <Container ref={ref}>
-        {/* 9999 prevents containerHeight from being 0 at when the component mounts */}
-        <InnerContainer isActive={isActive} containerHeight={containerHeight || 9999}>
+        <InnerContainer isActive={isActive} containerHeight={containerHeight}>
           {transitions((style, isSwitchingMemberMode) =>
             isSwitchingMemberMode ? (
               <AnimatedContainer isAnimatingSwitchMember={isAnimatingSwitchMember} style={style}>

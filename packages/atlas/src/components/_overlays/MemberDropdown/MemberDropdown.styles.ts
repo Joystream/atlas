@@ -23,10 +23,7 @@ export const Container = styled.div`
   }
 `
 
-export const InnerContainer = styled.div<{
-  isActive: boolean
-  containerHeight: number
-}>`
+export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: number }>`
   width: 280px;
   position: 'relative';
   max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
