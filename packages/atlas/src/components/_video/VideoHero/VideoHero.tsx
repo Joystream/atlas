@@ -4,7 +4,6 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { VideoHeroData } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/components/_icons'
@@ -23,6 +22,7 @@ import {
   StyledChannelLink,
   StyledLayoutGrid,
   TitleContainer,
+  TitleText,
 } from './VideoHero.styles'
 
 export type VideoHeroProps = {
@@ -77,7 +77,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
       {headerNode && headerNode}
       <InfoContainer isCategory={isCategory}>
         <StyledLayoutGrid>
-          <GridItem colSpan={{ xxs: 12, xs: 10, sm: 6, md: 5, xl: 4, xxl: 3 }}>
+          <GridItem colSpan={{ xxs: 12, xs: 12, sm: 6, md: 6, xl: 6, xxl: 6 }}>
             <StyledChannelLink textSecondary id={videoHeroData?.video?.channel?.id} />
             <TitleContainer>
               <SwitchTransition>
@@ -88,7 +88,7 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
-                      <Text variant={smMatch ? 'h700' : 'h500'}>{videoHeroData.heroTitle}</Text>
+                      <TitleText variant={smMatch ? 'h700' : 'h500'}>{videoHeroData.heroTitle}</TitleText>
                     </Link>
                   ) : smMatch ? (
                     <SkeletonLoader height={48} width={360} />

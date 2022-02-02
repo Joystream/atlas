@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { media, oldColors, sizes } from '@/styles'
 
@@ -91,4 +92,8 @@ export const ButtonsContainer = styled.div`
     margin-left: ${sizes(4)};
     flex-shrink: 0;
   }
+`
+
+export const TitleText = styled(Text)`
+  overflow-y: auto;
 `
