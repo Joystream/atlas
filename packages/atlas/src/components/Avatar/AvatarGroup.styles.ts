@@ -3,13 +3,11 @@ import styled from '@emotion/styled'
 
 import { cVar, square } from '@/styles'
 
+import { sharedAvataActiveStyles, sharedAvatarHoverStyles } from './Avatar.styles'
+
 import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
-
-export type AvatarGroupContainerProps = {
-  size?: AvatarGroupSize
-}
 
 const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
   // grid-auto-columns = size of the avatar - offset
@@ -32,14 +30,29 @@ const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
   }
 }
 
-export const AvatarGroupContainer = styled.div<{ size: AvatarGroupSize }>`
-  display: inline-grid;
-  grid-row: auto;
-  ${getSizeOfGridColumn};
-`
-
 export const StyledAvatar = styled(Avatar)`
   transition: transform ${cVar('animationTransitionFast')};
+`
+
+type AvatarGroupContainerProps = {
+  size?: AvatarGroupSize
+  shouldHighlightEveryAvatar?: boolean
+}
+
+export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
+  display: inline-grid;
+  grid-row: auto;
+  ${({ shouldHighlightEveryAvatar }) =>
+    shouldHighlightEveryAvatar &&
+    css`
+      :hover ${StyledAvatar} {
+        ${sharedAvatarHoverStyles};
+      }
+      :active ${StyledAvatar} {
+        ${sharedAvataActiveStyles};
+      }
+    `};
+  ${getSizeOfGridColumn};
 `
 
 type AvatatBackgroundProps = {

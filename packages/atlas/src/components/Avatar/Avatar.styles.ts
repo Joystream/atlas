@@ -102,7 +102,18 @@ const getAvatarSizeCss = ({ size }: ContainerProps): SerializedStyles => {
   }
 }
 
-const getBorderStyles = ({ isLoading, withoutOutline }: ContainerProps) => {
+export const sharedAvatarHoverStyles = css`
+  ::after {
+    box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
+  }
+`
+export const sharedAvataActiveStyles = css`
+  ::after {
+    box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
+  }
+`
+
+const getBorderStyles = ({ isLoading, withoutOutline }: Omit<ContainerProps, 'size'>) => {
   if (withoutOutline) {
     return
   }
@@ -120,15 +131,11 @@ const getBorderStyles = ({ isLoading, withoutOutline }: ContainerProps) => {
       }
 
       :hover {
-        ::after {
-          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
-        }
+        ${sharedAvatarHoverStyles};
       }
 
       :active {
-        ::after {
-          box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
-        }
+        ${sharedAvataActiveStyles}
       }
     `
   }

@@ -25,6 +25,7 @@ export type AvatarGroupProps = {
   reverse?: boolean
   loading?: boolean
   className?: string
+  shoulHighlightEveryAvatar?: boolean
 }
 
 const getSizeofAvatar = (size: AvatarGroupSize) => {
@@ -46,12 +47,13 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   clickable = true,
   loading,
   reverse,
+  shoulHighlightEveryAvatar,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
   return (
-    <AvatarGroupContainer size={size} className={className}>
+    <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shoulHighlightEveryAvatar}>
       {avatars.map((avatarProps, idx) => (
         <Fragment key={idx}>
           <AvatarWrapper

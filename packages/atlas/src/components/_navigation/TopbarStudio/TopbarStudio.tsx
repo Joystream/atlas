@@ -89,7 +89,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
                 {mdMatch && 'Upload video'}
               </Button>
             </CSSTransition>
-            <StyledAvatarGroup size="large" reverse avatars={avatars} clickable={false} />
+            <StyledAvatarGroup size="large" shoulHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
         )}
       </StyledTopbarBase>
