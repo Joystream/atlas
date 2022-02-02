@@ -48,9 +48,11 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
       isPickDate && isValid(new Date(value))
         ? [
             ...items,
+            // selected date
             {
               value,
               name: format(new Date(value), 'd MMM yyyy, HH:mm'),
+              hideInMenu: true,
             },
             pickDateItem,
           ]

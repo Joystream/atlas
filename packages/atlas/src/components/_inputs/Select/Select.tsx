@@ -27,7 +27,10 @@ export type SelectSizes = 'regular' | 'small'
 export type SelectItem<T = string> = {
   value: T
   name: string
+  // replaces the name in the menu list
   menuName?: string
+  // hides the item in the menu list
+  hideInMenu?: boolean
   tooltipHeaderText?: string
   tooltipText?: string
   badgeText?: string
@@ -124,6 +127,7 @@ export const _Select = <T extends unknown>(
             {isOpen &&
               items.map((item, index) => {
                 const itemProps = { ...getItemProps({ item: item.value, index }) }
+                if (item.hideInMenu) return null
                 return (
                   <SelectOption
                     isSelected={highlightedIndex === index}
