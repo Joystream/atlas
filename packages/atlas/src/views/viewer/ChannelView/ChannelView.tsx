@@ -49,11 +49,7 @@ import {
   VideoSection,
 } from './ChannelView.styles'
 
-const TABS = [
-  'Videos',
-  // 'NFTs',
-  'Information',
-] as const
+const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
@@ -211,8 +207,6 @@ export const ChannelView: React.FC = () => {
           />
         </PaginationContainer>
       </>
-    ) : currentTab === 'NFTs' ? (
-      <div>NFT Tiles</div>
     ) : (
       <ChannelAbout />
     )
