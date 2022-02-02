@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
-import { cVar } from '@/styles'
+import { cVar, transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
 import { NFTWorkspaceForm } from './NFTWorkspaceForm'
@@ -82,6 +82,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const closeVideoWorkspace = useCallback(() => {
+    setIsIssuedAsNFTChecked(false)
     if (anyVideoTabsCachedAssets) {
       openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
     } else {
@@ -139,21 +140,29 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
             onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
           />
-          {!isIssuedAsNFTChecked ? (
-            <VideoWorkspaceForm
-              setIsIssuedAsNFTChecked={setIsIssuedAsNFTChecked}
-              isIssuedAsNFTChecked={isIssuedAsNFTChecked}
-              onDeleteVideo={handleDeleteVideo}
-              selectedVideoTab={selectedVideoTab}
-              onThumbnailFileChange={handleThumbnailFileChange}
-              onVideoFileChange={handleVideoFileChange}
-              fee={0}
-              thumbnailHashPromise={thumbnailHashPromise}
-              videoHashPromise={videoHashPromise}
-            />
-          ) : (
-            <NFTWorkspaceForm />
-          )}
+          <SwitchTransition>
+            <CSSTransition
+              key={String(isIssuedAsNFTChecked)}
+              classNames={transitions.names.fade}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+            >
+              {!isIssuedAsNFTChecked ? (
+                <VideoWorkspaceForm
+                  setIsIssuedAsNFTChecked={setIsIssuedAsNFTChecked}
+                  isIssuedAsNFTChecked={isIssuedAsNFTChecked}
+                  onDeleteVideo={handleDeleteVideo}
+                  selectedVideoTab={selectedVideoTab}
+                  onThumbnailFileChange={handleThumbnailFileChange}
+                  onVideoFileChange={handleVideoFileChange}
+                  fee={0}
+                  thumbnailHashPromise={thumbnailHashPromise}
+                  videoHashPromise={videoHashPromise}
+                />
+              ) : (
+                <NFTWorkspaceForm />
+              )}
+            </CSSTransition>
+          </SwitchTransition>
         </Container>
       </CSSTransition>
     </>
