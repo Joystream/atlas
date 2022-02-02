@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { useChannel, useVideosConnection } from '@/api/hooks'
 import { SearchQuery, VideoFieldsFragment, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { Grid } from '@/components/Grid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Pagination } from '@/components/Pagination'
@@ -13,7 +14,7 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
-import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
+import { SvgActionCheck, SvgActionFilters, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
@@ -31,6 +32,7 @@ import { formatNumberShort } from '@/utils/number'
 import { ChannelAbout } from './ChannelAbout'
 import {
   CollectorsBoxContainer,
+  FilterButtonContainer,
   NotFoundChannelContainer,
   PaginationContainer,
   SearchButton,
@@ -44,6 +46,7 @@ import {
   SubTitle,
   SubTitleSkeletonLoader,
   TabsContainer,
+  TabsWrapper,
   Title,
   TitleContainer,
   TitleSection,
@@ -51,7 +54,7 @@ import {
   VideoSection,
 } from './ChannelView.styles'
 
-const TABS = ['Videos', 'Information'] as const
+const TABS = ['Videos', 'NFTs', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
@@ -134,6 +137,15 @@ export const ChannelView: React.FC = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
     }
   )
+  const filtersBarLogic = useFiltersBar()
+  const {
+    filters: { setIsFiltersOpen, isFiltersOpen },
+    canClearFilters: { canClearAllFilters, clearAllFilters },
+  } = filtersBarLogic
+
+  const toggleFilters = () => {
+    setIsFiltersOpen((value) => !value)
+  }
 
   const channelMetaTags = useMemo(() => {
     if (!channel || !avatarPhotoUrl) return {}
@@ -216,6 +228,11 @@ export const ChannelView: React.FC = () => {
           />
         </PaginationContainer>
       </>
+    ) : currentTab === 'NFTs' ? (
+      <VideoSection className={transitions.names.slide}>
+        {isSearching && <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />}
+        {!isSearching && <EmptyFallback title="This channel does not have any NFTs issued yet" variant="small" />}
+      </VideoSection>
     ) : (
       <ChannelAbout />
     )
@@ -223,8 +240,10 @@ export const ChannelView: React.FC = () => {
   useEffect(() => {
     if (currentTabName) {
       setCurrentTab(currentTabName)
+      setIsFiltersOpen(false)
+      clearAllFilters()
     }
-  }, [currentTabName])
+  }, [clearAllFilters, currentTabName, setIsFiltersOpen])
 
   // TODO: replace with real NFT collector data
   const collectors: Collector[] = []
@@ -287,38 +306,54 @@ export const ChannelView: React.FC = () => {
             </StyledButton>
           </StyledButtonContainer>
         </TitleSection>
-        <TabsContainer>
-          <StyledTabs
-            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTab)}
-            initialIndex={0}
-            tabs={mappedTabs}
-            onSelectTab={handleSetCurrentTab}
-          />
-          {currentTab === 'Videos' && (
-            <Search
-              searchInputRef={searchInputRef}
-              isSearchInputOpen={isSearchInputOpen}
-              setIsSearchingInputOpen={setIsSearchingInputOpen}
-              setIsSearching={setIsSearching}
-              search={search}
-              isSearching={isSearching}
-              setCurrentTab={setCurrentTab}
+        <TabsWrapper isFiltersOpen={isFiltersOpen}>
+          <TabsContainer>
+            <StyledTabs
+              selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTab)}
+              initialIndex={0}
+              tabs={mappedTabs}
+              onSelectTab={handleSetCurrentTab}
             />
-          )}
-          {currentTab === 'Videos' && (
-            <SortContainer>
-              <Select
-                size="small"
-                labelPosition="left"
-                disabled={isSearching}
-                value={!isSearching ? sortVideosBy : 0}
-                placeholder={isSearching ? 'Best match' : undefined}
-                items={!isSearching ? SORT_OPTIONS : []}
-                onChange={!isSearching ? handleSorting : undefined}
-              />
-            </SortContainer>
-          )}
-        </TabsContainer>
+            {currentTab === 'Videos' ||
+              (currentTab === 'NFTs' && (
+                <>
+                  <Search
+                    searchInputRef={searchInputRef}
+                    isSearchInputOpen={isSearchInputOpen}
+                    setIsSearchingInputOpen={setIsSearchingInputOpen}
+                    setIsSearching={setIsSearching}
+                    search={search}
+                    isSearching={isSearching}
+                    setCurrentTab={setCurrentTab}
+                  />
+                  <SortContainer>
+                    <Select
+                      size="small"
+                      labelPosition="left"
+                      disabled={isSearching}
+                      value={!isSearching ? sortVideosBy : 0}
+                      placeholder={isSearching ? 'Best match' : undefined}
+                      items={!isSearching ? SORT_OPTIONS : []}
+                      onChange={!isSearching ? handleSorting : undefined}
+                    />
+                  </SortContainer>
+                </>
+              ))}
+            {currentTab === 'NFTs' && (
+              <FilterButtonContainer>
+                <Button
+                  badge={canClearAllFilters}
+                  variant="secondary"
+                  icon={<SvgActionFilters />}
+                  onClick={toggleFilters}
+                >
+                  Filters
+                </Button>
+              </FilterButtonContainer>
+            )}
+          </TabsContainer>
+          <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />
+        </TabsWrapper>
         {tabContent}
       </LimitedWidthContainer>
     </ViewWrapper>

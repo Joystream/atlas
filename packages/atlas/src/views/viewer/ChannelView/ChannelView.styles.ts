@@ -71,6 +71,15 @@ export const SortContainer = styled.div`
   }
 `
 
+export const FilterButtonContainer = styled.div`
+  grid-area: filter;
+  grid-gap: 8px;
+
+  ${media.sm} {
+    grid-area: initial;
+  }
+`
+
 export const SubTitle = styled(Text)`
   margin: ${sizes(2)} 0;
   color: ${oldColors.gray[300]};
@@ -130,19 +139,30 @@ export const PaginationContainer = styled.div`
   padding-top: ${sizes(6)};
 `
 
+export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
+  z-index: 99;
+  position: relative;
+  margin-bottom: ${sizes(8)};
+
+  ${media.sm} {
+    margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
+    transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
+  }
+`
+
 export const TabsContainer = styled.div`
   display: grid;
   padding-top: ${sizes(8)};
-  margin-bottom: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
+  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr 'filter filter filter' auto / 1fr 1fr;
   align-items: baseline;
+  background-color: #000;
 
   ${media.sm} {
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
-    gap: ${sizes(8)};
-    grid-template: 1fr / auto 1fr 160px;
+    gap: ${sizes(4)};
+    grid-template: 1fr / auto 1fr 160px 99px;
   }
 `
 
@@ -155,6 +175,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   align-items: center;
   margin: ${sizes(6)} 0 ${sizes(2)} 0;
   position: relative;
+
   ${media.sm} {
     grid-area: initial;
     margin: 0;
