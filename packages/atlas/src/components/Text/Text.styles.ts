@@ -6,11 +6,23 @@ import { cVar } from '@/styles'
 type TextProps = {
   color?: string
   isSecondary?: boolean
+  clampAfterLine?: number
 }
 
-const baseStyles = ({ color, isSecondary }: TextProps) => css`
+const clampStyles = ({ clampAfterLine }: TextProps) => css`
+  /* stylelint-disable */
+  display: -webkit-box;
+  /* stylelint-enable */
+  -webkit-line-clamp: ${clampAfterLine};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`
+
+const baseStyles = ({ color, isSecondary, clampAfterLine }: TextProps) => css`
   margin: 0;
   color: ${color ? color : isSecondary ? cVar('colorText') : cVar('colorTextStrong')};
+
+  ${clampAfterLine && clampStyles({ clampAfterLine })}
 `
 
 export const styledVariants = {

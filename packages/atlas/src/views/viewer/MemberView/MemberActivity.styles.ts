@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { cVar, media, sizes } from '@/styles'
 
 export const GridRowWrapper = styled.div`
   display: contents;
@@ -14,7 +16,17 @@ export const OverviewItem = styled.div<{ divider?: boolean }>`
   margin-bottom: ${sizes(4)};
   box-shadow: ${cVar('effectDividersBottom')};
 
-  ${GridRowWrapper} > & {
+  ${GridRowWrapper}:last-of-type > & {
+    box-shadow: none;
+
+    ${media.sm} {
+      box-shadow: ${cVar('effectDividersBottom')};
+    }
+  }
+
+  ${GridRowWrapper}
+
+  > &:last-of-type {
     box-shadow: none;
   }
 `
@@ -29,4 +41,102 @@ export const OverviewContainer = styled.div`
   margin-top: ${sizes(6)};
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  ${media.sm} {
+    grid-template-columns: 1fr;
+  }
+`
+
+export const ActivityItemContainer = styled.div<{ loading: boolean }>`
+  display: grid;
+  gap: ${sizes(4)};
+  grid-template-columns: 1fr auto;
+  padding: ${sizes(4)};
+  transition: background-color ${cVar('animationTransitionFast')};
+  background-color: ${cVar('colorBackgroundMuted')};
+  cursor: ${({ loading }) => !loading && 'pointer'};
+
+  &:hover {
+    background-color: ${({ loading }) => (loading ? cVar('colorBackgroundMuted') : cVar('colorBackgroundAlpha'))};
+  }
+
+  ${media.sm} {
+    grid-template-columns: auto 1fr 73px;
+    gap: ${sizes(4)};
+  }
+
+  ${media.lg} {
+    grid-template-columns: auto 1fr auto;
+  }
+`
+export const PillAndDateContainer = styled.div`
+  display: grid;
+  grid-template-rows: max-content max-content;
+  gap: ${sizes(2)};
+  justify-items: end;
+  align-content: center;
+`
+export const TitleAndDescriptionContainer = styled.div`
+  display: grid;
+  gap: ${sizes(1)};
+  grid-column-end: span 2;
+  grid-row-start: 2;
+
+  ${media.sm} {
+    gap: ${sizes(2)};
+    grid-column-end: initial;
+    grid-row-start: initial;
+    align-content: center;
+    grid-auto-rows: min-content;
+  }
+`
+export const Thumbnail = styled.img`
+  height: 40px;
+
+  ${media.sm} {
+    height: 64px;
+    margin-right: ${sizes(2)};
+  }
+
+  ${media.lg} {
+    height: 80px;
+  }
+`
+export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
+  width: 71px;
+  height: 40px;
+
+  ${media.sm} {
+    width: 114px;
+    height: 64px;
+    margin-right: ${sizes(2)};
+  }
+
+  ${media.lg} {
+    width: 142px;
+    height: 80px;
+  }
+`
+
+export const PillSkeletonLoader = styled(SkeletonLoader)`
+  width: 40px;
+  height: 20px;
+`
+
+export const TitleSkeletonLoader = styled(SkeletonLoader)`
+  width: 160px;
+  height: 20px;
+  ${media.sm} {
+    width: 160px;
+    height: 24px;
+  }
+`
+
+export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
+  width: 256px;
+  height: 20px;
+`
+
+export const DateText = styled(Text)`
+  direction: rtl;
 `

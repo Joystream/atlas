@@ -211,8 +211,6 @@ export const ChannelView: React.FC = () => {
           />
         </PaginationContainer>
       </>
-    ) : currentTab === 'NFTs' ? (
-      <div>NFT Tiles</div>
     ) : (
       <ChannelAbout />
     )

@@ -1,6 +1,7 @@
 import { format, formatDistanceToNowStrict } from 'date-fns'
 
 export const formatDate = (date: Date) => format(date, 'd MMM yyyy')
+export const formatDateTime = (date: Date) => format(date, 'd MMM yyyy, HH:mm')
 
 export const formatDateAgo = (date: Date): string => {
   return `${formatDistanceToNowStrict(date)} ago`
