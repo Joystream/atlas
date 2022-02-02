@@ -5,9 +5,10 @@ import { cVar, media, sizes } from '@/styles'
 
 export const DRAWER_HEADER_TABS_BAR_HEIGHT = sizes(14, true)
 
-export const Topbar = styled.div`
+export const Tabbar = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: ${DRAWER_HEADER_TABS_BAR_HEIGHT}px;
   min-height: ${DRAWER_HEADER_TABS_BAR_HEIGHT}px;
   box-shadow: ${cVar('effectDividersBottom')}, ${cVar('effectDividersTop')};
@@ -18,7 +19,7 @@ export const Topbar = styled.div`
   }
 `
 
-export const TabsContainer = styled.div`
+export const TabContainer = styled.div`
   display: flex;
   align-items: center;
   overflow: auto hidden;
@@ -28,19 +29,6 @@ export const TabsContainer = styled.div`
     display: none;
   }
   scrollbar-width: none;
-`
-
-export const ButtonsContainer = styled.div`
-  display: grid;
-  align-items: center;
-  grid-auto-flow: column;
-  grid-gap: ${sizes(1)};
-  ${media.sm} {
-    grid-gap: ${sizes(4)};
-  }
-`
-export const TabWrapper = styled.div`
-  overflow: hidden;
 `
 
 export const TabTitle = styled(Text)`
