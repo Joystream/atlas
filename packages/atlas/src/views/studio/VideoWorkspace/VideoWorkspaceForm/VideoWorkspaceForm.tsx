@@ -13,6 +13,9 @@ import {
   License,
   VideoOrderByInput,
 } from '@/api/queries'
+import { Banner } from '@/components/Banner'
+import { Information } from '@/components/Information'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
@@ -23,6 +26,7 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/components/_inp
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TextField } from '@/components/_inputs/TextField'
 import { languages } from '@/config/languages'
@@ -63,7 +67,11 @@ import {
   RadioCardButtonsContainer,
   StyledActionBar,
   StyledMultiFileSelect,
+  StyledSvgWarning,
   StyledTitleArea,
+  SwitchFormField,
+  SwitchNFTWrapper,
+  YellowText,
 } from './VideoWorkspaceForm.styles'
 
 const CUSTOM_LICENSE_CODE = 1000
@@ -98,6 +106,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     videoHashPromise,
   }) => {
     const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
+    const [isIssuedAsNFT, setIsIssuedAsNFT] = useState(false)
     const isEdit = !selectedVideoTab?.isDraft
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
@@ -777,6 +786,33 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                     )}
                   />
                 </ExtendedMarginFormField>
+                <SwitchFormField title="Issue as NFT">
+                  <SwitchNFTWrapper>
+                    <Switch
+                      label="Toggle to list this video as an NFT"
+                      value={isIssuedAsNFT}
+                      onChange={() => setIsIssuedAsNFT(!isIssuedAsNFT)}
+                    />
+                    <Information
+                      placement="top"
+                      arrowDisabled
+                      text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+                    />
+                  </SwitchNFTWrapper>
+                  {isIssuedAsNFT && (
+                    <Banner
+                      id="issuing-nft"
+                      dismissable={false}
+                      icon={<StyledSvgWarning width={24} height={24} />}
+                      description={
+                        <>
+                          <Text variant="t200">After issuing this as an NFT </Text>
+                          <YellowText variant="t200">editing options of this video will be disabled</YellowText>
+                        </>
+                      }
+                    />
+                  )}
+                </SwitchFormField>
               </FormField>
               <MoreSettingsHeader>
                 <Button
