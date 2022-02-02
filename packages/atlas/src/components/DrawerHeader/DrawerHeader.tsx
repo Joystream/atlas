@@ -6,7 +6,7 @@ import { SvgActionClose } from '@/components/_icons'
 
 import { Tab, TabContainer, TabTitle, Tabbar } from './DrawerHeader.styles'
 
-type DrawerHeaderProps = {
+export type DrawerHeaderProps = {
   title?: string
   label: string
   onCloseClick: () => void
