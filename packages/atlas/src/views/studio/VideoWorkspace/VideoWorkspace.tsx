@@ -13,7 +13,7 @@ import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
   // videoWorkspace state
-  const { videoWorkspaceState, setVideoWorkspaceState, videoTab, anyVideoTabsCachedAssets } = useVideoWorkspace()
+  const { videoWorkspaceState, setVideoWorkspaceState, videoTab, anyVideoTabCachedAssets } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
   const { tabData } = useVideoWorkspaceTabData(videoTab)
 
@@ -30,7 +30,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [videoWorkspaceState])
 
   useEffect(() => {
-    if (videoWorkspaceState === 'closed' || !anyVideoTabsCachedAssets) {
+    if (videoWorkspaceState === 'closed' || !anyVideoTabCachedAssets) {
       return
     }
     window.onbeforeunload = (e: BeforeUnloadEvent) => {
@@ -40,7 +40,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     return () => {
       window.onbeforeunload = null
     }
-  }, [videoWorkspaceState, anyVideoTabsCachedAssets])
+  }, [videoWorkspaceState, anyVideoTabCachedAssets])
 
   const handleVideoFileChange = useCallback((file: Blob) => {
     const hashPromise = computeFileHash(file)
@@ -53,12 +53,12 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [])
 
   const closeVideoWorkspace = useCallback(() => {
-    if (anyVideoTabsCachedAssets) {
+    if (anyVideoTabCachedAssets) {
       openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
     } else {
       setVideoWorkspaceState('closed')
     }
-  }, [anyVideoTabsCachedAssets, openWarningDialog, setVideoWorkspaceState])
+  }, [anyVideoTabCachedAssets, openWarningDialog, setVideoWorkspaceState])
 
   const getBadgeText = () => {
     if (videoTab.isNew || videoTab.isDraft) {

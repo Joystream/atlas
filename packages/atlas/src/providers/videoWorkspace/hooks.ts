@@ -28,7 +28,7 @@ export const useVideoWorkspace = () => {
 export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const { selectedVideoTabCachedAssets } = useVideoWorkspace()
+  const { videoTabCachedAssets } = useVideoWorkspace()
   const { video, loading, error } = useVideo(tab?.id ?? '', {
     skip: tab?.isDraft,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceTabData', error),
@@ -51,7 +51,7 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
   const draft = drafts.find((d) => d.id === tab.id)
 
   const assets: VideoWorkspaceAssets = tab.isDraft
-    ? selectedVideoTabCachedAssets || {
+    ? videoTabCachedAssets || {
         video: { contentId: null },
         thumbnail: {
           cropContentId: null,

@@ -134,7 +134,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
+  const { videoWorkspaceState, anyVideoTabCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
   const { fetchOperators } = useOperatorsContext()
 
@@ -199,7 +199,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    if (anyVideoTabsCachedAssets) {
+    if (anyVideoTabCachedAssets) {
       openWarningDialog({ onConfirm: () => submit(data) })
     } else {
       await submit(data)

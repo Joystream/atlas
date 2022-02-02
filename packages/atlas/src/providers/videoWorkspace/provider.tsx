@@ -28,7 +28,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
   const [videoWorkspaceState, setVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
   const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
   const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>({})
-  const [videoTabsCachedDirtyFormData, _setVideoTabsCachedDirtyFormData] =
+  const [_videoTabCachedDirtyFormData, _setVideoTabCachedDirtyFormData] =
     useState<VideoWorkspaceTabCachedDirtyFormData>({})
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const addVideoTab = useCallback((tab?: VideoWorkspaceTab) => {
@@ -38,7 +38,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     setVideoTab(tab)
   }, [])
 
-  const setSelectedVideoTabCachedAssets = useCallback(
+  const setVideoTabCachedAssets = useCallback(
     (assets: VideoWorkspaceAssets | null) => {
       if (!videoTab) {
         return
@@ -50,17 +50,17 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     },
     [videoTab]
   )
-  const selectedVideoTabCachedAssets = assetsCache[videoTab?.id || '']
-  const updateSelectedVideoTab = useCallback((tabUpdates: Partial<VideoWorkspaceTab>) => {
+  const videoTabCachedAssets = assetsCache[videoTab?.id || '']
+  const updateVideoTab = useCallback((tabUpdates: Partial<VideoWorkspaceTab>) => {
     setVideoTab((prevState) => ({ ...prevState, ...tabUpdates }))
   }, [])
 
-  const setSelectedVideoTabCachedDirtyFormData = useCallback(
+  const setVideoTabCachedDirtyFormData = useCallback(
     (data: Partial<VideoWorkspaceFormFields>) => {
       if (!videoTab) {
         return
       }
-      _setVideoTabsCachedDirtyFormData((currentMap) => ({
+      _setVideoTabCachedDirtyFormData((currentMap) => ({
         ...currentMap,
         [videoTab.id]: { ...data },
       }))
@@ -68,9 +68,9 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     [videoTab]
   )
 
-  const selectedVideoTabCachedDirtyFormData = useMemo(
-    () => (videoTab ? videoTabsCachedDirtyFormData[videoTab?.id] : {}),
-    [videoTab, videoTabsCachedDirtyFormData]
+  const videoTabCachedDirtyFormData = useMemo(
+    () => (videoTab ? _videoTabCachedDirtyFormData[videoTab?.id] : {}),
+    [videoTab, _videoTabCachedDirtyFormData]
   )
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
       decrementOverlaysOpenCount()
       setVideoTab(generateTab())
       setAssetsCache({})
-      _setVideoTabsCachedDirtyFormData({})
+      _setVideoTabCachedDirtyFormData({})
     }
   }, [
     videoWorkspaceState,
@@ -97,7 +97,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     addVideoTab,
   ])
 
-  const anyVideoTabsCachedAssets = Object.values(assetsCache).some(
+  const anyVideoTabCachedAssets = Object.values(assetsCache).some(
     (val) => val?.thumbnail.cropContentId || val?.video.contentId
   )
 
@@ -109,27 +109,27 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
   const value = useMemo(
     () => ({
       hasVideoTabAnyCachedAssets,
-      anyVideoTabsCachedAssets,
+      anyVideoTabCachedAssets,
       videoTab,
       addVideoTab,
-      updateSelectedVideoTab,
+      updateVideoTab,
       videoWorkspaceState,
       setVideoWorkspaceState,
-      selectedVideoTabCachedAssets,
-      setSelectedVideoTabCachedAssets,
-      selectedVideoTabCachedDirtyFormData,
-      setSelectedVideoTabCachedDirtyFormData,
+      videoTabCachedAssets,
+      setVideoTabCachedAssets,
+      videoTabCachedDirtyFormData,
+      setVideoTabCachedDirtyFormData,
     }),
     [
       addVideoTab,
-      anyVideoTabsCachedAssets,
+      anyVideoTabCachedAssets,
       hasVideoTabAnyCachedAssets,
-      selectedVideoTabCachedAssets,
-      selectedVideoTabCachedDirtyFormData,
-      setSelectedVideoTabCachedAssets,
-      setSelectedVideoTabCachedDirtyFormData,
-      updateSelectedVideoTab,
+      setVideoTabCachedAssets,
+      setVideoTabCachedDirtyFormData,
+      updateVideoTab,
       videoTab,
+      videoTabCachedAssets,
+      videoTabCachedDirtyFormData,
       videoWorkspaceState,
     ]
   )

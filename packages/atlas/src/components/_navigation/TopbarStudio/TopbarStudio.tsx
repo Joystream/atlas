@@ -24,7 +24,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
   const { activeChannelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
-  const { videoWorkspaceState, addVideoTab, setVideoWorkspaceState, anyVideoTabsCachedAssets } = useVideoWorkspace()
+  const { videoWorkspaceState, setVideoWorkspaceState, anyVideoTabCachedAssets, addVideoTab } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
@@ -43,7 +43,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
     if (!channel) {
       return
     }
-    if (anyVideoTabsCachedAssets) {
+    if (anyVideoTabCachedAssets) {
       openWarningDialog({
         onConfirm: () => {
           setActiveUser({ channelId })

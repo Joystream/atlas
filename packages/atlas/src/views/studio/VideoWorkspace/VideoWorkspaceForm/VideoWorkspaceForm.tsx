@@ -104,10 +104,10 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     const [fileSelectError, setFileSelectError] = useState<string | null>(null)
     const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
     const {
-      updateSelectedVideoTab,
-      setSelectedVideoTabCachedAssets,
-      selectedVideoTabCachedDirtyFormData,
-      setSelectedVideoTabCachedDirtyFormData,
+      updateVideoTab,
+      setVideoTabCachedAssets,
+      videoTabCachedDirtyFormData,
+      setVideoTabCachedDirtyFormData,
       videoWorkspaceState,
     } = useVideoWorkspace()
     const { video } = useVideo(selectedVideoTab?.id || '', { fetchPolicy: 'cache-only', skip: !selectedVideoTab?.id })
@@ -170,7 +170,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           data: VideoWorkspaceFormFields,
           addDraftFn: typeof addDraft,
           updateDraftFn: typeof updateDraft,
-          updateSelectedTabFn: typeof updateSelectedVideoTab
+          updateSelectedTabFn: typeof updateVideoTab
         ) => {
           const draftData: RawDraft = {
             ...data,
@@ -196,7 +196,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         (
           data: VideoWorkspaceFormFields,
           dirtyFields: DeepMap<VideoWorkspaceFormFields, true>,
-          setSelectedVideoTabCachedDirtyFormDataFn: typeof setSelectedVideoTabCachedDirtyFormData
+          setSelectedVideoTabCachedDirtyFormDataFn: typeof setVideoTabCachedDirtyFormData
         ) => {
           const keysToKeep = Object.keys(dirtyFields) as Array<keyof VideoWorkspaceFormFields>
           const dirtyData = keysToKeep.reduce((acc, curr) => {
@@ -227,12 +227,12 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       setFileSelectError(null)
       reset(tabData)
 
-      if (selectedVideoTabCachedDirtyFormData) {
+      if (videoTabCachedDirtyFormData) {
         // allow a render for the form to reset first and then set fields dirty
         setTimeout(() => {
-          const keys = Object.keys(selectedVideoTabCachedDirtyFormData) as Array<keyof VideoWorkspaceFormFields>
+          const keys = Object.keys(videoTabCachedDirtyFormData) as Array<keyof VideoWorkspaceFormFields>
           keys.forEach((key) => {
-            setValue(key, selectedVideoTabCachedDirtyFormData[key] as ValueOf<VideoWorkspaceFormFields>, {
+            setValue(key, videoTabCachedDirtyFormData[key] as ValueOf<VideoWorkspaceFormFields>, {
               shouldDirty: true,
             })
           })
@@ -245,8 +245,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       reset,
       tabDataLoading,
       tabData,
-      updateSelectedVideoTab,
-      selectedVideoTabCachedDirtyFormData,
+      updateVideoTab,
+      videoTabCachedDirtyFormData,
       setValue,
     ])
 
@@ -388,14 +388,14 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
               })
             }
 
-            updateSelectedVideoTab({
+            updateVideoTab({
               id: videoId,
               isDraft: false,
             })
             removeDrafts([selectedVideoTab?.id])
           }
-          setSelectedVideoTabCachedAssets(null)
-          setSelectedVideoTabCachedDirtyFormData({})
+          setVideoTabCachedAssets(null)
+          setVideoTabCachedDirtyFormData({})
 
           // allow for the changes in refetched video to propagate first
           setTimeout(() => {
@@ -438,12 +438,12 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         removeDrafts,
         resolveAsset,
         selectedVideoTab,
-        setSelectedVideoTabCachedAssets,
-        setSelectedVideoTabCachedDirtyFormData,
+        setVideoTabCachedAssets,
+        setVideoTabCachedDirtyFormData,
         setVideoWorkspaceState,
         startFileUpload,
         thumbnailHashPromise,
-        updateSelectedVideoTab,
+        updateVideoTab,
         video?.media?.id,
         video?.thumbnailPhoto?.id,
         videoHashPromise,
@@ -482,27 +482,15 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
           return
         }
         if (!selectedVideoTab?.isDraft) {
-          debouncedSetSelectedVideoTabCachedDirtyFormData.current(
-            data,
-            dirtyFields,
-            setSelectedVideoTabCachedDirtyFormData
-          )
+          debouncedSetSelectedVideoTabCachedDirtyFormData.current(data, dirtyFields, setVideoTabCachedDirtyFormData)
         } else {
-          debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateSelectedVideoTab)
+          debouncedDraftSave.current(selectedVideoTab, data, addDraft, updateDraft, updateVideoTab)
         }
       })
       return () => {
         subscription.unsubscribe()
       }
-    }, [
-      addDraft,
-      dirtyFields,
-      selectedVideoTab,
-      setSelectedVideoTabCachedDirtyFormData,
-      updateDraft,
-      updateSelectedVideoTab,
-      watch,
-    ])
+    }, [addDraft, dirtyFields, selectedVideoTab, setVideoTabCachedDirtyFormData, updateDraft, updateVideoTab, watch])
 
     const handleVideoFileChange = useCallback(
       (video: VideoInputFile | null) => {
@@ -527,7 +515,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         setValue('assets', updatedAssets, { shouldDirty: true })
 
         if (selectedVideoTab?.isDraft) {
-          setSelectedVideoTabCachedAssets(updatedAssets)
+          setVideoTabCachedAssets(updatedAssets)
         }
         if (video?.blob) {
           onVideoFileChange(video.blob)
@@ -535,7 +523,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
         setFileSelectError(null)
       },
-      [addAsset, getValues, onVideoFileChange, selectedVideoTab?.isDraft, setSelectedVideoTabCachedAssets, setValue]
+      [addAsset, getValues, onVideoFileChange, selectedVideoTab?.isDraft, setVideoTabCachedAssets, setValue]
     )
 
     const handleThumbnailFileChange = useCallback(
@@ -568,14 +556,14 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         setValue('assets', updatedAssets, { shouldDirty: true })
 
         if (selectedVideoTab?.isDraft) {
-          setSelectedVideoTabCachedAssets(updatedAssets)
+          setVideoTabCachedAssets(updatedAssets)
         }
         if (thumbnail?.blob) {
           onThumbnailFileChange(thumbnail.blob)
         }
         setFileSelectError(null)
       },
-      [addAsset, getValues, onThumbnailFileChange, selectedVideoTab?.isDraft, setSelectedVideoTabCachedAssets, setValue]
+      [addAsset, getValues, onThumbnailFileChange, selectedVideoTab?.isDraft, setVideoTabCachedAssets, setValue]
     )
 
     const handleFileSelectError = useCallback((errorCode: FileErrorType | null, fileType: FileType) => {

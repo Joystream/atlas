@@ -13,10 +13,10 @@ export type DrawerHeaderProps = {
 }
 
 export const DrawerHeader: React.FC<DrawerHeaderProps> = React.memo(({ onCloseClick, title, label }) => {
-  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const tabContainerRef = useRef<HTMLDivElement>(null)
   return (
     <Tabbar>
-      <TabContainer ref={tabsContainerRef}>
+      <TabContainer ref={tabContainerRef}>
         <Tab>
           {label && <Pill label={label} size="small" />}
           <TabTitle variant="t200">{title}</TabTitle>

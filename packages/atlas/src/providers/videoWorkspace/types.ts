@@ -22,14 +22,14 @@ export type VideoWorkspaceTabCachedDirtyFormData = Record<string, Partial<VideoW
 export type ContextValue = {
   videoTab: VideoWorkspaceTab
   addVideoTab: (tab?: VideoWorkspaceTab, shouldSelect?: boolean) => void
-  updateSelectedVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
-  selectedVideoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
-  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
-  selectedVideoTabCachedAssets: VideoWorkspaceAssets | null
-  setSelectedVideoTabCachedAssets: (assets: VideoWorkspaceAssets | null) => void
+  updateVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
+  videoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
+  setVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
+  videoTabCachedAssets: VideoWorkspaceAssets | null
+  setVideoTabCachedAssets: (assets: VideoWorkspaceAssets | null) => void
   videoWorkspaceState: VideoWorkspaceState
   setVideoWorkspaceState: (state: VideoWorkspaceState) => void
-  anyVideoTabsCachedAssets: boolean
+  anyVideoTabCachedAssets: boolean
   hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
 }
 
