@@ -6,6 +6,7 @@ import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/pro
 import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
+import { NFTWorkspaceForm } from './NFTWorkspaceForm'
 import { Container, DrawerOverlay } from './VideoWorkspace.style'
 import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
@@ -23,6 +24,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     anyVideoTabsCachedAssets,
     hasVideoTabAnyCachedAssets,
   } = useVideoWorkspace()
+  const [isIssuedAsNFTChecked, setIsIssuedAsNFTChecked] = useState(false)
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
   const { openWarningDialog } = useDisplayDataLostWarning()
 
@@ -137,15 +139,21 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
             onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
           />
-          <VideoWorkspaceForm
-            onDeleteVideo={handleDeleteVideo}
-            selectedVideoTab={selectedVideoTab}
-            onThumbnailFileChange={handleThumbnailFileChange}
-            onVideoFileChange={handleVideoFileChange}
-            fee={0}
-            thumbnailHashPromise={thumbnailHashPromise}
-            videoHashPromise={videoHashPromise}
-          />
+          {!isIssuedAsNFTChecked ? (
+            <VideoWorkspaceForm
+              setIsIssuedAsNFTChecked={setIsIssuedAsNFTChecked}
+              isIssuedAsNFTChecked={isIssuedAsNFTChecked}
+              onDeleteVideo={handleDeleteVideo}
+              selectedVideoTab={selectedVideoTab}
+              onThumbnailFileChange={handleThumbnailFileChange}
+              onVideoFileChange={handleVideoFileChange}
+              fee={0}
+              thumbnailHashPromise={thumbnailHashPromise}
+              videoHashPromise={videoHashPromise}
+            />
+          ) : (
+            <NFTWorkspaceForm />
+          )}
         </Container>
       </CSSTransition>
     </>

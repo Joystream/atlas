@@ -85,6 +85,8 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 
 type VideoWorkspaceFormProps = {
   onThumbnailFileChange: (file: Blob) => void
+  isIssuedAsNFTChecked?: boolean
+  setIsIssuedAsNFTChecked: (isIssuedAsNFT: boolean) => void
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: VideoWorkspaceTab
@@ -100,6 +102,8 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     selectedVideoTab,
     onThumbnailFileChange,
     onVideoFileChange,
+    isIssuedAsNFTChecked,
+    setIsIssuedAsNFTChecked,
     onDeleteVideo,
     fee,
     thumbnailHashPromise,
@@ -164,8 +168,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       if (isEdit && videoWorkspaceState === 'closed' && tabData && !tabDataLoading) {
         reset(tabData)
         setMoreSettingsVisible(false)
+        setIsIssuedAsNFT(false)
       }
-    }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading])
+    }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading, setIsIssuedAsNFTChecked])
 
     useEffect(() => {
       if (isEdit) {
@@ -497,6 +502,15 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       [createSubmitHandler, dirtyFields, isEdit, onSubmit]
     )
 
+    const handleSubmitWithNFT = useMemo(
+      () =>
+        createSubmitHandler(() => {
+          // TODO do something here
+          setIsIssuedAsNFTChecked(true)
+        }),
+      [createSubmitHandler, setIsIssuedAsNFTChecked]
+    )
+
     useEffect(() => {
       const subscription = watch((data) => {
         if (!Object.keys(dirtyFields).length) {
@@ -643,9 +657,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
     const actionBarPrimaryButton = useMemo(
       () => ({
-        text: isEdit ? 'Publish changes' : 'Upload',
-        disabled: isDisabled,
-        onClick: handleSubmit,
+        text: isIssuedAsNFT || isIssuedAsNFTChecked ? 'Next step' : isEdit ? 'Publish changes' : 'Upload',
+        disabled: (isIssuedAsNFT || isIssuedAsNFTChecked) && isEdit ? false : isDisabled,
+        onClick: isIssuedAsNFT ? handleSubmitWithNFT : handleSubmit,
         tooltip: isDisabled
           ? {
               headerText: isEdit
@@ -662,7 +676,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             }
           : undefined,
       }),
-      [handleSubmit, isDisabled, isEdit, isFormValid]
+      [handleSubmit, handleSubmitWithNFT, isDisabled, isEdit, isFormValid, isIssuedAsNFT, isIssuedAsNFTChecked]
     )
 
     const actionBarSecondaryButton = useMemo(
