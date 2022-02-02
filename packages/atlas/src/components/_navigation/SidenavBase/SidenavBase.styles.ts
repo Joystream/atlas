@@ -37,7 +37,6 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   background-color: ${cVar('colorBackground')};
 `
 
-//  background-color: ${oldColors.gray[800]};
 export const LogoLink = styled(Link)`
   display: flex;
   align-items: center;
@@ -96,16 +95,28 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   position: relative;
   align-items: center;
 
+  > svg > path {
+    fill: ${cVar('colorText')};
+  }
+
   &:hover,
   &:focus {
     color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundAlpha')};
+
+    > svg > path {
+      fill: ${cVar('colorTextStrong')};
+    }
   }
 
   &:active,
   &[data-active='true'] {
     color: ${cVar('colorTextStrong')};
     background-color: ${cVar('colorBackgroundStrongAlpha')};
+
+    > svg > path {
+      fill: ${cVar('colorTextStrong')};
+    }
   }
 
   > svg {
