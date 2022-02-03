@@ -102,13 +102,14 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const closeVideoWorkspace = useCallback(() => {
+    setValue('isIssuedAsNFT', undefined)
     setIsIssuedAsNFTChecked(false)
     if (anyVideoTabsCachedAssets) {
       openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
     } else {
       setVideoWorkspaceState('closed')
     }
-  }, [anyVideoTabsCachedAssets, openWarningDialog, setVideoWorkspaceState])
+  }, [anyVideoTabsCachedAssets, openWarningDialog, setValue, setVideoWorkspaceState])
 
   const handleRemoveVideoTab = useCallback(
     (tabIdx: number) => {
