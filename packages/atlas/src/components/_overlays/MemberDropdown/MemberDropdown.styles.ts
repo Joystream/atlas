@@ -79,6 +79,10 @@ export const MemberInfoContainer = styled.div`
   ${paddingStyles}
 `
 
+export const MemberHandleText = styled(Text)`
+  word-break: break-word;
+`
+
 export const SectionContainer = styled.div`
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
   padding: ${sizes(2)} 0;

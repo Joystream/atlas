@@ -82,6 +82,10 @@ export const LabelContainer = styled.div`
   min-height: 24px;
 `
 
+export const LabelText = styled(Text)`
+  word-break: break-word;
+`
+
 const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps) =>
   css`
     > svg > path {
