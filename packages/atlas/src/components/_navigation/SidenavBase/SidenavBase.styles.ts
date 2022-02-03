@@ -56,13 +56,14 @@ export const SidebarNavFooter = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
+  border-top: 1px solid ${cVar('colorCoreNeutral700Lighten')};
 `
 
 export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: ${sizes(3)};
+  margin-top: ${sizes(8)};
 
   > * + * {
     margin-top: ${sizes(4)};
@@ -107,6 +108,10 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     > svg > path {
       fill: ${cVar('colorTextStrong')};
     }
+
+    > span {
+      color: ${cVar('colorTextStrong')};
+    }
   }
 
   &:active,
@@ -116,6 +121,10 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
 
     > svg > path {
       fill: ${cVar('colorTextStrong')};
+    }
+
+    > span {
+      color: ${cVar('colorTextStrong')};
     }
   }
 
@@ -131,13 +140,14 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     font: ${cVar('typographyDesktopH400')};
     letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH400TextTransform')};
+    color: ${cVar('colorText')};
   }
 
   ::after {
     ${media.md} {
       content: ${({ content }) => `'${content}'`};
       position: absolute;
-      color: ${oldColors.gray[50]};
+      color: ${cVar('colorText')};
       transition: opacity ${transitions.timings.regular} ${transitions.easing};
       opacity: ${({ expanded }) => (expanded ? 0 : 1)};
       left: calc(var(--size-sidenav-width-collapsed) / 2);
@@ -194,7 +204,8 @@ export const LegalLinksWrapper = styled.span`
   align-items: center;
   margin-top: ${sizes(8)};
   padding: ${sizes(4)} 0 ${sizes(6)};
-  border-top: 1px solid ${oldColors.gray[300]};
+  border-top: 1px solid ${cVar('colorCoreNeutral700Lighten')};
+  font: ${cVar('typographyDesktopT100')};
 
   > * {
     color: ${oldColors.gray[300]};
@@ -208,20 +219,20 @@ export const LegalLinksWrapper = styled.span`
 export const LegalLink = styled(Link)`
   text-decoration: none;
 
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
+  font: ${cVar('typographyDesktopT100')};
+  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
+  text-transform: ${cVar('typographyDesktopT100TextTransform')};
 
   &:hover {
-    color: ${oldColors.gray[400]};
+    color: ${cVar('colorTextMuted')};
   }
 
   &:focus {
-    color: ${oldColors.gray[400]};
+    color: ${cVar('colorTextMuted')};
   }
 
   &:active {
-    color: ${oldColors.gray[500]};
+    color: ${cVar('colorText')};
   }
 `
 

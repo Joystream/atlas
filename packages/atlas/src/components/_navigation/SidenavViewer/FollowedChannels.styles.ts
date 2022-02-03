@@ -12,6 +12,7 @@ export const FollowedChannelsWrapper = styled.div`
   height: 100%;
 `
 
+// TODO
 export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
@@ -19,6 +20,7 @@ export const ChannelsTitle = styled(Text)`
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
   color: ${cVar('colorText')};
 `
+
 export const ChannelsWrapper = styled.div`
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-y: auto;
