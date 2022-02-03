@@ -26,7 +26,7 @@ export const OverviewItem = styled.div<{ divider?: boolean }>`
 
   ${GridRowWrapper}
 
-  > &:last-of-type {
+ > &:last-of-type {
     box-shadow: none;
   }
 `
@@ -48,10 +48,11 @@ export const OverviewContainer = styled.div`
 `
 
 export const ActivityItemContainer = styled.div<{ loading: boolean }>`
+  padding: ${sizes(4)};
   display: grid;
   gap: ${sizes(4)};
   grid-template-columns: 1fr auto;
-  padding: ${sizes(4)};
+  align-items: center;
   transition: background-color ${cVar('animationTransitionFast')};
   background-color: ${cVar('colorBackgroundMuted')};
   cursor: ${({ loading }) => !loading && 'pointer'};
@@ -89,6 +90,9 @@ export const TitleAndDescriptionContainer = styled.div`
     align-content: center;
     grid-auto-rows: min-content;
   }
+`
+export const Title = styled(Text)`
+  word-break: break-word;
 `
 export const Thumbnail = styled.img`
   height: 40px;
@@ -138,5 +142,5 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
 `
 
 export const DateText = styled(Text)`
-  direction: rtl;
+  text-align: end;
 `

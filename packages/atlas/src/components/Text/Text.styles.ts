@@ -10,9 +10,8 @@ type TextProps = {
 }
 
 const clampStyles = ({ clampAfterLine }: TextProps) => css`
-  /* stylelint-disable */
+  /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
-  /* stylelint-enable */
   -webkit-line-clamp: ${clampAfterLine};
   -webkit-box-orient: vertical;
   overflow: hidden;

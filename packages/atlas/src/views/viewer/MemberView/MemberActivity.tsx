@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
@@ -22,6 +22,7 @@ import {
   PillSkeletonLoader,
   Thumbnail,
   ThumbnailSkeletonLoader,
+  Title,
   TitleAndDescriptionContainer,
   TitleSkeletonLoader,
 } from './MemberActivity.styles'
@@ -76,7 +77,7 @@ export const MemberActivity = () => {
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
             <LayoutGrid>
-              {activity.map((activity, i) => (
+              {activity?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
                   <ActivityItem
                     date={activity.date}
@@ -139,29 +140,34 @@ export const MemberActivity = () => {
   )
 }
 
-type ActivityItemProps = {
+export type ActivityItemProps = {
   date: string
   type: string
   title: string
   description: string
   thumnailUri: string
 }
-const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, description, thumnailUri }) => {
+export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, description, thumnailUri }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
 
-  React.useEffect(() => {
-    ;(async () => {
+  useEffect(() => {
+    const validateImg = async () => {
       const res = await imageUrlValidation(thumnailUri)
       setThumbnailLoaded(res)
-    })()
+    }
+    validateImg()
   }, [thumnailUri])
 
   const getTitleTextVariant = () => {
-    if (smMatch) return 'h300'
-    else if (lgMatch) return 'h400'
-    else return 'h200'
+    if (smMatch) {
+      return 'h300'
+    } else if (lgMatch) {
+      return 'h400'
+    } else {
+      return 'h200'
+    }
   }
 
   const isLoading = !date || !type || !title || !thumbnailLoaded
@@ -173,9 +179,9 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, descript
           <TitleSkeletonLoader />
         ) : (
           <div>
-            <Text variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
+            <Title variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
               {title}
-            </Text>
+            </Title>
           </div>
         )}
         {isLoading ? (
