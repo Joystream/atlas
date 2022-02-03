@@ -103,6 +103,38 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
     fill: ${cVar('colorText')};
   }
 
+  > svg {
+    ${media.md} {
+      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
+      transition: transform ${transitions.timings.regular} ${transitions.easing};
+    }
+  }
+
+  > span {
+    margin-left: ${sizes(6)};
+    font: ${cVar('typographyDesktopH400')};
+    letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
+    text-transform: ${cVar('typographyDesktopH400TextTransform')};
+    color: ${cVar('colorText')};
+  }
+
+  ::after {
+    ${media.md} {
+      content: ${({ content }) => `'${content}'`};
+      position: absolute;
+      color: ${cVar('colorText')};
+      transition: opacity ${transitions.timings.regular} ${transitions.easing};
+      opacity: ${({ expanded }) => (expanded ? 0 : 1)};
+      left: calc(var(--size-sidenav-width-collapsed) / 2);
+      transform: translateX(-50%);
+      bottom: 0;
+      margin-bottom: ${sizes(2)};
+      font: ${cVar('typographyDesktopT100Strong')};
+      letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
+      text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
+    }
+  }
+
   &:hover,
   &:focus {
     color: ${cVar('colorTextStrong')};
@@ -140,38 +172,6 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
       ${media.md} {
         color: ${cVar('colorTextStrong')};
       }
-    }
-  }
-
-  > svg {
-    ${media.md} {
-      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
-      transition: transform ${transitions.timings.regular} ${transitions.easing};
-    }
-  }
-
-  > span {
-    margin-left: ${sizes(6)};
-    font: ${cVar('typographyDesktopH400')};
-    letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopH400TextTransform')};
-    color: ${cVar('colorText')};
-  }
-
-  ::after {
-    ${media.md} {
-      content: ${({ content }) => `'${content}'`};
-      position: absolute;
-      color: ${cVar('colorText')};
-      transition: opacity ${transitions.timings.regular} ${transitions.easing};
-      opacity: ${({ expanded }) => (expanded ? 0 : 1)};
-      left: calc(var(--size-sidenav-width-collapsed) / 2);
-      transform: translateX(-50%);
-      bottom: 0;
-      margin-bottom: ${sizes(2)};
-      font: ${cVar('typographyDesktopT100Strong')};
-      letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
-      text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
     }
   }
 `
