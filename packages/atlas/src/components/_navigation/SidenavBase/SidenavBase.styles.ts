@@ -57,6 +57,7 @@ export const SidebarNavFooter = styled.div`
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
 `
 
 export const ButtonGroup = styled.div`
@@ -262,7 +263,7 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
 `
 
 export const ScrollContainer = styled.div`
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  flex-grow: 10;
 `
