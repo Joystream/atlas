@@ -73,7 +73,7 @@ export const FeaturedVideoCategoryCard: React.FC<FeaturedVideoCategoryCardProps>
               {isLoading ? (
                 <SkeletonLoader width="312px" height={variant === 'default' ? '40px' : '32px'} />
               ) : (
-                <Text variant={variant === 'default' ? 'h600' : 'h500'}>{title}hello</Text>
+                <Text variant={variant === 'default' ? 'h600' : 'h500'}>{title}</Text>
               )}
             </div>
 

@@ -199,9 +199,7 @@ export const VideoView: React.FC = () => {
       </PlayerWrapper>
       <InfoContainer className={transitions.names.slide}>
         {video ? (
-          <TitleText variant={xsMatch ? 'h700' : 'h500'}>
-            Suuuuuper long title with a lot of words lmao {video.title}
-          </TitleText>
+          <TitleText variant={xsMatch ? 'h700' : 'h500'}>{video.title}</TitleText>
         ) : (
           <SkeletonLoader height={xsMatch ? 56 : 32} width={400} />
         )}
