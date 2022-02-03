@@ -2,7 +2,19 @@ import { useApolloClient } from '@apollo/client'
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Controller, DeepMap, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  DeepMap,
+  FieldNamesMarkedBoolean,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+  UseFormStateReturn,
+  UseFormWatch,
+} from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 
 import { useCategories, useVideo } from '@/api/hooks'
@@ -93,6 +105,15 @@ type VideoWorkspaceFormProps = {
   fee: number
   thumbnailHashPromise: Promise<string> | null
   videoHashPromise: Promise<string> | null
+  // react-hook-form props
+  register: UseFormRegister<VideoWorkspaceFormFields>
+  control: Control<VideoWorkspaceFormFields>
+  createSubmitHandler: UseFormHandleSubmit<VideoWorkspaceFormFields>
+  getValues: UseFormGetValues<VideoWorkspaceFormFields>
+  setValue: UseFormSetValue<VideoWorkspaceFormFields>
+  watch: UseFormWatch<VideoWorkspaceFormFields>
+  reset: UseFormReset<VideoWorkspaceFormFields>
+  formState: UseFormStateReturn<VideoWorkspaceFormFields>
 }
 
 type ValueOf<T> = T[keyof T]
@@ -108,7 +129,16 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     fee,
     thumbnailHashPromise,
     videoHashPromise,
+    register,
+    control,
+    createSubmitHandler,
+    getValues,
+    setValue,
+    watch,
+    reset,
+    formState,
   }) => {
+    const { errors, dirtyFields, isDirty, isValid } = formState
     const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
     const [isIssuedAsNFT, setIsIssuedAsNFT] = useState(false)
     const isEdit = !selectedVideoTab?.isDraft
@@ -143,20 +173,6 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
     })
     const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceTabData(selectedVideoTab)
-
-    const {
-      register,
-      control,
-      handleSubmit: createSubmitHandler,
-      getValues,
-      setValue,
-      watch,
-      reset,
-      formState: { errors, dirtyFields, isDirty, isValid },
-    } = useForm<VideoWorkspaceFormFields>({
-      shouldFocusError: true,
-      mode: 'onChange',
-    })
 
     const addAsset = useAssetStore((state) => state.actions.addAsset)
     const mediaAsset = useRawAsset(watch('assets.video.contentId'))

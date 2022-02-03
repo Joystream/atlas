@@ -1,8 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
-import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
+import {
+  VideoWorkspaceFormFields,
+  VideoWorkspaceState,
+  VideoWorkspaceTab,
+  useVideoWorkspace,
+} from '@/providers/videoWorkspace'
 import { cVar, transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -33,6 +39,20 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [dialogState, setDialogState] = useState<VideoWorkspaceState>('unset')
   const prevDialogState = useRef(dialogState)
+
+  const {
+    register,
+    control,
+    handleSubmit: createSubmitHandler,
+    getValues,
+    setValue,
+    watch,
+    reset,
+    formState,
+  } = useForm<VideoWorkspaceFormFields>({
+    shouldFocusError: true,
+    mode: 'onChange',
+  })
 
   useEffect(() => {
     if (prevDialogState.current === 'minimized' && videoWorkspaceState === 'open') {
@@ -157,6 +177,14 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   fee={0}
                   thumbnailHashPromise={thumbnailHashPromise}
                   videoHashPromise={videoHashPromise}
+                  register={register}
+                  control={control}
+                  createSubmitHandler={createSubmitHandler}
+                  getValues={getValues}
+                  setValue={setValue}
+                  watch={watch}
+                  reset={reset}
+                  formState={formState}
                 />
               ) : (
                 <NFTWorkspaceForm />
