@@ -5,10 +5,12 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { ViewErrorBoundary } from '@/components/ViewErrorFallback'
+import { Loader } from '@/components/_loaders/Loader'
 import { BottomNav } from '@/components/_navigation/BottomNav'
 import { PrivateRoute } from '@/components/_navigation/PrivateRoute'
 import { SidenavViewer } from '@/components/_navigation/SidenavViewer'
 import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
+import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSearchStore } from '@/providers/search'
@@ -46,7 +48,7 @@ const viewerRoutes = [
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
   const locationState = location.state as RoutingState
-  const { activeMemberId } = useUser()
+  const { activeMemberId, isLoading } = useUser()
 
   const navigate = useNavigate()
   const mdMatch = useMediaMatch('md')
@@ -56,6 +58,9 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
+      <Modal show={isLoading} noBoxShadow>
+        <Loader variant="xlarge" />
+      </Modal>
       <TopbarViewer />
       <SidenavViewer />
       <MainContainer>
