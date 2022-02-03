@@ -31,21 +31,26 @@ export const ChannelsWrapper = styled.div`
 `
 
 export const ChannelsList = styled.ul`
+  color: ${cVar('colorText')};
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-x: hidden;
   padding: 0;
   margin: 0;
 `
 
-export const StyledChannelLink = styled(ChannelLink)`
+type HasSecondaryProps = {
+  textSecondary: boolean
+}
+
+export const StyledChannelLink = styled(ChannelLink)<HasSecondaryProps>`
   width: 100%;
+  height: ${sizes(6)};
 
   > span {
     margin-left: ${sizes(2)};
   }
 
-  padding: ${sizes(4)} 0;
-  color: inherit;
+  margin: ${sizes(4)} 0;
 `
 
 export const ChannelsItem = styled.li`
