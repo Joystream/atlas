@@ -56,14 +56,14 @@ export const SidebarNavFooter = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
-  border-top: 1px solid ${cVar('colorCoreNeutral700Lighten')};
+  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
 `
 
 export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(6)};
 
   > * + * {
     margin-top: ${sizes(4)};
@@ -216,9 +216,9 @@ export const SubItem = styled.li`
 export const LegalLinksWrapper = styled.span`
   display: flex;
   align-items: center;
-  margin-top: ${sizes(8)};
+  margin-top: ${sizes(6)};
   padding: ${sizes(4)} 0 ${sizes(6)};
-  border-top: 1px solid ${cVar('colorCoreNeutral700Lighten')};
+  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
   font: ${cVar('typographyDesktopT100')};
 
   > * {
