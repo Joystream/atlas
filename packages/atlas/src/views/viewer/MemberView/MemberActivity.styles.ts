@@ -24,9 +24,9 @@ export const OverviewItem = styled.div<{ divider?: boolean }>`
     }
   }
 
-  ${GridRowWrapper}
-
- > &:last-of-type {
+  /* stylelint-disable */
+  ${GridRowWrapper} > &:last-of-type {
+    /* stylelint-enable */
     box-shadow: none;
   }
 `
