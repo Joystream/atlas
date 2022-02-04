@@ -10,7 +10,8 @@ export const joinUrlFragments = (...fragments: string[]) => {
 }
 
 export const generateAssetUrl = (asset: DataObjectFieldsFragment) => {
-  const distributorsEndpoints = asset.storageBag.distributionBuckets.reduce((acc, bucket) => {
+  const workingBuckets = asset.storageBag.distributionBuckets.filter((bucket) => bucket.distributing)
+  const distributorsEndpoints = workingBuckets.reduce((acc, bucket) => {
     const endpoints = bucket.operators
       .filter((operator) => !!operator.metadata?.nodeEndpoint)
       .map((operator) => operator.metadata?.nodeEndpoint) as string[]
