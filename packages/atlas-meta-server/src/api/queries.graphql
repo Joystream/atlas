@@ -2,6 +2,7 @@ fragment DataObjectFields on StorageDataObject {
   id
   storageBag {
     distributionBuckets {
+      distributing
       operators {
         metadata {
           nodeEndpoint

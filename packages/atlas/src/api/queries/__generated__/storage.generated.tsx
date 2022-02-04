@@ -82,7 +82,7 @@ export const DistributionBucketOperatorFieldFragmentDoc = gql`
 `
 export const GetDistributionBucketsWithOperatorsDocument = gql`
   query GetDistributionBucketsWithOperators {
-    distributionBuckets(limit: 50) {
+    distributionBuckets(limit: 50, where: { distributing_eq: true }) {
       id
       bags {
         id

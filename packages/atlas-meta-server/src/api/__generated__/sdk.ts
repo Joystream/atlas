@@ -4011,6 +4011,7 @@ export type DataObjectFieldsFragment = {
     __typename?: 'StorageBag'
     distributionBuckets: Array<{
       __typename?: 'DistributionBucket'
+      distributing: boolean
       operators: Array<{
         __typename?: 'DistributionBucketOperator'
         metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4065,6 +4066,7 @@ export type GetChannelQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4097,6 +4099,7 @@ export type GetVideoQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4111,6 +4114,7 @@ export type GetVideoQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4134,6 +4138,7 @@ export const DataObjectFieldsFragmentDoc = gql`
     id
     storageBag {
       distributionBuckets {
+        distributing
         operators {
           metadata {
             nodeEndpoint
