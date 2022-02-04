@@ -27,10 +27,24 @@ export type StepProps = {
   number?: number
   onDelete?: () => void
   className?: string
+  showOtherStepsOnMobile?: boolean
 }
 
 export const Step = forwardRef<HTMLDivElement, StepProps>(
-  ({ type = 'default', isLoading, disabled, title, number, onDelete, className, variant = 'current' }, ref) => {
+  (
+    {
+      type = 'default',
+      isLoading,
+      disabled,
+      title,
+      number,
+      onDelete,
+      className,
+      variant = 'current',
+      showOtherStepsOnMobile,
+    },
+    ref
+  ) => {
     const [circularProgress, setCircularProgress] = useState(0)
 
     useEffect(() => {
@@ -46,7 +60,14 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
     }, [circularProgress, isLoading])
 
     return (
-      <StepWrapper aria-disabled={disabled} stepVariant={variant} stepType={type} ref={ref} className={className}>
+      <StepWrapper
+        aria-disabled={disabled}
+        stepVariant={variant}
+        stepType={type}
+        ref={ref}
+        className={className}
+        showOtherStepsOnMobile={showOtherStepsOnMobile}
+      >
         <StepStatus>
           {isLoading ? (
             <ProgressContainer>
