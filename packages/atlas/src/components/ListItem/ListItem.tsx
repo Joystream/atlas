@@ -1,7 +1,6 @@
 import React from 'react'
 import mergeRefs from 'react-merge-refs'
 
-import { Text } from '@/components/Text'
 import { useHover } from '@/hooks/useHover'
 import { cVar } from '@/styles'
 
@@ -10,6 +9,7 @@ import {
   Container,
   LabelCaptionContainer,
   LabelContainer,
+  LabelText,
   NodeContainer,
   SelectedIcon,
 } from './ListItem.styles'
@@ -65,7 +65,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
         )}
         <LabelCaptionContainer captionBottom={captionPosition === 'bottom'}>
           <LabelContainer>
-            <Text
+            <LabelText
               variant="t200-strong"
               secondary={!selected}
               color={
@@ -77,7 +77,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
               }
             >
               {label}
-            </Text>
+            </LabelText>
           </LabelContainer>
           <Caption captionPosition={captionPosition} secondary variant="t100">
             {caption}

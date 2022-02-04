@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { Loader } from '@/components/_loaders/Loader'
-import { Modal } from '@/components/_overlays/Modal'
 import { StepperModal } from '@/components/_overlays/StepperModal'
 import { QUERY_PARAMS } from '@/config/routes'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
@@ -41,9 +39,6 @@ export const SignInStepsStepper: React.FC = () => {
 
   return (
     <>
-      <Modal show={isLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </Modal>
       <StepperModal
         currentStepIdx={step <= 0 ? 0 : step - 1}
         steps={steps}

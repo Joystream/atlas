@@ -38,6 +38,7 @@ import {
   Filter,
   InnerContainer,
   LearnAboutTjoyLink,
+  MemberHandleText,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
@@ -194,7 +195,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C)
                 \ to preserve the space while member handle loads */}
-                        <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
+                        <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
                         <TjoyContainer>
                           {accountBalance !== undefined ? (
                             <>
