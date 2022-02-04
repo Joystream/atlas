@@ -137,7 +137,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
             </div>
             {smMatch && sortingNode}
           </ControlsContainer>
-          <FiltersBar {...filtersBarLogic} />
+          <FiltersBar {...filtersBarLogic} activeFilters={['date', 'length', 'other', 'language']} />
         </StyledSticky>
 
         <StyledVideoGrid

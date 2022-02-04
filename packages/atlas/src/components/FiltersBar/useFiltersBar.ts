@@ -10,6 +10,7 @@ export const useFiltersBar = () => {
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
   const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
+  const [nftStatusFilter, setNftStatusFilter] = useState<string[]>()
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
   const [language, setLanguage] = useState<string | null | undefined>('undefined')
 
@@ -20,11 +21,17 @@ export const useFiltersBar = () => {
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
+  // TODO: this needs to be replaced after graphql nft implementation
+  const canClearNftStatusFilter = !!nftStatusFilter?.length
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
     false
   const canClearAllFilters =
-    canClearDateUploadedFilter || canClearVideoLengthFilter || canClearOtherFilters || canClearCategoriesFilter
+    canClearDateUploadedFilter ||
+    canClearVideoLengthFilter ||
+    canClearOtherFilters ||
+    canClearCategoriesFilter ||
+    canClearNftStatusFilter
 
   const clearDateUploadedFilter = () => {
     setDateUploadedFilter(undefined)
@@ -51,6 +58,10 @@ export const useFiltersBar = () => {
     })
   }
 
+  const clearNftStatusFilter = () => {
+    setNftStatusFilter(undefined)
+  }
+
   const clearCategoriesFilter = () => {
     setCategoriesFilter(undefined)
     setVideoWhereInput((value) => {
@@ -65,6 +76,7 @@ export const useFiltersBar = () => {
     clearCategoriesFilter()
     clearOtherFilters()
     clearCategoriesFilter()
+    clearNftStatusFilter()
   }
 
   return {
@@ -81,6 +93,8 @@ export const useFiltersBar = () => {
       setExcludePaidPromotionalMaterialFilter,
       excludeMatureContentRatingFilter,
       setExcludeMatureContentRatingFilter,
+      nftStatusFilter,
+      setNftStatusFilter,
       categoriesFilter,
       setCategoriesFilter,
       language,
@@ -91,11 +105,13 @@ export const useFiltersBar = () => {
       canClearDateUploadedFilter,
       canClearVideoLengthFilter,
       canClearOtherFilters,
+      canClearNftStatusFilter,
       canClearCategoriesFilter,
       clearAllFilters,
       clearDateUploadedFilter,
       clearVideoLengthFilter,
       clearOtherFilters,
+      clearNftStatusFilter,
       clearCategoriesFilter,
     },
   } as const

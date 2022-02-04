@@ -1,17 +1,10 @@
+import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
-import { VideoOrderByInput } from '@/api/queries'
-import { GridItem } from '@/components/LayoutGrid'
-import { Text } from '@/components/Text'
+import { createApolloClient } from '@/api'
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
-import { SvgActionFilters } from '@/components/_icons'
-import { Select } from '@/components/_inputs/Select'
-import { languages } from '@/config/languages'
-import { SORT_OPTIONS } from '@/config/sorting'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { media, oldColors, sizes } from '@/styles'
 
@@ -21,32 +14,31 @@ import { useFiltersBar } from './useFiltersBar'
 export default {
   title: 'other/FiltersBar',
   component: FiltersBar,
+  args: {
+    activeFilters: ['date', 'other', 'categories', 'length', 'nftStatus', 'language'],
+  },
   decorators: [
-    (Story) => (
-      <OverlayManagerProvider>
-        <Story />
-      </OverlayManagerProvider>
-    ),
+    (Story) => {
+      const apolloClient = createApolloClient()
+      return (
+        <ApolloProvider client={apolloClient}>
+          <OverlayManagerProvider>
+            <Story />
+          </OverlayManagerProvider>
+        </ApolloProvider>
+      )
+    },
   ],
 } as Meta
 
-const RegularTemplate: Story<FiltersBarProps> = () => {
-  const mdMatch = useMediaMatch('md')
-  const lgMatch = useMediaMatch('lg')
-  const betweenMdAndLgMatch = mdMatch && !lgMatch
-
+const RegularTemplate: Story<FiltersBarProps> = (args) => {
   const filtersBarLogic = useFiltersBar()
 
   const {
     setVideoWhereInput,
     filters: { setIsFiltersOpen },
-    canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
-
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput | null | undefined>(
-    VideoOrderByInput.CreatedAtDesc
-  )
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
+  const [selectedLanguage] = useState<string | null | undefined>('en')
 
   const handleFilterClick = () => {
     setIsFiltersOpen((value) => !value)
@@ -64,46 +56,11 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
   return (
     <Container>
       <ControlsContainer>
-        <GridItem colSpan={{ base: 2, md: 1 }}>
-          <Text variant={mdMatch ? 'h500' : 'h400'}>All videos (441)</Text>
-        </GridItem>
-        <Select
-          onChange={setSelectedLanguage}
-          size="small"
-          helperText={null}
-          value={selectedLanguage}
-          items={languages}
-        />
-        <div>
-          {betweenMdAndLgMatch ? (
-            <IconButton variant="secondary" onClick={handleFilterClick}>
-              <SvgActionFilters />
-            </IconButton>
-          ) : (
-            <Button
-              badge={canClearAllFilters}
-              variant="secondary"
-              icon={<SvgActionFilters />}
-              onClick={handleFilterClick}
-            >
-              Filters
-            </Button>
-          )}
-        </div>
-        {mdMatch && (
-          <SortContainer>
-            <Text variant="t200">Sort by</Text>
-            <Select
-              size="small"
-              helperText={null}
-              value={sortVideosBy}
-              items={SORT_OPTIONS}
-              onChange={setSortVideosBy}
-            />
-          </SortContainer>
-        )}
+        <Button size="small" onClick={handleFilterClick}>
+          Show filters bar
+        </Button>
       </ControlsContainer>
-      <FiltersBar {...filtersBarLogic} />
+      <FiltersBar {...filtersBarLogic} {...args} />
     </Container>
   )
 }
@@ -111,14 +68,13 @@ const RegularTemplate: Story<FiltersBarProps> = () => {
 export const Regular = RegularTemplate.bind({})
 
 const Container = styled.div`
-  margin-top: ${sizes(16)};
   position: relative;
+  z-index: 99;
 `
 
 const ControlsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: ${sizes(4)};
   align-items: center;
   padding-bottom: ${sizes(4)};
   border-bottom: 1px solid ${oldColors.gray[700]};
@@ -129,17 +85,5 @@ const ControlsContainer = styled.div`
 
   ${media.md} {
     grid-template-columns: auto 160px 1fr 242px;
-  }
-`
-
-const SortContainer = styled.div`
-  padding-left: ${sizes(4)};
-  display: grid;
-  grid-gap: 8px;
-  align-items: center;
-  grid-template-columns: 1fr;
-  ${media.xs} {
-    grid-template-columns: auto 1fr;
-    grid-area: initial;
   }
 `
