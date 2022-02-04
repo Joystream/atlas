@@ -14,6 +14,8 @@ type ContainerProps = {
   isLoading?: boolean
   isClickable: boolean
   withoutOutline?: boolean
+  // allow passing 'type' prop to Container because it can be rendered as 'button' depending on context
+  type?: 'button'
 }
 
 type EditOverlayProps = {

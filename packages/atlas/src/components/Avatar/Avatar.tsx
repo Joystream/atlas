@@ -47,7 +47,6 @@ export const Avatar: React.FC<AvatarProps> = ({
   return (
     <Container
       as={onClick ? 'button' : 'div'}
-      // @ts-ignore 'type' prop will only be applied if the rendered tag is 'button' so it is valid here
       type={onClick ? 'button' : undefined}
       onClick={onClick}
       size={size}
