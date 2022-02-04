@@ -37,11 +37,7 @@ export const ChannelsList = styled.ul`
   margin: 0;
 `
 
-type HasSecondaryProps = {
-  textSecondary: boolean
-}
-
-export const StyledChannelLink = styled(ChannelLink)<HasSecondaryProps>`
+export const StyledChannelLink = styled(ChannelLink)`
   width: 100%;
   height: ${sizes(6)};
 
