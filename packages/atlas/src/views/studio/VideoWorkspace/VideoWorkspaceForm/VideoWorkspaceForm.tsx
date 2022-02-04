@@ -2,7 +2,19 @@ import { useApolloClient } from '@apollo/client'
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Controller, DeepMap, FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  DeepMap,
+  FieldNamesMarkedBoolean,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+  UseFormStateReturn,
+  UseFormWatch,
+} from 'react-hook-form'
 import useMeasure from 'react-use-measure'
 
 import { useCategories, useVideo } from '@/api/hooks'
@@ -13,6 +25,9 @@ import {
   License,
   VideoOrderByInput,
 } from '@/api/queries'
+import { Banner } from '@/components/Banner'
+import { Information } from '@/components/Information'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
@@ -23,6 +38,7 @@ import { FileErrorType, ImageInputFile, VideoInputFile } from '@/components/_inp
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select, SelectItem } from '@/components/_inputs/Select'
+import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TextField } from '@/components/_inputs/TextField'
 import { languages } from '@/config/languages'
@@ -63,7 +79,11 @@ import {
   RadioCardButtonsContainer,
   StyledActionBar,
   StyledMultiFileSelect,
+  StyledSvgWarning,
   StyledTitleArea,
+  SwitchFormField,
+  SwitchNFTWrapper,
+  YellowText,
 } from './VideoWorkspaceForm.styles'
 
 const CUSTOM_LICENSE_CODE = 1000
@@ -77,12 +97,23 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 
 type VideoWorkspaceFormProps = {
   onThumbnailFileChange: (file: Blob) => void
+  isIssuedAsNFTChecked?: boolean
+  setIsIssuedAsNFTChecked: (isIssuedAsNFT: boolean) => void
   onVideoFileChange: (file: Blob) => void
   onDeleteVideo: (videoId: string) => void
   selectedVideoTab?: VideoWorkspaceTab
   fee: number
   thumbnailHashPromise: Promise<string> | null
   videoHashPromise: Promise<string> | null
+  // react-hook-form props
+  register: UseFormRegister<VideoWorkspaceFormFields>
+  control: Control<VideoWorkspaceFormFields>
+  createSubmitHandler: UseFormHandleSubmit<VideoWorkspaceFormFields>
+  getValues: UseFormGetValues<VideoWorkspaceFormFields>
+  setValue: UseFormSetValue<VideoWorkspaceFormFields>
+  watch: UseFormWatch<VideoWorkspaceFormFields>
+  reset: UseFormReset<VideoWorkspaceFormFields>
+  formState: UseFormStateReturn<VideoWorkspaceFormFields>
 }
 
 type ValueOf<T> = T[keyof T]
@@ -92,11 +123,22 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     selectedVideoTab,
     onThumbnailFileChange,
     onVideoFileChange,
+    isIssuedAsNFTChecked,
+    setIsIssuedAsNFTChecked,
     onDeleteVideo,
     fee,
     thumbnailHashPromise,
     videoHashPromise,
+    register,
+    control,
+    createSubmitHandler,
+    getValues,
+    setValue,
+    watch,
+    reset,
+    formState,
   }) => {
+    const { errors, dirtyFields, isDirty, isValid } = formState
     const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
     const isEdit = !selectedVideoTab?.isDraft
     const [actionBarRef, actionBarBounds] = useMeasure()
@@ -131,20 +173,6 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     })
     const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceTabData(selectedVideoTab)
 
-    const {
-      register,
-      control,
-      handleSubmit: createSubmitHandler,
-      getValues,
-      setValue,
-      watch,
-      reset,
-      formState: { errors, dirtyFields, isDirty, isValid },
-    } = useForm<VideoWorkspaceFormFields>({
-      shouldFocusError: true,
-      mode: 'onChange',
-    })
-
     const addAsset = useAssetStore((state) => state.actions.addAsset)
     const mediaAsset = useRawAsset(watch('assets.video.contentId'))
     const thumbnailAsset = useRawAsset(watch('assets.thumbnail.cropContentId'))
@@ -155,8 +183,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       if (isEdit && videoWorkspaceState === 'closed' && tabData && !tabDataLoading) {
         reset(tabData)
         setMoreSettingsVisible(false)
+        setValue('isIssuedAsNFT', undefined)
       }
-    }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading])
+    }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading, setIsIssuedAsNFTChecked])
 
     useEffect(() => {
       if (isEdit) {
@@ -488,6 +517,15 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       [createSubmitHandler, dirtyFields, isEdit, onSubmit]
     )
 
+    const handleSubmitWithNFT = useMemo(
+      () =>
+        createSubmitHandler(() => {
+          // TODO do something here
+          setIsIssuedAsNFTChecked(true)
+        }),
+      [createSubmitHandler, setIsIssuedAsNFTChecked]
+    )
+
     useEffect(() => {
       const subscription = watch((data) => {
         if (!Object.keys(dirtyFields).length) {
@@ -634,9 +672,9 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
     const actionBarPrimaryButton = useMemo(
       () => ({
-        text: isEdit ? 'Publish changes' : 'Upload',
-        disabled: isDisabled,
-        onClick: handleSubmit,
+        text: watch('isIssuedAsNFT') || isIssuedAsNFTChecked ? 'Next step' : isEdit ? 'Publish changes' : 'Upload',
+        disabled: (watch('isIssuedAsNFT') || isIssuedAsNFTChecked) && isEdit ? false : isDisabled,
+        onClick: watch('isIssuedAsNFT') ? handleSubmitWithNFT : handleSubmit,
         tooltip: isDisabled
           ? {
               headerText: isEdit
@@ -653,7 +691,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
             }
           : undefined,
       }),
-      [handleSubmit, isDisabled, isEdit, isFormValid]
+      [handleSubmit, handleSubmitWithNFT, isDisabled, isEdit, isFormValid, isIssuedAsNFTChecked, watch]
     )
 
     const actionBarSecondaryButton = useMemo(
@@ -777,6 +815,33 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                     )}
                   />
                 </ExtendedMarginFormField>
+                <SwitchFormField title="Issue as NFT">
+                  <SwitchNFTWrapper>
+                    <Switch
+                      label="Toggle to list this video as an NFT"
+                      value={watch('isIssuedAsNFT')}
+                      onChange={(e) => setValue('isIssuedAsNFT', e?.currentTarget.checked, { shouldDirty: false })}
+                    />
+                    <Information
+                      placement="top"
+                      arrowDisabled
+                      text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+                    />
+                  </SwitchNFTWrapper>
+                  {watch('isIssuedAsNFT') && (
+                    <Banner
+                      id="issuing-nft"
+                      dismissable={false}
+                      icon={<StyledSvgWarning width={24} height={24} />}
+                      description={
+                        <>
+                          <Text variant="t200">After issuing this as an NFT </Text>
+                          <YellowText variant="t200">editing options of this video will be disabled</YellowText>
+                        </>
+                      }
+                    />
+                  )}
+                </SwitchFormField>
               </FormField>
               <MoreSettingsHeader>
                 <Button

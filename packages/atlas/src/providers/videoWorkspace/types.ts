@@ -49,6 +49,7 @@ export type VideoWorkspaceFormFields = {
   isExplicit: boolean
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceAssets
+  isIssuedAsNFT?: boolean
 }
 
 export type VideoWorkspaceState = 'closed' | 'open' | 'minimized' | 'maximized' | 'unset'

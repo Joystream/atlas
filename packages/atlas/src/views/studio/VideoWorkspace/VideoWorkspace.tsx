@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { useForm } from 'react-hook-form'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
-import { cVar } from '@/styles'
+import {
+  VideoWorkspaceFormFields,
+  VideoWorkspaceState,
+  VideoWorkspaceTab,
+  useVideoWorkspace,
+} from '@/providers/videoWorkspace'
+import { cVar, transitions } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
+import { NFTWorkspaceForm } from './NFTWorkspaceForm'
 import { Container, DrawerOverlay } from './VideoWorkspace.style'
 import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
@@ -24,6 +31,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     anyVideoTabsCachedAssets,
     hasVideoTabAnyCachedAssets,
   } = useVideoWorkspace()
+  const [isIssuedAsNFTChecked, setIsIssuedAsNFTChecked] = useState(false)
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
   const { openWarningDialog } = useDisplayDataLostWarning()
 
@@ -35,6 +43,20 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
   const [dialogState, setDialogState] = useState<VideoWorkspaceState>('unset')
   const prevDialogState = useRef(dialogState)
+
+  const {
+    register,
+    control,
+    handleSubmit: createSubmitHandler,
+    getValues,
+    setValue,
+    watch,
+    reset,
+    formState,
+  } = useForm<VideoWorkspaceFormFields>({
+    shouldFocusError: true,
+    mode: 'onChange',
+  })
 
   useEffect(() => {
     if (prevDialogState.current === 'minimized' && videoWorkspaceState === 'open') {
@@ -84,12 +106,14 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const closeVideoWorkspace = useCallback(() => {
+    setValue('isIssuedAsNFT', undefined)
+    setIsIssuedAsNFTChecked(false)
     if (anyVideoTabsCachedAssets) {
       openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
     } else {
       setVideoWorkspaceState('closed')
     }
-  }, [anyVideoTabsCachedAssets, openWarningDialog, setVideoWorkspaceState])
+  }, [anyVideoTabsCachedAssets, openWarningDialog, setValue, setVideoWorkspaceState])
 
   const handleRemoveVideoTab = useCallback(
     (tabIdx: number) => {
@@ -142,15 +166,37 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
             onToggleMinimizedClick={toggleMinimizedVideoWorkspace}
           />
-          <VideoWorkspaceForm
-            onDeleteVideo={handleDeleteVideo}
-            selectedVideoTab={selectedVideoTab}
-            onThumbnailFileChange={handleThumbnailFileChange}
-            onVideoFileChange={handleVideoFileChange}
-            fee={0}
-            thumbnailHashPromise={thumbnailHashPromise}
-            videoHashPromise={videoHashPromise}
-          />
+          <SwitchTransition>
+            <CSSTransition
+              key={String(isIssuedAsNFTChecked)}
+              classNames={transitions.names.fade}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+            >
+              {!isIssuedAsNFTChecked ? (
+                <VideoWorkspaceForm
+                  setIsIssuedAsNFTChecked={setIsIssuedAsNFTChecked}
+                  isIssuedAsNFTChecked={isIssuedAsNFTChecked}
+                  onDeleteVideo={handleDeleteVideo}
+                  selectedVideoTab={selectedVideoTab}
+                  onThumbnailFileChange={handleThumbnailFileChange}
+                  onVideoFileChange={handleVideoFileChange}
+                  fee={0}
+                  thumbnailHashPromise={thumbnailHashPromise}
+                  videoHashPromise={videoHashPromise}
+                  register={register}
+                  control={control}
+                  createSubmitHandler={createSubmitHandler}
+                  getValues={getValues}
+                  setValue={setValue}
+                  watch={watch}
+                  reset={reset}
+                  formState={formState}
+                />
+              ) : (
+                <NFTWorkspaceForm />
+              )}
+            </CSSTransition>
+          </SwitchTransition>
         </Container>
       </CSSTransition>
     </>
