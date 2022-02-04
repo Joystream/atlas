@@ -12,8 +12,6 @@ import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 import { VideoWorkspaceTabsBar } from './VideoWorkspaceTabsBar'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
-  const headTags = useHeadTags('Edit video')
-
   // videoWorkspace state
   const {
     videoWorkspaceState,
@@ -28,6 +26,9 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   } = useVideoWorkspace()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
   const { openWarningDialog } = useDisplayDataLostWarning()
+
+  const isEdit = !selectedVideoTab?.isDraft
+  const headTags = useHeadTags(isEdit ? 'Edit video' : 'New video')
 
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)

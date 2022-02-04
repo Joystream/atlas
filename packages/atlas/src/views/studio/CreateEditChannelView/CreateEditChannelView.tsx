@@ -196,7 +196,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     setCoverHashPromise(hashPromise)
   }, [dirtyFields.cover, coverAsset])
 
-  const headTags = useHeadTags('Edit channel')
+  const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
     if (anyVideoTabsCachedAssets) {
