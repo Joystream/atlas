@@ -44,14 +44,19 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h300" secondary>
+        <ChannelsTitle variant="h100" secondary>
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>
           <ChannelsList>
             {channels.map(({ id }) => (
               <ChannelsItem key={id} onClick={onClick}>
-                <StyledChannelLink id={id} textSecondary onNotFound={() => onChannelNotFound?.(id)} />
+                <StyledChannelLink
+                  id={id}
+                  textSecondary
+                  textVariant="h300"
+                  onNotFound={() => onChannelNotFound?.(id)}
+                />
               </ChannelsItem>
             ))}
           </ChannelsList>
