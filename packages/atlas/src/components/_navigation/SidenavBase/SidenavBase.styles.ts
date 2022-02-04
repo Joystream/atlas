@@ -81,8 +81,6 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
   &[data-badge]::after {
     left: ${sizes(12)};
     top: ${sizes(3)};
-    color: blue;
-    background-color: green;
 
     ${media.md} {
       transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);

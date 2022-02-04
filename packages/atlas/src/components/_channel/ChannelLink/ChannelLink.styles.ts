@@ -23,15 +23,3 @@ type AvatarProps = {
 export const StyledAvatar = styled(Avatar)<AvatarProps>`
   margin-right: ${({ withHandle }) => (withHandle ? sizes(3) : 0)};
 `
-
-type HandleProps = {
-  isSecondary: boolean
-}
-
-const secondaryTextCss = `
-  color: ${cVar('colorText')};
-`
-
-export const StyledText = styled(Text)<HandleProps>`
-  ${({ isSecondary }) => isSecondary && secondaryTextCss}
-`
