@@ -217,7 +217,7 @@ export const LegalLinksWrapper = styled.span`
   align-items: center;
   margin-top: ${sizes(6)};
   padding: ${sizes(4)} 0 ${sizes(6)};
-  border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
+  border-top: 1px solid ${cVar('colorBorderMuted')};
 
   > * {
     color: ${oldColors.gray[300]};
