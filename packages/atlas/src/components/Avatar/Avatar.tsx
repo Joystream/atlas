@@ -8,7 +8,7 @@ import {
   AvatarSize,
   ChildrenWrapper,
   Container,
-  EditButton,
+  EditOverlay,
   NewChannelAvatar,
   SilhouetteAvatar,
   StyledImage,
@@ -42,16 +42,13 @@ export const Avatar: React.FC<AvatarProps> = ({
   newChannel,
   onError,
 }) => {
-  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation()
-    if (onClick) {
-      onClick(event)
-    }
-  }
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
 
   return (
     <Container
+      as={onClick ? 'button' : 'div'}
+      // @ts-ignore 'type' prop will only be applied if the rendered tag is 'button' so it is valid here
+      type={onClick ? 'button' : undefined}
       onClick={onClick}
       size={size}
       className={className}
@@ -60,10 +57,10 @@ export const Avatar: React.FC<AvatarProps> = ({
       isClickable={!!onClick}
     >
       {isEditable && (
-        <EditButton size={size} onClick={handleEditClick} type="button">
+        <EditOverlay size={size}>
           <SvgActionImage />
           <span>{assetUrl ? 'Edit avatar' : 'Add avatar'}</span>
-        </EditButton>
+        </EditOverlay>
       )}
       {!children &&
         (newChannel && !isEditable ? (

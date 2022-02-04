@@ -16,7 +16,7 @@ type ContainerProps = {
   withoutOutline?: boolean
 }
 
-type EditButtonProps = {
+type EditOverlayProps = {
   size: Omit<AvatarSize, 'default'>
 }
 
@@ -141,14 +141,13 @@ const getBorderStyles = ({ isLoading, isClickable, withoutOutline }: Omit<Contai
   `
 }
 
-export const EditButton = styled.button<EditButtonProps>`
-  width: 100%;
-  height: 100%;
-  border-radius: 100%;
-  cursor: pointer;
-  background: none;
-  border: none;
+export const EditOverlay = styled.div<EditOverlayProps>`
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 100%;
   z-index: 3;
   color: ${cVar('colorCoreNeutral100')};
 
@@ -180,11 +179,15 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   ${getBorderStyles};
 
   border-radius: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
+  cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'inherit')};
 `
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
