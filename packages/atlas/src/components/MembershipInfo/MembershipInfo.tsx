@@ -31,6 +31,7 @@ export type MembershipInfoProps = {
   address?: string | null
   loading?: boolean
   isOwner?: boolean
+  editable?: boolean
   className?: string
 }
 
@@ -42,6 +43,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   handle,
   loading,
   isOwner,
+  editable,
   className,
 }) => {
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
@@ -69,7 +71,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
           <MembershipInfoContainer>
             <Avatar
               size={smMatch ? 'preview' : 'channel-card'}
-              editable={isOwner}
+              editable={editable}
               onEditClick={onAvatarEditClick}
               assetUrl={avatarUrl}
               loading={loading}
@@ -86,7 +88,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
               ) : (
                 <StyledText variant="t300" secondary onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
-                  <Tooltip text="Copy address" arrowDisabled placement="top">
+                  <Tooltip text="Copy account address" arrowDisabled placement="top">
                     {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}
                   </Tooltip>
                 </StyledText>

@@ -104,8 +104,9 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }
     const handleMemberChange = (memberId: string, accountId: string, channelId: string | null) => {
       setActiveUser({ accountId, memberId, channelId })
-      if (channelId && pathname === absoluteRoutes.studio.newChannel()) {
-        navigate(absoluteRoutes.studio.editChannel())
+
+      if (channelId && pathname.search('studio') >= 0) {
+        navigate(absoluteRoutes.studio.index())
       }
       closeDropdown?.()
       setIsSwitchingMember(false)
@@ -138,6 +139,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
           // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
           event.preventDefault()
           event.stopPropagation()
+          setIsSwitchingMember(false)
           closeDropdown?.()
         }
       }

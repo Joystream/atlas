@@ -5,12 +5,12 @@ import { Text } from '@/components/Text'
 import { ChannelCard } from '@/components/_channel/ChannelCard'
 import { cVar, media, sizes } from '@/styles'
 
-export const TextContainer = styled.div`
+export const TextContainer = styled.div<{ withDivider?: boolean }>`
   display: grid;
   grid-gap: ${sizes(4)};
   padding-bottom: ${sizes(8)};
   margin-bottom: ${sizes(8)};
-  box-shadow: ${cVar('effectDividersBottom')};
+  box-shadow: ${({ withDivider }) => (withDivider ? cVar('effectDividersBottom') : 'unset')};
 `
 
 export const Details = styled.div`
