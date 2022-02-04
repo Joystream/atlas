@@ -13,7 +13,6 @@ export const FollowedChannelsWrapper = styled.div`
 `
 
 export const ChannelsTitle = styled(Text)`
-  font: ${cVar('typographyDesktopH100')};
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;

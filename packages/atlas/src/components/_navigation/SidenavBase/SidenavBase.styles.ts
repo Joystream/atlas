@@ -218,7 +218,6 @@ export const LegalLinksWrapper = styled.span`
   margin-top: ${sizes(6)};
   padding: ${sizes(4)} 0 ${sizes(6)};
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  font: ${cVar('typographyDesktopT100')};
 
   > * {
     color: ${oldColors.gray[300]};

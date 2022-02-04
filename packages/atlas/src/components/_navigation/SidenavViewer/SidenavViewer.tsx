@@ -28,7 +28,7 @@ export const SidenavViewer: React.FC = () => {
   const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
 
   const buttonsContent = !isLoggedIn ? (
-    <Button size="large" icon={<SvgActionMember />} onClick={signIn}>
+    <Button icon={<SvgActionMember />} onClick={signIn}>
       Sign in
     </Button>
   ) : (

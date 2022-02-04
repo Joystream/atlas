@@ -3,6 +3,7 @@ import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
+import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
@@ -98,7 +99,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
               <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
-                Terms of Service
+                <Text variant="t100">Terms of Service</Text>
               </LegalLink>
               <span>•</span>
               <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
