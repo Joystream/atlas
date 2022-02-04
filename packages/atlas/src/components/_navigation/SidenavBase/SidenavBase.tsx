@@ -99,7 +99,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
               <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
-                <Text variant="t100">Terms of Service</Text>
+                <Text variant="t100" secondary>Terms of Service</Text>
               </LegalLink>
               <span>•</span>
               <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">

@@ -51,7 +51,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
           <ChannelsList>
             {channels.map(({ id }) => (
               <ChannelsItem key={id} onClick={onClick}>
-                <StyledChannelLink id={id} textSecondary={true} onNotFound={() => onChannelNotFound?.(id)} />
+                <StyledChannelLink id={id} textSecondary onNotFound={() => onChannelNotFound?.(id)} />
               </ChannelsItem>
             ))}
           </ChannelsList>
