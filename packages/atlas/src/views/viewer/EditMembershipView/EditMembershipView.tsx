@@ -89,6 +89,7 @@ export const EditMembershipView: React.FC = () => {
           onAvatarEditClick={() => setFocus('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
           loading={activeMembershipLoading}
+          editable
           handle={getValues('handle')}
         />
         <Wrapper actionBarHeight={actionBarBounds.height}>

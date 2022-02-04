@@ -28,7 +28,7 @@ export const MemberAbout = () => {
     <StyledLayoutGrid>
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
         {!!member?.about && (
-          <TextContainer>
+          <TextContainer withDivider={!!member?.channels.length}>
             <Text variant="h500">About me</Text>
             <Text variant="t300" secondary>
               {member.about}
