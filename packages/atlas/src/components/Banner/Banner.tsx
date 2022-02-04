@@ -8,7 +8,7 @@ import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton
 export type BannerProps = {
   id: string
   title?: string
-  description?: string
+  description?: React.ReactNode
   className?: string
   dismissable?: boolean
   icon?: ReactNode

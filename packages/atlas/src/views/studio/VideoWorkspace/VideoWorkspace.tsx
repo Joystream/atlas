@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useMeasure from 'react-use-measure'
 
 import { DrawerHeader } from '@/components/DrawerHeader'
@@ -8,8 +8,9 @@ import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
-import { cVar } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
+import { NFTWorkspaceForm } from './NFTWorkspaceForm'
 import { VideoForm } from './VideoForm'
 import { Container, DrawerOverlay, ScrollContainer, StyledActionBar } from './VideoWorkspace.style'
 import { useHandleVideoWorkspaceSubmit } from './hooks'
@@ -17,6 +18,9 @@ import { useHandleVideoWorkspaceSubmit } from './hooks'
 export const VideoWorkspace: React.FC = React.memo(() => {
   const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
   const [actionBarHeight, setActionBarHeight] = useState(0)
+  // todo handle switching to NFTForm
+  const [isIssuedAsNFTChecked] = useState(false)
+  const [isIssuedAsNFT, setIsIssuedAsNFT] = useState(false)
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { tabData } = useVideoWorkspaceData()
@@ -78,20 +82,36 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
           />
           <ScrollContainer actionBarHeight={actionBarHeight}>
-            <VideoForm setFormStatus={setFormStatus} onSubmit={handleSubmit} />
+            <VideoForm
+              setFormStatus={setFormStatus}
+              onSubmit={handleSubmit}
+              setIsIssuedAsNFT={setIsIssuedAsNFT}
+              isIssuedAsNFT={isIssuedAsNFT}
+            />
           </ScrollContainer>
-
-          <VideoWorkspaceActionBar
-            isEdit={isEdit}
-            // form can be submitted if both:
-            // 1. form is valid
-            // 2. the video is a new one OR the form is dirty (some edit has been made)
-            canSubmit={(formStatus?.isValid && (!isEdit || formStatus?.isDirty)) || false}
-            canReset={formStatus?.isDirty || false}
-            onSubmit={formStatus?.triggerFormSubmit}
-            onReset={formStatus?.resetForm}
-            onResize={setActionBarHeight}
-          />
+          <SwitchTransition>
+            <CSSTransition
+              key={String(isIssuedAsNFTChecked)}
+              classNames={transitions.names.fade}
+              timeout={parseInt(cVar('animationTimingFast', true))}
+            >
+              {!isIssuedAsNFTChecked ? (
+                <VideoWorkspaceActionBar
+                  isEdit={isEdit}
+                  // form can be submitted if both:
+                  // 1. form is valid
+                  // 2. the video is a new one OR the form is dirty (some edit has been made)
+                  canSubmit={(formStatus?.isValid && (!isEdit || formStatus?.isDirty)) || false}
+                  canReset={formStatus?.isDirty || false}
+                  onSubmit={formStatus?.triggerFormSubmit}
+                  onReset={formStatus?.resetForm}
+                  onResize={setActionBarHeight}
+                />
+              ) : (
+                <NFTWorkspaceForm />
+              )}
+            </CSSTransition>
+          </SwitchTransition>
         </Container>
       </CSSTransition>
     </>
