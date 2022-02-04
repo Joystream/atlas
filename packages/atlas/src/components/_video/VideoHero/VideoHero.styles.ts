@@ -94,6 +94,6 @@ export const ButtonsContainer = styled.div`
   }
 `
 
-export const TitleText = styled(Text)`
-  overflow-y: auto;
+export const TitleText = styled(Text)<IsCategoryProp>`
+  ${({ isCategory }) => (isCategory ? `overflow-y: auto` : ``)};
 `

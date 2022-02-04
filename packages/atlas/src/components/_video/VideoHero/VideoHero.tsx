@@ -88,7 +88,9 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
-                      <TitleText variant={smMatch ? 'h700' : 'h500'}>{videoHeroData.heroTitle}</TitleText>
+                      <TitleText isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
+                        {videoHeroData.heroTitle}
+                      </TitleText>
                     </Link>
                   ) : smMatch ? (
                     <SkeletonLoader height={48} width={360} />
