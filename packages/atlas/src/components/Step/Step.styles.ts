@@ -13,12 +13,12 @@ const truncateText = css`
   text-overflow: ellipsis;
 `
 
-const stepperVariantStyles = (stepType: StepType, stepVariant?: StepVariant) => {
+const stepperVariantStyles = ({ stepType, stepVariant, showOtherStepsOnMobile }: StepWrapperProps) => {
   switch (stepType) {
     case 'default':
       return css`
         padding: 0;
-        display: ${stepVariant === 'current' ? 'flex' : 'none'};
+        display: ${stepVariant === 'current' || showOtherStepsOnMobile ? 'flex' : 'none'};
         align-items: center;
 
         ${media.sm} {
@@ -45,6 +45,7 @@ const stepperVariantStyles = (stepType: StepType, stepVariant?: StepVariant) => 
 
 type StepWrapperProps = {
   disabled?: boolean
+  showOtherStepsOnMobile?: boolean
   stepVariant?: StepVariant
   stepType?: StepType
 }
@@ -60,7 +61,7 @@ export const StepWrapper = styled.div<StepWrapperProps>`
     background-color ${transitions.timings.routing} ${transitions.easing};
   ${truncateText}
 
-  ${({ stepType = 'default', stepVariant }) => stepperVariantStyles(stepType, stepVariant)};
+  ${stepperVariantStyles};
 
   &[aria-disabled='true'] {
     opacity: 0.6;
