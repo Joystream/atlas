@@ -3,10 +3,11 @@ import styled from '@emotion/styled'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { SvgActionWarning } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleArea } from '@/components/_inputs/TitleArea'
-import { media, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
@@ -89,4 +90,29 @@ export const DeleteVideoButton = styled(Button)`
 
 export const ExtendedMarginFormField = styled(FormField)`
   margin-top: ${sizes(10)};
+`
+
+export const SwitchFormField = styled(FormField)`
+  padding: ${sizes(10)} 0;
+  border-top: 1px solid ${cVar('colorCoreNeutral700')};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+`
+
+export const SwitchNFTWrapper = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 4px;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: ${sizes(4)};
+`
+
+export const StyledSvgWarning = styled(SvgActionWarning)`
+  path {
+    fill: ${cVar('colorCoreYellow100')};
+  }
+`
+
+export const YellowText = styled(Text)`
+  color: ${cVar('colorCoreYellow100')};
 `
