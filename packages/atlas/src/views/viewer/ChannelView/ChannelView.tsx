@@ -1,3 +1,4 @@
+import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -18,6 +19,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
@@ -97,6 +99,7 @@ export const ChannelView: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const {
@@ -131,6 +134,12 @@ export const ChannelView: React.FC = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
     }
   )
+
+  const channelMetaTags = useMemo(() => {
+    if (!channel || !avatarPhotoUrl) return {}
+    return generateChannelMetaTags(channel, avatarPhotoUrl)
+  }, [channel, avatarPhotoUrl])
+  const headTags = useHeadTags(channel?.title, channelMetaTags)
 
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
@@ -241,6 +250,7 @@ export const ChannelView: React.FC = () => {
 
   return (
     <ViewWrapper>
+      {headTags}
       <ChannelCover assetUrl={coverPhotoUrl} />
       <LimitedWidthContainer>
         {smMatch ? (

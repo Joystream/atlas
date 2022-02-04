@@ -7,6 +7,7 @@ import { MembershipInfo } from '@/components/MembershipInfo'
 import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
@@ -53,6 +54,8 @@ export const EditMembershipView: React.FC = () => {
     }
   }, [activeMembership, activeMembershipLoading, resetForm])
 
+  const headTags = useHeadTags('Edit membership')
+
   const handleEditMember = handleSubmit(async (formData) => {
     if (!joystream || !activeMembership) {
       return
@@ -82,6 +85,7 @@ export const EditMembershipView: React.FC = () => {
 
   return (
     <form onSubmit={handleEditMember}>
+      {headTags}
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}

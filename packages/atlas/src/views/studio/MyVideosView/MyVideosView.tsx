@@ -15,6 +15,7 @@ import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { chanelUnseenDraftsSelector, channelDraftsSelector, useDraftStore } from '@/providers/drafts'
@@ -45,6 +46,7 @@ const REMOVE_DRAFT_SNACKBAR = 'REMOVE_DRAFT_SNACKBAR'
 const SNACKBAR_TIMEOUT = 5000
 
 export const MyVideosView = () => {
+  const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
   const { setVideoWorkspaceState, videoTabs, addVideoTab, setSelectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
@@ -287,6 +289,7 @@ export const MyVideosView = () => {
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: tab === 'Drafts' ? unseenDrafts.length : 0 }))
   return (
     <LimitedWidthContainer>
+      {headTags}
       <StyledText variant="h700">My videos</StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton

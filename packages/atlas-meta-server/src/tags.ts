@@ -1,6 +1,6 @@
 import { formatISODuration } from 'date-fns'
 
-import { GetChannelQuery, GetVideoQuery } from './api/__generated__/sdk'
+import { BasicChannelFieldsFragment, BasicVideoFieldsFragment } from './api/__generated__/sdk'
 import { joinUrlFragments } from './utils'
 
 const BASE_ATLAS_URL = 'https://play.joystream.org'
@@ -15,9 +15,7 @@ type SchemaOrgTag = {
   prop: string
   value: unknown
 }
-type MetaTags = Record<string, string | number>
-type VideoData = NonNullable<GetVideoQuery['videoByUniqueInput']>
-type ChannelData = NonNullable<GetChannelQuery['channelByUniqueInput']>
+export type MetaTags = Record<string, string | number>
 
 const commonMetaTags = {
   'twitter:site': '@JoystreamDAO',
@@ -34,7 +32,7 @@ const sanitizeDescription = (fullDescription: string) => {
   return needsTrimming ? oneLineDescription.slice(0, 157) + '...' : oneLineDescription
 }
 
-export const generateVideoMetaTags = (video: VideoData, thumbnailUrl: string): MetaTags => {
+export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnailUrl: string): MetaTags => {
   const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
   const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
   const sanitizedDescription = sanitizeDescription(video.description || '')
@@ -62,7 +60,7 @@ export const generateVideoMetaTags = (video: VideoData, thumbnailUrl: string): M
   }
 }
 
-export const generateChannelMetaTags = (channel: ChannelData, avatarUrl: string): MetaTags => {
+export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, avatarUrl: string): MetaTags => {
   const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', channel.id)
   const sanitizedDescription = sanitizeDescription(channel.description || '')
 
@@ -81,7 +79,7 @@ export const generateChannelMetaTags = (channel: ChannelData, avatarUrl: string)
   }
 }
 
-export const generateVideoSchemaTagsHtml = (video: VideoData, thumbnailUrl: string) => {
+export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thumbnailUrl: string) => {
   const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
   const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', video.channel.id)
   const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
@@ -187,7 +185,7 @@ export const generateVideoSchemaTagsHtml = (video: VideoData, thumbnailUrl: stri
   return htmlTags.join('\n')
 }
 
-export const generateChannelSchemaTagsHtml = (channel: ChannelData, avatarUrl: string) => {
+export const generateChannelSchemaTagsHtml = (channel: BasicChannelFieldsFragment, avatarUrl: string) => {
   const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', channel.id)
 
   const schemaOrgTags: SchemaOrgTag[] = [

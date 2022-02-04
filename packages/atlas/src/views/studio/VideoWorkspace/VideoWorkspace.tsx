@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { VideoWorkspaceState, VideoWorkspaceTab, useVideoWorkspace } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
@@ -25,6 +26,9 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   } = useVideoWorkspace()
   const selectedVideoTab = videoTabs[selectedVideoTabIdx] as VideoWorkspaceTab | undefined
   const { openWarningDialog } = useDisplayDataLostWarning()
+
+  const isEdit = !selectedVideoTab?.isDraft
+  const headTags = useHeadTags(isEdit ? 'Edit video' : 'New video')
 
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -110,6 +114,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   return (
     <>
+      {dialogState === 'open' && headTags}
       <CSSTransition
         in={['open', 'maximized'].includes(dialogState)}
         mountOnEnter

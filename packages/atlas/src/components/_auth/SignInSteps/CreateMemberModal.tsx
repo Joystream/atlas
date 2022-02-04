@@ -6,10 +6,8 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
-import { QUERY_PARAMS } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -27,10 +25,13 @@ type Inputs = {
   about: string | null
 }
 
-export const CreateMemberModal: React.FC = () => {
+type CreateMemberModalProps = {
+  show: boolean
+}
+
+export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) => {
   const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -133,7 +134,7 @@ export const CreateMemberModal: React.FC = () => {
   return (
     <StyledDialogModal
       title="Create a Joystream membership"
-      show={step === 'member' && accountSet && !isCreatingMembership}
+      show={show && accountSet && !isCreatingMembership}
       dividers
       as="form"
       onSubmit={handleCreateMember}

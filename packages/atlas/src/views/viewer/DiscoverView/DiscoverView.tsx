@@ -5,6 +5,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
@@ -67,12 +68,15 @@ export const DiscoverView: React.FC = () => {
   )
   const isMdBreakpoint = useMediaMatch('md')
 
+  const headTags = useHeadTags('Discover')
+
   if (error) {
     return <ViewErrorFallback />
   }
 
   return (
     <StyledLimitedWidthContainer big>
+      {headTags}
       <Text variant="h700">Discover</Text>
       {featuredVideoCategoryCardsData && (
         <FeaturedCategoriesContainer>

@@ -15,6 +15,7 @@ import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
@@ -43,6 +44,8 @@ export const CategoryView = () => {
   )
   const currentCategory = mappedVideoCategories?.find((category) => category.id === id)
 
+  const headTags = useHeadTags(currentCategory?.name)
+
   const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(id)
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
@@ -58,6 +61,7 @@ export const CategoryView = () => {
   }
   return (
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
+      {headTags}
       <VideoCategoryHero
         header={{
           title: currentCategory?.name ?? undefined,
