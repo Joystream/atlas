@@ -70,4 +70,10 @@ export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
 
 export const MemberLink = styled(Button)`
   justify-content: start;
+
+  &,
+  * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `

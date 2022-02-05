@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { Avatar, AvatarProps } from './Avatar'
+import { Avatar } from './Avatar'
 
 export default {
   title: 'other/Avatar',
@@ -19,15 +19,15 @@ export default {
       defaultValue: 'channel',
     },
     editable: { type: 'boolean', defaultValue: false },
+    clickable: { type: 'boolean', defaultValue: false },
     loading: { type: 'boolean', defaultValue: false },
   },
 } as Meta
 
-const Template: Story<AvatarProps> = (args) => <Avatar {...args} />
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Template: Story<any> = (args) => (
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  <Avatar {...args} onClick={args.editable || args.clickable ? () => {} : undefined} />
+)
 
 export const Default = Template.bind({})
-
-export const WithAvatar = Template.bind({})
-WithAvatar.args = {
-  assetUrl: 'https://picsum.photos/200/300',
-}

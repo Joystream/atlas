@@ -12,10 +12,13 @@ export type AvatarSize = 'preview' | 'cover' | 'default' | 'fill' | 'bid' | 'sma
 type ContainerProps = {
   size: AvatarSize
   isLoading?: boolean
+  isClickable: boolean
   withoutOutline?: boolean
+  // allow passing 'type' prop to Container because it can be rendered as 'button' depending on context
+  type?: 'button'
 }
 
-type EditButtonProps = {
+type EditOverlayProps = {
   size: Omit<AvatarSize, 'default'>
 }
 
@@ -107,48 +110,46 @@ export const sharedAvatarHoverStyles = css`
     box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral200')};
   }
 `
-export const sharedAvataActiveStyles = css`
+export const sharedAvatarActiveStyles = css`
   ::after {
     box-shadow: inset 0 0 0 2px ${cVar('colorCoreBlue500')};
   }
 `
 
-const getBorderStyles = ({ isLoading, withoutOutline }: Omit<ContainerProps, 'size'>) => {
-  if (withoutOutline) {
+const getBorderStyles = ({ isLoading, isClickable, withoutOutline }: Omit<ContainerProps, 'size'>) => {
+  if (withoutOutline || isLoading) {
     return
   }
-  if (!isLoading) {
-    return css`
-      ::after {
-        ${square('100%')};
 
-        content: '';
-        display: block;
-        border-radius: 50%;
-        z-index: ${zIndex.overlay};
-        pointer-events: none;
-        box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-      }
+  return css`
+    ::after {
+      ${square('100%')};
 
-      :hover {
-        ${sharedAvatarHoverStyles};
-      }
+      content: '';
+      display: block;
+      border-radius: 50%;
+      z-index: ${zIndex.overlay};
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+    }
 
-      :active {
-        ${sharedAvataActiveStyles}
-      }
-    `
-  }
+    :hover {
+      ${isClickable && sharedAvatarHoverStyles};
+    }
+
+    :active {
+      ${isClickable && sharedAvatarActiveStyles};
+    }
+  `
 }
 
-export const EditButton = styled.button<EditButtonProps>`
-  width: 100%;
-  height: 100%;
-  border-radius: 100%;
-  cursor: pointer;
-  background: none;
-  border: none;
+export const EditOverlay = styled.div<EditOverlayProps>`
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 100%;
   z-index: 3;
   color: ${cVar('colorCoreNeutral100')};
 
@@ -180,11 +181,15 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   ${getBorderStyles};
 
   border-radius: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
+  cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'inherit')};
 `
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
