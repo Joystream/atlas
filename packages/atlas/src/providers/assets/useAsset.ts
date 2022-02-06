@@ -4,7 +4,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries'
 
 import { useAssetStore } from './store'
 
-export const useAsset = (dataObject: StorageDataObjectFieldsFragment | null | undefined) => {
+export const useAsset = (dataObject?: StorageDataObjectFieldsFragment | null) => {
   const contentId = dataObject?.id ?? null
   const asset = useAssetStore((state) => (contentId ? state.assets[contentId] : null))
   const pendingAsset = useAssetStore((state) => (contentId ? state.pendingAssets[contentId] : null))

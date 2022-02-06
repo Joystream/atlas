@@ -5,6 +5,7 @@ import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
+import { useCategoriesMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createLookup } from '@/utils/data'
@@ -15,14 +16,10 @@ import {
   StyledGridHeadingContainer,
   StyledLimitedWidthContainer,
 } from './DiscoverView.styles'
-import { videoCategories } from './data'
 
 export const DiscoverView: React.FC = () => {
   const { categories } = useCategories()
-  const mappedVideoCategories = categories?.map((category) => ({
-    ...videoCategories[category.id],
-    ...category,
-  }))
+  const mappedVideoCategories = useCategoriesMatch()
 
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
 

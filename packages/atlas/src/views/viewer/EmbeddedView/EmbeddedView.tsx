@@ -1,6 +1,6 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -11,6 +11,7 @@ import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 
@@ -28,14 +29,7 @@ export const EmbeddedView: React.FC = () => {
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
 
-  const [startTimestamp, setStartTimestamp] = useState<number>()
-  useEffect(() => {
-    const duration = video?.duration ?? 0
-    if (!timestampFromQuery || timestampFromQuery > duration) {
-      return
-    }
-    setStartTimestamp(timestampFromQuery)
-  }, [video?.duration, timestampFromQuery])
+  const { startTimestamp } = useVideoStartTimestamp(timestampFromQuery, video?.duration)
 
   const channelId = video?.channel?.id
   const videoId = video?.id

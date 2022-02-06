@@ -3,13 +3,8 @@ import React, { useMemo } from 'react'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import {
-  CallToActionButton,
-  CallToActionButtonProps,
-  CallToActionWrapper,
-} from '@/components/_buttons/CallToActionButton'
-import { SvgSidebarChannels, SvgSidebarHome, SvgSidebarNew, SvgSidebarPopular } from '@/components/_icons'
-import { absoluteRoutes } from '@/config/routes'
+import { CallToActionButton, CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
+import { CTA_MAP } from '@/config/cta'
 import { cVar, media, sizes } from '@/styles'
 import { CtaData } from '@/types/cta'
 
@@ -18,46 +13,9 @@ type VideoContentTemplateProps = {
   cta?: CtaData[]
 }
 
-const CTA_MAP: Record<string, CallToActionButtonProps> = {
-  home: {
-    label: 'Home',
-    to: absoluteRoutes.viewer.index(),
-    colorVariant: 'yellow',
-    icon: <SvgSidebarHome />,
-  },
-  new: {
-    label: 'New & Noteworthy',
-    to: absoluteRoutes.viewer.new(),
-    colorVariant: 'green',
-    icon: <SvgSidebarNew />,
-  },
-  channels: {
-    label: 'Browse channels',
-    to: absoluteRoutes.viewer.channels(),
-    colorVariant: 'blue',
-    icon: <SvgSidebarChannels />,
-  },
-  popular: {
-    label: 'Popular on Joystream',
-    to: absoluteRoutes.viewer.popular(),
-    colorVariant: 'red',
-    icon: <SvgSidebarPopular />,
-  },
-}
-
 export const VideoContentTemplate: React.FC<VideoContentTemplateProps> = ({ children, title, cta }) => {
   const ctaContent = useMemo(
-    () =>
-      cta &&
-      cta.map((item, idx) => (
-        <CallToActionButton
-          key={`cta-${idx}`}
-          label={CTA_MAP[item].label}
-          to={CTA_MAP[item].to}
-          colorVariant={CTA_MAP[item].colorVariant}
-          icon={CTA_MAP[item].icon}
-        />
-      )),
+    () => cta && cta.map((item, idx) => <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />),
     [cta]
   )
 
