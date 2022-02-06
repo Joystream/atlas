@@ -26,13 +26,10 @@ import {
   StyledTopbarBase,
 } from './TopbarViewer.styles'
 
-const EXTENSION_TIMEOUT = 1500
-
 export const TopbarViewer: React.FC = () => {
   const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn, activeMembershipLoading } =
     useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
-  const [extensionTimeoutPassed, setExtensionTimeoutPassed] = useState(false)
 
   const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
 
@@ -44,19 +41,6 @@ export const TopbarViewer: React.FC = () => {
     searchQuery,
     actions: { setSearchOpen, setSearchQuery },
   } = useSearchStore()
-
-  useEffect(() => {
-    if (extensionConnected) {
-      return
-    }
-    const timeout = setTimeout(() => {
-      setExtensionTimeoutPassed(true)
-    }, EXTENSION_TIMEOUT)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [extensionConnected])
 
   useEffect(() => {
     if (searchOpen) {
@@ -99,7 +83,7 @@ export const TopbarViewer: React.FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
-  const topbarButtonLoaded = extensionConnected !== null || extensionTimeoutPassed
+  const topbarButtonLoaded = extensionConnected !== null
 
   return (
     <>
