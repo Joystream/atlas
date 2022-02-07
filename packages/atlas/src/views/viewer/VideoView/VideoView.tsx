@@ -279,7 +279,7 @@ export const VideoView: React.FC = () => {
                 </LicenseContainer>
                 <CategoryWrapper>
                   <DescriptionTitle variant="h100">Category</DescriptionTitle>
-                  <Category>
+                  <Category to={absoluteRoutes.viewer.category(category?.id)}>
                     {category?.icon}
                     <Text variant={mdMatch ? 't300' : 't200'} secondary>
                       {category?.name}

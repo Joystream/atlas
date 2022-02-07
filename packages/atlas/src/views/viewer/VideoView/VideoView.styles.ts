@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -76,9 +77,10 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
-export const Category = styled.div`
+export const Category = styled(Link)`
   display: flex;
   align-items: center;
+  text-decoration: none;
 
   svg {
     margin-right: ${sizes(2)};

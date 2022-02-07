@@ -50,7 +50,7 @@ export const MoreVideos: React.FC<MoreVideosProps> = ({ channelId, channelName, 
         <Button to={linkUrl} variant="secondary" icon={<SvgActionChevronR />} iconOnly />
       </MoreFrom>
       <LayoutGrid>{gridContent}</LayoutGrid>
-      <SeeMoreButton to={linkUrl} variant="tertiary" icon={<SvgActionChevronR />} iconPlacement="right">
+      <SeeMoreButton to={linkUrl} variant="tertiary" icon={<SvgActionChevronR />} iconPlacement="right" size="large">
         See the {type === 'channel' ? 'channel' : 'category page'}
       </SeeMoreButton>
     </MoreVideosContainer>

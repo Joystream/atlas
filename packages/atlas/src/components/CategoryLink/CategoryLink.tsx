@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { TextVariant } from '@/components/Text'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { CircleDefaultBackground } from '@/components/_video/VideoCategoryCard/VideoCategoryCard.style'
 import { videoCategories } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
@@ -43,7 +44,8 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
       className={className}
     >
       {!hideIcon && id ? (
-        <IconWrapper withHandle={!hideHandle} color={videoCategories[id].color}>
+        <IconWrapper withHandle={!hideHandle}>
+          <CircleDefaultBackground color={videoCategories[id].color} />
           {videoCategories[id].icon}
         </IconWrapper>
       ) : (

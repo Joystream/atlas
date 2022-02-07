@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { sizes } from '@/styles'
 import { square } from '@/styles'
-import { hexToRgb } from '@/styles/utils'
 
 type ContainerProps = {
   disabled?: boolean
@@ -18,14 +17,14 @@ export const Container = styled(Link)<ContainerProps>`
 `
 
 type IconWrapperProps = {
-  color: string
   withHandle: boolean
 }
 
 export const IconWrapper = styled.div<IconWrapperProps>`
   ${square(40)}
+  position: relative;
   border-radius: 50%;
-  background-color: ${({ color }) => `rgba(${hexToRgb(color)}, 0.2) `};
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
