@@ -113,8 +113,8 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
                   key={position}
                   type={properties.type}
                   position={position as keyof SlotsObject}
-                  onMouseMove={() => clickable && setActiveDisabled(true)}
-                  onMouseOut={() => clickable && setActiveDisabled(false)}
+                  onMouseMove={() => clickable && properties.clickable && setActiveDisabled(true)}
+                  onMouseOut={() => clickable && properties.clickable && setActiveDisabled(false)}
                 >
                   {properties.element}
                 </SlotContainer>
