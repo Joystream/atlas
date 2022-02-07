@@ -221,6 +221,7 @@ export const LegalLinksWrapper = styled.span`
   margin-top: ${sizes(6)};
   padding: ${sizes(6)} 0;
   border-top: 1px solid ${cVar('colorBorderMuted')};
+  color: ${cVar('colorTextMuted')} !important;
 
   > * + * {
     margin-left: ${sizes(2)};
