@@ -3,7 +3,6 @@ import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
-import { Text } from '@/components/Text'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
