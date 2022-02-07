@@ -31,11 +31,6 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
   onClick,
   onChannelNotFound,
 }) => {
-  const [isShowingMore, setIsShowingMore] = useState(false)
-
-  const numberOfChannels = followedChannels.length
-  const channelsToSlice = isShowingMore ? numberOfChannels : MAX_CHANNELS
-  const channels = followedChannels.slice(0, channelsToSlice)
   return (
     <CSSTransition
       in={expanded}
@@ -49,7 +44,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
         </ChannelsTitle>
         <ChannelsWrapper>
           <ChannelsList>
-            {channels.map(({ id }) => (
+            {followedChannels.map(({ id }) => (
               <ChannelsItem key={id} onClick={onClick}>
                 <StyledChannelLink
                   id={id}
@@ -60,12 +55,6 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
               </ChannelsItem>
             ))}
           </ChannelsList>
-          {numberOfChannels > MAX_CHANNELS && (
-            <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
-              <ShowMoreIconWrapper>{isShowingMore ? <SvgActionChevronT /> : <SvgActionChevronB />}</ShowMoreIconWrapper>
-              {isShowingMore ? <span>Show Less</span> : <span>Show {numberOfChannels - MAX_CHANNELS} More</span>}
-            </ShowMoreButton>
-          )}
         </ChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>
