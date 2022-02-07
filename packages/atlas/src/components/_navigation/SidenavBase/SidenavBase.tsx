@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, createRef } from 'react'
 import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
@@ -56,6 +56,12 @@ const SidenavBase: React.FC<SidenavProps> = ({
   toggleSideNav,
   className,
 }) => {
+  const scrollContainer = createRef<HTMLDivElement>()
+  const scrollAndToggle = (expended: boolean) => {
+    scrollContainer?.current && scrollContainer.current.scrollTo(0, 0)
+    toggleSideNav(expended)
+  }
+
   return (
     <>
       <CSSTransition
@@ -64,13 +70,13 @@ const SidenavBase: React.FC<SidenavProps> = ({
         timeout={parseInt(transitions.timings.loading)}
         classNames={transitions.names.fade}
       >
-        <DrawerOverlay onClick={() => toggleSideNav(false)} />
+        <DrawerOverlay onClick={() => scrollAndToggle(false)} />
       </CSSTransition>
       <SidebarNav expanded={expanded} className={className}>
-        <LogoLink to={logoLinkUrl} onClick={() => toggleSideNav(false)} tabIndex={expanded ? 0 : -1}>
+        <LogoLink to={logoLinkUrl} onClick={() => scrollAndToggle(false)} tabIndex={expanded ? 0 : -1}>
           {logoNode}
         </LogoLink>
-        <ScrollContainer>
+        <ScrollContainer ref={scrollContainer}>
           <SidebarNavList>
             {items.map((item) => (
               <NavItem
@@ -79,7 +85,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
                 expanded={expanded}
                 subitems={item.subitems}
                 itemName={item.name}
-                onClick={() => toggleSideNav(false)}
+                onClick={() => scrollAndToggle(false)}
                 badgeNumber={item.badgeNumber}
               >
                 {item.icon}
@@ -99,7 +105,9 @@ const SidenavBase: React.FC<SidenavProps> = ({
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
               <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
-                <Text variant="t100" secondary>Terms of Service</Text>
+                <Text variant="t100" secondary>
+                  Terms of Service
+                </Text>
               </LegalLink>
               <span>•</span>
               <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
@@ -109,7 +117,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
           </SidebarNavFooter>
         </CSSTransition>
       </SidebarNav>
-      <StyledHamburgerButton active={expanded} onClick={() => toggleSideNav(!expanded)} />
+      <StyledHamburgerButton active={expanded} onClick={() => scrollAndToggle(!expanded)} />
     </>
   )
 }
