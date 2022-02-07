@@ -47,7 +47,9 @@ export const OverviewContainer = styled.div`
   }
 `
 
-export const ActivityItemContainer = styled.div<{ loading: boolean }>`
+export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<{
+  loading?: boolean
+}>`
   padding: ${sizes(4)};
   display: grid;
   gap: ${sizes(4)};

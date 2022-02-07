@@ -3,7 +3,7 @@ import React from 'react'
 
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 
-import { ActivityItem, ActivityItemProps } from './MemberActivity'
+import { ActivityItem, ActivityItemProps } from './ActivityItem'
 
 export default {
   title: 'Other/ActivityItem',
