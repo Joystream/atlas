@@ -56,8 +56,9 @@ export type MemberDropdownProps = {
 export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const [accountBalance, setAccountBalance] = useState<number | undefined>(undefined)
-    const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const { pathname } = useLocation()
+
+    const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
@@ -79,6 +80,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       onStart: () => setIsAnimatingSwitchMember(true),
     })
 
+    const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
     const hasOneMember = memberships?.length === 1
 
     const handleAddNewChannel = () => {
@@ -107,14 +109,12 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
 
       closeDropdown?.()
       setIsSwitchingMember(false)
-      if (pathname.search('studio') === -1) {
+
+      if (isStudio) {
         return
       }
-      if (!channelId) {
-        navigate(absoluteRoutes.studio.signIn())
-      } else {
-        navigate(absoluteRoutes.studio.index())
-      }
+
+      navigate(absoluteRoutes.studio.index())
     }
 
     useEffect(() => {

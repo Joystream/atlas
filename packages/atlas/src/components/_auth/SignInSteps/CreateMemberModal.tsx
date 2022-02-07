@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useMatch, useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
@@ -35,6 +35,8 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const isSignIn = useMatch(absoluteRoutes.studio.signIn())
+  const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
@@ -82,8 +84,8 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
         iconType: 'success',
       })
 
-      if (pathname.search('studio') >= 0) {
-        navigate(absoluteRoutes.studio.signIn())
+      if (isStudio) {
+        navigate(isSignIn ? absoluteRoutes.studio.newChannel() : absoluteRoutes.studio.signIn())
       } else {
         navigate(pathname)
       }
@@ -92,6 +94,8 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
     activeAccountId,
     closeCreatingMemberDialog,
     displaySnackbar,
+    isSignIn,
+    isStudio,
     membershipBlock,
     navigate,
     pathname,
