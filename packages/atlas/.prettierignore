@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.yarn/
+.coverage
+tsconfig.json
+.history
+
+# don't prettify minified animation JSONs
+src/assets/animations
+
+src/api/schemas
+src/data

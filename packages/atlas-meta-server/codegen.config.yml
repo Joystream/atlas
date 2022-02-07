@@ -1,0 +1,26 @@
+overwrite: true
+
+schema: ${GRAPHQL_URL}
+
+documents:
+  - './src/api/*.graphql'
+
+config:
+  scalars:
+    DateTime: Date
+    BigInt: number
+  preResolveTypes: true # avoid using Pick
+
+generates:
+  src/api/schema.json:
+    plugins:
+      - introspection
+  src/api/__generated__/sdk.ts:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+        - eslint --fix
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

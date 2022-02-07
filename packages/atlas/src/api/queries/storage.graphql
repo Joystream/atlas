@@ -1,0 +1,51 @@
+fragment StorageDataObjectFields on StorageDataObject {
+  id
+  createdAt
+  size
+  isAccepted
+  ipfsHash
+  storageBag {
+    id
+  }
+  type {
+    __typename
+  }
+}
+
+fragment DistributionBucketOperatorField on DistributionBucketOperator {
+  id
+  metadata {
+    nodeEndpoint
+  }
+  status
+}
+
+query GetDistributionBucketsWithOperators {
+  distributionBuckets(limit: 50, where: { distributing_eq: true }) {
+    id
+    bags {
+      id
+    }
+    operators {
+      ...DistributionBucketOperatorField
+    }
+  }
+}
+
+query GetStorageBuckets {
+  storageBuckets(
+    limit: 50
+    where: {
+      operatorStatus_json: { isTypeOf_eq: "StorageBucketOperatorStatusActive" }
+      operatorMetadata: { nodeEndpoint_contains: "http" }
+    }
+  ) {
+    id
+    operatorMetadata {
+      nodeEndpoint
+    }
+    bags {
+      id
+    }
+  }
+}

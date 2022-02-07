@@ -1,0 +1,23 @@
+fragment BasicMembershipFields on Membership {
+  id
+  handle
+  avatarUri
+  about
+  controllerAccount
+  createdAt
+  channels {
+    ...BasicChannelFields
+  }
+}
+
+query GetMembership($where: MembershipWhereUniqueInput!) {
+  membershipByUniqueInput(where: $where) {
+    ...BasicMembershipFields
+  }
+}
+
+query GetMemberships($where: MembershipWhereInput!) {
+  memberships(where: $where, orderBy: [createdAt_ASC]) {
+    ...BasicMembershipFields
+  }
+}

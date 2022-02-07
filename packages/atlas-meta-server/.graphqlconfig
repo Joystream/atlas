@@ -1,0 +1,4 @@
+{
+  "name": "Orion schema",
+  "schemaPath": "./src/api/schema.json"
+}

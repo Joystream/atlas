@@ -12,7 +12,7 @@ lerna-debug.log*
 .cache/
 .now
 dist/
-storybook-static
+dist-storybook
 
 .history
 .idea
