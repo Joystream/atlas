@@ -4,7 +4,7 @@ import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/components/Badge'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const NAVBAR_LEFT_PADDING = 24
