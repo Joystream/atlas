@@ -14,6 +14,7 @@ This document tries to outline all the conventions/tools/services used to make A
 - [Zustand](https://github.com/pmndrs/zustand) - for simple local state management
 
 ### Monorepo
+
 Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/features/workspaces) and because of that, to install new dependency from root, you need to use the following pattern: `yarn workspace [package_name] add [dependency_name]`. You also have the option to install dependencies directly from package directory using `yarn add [package_name]`
 
 ### Repo structure
@@ -45,6 +46,7 @@ Please note that this repo is based on [Yarn Workspaces](https://yarnpkg.com/fea
       - `main.tsx` - app entry-point
       - `App.tsx` - React entry-point
   - `atlas-meta-server` - meta tags pre-rendering server
+  - `atlas-cloudflare-worker` - Cloudflare Worker to enable Atlas social previews on Cloudflare edge network
 
 ### DevOps
 
@@ -59,7 +61,7 @@ Because social media crawling bots can't handle SPA apps, we decided to pre-rend
 There are 2 methods of handling the incoming traffic and redirecting:
 
 1. For self-hosted version of Atlas - docker-compose setup located in `ci/` directory. This will run docker-compose with NGINX that redirects any incoming traffic. Social crawlers' requests get sent to `atlas-meta-server` instance, and otherwise static files are served.
-2. For jsgenesis-run Atlas production instance - Cloudflare Worker setup. This method uses [Cloudflare Workers](https://workers.cloudflare.com/) that runs redirection logic on Cloudflare edge network, allowing redundancy and very fast response times. If the request is a regular one, it gets redirected to Vercel deployment.
+2. For jsgenesis-run Atlas production instance - Cloudflare Worker setup located in `packages/atlas-cloudflare-worker`. This method uses [Cloudflare Workers](https://workers.cloudflare.com/) that runs redirection logic on Cloudflare edge network, allowing redundancy and very fast response times. If the request is a regular one, it gets redirected to Vercel deployment.
 
 To build and run `atlas-meta-server` for production:
 
