@@ -45,6 +45,7 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
   overflow-x: hidden;
   min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  flex-shrink: 0;
 `
 
 export const SidebarNavList = styled.ul`
@@ -221,10 +222,6 @@ export const LegalLinksWrapper = styled.span`
   padding: ${sizes(6)} 0;
   border-top: 1px solid ${cVar('colorBorderMuted')};
 
-  > * {
-    color: ${oldColors.gray[300]};
-  }
-
   > * + * {
     margin-left: ${sizes(2)};
   }
@@ -236,6 +233,7 @@ export const LegalLink = styled(Link)`
   font: ${cVar('typographyDesktopT100')};
   letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT100TextTransform')};
+  color: ${cVar('colorTextMuted')} !important;
 
   &:hover {
     color: ${cVar('colorTextMuted')};
@@ -244,20 +242,12 @@ export const LegalLink = styled(Link)`
   &:focus {
     color: ${cVar('colorTextMuted')};
   }
-
-  &:active {
-    color: ${cVar('colorText')};
-  }
 `
 
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
   left: ${sizes(3)};
   z-index: ${zIndex.sideNav};
-
-  ${media.md} {
-    top: ${sizes(4)};
-  }
 `
 
 export const ScrollContainer = styled.div`
