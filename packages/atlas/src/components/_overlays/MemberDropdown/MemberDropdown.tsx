@@ -105,11 +105,16 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     const handleMemberChange = (memberId: string, accountId: string, channelId: string | null) => {
       setActiveUser({ accountId, memberId, channelId })
 
-      if (channelId && pathname.search('studio') >= 0) {
-        navigate(absoluteRoutes.studio.index())
-      }
       closeDropdown?.()
       setIsSwitchingMember(false)
+      if (pathname.search('studio') === -1) {
+        return
+      }
+      if (!channelId) {
+        navigate(absoluteRoutes.studio.signIn())
+      } else {
+        navigate(absoluteRoutes.studio.index())
+      }
     }
 
     useEffect(() => {

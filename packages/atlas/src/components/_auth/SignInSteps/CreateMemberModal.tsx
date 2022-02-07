@@ -6,6 +6,7 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
+import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { MemberId } from '@/joystream-lib'
@@ -80,7 +81,12 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
         description: 'Browse, watch, create, collect videos across the platform and have fun!',
         iconType: 'success',
       })
-      navigate(pathname)
+
+      if (pathname.search('studio') >= 0) {
+        navigate(absoluteRoutes.studio.signIn())
+      } else {
+        navigate(pathname)
+      }
     }
   }, [
     activeAccountId,

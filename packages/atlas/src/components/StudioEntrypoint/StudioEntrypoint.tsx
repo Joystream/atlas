@@ -37,7 +37,7 @@ export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocatio
   // signed users
   if (!activeMembershipLoading && !membershipsLoading && !channelSet && hasMemberships && memberSet) {
     if (!activeMembership?.channels.length) {
-      return <Navigate to={absoluteRoutes.studio.newChannel()} replace />
+      return <Navigate to={absoluteRoutes.studio.signIn()} replace />
     }
     return <Navigate to={enterLocation} replace />
   }
