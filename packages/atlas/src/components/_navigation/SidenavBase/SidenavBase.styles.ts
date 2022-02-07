@@ -247,6 +247,7 @@ export const LegalLink = styled(Link)`
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
   left: ${sizes(3)};
+  top: ${sizes(3)};
   z-index: ${zIndex.sideNav};
 `
 
