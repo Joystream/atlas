@@ -42,6 +42,8 @@ type ActiveUserContextValue = ActiveUserStoreActions & {
 const ActiveUserContext = React.createContext<undefined | ActiveUserContextValue>(undefined)
 ActiveUserContext.displayName = 'ActiveUserContext'
 
+const EXTENSION_TIMEOUT = 1500
+
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
@@ -58,6 +60,19 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
 
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [extensionConnected, setExtensionConnected] = useState<boolean | null | 'pending'>(null)
+
+  useEffect(() => {
+    if (extensionConnected || extensionConnected === false) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setExtensionConnected(false)
+    }, EXTENSION_TIMEOUT)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [extensionConnected])
 
   const accountsIds = (accounts || []).map((a) => a.id)
   const {
@@ -179,7 +194,6 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
 
     const account = accounts.find((a) => a.id === activeUserState.accountId)
-
     if (!account) {
       ConsoleLogger.warn('Selected accountId not found in extension accounts, resetting user')
       resetActiveUser()
