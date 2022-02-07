@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
@@ -94,6 +95,10 @@ export const ButtonsContainer = styled.div`
   }
 `
 
+const overFlowAuto = css`
+  overflow-y: auto;
+`
+
 export const TitleText = styled(Text)<IsCategoryProp>`
-  ${({ isCategory }) => (isCategory ? `overflow-y: auto` : ``)};
+  ${({ isCategory }) => isCategory && overFlowAuto};
 `
