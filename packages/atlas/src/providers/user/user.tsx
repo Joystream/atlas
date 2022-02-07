@@ -62,7 +62,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
   const [extensionConnected, setExtensionConnected] = useState<boolean | null | 'pending'>(null)
 
   useEffect(() => {
-    if (extensionConnected) {
+    if (extensionConnected || extensionConnected === false) {
       return
     }
     const timeout = setTimeout(() => {
