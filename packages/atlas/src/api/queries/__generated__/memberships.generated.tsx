@@ -174,7 +174,7 @@ export type GetMembershipLazyQueryHookResult = ReturnType<typeof useGetMembershi
 export type GetMembershipQueryResult = Apollo.QueryResult<GetMembershipQuery, GetMembershipQueryVariables>
 export const GetMembershipsDocument = gql`
   query GetMemberships($where: MembershipWhereInput!) {
-    memberships(where: $where) {
+    memberships(where: $where, orderBy: [createdAt_ASC]) {
       ...BasicMembershipFields
     }
   }

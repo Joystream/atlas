@@ -17,7 +17,7 @@ query GetMembership($where: MembershipWhereUniqueInput!) {
 }
 
 query GetMemberships($where: MembershipWhereInput!) {
-  memberships(where: $where) {
+  memberships(where: $where, orderBy: [createdAt_ASC]) {
     ...BasicMembershipFields
   }
 }
