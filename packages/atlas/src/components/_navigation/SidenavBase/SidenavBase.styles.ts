@@ -43,6 +43,8 @@ export const LogoLink = styled(Link)`
   height: var(--size-topbar-height);
   margin-left: 80px;
   text-decoration: none;
+  overflow-x: hidden;
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
 `
 
 export const SidebarNavList = styled.ul`
@@ -250,9 +252,7 @@ export const LegalLink = styled(Link)`
 
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
-  z-index: ${zIndex.sideNav};
   left: ${sizes(3)};
-  top: ${sizes(2)};
 
   ${media.md} {
     top: ${sizes(4)};
