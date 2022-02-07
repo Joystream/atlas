@@ -111,10 +111,8 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       setIsSwitchingMember(false)
 
       if (isStudio) {
-        return
+        navigate(absoluteRoutes.studio.index())
       }
-
-      navigate(absoluteRoutes.studio.index())
     }
 
     useEffect(() => {
