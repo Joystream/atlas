@@ -96,4 +96,15 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
     )
   }
 )
+
+export const getStepVariant = (currentStepIdx: number, idx: number) => {
+  if (currentStepIdx === idx) {
+    return 'current'
+  }
+  if (currentStepIdx > idx) {
+    return 'completed'
+  }
+  return 'future'
+}
+
 Step.displayName = 'Step'

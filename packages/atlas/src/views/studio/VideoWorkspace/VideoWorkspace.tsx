@@ -108,7 +108,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   onResize={setActionBarHeight}
                 />
               ) : (
-                <NFTWorkspaceForm />
+                <NFTWorkspaceForm onGoBack={() => setIsIssuedAsNFTChecked(false)} />
               )}
             </CSSTransition>
           </SwitchTransition>
