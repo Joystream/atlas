@@ -3,10 +3,10 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type GetDataObjectAvailabilityQueryVariables = Types.Exact<{
-  id_eq?: Types.Maybe<Types.Scalars['ID']>
-  id_in?: Types.Maybe<Array<Types.Scalars['ID']> | Types.Scalars['ID']>
+  id_eq?: Types.InputMaybe<Types.Scalars['ID']>
+  id_in?: Types.InputMaybe<Array<Types.Scalars['ID']> | Types.Scalars['ID']>
 }>
 
 export type GetDataObjectAvailabilityQuery = {

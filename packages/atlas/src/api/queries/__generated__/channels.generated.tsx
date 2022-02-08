@@ -4,15 +4,15 @@ import * as Apollo from '@apollo/client'
 import * as Types from './baseTypes.generated'
 import { StorageDataObjectFieldsFragmentDoc } from './storage.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
   id: string
-  title?: Types.Maybe<string>
+  title?: string | null
   createdAt: Date
   views: number
   follows: number
-  avatarPhoto?: Types.Maybe<{
+  avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -23,25 +23,25 @@ export type BasicChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
+  } | null
 }
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
-  description?: Types.Maybe<string>
-  isPublic?: Types.Maybe<boolean>
+  description?: string | null
+  isPublic?: boolean | null
   isCensored: boolean
   id: string
-  title?: Types.Maybe<string>
+  title?: string | null
   createdAt: Date
   views: number
   follows: number
-  language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-  ownerMember?: Types.Maybe<{ __typename?: 'Membership'; id: string; handle: string; avatarUri?: Types.Maybe<string> }>
-  coverPhoto?: Types.Maybe<{
+  language?: { __typename?: 'Language'; id: string; iso: string } | null
+  ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+  coverPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -52,11 +52,11 @@ export type AllChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
-  avatarPhoto?: Types.Maybe<{
+  } | null
+  avatarPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -67,10 +67,10 @@ export type AllChannelFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
+  } | null
 }
 
 export type GetBasicChannelQueryVariables = Types.Exact<{
@@ -79,14 +79,14 @@ export type GetBasicChannelQueryVariables = Types.Exact<{
 
 export type GetBasicChannelQuery = {
   __typename?: 'Query'
-  channelByUniqueInput?: Types.Maybe<{
+  channelByUniqueInput?: {
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -97,11 +97,11 @@ export type GetBasicChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-  }>
+    } | null
+  } | null
 }
 
 export type GetChannelQueryVariables = Types.Exact<{
@@ -110,24 +110,19 @@ export type GetChannelQueryVariables = Types.Exact<{
 
 export type GetChannelQuery = {
   __typename?: 'Query'
-  channelByUniqueInput?: Types.Maybe<{
+  channelByUniqueInput?: {
     __typename?: 'Channel'
-    description?: Types.Maybe<string>
-    isPublic?: Types.Maybe<boolean>
+    description?: string | null
+    isPublic?: boolean | null
     isCensored: boolean
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-    ownerMember?: Types.Maybe<{
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      avatarUri?: Types.Maybe<string>
-    }>
-    coverPhoto?: Types.Maybe<{
+    language?: { __typename?: 'Language'; id: string; iso: string } | null
+    ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+    coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -138,11 +133,11 @@ export type GetChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    avatarPhoto?: Types.Maybe<{
+    } | null
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -153,15 +148,15 @@ export type GetChannelQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-  }>
+    } | null
+  } | null
 }
 
 export type GetVideoCountQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetVideoCountQuery = {
@@ -170,31 +165,26 @@ export type GetVideoCountQuery = {
 }
 
 export type GetChannelsQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.ChannelWhereInput>
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  orderBy?: Types.Maybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
 export type GetChannelsQuery = {
   __typename?: 'Query'
   channels: Array<{
     __typename?: 'Channel'
-    description?: Types.Maybe<string>
-    isPublic?: Types.Maybe<boolean>
+    description?: string | null
+    isPublic?: boolean | null
     isCensored: boolean
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-    ownerMember?: Types.Maybe<{
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      avatarUri?: Types.Maybe<string>
-    }>
-    coverPhoto?: Types.Maybe<{
+    language?: { __typename?: 'Language'; id: string; iso: string } | null
+    ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+    coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -205,11 +195,11 @@ export type GetChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    avatarPhoto?: Types.Maybe<{
+    } | null
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -220,18 +210,18 @@ export type GetChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
 export type GetChannelsConnectionQueryVariables = Types.Exact<{
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.ChannelWhereInput>
-  orderBy?: Types.Maybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelOrderByInput> | Types.ChannelOrderByInput>
 }>
 
 export type GetChannelsConnectionQuery = {
@@ -244,22 +234,17 @@ export type GetChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
-        description?: Types.Maybe<string>
-        isPublic?: Types.Maybe<boolean>
+        description?: string | null
+        isPublic?: boolean | null
         isCensored: boolean
         id: string
-        title?: Types.Maybe<string>
+        title?: string | null
         createdAt: Date
         views: number
         follows: number
-        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-        ownerMember?: Types.Maybe<{
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          avatarUri?: Types.Maybe<string>
-        }>
-        coverPhoto?: Types.Maybe<{
+        language?: { __typename?: 'Language'; id: string; iso: string } | null
+        ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -270,11 +255,11 @@ export type GetChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
-        avatarPhoto?: Types.Maybe<{
+        } | null
+        avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -285,13 +270,13 @@ export type GetChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
+        } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
   }
 }
 
@@ -314,11 +299,11 @@ export type UnfollowChannelMutation = {
 }
 
 export type GetMostViewedChannelsConnectionQueryVariables = Types.Exact<{
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  periodDays?: Types.Maybe<Types.Scalars['Int']>
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  periodDays?: Types.InputMaybe<Types.Scalars['Int']>
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostViewedChannelsConnectionQuery = {
@@ -331,22 +316,17 @@ export type GetMostViewedChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
-        description?: Types.Maybe<string>
-        isPublic?: Types.Maybe<boolean>
+        description?: string | null
+        isPublic?: boolean | null
         isCensored: boolean
         id: string
-        title?: Types.Maybe<string>
+        title?: string | null
         createdAt: Date
         views: number
         follows: number
-        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-        ownerMember?: Types.Maybe<{
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          avatarUri?: Types.Maybe<string>
-        }>
-        coverPhoto?: Types.Maybe<{
+        language?: { __typename?: 'Language'; id: string; iso: string } | null
+        ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -357,11 +337,11 @@ export type GetMostViewedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
-        avatarPhoto?: Types.Maybe<{
+        } | null
+        avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -372,22 +352,22 @@ export type GetMostViewedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
+        } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
   }
 }
 
 export type GetMostFollowedChannelsConnectionQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int']
-  periodDays?: Types.Maybe<Types.Scalars['Int']>
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  periodDays?: Types.InputMaybe<Types.Scalars['Int']>
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetMostFollowedChannelsConnectionQuery = {
@@ -400,22 +380,17 @@ export type GetMostFollowedChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
-        description?: Types.Maybe<string>
-        isPublic?: Types.Maybe<boolean>
+        description?: string | null
+        isPublic?: boolean | null
         isCensored: boolean
         id: string
-        title?: Types.Maybe<string>
+        title?: string | null
         createdAt: Date
         views: number
         follows: number
-        language?: Types.Maybe<{ __typename?: 'Language'; id: string; iso: string }>
-        ownerMember?: Types.Maybe<{
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          avatarUri?: Types.Maybe<string>
-        }>
-        coverPhoto?: Types.Maybe<{
+        language?: { __typename?: 'Language'; id: string; iso: string } | null
+        ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+        coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -426,11 +401,11 @@ export type GetMostFollowedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
-        avatarPhoto?: Types.Maybe<{
+        } | null
+        avatarPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -441,18 +416,18 @@ export type GetMostFollowedChannelsConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
+        } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
   }
 }
 
 export type GetTop10ChannelsQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetTop10ChannelsQuery = {
@@ -460,11 +435,11 @@ export type GetTop10ChannelsQuery = {
   top10Channels: Array<{
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -475,15 +450,15 @@ export type GetTop10ChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
 export type GetPromisingChannelsQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetPromisingChannelsQuery = {
@@ -491,11 +466,11 @@ export type GetPromisingChannelsQuery = {
   promisingChannels: Array<{
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -506,15 +481,15 @@ export type GetPromisingChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
 export type GetDiscoverChannelsQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetDiscoverChannelsQuery = {
@@ -522,11 +497,11 @@ export type GetDiscoverChannelsQuery = {
   discoverChannels: Array<{
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -537,15 +512,15 @@ export type GetDiscoverChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
 export type GetPopularChannelsQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.ChannelWhereInput>
+  where?: Types.InputMaybe<Types.ChannelWhereInput>
 }>
 
 export type GetPopularChannelsQuery = {
@@ -553,11 +528,11 @@ export type GetPopularChannelsQuery = {
   popularChannels: Array<{
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -568,10 +543,10 @@ export type GetPopularChannelsQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 

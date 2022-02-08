@@ -3,12 +3,12 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type BasicWorkerFieldsFragment = {
   __typename?: 'Worker'
   id: string
   workerId: string
-  metadata?: Types.Maybe<string>
+  metadata?: string | null
   isActive: boolean
   type: Types.WorkerType
 }
@@ -19,20 +19,20 @@ export type GetWorkerQueryVariables = Types.Exact<{
 
 export type GetWorkerQuery = {
   __typename?: 'Query'
-  workerByUniqueInput?: Types.Maybe<{
+  workerByUniqueInput?: {
     __typename?: 'Worker'
     id: string
     workerId: string
-    metadata?: Types.Maybe<string>
+    metadata?: string | null
     isActive: boolean
     type: Types.WorkerType
-  }>
+  } | null
 }
 
 export type GetWorkersQueryVariables = Types.Exact<{
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  offset?: Types.Maybe<Types.Scalars['Int']>
-  where?: Types.Maybe<Types.WorkerWhereInput>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.WorkerWhereInput>
 }>
 
 export type GetWorkersQuery = {
@@ -41,7 +41,7 @@ export type GetWorkersQuery = {
     __typename?: 'Worker'
     id: string
     workerId: string
-    metadata?: Types.Maybe<string>
+    metadata?: string | null
     isActive: boolean
     type: Types.WorkerType
   }>

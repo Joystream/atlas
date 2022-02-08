@@ -3,7 +3,7 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type StorageDataObjectFieldsFragment = {
   __typename?: 'StorageDataObject'
   id: string
@@ -15,16 +15,16 @@ export type StorageDataObjectFieldsFragment = {
   type:
     | { __typename: 'DataObjectTypeChannelAvatar' }
     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+    | { __typename: 'DataObjectTypeUnknown' }
     | { __typename: 'DataObjectTypeVideoMedia' }
     | { __typename: 'DataObjectTypeVideoThumbnail' }
-    | { __typename: 'DataObjectTypeUnknown' }
 }
 
 export type DistributionBucketOperatorFieldFragment = {
   __typename?: 'DistributionBucketOperator'
   id: string
   status: Types.DistributionBucketOperatorStatus
-  metadata?: Types.Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Types.Maybe<string> }>
+  metadata?: { __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
 }
 
 export type GetDistributionBucketsWithOperatorsQueryVariables = Types.Exact<{ [key: string]: never }>
@@ -39,7 +39,7 @@ export type GetDistributionBucketsWithOperatorsQuery = {
       __typename?: 'DistributionBucketOperator'
       id: string
       status: Types.DistributionBucketOperatorStatus
-      metadata?: Types.Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Types.Maybe<string> }>
+      metadata?: { __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
     }>
   }>
 }
@@ -51,7 +51,7 @@ export type GetStorageBucketsQuery = {
   storageBuckets: Array<{
     __typename?: 'StorageBucket'
     id: string
-    operatorMetadata?: Types.Maybe<{ __typename?: 'StorageBucketOperatorMetadata'; nodeEndpoint?: Types.Maybe<string> }>
+    operatorMetadata?: { __typename?: 'StorageBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
     bags: Array<{ __typename?: 'StorageBag'; id: string }>
   }>
 }
