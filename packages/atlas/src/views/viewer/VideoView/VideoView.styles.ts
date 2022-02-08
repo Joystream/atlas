@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { GridItem } from '@/components/LayoutGrid'
+import { LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -8,19 +10,36 @@ import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
-export const PlayerContainer = styled.div`
-  width: 100%;
-  height: calc(100vw * 0.5625);
-  ${media.md} {
-    height: calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625);
-    max-height: calc(70vh);
-  }
+type CinematicView = {
+  cinematicView: boolean
+}
+
+export const PlyerGridWrapper = styled(LimitedWidthContainer)<CinematicView>`
+  max-width: ${({ cinematicView }) => cinematicView && 'unset'};
+  padding-bottom: 0;
+  margin-bottom: ${({ cinematicView }) => cinematicView && sizes(8)};
 `
 
-export const PlayerWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+export const PlayerGridItem = styled(GridItem)`
+  width: 100%;
+`
+
+export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
+  display: ${({ cinematicView }) => !cinematicView && 'flex'};
+  justify-content: ${({ cinematicView }) => !cinematicView && 'center'};
+  margin: 0 ${({ cinematicView }) => (cinematicView ? 'calc(-1 * var(--size-global-horizontal-padding))' : 0)};
+`
+
+export const PlayerContainer = styled.div<CinematicView & { calculatedHeight?: number }>`
+  width: 100%;
+  height: calc(100vw * 0.5625);
+
+  ${media.md} {
+    height: ${({ cinematicView, calculatedHeight }) =>
+      cinematicView ? 'calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625)' : `${calculatedHeight}px`};
+    max-height: ${({ cinematicView }) => cinematicView && '70vh'};
+    margin-bottom: ${({ cinematicView }) => !cinematicView && sizes(8)};
+  }
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`

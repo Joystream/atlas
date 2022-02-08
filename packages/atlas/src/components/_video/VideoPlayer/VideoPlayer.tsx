@@ -13,6 +13,8 @@ import {
   SvgControlsSmallScreen,
   SvgControlsSoundLowVolume,
   SvgControlsSoundOn,
+  SvgControlsVideoModeCinemaView,
+  SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -86,10 +88,12 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 ) => {
   const [player, playerRef] = useVideoJsPlayer(videoJsConfig)
   const [isPlaying, setIsPlaying] = useState(false)
-  const currentVolume = usePersonalDataStore((state) => state.currentVolume)
-  const cachedVolume = usePersonalDataStore((state) => state.cachedVolume)
-  const setCurrentVolume = usePersonalDataStore((state) => state.actions.setCurrentVolume)
-  const setCachedVolume = usePersonalDataStore((state) => state.actions.setCachedVolume)
+  const {
+    currentVolume,
+    cachedVolume,
+    cinematicView,
+    actions: { setCurrentVolume, setCachedVolume, setCinematicView },
+  } = usePersonalDataStore((state) => state)
   const [volumeToSave, setVolumeToSave] = useState(0)
 
   const [videoTime, setVideoTime] = useState(0)
@@ -482,6 +486,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
+  const toggleCinematicView = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setCinematicView(!cinematicView)
+  }
+
   const showPlayerControls = isLoaded && playerState
   const showControlsIndicator = playerState !== 'ended'
 
@@ -547,6 +556,14 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
+                  {mdMatch && !isEmbedded && (
+                    <PlayerControlButton
+                      onClick={toggleCinematicView}
+                      tooltipText={cinematicView ? 'Exit cinematic mode' : 'Cinematic view'}
+                    >
+                      {cinematicView ? <SvgControlsVideoModeCompactView /> : <SvgControlsVideoModeCinemaView />}
+                    </PlayerControlButton>
+                  )}
                   {isPiPSupported && (
                     <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
                       {isPiPEnabled ? <SvgControlsPipOff /> : <SvgControlsPipOn />}

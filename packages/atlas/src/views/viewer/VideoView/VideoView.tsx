@@ -2,10 +2,12 @@ import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import useResizeObserver from 'use-resize-observer'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -43,13 +45,16 @@ import {
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
+  PlayerGridItem,
   PlayerSkeletonLoader,
   PlayerWrapper,
+  PlyerGridWrapper,
   StyledCallToActionWrapper,
-  StyledLimitedWidthContainer,
   TitleContainer,
   TitleText,
 } from './VideoView.styles'
+
+const DEFAULT_ASPECT_RATIO = 0.56
 
 export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
@@ -60,8 +65,11 @@ export const VideoView: React.FC = () => {
   })
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
-  const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
-  const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
+  const {
+    watchedVideos,
+    cinematicView,
+    actions: { updateWatchedVideos },
+  } = usePersonalDataStore((state) => state)
   const category = useCategoryMatch(video?.category?.id)
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
@@ -74,6 +82,7 @@ export const VideoView: React.FC = () => {
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
+  const { ref: videoGridRef, width: playerContainerWidth } = useResizeObserver()
 
   // Restore an interrupted video state
   useEffect(() => {
@@ -164,6 +173,14 @@ export const VideoView: React.FC = () => {
     setDetailsExpanded((prevState) => !prevState)
   }
 
+  const aspectRatio = useMemo(() => {
+    if (!video || !video.mediaMetadata) {
+      return DEFAULT_ASPECT_RATIO
+    }
+    const { pixelHeight, pixelWidth } = video.mediaMetadata
+    return (pixelHeight || 0) / (pixelWidth || 0)
+  }, [video])
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -183,131 +200,161 @@ export const VideoView: React.FC = () => {
     )
   }
 
+  const playerGrid = {
+    xxs: 12,
+    md: cinematicView ? 12 : 8,
+  }
+  const mainGrid = { xxs: 12, md: cinematicView ? 8 : 12 }
+
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
+  const isCinematic = cinematicView || !mdMatch
+  const calculatedPlayerHeight = playerContainerWidth && playerContainerWidth * aspectRatio
+
+  const sideItems = (
+    <GridItem colSpan={{ xxs: 12, md: 4 }}>
+      <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+      <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
+    </GridItem>
+  )
+
+  const detailsItems = (
+    <>
+      {headTags}
+      <TitleContainer>
+        {video ? (
+          <TitleText variant={mdMatch ? 'h600' : 'h400'}>{video.title}</TitleText>
+        ) : (
+          <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
+        )}
+        <Meta variant={mdMatch ? 't300' : 't100'} secondary>
+          {video ? (
+            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+          ) : (
+            <SkeletonLoader height={24} width={200} />
+          )}
+        </Meta>
+      </TitleContainer>
+      <ChannelContainer>
+        <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
+      </ChannelContainer>
+      <DetailsWrapper>
+        <DescriptionContainer>
+          {video ? (
+            video?.description && (
+              <>
+                <DescriptionTitle variant="h100">Description</DescriptionTitle>
+                {video.description?.split('\n').map((line, idx) => (
+                  <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                    {replaceUrls(line)}
+                  </Text>
+                ))}
+              </>
+            )
+          ) : (
+            <>
+              <DescriptionSkeletonLoader width="70%" />
+              <DescriptionSkeletonLoader width="40%" />
+              <DescriptionSkeletonLoader width="80%" />
+              <DescriptionSkeletonLoader width="30%" />
+            </>
+          )}
+          {!mdMatch && (
+            <ExpandButton
+              onClick={toggleDetailsExpand}
+              iconPlacement="right"
+              size="small"
+              variant="tertiary"
+              textOnly
+              icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
+            >
+              Show {!detailsExpanded ? 'more' : 'less'}
+            </ExpandButton>
+          )}
+        </DescriptionContainer>
+        <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
+          <GridItem>
+            {video ? (
+              <>
+                <DescriptionTitle variant="h100">License</DescriptionTitle>
+                {foundLicense && (
+                  <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                    {foundLicense.name}
+                  </Text>
+                )}
+                <LicenseCustomText as="p" variant="t100" secondary>
+                  {video.license?.customText}
+                </LicenseCustomText>
+              </>
+            ) : (
+              <SkeletonLoader height={12} width={200} />
+            )}
+          </GridItem>
+          <CategoryWrapper>
+            {video ? (
+              <>
+                <DescriptionTitle variant="h100">Category</DescriptionTitle>
+                <Category to={absoluteRoutes.viewer.category(category?.id)}>
+                  {category?.icon}
+                  <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                    {category?.name}
+                  </Text>
+                </Category>
+              </>
+            ) : (
+              <SkeletonLoader height={12} width={200} />
+            )}
+          </CategoryWrapper>
+        </LicenceCategoryWrapper>
+      </DetailsWrapper>
+    </>
+  )
 
   return (
     <>
-      {headTags}
-      <PlayerWrapper>
-        <PlayerContainer>
-          {!isMediaLoading && video ? (
-            <VideoPlayer
-              isVideoPending={!video.media?.isAccepted}
-              channelId={video.channel?.id}
-              videoId={video.id}
-              autoplay
-              src={mediaUrl}
-              fill
-              onEnd={handleVideoEnd}
-              onTimeUpdated={handleTimeUpdate}
-              startTime={startTimestamp}
-            />
-          ) : (
-            <PlayerSkeletonLoader />
-          )}
-        </PlayerContainer>
-      </PlayerWrapper>
-      <StyledLimitedWidthContainer>
-        <LayoutGrid>
-          <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: 8 }}>
-            <TitleContainer>
-              {video ? (
-                <TitleText variant={mdMatch ? 'h600' : 'h400'}>{video.title}</TitleText>
+      <PlyerGridWrapper cinematicView={isCinematic}>
+        <PlayerWrapper cinematicView={isCinematic}>
+          <PlayerGridItem colSpan={playerGrid} ref={videoGridRef}>
+            <PlayerContainer
+              className={transitions.names.slide}
+              cinematicView={cinematicView}
+              calculatedHeight={calculatedPlayerHeight}
+            >
+              {!isMediaLoading && video ? (
+                <VideoPlayer
+                  isVideoPending={!video?.media?.isAccepted}
+                  channelId={video?.channel?.id}
+                  videoId={video?.id}
+                  autoplay
+                  src={mediaUrl}
+                  fill
+                  onEnd={handleVideoEnd}
+                  onTimeUpdated={handleTimeUpdate}
+                  startTime={startTimestamp}
+                />
               ) : (
-                <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
+                <PlayerSkeletonLoader />
               )}
-              <Meta variant={mdMatch ? 't300' : 't100'} secondary>
-                {video ? (
-                  formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
-                ) : (
-                  <SkeletonLoader height={24} width={200} />
-                )}
-              </Meta>
-            </TitleContainer>
-            <ChannelContainer>
-              <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
-            </ChannelContainer>
-            <DetailsWrapper>
-              <DescriptionContainer>
-                {video ? (
-                  video?.description && (
-                    <>
-                      <DescriptionTitle variant="h100">Description</DescriptionTitle>
-                      {video.description?.split('\n').map((line, idx) => (
-                        <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
-                          {replaceUrls(line)}
-                        </Text>
-                      ))}
-                    </>
-                  )
-                ) : (
-                  <>
-                    <DescriptionSkeletonLoader width="70%" />
-                    <DescriptionSkeletonLoader width="40%" />
-                    <DescriptionSkeletonLoader width="80%" />
-                    <DescriptionSkeletonLoader width="30%" />
-                  </>
-                )}
-                {!mdMatch && (
-                  <ExpandButton
-                    onClick={toggleDetailsExpand}
-                    iconPlacement="right"
-                    size="small"
-                    variant="tertiary"
-                    textOnly
-                    icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
-                  >
-                    Show {!detailsExpanded ? 'more' : 'less'}
-                  </ExpandButton>
-                )}
-              </DescriptionContainer>
-              <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
-                <GridItem>
-                  {video ? (
-                    <>
-                      <DescriptionTitle variant="h100">License</DescriptionTitle>
-                      {foundLicense && (
-                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                          {foundLicense.name}
-                        </Text>
-                      )}
-                      <LicenseCustomText as="p" variant="t100" secondary>
-                        {video.license?.customText}
-                      </LicenseCustomText>
-                    </>
-                  ) : (
-                    <SkeletonLoader height={12} width={200} />
-                  )}
-                </GridItem>
-                <CategoryWrapper>
-                  {video ? (
-                    <>
-                      <DescriptionTitle variant="h100">Category</DescriptionTitle>
-                      <Category to={absoluteRoutes.viewer.category(category?.id)}>
-                        {category?.icon}
-                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                          {category?.name}
-                        </Text>
-                      </Category>
-                    </>
-                  ) : (
-                    <SkeletonLoader height={12} width={200} />
-                  )}
-                </CategoryWrapper>
-              </LicenceCategoryWrapper>
-            </DetailsWrapper>
-          </GridItem>
-          <GridItem colSpan={{ xxs: 12, md: 4 }}>
-            <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
-            <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
-          </GridItem>
-        </LayoutGrid>
+            </PlayerContainer>
+            {!isCinematic && detailsItems}
+          </PlayerGridItem>
+          {!isCinematic && sideItems}
+        </PlayerWrapper>
+      </PlyerGridWrapper>
+      <LimitedWidthContainer>
+        {isCinematic && (
+          <LayoutGrid>
+            <GridItem className={transitions.names.slide} colSpan={mainGrid}>
+              {detailsItems}
+            </GridItem>
+            {sideItems}
+          </LayoutGrid>
+        )}
         <StyledCallToActionWrapper>
           {['popular', 'new', 'discover'].map((item, idx) => (
             <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />
           ))}
         </StyledCallToActionWrapper>
-      </StyledLimitedWidthContainer>
+      </LimitedWidthContainer>
     </>
   )
 }

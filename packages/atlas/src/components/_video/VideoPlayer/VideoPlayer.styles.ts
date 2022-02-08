@@ -214,7 +214,7 @@ export const CurrentTime = styled(Text)`
 
 export const ScreenControls = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   gap: 0.25em;
   margin-left: auto;
 
