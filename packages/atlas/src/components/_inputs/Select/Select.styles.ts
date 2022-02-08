@@ -145,6 +145,7 @@ export const NodeContainer = styled.div`
   bottom: 0;
 `
 
-export const ValueContainer = styled.span<{ leftNodeWidth: number }>`
-  padding-left: ${({ leftNodeWidth }) => (leftNodeWidth ? sizes(2, true) + leftNodeWidth : 0)}px;
+export const ValueContainer = styled.span<{ hasIconLeft: boolean }>`
+  /* padding + icon width */
+  padding-left: ${({ hasIconLeft }) => (hasIconLeft ? sizes(2, true) + 24 : 0)}px;
 `

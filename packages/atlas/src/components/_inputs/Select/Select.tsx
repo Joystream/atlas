@@ -1,6 +1,5 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import React, { Ref, forwardRef, useMemo } from 'react'
-import useMeasure from 'react-use-measure'
 
 import { TextProps } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
@@ -47,7 +46,7 @@ export type SelectProps<T = string> = {
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
   size?: SelectSizes
-  nodeStart?: React.ReactNode
+  iconLeft?: React.ReactNode
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -67,7 +66,7 @@ export const _Select = <T extends unknown>(
     onChange,
     containerRef,
     size = 'regular',
-    nodeStart,
+    iconLeft,
     ...inputBaseProps
   }: SelectProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>
@@ -91,8 +90,6 @@ export const _Select = <T extends unknown>(
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
-  const [nodeLeftRef, nodeLeftBounds] = useMeasure()
-
   const selectedItem = useMemo(() => items.find((item) => item.value === selectedItemValue), [items, selectedItemValue])
 
   return (
@@ -116,8 +113,8 @@ export const _Select = <T extends unknown>(
             tabIndex={disabled ? -1 : 0}
             size={size}
           >
-            {nodeStart && <NodeContainer ref={nodeLeftRef}>{nodeStart}</NodeContainer>}
-            <ValueContainer leftNodeWidth={nodeLeftBounds.width}>
+            {iconLeft && <NodeContainer>{iconLeft}</NodeContainer>}
+            <ValueContainer hasIconLeft={!!iconLeft}>
               {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
             </ValueContainer>
             {selectedItem?.badgeText && <StyledPill label={selectedItem.badgeText} />}

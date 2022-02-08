@@ -66,7 +66,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
-        nodeStart={isPickDate ? <SvgControlsCalendar /> : undefined}
+        iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
         value={value}
         items={mappedItems}
         onChange={(value) => onChange(value ?? null)}
