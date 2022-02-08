@@ -83,7 +83,6 @@ export const MoreVideosHeader = styled.h5`
 export const LicenseContainer = styled.div`
   margin: ${sizes(4)} 0 0;
   color: ${oldColors.gray[500]};
-
   font: ${cVar('typographyDesktopT100')};
   letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT100TextTransform')};

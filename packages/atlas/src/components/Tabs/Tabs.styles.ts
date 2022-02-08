@@ -25,6 +25,7 @@ export const TabsGroup = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
 `
 

@@ -82,6 +82,7 @@ const getIconOnlyPadding = (size?: ButtonSize, iconOnly?: boolean) => {
 
 export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: ButtonSize }>`
   ${({ size, iconOnly }) => getIconOnlyPadding(size, iconOnly)};
+
   margin-right: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'left' && !iconOnly ? sizes(2) : 0)};
   margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `

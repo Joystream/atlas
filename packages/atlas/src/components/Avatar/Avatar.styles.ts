@@ -152,7 +152,6 @@ export const EditOverlay = styled.div<EditOverlayProps>`
   border-radius: 100%;
   z-index: 3;
   color: ${cVar('colorCoreNeutral100')};
-
   font: ${cVar('typographyDesktopT200Strong')};
   letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
@@ -184,7 +183,6 @@ export const Container = styled('div', { shouldForwardProp: isPropValid })<Conta
   padding: 0;
   border: 0;
   background: none;
-
   display: flex;
   justify-content: center;
   align-items: center;

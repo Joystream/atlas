@@ -27,7 +27,6 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   width: 280px;
   position: 'relative';
   max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
-
   height: ${({ containerHeight }) => containerHeight}px;
   transform: translateY(
     ${({ isActive, containerHeight }) =>
@@ -36,7 +35,6 @@ export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: n
   transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
-
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;

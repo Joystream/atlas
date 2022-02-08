@@ -62,6 +62,7 @@ type AvatatBackgroundProps = {
 export const AvatarBackground = styled.div<AvatatBackgroundProps>`
   position: absolute;
   ${square('100%')};
+
   border-radius: 50%;
   top: 0;
   background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
@@ -77,6 +78,7 @@ export const AvatarOverlay = styled.div<AvatarOverlayProps>`
   position: absolute;
   top: 0;
   ${square('100%')}
+
   border-radius: 50%;
   background-color: black;
   opacity: ${({ dimmed }) => (dimmed ? 0.5 : 0)};
