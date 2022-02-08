@@ -1,7 +1,5 @@
-import React, { ReactNode, createRef } from 'react'
-import { useMatch } from 'react-router-dom'
+import React, { createRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import useResizeObserver from 'use-resize-observer'
 
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'

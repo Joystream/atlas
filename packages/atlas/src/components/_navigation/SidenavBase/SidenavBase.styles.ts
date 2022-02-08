@@ -1,6 +1,5 @@
-import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
-import { Link, LinkProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING, SubItemProps } from '@/components/_navigation/NavItem'

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 
-import { SidebarNav, SidebarNavItem, SidebarNavLink, SubItem, SubItemProps, SubItemsWrapper } from './NavItem.styles'
+import { SidebarNavItem, SidebarNavLink, SubItem, SubItemsWrapper } from './NavItem.styles'
 
 type NavSubitem = {
   name: string

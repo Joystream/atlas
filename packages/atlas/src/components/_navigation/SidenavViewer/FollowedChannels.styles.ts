@@ -111,21 +111,3 @@ export const ChannelsItem = styled.li`
     background-color: ${cVar('colorBackgroundStrongAlpha')};
   }
 `
-
-export const ShowMoreButton = styled.button`
-  border: none;
-  background: none;
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-  cursor: pointer;
-  padding: ${sizes(5)} 0;
-  display: flex;
-  align-items: center;
-  color: ${cVar('colorText')};
-`
-
-export const ShowMoreIconWrapper = styled.span`
-  padding: ${sizes(2)};
-  margin-right: ${sizes(6)};
-`
