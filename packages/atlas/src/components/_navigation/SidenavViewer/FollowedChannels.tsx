@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { Text } from '@/components/Text'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionNewChannel } from '@/components/_icons'
+import { absoluteRoutes } from '@/config/routes'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
 
 import {
+  BrowseChannelsIcon,
+  BrowseChannelsText,
+  BrowseChannelsWrapper,
   ChannelsItem,
   ChannelsList,
   ChannelsTitle,
@@ -42,20 +47,29 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
         <ChannelsTitle variant="h100" secondary>
           Followed channels
         </ChannelsTitle>
-        <ChannelsWrapper>
-          <ChannelsList>
-            {followedChannels.map(({ id }) => (
-              <ChannelsItem key={id} onClick={onClick}>
-                <StyledChannelLink
-                  id={id}
-                  textSecondary
-                  textVariant="h300"
-                  onNotFound={() => onChannelNotFound?.(id)}
-                />
-              </ChannelsItem>
-            ))}
-          </ChannelsList>
-        </ChannelsWrapper>
+        {followedChannels.length > 0 ? (
+          <ChannelsWrapper>
+            <ChannelsList>
+              {followedChannels.map(({ id }) => (
+                <ChannelsItem key={id} onClick={onClick}>
+                  <StyledChannelLink
+                    id={id}
+                    textSecondary
+                    textVariant="h300"
+                    onNotFound={() => onChannelNotFound?.(id)}
+                  />
+                </ChannelsItem>
+              ))}
+            </ChannelsList>
+          </ChannelsWrapper>
+        ) : (
+          <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()}>
+            <BrowseChannelsIcon>
+              <SvgActionNewChannel />
+            </BrowseChannelsIcon>
+            <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+          </BrowseChannelsWrapper>
+        )}
       </FollowedChannelsWrapper>
     </CSSTransition>
   )

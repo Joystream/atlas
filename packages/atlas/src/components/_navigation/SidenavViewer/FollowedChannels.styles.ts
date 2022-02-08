@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
@@ -10,6 +11,44 @@ export const FollowedChannelsWrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100%;
+`
+
+export const BrowseChannelsWrapper = styled(Link)`
+  padding: ${sizes(4)} ${NAVBAR_LEFT_PADDING}px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundAlpha')};
+  }
+  color: ${cVar('colorText')};
+
+  &:hover,
+  &:focus {
+    color: ${cVar('colorTextStrong')};
+  }
+`
+
+export const BrowseChannelsIcon = styled.div`
+  background-color: ${cVar('colorBackgroundAlpha')};
+  border-radius: 50%;
+  opacity: 0.5;
+  width: ${sizes(8)};
+  height: ${sizes(8)};
+  padding: ${sizes(2)};
+  margin-right: ${sizes(4)};
+
+  > svg > path {
+    fill: ${cVar('colorTextStrong')} !important;
+  }
+`
+
+export const BrowseChannelsText = styled(Text)`
+  color: inherit;
 `
 
 export const ChannelsTitle = styled(Text)`
@@ -39,13 +78,14 @@ export const ChannelsList = styled.ul`
 
 export const StyledChannelLink = styled(ChannelLink)`
   width: 100%;
-  height: ${sizes(6)};
+  height: 100%;
 
   > span {
     margin-left: ${sizes(2)};
   }
 
-  margin: ${sizes(4)} 0;
+  padding: ${sizes(4)} 0;
+  color: inherit;
 `
 
 export const ChannelsItem = styled.li`
@@ -54,12 +94,15 @@ export const ChannelsItem = styled.li`
   &:hover,
   &:focus {
     background-color: ${cVar('colorBackgroundAlpha')};
-    color: ${cVar('colorTextStrong')};
+
+    h6 {
+      color: ${cVar('colorTextStrong')} !important;
+    }
   }
 
   &:active,
   &[data-active='true'] {
-    color: ${cVar('colorTextStrong')};
+    color: ${cVar('colorTextStrong')} !important;
     background-color: ${cVar('colorBackgroundStrongAlpha')};
   }
 `
