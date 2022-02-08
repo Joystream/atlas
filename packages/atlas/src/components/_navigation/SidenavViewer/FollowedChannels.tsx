@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+// TODO put this in its own file
+import { useBasicChannel } from '@/api/hooks'
+import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB, SvgActionChevronT, SvgActionNewChannel } from '@/components/_icons'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/providers/assets'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 import {
   BrowseChannelsIcon,
   BrowseChannelsText,
   BrowseChannelsWrapper,
+  ChannelTitle,
   ChannelsItem,
   ChannelsList,
   ChannelsTitle,
@@ -22,6 +30,40 @@ import {
 } from './FollowedChannels.styles'
 
 const MAX_CHANNELS = 4
+
+type ChannelIdProps = {
+  id: string
+}
+
+// TODO put in its own file
+export const ChannelNavItem: React.FC<NavItemProps & ChannelIdProps> = ({
+  id,
+  to,
+  expanded,
+  itemName,
+  isSecondary,
+  onClick,
+}) => {
+  const { channel } = useBasicChannel(id || '', {
+    skip: !id,
+    onCompleted: (data) => !data && SentryLogger.error('Channel not found', 'ChannelLink', { channel: { id } }),
+    onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
+  })
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
+
+  return (
+    <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
+      <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
+      {channel ? (
+        <ChannelTitle variant="h300" secondary={true}>
+          {channel.title}
+        </ChannelTitle>
+      ) : (
+        <SkeletonLoader height={16} width={150} />
+      )}
+    </NavItem>
+  )
+}
 
 type FollowedChannelsProps = {
   followedChannels: FollowedChannel[]
@@ -51,14 +93,17 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
           <ChannelsWrapper>
             <ChannelsList>
               {followedChannels.map(({ id }) => (
-                <ChannelsItem key={id} onClick={onClick}>
-                  <StyledChannelLink
-                    id={id}
-                    textSecondary
-                    textVariant="h300"
-                    onNotFound={() => onChannelNotFound?.(id)}
-                  />
-                </ChannelsItem>
+                <ChannelNavItem
+                  id={id}
+                  to={absoluteRoutes.viewer.channel(id)}
+                  expanded={expanded}
+                  itemName={id}
+                  onClick={() => onClick()}
+                  isSecondary={true}
+                  key={id}
+                >
+                  {id}
+                </ChannelNavItem>
               ))}
             </ChannelsList>
           </ChannelsWrapper>
@@ -74,3 +119,13 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
     </CSSTransition>
   )
 }
+/*
+                <ChannelsItem key={id} onClick={onClick}>
+                  <StyledChannelLink
+                    id={id}
+                    textSecondary
+                    textVariant="h300"
+                    onNotFound={() => onChannelNotFound?.(id)}
+                  />
+                </ChannelsItem>
+*/

@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { cVar, sizes } from '@/styles'
 
-import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase'
+import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../NavItem'
 
 export const FollowedChannelsWrapper = styled.div`
   display: grid;
@@ -49,6 +49,11 @@ export const BrowseChannelsIcon = styled.div`
 
 export const BrowseChannelsText = styled(Text)`
   color: inherit;
+`
+
+export const ChannelTitle = styled(Text)`
+  padding-left: ${sizes(4)};
+  color: inherit !important;
 `
 
 export const ChannelsTitle = styled(Text)`

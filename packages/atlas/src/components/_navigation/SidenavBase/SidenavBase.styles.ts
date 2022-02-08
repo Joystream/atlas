@@ -2,25 +2,13 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
-import { smallBadgeStyles } from '@/components/Badge'
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
+import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING, SubItemProps } from '@/components/_navigation/NavItem'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
-
-export const EXPANDED_SIDENAVBAR_WIDTH = 360
-export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
   expanded?: boolean
 }
-
-type SubItemProps = {
-  subitemsHeight?: number
-} & ExpandableElementProps
-
-type SidebarNavLinkProps = {
-  content: string
-} & ExpandableElementProps &
-  LinkProps
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
@@ -74,6 +62,7 @@ export const ButtonGroup = styled.div`
   }
 `
 
+/*
 export const SidebarNavItem = styled.li<ExpandableElementProps>`
   position: relative;
   width: 100%;
@@ -91,95 +80,13 @@ export const SidebarNavItem = styled.li<ExpandableElementProps>`
     }
   }
 `
+*/
 
-export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<SidebarNavLinkProps>`
-  padding: ${sizes(5)} ${NAVBAR_LEFT_PADDING}px;
-  color: ${cVar('colorText')};
-  text-decoration: none;
-  display: flex;
-  position: relative;
-  align-items: center;
-
-  > svg > path {
-    fill: ${cVar('colorText')};
-  }
-
-  > svg {
-    ${media.md} {
-      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
-      transition: transform ${transitions.timings.regular} ${transitions.easing};
-    }
-  }
-
-  > span {
-    margin-left: ${sizes(6)};
-    font: ${cVar('typographyDesktopH400')};
-    letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopH400TextTransform')};
-    color: ${cVar('colorText')};
-  }
-
-  ::after {
-    ${media.md} {
-      content: ${({ content }) => `'${content}'`};
-      position: absolute;
-      color: ${cVar('colorText')};
-      transition: opacity ${transitions.timings.regular} ${transitions.easing};
-      opacity: ${({ expanded }) => (expanded ? 0 : 1)};
-      left: calc(var(--size-sidenav-width-collapsed) / 2);
-      transform: translateX(-50%);
-      bottom: 0;
-      margin-bottom: ${sizes(2)};
-      font: ${cVar('typographyDesktopT100Strong')};
-      letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
-      text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
-    }
-  }
-
-  &:hover,
-  &:focus {
-    color: ${cVar('colorTextStrong')};
-    background-color: ${cVar('colorBackgroundAlpha')};
-
-    > svg > path {
-      fill: ${cVar('colorTextStrong')};
-    }
-
-    > span {
-      color: ${cVar('colorTextStrong')};
-    }
-
-    ::after {
-      ${media.md} {
-        color: ${cVar('colorTextStrong')};
-      }
-    }
-  }
-
-  &:active,
-  &[data-active='true'] {
-    color: ${cVar('colorTextStrong')};
-    background-color: ${cVar('colorBackgroundStrongAlpha')};
-
-    > svg > path {
-      fill: ${cVar('colorTextStrong')};
-    }
-
-    > span {
-      color: ${cVar('colorTextStrong')};
-    }
-
-    ::after {
-      ${media.md} {
-        color: ${cVar('colorTextStrong')};
-      }
-    }
-  }
-`
-
+/*
 export const SecondarySidebarNavLink = styled(SidebarNavLink)`
   font-size: ${cVar('typographyFontSizes5')};
 `
+*/
 
 export const DrawerOverlay = styled.div`
   position: fixed;

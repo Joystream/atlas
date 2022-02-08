@@ -4,12 +4,12 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlay, SvgSidebarChannel, SvgSidebarUpload, SvgSidebarVideos } from '@/components/_icons'
 import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+import { NavItemType } from '@/components/_navigation/NavItem'
+import { SidenavBase } from '@/components/_navigation/SidenavBase'
 import { absoluteRoutes } from '@/config/routes'
 import { chanelUnseenDraftsSelector, useDraftStore } from '@/providers/drafts'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useUser } from '@/providers/user'
-
-import { NavItemType, SidenavBase } from '../SidenavBase'
 
 const studioNavbarItems: NavItemType[] = [
   {

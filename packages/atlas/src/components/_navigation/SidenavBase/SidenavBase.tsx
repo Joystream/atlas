@@ -3,6 +3,7 @@ import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
+import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
@@ -15,24 +16,9 @@ import {
   ScrollContainer,
   SidebarNav,
   SidebarNavFooter,
-  SidebarNavItem,
-  SidebarNavLink,
   SidebarNavList,
   StyledHamburgerButton,
-  SubItem,
-  SubItemsWrapper,
 } from './SidenavBase.styles'
-
-type NavSubitem = {
-  name: string
-  expandedName?: string
-}
-type NavItemType = {
-  subitems?: NavSubitem[]
-  icon: ReactNode
-  to: string
-  badgeNumber?: number
-} & NavSubitem
 
 export type SidenavProps = {
   items: NavItemType[]
@@ -86,6 +72,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
                 itemName={item.name}
                 onClick={() => scrollAndToggle(false)}
                 badgeNumber={item.badgeNumber}
+                isSecondary={false}
               >
                 {item.icon}
                 <span>{item.expandedName || item.name}</span>
@@ -119,51 +106,4 @@ const SidenavBase: React.FC<SidenavProps> = ({
   )
 }
 
-type NavItemProps = {
-  subitems?: NavSubitem[]
-  expanded: boolean
-  to: string
-  itemName: string
-  badgeNumber?: number
-  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
-}
-
-const NavItem: React.FC<NavItemProps> = ({
-  expanded = false,
-  subitems,
-  children,
-  to,
-  onClick,
-  itemName,
-  badgeNumber,
-}) => {
-  const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
-  const match = useMatch(to)
-  return (
-    <SidebarNavItem data-badge={badgeNumber} expanded={expanded}>
-      <SidebarNavLink
-        onClick={onClick}
-        data-active={match ? 'true' : ''}
-        to={to}
-        expanded={expanded || undefined}
-        content={itemName}
-      >
-        {children}
-      </SidebarNavLink>
-      {subitems && (
-        <SubItemsWrapper expanded={expanded} subitemsHeight={subitemsHeight}>
-          <ul ref={subitemsRef}>
-            {subitems.map((item) => (
-              <SubItem key={item.name}>
-                <a>{item.name}</a>
-              </SubItem>
-            ))}
-          </ul>
-        </SubItemsWrapper>
-      )}
-    </SidebarNavItem>
-  )
-}
-
-export { SidenavBase, NavItem }
-export type { NavItemType }
+export { SidenavBase }
