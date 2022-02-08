@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-// TODO put this in its own file
 import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -35,7 +34,6 @@ type ChannelIdProps = {
   id: string
 }
 
-// TODO put in its own file
 export const ChannelNavItem: React.FC<NavItemProps & ChannelIdProps> = ({
   id,
   to,

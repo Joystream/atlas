@@ -61,33 +61,6 @@ export const ButtonGroup = styled.div`
     margin-top: ${sizes(4)};
   }
 `
-
-/*
-export const SidebarNavItem = styled.li<ExpandableElementProps>`
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  ${smallBadgeStyles}
-
-  &[data-badge]::after {
-    left: ${sizes(12)};
-    top: ${sizes(3)};
-
-    ${media.md} {
-      transform: translateY(${({ expanded }) => (expanded ? 0 : -8)}px);
-      transition: transform ${transitions.timings.regular} ${transitions.easing};
-    }
-  }
-`
-*/
-
-/*
-export const SecondarySidebarNavLink = styled(SidebarNavLink)`
-  font-size: ${cVar('typographyFontSizes5')};
-`
-*/
-
 export const DrawerOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -157,6 +130,9 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   margin-left: ${sizes(3)};
   margin-top: ${sizes(4)};
   z-index: ${zIndex.sideNav};
+  ${media.xxs} {
+    margin-top: ${sizes(3)};
+  }
 `
 
 export const ScrollContainer = styled.div`
