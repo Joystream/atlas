@@ -1,0 +1,105 @@
+import styled from '@emotion/styled'
+
+import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { cVar, media, sizes } from '@/styles'
+
+export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<{
+  loading?: boolean
+}>`
+  padding: ${sizes(4)};
+  display: grid;
+  gap: ${sizes(4)};
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  transition: background-color ${cVar('animationTransitionFast')};
+  background-color: ${cVar('colorBackgroundMuted')};
+  cursor: ${({ loading }) => !loading && 'pointer'};
+
+  &:hover {
+    background-color: ${({ loading }) => (loading ? cVar('colorBackgroundMuted') : cVar('colorBackgroundAlpha'))};
+  }
+
+  ${media.sm} {
+    grid-template-columns: auto 1fr 73px;
+    gap: ${sizes(4)};
+  }
+
+  ${media.lg} {
+    grid-template-columns: auto 1fr auto;
+  }
+`
+export const PillAndDateContainer = styled.div`
+  display: grid;
+  grid-template-rows: max-content max-content;
+  gap: ${sizes(2)};
+  justify-items: end;
+  align-content: center;
+`
+export const TitleAndDescriptionContainer = styled.div`
+  display: grid;
+  gap: ${sizes(1)};
+  grid-column-end: span 2;
+  grid-row-start: 2;
+
+  ${media.sm} {
+    gap: ${sizes(2)};
+    grid-column-end: initial;
+    grid-row-start: initial;
+    align-content: center;
+    grid-auto-rows: min-content;
+  }
+`
+export const Title = styled(Text)`
+  word-break: break-word;
+`
+export const Thumbnail = styled.img`
+  height: 40px;
+
+  ${media.sm} {
+    height: 64px;
+    margin-right: ${sizes(2)};
+  }
+
+  ${media.lg} {
+    height: 80px;
+  }
+`
+export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
+  width: 71px;
+  height: 40px;
+
+  ${media.sm} {
+    width: 114px;
+    height: 64px;
+    margin-right: ${sizes(2)};
+  }
+
+  ${media.lg} {
+    width: 142px;
+    height: 80px;
+  }
+`
+
+export const PillSkeletonLoader = styled(SkeletonLoader)`
+  width: 40px;
+  height: 20px;
+`
+
+export const TitleSkeletonLoader = styled(SkeletonLoader)`
+  width: 160px;
+  height: 20px;
+  ${media.sm} {
+    width: 160px;
+    height: 24px;
+  }
+`
+
+export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
+  width: 256px;
+  height: 20px;
+`
+
+export const DateText = styled(Text)`
+  text-align: end;
+`

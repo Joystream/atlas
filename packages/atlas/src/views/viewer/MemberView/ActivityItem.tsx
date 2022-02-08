@@ -17,7 +17,7 @@ import {
   Title,
   TitleAndDescriptionContainer,
   TitleSkeletonLoader,
-} from './MemberActivity.styles'
+} from './ActivityItem.styles'
 
 export type ActivityItemProps = {
   date: string
