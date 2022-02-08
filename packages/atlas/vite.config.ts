@@ -1,6 +1,5 @@
 /// <reference types="vitest" />
 import { babel } from '@rollup/plugin-babel'
-import graphql from '@rollup/plugin-graphql'
 import inject from '@rollup/plugin-inject'
 import react from '@vitejs/plugin-react'
 import * as path from 'path'
@@ -34,7 +33,6 @@ export default defineConfig({
       compact: false,
       babelHelpers: 'bundled',
     }),
-    graphql(),
     {
       ...inject({
         include: ['node_modules/**/*.js*'],
