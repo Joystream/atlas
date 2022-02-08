@@ -525,6 +525,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               ) : null}
               <ActionBar
                 primaryText="Fee: 0 Joy"
+                variant={newChannel ? 'new' : 'edit'}
                 secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
                 isEdit={!newChannel}
                 primaryButton={{
