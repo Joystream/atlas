@@ -189,7 +189,6 @@ export const LegalLinksWrapper = styled.span`
 
 export const LegalLink = styled(Link)`
   text-decoration: none;
-
   font: ${cVar('typographyDesktopT200Strong')};
   letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};

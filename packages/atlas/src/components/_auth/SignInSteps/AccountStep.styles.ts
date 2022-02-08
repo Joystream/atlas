@@ -50,6 +50,7 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   &:first-of-type {
     margin-top: ${sizes(2)};
   }
+
   cursor: pointer;
   text-align: left;
   display: flex;

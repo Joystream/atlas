@@ -14,6 +14,7 @@ export const MembershipHeader = styled.header`
     grid-auto-flow: column;
     justify-content: space-between;
   }
+
   margin: ${sizes(8)} 0;
 `
 
@@ -37,6 +38,7 @@ export const MembershipDetails = styled.div`
   ${media.sm} {
     align-items: unset;
   }
+
   overflow: hidden;
   max-width: 100%;
 `

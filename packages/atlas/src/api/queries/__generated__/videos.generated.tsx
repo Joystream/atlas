@@ -5,28 +5,28 @@ import * as Types from './baseTypes.generated'
 import { BasicChannelFieldsFragmentDoc } from './channels.generated'
 import { StorageDataObjectFieldsFragmentDoc } from './storage.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type VideoMediaMetadataFieldsFragment = {
   __typename?: 'VideoMediaMetadata'
   id: string
-  pixelHeight?: Types.Maybe<number>
-  pixelWidth?: Types.Maybe<number>
+  pixelHeight?: number | null
+  pixelWidth?: number | null
 }
 
 export type LicenseFieldsFragment = {
   __typename?: 'License'
   id: string
-  code?: Types.Maybe<number>
-  attribution?: Types.Maybe<string>
-  customText?: Types.Maybe<string>
+  code?: number | null
+  attribution?: string | null
+  customText?: string | null
 }
 
 export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
-  title?: Types.Maybe<string>
+  title?: string | null
   channel: { __typename?: 'Channel'; id: string }
-  thumbnailPhoto?: Types.Maybe<{
+  thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -37,35 +37,35 @@ export type BasicVideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
+  } | null
 }
 
 export type VideoFieldsFragment = {
   __typename?: 'Video'
   id: string
-  title?: Types.Maybe<string>
-  description?: Types.Maybe<string>
+  title?: string | null
+  description?: string | null
   views: number
-  duration?: Types.Maybe<number>
+  duration?: number | null
   createdAt: Date
-  isPublic?: Types.Maybe<boolean>
-  isExplicit?: Types.Maybe<boolean>
+  isPublic?: boolean | null
+  isExplicit?: boolean | null
   isFeatured: boolean
-  hasMarketing?: Types.Maybe<boolean>
+  hasMarketing?: boolean | null
   isCensored: boolean
-  publishedBeforeJoystream?: Types.Maybe<Date>
-  category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-  language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-  mediaMetadata?: Types.Maybe<{
+  publishedBeforeJoystream?: Date | null
+  category?: { __typename?: 'VideoCategory'; id: string } | null
+  language?: { __typename?: 'Language'; iso: string } | null
+  mediaMetadata?: {
     __typename?: 'VideoMediaMetadata'
     id: string
-    pixelHeight?: Types.Maybe<number>
-    pixelWidth?: Types.Maybe<number>
-  }>
-  media?: Types.Maybe<{
+    pixelHeight?: number | null
+    pixelWidth?: number | null
+  } | null
+  media?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -76,11 +76,11 @@ export type VideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
-  thumbnailPhoto?: Types.Maybe<{
+  } | null
+  thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
@@ -91,18 +91,18 @@ export type VideoFieldsFragment = {
     type:
       | { __typename: 'DataObjectTypeChannelAvatar' }
       | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
       | { __typename: 'DataObjectTypeVideoMedia' }
       | { __typename: 'DataObjectTypeVideoThumbnail' }
-      | { __typename: 'DataObjectTypeUnknown' }
-  }>
+  } | null
   channel: {
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -113,18 +113,18 @@ export type VideoFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }
-  license?: Types.Maybe<{
+  license?: {
     __typename?: 'License'
     id: string
-    code?: Types.Maybe<number>
-    attribution?: Types.Maybe<string>
-    customText?: Types.Maybe<string>
-  }>
+    code?: number | null
+    attribution?: string | null
+    customText?: string | null
+  } | null
 }
 
 export type GetVideoQueryVariables = Types.Exact<{
@@ -133,29 +133,29 @@ export type GetVideoQueryVariables = Types.Exact<{
 
 export type GetVideoQuery = {
   __typename?: 'Query'
-  videoByUniqueInput?: Types.Maybe<{
+  videoByUniqueInput?: {
     __typename?: 'Video'
     id: string
-    title?: Types.Maybe<string>
-    description?: Types.Maybe<string>
+    title?: string | null
+    description?: string | null
     views: number
-    duration?: Types.Maybe<number>
+    duration?: number | null
     createdAt: Date
-    isPublic?: Types.Maybe<boolean>
-    isExplicit?: Types.Maybe<boolean>
+    isPublic?: boolean | null
+    isExplicit?: boolean | null
     isFeatured: boolean
-    hasMarketing?: Types.Maybe<boolean>
+    hasMarketing?: boolean | null
     isCensored: boolean
-    publishedBeforeJoystream?: Types.Maybe<Date>
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-    mediaMetadata?: Types.Maybe<{
+    publishedBeforeJoystream?: Date | null
+    category?: { __typename?: 'VideoCategory'; id: string } | null
+    language?: { __typename?: 'Language'; iso: string } | null
+    mediaMetadata?: {
       __typename?: 'VideoMediaMetadata'
       id: string
-      pixelHeight?: Types.Maybe<number>
-      pixelWidth?: Types.Maybe<number>
-    }>
-    media?: Types.Maybe<{
+      pixelHeight?: number | null
+      pixelWidth?: number | null
+    } | null
+    media?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -166,11 +166,11 @@ export type GetVideoQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    thumbnailPhoto?: Types.Maybe<{
+    } | null
+    thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -181,18 +181,18 @@ export type GetVideoQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -203,26 +203,26 @@ export type GetVideoQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }
-    license?: Types.Maybe<{
+    license?: {
       __typename?: 'License'
       id: string
-      code?: Types.Maybe<number>
-      attribution?: Types.Maybe<string>
-      customText?: Types.Maybe<string>
-    }>
-  }>
+      code?: number | null
+      attribution?: string | null
+      customText?: string | null
+    } | null
+  } | null
 }
 
 export type GetVideosConnectionQueryVariables = Types.Exact<{
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
   orderBy?: Types.VideoOrderByInput
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetVideosConnectionQuery = {
@@ -236,26 +236,26 @@ export type GetVideosConnectionQuery = {
       node: {
         __typename?: 'Video'
         id: string
-        title?: Types.Maybe<string>
-        description?: Types.Maybe<string>
+        title?: string | null
+        description?: string | null
         views: number
-        duration?: Types.Maybe<number>
+        duration?: number | null
         createdAt: Date
-        isPublic?: Types.Maybe<boolean>
-        isExplicit?: Types.Maybe<boolean>
+        isPublic?: boolean | null
+        isExplicit?: boolean | null
         isFeatured: boolean
-        hasMarketing?: Types.Maybe<boolean>
+        hasMarketing?: boolean | null
         isCensored: boolean
-        publishedBeforeJoystream?: Types.Maybe<Date>
-        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-        mediaMetadata?: Types.Maybe<{
+        publishedBeforeJoystream?: Date | null
+        category?: { __typename?: 'VideoCategory'; id: string } | null
+        language?: { __typename?: 'Language'; iso: string } | null
+        mediaMetadata?: {
           __typename?: 'VideoMediaMetadata'
           id: string
-          pixelHeight?: Types.Maybe<number>
-          pixelWidth?: Types.Maybe<number>
-        }>
-        media?: Types.Maybe<{
+          pixelHeight?: number | null
+          pixelWidth?: number | null
+        } | null
+        media?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -266,11 +266,11 @@ export type GetVideosConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
-        thumbnailPhoto?: Types.Maybe<{
+        } | null
+        thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -281,18 +281,18 @@ export type GetVideosConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
-          title?: Types.Maybe<string>
+          title?: string | null
           createdAt: Date
           views: number
           follows: number
-          avatarPhoto?: Types.Maybe<{
+          avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -303,28 +303,28 @@ export type GetVideosConnectionQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
-              | { __typename: 'DataObjectTypeUnknown' }
-          }>
+          } | null
         }
-        license?: Types.Maybe<{
+        license?: {
           __typename?: 'License'
           id: string
-          code?: Types.Maybe<number>
-          attribution?: Types.Maybe<string>
-          customText?: Types.Maybe<string>
-        }>
+          code?: number | null
+          attribution?: string | null
+          customText?: string | null
+        } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
   }
 }
 
 export type GetVideosQueryVariables = Types.Exact<{
-  offset?: Types.Maybe<Types.Scalars['Int']>
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  where?: Types.Maybe<Types.VideoWhereInput>
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
   orderBy?: Types.VideoOrderByInput
 }>
 
@@ -333,26 +333,26 @@ export type GetVideosQuery = {
   videos: Array<{
     __typename?: 'Video'
     id: string
-    title?: Types.Maybe<string>
-    description?: Types.Maybe<string>
+    title?: string | null
+    description?: string | null
     views: number
-    duration?: Types.Maybe<number>
+    duration?: number | null
     createdAt: Date
-    isPublic?: Types.Maybe<boolean>
-    isExplicit?: Types.Maybe<boolean>
+    isPublic?: boolean | null
+    isExplicit?: boolean | null
     isFeatured: boolean
-    hasMarketing?: Types.Maybe<boolean>
+    hasMarketing?: boolean | null
     isCensored: boolean
-    publishedBeforeJoystream?: Types.Maybe<Date>
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-    mediaMetadata?: Types.Maybe<{
+    publishedBeforeJoystream?: Date | null
+    category?: { __typename?: 'VideoCategory'; id: string } | null
+    language?: { __typename?: 'Language'; iso: string } | null
+    mediaMetadata?: {
       __typename?: 'VideoMediaMetadata'
       id: string
-      pixelHeight?: Types.Maybe<number>
-      pixelWidth?: Types.Maybe<number>
-    }>
-    media?: Types.Maybe<{
+      pixelHeight?: number | null
+      pixelWidth?: number | null
+    } | null
+    media?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -363,11 +363,11 @@ export type GetVideosQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    thumbnailPhoto?: Types.Maybe<{
+    } | null
+    thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -378,18 +378,18 @@ export type GetVideosQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -400,23 +400,23 @@ export type GetVideosQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }
-    license?: Types.Maybe<{
+    license?: {
       __typename?: 'License'
       id: string
-      code?: Types.Maybe<number>
-      attribution?: Types.Maybe<string>
-      customText?: Types.Maybe<string>
-    }>
+      code?: number | null
+      attribution?: string | null
+      customText?: string | null
+    } | null
   }>
 }
 
 export type GetBasicVideosQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetBasicVideosQuery = {
@@ -424,9 +424,9 @@ export type GetBasicVideosQuery = {
   videos: Array<{
     __typename?: 'Video'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     channel: { __typename?: 'Channel'; id: string }
-    thumbnailPhoto?: Types.Maybe<{
+    thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -437,20 +437,20 @@ export type GetBasicVideosQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
 export type GetMostViewedVideosConnectionQueryVariables = Types.Exact<{
-  limit?: Types.Maybe<Types.Scalars['Int']>
-  periodDays?: Types.Maybe<Types.Scalars['Int']>
-  first?: Types.Maybe<Types.Scalars['Int']>
-  after?: Types.Maybe<Types.Scalars['String']>
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
+  periodDays?: Types.InputMaybe<Types.Scalars['Int']>
+  first?: Types.InputMaybe<Types.Scalars['Int']>
+  after?: Types.InputMaybe<Types.Scalars['String']>
   orderBy?: Types.VideoOrderByInput
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetMostViewedVideosConnectionQuery = {
@@ -464,26 +464,26 @@ export type GetMostViewedVideosConnectionQuery = {
       node: {
         __typename?: 'Video'
         id: string
-        title?: Types.Maybe<string>
-        description?: Types.Maybe<string>
+        title?: string | null
+        description?: string | null
         views: number
-        duration?: Types.Maybe<number>
+        duration?: number | null
         createdAt: Date
-        isPublic?: Types.Maybe<boolean>
-        isExplicit?: Types.Maybe<boolean>
+        isPublic?: boolean | null
+        isExplicit?: boolean | null
         isFeatured: boolean
-        hasMarketing?: Types.Maybe<boolean>
+        hasMarketing?: boolean | null
         isCensored: boolean
-        publishedBeforeJoystream?: Types.Maybe<Date>
-        category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-        language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-        mediaMetadata?: Types.Maybe<{
+        publishedBeforeJoystream?: Date | null
+        category?: { __typename?: 'VideoCategory'; id: string } | null
+        language?: { __typename?: 'Language'; iso: string } | null
+        mediaMetadata?: {
           __typename?: 'VideoMediaMetadata'
           id: string
-          pixelHeight?: Types.Maybe<number>
-          pixelWidth?: Types.Maybe<number>
-        }>
-        media?: Types.Maybe<{
+          pixelHeight?: number | null
+          pixelWidth?: number | null
+        } | null
+        media?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -494,11 +494,11 @@ export type GetMostViewedVideosConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
-        thumbnailPhoto?: Types.Maybe<{
+        } | null
+        thumbnailPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
@@ -509,18 +509,18 @@ export type GetMostViewedVideosConnectionQuery = {
           type:
             | { __typename: 'DataObjectTypeChannelAvatar' }
             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+            | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
-            | { __typename: 'DataObjectTypeUnknown' }
-        }>
+        } | null
         channel: {
           __typename?: 'Channel'
           id: string
-          title?: Types.Maybe<string>
+          title?: string | null
           createdAt: Date
           views: number
           follows: number
-          avatarPhoto?: Types.Maybe<{
+          avatarPhoto?: {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
@@ -531,26 +531,26 @@ export type GetMostViewedVideosConnectionQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
-              | { __typename: 'DataObjectTypeUnknown' }
-          }>
+          } | null
         }
-        license?: Types.Maybe<{
+        license?: {
           __typename?: 'License'
           id: string
-          code?: Types.Maybe<number>
-          attribution?: Types.Maybe<string>
-          customText?: Types.Maybe<string>
-        }>
+          code?: number | null
+          attribution?: string | null
+          customText?: string | null
+        } | null
       }
     }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: Types.Maybe<string> }
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
   }
 }
 
 export type GetTop10VideosThisWeekQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetTop10VideosThisWeekQuery = {
@@ -558,26 +558,26 @@ export type GetTop10VideosThisWeekQuery = {
   top10VideosThisWeek: Array<{
     __typename?: 'Video'
     id: string
-    title?: Types.Maybe<string>
-    description?: Types.Maybe<string>
+    title?: string | null
+    description?: string | null
     views: number
-    duration?: Types.Maybe<number>
+    duration?: number | null
     createdAt: Date
-    isPublic?: Types.Maybe<boolean>
-    isExplicit?: Types.Maybe<boolean>
+    isPublic?: boolean | null
+    isExplicit?: boolean | null
     isFeatured: boolean
-    hasMarketing?: Types.Maybe<boolean>
+    hasMarketing?: boolean | null
     isCensored: boolean
-    publishedBeforeJoystream?: Types.Maybe<Date>
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-    mediaMetadata?: Types.Maybe<{
+    publishedBeforeJoystream?: Date | null
+    category?: { __typename?: 'VideoCategory'; id: string } | null
+    language?: { __typename?: 'Language'; iso: string } | null
+    mediaMetadata?: {
       __typename?: 'VideoMediaMetadata'
       id: string
-      pixelHeight?: Types.Maybe<number>
-      pixelWidth?: Types.Maybe<number>
-    }>
-    media?: Types.Maybe<{
+      pixelHeight?: number | null
+      pixelWidth?: number | null
+    } | null
+    media?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -588,11 +588,11 @@ export type GetTop10VideosThisWeekQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    thumbnailPhoto?: Types.Maybe<{
+    } | null
+    thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -603,18 +603,18 @@ export type GetTop10VideosThisWeekQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -625,23 +625,23 @@ export type GetTop10VideosThisWeekQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }
-    license?: Types.Maybe<{
+    license?: {
       __typename?: 'License'
       id: string
-      code?: Types.Maybe<number>
-      attribution?: Types.Maybe<string>
-      customText?: Types.Maybe<string>
-    }>
+      code?: number | null
+      attribution?: string | null
+      customText?: string | null
+    } | null
   }>
 }
 
 export type GetTop10VideosThisMonthQueryVariables = Types.Exact<{
-  where?: Types.Maybe<Types.VideoWhereInput>
+  where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
 export type GetTop10VideosThisMonthQuery = {
@@ -649,26 +649,26 @@ export type GetTop10VideosThisMonthQuery = {
   top10VideosThisMonth: Array<{
     __typename?: 'Video'
     id: string
-    title?: Types.Maybe<string>
-    description?: Types.Maybe<string>
+    title?: string | null
+    description?: string | null
     views: number
-    duration?: Types.Maybe<number>
+    duration?: number | null
     createdAt: Date
-    isPublic?: Types.Maybe<boolean>
-    isExplicit?: Types.Maybe<boolean>
+    isPublic?: boolean | null
+    isExplicit?: boolean | null
     isFeatured: boolean
-    hasMarketing?: Types.Maybe<boolean>
+    hasMarketing?: boolean | null
     isCensored: boolean
-    publishedBeforeJoystream?: Types.Maybe<Date>
-    category?: Types.Maybe<{ __typename?: 'VideoCategory'; id: string }>
-    language?: Types.Maybe<{ __typename?: 'Language'; iso: string }>
-    mediaMetadata?: Types.Maybe<{
+    publishedBeforeJoystream?: Date | null
+    category?: { __typename?: 'VideoCategory'; id: string } | null
+    language?: { __typename?: 'Language'; iso: string } | null
+    mediaMetadata?: {
       __typename?: 'VideoMediaMetadata'
       id: string
-      pixelHeight?: Types.Maybe<number>
-      pixelWidth?: Types.Maybe<number>
-    }>
-    media?: Types.Maybe<{
+      pixelHeight?: number | null
+      pixelWidth?: number | null
+    } | null
+    media?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -679,11 +679,11 @@ export type GetTop10VideosThisMonthQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
-    thumbnailPhoto?: Types.Maybe<{
+    } | null
+    thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -694,18 +694,18 @@ export type GetTop10VideosThisMonthQuery = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
     channel: {
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -716,25 +716,25 @@ export type GetTop10VideosThisMonthQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }
-    license?: Types.Maybe<{
+    license?: {
       __typename?: 'License'
       id: string
-      code?: Types.Maybe<number>
-      attribution?: Types.Maybe<string>
-      customText?: Types.Maybe<string>
-    }>
+      code?: number | null
+      attribution?: string | null
+      customText?: string | null
+    } | null
   }>
 }
 
 export type AddVideoViewMutationVariables = Types.Exact<{
   videoId: Types.Scalars['ID']
   channelId: Types.Scalars['ID']
-  categoryId?: Types.Maybe<Types.Scalars['ID']>
+  categoryId?: Types.InputMaybe<Types.Scalars['ID']>
 }>
 
 export type AddVideoViewMutation = {
