@@ -193,7 +193,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   formState={formState}
                 />
               ) : (
-                <NFTWorkspaceForm />
+                <NFTWorkspaceForm onGoBack={() => setIsIssuedAsNFTChecked(false)} />
               )}
             </CSSTransition>
           </SwitchTransition>
