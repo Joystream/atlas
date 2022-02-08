@@ -16,8 +16,8 @@ export type VideoWorkspaceTab = {
   isNew?: boolean
 }
 
-export type VideoWorkspaceAssetsCache = Record<string, VideoWorkspaceAssets | null>
-export type VideoWorkspaceTabCachedDirtyFormData = Record<string, Partial<VideoWorkspaceFormFields>>
+export type VideoWorkspaceAssetsCache = VideoWorkspaceAssets | null
+export type VideoWorkspaceTabCachedDirtyFormData = Partial<VideoWorkspaceFormFields>
 
 export type ContextValue = {
   videoTab: VideoWorkspaceTab
@@ -30,7 +30,6 @@ export type ContextValue = {
   videoWorkspaceState: VideoWorkspaceState
   setVideoWorkspaceState: (state: VideoWorkspaceState) => void
   anyVideoTabCachedAssets: boolean
-  hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
 }
 
 export type VideoWorkspaceFormFields = {

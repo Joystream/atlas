@@ -27,7 +27,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
   const [videoTab, setVideoTab] = useState<VideoWorkspaceTab>(generateTab())
   const [videoWorkspaceState, setVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
   const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
-  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>({})
+  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
   const [_videoTabCachedDirtyFormData, _setVideoTabCachedDirtyFormData] =
     useState<VideoWorkspaceTabCachedDirtyFormData>({})
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
@@ -43,14 +43,11 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
       if (!videoTab) {
         return
       }
-      setAssetsCache((existingAssets) => ({
-        ...existingAssets,
-        [videoTab?.id]: assets,
-      }))
+      setAssetsCache(assets)
     },
     [videoTab]
   )
-  const videoTabCachedAssets = assetsCache[videoTab?.id || '']
+  const videoTabCachedAssets = assetsCache
   const updateVideoTab = useCallback((tabUpdates: Partial<VideoWorkspaceTab>) => {
     setVideoTab((prevState) => ({ ...prevState, ...tabUpdates }))
   }, [])
@@ -60,16 +57,13 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
       if (!videoTab) {
         return
       }
-      _setVideoTabCachedDirtyFormData((currentMap) => ({
-        ...currentMap,
-        [videoTab.id]: { ...data },
-      }))
+      _setVideoTabCachedDirtyFormData(data)
     },
     [videoTab]
   )
 
   const videoTabCachedDirtyFormData = useMemo(
-    () => (videoTab ? _videoTabCachedDirtyFormData[videoTab?.id] : {}),
+    () => (videoTab ? _videoTabCachedDirtyFormData : {}),
     [videoTab, _videoTabCachedDirtyFormData]
   )
 
@@ -85,7 +79,7 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     if (videoWorkspaceState === 'closed') {
       decrementOverlaysOpenCount()
       setVideoTab(generateTab())
-      setAssetsCache({})
+      setAssetsCache(null)
       _setVideoTabCachedDirtyFormData({})
     }
   }, [
@@ -97,18 +91,13 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     addVideoTab,
   ])
 
-  const anyVideoTabCachedAssets = Object.values(assetsCache).some(
-    (val) => val?.thumbnail.cropContentId || val?.video.contentId
+  const anyVideoTabCachedAssets = !!(
+    assetsCache &&
+    (assetsCache.thumbnail.cropContentId || assetsCache.video.contentId)
   )
-
-  const hasVideoTabAnyCachedAssets = useCallback(() => {
-    const tabId = videoTab?.id
-    return !!assetsCache[tabId]?.thumbnail || !!assetsCache[tabId]?.video
-  }, [assetsCache, videoTab])
 
   const value = useMemo(
     () => ({
-      hasVideoTabAnyCachedAssets,
       anyVideoTabCachedAssets,
       videoTab,
       addVideoTab,
@@ -123,7 +112,6 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     [
       addVideoTab,
       anyVideoTabCachedAssets,
-      hasVideoTabAnyCachedAssets,
       setVideoTabCachedAssets,
       setVideoTabCachedDirtyFormData,
       updateVideoTab,
