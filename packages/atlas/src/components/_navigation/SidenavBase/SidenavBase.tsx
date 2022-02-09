@@ -1,6 +1,7 @@
 import React, { createRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
@@ -89,11 +90,15 @@ const SidenavBase: React.FC<SidenavProps> = ({
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
               <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
-                Terms of Service
+                <Text variant="t100" color="inherit">
+                  Terms of Service
+                </Text>
               </LegalLink>
               <span>•</span>
               <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
-                Copyright Policy
+                <Text variant="t100" color="inherit">
+                  Copyright Policy
+                </Text>
               </LegalLink>
             </LegalLinksWrapper>
           </SidebarNavFooter>

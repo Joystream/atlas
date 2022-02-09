@@ -19,17 +19,12 @@ export const BrowseChannelsWrapper = styled(Link)`
   flex-direction: row;
   align-items: center;
   text-decoration: none;
-
-  &:hover,
-  &:focus {
-    color: ${cVar('colorTextStrong')};
-    background-color: ${cVar('colorBackgroundAlpha')};
-  }
   color: ${cVar('colorText')};
 
   &:hover,
   &:focus {
     color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundAlpha')};
   }
 `
 
