@@ -13,11 +13,6 @@ export const NotFoundMemberContainer = styled.div`
 
 export const SortContainer = styled.div`
   grid-area: sort;
-  grid-gap: 8px;
-
-  ${media.sm} {
-    grid-area: initial;
-  }
 `
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
@@ -25,7 +20,6 @@ export const StyledTabs = styled(Tabs)`
 
   ${media.sm} {
     border-bottom: none;
-    grid-area: initial;
   }
 `
 
@@ -33,15 +27,16 @@ export const TabsContainer = styled.div`
   display: grid;
   padding-top: ${sizes(8)};
   gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr 'filter filter filter' auto / 1fr 1fr;
-  align-items: baseline;
+  grid-template:
+    'tabs tabs' auto
+    'sort filter' auto / 1fr auto;
   background-color: #000;
 
   ${media.sm} {
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
     gap: ${sizes(4)};
-    grid-template: 1fr / auto 1fr 160px 99px;
+    grid-template: 'tabs sort filter' 1fr / auto 160px 99px;
   }
 `
 
@@ -51,10 +46,6 @@ export const StyledMembershipInfo = styled(MembershipInfo)`
 
 export const FilterButtonContainer = styled.div`
   grid-area: filter;
-  grid-gap: 8px;
-  ${media.sm} {
-    grid-area: initial;
-  }
 `
 
 export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`

@@ -133,7 +133,6 @@ export const MemberView: React.FC = () => {
               tabs={mappedTabs}
               onSelectTab={handleSetCurrentTab}
             />
-            <div />
             {currentTab === 'NFTs owned' ||
               (currentTab === 'Activity' && (
                 <SortContainer>
