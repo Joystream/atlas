@@ -689,15 +689,19 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
               name="assets"
               control={control}
               render={() => (
-                <StyledMultiFileSelect
-                  files={files}
-                  onVideoChange={handleVideoFileChange}
-                  onThumbnailChange={handleThumbnailFileChange}
-                  editMode={isEdit}
-                  error={fileSelectError}
-                  onError={handleFileSelectError}
-                  maxVideoSize={10 * 1024 * 1024 * 1024}
-                />
+                // don't remove this div
+                // without this element position sticky won't work
+                <div>
+                  <StyledMultiFileSelect
+                    files={files}
+                    onVideoChange={handleVideoFileChange}
+                    onThumbnailChange={handleThumbnailFileChange}
+                    editMode={isEdit}
+                    error={fileSelectError}
+                    onError={handleFileSelectError}
+                    maxVideoSize={10 * 1024 * 1024 * 1024}
+                  />
+                </div>
               )}
             />
             <InputsContainer>
