@@ -11,18 +11,29 @@ export type SwitchProps = {
   label?: string
 }
 
-export const Switch: React.FC<SwitchProps> = ({ className, disabled, name, onChange, value, label }) => {
-  return (
-    <SwitchLabel disabled={disabled} className={className} as={label ? 'label' : 'div'}>
-      <SwitchWrapper disabled={disabled}>
-        <SwitchCheckbox type="checkbox" name={name} disabled={disabled} onChange={onChange} checked={value} />
-        <SwitchSlider />
-      </SwitchWrapper>
-      {label && (
-        <LabelText variant="t200" secondary={disabled}>
-          {label}
-        </LabelText>
-      )}
-    </SwitchLabel>
-  )
-}
+export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
+  ({ className, disabled, name, onChange, value, label }, ref) => {
+    return (
+      <SwitchLabel disabled={disabled} className={className} as={label ? 'label' : 'div'}>
+        <SwitchWrapper disabled={disabled}>
+          <SwitchCheckbox
+            type="checkbox"
+            name={name}
+            disabled={disabled}
+            onChange={onChange}
+            checked={value}
+            ref={ref}
+          />
+          <SwitchSlider />
+        </SwitchWrapper>
+        {label && (
+          <LabelText variant="t200" secondary={disabled}>
+            {label}
+          </LabelText>
+        )}
+      </SwitchLabel>
+    )
+  }
+)
+
+Switch.displayName = 'Switch'
