@@ -55,6 +55,7 @@ export const SidebarNavList = styled.ul`
   ${media.md} {
     width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   }
+
   padding: 0;
 `
 
@@ -128,10 +129,6 @@ export const LegalLinksWrapper = styled.span`
 
 export const LegalLink = styled(Link)`
   text-decoration: none;
-
-  font: ${cVar('typographyDesktopT100')};
-  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT100TextTransform')};
   color: ${cVar('colorTextMuted')} !important;
 
   &:hover {

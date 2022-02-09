@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo, SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -20,6 +21,7 @@ import {
   SearchbarContainer,
   SignedButtonsWrapper,
   StyledAvatar,
+  StyledButtonSkeletonLoader,
   StyledIconButton,
   StyledTopbarBase,
 } from './TopbarViewer.styles'
@@ -29,7 +31,7 @@ export const TopbarViewer: React.FC = () => {
     useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
-  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
@@ -81,6 +83,8 @@ export const TopbarViewer: React.FC = () => {
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }
 
+  const topbarButtonLoaded = extensionConnected !== null
+
   return (
     <>
       <StyledTopbarBase
@@ -102,39 +106,55 @@ export const TopbarViewer: React.FC = () => {
               onClick={handleFocus}
             />
           </CSSTransition>
-          {!mdMatch && isLoggedIn && !searchOpen && (
+          {!mdMatch && isLoggedIn && !searchOpen && topbarButtonLoaded && (
             <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
           )}
         </SearchbarContainer>
-        <CSSTransition
-          in={!activeMembershipLoading}
-          mountOnEnter
-          classNames={transitions.names.fade}
-          timeout={parseInt(cVar('animationTimingFast', true))}
-        >
-          <ButtonWrapper>
-            {mdMatch &&
-              (isLoggedIn ? (
-                <SignedButtonsWrapper>
-                  <Button
-                    icon={<SvgActionAddVideo />}
-                    iconPlacement="left"
-                    size="medium"
-                    to={absoluteRoutes.studio.index()}
-                    variant="secondary"
-                  >
-                    Go to Studio
-                  </Button>
-                  <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
-                </SignedButtonsWrapper>
-              ) : (
-                <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
-                  Sign In
-                </Button>
-              ))}
-            {!searchQuery && !mdMatch && !isLoggedIn && <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>}
-          </ButtonWrapper>
-        </CSSTransition>
+        <SwitchTransition>
+          <CSSTransition
+            key={String(topbarButtonLoaded)}
+            mountOnEnter
+            classNames={transitions.names.fade}
+            timeout={parseInt(cVar('animationTimingFast', true))}
+          >
+            <ButtonWrapper>
+              {mdMatch &&
+                (topbarButtonLoaded ? (
+                  isLoggedIn ? (
+                    <SignedButtonsWrapper>
+                      <Button
+                        icon={<SvgActionAddVideo />}
+                        iconPlacement="left"
+                        size="medium"
+                        to={absoluteRoutes.studio.index()}
+                        variant="secondary"
+                      >
+                        Go to Studio
+                      </Button>
+                      <StyledAvatar
+                        size="small"
+                        assetUrl={activeMembership?.avatarUri}
+                        onClick={handleDrawerToggle}
+                        loading={activeMembershipLoading}
+                      />
+                    </SignedButtonsWrapper>
+                  ) : (
+                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
+                      Sign In
+                    </Button>
+                  )
+                ) : (
+                  <SignedButtonsWrapper>
+                    <StyledButtonSkeletonLoader width={140} height={40} />
+                    <SkeletonLoader rounded width={40} height={40} />
+                  </SignedButtonsWrapper>
+                ))}
+              {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
+                <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>
+              )}
+            </ButtonWrapper>
+          </CSSTransition>
+        </SwitchTransition>
         <CSSTransition classNames="searchbar-overlay" in={searchOpen} timeout={0} unmountOnExit mountOnEnter>
           <Overlay onClick={onClose} />
         </CSSTransition>

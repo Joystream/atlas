@@ -40,7 +40,7 @@ export const Carousel = forwardRef<
     ref
   ) => {
     const dotsRef = useRef<HTMLDivElement>(null)
-    const gliderInstanceRef = useRef<Glider.Static<HTMLElement>>()
+    const gliderInstanceRef = useRef<Glider<HTMLElement>>()
     const slidesToScrollRef = useRef<number>(0)
 
     const onAnimated = () => {

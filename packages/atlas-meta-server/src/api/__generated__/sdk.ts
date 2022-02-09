@@ -4011,12 +4011,40 @@ export type DataObjectFieldsFragment = {
     __typename?: 'StorageBag'
     distributionBuckets: Array<{
       __typename?: 'DistributionBucket'
+      distributing: boolean
       operators: Array<{
         __typename?: 'DistributionBucketOperator'
         metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
       }>
     }>
   }
+}
+
+export type BasicChannelFieldsFragment = {
+  __typename?: 'Channel'
+  id: string
+  title?: Maybe<string>
+  description?: Maybe<string>
+  createdAt: Date
+}
+
+export type BasicVideoFieldsFragment = {
+  __typename?: 'Video'
+  id: string
+  title?: Maybe<string>
+  description?: Maybe<string>
+  duration?: Maybe<number>
+  isPublic?: Maybe<boolean>
+  isExplicit?: Maybe<boolean>
+  createdAt: Date
+  channel: { __typename?: 'Channel'; id: string; title?: Maybe<string> }
+  category?: Maybe<{ __typename?: 'VideoCategory'; name?: Maybe<string> }>
+  mediaMetadata?: Maybe<{
+    __typename?: 'VideoMediaMetadata'
+    pixelWidth?: Maybe<number>
+    pixelHeight?: Maybe<number>
+    encoding?: Maybe<{ __typename?: 'VideoMediaEncoding'; mimeMediaType?: Maybe<string> }>
+  }>
 }
 
 export type GetChannelQueryVariables = Exact<{
@@ -4038,6 +4066,7 @@ export type GetChannelQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4063,8 +4092,6 @@ export type GetVideoQuery = {
     isPublic?: Maybe<boolean>
     isExplicit?: Maybe<boolean>
     createdAt: Date
-    channel: { __typename?: 'Channel'; id: string; title?: Maybe<string> }
-    category?: Maybe<{ __typename?: 'VideoCategory'; name?: Maybe<string> }>
     thumbnailPhoto?: Maybe<{
       __typename?: 'StorageDataObject'
       id: string
@@ -4072,6 +4099,7 @@ export type GetVideoQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4086,6 +4114,7 @@ export type GetVideoQuery = {
         __typename?: 'StorageBag'
         distributionBuckets: Array<{
           __typename?: 'DistributionBucket'
+          distributing: boolean
           operators: Array<{
             __typename?: 'DistributionBucketOperator'
             metadata?: Maybe<{ __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: Maybe<string> }>
@@ -4093,6 +4122,8 @@ export type GetVideoQuery = {
         }>
       }
     }>
+    channel: { __typename?: 'Channel'; id: string; title?: Maybe<string> }
+    category?: Maybe<{ __typename?: 'VideoCategory'; name?: Maybe<string> }>
     mediaMetadata?: Maybe<{
       __typename?: 'VideoMediaMetadata'
       pixelWidth?: Maybe<number>
@@ -4107,6 +4138,7 @@ export const DataObjectFieldsFragmentDoc = gql`
     id
     storageBag {
       distributionBuckets {
+        distributing
         operators {
           metadata {
             nodeEndpoint
@@ -4116,52 +4148,64 @@ export const DataObjectFieldsFragmentDoc = gql`
     }
   }
 `
+export const BasicChannelFieldsFragmentDoc = gql`
+  fragment BasicChannelFields on Channel {
+    id
+    title
+    description
+    createdAt
+  }
+`
+export const BasicVideoFieldsFragmentDoc = gql`
+  fragment BasicVideoFields on Video {
+    id
+    title
+    description
+    duration
+    isPublic
+    isExplicit
+    createdAt
+    channel {
+      id
+      title
+    }
+    category {
+      name
+    }
+    mediaMetadata {
+      pixelWidth
+      pixelHeight
+      encoding {
+        mimeMediaType
+      }
+    }
+  }
+`
 export const GetChannelDocument = gql`
   query GetChannel($id: ID!) {
     channelByUniqueInput(where: { id: $id }) {
-      id
-      title
-      description
-      createdAt
+      ...BasicChannelFields
       avatarPhoto {
         ...DataObjectFields
       }
     }
   }
+  ${BasicChannelFieldsFragmentDoc}
   ${DataObjectFieldsFragmentDoc}
 `
 export const GetVideoDocument = gql`
   query GetVideo($id: ID!) {
     videoByUniqueInput(where: { id: $id }) {
-      id
-      title
-      description
-      duration
-      isPublic
-      isExplicit
-      createdAt
-      channel {
-        id
-        title
-      }
-      category {
-        name
-      }
+      ...BasicVideoFields
       thumbnailPhoto {
         ...DataObjectFields
       }
       media {
         ...DataObjectFields
       }
-      mediaMetadata {
-        pixelWidth
-        pixelHeight
-        encoding {
-          mimeMediaType
-        }
-      }
     }
   }
+  ${BasicVideoFieldsFragmentDoc}
   ${DataObjectFieldsFragmentDoc}
 `
 

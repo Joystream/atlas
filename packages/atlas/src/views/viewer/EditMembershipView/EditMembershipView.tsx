@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import useMeasure from 'react-use-measure'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInputs'
+import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
@@ -12,6 +15,7 @@ import { useUser } from '@/providers/user'
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
 export const EditMembershipView: React.FC = () => {
+  const navigate = useNavigate()
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const [actionBarRef, actionBarBounds] = useMeasure()
   const { joystream, proxyCallback } = useJoystream()
@@ -50,20 +54,22 @@ export const EditMembershipView: React.FC = () => {
     }
   }, [activeMembership, activeMembershipLoading, resetForm])
 
-  const handleEditMember = handleSubmit(async (data) => {
+  const headTags = useHeadTags('Edit membership')
+
+  const handleEditMember = handleSubmit(async (formData) => {
     if (!joystream || !activeMembership) {
       return
     }
 
-    await handleTransaction({
+    const success = await handleTransaction({
       txFactory: async (updateStatus) =>
         (
           await joystream.extrinsics
         ).updateMember(
           activeMembership?.id,
-          dirtyFields.handle ? data.handle : null,
-          dirtyFields.avatar ? data?.avatar : null,
-          dirtyFields.about ? data.about : null,
+          dirtyFields.handle ? formData.handle : null,
+          dirtyFields.avatar ? formData?.avatar : null,
+          dirtyFields.about ? formData.about : null,
           proxyCallback(updateStatus)
         ),
       successMessage: {
@@ -71,11 +77,15 @@ export const EditMembershipView: React.FC = () => {
         description: 'Lorem ipsum',
       },
     })
-    refetchActiveMembership()
+    const { data } = await refetchActiveMembership()
+    if (success) {
+      navigate(absoluteRoutes.viewer.member(data.membershipByUniqueInput?.handle))
+    }
   })
 
   return (
     <form onSubmit={handleEditMember}>
+      {headTags}
       <LimitedWidthContainer>
         <MembershipInfo
           address={activeAccountId}
@@ -83,6 +93,7 @@ export const EditMembershipView: React.FC = () => {
           onAvatarEditClick={() => setFocus('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
           loading={activeMembershipLoading}
+          editable
           handle={getValues('handle')}
         />
         <Wrapper actionBarHeight={actionBarBounds.height}>
@@ -102,7 +113,7 @@ export const EditMembershipView: React.FC = () => {
           secondaryButton={{
             visible: true,
             text: 'Cancel',
-            onClick: resetForm,
+            to: absoluteRoutes.viewer.member(activeMembership?.handle),
           }}
         />
       </LimitedWidthContainer>

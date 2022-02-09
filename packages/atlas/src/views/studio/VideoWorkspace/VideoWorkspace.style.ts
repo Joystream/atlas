@@ -51,6 +51,7 @@ const containerStyles = (state: VideoWorkspaceState) => {
 
 export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
   ${({ dialogState }) => containerStyles(dialogState)};
+
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);

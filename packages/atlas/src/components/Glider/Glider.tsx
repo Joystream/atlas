@@ -41,7 +41,7 @@ export function useGlider<T extends HTMLElement>({
   onSlideVisible,
   ...gliderOptions
 }: GliderProps) {
-  const [glider, setGlider] = useState<Glider.Static<HTMLElement>>()
+  const [glider, setGlider] = useState<Glider<HTMLElement>>()
   const element = useRef<T>(null)
 
   useLayoutEffect(() => {

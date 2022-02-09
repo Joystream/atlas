@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
+import { BUILD_ENV } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
 import migratedGizaIdMappings from '@/data/migratedGizaIdMappings.json'
 
@@ -9,7 +10,7 @@ export const useRedirectMigratedGizaContent = ({ type }: { type: 'channel' | 'vi
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (type !== 'channel' || !id) return
+    if (type !== 'channel' || !id || BUILD_ENV !== 'production') return
 
     const mapping = migratedGizaIdMappings.channelIdsMapEntries
     const migratedId = mapping[id as keyof typeof mapping]
@@ -20,7 +21,7 @@ export const useRedirectMigratedGizaContent = ({ type }: { type: 'channel' | 'vi
   }, [id, navigate, type])
 
   useEffect(() => {
-    if ((type !== 'video' && type !== 'embedded-video') || !id) return
+    if ((type !== 'video' && type !== 'embedded-video') || !id || BUILD_ENV !== 'production') return
 
     const mapping = migratedGizaIdMappings.videoIdsMapEntries
     const migratedId = mapping[id as keyof typeof mapping]

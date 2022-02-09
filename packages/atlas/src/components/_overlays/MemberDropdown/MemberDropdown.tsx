@@ -38,6 +38,7 @@ import {
   Filter,
   InnerContainer,
   LearnAboutTjoyLink,
+  MemberHandleText,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
@@ -55,8 +56,9 @@ export type MemberDropdownProps = {
 export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const [accountBalance, setAccountBalance] = useState<number | undefined>(undefined)
-    const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const { pathname } = useLocation()
+
+    const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
@@ -78,6 +80,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       onStart: () => setIsAnimatingSwitchMember(true),
     })
 
+    const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
     const hasOneMember = memberships?.length === 1
 
     const handleAddNewChannel = () => {
@@ -92,8 +95,8 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       navigate(absoluteRoutes.studio.index())
       closeDropdown?.()
     }
-    // TODO: add navigation
     const handleGoToMyProfile = () => {
+      navigate(absoluteRoutes.viewer.member(activeMembership?.handle))
       closeDropdown?.()
     }
     const handleAddNewMember = () => {
@@ -103,11 +106,13 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }
     const handleMemberChange = (memberId: string, accountId: string, channelId: string | null) => {
       setActiveUser({ accountId, memberId, channelId })
-      if (channelId && pathname === absoluteRoutes.studio.newChannel()) {
-        navigate(absoluteRoutes.studio.editChannel())
-      }
+
       closeDropdown?.()
       setIsSwitchingMember(false)
+
+      if (isStudio) {
+        navigate(absoluteRoutes.studio.index())
+      }
     }
 
     useEffect(() => {
@@ -137,6 +142,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
           // prevent default so it doesn't trigger unwanted submit e.g. in Channel Edit View
           event.preventDefault()
           event.stopPropagation()
+          setIsSwitchingMember(false)
           closeDropdown?.()
         }
       }
@@ -151,8 +157,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     }, [isSwitchingMember, transRef])
     return (
       <Container ref={ref}>
-        {/* 9999 prevents containerHeight from being 0 at when the component mounts */}
-        <InnerContainer isActive={isActive} containerHeight={containerHeight || 9999}>
+        <InnerContainer isActive={isActive} containerHeight={containerHeight}>
           {transitions((style, isSwitchingMemberMode) =>
             isSwitchingMemberMode ? (
               <AnimatedContainer isAnimatingSwitchMember={isAnimatingSwitchMember} style={style}>
@@ -162,7 +167,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       onClick={() => setIsSwitchingMember(false)}
                       nodeStart={<SvgActionChevronL />}
                       label="Switch member"
-                      applyIconStylesNodeStart
                     />
                   </SwitchMemberItemListContainer>
 
@@ -196,7 +200,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C)
                 \ to preserve the space while member handle loads */}
-                        <Text variant="h400">{activeMembership?.handle ?? '‌‌ '}</Text>
+                        <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
                         <TjoyContainer>
                           {accountBalance !== undefined ? (
                             <>
@@ -251,7 +255,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       onClick={() => (hasOneMember ? handleAddNewMember() : setIsSwitchingMember(true))}
                       label={hasOneMember ? 'Add new member...' : 'Switch member'}
                       nodeEnd={!hasOneMember && <SvgActionChevronR />}
-                      applyIconStylesNodeEnd
                     />
                   </SectionContainer>
                   {publisher && (

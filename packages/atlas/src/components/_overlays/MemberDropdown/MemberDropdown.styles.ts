@@ -23,14 +23,10 @@ export const Container = styled.div`
   }
 `
 
-export const InnerContainer = styled.div<{
-  isActive: boolean
-  containerHeight: number
-}>`
+export const InnerContainer = styled.div<{ isActive: boolean; containerHeight: number }>`
   width: 280px;
   position: 'relative';
   max-height: calc(100vh - ${sizes(4)} - var(--size-topbar-height));
-
   height: ${({ containerHeight }) => containerHeight}px;
   transform: translateY(
     ${({ isActive, containerHeight }) =>
@@ -39,7 +35,6 @@ export const InnerContainer = styled.div<{
   transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
   will-change: height, transform;
   box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
-
   background-color: ${cVar('colorBackgroundStrong')};
   overflow-y: auto;
   overflow-x: hidden;
@@ -80,6 +75,10 @@ export const MemberInfoContainer = styled.div`
   display: grid;
   gap: ${sizes(4)};
   ${paddingStyles}
+`
+
+export const MemberHandleText = styled(Text)`
+  word-break: break-word;
 `
 
 export const SectionContainer = styled.div`

@@ -1,15 +1,14 @@
 import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useMatch, useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
-import { QUERY_PARAMS } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { MemberId } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -27,12 +26,17 @@ type Inputs = {
   about: string | null
 }
 
-export const CreateMemberModal: React.FC = () => {
+type CreateMemberModalProps = {
+  show: boolean
+}
+
+export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) => {
   const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
-  const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const isSignIn = useMatch(absoluteRoutes.studio.signIn())
+  const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
@@ -79,12 +83,19 @@ export const CreateMemberModal: React.FC = () => {
         description: 'Browse, watch, create, collect videos across the platform and have fun!',
         iconType: 'success',
       })
-      navigate(pathname)
+
+      if (isStudio) {
+        navigate(isSignIn ? absoluteRoutes.studio.newChannel() : absoluteRoutes.studio.signIn())
+      } else {
+        navigate(pathname)
+      }
     }
   }, [
     activeAccountId,
     closeCreatingMemberDialog,
     displaySnackbar,
+    isSignIn,
+    isStudio,
     membershipBlock,
     navigate,
     pathname,
@@ -133,7 +144,7 @@ export const CreateMemberModal: React.FC = () => {
   return (
     <StyledDialogModal
       title="Create a Joystream membership"
-      show={step === 'member' && accountSet && !isCreatingMembership}
+      show={show && accountSet && !isCreatingMembership}
       dividers
       as="form"
       onSubmit={handleCreateMember}

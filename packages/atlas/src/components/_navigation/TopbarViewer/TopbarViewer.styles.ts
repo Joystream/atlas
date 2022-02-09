@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar } from '@/styles'
 import { media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
@@ -102,4 +103,8 @@ export const Overlay = styled.div`
 
 export const StyledIconButton = styled(Button)`
   margin-left: ${sizes(2)};
+`
+
+export const StyledButtonSkeletonLoader = styled(SkeletonLoader)`
+  margin-right: ${sizes(4)};
 `

@@ -21,7 +21,7 @@ fragment DistributionBucketOperatorField on DistributionBucketOperator {
 }
 
 query GetDistributionBucketsWithOperators {
-  distributionBuckets(limit: 50) {
+  distributionBuckets(limit: 50, where: { distributing_eq: true }) {
     id
     bags {
       id

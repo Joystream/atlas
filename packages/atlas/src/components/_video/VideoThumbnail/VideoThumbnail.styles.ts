@@ -58,6 +58,7 @@ export const SlotContainer = styled.div<SlotsContainerProps>`
   user-select: none;
   max-width: 50%;
   ${({ position }) => getSlotPosition(position)};
+
   opacity: ${({ type = 'default' }) => (type === 'hover' ? 0 : 1)};
   transition: opacity ${cVar('animationTransitionFast')};
 `
@@ -84,6 +85,7 @@ export const ThumbnailImage = styled.img`
   top: 0;
   left: 0;
   ${square('100%')};
+
   object-fit: contain;
 `
 
@@ -92,6 +94,7 @@ export const ThumbnailBackground = styled.div`
   top: 0;
   left: 0;
   ${square('100%')};
+
   background: ${cVar('colorBackground')};
 `
 

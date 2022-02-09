@@ -28,7 +28,7 @@ type IsSecondary = {
 }
 
 const smallPaddingCss = css`
-  padding: ${sizes(3)} ${NAVBAR_LEFT_PADDING}px;
+  padding: ${sizes(4)} ${NAVBAR_LEFT_PADDING}px;
 `
 
 const bigPaddingCss = css`

@@ -4,6 +4,7 @@ import React from 'react'
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { oldColors, sizes } from '@/styles'
 
 export const TextContainer = styled.div`
@@ -64,5 +65,15 @@ export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
 
   &:hover {
     text-decoration: underline;
+  }
+`
+
+export const MemberLink = styled(Button)`
+  justify-content: start;
+
+  &,
+  * {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `

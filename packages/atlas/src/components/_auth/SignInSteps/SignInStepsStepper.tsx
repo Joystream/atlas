@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
-import { Loader } from '@/components/_loaders/Loader'
-import { Modal } from '@/components/_overlays/Modal'
 import { StepperModal } from '@/components/_overlays/StepperModal'
 import { QUERY_PARAMS } from '@/config/routes'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useUser } from '@/providers/user'
 import { urlParams } from '@/utils/url'
@@ -15,8 +14,10 @@ import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
 
 export const SignInStepsStepper: React.FC = () => {
+  const headTags = useHeadTags('Sign in')
   const navigate = useNavigate()
-  const step = Number(useRouterQuery(QUERY_PARAMS.LOGIN))
+  const step = useRouterQuery(QUERY_PARAMS.LOGIN)
+  const stepNumber = Number(step)
   const { extensionConnected, signIn, isLoading } = useUser()
   const steps = [
     {
@@ -34,23 +35,24 @@ export const SignInStepsStepper: React.FC = () => {
   ]
 
   useEffect(() => {
-    if (extensionConnected === null && step >= 1) {
+    if (extensionConnected === null && stepNumber >= 1) {
       signIn()
     }
-  }, [extensionConnected, signIn, step])
+  }, [extensionConnected, signIn, stepNumber])
+
+  const showStepper = stepNumber >= 1 && !isLoading
+  const showCreateMemberModal = step === 'member'
 
   return (
     <>
-      <Modal show={isLoading} noBoxShadow>
-        <Loader variant="xlarge" />
-      </Modal>
+      {(showStepper || showCreateMemberModal) && headTags}
       <StepperModal
-        currentStepIdx={step <= 0 ? 0 : step - 1}
+        currentStepIdx={stepNumber <= 0 ? 0 : stepNumber - 1}
         steps={steps}
-        show={step >= 1 && !isLoading}
+        show={showStepper}
         onExitClick={() => navigate({ search: '' })}
       />
-      <CreateMemberModal />
+      <CreateMemberModal show={showCreateMemberModal} />
     </>
   )
 }

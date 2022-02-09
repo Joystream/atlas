@@ -22,8 +22,10 @@ export type AvatarGroupProps = {
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean
+  reverse?: boolean
   loading?: boolean
   className?: string
+  shoulHighlightEveryAvatar?: boolean
 }
 
 const getSizeofAvatar = (size: AvatarGroupSize) => {
@@ -44,12 +46,14 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   avatarStrokeColor,
   clickable = true,
   loading,
+  reverse,
+  shoulHighlightEveryAvatar,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
   return (
-    <AvatarGroupContainer size={size} className={className}>
+    <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shoulHighlightEveryAvatar}>
       {avatars.map((avatarProps, idx) => (
         <Fragment key={idx}>
           <AvatarWrapper
@@ -58,7 +62,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
             onMouseEnter={() => clickable && setHoveredAvatarIdx(idx)}
             onMouseLeave={() => clickable && setHoveredAvatarIdx(null)}
             size={size}
-            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : avatars.length - idx }}
+            style={{ zIndex: hoveredAvatarIdx === idx ? avatars.length : reverse ? idx : avatars.length - idx }}
             avatarStrokeColor={avatarStrokeColor}
           >
             <AvatarBackground avatarStrokeColor={avatarStrokeColor} />

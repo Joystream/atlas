@@ -1,3 +1,4 @@
+import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
@@ -18,6 +19,7 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
@@ -49,19 +51,28 @@ import {
   VideoSection,
 } from './ChannelView.styles'
 
-const TABS = [
-  'Videos',
-  // 'NFTs',
-  'Information',
-] as const
+const TABS = ['Videos', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+
+  // At mount set the tab from the search params
+  // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
+  const initialRender = useRef(true)
+  useEffect(() => {
+    if (initialRender.current) {
+      const tabIndex = TABS.findIndex((t) => t === currentTabName)
+      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
+      initialRender.current = false
+    }
+  })
+
   useRedirectMigratedGizaContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
-  const [searchParams, setSearchParams] = useSearchParams()
   const { channel, loading, error } = useChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
@@ -85,10 +96,10 @@ export const ChannelView: React.FC = () => {
   })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const currentTabName = searchParams.get('tab')
-  const [currentTab, setCurrentTab] = useState<string | null>(null)
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
   const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
   const {
@@ -123,6 +134,12 @@ export const ChannelView: React.FC = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
     }
   )
+
+  const channelMetaTags = useMemo(() => {
+    if (!channel || !avatarPhotoUrl) return {}
+    return generateChannelMetaTags(channel, avatarPhotoUrl)
+  }, [channel, avatarPhotoUrl])
+  const headTags = useHeadTags(channel?.title, channelMetaTags)
 
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
@@ -199,21 +216,9 @@ export const ChannelView: React.FC = () => {
           />
         </PaginationContainer>
       </>
-    ) : currentTab === 'NFTs' ? (
-      <div>NFT Tiles</div>
     ) : (
       <ChannelAbout />
     )
-
-  // At mount set the tab from the search params
-  const initialRender = useRef(true)
-  useEffect(() => {
-    if (initialRender.current) {
-      const tabIndex = TABS.findIndex((t) => t === currentTabName)
-      if (tabIndex === -1) setSearchParams({ 'tab': 'Videos' }, { replace: true })
-      initialRender.current = false
-    }
-  })
 
   useEffect(() => {
     if (currentTabName) {
@@ -245,6 +250,7 @@ export const ChannelView: React.FC = () => {
 
   return (
     <ViewWrapper>
+      {headTags}
       <ChannelCover assetUrl={coverPhotoUrl} />
       <LimitedWidthContainer>
         {smMatch ? (
@@ -403,7 +409,7 @@ type SearchProps = {
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
   search: (searchQuery: string) => void
-  setCurrentTab: (tab: string) => void
+  setCurrentTab: (tab: typeof TABS[number] | null) => void
 }
 const Search: React.FC<SearchProps> = ({
   searchInputRef,

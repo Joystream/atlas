@@ -3,13 +3,11 @@ import styled from '@emotion/styled'
 
 import { cVar, square } from '@/styles'
 
+import { sharedAvatarActiveStyles, sharedAvatarHoverStyles } from './Avatar.styles'
+
 import { Avatar } from '.'
 
 export type AvatarGroupSize = 'small' | 'medium' | 'large'
-
-export type AvatarGroupContainerProps = {
-  size?: AvatarGroupSize
-}
 
 const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
   // grid-auto-columns = size of the avatar - offset
@@ -32,26 +30,29 @@ const getSizeOfGridColumn = ({ size }: AvatarGroupContainerProps) => {
   }
 }
 
-export const AvatarGroupContainer = styled.div<{ size: AvatarGroupSize }>`
-  display: inline-grid;
-  grid-row: auto;
-  ${getSizeOfGridColumn};
+export const StyledAvatar = styled(Avatar)`
+  transition: transform ${cVar('animationTransitionFast')};
 `
 
-export const StyledAvatar = styled(Avatar)`
-  transition: transform ${cVar('animationTransitionFast')}, box-shadow ${cVar('animationTransitionFast')};
+type AvatarGroupContainerProps = {
+  size?: AvatarGroupSize
+  shouldHighlightEveryAvatar?: boolean
+}
 
-  :hover {
-    ::after {
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-    }
-  }
-
-  :active {
-    ::after {
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
-    }
-  }
+export const AvatarGroupContainer = styled.div<AvatarGroupContainerProps>`
+  display: inline-grid;
+  grid-row: auto;
+  ${({ shouldHighlightEveryAvatar }) =>
+    shouldHighlightEveryAvatar &&
+    css`
+      :hover ${StyledAvatar} {
+        ${sharedAvatarHoverStyles};
+      }
+      :active ${StyledAvatar} {
+        ${sharedAvatarActiveStyles};
+      }
+    `};
+  ${getSizeOfGridColumn};
 `
 
 type AvatatBackgroundProps = {
@@ -61,6 +62,7 @@ type AvatatBackgroundProps = {
 export const AvatarBackground = styled.div<AvatatBackgroundProps>`
   position: absolute;
   ${square('100%')};
+
   border-radius: 50%;
   top: 0;
   background-color: ${({ avatarStrokeColor = 'black' }) => avatarStrokeColor};
@@ -76,6 +78,7 @@ export const AvatarOverlay = styled.div<AvatarOverlayProps>`
   position: absolute;
   top: 0;
   ${square('100%')}
+
   border-radius: 50%;
   background-color: black;
   opacity: ${({ dimmed }) => (dimmed ? 0.5 : 0)};

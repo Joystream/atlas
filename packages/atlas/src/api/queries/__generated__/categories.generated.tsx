@@ -3,14 +3,14 @@ import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-const defaultOptions = {}
-export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }
+const defaultOptions = {} as const
+export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: string | null }
 
 export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetVideoCategoriesQuery = {
   __typename?: 'Query'
-  videoCategories: Array<{ __typename?: 'VideoCategory'; id: string; name?: Types.Maybe<string> }>
+  videoCategories: Array<{ __typename?: 'VideoCategory'; id: string; name?: string | null }>
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`

@@ -22,6 +22,7 @@ import {
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
@@ -194,6 +195,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     const hashPromise = computeFileHash(coverAsset.blob)
     setCoverHashPromise(hashPromise)
   }, [dirtyFields.cover, coverAsset])
+
+  const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
     if (anyVideoTabsCachedAssets) {
@@ -378,6 +381,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const isDisabled = !isDirty || nodeConnectionStatus !== 'connected' || !isValid
   return (
     <form onSubmit={handleSubmit}>
+      {headTags}
       <Controller
         name="cover"
         control={control}
@@ -415,7 +419,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 assetUrl={avatarAsset?.url}
                 hasAvatarUploadFailed={hasAvatarUploadFailed}
                 size="fill"
-                onEditClick={() => avatarDialogRef.current?.open()}
+                onClick={() => avatarDialogRef.current?.open()}
                 editable
                 loading={loading}
               />
