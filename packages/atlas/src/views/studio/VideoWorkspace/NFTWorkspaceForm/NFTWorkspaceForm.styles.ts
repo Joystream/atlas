@@ -53,13 +53,13 @@ export const NFTFormWrapper = styled.div`
 export const StepperWrapper = styled.div`
   max-width: 100%;
   overflow-x: auto;
+  padding-bottom: ${sizes(8)};
+  box-shadow: ${cVar('effectDividersBottom')};
+  scrollbar-width: none;
 
   ::-webkit-scrollbar {
     display: none;
   }
-  scrollbar-width: none;
-  padding-bottom: ${sizes(8)};
-  box-shadow: ${cVar('effectDividersBottom')};
 `
 
 export const StepperInnerWrapper = styled.div`
