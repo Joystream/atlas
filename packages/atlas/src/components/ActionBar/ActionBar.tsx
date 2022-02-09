@@ -4,7 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Text } from '@/components/Text'
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionInformative } from '@/components/_icons'
+import { SvgActionInformative, SvgControlsCancel } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
@@ -111,7 +111,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
               {textNode}
               <EditSecondaryButton
                 {...secondaryButton}
-                icon={!smMatch ? secondaryButton?.icon : undefined}
+                icon={!smMatch ? <SvgControlsCancel width={16} height={16} /> : undefined}
                 variant={!smMatch ? 'tertiary' : 'secondary'}
                 size={!smMatch ? 'small' : 'large'}
                 iconPlacement="right"

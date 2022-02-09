@@ -30,7 +30,7 @@ import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT, SvgControlsCancel } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -700,12 +700,14 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
 
     const actionBarSecondaryButton = useMemo(
       () => ({
-        visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
+        visible: (isEdit && isDirty && nodeConnectionStatus === 'connected') || watch('isIssuedAsNFT'),
         text: 'Cancel',
-        onClick: () => reset(),
-        icon: isEdit && !watch('isIssuedAsNFT') ? <SvgControlsCancel width={16} height={16} /> : undefined,
+        onClick: () => {
+          setValue('isIssuedAsNFT', false)
+          reset()
+        },
       }),
-      [isDirty, isEdit, nodeConnectionStatus, reset, watch]
+      [isDirty, isEdit, nodeConnectionStatus, reset, setValue, watch]
     )
 
     const actionBarDraftBadge = useMemo(
@@ -993,7 +995,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         </FormScrolling>
         <StyledActionBar
           ref={actionBarRef}
-          variant={watch('isIssuedAsNFT') ? 'nft' : isEdit ? 'edit' : 'new'}
+          variant={isEdit ? 'edit' : 'new'}
           primaryText={`Fee: ${fee} Joy`}
           secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
           primaryButton={actionBarPrimaryButton}
