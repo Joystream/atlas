@@ -416,6 +416,7 @@ export type GetVideosQuery = {
 }
 
 export type GetBasicVideosQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
 }>
 
@@ -956,8 +957,8 @@ export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
 export const GetBasicVideosDocument = gql`
-  query GetBasicVideos($where: VideoWhereInput) {
-    videos(where: $where) {
+  query GetBasicVideos($limit: Int, $where: VideoWhereInput) {
+    videos(limit: $limit, where: $where) {
       ...BasicVideoFields
     }
   }
@@ -976,6 +977,7 @@ export const GetBasicVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetBasicVideosQuery({
  *   variables: {
+ *      limit: // value for 'limit'
  *      where: // value for 'where'
  *   },
  * });

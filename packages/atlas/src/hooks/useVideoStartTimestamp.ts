@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 
-export const useVideoStartTimestamp = (timestampFromQuery: number, duration?: number | null) => {
+import { useRouterQuery } from '@/hooks/useRouterQuery'
+
+export const useVideoStartTimestamp = (duration?: number | null) => {
   const [startTimestamp, setStartTimestamp] = useState<number>()
+  const timestampFromQuery = Number(useRouterQuery('time'))
 
   useEffect(() => {
     if (!timestampFromQuery || timestampFromQuery > (duration ?? 0)) {

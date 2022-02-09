@@ -2,8 +2,8 @@ import React from 'react'
 
 import { CallToActionButtonProps } from '@/components/_buttons/CallToActionButton'
 import {
-  SvgControlsPlaceholder,
   SvgSidebarChannels,
+  SvgSidebarExplore,
   SvgSidebarHome,
   SvgSidebarNew,
   SvgSidebarPopular,
@@ -40,7 +40,6 @@ export const CTA_MAP: Record<string, CallToActionButtonProps> = {
     label: 'Discover videos',
     to: absoluteRoutes.viewer.discover(),
     colorVariant: 'yellow',
-    iconColorVariant: 'white',
-    icon: <SvgControlsPlaceholder />,
+    icon: <SvgSidebarExplore />,
   },
 }

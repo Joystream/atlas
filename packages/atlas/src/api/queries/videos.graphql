@@ -91,8 +91,8 @@ query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: Vi
   }
 }
 
-query GetBasicVideos($where: VideoWhereInput) {
-  videos(where: $where) {
+query GetBasicVideos($limit: Int, $where: VideoWhereInput) {
+  videos(limit: $limit, where: $where) {
     ...BasicVideoFields
   }
 }

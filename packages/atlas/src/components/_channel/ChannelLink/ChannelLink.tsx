@@ -12,7 +12,15 @@ import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, FollowButton, Follows, StyledAvatar, StyledText, TitleWrapper } from './ChannelLink.styles'
+import {
+  Container,
+  FollowButton,
+  Follows,
+  StyledAvatar,
+  StyledLink,
+  StyledText,
+  TitleWrapper,
+} from './ChannelLink.styles'
 
 type ChannelLinkProps = {
   id?: string
@@ -62,14 +70,16 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const _textVariant = textVariant || 't200-strong'
   return (
-    <Container onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
+    <Container className={className}>
       {!hideAvatar && (
-        <StyledAvatar
-          withHandle={!hideHandle}
-          loading={!displayedChannel}
-          size={avatarSize}
-          assetUrl={avatarPhotoUrl}
-        />
+        <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
+          <StyledAvatar
+            withHandle={!hideHandle}
+            loading={!displayedChannel}
+            size={avatarSize}
+            assetUrl={avatarPhotoUrl}
+          />
+        </StyledLink>
       )}
       {!hideHandle && (
         <SwitchTransition>
@@ -80,7 +90,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
           >
             {displayedChannel ? (
               <TitleWrapper>
-                <div>
+                <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
                   <StyledText variant={_textVariant} isSecondary={!!textSecondary}>
                     {customTitle || displayedChannel?.title}
                   </StyledText>
@@ -89,7 +99,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
                       {displayedChannel.follows} {displayedChannel.follows === 1 ? 'follower' : 'followers'}
                     </Follows>
                   )}
-                </div>
+                </StyledLink>
                 {followButton && (
                   <FollowButton variant="secondary" onClick={handleFollowButtonClick}>
                     {isFollowing ? 'Unfollow' : 'Follow'}

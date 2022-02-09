@@ -44,7 +44,7 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
       className={className}
     >
       {!hideIcon && id ? (
-        <IconWrapper withHandle={!hideHandle}>
+        <IconWrapper withHandle={!hideHandle} color={videoCategories[id].color}>
           <CircleDefaultBackground color={videoCategories[id].color} />
           {videoCategories[id].icon}
         </IconWrapper>

@@ -21,7 +21,6 @@ import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -40,7 +39,6 @@ import {
   DetailsWrapper,
   ExpandButton,
   LicenceCategoryWrapper,
-  LicenseContainer,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
@@ -65,8 +63,6 @@ export const VideoView: React.FC = () => {
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
   const category = useCategoryMatch(video?.category?.id)
 
-  const timestampFromQuery = Number(useRouterQuery('time'))
-
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
 
@@ -76,7 +72,7 @@ export const VideoView: React.FC = () => {
   }, [video, thumbnailUrl])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
-  const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(timestampFromQuery, video?.duration)
+  const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
 
   // Restore an interrupted video state
   useEffect(() => {
@@ -212,7 +208,7 @@ export const VideoView: React.FC = () => {
       </PlayerWrapper>
       <StyledLimitedWidthContainer>
         <LayoutGrid>
-          <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, xs: 12, sm: 12, md: 8, xl: 8, xxl: 8 }}>
+          <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: 8 }}>
             <TitleContainer>
               {video ? (
                 <TitleText variant={mdMatch ? 'h600' : 'h400'}>{video.title}</TitleText>
@@ -228,23 +224,27 @@ export const VideoView: React.FC = () => {
               </Meta>
             </TitleContainer>
             <ChannelContainer>
-              <ChannelLink followButton id={channelId} textVariant="h300" />
+              <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
             </ChannelContainer>
             <DetailsWrapper>
               <DescriptionContainer>
-                <DescriptionTitle variant="h100">Description</DescriptionTitle>
                 {video ? (
-                  video.description?.split('\n').map((line, idx) => (
-                    <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
-                      {replaceUrls(line)}
-                    </Text>
-                  ))
+                  video?.description && (
+                    <>
+                      <DescriptionTitle variant="h100">Description</DescriptionTitle>
+                      {video.description?.split('\n').map((line, idx) => (
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                          {replaceUrls(line)}
+                        </Text>
+                      ))}
+                    </>
+                  )
                 ) : (
                   <>
-                    <DescriptionSkeletonLoader width={700} />
-                    <DescriptionSkeletonLoader width={400} />
-                    <DescriptionSkeletonLoader width={800} />
-                    <DescriptionSkeletonLoader width={300} />
+                    <DescriptionSkeletonLoader width="70%" />
+                    <DescriptionSkeletonLoader width="40%" />
+                    <DescriptionSkeletonLoader width="80%" />
+                    <DescriptionSkeletonLoader width="30%" />
                   </>
                 )}
                 {!mdMatch && (
@@ -253,6 +253,7 @@ export const VideoView: React.FC = () => {
                     iconPlacement="right"
                     size="small"
                     variant="tertiary"
+                    textOnly
                     icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
                   >
                     Show {!detailsExpanded ? 'more' : 'less'}
@@ -260,14 +261,15 @@ export const VideoView: React.FC = () => {
                 )}
               </DescriptionContainer>
               <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
-                <LicenseContainer>
+                <GridItem>
                   {video ? (
                     <>
                       <DescriptionTitle variant="h100">License</DescriptionTitle>
                       {foundLicense && (
-                        <a href={foundLicense.url} target="_blank" rel="noopener noreferrer">
-                          {foundLicense.name}
-                        </a>
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                          {foundLicense.name[0].toUpperCase()}
+                          {foundLicense.name.slice(1).toLocaleLowerCase()}
+                        </Text>
                       )}
                       <Text variant="t100" secondary>
                         {video.license?.customText}
@@ -276,20 +278,26 @@ export const VideoView: React.FC = () => {
                   ) : (
                     <SkeletonLoader height={12} width={200} />
                   )}
-                </LicenseContainer>
+                </GridItem>
                 <CategoryWrapper>
-                  <DescriptionTitle variant="h100">Category</DescriptionTitle>
-                  <Category to={absoluteRoutes.viewer.category(category?.id)}>
-                    {category?.icon}
-                    <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                      {category?.name}
-                    </Text>
-                  </Category>
+                  {video ? (
+                    <>
+                      <DescriptionTitle variant="h100">Category</DescriptionTitle>
+                      <Category to={absoluteRoutes.viewer.category(category?.id)}>
+                        {category?.icon}
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                          {category?.name}
+                        </Text>
+                      </Category>
+                    </>
+                  ) : (
+                    <SkeletonLoader height={12} width={200} />
+                  )}
                 </CategoryWrapper>
               </LicenceCategoryWrapper>
             </DetailsWrapper>
           </GridItem>
-          <GridItem colSpan={{ xxs: 12, xs: 12, sm: 12, md: 4, xl: 4, xxl: 4 }}>
+          <GridItem colSpan={{ xxs: 12, md: 4 }}>
             <MoreVideos channelId={channelId} channelName={channelName} type="channel" />
             <MoreVideos categoryId={category?.id} categoryName={category?.name} type="category" />
           </GridItem>

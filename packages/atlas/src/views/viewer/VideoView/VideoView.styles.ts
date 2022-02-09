@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { GridItem } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -61,7 +60,7 @@ export const ChannelContainer = styled.div`
 
 export const DetailsWrapper = styled.div`
   ${media.md} {
-    padding-left: ${sizes(11)};
+    padding-left: ${sizes(14)};
   }
 `
 
@@ -98,6 +97,7 @@ export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  gap: ${sizes(6)};
   visibility: ${({ detailsExpanded }) => (detailsExpanded ? 'visible' : 'hidden')};
   max-height: ${({ detailsExpanded }) => (detailsExpanded ? 'auto' : '0')};
   overflow: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'hidden')};
@@ -108,19 +108,6 @@ export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
 export const ExpandButton = styled(Button)`
   display: block;
   margin-top: ${sizes(2)};
-`
-
-export const LicenseContainer = styled(GridItem)`
-  a {
-    display: block;
-    text-decoration: none;
-    color: ${cVar('colorText')};
-    font: ${cVar('typographyDesktopT200')};
-
-    ${media.md} {
-      font: ${cVar('typographyDesktopT300')};
-    }
-  }
 `
 
 export const CategoryWrapper = styled.div`

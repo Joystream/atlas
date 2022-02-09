@@ -21,7 +21,8 @@ type IconWrapperProps = {
 }
 
 export const IconWrapper = styled.div<IconWrapperProps>`
-  ${square(40)}
+  ${square(40)};
+
   position: relative;
   border-radius: 50%;
   overflow: hidden;

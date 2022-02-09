@@ -1,15 +1,14 @@
 import React from 'react'
 
-import { useVideosConnection } from '@/api/hooks'
+import { useBasicVideos } from '@/api/hooks'
 import { CategoryLink } from '@/components/CategoryLink'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SvgActionChevronR } from '@/components/_icons'
-import { VideoTile } from '@/components/_video/VideoTile'
+import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 
 import { MoreFrom, MoreVideosContainer, SeeMoreButton } from './VideoView.styles'
 
@@ -25,14 +24,21 @@ const NUMBER_OF_VIDEOS = 6
 
 export const MoreVideos: React.FC<MoreVideosProps> = ({ channelId, channelName, categoryId, categoryName, type }) => {
   const where = type === 'channel' ? { channel: { id_eq: channelId } } : { category: { id_eq: categoryId } }
-  const { edges = [], loading } = useVideosConnection({ first: NUMBER_OF_VIDEOS, where })
-  const placeholderItems = loading ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []
-  const displayedItems = loading ? [] : edges.map((edge) => edge.node)
+  const { videos = [], loading } = useBasicVideos({ where, limit: NUMBER_OF_VIDEOS })
+  const displayedItems = loading ? [] : videos.map((edge) => edge)
+  const placeholderItems =
+    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []
+  const lgMatch = useMediaMatch('lg')
   const gridContent = (
     <>
       {[...displayedItems, ...placeholderItems]?.map((video, idx) => (
-        <GridItem key={`more-videos-${idx}`} colSpan={{ xxs: 12, xs: 12, sm: 6, md: 12, xl: 12, xxl: 12 }}>
-          <MoreVideosVideoTile key={`videos-${idx}`} id={video.id} />
+        <GridItem key={`more-videos-${idx}`} colSpan={{ xxs: 12, sm: 6, md: 12 }}>
+          <VideoTileViewer
+            key={`videos-${idx}`}
+            id={video.id}
+            detailsVariant="withChannelName"
+            direction={lgMatch ? 'horizontal' : 'vertical'}
+          />
         </GridItem>
       ))}
     </>
@@ -54,31 +60,5 @@ export const MoreVideos: React.FC<MoreVideosProps> = ({ channelId, channelName, 
         See the {type === 'channel' ? 'channel' : 'category page'}
       </SeeMoreButton>
     </MoreVideosContainer>
-  )
-}
-
-type MoreVideosVideoTileProps = {
-  id?: string
-}
-
-const MoreVideosVideoTile: React.FC<MoreVideosVideoTileProps> = ({ id }) => {
-  const lgMatch = useMediaMatch('lg')
-  const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
-    id,
-  })
-  return (
-    <VideoTile
-      detailsVariant="withChannelName"
-      videoTitle={video?.title}
-      channelTitle={video?.channel.title}
-      views={video?.views}
-      createdAt={video?.createdAt}
-      videoHref={videoHref}
-      loadingDetails={loading}
-      thumbnailUrl={thumbnailPhotoUrl}
-      loadingThumbnail={isLoadingThumbnail}
-      channelHref={absoluteRoutes.viewer.channel(video?.channel.id)}
-      direction={lgMatch ? 'horizontal' : 'vertical'}
-    />
   )
 }

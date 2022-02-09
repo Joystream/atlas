@@ -1,29 +1,25 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Avatar } from '@/components/Avatar'
+import { Avatar, AvatarSize } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { oldColors, sizes } from '@/styles'
 
-type ContainerProps = {
-  disabled?: boolean
-}
-
-export const Container = styled(Link)<ContainerProps>`
+export const Container = styled.div`
   width: 100%;
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 `
 
 type AvatarProps = {
   withHandle: boolean
+  size: AvatarSize
 }
 
 export const StyledAvatar = styled(Avatar)<AvatarProps>`
-  margin-right: ${({ withHandle }) => (withHandle ? sizes(3) : 0)};
+  margin-right: ${({ withHandle, size }) => (withHandle ? (size === 'small' ? sizes(4) : sizes(3)) : 0)};
 `
 
 type HandleProps = {
@@ -50,4 +46,13 @@ export const FollowButton = styled(Button)`
 
 export const Follows = styled(Text)`
   margin-top: ${sizes(1)};
+`
+
+type StyledLinkProps = {
+  disabled?: boolean
+}
+
+export const StyledLink = styled(Link)<StyledLinkProps>`
+  text-decoration: none;
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 `

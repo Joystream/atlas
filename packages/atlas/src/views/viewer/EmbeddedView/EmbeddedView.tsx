@@ -10,7 +10,6 @@ import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
@@ -25,11 +24,9 @@ export const EmbeddedView: React.FC = () => {
   })
   const { addVideoView } = useAddVideoView()
 
-  const timestampFromQuery = Number(useRouterQuery('time'))
-
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
 
-  const { startTimestamp } = useVideoStartTimestamp(timestampFromQuery, video?.duration)
+  const { startTimestamp } = useVideoStartTimestamp(video?.duration)
 
   const channelId = video?.channel?.id
   const videoId = video?.id
