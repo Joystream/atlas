@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { Tabs } from '@/components/Tabs'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 export const NotFoundMemberContainer = styled.div`
   display: flex;
@@ -16,8 +16,7 @@ export const SortContainer = styled.div`
 `
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[700]};
-
+  box-shadow: ${cVar('effectDividersBottom')};
   ${media.sm} {
     border-bottom: none;
   }
