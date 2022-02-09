@@ -10,26 +10,22 @@ export type VideoWorkspaceAssets = {
   } & ImageInputMetadata
 }
 
-export type VideoWorkspaceTab = {
+export type VideoWorkspace = {
   id: string
   isDraft?: boolean
   isNew?: boolean
 }
 
 export type VideoWorkspaceAssetsCache = VideoWorkspaceAssets | null
-export type VideoWorkspaceTabCachedDirtyFormData = Partial<VideoWorkspaceFormFields>
+export type VideoWorkspaceCachedDirtyFormData = Partial<VideoWorkspaceFormFields>
 
 export type ContextValue = {
-  videoTab: VideoWorkspaceTab
-  addVideoTab: (tab?: VideoWorkspaceTab, shouldSelect?: boolean) => void
-  updateVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
-  videoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
-  setVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
-  videoTabCachedAssets: VideoWorkspaceAssets | null
-  setVideoTabCachedAssets: (assets: VideoWorkspaceAssets | null) => void
+  editedVideoInfo: VideoWorkspace
+  setEditedVideo: (video?: VideoWorkspace) => void
   videoWorkspaceState: VideoWorkspaceState
   setVideoWorkspaceState: (state: VideoWorkspaceState) => void
-  anyVideoTabCachedAssets: boolean
+  videoCachedAssets: VideoWorkspaceAssets | null
+  setVideoCachedAssets: (assets: VideoWorkspaceAssets | null) => void
 }
 
 export type VideoWorkspaceFormFields = {

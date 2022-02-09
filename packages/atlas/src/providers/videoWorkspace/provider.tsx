@@ -4,12 +4,10 @@ import { createId } from '@/utils/createId'
 
 import {
   ContextValue,
+  VideoWorkspace,
   VideoWorkspaceAssets,
   VideoWorkspaceAssetsCache,
-  VideoWorkspaceFormFields,
   VideoWorkspaceState,
-  VideoWorkspaceTab,
-  VideoWorkspaceTabCachedDirtyFormData,
 } from './types'
 
 import { useOverlayManager } from '../overlayManager'
@@ -17,55 +15,32 @@ import { useOverlayManager } from '../overlayManager'
 export const VideoWorkspaceContext = React.createContext<ContextValue | undefined>(undefined)
 VideoWorkspaceContext.displayName = 'VideoWorkspaceContext'
 
-const generateTab = () => ({
+const generateVideo = () => ({
   id: createId(),
   isDraft: true,
   isNew: true,
 })
 
 export const VideoWorkspaceProvider: React.FC = ({ children }) => {
-  const [videoTab, setVideoTab] = useState<VideoWorkspaceTab>(generateTab())
+  const [editedVideoInfo, setEditedVideoInfo] = useState<VideoWorkspace>(generateVideo())
+  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
   const [videoWorkspaceState, setVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
   const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
-  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
-  const [_videoTabCachedDirtyFormData, _setVideoTabCachedDirtyFormData] =
-    useState<VideoWorkspaceTabCachedDirtyFormData>({})
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
-  const addVideoTab = useCallback((tab?: VideoWorkspaceTab) => {
-    if (!tab) {
-      return
-    }
-    setVideoTab(tab)
+  const setEditedVideo = useCallback((video?: VideoWorkspace) => {
+    setEditedVideoInfo(!video ? generateVideo() : video)
   }, [])
 
-  const setVideoTabCachedAssets = useCallback(
+  const setVideoCachedAssets = useCallback(
     (assets: VideoWorkspaceAssets | null) => {
-      if (!videoTab) {
+      if (!editedVideoInfo) {
         return
       }
       setAssetsCache(assets)
     },
-    [videoTab]
+    [editedVideoInfo]
   )
-  const videoTabCachedAssets = assetsCache
-  const updateVideoTab = useCallback((tabUpdates: Partial<VideoWorkspaceTab>) => {
-    setVideoTab((prevState) => ({ ...prevState, ...tabUpdates }))
-  }, [])
-
-  const setVideoTabCachedDirtyFormData = useCallback(
-    (data: Partial<VideoWorkspaceFormFields>) => {
-      if (!videoTab) {
-        return
-      }
-      _setVideoTabCachedDirtyFormData(data)
-    },
-    [videoTab]
-  )
-
-  const videoTabCachedDirtyFormData = useMemo(
-    () => (videoTab ? _videoTabCachedDirtyFormData : {}),
-    [videoTab, _videoTabCachedDirtyFormData]
-  )
+  const videoCachedAssets = assetsCache
 
   useEffect(() => {
     if (videoWorkspaceState === cachedVideoWorkspaceState) {
@@ -78,48 +53,26 @@ export const VideoWorkspaceProvider: React.FC = ({ children }) => {
     }
     if (videoWorkspaceState === 'closed') {
       decrementOverlaysOpenCount()
-      setVideoTab(generateTab())
-      setAssetsCache(null)
-      _setVideoTabCachedDirtyFormData({})
     }
   }, [
     videoWorkspaceState,
     cachedVideoWorkspaceState,
-    videoTab,
+    editedVideoInfo,
     incrementOverlaysOpenCount,
     decrementOverlaysOpenCount,
-    addVideoTab,
+    setEditedVideo,
   ])
-
-  const anyVideoTabCachedAssets = !!(
-    assetsCache &&
-    (assetsCache.thumbnail.cropContentId || assetsCache.video.contentId)
-  )
 
   const value = useMemo(
     () => ({
-      anyVideoTabCachedAssets,
-      videoTab,
-      addVideoTab,
-      updateVideoTab,
+      editedVideoInfo,
+      setEditedVideo,
       videoWorkspaceState,
       setVideoWorkspaceState,
-      videoTabCachedAssets,
-      setVideoTabCachedAssets,
-      videoTabCachedDirtyFormData,
-      setVideoTabCachedDirtyFormData,
+      videoCachedAssets,
+      setVideoCachedAssets,
     }),
-    [
-      addVideoTab,
-      anyVideoTabCachedAssets,
-      setVideoTabCachedAssets,
-      setVideoTabCachedDirtyFormData,
-      updateVideoTab,
-      videoTab,
-      videoTabCachedAssets,
-      videoTabCachedDirtyFormData,
-      videoWorkspaceState,
-    ]
+    [editedVideoInfo, setEditedVideo, videoWorkspaceState, videoCachedAssets, setVideoCachedAssets]
   )
 
   return <VideoWorkspaceContext.Provider value={value}>{children}</VideoWorkspaceContext.Provider>

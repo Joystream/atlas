@@ -4,7 +4,12 @@ import { CSSTransition } from 'react-transition-group'
 import { DrawerHeader } from '@/components/DrawerHeader'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import { VideoWorkspaceState, useVideoWorkspace, useVideoWorkspaceTabData } from '@/providers/videoWorkspace'
+import {
+  VideoWorkspaceAssetsCache,
+  VideoWorkspaceState,
+  useVideoWorkspace,
+  useVideoWorkspaceData,
+} from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
 import { computeFileHash } from '@/utils/hashing'
 
@@ -13,12 +18,17 @@ import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
   // videoWorkspace state
-  const { videoWorkspaceState, setVideoWorkspaceState, videoTab, anyVideoTabCachedAssets } = useVideoWorkspace()
+  const { videoWorkspaceState, setVideoWorkspaceState, editedVideoInfo } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
-  const { tabData } = useVideoWorkspaceTabData(videoTab)
+  const { tabData } = useVideoWorkspaceData(editedVideoInfo)
+  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
 
-  const isEdit = !videoTab?.isDraft
+  const isEdit = !editedVideoInfo?.isDraft
   const headTags = useHeadTags(isEdit ? 'Edit video' : 'New video')
+  const anyVideoTabCachedAssets = !!(
+    assetsCache &&
+    (assetsCache.thumbnail.cropContentId || assetsCache.video.contentId)
+  )
 
   // transaction management
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
@@ -61,7 +71,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [anyVideoTabCachedAssets, openWarningDialog, setVideoWorkspaceState])
 
   const getBadgeText = () => {
-    if (videoTab.isNew || videoTab.isDraft) {
+    if (editedVideoInfo.isNew || editedVideoInfo.isDraft) {
       return 'New'
     }
     return 'Edit'
@@ -93,12 +103,13 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
           />
           <VideoWorkspaceForm
-            selectedVideoTab={videoTab}
+            editedVideoInfo={editedVideoInfo}
             onThumbnailFileChange={handleThumbnailFileChange}
             onVideoFileChange={handleVideoFileChange}
             fee={0}
             thumbnailHashPromise={thumbnailHashPromise}
             videoHashPromise={videoHashPromise}
+            setAssetsCache={setAssetsCache}
           />
         </Container>
       </CSSTransition>

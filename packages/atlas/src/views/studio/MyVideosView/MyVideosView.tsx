@@ -48,7 +48,7 @@ const SNACKBAR_TIMEOUT = 5000
 export const MyVideosView = () => {
   const headTags = useHeadTags('My videos')
   const navigate = useNavigate()
-  const { videoTab, addVideoTab } = useVideoWorkspace()
+  const { editedVideoInfo, setEditedVideo } = useVideoWorkspace()
   const { displaySnackbar, updateSnackbar } = useSnackbar()
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
@@ -139,7 +139,7 @@ export const MyVideosView = () => {
     }
   }
 
-  const handleAddVideoTab = useCallback(() => addVideoTab(), [addVideoTab])
+  const handleAddVideoTab = useCallback(() => setEditedVideo(), [setEditedVideo])
 
   type HandleVideoClickOpts = {
     draft?: boolean
@@ -149,7 +149,7 @@ export const MyVideosView = () => {
     if (!id) {
       return
     }
-    addVideoTab({ id, isDraft: opts.draft })
+    setEditedVideo({ id, isNew: false, isDraft: opts.draft })
     if (opts.minimized) {
       addToTabNotificationsCount.current++
       if (addToTabNotificationsCount.current > 1) {
@@ -165,7 +165,7 @@ export const MyVideosView = () => {
         })
       }
     } else {
-      if (videoTab) navigate(absoluteRoutes.studio.videoWorkspace())
+      if (editedVideoInfo) navigate(absoluteRoutes.studio.videoWorkspace())
     }
   }
 

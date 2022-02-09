@@ -21,7 +21,6 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -134,8 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { videoWorkspaceState, anyVideoTabCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
-  const { openWarningDialog } = useDisplayDataLostWarning()
+  const { videoWorkspaceState, setVideoWorkspaceState } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
@@ -199,11 +197,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    if (anyVideoTabCachedAssets) {
-      openWarningDialog({ onConfirm: () => submit(data) })
-    } else {
-      await submit(data)
-    }
+    await submit(data)
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
