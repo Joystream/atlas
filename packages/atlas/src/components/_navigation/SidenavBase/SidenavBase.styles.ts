@@ -2,7 +2,12 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING, SubItemProps } from '@/components/_navigation/NavItem'
+import {
+  EXPANDED_SIDENAVBAR_WIDTH,
+  EXPANDED_SIDENAVBAR_WIDTH_XXS,
+  NAVBAR_LEFT_PADDING,
+  SubItemProps,
+} from '@/components/_navigation/NavItem'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
@@ -15,7 +20,11 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   bottom: 0;
   height: 100%;
   z-index: ${zIndex.sideNav};
-  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
+  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH_XXS}px` : 'var(--size-sidenav-width-collapsed)')};
+  ${media.md} {
+    width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
+  }
+
   transition: width ${transitions.timings.regular} ${transitions.easing};
   display: flex;
   flex-direction: column;
@@ -31,14 +40,21 @@ export const LogoLink = styled(Link)`
   margin-left: 80px;
   text-decoration: none;
   overflow-x: hidden;
-  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
+  ${media.md} {
+    min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  }
+
   flex-shrink: 0;
 `
 
 export const SidebarNavList = styled.ul`
   margin-top: 28px;
   list-style: none;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
+  ${media.md} {
+    width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  }
   padding: 0;
 `
 
@@ -47,7 +63,10 @@ export const SidebarNavFooter = styled.div`
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  min-width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
+  ${media.md} {
+    min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  }
 `
 
 export const ButtonGroup = styled.div`
@@ -127,10 +146,10 @@ export const LegalLink = styled(Link)`
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
   margin-left: ${sizes(3)};
-  margin-top: ${sizes(4)};
   z-index: ${zIndex.sideNav};
-  ${media.xxs} {
-    margin-top: ${sizes(3)};
+  margin-top: ${sizes(3)};
+  ${media.md} {
+    margin-top: ${sizes(4)};
   }
 `
 

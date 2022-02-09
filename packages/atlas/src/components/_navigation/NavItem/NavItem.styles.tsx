@@ -7,6 +7,7 @@ import { smallBadgeStyles } from '@/components/Badge'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const EXPANDED_SIDENAVBAR_WIDTH = 360
+export const EXPANDED_SIDENAVBAR_WIDTH_XXS = 320
 export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
