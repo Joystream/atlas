@@ -61,9 +61,6 @@ export const ChannelsTitle = styled(Text)`
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
   width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  color: ${cVar('colorText')};
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
 `
 
 export const ChannelsWrapper = styled.div`
