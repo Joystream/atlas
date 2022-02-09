@@ -9,7 +9,7 @@ export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) =
 }>`
   padding: ${sizes(4)};
   display: grid;
-  gap: ${sizes(4)};
+  gap: ${sizes(4)} 0;
   grid-template-columns: 1fr auto;
   align-items: center;
   transition: background-color ${cVar('animationTransitionFast')};
@@ -22,11 +22,11 @@ export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) =
 
   ${media.sm} {
     grid-template-columns: auto 1fr 73px;
-    gap: ${sizes(4)};
   }
 
   ${media.lg} {
     grid-template-columns: auto 1fr auto;
+    padding: ${sizes(6)};
   }
 `
 export const PillAndDateContainer = styled.div`
@@ -44,10 +44,15 @@ export const TitleAndDescriptionContainer = styled.div`
 
   ${media.sm} {
     gap: ${sizes(2)};
+    margin: 0 ${sizes(4)} 0 ${sizes(6)};
     grid-column-end: initial;
     grid-row-start: initial;
     align-content: center;
     grid-auto-rows: min-content;
+  }
+
+  ${media.lg} {
+    margin: 0 ${sizes(6)};
   }
 `
 export const Title = styled(Text)`
@@ -58,7 +63,6 @@ export const Thumbnail = styled.img`
 
   ${media.sm} {
     height: 64px;
-    margin-right: ${sizes(2)};
   }
 
   ${media.lg} {

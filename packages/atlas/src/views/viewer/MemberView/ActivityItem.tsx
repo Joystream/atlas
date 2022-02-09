@@ -20,7 +20,7 @@ import {
 } from './ActivityItem.styles'
 
 export type ActivityItemProps = {
-  date: string
+  date: Date
   type: string
   title: string
   description: string
@@ -57,11 +57,9 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
         {isLoading ? (
           <TitleSkeletonLoader />
         ) : (
-          <div>
-            <Title variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
-              {title}
-            </Title>
-          </div>
+          <Title variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
+            {title}
+          </Title>
         )}
         {isLoading ? (
           <DescriptionSkeletonLoader />
@@ -75,11 +73,9 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
         <PillSkeletonLoader />
       ) : (
         <PillAndDateContainer>
-          <div>
-            <Pill label={type} size="small" />
-          </div>
+          <Pill label={type} size="small" />
           <DateText variant="t100" secondary>
-            {formatDateTime(new Date(date))}
+            {formatDateTime(date)}
           </DateText>
         </PillAndDateContainer>
       )}
