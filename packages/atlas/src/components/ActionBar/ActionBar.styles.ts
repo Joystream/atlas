@@ -78,6 +78,7 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
 export const NFTTopWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  min-height: 32px;
 `
 export const NFTBottomWrapper = styled.div`
   display: flex;
