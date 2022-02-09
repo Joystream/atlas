@@ -3922,8 +3922,8 @@ __metadata:
     "@tippyjs/react": ^4.2.6
     "@types/glider-js": ^1.7.6
     "@types/loadable__component": ^5.13.4
-    "@types/lodash-es": ^4.17.5
-    "@types/react": ^17.0.37
+    "@types/lodash-es": ^4.17.6
+    "@types/react": ^17.0.39
     "@types/react-datepicker": ^4.3.4
     "@types/react-dom": ^17.0.11
     "@types/react-helmet": ^6.1.5
@@ -6900,7 +6900,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash-es@npm:^4.17.5":
+"@types/lodash-es@npm:^4.17.6":
   version: 4.17.6
   resolution: "@types/lodash-es@npm:4.17.6"
   dependencies:
@@ -7149,7 +7149,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.37":
+"@types/react@npm:^17.0.39":
   version: 17.0.39
   resolution: "@types/react@npm:17.0.39"
   dependencies:
