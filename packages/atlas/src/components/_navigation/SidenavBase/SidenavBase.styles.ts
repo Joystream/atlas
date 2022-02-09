@@ -2,17 +2,16 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import {
-  EXPANDED_SIDENAVBAR_WIDTH,
-  EXPANDED_SIDENAVBAR_WIDTH_XXS,
-  NAVBAR_LEFT_PADDING,
-  SubItemProps,
-} from '@/components/_navigation/NavItem'
+import { SubItemProps } from '@/components/_navigation/NavItem/NavItem.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
   expanded?: boolean
 }
+
+export const EXPANDED_SIDENAVBAR_WIDTH = 360
+export const EXPANDED_SIDENAVBAR_WIDTH_XXS = 320
+export const NAVBAR_LEFT_PADDING = 24
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
@@ -144,7 +143,7 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
   margin-left: ${sizes(3)};
   z-index: ${zIndex.sideNav};
-  margin-top: ${sizes(3)};
+  margin-top: ${sizes(2)};
   ${media.md} {
     margin-top: ${sizes(4)};
   }

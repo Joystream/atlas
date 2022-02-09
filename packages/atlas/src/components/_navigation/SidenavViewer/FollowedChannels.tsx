@@ -82,33 +82,30 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
         <ChannelsTitle variant="h100" secondary>
           Followed channels
         </ChannelsTitle>
-        {followedChannels.length > 0 ? (
-          <ChannelsWrapper>
-            <ChannelsList>
-              {followedChannels.map(({ id }) => (
-                <ChannelNavItem
-                  id={id}
-                  to={absoluteRoutes.viewer.channel(id)}
-                  expanded={expanded}
-                  itemName={id}
-                  onClick={() => onClick()}
-                  isSecondary={true}
-                  onChannelNotFound={onChannelNotFound}
-                  key={id}
-                >
-                  {id}
-                </ChannelNavItem>
-              ))}
-            </ChannelsList>
-          </ChannelsWrapper>
-        ) : (
-          <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()}>
-            <BrowseChannelsIcon>
-              <SvgActionNewChannel />
-            </BrowseChannelsIcon>
-            <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
-          </BrowseChannelsWrapper>
-        )}
+        <ChannelsWrapper>
+          <ChannelsList>
+            {followedChannels.map(({ id }) => (
+              <ChannelNavItem
+                id={id}
+                to={absoluteRoutes.viewer.channel(id)}
+                expanded={expanded}
+                itemName={id}
+                onClick={onClick}
+                isSecondary={true}
+                onChannelNotFound={onChannelNotFound}
+                key={id}
+              >
+                {id}
+              </ChannelNavItem>
+            ))}
+          </ChannelsList>
+        </ChannelsWrapper>
+        <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
+          <BrowseChannelsIcon>
+            <SvgActionNewChannel />
+          </BrowseChannelsIcon>
+          <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+        </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>
   )

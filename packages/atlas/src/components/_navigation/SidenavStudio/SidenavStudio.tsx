@@ -59,7 +59,11 @@ export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
 
   const buttons = (
     <>
-      <Button icon={<SvgActionAddVideo />} to={absoluteRoutes.studio.videoWorkspace()}>
+      <Button
+        icon={<SvgActionAddVideo />}
+        onClick={() => setExpanded(false)}
+        to={absoluteRoutes.studio.videoWorkspace()}
+      >
         Upload video
       </Button>
       <Button

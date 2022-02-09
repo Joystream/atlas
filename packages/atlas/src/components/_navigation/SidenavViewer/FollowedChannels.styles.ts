@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { cVar, sizes } from '@/styles'
 
-import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../NavItem'
+import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
 
 export const FollowedChannelsWrapper = styled.div`
   display: grid;

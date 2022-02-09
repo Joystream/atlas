@@ -4,11 +4,8 @@ import styled from '@emotion/styled'
 import { Link, LinkProps } from 'react-router-dom'
 
 import { smallBadgeStyles } from '@/components/Badge'
+import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '@/components/_navigation/SidenavBase/SidenavBase.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
-
-export const EXPANDED_SIDENAVBAR_WIDTH = 360
-export const EXPANDED_SIDENAVBAR_WIDTH_XXS = 320
-export const NAVBAR_LEFT_PADDING = 24
 
 type ExpandableElementProps = {
   expanded?: boolean
