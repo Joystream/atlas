@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import useMeasure from 'react-use-measure'
 
 import { NftTile } from '@/components/NftTile'
@@ -22,10 +22,11 @@ import {
 
 type NFTWorkspaceFormProps = {
   onGoBack: () => void
+  isEdit?: boolean
+  fee: number
 }
 
-export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack }) => {
-  const isEdit = false
+export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, isEdit, fee }) => {
   const [currentStepIdx, setCurrentStepIdx] = useState(0)
   const [actionBarRef, actionBarBounds] = useMeasure()
   const mdMatch = useMediaMatch('md')
@@ -60,6 +61,49 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack }) 
     },
   ]
 
+  const actionBarPrimaryButton = useMemo(
+    () => ({
+      text: 'Next step',
+      disabled: false,
+      onClick: () => {
+        if (currentStepIdx < 3) {
+          setCurrentStepIdx((current) => current + 1)
+        } else {
+          // handle issuing NFT here
+        }
+      },
+    }),
+    [currentStepIdx]
+  )
+
+  const actionBarSecondaryButton = useMemo(
+    () => ({
+      text: 'Back',
+      visible: true,
+      onClick: () => {
+        if (currentStepIdx > 0) {
+          setCurrentStepIdx((current) => current - 1)
+        } else {
+          onGoBack()
+        }
+      },
+    }),
+    [currentStepIdx, onGoBack]
+  )
+
+  const actionBarDraftBadge = useMemo(
+    () =>
+      !isEdit
+        ? {
+            text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
+            tooltip: {
+              text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+            },
+          }
+        : undefined,
+    [isEdit, mdMatch]
+  )
+
   return (
     <ScrollableWrapper actionBarHeight={actionBarBounds.height}>
       <NFTWorkspaceFormWrapper>
@@ -93,40 +137,11 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack }) 
       <StyledActionBar
         ref={actionBarRef}
         variant="nft"
-        primaryText="Fee: 0 Joy"
-        secondaryText="Every change to the blockchain requires making a nominal transaction."
-        primaryButton={{
-          text: 'Next step',
-          disabled: false,
-          onClick: () => {
-            if (currentStepIdx < 3) {
-              setCurrentStepIdx((current) => current + 1)
-            } else {
-              // handle issuing NFT here
-            }
-          },
-        }}
-        secondaryButton={{
-          text: 'Back',
-          visible: true,
-          onClick: () => {
-            if (currentStepIdx > 0) {
-              setCurrentStepIdx((current) => current - 1)
-            } else {
-              onGoBack()
-            }
-          },
-        }}
-        draftBadge={
-          isEdit
-            ? {
-                text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
-                tooltip: {
-                  text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-                },
-              }
-            : undefined
-        }
+        primaryText={`Fee: ${fee} Joy`}
+        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+        primaryButton={actionBarPrimaryButton}
+        secondaryButton={actionBarSecondaryButton}
+        draftBadge={actionBarDraftBadge}
       />
     </ScrollableWrapper>
   )

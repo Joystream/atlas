@@ -19,7 +19,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
   const [actionBarHeight, setActionBarHeight] = useState(0)
   // todo handle switching to NFTForm
-  const [isIssuedAsNFTChecked] = useState(false)
+  const [isIssuedAsNFTChecked, setIsIssuedAsNFTChecked] = useState(false)
   const [isIssuedAsNFT, setIsIssuedAsNFT] = useState(false)
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
@@ -108,7 +108,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   onResize={setActionBarHeight}
                 />
               ) : (
-                <NFTWorkspaceForm onGoBack={() => setIsIssuedAsNFTChecked(false)} />
+                <NFTWorkspaceForm onGoBack={() => setIsIssuedAsNFTChecked(false)} isEdit={isEdit} fee={0} />
               )}
             </CSSTransition>
           </SwitchTransition>
@@ -154,7 +154,7 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   return (
     <StyledActionBar
       ref={actionBarRef}
-      isEdit={isEdit}
+      variant={isEdit ? 'edit' : 'new'}
       primaryText="Fee: 0 Joy"
       secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
       primaryButton={{
@@ -175,7 +175,6 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
         icon: <SvgControlsCancel width={16} height={16} />,
       }}
       draftBadge={{
-        visible: !isEdit,
         text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
         tooltip: {
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
