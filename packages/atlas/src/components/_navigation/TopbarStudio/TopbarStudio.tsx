@@ -7,7 +7,6 @@ import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -24,8 +23,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
   const { activeChannelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
-  const { videoWorkspaceState, addVideoTab, setVideoWorkspaceState, anyVideoTabsCachedAssets } = useVideoWorkspace()
-  const { openWarningDialog } = useDisplayDataLostWarning()
+  const { videoWorkspaceState, setEditedVideo, setVideoWorkspaceState } = useVideoWorkspace()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -43,17 +41,8 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
     if (!channel) {
       return
     }
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({
-        onConfirm: () => {
-          setActiveUser({ channelId })
-          setVideoWorkspaceState('closed')
-        },
-      })
-    } else {
-      setActiveUser({ channelId })
-      setVideoWorkspaceState('closed')
-    }
+    setActiveUser({ channelId })
+    setVideoWorkspaceState('closed')
   }
 
   const avatars: AvatarGroupSingleAvatar[] = activeChannelId
@@ -81,7 +70,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
             >
               <Button
                 to={absoluteRoutes.studio.videoWorkspace()}
-                onClick={() => addVideoTab()}
+                onClick={() => setEditedVideo()}
                 variant="secondary"
                 icon={<SvgActionAddVideo />}
                 iconPlacement="left"

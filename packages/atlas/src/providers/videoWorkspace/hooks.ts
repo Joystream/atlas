@@ -10,7 +10,7 @@ import { RoutingState } from '@/types/routing'
 import { SentryLogger } from '@/utils/logs'
 
 import { VideoWorkspaceContext } from './provider'
-import { VideoWorkspaceAssets, VideoWorkspaceFormFields, VideoWorkspaceState, VideoWorkspaceTab } from './types'
+import { VideoWorkspace, VideoWorkspaceAssets, VideoWorkspaceFormFields, VideoWorkspaceState } from './types'
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
 import { useAuthorizedUser } from '../user'
@@ -25,16 +25,16 @@ export const useVideoWorkspace = () => {
   return ctx
 }
 
-export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
+export const useVideoWorkspaceData = (videoForm?: VideoWorkspace) => {
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const { selectedVideoTabCachedAssets } = useVideoWorkspace()
-  const { video, loading, error } = useVideo(tab?.id ?? '', {
-    skip: tab?.isDraft,
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceTabData', error),
+  const { videoCachedAssets } = useVideoWorkspace()
+  const { video, loading, error } = useVideo(videoForm?.id ?? '', {
+    skip: videoForm?.isDraft,
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })
 
-  if (!tab) {
+  if (!videoForm) {
     return {
       tabData: null,
       loading: false,
@@ -48,10 +48,10 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
     language: video?.language?.iso,
   }
 
-  const draft = drafts.find((d) => d.id === tab.id)
+  const draft = drafts.find((d) => d.id === videoForm.id)
 
-  const assets: VideoWorkspaceAssets = tab.isDraft
-    ? selectedVideoTabCachedAssets || {
+  const assets: VideoWorkspaceAssets = videoForm.isDraft
+    ? videoCachedAssets || {
         video: { contentId: null },
         thumbnail: {
           cropContentId: null,
@@ -69,18 +69,18 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
       }
 
   const normalizedData: VideoWorkspaceFormFields = {
-    title: tab.isDraft ? draft?.title ?? '' : video?.title ?? '',
-    description: (tab.isDraft ? draft?.description : video?.description) ?? '',
-    category: (tab.isDraft ? draft?.category : video?.category?.id) ?? null,
-    licenseCode: (tab.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
-    licenseCustomText: (tab.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
-    licenseAttribution: (tab.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
-    language: (tab.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
-    isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
-    isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
-    hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+    title: videoForm.isDraft ? draft?.title ?? '' : video?.title ?? '',
+    description: (videoForm.isDraft ? draft?.description : video?.description) ?? '',
+    category: (videoForm.isDraft ? draft?.category : video?.category?.id) ?? null,
+    licenseCode: (videoForm.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
+    licenseCustomText: (videoForm.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
+    licenseAttribution: (videoForm.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
+    language: (videoForm.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    isPublic: (videoForm.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
+    isExplicit: (videoForm.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
+    hasMarketing: (videoForm.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
-      (tab.isDraft
+      (videoForm.isDraft
         ? draft?.publishedBeforeJoystream
           ? parseISO(draft.publishedBeforeJoystream)
           : null
@@ -90,7 +90,7 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
 
   return {
     tabData: normalizedData,
-    loading: tab.isDraft ? false : loading,
+    loading: videoForm.isDraft ? false : loading,
     error,
   }
 }
@@ -129,10 +129,7 @@ export const useVideoWorkspaceRouting = (): Location => {
     }
     setCachedVideoWorkspaceState(videoWorkspaceState)
 
-    if (
-      (videoWorkspaceState === 'minimized' && cachedVideoWorkspaceState === 'open') ||
-      (videoWorkspaceState === 'closed' && cachedVideoWorkspaceState !== 'minimized')
-    ) {
+    if (videoWorkspaceState === 'closed') {
       // restore the old location when videoWorkspace was minimized/closed
       const oldLocation = locationState?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)

@@ -10,30 +10,22 @@ export type VideoWorkspaceAssets = {
   } & ImageInputMetadata
 }
 
-export type VideoWorkspaceTab = {
+export type VideoWorkspace = {
   id: string
   isDraft?: boolean
   isNew?: boolean
 }
 
-export type VideoWorkspaceAssetsCache = Record<string, VideoWorkspaceAssets | null>
-export type VideoWorkspaceTabCachedDirtyFormData = Record<string, Partial<VideoWorkspaceFormFields>>
+export type VideoWorkspaceAssetsCache = VideoWorkspaceAssets | null
+export type VideoWorkspaceCachedDirtyFormData = Partial<VideoWorkspaceFormFields>
 
 export type ContextValue = {
-  videoTabs: VideoWorkspaceTab[]
-  addVideoTab: (tab?: VideoWorkspaceTab, shouldSelect?: boolean) => void
-  removeVideoTab: (tabIdx: number) => void
-  updateSelectedVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
-  selectedVideoTabIdx: number
-  setSelectedVideoTabIdx: (tabIdx: number) => void
-  selectedVideoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
-  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
-  selectedVideoTabCachedAssets: VideoWorkspaceAssets | null
-  setSelectedVideoTabCachedAssets: (assets: VideoWorkspaceAssets | null) => void
+  editedVideoInfo: VideoWorkspace
+  setEditedVideo: (video?: VideoWorkspace) => void
   videoWorkspaceState: VideoWorkspaceState
   setVideoWorkspaceState: (state: VideoWorkspaceState) => void
-  anyVideoTabsCachedAssets: boolean
-  hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
+  videoCachedAssets: VideoWorkspaceAssets | null
+  setVideoCachedAssets: (assets: VideoWorkspaceAssets | null) => void
 }
 
 export type VideoWorkspaceFormFields = {
@@ -51,4 +43,4 @@ export type VideoWorkspaceFormFields = {
   assets: VideoWorkspaceAssets
 }
 
-export type VideoWorkspaceState = 'closed' | 'open' | 'minimized' | 'maximized' | 'unset'
+export type VideoWorkspaceState = 'closed' | 'open' | 'unset'

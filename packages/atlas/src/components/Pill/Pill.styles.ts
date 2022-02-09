@@ -67,7 +67,6 @@ const variantStyles = ({ variant }: PillProps) => {
 export const StyledPill = styled.div<PillProps & { hasLabel: boolean }>`
   display: inline-flex;
   align-items: center;
-  padding: ${sizes(2)};
   border-radius: 2px;
 
   svg {
