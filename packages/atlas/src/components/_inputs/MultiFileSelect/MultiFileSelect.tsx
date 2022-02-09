@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -80,12 +81,26 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
     const [rawImageFile, setRawImageFile] = useState<File | null>(null)
     const thumbnailStepRef = useRef<HTMLDivElement>(null)
     const [underlineWidth, setUnderlineWidth] = useState(0)
+    const [underlineLeft, setUnderlineLeft] = useState(0)
+    useResizeObserver({
+      ref: thumbnailStepRef,
+      onResize: () => {
+        setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth || 0)
+        setUnderlineLeft(step === 'image' ? thumbnailStepRef?.current?.offsetLeft || 0 : 0)
+      },
+    })
 
     useLayoutEffect(() => {
       if (thumbnailStepRef?.current?.offsetWidth) {
         setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth)
       }
     }, [])
+
+    useLayoutEffect(() => {
+      if (thumbnailStepRef?.current?.offsetLeft) {
+        setUnderlineLeft(step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0)
+      }
+    }, [step])
 
     useEffect(() => {
       if (isImgLoading || isVideoLoading) {
@@ -269,7 +284,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
               <AnimatedUnderline
                 style={{
                   width: underlineWidth,
-                  left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
+                  left: underlineLeft,
                 }}
               />
             </CSSTransition>
