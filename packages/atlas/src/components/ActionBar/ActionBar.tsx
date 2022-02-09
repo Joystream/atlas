@@ -39,7 +39,6 @@ export type ActionBarVariant = 'new' | 'edit' | 'nft'
 export type ActionBarProps = {
   variant?: ActionBarVariant
   primaryButton: ActionDialogButtonProps
-  isEdit?: boolean
   primaryText?: string
   secondaryText?: string
   fullWidth?: boolean
@@ -49,10 +48,7 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
-  (
-    { primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, isEdit, variant = 'new' },
-    ref
-  ) => {
+  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, variant = 'new' }, ref) => {
     const smMatch = useMediaMatch('sm')
 
     const textNode = (
@@ -153,7 +149,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         variant={variant}
         ref={ref}
         className={className}
-        isActive={isEdit ? !primaryButton?.disabled : true}
+        isActive={variant === 'edit' ? !primaryButton?.disabled : true}
       >
         {getActionBarVariant(variant)}
       </ActionBarContainer>

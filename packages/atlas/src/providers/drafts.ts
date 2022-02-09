@@ -27,6 +27,7 @@ export type VideoDraft = {
   licenseCode?: License['code'] | null
   licenseCustomText?: License['customText'] | null
   licenseAttribution?: License['attribution'] | null
+  isIssuedAsNFT?: boolean
 } & CommonDraftProps
 
 export type RawDraft = Omit<Draft, 'id' | 'updatedAt'>

@@ -171,7 +171,11 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     const { categories, error: categoriesError } = useCategories(undefined, {
       onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
     })
-    const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceTabData(selectedVideoTab)
+    const {
+      tabData,
+      loading: tabDataLoading,
+      error: tabDataError,
+    } = useVideoWorkspaceTabData(selectedVideoTab, watch('isIssuedAsNFT'))
 
     const addAsset = useAssetStore((state) => state.actions.addAsset)
     const mediaAsset = useRawAsset(watch('assets.video.contentId'))
@@ -183,7 +187,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
       if (isEdit && videoWorkspaceState === 'closed' && tabData && !tabDataLoading) {
         reset(tabData)
         setMoreSettingsVisible(false)
-        setValue('isIssuedAsNFT', undefined)
+        setValue('isIssuedAsNFT', false)
       }
     }, [isEdit, reset, setValue, videoWorkspaceState, tabData, tabDataLoading, setIsIssuedAsNFTChecked])
 
@@ -699,19 +703,21 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         visible: isEdit && isDirty && nodeConnectionStatus === 'connected',
         text: 'Cancel',
         onClick: () => reset(),
-        icon: <SvgControlsCancel width={16} height={16} />,
+        icon: isEdit && !watch('isIssuedAsNFT') ? <SvgControlsCancel width={16} height={16} /> : undefined,
       }),
-      [isDirty, isEdit, nodeConnectionStatus, reset]
+      [isDirty, isEdit, nodeConnectionStatus, reset, watch]
     )
 
     const actionBarDraftBadge = useMemo(
-      () => ({
-        visible: !isEdit,
-        text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
-        tooltip: {
-          text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-        },
-      }),
+      () =>
+        !isEdit
+          ? {
+              text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
+              tooltip: {
+                text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+              },
+            }
+          : undefined,
       [isEdit, mdMatch]
     )
 
@@ -819,8 +825,10 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                   <SwitchNFTWrapper>
                     <Switch
                       label="Toggle to list this video as an NFT"
-                      value={watch('isIssuedAsNFT')}
-                      onChange={(e) => setValue('isIssuedAsNFT', e?.currentTarget.checked, { shouldDirty: false })}
+                      value={getValues('isIssuedAsNFT') || false}
+                      onChange={(e) => {
+                        setValue('isIssuedAsNFT', e?.target.checked || false, { shouldDirty: false })
+                      }}
                     />
                     <Information
                       placement="top"
@@ -828,6 +836,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
                       text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
                     />
                   </SwitchNFTWrapper>
+
                   {watch('isIssuedAsNFT') && (
                     <Banner
                       id="issuing-nft"
@@ -984,7 +993,7 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
         </FormScrolling>
         <StyledActionBar
           ref={actionBarRef}
-          isEdit={isEdit}
+          variant={watch('isIssuedAsNFT') ? 'nft' : isEdit ? 'edit' : 'new'}
           primaryText={`Fee: ${fee} Joy`}
           secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
           primaryButton={actionBarPrimaryButton}

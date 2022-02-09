@@ -106,7 +106,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const closeVideoWorkspace = useCallback(() => {
-    setValue('isIssuedAsNFT', undefined)
+    setValue('isIssuedAsNFT', false)
     setIsIssuedAsNFTChecked(false)
     if (anyVideoTabsCachedAssets) {
       openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
@@ -193,7 +193,11 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   formState={formState}
                 />
               ) : (
-                <NFTWorkspaceForm onGoBack={() => setIsIssuedAsNFTChecked(false)} />
+                <NFTWorkspaceForm
+                  onGoBack={() => setIsIssuedAsNFTChecked(false)}
+                  isEdit={!selectedVideoTab?.isDraft}
+                  fee={0}
+                />
               )}
             </CSSTransition>
           </SwitchTransition>

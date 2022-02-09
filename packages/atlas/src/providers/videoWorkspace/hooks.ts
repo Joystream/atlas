@@ -25,7 +25,7 @@ export const useVideoWorkspace = () => {
   return ctx
 }
 
-export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
+export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab, isIssuedAsNFT?: boolean) => {
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
   const { selectedVideoTabCachedAssets } = useVideoWorkspace()
@@ -79,6 +79,7 @@ export const useVideoWorkspaceTabData = (tab?: VideoWorkspaceTab) => {
     isPublic: (tab.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (tab.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (tab.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+    isIssuedAsNFT: tab.isDraft ? draft?.isIssuedAsNFT || false : isIssuedAsNFT || false,
     publishedBeforeJoystream:
       (tab.isDraft
         ? draft?.publishedBeforeJoystream
