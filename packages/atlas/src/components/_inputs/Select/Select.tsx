@@ -1,10 +1,12 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import React, { Ref, forwardRef, useMemo } from 'react'
 
+import { TextProps } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { SvgActionChevronB } from '@/components/_icons'
 
 import {
+  NodeContainer,
   SelectButton,
   SelectLabel,
   SelectMenu,
@@ -14,6 +16,7 @@ import {
   StyledLabelText,
   StyledPill,
   StyledSvgGlyphInfo,
+  ValueContainer,
 } from './Select.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
@@ -23,9 +26,14 @@ export type SelectSizes = 'regular' | 'small'
 export type SelectItem<T = string> = {
   value: T
   name: string
+  // replaces the name in the menu list
+  menuName?: string
+  // hides the item in the menu list
+  hideInMenu?: boolean
   tooltipHeaderText?: string
   tooltipText?: string
   badgeText?: string
+  onClick?: () => void
 }
 
 export type SelectProps<T = string> = {
@@ -33,10 +41,12 @@ export type SelectProps<T = string> = {
   value?: T | null
   valueLabel?: string
   labelPosition?: 'top' | 'left'
+  labelTextProps?: Omit<TextProps, 'ref'>
   items: SelectItem<T>[]
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
   size?: SelectSizes
+  iconLeft?: React.ReactNode
 } & InputBaseProps
 
 // don't use React.FC so we can use a generic type on a component
@@ -45,6 +55,7 @@ export type SelectProps<T = string> = {
 export const _Select = <T extends unknown>(
   {
     label = '',
+    labelTextProps,
     labelPosition = 'top',
     items,
     placeholder = 'Select option',
@@ -55,6 +66,7 @@ export const _Select = <T extends unknown>(
     onChange,
     containerRef,
     size = 'regular',
+    iconLeft,
     ...inputBaseProps
   }: SelectProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>
@@ -78,7 +90,6 @@ export const _Select = <T extends unknown>(
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
-
   const selectedItem = useMemo(() => items.find((item) => item.value === selectedItemValue), [items, selectedItemValue])
 
   return (
@@ -86,7 +97,7 @@ export const _Select = <T extends unknown>(
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && (
-            <StyledLabelText variant="t200" labelPosition={labelPosition}>
+            <StyledLabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
               {label}
             </StyledLabelText>
           )}
@@ -102,32 +113,43 @@ export const _Select = <T extends unknown>(
             tabIndex={disabled ? -1 : 0}
             size={size}
           >
-            {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
+            {iconLeft && <NodeContainer>{iconLeft}</NodeContainer>}
+            <ValueContainer hasIconLeft={!!iconLeft}>
+              {(valueLabel ?? '') + (selectedItem?.name || placeholder)}
+            </ValueContainer>
             {selectedItem?.badgeText && <StyledPill label={selectedItem.badgeText} />}
-            <SvgActionChevronB />
+            <SvgActionChevronB className="chevron-bottom" />
           </SelectButton>
           <SelectMenu isOpen={isOpen} {...getMenuProps()}>
             {isOpen &&
-              items.map((item, index) => (
-                <SelectOption
-                  isSelected={highlightedIndex === index}
-                  key={`${item.name}-${index}`}
-                  {...getItemProps({ item: item.value, index })}
-                >
-                  {item.tooltipText && (
-                    <Tooltip
-                      headerText={item.tooltipHeaderText}
-                      text={item.tooltipText}
-                      placement="top-end"
-                      offsetX={6}
-                      offsetY={12}
-                    >
-                      <StyledSvgGlyphInfo />
-                    </Tooltip>
-                  )}
-                  {item?.name}
-                </SelectOption>
-              ))}
+              items.map((item, index) => {
+                const itemProps = { ...getItemProps({ item: item.value, index }) }
+                if (item.hideInMenu) return null
+                return (
+                  <SelectOption
+                    isSelected={highlightedIndex === index}
+                    key={`${item.name}-${index}`}
+                    {...itemProps}
+                    onClick={(e) => {
+                      item.onClick?.()
+                      itemProps.onClick(e)
+                    }}
+                  >
+                    {item.tooltipText && (
+                      <Tooltip
+                        headerText={item.tooltipHeaderText}
+                        text={item.tooltipText}
+                        placement="top-end"
+                        offsetX={6}
+                        offsetY={12}
+                      >
+                        <StyledSvgGlyphInfo />
+                      </Tooltip>
+                    )}
+                    {item?.menuName ?? item?.name}
+                  </SelectOption>
+                )
+              })}
           </SelectMenu>
         </SelectMenuWrapper>
       </SelectWrapper>
