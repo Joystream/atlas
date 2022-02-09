@@ -28,6 +28,7 @@ export const TabContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
 `
 
