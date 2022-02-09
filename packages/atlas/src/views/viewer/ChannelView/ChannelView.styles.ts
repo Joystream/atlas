@@ -58,9 +58,6 @@ export const TitleContainer = styled.div`
 
 export const Title = styled(Text)`
   margin-bottom: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   max-width: 600px;
 `
 

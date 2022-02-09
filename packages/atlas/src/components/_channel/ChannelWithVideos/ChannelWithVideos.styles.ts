@@ -27,9 +27,6 @@ export const InfoWrapper = styled.div`
 
 export const ChannelTitle = styled(Text)`
   max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
 export const ChannelFollows = styled(Text)`
