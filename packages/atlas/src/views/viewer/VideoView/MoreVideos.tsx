@@ -21,7 +21,7 @@ type MoreVideosProps = {
   type: 'channel' | 'category'
 }
 
-const NUMBER_OF_VIDEOS = 7
+const NUMBER_OF_VIDEOS = 6
 
 export const MoreVideos: React.FC<MoreVideosProps> = ({
   channelId,
@@ -32,10 +32,11 @@ export const MoreVideos: React.FC<MoreVideosProps> = ({
   type,
 }) => {
   const where = type === 'channel' ? { channel: { id_eq: channelId } } : { category: { id_eq: categoryId } }
-  const { videos = [], loading } = useBasicVideos({ where, limit: NUMBER_OF_VIDEOS })
-  const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, 6)
+  // we fetch +1 because we need to filter duplicated video
+  const { videos = [], loading } = useBasicVideos({ where, limit: NUMBER_OF_VIDEOS + 1 })
+  const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, NUMBER_OF_VIDEOS)
   const placeholderItems =
-    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS - 1 }, () => ({ id: undefined })) : []
+    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []
   const lgMatch = useMediaMatch('lg')
   const gridContent = (
     <>
