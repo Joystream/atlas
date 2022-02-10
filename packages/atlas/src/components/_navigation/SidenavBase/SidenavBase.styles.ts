@@ -88,30 +88,6 @@ export const DrawerOverlay = styled.div`
   z-index: ${zIndex.sideNav};
   background-color: rgba(0 0 0 / 0.5);
 `
-export const SubItemsWrapper = styled.div<SubItemProps>`
-  padding-left: calc(32px + ${sizes(8)});
-  transition: height ${transitions.timings.regular} ${transitions.easing};
-  overflow: hidden;
-  height: ${({ expanded, subitemsHeight }) => (expanded ? subitemsHeight || 0 : 0)}px;
-
-  > ul {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    list-style: none;
-  }
-`
-
-export const SubItem = styled.li`
-  font: ${cVar('typographyDesktopT200')};
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  margin-top: ${sizes(8)};
-
-  :first-of-type {
-    margin-top: ${sizes(6)};
-  }
-`
 
 export const LegalLinksWrapper = styled.span`
   display: flex;

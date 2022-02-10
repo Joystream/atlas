@@ -71,22 +71,3 @@ export const ChannelsList = styled.ul`
   padding: 0;
   margin: 0;
 `
-
-export const ChannelsItem = styled.li`
-  padding-left: ${NAVBAR_LEFT_PADDING}px;
-
-  &:hover,
-  &:focus {
-    background-color: ${cVar('colorBackgroundAlpha')};
-
-    h6 {
-      color: ${cVar('colorTextStrong')} !important;
-    }
-  }
-
-  &:active,
-  &[data-active='true'] {
-    color: ${cVar('colorTextStrong')} !important;
-    background-color: ${cVar('colorBackgroundStrongAlpha')};
-  }
-`
