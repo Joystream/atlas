@@ -133,7 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { videoWorkspaceState, setVideoWorkspaceState } = useVideoWorkspace()
+  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
@@ -227,7 +227,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    setVideoWorkspaceState('closed')
+    setIsWorkspaceOpen(false)
 
     const metadata: ChannelInputMetadata = {
       ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
@@ -514,7 +514,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             />
           </FormField>
           <CSSTransition
-            in={videoWorkspaceState !== 'open'}
+            in={!isWorkspaceOpen}
             timeout={2 * parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
             unmountOnExit

@@ -1,12 +1,12 @@
 import { ImageInputMetadata, VideoInputMetadata } from '@/components/_inputs/MultiFileSelect'
 
-export type VideoWorkspaceAssets = {
+export type VideoWorkspaceVideoAssets = {
   video: {
-    contentId: string | null
+    id: string | null
   } & VideoInputMetadata
   thumbnail: {
-    cropContentId: string | null
-    originalContentId: string | null
+    cropId: string | null
+    originalId: string | null
   } & ImageInputMetadata
 }
 
@@ -16,19 +16,14 @@ export type VideoWorkspace = {
   isNew?: boolean
 }
 
-export type VideoWorkspaceAssetsCache = VideoWorkspaceAssets | null
-export type VideoWorkspaceCachedDirtyFormData = Partial<VideoWorkspaceFormFields>
-
 export type ContextValue = {
   editedVideoInfo: VideoWorkspace
   setEditedVideo: (video?: VideoWorkspace) => void
-  videoWorkspaceState: VideoWorkspaceState
-  setVideoWorkspaceState: (state: VideoWorkspaceState) => void
-  videoCachedAssets: VideoWorkspaceAssets | null
-  setVideoCachedAssets: (assets: VideoWorkspaceAssets | null) => void
+  isWorkspaceOpen: boolean
+  setIsWorkspaceOpen: (open: boolean) => void
 }
 
-export type VideoWorkspaceFormFields = {
+export type VideoWorkspaceVideoFormFields = {
   title: string
   description: string
   language: string | null
@@ -40,7 +35,5 @@ export type VideoWorkspaceFormFields = {
   isPublic: boolean
   isExplicit: boolean
   publishedBeforeJoystream: Date | null
-  assets: VideoWorkspaceAssets
+  assets: VideoWorkspaceVideoAssets
 }
-
-export type VideoWorkspaceState = 'closed' | 'open' | 'unset'

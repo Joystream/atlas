@@ -2,13 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { createId } from '@/utils/createId'
 
-import {
-  ContextValue,
-  VideoWorkspace,
-  VideoWorkspaceAssets,
-  VideoWorkspaceAssetsCache,
-  VideoWorkspaceState,
-} from './types'
+import { ContextValue, VideoWorkspace } from './types'
 
 import { useOverlayManager } from '../overlayManager'
 
@@ -23,56 +17,35 @@ const generateVideo = () => ({
 
 export const VideoWorkspaceProvider: React.FC = ({ children }) => {
   const [editedVideoInfo, setEditedVideoInfo] = useState<VideoWorkspace>(generateVideo())
-  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
-  const [videoWorkspaceState, setVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
-  const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
+  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false)
+  const [cachedIsWorkspaceOpen, setCachedIsWorkspaceOpen] = useState(false)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const setEditedVideo = useCallback((video?: VideoWorkspace) => {
     setEditedVideoInfo(!video ? generateVideo() : video)
   }, [])
 
-  const setVideoCachedAssets = useCallback(
-    (assets: VideoWorkspaceAssets | null) => {
-      if (!editedVideoInfo) {
-        return
-      }
-      setAssetsCache(assets)
-    },
-    [editedVideoInfo]
-  )
-  const videoCachedAssets = assetsCache
-
+  // manage overlays counts when workspace opens/closes
   useEffect(() => {
-    if (videoWorkspaceState === cachedVideoWorkspaceState) {
+    if (isWorkspaceOpen === cachedIsWorkspaceOpen) {
       return
     }
-    setCachedVideoWorkspaceState(videoWorkspaceState)
+    setCachedIsWorkspaceOpen(isWorkspaceOpen)
 
-    if (videoWorkspaceState === 'open') {
+    if (isWorkspaceOpen) {
       incrementOverlaysOpenCount()
-    }
-    if (videoWorkspaceState === 'closed') {
+    } else {
       decrementOverlaysOpenCount()
     }
-  }, [
-    videoWorkspaceState,
-    cachedVideoWorkspaceState,
-    editedVideoInfo,
-    incrementOverlaysOpenCount,
-    decrementOverlaysOpenCount,
-    setEditedVideo,
-  ])
+  }, [isWorkspaceOpen, cachedIsWorkspaceOpen, incrementOverlaysOpenCount, decrementOverlaysOpenCount])
 
   const value = useMemo(
     () => ({
       editedVideoInfo,
       setEditedVideo,
-      videoWorkspaceState,
-      setVideoWorkspaceState,
-      videoCachedAssets,
-      setVideoCachedAssets,
+      isWorkspaceOpen,
+      setIsWorkspaceOpen,
     }),
-    [editedVideoInfo, setEditedVideo, videoWorkspaceState, videoCachedAssets, setVideoCachedAssets]
+    [editedVideoInfo, setEditedVideo, isWorkspaceOpen]
   )
 
   return <VideoWorkspaceContext.Provider value={value}>{children}</VideoWorkspaceContext.Provider>

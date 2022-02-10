@@ -23,7 +23,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
   const { activeChannelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
-  const { videoWorkspaceState, setEditedVideo, setVideoWorkspaceState } = useVideoWorkspace()
+  const { isWorkspaceOpen, setEditedVideo, setIsWorkspaceOpen } = useVideoWorkspace()
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
@@ -42,7 +42,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
       return
     }
     setActiveUser({ channelId })
-    setVideoWorkspaceState('closed')
+    setIsWorkspaceOpen(false)
   }
 
   const avatars: AvatarGroupSingleAvatar[] = activeChannelId
@@ -62,7 +62,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
         {!hideChannelInfo && (
           <StudioTopbarContainer>
             <CSSTransition
-              in={videoWorkspaceState !== 'open' && !!activeChannelId}
+              in={!isWorkspaceOpen && !!activeChannelId}
               unmountOnExit
               mountOnEnter
               timeout={parseInt(transitions.timings.loading)}

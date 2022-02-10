@@ -4,43 +4,23 @@ import { CSSTransition } from 'react-transition-group'
 import { DrawerHeader } from '@/components/DrawerHeader'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
-import {
-  VideoWorkspaceAssetsCache,
-  VideoWorkspaceState,
-  useVideoWorkspace,
-  useVideoWorkspaceData,
-} from '@/providers/videoWorkspace'
+import { useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { cVar } from '@/styles'
-import { computeFileHash } from '@/utils/hashing'
 
+import { VideoForm } from './VideoForm'
 import { Container, DrawerOverlay } from './VideoWorkspace.style'
-import { VideoWorkspaceForm } from './VideoWorkspaceForm'
 
 export const VideoWorkspace: React.FC = React.memo(() => {
-  // videoWorkspace state
-  const { videoWorkspaceState, setVideoWorkspaceState, editedVideoInfo } = useVideoWorkspace()
+  const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { openWarningDialog } = useDisplayDataLostWarning()
-  const { tabData } = useVideoWorkspaceData(editedVideoInfo)
-  const [assetsCache, setAssetsCache] = useState<VideoWorkspaceAssetsCache>(null)
+  const { tabData } = useVideoWorkspaceData()
+  const [hasUnsavedAssets, setHasUnsavedAssets] = useState(false)
 
   const isEdit = !editedVideoInfo?.isDraft
   const headTags = useHeadTags(isEdit ? 'Edit video' : 'New video')
-  const anyVideoTabCachedAssets = !!(
-    assetsCache &&
-    (assetsCache.thumbnail.cropContentId || assetsCache.video.contentId)
-  )
-
-  // transaction management
-  const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
-  const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
-  const [dialogState, setDialogState] = useState<VideoWorkspaceState>('unset')
 
   useEffect(() => {
-    setDialogState(videoWorkspaceState)
-  }, [videoWorkspaceState])
-
-  useEffect(() => {
-    if (videoWorkspaceState === 'closed' || !anyVideoTabCachedAssets) {
+    if (!isWorkspaceOpen || !hasUnsavedAssets) {
       return
     }
     window.onbeforeunload = (e: BeforeUnloadEvent) => {
@@ -50,25 +30,15 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     return () => {
       window.onbeforeunload = null
     }
-  }, [videoWorkspaceState, anyVideoTabCachedAssets])
-
-  const handleVideoFileChange = useCallback((file: Blob) => {
-    const hashPromise = computeFileHash(file)
-    setVideoHashPromise(hashPromise)
-  }, [])
-
-  const handleThumbnailFileChange = useCallback((file: Blob) => {
-    const hashPromise = computeFileHash(file)
-    setThumbnailHashPromise(hashPromise)
-  }, [])
+  }, [hasUnsavedAssets, isWorkspaceOpen])
 
   const closeVideoWorkspace = useCallback(() => {
-    if (anyVideoTabCachedAssets) {
-      openWarningDialog({ onConfirm: () => setVideoWorkspaceState('closed') })
+    if (hasUnsavedAssets) {
+      openWarningDialog({ onConfirm: () => setIsWorkspaceOpen(false) })
     } else {
-      setVideoWorkspaceState('closed')
+      setIsWorkspaceOpen(false)
     }
-  }, [anyVideoTabCachedAssets, openWarningDialog, setVideoWorkspaceState])
+  }, [hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
   const getBadgeText = () => {
     if (editedVideoInfo.isNew || editedVideoInfo.isDraft) {
@@ -79,9 +49,9 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   return (
     <>
-      {dialogState === 'open' && headTags}
+      {isWorkspaceOpen && headTags}
       <CSSTransition
-        in={dialogState === 'open'}
+        in={isWorkspaceOpen}
         mountOnEnter
         unmountOnExit
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
@@ -90,7 +60,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         <DrawerOverlay />
       </CSSTransition>
       <CSSTransition
-        in={dialogState === 'open'}
+        in={isWorkspaceOpen}
         mountOnEnter
         unmountOnExit
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
@@ -102,15 +72,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             label={getBadgeText()}
             onCloseClick={closeVideoWorkspace}
           />
-          <VideoWorkspaceForm
-            editedVideoInfo={editedVideoInfo}
-            onThumbnailFileChange={handleThumbnailFileChange}
-            onVideoFileChange={handleVideoFileChange}
-            fee={0}
-            thumbnailHashPromise={thumbnailHashPromise}
-            videoHashPromise={videoHashPromise}
-            setAssetsCache={setAssetsCache}
-          />
+          <VideoForm fee={0} setHasUnsavedAssets={setHasUnsavedAssets} />
         </Container>
       </CSSTransition>
     </>
