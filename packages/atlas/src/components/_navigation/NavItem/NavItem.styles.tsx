@@ -118,21 +118,6 @@ export const SidebarNavLink = styled(Link, { shouldForwardProp: isPropValid })<S
   }
 `
 
-export const SidebarNav = styled.nav<ExpandableElementProps>`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  height: 100%;
-  z-index: ${zIndex.sideNav};
-  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
-  transition: width ${transitions.timings.regular} ${transitions.easing};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  color: ${cVar('colorText')};
-  background-color: ${cVar('colorBackground')};
-`
-
 export const SidebarNavItem = styled.li<ExpandableElementProps>`
   position: relative;
   width: 100%;
