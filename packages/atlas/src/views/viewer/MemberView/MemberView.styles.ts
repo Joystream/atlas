@@ -18,7 +18,7 @@ export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
   box-shadow: ${cVar('effectDividersBottom')};
   ${media.sm} {
-    border-bottom: none;
+    box-shadow: none;
   }
 `
 
