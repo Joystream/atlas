@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { sizes } from '@/styles'
 
-import { KebabMenuButtonIcon } from '../VideoTileDetails/VideoTileDetails.styles'
+import { KebabMenuButtonIcon, VideoTitle } from '../VideoTileDetails/VideoTileDetails.styles'
 
 export const VideoTileContainer = styled.div<{ direction: 'vertical' | 'horizontal' }>`
   gap: ${sizes(4)};
@@ -12,6 +12,10 @@ export const VideoTileContainer = styled.div<{ direction: 'vertical' | 'horizont
       ? css`
           display: grid;
           grid-template-columns: repeat(2, minmax(160px, 320px));
+
+          ${VideoTitle} {
+            -webkit-line-clamp: 3;
+          }
         `
       : css`
           display: flex;
