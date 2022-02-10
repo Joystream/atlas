@@ -54,14 +54,12 @@ export const SidenavViewer: React.FC = () => {
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={
-        followedChannels.length ? (
-          <FollowedChannels
-            onClick={() => setExpanded(false)}
-            onChannelNotFound={handleChannelNotFound}
-            followedChannels={followedChannels}
-            expanded={expanded}
-          />
-        ) : null
+        <FollowedChannels
+          onClick={() => setExpanded(false)}
+          onChannelNotFound={handleChannelNotFound}
+          followedChannels={followedChannels}
+          expanded={expanded}
+        />
       }
       buttonsContent={buttonsContent}
     />
