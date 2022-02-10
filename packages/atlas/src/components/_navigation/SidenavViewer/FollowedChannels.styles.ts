@@ -32,20 +32,6 @@ export const BrowseChannelsWrapper = styled(Link)`
   }
 `
 
-export const BrowseChannelsIcon = styled.div`
-  background-color: ${cVar('colorBackgroundAlpha')};
-  border-radius: 50%;
-  opacity: 0.5;
-  width: ${sizes(8)};
-  height: ${sizes(8)};
-  padding: ${sizes(2)};
-  margin-right: ${sizes(4)};
-
-  > svg > path {
-    fill: ${cVar('colorTextStrong')} !important;
-  }
-`
-
 export const BrowseChannelsText = styled(Text)`
   color: inherit;
   margin-left: ${sizes(4)};
