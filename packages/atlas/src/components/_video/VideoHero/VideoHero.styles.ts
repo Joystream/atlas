@@ -100,5 +100,5 @@ const overFlowAuto = css`
 `
 
 export const TitleText = styled(Text)<IsCategoryProp>`
-  ${({ isCategory }) => isCategory && overFlowAuto};
+  ${({ isCategory }) => !isCategory && overFlowAuto};
 `
