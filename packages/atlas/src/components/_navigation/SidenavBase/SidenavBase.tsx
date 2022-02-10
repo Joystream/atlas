@@ -60,7 +60,7 @@ const SidenavBase: React.FC<SidenavProps> = ({
         <LogoLink to={logoLinkUrl} onClick={() => scrollAndToggle(false)} tabIndex={expanded ? 0 : -1}>
           {logoNode}
         </LogoLink>
-        <ScrollContainer ref={scrollContainer}>
+        <ScrollContainer ref={scrollContainer} expanded={expanded}>
           <SidebarNavList>
             {items.map((item) => (
               <NavItem
