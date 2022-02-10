@@ -44,8 +44,6 @@ export const LogoLink = styled(Link)`
   margin-left: 80px;
   text-decoration: none;
   overflow-x: hidden;
-  ${setSizeNavbarWidthExpanded}
-
   min-width: var(--size-sidenav-width-expanded);
   flex-shrink: 0;
 `
@@ -64,8 +62,6 @@ export const SidebarNavFooter = styled.div`
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  ${setSizeNavbarWidthExpanded}
-
   min-width: var(--size-sidenav-width-expanded);
 `
 
