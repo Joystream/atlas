@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -13,17 +14,22 @@ export const EXPANDED_SIDENAVBAR_WIDTH = 360
 export const EXPANDED_SIDENAVBAR_WIDTH_XXS = 320
 export const NAVBAR_LEFT_PADDING = 24
 
+const setSizeNavbarWidthExpanded = css`
+  --size-sidenav-width-expanded: 320px;
+  ${media.md} {
+    --size-sidenav-width-expanded: 360px;
+  }
+`
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
   top: 0;
   bottom: 0;
   height: 100%;
   z-index: ${zIndex.sideNav};
-  width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH_XXS}px` : 'var(--size-sidenav-width-collapsed)')};
-  ${media.md} {
-    width: ${({ expanded }) => (expanded ? `${EXPANDED_SIDENAVBAR_WIDTH}px` : 'var(--size-sidenav-width-collapsed)')};
-  }
 
+  ${setSizeNavbarWidthExpanded}
+
+  width: ${({ expanded }) => (expanded ? 'var(--size-sidenav-width-expanded)' : 'var(--size-sidenav-width-collapsed)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
   display: flex;
   flex-direction: column;
@@ -39,22 +45,18 @@ export const LogoLink = styled(Link)`
   margin-left: 80px;
   text-decoration: none;
   overflow-x: hidden;
-  min-width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
-  ${media.md} {
-    min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
-  }
+  ${setSizeNavbarWidthExpanded}
 
+  min-width: var(--size-sidenav-width-expanded);
   flex-shrink: 0;
 `
 
 export const SidebarNavList = styled.ul`
   margin-top: 28px;
   list-style: none;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
-  ${media.md} {
-    width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
-  }
+  ${setSizeNavbarWidthExpanded}
 
+  width: var(--size-sidenav-width-expanded);
   padding: 0;
 `
 
@@ -63,10 +65,9 @@ export const SidebarNavFooter = styled.div`
   flex-direction: column;
   padding: 0 ${NAVBAR_LEFT_PADDING}px;
   border-top: 1px solid ${cVar('colorBorderMutedAlpha')};
-  min-width: ${EXPANDED_SIDENAVBAR_WIDTH_XXS}px;
-  ${media.md} {
-    min-width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
-  }
+  ${setSizeNavbarWidthExpanded}
+
+  min-width: var(--size-sidenav-width-expanded);
 `
 
 export const ButtonGroup = styled.div`
@@ -104,14 +105,14 @@ export const LegalLinksWrapper = styled.span`
 
 export const LegalLink = styled(Link)`
   text-decoration: none;
-  color: ${cVar('colorTextMuted')} !important;
+  color: ${cVar('colorTextMuted')};
 
   &:hover {
-    color: ${cVar('colorTextMuted')};
+    color: ${cVar('colorText')};
   }
 
   &:focus {
-    color: ${cVar('colorTextMuted')};
+    color: ${cVar('colorText')};
   }
 `
 
