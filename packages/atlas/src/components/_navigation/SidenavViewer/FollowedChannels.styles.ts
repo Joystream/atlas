@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { ChannelLink } from './ChannelLink'
-
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
 
 export const FollowedChannelsWrapper = styled.div`
@@ -72,18 +70,6 @@ export const ChannelsList = styled.ul`
   overflow-x: hidden;
   padding: 0;
   margin: 0;
-`
-
-export const StyledChannelLink = styled(ChannelLink)`
-  width: 100%;
-  height: 100%;
-
-  > span {
-    margin-left: ${sizes(2)};
-  }
-
-  padding: ${sizes(4)} 0;
-  color: inherit;
 `
 
 export const ChannelsItem = styled.li`
