@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
@@ -9,16 +8,8 @@ type ExpandableElementProps = {
   expanded?: boolean
 }
 
-export const EXPANDED_SIDENAVBAR_WIDTH = 360
-export const EXPANDED_SIDENAVBAR_WIDTH_XXS = 320
 export const NAVBAR_LEFT_PADDING = 24
 
-const setSizeNavbarWidthExpanded = css`
-  --size-sidenav-width-expanded: 320px;
-  ${media.md} {
-    --size-sidenav-width-expanded: 360px;
-  }
-`
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
   top: 0;
@@ -26,7 +17,10 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   height: 100%;
   z-index: ${zIndex.sideNav};
 
-  ${setSizeNavbarWidthExpanded}
+  --size-sidenav-width-expanded: 320px;
+  ${media.md} {
+    --size-sidenav-width-expanded: 360px;
+  }
 
   width: ${({ expanded }) => (expanded ? 'var(--size-sidenav-width-expanded)' : 'var(--size-sidenav-width-collapsed)')};
   transition: width ${transitions.timings.regular} ${transitions.easing};
@@ -119,8 +113,12 @@ export const StyledHamburgerButton = styled(HamburgerButton)`
   }
 `
 
-export const ScrollContainer = styled.div`
-  overflow-y: auto;
+type ScrollContainerProps = {
+  expanded: boolean
+}
+
+export const ScrollContainer = styled.div<ScrollContainerProps>`
+  overflow-y: ${({ expanded }) => (expanded ? 'auto' : 'hidden')};
   overflow-x: hidden;
   flex-grow: 10;
 `

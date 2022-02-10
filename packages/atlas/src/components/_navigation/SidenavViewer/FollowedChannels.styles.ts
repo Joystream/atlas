@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
-import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
+import { NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
 
 export const StyledSkeletonLoader = styled(SkeletonLoader)`
   margin-left: ${sizes(4)};
@@ -46,18 +46,18 @@ export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
+  width: calc(var(--size-sidenav-width-expanded) - ${NAVBAR_LEFT_PADDING}px);
 `
 
 export const ChannelsWrapper = styled.div`
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  width: var(--size-sidenav-width-expanded);
   overflow-y: auto;
   overflow-x: hidden;
 `
 
 export const ChannelsList = styled.ul`
   color: ${cVar('colorText')};
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  width: var(--size-sidenav-width-expanded);
   overflow-x: hidden;
   padding: 0;
   margin: 0;
