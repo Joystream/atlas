@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
 
+const ESTIMATED_BLOCK_TIME = 6000
+
 export const useBlockTimeEstimation = () => {
   const { joystream, proxyCallback } = useJoystream()
 
@@ -29,11 +31,11 @@ export const useBlockTimeEstimation = () => {
 
   const convertBlockToDate = (block: number) => {
     const now = Date.now()
-    const differenceBetweenProvidedBlockandCurrentBlock = block - currentBlock
+    const differenceBetweenProvidedBlockAndCurrentBlock = block - currentBlock
     const differenceBetweenNowAndTimeofTheLastBlock = now - timeofTheLastBlock
 
     const estimatedTime =
-      differenceBetweenProvidedBlockandCurrentBlock * 6000 - differenceBetweenNowAndTimeofTheLastBlock
+      differenceBetweenProvidedBlockAndCurrentBlock * ESTIMATED_BLOCK_TIME - differenceBetweenNowAndTimeofTheLastBlock
     const date = now + estimatedTime
 
     return date
@@ -45,11 +47,11 @@ export const useBlockTimeEstimation = () => {
     }
     const timeOfTheFirstBlock = convertBlockToDate(0)
 
-    const differenceBetweenNowAndProvidedDate = date - timeOfTheFirstBlock
+    const differenceBetweenTimeofTheFirstBlockAndDate = date - timeOfTheFirstBlock
 
-    const amountOfBlocks = Math.round(differenceBetweenNowAndProvidedDate / 6000)
+    const block = Math.round(differenceBetweenTimeofTheFirstBlockAndDate / ESTIMATED_BLOCK_TIME)
 
-    return amountOfBlocks
+    return block
   }
 
   return { currentBlock, timeofTheLastBlock, convertBlockToDate, convertDateToBlock }
