@@ -25,7 +25,7 @@ export const StyledTabs = styled(Tabs)`
 export const TabsContainer = styled.div`
   display: grid;
   padding-top: ${sizes(8)};
-  gap: ${sizes(2)};
+  gap: ${sizes(8)} ${sizes(2)};
   grid-template:
     'tabs tabs' auto
     'sort filter' auto / 1fr auto;
@@ -50,7 +50,6 @@ export const FilterButtonContainer = styled.div`
 export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
   z-index: 99;
   position: relative;
-  margin-bottom: ${sizes(8)};
   ${media.sm} {
     margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
     transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
