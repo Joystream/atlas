@@ -13,7 +13,7 @@ export const FollowedChannelsWrapper = styled.div`
 `
 
 export const BrowseChannelsWrapper = styled(Link)`
-  padding: ${sizes(4)} ${NAVBAR_LEFT_PADDING}px;
+  padding: ${sizes(3)} ${NAVBAR_LEFT_PADDING}px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -43,6 +43,7 @@ export const BrowseChannelsIcon = styled.div`
 
 export const BrowseChannelsText = styled(Text)`
   color: inherit;
+  margin-left: ${sizes(4)};
 `
 
 export const ChannelTitle = styled(Text)`
@@ -61,7 +62,6 @@ export const ChannelsWrapper = styled.div`
   width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 10px;
 `
 
 export const ChannelsList = styled.ul`

@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { SvgActionNewChannel } from '@/components/_icons'
+import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
@@ -13,7 +14,6 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  BrowseChannelsIcon,
   BrowseChannelsText,
   BrowseChannelsWrapper,
   ChannelTitle,
@@ -101,9 +101,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
           </ChannelsList>
         </ChannelsWrapper>
         <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
-          <BrowseChannelsIcon>
-            <SvgActionNewChannel />
-          </BrowseChannelsIcon>
+          <IconWrapper icon={<SvgActionNewChannel />} />
           <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
         </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
