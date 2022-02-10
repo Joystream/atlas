@@ -20,7 +20,7 @@ export type NavItemProps = {
   subitems?: NavSubitem[]
   expanded: boolean
   to: string
-  itemName: string
+  itemName?: string
   badgeNumber?: number
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
   isSecondary: boolean
@@ -45,7 +45,7 @@ export const NavItem: React.FC<NavItemProps> = ({
         data-active={match ? 'true' : ''}
         to={to}
         expanded={expanded || undefined}
-        content={itemName}
+        content={itemName || ''}
         isSecondary={isSecondary}
       >
         {children}

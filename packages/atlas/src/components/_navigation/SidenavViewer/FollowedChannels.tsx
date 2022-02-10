@@ -89,7 +89,6 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
                 id={id}
                 to={absoluteRoutes.viewer.channel(id)}
                 expanded={expanded}
-                itemName={id}
                 onClick={onClick}
                 isSecondary={true}
                 onChannelNotFound={onChannelNotFound}
