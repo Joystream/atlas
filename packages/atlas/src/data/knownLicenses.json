@@ -1,7 +1,7 @@
 [
   {
     "code": 1000,
-    "name": "CUSTOM",
+    "name": "Custom",
     "longName": "Custom License",
     "description": "A user defined License",
     "url": "",

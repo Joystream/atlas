@@ -25,7 +25,45 @@ export type BasicVideoFieldsFragment = {
   __typename?: 'Video'
   id: string
   title?: string | null
-  channel: { __typename?: 'Channel'; id: string }
+  views: number
+  createdAt: Date
+  duration?: number | null
+  isPublic?: boolean | null
+  media?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: number
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+  } | null
+  channel: {
+    __typename?: 'Channel'
+    id: string
+    title?: string | null
+    avatarPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+  }
   thumbnailPhoto?: {
     __typename?: 'StorageDataObject'
     id: string
@@ -416,7 +454,9 @@ export type GetVideosQuery = {
 }
 
 export type GetBasicVideosQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>
   where?: Types.InputMaybe<Types.VideoWhereInput>
+  orderBy?: Types.VideoOrderByInput
 }>
 
 export type GetBasicVideosQuery = {
@@ -425,7 +465,45 @@ export type GetBasicVideosQuery = {
     __typename?: 'Video'
     id: string
     title?: string | null
-    channel: { __typename?: 'Channel'; id: string }
+    views: number
+    createdAt: Date
+    duration?: number | null
+    isPublic?: boolean | null
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: number
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+    }
     thumbnailPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -442,6 +520,73 @@ export type GetBasicVideosQuery = {
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
   }>
+}
+
+export type GetBasicVideoQueryVariables = Types.Exact<{
+  where: Types.VideoWhereUniqueInput
+}>
+
+export type GetBasicVideoQuery = {
+  __typename?: 'Query'
+  videoByUniqueInput?: {
+    __typename?: 'Video'
+    id: string
+    title?: string | null
+    views: number
+    createdAt: Date
+    duration?: number | null
+    isPublic?: boolean | null
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: number
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+    }
+    thumbnailPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+  } | null
 }
 
 export type GetMostViewedVideosConnectionQueryVariables = Types.Exact<{
@@ -746,8 +891,20 @@ export const BasicVideoFieldsFragmentDoc = gql`
   fragment BasicVideoFields on Video {
     id
     title
+    views
+    createdAt
+    duration
+    title
+    isPublic
+    media {
+      ...StorageDataObjectFields
+    }
     channel {
       id
+      title
+      avatarPhoto {
+        ...StorageDataObjectFields
+      }
     }
     thumbnailPhoto {
       ...StorageDataObjectFields
@@ -956,8 +1113,8 @@ export type GetVideosQueryHookResult = ReturnType<typeof useGetVideosQuery>
 export type GetVideosLazyQueryHookResult = ReturnType<typeof useGetVideosLazyQuery>
 export type GetVideosQueryResult = Apollo.QueryResult<GetVideosQuery, GetVideosQueryVariables>
 export const GetBasicVideosDocument = gql`
-  query GetBasicVideos($where: VideoWhereInput) {
-    videos(where: $where) {
+  query GetBasicVideos($limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
+    videos(limit: $limit, where: $where, orderBy: [$orderBy]) {
       ...BasicVideoFields
     }
   }
@@ -976,7 +1133,9 @@ export const GetBasicVideosDocument = gql`
  * @example
  * const { data, loading, error } = useGetBasicVideosQuery({
  *   variables: {
+ *      limit: // value for 'limit'
  *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
@@ -995,6 +1154,46 @@ export function useGetBasicVideosLazyQuery(
 export type GetBasicVideosQueryHookResult = ReturnType<typeof useGetBasicVideosQuery>
 export type GetBasicVideosLazyQueryHookResult = ReturnType<typeof useGetBasicVideosLazyQuery>
 export type GetBasicVideosQueryResult = Apollo.QueryResult<GetBasicVideosQuery, GetBasicVideosQueryVariables>
+export const GetBasicVideoDocument = gql`
+  query GetBasicVideo($where: VideoWhereUniqueInput!) {
+    videoByUniqueInput(where: $where) {
+      ...BasicVideoFields
+    }
+  }
+  ${BasicVideoFieldsFragmentDoc}
+`
+
+/**
+ * __useGetBasicVideoQuery__
+ *
+ * To run a query within a React component, call `useGetBasicVideoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBasicVideoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBasicVideoQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetBasicVideoQuery(
+  baseOptions: Apollo.QueryHookOptions<GetBasicVideoQuery, GetBasicVideoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetBasicVideoQuery, GetBasicVideoQueryVariables>(GetBasicVideoDocument, options)
+}
+export function useGetBasicVideoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetBasicVideoQuery, GetBasicVideoQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetBasicVideoQuery, GetBasicVideoQueryVariables>(GetBasicVideoDocument, options)
+}
+export type GetBasicVideoQueryHookResult = ReturnType<typeof useGetBasicVideoQuery>
+export type GetBasicVideoLazyQueryHookResult = ReturnType<typeof useGetBasicVideoLazyQuery>
+export type GetBasicVideoQueryResult = Apollo.QueryResult<GetBasicVideoQuery, GetBasicVideoQueryVariables>
 export const GetMostViewedVideosConnectionDocument = gql`
   query GetMostViewedVideosConnection(
     $limit: Int = 50

@@ -1,14 +1,12 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
+import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
-import { ViewWrapper } from '@/components/ViewWrapper'
+import { Button } from '@/components/_buttons/Button'
+import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, sizes } from '@/styles'
-
-export const StyledViewWrapper = styled(ViewWrapper)`
-  display: flex;
-  flex-direction: column;
-`
+import { cVar, media, sizes } from '@/styles'
 
 export const PlayerContainer = styled.div`
   width: 100%;
@@ -29,18 +27,23 @@ export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   height: 100%;
 `
 
+export const TitleContainer = styled.div`
+  padding-bottom: ${sizes(6)};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+`
+
 export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
   height: 28px;
   margin: ${sizes(4)} 0 0;
 `
 
-export const InfoContainer = styled.div`
-  padding: ${sizes(8)} 0;
-`
-
 export const Meta = styled(Text)`
   display: block;
-  margin-top: ${sizes(1)};
+  margin-top: ${sizes(2)};
+
+  ${media.md} {
+    margin-top: ${sizes(4)};
+  }
 `
 
 export const TitleText = styled(Text)`
@@ -48,53 +51,67 @@ export const TitleText = styled(Text)`
 `
 
 export const ChannelContainer = styled.div`
-  margin-top: ${sizes(4)};
+  margin-top: ${sizes(6)};
+
+  ${media.md} {
+    margin-top: ${sizes(8)};
+  }
+`
+
+export const DetailsWrapper = styled.div`
+  ${media.md} {
+    padding-left: ${sizes(14)};
+  }
 `
 
 export const DescriptionContainer = styled.div`
   margin-top: ${sizes(6)};
-  border-top: 1px solid ${oldColors.gray[800]};
+  margin-bottom: ${sizes(8)};
 
-  p {
-    font: ${cVar('typographyDesktopT200')};
-    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopT200TextTransform')};
-    margin: ${sizes(4)} 0 0;
+  ${media.md} {
+    margin: ${sizes(8)} 0;
+  }
+`
+export const DescriptionTitle = styled(Text)`
+  margin-bottom: ${sizes(2)};
+`
 
-    ${media.sm} {
-      font: ${cVar('typographyDesktopT300')};
-      letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
-      text-transform: ${cVar('typographyDesktopT300TextTransform')};
-      color: ${oldColors.gray[300]};
-    }
+export const Category = styled(Link)`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  svg {
+    margin-right: ${sizes(2)};
   }
 `
 
-export const MoreVideosContainer = styled.div`
-  margin-top: 88px;
+export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: ${sizes(6)};
+  visibility: ${({ detailsExpanded }) => (detailsExpanded ? 'visible' : 'hidden')};
+  max-height: ${({ detailsExpanded }) => (detailsExpanded ? 'auto' : '0')};
+  overflow: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'hidden')};
+  opacity: ${({ detailsExpanded }) => (detailsExpanded ? 1 : 0)};
+  transition: opacity 150ms ease-out;
 `
 
-export const MoreVideosHeader = styled.h5`
-  margin: 0 0 ${sizes(4)};
-  font: ${cVar('typographyDesktopH400')};
-  letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopH400TextTransform')};
+export const LicenseCustomText = styled(Text)`
+  margin-top: ${sizes(2)};
 `
-export const LicenseContainer = styled.div`
-  margin: ${sizes(4)} 0 0;
-  color: ${oldColors.gray[500]};
-  font: ${cVar('typographyDesktopT100')};
-  letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT100TextTransform')};
 
-  p {
-    max-width: 60ch;
-    margin: 0;
-  }
+export const ExpandButton = styled(Button)`
+  display: block;
+  margin-top: ${sizes(2)};
+`
 
-  a {
-    text-decoration: none;
-    color: ${oldColors.gray[500]};
+export const CategoryWrapper = styled.div`
+  text-align: left;
+
+  path {
+    fill: ${cVar('colorText')};
   }
 `
 
@@ -103,4 +120,36 @@ export const NotFoundVideoContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: calc(100vh - var(--size-topbar-height));
+`
+
+export const Details = styled.div`
+  display: flex;
+`
+
+export const StyledLimitedWidthContainer = styled(LimitedWidthContainer)`
+  margin-top: ${sizes(8)};
+`
+
+export const MoreVideosContainer = styled.div`
+  :not(:first-of-type) {
+    margin-top: ${sizes(16)};
+  }
+`
+
+export const MoreFrom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  padding-bottom: ${sizes(4)};
+  margin-bottom: ${sizes(8)};
+`
+
+export const SeeMoreButton = styled(Button)`
+  width: 100%;
+  margin-top: ${sizes(8)};
+`
+
+export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
+  margin-top: ${sizes(16)};
 `

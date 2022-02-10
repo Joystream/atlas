@@ -5,52 +5,64 @@ import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
-import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
+import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
+import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
+import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
+import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
-import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
+import { MoreVideos } from './MoreVideos'
 import {
+  Category,
+  CategoryWrapper,
   ChannelContainer,
   DescriptionContainer,
   DescriptionSkeletonLoader,
-  InfoContainer,
-  LicenseContainer,
+  DescriptionTitle,
+  DetailsWrapper,
+  ExpandButton,
+  LicenceCategoryWrapper,
+  LicenseCustomText,
   Meta,
-  MoreVideosContainer,
   NotFoundVideoContainer,
   PlayerContainer,
   PlayerSkeletonLoader,
   PlayerWrapper,
-  StyledViewWrapper,
+  StyledCallToActionWrapper,
+  StyledLimitedWidthContainer,
+  TitleContainer,
   TitleText,
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
+  const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
-  const xsMatch = useMediaMatch('sm')
+  const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
   const watchedVideos = usePersonalDataStore((state) => state.watchedVideos)
   const updateWatchedVideos = usePersonalDataStore((state) => state.actions.updateWatchedVideos)
-
-  const timestampFromQuery = Number(useRouterQuery('time'))
+  const category = useCategoryMatch(video?.category?.id)
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
@@ -61,25 +73,19 @@ export const VideoView: React.FC = () => {
   }, [video, thumbnailUrl])
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
-  const [startTimestamp, setStartTimestamp] = useState<number>()
+  const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
+
+  // Restore an interrupted video state
   useEffect(() => {
-    if (startTimestamp != null) {
+    if (startTimestamp != null || !video) {
       return
     }
     const currentVideo = watchedVideos.find((v) => v.id === video?.id)
-
     setStartTimestamp(currentVideo?.__typename === 'INTERRUPTED' ? currentVideo.timestamp : 0)
-  }, [watchedVideos, startTimestamp, video?.duration, video?.id])
-
-  useEffect(() => {
-    const duration = video?.duration ?? 0
-    if (!timestampFromQuery || timestampFromQuery > duration) {
-      return
-    }
-    setStartTimestamp(timestampFromQuery)
-  }, [video?.duration, timestampFromQuery])
+  }, [watchedVideos, startTimestamp, video, setStartTimestamp])
 
   const channelId = video?.channel?.id
+  const channelName = video?.channel?.title
   const videoId = video?.id
   const categoryId = video?.category?.id
 
@@ -154,6 +160,10 @@ export const VideoView: React.FC = () => {
     }, [] as React.ReactNode[])
   }
 
+  const toggleDetailsExpand = () => {
+    setDetailsExpanded((prevState) => !prevState)
+  }
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -176,7 +186,7 @@ export const VideoView: React.FC = () => {
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
 
   return (
-    <StyledViewWrapper>
+    <>
       {headTags}
       <PlayerWrapper>
         <PlayerContainer>
@@ -197,61 +207,107 @@ export const VideoView: React.FC = () => {
           )}
         </PlayerContainer>
       </PlayerWrapper>
-      <InfoContainer className={transitions.names.slide}>
-        {video ? (
-          <TitleText variant={xsMatch ? 'h700' : 'h500'}>{video.title}</TitleText>
-        ) : (
-          <SkeletonLoader height={xsMatch ? 56 : 32} width={400} />
-        )}
-        <Meta variant="t300" secondary>
-          {video ? (
-            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
-          ) : (
-            <SkeletonLoader height={24} width={200} />
-          )}
-        </Meta>
-        <ChannelContainer>
-          <ChannelLink id={video?.channel?.id} />
-        </ChannelContainer>
-        <DescriptionContainer>
-          {video ? (
-            video.description?.split('\n').map((line, idx) => <p key={idx}>{replaceUrls(line)}</p>)
-          ) : (
-            <>
-              <DescriptionSkeletonLoader width={700} />
-              <DescriptionSkeletonLoader width={400} />
-              <DescriptionSkeletonLoader width={800} />
-              <DescriptionSkeletonLoader width={300} />
-            </>
-          )}
-        </DescriptionContainer>
-        <LicenseContainer>
-          {video ? (
-            <>
-              License:
-              {foundLicense && (
-                <a href={foundLicense.url} target="_blank" rel="noopener noreferrer">
-                  {foundLicense.name}
-                </a>
+      <StyledLimitedWidthContainer>
+        <LayoutGrid>
+          <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: 8 }}>
+            <TitleContainer>
+              {video ? (
+                <TitleText variant={mdMatch ? 'h600' : 'h400'}>{video.title}</TitleText>
+              ) : (
+                <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
               )}
-              <p>{video.license?.customText}</p>
-              {video.license?.attribution ? <p>Attribution: {video.license.attribution}</p> : null}
-            </>
-          ) : (
-            <SkeletonLoader height={12} width={200} />
-          )}
-        </LicenseContainer>
-        <MoreVideosContainer>
-          <InfiniteVideoGrid
-            title={`More from ${video?.channel?.title}`}
-            titleLoader
-            ready={!loading}
-            videoWhereInput={{ channel: { id_eq: channelId } }}
-            showChannel={false}
-            excludeId={video?.id}
-          />
-        </MoreVideosContainer>
-      </InfoContainer>
-    </StyledViewWrapper>
+              <Meta variant={mdMatch ? 't300' : 't100'} secondary>
+                {video ? (
+                  formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+                ) : (
+                  <SkeletonLoader height={24} width={200} />
+                )}
+              </Meta>
+            </TitleContainer>
+            <ChannelContainer>
+              <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
+            </ChannelContainer>
+            <DetailsWrapper>
+              <DescriptionContainer>
+                {video ? (
+                  video?.description && (
+                    <>
+                      <DescriptionTitle variant="h100">Description</DescriptionTitle>
+                      {video.description?.split('\n').map((line, idx) => (
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                          {replaceUrls(line)}
+                        </Text>
+                      ))}
+                    </>
+                  )
+                ) : (
+                  <>
+                    <DescriptionSkeletonLoader width="70%" />
+                    <DescriptionSkeletonLoader width="40%" />
+                    <DescriptionSkeletonLoader width="80%" />
+                    <DescriptionSkeletonLoader width="30%" />
+                  </>
+                )}
+                {!mdMatch && (
+                  <ExpandButton
+                    onClick={toggleDetailsExpand}
+                    iconPlacement="right"
+                    size="small"
+                    variant="tertiary"
+                    textOnly
+                    icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
+                  >
+                    Show {!detailsExpanded ? 'more' : 'less'}
+                  </ExpandButton>
+                )}
+              </DescriptionContainer>
+              <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
+                <GridItem>
+                  {video ? (
+                    <>
+                      <DescriptionTitle variant="h100">License</DescriptionTitle>
+                      {foundLicense && (
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                          {foundLicense.name}
+                        </Text>
+                      )}
+                      <LicenseCustomText as="p" variant="t100" secondary>
+                        {video.license?.customText}
+                      </LicenseCustomText>
+                    </>
+                  ) : (
+                    <SkeletonLoader height={12} width={200} />
+                  )}
+                </GridItem>
+                <CategoryWrapper>
+                  {video ? (
+                    <>
+                      <DescriptionTitle variant="h100">Category</DescriptionTitle>
+                      <Category to={absoluteRoutes.viewer.category(category?.id)}>
+                        {category?.icon}
+                        <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                          {category?.name}
+                        </Text>
+                      </Category>
+                    </>
+                  ) : (
+                    <SkeletonLoader height={12} width={200} />
+                  )}
+                </CategoryWrapper>
+              </LicenceCategoryWrapper>
+            </DetailsWrapper>
+          </GridItem>
+          <GridItem colSpan={{ xxs: 12, md: 4 }}>
+            <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+            <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
+          </GridItem>
+        </LayoutGrid>
+        <StyledCallToActionWrapper>
+          {['popular', 'new', 'discover'].map((item, idx) => (
+            <CallToActionButton key={`cta-${idx}`} {...CTA_MAP[item]} />
+          ))}
+        </StyledCallToActionWrapper>
+      </StyledLimitedWidthContainer>
+    </>
   )
 }

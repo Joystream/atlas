@@ -15,9 +15,10 @@ type VideoTileViewerProps = {
   id?: string
   onClick?: () => void
   detailsVariant?: VideoDetailsVariant
+  direction?: 'vertical' | 'horizontal'
 }
 
-export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant }) => {
+export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
   const navigate = useNavigate()
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
     useVideoTileSharedLogic({
@@ -62,6 +63,7 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
           title: 'Copy video URL',
         },
       ]}
+      direction={direction}
     />
   )
 }
