@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { Member } from '@/components/NftTile'
@@ -17,6 +17,7 @@ import {
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { cVar } from '@/styles'
+import { copyToClipboard } from '@/utils/browser'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -42,6 +43,7 @@ export type NftTileDetailsProps = {
   topBid?: number
   title: string
   hovered?: boolean
+  videoHref?: string
 }
 
 type TileSize = 'small' | 'medium'
@@ -68,6 +70,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   bid,
   title,
   hovered,
+  videoHref,
 }) => {
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
@@ -86,11 +89,16 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     },
   })
 
+  const handleCopyVideoURLClick = useCallback(() => {
+    copyToClipboard(videoHref ? location.origin + videoHref : '')
+  }, [videoHref])
+
   const getContextMenuContent = useMemo(() => {
     const elements: MenuItemProps[] = [
       {
         icon: <SvgActionCopy />,
         title: 'Copy video URL',
+        onClick: handleCopyVideoURLClick,
       },
     ]
     if (role === 'owner') {
@@ -142,7 +150,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       }
     }
     return elements
-  }, [auction, buyNow, role])
+  }, [auction, buyNow, handleCopyVideoURLClick, role])
 
   const DetailsContent: React.FC<DetailsContent> = React.memo(({ caption, icon, content, secondary }) => (
     <div>

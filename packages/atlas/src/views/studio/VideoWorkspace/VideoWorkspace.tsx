@@ -194,6 +194,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                 />
               ) : (
                 <NFTWorkspaceForm
+                  videoId={selectedVideoTab?.id ?? ''}
                   onGoBack={() => setIsIssuedAsNFTChecked(false)}
                   isEdit={!selectedVideoTab?.isDraft}
                   fee={0}

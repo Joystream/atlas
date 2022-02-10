@@ -139,7 +139,16 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     formState,
   }) => {
     const { errors, dirtyFields, isDirty, isValid } = formState
-    const { setVideoWorkspaceState, selectedVideoTabIdx, removeVideoTab } = useVideoWorkspace()
+    const {
+      setVideoWorkspaceState,
+      selectedVideoTabIdx,
+      removeVideoTab,
+      updateSelectedVideoTab,
+      setSelectedVideoTabCachedAssets,
+      selectedVideoTabCachedDirtyFormData,
+      setSelectedVideoTabCachedDirtyFormData,
+      videoWorkspaceState,
+    } = useVideoWorkspace()
     const isEdit = !selectedVideoTab?.isDraft
     const [actionBarRef, actionBarBounds] = useMeasure()
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
@@ -154,13 +163,6 @@ export const VideoWorkspaceForm: React.FC<VideoWorkspaceFormProps> = React.memo(
     const [forceReset, setForceReset] = useState(false)
     const [fileSelectError, setFileSelectError] = useState<string | null>(null)
     const [cachedSelectedVideoTabId, setCachedSelectedVideoTabId] = useState<string | null>(null)
-    const {
-      updateSelectedVideoTab,
-      setSelectedVideoTabCachedAssets,
-      selectedVideoTabCachedDirtyFormData,
-      setSelectedVideoTabCachedDirtyFormData,
-      videoWorkspaceState,
-    } = useVideoWorkspace()
     const { video } = useVideo(selectedVideoTab?.id || '', { fetchPolicy: 'cache-only', skip: !selectedVideoTab?.id })
     const { updateDraft, addDraft } = useDraftStore((state) => state.actions)
 

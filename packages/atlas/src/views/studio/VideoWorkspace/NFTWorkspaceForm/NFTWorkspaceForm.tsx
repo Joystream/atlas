@@ -1,10 +1,14 @@
 import React, { useMemo, useState } from 'react'
 import useMeasure from 'react-use-measure'
 
-import { NftTile } from '@/components/NftTile'
+import { useVideo } from '@/api/hooks'
+import { NftTile, NftTileProps } from '@/components/NftTile'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Paragraph } from '@/components/_inputs/FileSelect/FileSelect.styles'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useAsset } from '@/providers/assets'
+import { useUser } from '@/providers/user'
 
 import {
   NFTFormScrolling,
@@ -24,25 +28,32 @@ type NFTWorkspaceFormProps = {
   onGoBack: () => void
   isEdit?: boolean
   fee: number
+  videoId: string
 }
 
-export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, isEdit, fee }) => {
+export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, isEdit, fee, videoId }) => {
+  const { activeMembership } = useUser()
   const [currentStepIdx, setCurrentStepIdx] = useState(0)
   const [actionBarRef, actionBarBounds] = useMeasure()
   const mdMatch = useMediaMatch('md')
-  const dummyNfftTileProps = {
+  const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
+  const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
+
+  const dummyNfftTileProps: NftTileProps = {
+    title: video?.title ?? '',
+    videoHref: videoId ? absoluteRoutes.viewer.video(videoId) : undefined,
     buyNow: false,
     role: 'owner' as const,
     auction: 'none' as const,
     bid: 1234,
     minBid: 1234,
     topBid: 123,
-    thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
-    creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
-    owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
-    duration: 120,
-    views: 123456789,
-    loading: false,
+    thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
+    creator: { assetUrl: activeMembership?.avatarUri, name: activeMembership?.handle },
+    owner: { assetUrl: activeMembership?.avatarUri, name: activeMembership?.handle },
+    duration: video?.duration,
+    views: video?.views,
+    loading: loadingVideo,
     fullWidth: false,
   }
 
@@ -108,7 +119,7 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, is
     <ScrollableWrapper actionBarHeight={actionBarBounds.height}>
       <NFTWorkspaceFormWrapper>
         <NFTPreview>
-          <NftTile title="title" {...dummyNfftTileProps} />
+          <NftTile {...dummyNfftTileProps} />
         </NFTPreview>
         <NFTFormScrolling>
           <NFTFormWrapper>

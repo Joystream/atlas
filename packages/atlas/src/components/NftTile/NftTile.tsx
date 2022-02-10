@@ -11,7 +11,7 @@ import { Container } from './NftTile.styles'
 
 export type Member = {
   assetUrl?: string | null
-  name: string
+  name?: string
 }
 
 export type NftTileProps = {
@@ -31,6 +31,7 @@ export type NftTileProps = {
   timeLeft?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
+  videoHref?: string
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
@@ -49,6 +50,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   timeLeft,
   role,
   fullWidth,
+  videoHref,
 }) => {
   const [calculatedTimeLeft, setCalculatedTimeLeft] = useState(0)
   const [hovered, setHovered] = useState(false)
@@ -136,6 +138,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         }}
       />
       <NftTileDetails
+        videoHref={videoHref}
         hovered={hovered}
         owner={owner}
         auction={auction}
