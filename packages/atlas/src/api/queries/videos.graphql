@@ -14,8 +14,20 @@ fragment LicenseFields on License {
 fragment BasicVideoFields on Video {
   id
   title
+  views
+  createdAt
+  duration
+  title
+  isPublic
+  media {
+    ...StorageDataObjectFields
+  }
   channel {
     id
+    title
+    avatarPhoto {
+      ...StorageDataObjectFields
+    }
   }
   thumbnailPhoto {
     ...StorageDataObjectFields
@@ -91,8 +103,14 @@ query GetVideos($offset: Int, $limit: Int, $where: VideoWhereInput, $orderBy: Vi
   }
 }
 
-query GetBasicVideos($limit: Int, $where: VideoWhereInput) {
-  videos(limit: $limit, where: $where) {
+query GetBasicVideos($limit: Int, $where: VideoWhereInput, $orderBy: VideoOrderByInput! = createdAt_DESC) {
+  videos(limit: $limit, where: $where, orderBy: [$orderBy]) {
+    ...BasicVideoFields
+  }
+}
+
+query GetBasicVideo($where: VideoWhereUniqueInput!) {
+  videoByUniqueInput(where: $where) {
     ...BasicVideoFields
   }
 }

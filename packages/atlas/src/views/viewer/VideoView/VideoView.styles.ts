@@ -86,13 +86,6 @@ export const Category = styled(Link)`
   }
 `
 
-export const MoreVideosHeader = styled.h5`
-  margin: 0 0 ${sizes(4)};
-  font: ${cVar('typographyDesktopH400')};
-  letter-spacing: ${cVar('typographyDesktopH400LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopH400TextTransform')};
-`
-
 export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -103,6 +96,10 @@ export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
   overflow: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'hidden')};
   opacity: ${({ detailsExpanded }) => (detailsExpanded ? 1 : 0)};
   transition: opacity 150ms ease-out;
+`
+
+export const LicenseCustomText = styled(Text)`
+  margin-top: ${sizes(2)};
 `
 
 export const ExpandButton = styled(Button)`

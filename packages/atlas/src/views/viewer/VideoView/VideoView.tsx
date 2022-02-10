@@ -39,6 +39,7 @@ import {
   DetailsWrapper,
   ExpandButton,
   LicenceCategoryWrapper,
+  LicenseCustomText,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
@@ -267,13 +268,12 @@ export const VideoView: React.FC = () => {
                       <DescriptionTitle variant="h100">License</DescriptionTitle>
                       {foundLicense && (
                         <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                          {foundLicense.name[0].toUpperCase()}
-                          {foundLicense.name.slice(1).toLocaleLowerCase()}
+                          {foundLicense.name}
                         </Text>
                       )}
-                      <Text variant="t100" secondary>
+                      <LicenseCustomText as="p" variant="t100" secondary>
                         {video.license?.customText}
-                      </Text>
+                      </LicenseCustomText>
                     </>
                   ) : (
                     <SkeletonLoader height={12} width={200} />
