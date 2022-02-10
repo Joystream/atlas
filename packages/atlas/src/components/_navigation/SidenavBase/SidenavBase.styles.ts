@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { HamburgerButton } from '@/components/_buttons/HamburgerButton'
-import { SubItemProps } from '@/components/_navigation/NavItem/NavItem.styles'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 type ExpandableElementProps = {
