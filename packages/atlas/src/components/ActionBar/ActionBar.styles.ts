@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
-import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { ActionBarVariant } from './ActionBar'
 
@@ -88,6 +88,7 @@ export const StyledPrimaryText = styled(Text)`
   grid-area: primary-text;
   margin-right: ${sizes(5)};
   align-self: center;
+  padding: 6px 0;
 `
 
 export const StyledSecondaryText = styled(Text)`
@@ -132,18 +133,18 @@ export const DraftsBadgeContainer = styled.div`
   grid-area: badge;
   user-select: none;
   margin-left: auto;
+  padding: 0 ${sizes(3)};
   display: flex;
   align-items: center;
   height: 100%;
-  padding: ${sizes(4)} 0;
   transition: background-color ${transitions.timings.sharp} ${transitions.easing};
 
   ${media.sm} {
     padding: 0 ${sizes(4)};
+  }
 
-    :hover {
-      background-color: ${oldColors.transparentPrimary[18]};
-    }
+  :hover {
+    background-color: ${cVar('colorCoreNeutral700Lighten')};
   }
 `
 
