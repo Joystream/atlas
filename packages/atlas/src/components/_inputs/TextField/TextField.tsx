@@ -7,7 +7,7 @@ import { NodeContainer, TextFieldContainer, TextInput } from './TextField.styles
 
 export type TextFieldProps = {
   name?: string
-  type?: 'text' | 'email' | 'password' | 'search'
+  type?: 'text' | 'email' | 'password' | 'search' | 'number'
   value?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void

@@ -12,6 +12,7 @@ import {
   Animations,
   AutomaticCrop,
   DesignTokens,
+  EstimatingBlockTime,
   FileHashing,
   GridTesting,
   ImageDownsizing,
@@ -48,6 +49,7 @@ const playgroundRoutes = [
   { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
   { path: 'indirect-signin-dialog', element: <IndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'member-dropdown', element: <PlaygroundMemberDropdown />, name: 'Member dropdown' },
+  { path: 'block-time', element: <EstimatingBlockTime />, name: 'Estimating block time' },
 ]
 
 const PlaygroundLayout = () => {
