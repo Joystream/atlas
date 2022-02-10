@@ -298,8 +298,8 @@ export const VideoView: React.FC = () => {
             </DetailsWrapper>
           </GridItem>
           <GridItem colSpan={{ xxs: 12, md: 4 }}>
-            <MoreVideos channelId={channelId} channelName={channelName} type="channel" />
-            <MoreVideos categoryId={category?.id} categoryName={category?.name} type="category" />
+            <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
+            <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
           </GridItem>
         </LayoutGrid>
         <StyledCallToActionWrapper>

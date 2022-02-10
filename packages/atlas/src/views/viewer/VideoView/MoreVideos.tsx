@@ -17,17 +17,25 @@ type MoreVideosProps = {
   channelName?: string | null
   categoryId?: string
   categoryName?: string | null
+  videoId?: string
   type: 'channel' | 'category'
 }
 
-const NUMBER_OF_VIDEOS = 6
+const NUMBER_OF_VIDEOS = 7
 
-export const MoreVideos: React.FC<MoreVideosProps> = ({ channelId, channelName, categoryId, categoryName, type }) => {
+export const MoreVideos: React.FC<MoreVideosProps> = ({
+  channelId,
+  channelName,
+  categoryId,
+  categoryName,
+  videoId,
+  type,
+}) => {
   const where = type === 'channel' ? { channel: { id_eq: channelId } } : { category: { id_eq: categoryId } }
   const { videos = [], loading } = useBasicVideos({ where, limit: NUMBER_OF_VIDEOS })
-  const displayedItems = loading ? [] : videos.map((edge) => edge)
+  const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, 6)
   const placeholderItems =
-    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []
+    loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS - 1 }, () => ({ id: undefined })) : []
   const lgMatch = useMediaMatch('lg')
   const gridContent = (
     <>
