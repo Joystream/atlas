@@ -64,7 +64,6 @@ export const Title = styled(Text)`
 
 export const SortContainer = styled.div`
   grid-area: sort;
-  grid-gap: 8px;
 
   ${media.sm} {
     grid-area: initial;
@@ -153,9 +152,8 @@ export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
 export const TabsContainer = styled.div`
   display: grid;
   padding-top: ${sizes(8)};
-  gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr 'filter filter filter' auto / 1fr 1fr;
-  align-items: baseline;
+  gap: ${sizes(4)};
+  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort filter' auto / 1fr 1fr;
   background-color: #000;
 
   ${media.sm} {
@@ -173,7 +171,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   display: flex;
   grid-area: search;
   align-items: center;
-  margin: ${sizes(6)} 0 ${sizes(2)} 0;
+  margin: ${sizes(8)} 0 ${sizes(2)} 0;
   position: relative;
 
   ${media.sm} {

@@ -347,7 +347,7 @@ export const ChannelView: React.FC = () => {
                   icon={<SvgActionFilters />}
                   onClick={toggleFilters}
                 >
-                  Filters
+                  {smMatch && 'Filters'}
                 </Button>
               </FilterButtonContainer>
             )}
