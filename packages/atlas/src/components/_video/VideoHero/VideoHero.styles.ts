@@ -1,6 +1,8 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
+import { Text } from '@/components/Text'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { media, oldColors, sizes } from '@/styles'
 
@@ -91,4 +93,12 @@ export const ButtonsContainer = styled.div`
     margin-left: ${sizes(4)};
     flex-shrink: 0;
   }
+`
+
+const overFlowAuto = css`
+  overflow-y: auto;
+`
+
+export const TitleText = styled(Text)<IsCategoryProp>`
+  ${({ isCategory }) => !isCategory && overFlowAuto};
 `
