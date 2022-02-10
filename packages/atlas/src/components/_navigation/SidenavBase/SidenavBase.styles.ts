@@ -51,8 +51,6 @@ export const LogoLink = styled(Link)`
 export const SidebarNavList = styled.ul`
   margin-top: 28px;
   list-style: none;
-  ${setSizeNavbarWidthExpanded}
-
   width: var(--size-sidenav-width-expanded);
   padding: 0;
 `
@@ -113,11 +111,11 @@ export const LegalLink = styled(Link)`
 
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
-  margin-left: ${sizes(3)};
+  top: ${sizes(2)};
+  left: ${sizes(3)};
   z-index: ${zIndex.sideNav};
-  margin-top: ${sizes(2)};
   ${media.md} {
-    margin-top: ${sizes(4)};
+    top: ${sizes(4)};
   }
 `
 
