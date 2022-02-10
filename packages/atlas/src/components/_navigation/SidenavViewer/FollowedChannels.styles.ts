@@ -2,9 +2,14 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
+
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
+  margin-left: ${sizes(4)};
+`
 
 export const FollowedChannelsWrapper = styled.div`
   display: grid;

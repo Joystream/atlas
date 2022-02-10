@@ -5,7 +5,6 @@ import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
@@ -21,6 +20,7 @@ import {
   ChannelsTitle,
   ChannelsWrapper,
   FollowedChannelsWrapper,
+  StyledSkeletonLoader,
 } from './FollowedChannels.styles'
 
 type ChannelNavItemProps = {
@@ -52,7 +52,7 @@ export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
           {channel.title}
         </ChannelTitle>
       ) : (
-        <SkeletonLoader height={16} width={150} />
+        <StyledSkeletonLoader height={16} width={150} />
       )}
     </NavItem>
   )
