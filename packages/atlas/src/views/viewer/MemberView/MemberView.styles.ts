@@ -51,7 +51,7 @@ export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
   z-index: 99;
   position: relative;
   ${media.sm} {
-    margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
+    margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 8)};
     transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
   }
 `
