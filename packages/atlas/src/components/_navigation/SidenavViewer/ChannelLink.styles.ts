@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
-import { Text } from '@/components/Text'
-import { oldColors, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 type ContainerProps = {
   disabled?: boolean
@@ -21,17 +20,5 @@ type AvatarProps = {
 }
 
 export const StyledAvatar = styled(Avatar)<AvatarProps>`
-  margin-right: ${({ withHandle }) => (withHandle ? sizes(3) : 0)};
-`
-
-type HandleProps = {
-  isSecondary: boolean
-}
-
-const secondaryTextCss = `
-  color: ${oldColors.gray[200]};
-`
-
-export const StyledText = styled(Text)<HandleProps>`
-  ${({ isSecondary }) => isSecondary && secondaryTextCss}
+  margin-right: ${({ withHandle }) => (withHandle ? sizes(4) : 0)};
 `

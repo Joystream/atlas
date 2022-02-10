@@ -2,8 +2,9 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { cVar, sizes } from '@/styles'
+
+import { ChannelLink } from './ChannelLink'
 
 import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
 

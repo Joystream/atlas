@@ -4,14 +4,14 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { AvatarSize } from '@/components/Avatar'
-import { TextVariant } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { Container, StyledAvatar, StyledText } from './ChannelLink.styles'
+import { Container, StyledAvatar } from './ChannelLink.styles'
 
 type ChannelLinkProps = {
   id?: string
@@ -49,7 +49,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
 
   const displayedChannel = overrideChannel || channel
 
-  const _textVariant = textVariant ?? textSecondary ? 't200-strong' : 't300-strong'
+  const _textVariant = textVariant ?? (textSecondary ? 't200-strong' : 't300-strong')
   return (
     <Container onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink} className={className}>
       {!hideAvatar && (
@@ -68,9 +68,9 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {displayedChannel ? (
-              <StyledText variant={_textVariant} isSecondary={!!textSecondary}>
+              <Text variant={_textVariant} secondary={!!textSecondary}>
                 {displayedChannel.title}
-              </StyledText>
+              </Text>
             ) : (
               <SkeletonLoader height={16} width={150} />
             )}
