@@ -9,6 +9,7 @@ export type TextProps = {
   color?: string
   secondary?: boolean
   className?: string
+  clampAfterLine?: number
   as?: keyof JSX.IntrinsicElements
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 
