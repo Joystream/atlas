@@ -4,6 +4,7 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { imageUrlValidation } from '@/utils/asset'
+import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -25,8 +26,9 @@ export type ActivityItemProps = {
   title: string
   description: string
   thumnailUri: string
+  joy: number
 }
-export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, description, thumnailUri }) => {
+export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, description, thumnailUri, joy }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -40,10 +42,10 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
   }, [thumnailUri])
 
   const getTitleTextVariant = () => {
-    if (smMatch) {
-      return 'h300'
-    } else if (lgMatch) {
+    if (lgMatch) {
       return 'h400'
+    } else if (smMatch) {
+      return 'h300'
     } else {
       return 'h200'
     }
@@ -66,6 +68,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
         ) : (
           <Text variant={lgMatch ? 't300' : 't200'} secondary>
             {description}
+            <Text variant={lgMatch ? 't300' : 't200'}>ツ {formatNumberShort(joy)}</Text>
           </Text>
         )}
       </TitleAndDescriptionContainer>
