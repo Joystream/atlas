@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
-import { zIndex } from '@/styles'
-import { cVar } from '@/styles'
+import { ActionBar } from '@/components/ActionBar'
+import { cVar, zIndex } from '@/styles'
 
 export const DrawerOverlay = styled.div`
   position: fixed;
@@ -56,4 +56,21 @@ export const Container = styled.div`
       opacity: 0;
     }
   }
+`
+type ScrollContainerProps = {
+  actionBarHeight?: number
+  isEdit?: boolean
+}
+export const ScrollContainer = styled.div<ScrollContainerProps>`
+  flex: 1;
+  margin-bottom: ${({ actionBarHeight }) => actionBarHeight}px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`
+
+export const StyledActionBar = styled(ActionBar)`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
 `

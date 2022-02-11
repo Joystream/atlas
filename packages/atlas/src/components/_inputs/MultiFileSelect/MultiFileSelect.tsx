@@ -22,7 +22,7 @@ type InputFile = {
   title?: string
 }
 
-export type VideoInputMetadata = {
+export type MediaInputMetadata = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
@@ -30,7 +30,7 @@ export type VideoInputMetadata = {
   size?: number
 }
 
-export type VideoInputFile = VideoInputMetadata & InputFile
+export type VideoInputFile = MediaInputMetadata & InputFile
 
 export type ImageInputMetadata = {
   imageCropData?: ImageCropData

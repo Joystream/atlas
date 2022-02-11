@@ -1,9 +1,11 @@
-import { ImageInputMetadata, VideoInputMetadata } from '@/components/_inputs/MultiFileSelect'
+import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
+import { VideoAssets, VideoInputMetadata } from '@/joystream-lib'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 export type VideoWorkspaceVideoAssets = {
   video: {
     id: string | null
-  } & VideoInputMetadata
+  } & MediaInputMetadata
   thumbnail: {
     cropId: string | null
     originalId: string | null
@@ -36,4 +38,23 @@ export type VideoWorkspaceVideoFormFields = {
   isExplicit: boolean
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceVideoAssets
+}
+
+export type VideoFormData = {
+  metadata: VideoInputMetadata
+  assets: VideoAssets<{
+    hashPromise: Promise<string>
+    blob: Blob
+    url?: string
+    dimensions?: AssetDimensions
+    cropData?: ImageCropData
+  }>
+}
+
+export type VideoWorkspaceFormStatus = {
+  isValid: boolean
+  isDirty: boolean
+  hasUnsavedAssets?: boolean
+  triggerFormSubmit: () => void
+  resetForm: () => void
 }
