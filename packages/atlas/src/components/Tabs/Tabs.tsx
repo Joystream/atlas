@@ -2,10 +2,9 @@ import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { Pill } from '@/components/Pill'
 import { transitions } from '@/styles'
 
-import { BackgroundGradient, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+import { BackgroundGradient, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
 
 export type TabItem = {
   name: string
@@ -106,7 +105,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
             >
               <span data-badge={tab.badgeNumber}>
                 {tab.name}
-                {tab.pillText && <Pill size="small" label={tab.pillText} />}
+                {tab.pillText && <StyledPill size="small" label={tab.pillText} />}
               </span>
             </Tab>
           ))}

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { Tabs } from '@/components/Tabs'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 export const NotFoundMemberContainer = styled.div`
   display: flex;
@@ -13,41 +13,45 @@ export const NotFoundMemberContainer = styled.div`
 
 export const SortContainer = styled.div`
   grid-area: sort;
-  grid-gap: 8px;
-
-  ${media.sm} {
-    grid-area: initial;
-  }
 `
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[700]};
-
+  box-shadow: ${cVar('effectDividersBottom')};
   ${media.sm} {
-    border-bottom: none;
-    grid-area: initial;
+    box-shadow: none;
   }
 `
 
 export const TabsContainer = styled.div`
   display: grid;
-  margin-bottom: ${sizes(8)};
-  gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
-  align-items: baseline;
-
-  ${media.xs} {
-    padding-top: ${sizes(8)};
-  }
+  padding-top: ${sizes(8)};
+  gap: ${sizes(8)} ${sizes(2)};
+  grid-template:
+    'tabs tabs' auto
+    'sort filter' auto / 1fr auto;
+  background-color: #000;
 
   ${media.sm} {
     align-items: center;
-    border-bottom: solid 1px ${oldColors.gray[700]};
-    gap: ${sizes(8)};
-    grid-template: 1fr / 1fr 160px;
+    box-shadow: ${cVar('effectDividersBottom')};
+    gap: ${sizes(4)};
+    grid-template: 'tabs sort filter' 1fr / auto 160px 99px;
   }
 `
 
 export const StyledMembershipInfo = styled(MembershipInfo)`
   margin-top: ${sizes(8)};
+`
+
+export const FilterButtonContainer = styled.div`
+  grid-area: filter;
+`
+
+export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
+  z-index: 99;
+  position: relative;
+  ${media.sm} {
+    margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 8)};
+    transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
+  }
 `
