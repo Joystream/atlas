@@ -5,10 +5,12 @@ import { useSearchParams } from 'react-router-dom'
 import { useMemberships } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
+import { SvgActionFilters } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
@@ -18,25 +20,24 @@ import { SentryLogger } from '@/utils/logs'
 
 import { MemberAbout } from './MemberAbout'
 import { MemberActivity } from './MemberActivity'
+import { MemberNFTs } from './MemberNFTs'
 import {
+  FilterButtonContainer,
   NotFoundMemberContainer,
   SortContainer,
   StyledMembershipInfo,
   StyledTabs,
   TabsContainer,
+  TabsWrapper,
 } from './MemberView.styles'
 
-const TABS = [
-  // 'NFTs',
-  'Activity',
-  'About',
-] as const
+const TABS = ['NFTs owned', 'Activity', 'About'] as const
 
 export const MemberView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
-  const [sortActivityBy, setSortActivityBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const { activeMemberId } = useUser()
   const { handle } = useParams()
   const {
@@ -52,17 +53,29 @@ export const MemberView: React.FC = () => {
   const member = memberships?.find((member) => member.handle === handle)
   const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
 
-  const handleSetCurrentTab = async (tab: number) => {
-    setSearchParams({ 'tab': TABS[tab] }, { replace: true })
+  const filtersBarLogic = useFiltersBar()
+  const {
+    filters: { setIsFiltersOpen, isFiltersOpen },
+    canClearFilters: { canClearAllFilters },
+  } = filtersBarLogic
+
+  const toggleFilters = () => {
+    setIsFiltersOpen((value) => !value)
   }
   const handleSorting = (value?: unknown) => {
     if (value) {
-      setSortActivityBy(value as VideoOrderByInput)
+      setSortVideosBy(value as VideoOrderByInput)
     }
   }
-  const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
+  const handleSetCurrentTab = async (tab: number) => {
+    setSearchParams({ 'tab': TABS[tab] }, { replace: true })
+  }
+
+  const mappedTabs = TABS.map((tab) => ({ name: tab, pillText: tab === 'NFTs owned' ? '0' : undefined }))
   const tabContent = React.useMemo(() => {
     switch (currentTab) {
+      case 'NFTs owned':
+        return <MemberNFTs />
       case 'Activity':
         return <MemberActivity />
       case 'About':
@@ -83,8 +96,9 @@ export const MemberView: React.FC = () => {
   useEffect(() => {
     if (currentTabName) {
       setCurrentTab(currentTabName)
+      setIsFiltersOpen(false)
     }
-  }, [currentTabName])
+  }, [currentTabName, setIsFiltersOpen])
 
   if (!loadingMember && !member) {
     return (
@@ -114,26 +128,41 @@ export const MemberView: React.FC = () => {
           loading={loadingMember}
           isOwner={activeMemberId === member?.id}
         />
-        <TabsContainer>
-          <StyledTabs
-            selected={TABS.findIndex((x) => x === currentTab)}
-            initialIndex={0}
-            tabs={mappedTabs}
-            onSelectTab={handleSetCurrentTab}
-          />
-
-          {currentTab === 'Activity' && (
-            <SortContainer>
-              <Select
-                size="small"
-                labelPosition="left"
-                value={sortActivityBy}
-                items={SORT_OPTIONS}
-                onChange={handleSorting}
-              />
-            </SortContainer>
-          )}
-        </TabsContainer>
+        <TabsWrapper isFiltersOpen={isFiltersOpen}>
+          <TabsContainer>
+            <StyledTabs
+              selected={TABS.findIndex((x) => x === currentTab)}
+              initialIndex={0}
+              tabs={mappedTabs}
+              onSelectTab={handleSetCurrentTab}
+            />
+            {currentTab === 'NFTs owned' ||
+              (currentTab === 'Activity' && (
+                <SortContainer>
+                  <Select
+                    size="small"
+                    labelPosition="left"
+                    value={sortVideosBy}
+                    items={SORT_OPTIONS}
+                    onChange={handleSorting}
+                  />
+                </SortContainer>
+              ))}
+            {currentTab === 'NFTs owned' && (
+              <FilterButtonContainer>
+                <Button
+                  badge={canClearAllFilters}
+                  variant="secondary"
+                  icon={<SvgActionFilters />}
+                  onClick={toggleFilters}
+                >
+                  Filters
+                </Button>
+              </FilterButtonContainer>
+            )}
+          </TabsContainer>
+          <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />
+        </TabsWrapper>
         {tabContent}
       </LimitedWidthContainer>
     </ViewWrapper>
