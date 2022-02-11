@@ -3,7 +3,7 @@ import React from 'react'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
+import { SvgActionBid, SvgActionBuyNow, SvgActionSell, SvgControlsPlaceholder } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
@@ -102,7 +102,7 @@ export const MemberActivity = () => {
               </OverviewItem>
               <GridRowWrapper>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgActionMint />} size="large" />
+                  <IconWrapper icon={<SvgControlsPlaceholder />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
                       Created
