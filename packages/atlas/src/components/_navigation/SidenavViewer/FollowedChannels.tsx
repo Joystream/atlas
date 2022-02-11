@@ -1,22 +1,62 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { useBasicChannel } from '@/api/hooks'
+import { Avatar } from '@/components/Avatar'
+import { SvgActionNewChannel } from '@/components/_icons'
+import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
+import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/providers/assets'
 import { FollowedChannel } from '@/providers/personalData/types'
 import { transitions } from '@/styles'
+import { SentryLogger } from '@/utils/logs'
 
 import {
-  ChannelsItem,
+  BrowseChannelsText,
+  BrowseChannelsWrapper,
+  ChannelTitle,
   ChannelsList,
   ChannelsTitle,
   ChannelsWrapper,
   FollowedChannelsWrapper,
-  ShowMoreButton,
-  ShowMoreIconWrapper,
-  StyledChannelLink,
+  StyledSkeletonLoader,
 } from './FollowedChannels.styles'
 
-const MAX_CHANNELS = 4
+type ChannelNavItemProps = {
+  id: string
+  onChannelNotFound?: (id: string) => void
+}
+
+export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
+  id,
+  to,
+  expanded,
+  itemName,
+  isSecondary,
+  onChannelNotFound,
+  onClick,
+}) => {
+  const { channel } = useBasicChannel(id || '', {
+    skip: !id,
+    onCompleted: (data) => !data && onChannelNotFound?.(id),
+    onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
+  })
+  const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
+
+  return (
+    <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
+      <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
+      {channel ? (
+        <ChannelTitle variant="h300" secondary={true}>
+          {channel.title}
+        </ChannelTitle>
+      ) : (
+        <StyledSkeletonLoader height={16} width={150} />
+      )}
+    </NavItem>
+  )
+}
 
 type FollowedChannelsProps = {
   followedChannels: FollowedChannel[]
@@ -31,11 +71,6 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
   onClick,
   onChannelNotFound,
 }) => {
-  const [isShowingMore, setIsShowingMore] = useState(false)
-
-  const numberOfChannels = followedChannels.length
-  const channelsToSlice = isShowingMore ? numberOfChannels : MAX_CHANNELS
-  const channels = followedChannels.slice(0, channelsToSlice)
   return (
     <CSSTransition
       in={expanded}
@@ -44,22 +79,30 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h300">Followed channels</ChannelsTitle>
+        <ChannelsTitle variant="h100" secondary>
+          Followed channels
+        </ChannelsTitle>
         <ChannelsWrapper>
           <ChannelsList>
-            {channels.map(({ id }) => (
-              <ChannelsItem key={id} onClick={onClick}>
-                <StyledChannelLink id={id} onNotFound={() => onChannelNotFound?.(id)} />
-              </ChannelsItem>
+            {followedChannels.map(({ id }) => (
+              <ChannelNavItem
+                id={id}
+                to={absoluteRoutes.viewer.channel(id)}
+                expanded={expanded}
+                onClick={onClick}
+                isSecondary={true}
+                onChannelNotFound={onChannelNotFound}
+                key={id}
+              >
+                {id}
+              </ChannelNavItem>
             ))}
           </ChannelsList>
-          {numberOfChannels > MAX_CHANNELS && (
-            <ShowMoreButton onClick={() => setIsShowingMore(!isShowingMore)}>
-              <ShowMoreIconWrapper>{isShowingMore ? <SvgActionChevronT /> : <SvgActionChevronB />}</ShowMoreIconWrapper>
-              {isShowingMore ? <span>Show Less</span> : <span>Show {numberOfChannels - MAX_CHANNELS} More</span>}
-            </ShowMoreButton>
-          )}
         </ChannelsWrapper>
+        <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
+          <IconWrapper icon={<SvgActionNewChannel />} />
+          <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+        </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>
   )

@@ -1,10 +1,15 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { cVar, oldColors, sizes } from '@/styles'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { cVar, sizes } from '@/styles'
 
-import { EXPANDED_SIDENAVBAR_WIDTH, NAVBAR_LEFT_PADDING } from '../SidenavBase'
+import { NAVBAR_LEFT_PADDING } from '../SidenavBase/SidenavBase.styles'
+
+export const StyledSkeletonLoader = styled(SkeletonLoader)`
+  margin-left: ${sizes(4)};
+`
 
 export const FollowedChannelsWrapper = styled.div`
   display: grid;
@@ -12,52 +17,48 @@ export const FollowedChannelsWrapper = styled.div`
   height: 100%;
 `
 
+export const BrowseChannelsWrapper = styled(Link)`
+  padding: ${sizes(3)} ${NAVBAR_LEFT_PADDING}px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: ${cVar('colorText')};
+
+  &:hover,
+  &:focus {
+    color: ${cVar('colorTextStrong')};
+    background-color: ${cVar('colorBackgroundAlpha')};
+  }
+`
+
+export const BrowseChannelsText = styled(Text)`
+  color: inherit;
+  margin-left: ${sizes(4)};
+`
+
+export const ChannelTitle = styled(Text)`
+  padding-left: ${sizes(4)};
+  color: inherit !important;
+`
+
 export const ChannelsTitle = styled(Text)`
   margin-top: ${sizes(6)};
   margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
-  color: ${oldColors.gray[300]};
+  width: calc(var(--size-sidenav-width-expanded) - ${NAVBAR_LEFT_PADDING}px);
 `
+
 export const ChannelsWrapper = styled.div`
-  padding-left: ${NAVBAR_LEFT_PADDING}px;
-  width: ${EXPANDED_SIDENAVBAR_WIDTH}px;
+  width: var(--size-sidenav-width-expanded);
   overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 10px;
 `
 
 export const ChannelsList = styled.ul`
-  width: ${EXPANDED_SIDENAVBAR_WIDTH - NAVBAR_LEFT_PADDING}px;
+  color: ${cVar('colorText')};
+  width: var(--size-sidenav-width-expanded);
   overflow-x: hidden;
   padding: 0;
   margin: 0;
-`
-export const StyledChannelLink = styled(ChannelLink)`
-  > span {
-    margin-left: ${sizes(6)};
-  }
-`
-
-export const ChannelsItem = styled.li`
-  margin-top: ${sizes(5)};
-  list-style: none;
-`
-
-export const ShowMoreButton = styled.button`
-  border: none;
-  background: none;
-  font: ${cVar('typographyDesktopT200Strong')};
-  letter-spacing: ${cVar('typographyDesktopT200StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200StrongTextTransform')};
-  cursor: pointer;
-  padding: ${sizes(5)} 0;
-  display: flex;
-  align-items: center;
-  color: ${oldColors.white};
-`
-
-export const ShowMoreIconWrapper = styled.span`
-  padding: ${sizes(2)};
-  margin-right: ${sizes(6)};
 `

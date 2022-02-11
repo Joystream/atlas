@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionNewTab } from '@/components/_icons'
+import { SvgActionMember, SvgActionNewTab } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { viewerNavItems } from '@/config/nav'
 import { absoluteRoutes } from '@/config/routes'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { FollowedChannels } from './FollowedChannels'
@@ -22,6 +23,29 @@ export const SidenavViewer: React.FC = () => {
     updateChannelFollowing(id, false)
   }
 
+  const { signIn, activeMemberId, activeAccountId, extensionConnected } = useUser()
+
+  const isLoggedIn = !!activeAccountId && !!activeMemberId && !!extensionConnected
+
+  const closeAndSignIn = () => {
+    setExpanded(false)
+    signIn()
+  }
+  const buttonsContent = !isLoggedIn ? (
+    <Button icon={<SvgActionMember />} onClick={closeAndSignIn}>
+      Sign in
+    </Button>
+  ) : (
+    <Button
+      variant="secondary"
+      to={absoluteRoutes.studio.index()}
+      onClick={() => setExpanded(false)}
+      icon={<SvgActionNewTab />}
+    >
+      Go to Studio
+    </Button>
+  )
+
   return (
     <SidenavBase
       expanded={expanded}
@@ -30,27 +54,14 @@ export const SidenavViewer: React.FC = () => {
       logoLinkUrl={absoluteRoutes.viewer.index()}
       items={viewerNavItems}
       additionalContent={
-        followedChannels.length ? (
-          <FollowedChannels
-            onClick={() => setExpanded(false)}
-            onChannelNotFound={handleChannelNotFound}
-            followedChannels={followedChannels}
-            expanded={expanded}
-          />
-        ) : null
+        <FollowedChannels
+          onClick={() => setExpanded(false)}
+          onChannelNotFound={handleChannelNotFound}
+          followedChannels={followedChannels}
+          expanded={expanded}
+        />
       }
-      buttonsContent={
-        <>
-          <Button
-            variant="secondary"
-            to={absoluteRoutes.studio.index()}
-            onClick={() => setExpanded(false)}
-            icon={<SvgActionNewTab />}
-          >
-            Joystream Studio
-          </Button>
-        </>
-      }
+      buttonsContent={buttonsContent}
     />
   )
 }
