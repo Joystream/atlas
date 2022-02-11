@@ -86,7 +86,7 @@ export const variables = css`
     --color-text: var(--color-core-neutral-300);
     --color-text-strong: var(--color-core-neutral-50);
     --color-text-primary: var(--color-core-blue-300);
-    --color-text-error: var(--color-core-red-300);
+    --color-text-error: var(--color-core-red-200);
     --color-text-success: var(--color-core-green-300);
     --color-text-caution: var(--color-core-yellow-200);
     --color-border-muted: var(--color-core-neutral-700);
@@ -365,7 +365,7 @@ export const theme = {
   colorText: { variable: 'var(--color-text)', value: '#7B8A95' },
   colorTextStrong: { variable: 'var(--color-text-strong)', value: '#F4F6F8' },
   colorTextPrimary: { variable: 'var(--color-text-primary)', value: '#7174FF' },
-  colorTextError: { variable: 'var(--color-text-error)', value: '#F34235' },
+  colorTextError: { variable: 'var(--color-text-error)', value: '#FF695F' },
   colorTextSuccess: { variable: 'var(--color-text-success)', value: '#0C9846' },
   colorTextCaution: { variable: 'var(--color-text-caution)', value: '#CAA802' },
   colorBorderMuted: { variable: 'var(--color-border-muted)', value: '#272D33' },
