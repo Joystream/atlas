@@ -43,7 +43,7 @@ export const LogoLink = styled(Link)`
 `
 
 export const SidebarNavList = styled.ul`
-  margin-top: 28px;
+  margin-top: 24px;
   list-style: none;
   width: var(--size-sidenav-width-expanded);
   padding: 0;
