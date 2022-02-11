@@ -47,6 +47,8 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [formStatus?.hasUnsavedAssets, isWorkspaceOpen])
 
   const closeVideoWorkspace = useCallback(() => {
+    setIsIssuedAsNFT(false)
+    setIsIssuedAsNFTChecked(false)
     if (formStatus?.hasUnsavedAssets) {
       openWarningDialog({ onConfirm: () => setIsWorkspaceOpen(false) })
     } else {
