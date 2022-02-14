@@ -240,7 +240,7 @@ export const Container = styled.div<ContainerProps>`
   }
 
   .vjs-tech {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;

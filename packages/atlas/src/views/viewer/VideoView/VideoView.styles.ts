@@ -34,12 +34,11 @@ export const PlayerGridItem = styled(GridItem)`
 const getPlayerWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
   cinematicView
     ? css`
-        margin: 0;
+        margin: 0 calc(-1 * var(--size-global-horizontal-padding));
       `
     : css`
         display: flex;
         justify-content: center;
-        margin: 0 calc(-1 * var(--size-global-horizontal-padding));
 
         ${media.md} {
           padding-top: ${sizes(8)};
@@ -75,10 +74,11 @@ export const PlayerContainer = styled.div<PlayerContainerProps>`
   ${getPlayerContainerCinematicStyles};
 
   width: 100%;
+  position: relative;
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
-  height: 100%;
+  position: absolute;
 `
 
 export const TitleContainer = styled.div`
