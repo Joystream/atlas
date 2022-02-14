@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
 
@@ -28,7 +28,7 @@ export const useBlockTimeEstimation = () => {
     return unsubscribe
   }, [joystream, proxyCallback])
 
-  const convertBlockToDate = useRef((block: number) => {
+  const convertBlockToDate = useCallback((block: number) => {
     const now = Date.now()
     const differenceBetweenProvidedBlockAndCurrentBlock = block - currentBlockRef.current
     const differenceBetweenNowAndTimeofTheLastBlock = now - timeofTheLastBlockRef.current
@@ -38,25 +38,28 @@ export const useBlockTimeEstimation = () => {
     const date = now + estimatedTime
 
     return date
-  })
+  }, [])
 
-  const convertDateToBlock = useRef((date: number) => {
-    if (!date) {
-      return
-    }
-    const timeOfTheFirstBlock = convertBlockToDate.current(0)
+  const convertDateToBlock = useCallback(
+    (date: number) => {
+      if (!date) {
+        return
+      }
+      const timeOfTheFirstBlock = convertBlockToDate(0)
 
-    const differenceBetweenTimeofTheFirstBlockAndDate = date - timeOfTheFirstBlock
+      const differenceBetweenTimeofTheFirstBlockAndDate = date - timeOfTheFirstBlock
 
-    const block = Math.round(differenceBetweenTimeofTheFirstBlockAndDate / ESTIMATED_BLOCK_TIME)
+      const block = Math.round(differenceBetweenTimeofTheFirstBlockAndDate / ESTIMATED_BLOCK_TIME)
 
-    return block
-  })
+      return block
+    },
+    [convertBlockToDate]
+  )
 
   return {
     currentBlock: currentBlockRef.current,
     timeofTheLastBlock: timeofTheLastBlockRef.current,
-    convertBlockToDate: convertBlockToDate.current,
-    convertDateToBlock: convertDateToBlock.current,
+    convertBlockToDate: convertBlockToDate,
+    convertDateToBlock: convertDateToBlock,
   }
 }
