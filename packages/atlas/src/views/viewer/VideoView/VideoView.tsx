@@ -200,12 +200,6 @@ export const VideoView: React.FC = () => {
     )
   }
 
-  const playerGrid = {
-    xxs: 12,
-    md: cinematicView ? 12 : 8,
-  }
-  const mainGrid = { xxs: 12, md: cinematicView ? 8 : 12 }
-
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
   const isCinematic = cinematicView || !mdMatch
   const calculatedPlayerHeight = playerContainerWidth && playerContainerWidth * aspectRatio
@@ -313,7 +307,7 @@ export const VideoView: React.FC = () => {
     <>
       <PlyerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
-          <PlayerGridItem colSpan={playerGrid} ref={videoGridRef}>
+          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }} ref={videoGridRef}>
             <PlayerContainer
               className={transitions.names.slide}
               cinematicView={cinematicView}
@@ -343,7 +337,7 @@ export const VideoView: React.FC = () => {
       <LimitedWidthContainer>
         {isCinematic && (
           <LayoutGrid>
-            <GridItem className={transitions.names.slide} colSpan={mainGrid}>
+            <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
             </GridItem>
             {sideItems}

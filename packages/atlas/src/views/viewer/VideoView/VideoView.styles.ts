@@ -28,6 +28,14 @@ export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
   display: ${({ cinematicView }) => !cinematicView && 'flex'};
   justify-content: ${({ cinematicView }) => !cinematicView && 'center'};
   margin: 0 ${({ cinematicView }) => (cinematicView ? 'calc(-1 * var(--size-global-horizontal-padding))' : 0)};
+
+  ${media.md} {
+    padding-top: ${({ cinematicView }) => !cinematicView && sizes(8)};
+  }
+
+  ${media.xl} {
+    padding-top: ${({ cinematicView }) => !cinematicView && sizes(16)};
+  }
 `
 
 export const PlayerContainer = styled.div<CinematicView & { calculatedHeight?: number }>`

@@ -165,16 +165,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         return
       }
 
-      const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f']
+      const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f', 'c']
       if (playerReservedKeys.includes(event.key)) {
         event.preventDefault()
-        hotkeysHandler(event, player, playVideo, pauseVideo)
+        hotkeysHandler(event, player, playVideo, pauseVideo, () => setCinematicView(!cinematicView))
       }
     }
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [pauseVideo, playVideo, player, playerState])
+  }, [cinematicView, pauseVideo, playVideo, player, playerState, setCinematicView])
 
   // handle error
   useEffect(() => {
@@ -559,7 +559,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   {mdMatch && !isEmbedded && (
                     <PlayerControlButton
                       onClick={toggleCinematicView}
-                      tooltipText={cinematicView ? 'Exit cinematic mode' : 'Cinematic view'}
+                      tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
                     >
                       {cinematicView ? <SvgControlsVideoModeCompactView /> : <SvgControlsVideoModeCinemaView />}
                     </PlayerControlButton>
