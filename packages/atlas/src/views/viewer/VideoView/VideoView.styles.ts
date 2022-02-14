@@ -53,9 +53,7 @@ export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
   ${getPlayerWrapperCinematicStyles};
 `
 
-type PlayerContainerProps = CinematicView & { calculatedHeight?: number }
-
-const getPlayerContainerCinematicStyles = ({ cinematicView, calculatedHeight }: PlayerContainerProps) =>
+const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
   cinematicView
     ? css`
         ${media.md} {
@@ -65,12 +63,11 @@ const getPlayerContainerCinematicStyles = ({ cinematicView, calculatedHeight }: 
       `
     : css`
         ${media.md} {
-          height: ${calculatedHeight ? `${calculatedHeight}px` : 'calc(61.5vw * 0.5625)'};
           margin-bottom: ${sizes(8)};
         }
       `
 
-export const PlayerContainer = styled.div<PlayerContainerProps>`
+export const PlayerContainer = styled.div<CinematicView>`
   ${getPlayerContainerCinematicStyles};
 
   width: 100%;
@@ -78,7 +75,7 @@ export const PlayerContainer = styled.div<PlayerContainerProps>`
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
-  position: absolute;
+  aspect-ratio: 16 / 9;
 `
 
 export const TitleContainer = styled.div`

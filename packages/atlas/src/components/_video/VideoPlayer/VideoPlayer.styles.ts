@@ -232,11 +232,18 @@ export const Container = styled.div<ContainerProps>`
   z-index: 0;
 
   .video-js {
-    background-color: ${oldColors.gray[900]};
-    position: relative;
-    padding: 0;
+    display: block;
+    height: 0;
     width: 100%;
-    height: 100%;
+    max-width: 100%;
+    position: relative;
+
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .vjs-tech {

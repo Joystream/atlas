@@ -54,8 +54,6 @@ import {
   TitleText,
 } from './VideoView.styles'
 
-const DEFAULT_ASPECT_RATIO = 0.56
-
 export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
@@ -82,7 +80,7 @@ export const VideoView: React.FC = () => {
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
-  const { ref: videoGridRef, width: playerContainerWidth } = useResizeObserver()
+  const { ref: videoGridRef } = useResizeObserver()
 
   // Restore an interrupted video state
   useEffect(() => {
@@ -173,14 +171,6 @@ export const VideoView: React.FC = () => {
     setDetailsExpanded((prevState) => !prevState)
   }
 
-  const aspectRatio = useMemo(() => {
-    if (!video || !video.mediaMetadata) {
-      return DEFAULT_ASPECT_RATIO
-    }
-    const { pixelHeight, pixelWidth } = video.mediaMetadata
-    return !pixelHeight || !pixelWidth ? DEFAULT_ASPECT_RATIO : pixelHeight / pixelWidth
-  }, [video])
-
   if (error) {
     return <ViewErrorFallback />
   }
@@ -202,7 +192,6 @@ export const VideoView: React.FC = () => {
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
   const isCinematic = cinematicView || !mdMatch
-  const calculatedPlayerHeight = playerContainerWidth && playerContainerWidth * aspectRatio
 
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
@@ -308,11 +297,7 @@ export const VideoView: React.FC = () => {
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }} ref={videoGridRef}>
-            <PlayerContainer
-              className={transitions.names.slide}
-              cinematicView={cinematicView}
-              calculatedHeight={calculatedPlayerHeight}
-            >
+            <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
               {!isMediaLoading && video ? (
                 <VideoPlayer
                   isVideoPending={!video?.media?.isAccepted}
@@ -320,7 +305,7 @@ export const VideoView: React.FC = () => {
                   videoId={video?.id}
                   autoplay
                   src={mediaUrl}
-                  fill
+                  fluid
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}
