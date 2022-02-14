@@ -1,8 +1,8 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { GridItem } from '@/components/LayoutGrid'
-import { LayoutGrid } from '@/components/LayoutGrid'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -14,40 +14,67 @@ type CinematicView = {
   cinematicView: boolean
 }
 
-export const PlyerGridWrapper = styled(LimitedWidthContainer)<CinematicView>`
-  max-width: ${({ cinematicView }) => cinematicView && 'unset'};
+const getPlayerGridWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
+  cinematicView &&
+  css`
+    max-width: unset;
+    margin-bottom: ${sizes(8)};
+  `
+
+export const PlayerGridWrapper = styled(LimitedWidthContainer)<CinematicView>`
+  ${getPlayerGridWrapperCinematicStyles};
+
   padding-bottom: 0;
-  margin-bottom: ${({ cinematicView }) => cinematicView && sizes(8)};
 `
 
 export const PlayerGridItem = styled(GridItem)`
   width: 100%;
 `
 
+const getPlayerWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
+  cinematicView
+    ? css`
+        margin: 0;
+      `
+    : css`
+        display: flex;
+        justify-content: center;
+        margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+
+        ${media.md} {
+          padding-top: ${sizes(8)};
+        }
+
+        ${media.xl} {
+          padding-top: ${sizes(16)};
+        }
+      `
+
 export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
-  display: ${({ cinematicView }) => !cinematicView && 'flex'};
-  justify-content: ${({ cinematicView }) => !cinematicView && 'center'};
-  margin: 0 ${({ cinematicView }) => (cinematicView ? 'calc(-1 * var(--size-global-horizontal-padding))' : 0)};
-
-  ${media.md} {
-    padding-top: ${({ cinematicView }) => !cinematicView && sizes(8)};
-  }
-
-  ${media.xl} {
-    padding-top: ${({ cinematicView }) => !cinematicView && sizes(16)};
-  }
+  ${getPlayerWrapperCinematicStyles};
 `
 
-export const PlayerContainer = styled.div<CinematicView & { calculatedHeight?: number }>`
-  width: 100%;
-  height: calc(100vw * 0.5625);
+type PlayerContainerProps = CinematicView & { calculatedHeight?: number }
 
-  ${media.md} {
-    height: ${({ cinematicView, calculatedHeight }) =>
-      cinematicView ? 'calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625)' : `${calculatedHeight}px`};
-    max-height: ${({ cinematicView }) => cinematicView && '70vh'};
-    margin-bottom: ${({ cinematicView }) => !cinematicView && sizes(8)};
-  }
+const getPlayerContainerCinematicStyles = ({ cinematicView, calculatedHeight }: PlayerContainerProps) =>
+  cinematicView
+    ? css`
+        ${media.md} {
+          height: calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625);
+          max-height: 70vh;
+        }
+      `
+    : css`
+        ${media.md} {
+          height: ${calculatedHeight ? `${calculatedHeight}px` : 'calc(61.5vw * 0.5625)'};
+          margin-bottom: ${sizes(8)};
+        }
+      `
+
+export const PlayerContainer = styled.div<PlayerContainerProps>`
+  ${getPlayerContainerCinematicStyles};
+
+  width: 100%;
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`

@@ -46,9 +46,9 @@ import {
   NotFoundVideoContainer,
   PlayerContainer,
   PlayerGridItem,
+  PlayerGridWrapper,
   PlayerSkeletonLoader,
   PlayerWrapper,
-  PlyerGridWrapper,
   StyledCallToActionWrapper,
   TitleContainer,
   TitleText,
@@ -178,7 +178,7 @@ export const VideoView: React.FC = () => {
       return DEFAULT_ASPECT_RATIO
     }
     const { pixelHeight, pixelWidth } = video.mediaMetadata
-    return (pixelHeight || 0) / (pixelWidth || 0)
+    return !pixelHeight || !pixelWidth ? DEFAULT_ASPECT_RATIO : pixelHeight / pixelWidth
   }, [video])
 
   if (error) {
@@ -305,7 +305,7 @@ export const VideoView: React.FC = () => {
 
   return (
     <>
-      <PlyerGridWrapper cinematicView={isCinematic}>
+      <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
           <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }} ref={videoGridRef}>
             <PlayerContainer
@@ -333,7 +333,7 @@ export const VideoView: React.FC = () => {
           </PlayerGridItem>
           {!isCinematic && sideItems}
         </PlayerWrapper>
-      </PlyerGridWrapper>
+      </PlayerGridWrapper>
       <LimitedWidthContainer>
         {isCinematic && (
           <LayoutGrid>
