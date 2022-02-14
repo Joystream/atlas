@@ -55,6 +55,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
       {isWorkspaceOpen && headTags}
       <CSSTransition
         in={isWorkspaceOpen}
+        appear
         mountOnEnter
         unmountOnExit
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
@@ -64,6 +65,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
       </CSSTransition>
       <CSSTransition
         in={isWorkspaceOpen}
+        appear
         mountOnEnter
         unmountOnExit
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
