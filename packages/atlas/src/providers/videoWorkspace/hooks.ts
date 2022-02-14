@@ -10,7 +10,7 @@ import { RoutingState } from '@/types/routing'
 import { SentryLogger } from '@/utils/logs'
 
 import { VideoWorkspaceContext } from './provider'
-import { VideoWorkspace, VideoWorkspaceAssets, VideoWorkspaceFormFields, VideoWorkspaceState } from './types'
+import { VideoWorkspaceVideoAssets, VideoWorkspaceVideoFormFields } from './types'
 
 import { channelDraftsSelector, useDraftStore } from '../drafts'
 import { useAuthorizedUser } from '../user'
@@ -25,16 +25,16 @@ export const useVideoWorkspace = () => {
   return ctx
 }
 
-export const useVideoWorkspaceData = (videoForm?: VideoWorkspace) => {
+export const useVideoWorkspaceData = () => {
+  const { editedVideoInfo } = useVideoWorkspace()
   const { activeChannelId } = useAuthorizedUser()
   const drafts = useDraftStore(channelDraftsSelector(activeChannelId))
-  const { videoCachedAssets } = useVideoWorkspace()
-  const { video, loading, error } = useVideo(videoForm?.id ?? '', {
-    skip: videoForm?.isDraft,
+  const { video, loading, error } = useVideo(editedVideoInfo?.id ?? '', {
+    skip: editedVideoInfo?.isDraft,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'useVideoWorkspaceData', error),
   })
 
-  if (!videoForm) {
+  if (!editedVideoInfo) {
     return {
       tabData: null,
       loading: false,
@@ -42,55 +42,51 @@ export const useVideoWorkspaceData = (videoForm?: VideoWorkspace) => {
     }
   }
 
-  const videoData = {
-    ...video,
-    category: video?.category?.id,
-    language: video?.language?.iso,
-  }
+  const draft = drafts.find((d) => d.id === editedVideoInfo.id)
 
-  const draft = drafts.find((d) => d.id === videoForm.id)
-
-  const assets: VideoWorkspaceAssets = videoForm.isDraft
-    ? videoCachedAssets || {
-        video: { contentId: null },
+  const assets: VideoWorkspaceVideoAssets = editedVideoInfo.isDraft
+    ? {
+        video: {
+          id: null,
+        },
         thumbnail: {
-          cropContentId: null,
-          originalContentId: null,
+          cropId: null,
+          originalId: null,
         },
       }
     : {
         video: {
-          contentId: video?.media?.id ?? null,
+          id: video?.media?.id ?? null,
         },
         thumbnail: {
-          cropContentId: video?.thumbnailPhoto?.id ?? null,
-          originalContentId: null,
+          cropId: video?.thumbnailPhoto?.id ?? null,
+          originalId: null,
         },
       }
 
-  const normalizedData: VideoWorkspaceFormFields = {
-    title: videoForm.isDraft ? draft?.title ?? '' : video?.title ?? '',
-    description: (videoForm.isDraft ? draft?.description : video?.description) ?? '',
-    category: (videoForm.isDraft ? draft?.category : video?.category?.id) ?? null,
-    licenseCode: (videoForm.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
-    licenseCustomText: (videoForm.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
-    licenseAttribution: (videoForm.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
-    language: (videoForm.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
-    isPublic: (videoForm.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
-    isExplicit: (videoForm.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
-    hasMarketing: (videoForm.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+  const normalizedData: VideoWorkspaceVideoFormFields = {
+    title: editedVideoInfo.isDraft ? draft?.title ?? '' : video?.title ?? '',
+    description: (editedVideoInfo.isDraft ? draft?.description : video?.description) ?? '',
+    category: (editedVideoInfo.isDraft ? draft?.category : video?.category?.id) ?? null,
+    licenseCode: (editedVideoInfo.isDraft ? draft?.licenseCode : video?.license?.code) ?? DEFAULT_LICENSE_ID,
+    licenseCustomText: (editedVideoInfo.isDraft ? draft?.licenseCustomText : video?.license?.customText) ?? null,
+    licenseAttribution: (editedVideoInfo.isDraft ? draft?.licenseAttribution : video?.license?.attribution) ?? null,
+    language: (editedVideoInfo.isDraft ? draft?.language : video?.language?.iso) ?? 'en',
+    isPublic: (editedVideoInfo.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
+    isExplicit: (editedVideoInfo.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
+    hasMarketing: (editedVideoInfo.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
     publishedBeforeJoystream:
-      (videoForm.isDraft
+      (editedVideoInfo.isDraft
         ? draft?.publishedBeforeJoystream
           ? parseISO(draft.publishedBeforeJoystream)
           : null
-        : videoData?.publishedBeforeJoystream) ?? null,
+        : video?.publishedBeforeJoystream) ?? null,
     assets,
   }
 
   return {
     tabData: normalizedData,
-    loading: videoForm.isDraft ? false : loading,
+    loading: editedVideoInfo.isDraft ? false : loading,
     error,
   }
 }
@@ -104,8 +100,8 @@ export const useVideoWorkspaceRouting = (): Location => {
   const [cachedLocation, setCachedLocation] = useState<Location>()
 
   const videoWorkspaceMatch = useMatch(WORKSPACE_MATCH)
-  const { videoWorkspaceState, setVideoWorkspaceState } = useVideoWorkspace()
-  const [cachedVideoWorkspaceState, setCachedVideoWorkspaceState] = useState<VideoWorkspaceState>('closed')
+  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
+  const [cachedIsWorkspaceOpen, setCachedIsWorkspaceOpen] = useState(false)
 
   useEffect(() => {
     if (location === cachedLocation) {
@@ -113,35 +109,35 @@ export const useVideoWorkspaceRouting = (): Location => {
     }
     setCachedLocation(location)
 
-    if (videoWorkspaceMatch && videoWorkspaceState !== 'open') {
+    if (videoWorkspaceMatch && !isWorkspaceOpen) {
       // route changed to video edit
       const state: RoutingState = {
         overlaidLocation: cachedLocation ?? defaultLocation,
       }
       navigate(location, { replace: true, state })
-      setVideoWorkspaceState('open')
+      setIsWorkspaceOpen(true)
     }
-  }, [location, cachedLocation, videoWorkspaceMatch, videoWorkspaceState, setVideoWorkspaceState, navigate])
+  }, [location, cachedLocation, videoWorkspaceMatch, navigate, isWorkspaceOpen, setIsWorkspaceOpen])
 
   useEffect(() => {
-    if (videoWorkspaceState === cachedVideoWorkspaceState) {
+    if (isWorkspaceOpen === cachedIsWorkspaceOpen) {
       return
     }
-    setCachedVideoWorkspaceState(videoWorkspaceState)
+    setCachedIsWorkspaceOpen(isWorkspaceOpen)
 
-    if (videoWorkspaceState === 'closed') {
-      // restore the old location when videoWorkspace was minimized/closed
+    if (!isWorkspaceOpen) {
+      // restore the old location when videoWorkspace was closed
       const oldLocation = locationState?.overlaidLocation ?? absoluteRoutes.studio.index()
       navigate(oldLocation)
     }
-    if (videoWorkspaceState === 'open' && !videoWorkspaceMatch) {
-      // videoWorkspaceState changed without the route - most likely from the videoWorkspace itself, change URL and save current location
+    if (isWorkspaceOpen && !videoWorkspaceMatch) {
+      // isWorkspaceOpen changed without the route change, change URL and save current location
       const state: RoutingState = {
         overlaidLocation: location,
       }
       navigate(absoluteRoutes.studio.videoWorkspace(), { state: state })
     }
-  }, [videoWorkspaceState, cachedVideoWorkspaceState, location, locationState, navigate, videoWorkspaceMatch])
+  }, [cachedIsWorkspaceOpen, isWorkspaceOpen, location, locationState, navigate, videoWorkspaceMatch])
 
   if (videoWorkspaceMatch) {
     return locationState?.overlaidLocation ?? cachedLocation ?? defaultLocation

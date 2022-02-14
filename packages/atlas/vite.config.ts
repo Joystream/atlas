@@ -55,6 +55,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['buffer'],
+    include: ['buffer', 'blake3/browser-async', 'multihashes'],
   },
 })

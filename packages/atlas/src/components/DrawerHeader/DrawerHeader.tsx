@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 
 import { Pill } from '@/components/Pill'
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -13,10 +13,9 @@ export type DrawerHeaderProps = {
 }
 
 export const DrawerHeader: React.FC<DrawerHeaderProps> = React.memo(({ onCloseClick, title, label }) => {
-  const tabContainerRef = useRef<HTMLDivElement>(null)
   return (
     <Tabbar>
-      <TabContainer ref={tabContainerRef}>
+      <TabContainer>
         <Tab>
           {label && <Pill label={label} size="small" />}
           <TabTitle variant="t200">{title}</TabTitle>

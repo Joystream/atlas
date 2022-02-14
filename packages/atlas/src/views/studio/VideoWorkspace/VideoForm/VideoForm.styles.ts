@@ -1,7 +1,5 @@
 import styled from '@emotion/styled'
 
-import { ActionBar } from '@/components/ActionBar'
-import { DRAWER_HEADER_TABS_BAR_HEIGHT } from '@/components/DrawerHeader'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -28,18 +26,6 @@ export const StyledMultiFileSelect = styled(MultiFileSelect)`
     position: sticky;
     top: ${sizes(12)};
   }
-`
-
-type FormScrollingProps = {
-  actionBarHeight?: number
-  isEdit?: boolean
-}
-export const FormScrolling = styled.div<FormScrollingProps>`
-  height: ${({ actionBarHeight, isEdit }) =>
-    isEdit ? '100%' : `calc(100% - ${actionBarHeight ?? 0}px - ${DRAWER_HEADER_TABS_BAR_HEIGHT}px) `};
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 
 export const FormWrapper = styled(LimitedWidthContainer)`
@@ -103,11 +89,4 @@ export const DeleteVideoButton = styled(Button)`
 
 export const ExtendedMarginFormField = styled(FormField)`
   margin-top: ${sizes(10)};
-`
-
-export const StyledActionBar = styled(ActionBar)`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  left: 0;
 `
