@@ -277,6 +277,7 @@ export const MyVideosView = () => {
           to={absoluteRoutes.studio.videoWorkspace()}
           icon={<SvgActionAddVideo />}
           onClick={handleAddVideoTab}
+          fullWidth
         >
           Upload video
         </MobileButton>
