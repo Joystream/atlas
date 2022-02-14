@@ -2,8 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { sizes } from '@/styles'
-import { square } from '@/styles'
+import { sizes, square } from '@/styles'
 
 type ContainerProps = {
   disabled?: boolean

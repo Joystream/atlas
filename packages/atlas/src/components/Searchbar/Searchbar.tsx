@@ -12,13 +12,13 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useSearchStore } from '@/providers/search'
 
 import { SearchBox } from './SearchBox'
-import { SearchHelper } from './Searchbar.styles'
 import {
   CancelButton,
   Container,
   InnerContainer,
   Input,
   SearchButton,
+  SearchHelper,
   StyledForm,
   StyledSvgOutlineSearch,
 } from './Searchbar.styles'

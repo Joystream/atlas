@@ -4,8 +4,7 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar } from '@/styles'
-import { media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 

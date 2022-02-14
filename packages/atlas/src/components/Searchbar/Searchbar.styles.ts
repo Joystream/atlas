@@ -4,8 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgControlsSearchAlt } from '@/components/_icons'
-import { cVar } from '@/styles'
-import { media, oldColors, sizes, square } from '@/styles'
+import { cVar, media, oldColors, sizes, square } from '@/styles'
 
 export const Input = styled.input`
   width: 100%;
