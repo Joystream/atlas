@@ -5,8 +5,7 @@ import Lottie from 'react-lottie-player'
 import { SvgPolkadotLogoMono } from '@/components/_illustrations'
 import { Spinner } from '@/components/_loaders/Spinner'
 import { Modal } from '@/components/_overlays/Modal'
-import { cVar } from '@/styles'
-import { oldColors, sizes, square, transitions } from '@/styles'
+import { cVar, oldColors, sizes, square, transitions } from '@/styles'
 
 type StepProps = {
   isActive?: boolean

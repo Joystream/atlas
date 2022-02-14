@@ -1,6 +1,5 @@
 import { clamp, round } from 'lodash-es'
-import React, { useEffect, useRef } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
 import { formatDurationShort } from '@/utils/time'

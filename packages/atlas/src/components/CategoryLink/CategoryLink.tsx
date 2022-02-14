@@ -1,8 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { TextVariant } from '@/components/Text'
-import { Text } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { CircleDefaultBackground } from '@/components/_video/VideoCategoryCard/VideoCategoryCard.style'
 import { videoCategories } from '@/config/categories'

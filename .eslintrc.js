@@ -22,27 +22,18 @@ module.exports = {
     },
   },
   rules: {
-    // taken care of by typescript
-    'react/prop-types': 'off',
+    // force using Logger object
+    'no-console': ['warn'],
+    'no-duplicate-imports': ['warn'],
 
     // disable explicit return types
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-
     // allow "_" prefixed function arguments
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true, 'varsIgnorePattern': '^_+$' },
     ],
-    'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
-    'react/self-closing-comp': [
-      'warn',
-      {
-        'component': true,
-        'html': true,
-      },
-    ],
     '@typescript-eslint/no-empty-function': 'warn',
-    'react/no-unescaped-entities': 'off',
     '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/ban-ts-comment': [
       'error',
@@ -59,8 +50,17 @@ module.exports = {
       },
     ],
 
-    // force using Logger object
-    'no-console': ['warn'],
+    // taken care of by typescript
+    'react/prop-types': 'off',
+    'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
+    'react/self-closing-comp': [
+      'warn',
+      {
+        'component': true,
+        'html': true,
+      },
+    ],
+    'react/no-unescaped-entities': 'off',
 
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',

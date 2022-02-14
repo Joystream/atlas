@@ -2,8 +2,7 @@ import { debounce } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useSearch } from '@/api/hooks'
-import { VideoWhereInput } from '@/api/queries'
-import { SearchQuery } from '@/api/queries'
+import { SearchQuery, VideoWhereInput } from '@/api/queries'
 import { SentryLogger } from '@/utils/logs'
 
 type SearchResultData = {

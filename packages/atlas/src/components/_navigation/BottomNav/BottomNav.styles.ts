@@ -3,8 +3,7 @@ import styled from '@emotion/styled'
 import { Link, PathMatch } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { cVar } from '@/styles'
-import { oldColors, sizes, zIndex } from '@/styles'
+import { cVar, oldColors, sizes, zIndex } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
