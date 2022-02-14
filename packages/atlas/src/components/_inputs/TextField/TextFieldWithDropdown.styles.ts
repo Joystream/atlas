@@ -8,6 +8,8 @@ export const TextFieldWithDropdownWrapper = styled.div`
 `
 
 export const ListWrapper = styled.ul`
+  max-height: 300px;
+  overflow-y: auto;
   background: ${cVar('colorBackgroundStrong')};
   padding: 0;
   position: absolute;
