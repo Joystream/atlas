@@ -7,7 +7,7 @@ const ESTIMATED_BLOCK_TIME = 6000
 export const useBlockTimeEstimation = () => {
   const { joystream, proxyCallback } = useJoystream()
   const currentBlockRef = useRef(0)
-  const timeofTheLastBlockRef = useRef(0)
+  const timeOfTheLastBlockRef = useRef(0)
 
   useEffect(() => {
     if (!joystream) {
@@ -19,7 +19,7 @@ export const useBlockTimeEstimation = () => {
       unsubscribe = await joystream.subscribeCurrentBlock(
         proxyCallback((number) => {
           currentBlockRef.current = number
-          timeofTheLastBlockRef.current = Date.now()
+          timeOfTheLastBlockRef.current = Date.now()
         })
       )
     }
@@ -31,7 +31,7 @@ export const useBlockTimeEstimation = () => {
   const convertBlockToDate = useCallback((block: number) => {
     const now = Date.now()
     const differenceBetweenProvidedBlockAndCurrentBlock = block - currentBlockRef.current
-    const differenceBetweenNowAndTimeofTheLastBlock = now - timeofTheLastBlockRef.current
+    const differenceBetweenNowAndTimeofTheLastBlock = now - timeOfTheLastBlockRef.current
 
     const estimatedTime =
       differenceBetweenProvidedBlockAndCurrentBlock * ESTIMATED_BLOCK_TIME - differenceBetweenNowAndTimeofTheLastBlock
@@ -57,8 +57,6 @@ export const useBlockTimeEstimation = () => {
   )
 
   return {
-    currentBlock: currentBlockRef.current,
-    timeofTheLastBlock: timeofTheLastBlockRef.current,
     convertBlockToDate: convertBlockToDate,
     convertDateToBlock: convertDateToBlock,
   }

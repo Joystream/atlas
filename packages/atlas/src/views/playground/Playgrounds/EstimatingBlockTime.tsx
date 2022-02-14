@@ -1,5 +1,5 @@
 import { formatDistanceToNowStrict } from 'date-fns'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
@@ -9,30 +9,21 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 export const EstimatingBlockTime = () => {
   const [datetimeLocal, setDatetimeLocal] = useState('')
   const [blockNumber, setBlockNumber] = useState(0)
+  const [currentBlock, setCurrentBlock] = useState<number>()
 
   const [currentTime, setCurrentTime] = useState(new Date())
 
-  const { convertBlockToDate, convertDateToBlock, currentBlock, timeofTheLastBlock } = useBlockTimeEstimation()
-
-  const initialRender = useRef(true)
-
-  useEffect(() => {
-    if (!initialRender.current || !currentBlock) {
-      return
-    }
-    setBlockNumber(currentBlock + 10)
-
-    initialRender.current = false
-  }, [blockNumber, currentBlock])
+  const { convertBlockToDate, convertDateToBlock } = useBlockTimeEstimation()
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
+      setCurrentBlock(convertDateToBlock(Date.now()))
     }, 1000)
     return () => {
       clearInterval(timer)
     }
-  }, [])
+  }, [convertDateToBlock])
 
   return (
     <div>
@@ -40,7 +31,6 @@ export const EstimatingBlockTime = () => {
         <Text variant="h700">Current state</Text>
         <Text variant="h300">Current block number: {currentBlock}</Text>
         <Text variant="h300">Current time: {new Date(currentTime).toLocaleString()}</Text>
-        <Text variant="h300">Time of the last block: {new Date(timeofTheLastBlock).toLocaleString()}</Text>
       </div>
       <br />
       <div>
