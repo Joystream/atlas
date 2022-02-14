@@ -159,7 +159,6 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
         },
       }}
-      fullWidth={true}
     />
   )
 }

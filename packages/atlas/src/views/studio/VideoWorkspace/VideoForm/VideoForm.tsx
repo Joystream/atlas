@@ -62,7 +62,7 @@ type VideoFormProps = {
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFormStatus }) => {
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
-  const [cachedEditedVideoId, setCachedEditedVideoId] = useState<string>('')
+  const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
