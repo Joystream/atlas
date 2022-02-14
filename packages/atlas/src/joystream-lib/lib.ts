@@ -93,4 +93,13 @@ export class JoystreamLib {
 
     return proxy(unsubscribe)
   }
+
+  async subscribeCurrentBlock(callback: (currentBlock: number) => void) {
+    await this.ensureApi()
+    const unsubscribe = await this.api.rpc.chain.subscribeNewHeads((result) => {
+      const { number } = result
+      callback(number.toNumber())
+    })
+    return proxy(unsubscribe)
+  }
 }
