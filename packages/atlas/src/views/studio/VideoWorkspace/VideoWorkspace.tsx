@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import useMeasure from 'react-use-measure'
 
+import { ActionBarVariant, ActionDialogButtonProps } from '@/components/ActionBar'
 import { DrawerHeader } from '@/components/DrawerHeader'
-import { SvgControlsCancel } from '@/components/_icons'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -57,51 +57,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   const isIssuedAsNFTChecked = NFTCurrentStepIdx !== null
 
-  const handleReset = () => {}
-
-  // const actionBarPrimaryButton = useMemo(
-  //   () => ({
-  //     text: 'Next step',
-  //     disabled: false,
-  //     onClick: () => {
-  //       if (currentStepIdx < 3) {
-  //         setCurrentStepIdx((current) => current + 1)
-  //       } else {
-  //         // handle issuing NFT here
-  //       }
-  //     },
-  //   }),
-  //   [currentStepIdx]
-  // )
-
-  // const actionBarSecondaryButton = useMemo(
-  //   () => ({
-  //     text: 'Back',
-  //     visible: true,
-  //     onClick: () => {
-  //       if (currentStepIdx > 0) {
-  //         setCurrentStepIdx((current) => current - 1)
-  //       } else {
-  //         onGoBack()
-  //       }
-  //     },
-  //   }),
-  //   [currentStepIdx, onGoBack]
-  // )
-
-  // const actionBarDraftBadge = useMemo(
-  //   () =>
-  //     !isEdit
-  //       ? {
-  //           text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
-  //           tooltip: {
-  //             text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-  //           },
-  //         }
-  //       : undefined,
-  //   [isEdit, mdMatch]
-  // )
-
   return (
     <>
       {isWorkspaceOpen && headTags}
@@ -150,21 +105,31 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             </SwitchTransition>
           </ScrollContainer>
           <VideoWorkspaceActionBar
-            isIssuedAsNFT={isIssuedAsNFT}
             isEdit={isEdit}
+            NFTCurrentStepIdx={NFTCurrentStepIdx}
+            isIssuedAsNFT={isIssuedAsNFT}
+            variant={isIssuedAsNFTChecked ? 'nft' : isEdit ? 'edit' : 'new'}
             // form can be submitted if both:
             // 1. form is valid
-            // 2. the video is a new one OR the form is dirty (some edit has been made)
-            canSubmit={(formStatus?.isValid && (!isEdit || formStatus?.isDirty)) || isIssuedAsNFT || false}
-            canReset={formStatus?.isDirty || false || isIssuedAsNFT}
-            onSubmit={
+            // 2. the video is a new one OR the form is dirty  (some edit has been made)
+            canSubmit={(formStatus?.isValid && (isEdit ? formStatus.isDirty || isIssuedAsNFT : true)) || false}
+            canReset={formStatus?.isDirty || isIssuedAsNFT || false}
+            onSubmit={() => {
               isIssuedAsNFT
-                ? () => setNFTCurrentStepIdx((step) => (step === null ? 0 : step + 1))
-                : formStatus?.triggerFormSubmit
-            }
+                ? setNFTCurrentStepIdx((step) => (step === null ? 0 : step + 1))
+                : formStatus?.triggerFormSubmit()
+            }}
             onReset={() => {
-              setIsIssuedAsNFT(false)
-              formStatus?.resetForm()
+              if (isIssuedAsNFTChecked) {
+                if (NFTCurrentStepIdx === 0) {
+                  setNFTCurrentStepIdx(null)
+                } else {
+                  setNFTCurrentStepIdx(NFTCurrentStepIdx - 1)
+                }
+              } else {
+                formStatus?.resetForm()
+                setIsIssuedAsNFT(false)
+              }
             }}
             onResize={setActionBarHeight}
           />
@@ -176,8 +141,10 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 VideoWorkspace.displayName = 'VideoWorkspace'
 
 type VideoWorkspaceActionBarProps = {
+  variant?: ActionBarVariant
   isEdit: boolean
-  isIssuedAsNFT: boolean
+  NFTCurrentStepIdx: number | null
+  isIssuedAsNFT?: boolean
   canReset: boolean
   canSubmit: boolean
   onSubmit?: () => void
@@ -186,7 +153,9 @@ type VideoWorkspaceActionBarProps = {
 }
 
 const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
+  variant = 'new',
   isEdit,
+  NFTCurrentStepIdx,
   isIssuedAsNFT,
   canReset,
   canSubmit,
@@ -197,7 +166,7 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   const mdMatch = useMediaMatch('md')
   const [actionBarRef, actionBarBounds] = useMeasure()
 
-  const isActive = !isEdit || canSubmit
+  const isActive = variant === 'edit' || canSubmit
   const height = isActive ? actionBarBounds.height : 0
 
   // send update to VideoWorkspace whenever height changes
@@ -209,14 +178,9 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
     onResize(height)
   }, [height, onResize])
 
-  return (
-    <StyledActionBar
-      ref={actionBarRef}
-      variant={isIssuedAsNFT ? 'nft' : isEdit ? 'edit' : 'new'}
-      primaryText="Fee: 0 Joy"
-      secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-      primaryButton={{
-        text: isIssuedAsNFT ? 'Next' : isEdit ? 'Publish changes' : 'Upload',
+  const getPrimaryButton = useCallback(
+    (variant: ActionBarVariant): ActionDialogButtonProps => {
+      const commonPrimaryButtonProps: ActionDialogButtonProps = {
         disabled: !canSubmit,
         onClick: onSubmit,
         tooltip: canSubmit
@@ -225,19 +189,60 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
               headerText: 'Fill all required fields to proceed',
               text: 'Required: video file, thumbnail image, title, category, language',
             },
-      }}
-      secondaryButton={{
+      }
+      switch (variant) {
+        case 'new':
+          return { ...commonPrimaryButtonProps, text: isIssuedAsNFT ? 'Next' : 'Upload' }
+        case 'edit':
+          return { ...commonPrimaryButtonProps, text: isIssuedAsNFT ? 'Next' : 'Publish changes' }
+        case 'nft':
+          return {
+            ...commonPrimaryButtonProps,
+            text: NFTCurrentStepIdx === null || NFTCurrentStepIdx < 2 ? 'Next' : 'Upload and issue',
+          }
+      }
+    },
+    [NFTCurrentStepIdx, canSubmit, isIssuedAsNFT, onSubmit]
+  )
+
+  const getSecondaryButton = useCallback(
+    (variant) => {
+      if (variant === 'new') {
+        return
+      }
+      return {
         visible: canReset,
-        text: 'Cancel',
+        text: variant === 'edit' ? 'Cancel' : 'Back',
         onClick: () => onReset?.(),
-        icon: <SvgControlsCancel width={16} height={16} />,
-      }}
-      draftBadge={{
+      }
+    },
+    [canReset, onReset]
+  )
+
+  const getDraftBadge = useCallback(
+    (isEdit: boolean) => {
+      if (isEdit) {
+        return
+      }
+      return {
         text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
         tooltip: {
           text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
         },
-      }}
+      }
+    },
+    [mdMatch]
+  )
+
+  return (
+    <StyledActionBar
+      ref={actionBarRef}
+      variant={variant}
+      primaryText="Fee: 0 Joy"
+      secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+      primaryButton={getPrimaryButton(variant)}
+      secondaryButton={getSecondaryButton(variant)}
+      draftBadge={getDraftBadge(isEdit)}
     />
   )
 }

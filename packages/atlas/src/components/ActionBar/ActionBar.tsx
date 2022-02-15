@@ -22,7 +22,7 @@ import {
   StyledSecondaryText,
 } from './ActionBar.styles'
 
-type ActionDialogButtonProps = {
+export type ActionDialogButtonProps = {
   text?: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
@@ -75,7 +75,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
         mountOnEnter
         unmountOnExit
       >
-        <SecondaryButton {...secondaryButton} variant="secondary" size="large" iconPlacement="right">
+        <SecondaryButton {...secondaryButton} variant="secondary" size="large">
           {secondaryButton?.text}
         </SecondaryButton>
       </CSSTransition>
