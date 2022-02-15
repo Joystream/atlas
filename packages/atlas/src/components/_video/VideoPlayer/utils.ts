@@ -112,7 +112,7 @@ export const hotkeysHandler = (
       return
     case 'KeyC':
       toggleCinematicView()
-      break
+      return
     default:
       return
   }
