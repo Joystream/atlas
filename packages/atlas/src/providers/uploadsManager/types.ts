@@ -11,7 +11,7 @@ export type AssetUpload = {
   parentObject: {
     type: AssetParent
     id: ChannelId | VideoId
-    title?: string
+    title?: string | null
   }
   owner: ChannelId
   type: AssetType
@@ -22,8 +22,6 @@ export type AssetUpload = {
   metadata?: string
 }
 export type InputAssetUpload = Omit<AssetUpload, 'size'>
-
-export type UploadsManagerState = AssetUpload[]
 
 export type StartFileUploadOptions = {
   isReUpload?: boolean

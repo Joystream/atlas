@@ -4,7 +4,7 @@ import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
 import useMeasure from 'react-use-measure'
 
-import { useChannel } from '@/api/hooks'
+import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
@@ -22,7 +22,7 @@ import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
@@ -79,6 +79,8 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
       onRest: () => setIsAnimatingSwitchMember(false),
       onStart: () => setIsAnimatingSwitchMember(true),
     })
+
+    const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)
 
     const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
     const hasOneMember = memberships?.length === 1
@@ -172,14 +174,13 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
 
                   <SectionContainer>
                     {memberships?.map((member) => (
-                      <ListItem
+                      <MemberListItem
                         key={member.id}
+                        member={member}
+                        selected={member.id === activeMembership?.id}
                         onClick={() =>
                           handleMemberChange(member.id, member.controllerAccount, member.channels[0]?.id || null)
                         }
-                        nodeStart={<Avatar assetUrl={member.avatarUri} />}
-                        label={member.handle ?? ''}
-                        selected={member.id === activeMembership?.id}
                       />
                     ))}
                     <ListItem
@@ -193,13 +194,12 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
             ) : (
               <AnimatedContainer isAnimatingSwitchMember={isAnimatingSwitchMember} style={style}>
                 <div ref={mergeRefs([containerRef, measureContainerRef])}>
-                  <BlurredBG url={activeMembership?.avatarUri}>
+                  <BlurredBG url={avatarUrl}>
                     <Filter />
                     <MemberInfoContainer>
-                      <StyledAvatar size="fill" assetUrl={activeMembership?.avatarUri} />
+                      <StyledAvatar size="fill" assetUrl={avatarUrl} loading={avatarLoading} />
                       <div>
-                        {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C)
-                \ to preserve the space while member handle loads */}
+                        {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
                         <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
                         <TjoyContainer>
                           {accountBalance !== undefined ? (
@@ -265,9 +265,9 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       {activeMembership?.channels.map((channel) => (
                         <ChannelListItem
                           key={channel.id}
+                          channel={channel}
+                          selected={channel.id === activeChannelId}
                           onClick={() => onChannelChange?.(channel.id)}
-                          channelId={channel.id}
-                          activeChannelId={activeChannelId}
                         />
                       ))}
                       <ListItem
@@ -288,20 +288,37 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
 )
 MemberDropdown.displayName = 'MemberDropdown'
 
-const ChannelListItem: React.FC<{ channelId: string; activeChannelId: string | null; onClick: () => void }> = ({
-  activeChannelId,
-  channelId,
-  onClick,
-}) => {
-  const { channel } = useChannel(channelId)
-  const { url: avatarPhotoUrl, isLoadingAsset } = useAsset(channel?.avatarPhoto)
+type ChannelListItemProps = {
+  channel: BasicChannelFieldsFragment
+  selected: boolean
+  onClick: () => void
+}
+const ChannelListItem: React.FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
+  const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
   return (
     <ListItem
       onClick={onClick}
-      nodeStart={<Avatar assetUrl={avatarPhotoUrl} loading={isLoadingAsset} />}
+      nodeStart={<Avatar assetUrl={url} loading={isLoadingAsset} />}
       label={channel?.title ?? ''}
       caption={channel ? `${channel?.follows} followers` : undefined}
-      selected={activeChannelId === channel?.id}
+      selected={selected}
+    />
+  )
+}
+
+type MemberListItemProps = {
+  member: BasicMembershipFieldsFragment
+  selected: boolean
+  onClick: () => void
+}
+const MemberListItem: React.FC<MemberListItemProps> = ({ member, selected, onClick }) => {
+  const { url, isLoadingAsset } = useMemberAvatar(member)
+  return (
+    <ListItem
+      onClick={onClick}
+      nodeStart={<Avatar assetUrl={url} loading={isLoadingAsset} />}
+      label={member.handle ?? ''}
+      selected={selected}
     />
   )
 }

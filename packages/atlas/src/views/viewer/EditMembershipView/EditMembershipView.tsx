@@ -8,6 +8,7 @@ import { CreateEditMemberInputs } from '@/components/_auth/CreateEditMemberInput
 import { absoluteRoutes } from '@/config/routes'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
 import { useHeadTags } from '@/hooks/useHeadTags'
+import { MemberInputMetadata } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
@@ -39,14 +40,17 @@ export const EditMembershipView: React.FC = () => {
     reset(
       {
         handle: activeMembership?.handle,
-        avatar: activeMembership?.avatarUri,
-        about: activeMembership?.about,
+        avatar:
+          activeMembership?.metadata.avatar?.__typename === 'AvatarUri'
+            ? activeMembership.metadata.avatar.avatarUri
+            : null,
+        about: activeMembership?.metadata.about,
       },
       {
         keepDirty: false,
       }
     )
-  }, [activeMembership?.about, activeMembership?.avatarUri, activeMembership?.handle, reset])
+  }, [activeMembership, reset])
 
   useEffect(() => {
     if (!activeMembershipLoading && activeMembership) {
@@ -62,16 +66,18 @@ export const EditMembershipView: React.FC = () => {
     }
 
     const success = await handleTransaction({
-      txFactory: async (updateStatus) =>
-        (
-          await joystream.extrinsics
-        ).updateMember(
+      txFactory: async (updateStatus) => {
+        const memberInputMetadata: MemberInputMetadata = {
+          ...(dirtyFields.about ? { about: formData?.about } : {}),
+          ...(dirtyFields.avatar ? { avatarUri: formData?.avatar } : {}),
+        }
+        return (await joystream.extrinsics).updateMember(
           activeMembership?.id,
           dirtyFields.handle ? formData.handle : null,
-          dirtyFields.avatar ? formData?.avatar : null,
-          dirtyFields.about ? formData.about : null,
+          memberInputMetadata,
           proxyCallback(updateStatus)
-        ),
+        )
+      },
       successMessage: {
         title: 'Member successfully updated',
         description: 'Lorem ipsum',

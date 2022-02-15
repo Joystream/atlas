@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { VideoFieldsFragmentDoc } from './videos.generated'
+import { AllChannelFieldsFragmentDoc, BasicVideoFieldsFragmentDoc, VideoFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetVideoHeroQueryVariables = Types.Exact<{ [key: string]: never }>

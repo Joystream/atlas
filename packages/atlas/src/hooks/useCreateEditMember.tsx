@@ -34,11 +34,7 @@ export const useCreateEditMemberForm = ({ prevHandle }: UseCreateEditMemberFormA
         query: GetMembershipDocument,
         variables: { where: { handle: value } },
       })
-      if (membershipByUniqueInput) {
-        return false
-      } else {
-        return true
-      }
+      return !membershipByUniqueInput
     }, 500)
   )
 
@@ -68,8 +64,9 @@ export const useCreateEditMemberForm = ({ prevHandle }: UseCreateEditMemberFormA
           return debouncedAvatarValidation.current(val)
         },
         { message: 'Image not found' }
-      ),
-    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }),
+      )
+      .nullable(),
+    about: z.string().max(1000, { message: 'About cannot be longer than 1000 characters' }).nullable(),
   })
 
   const {

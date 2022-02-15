@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { StorageDataObjectFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
 
 import { useAssetStore } from './store'
 
@@ -25,4 +25,17 @@ export const useRawAsset = (contentId: string | null) => {
 
 export const useRawAssetResolver = () => {
   return (contentId: string | null) => (contentId ? useAssetStore.getState().assets[contentId] : null)
+}
+
+export const useMemberAvatar = (member?: BasicMembershipFieldsFragment | null): ReturnType<typeof useAsset> => {
+  const avatar = member?.metadata.avatar
+  const avatarAsset = useAsset(avatar?.__typename === 'AvatarObject' ? avatar.avatarObject : null)
+
+  if (avatar?.__typename === 'AvatarUri') {
+    return { url: avatar.avatarUri, isLoadingAsset: false }
+  } else if (avatar?.__typename === 'AvatarObject') {
+    return avatarAsset
+  }
+
+  return { url: null, isLoadingAsset: true }
 }
