@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { NftTile } from '@/components/NftTile'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
-import { Paragraph } from '@/components/_inputs/FileSelect/FileSelect.styles'
+import { SvgActionChevronR } from '@/components/_icons'
+import { NftAuctionInputMetadata } from '@/joystream-lib'
+import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
+import { Listing, NFTFormData } from '@/views/studio/VideoWorkspace/NFTForm/types'
 
+import { AcceptTerms } from './AcceptTerms'
+import { ListingType } from './ListingType'
 import {
   NFTFormScrolling,
   NFTFormWrapper,
@@ -13,32 +19,52 @@ import {
   StepWrapper,
   StepperInnerWrapper,
   StepperWrapper,
-  StyledChevron,
-  Title,
 } from './NFTForm.styles'
+import { SetUp } from './SetUp'
 
-type NFTFormProps = {
-  isEdit?: boolean
-  NFTCurrentStepIdx: number
+const DUMMY_NFT_TILE_PROPS = {
+  buyNow: false,
+  role: 'owner' as const,
+  auction: 'none' as const,
+  bid: 1234,
+  minBid: 1234,
+  topBid: 123,
+  thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
+  creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
+  owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
+  duration: 120,
+  views: 123456789,
+  loading: false,
+  fullWidth: false,
 }
 
-export const NFTForm: React.FC<NFTFormProps> = ({ NFTCurrentStepIdx }) => {
-  const dummyNfftTileProps = {
-    buyNow: false,
-    role: 'owner' as const,
-    auction: 'none' as const,
-    bid: 1234,
-    minBid: 1234,
-    topBid: 123,
-    thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
-    creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
-    owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
-    duration: 120,
-    views: 123456789,
-    loading: false,
-    fullWidth: false,
-  }
+type NFTFormProps = {
+  listingType: Listing
+  setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null>>
+  setListingType: (listingType: Listing) => void
+  NFTCurrentStepIdx: number
+  onSubmit: (data: NFTFormData) => void
+  termsAccepted: boolean
+  toggleTermsAccept: () => void
+}
 
+export const NFTForm: React.FC<NFTFormProps> = ({
+  NFTCurrentStepIdx,
+  listingType,
+  setFormStatus,
+  setListingType,
+  onSubmit,
+  termsAccepted,
+  toggleTermsAccept,
+}) => {
+  const {
+    handleSubmit: createSubmitHandler,
+    register,
+    reset,
+    getValues,
+    setValue,
+    formState: { isDirty, isValid },
+  } = useForm<NFTFormData>({ mode: 'onChange' })
   const issueNFTSteps: StepProps[] = [
     {
       variant: 'current',
@@ -54,11 +80,43 @@ export const NFTForm: React.FC<NFTFormProps> = ({ NFTCurrentStepIdx }) => {
     },
   ]
 
+  const handleSubmit = useCallback(() => {
+    createSubmitHandler(onSubmit)
+  }, [createSubmitHandler, onSubmit])
+
+  const formStatus: VideoWorkspaceFormStatus<NFTFormData> = useMemo(
+    () => ({
+      isDirty,
+      isValid,
+      formValues: getValues(),
+      resetForm: reset,
+      triggerFormSubmit: handleSubmit,
+    }),
+    [getValues, handleSubmit, isDirty, isValid, reset]
+  )
+
+  // sent updates on form status to VideoWorkspace
+  useEffect(() => {
+    setFormStatus(formStatus)
+  }, [formStatus, setFormStatus])
+
+  const stepsContent = [
+    <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
+    <SetUp key="step-content-2" register={register} selectedType={listingType} setValue={setValue} />,
+    <AcceptTerms
+      key="step-content-3"
+      selectedType={listingType}
+      formData={getValues()}
+      termsAccepted={termsAccepted}
+      toggleTermsAccept={toggleTermsAccept}
+    />,
+  ]
+
   return (
     <ScrollableWrapper>
       <NFTWorkspaceFormWrapper>
         <NFTPreview>
-          <NftTile title="title" {...dummyNfftTileProps} />
+          <NftTile title="title" {...DUMMY_NFT_TILE_PROPS} />
         </NFTPreview>
         <NFTFormScrolling>
           <NFTFormWrapper>
@@ -70,17 +128,13 @@ export const NFTForm: React.FC<NFTFormProps> = ({ NFTCurrentStepIdx }) => {
                   return (
                     <StepWrapper key={idx}>
                       <Step showOtherStepsOnMobile number={idx + 1} variant={stepVariant} title={step.title} />
-                      {!isLast && <StyledChevron />}
+                      {!isLast && <SvgActionChevronR />}
                     </StepWrapper>
                   )
                 })}
               </StepperInnerWrapper>
             </StepperWrapper>
-            <Title variant="h500">Choose listing type</Title>
-            <Paragraph variant="t300" secondary>
-              Choose “Not for sale” if you don't want to sell your NFT right away or “Put on marketplace” to sell it on
-              auction, or for a fixed price.
-            </Paragraph>
+            {stepsContent[NFTCurrentStepIdx]}
           </NFTFormWrapper>
         </NFTFormScrolling>
       </NFTWorkspaceFormWrapper>

@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionWarning } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TitleArea } from '@/components/_inputs/TitleArea'
@@ -105,14 +104,4 @@ export const SwitchNFTWrapper = styled.div`
   align-items: center;
   justify-content: start;
   margin-bottom: ${sizes(4)};
-`
-
-export const StyledSvgWarning = styled(SvgActionWarning)`
-  path {
-    fill: ${cVar('colorCoreYellow100')};
-  }
-`
-
-export const YellowText = styled(Text)`
-  color: ${cVar('colorCoreYellow100')};
 `

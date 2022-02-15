@@ -47,13 +47,13 @@ import {
   RadioButtonsContainer,
   RadioCardButtonsContainer,
   StyledMultiFileSelect,
-  StyledSvgWarning,
   StyledTitleArea,
   SwitchFormField,
   SwitchNFTWrapper,
-  YellowText,
 } from './VideoForm.styles'
 import { convertVideoFormDataToFormFields } from './utils'
+
+import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -66,7 +66,7 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
-  setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus | null>>
+  setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> | null>>
   videoFormDataForNFT: VideoFormData | null
   setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
   isIssuedAsNFT: boolean
@@ -245,7 +245,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
     ])
 
     const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
-    const formStatus: VideoWorkspaceFormStatus = useMemo(
+    const formStatus: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> = useMemo(
       () => ({
         hasUnsavedAssets,
         isDirty,

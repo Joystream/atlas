@@ -55,10 +55,10 @@ export type VideoFormData = {
   }>
 }
 
-export type VideoWorkspaceFormStatus = {
+export type VideoWorkspaceFormStatus<T> = {
   isValid: boolean
   isDirty: boolean
   hasUnsavedAssets?: boolean
   triggerFormSubmit: () => void
-  resetForm: UseFormReset<VideoWorkspaceVideoFormFields>
+  resetForm: UseFormReset<T>
 }

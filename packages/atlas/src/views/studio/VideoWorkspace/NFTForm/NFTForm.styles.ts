@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgActionChevronR } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const ScrollableWrapper = styled.div`
@@ -25,6 +24,7 @@ export const NFTPreview = styled.div`
   justify-content: center;
   align-items: center;
   padding: ${sizes(16)} ${sizes(4)};
+
   ${media.md} {
     width: 50%;
     position: fixed;
@@ -38,7 +38,9 @@ export const NFTFormScrolling = styled.div`
   padding: ${sizes(8)};
   flex-grow: 1;
   position: relative;
+
   ${media.md} {
+    height: 100%;
     left: 50%;
     max-width: 50%;
   }
@@ -53,6 +55,7 @@ export const StepperWrapper = styled.div`
   padding-bottom: ${sizes(8)};
   box-shadow: ${cVar('effectDividersBottom')};
   scrollbar-width: none;
+  margin-bottom: ${sizes(8)};
 
   ::-webkit-scrollbar {
     display: none;
@@ -72,13 +75,6 @@ export const StepWrapper = styled.div<{ isLast?: boolean }>`
   grid-template-columns: 1fr ${({ isLast }) => !isLast && 'auto'};
   gap: 16px;
   align-items: center;
-`
-
-export const StyledChevron = styled(SvgActionChevronR)``
-
-export const Title = styled(Text)`
-  margin-top: ${sizes(8)};
-  margin-bottom: ${sizes(4)};
 `
 
 export const Paragraph = styled(Text)`

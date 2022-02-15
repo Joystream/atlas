@@ -18,6 +18,7 @@ export type TooltipProps = {
   hideOnClick?: boolean | 'toggle'
   arrowDisabled?: boolean
   reference?: Element | React.RefObject<Element> | null | undefined
+  footer?: React.ReactNode
   className?: string
 }
 
@@ -32,6 +33,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   offsetX = 0,
   offsetY = 8,
   arrowDisabled,
+  footer,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -53,7 +55,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs} headerText={!!headerText}>
+          <StyledTooltip {...attrs} headerText={!!headerText} footer={!!footer}>
             <TooltipHeader>
               {icon && (
                 <IconWrapper>
@@ -66,7 +68,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
             <TooltipText withIcon={!!icon} variant="t100">
               {text}
             </TooltipText>
-
+            {footer}
             {!arrowDisabled && <Arrow />}
           </StyledTooltip>
         </CSSTransition>
