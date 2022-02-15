@@ -11,8 +11,10 @@ export const ControlsIndicatorWrapper = styled.div`
   display: none;
   width: 100%;
   height: 100%;
+  top: 0;
   position: absolute;
   pointer-events: none;
+  inset: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -28,8 +30,6 @@ export const LoaderWrapper = styled(ControlsIndicatorWrapper)`
 export const StyledLoader = styled(Loader)`
   width: ${sizes(9)};
   @media (hover: hover) {
-    /* align position with indicator */
-    margin-bottom: calc(${INDICATOR_SIZE} / 2);
     width: ${sizes(18)};
   }
 `

@@ -12,6 +12,7 @@ export type PersonalDataStoreState = {
   dismissedMessages: DismissedMessage[]
   currentVolume: number
   cachedVolume: number
+  cinematicView: boolean
 }
 
 const WHITELIST = [
@@ -21,6 +22,7 @@ const WHITELIST = [
   'dismissedMessages',
   'currentVolume',
   'cachedVolume',
+  'cinematicView',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -31,6 +33,7 @@ export type PersonalDataStoreActions = {
   updateDismissedMessages: (id: string, add?: boolean) => void
   setCurrentVolume: (volume: number) => void
   setCachedVolume: (volume: number) => void
+  setCinematicView: (cinematicView: boolean) => void
 }
 
 const initialState: PersonalDataStoreState = {
@@ -40,6 +43,7 @@ const initialState: PersonalDataStoreState = {
   recentSearches: [],
   dismissedMessages: [],
   currentVolume: 1,
+  cinematicView: false,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -96,6 +100,10 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       setCachedVolume: (volume) =>
         set((state) => {
           state.cachedVolume = round(volume, 2)
+        }),
+      setCinematicView: (cinematicView) =>
+        set((state) => {
+          state.cinematicView = cinematicView
         }),
     }),
   },

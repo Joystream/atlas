@@ -1,6 +1,8 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -8,23 +10,72 @@ import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
-export const PlayerContainer = styled.div`
-  width: 100%;
-  height: calc(100vw * 0.5625);
-  ${media.md} {
-    height: calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625);
-    max-height: calc(70vh);
-  }
+type CinematicView = {
+  cinematicView: boolean
+}
+
+const getPlayerGridWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
+  cinematicView &&
+  css`
+    max-width: unset;
+    margin-bottom: ${sizes(8)};
+  `
+
+export const PlayerGridWrapper = styled(LimitedWidthContainer)<CinematicView>`
+  ${getPlayerGridWrapperCinematicStyles};
+
+  padding-bottom: 0;
 `
 
-export const PlayerWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+export const PlayerGridItem = styled(GridItem)`
+  width: 100%;
+`
+
+const getPlayerWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
+  cinematicView
+    ? css`
+        margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+      `
+    : css`
+        display: flex;
+        justify-content: center;
+
+        ${media.md} {
+          padding-top: ${sizes(8)};
+        }
+
+        ${media.xl} {
+          padding-top: ${sizes(16)};
+        }
+      `
+
+export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
+  ${getPlayerWrapperCinematicStyles};
+`
+
+const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
+  cinematicView
+    ? css`
+        height: calc(100vw * 0.5625);
+        ${media.md} {
+          max-height: 70vh;
+        }
+      `
+    : css`
+        ${media.md} {
+          margin-bottom: ${sizes(8)};
+        }
+      `
+
+export const PlayerContainer = styled.div<CinematicView>`
+  ${getPlayerContainerCinematicStyles};
+
+  width: 100%;
+  position: relative;
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
-  height: 100%;
+  aspect-ratio: 16 / 9;
 `
 
 export const TitleContainer = styled.div`

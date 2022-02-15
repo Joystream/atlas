@@ -30,7 +30,8 @@ export const hotkeysHandler = (
   event: KeyboardEvent,
   playerInstance: VideoJsPlayer,
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>,
-  pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void
+  pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void,
+  toggleCinematicView: () => void
 ) => {
   if (!playerInstance) {
     return
@@ -108,6 +109,9 @@ export const hotkeysHandler = (
       } else {
         playerInstance.requestFullscreen()
       }
+      return
+    case 'KeyC':
+      toggleCinematicView()
       return
     default:
       return
