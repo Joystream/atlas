@@ -236,7 +236,6 @@ export const Container = styled.div<ContainerProps>`
     height: 0;
     width: 100%;
     max-width: 100%;
-    position: relative;
 
     video {
       position: absolute;

@@ -56,8 +56,8 @@ export const PlayerWrapper = styled(LayoutGrid)<CinematicView>`
 const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
   cinematicView
     ? css`
+        height: calc(100vw * 0.5625);
         ${media.md} {
-          height: calc((100vw - var(--size-sidenav-width-collapsed)) * 0.5625);
           max-height: 70vh;
         }
       `
