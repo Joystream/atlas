@@ -94,7 +94,23 @@ export const useBasicVideos = (
   variables?: GetBasicVideosQueryVariables,
   opts?: QueryHookOptions<GetBasicVideosQuery, GetBasicVideosQueryVariables>
 ) => {
-  const { data, ...rest } = useGetBasicVideosQuery({ ...opts, variables })
+  const { data, ...rest } = useGetBasicVideosQuery({
+    ...opts,
+    variables: {
+      ...variables,
+      where: {
+        ...variables?.where,
+        isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
+      },
+    },
+  })
   return {
     videos: data?.videos,
     ...rest,
