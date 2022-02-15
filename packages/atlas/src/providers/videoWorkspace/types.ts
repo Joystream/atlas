@@ -1,42 +1,31 @@
-import { ImageInputMetadata, VideoInputMetadata } from '@/components/_inputs/MultiFileSelect'
+import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
+import { VideoAssets, VideoInputMetadata } from '@/joystream-lib'
+import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
-export type VideoWorkspaceAssets = {
+export type VideoWorkspaceVideoAssets = {
   video: {
-    contentId: string | null
-  } & VideoInputMetadata
+    id: string | null
+  } & MediaInputMetadata
   thumbnail: {
-    cropContentId: string | null
-    originalContentId: string | null
+    cropId: string | null
+    originalId: string | null
   } & ImageInputMetadata
 }
 
-export type VideoWorkspaceTab = {
+export type VideoWorkspace = {
   id: string
   isDraft?: boolean
   isNew?: boolean
 }
 
-export type VideoWorkspaceAssetsCache = Record<string, VideoWorkspaceAssets | null>
-export type VideoWorkspaceTabCachedDirtyFormData = Record<string, Partial<VideoWorkspaceFormFields>>
-
 export type ContextValue = {
-  videoTabs: VideoWorkspaceTab[]
-  addVideoTab: (tab?: VideoWorkspaceTab, shouldSelect?: boolean) => void
-  removeVideoTab: (tabIdx: number) => void
-  updateSelectedVideoTab: (tabUpdates: Partial<VideoWorkspaceTab>) => void
-  selectedVideoTabIdx: number
-  setSelectedVideoTabIdx: (tabIdx: number) => void
-  selectedVideoTabCachedDirtyFormData: Partial<VideoWorkspaceFormFields> | undefined
-  setSelectedVideoTabCachedDirtyFormData: (formData: Partial<VideoWorkspaceFormFields>) => void
-  selectedVideoTabCachedAssets: VideoWorkspaceAssets | null
-  setSelectedVideoTabCachedAssets: (assets: VideoWorkspaceAssets | null) => void
-  videoWorkspaceState: VideoWorkspaceState
-  setVideoWorkspaceState: (state: VideoWorkspaceState) => void
-  anyVideoTabsCachedAssets: boolean
-  hasVideoTabAnyCachedAssets: (tabIdx: number) => boolean
+  editedVideoInfo: VideoWorkspace
+  setEditedVideo: (video?: VideoWorkspace) => void
+  isWorkspaceOpen: boolean
+  setIsWorkspaceOpen: (open: boolean) => void
 }
 
-export type VideoWorkspaceFormFields = {
+export type VideoWorkspaceVideoFormFields = {
   title: string
   description: string
   language: string | null
@@ -48,7 +37,24 @@ export type VideoWorkspaceFormFields = {
   isPublic: boolean
   isExplicit: boolean
   publishedBeforeJoystream: Date | null
-  assets: VideoWorkspaceAssets
+  assets: VideoWorkspaceVideoAssets
 }
 
-export type VideoWorkspaceState = 'closed' | 'open' | 'minimized' | 'maximized' | 'unset'
+export type VideoFormData = {
+  metadata: VideoInputMetadata
+  assets: VideoAssets<{
+    hashPromise: Promise<string>
+    blob: Blob
+    url?: string
+    dimensions?: AssetDimensions
+    cropData?: ImageCropData
+  }>
+}
+
+export type VideoWorkspaceFormStatus = {
+  isValid: boolean
+  isDirty: boolean
+  hasUnsavedAssets?: boolean
+  triggerFormSubmit: () => void
+  resetForm: () => void
+}

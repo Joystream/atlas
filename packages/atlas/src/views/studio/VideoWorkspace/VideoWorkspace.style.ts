@@ -1,11 +1,7 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { VideoWorkspaceState } from '@/providers/videoWorkspace'
-import { zIndex } from '@/styles'
-import { cVar } from '@/styles'
-
-import { VIDEO_WORKSPACE_TABS_BAR_HEIGHT } from './VideoWorkspaceTabsBar'
+import { ActionBar } from '@/components/ActionBar'
+import { cVar, zIndex } from '@/styles'
 
 export const DrawerOverlay = styled.div`
   position: fixed;
@@ -30,27 +26,9 @@ export const DrawerOverlay = styled.div`
   }
 `
 
-const containerStyles = (state: VideoWorkspaceState) => {
-  if (state === 'minimized') {
-    return css`
-      transform: translateY(calc(100% - ${VIDEO_WORKSPACE_TABS_BAR_HEIGHT}px));
-      opacity: 1;
-    `
-  }
-  if (state === 'maximized') {
-    return css`
-      transform: translateY(0);
-      opacity: 1;
-    `
-  }
-  return css`
-    transform: translateY(100%);
-    opacity: 0;
-  `
-}
-
-export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
-  ${({ dialogState }) => containerStyles(dialogState)};
+export const Container = styled.div`
+  transform: translateY(100%);
+  opacity: 0;
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);
@@ -78,4 +56,21 @@ export const Container = styled.div<{ dialogState: VideoWorkspaceState }>`
       opacity: 0;
     }
   }
+`
+type ScrollContainerProps = {
+  actionBarHeight?: number
+  isEdit?: boolean
+}
+export const ScrollContainer = styled.div<ScrollContainerProps>`
+  flex: 1;
+  margin-bottom: ${({ actionBarHeight }) => actionBarHeight}px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+`
+
+export const StyledActionBar = styled(ActionBar)`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
 `

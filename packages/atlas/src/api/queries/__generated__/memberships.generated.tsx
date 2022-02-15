@@ -4,23 +4,23 @@ import * as Apollo from '@apollo/client'
 import * as Types from './baseTypes.generated'
 import { BasicChannelFieldsFragmentDoc } from './channels.generated'
 
-const defaultOptions = {}
+const defaultOptions = {} as const
 export type BasicMembershipFieldsFragment = {
   __typename?: 'Membership'
   id: string
   handle: string
-  avatarUri?: Types.Maybe<string>
-  about?: Types.Maybe<string>
+  avatarUri?: string | null
+  about?: string | null
   controllerAccount: string
   createdAt: Date
   channels: Array<{
     __typename?: 'Channel'
     id: string
-    title?: Types.Maybe<string>
+    title?: string | null
     createdAt: Date
     views: number
     follows: number
-    avatarPhoto?: Types.Maybe<{
+    avatarPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
@@ -31,10 +31,10 @@ export type BasicMembershipFieldsFragment = {
       type:
         | { __typename: 'DataObjectTypeChannelAvatar' }
         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
-        | { __typename: 'DataObjectTypeUnknown' }
-    }>
+    } | null
   }>
 }
 
@@ -44,22 +44,22 @@ export type GetMembershipQueryVariables = Types.Exact<{
 
 export type GetMembershipQuery = {
   __typename?: 'Query'
-  membershipByUniqueInput?: Types.Maybe<{
+  membershipByUniqueInput?: {
     __typename?: 'Membership'
     id: string
     handle: string
-    avatarUri?: Types.Maybe<string>
-    about?: Types.Maybe<string>
+    avatarUri?: string | null
+    about?: string | null
     controllerAccount: string
     createdAt: Date
     channels: Array<{
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -70,12 +70,12 @@ export type GetMembershipQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }>
-  }>
+  } | null
 }
 
 export type GetMembershipsQueryVariables = Types.Exact<{
@@ -88,18 +88,18 @@ export type GetMembershipsQuery = {
     __typename?: 'Membership'
     id: string
     handle: string
-    avatarUri?: Types.Maybe<string>
-    about?: Types.Maybe<string>
+    avatarUri?: string | null
+    about?: string | null
     controllerAccount: string
     createdAt: Date
     channels: Array<{
       __typename?: 'Channel'
       id: string
-      title?: Types.Maybe<string>
+      title?: string | null
       createdAt: Date
       views: number
       follows: number
-      avatarPhoto?: Types.Maybe<{
+      avatarPhoto?: {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
@@ -110,10 +110,10 @@ export type GetMembershipsQuery = {
         type:
           | { __typename: 'DataObjectTypeChannelAvatar' }
           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
-          | { __typename: 'DataObjectTypeUnknown' }
-      }>
+      } | null
     }>
   }>
 }

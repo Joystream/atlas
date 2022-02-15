@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
@@ -8,6 +9,7 @@ import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_ov
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { FileType } from '@/types/files'
 import { validateImage } from '@/utils/image'
+import { SentryLogger } from '@/utils/logs'
 import { getVideoMetadata } from '@/utils/video'
 
 import { AnimatedUnderline, MultiFileSelectContainer, StepDivider, StepsContainer } from './MultiFileSelect.styles'
@@ -20,7 +22,7 @@ type InputFile = {
   title?: string
 }
 
-export type VideoInputMetadata = {
+export type MediaInputMetadata = {
   duration?: number
   mediaPixelWidth?: number
   mediaPixelHeight?: number
@@ -28,7 +30,7 @@ export type VideoInputMetadata = {
   size?: number
 }
 
-export type VideoInputFile = VideoInputMetadata & InputFile
+export type VideoInputFile = MediaInputMetadata & InputFile
 
 export type ImageInputMetadata = {
   imageCropData?: ImageCropData
@@ -53,8 +55,6 @@ export type MultiFileSelectProps = {
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
   editMode?: boolean
-  onError?: (error: FileErrorType | null, fileType: FileType) => void
-  error?: string | null
   className?: string
 }
 
@@ -62,30 +62,37 @@ const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
 const VIDEO_SELECT_TITLE = 'Select video file'
 
 export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
-  ({
-    onVideoChange,
-    onThumbnailChange,
-    files,
-    maxImageSize,
-    maxVideoSize,
-    editMode = false,
-    onError,
-    error,
-    className,
-  }) => {
+  ({ onVideoChange, onThumbnailChange, files, maxImageSize, maxVideoSize, editMode = false, className }) => {
     const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
     const [step, setStep] = useState<FileType>('video')
     const [isImgLoading, setIsImgLoading] = useState(false)
     const [isVideoLoading, setIsVideoLoading] = useState(false)
     const [rawImageFile, setRawImageFile] = useState<File | null>(null)
     const thumbnailStepRef = useRef<HTMLDivElement>(null)
+    const [error, setError] = useState<string | null>(null)
+
     const [underlineWidth, setUnderlineWidth] = useState(0)
+    const [underlineLeft, setUnderlineLeft] = useState(0)
+
+    useResizeObserver({
+      ref: thumbnailStepRef,
+      onResize: () => {
+        setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth || 0)
+        setUnderlineLeft(step === 'image' ? thumbnailStepRef?.current?.offsetLeft || 0 : 0)
+      },
+    })
 
     useLayoutEffect(() => {
       if (thumbnailStepRef?.current?.offsetWidth) {
         setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth)
       }
     }, [])
+
+    useLayoutEffect(() => {
+      if (thumbnailStepRef?.current?.offsetLeft) {
+        setUnderlineLeft(step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0)
+      }
+    }, [step])
 
     useEffect(() => {
       if (isImgLoading || isVideoLoading) {
@@ -133,7 +140,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
         }
         onVideoChange(updatedVideo)
       } catch (e) {
-        onError?.('file-invalid-type', step)
+        handleFileSelectError?.('file-invalid-type', step)
       }
     }
 
@@ -165,7 +172,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
           setRawImageFile(file)
           dialogRef.current?.open(file)
         } catch (error) {
-          onError?.('file-invalid-type', step)
+          handleFileSelectError?.('file-invalid-type', step)
         }
       }
     }
@@ -175,6 +182,23 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
         dialogRef.current?.open(files.thumbnail.originalBlob)
       }
     }
+
+    const handleFileSelectError = useCallback((errorCode: FileErrorType | null, fileType: FileType) => {
+      if (!errorCode) {
+        setError(null)
+      } else if (errorCode === 'file-invalid-type') {
+        setError(
+          fileType === 'video'
+            ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
+            : `Preferred 16:9 image ratio`
+        )
+      } else if (errorCode === 'file-too-large') {
+        setError('File too large')
+      } else {
+        SentryLogger.error('Unknown file select error', 'MultiFileSelect', null, { error: { code: errorCode } })
+        setError('Unknown error')
+      }
+    }, [])
 
     const handleDeleteFile = useCallback(
       (fileType: FileType) => {
@@ -201,7 +225,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
       }
 
       const firstError = errors[0]
-      onError?.(firstError.code, step)
+      handleFileSelectError?.(firstError.code, step)
     }
     const stepsActive =
       (editMode && !files.thumbnail?.url) || (!editMode && !(files.thumbnail?.originalBlob && files.video?.blob))
@@ -225,8 +249,6 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
               : `Preferred 16:9 image ratio`
           }
           onDropRejected={handleFileRejections}
-          onError={onError}
-          error={error}
         />
         <StepsContainer>
           <Step
@@ -269,7 +291,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
               <AnimatedUnderline
                 style={{
                   width: underlineWidth,
-                  left: step === 'image' ? thumbnailStepRef?.current?.offsetLeft : 0,
+                  left: underlineLeft,
                 }}
               />
             </CSSTransition>

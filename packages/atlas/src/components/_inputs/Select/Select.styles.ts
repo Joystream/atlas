@@ -22,13 +22,6 @@ export const SelectWrapper = styled.div<SelectWrapperProps>`
       align-items: center;
     `};
 `
-type SelectButtonProps = {
-  isOpen?: boolean
-  filled?: boolean
-  error?: boolean
-  disabled?: boolean
-  size?: SelectSizes
-}
 
 export const SelectLabel = styled.label`
   flex-shrink: 0;
@@ -45,7 +38,13 @@ export const SelectMenuWrapper = styled.div`
   position: relative;
   width: 100%;
 `
-
+type SelectButtonProps = {
+  isOpen?: boolean
+  filled?: boolean
+  error?: boolean
+  disabled?: boolean
+  size?: SelectSizes
+}
 export const SelectButton = styled.button<SelectButtonProps>`
   cursor: pointer;
   width: 100%;
@@ -64,22 +63,21 @@ export const SelectButton = styled.button<SelectButtonProps>`
   font: ${cVar('typographyDesktopT200')} !important;
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')} !important;
   text-transform: ${cVar('typographyDesktopT200TextTransform')} !important;
-
+  min-height: ${sizes(10)};
   ${({ size }) => {
     switch (size) {
       case 'regular':
         return css`
-          min-height: ${sizes(10)};
+          padding: ${sizes(3)} ${sizes(4)} !important;
         `
       case 'small':
         return css`
-          min-height: ${sizes(10)};
           padding: 0 ${sizes(4)} !important;
         `
     }
   }}
 
-  svg {
+  .chevron-bottom {
     transition: all ${transitions.timings.regular} ${transitions.easing};
     transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
     color: ${({ isOpen }) => (isOpen ? oldColors.blue[400] : 'inherit')};
@@ -136,4 +134,18 @@ export const StyledSvgGlyphInfo = styled(SvgAlertsInformative24)`
 `
 export const StyledPill = styled(Pill)`
   margin-left: ${sizes(3)};
+`
+
+export const NodeContainer = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+`
+
+export const ValueContainer = styled.span<{ hasIconLeft: boolean }>`
+  /* padding + icon width */
+  padding-left: ${({ hasIconLeft }) => (hasIconLeft ? sizes(2, true) + 24 : 0)}px;
 `

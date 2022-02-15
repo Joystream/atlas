@@ -6,10 +6,13 @@ import { Instance } from 'tippy.js'
 
 export type PopoverImperativeHandle = {
   hide: () => void
+  show: () => void
 }
 
 export type PopoverProps = {
   trigger: React.ReactNode
+  triggerMode?: string
+  triggerTarget?: Element | Element[] | null | undefined
   placement?: Placement
   offset?: [number, number]
   hideOnClick?: boolean
@@ -21,33 +24,49 @@ export type PopoverProps = {
 
 const EXIT_ANIMATION_DURATION = 100
 
+const onTrigger = (instance: Instance<unknown>) => {
+  const box = instance.popper.firstElementChild
+  requestAnimationFrame(() => {
+    box?.classList.add('popover-enter-active')
+    box?.classList.remove('popover-exit-active')
+  })
+}
+
 const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverProps> = (
-  { hideOnClick = true, onHide, placement = 'bottom-start', children, offset = [0, 8], trigger, className, disabled },
+  {
+    hideOnClick = true,
+    onHide,
+    triggerTarget,
+    triggerMode = 'click',
+    placement = 'bottom-start',
+    children,
+    offset = [0, 8],
+    trigger,
+    className,
+    disabled,
+  },
   ref
 ) => {
   const tippyRef = useRef<Instance>()
 
   useImperativeHandle(ref, () => ({
     hide: () => tippyRef.current?.hide(),
+    show: () => tippyRef.current?.show(),
   }))
 
   return (
     <Tippy
       disabled={disabled}
-      trigger="click"
+      trigger={triggerMode}
       hideOnClick={hideOnClick}
       interactive
       animation
+      triggerTarget={triggerTarget}
       onCreate={(instance) => {
         tippyRef.current = instance
       }}
-      onTrigger={(instance) => {
-        const box = instance.popper.firstElementChild
-        requestAnimationFrame(() => {
-          box?.classList.add('popover-enter-active')
-          box?.classList.remove('popover-exit-active')
-        })
-      }}
+      onTrigger={onTrigger}
+      onShow={onTrigger}
       onHide={(instance) => {
         const box = instance.popper?.firstElementChild
         requestAnimationFrame(() => {

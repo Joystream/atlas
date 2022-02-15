@@ -36,7 +36,6 @@ export type ActionBarProps = {
   isEdit?: boolean
   primaryText?: string
   secondaryText?: string
-  fullWidth?: boolean
   className?: string
   secondaryButton?: ActionDialogButtonProps & { visible?: boolean }
   draftBadge?: ActionDialogDraftBadge

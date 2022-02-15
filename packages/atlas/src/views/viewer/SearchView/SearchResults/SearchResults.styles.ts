@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Select } from '@/components/_inputs/Select'
-import { media, oldColors, sizes, zIndex } from '@/styles'
-import { transitions } from '@/styles'
+import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 export const PaddingWrapper = styled.div<{ filtersOpen: boolean }>`
   position: relative;

@@ -3,8 +3,7 @@ import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { cVar } from '@/styles'
-import { media, square } from '@/styles'
+import { cVar, media, square } from '@/styles'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
 

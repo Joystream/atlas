@@ -13,6 +13,7 @@ export const StyledSvgActionInformative = styled(SvgActionInformative)`
 
 export const IconWrapper = styled.div`
   ${square(32)};
+
   border-radius: 50%;
   display: flex;
   justify-content: center;

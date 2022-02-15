@@ -60,6 +60,7 @@ export const ButtonGroup = styled.div`
     flex-direction: row;
   }
 `
+
 export const SignInButton = styled(Button)`
   margin-bottom: ${sizes(4)};
   ${media.sm} {

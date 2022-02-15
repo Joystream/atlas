@@ -138,7 +138,7 @@ export const sendExtrinsicAndParseEvents = (
       })
   })
 
-export const getInputDataObjectsIds = (assets: VideoInputAssets | ChannelInputAssets) =>
+export const getInputDataObjectsIds = (assets: VideoInputAssets | ChannelInputAssets): string[] =>
   Object.values(assets)
     .filter((asset): asset is Required<DataObjectMetadata> => !!asset.replacedDataObjectId)
     .map((asset) => asset.replacedDataObjectId)

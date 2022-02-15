@@ -21,7 +21,6 @@ import {
 } from '@/components/_overlays/ImageCropModal'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
-import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { ChannelExtrinsicResult, ChannelInputAssets, ChannelInputMetadata } from '@/joystream-lib'
 import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/providers/assets'
@@ -134,8 +133,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const avatarAsset = useRawAsset(watch('avatar').contentId)
   const coverAsset = useRawAsset(watch('cover').contentId)
 
-  const { videoWorkspaceState, anyVideoTabsCachedAssets, setVideoWorkspaceState } = useVideoWorkspace()
-  const { openWarningDialog } = useDisplayDataLostWarning()
+  const { isWorkspaceOpen, setIsWorkspaceOpen } = useVideoWorkspace()
   const { fetchOperators } = useOperatorsContext()
 
   useEffect(() => {
@@ -199,11 +197,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const headTags = useHeadTags(newChannel ? 'New channel' : 'Edit channel')
 
   const handleSubmit = createSubmitHandler(async (data) => {
-    if (anyVideoTabsCachedAssets) {
-      openWarningDialog({ onConfirm: () => submit(data) })
-    } else {
-      await submit(data)
-    }
+    await submit(data)
   })
 
   const handleCoverChange: ImageCropModalProps['onConfirm'] = (
@@ -233,7 +227,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       return
     }
 
-    setVideoWorkspaceState('closed')
+    setIsWorkspaceOpen(false)
 
     const metadata: ChannelInputMetadata = {
       ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
@@ -520,7 +514,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
             />
           </FormField>
           <CSSTransition
-            in={videoWorkspaceState !== 'open'}
+            in={!isWorkspaceOpen}
             timeout={2 * parseInt(transitions.timings.loading)}
             classNames={transitions.names.fade}
             unmountOnExit

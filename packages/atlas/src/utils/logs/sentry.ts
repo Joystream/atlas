@@ -1,11 +1,9 @@
 import * as Sentry from '@sentry/react'
-import { Severity } from '@sentry/react'
+import { Severity, SeverityLevel } from '@sentry/react'
 
 import { ConsoleLogger } from './console'
 
 type LogContexts = Record<string, Record<string, unknown>>
-
-type LogMessageLevel = 'log' | 'warning' | 'error'
 
 class SentryError extends Error {
   name: string
@@ -85,7 +83,7 @@ class _SentryLogger {
     })
   }
 
-  message(message: string, source: string, level: LogMessageLevel, contexts?: LogContexts) {
+  message(message: string, source: string, level: SeverityLevel, contexts?: LogContexts) {
     const logFn = level === 'error' ? ConsoleLogger.error : level === 'warning' ? ConsoleLogger.warn : ConsoleLogger.log
     logFn(message, contexts)
 
@@ -95,7 +93,7 @@ class _SentryLogger {
     }
 
     Sentry.captureMessage(message, {
-      level: Severity.fromString(level),
+      level: level as Severity,
       contexts,
       tags: { source },
       user: { ...this.user, ip_address: '{{auto}}' },

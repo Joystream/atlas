@@ -1,4 +1,4 @@
-import { useVideo } from '@/api/hooks'
+import { useBasicVideo } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
@@ -9,7 +9,7 @@ type UseVideoSharedLogicOpts = {
   onNotFound?: () => void
 }
 export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpts) => {
-  const { video, loading } = useVideo(id ?? '', {
+  const { video, loading } = useBasicVideo(id ?? '', {
     skip: !id || isDraft,
     onCompleted: (data) => !data && onNotFound?.(),
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),

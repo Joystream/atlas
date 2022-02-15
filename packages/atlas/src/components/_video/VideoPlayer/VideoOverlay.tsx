@@ -86,6 +86,7 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
 
 export const LoadingOverlay = styled.div`
   position: absolute;
+  height: 100%;
   z-index: 0;
   top: 0;
   left: 0;

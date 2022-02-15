@@ -149,6 +149,7 @@ StudioLayout.displayName = 'StudioLayout'
 
 const MainContainer = styled.main<{ hasSidebar: boolean }>`
   --size-sidenav-width: ${({ hasSidebar }) => (hasSidebar ? 'var(--size-sidenav-width-collapsed)' : 0)};
+
   position: relative;
   height: 100%;
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;

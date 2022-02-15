@@ -7,8 +7,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar } from '@/styles'
-import { media, oldColors, sizes, square } from '@/styles'
+import { cVar, media, oldColors, sizes, square } from '@/styles'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 

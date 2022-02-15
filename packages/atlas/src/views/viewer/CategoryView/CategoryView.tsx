@@ -14,6 +14,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { VideoCategoryHero } from '@/components/_video/VideoCategoryHero'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { VideoCategoryData, videoCategories } from '@/config/categories'
 import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -22,8 +23,6 @@ import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
 import { CategoriesContainer, TitleContainer } from './CategoryView.styles'
-
-import { VideoCategoryData, videoCategories } from '../DiscoverView/data'
 
 export const CategoryView = () => {
   const mdBreakpointMatch = useMediaMatch('md')
