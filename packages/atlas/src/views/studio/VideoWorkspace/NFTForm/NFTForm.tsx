@@ -1,10 +1,8 @@
-import React, { useMemo, useState } from 'react'
-import useMeasure from 'react-use-measure'
+import React from 'react'
 
 import { NftTile } from '@/components/NftTile'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Paragraph } from '@/components/_inputs/FileSelect/FileSelect.styles'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
   NFTFormScrolling,
@@ -15,21 +13,16 @@ import {
   StepWrapper,
   StepperInnerWrapper,
   StepperWrapper,
-  StyledActionBar,
   StyledChevron,
   Title,
-} from './NFTWorkspaceForm.styles'
+} from './NFTForm.styles'
 
-type NFTWorkspaceFormProps = {
-  onGoBack: () => void
+type NFTFormProps = {
   isEdit?: boolean
-  fee: number
+  NFTCurrentStepIdx: number
 }
 
-export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, isEdit, fee }) => {
-  const [currentStepIdx, setCurrentStepIdx] = useState(0)
-  const [actionBarRef, actionBarBounds] = useMeasure()
-  const mdMatch = useMediaMatch('md')
+export const NFTForm: React.FC<NFTFormProps> = ({ NFTCurrentStepIdx }) => {
   const dummyNfftTileProps = {
     buyNow: false,
     role: 'owner' as const,
@@ -61,51 +54,8 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, is
     },
   ]
 
-  const actionBarPrimaryButton = useMemo(
-    () => ({
-      text: 'Next step',
-      disabled: false,
-      onClick: () => {
-        if (currentStepIdx < 3) {
-          setCurrentStepIdx((current) => current + 1)
-        } else {
-          // handle issuing NFT here
-        }
-      },
-    }),
-    [currentStepIdx]
-  )
-
-  const actionBarSecondaryButton = useMemo(
-    () => ({
-      text: 'Back',
-      visible: true,
-      onClick: () => {
-        if (currentStepIdx > 0) {
-          setCurrentStepIdx((current) => current - 1)
-        } else {
-          onGoBack()
-        }
-      },
-    }),
-    [currentStepIdx, onGoBack]
-  )
-
-  const actionBarDraftBadge = useMemo(
-    () =>
-      !isEdit
-        ? {
-            text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
-            tooltip: {
-              text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
-            },
-          }
-        : undefined,
-    [isEdit, mdMatch]
-  )
-
   return (
-    <ScrollableWrapper actionBarHeight={actionBarBounds.height}>
+    <ScrollableWrapper>
       <NFTWorkspaceFormWrapper>
         <NFTPreview>
           <NftTile title="title" {...dummyNfftTileProps} />
@@ -115,7 +65,7 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, is
             <StepperWrapper>
               <StepperInnerWrapper>
                 {issueNFTSteps.map((step, idx) => {
-                  const stepVariant = getStepVariant(currentStepIdx, idx)
+                  const stepVariant = getStepVariant(NFTCurrentStepIdx, idx)
                   const isLast = idx === issueNFTSteps.length - 1
                   return (
                     <StepWrapper key={idx}>
@@ -134,15 +84,6 @@ export const NFTWorkspaceForm: React.FC<NFTWorkspaceFormProps> = ({ onGoBack, is
           </NFTFormWrapper>
         </NFTFormScrolling>
       </NFTWorkspaceFormWrapper>
-      <StyledActionBar
-        ref={actionBarRef}
-        variant="nft"
-        primaryText={`Fee: ${fee} Joy`}
-        secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-        primaryButton={actionBarPrimaryButton}
-        secondaryButton={actionBarSecondaryButton}
-        draftBadge={actionBarDraftBadge}
-      />
     </ScrollableWrapper>
   )
 }

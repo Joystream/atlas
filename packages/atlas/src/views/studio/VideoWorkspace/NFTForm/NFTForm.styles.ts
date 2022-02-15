@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
 
-import { ActionBar } from '@/components/ActionBar'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
-export const ScrollableWrapper = styled.div<{ actionBarHeight: number }>`
+export const ScrollableWrapper = styled.div`
   height: 100%;
-  margin-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
-  overflow-y: auto;
 `
 
 export const NFTWorkspaceFormWrapper = styled.div`
@@ -86,11 +83,4 @@ export const Title = styled(Text)`
 
 export const Paragraph = styled(Text)`
   margin-bottom: ${sizes(12)};
-`
-
-export const StyledActionBar = styled(ActionBar)`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  left: 0;
 `
