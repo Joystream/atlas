@@ -230,6 +230,11 @@ export const Container = styled.div<ContainerProps>`
   position: relative;
   height: 100%;
   z-index: 0;
+  aspect-ratio: 16/9;
+
+  ${media.md} {
+    aspect-ratio: unset;
+  }
 
   .video-js {
     display: block;
