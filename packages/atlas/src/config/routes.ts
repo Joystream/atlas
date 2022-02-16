@@ -23,6 +23,7 @@ export const relativeRoutes = {
   viewer: {
     index: () => '',
     new: () => 'new',
+    notifications: () => 'notifications',
     discover: () => 'discover',
     popular: () => 'popular',
     category: (id = ':id') => `category/${id}`,

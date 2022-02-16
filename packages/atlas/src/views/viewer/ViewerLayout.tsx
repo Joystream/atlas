@@ -31,6 +31,7 @@ import {
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
+import { Notifications } from './Notifications'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -44,6 +45,8 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
 ]
+
+const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
@@ -86,7 +89,17 @@ export const ViewerLayout: React.FC = () => {
                     <PrivateRoute
                       isAuth={!!activeMemberId}
                       element={<EditMembershipView />}
-                      redirectTo={absoluteRoutes.viewer.index()}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
+                  }
+                />
+                <Route
+                  path={absoluteRoutes.viewer.notifications()}
+                  element={
+                    <PrivateRoute
+                      isAuth={!!activeMemberId}
+                      element={<Notifications />}
+                      redirectTo={ENTRY_POINT_ROUTE}
                     />
                   }
                 />
