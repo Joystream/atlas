@@ -1,0 +1,152 @@
+fragment VideoCategoryFields on VideoCategory {
+  id
+  name
+}
+fragment BasicChannelFields on Channel {
+  id
+  title
+  createdAt
+  views
+  follows
+
+  avatarPhoto {
+    ...StorageDataObjectFields
+  }
+}
+
+fragment AllChannelFields on Channel {
+  ...BasicChannelFields
+  description
+  isPublic
+  isCensored
+  language {
+    id
+    iso
+  }
+  ownerMember {
+    ...BasicMembershipFields
+  }
+  coverPhoto {
+    ...StorageDataObjectFields
+  }
+}
+
+fragment BasicMembershipFields on Membership {
+  id
+  handle
+  metadata {
+    avatar {
+      ... on AvatarObject {
+        avatarObject {
+          ...StorageDataObjectFields
+        }
+      }
+      ... on AvatarUri {
+        avatarUri
+      }
+    }
+    about
+  }
+}
+
+fragment AllMembershipFields on Membership {
+  ...BasicMembershipFields
+  controllerAccount
+  createdAt
+  channels {
+    ...BasicChannelFields
+  }
+}
+
+fragment StorageDataObjectFields on StorageDataObject {
+  id
+  createdAt
+  size
+  isAccepted
+  ipfsHash
+  storageBag {
+    id
+  }
+  type {
+    __typename
+  }
+}
+
+fragment DistributionBucketOperatorField on DistributionBucketOperator {
+  id
+  metadata {
+    nodeEndpoint
+  }
+  status
+}
+fragment VideoMediaMetadataFields on VideoMediaMetadata {
+  id
+  pixelHeight
+  pixelWidth
+}
+
+fragment LicenseFields on License {
+  id
+  code
+  attribution
+  customText
+}
+
+fragment BasicVideoFields on Video {
+  id
+  title
+  views
+  createdAt
+  duration
+  title
+  isPublic
+  media {
+    ...StorageDataObjectFields
+  }
+  channel {
+    id
+    title
+    avatarPhoto {
+      ...StorageDataObjectFields
+    }
+  }
+  thumbnailPhoto {
+    ...StorageDataObjectFields
+  }
+}
+
+fragment VideoFields on Video {
+  id
+  title
+  description
+  category {
+    id
+  }
+  views
+  duration
+  createdAt
+  isPublic
+  isExplicit
+  isFeatured
+  hasMarketing
+  isCensored
+  language {
+    iso
+  }
+  publishedBeforeJoystream
+  mediaMetadata {
+    ...VideoMediaMetadataFields
+  }
+  media {
+    ...StorageDataObjectFields
+  }
+  thumbnailPhoto {
+    ...StorageDataObjectFields
+  }
+  channel {
+    ...BasicChannelFields
+  }
+  license {
+    ...LicenseFields
+  }
+}
