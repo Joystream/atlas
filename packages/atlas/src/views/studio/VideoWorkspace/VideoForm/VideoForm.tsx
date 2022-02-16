@@ -67,14 +67,14 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
   setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus | null>>
-  temporaryFormData: VideoWorkspaceVideoFormFields | null
-  setTemporaryFormData: Dispatch<SetStateAction<VideoWorkspaceVideoFormFields | null>>
+  videoFormDataForNFT: VideoWorkspaceVideoFormFields | null
+  setVideoFormDataForNFT: Dispatch<SetStateAction<VideoWorkspaceVideoFormFields | null>>
   setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
   isIssuedAsNFT: boolean
 }
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(
-  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT, temporaryFormData, setTemporaryFormData }) => {
+  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT, videoFormDataForNFT, setVideoFormDataForNFT }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
@@ -126,11 +126,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       }
       setCachedEditedVideoId(editedVideoInfo.id)
 
-      if (temporaryFormData && !isEqual(temporaryFormData, tabData)) {
-        // this is a hack, this will force marking the form dirty
-        setValue('title', temporaryFormData.title, { shouldDirty: true })
-        reset(temporaryFormData, { keepDirty: true })
-        setTemporaryFormData(null)
+      if (videoFormDataForNFT && !isEqual(videoFormDataForNFT, tabData)) {
+        // Small hack which will force marking the form as dirty
+        // We're basically set one value with setValue() to make this dirty and then rest of the form with the reset()
+        setValue('title', videoFormDataForNFT.title, { shouldDirty: true })
+        reset(videoFormDataForNFT, { keepDirty: true })
+        setVideoFormDataForNFT(null)
       } else {
         reset(tabData)
       }
@@ -141,8 +142,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       editedVideoInfo.id,
       cachedEditedVideoId,
       setValue,
-      temporaryFormData,
-      setTemporaryFormData,
+      videoFormDataForNFT,
+      setVideoFormDataForNFT,
     ])
 
     const handleSubmit = useCallback(() => {
