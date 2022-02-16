@@ -1,4 +1,5 @@
 import { formatISO } from 'date-fns'
+import { isEqual } from 'lodash-es'
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -66,12 +67,14 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
   setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus | null>>
+  temporaryFormData: VideoWorkspaceVideoFormFields | null
+  setTemporaryFormData: Dispatch<SetStateAction<VideoWorkspaceVideoFormFields | null>>
   setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
   isIssuedAsNFT: boolean
 }
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(
-  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT }) => {
+  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT, temporaryFormData, setTemporaryFormData }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
@@ -121,10 +124,26 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       if (editedVideoInfo.id === cachedEditedVideoId || !tabData || tabDataLoading) {
         return
       }
-
       setCachedEditedVideoId(editedVideoInfo.id)
-      reset(tabData)
-    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId])
+
+      if (temporaryFormData && !isEqual(temporaryFormData, tabData)) {
+        // this is a hack, this will force marking the form dirty
+        setValue('title', temporaryFormData.title, { shouldDirty: true })
+        reset(temporaryFormData, { keepDirty: true })
+        setTemporaryFormData(null)
+      } else {
+        reset(tabData)
+      }
+    }, [
+      tabData,
+      tabDataLoading,
+      reset,
+      editedVideoInfo.id,
+      cachedEditedVideoId,
+      setValue,
+      temporaryFormData,
+      setTemporaryFormData,
+    ])
 
     const handleSubmit = useCallback(() => {
       flushDraftSave()
@@ -234,10 +253,11 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
         hasUnsavedAssets,
         isDirty,
         isValid: isFormValid,
+        formValues: getValues(),
         resetForm: reset,
         triggerFormSubmit: handleSubmit,
       }),
-      [handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
+      [getValues, handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
     )
 
     // sent updates on form status to VideoWorkspace
