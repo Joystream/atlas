@@ -141,15 +141,15 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
 
       const license = {
         code: data.licenseCode ?? undefined,
-        attribution: data.licenseAttribution ?? undefined,
-        customText: data.licenseCustomText ?? undefined,
+        attribution: data.licenseAttribution?.trim() ?? undefined,
+        customText: data.licenseCustomText?.trim() ?? undefined,
       }
       const anyLicenseFieldsDirty =
         dirtyFields.licenseCode || dirtyFields.licenseAttribution || dirtyFields.licenseCustomText
 
       const metadata: VideoInputMetadata = {
-        ...(isNew || dirtyFields.title ? { title: data.title } : {}),
-        ...(isNew || dirtyFields.description ? { description: data.description } : {}),
+        ...(isNew || dirtyFields.title ? { title: data.title.trim() } : {}),
+        ...(isNew || dirtyFields.description ? { description: data.description.trim() } : {}),
         ...(isNew || dirtyFields.category ? { category: Number(data.category) } : {}),
         ...(isNew || dirtyFields.isPublic ? { isPublic: data.isPublic } : {}),
         ...((isNew || dirtyFields.hasMarketing) && data.hasMarketing != null
