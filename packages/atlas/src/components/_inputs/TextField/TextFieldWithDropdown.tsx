@@ -1,5 +1,5 @@
 import { useCombobox } from 'downshift'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { SvgActionLoader } from '@/components/_icons'
@@ -23,7 +23,11 @@ export const TextFieldWithDropdown: React.FC<TextFieldWithDropdownProps> = ({
   onChange,
   resetOnSelect,
 }) => {
-  const [inputItems, setInputItems] = useState(items)
+  const [inputItems, setInputItems] = useState<ListItemProps[]>([])
+
+  useEffect(() => {
+    setInputItems(items)
+  }, [items])
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, reset, getItemProps, getComboboxProps } = useCombobox({
     items: inputItems || [],

@@ -14,16 +14,25 @@ type Member = {
 
 export const WhitelistingMembers = () => {
   const [selectedMembers, setSelectedMembers] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<Member[]>([])
   const client = useApolloClient()
+
   const debouncedHandleUniqueValidation = useRef(
     debouncePromise(async (val?: string) => {
+      if (!val) {
+        setMembers([])
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(true)
       const {
         data: { memberships },
       } = await client.query<GetMembershipsQuery, GetMembershipsQueryVariables>({
         query: GetMembershipsDocument,
         variables: { where: { handle_startsWith: val } },
       })
+      setIsLoading(false)
       if (memberships.length) {
         setMembers(memberships.map((member) => ({ handle: member.handle, avatarUri: member.avatarUri, id: member.id })))
       }
@@ -37,6 +46,7 @@ export const WhitelistingMembers = () => {
           nodeStart: <Avatar assetUrl={member.avatarUri} />,
         }))}
         resetOnSelect
+        loading={isLoading}
         onSelect={(item) => item && setSelectedMembers([item, ...selectedMembers])}
         onChange={debouncedHandleUniqueValidation.current}
       />
