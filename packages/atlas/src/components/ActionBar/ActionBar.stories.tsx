@@ -14,7 +14,6 @@ export default {
     primaryText: 'Fee: 0.2 Joy',
     secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
     detailsText: 'Video details saved as draft (2 min ago)',
-    fee: 1,
   } as ActionBarProps,
   argTypes: {
     variant: { table: { disable: true } },
