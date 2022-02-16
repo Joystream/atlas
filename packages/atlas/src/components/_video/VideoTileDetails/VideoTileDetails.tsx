@@ -7,7 +7,7 @@ import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { cVar, transitions } from '@/styles'
-import { formatVideoViewsAndDate } from '@/utils/video'
+import { formatVideoDate, formatVideoViews } from '@/utils/video'
 
 import {
   ChannelTitle,
@@ -18,6 +18,7 @@ import {
   VideoInfoContainer,
   VideoMetaContainer,
   VideoTitle,
+  Views,
 } from './VideoTileDetails.styles'
 
 export type VideoDetailsVariant = 'withoutChannel' | 'withChannelName' | 'withChannelNameAndAvatar'
@@ -98,7 +99,13 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                 <SkeletonLoader height={variant === 'withoutChannel' ? 20 : 16} width="100%" />
               ) : (
                 <Text variant="t200" secondary as="p">
-                  {videoSubTitle ? videoSubTitle : createdAt && formatVideoViewsAndDate(views || 0, createdAt)}
+                  {videoSubTitle
+                    ? videoSubTitle
+                    : createdAt && (
+                        <>
+                          {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
+                        </>
+                      )}
                 </Text>
               )}
             </VideoMetaContainer>

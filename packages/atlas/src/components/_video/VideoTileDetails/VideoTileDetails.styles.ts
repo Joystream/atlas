@@ -60,3 +60,7 @@ export const VideoMetaContainer = styled.div`
   margin-top: ${sizes(2)};
   width: 100%;
 `
+
+export const Views = styled.span`
+  white-space: nowrap;
+`
