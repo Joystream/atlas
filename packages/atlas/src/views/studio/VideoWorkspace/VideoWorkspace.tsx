@@ -110,7 +110,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         <Container role="dialog">
           <DrawerHeader
             title={tabData?.title || 'New video'}
-            label={editedVideoInfo.isNew || editedVideoInfo.isDraft ? 'New' : 'Edit'}
+            label={isNFTFormOpen ? 'NFT' : editedVideoInfo.isNew || editedVideoInfo.isDraft ? 'New' : 'Edit'}
             onCloseClick={closeVideoWorkspace}
           />
           <ScrollContainer actionBarHeight={actionBarHeight}>
