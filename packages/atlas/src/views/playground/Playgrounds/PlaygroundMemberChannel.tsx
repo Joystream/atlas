@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useMemberships } from '@/api/hooks'
-import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
+import { AllMembershipFieldsFragment, BasicChannelFieldsFragment } from '@/api/queries'
 import { Button } from '@/components/_buttons/Button'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { useUser } from '@/providers/user'
@@ -10,7 +10,7 @@ const account = 'POLKADOT_ACCOUNT'
 
 export const PlaygroundMemberChannel = () => {
   const [selectedChannel, setSelectedChannel] = useState<BasicChannelFieldsFragment>()
-  const [selectedMember, setSelectedMember] = useState<BasicMembershipFieldsFragment>()
+  const [selectedMember, setSelectedMember] = useState<AllMembershipFieldsFragment>()
   const [activeUserString, setActiveUserString] = useState('')
 
   const { activeAccountId, activeMemberId, activeChannelId, setActiveUser, resetActiveUser } = useUser()

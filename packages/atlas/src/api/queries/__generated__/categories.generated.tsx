@@ -2,10 +2,9 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
+import { VideoCategoryFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: string | null }
-
 export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetVideoCategoriesQuery = {
@@ -13,12 +12,6 @@ export type GetVideoCategoriesQuery = {
   videoCategories: Array<{ __typename?: 'VideoCategory'; id: string; name?: string | null }>
 }
 
-export const VideoCategoryFieldsFragmentDoc = gql`
-  fragment VideoCategoryFields on VideoCategory {
-    id
-    name
-  }
-`
 export const GetVideoCategoriesDocument = gql`
   query GetVideoCategories {
     videoCategories {

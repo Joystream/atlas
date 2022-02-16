@@ -1,5 +1,8 @@
 import React, { Fragment, useRef, useState } from 'react'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { useMemberAvatar } from '@/providers/assets'
+
 import { AvatarProps } from './Avatar'
 import {
   AvatarBackground,
@@ -12,20 +15,29 @@ import {
 
 import { Tooltip } from '../Tooltip'
 
-export type AvatarGroupSingleAvatar = Omit<AvatarProps, 'size' | 'className'> & {
+type SharedAvatarGroupAvatarProps = {
   tooltipText?: string
   children?: React.ReactNode
-}
+} & Pick<AvatarProps, 'onClick' | 'withoutOutline' | 'loading'>
+
+export type AvatarGroupUrlAvatar = {
+  __typename?: 'AvatarGroupUrlAvatar'
+  url?: string | null
+} & SharedAvatarGroupAvatarProps
+
+type AvatarGroupMemberAvatar = BasicMembershipFieldsFragment & SharedAvatarGroupAvatarProps
+
+export type AvatarGroupAvatar = AvatarGroupUrlAvatar | AvatarGroupMemberAvatar
 
 export type AvatarGroupProps = {
-  avatars: AvatarGroupSingleAvatar[]
+  avatars: AvatarGroupAvatar[]
   size?: AvatarGroupSize
   avatarStrokeColor?: string
   clickable?: boolean
   reverse?: boolean
   loading?: boolean
   className?: string
-  shoulHighlightEveryAvatar?: boolean
+  shouldHighlightEveryAvatar?: boolean
 }
 
 const getSizeofAvatar = (size: AvatarGroupSize) => {
@@ -47,13 +59,13 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   clickable = true,
   loading,
   reverse,
-  shoulHighlightEveryAvatar,
+  shouldHighlightEveryAvatar,
   className,
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
   return (
-    <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shoulHighlightEveryAvatar}>
+    <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shouldHighlightEveryAvatar}>
       {avatars.map((avatarProps, idx) => (
         <Fragment key={idx}>
           <AvatarWrapper
@@ -66,7 +78,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
             avatarStrokeColor={avatarStrokeColor}
           >
             <AvatarBackground avatarStrokeColor={avatarStrokeColor} />
-            <StyledAvatar {...avatarProps} loading={loading} size={getSizeofAvatar(size)} />
+            <SingleAvatar avatar={avatarProps} loading={loading} size={getSizeofAvatar(size)} />
             <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
           </AvatarWrapper>
           <Tooltip
@@ -79,5 +91,35 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
         </Fragment>
       ))}
     </AvatarGroupContainer>
+  )
+}
+
+type SingleAvatarProps = {
+  avatar: AvatarGroupAvatar
+  loading?: boolean
+  size: AvatarProps['size']
+}
+const SingleAvatar: React.FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, size }) => {
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(
+    avatar.__typename === 'Membership' ? avatar : null
+  )
+
+  let loading: boolean
+  let url: string | null | undefined
+  if (avatar.__typename === 'Membership') {
+    url = memberAvatarUrl
+    loading = memberAvatarLoading || avatar.loading || loadingProp || false
+  } else {
+    url = (avatar as AvatarGroupUrlAvatar).url
+    loading = avatar.loading || loadingProp || false
+  }
+  return (
+    <StyledAvatar
+      loading={loading}
+      assetUrl={url}
+      size={size}
+      withoutOutline={avatar.withoutOutline}
+      onClick={avatar.onClick}
+    />
   )
 }

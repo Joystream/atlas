@@ -2,8 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllChannelFieldsFragmentDoc } from './channels.generated'
-import { VideoFieldsFragmentDoc } from './videos.generated'
+import { AllChannelFieldsFragmentDoc, BasicVideoFieldsFragmentDoc, VideoFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type SearchQueryVariables = Types.Exact<{
@@ -29,7 +28,36 @@ export type SearchQuery = {
           views: number
           follows: number
           language?: { __typename?: 'Language'; id: string; iso: string } | null
-          ownerMember?: { __typename?: 'Membership'; id: string; handle: string; avatarUri?: string | null } | null
+          ownerMember?: {
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: number
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          } | null
           coverPhoto?: {
             __typename?: 'StorageDataObject'
             id: string

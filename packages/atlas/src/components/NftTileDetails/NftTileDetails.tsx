@@ -205,8 +205,8 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           }
           loading={loading}
           avatars={[
-            { assetUrl: creator.assetUrl, tooltipText: creator.name },
-            { assetUrl: owner.assetUrl, tooltipText: owner.name },
+            { url: creator.assetUrl, tooltipText: creator.name },
+            { url: owner.assetUrl, tooltipText: owner.name },
           ]}
         />
         <ContextMenu
