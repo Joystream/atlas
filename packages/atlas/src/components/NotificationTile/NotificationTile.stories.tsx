@@ -6,7 +6,11 @@ import { NotificationProps, NotificationTile } from '.'
 export default {
   title: 'Other/NotificationTile',
   component: NotificationTile,
-  argTypes: {},
+  argTypes: {
+    variant: {
+      control: { type: 'radio', options: ['default', 'compact'] },
+    },
+  },
   args: {
     avatarUrl: 'https://placedog.net/400/400?random&1',
     videoTitle: 'Lorem ipsum',
@@ -15,6 +19,7 @@ export default {
     date: 'Nov 13',
     read: false,
     loading: false,
+    variant: 'default',
   },
 } as Meta
 

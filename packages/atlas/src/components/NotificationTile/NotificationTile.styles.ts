@@ -3,21 +3,33 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
+type Variant = 'default' | 'compact'
+
 type NotificationWrapperProps = {
   read?: boolean
   selected?: boolean
   loading?: boolean
+  variant: Variant
 }
 
-const getNotificationWrapperStyles = ({ read, selected, loading }: NotificationWrapperProps) => {
+const getNotificationWrapperStyles = ({ read, selected, loading, variant }: NotificationWrapperProps) => {
   if (selected) {
     return css`
       background-color: ${cVar('colorBackgroundElevated')};
     `
   }
   if (!read) {
+    if (variant === 'default') {
+      return css`
+        background-color: ${cVar('colorBackground')};
+
+        :hover {
+          background-color: ${cVar('colorBackgroundStrong')};
+        }
+      `
+    }
     return css`
-      background-color: ${cVar('colorBackground')};
+      background-color: ${cVar('colorBackgroundMutedAlpha')};
 
       :hover {
         background-color: ${cVar('colorBackgroundStrong')};
@@ -27,8 +39,17 @@ const getNotificationWrapperStyles = ({ read, selected, loading }: NotificationW
   if (loading) {
     return
   }
+  if (variant === 'default') {
+    return css`
+      background-color: ${cVar('colorBackgroundMuted')};
+
+      :hover {
+        background-color: ${cVar('colorBackground')};
+      }
+    `
+  }
   return css`
-    background-color: ${cVar('colorBackgroundMuted')};
+    background-color: transparent;
 
     :hover {
       background-color: ${cVar('colorBackground')};
@@ -36,7 +57,7 @@ const getNotificationWrapperStyles = ({ read, selected, loading }: NotificationW
   `
 }
 
-const getReadNotificationVariant = ({ read }: NotificationWrapperProps) =>
+const getReadNotificationVariant = ({ read, variant }: NotificationWrapperProps) =>
   !read &&
   css`
     ::after {
@@ -45,7 +66,7 @@ const getReadNotificationVariant = ({ read }: NotificationWrapperProps) =>
       position: absolute;
       left: 0;
       top: 0;
-      width: 4px;
+      width: ${variant === 'default' ? 4 : 2}px;
       height: 100%;
       background-color: ${cVar('colorBackgroundPrimary')};
     }
@@ -58,7 +79,8 @@ export const Wrapper = styled.div<NotificationWrapperProps>`
   display: flex;
   align-items: center;
   position: relative;
-  padding: ${sizes(4)} ${sizes(5)};
+  padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(2)} ${sizes(4)}`)};
+  padding-left: ${({ variant }) => variant === 'default' && sizes(5)};
   transition: background-color ${cVar('animationTransitionFast')};
 `
 
@@ -66,8 +88,14 @@ export const Title = styled.div`
   margin-bottom: ${sizes(0.5)};
 `
 
-export const AvatarWrapper = styled.div`
+type AvatarWrapperProps = {
+  tileVariant: Variant
+}
+
+export const AvatarWrapper = styled.div<AvatarWrapperProps>`
   margin: 0 ${sizes(4)};
+  margin-left: ${({ tileVariant }) => sizes(tileVariant === 'default' ? 4 : 0)};
+  margin-right: ${({ tileVariant }) => sizes(tileVariant === 'default' ? 4 : 3)};
 `
 
 export const Content = styled.div`

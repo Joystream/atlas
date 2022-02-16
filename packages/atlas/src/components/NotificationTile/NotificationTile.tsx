@@ -18,6 +18,7 @@ export type NotificationProps = {
   onSelect?: (id: string) => void
   read?: boolean
   selected?: boolean
+  variant?: 'default' | 'compact'
   className?: string
 }
 
@@ -32,26 +33,32 @@ export const NotificationTile: React.FC<NotificationProps> = ({
   onSelect,
   read,
   selected = false,
+  variant = 'default',
   className,
 }) => {
+  const titleVariant = variant === 'default' ? 'h300' : 't200-strong'
   return (
-    <Wrapper read={read} selected={selected} loading={loading} className={className}>
-      <Checkbox onChange={() => onSelect?.(id)} disabled={loading} value={selected} />
-      <AvatarWrapper>
-        {!loading ? <Avatar size="small" assetUrl={avatarUrl} /> : <SkeletonLoader width={40} height={40} rounded />}
+    <Wrapper read={read} selected={selected} loading={loading} className={className} variant={variant}>
+      {variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} disabled={loading} value={selected} />}
+      <AvatarWrapper tileVariant={variant}>
+        {!loading ? (
+          <Avatar size={variant === 'default' ? 'small' : 'default'} assetUrl={avatarUrl} />
+        ) : (
+          <SkeletonLoader width={40} height={40} rounded />
+        )}
       </AvatarWrapper>
       <Content>
         {!loading ? (
           <>
             <Title>
-              <Text as="span" variant="h300" secondary>
+              <Text as="span" variant={titleVariant} secondary>
                 {`${author} `}
               </Text>
-              <Text as="span" variant="h300">
+              <Text as="span" variant={titleVariant}>
                 {text}
               </Text>
             </Title>
-            <Text variant="t200" secondary>
+            <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
               {date} • {videoTitle}
             </Text>
           </>
