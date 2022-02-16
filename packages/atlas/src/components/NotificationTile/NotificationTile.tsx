@@ -37,6 +37,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
   className,
 }) => {
   const titleVariant = variant === 'default' ? 'h300' : 't200-strong'
+  const avatarSkeletonSize = variant === 'default' ? 40 : 32
   return (
     <Wrapper read={read} selected={selected} loading={loading} className={className} variant={variant}>
       {variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} disabled={loading} value={selected} />}
@@ -44,7 +45,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         {!loading ? (
           <Avatar size={variant === 'default' ? 'small' : 'default'} assetUrl={avatarUrl} />
         ) : (
-          <SkeletonLoader width={40} height={40} rounded />
+          <SkeletonLoader width={avatarSkeletonSize} height={avatarSkeletonSize} rounded />
         )}
       </AvatarWrapper>
       <Content>
@@ -64,8 +65,8 @@ export const NotificationTile: React.FC<NotificationProps> = ({
           </>
         ) : (
           <>
-            <SkeletonLoader width="40%" height={24} bottomSpace={2} />
-            <SkeletonLoader width="50%" height={20} />
+            <SkeletonLoader width="40%" height={variant === 'default' ? 24 : 20} bottomSpace={2} />
+            <SkeletonLoader width="50%" height={variant === 'default' ? 20 : 19} />
           </>
         )}
       </Content>
