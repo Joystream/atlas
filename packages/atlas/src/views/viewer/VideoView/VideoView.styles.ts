@@ -62,6 +62,8 @@ const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
         }
       `
     : css`
+        padding-top: 56.3%;
+
         ${media.md} {
           margin-bottom: ${sizes(8)};
         }
@@ -75,7 +77,8 @@ export const PlayerContainer = styled.div<CinematicView>`
 `
 
 export const PlayerSkeletonLoader = styled(SkeletonLoader)`
-  aspect-ratio: 16 / 9;
+  position: absolute;
+  top: 0;
 `
 
 export const TitleContainer = styled.div`
