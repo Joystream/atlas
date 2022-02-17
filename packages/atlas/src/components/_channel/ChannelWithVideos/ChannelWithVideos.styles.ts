@@ -25,10 +25,6 @@ export const InfoWrapper = styled.div`
   align-items: start;
 `
 
-export const ChannelTitle = styled(Text)`
-  max-width: 200px;
-`
-
 export const ChannelFollows = styled(Text)`
   margin-top: ${sizes(1)};
   max-width: 200px;
