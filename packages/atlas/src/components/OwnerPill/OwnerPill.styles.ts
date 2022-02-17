@@ -18,7 +18,6 @@ export const DesaturedText = styled(Text)`
   opacity: 0.75;
   margin-left: ${sizes(1.5)};
 `
-
 export const MembershipHandle = styled(Text)`
   display: block;
   text-overflow: ellipsis;

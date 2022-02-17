@@ -58,7 +58,6 @@ export const TitleContainer = styled.div`
 
 export const Title = styled(Text)`
   margin-bottom: 0;
-  max-width: 600px;
 `
 
 export const SortContainer = styled.div`
@@ -157,7 +156,6 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   ${media.sm} {
     grid-area: initial;
     margin: 0;
-    max-width: 200px;
   }
 `
 
