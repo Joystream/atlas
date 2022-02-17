@@ -1,6 +1,7 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
+import { throttle } from 'lodash-es'
+import React, { useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -47,6 +48,31 @@ export const EmbeddedView: React.FC = () => {
     })
   }, [addVideoView, videoId, channelId, categoryId])
 
+  const handleVideoEnded = () => {
+    if (window.top) {
+      window.top.postMessage('atlas_video_ended', '*')
+    }
+  }
+
+  const throttledSendTimeUpdate = useRef(
+    throttle((time: number) => {
+      if (window.top) {
+        window.top.postMessage(`atlas_video_progress:${time}`, '*')
+      }
+    }, 1000)
+  )
+
+  const handleTimeUpdated = (time: number) => {
+    if (!video?.duration) {
+      return
+    }
+
+    const progress = time / video.duration
+    // make sure progress is in 0..1 range
+    const normalizedProgress = Math.min(Math.max(0, progress), 1)
+    throttledSendTimeUpdate.current(normalizedProgress)
+  }
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -79,6 +105,8 @@ export const EmbeddedView: React.FC = () => {
             src={mediaUrl}
             fill
             startTime={startTimestamp}
+            onEnd={handleVideoEnded}
+            onTimeUpdated={handleTimeUpdated}
             isEmbedded
           />
         ) : (
