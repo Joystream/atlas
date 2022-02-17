@@ -62,7 +62,7 @@ const getPlayerContainerCinematicStyles = ({ cinematicView }: CinematicView) =>
         }
       `
     : css`
-        padding-top: 56.3%;
+        padding-top: 56.25%;
 
         ${media.md} {
           margin-bottom: ${sizes(8)};
