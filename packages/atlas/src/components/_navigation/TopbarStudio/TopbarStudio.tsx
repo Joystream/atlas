@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
+import { NotificationsButton } from '@/components/_buttons/NotificationsButton'
 import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -79,6 +80,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
                 {mdMatch && 'Upload video'}
               </Button>
             </CSSTransition>
+            <NotificationsButton />
             <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
         )}

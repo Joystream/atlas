@@ -4,7 +4,8 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionAddVideo, SvgActionMember } from '@/components/_icons'
+import { NotificationsButton } from '@/components/_buttons/NotificationsButton'
+import { SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -108,14 +109,6 @@ export const TopbarViewer: React.FC = () => {
               onClick={handleFocus}
             />
           </CSSTransition>
-          {!mdMatch && isLoggedIn && !searchOpen && topbarButtonLoaded && (
-            <StyledAvatar
-              size="small"
-              assetUrl={memberAvatarUrl}
-              loading={memberAvatarLoading}
-              onClick={handleDrawerToggle}
-            />
-          )}
         </SearchbarContainer>
         <SwitchTransition>
           <CSSTransition
@@ -125,37 +118,38 @@ export const TopbarViewer: React.FC = () => {
             timeout={parseInt(cVar('animationTimingFast', true))}
           >
             <ButtonWrapper>
-              {mdMatch &&
-                (topbarButtonLoaded ? (
-                  isLoggedIn ? (
-                    <SignedButtonsWrapper>
-                      <Button
-                        icon={<SvgActionAddVideo />}
-                        iconPlacement="left"
-                        size="medium"
-                        to={absoluteRoutes.studio.index()}
-                        variant="secondary"
-                      >
-                        Go to Studio
-                      </Button>
+              {topbarButtonLoaded ? (
+                isLoggedIn ? (
+                  <SignedButtonsWrapper>
+                    <NotificationsButton />
+                    {!mdMatch && !searchOpen && (
+                      <StyledAvatar
+                        size="small"
+                        assetUrl={memberAvatarUrl}
+                        loading={memberAvatarLoading}
+                        onClick={handleDrawerToggle}
+                      />
+                    )}
+                    {mdMatch && (
                       <StyledAvatar
                         size="small"
                         assetUrl={memberAvatarUrl}
                         onClick={handleDrawerToggle}
                         loading={memberAvatarLoading}
                       />
-                    </SignedButtonsWrapper>
-                  ) : (
-                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
-                      Sign In
-                    </Button>
-                  )
-                ) : (
-                  <SignedButtonsWrapper>
-                    <StyledButtonSkeletonLoader width={140} height={40} />
-                    <SkeletonLoader rounded width={40} height={40} />
+                    )}
                   </SignedButtonsWrapper>
-                ))}
+                ) : (
+                  <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
+                    Sign In
+                  </Button>
+                )
+              ) : (
+                <SignedButtonsWrapper>
+                  <StyledButtonSkeletonLoader width={140} height={40} />
+                  <SkeletonLoader rounded width={40} height={40} />
+                </SignedButtonsWrapper>
+              )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
                 <StyledIconButton onClick={signIn}>Sign In</StyledIconButton>
               )}
