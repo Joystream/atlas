@@ -7,7 +7,7 @@ import { cVar, media, sizes } from '@/styles'
 
 export const Container = styled.div<{ fullWidth?: boolean }>`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
-  background-color: ${cVar('colorBackground')};
+  background-color: ${cVar('colorBackgroundStrong')};
 `
 
 export const Title = styled(Text)`

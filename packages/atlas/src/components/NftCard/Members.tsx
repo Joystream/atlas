@@ -40,7 +40,7 @@ export const Members: React.FC<MembersProps> = ({ caption, members }) => {
           <StyledAvatarGroup
             avatars={avatars.slice(0, 3)}
             size="small"
-            avatarStrokeColor={cVar('colorBackground', true)}
+            avatarStrokeColor={cVar('colorBackgroundStrong', true)}
           />
           <Text variant="t100" secondary>
             {avatars.length > 3 && `+${avatars.length - 3}`}

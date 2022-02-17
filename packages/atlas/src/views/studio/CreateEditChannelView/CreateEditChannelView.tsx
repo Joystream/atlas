@@ -230,8 +230,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     setIsWorkspaceOpen(false)
 
     const metadata: ChannelInputMetadata = {
-      ...(dirtyFields.title ? { title: data.title ?? '' } : {}),
-      ...(dirtyFields.description ? { description: data.description ?? '' } : {}),
+      ...(dirtyFields.title ? { title: data.title?.trim() ?? '' } : {}),
+      ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
       ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
     }

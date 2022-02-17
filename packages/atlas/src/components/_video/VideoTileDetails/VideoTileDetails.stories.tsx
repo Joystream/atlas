@@ -31,6 +31,8 @@ export default {
     ],
   },
   argTypes: {
+    onVideoTitleClick: { table: { disable: true } },
+    onChannelAvatarClick: { table: { disable: true } },
     kebabMenuItems: { table: { disable: true } },
     video: { table: { disable: true } },
     variant: {
@@ -39,6 +41,8 @@ export default {
         type: 'radio',
       },
     },
+    videoHref: { type: 'string' },
+    videoSubTitle: { type: 'string' },
     size: {
       options: ['medium', 'small'],
       control: {
