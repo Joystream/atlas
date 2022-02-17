@@ -1,8 +1,8 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionJoyToken } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
@@ -10,6 +10,7 @@ type SizeProps = { 'data-size': 'medium' | 'small' }
 
 export const Container = styled.div`
   background-color: ${cVar('colorCoreNeutral900')};
+  min-width: 0;
 `
 
 export const Content = styled.div<SizeProps>`
@@ -17,11 +18,12 @@ export const Content = styled.div<SizeProps>`
   gap: ${sizes(6)};
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
-  padding: ${sizes(6)};
   box-shadow: inset 2px 0 0 ${cVar('colorCoreBlue500')}, ${cVar('effectDividersTop')}, ${cVar('effectDividersBottom')};
+  padding: ${sizes(6)};
 
   &[data-size='small'] {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    padding: ${sizes(4)};
     gap: ${sizes(4)};
   }
 `
@@ -36,6 +38,7 @@ export const NFTOwnerContainer = styled.div<SizeProps>`
   padding: ${sizes(6)};
 
   &[data-size='small'] {
+    padding: ${sizes(4)};
     gap: ${sizes(1)} ${sizes(4)};
   }
 `
@@ -48,8 +51,18 @@ export const OwnerLabel = styled(Text)`
   grid-area: owner-label;
 `
 
-export const OwnerHandle = styled(Text)`
+export const OwnerHandle = styled(Button)`
   grid-area: owner;
+  justify-content: start;
+`
+
+export const ButtonGrid = styled.div<SizeProps>`
+  display: grid;
+  gap: ${sizes(4)};
+
+  &[data-size='small'] {
+    gap: ${sizes(2)};
+  }
 `
 
 //////////////////////// NFT INFO ITEMS
@@ -76,7 +89,8 @@ export const InfoItemContent = styled.div<SizeProps>`
   display: grid;
   gap: ${sizes(2)};
   align-items: center;
-  grid-template-columns: min-content min-content;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
 `
 export const Label = styled(Text)`
   grid-area: label;

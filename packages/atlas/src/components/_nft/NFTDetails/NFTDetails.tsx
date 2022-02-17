@@ -1,13 +1,16 @@
-import { add, sub } from 'date-fns'
 import React, { useEffect } from 'react'
+import useMeasure from 'react-use-measure'
 
-import { Avatar } from '@/components/Avatar'
+import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { SvgActionJoyToken } from '@/components/_icons'
+import { Button } from '@/components/_buttons/Button'
+import { absoluteRoutes } from '@/config/routes'
 import { cVar } from '@/styles'
-import { formatDurationShort } from '@/utils/time'
+import { formatNumberShort } from '@/utils/number'
+import { formatDate, formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
+  ButtonGrid,
   Container,
   Content,
   InfoItemContainer,
@@ -27,52 +30,224 @@ export type NFTDetailsProps = {
   ownerHandle?: string
   ownerAvatarUri?: string
   isOwner: boolean
-  auction: 'none' | 'last-price' | 'waiting-for-bids' | 'minimum-bid' | 'top-bid' | 'withdraw'
-  withBuyNow: boolean
-  withTimer: boolean
-  // TODO: Remove later
-  size: Size
+  auction: 'none' | 'last-price' | 'waiting-for-bids' | 'minimum-bid' | 'top-bid' | 'withdraw' | 'settle'
+  buyNowPrice?: number
+  lastPrice?: number
+  auctionEndDate?: Date
+  lastTransactionDate?: Date
 }
+// TODO: remove dummy dollar values
 export const NFTDetails: React.FC<NFTDetailsProps> = ({
   ownerHandle,
   isOwner,
   auction,
-  withBuyNow,
-  withTimer,
+  buyNowPrice,
+  lastPrice = 0,
+  auctionEndDate,
   ownerAvatarUri,
-  size,
+  lastTransactionDate,
 }) => {
-  // const size: Size = 'medium'
+  const [containerRef, { width = 281 }] = useMeasure()
+  const size: Size = width > 280 ? 'medium' : 'small'
+
+  const content = React.useMemo(() => {
+    const contentTextVariant = size === 'small' ? 'h400' : 'h600'
+    const buttonSize = size === 'small' ? 'medium' : 'large'
+    const buttonColumnSpan = size === 'small' ? 1 : 2
+    switch (auction) {
+      case 'none':
+        return (
+          <>
+            {buyNowPrice ? (
+              <NFTInfoItem
+                size={size}
+                label="Buy now"
+                content={
+                  <>
+                    <JoyTokenIcon />
+                    <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
+                  </>
+                }
+                secondaryText="$9,629.25"
+              />
+            ) : (
+              <NFTInfoItem
+                size={size}
+                label="status"
+                content={
+                  <Text variant={contentTextVariant} secondary>
+                    Not for sale
+                  </Text>
+                }
+              />
+            )}
+            {buyNowPrice ? (
+              isOwner ? (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <ButtonGrid data-size={size}>
+                    <Button fullWidth variant="secondary" size={buttonSize}>
+                      Change price
+                    </Button>
+                    <Button fullWidth variant="destructive" size={buttonSize}>
+                      Remove from sale
+                    </Button>
+                  </ButtonGrid>
+                </GridItem>
+              ) : (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <Button fullWidth size={buttonSize}>
+                    Buy now
+                  </Button>
+                </GridItem>
+              )
+            ) : (
+              isOwner && (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <Button fullWidth variant="secondary" size={buttonSize}>
+                    Start sale of this NFT
+                  </Button>
+                </GridItem>
+              )
+            )}
+          </>
+        )
+      case 'last-price':
+        return (
+          <>
+            <NFTInfoItem
+              size={size}
+              label="Last price"
+              content={
+                <>
+                  <JoyTokenIcon />
+                  <Text variant={contentTextVariant} secondary>
+                    {formatNumberShort(lastPrice)}
+                  </Text>
+                </>
+              }
+              secondaryText={lastTransactionDate && formatDateTime(lastTransactionDate)}
+            />
+            {isOwner && (
+              <GridItem colSpan={buttonColumnSpan}>
+                <Button fullWidth variant="secondary" size={buttonSize}>
+                  Start sale of this NFT
+                </Button>
+              </GridItem>
+            )}
+          </>
+        )
+      case 'waiting-for-bids':
+        return (
+          <>
+            {buyNowPrice ? (
+              isOwner ? (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <Button fullWidth variant="destructive" size={buttonSize}>
+                    Remove from sale
+                  </Button>
+                </GridItem>
+              ) : (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <ButtonGrid data-size={size}>
+                    <Button fullWidth variant="secondary" size={buttonSize}>
+                      Place a bid
+                    </Button>
+                    <Button fullWidth size={buttonSize}>
+                      Buy now
+                    </Button>
+                  </ButtonGrid>
+                </GridItem>
+              )
+            ) : isOwner ? (
+              <GridItem colSpan={buttonColumnSpan}>
+                <Button fullWidth variant="destructive" size={buttonSize}>
+                  Remove from sale
+                </Button>
+              </GridItem>
+            ) : (
+              <GridItem colSpan={buttonColumnSpan}>
+                <Button fullWidth size={buttonSize}>
+                  Place a bid
+                </Button>
+              </GridItem>
+            )}
+          </>
+        )
+      case 'minimum-bid':
+      case 'top-bid':
+      case 'withdraw':
+        // TODO: testing area atm
+        return (
+          <>
+            <NFTInfoItem
+              size={size}
+              label="status"
+              content={
+                <Text variant={contentTextVariant} secondary>
+                  Not for sale
+                </Text>
+              }
+            />
+            <NFTInfoItem
+              size={size}
+              label="status"
+              content={
+                <Text variant={contentTextVariant} secondary>
+                  Not for sale
+                </Text>
+              }
+            />
+            <NFTInfoItem
+              size={size}
+              label="status"
+              content={
+                <>
+                  <JoyTokenIcon />
+                  <Text variant={contentTextVariant} secondary>
+                    35,9K
+                  </Text>
+                </>
+              }
+              secondaryText="$9,629.25"
+            />
+            {auctionEndDate && <NFTTimerItem size={size} time={auctionEndDate} />}
+            <GridItem colSpan={buttonColumnSpan}>
+              <Button fullWidth variant="secondary" size={buttonSize}>
+                Start sale of this NFT
+              </Button>
+            </GridItem>
+          </>
+        )
+      case 'settle':
+    }
+  }, [size, auction, buyNowPrice, isOwner, lastPrice, lastTransactionDate, auctionEndDate])
 
   return (
-    <Container>
+    <Container ref={containerRef}>
       <NFTOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
           This NFT is owned by
         </OwnerLabel>
-        <OwnerHandle variant="h300">{ownerHandle}</OwnerHandle>
+        <OwnerHandle to={ownerHandle && absoluteRoutes.viewer.member(ownerHandle)} variant="secondary" textOnly>
+          {ownerHandle}
+        </OwnerHandle>
       </NFTOwnerContainer>
-      <Content data-size={size}>
-        <NFTInfoItem size={size} label="label" text="Text" secondaryText="$9,629.25" />
-        <NFTTimerItem size={size} time={new Date()} />
-        <NFTInfoItem size={size} label="label" text="Text" secondaryText="$9,629.25" />
-      </Content>
+      <Content data-size={size}>{content}</Content>
+
+      {/* TODO: add history */}
     </Container>
   )
 }
 
-type NFTInfoItemProps = { size: Size; label: string; text: string; secondaryText?: string }
-const NFTInfoItem: React.FC<NFTInfoItemProps> = ({ size, label, text, secondaryText }) => {
+type NFTInfoItemProps = { size: Size; label: string; content: React.ReactNode; secondaryText?: string }
+const NFTInfoItem: React.FC<NFTInfoItemProps> = ({ size, label, content, secondaryText }) => {
   return (
     <InfoItemContainer data-size={size}>
       <Label variant="h100" secondary>
         {label}
       </Label>
-      <InfoItemContent data-size={size}>
-        <JoyTokenIcon />
-        <Text variant={size === 'small' ? 'h400' : 'h600'}>{text}</Text>
-      </InfoItemContent>
+      <InfoItemContent data-size={size}>{content}</InfoItemContent>
       <SecondaryText as="p" variant="t100" secondary data-size={size}>
         {secondaryText}
       </SecondaryText>
@@ -80,20 +255,15 @@ const NFTInfoItem: React.FC<NFTInfoItemProps> = ({ size, label, text, secondaryT
   )
 }
 
-const theDate = add(new Date(), {
-  minutes: 110,
-  seconds: 10,
-})
-const NFTTimerItem: React.FC<{ size: Size; time: Date }> = ({ size }) => {
+const NFTTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
   const [, rerender] = React.useState({})
-
   const forceUpdate = React.useCallback(() => rerender({}), [])
 
-  const timeInSeconds = Math.max(0, Math.round((theDate.getTime() - new Date().getTime()) / 1000))
-  const lessThanAMinuteLeft = timeInSeconds < 60
+  const timeInSeconds = Math.max(0, Math.round((time.getTime() - new Date().getTime()) / 1000))
+  const lessThanAMinuteLeft: boolean = timeInSeconds < 60
 
   useEffect(() => {
-    const interval = setInterval(forceUpdate, 100)
+    const interval = setInterval(forceUpdate, 1000)
     return () => {
       clearInterval(interval)
     }
@@ -112,7 +282,6 @@ const NFTTimerItem: React.FC<{ size: Size; time: Date }> = ({ size }) => {
           {formatDurationShort(timeInSeconds, true)}
         </Text>
       </InfoItemContent>
-      {/* necessary for the layout */}
       <TimerSecondaryText
         color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
         as="p"
