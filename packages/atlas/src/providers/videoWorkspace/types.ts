@@ -58,6 +58,5 @@ export type VideoWorkspaceFormStatus = {
   isDirty: boolean
   hasUnsavedAssets?: boolean
   triggerFormSubmit: () => void
-  formValues: VideoWorkspaceVideoFormFields
   resetForm: UseFormReset<VideoWorkspaceVideoFormFields>
 }
