@@ -227,14 +227,11 @@ export const ScreenControls = styled.div`
 `
 
 export const Container = styled.div<ContainerProps>`
-  position: relative;
+  position: absolute;
+  top: 0;
+  width: 100%;
   height: 100%;
   z-index: 0;
-  aspect-ratio: 16/9;
-
-  ${media.md} {
-    aspect-ratio: unset;
-  }
 
   .video-js {
     display: block;
