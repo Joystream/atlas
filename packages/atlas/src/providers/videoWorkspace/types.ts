@@ -45,6 +45,8 @@ export type VideoWorkspaceVideoFormFields = {
 export type VideoFormData = {
   metadata: VideoInputMetadata
   assets: VideoAssets<{
+    id: string
+    originalId?: string
     hashPromise: Promise<string>
     blob: Blob
     url?: string

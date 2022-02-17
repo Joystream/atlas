@@ -1,5 +1,4 @@
 import { formatISO } from 'date-fns'
-import { isEqual } from 'lodash-es'
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -24,7 +23,7 @@ import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { VideoInputMetadata } from '@/joystream-lib'
-import { useRawAsset, useRawAssetResolver } from '@/providers/assets'
+import { useRawAssetResolver } from '@/providers/assets'
 import {
   DEFAULT_LICENSE_ID,
   VideoFormData,
@@ -54,6 +53,7 @@ import {
   SwitchNFTWrapper,
   YellowText,
 } from './VideoForm.styles'
+import { convertVideoFormDataToFormFields } from './utils'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -125,55 +125,17 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       }
       setCachedEditedVideoId(editedVideoInfo.id)
 
-      // if (videoFormDataForNFT && !isEqual(videoFormDataForNFT, tabData)) {
-      // Small hack which will force marking the form as dirty
-      // We're basically set one value with setValue() to make this dirty and then rest of the form with the reset()
-      // setValue('title', videoFormDataForNFT.title, { shouldDirty: true })
-      // reset(videoFormDataForNFT, { keepDirty: true })
-      // setVideoFormDataForNFT(null)
-      // } else {
-      const convertMetadataToFormFields = (videoFormData: VideoFormData): Partial<VideoWorkspaceVideoFormFields> => {
-        const {
-          metadata: {
-            title,
-            description,
-            category,
-            language,
-            license,
-            hasMarketing,
-            isPublic,
-            isExplicit,
-            publishedBeforeJoystream,
-          },
-        } = videoFormData
-        return {
-          ...(title ? { title } : {}),
-          ...(description ? { description } : {}),
-          ...(category ? { category: category?.toString() } : {}),
-          ...(hasMarketing ? { hasMarketing } : {}),
-          ...(language ? { language } : {}),
-          ...(isPublic ? { isPublic } : {}),
-          ...(isExplicit ? { isExplicit } : {}),
-          ...(license?.attribution ? { licenseAttribution: license?.attribution } : {}),
-          ...(license?.code ? { licenseCode: license?.code } : {}),
-          ...(license?.customText ? { licenseCustomText: license?.customText } : {}),
-          ...(publishedBeforeJoystream
-            ? { publishedBeforeJoystream: new Date(Date.parse(publishedBeforeJoystream)) }
-            : {}),
-        }
-      }
-
       reset(tabData)
+
       if (videoFormDataForNFT) {
         setTimeout(() => {
-          const converted = convertMetadataToFormFields(videoFormDataForNFT)
-          Object.entries(converted).forEach(([key, value]) => {
+          const videoFormFields = convertVideoFormDataToFormFields(videoFormDataForNFT)
+          Object.entries(videoFormFields).forEach(([key, value]) => {
             setValue(key as keyof VideoWorkspaceVideoFormFields, value, { shouldDirty: true })
           })
         }, 0)
       }
     }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue, videoFormDataForNFT])
-
     const handleSubmit = useCallback(() => {
       flushDraftSave()
 
@@ -238,9 +200,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
         onSubmit({
           metadata,
           assets: {
-            ...(videoAsset?.blob && videoHashPromise
+            ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
               ? {
                   media: {
+                    id: videoInputFile.id,
                     blob: videoAsset.blob,
                     url: videoAsset.url || undefined,
                     hashPromise: videoHashPromise,
@@ -248,9 +211,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                   },
                 }
               : {}),
-            ...(thumbnailAsset?.blob && thumbnailHashPromise
+            ...(thumbnailAsset?.blob &&
+            thumbnailInputFile.cropId &&
+            thumbnailInputFile.originalId &&
+            thumbnailHashPromise
               ? {
                   thumbnailPhoto: {
+                    id: thumbnailInputFile.cropId,
+                    originalId: thumbnailInputFile.originalId,
                     blob: thumbnailAsset.blob,
                     url: thumbnailAsset.url || undefined,
                     hashPromise: thumbnailHashPromise,
@@ -307,7 +275,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
     if (tabDataError || categoriesError) {
       return <ViewErrorFallback />
     }
-
     return (
       <FormWrapper as="form" onSubmit={handleSubmit}>
         <Controller

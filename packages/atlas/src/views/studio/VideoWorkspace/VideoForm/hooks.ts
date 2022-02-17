@@ -28,12 +28,10 @@ export const useVideoFormAssets = (
   const { tabData } = useVideoWorkspaceData()
 
   const addAsset = useAssetStore((state) => state.actions.addAsset)
-
-  const mediaAsset = useRawAsset(watch('assets.video.id') || tabData?.assets.video.id || null)
-  const thumbnailAsset = useRawAsset(watch('assets.thumbnail.cropId') || tabData?.assets.thumbnail.originalId || null)
-  const originalThumbnailAsset = useRawAsset(
-    watch('assets.thumbnail.originalId') || tabData?.assets.thumbnail.cropId || null
-  )
+  const assets = watch('assets')
+  const mediaAsset = useRawAsset(assets?.video.id || tabData?.assets.video.id || null)
+  const thumbnailAsset = useRawAsset(assets?.thumbnail.cropId || null)
+  const originalThumbnailAsset = useRawAsset(assets?.thumbnail.originalId || null)
 
   const hasUnsavedAssets = dirtyFields.assets?.video?.id || dirtyFields.assets?.thumbnail?.cropId || false
 
@@ -46,6 +44,24 @@ export const useVideoFormAssets = (
     const hashPromise = computeFileHash(file)
     setThumbnailHashPromise(hashPromise)
   }, [])
+
+  useEffect(() => {
+    if (!thumbnailAsset) {
+      return
+    }
+    if (thumbnailAsset?.blob) {
+      computeThumbnailHash(thumbnailAsset.blob)
+    }
+  }, [computeThumbnailHash, thumbnailAsset])
+
+  useEffect(() => {
+    if (!mediaAsset) {
+      return
+    }
+    if (mediaAsset?.blob) {
+      computeMediaHash(mediaAsset.blob)
+    }
+  }, [computeMediaHash, mediaAsset])
 
   const handleVideoFileChange = useCallback(
     (video: VideoInputFile | null) => {
@@ -68,12 +84,8 @@ export const useVideoFormAssets = (
         video: updatedVideo,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
-
-      if (video?.blob) {
-        computeMediaHash(video.blob)
-      }
     },
-    [addAsset, computeMediaHash, getValues, setValue]
+    [addAsset, getValues, setValue]
   )
 
   const handleThumbnailFileChange = useCallback(
@@ -95,27 +107,26 @@ export const useVideoFormAssets = (
       addAsset(newOriginalAssetId, { blob: thumbnail.originalBlob })
 
       const updatedThumbnail = {
+        ...thumbnail,
         cropId: newCropAssetId,
         originalId: newOriginalAssetId,
-        ...thumbnail,
       }
       const updatedAssets = {
         ...currentAssetsValue,
         thumbnail: updatedThumbnail,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
-
-      if (thumbnail?.blob) {
-        computeThumbnailHash(thumbnail.blob)
-      }
     },
-    [addAsset, computeThumbnailHash, getValues, setValue]
+    [addAsset, getValues, setValue]
   )
 
   const files = useMemo(
     () => ({
       video: mediaAsset,
-      thumbnail: { ...thumbnailAsset, originalBlob: originalThumbnailAsset?.blob },
+      thumbnail: {
+        ...thumbnailAsset,
+        ...(originalThumbnailAsset?.blob ? { originalBlob: originalThumbnailAsset?.blob } : {}),
+      },
     }),
     [mediaAsset, originalThumbnailAsset?.blob, thumbnailAsset]
   )
