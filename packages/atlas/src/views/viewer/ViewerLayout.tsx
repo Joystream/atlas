@@ -17,6 +17,7 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
+import { Notifications } from '@/views/notifications'
 import {
   CategoryView,
   ChannelView,
@@ -31,7 +32,6 @@ import {
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
-import { Notifications } from './Notifications'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
