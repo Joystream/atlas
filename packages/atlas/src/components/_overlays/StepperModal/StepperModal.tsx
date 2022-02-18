@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { Step } from '@/components/Step'
+import { Step, getStepVariant } from '@/components/Step'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionClose } from '@/components/_icons'
 
@@ -51,14 +51,4 @@ export const StepperModal: React.FC<StepperModalProps> = ({
       {steps[currentStepIdx].element}
     </StyledModal>
   )
-}
-
-const getStepVariant = (currentStepIdx: number, idx: number) => {
-  if (currentStepIdx === idx) {
-    return 'current'
-  }
-  if (currentStepIdx > idx) {
-    return 'completed'
-  }
-  return 'future'
 }

@@ -53,6 +53,7 @@ import {
   SwitchNFTWrapper,
   YellowText,
 } from './VideoForm.styles'
+import { convertVideoFormDataToFormFields } from './utils'
 
 const CUSTOM_LICENSE_CODE = 1000
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
@@ -66,12 +67,13 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
   setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus | null>>
+  videoFormDataForNFT: VideoFormData | null
   setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
   isIssuedAsNFT: boolean
 }
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(
-  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT }) => {
+  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT, videoFormDataForNFT }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
@@ -121,11 +123,19 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       if (editedVideoInfo.id === cachedEditedVideoId || !tabData || tabDataLoading) {
         return
       }
-
       setCachedEditedVideoId(editedVideoInfo.id)
-      reset(tabData)
-    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId])
 
+      reset(tabData)
+
+      if (videoFormDataForNFT) {
+        setTimeout(() => {
+          const videoFormFields = convertVideoFormDataToFormFields(videoFormDataForNFT)
+          Object.entries(videoFormFields).forEach(([key, value]) => {
+            setValue(key as keyof VideoWorkspaceVideoFormFields, value, { shouldDirty: true })
+          })
+        }, 0)
+      }
+    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue, videoFormDataForNFT])
     const handleSubmit = useCallback(() => {
       flushDraftSave()
 
@@ -190,9 +200,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
         onSubmit({
           metadata,
           assets: {
-            ...(videoAsset?.blob && videoHashPromise
+            ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
               ? {
                   media: {
+                    id: videoInputFile.id,
                     blob: videoAsset.blob,
                     url: videoAsset.url || undefined,
                     hashPromise: videoHashPromise,
@@ -200,9 +211,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                   },
                 }
               : {}),
-            ...(thumbnailAsset?.blob && thumbnailHashPromise
+            ...(thumbnailAsset?.blob &&
+            thumbnailInputFile.cropId &&
+            thumbnailInputFile.originalId &&
+            thumbnailHashPromise
               ? {
                   thumbnailPhoto: {
+                    id: thumbnailInputFile.cropId,
+                    originalId: thumbnailInputFile.originalId,
                     blob: thumbnailAsset.blob,
                     url: thumbnailAsset.url || undefined,
                     hashPromise: thumbnailHashPromise,
@@ -234,10 +250,11 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
         hasUnsavedAssets,
         isDirty,
         isValid: isFormValid,
+        formValues: getValues(),
         resetForm: reset,
         triggerFormSubmit: handleSubmit,
       }),
-      [handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
+      [getValues, handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
     )
 
     // sent updates on form status to VideoWorkspace
@@ -258,7 +275,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
     if (tabDataError || categoriesError) {
       return <ViewErrorFallback />
     }
-
     return (
       <FormWrapper as="form" onSubmit={handleSubmit}>
         <Controller
