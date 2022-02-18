@@ -99,7 +99,7 @@ export const ChannelView: React.FC = () => {
   })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
@@ -230,7 +230,7 @@ export const ChannelView: React.FC = () => {
       </>
     ) : currentTab === 'NFTs' ? (
       <VideoSection className={transitions.names.slide}>
-        {isSearching && <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />}
+        {isSearching && <EmptyFallback title={`No NFTs matching "${searchQuery}" query found`} variant="small" />}
         {!isSearching && <EmptyFallback title="This channel does not have any NFTs issued yet" variant="small" />}
       </VideoSection>
     ) : (
@@ -314,42 +314,39 @@ export const ChannelView: React.FC = () => {
               tabs={mappedTabs}
               onSelectTab={handleSetCurrentTab}
             />
-            {currentTab === 'Videos' ||
-              (currentTab === 'NFTs' && (
-                <>
-                  <Search
-                    searchInputRef={searchInputRef}
-                    isSearchInputOpen={isSearchInputOpen}
-                    setIsSearchingInputOpen={setIsSearchingInputOpen}
-                    setIsSearching={setIsSearching}
-                    search={search}
-                    isSearching={isSearching}
-                    setCurrentTab={setCurrentTab}
+            {['Videos', 'NFTs'].includes(currentTab) && (
+              <>
+                <Search
+                  searchInputRef={searchInputRef}
+                  isSearchInputOpen={isSearchInputOpen}
+                  setIsSearchingInputOpen={setIsSearchingInputOpen}
+                  setIsSearching={setIsSearching}
+                  search={search}
+                  isSearching={isSearching}
+                  setCurrentTab={setCurrentTab}
+                />
+                <SortContainer>
+                  <Select
+                    size="small"
+                    labelPosition="left"
+                    disabled={isSearching}
+                    value={!isSearching ? sortVideosBy : 0}
+                    placeholder={isSearching ? 'Best match' : undefined}
+                    items={!isSearching ? SORT_OPTIONS : []}
+                    onChange={!isSearching ? handleSorting : undefined}
                   />
-                  <SortContainer>
-                    <Select
-                      size="small"
-                      labelPosition="left"
-                      disabled={isSearching}
-                      value={!isSearching ? sortVideosBy : 0}
-                      placeholder={isSearching ? 'Best match' : undefined}
-                      items={!isSearching ? SORT_OPTIONS : []}
-                      onChange={!isSearching ? handleSorting : undefined}
-                    />
-                  </SortContainer>
-                </>
-              ))}
-            {currentTab === 'NFTs' && (
-              <FilterButtonContainer>
-                <Button
-                  badge={canClearAllFilters}
-                  variant="secondary"
-                  icon={<SvgActionFilters />}
-                  onClick={toggleFilters}
-                >
-                  {smMatch && 'Filters'}
-                </Button>
-              </FilterButtonContainer>
+                </SortContainer>
+                <FilterButtonContainer>
+                  <Button
+                    badge={canClearAllFilters}
+                    variant="secondary"
+                    icon={<SvgActionFilters />}
+                    onClick={toggleFilters}
+                  >
+                    {smMatch && 'Filters'}
+                  </Button>
+                </FilterButtonContainer>
+              </>
             )}
           </TabsContainer>
           <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />
@@ -444,7 +441,7 @@ type SearchProps = {
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
   search: (searchQuery: string) => void
-  setCurrentTab: (tab: typeof TABS[number] | null) => void
+  setCurrentTab: (tab: typeof TABS[number]) => void
 }
 const Search: React.FC<SearchProps> = ({
   searchInputRef,
