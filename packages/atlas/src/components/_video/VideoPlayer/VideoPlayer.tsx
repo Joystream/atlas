@@ -562,7 +562,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
-                  {mdMatch && !isEmbedded && (
+                  {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
