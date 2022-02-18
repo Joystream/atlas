@@ -26,6 +26,7 @@ export const EmbeddedView: React.FC = () => {
   const { addVideoView } = useAddVideoView()
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
+  const { url: thumbnailUrl, isLoadingAsset: isThumbnailLoading } = useAsset(video?.thumbnailPhoto)
 
   const { startTimestamp } = useVideoStartTimestamp(video?.duration)
 
@@ -96,13 +97,13 @@ export const EmbeddedView: React.FC = () => {
     <>
       <EmbeddedGlobalStyles />
       <Container>
-        {!isMediaLoading && video ? (
+        {!isMediaLoading && !isThumbnailLoading && video ? (
           <VideoPlayer
             isVideoPending={!video?.media?.isAccepted}
             channelId={video.channel?.id}
             videoId={video.id}
-            autoplay
             src={mediaUrl}
+            posterUrl={thumbnailUrl}
             fill
             startTime={startTimestamp}
             onEnd={handleVideoEnded}

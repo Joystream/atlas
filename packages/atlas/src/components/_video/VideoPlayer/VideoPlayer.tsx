@@ -102,7 +102,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isAutoPlayFailed, setIsAutoPlayFailed] = useState(false)
+  const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
 
   const playVideo = useCallback(
@@ -112,7 +112,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
       withIndicator && player.trigger(CustomVideojsEvents.PlayControl)
       try {
-        setIsAutoPlayFailed(false)
+        setNeedsManualPlay(false)
         const playPromise = await player.play()
         if (playPromise && callback) callback()
       } catch (error) {
@@ -166,7 +166,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
 
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f', 'c']
-      if (playerReservedKeys.includes(event.key)) {
+      if (
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        playerReservedKeys.includes(event.key)
+      ) {
         event.preventDefault()
         hotkeysHandler(event, player, playVideo, pauseVideo, () => setCinematicView(!cinematicView))
       }
@@ -248,7 +254,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           setIsPlaying(true)
         })
         .catch((e) => {
-          setIsAutoPlayFailed(true)
+          setNeedsManualPlay(true)
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
@@ -497,7 +503,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   return (
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
-        {isAutoPlayFailed && (
+        {needsManualPlay && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgControlsPlay />
@@ -518,7 +524,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
-                  {(!isAutoPlayFailed || mdMatch) && (
+                  {(!needsManualPlay || mdMatch) && (
                     <PlayButton
                       isEnded={playerState === 'ended'}
                       onClick={handlePlayPause}
@@ -556,7 +562,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
-                  {mdMatch && !isEmbedded && (
+                  {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}

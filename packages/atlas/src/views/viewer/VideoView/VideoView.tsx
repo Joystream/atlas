@@ -305,7 +305,6 @@ export const VideoView: React.FC = () => {
                   videoId={video?.id}
                   autoplay
                   src={mediaUrl}
-                  fluid={!isCinematic}
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}
