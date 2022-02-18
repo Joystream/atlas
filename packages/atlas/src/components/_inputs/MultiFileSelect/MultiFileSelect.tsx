@@ -23,7 +23,7 @@ type InputFile = {
 }
 
 export type MediaInputMetadata = {
-  duration?: number
+  duration?: number | null
   mediaPixelWidth?: number
   mediaPixelHeight?: number
   mimeType?: string
