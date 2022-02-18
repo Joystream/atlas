@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { NotificationProps, NotificationTile } from '.'
+import { NotificationProps, NotificationTile } from './NotificationTile'
 
 export default {
   title: 'Other/NotificationTile',
