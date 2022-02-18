@@ -102,7 +102,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
 
   const [playerState, setPlayerState] = useState<PlayerState>('loading')
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isAutoPlayFailed, setIsAutoPlayFailed] = useState(false)
+  const [needsManualPlay, setNeedsManualPlay] = useState(!autoplay)
   const mdMatch = useMediaMatch('md')
 
   const playVideo = useCallback(
@@ -112,7 +112,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
       withIndicator && player.trigger(CustomVideojsEvents.PlayControl)
       try {
-        setIsAutoPlayFailed(false)
+        setNeedsManualPlay(false)
         const playPromise = await player.play()
         if (playPromise && callback) callback()
       } catch (error) {
@@ -254,7 +254,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
           setIsPlaying(true)
         })
         .catch((e) => {
-          setIsAutoPlayFailed(true)
+          setNeedsManualPlay(true)
           ConsoleLogger.warn('Video autoplay failed', e)
         })
     }
@@ -503,7 +503,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   return (
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
-        {!isPlaying && (isAutoPlayFailed || !autoplay) && (
+        {needsManualPlay && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgControlsPlay />
@@ -524,7 +524,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
               />
               <CustomControls isFullScreen={isFullScreen} isEnded={playerState === 'ended'}>
                 <PlayControl isLoading={playerState === 'loading'}>
-                  {(!isAutoPlayFailed || mdMatch) && (
+                  {(!needsManualPlay || mdMatch) && (
                     <PlayButton
                       isEnded={playerState === 'ended'}
                       onClick={handlePlayPause}
