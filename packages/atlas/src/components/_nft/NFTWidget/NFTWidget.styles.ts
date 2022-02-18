@@ -80,7 +80,7 @@ export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean 
   }
 `
 
-//////////////////////// NFT INFO ITEMS
+// NFT INFO ITEMS
 export const InfoItemContainer = styled.div<SizeProps>`
   display: grid;
   gap: ${sizes(1)};

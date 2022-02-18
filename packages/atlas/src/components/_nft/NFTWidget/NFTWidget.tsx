@@ -92,17 +92,7 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
         return (
           <>
             {buyNowPrice ? (
-              <NFTInfoItem
-                size={size}
-                label="Buy now"
-                content={
-                  <>
-                    <JoyTokenIcon />
-                    <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
-                  </>
-                }
-                secondaryText="$9,629.25"
-              />
+              buyNowNode
             ) : (
               <NFTInfoItem
                 size={size}
