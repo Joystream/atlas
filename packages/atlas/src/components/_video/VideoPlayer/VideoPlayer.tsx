@@ -497,7 +497,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   return (
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
-        {isAutoPlayFailed && (
+        {!isPlaying && (isAutoPlayFailed || !autoplay) && (
           <BigPlayButtonOverlay onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgControlsPlay />
