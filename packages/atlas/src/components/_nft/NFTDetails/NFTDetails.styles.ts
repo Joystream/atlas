@@ -43,6 +43,17 @@ export const NFTOwnerContainer = styled.div<SizeProps>`
   }
 `
 
+export const NFTHistoryHeader = styled.div<SizeProps>`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: ${sizes(7)} ${sizes(6)};
+
+  &[data-size='small'] {
+    padding: ${sizes(5)} ${sizes(4)};
+  }
+`
+
 export const OwnerAvatar = styled(Avatar)`
   grid-area: avatar;
 `
@@ -56,12 +67,16 @@ export const OwnerHandle = styled(Button)`
   justify-content: start;
 `
 
-export const ButtonGrid = styled.div<SizeProps>`
+export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean }>`
   display: grid;
   gap: ${sizes(4)};
 
   &[data-size='small'] {
     gap: ${sizes(2)};
+  }
+
+  &[data-two-columns='true'] {
+    grid-template-columns: 1fr 1fr;
   }
 `
 

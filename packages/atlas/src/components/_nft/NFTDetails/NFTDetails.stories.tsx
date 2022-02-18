@@ -17,13 +17,15 @@ export default {
   args: {
     ownerHandle: 'ye 🖤',
     ownerAvatarUri: 'https://54.172.37.177.nip.io/distributor-1/api/v1/assets/3',
-    endingDate: add(new Date(), {
+    auctionEndDate: add(new Date(), {
       minutes: 110,
       seconds: 10,
     }),
     auction: 'none',
     size: 'medium',
     buyNowPrice: 36900,
+    minBid: 15800,
+    topBid: 15800,
     lastTransactionDate: new Date(),
     lastPrice: 25900,
   },
