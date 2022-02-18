@@ -166,7 +166,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
 
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f', 'c']
-      if (playerReservedKeys.includes(event.key)) {
+      if (
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        playerReservedKeys.includes(event.key)
+      ) {
         event.preventDefault()
         hotkeysHandler(event, player, playVideo, pauseVideo, () => setCinematicView(!cinematicView))
       }
