@@ -111,7 +111,7 @@ export const hotkeysHandler = (
       }
       return
     case 'KeyC':
-      toggleCinematicView()
+      !playerInstance.isFullscreen() && toggleCinematicView()
       return
     default:
       return

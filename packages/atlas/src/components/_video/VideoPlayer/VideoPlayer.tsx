@@ -166,7 +166,13 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
       }
 
       const playerReservedKeys = ['k', ' ', 'ArrowLeft', 'ArrowRight', 'j', 'l', 'ArrowUp', 'ArrowDown', 'm', 'f', 'c']
-      if (playerReservedKeys.includes(event.key)) {
+      if (
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        playerReservedKeys.includes(event.key)
+      ) {
         event.preventDefault()
         hotkeysHandler(event, player, playVideo, pauseVideo, () => setCinematicView(!cinematicView))
       }
@@ -556,7 +562,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                   </CurrentTime>
                 </CurrentTimeWrapper>
                 <ScreenControls>
-                  {mdMatch && !isEmbedded && (
+                  {mdMatch && !isEmbedded && !player?.isFullscreen() && (
                     <PlayerControlButton
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
