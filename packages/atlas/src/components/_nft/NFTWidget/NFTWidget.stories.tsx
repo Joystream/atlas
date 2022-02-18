@@ -4,11 +4,11 @@ import { add } from 'date-fns'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { NFTDetails, NFTDetailsProps } from '.'
+import { NFTWidget, NFTWidgetProps } from '.'
 
 export default {
-  title: 'NFT/NFTDetails',
-  component: NFTDetails,
+  title: 'NFT/NFT Widget',
+  component: NFTWidget,
   argTypes: {
     size: {
       control: { type: 'select', options: ['small', 'medium'] },
@@ -40,9 +40,9 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NFTDetailsProps & { size: 'medium' | 'small' }> = (args) => (
+const Template: Story<NFTWidgetProps & { size: 'medium' | 'small' }> = (args) => (
   <Container data-size={args.size}>
-    <NFTDetails {...args} />
+    <NFTWidget {...args} />
   </Container>
 )
 

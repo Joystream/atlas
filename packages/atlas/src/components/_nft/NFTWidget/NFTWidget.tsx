@@ -25,10 +25,10 @@ import {
   OwnerLabel,
   SecondaryText,
   TimerSecondaryText,
-} from './NFTDetails.styles'
+} from './NFTWidget.styles'
 
 type Size = 'medium' | 'small'
-export type NFTDetailsProps = {
+export type NFTWidgetProps = {
   ownerHandle?: string
   ownerAvatarUri?: string
   isOwner: boolean
@@ -41,7 +41,7 @@ export type NFTDetailsProps = {
   lastTransactionDate?: Date
 }
 // TODO: remove dummy dollar values
-export const NFTDetails: React.FC<NFTDetailsProps> = ({
+export const NFTWidget: React.FC<NFTWidgetProps> = ({
   ownerHandle,
   isOwner,
   auction,
