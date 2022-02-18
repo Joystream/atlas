@@ -10,7 +10,6 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { SvgControlsCancel } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -525,8 +524,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               ) : null}
               <ActionBar
                 primaryText="Fee: 0 Joy"
+                variant={newChannel ? 'new' : 'edit'}
                 secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-                isEdit={!newChannel}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
@@ -551,7 +550,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
                   text: 'Cancel',
                   onClick: () => reset(),
-                  icon: <SvgControlsCancel width={16} height={16} />,
                 }}
               />
             </ActionBarTransactionWrapper>

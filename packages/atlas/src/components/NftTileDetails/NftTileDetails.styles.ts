@@ -61,7 +61,8 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => `
   }
 `
 
-export const Content = styled.div<ContentProps>`
+const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize'
+export const Content = styled('div', { shouldForwardProp: isContentPropValid })<ContentProps>`
   ${containerHoverStyles};
   ${tileSizeVariants};
 

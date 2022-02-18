@@ -1,3 +1,5 @@
+import { UseFormReset } from 'react-hook-form'
+
 import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
 import { VideoAssets, VideoInputMetadata } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -43,6 +45,8 @@ export type VideoWorkspaceVideoFormFields = {
 export type VideoFormData = {
   metadata: VideoInputMetadata
   assets: VideoAssets<{
+    id: string
+    originalId?: string
     hashPromise: Promise<string>
     blob: Blob
     url?: string
@@ -56,5 +60,5 @@ export type VideoWorkspaceFormStatus = {
   isDirty: boolean
   hasUnsavedAssets?: boolean
   triggerFormSubmit: () => void
-  resetForm: () => void
+  resetForm: UseFormReset<VideoWorkspaceVideoFormFields>
 }
