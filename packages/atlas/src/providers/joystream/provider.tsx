@@ -11,9 +11,12 @@ import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 import { useConnectionStatusStore } from '../connectionStatus'
 import { useUser } from '../user'
 
+const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
+
 type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: <T extends object>(callback: T) => T & ProxyMarked
+  price: number
 }
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
@@ -25,6 +28,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
+  const [price, setPrice] = useState(0)
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
       setNodeConnection(connected ? 'connected' : 'disconnected')
@@ -35,6 +39,14 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
+  useEffect(() => {
+    const getPrice = async () => {
+      const data = await fetch(JOYSTREAM_STATUS_URL)
+      const json = await data.json()
+      setPrice(parseFloat(json.price))
+    }
+    getPrice()
+  })
   useEffect(() => {
     const getJoystream = async () => {
       try {
@@ -87,7 +99,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [activeAccountId, accounts, initialized])
 
   return (
-    <JoystreamContext.Provider value={{ joystream: initialized ? joystream.current : undefined, proxyCallback }}>
+    <JoystreamContext.Provider value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, price }}>
       {children}
     </JoystreamContext.Provider>
   )
