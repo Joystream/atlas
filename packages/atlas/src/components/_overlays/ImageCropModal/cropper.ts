@@ -27,8 +27,8 @@ const CANVAS_OPTS_PER_TYPE: Record<CropperImageType, Cropper.GetCroppedCanvasOpt
     height: 192,
   },
   videoThumbnail: {
-    width: 640,
-    height: 360,
+    width: 1280,
+    height: 720,
   },
   cover: {
     width: 1920,
