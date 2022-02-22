@@ -25,6 +25,7 @@ import {
   PlaygroundDrafts,
   PlaygroundMemberChannel,
   PlaygroundMemberDropdown,
+  PlaygroundNFTExtrinsics,
   PlaygroundValidationForm,
   UploadFiles,
   VideoMetaData,
@@ -50,6 +51,7 @@ const playgroundRoutes = [
   { path: 'indirect-signin-dialog', element: <IndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'member-dropdown', element: <PlaygroundMemberDropdown />, name: 'Member dropdown' },
   { path: 'block-time', element: <EstimatingBlockTime />, name: 'Estimating block time' },
+  { path: 'nft-extrinsics', element: <PlaygroundNFTExtrinsics />, name: 'NFT extrinsics' },
 ]
 
 const PlaygroundLayout = () => {
