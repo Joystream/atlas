@@ -5,6 +5,7 @@ import { cVar, media, oldColors, zIndex } from '@/styles'
 
 export const RankingNumberTileWrapper = styled.div`
   display: flex;
+  margin-left: 32px;
 `
 
 const variantStyles = (doubleDigits: boolean) => {
@@ -36,6 +37,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   position: relative;
   z-index: ${zIndex.closeBackground};
   color: black;
+  left: 8px;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: ${oldColors.gray[500]};
   font-weight: 700;
@@ -49,6 +51,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 8px;
 
   ${({ doubleDigits }) => variantStyles(doubleDigits)};
 `

@@ -10,10 +10,14 @@ import {
 
 type RankingNumberTileProps = {
   rankingNumber: number
-  doubleDigits: boolean
+  doubleDigits?: boolean
 }
 
-export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ rankingNumber, doubleDigits, children }) => {
+export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({
+  rankingNumber,
+  doubleDigits = false,
+  children,
+}) => {
   return (
     <RankingNumberTileWrapper>
       <RankingNumber doubleDigits={doubleDigits}>
