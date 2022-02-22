@@ -50,9 +50,37 @@ export type VideoInputMetadata = Omit<
   publishedBeforeJoystream?: string
   mimeMediaType?: string
   category?: number
+  nft?: NftIssuanceInputMetadata
 }
 export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'>
 export type MemberInputMetadata = Omit<IMembershipMetadata, 'avatarObject'>
+
+type NftBuyNowInputMetadata = {
+  type: 'buyNow'
+  buyNowPrice: number
+}
+type NftCommonAuctionInputMetadata = Partial<Omit<NftBuyNowInputMetadata, 'type'>> & {
+  startingPrice: number
+  minimalBidStep: number
+  // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
+  startsAtBlock?: number
+  whitelistedMembersIds?: string[]
+}
+export type NftOpenAuctionInputMetadata = NftCommonAuctionInputMetadata & {
+  type: 'open'
+  bidLockDuration?: number
+}
+export type NftEnglishAuctionInputMetadata = NftCommonAuctionInputMetadata & {
+  type: 'english'
+  auctionDurationBlocks: number
+  extensionPeriodBlocks?: number
+}
+export type NftAuctionInputMetadata = NftOpenAuctionInputMetadata | NftEnglishAuctionInputMetadata
+export type NftSaleInputMetadata = NftBuyNowInputMetadata | NftAuctionInputMetadata
+export type NftIssuanceInputMetadata = {
+  royalty?: number
+  sale?: NftSaleInputMetadata
+}
 
 type JoystreamEvents = AugmentedEvents<'promise'>
 type JoystreamEventData<TEvent> = TEvent extends AugmentedEvent<'promise', infer X> ? X : never
@@ -72,3 +100,4 @@ export type SendExtrinsicResult = ExtrinsicResult<{ events: GenericEvent[]; getE
 export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetsIds }>
 export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
+export type NftExtrinsicResult = ExtrinsicResult
