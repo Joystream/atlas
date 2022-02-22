@@ -48,9 +48,7 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   align-items: center;
   writing-mode: vertical-rl;
   text-orientation: upright;
-  display: flex;
   flex-direction: column;
-  align-items: center;
   margin-left: 8px;
 
   ${({ doubleDigits }) => variantStyles(doubleDigits)};

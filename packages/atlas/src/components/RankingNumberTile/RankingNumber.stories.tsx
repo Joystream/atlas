@@ -13,6 +13,10 @@ export default {
     },
     rankingNumber: { control: { type: 'number' } },
   },
+  args: {
+    rankingNumber: 1,
+    doubleDigits: false,
+  },
 } as Meta
 
 const PlaceHolder = styled.div`
