@@ -1,15 +1,24 @@
 import React from 'react'
 
-import { ChildrenWrapper, DropShadow, RankingNumber, RankingNumberTileWrapper } from './RankingNumberTile.styles'
+import {
+  ChildrenWrapper,
+  DropShadow,
+  RankingNumber,
+  RankingNumberInner,
+  RankingNumberTileWrapper,
+} from './RankingNumberTile.styles'
 
 type RankingNumberTileProps = {
   rankingNumber: number
+  doubleDigits: boolean
 }
 
-export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ rankingNumber, children }) => {
+export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ rankingNumber, doubleDigits, children }) => {
   return (
     <RankingNumberTileWrapper>
-      <RankingNumber doubleDigit={false}>{rankingNumber}</RankingNumber>
+      <RankingNumber doubleDigits={doubleDigits}>
+        <RankingNumberInner>{rankingNumber}</RankingNumberInner>
+      </RankingNumber>
       <DropShadow />
       <ChildrenWrapper>{children}</ChildrenWrapper>
     </RankingNumberTileWrapper>

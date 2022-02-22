@@ -4,13 +4,11 @@ import styled from '@emotion/styled'
 import { cVar, media, oldColors, zIndex } from '@/styles'
 
 export const RankingNumberTileWrapper = styled.div`
-  position: relative;
   display: flex;
-  justify-content: flex-end;
 `
 
-const variantStyles = (doubleDigit: boolean) => {
-  return doubleDigit
+const variantStyles = (doubleDigits: boolean) => {
+  return doubleDigits
     ? css`
         line-height: 85%;
         ${media.xxs} {
@@ -31,26 +29,32 @@ const variantStyles = (doubleDigit: boolean) => {
 }
 
 type RankingNumberProps = {
-  doubleDigit: boolean
+  doubleDigits: boolean
 }
 
 export const RankingNumber = styled.div<RankingNumberProps>`
-  position: absolute;
+  position: relative;
   z-index: ${zIndex.closeBackground};
-  left: 0;
   color: black;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: ${oldColors.gray[500]};
-  line-height: 100%;
   font-weight: 700;
   letter-spacing: -0.17em;
   font-family: ${cVar('typographyFontsPrimary')};
   font-size: 100px;
-  height: 100%;
   display: flex;
   align-items: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  ${({ doubleDigit }) => variantStyles(doubleDigit)};
+  ${({ doubleDigits }) => variantStyles(doubleDigits)};
+`
+
+export const RankingNumberInner = styled.div`
+  line-height: 0;
 `
 
 export const ChildrenWrapper = styled.div`
@@ -71,6 +75,6 @@ export const ChildrenWrapper = styled.div`
 
 export const DropShadow = styled.div`
   width: 32px;
-  margin-left: 32px;
   background: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, #000 100%);
+  margin-left: 8px;
 `
