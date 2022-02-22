@@ -29,6 +29,7 @@ export type ListItemProps = {
   captionPosition?: 'right' | 'bottom'
   onClick?: () => void
   className?: string
+  highlight?: boolean
 }
 
 export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
@@ -45,12 +46,14 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
       nodeEnd,
       onClick,
       className,
+      highlight,
     },
     ref
   ) => {
     const [hoverRef, isHovering] = useHover<HTMLDivElement>()
     return (
       <Container
+        highlight={highlight}
         className={className}
         onClick={onClick}
         disabled={disabled}
@@ -71,7 +74,7 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
               color={
                 destructive
                   ? cVar('colorTextError')
-                  : isHovering || selected
+                  : isHovering || selected || highlight
                   ? cVar('colorCoreNeutral50')
                   : cVar('colorCoreNeutral300')
               }
