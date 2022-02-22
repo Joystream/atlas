@@ -150,3 +150,64 @@ fragment VideoFields on Video {
     ...LicenseFields
   }
 }
+
+fragment AllNftFields on OwnedNft {
+  id
+  createdAt
+  creatorRoyalty
+  ownerMember {
+    ...BasicMembershipFields
+  }
+  transactionalStatus {
+    __typename
+    ... on TransactionalStatusIdle {
+      dummy
+    }
+    ... on TransactionalStatusBuyNow {
+      price
+    }
+    ... on TransactionalStatusAuction {
+      auction {
+        auctionType {
+          __typename
+          ... on AuctionTypeEnglish {
+            duration
+            extensionPeriod
+          }
+          ... on AuctionTypeOpen {
+            bidLockingTime
+          }
+        }
+        isCompleted
+
+        buyNowPrice
+        minimalBidStep
+        startingPrice
+
+        startsAtBlock
+        plannedEndAtBlock
+        endedAtBlock
+
+        lastBid {
+          ...AllBidFields
+        }
+        bids {
+          ...AllBidFields
+        }
+
+        whitelistedMembers {
+          ...BasicMembershipFields
+        }
+      }
+    }
+  }
+}
+
+fragment AllBidFields on Bid {
+  bidder {
+    ...BasicMembershipFields
+  }
+  amount
+  createdAt
+  isCanceled
+}
