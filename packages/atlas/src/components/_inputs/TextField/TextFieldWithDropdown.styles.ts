@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { cVar } from '@/styles'
+import { cVar, zIndex } from '@/styles'
 
 export const TextFieldWithDropdownWrapper = styled.div`
   position: relative;
@@ -14,5 +14,6 @@ export const ListWrapper = styled.ul`
   padding: 0;
   position: absolute;
   width: 100%;
+  z-index: ${zIndex.globalOverlay};
   margin: 0;
 `

@@ -1,5 +1,5 @@
 import { useCombobox } from 'downshift'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { SvgActionLoader } from '@/components/_icons'
@@ -8,61 +8,56 @@ import { ListWrapper, TextFieldWithDropdownWrapper } from './TextFieldWithDropdo
 
 import { TextField } from '.'
 
-type TextFieldWithDropdownProps = {
-  items?: Array<ListItemProps>
+type TextFieldWithDropdownProps<ItemType = unknown> = {
+  items?: (ListItemProps & ItemType)[]
   loading?: boolean
-  onSelect?: (item?: string) => void
-  onChange?: (val?: string) => void | Promise<void>
+  onSelect?: (item?: ListItemProps & ItemType) => void
+  onChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
 }
 
-export const TextFieldWithDropdown: React.FC<TextFieldWithDropdownProps> = ({
+export const TextFieldWithDropdown = <ItemType,>({
   loading,
   items = [],
   onSelect,
   onChange,
   resetOnSelect,
-}) => {
-  const [inputItems, setInputItems] = useState<ListItemProps[]>([])
-
-  useEffect(() => {
-    setInputItems(items)
-  }, [items])
-
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, reset, getItemProps, getComboboxProps } = useCombobox({
-    items: inputItems || [],
+}: TextFieldWithDropdownProps<ItemType>) => {
+  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, getComboboxProps, reset } = useCombobox({
+    items,
+    itemToString: (item) => (item ? item.label : ''),
     onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem?.label) {
-        resetOnSelect && reset()
-        onSelect?.(selectedItem.label)
+      if (!selectedItem) {
+        return
+      }
+      onSelect?.(selectedItem)
+      if (resetOnSelect) {
+        reset()
       }
     },
     onInputValueChange: ({ inputValue }) => {
       onChange?.(inputValue)
-      if (inputValue) {
-        setInputItems(items.filter((item) => item.label.toLowerCase().startsWith(inputValue.toLowerCase())))
-      }
     },
   })
 
   return (
-    <TextFieldWithDropdownWrapper style={{ width: '100%' }}>
+    <TextFieldWithDropdownWrapper>
       <div {...getComboboxProps()}>
         <TextField {...getInputProps()} nodeEnd={loading && <SvgActionLoader />} />
       </div>
       <ListWrapper {...getMenuProps()}>
         {isOpen &&
-          inputItems.map((item, index) => {
+          items.map((item, index) => {
             return (
               <ListItem
-                {...item}
                 key={`${item}${index}`}
+                {...item}
                 {...getItemProps({
                   item,
                   index,
                 })}
                 size="large"
-                selected={highlightedIndex === index}
+                highlight={highlightedIndex === index}
               />
             )
           })}
