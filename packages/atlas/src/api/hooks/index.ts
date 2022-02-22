@@ -1,6 +1,7 @@
 export * from './categories'
 export * from './channel'
 export * from './membership'
+export * from './nfts'
 export * from './queryNode'
 export * from './search'
 export * from './video'

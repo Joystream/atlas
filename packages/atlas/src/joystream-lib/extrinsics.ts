@@ -4,19 +4,22 @@ import {
   ChannelUpdateParameters,
   ContentActor,
   NftIssuanceParameters,
+  Royalty,
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
 import { DataObjectId } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { bool } from '@polkadot/types'
+import { Bytes, bool } from '@polkadot/types'
 import { BTreeSet, Option, GenericAccountId as RuntimeAccountId } from '@polkadot/types'
 
 import { SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
 import {
+  createNftAuctionParams,
+  createNftIssuanceTransactionalStatus,
   extractChannelResultAssetsIds,
   extractVideoResultAssetsIds,
   getInputDataObjectsIds,
@@ -35,6 +38,9 @@ import {
   MemberExtrinsicResult,
   MemberId,
   MemberInputMetadata,
+  NftExtrinsicResult,
+  NftIssuanceInputMetadata,
+  NftSaleInputMetadata,
   SendExtrinsicResult,
   VideoExtrinsicResult,
   VideoId,
@@ -244,6 +250,118 @@ export class JoystreamLibExtrinsics {
       block,
     }
   }
+
+  async issueNft(
+    videoId: VideoId,
+    memberId: MemberId,
+    inputMetadata: NftIssuanceInputMetadata,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const transactionalStatus = createNftIssuanceTransactionalStatus(this.api.registry, inputMetadata)
+
+    const issueNftParameters = new NftIssuanceParameters(this.api.registry, {
+      nft_metadata: new Bytes(this.api.registry, '0x0'),
+      init_transactional_status: transactionalStatus,
+      non_channel_owner: new Option(this.api.registry, RuntimeMemberId),
+      royalty: new Option(this.api.registry, Royalty),
+    })
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.issueNft(contentActor, videoId, issueNftParameters)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  async putNftOnSale(
+    videoId: VideoId,
+    memberId: MemberId,
+    inputMetadata: NftSaleInputMetadata,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx =
+      inputMetadata.type === 'buyNow'
+        ? this.api.tx.content.sellNft(videoId, contentActor, inputMetadata.buyNowPrice)
+        : this.api.tx.content.startNftAuction(
+            contentActor,
+            videoId,
+            createNftAuctionParams(this.api.registry, inputMetadata)
+          )
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  async cancelNftSale(
+    videoId: VideoId,
+    memberId: MemberId,
+    isBuyNow: boolean,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = isBuyNow
+      ? this.api.tx.content.cancelBuyNow(contentActor, videoId)
+      : this.api.tx.content.cancelNftAuction(contentActor, videoId)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  async buyNftNow(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const tx = this.api.tx.content.buyNft(videoId, new RuntimeMemberId(this.api.registry, memberId))
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  async makeNftBid(
+    videoId: VideoId,
+    memberId: MemberId,
+    bidPrice: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const tx = this.api.tx.content.makeBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
+  async cancelNftBid(
+    videoId: VideoId,
+    memberId: MemberId,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const tx = this.api.tx.content.cancelOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
   async updateMember(
     memberId: MemberId,
     handle: string | null,
