@@ -6,23 +6,26 @@ import React, { useRef, useState } from 'react'
 import { GetMembershipsDocument, GetMembershipsQuery, GetMembershipsQueryVariables } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { MemberBadge } from '@/components/MemberBadge'
+import { SvgActionCancel } from '@/components/_icons'
 import { TextFieldWithDropdown } from '@/components/_inputs/TextField/TextFieldWithDropdown'
 import { createLookup } from '@/utils/data'
 
 type Member = {
   id: string
-  handle: string | null
+  handle?: string | null
   avatarUri?: string | null
 }
 
 export const WhitelistingMembers = () => {
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+  const [isNotFound, setIsNotFound] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<Member[]>([])
   const client = useApolloClient()
 
   const debounceFetchMembers = useRef(
     debouncePromise(async (val?: string, selectedMembers?: Member[]) => {
+      setIsNotFound(false)
       if (!val) {
         setMembers([])
         return
@@ -37,23 +40,24 @@ export const WhitelistingMembers = () => {
       })
       setIsLoading(false)
       const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
-      if (memberships.length) {
-        const filteredMembers = memberships
-          .map(({ handle, id, metadata: { avatar } }) => ({
-            handle,
-            avatarUri: avatar?.__typename === 'AvatarUri' ? avatar.avatarUri : undefined,
-            id,
-          }))
-          .filter((member) => {
-            return !selectedMembersLookup[member.id]
-          })
-        setMembers(filteredMembers)
+      const filteredMembers = memberships
+        .map(({ handle, id, metadata: { avatar } }) => ({
+          handle,
+          avatarUri: avatar?.__typename === 'AvatarUri' ? avatar.avatarUri : undefined,
+          id,
+        }))
+        .filter((member) => {
+          return !selectedMembersLookup[member.id]
+        })
+      setMembers(filteredMembers)
+      if (!filteredMembers.length) {
+        setIsNotFound(true)
       }
     }, 500)
   )
 
   const handleSelect = (item?: Member) => {
-    if (!item) {
+    if (!item || isNotFound) {
       return
     }
     setSelectedMembers((prevItems) => [item, ...prevItems])
@@ -65,20 +69,30 @@ export const WhitelistingMembers = () => {
     setSelectedMembers(filteredMembers)
   }
 
+  const dropdownItems = members.map((member) => ({
+    label: member.handle || '',
+    nodeStart: <Avatar assetUrl={member.avatarUri} />,
+    id: member.id,
+    handle: member.handle,
+    avatarUri: member.avatarUri,
+  }))
+
+  const notFoundListItem = {
+    id: 'not-found',
+    label: 'We couldn’t find this member. Please check if spelling is correct.',
+    nodeStart: <SvgActionCancel />,
+  }
+
   return (
     <div>
       <TextFieldWithDropdown<Member>
-        items={members.map((member) => ({
-          label: member.handle || '',
-          nodeStart: <Avatar assetUrl={member.avatarUri} />,
-          id: member.id,
-          handle: member.handle,
-          avatarUri: member.avatarUri,
-        }))}
+        items={dropdownItems}
+        placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
+        notFoundNode={isNotFound ? notFoundListItem : null}
         resetOnSelect
         loading={isLoading}
-        onSelect={handleSelect}
-        onChange={(val) => debounceFetchMembers.current(val, selectedMembers)}
+        onSelectedItemChange={handleSelect}
+        onInputValueChange={(val) => debounceFetchMembers.current(val, selectedMembers)}
       />
       <MemberBadgesWrapper>
         {selectedMembers.map(({ id, handle, avatarUri }) => (

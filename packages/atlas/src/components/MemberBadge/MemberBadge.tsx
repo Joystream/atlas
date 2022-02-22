@@ -6,7 +6,7 @@ import { Avatar } from '../Avatar'
 
 export type MemberBadgeProps = {
   avatarUri?: string | null
-  handle: string | null
+  handle?: string | null
   onDeleteClick?: () => void
   className?: string
 }
