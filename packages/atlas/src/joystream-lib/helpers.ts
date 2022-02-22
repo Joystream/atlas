@@ -211,19 +211,24 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
   }
 }
 
+type AuctionDetails = { open: OpenAuctionDetails } | { english: EnglishAuctionDetails }
 export const createNftAuctionParams = (registry: Registry, inputMetadata: NftAuctionInputMetadata): AuctionParams => {
-  if (inputMetadata.type === 'open') {
-    const openAuctionDetails = new OpenAuctionDetails(registry, {
-      bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
-    })
+  const getParams = (auctionDetails: AuctionDetails) => {
     return new AuctionParams(registry, {
       starting_price: new Balance(registry, inputMetadata.startingPrice),
       buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
-      auction_type: new AuctionType(registry, { open: openAuctionDetails }),
+      auction_type: new AuctionType(registry, auctionDetails),
       minimal_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
       starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
       whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
     })
+  }
+
+  if (inputMetadata.type === 'open') {
+    const openAuctionDetails = new OpenAuctionDetails(registry, {
+      bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
+    })
+    return getParams({ open: openAuctionDetails })
   }
 
   if (inputMetadata.type === 'english') {
@@ -231,14 +236,7 @@ export const createNftAuctionParams = (registry: Registry, inputMetadata: NftAuc
       auction_duration: new BlockNumber(registry, inputMetadata.auctionDurationBlocks),
       extension_period: new BlockNumber(registry, inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
     })
-    return new AuctionParams(registry, {
-      starting_price: new Balance(registry, inputMetadata.startingPrice),
-      buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
-      auction_type: new AuctionType(registry, { english: englishAuctionDetails }),
-      minimal_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
-      starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
-      whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
-    })
+    return getParams({ english: englishAuctionDetails })
   }
 
   throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown auction type`, details: { inputMetadata } })
