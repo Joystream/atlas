@@ -8,6 +8,7 @@ import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { copyToClipboard } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
 
+import { useSnackbar } from '../../../providers/snackbars/snackbar'
 import { VideoTile } from '../VideoTile'
 import { VideoDetailsVariant } from '../VideoTileDetails'
 
@@ -19,6 +20,7 @@ type VideoTileViewerProps = {
 }
 
 export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
+  const { displaySnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
     useVideoTileSharedLogic({
@@ -27,7 +29,8 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '')
-  }, [videoHref])
+    displaySnackbar({ title: 'Video URL have been copied' })
+  }, [videoHref, displaySnackbar])
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
 
