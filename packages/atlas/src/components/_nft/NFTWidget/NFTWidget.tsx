@@ -48,10 +48,10 @@ export type NFTWidgetProps = {
     | { status: 'buy-now'; buyNowPrice: number }
     | Auction
 }
-// Questions:
-// Don't we need to reflect in UI when the Auction actually STARTS?
 
+// TODO: Update Joy icon with the right variant once it is exported correctly
 // TODO: remove dummy dollar values
+// TODO: needs UI for when auction starts in the future
 export const NFTWidget: React.FC<NFTWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
   const [containerRef, { width = 281 }] = useMeasure()
   const size: Size = width > 280 ? 'medium' : 'small'
