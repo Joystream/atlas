@@ -38,7 +38,7 @@ export const TitleSection = styled.div`
 
   ${media.sm} {
     margin-top: 0;
-    grid-template-columns: min-content max-content auto;
+    grid-template-columns: min-content 1fr auto;
   }
 `
 
@@ -49,19 +49,17 @@ export const TitleContainer = styled.div`
   max-width: 100%;
   overflow: hidden;
   z-index: 2;
+  justify-self: stretch;
+  justify-content: center;
 
   ${media.sm} {
     align-items: normal;
-    justify-content: center;
+    margin-left: ${sizes(6)};
   }
 `
 
 export const Title = styled(Text)`
   margin-bottom: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 600px;
 `
 
 export const SortContainer = styled.div`
@@ -89,7 +87,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   border-radius: 100%;
   ${media.sm} {
     border: none;
-    margin: 0 ${sizes(8)} 0 0;
+    margin: 0;
   }
 `
 
@@ -160,7 +158,6 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   ${media.sm} {
     grid-area: initial;
     margin: 0;
-    max-width: 200px;
   }
 `
 
