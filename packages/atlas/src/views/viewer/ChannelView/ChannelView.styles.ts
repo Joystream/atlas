@@ -38,7 +38,7 @@ export const TitleSection = styled.div`
 
   ${media.sm} {
     margin-top: 0;
-    grid-template-columns: min-content max-content auto;
+    grid-template-columns: min-content 1fr auto;
   }
 `
 
@@ -49,10 +49,11 @@ export const TitleContainer = styled.div`
   max-width: 100%;
   overflow: hidden;
   z-index: 2;
+  justify-self: stretch;
 
   ${media.sm} {
     align-items: normal;
-    justify-content: center;
+    margin-left: ${sizes(6)};
   }
 `
 

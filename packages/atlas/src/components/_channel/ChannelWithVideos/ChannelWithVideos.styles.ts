@@ -6,6 +6,10 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
+export const Title = styled(Text)`
+  margin-right: ${sizes(6)};
+`
+
 export const ChannelCardAnchor = styled(Link)`
   text-decoration: none;
   align-items: center;
