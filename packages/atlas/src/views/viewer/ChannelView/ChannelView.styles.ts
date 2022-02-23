@@ -50,6 +50,7 @@ export const TitleContainer = styled.div`
   overflow: hidden;
   z-index: 2;
   justify-self: stretch;
+  justify-content: center;
 
   ${media.sm} {
     align-items: normal;
@@ -86,7 +87,7 @@ export const StyledChannelLink = styled(ChannelLink)`
   border-radius: 100%;
   ${media.sm} {
     border: none;
-    margin: 0 ${sizes(8)} 0 0;
+    margin: 0;
   }
 `
 
