@@ -2,6 +2,7 @@ import React, { FC, useMemo, useState } from 'react'
 
 import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
+import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
@@ -11,14 +12,7 @@ import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
-import {
-  ChannelCardAnchor,
-  ChannelFollows,
-  FollowButton,
-  InfoWrapper,
-  StyledAvatar,
-  Title,
-} from './ChannelWithVideos.styles'
+import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'
 
 type ChannelWithVideosProps = {
   channelId?: string
@@ -82,7 +76,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
           {isLoading ? (
             <SkeletonLoader width="120px" height="20px" bottomSpace="4px" />
           ) : (
-            <Title variant="h300">{channel?.title}</Title>
+            <Text variant="h300">{channel?.title}</Text>
           )}
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
