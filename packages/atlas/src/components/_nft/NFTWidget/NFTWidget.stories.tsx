@@ -13,21 +13,26 @@ export default {
     size: {
       control: { type: 'select', options: ['small', 'medium'] },
     },
+    status: {
+      control: { type: 'select', options: ['iddle', 'buy-now', 'auction'] },
+    },
   },
   args: {
     ownerHandle: 'ye 🖤',
     ownerAvatarUri: 'https://54.172.37.177.nip.io/distributor-1/api/v1/assets/3',
-    auctionEndDate: add(new Date(), {
-      minutes: 110,
-      seconds: 10,
-    }),
-    auction: 'none',
     size: 'medium',
+    status: 'iddle',
+    startingPrice: 15800,
     buyNowPrice: 36900,
-    minBid: 15800,
     topBid: 15800,
     lastTransactionDate: new Date(),
     lastPrice: 25900,
+    isCompleted: false,
+    canWithdrawBid: false,
+    auctionPlannedEndDate: add(new Date(), {
+      minutes: 110,
+      seconds: 10,
+    }),
   },
   decorators: [
     (Story) => {
@@ -40,9 +45,35 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NFTWidgetProps & { size: 'medium' | 'small' }> = (args) => (
-  <Container data-size={args.size}>
-    <NFTWidget {...args} />
+// worth typing?
+const Template: Story<NFTWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
+  size,
+  status,
+  startingPrice,
+  buyNowPrice,
+  topBid,
+  lastTransactionDate,
+  lastPrice,
+  isCompleted,
+  canWithdrawBid,
+  auctionPlannedEndDate,
+  ...others
+}) => (
+  <Container data-size={size}>
+    <NFTWidget
+      {...others}
+      nftState={{
+        status: status,
+        startingPrice,
+        buyNowPrice,
+        topBid,
+        lastTransactionDate,
+        lastPrice,
+        canWithdrawBid,
+        isCompleted,
+        auctionPlannedEndDate,
+      }}
+    />
   </Container>
 )
 

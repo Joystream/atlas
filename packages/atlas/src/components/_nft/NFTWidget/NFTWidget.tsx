@@ -28,31 +28,31 @@ import {
 } from './NFTWidget.styles'
 
 type Size = 'medium' | 'small'
+
+export type Auction = {
+  status: 'auction'
+  startingPrice: number
+  buyNowPrice?: number
+  topBid?: number
+  isCompleted?: boolean
+  canWithdrawBid?: boolean
+  auctionPlannedEndDate?: Date
+}
+
 export type NFTWidgetProps = {
   ownerHandle?: string
   ownerAvatarUri?: string
   isOwner: boolean
-  auction: 'none' | 'last-price' | 'waiting-for-bids' | 'minimum-bid' | 'top-bid' | 'withdraw' | 'settle'
-  buyNowPrice?: number
-  lastPrice?: number
-  minBid?: number
-  topBid?: number
-  auctionEndDate?: Date
-  lastTransactionDate?: Date
+  nftState:
+    | { status: 'iddle'; lastPrice?: number; lastTransactionDate?: Date }
+    | { status: 'buy-now'; buyNowPrice: number }
+    | Auction
 }
+// Questions:
+// Don't we need to reflect in UI when the Auction actually STARTS?
+
 // TODO: remove dummy dollar values
-export const NFTWidget: React.FC<NFTWidgetProps> = ({
-  ownerHandle,
-  isOwner,
-  auction,
-  buyNowPrice,
-  lastPrice = 0,
-  topBid = 0,
-  minBid = 0,
-  auctionEndDate,
-  ownerAvatarUri,
-  lastTransactionDate,
-}) => {
+export const NFTWidget: React.FC<NFTWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
   const [containerRef, { width = 281 }] = useMeasure()
   const size: Size = width > 280 ? 'medium' : 'small'
 
@@ -60,39 +60,39 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
-    const buyNowNode = buyNowPrice ? (
-      <NFTInfoItem
-        size={size}
-        label="Buy now"
-        content={
-          <>
-            <JoyTokenIcon />
-            <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
-          </>
-        }
-        secondaryText="$9,629.25"
-      />
-    ) : null
-    const timerNode = !!auctionEndDate && <NFTTimerItem size={size} time={auctionEndDate} />
-    const placeABidBuyNowNode = (
-      <GridItem colSpan={buttonColumnSpan}>
-        <ButtonGrid data-size={size} data-two-columns>
-          <Button fullWidth variant="secondary" size={buttonSize}>
-            Place a bid
-          </Button>
-          <Button fullWidth size={buttonSize}>
-            Buy now
-          </Button>
-        </ButtonGrid>
-      </GridItem>
-    )
+    const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
+      buyNowPrice ? (
+        <NFTInfoItem
+          size={size}
+          label="Buy now"
+          content={
+            <>
+              <JoyTokenIcon />
+              <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
+            </>
+          }
+          secondaryText="$9,629.25"
+        />
+      ) : null
 
-    switch (auction) {
-      case 'none':
+    switch (nftState.status) {
+      case 'iddle':
         return (
           <>
-            {buyNowPrice ? (
-              buyNowNode
+            {nftState.lastPrice ? (
+              <NFTInfoItem
+                size={size}
+                label="Last price"
+                content={
+                  <>
+                    <JoyTokenIcon />
+                    <Text variant={contentTextVariant} secondary>
+                      {formatNumberShort(nftState.lastPrice)}
+                    </Text>
+                  </>
+                }
+                secondaryText={nftState.lastTransactionDate && formatDateTime(nftState.lastTransactionDate)}
+              />
             ) : (
               <NFTInfoItem
                 size={size}
@@ -104,52 +104,6 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
                 }
               />
             )}
-            {buyNowPrice ? (
-              isOwner ? (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <ButtonGrid data-size={size}>
-                    <Button fullWidth variant="secondary" size={buttonSize}>
-                      Change price
-                    </Button>
-                    <Button fullWidth variant="destructive" size={buttonSize}>
-                      Remove from sale
-                    </Button>
-                  </ButtonGrid>
-                </GridItem>
-              ) : (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <Button fullWidth size={buttonSize}>
-                    Buy now
-                  </Button>
-                </GridItem>
-              )
-            ) : (
-              isOwner && (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <Button fullWidth variant="secondary" size={buttonSize}>
-                    Start sale of this NFT
-                  </Button>
-                </GridItem>
-              )
-            )}
-          </>
-        )
-      case 'last-price':
-        return (
-          <>
-            <NFTInfoItem
-              size={size}
-              label="Last price"
-              content={
-                <>
-                  <JoyTokenIcon />
-                  <Text variant={contentTextVariant} secondary>
-                    {formatNumberShort(lastPrice)}
-                  </Text>
-                </>
-              }
-              secondaryText={lastTransactionDate && formatDateTime(lastTransactionDate)}
-            />
             {isOwner && (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth variant="secondary" size={buttonSize}>
@@ -159,147 +113,97 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
             )}
           </>
         )
-      case 'waiting-for-bids':
+      case 'buy-now':
         return (
           <>
-            <NFTInfoItem
-              size={size}
-              label="status"
-              content={
-                <>
-                  <JoyTokenIcon />
-                  <Text variant={contentTextVariant} secondary>
-                    –
-                  </Text>
-                </>
-              }
-              secondaryText="Place first bid"
-            />
-            {buyNowNode}
-            {timerNode}
-            {buyNowPrice ? (
-              isOwner ? (
-                <GridItem colSpan={buttonColumnSpan}>
+            <BuyNow buyNowPrice={nftState.buyNowPrice} />
+            {isOwner ? (
+              <GridItem colSpan={buttonColumnSpan}>
+                <ButtonGrid data-size={size}>
+                  <Button fullWidth variant="secondary" size={buttonSize}>
+                    Change price
+                  </Button>
                   <Button fullWidth variant="destructive" size={buttonSize}>
                     Remove from sale
                   </Button>
-                </GridItem>
-              ) : (
-                placeABidBuyNowNode
-              )
-            ) : isOwner ? (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth variant="destructive" size={buttonSize}>
-                  Remove from sale
-                </Button>
+                </ButtonGrid>
               </GridItem>
             ) : (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth size={buttonSize}>
-                  Place a bid
+                  Buy now
                 </Button>
               </GridItem>
             )}
           </>
         )
-      case 'minimum-bid':
-        return (
+      case 'auction':
+        return nftState.isCompleted ? (
           <>
             <NFTInfoItem
               size={size}
-              label="Min bid"
+              label="You have won with"
               content={
                 <>
                   <JoyTokenIcon />
-                  <Text variant={contentTextVariant}>{formatNumberShort(minBid)}</Text>
+                  <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid ?? 0)}</Text>
                 </>
               }
               secondaryText="$9,629.25"
             />
-            {buyNowNode}
-            {timerNode}
-            {buyNowPrice ? (
-              isOwner ? (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <Button fullWidth variant="destructive" size={buttonSize}>
-                    Remove from sale
-                  </Button>
-                </GridItem>
-              ) : (
-                placeABidBuyNowNode
-              )
-            ) : isOwner ? (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth variant="destructive" size={buttonSize}>
-                  Remove from sale
-                </Button>
-              </GridItem>
-            ) : (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth size={buttonSize}>
-                  Place a bid
-                </Button>
-              </GridItem>
-            )}
+            <GridItem colSpan={buttonColumnSpan}>
+              <Button fullWidth size={buttonSize}>
+                Settle auction
+              </Button>
+            </GridItem>
           </>
-        )
-      case 'top-bid':
-        return (
+        ) : (
           <>
-            <NFTInfoItem
-              size={size}
-              label="Top bid"
-              content={
-                <>
-                  <JoyTokenIcon />
-                  <Text variant={contentTextVariant}>{formatNumberShort(topBid)}</Text>
-                </>
-              }
-              secondaryText="$9,629.25"
-            />
-            {buyNowNode}
-            {timerNode}
-            {buyNowPrice ? (
-              isOwner ? (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <Button fullWidth variant="destructive" size={buttonSize}>
-                    Review and accept bid
-                  </Button>
-                </GridItem>
-              ) : (
-                placeABidBuyNowNode
-              )
-            ) : isOwner ? (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth variant="destructive" size={buttonSize}>
-                  Review and accept bid
-                </Button>
-              </GridItem>
+            {nftState.topBid ? (
+              <NFTInfoItem
+                size={size}
+                label="Top bid"
+                content={
+                  <>
+                    <JoyTokenIcon />
+                    <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid)}</Text>
+                  </>
+                }
+                secondaryText="$9,629.25"
+              />
             ) : (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth size={buttonSize}>
-                  Place a bid
-                </Button>
-              </GridItem>
+              <NFTInfoItem
+                size={size}
+                label="Starting Price"
+                content={
+                  <>
+                    <JoyTokenIcon />
+                    <Text variant={contentTextVariant}>{formatNumberShort(nftState.startingPrice)}</Text>
+                  </>
+                }
+                secondaryText="$9,629.25"
+              />
             )}
-          </>
-        )
-      case 'withdraw':
-        return (
-          <>
-            <NFTInfoItem
-              size={size}
-              label="Top bid"
-              content={
-                <>
-                  <JoyTokenIcon />
-                  <Text variant={contentTextVariant}>{formatNumberShort(topBid)}</Text>
-                </>
-              }
-              secondaryText="$9,629.25"
-            />
-            {buyNowNode}
-            {buyNowPrice ? (
+            <BuyNow buyNowPrice={nftState.buyNowPrice} />
+            {!!nftState.auctionPlannedEndDate && <NFTTimerItem size={size} time={nftState.auctionPlannedEndDate} />}
+            {isOwner ? (
+              <>
+                {!nftState.auctionPlannedEndDate && !nftState.topBid && (
+                  <GridItem colSpan={buttonColumnSpan}>
+                    <Button fullWidth variant="destructive" size={buttonSize}>
+                      Remove from sale
+                    </Button>
+                  </GridItem>
+                )}
+                {!nftState.auctionPlannedEndDate && !!nftState.topBid && (
+                  <GridItem colSpan={buttonColumnSpan}>
+                    <Button fullWidth size={buttonSize}>
+                      Review and accept bid
+                    </Button>
+                  </GridItem>
+                )}
+              </>
+            ) : nftState.buyNowPrice ? (
               <>
                 <GridItem colSpan={buttonColumnSpan}>
                   <ButtonGrid data-size={size} data-two-columns>
@@ -309,11 +213,14 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
                     <Button fullWidth size={buttonSize}>
                       Buy now
                     </Button>
-                    <GridItem colSpan={2}>
-                      <Button fullWidth size={buttonSize} variant="destructive-secondary">
-                        Withdraw a bid
-                      </Button>
-                    </GridItem>
+                    {/* second row button */}
+                    {nftState.canWithdrawBid && (
+                      <GridItem colSpan={2}>
+                        <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                          Withdraw a bid
+                        </Button>
+                      </GridItem>
+                    )}
                   </ButtonGrid>
                 </GridItem>
               </>
@@ -333,30 +240,8 @@ export const NFTWidget: React.FC<NFTWidgetProps> = ({
             )}
           </>
         )
-      case 'settle':
-        return (
-          <>
-            <NFTInfoItem
-              size={size}
-              label="You have won with"
-              content={
-                <>
-                  <JoyTokenIcon />
-                  {/* TODO: probably not top bid but Idk the payload yet */}
-                  <Text variant={contentTextVariant}>{formatNumberShort(topBid)}</Text>
-                </>
-              }
-              secondaryText="$9,629.25"
-            />
-            <GridItem colSpan={buttonColumnSpan}>
-              <Button fullWidth size={buttonSize}>
-                Settle auction
-              </Button>
-            </GridItem>
-          </>
-        )
     }
-  }, [size, buyNowPrice, auctionEndDate, auction, isOwner, lastPrice, lastTransactionDate, minBid, topBid])
+  }, [size, nftState, isOwner])
 
   return (
     <Container ref={containerRef}>
