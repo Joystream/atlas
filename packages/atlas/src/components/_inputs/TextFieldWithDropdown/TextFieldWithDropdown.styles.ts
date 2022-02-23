@@ -7,12 +7,14 @@ export const TextFieldWithDropdownWrapper = styled.div`
   width: 100%;
 `
 
-export const ListWrapper = styled.ul`
+export const ListWrapper = styled.ul<{ topPosition?: number }>`
   max-height: 300px;
   overflow-y: auto;
   background: ${cVar('colorBackgroundStrong')};
   padding: 0;
   position: absolute;
+  top: ${({ topPosition = 0 }) => topPosition}px;
+  left: 0;
   width: 100%;
   z-index: ${zIndex.globalOverlay};
   margin: 0;
