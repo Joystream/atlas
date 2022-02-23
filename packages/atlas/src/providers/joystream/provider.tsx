@@ -41,12 +41,16 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     const getPrice = async () => {
-      const data = await fetch(JOYSTREAM_STATUS_URL)
-      const json = await data.json()
-      setPrice(parseFloat(json.price))
+      try {
+        const data = await fetch(JOYSTREAM_STATUS_URL)
+        const json = await data.json()
+        setPrice(parseFloat(json.price))
+      } catch (e) {
+        SentryLogger.error('Failed to fetch tJoy price', e)
+      }
     }
     getPrice()
-  })
+  }, [setPrice])
   useEffect(() => {
     const getJoystream = async () => {
       try {

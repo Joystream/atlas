@@ -9,3 +9,17 @@ export const useJoystream = () => {
   }
   return ctx
 }
+
+export const useTokenPrice = () => {
+  const ctx = useContext(JoystreamContext)
+  if (!ctx) {
+    throw new Error('useJoystream must be used within JoystreamProvider')
+  }
+
+  const { price } = ctx
+  const formattedPrice = `${price} $ / tJoy`
+  return {
+    price,
+    formattedPrice,
+  }
+}
