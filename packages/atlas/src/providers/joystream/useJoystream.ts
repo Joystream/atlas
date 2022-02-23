@@ -17,9 +17,11 @@ export const useTokenPrice = () => {
   }
 
   const { price } = ctx
-  const formattedPrice = `${price} $ / tJoy`
+  const convertToUSD = (tJoy: number) => tJoy * price
+  const convertToTJoy = (USD: number) => USD / price
   return {
     price,
-    formattedPrice,
+    convertToUSD,
+    convertToTJoy,
   }
 }
