@@ -40,7 +40,11 @@ export const NotificationTile: React.FC<NotificationProps> = ({
   const avatarSkeletonSize = variant === 'default' ? 40 : 32
   return (
     <Wrapper read={read} selected={selected} loading={loading} className={className} variant={variant}>
-      {variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} disabled={loading} value={selected} />}
+      {!loading ? (
+        variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} value={selected} />
+      ) : (
+        <SkeletonLoader width={16} height={16} />
+      )}
       <AvatarWrapper tileVariant={variant}>
         {!loading ? (
           <Avatar size={variant === 'default' ? 'small' : 'default'} assetUrl={avatarUrl} />
