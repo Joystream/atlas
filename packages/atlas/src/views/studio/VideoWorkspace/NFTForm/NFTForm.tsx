@@ -42,14 +42,14 @@ type NFTFormProps = {
   listingType: Listing
   setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null>>
   setListingType: (listingType: Listing) => void
-  NFTCurrentStepIdx: number
+  nftCurrentStepIdx: number
   onSubmit: (data: NFTFormData) => void
   termsAccepted: boolean
   toggleTermsAccept: () => void
 }
 
 export const NFTForm: React.FC<NFTFormProps> = ({
-  NFTCurrentStepIdx,
+  nftCurrentStepIdx,
   listingType,
   setFormStatus,
   setListingType,
@@ -123,7 +123,7 @@ export const NFTForm: React.FC<NFTFormProps> = ({
             <StepperWrapper>
               <StepperInnerWrapper>
                 {issueNFTSteps.map((step, idx) => {
-                  const stepVariant = getStepVariant(NFTCurrentStepIdx, idx)
+                  const stepVariant = getStepVariant(nftCurrentStepIdx, idx)
                   const isLast = idx === issueNFTSteps.length - 1
                   return (
                     <StepWrapper key={idx}>
@@ -134,7 +134,7 @@ export const NFTForm: React.FC<NFTFormProps> = ({
                 })}
               </StepperInnerWrapper>
             </StepperWrapper>
-            {stepsContent[NFTCurrentStepIdx]}
+            {stepsContent[nftCurrentStepIdx]}
           </NFTFormWrapper>
         </NFTFormScrolling>
       </NFTWorkspaceFormWrapper>
