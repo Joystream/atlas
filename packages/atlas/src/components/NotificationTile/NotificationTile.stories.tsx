@@ -7,9 +7,10 @@ export default {
   title: 'Other/NotificationTile',
   component: NotificationTile,
   argTypes: {
-    variant: {
-      control: { type: 'radio', options: ['default', 'compact'] },
-    },
+    onSelect: { table: { disable: true } },
+    id: { table: { disable: true } },
+    className: { table: { disable: true } },
+    selected: { table: { disable: true } },
   },
   args: {
     avatarUrl: 'https://placedog.net/400/400?random&1',
