@@ -62,10 +62,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
                   <SvgAlertsInformative24 />
                 </IconWrapper>
               )}
-              {headerText && <TooltipText variant="h100">{headerText}</TooltipText>}
+              {headerText && (
+                <TooltipText variant="h100" footer={!!footer}>
+                  {headerText}
+                </TooltipText>
+              )}
             </TooltipHeader>
 
-            <TooltipText withIcon={!!icon} variant="t100">
+            <TooltipText withIcon={!!icon} footer={!!footer} variant="t100">
               {text}
             </TooltipText>
             {footer}

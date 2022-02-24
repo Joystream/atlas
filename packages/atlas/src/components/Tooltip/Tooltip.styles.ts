@@ -39,10 +39,11 @@ export const Arrow = styled.div`
 
 type TooltipTextProps = {
   withIcon?: boolean
+  footer: boolean
 }
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  max-width: 255px;
+  max-width: ${({ footer }) => (footer ? 249 : 200)}px;
 
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
