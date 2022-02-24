@@ -73,40 +73,27 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
     })
   }
 
-  const getHeaderText = () => {
-    if (selectedType === 'Auction') {
-      return (
-        <>
-          <Header variant="h500">Auction</Header>
-          <Text variant="t300" secondary>
-            Choose settings of your listing. All fields are optional.
-          </Text>
-        </>
-      )
-    }
-    if (selectedType === 'Fixed price') {
-      return (
-        <>
-          <Header variant="h500">Buy now</Header>
-          <Text variant="t300" secondary>
-            No bids will be accepted, only a purchase for fixed price will complete the sale.
-          </Text>
-        </>
-      )
-    }
-    return (
-      <>
-        <Header variant="h500">Not for sale</Header>
-        <Text variant="t300" secondary>
-          Choose settings of your listing. All fields are optional.
-        </Text>
-      </>
-    )
+  const headerText = {
+    'Auction': {
+      header: 'Auction',
+      caption: 'Choose settings of your listing. All fields are optional.',
+    },
+    'Fixed price': {
+      header: 'Buy now',
+      caption: 'No bids will be accepted, only a purchase for fixed price will complete the sale.',
+    },
+    'Not for sale': {
+      header: 'Not for sale',
+      caption: 'No bids will be accepted, only a purchase for fixed price will complete the sale.',
+    },
   }
 
   return (
     <>
-      {getHeaderText()}
+      <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
+      <Text variant="t300" secondary>
+        {selectedType && headerText[selectedType].caption}
+      </Text>
       <form>
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
