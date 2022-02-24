@@ -190,7 +190,7 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   const mdMatch = useMediaMatch('md')
   const [actionBarRef, actionBarBounds] = useMeasure()
 
-  const isActive = variant === 'edit' || canSubmit
+  const isActive = variant === 'new' || canSubmit
   const height = isActive ? actionBarBounds.height : 0
 
   // send update to VideoWorkspace whenever height changes
