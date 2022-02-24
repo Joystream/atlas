@@ -19,17 +19,8 @@ const getNotificationWrapperStyles = ({ read, selected, loading, variant }: Noti
     `
   }
   if (!read) {
-    if (variant === 'default') {
-      return css`
-        background-color: ${cVar('colorBackground')};
-
-        :hover {
-          background-color: ${cVar('colorBackgroundStrong')};
-        }
-      `
-    }
     return css`
-      background-color: ${cVar('colorBackgroundMutedAlpha')};
+      background-color: ${variant === 'default' ? cVar('colorBackground') : cVar('colorBackgroundMutedAlpha')};
 
       :hover {
         background-color: ${cVar('colorBackgroundStrong')};
@@ -39,17 +30,9 @@ const getNotificationWrapperStyles = ({ read, selected, loading, variant }: Noti
   if (loading) {
     return
   }
-  if (variant === 'default') {
-    return css`
-      background-color: ${cVar('colorBackgroundMuted')};
 
-      :hover {
-        background-color: ${cVar('colorBackground')};
-      }
-    `
-  }
   return css`
-    background-color: transparent;
+    background-color: ${variant === 'default' ? cVar('colorBackgroundMuted') : 'transparent'};
 
     :hover {
       background-color: ${cVar('colorBackground')};
