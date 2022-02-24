@@ -16,16 +16,14 @@ export type Member = {
 
 export type NftTileProps = {
   auction: 'none' | 'minBid' | 'topBid' | 'waiting'
-  buyNow?: boolean
   thumbnail: VideoThumbnailProps
   loading?: boolean
   title: string
   owner: Member
   creator: Member
-  timer?: string
   duration?: number | null
   views?: number | null
-  bid: number
+  buyNowPrice?: number
   minBid?: number
   topBid?: number
   timeLeft?: number
@@ -35,7 +33,6 @@ export type NftTileProps = {
 
 export const NftTile: React.FC<NftTileProps> = ({
   auction,
-  buyNow,
   thumbnail,
   loading,
   title,
@@ -43,7 +40,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   owner,
   duration,
   views,
-  bid,
+  buyNowPrice,
   minBid,
   topBid,
   timeLeft,
@@ -76,11 +73,13 @@ export const NftTile: React.FC<NftTileProps> = ({
   const getBottomLeft = useMemo(() => {
     switch (auction) {
       case 'none':
-        return <Pill icon={buyNow ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" variant="overlay" />
+        return (
+          <Pill icon={buyNowPrice ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" variant="overlay" />
+        )
       case 'minBid':
       case 'topBid':
       case 'waiting':
-        return buyNow ? (
+        return buyNowPrice ? (
           <PillGroup
             items={[
               {
@@ -111,7 +110,7 @@ export const NftTile: React.FC<NftTileProps> = ({
           />
         )
     }
-  }, [auction, buyNow, calculatedTimeLeft, timeLeft])
+  }, [auction, buyNowPrice, calculatedTimeLeft, timeLeft])
 
   return (
     <Container fullWidth={fullWidth}>
@@ -139,14 +138,13 @@ export const NftTile: React.FC<NftTileProps> = ({
         hovered={hovered}
         owner={owner}
         auction={auction}
-        bid={bid}
+        buyNowPrice={buyNowPrice}
         loading={loading}
         topBid={topBid}
         creator={creator}
         role={role}
         title={title}
         minBid={minBid}
-        buyNow={buyNow}
       />
     </Container>
   )
