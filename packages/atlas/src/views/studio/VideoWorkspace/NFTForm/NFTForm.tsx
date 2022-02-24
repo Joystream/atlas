@@ -40,7 +40,7 @@ const DUMMY_NFT_TILE_PROPS = {
 
 type NFTFormProps = {
   listingType: Listing
-  setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null>>
+  setFormStatus: (data: VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null) => void
   setListingType: (listingType: Listing) => void
   nftCurrentStepIdx: number
   onSubmit: (data: NFTFormData) => void
@@ -88,11 +88,10 @@ export const NFTForm: React.FC<NFTFormProps> = ({
     () => ({
       isDirty,
       isValid,
-      formValues: getValues(),
       resetForm: reset,
-      triggerFormSubmit: handleSubmit,
+      triggerNftFormSubmit: handleSubmit,
     }),
-    [getValues, handleSubmit, isDirty, isValid, reset]
+    [handleSubmit, isDirty, isValid, reset]
   )
 
   // sent updates on form status to VideoWorkspace

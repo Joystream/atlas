@@ -59,6 +59,7 @@ export type VideoWorkspaceFormStatus<T> = {
   isValid: boolean
   isDirty: boolean
   hasUnsavedAssets?: boolean
-  triggerFormSubmit: () => void
+  triggerVideoFormSubmit?: () => void
+  triggerNftFormSubmit?: () => void
   resetForm: UseFormReset<T>
 }

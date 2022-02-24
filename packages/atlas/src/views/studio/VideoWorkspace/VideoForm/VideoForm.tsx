@@ -66,7 +66,7 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
-  setFormStatus: Dispatch<SetStateAction<VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> | null>>
+  setFormStatus: (data: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> | null) => void
   videoFormDataForNFT: VideoFormData | null
   setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
   isIssuedAsNFT: boolean
@@ -250,11 +250,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
         hasUnsavedAssets,
         isDirty,
         isValid: isFormValid,
-        formValues: getValues(),
         resetForm: reset,
-        triggerFormSubmit: handleSubmit,
+        triggerVideoFormSubmit: handleSubmit,
       }),
-      [getValues, handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
+      [handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
     )
 
     // sent updates on form status to VideoWorkspace
