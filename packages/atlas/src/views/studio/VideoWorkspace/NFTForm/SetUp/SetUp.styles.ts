@@ -5,19 +5,6 @@ import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { cVar, sizes } from '@/styles'
 
-export const MoreSettingsSection = styled.div<{ expanded: boolean }>`
-  visibility: ${({ expanded }) => (expanded ? 'visible' : 'hidden')};
-  height: ${({ expanded }) => (expanded ? '400px' : '0')};
-  overflow: hidden;
-  opacity: ${({ expanded }) => (expanded ? 1 : 0)};
-  transition: opacity 150ms ease-out, height 150ms ease-out 150ms;
-`
-
-export const MoreSettingsDescription = styled(Text)`
-  display: block;
-  margin-top: ${sizes(4)};
-`
-
 export const Header = styled(Text)`
   margin-bottom: ${sizes(4)};
 `

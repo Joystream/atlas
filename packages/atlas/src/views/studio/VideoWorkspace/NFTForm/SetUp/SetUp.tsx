@@ -4,8 +4,6 @@ import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
@@ -13,16 +11,7 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { cVar } from '@/styles'
 import { AuctionDurationTooltipFooter } from '@/views/studio/VideoWorkspace/NFTForm/AcceptTerms/AcceptTerms.styles'
 
-import {
-  AuctionDatePickerWrapper,
-  DaysSummary,
-  DaysSummaryInfo,
-  Divider,
-  Header,
-  MoreSettingsDescription,
-  MoreSettingsSection,
-  StyledFormField,
-} from './SetUp.styles'
+import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
 
 import { useNFTForm } from '../NFTForm.hooks'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
@@ -36,7 +25,6 @@ type SetUpProps = {
 
 export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }) => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])
-  const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [auctionDate, setAuctionDate] = useState<AuctionDate>({ startDate: null, endDate: null })
   const { convertDurationToBlocks } = useBlockTimeEstimation()
   const { getTotalDaysAndHoursText } = useNFTForm()
@@ -119,18 +107,6 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
         )}
         {selectedType === 'Auction' && (
           <>
-            <StyledFormField
-              title="Min step bid"
-              switchProps={{ name: 'minimalBidStepActive', onChange: toggleActiveInput }}
-              infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
-            >
-              <TextField
-                {...register('minimalBidStep')}
-                type="number"
-                nodeEnd={<Pill label="tJOY" />}
-                disabled={!activeInputs.includes('minimalBidStepActive')}
-              />
-            </StyledFormField>
             <FormField
               title="Minimum bid"
               switchProps={{ name: 'startingPriceActive', onChange: toggleActiveInput }}
@@ -157,97 +133,80 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
                 disabled={!activeInputs.includes('buyNowPriceActive')}
               />
             </FormField>
-            <Divider />
-            <Button
-              size="large"
-              iconPlacement="right"
-              textOnly
-              icon={moreSettingsVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
-              onClick={() => setMoreSettingsVisible(!moreSettingsVisible)}
+            <FormField
+              title="Auction duration"
+              switchProps={{ name: 'auctionDuration', onChange: toggleActiveInput }}
+              infoTooltip={{
+                text: 'You can set the auction expiration date by setting its duration. When active - highest bid wins at the time of auction end.',
+              }}
             >
-              Show {moreSettingsVisible ? 'less' : 'more'} settings
-            </Button>
-            {!moreSettingsVisible && (
-              <MoreSettingsDescription variant="t200" secondary>
-                Auction duration
-              </MoreSettingsDescription>
+              <AuctionDatePickerWrapper>
+                <AuctionDatePicker
+                  size="regular"
+                  label="Starting date"
+                  minDate={new Date()}
+                  disabled={!activeInputs.includes('auctionDuration')}
+                  items={[
+                    {
+                      value: new Date(),
+                      name: 'Right after listing',
+                    },
+                  ]}
+                  onChange={(value) => setAuctionDuration({ startDate: value })}
+                  value={auctionDate.startDate}
+                />
+                <AuctionDatePicker
+                  size="regular"
+                  label="expiration date"
+                  minDate={new Date()}
+                  disabled={!activeInputs.includes('auctionDuration') || !auctionDate.startDate}
+                  onChange={(value) => setAuctionDuration({ endDate: value })}
+                  items={[
+                    {
+                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 1),
+                      name: '1 day',
+                    },
+                    {
+                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 3),
+                      name: '3 days',
+                    },
+                    {
+                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 5),
+                      name: '5 days',
+                    },
+                    {
+                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 7),
+                      name: '7 days',
+                    },
+                  ]}
+                  value={auctionDate.endDate}
+                />
+              </AuctionDatePickerWrapper>
+            </FormField>
+            {auctionDate.startDate instanceof Date && auctionDate.endDate instanceof Date && (
+              <DaysSummary>
+                <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
+                  Total:
+                </Text>
+                &nbsp;
+                <Text variant="t200-strong">{daysAndHours}</Text>
+                &nbsp;
+                <Text variant="t200-strong" secondary>
+                  / {numberOfBlocks?.toLocaleString('no', { maximumFractionDigits: 1 })} Blocks
+                </Text>
+                <DaysSummaryInfo
+                  text="It’s the time when your auction will become active and buyer will be able to make an offer"
+                  placement="top"
+                  footer={
+                    <AuctionDurationTooltipFooter>
+                      <Text variant="t100">
+                        {daysAndHours} = {numberOfBlocks}
+                      </Text>
+                    </AuctionDurationTooltipFooter>
+                  }
+                />
+              </DaysSummary>
             )}
-            <MoreSettingsSection expanded={moreSettingsVisible}>
-              <FormField
-                title="Auction duration"
-                switchProps={{ name: 'auctionDuration', onChange: toggleActiveInput }}
-                infoTooltip={{
-                  text: 'You can set the auction expiration date by setting its duration. When active - highest bid wins at the time of auction end.',
-                }}
-              >
-                <AuctionDatePickerWrapper>
-                  <AuctionDatePicker
-                    size="regular"
-                    label="Starting date"
-                    minDate={new Date()}
-                    disabled={!activeInputs.includes('auctionDuration')}
-                    items={[
-                      {
-                        value: new Date(),
-                        name: 'Right after listing',
-                      },
-                    ]}
-                    onChange={(value) => setAuctionDuration({ startDate: value })}
-                    value={auctionDate.startDate}
-                  />
-                  <AuctionDatePicker
-                    size="regular"
-                    label="expiration date"
-                    minDate={new Date()}
-                    disabled={!activeInputs.includes('auctionDuration') || !auctionDate.startDate}
-                    onChange={(value) => setAuctionDuration({ endDate: value })}
-                    items={[
-                      {
-                        value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 1),
-                        name: '1 day',
-                      },
-                      {
-                        value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 3),
-                        name: '3 days',
-                      },
-                      {
-                        value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 5),
-                        name: '5 days',
-                      },
-                      {
-                        value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 7),
-                        name: '7 days',
-                      },
-                    ]}
-                    value={auctionDate.endDate}
-                  />
-                </AuctionDatePickerWrapper>
-              </FormField>
-              {auctionDate.startDate instanceof Date && auctionDate.endDate instanceof Date && (
-                <DaysSummary>
-                  <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
-                    Total:
-                  </Text>
-                  &nbsp;
-                  <Text variant="t200-strong">{daysAndHours}</Text>
-                  &nbsp;
-                  <Text variant="t200-strong" secondary>
-                    / {numberOfBlocks?.toLocaleString('no', { maximumFractionDigits: 1 })} Blocks
-                  </Text>
-                  <DaysSummaryInfo
-                    text="It’s the time when your auction will become active and buyer will be able to make an offer"
-                    placement="top"
-                    footer={
-                      <AuctionDurationTooltipFooter>
-                        <Text variant="t100">
-                          {daysAndHours} = {numberOfBlocks}
-                        </Text>
-                      </AuctionDurationTooltipFooter>
-                    }
-                  />
-                </DaysSummary>
-              )}
-            </MoreSettingsSection>
           </>
         )}
       </form>

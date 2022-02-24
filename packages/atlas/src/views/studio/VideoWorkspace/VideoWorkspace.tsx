@@ -65,8 +65,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   )
 
   const handleNFTSubmit = useCallback(
-    // eslint-disable-next-line
-    (data: NftAuctionInputMetadata | NftIssuanceInputMetadata) => {
+    (_: NftAuctionInputMetadata | NftIssuanceInputMetadata) => {
       if (isIssuedAsNFT) {
         if (nftCurrentStepIdx === 2) {
           handleNFTWorkspaceSubmit()
