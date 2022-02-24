@@ -29,7 +29,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const [listingType, setListingType] = useState<Listing>(undefined)
   const [formStatus, setFormStatus] = useState<FormStatus>(null)
   const [videoFormDataForNFT, setVideoFormDataForNFT] = useState<VideoFormData | null>(null)
-  const [nftTermsAccepted, setNftTermsAccepted] = useState(false)
 
   const [actionBarHeight, setActionBarHeight] = useState(0)
   const [nftCurrentStepIdx, setNftCurrentStepIdx] = useState(-1)
@@ -49,10 +48,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     }
     setFormStatus((prevState) => ({ ...prevState, ...data }))
   }, [])
-
-  const toggleTermsAccept = () => {
-    setNftTermsAccepted((prevState) => !prevState)
-  }
 
   const handleSubmit = useCallback(
     (data: VideoFormData) => {
@@ -109,7 +104,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [isWorkspaceOpen])
 
   const closeVideoWorkspace = useCallback(() => {
-    setNftTermsAccepted(false)
     setIsIssuedAsNFT(false)
     setNftCurrentStepIdx(-1)
     setListingType(undefined)
@@ -141,10 +135,10 @@ export const VideoWorkspace: React.FC = React.memo(() => {
       return formStatus?.isValid
     }
     if (nftCurrentStepIdx === 2) {
-      return nftTermsAccepted
+      return formStatus?.termsAccepted
     }
     return true
-  }, [nftCurrentStepIdx, formStatus?.isValid, nftTermsAccepted, listingType])
+  }, [nftCurrentStepIdx, formStatus, listingType])
 
   return (
     <>
@@ -195,8 +189,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                     setListingType={setListingType}
                     listingType={listingType}
                     onSubmit={handleNFTSubmit}
-                    toggleTermsAccept={toggleTermsAccept}
-                    termsAccepted={nftTermsAccepted}
                   />
                 )}
               </CSSTransition>

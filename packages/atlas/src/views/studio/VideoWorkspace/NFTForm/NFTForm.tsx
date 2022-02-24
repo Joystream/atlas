@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { NftTile } from '@/components/NftTile'
@@ -44,8 +44,6 @@ type NFTFormProps = {
   setListingType: (listingType: Listing) => void
   nftCurrentStepIdx: number
   onSubmit: (data: NFTFormData) => void
-  termsAccepted: boolean
-  toggleTermsAccept: () => void
 }
 
 export const NFTForm: React.FC<NFTFormProps> = ({
@@ -54,9 +52,8 @@ export const NFTForm: React.FC<NFTFormProps> = ({
   setFormStatus,
   setListingType,
   onSubmit,
-  termsAccepted,
-  toggleTermsAccept,
 }) => {
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const {
     handleSubmit: createSubmitHandler,
     register,
@@ -84,14 +81,19 @@ export const NFTForm: React.FC<NFTFormProps> = ({
     createSubmitHandler(onSubmit)
   }, [createSubmitHandler, onSubmit])
 
+  const toggleTermsAccept = () => {
+    setTermsAccepted((prevState) => !prevState)
+  }
+
   const formStatus: VideoWorkspaceFormStatus<NFTFormData> = useMemo(
     () => ({
       isDirty,
       isValid,
       resetForm: reset,
       triggerNftFormSubmit: handleSubmit,
+      termsAccepted,
     }),
-    [handleSubmit, isDirty, isValid, reset]
+    [handleSubmit, isDirty, isValid, reset, termsAccepted]
   )
 
   // sent updates on form status to VideoWorkspace
