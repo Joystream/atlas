@@ -72,7 +72,9 @@ const getReadNotificationVariant = ({ read, variant }: NotificationWrapperProps)
     }
   `
 
-export const Wrapper = styled.div<NotificationWrapperProps>`
+const shouldForwardWrapperProps = (prop: PropertyKey) => prop !== 'loading' && prop !== 'read'
+
+export const Wrapper = styled('div', { shouldForwardProp: shouldForwardWrapperProps })<NotificationWrapperProps>`
   ${getNotificationWrapperStyles};
   ${getReadNotificationVariant};
 
