@@ -27,6 +27,7 @@ import {
   PlaygroundMemberDropdown,
   PlaygroundNFTExtrinsics,
   PlaygroundValidationForm,
+  TJoyPrice,
   UploadFiles,
   VideoMetaData,
 } from './Playgrounds'
@@ -52,6 +53,7 @@ const playgroundRoutes = [
   { path: 'member-dropdown', element: <PlaygroundMemberDropdown />, name: 'Member dropdown' },
   { path: 'block-time', element: <EstimatingBlockTime />, name: 'Estimating block time' },
   { path: 'nft-extrinsics', element: <PlaygroundNFTExtrinsics />, name: 'NFT extrinsics' },
+  { path: 'tjoy-price', element: <TJoyPrice />, name: 'TJoy Price' },
 ]
 
 const PlaygroundLayout = () => {
