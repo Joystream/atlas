@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { NftTile } from '@/components/NftTile'

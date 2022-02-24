@@ -70,20 +70,6 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <DescriptionText>{selectedType}</DescriptionText>
         </Description>
       </Row>
-      {formData.minimalBidStep && (
-        <Row>
-          <Title>
-            <TitleText>Minimal step bid</TitleText>
-            <Information
-              text="Its the starting price of your auction. No lower bids will be accepted"
-              placement="top"
-            />
-          </Title>
-          <Description>
-            <DescriptionText>{formData.minimalBidStep}</DescriptionText>
-          </Description>
-        </Row>
-      )}
       {formData?.startingPrice && (
         <Row>
           <Title>

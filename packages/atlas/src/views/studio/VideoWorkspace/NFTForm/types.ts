@@ -1,5 +1,3 @@
-import { NftAuctionInputMetadata, NftIssuanceInputMetadata } from '@/joystream-lib'
-
 export type Listing = 'Auction' | 'Fixed price' | 'Not for sale' | undefined
 
 export type AuctionDate = {
@@ -7,4 +5,10 @@ export type AuctionDate = {
   endDate: Date | string | null
 }
 
-export type NFTFormData = NftAuctionInputMetadata & NftIssuanceInputMetadata & AuctionDate
+export type NFTFormData = {
+  royalty?: number
+  startingPrice?: number
+  buyNowPrice?: number
+  whitelistedMembersIds?: string[] // to be used later
+  auctionDurationBlocks?: number
+} & AuctionDate
