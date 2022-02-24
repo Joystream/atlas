@@ -3,6 +3,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSnackbar } from '@/providers/snackbars'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
 import { copyToClipboard } from '@/utils/browser'
@@ -46,6 +47,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   editable,
   className,
 }) => {
+  const { displaySnackbar } = useSnackbar()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -53,6 +55,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
     if (!address) {
       return
     }
+    displaySnackbar({ title: 'Video URL have been copied', iconType: 'info' })
     copyToClipboard(address)
     setCopyButtonClicked(true)
     setTimeout(() => {
