@@ -5,6 +5,9 @@ import { SvgActionArrowRight } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const TermsBox = styled.div`
+  position: absolute;
+  left: 0;
+  bottom: 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -13,8 +16,6 @@ export const TermsBox = styled.div`
   padding: ${sizes(4)};
 
   ${media.md} {
-    position: absolute;
-    bottom: 80px;
     left: ${sizes(1)};
   }
 `

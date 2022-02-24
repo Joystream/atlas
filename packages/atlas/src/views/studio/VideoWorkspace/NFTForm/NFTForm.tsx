@@ -119,7 +119,7 @@ export const NFTForm: React.FC<NFTFormProps> = ({
           <NftTile title="title" {...DUMMY_NFT_TILE_PROPS} />
         </NFTPreview>
         <NFTFormScrolling>
-          <NFTFormWrapper>
+          <NFTFormWrapper lastStep={nftCurrentStepIdx === 2}>
             <StepperWrapper>
               <StepperInnerWrapper>
                 {issueNFTSteps.map((step, idx) => {

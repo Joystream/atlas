@@ -46,8 +46,13 @@ export const NFTFormScrolling = styled.div`
   }
 `
 
-export const NFTFormWrapper = styled.div`
+type NFTFormWrapperProps = {
+  lastStep: boolean
+}
+
+export const NFTFormWrapper = styled.div<NFTFormWrapperProps>`
   height: 100%;
+  padding-bottom: ${({ lastStep }) => lastStep && '80px'};
 `
 export const StepperWrapper = styled.div`
   max-width: 100%;
