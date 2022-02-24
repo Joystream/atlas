@@ -23,6 +23,7 @@
     "atlas:tokens": "yarn workspace @joystream/atlas tokens",
     "atlas:tokens:fetch": "yarn workspace @joystream/atlas tokens:fetch",
     "atlas:tokens:build": "yarn workspace @joystream/atlas tokens:build",
+    "atlas:graphql": "yarn workspace @joystream/atlas graphql",
     "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
     "docker:atlas": "ci/build-docker-atlas.sh",
     "docker:meta-server": "ci/build-docker-meta-server.sh",

@@ -201,6 +201,14 @@ fragment AllNftFields on OwnedNft {
       }
     }
   }
+  video {
+    ...BasicVideoFields
+    channel {
+      ownerMember {
+        ...BasicMembershipFields
+      }
+    }
+  }
 }
 
 fragment AllBidFields on Bid {
