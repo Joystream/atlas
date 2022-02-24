@@ -5,8 +5,7 @@ import { Pill } from '@/components/Pill'
 import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useSnackbar } from '@/providers/snackbars/snackbar'
-import { copyToClipboard } from '@/utils/browser'
+import { useClipboard } from '@/providers/clipboard/hooks'
 import { formatDurationShort } from '@/utils/time'
 
 import { VideoTile } from '../VideoTile'
@@ -20,7 +19,7 @@ type VideoTileViewerProps = {
 }
 
 export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
-  const { displaySnackbar } = useSnackbar()
+  const { copyToClipboard } = useClipboard()
   const navigate = useNavigate()
   const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
     useVideoTileSharedLogic({
@@ -29,8 +28,7 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '')
-    displaySnackbar({ title: 'Video URL have been copied', iconType: 'info' })
-  }, [videoHref, displaySnackbar])
+  }, [videoHref, copyToClipboard])
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
 

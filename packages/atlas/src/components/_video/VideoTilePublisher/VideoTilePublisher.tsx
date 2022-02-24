@@ -19,9 +19,8 @@ import {
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
-import { useSnackbar } from '@/providers/snackbars/snackbar'
+import { useClipboard } from '@/providers/clipboard/hooks'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { copyToClipboard } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -43,7 +42,7 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, owner }) => {
-    const { displaySnackbar } = useSnackbar()
+    const { copyToClipboard } = useClipboard()
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
@@ -141,8 +140,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         {
           icon: <SvgActionCopy />,
           onClick: () => {
-            copyToClipboard(videoHref ? location.origin + videoHref : ''),
-              displaySnackbar({ title: 'Video URL have been copied', iconType: 'info' })
+            copyToClipboard(videoHref ? location.origin + videoHref : '')
           },
           title: 'Copy video URL',
         },
@@ -167,7 +165,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       onEditClick,
       onOpenInTabClick,
       onReuploadVideoClick,
-      displaySnackbar,
+      copyToClipboard,
       videoHref,
     ])
 

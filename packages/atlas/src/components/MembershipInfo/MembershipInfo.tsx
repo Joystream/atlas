@@ -3,10 +3,9 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useSnackbar } from '@/providers/snackbars'
+import { useClipboard } from '@/providers/clipboard/hooks'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
-import { copyToClipboard } from '@/utils/browser'
 
 import {
   MembershipDetails,
@@ -47,7 +46,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   editable,
   className,
 }) => {
-  const { displaySnackbar } = useSnackbar()
+  const { copyToClipboard } = useClipboard()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
 
