@@ -30,6 +30,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const [videoFormDataForNFT, setVideoFormDataForNFT] = useState<VideoFormData | null>(null)
   const [NFTtermsAccepted, setNFTTermsAccepted] = useState(false)
 
+  const [actionBarHeight, setActionBarHeight] = useState(0)
   const [NFTCurrentStepIdx, setNFTCurrentStepIdx] = useState(-1)
   const [isIssuedAsNFT, setIsIssuedAsNFT] = useState(false)
 
