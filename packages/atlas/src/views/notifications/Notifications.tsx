@@ -14,14 +14,12 @@ import {
   StyledPill,
 } from './Notifications.styles'
 
-const UNREADS = 10
-
 const NOTIFICATIONS = [
   {
     id: '0',
     author: 'DREAM TEAM',
     text: 'outbid you at an auction for 32K tJOY',
-    date: 'Nov 13',
+    date: new Date(Date.now() - 1000000),
     avatarUrl: 'https://placedog.net/400/400?random&1',
     videoTitle: 'Know your Councils #02 (CheOmsk)',
     read: false,
@@ -30,16 +28,25 @@ const NOTIFICATIONS = [
     id: '1',
     author: 'Joystream movie',
     text: 'withdrew their bid',
-    date: 'Nov 13',
+    date: new Date(Date.now() - 9000000),
     avatarUrl: 'https://placedog.net/400/400?random&2',
     videoTitle: 'Как заработать в крипте БЕЗ вложений?',
     read: true,
   },
   {
     id: '2',
+    author: 'Joystream movie',
+    text: 'withdrew their bid',
+    date: new Date(Date.now() - 299000000),
+    avatarUrl: 'https://placedog.net/400/400?random&2',
+    videoTitle: 'Как заработать в крипте БЕЗ вложений?',
+    read: true,
+  },
+  {
+    id: '3',
     author: 'You',
     text: 'won the auction',
-    date: 'Nov 13',
+    date: new Date(Date.now() - 35000000000),
     avatarUrl: 'https://placedog.net/400/400?random&3',
     videoTitle: 'Atlas guide for RU community',
     read: false,
@@ -49,14 +56,15 @@ const NOTIFICATIONS = [
 export const Notifications = () => {
   const { selectedNotifications, toggleSelected } = useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
+  const unreadNumber = NOTIFICATIONS.filter((notification) => !notification.read).length
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, md: 10, lg: 8 }} colStart={{ md: 2, lg: 3 }}>
         <Header>
           <Text variant={smMatch ? 'h700' : 'h600'}>Notifications</Text>
-          {!!UNREADS && (
+          {!!unreadNumber && (
             <>
-              <StyledPill label={`${UNREADS} unread`} />
+              <StyledPill label={`${unreadNumber} unread`} />
               <MarkAllReadWrapper>
                 <Button variant="secondary" size="small">
                   Mark all as read
