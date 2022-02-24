@@ -2,6 +2,7 @@ import React, { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useNft } from '@/api/hooks'
+import { NftTileViewer } from '@/components/NftTileViewer/NftTileViewer'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
@@ -54,6 +55,7 @@ export const PlaygroundNFTExtrinsics: React.FC = () => {
     <div>
       <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
       {getTabContents()}
+      <NftTileViewer nftId={videoId} />
       <pre>{JSON.stringify(nft, null, 2)}</pre>
     </div>
   )

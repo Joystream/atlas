@@ -15,17 +15,17 @@ export type Member = {
 }
 
 export type NftTileProps = {
-  auction: 'none' | 'minBid' | 'topBid' | 'waiting'
-  thumbnail: VideoThumbnailProps
+  auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
+  thumbnail?: VideoThumbnailProps
+  title?: string | null
+  owner?: Member
+  creator?: Member
   loading?: boolean
-  title: string
-  owner: Member
-  creator: Member
   duration?: number | null
   views?: number | null
-  buyNowPrice?: number
-  minBid?: number
-  topBid?: number
+  buyNowPrice?: number | null | undefined
+  minBid?: number | null | undefined
+  topBid?: number | null | undefined
   timeLeft?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
@@ -118,7 +118,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         loading={loading}
-        thumbnailUrl={thumbnail.thumbnailUrl}
+        thumbnailUrl={thumbnail?.thumbnailUrl}
         clickable={false}
         slots={{
           topLeft: views

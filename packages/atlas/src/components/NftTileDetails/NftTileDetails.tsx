@@ -32,14 +32,14 @@ import {
 
 export type NftTileDetailsProps = {
   loading?: boolean
-  owner: Member
-  creator: Member
-  auction: 'none' | 'minBid' | 'topBid' | 'waiting'
-  buyNowPrice?: number
-  role: 'owner' | 'viewer'
-  minBid?: number
-  topBid?: number
-  title: string
+  owner?: Member
+  creator?: Member
+  role?: 'owner' | 'viewer'
+  auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
+  buyNowPrice?: number | null | undefined
+  minBid?: number | null | undefined
+  topBid?: number | null | undefined
+  title?: string | null | undefined
   hovered?: boolean
 }
 
@@ -205,8 +205,8 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           }
           loading={loading}
           avatars={[
-            { url: creator.assetUrl, tooltipText: creator.name },
-            { url: owner.assetUrl, tooltipText: owner.name },
+            { url: creator?.assetUrl, tooltipText: creator?.name },
+            ...(owner ? [{ url: owner?.assetUrl, tooltipText: owner?.name }] : []),
           ]}
         />
         <ContextMenu
