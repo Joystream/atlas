@@ -9,11 +9,11 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { cVar } from '@/styles'
-import { AuctionDurationTooltipFooter } from '@/views/studio/VideoWorkspace/NFTForm/AcceptTerms/AcceptTerms.styles'
 
 import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
 
 import { useNFTForm } from '../NFTForm.hooks'
+import { AuctionDurationTooltipFooter } from '../NFTForm.styles'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 import { AuctionDate, Listing, NFTFormData } from '../types'
 

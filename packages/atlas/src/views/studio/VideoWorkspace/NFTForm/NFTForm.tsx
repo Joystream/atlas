@@ -6,7 +6,6 @@ import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
 import { NftAuctionInputMetadata } from '@/joystream-lib'
 import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
-import { Listing, NFTFormData } from '@/views/studio/VideoWorkspace/NFTForm/types'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
@@ -21,6 +20,7 @@ import {
   StepperWrapper,
 } from './NFTForm.styles'
 import { SetUp } from './SetUp'
+import { Listing, NFTFormData } from './types'
 
 const DUMMY_NFT_TILE_PROPS = {
   buyNow: false,

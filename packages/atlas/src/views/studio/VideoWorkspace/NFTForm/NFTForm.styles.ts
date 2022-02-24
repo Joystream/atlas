@@ -85,3 +85,9 @@ export const StepWrapper = styled.div<{ isLast?: boolean }>`
 export const Paragraph = styled(Text)`
   margin-bottom: ${sizes(12)};
 `
+
+export const AuctionDurationTooltipFooter = styled.div`
+  padding: ${sizes(2)};
+  margin-top: 10px;
+  background-color: ${cVar('colorBackgroundElevated')};
+`

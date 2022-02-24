@@ -7,19 +7,11 @@ import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 
-import {
-  AuctionDurationTooltipFooter,
-  Description,
-  Divider,
-  Header,
-  Row,
-  StyledSvgActionArrowRight,
-  TermsBox,
-  Title,
-} from './AcceptTerms.styles'
+import { Description, Divider, Header, Row, StyledSvgActionArrowRight, TermsBox, Title } from './AcceptTerms.styles'
 
 import { StyledSvgWarning, YellowText } from '../../VideoWorkspace.style'
 import { useNFTForm } from '../NFTForm.hooks'
+import { AuctionDurationTooltipFooter } from '../NFTForm.styles'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 import { Listing, NFTFormData } from '../types'
 

@@ -38,12 +38,6 @@ export const Title = styled.div`
   align-items: center;
 `
 
-export const AuctionDurationTooltipFooter = styled.div`
-  padding: ${sizes(2)};
-  margin-top: 10px;
-  background-color: ${cVar('colorBackgroundElevated')};
-`
-
 export const Description = styled.div`
   display: flex;
 `
