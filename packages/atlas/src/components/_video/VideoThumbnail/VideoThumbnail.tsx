@@ -23,6 +23,7 @@ export type SlotsObject = {
     element: React.ReactNode
     type?: 'default' | 'hover'
     clickable?: boolean
+    halfWidth?: boolean
   }
 }
 
@@ -112,6 +113,7 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
                 <SlotContainer
                   key={position}
                   type={properties.type}
+                  halfWidth={properties.halfWidth}
                   position={position as keyof SlotsObject}
                   onMouseMove={() => clickable && properties.clickable && setActiveDisabled(true)}
                   onMouseOut={() => clickable && properties.clickable && setActiveDisabled(false)}
