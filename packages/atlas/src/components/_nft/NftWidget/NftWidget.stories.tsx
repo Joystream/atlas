@@ -79,7 +79,7 @@ const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: st
     <NftWidget
       {...others}
       nftState={{
-        status: status,
+        status,
         startingPrice,
         buyNowPrice,
         topBid,

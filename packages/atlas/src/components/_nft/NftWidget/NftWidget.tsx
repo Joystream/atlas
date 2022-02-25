@@ -4,7 +4,6 @@ import useResizeObserver from 'use-resize-observer'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
@@ -12,19 +11,20 @@ import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
+import { NftHistory } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
   Container,
   Content,
-  NftHistoryHeader,
   NftOwnerContainer,
   OwnerAvatar,
   OwnerHandle,
   OwnerLabel,
+  sizeObj,
 } from './NftWidget.styles'
 
-export type Size = 'medium' | 'small'
+export type Size = keyof typeof sizeObj
 
 export type Auction = {
   status: 'auction'
@@ -261,11 +261,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
 
-      {/* TODO: add history */}
-      <NftHistoryHeader data-size={size}>
-        <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
-        <SvgActionChevronB />
-      </NftHistoryHeader>
+      <NftHistory size={size} />
     </Container>
   )
 }

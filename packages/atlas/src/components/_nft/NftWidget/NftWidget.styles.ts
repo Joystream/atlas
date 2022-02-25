@@ -6,7 +6,8 @@ import { Button } from '@/components/_buttons/Button'
 import { BorderWrapper } from '@/components/_buttons/ButtonBase/ButtonBase.styles'
 import { cVar, sizes } from '@/styles'
 
-type SizeProps = { 'data-size': 'medium' | 'small' }
+export const sizeObj = { small: 'small', medium: 'medium' } as const
+export type SizeProps = { 'data-size': keyof typeof sizeObj }
 
 export const Container = styled.div`
   background-color: ${cVar('colorBackgroundMuted')};
@@ -21,7 +22,7 @@ export const Content = styled.div<SizeProps>`
   box-shadow: inset 2px 0 0 ${cVar('colorCoreBlue500')}, ${cVar('effectDividersTop')}, ${cVar('effectDividersBottom')};
   padding: ${sizes(6)};
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     grid-template-columns: minmax(0, 1fr);
     padding: ${sizes(4)};
     gap: ${sizes(4)};
@@ -37,20 +38,9 @@ export const NftOwnerContainer = styled.div<SizeProps>`
   align-items: center;
   padding: ${sizes(6)};
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     padding: ${sizes(4)};
     gap: ${sizes(1)} ${sizes(4)};
-  }
-`
-
-export const NftHistoryHeader = styled.div<SizeProps>`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: ${sizes(7)} ${sizes(6)};
-
-  &[data-size='small'] {
-    padding: ${sizes(5)} ${sizes(4)};
   }
 `
 
@@ -75,7 +65,7 @@ export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean 
   display: grid;
   gap: ${sizes(4)};
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     gap: ${sizes(2)};
   }
 
