@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useNft } from '@/api/hooks'
-import { NftTileViewer } from '@/components/NftTileViewer/NftTileViewer'
+import { NftTileViewer } from '@/components/NftTileViewer'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
