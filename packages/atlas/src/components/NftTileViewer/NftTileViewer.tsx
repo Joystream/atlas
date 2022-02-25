@@ -92,7 +92,9 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
           buyNowPrice: nft.transactionalStatus.price,
         }
       case 'TransactionalStatusAuction': {
-        const isEnded = nft.transactionalStatus.auction?.endedAtBlock || timeleft <= 0
+        const isEnded =
+          (nft.transactionalStatus.auction?.endedAtBlock || timeleft <= 0) &&
+          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish'
         return {
           ...nftCommponProps,
           auction: isEnded ? 'none' : nft.transactionalStatus.auction?.lastBid?.amount ? 'topBid' : 'minBid',
