@@ -227,7 +227,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       )}
       <Details>
         {getDetails}
-        {!!buyNowPrice && !loading && (
+        {!loading && buyNowPrice && buyNowPrice > 0 && (
           <DetailsContent caption="Buy now" content={formatNumberShort(buyNowPrice)} icon={<SvgActionJoyToken />} />
         )}
       </Details>

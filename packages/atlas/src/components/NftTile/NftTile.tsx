@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { NftTileDetails } from '@/components/NftTileDetails'
 import { Pill, PillGroup } from '@/components/Pill'
@@ -23,10 +23,10 @@ export type NftTileProps = {
   loading?: boolean
   duration?: number | null
   views?: number | null
-  buyNowPrice?: number | null | undefined
-  minBid?: number | null | undefined
-  topBid?: number | null | undefined
-  timeLeft?: number
+  buyNowPrice?: number | null
+  minBid?: number | null
+  topBid?: number | null
+  timeleft?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
 }
@@ -43,32 +43,11 @@ export const NftTile: React.FC<NftTileProps> = ({
   buyNowPrice,
   minBid,
   topBid,
-  timeLeft,
+  timeleft,
   role,
   fullWidth,
 }) => {
-  const [calculatedTimeLeft, setCalculatedTimeLeft] = useState(0)
   const [hovered, setHovered] = useState(false)
-
-  useEffect(() => {
-    if (!timeLeft) {
-      return
-    }
-
-    setCalculatedTimeLeft(timeLeft)
-    const timeLeftInterval = setInterval(() => {
-      setCalculatedTimeLeft((prevState) => {
-        if (prevState <= 1) {
-          clearInterval(timeLeftInterval)
-        }
-        return --prevState
-      })
-    }, 1000)
-
-    return () => {
-      clearInterval(timeLeftInterval)
-    }
-  }, [timeLeft])
 
   const getBottomLeft = useMemo(() => {
     switch (auction) {
@@ -84,12 +63,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: timeLeft
-                  ? calculatedTimeLeft < 60
+                label: timeleft
+                  ? timeleft < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(calculatedTimeLeft, true)
+                    : formatDurationShort(timeleft, true)
                   : undefined,
-                variant: timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay',
+                variant: timeleft && timeleft < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -98,19 +77,13 @@ export const NftTile: React.FC<NftTileProps> = ({
         ) : (
           <Pill
             icon={<SvgActionAuction />}
-            label={
-              timeLeft
-                ? calculatedTimeLeft < 60
-                  ? 'Less than a minute'
-                  : formatDurationShort(calculatedTimeLeft, true)
-                : undefined
-            }
+            label={timeleft ? (timeleft < 60 ? 'Less than a minute' : formatDurationShort(timeleft, true)) : undefined}
             size="medium"
-            variant={timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay'}
+            variant={timeleft && timeleft < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNowPrice, calculatedTimeLeft, timeLeft])
+  }, [auction, buyNowPrice, timeleft])
 
   return (
     <Container fullWidth={fullWidth}>

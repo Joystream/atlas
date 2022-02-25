@@ -312,7 +312,7 @@ export const useUser = () => {
 
 export const useAuthorizedUser = () => {
   const { activeAccountId, activeMemberId, activeChannelId, ...rest } = useUser()
-  if (!activeAccountId || !activeMemberId || !activeChannelId) {
+  if (!activeAccountId || !activeMemberId) {
     throw new Error('Trying to use authorized user without authorization')
   }
 
