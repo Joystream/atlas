@@ -4,11 +4,11 @@ import { add } from 'date-fns'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { NFTWidget, NFTWidgetProps } from '.'
+import { NftWidget, NftWidgetProps } from '.'
 
 export default {
   title: 'NFT/NFT Widget',
-  component: NFTWidget,
+  component: NftWidget,
   argTypes: {
     size: {
       control: { type: 'select', options: ['small', 'medium'] },
@@ -16,6 +16,7 @@ export default {
     status: {
       control: { type: 'select', options: ['iddle', 'buy-now', 'auction'] },
     },
+    nftState: { table: { disable: true } },
   },
   args: {
     ownerHandle: 'ye 🖤',
@@ -46,7 +47,7 @@ export default {
 } as Meta
 
 // worth typing?
-const Template: Story<NFTWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
+const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
   size,
   status,
   startingPrice,
@@ -60,7 +61,7 @@ const Template: Story<NFTWidgetProps & { size: 'medium' | 'small' } & { [key: st
   ...others
 }) => (
   <Container data-size={size}>
-    <NFTWidget
+    <NftWidget
       {...others}
       nftState={{
         status: status,

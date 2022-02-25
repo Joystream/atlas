@@ -1,1 +1,1 @@
-export * from './NFTWidget'
+export * from './NftWidget'
