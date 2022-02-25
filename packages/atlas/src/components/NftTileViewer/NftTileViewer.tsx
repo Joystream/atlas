@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useNft } from '@/api/hooks'
 import { AllNftFieldsFragment } from '@/api/queries'
+import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useAsset } from '@/providers/assets'
 
@@ -13,6 +15,7 @@ type NftTileViewerProps = {
 
 export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { nft, loading } = useNft(nftId || '')
+  const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const { convertBlockToDate, convertDateToBlock } = useBlockTimeEstimation()
@@ -52,6 +55,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       views: nft?.video?.views,
       loading,
       thumbnail: {
+        videoHref: absoluteRoutes.viewer.video(nft?.video.id),
         thumbnailUrl: thumbnail.url,
         loading: thumbnail.isLoadingAsset,
         thumbnailAlt: `${nft?.video?.title} video thumbnail`,
@@ -63,11 +67,15 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
               nft?.ownerMember?.metadata.avatar?.__typename === 'AvatarUri'
                 ? nft.ownerMember?.metadata.avatar.avatarUri
                 : '',
+            loading,
+            onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
           }
         : undefined,
       creator: {
         name: nft?.video.channel.title,
+        loading: creatorAvatar.isLoadingAsset || loading,
         assetUrl: creatorAvatar.url,
+        onClick: () => navigate(absoluteRoutes.viewer.channel(nft?.video.channel.id)),
       },
     } as NftTileProps
     switch (nft?.transactionalStatus.__typename) {

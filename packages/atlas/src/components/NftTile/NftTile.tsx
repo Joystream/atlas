@@ -12,6 +12,8 @@ import { Container } from './NftTile.styles'
 export type Member = {
   assetUrl?: string | null
   name: string
+  onClick?: () => void
+  loading?: boolean
 }
 
 export type NftTileProps = {
@@ -88,6 +90,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   return (
     <Container fullWidth={fullWidth}>
       <VideoThumbnail
+        videoHref={thumbnail?.videoHref}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         loading={loading}
