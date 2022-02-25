@@ -5,6 +5,7 @@ import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
+import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -79,6 +80,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
                 {mdMatch && 'Upload video'}
               </Button>
             </CSSTransition>
+            <NotificationsButton />
             <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
         )}
