@@ -54,7 +54,6 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
     if (!address) {
       return
     }
-    displaySnackbar({ title: 'Video URL have been copied', iconType: 'info' })
     copyToClipboard(address)
     setCopyButtonClicked(true)
     setTimeout(() => {
