@@ -13,6 +13,7 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { PlaceBidProvider } from '@/providers/placeBid/provider'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
@@ -29,6 +30,7 @@ import {
   SearchView,
   VideoView,
 } from '@/views/viewer'
+import { PlaceBid } from '@/views/viewer/PlaceBid'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
@@ -60,7 +62,7 @@ export const ViewerLayout: React.FC = () => {
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (
-    <>
+    <PlaceBidProvider>
       <Modal show={isLoading} noBoxShadow>
         <Loader variant="xlarge" />
       </Modal>
@@ -108,8 +110,9 @@ export const ViewerLayout: React.FC = () => {
           </SwitchTransition>
         </ErrorBoundary>
       </MainContainer>
+      <PlaceBid />
       {!mdMatch && !searchOpen && <BottomNav />}
-    </>
+    </PlaceBidProvider>
   )
 }
 
