@@ -51,7 +51,6 @@ export type NftWidgetProps = {
 
 // TODO: Update Joy icon with the right variant once it is exported correctly
 // TODO: remove dummy dollar values
-// TODO: needs UI for when auction starts in the future
 export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
   const [containerRef, { width = 281 }] = useMeasure()
   const size: Size = width > 280 ? 'medium' : 'small'
