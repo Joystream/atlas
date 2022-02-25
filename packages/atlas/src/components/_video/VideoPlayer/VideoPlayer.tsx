@@ -27,7 +27,7 @@ import { PlayerControlButton } from './PlayerControlButton'
 import { VideoOverlay } from './VideoOverlay'
 import {
   BigPlayButton,
-  BigPlayButtonOverlay,
+  BigPlayButtonContainer,
   Container,
   ControlsOverlay,
   CurrentTime,
@@ -504,11 +504,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     <Container isFullScreen={isFullScreen} className={className}>
       <div data-vjs-player onClick={handlePlayPause}>
         {needsManualPlay && (
-          <BigPlayButtonOverlay onClick={handlePlayPause}>
+          <BigPlayButtonContainer onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
               <SvgControlsPlay />
             </BigPlayButton>
-          </BigPlayButtonOverlay>
+          </BigPlayButtonContainer>
         )}
         <video style={videoStyle} ref={playerRef} className="video-js" onClick={onVideoClick} />
         {showPlayerControls && (
