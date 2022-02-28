@@ -1,34 +1,3 @@
-fragment BasicChannelFields on Channel {
-  id
-  title
-  createdAt
-  views
-  follows
-
-  avatarPhoto {
-    ...StorageDataObjectFields
-  }
-}
-
-fragment AllChannelFields on Channel {
-  ...BasicChannelFields
-  description
-  isPublic
-  isCensored
-  language {
-    id
-    iso
-  }
-  ownerMember {
-    id
-    handle
-    avatarUri
-  }
-  coverPhoto {
-    ...StorageDataObjectFields
-  }
-}
-
 query GetBasicChannel($where: ChannelWhereUniqueInput!) {
   channelByUniqueInput(where: $where) {
     ...BasicChannelFields
