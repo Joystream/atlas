@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { AvatarGroupSingleAvatar } from '@/components/Avatar/AvatarGroup'
+import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionAddVideo } from '@/components/_icons'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { useVideoWorkspace } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
@@ -27,7 +27,8 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
 
   const currentChannel = activeMembership?.channels.find((channel) => channel.id === activeChannelId)
 
-  const { url: avatarPhotoUrl, isLoadingAsset } = useAsset(currentChannel?.avatarPhoto)
+  const { url: channelAvatarUrl, isLoadingAsset: channelAvatarLoading } = useAsset(currentChannel?.avatarPhoto)
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
@@ -45,16 +46,16 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
     setIsWorkspaceOpen(false)
   }
 
-  const avatars: AvatarGroupSingleAvatar[] = activeChannelId
+  const avatars: AvatarGroupUrlAvatar[] = activeChannelId
     ? [
         {
-          assetUrl: activeMembership?.avatarUri,
+          url: memberAvatarUrl,
+          loading: memberAvatarLoading,
           onClick: handleDrawerToggle,
-          loading: isLoadingAsset,
         },
-        { assetUrl: avatarPhotoUrl, onClick: handleDrawerToggle },
+        { url: channelAvatarUrl, loading: channelAvatarLoading, onClick: handleDrawerToggle },
       ]
-    : [{ assetUrl: activeMembership?.avatarUri, onClick: handleDrawerToggle }]
+    : [{ url: memberAvatarUrl, loading: memberAvatarLoading, onClick: handleDrawerToggle }]
 
   return (
     <>
@@ -78,7 +79,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
                 {mdMatch && 'Upload video'}
               </Button>
             </CSSTransition>
-            <StyledAvatarGroup size="large" shoulHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
+            <StyledAvatarGroup size="large" shouldHighlightEveryAvatar reverse avatars={avatars} clickable={false} />
           </StudioTopbarContainer>
         )}
       </StyledTopbarBase>
