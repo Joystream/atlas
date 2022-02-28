@@ -164,6 +164,7 @@ Publisher.args = {
     topLeft: {
       element: <OwnerPill avatar="https://thispersondoesnotexist.com/image" handle="thishandledoesntexists" />,
       clickable: true,
+      halfWidth: true,
     },
     bottomRight: {
       element: <Pill variant="overlay" label="30:12" />,

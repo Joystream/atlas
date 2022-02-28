@@ -527,6 +527,65 @@ export type AllNftFieldsFragment = {
     | { __typename: 'TransactionalStatusBuyNow'; price: number }
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+  video: {
+    __typename?: 'Video'
+    id: string
+    title?: string | null
+    views: number
+    createdAt: Date
+    duration?: number | null
+    isPublic?: boolean | null
+    media?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    channel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: number
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+    }
+    thumbnailPhoto?: {
+      __typename?: 'StorageDataObject'
+      id: string
+      createdAt: Date
+      size: number
+      isAccepted: boolean
+      ipfsHash: string
+      storageBag: { __typename?: 'StorageBag'; id: string }
+      type:
+        | { __typename: 'DataObjectTypeChannelAvatar' }
+        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+        | { __typename: 'DataObjectTypeUnknown' }
+        | { __typename: 'DataObjectTypeVideoMedia' }
+        | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+  }
 }
 
 export type AllBidFieldsFragment = {
@@ -662,31 +721,6 @@ export const DistributionBucketOperatorFieldFragmentDoc = gql`
     status
   }
 `
-export const BasicVideoFieldsFragmentDoc = gql`
-  fragment BasicVideoFields on Video {
-    id
-    title
-    views
-    createdAt
-    duration
-    title
-    isPublic
-    media {
-      ...StorageDataObjectFields
-    }
-    channel {
-      id
-      title
-      avatarPhoto {
-        ...StorageDataObjectFields
-      }
-    }
-    thumbnailPhoto {
-      ...StorageDataObjectFields
-    }
-  }
-  ${StorageDataObjectFieldsFragmentDoc}
-`
 export const VideoMediaMetadataFieldsFragmentDoc = gql`
   fragment VideoMediaMetadataFields on VideoMediaMetadata {
     id
@@ -754,6 +788,31 @@ export const AllBidFieldsFragmentDoc = gql`
   }
   ${BasicMembershipFieldsFragmentDoc}
 `
+export const BasicVideoFieldsFragmentDoc = gql`
+  fragment BasicVideoFields on Video {
+    id
+    title
+    views
+    createdAt
+    duration
+    title
+    isPublic
+    media {
+      ...StorageDataObjectFields
+    }
+    channel {
+      id
+      title
+      avatarPhoto {
+        ...StorageDataObjectFields
+      }
+    }
+    thumbnailPhoto {
+      ...StorageDataObjectFields
+    }
+  }
+  ${StorageDataObjectFieldsFragmentDoc}
+`
 export const AllNftFieldsFragmentDoc = gql`
   fragment AllNftFields on OwnedNft {
     id
@@ -801,7 +860,11 @@ export const AllNftFieldsFragmentDoc = gql`
         }
       }
     }
+    video {
+      ...BasicVideoFields
+    }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${AllBidFieldsFragmentDoc}
+  ${BasicVideoFieldsFragmentDoc}
 `

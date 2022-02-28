@@ -84,6 +84,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         topLeft: owner && {
           element: <OwnerPill avatar={owner.avatarUrl} handle={owner.handle} />,
           clickable: true,
+          halfWidth: true,
         },
         topRight: {
           element: (

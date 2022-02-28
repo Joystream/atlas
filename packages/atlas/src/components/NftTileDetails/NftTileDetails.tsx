@@ -32,15 +32,14 @@ import {
 
 export type NftTileDetailsProps = {
   loading?: boolean
-  owner: Member
-  creator: Member
-  auction: 'none' | 'minBid' | 'topBid' | 'waiting'
-  buyNow?: boolean
-  role: 'owner' | 'viewer'
-  bid: number
-  minBid?: number
-  topBid?: number
-  title: string
+  owner?: Member
+  creator?: Member
+  role?: 'owner' | 'viewer'
+  auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
+  buyNowPrice?: number | null
+  minBid?: number | null
+  topBid?: number | null
+  title?: string | null
   hovered?: boolean
 }
 
@@ -62,10 +61,9 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   owner,
   role,
   auction,
-  buyNow,
   minBid,
   topBid,
-  bid,
+  buyNowPrice,
   title,
   hovered,
 }) => {
@@ -95,7 +93,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       },
     ]
     if (role === 'owner') {
-      if (auction === 'none' && !buyNow) {
+      if (auction === 'none' && !buyNowPrice) {
         elements.unshift({
           icon: <SvgActionSell />,
           title: 'Start sale',
@@ -116,7 +114,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     } else {
       if (auction !== 'none') {
         elements.unshift(
-          ...(buyNow
+          ...(buyNowPrice
             ? [
                 {
                   icon: <SvgActionBuyNow />,
@@ -131,7 +129,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         )
       } else {
         elements.unshift(
-          ...(buyNow
+          ...(buyNowPrice
             ? [
                 {
                   icon: <SvgActionBuyNow />,
@@ -143,7 +141,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       }
     }
     return elements
-  }, [auction, buyNow, role])
+  }, [auction, buyNowPrice, role])
 
   const DetailsContent: React.FC<DetailsContent> = React.memo(({ caption, icon, content, secondary }) => (
     <div>
@@ -172,7 +170,9 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     switch (auction) {
       case 'none':
         return (
-          !buyNow && <DetailsContent caption="Status" content="Not for sale" icon={<SvgActionNotForSale />} secondary />
+          !buyNowPrice && (
+            <DetailsContent caption="Status" content="Not for sale" icon={<SvgActionNotForSale />} secondary />
+          )
         )
       case 'minBid':
         return (
@@ -189,7 +189,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       case 'waiting':
         return <DetailsContent caption="Status" content="Place first bid" icon={<SvgActionJoyToken />} secondary />
     }
-  }, [DetailsContent, auction, buyNow, loading, minBid, tileSize, topBid])
+  }, [DetailsContent, auction, buyNowPrice, loading, minBid, tileSize, topBid])
 
   return (
     <Content
@@ -206,8 +206,15 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           }
           loading={loading}
           avatars={[
-            { url: creator.assetUrl, tooltipText: creator.name },
-            { url: owner.assetUrl, tooltipText: owner.name },
+            {
+              url: creator?.assetUrl,
+              tooltipText: creator?.name,
+              onClick: creator?.onClick,
+              loading: creator?.loading,
+            },
+            ...(owner
+              ? [{ url: owner?.assetUrl, tooltipText: owner?.name, onClick: owner?.onClick, loading: owner.loading }]
+              : []),
           ]}
         />
         <ContextMenu
@@ -228,8 +235,8 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       )}
       <Details>
         {getDetails}
-        {!!bid && buyNow && !loading && (
-          <DetailsContent caption="Buy now" content={formatNumberShort(bid)} icon={<SvgActionJoyToken />} />
+        {!loading && !!buyNowPrice && buyNowPrice > 0 && (
+          <DetailsContent caption="Buy now" content={formatNumberShort(buyNowPrice)} icon={<SvgActionJoyToken />} />
         )}
       </Details>
     </Content>
