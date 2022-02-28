@@ -10,19 +10,19 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { Description, Divider, Header, Row, StyledSvgActionArrowRight, TermsBox, Title } from './AcceptTerms.styles'
 
 import { StyledSvgWarning, YellowText } from '../../VideoWorkspace.style'
-import { useNFTForm } from '../NFTForm.hooks'
-import { AuctionDurationTooltipFooter } from '../NFTForm.styles'
+import { useNftForm } from '../NftForm.hooks'
+import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
-import { Listing, NFTFormData } from '../types'
+import { Listing, NftFormData } from '../types'
 
 type AcceptTermsProps = {
   selectedType: Listing
-  formData: NFTFormData
+  formData: NftFormData
   termsAccepted: boolean
   toggleTermsAccept: () => void
 }
 
-const DATE_FORMAT = 'dd MMM yyyy, hh:mm'
+const DATE_FORMAT = 'dd MMM yyyy, HH:mm OOOO'
 
 export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   selectedType,
@@ -30,7 +30,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   termsAccepted,
   toggleTermsAccept,
 }) => {
-  const { getTotalDaysAndHoursText } = useNFTForm()
+  const { getTotalDaysAndHoursText } = useNftForm()
   const { convertDurationToBlocks } = useBlockTimeEstimation()
 
   const startDate = formData.startDate as Date
@@ -70,7 +70,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <DescriptionText>{selectedType}</DescriptionText>
         </Description>
       </Row>
-      {formData?.startingPrice && (
+      {formData.startingPrice && (
         <Row>
           <Title>
             <TitleText>Minimum bid</TitleText>
@@ -89,7 +89,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Title>
             <TitleText>Fixed price</TitleText>
             <Information
-              text="Sell your NFT for a predefined price. When this price is reached it automaticly ends auction"
+              text="Sell your NFT for a predefined price. When this price is reached it automatically ends auction"
               placement="top"
             />
           </Title>

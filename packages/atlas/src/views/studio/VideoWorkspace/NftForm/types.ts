@@ -5,7 +5,7 @@ export type AuctionDate = {
   endDate: Date | string | null
 }
 
-export type NFTFormData = {
+export type NftFormData = {
   royalty?: number
   startingPrice?: number
   buyNowPrice?: number

@@ -7,7 +7,7 @@ export const ScrollableWrapper = styled.div`
   height: 100%;
 `
 
-export const NFTWorkspaceFormWrapper = styled.div`
+export const NftWorkspaceFormWrapper = styled.div`
   height: 100%;
   justify-content: flex-end;
   display: flex;
@@ -18,7 +18,7 @@ export const NFTWorkspaceFormWrapper = styled.div`
   }
 `
 
-export const NFTPreview = styled.div`
+export const NftPreview = styled.div`
   background: black;
   display: flex;
   justify-content: center;
@@ -34,25 +34,24 @@ export const NFTPreview = styled.div`
   }
 `
 
-export const NFTFormScrolling = styled.div`
+export const NftFormScrolling = styled.div`
   padding: ${sizes(8)};
   flex-grow: 1;
   position: relative;
 
   ${media.md} {
-    height: 100%;
     left: 50%;
     max-width: 50%;
   }
 `
 
-type NFTFormWrapperProps = {
+type NftFormWrapperProps = {
   lastStep: boolean
 }
 
-export const NFTFormWrapper = styled.div<NFTFormWrapperProps>`
+export const NftFormWrapper = styled.div<NftFormWrapperProps>`
   height: 100%;
-  padding-bottom: ${({ lastStep }) => lastStep && '80px'};
+  padding-bottom: ${({ lastStep }) => lastStep && '40px'};
 `
 export const StepperWrapper = styled.div`
   max-width: 100%;

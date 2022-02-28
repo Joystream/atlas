@@ -1,6 +1,6 @@
 import { addDays, differenceInMilliseconds } from 'date-fns'
 import React, { useEffect, useState } from 'react'
-import { UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import { UseFormRegister, UseFormReset, UseFormSetValue } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
@@ -12,22 +12,36 @@ import { cVar } from '@/styles'
 
 import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
 
-import { useNFTForm } from '../NFTForm.hooks'
-import { AuctionDurationTooltipFooter } from '../NFTForm.styles'
+import { useNftForm } from '../NftForm.hooks'
+import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
-import { AuctionDate, Listing, NFTFormData } from '../types'
+import { AuctionDate, Listing, NftFormData } from '../types'
 
 type SetUpProps = {
-  register: UseFormRegister<NFTFormData>
+  register: UseFormRegister<NftFormData>
   selectedType: Listing
-  setValue: UseFormSetValue<NFTFormData>
+  setValue: UseFormSetValue<NftFormData>
+  activeInputs: string[]
+  setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
+  reset: UseFormReset<NftFormData>
+  formData: NftFormData
 }
 
-export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }) => {
-  const [activeInputs, setActiveInputs] = useState<string[]>([])
-  const [auctionDate, setAuctionDate] = useState<AuctionDate>({ startDate: null, endDate: null })
+export const SetUp: React.FC<SetUpProps> = ({
+  register,
+  selectedType,
+  setValue,
+  activeInputs,
+  setActiveInputs,
+  reset,
+  formData,
+}) => {
+  const [auctionDate, setAuctionDate] = useState<AuctionDate>({
+    startDate: formData.startDate || null,
+    endDate: formData.endDate || null,
+  })
   const { convertDurationToBlocks } = useBlockTimeEstimation()
-  const { getTotalDaysAndHoursText } = useNFTForm()
+  const { getTotalDaysAndHoursText } = useNftForm()
 
   const setAuctionDuration = (date: { startDate?: Date | string | null; endDate?: Date | string | null }) => {
     setAuctionDate((prevState) => ({ ...prevState, ...date }))
@@ -57,6 +71,11 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
       if (!prevState.includes(name)) {
         return [...prevState, name]
       }
+      if (name === 'auctionDuration') {
+        setAuctionDate({ startDate: null, endDate: null })
+      } else {
+        reset({ ...formData, [name]: undefined })
+      }
       return prevState.filter((inputName) => inputName !== name)
     })
   }
@@ -85,13 +104,17 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
       <form>
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
-            <TextField {...register('buyNowPrice')} type="number" nodeEnd={<Pill label="tJoy" />} />
+            <TextField {...register('buyNowPrice', { required: true })} type="number" nodeEnd={<Pill label="tJoy" />} />
           </StyledFormField>
         )}
         {selectedType === 'Not for sale' && (
           <StyledFormField
             title="Royalties"
-            switchProps={{ name: 'royaltyActive', onChange: toggleActiveInput }}
+            switchProps={{
+              name: 'royalty',
+              onChange: toggleActiveInput,
+              value: activeInputs.includes('royalty'),
+            }}
             infoTooltip={{
               text: 'By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid.',
               footer: <RoyaltiesTooltipFooter />,
@@ -101,7 +124,7 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
               {...register('royalty')}
               type="number"
               nodeEnd={<Pill label="%" />}
-              disabled={!activeInputs.includes('royaltyActive')}
+              disabled={!activeInputs.includes('royalty')}
             />
           </StyledFormField>
         )}
@@ -109,33 +132,40 @@ export const SetUp: React.FC<SetUpProps> = ({ register, selectedType, setValue }
           <>
             <FormField
               title="Minimum bid"
-              switchProps={{ name: 'startingPriceActive', onChange: toggleActiveInput }}
+              switchProps={{
+                name: 'startingPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('startingPrice'),
+              }}
               infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
             >
               <TextField
                 {...register('startingPrice')}
                 type="number"
                 nodeEnd={<Pill label="tJOY" />}
-                disabled={!activeInputs.includes('startingPriceActive')}
+                disabled={!activeInputs.includes('startingPrice')}
               />
             </FormField>
             <FormField
               title="Fixed price"
-              switchProps={{ name: 'buyNowPriceActive', onChange: toggleActiveInput }}
+              switchProps={{
+                name: 'buyNowPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('buyNowPrice'),
+              }}
               infoTooltip={{
-                text: 'Sell your NFT for a predefined price. When this price is reached it automaticly ends auction',
+                text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
               }}
             >
-              <TextField
-                {...register('buyNowPrice')}
-                type="text"
-                nodeEnd={<Pill label="tJOY" />}
-                disabled={!activeInputs.includes('buyNowPriceActive')}
-              />
+              <TextField type="text" nodeEnd={<Pill label="tJOY" />} disabled={!activeInputs.includes('buyNowPrice')} />
             </FormField>
             <FormField
               title="Auction duration"
-              switchProps={{ name: 'auctionDuration', onChange: toggleActiveInput }}
+              switchProps={{
+                name: 'auctionDuration',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('auctionDuration'),
+              }}
               infoTooltip={{
                 text: 'You can set the auction expiration date by setting its duration. When active - highest bid wins at the time of auction end.',
               }}

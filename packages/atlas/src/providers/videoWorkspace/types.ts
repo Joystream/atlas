@@ -63,4 +63,5 @@ export type VideoWorkspaceFormStatus<T> = {
   triggerNftFormSubmit?: () => void
   resetForm: UseFormReset<T>
   termsAccepted?: boolean
+  activeFields?: string[]
 }

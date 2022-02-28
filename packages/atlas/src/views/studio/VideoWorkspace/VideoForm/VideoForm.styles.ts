@@ -97,7 +97,7 @@ export const SwitchFormField = styled(FormField)`
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
 `
 
-export const SwitchNFTWrapper = styled.div`
+export const SwitchNftWrapper = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   grid-gap: 4px;

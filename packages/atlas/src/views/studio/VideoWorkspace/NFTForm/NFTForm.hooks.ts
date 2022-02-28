@@ -1,6 +1,9 @@
 import { intervalToDuration } from 'date-fns'
+import { useState } from 'react'
 
-export const useNFTForm = () => {
+export const useNftForm = () => {
+  const [activeInputs, setActiveInputs] = useState<string[]>([])
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const getTotalDaysAndHoursText = (start: Date, end: Date) => {
     const { days, hours } = intervalToDuration({
       start,
@@ -11,5 +14,5 @@ export const useNFTForm = () => {
     return `${parsedDays} ${parsedHours}`
   }
 
-  return { getTotalDaysAndHoursText }
+  return { getTotalDaysAndHoursText, state: { activeInputs, setActiveInputs, termsAccepted, setTermsAccepted } }
 }

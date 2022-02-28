@@ -49,7 +49,7 @@ import {
   StyledMultiFileSelect,
   StyledTitleArea,
   SwitchFormField,
-  SwitchNFTWrapper,
+  SwitchNftWrapper,
 } from './VideoForm.styles'
 import { convertVideoFormDataToFormFields } from './utils'
 
@@ -67,13 +67,13 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
   setFormStatus: (data: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> | null) => void
-  videoFormDataForNFT: VideoFormData | null
-  setIsIssuedAsNFT: (isIssuedAsNFT: boolean) => void
-  isIssuedAsNFT: boolean
+  videoFormDataForNft: VideoFormData | null
+  setIsIssuedAsNft: (isIssuedAsNft: boolean) => void
+  isIssuedAsNft: boolean
 }
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(
-  ({ onSubmit, setFormStatus, isIssuedAsNFT, setIsIssuedAsNFT, videoFormDataForNFT }) => {
+  ({ onSubmit, setFormStatus, isIssuedAsNft, setIsIssuedAsNft, videoFormDataForNft }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
@@ -127,15 +127,15 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
 
       reset(tabData)
 
-      if (videoFormDataForNFT) {
+      if (videoFormDataForNft) {
         setTimeout(() => {
-          const videoFormFields = convertVideoFormDataToFormFields(videoFormDataForNFT)
+          const videoFormFields = convertVideoFormDataToFormFields(videoFormDataForNft)
           Object.entries(videoFormFields).forEach(([key, value]) => {
             setValue(key as keyof VideoWorkspaceVideoFormFields, value, { shouldDirty: true })
           })
         }, 0)
       }
-    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue, videoFormDataForNFT])
+    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue, videoFormDataForNft])
     const handleSubmit = useCallback(() => {
       flushDraftSave()
 
@@ -370,27 +370,27 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                 )}
               />
             </ExtendedMarginFormField>
-            <SwitchFormField title="Issue as NFT">
-              <SwitchNFTWrapper>
+            <SwitchFormField title="Issue as Nft">
+              <SwitchNftWrapper>
                 <Switch
-                  label="Toggle to list this video as an NFT"
-                  value={isIssuedAsNFT}
-                  onChange={(e) => setIsIssuedAsNFT(e?.currentTarget.checked || false)}
+                  label="Toggle to list this video as an Nft"
+                  value={isIssuedAsNft}
+                  onChange={(e) => setIsIssuedAsNft(e?.currentTarget.checked || false)}
                 />
                 <Information
                   placement="top"
                   arrowDisabled
-                  text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+                  text="By issuing your video as an Nft you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
                 />
-              </SwitchNFTWrapper>
-              {isIssuedAsNFT && (
+              </SwitchNftWrapper>
+              {isIssuedAsNft && (
                 <Banner
                   id="issuing-nft"
                   dismissable={false}
                   icon={<StyledSvgWarning width={24} height={24} />}
                   description={
                     <>
-                      <Text variant="t200">After issuing this as an NFT </Text>
+                      <Text variant="t200">After issuing this as an Nft </Text>
                       <YellowText variant="t200">editing options of this video will be disabled</YellowText>
                     </>
                   }

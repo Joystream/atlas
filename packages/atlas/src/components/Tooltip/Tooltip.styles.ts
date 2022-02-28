@@ -43,7 +43,7 @@ type TooltipTextProps = {
 }
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  max-width: ${({ footer }) => (footer ? 249 : 200)}px;
+  max-width: ${({ footer }) => (footer ? 250 : 200)}px;
 
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `

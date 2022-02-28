@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { NftTile } from '@/components/NftTile'
@@ -9,20 +9,21 @@ import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
+import { useNftForm } from './NftForm.hooks'
 import {
-  NFTFormScrolling,
-  NFTFormWrapper,
-  NFTPreview,
-  NFTWorkspaceFormWrapper,
+  NftFormScrolling,
+  NftFormWrapper,
+  NftPreview,
+  NftWorkspaceFormWrapper,
   ScrollableWrapper,
   StepWrapper,
   StepperInnerWrapper,
   StepperWrapper,
-} from './NFTForm.styles'
+} from './NftForm.styles'
 import { SetUp } from './SetUp'
-import { Listing, NFTFormData } from './types'
+import { Listing, NftFormData } from './types'
 
-const DUMMY_NFT_TILE_PROPS = {
+const DUMMY_Nft_TILE_PROPS = {
   buyNow: false,
   role: 'owner' as const,
   auction: 'none' as const,
@@ -38,22 +39,24 @@ const DUMMY_NFT_TILE_PROPS = {
   fullWidth: false,
 }
 
-type NFTFormProps = {
+type NftFormProps = {
   listingType: Listing
   setFormStatus: (data: VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null) => void
   setListingType: (listingType: Listing) => void
   nftCurrentStepIdx: number
-  onSubmit: (data: NFTFormData) => void
+  onSubmit: (data: NftFormData) => void
 }
 
-export const NFTForm: React.FC<NFTFormProps> = ({
+export const NftForm: React.FC<NftFormProps> = ({
   nftCurrentStepIdx,
   listingType,
   setFormStatus,
   setListingType,
   onSubmit,
 }) => {
-  const [termsAccepted, setTermsAccepted] = useState(false)
+  const {
+    state: { termsAccepted, setTermsAccepted, activeInputs, setActiveInputs },
+  } = useNftForm()
   const {
     handleSubmit: createSubmitHandler,
     register,
@@ -61,8 +64,8 @@ export const NFTForm: React.FC<NFTFormProps> = ({
     getValues,
     setValue,
     formState: { isDirty, isValid },
-  } = useForm<NFTFormData>({ mode: 'onChange' })
-  const issueNFTSteps: StepProps[] = [
+  } = useForm<NftFormData>({ mode: 'onChange' })
+  const issueNftSteps: StepProps[] = [
     {
       variant: 'current',
       title: 'Choose listing type',
@@ -85,15 +88,16 @@ export const NFTForm: React.FC<NFTFormProps> = ({
     setTermsAccepted((prevState) => !prevState)
   }
 
-  const formStatus: VideoWorkspaceFormStatus<NFTFormData> = useMemo(
+  const formStatus: VideoWorkspaceFormStatus<NftFormData> = useMemo(
     () => ({
       isDirty,
       isValid,
       resetForm: reset,
       triggerNftFormSubmit: handleSubmit,
       termsAccepted,
+      activeInputs,
     }),
-    [handleSubmit, isDirty, isValid, reset, termsAccepted]
+    [activeInputs, handleSubmit, isDirty, isValid, reset, termsAccepted]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -101,9 +105,26 @@ export const NFTForm: React.FC<NFTFormProps> = ({
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
 
+  // Clear form on listing type change
+  useEffect(() => {
+    if (listingType) {
+      reset()
+      setActiveInputs([])
+    }
+  }, [listingType, reset, setActiveInputs])
+
   const stepsContent = [
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
-    <SetUp key="step-content-2" register={register} selectedType={listingType} setValue={setValue} />,
+    <SetUp
+      key="step-content-2"
+      register={register}
+      selectedType={listingType}
+      setValue={setValue}
+      activeInputs={activeInputs}
+      setActiveInputs={setActiveInputs}
+      reset={reset}
+      formData={getValues()}
+    />,
     <AcceptTerms
       key="step-content-3"
       selectedType={listingType}
@@ -115,17 +136,17 @@ export const NFTForm: React.FC<NFTFormProps> = ({
 
   return (
     <ScrollableWrapper>
-      <NFTWorkspaceFormWrapper>
-        <NFTPreview>
-          <NftTile title="title" {...DUMMY_NFT_TILE_PROPS} />
-        </NFTPreview>
-        <NFTFormScrolling>
-          <NFTFormWrapper lastStep={nftCurrentStepIdx === 2}>
+      <NftWorkspaceFormWrapper>
+        <NftPreview>
+          <NftTile title="title" {...DUMMY_Nft_TILE_PROPS} />
+        </NftPreview>
+        <NftFormScrolling>
+          <NftFormWrapper lastStep={nftCurrentStepIdx === 2}>
             <StepperWrapper>
               <StepperInnerWrapper>
-                {issueNFTSteps.map((step, idx) => {
+                {issueNftSteps.map((step, idx) => {
                   const stepVariant = getStepVariant(nftCurrentStepIdx, idx)
-                  const isLast = idx === issueNFTSteps.length - 1
+                  const isLast = idx === issueNftSteps.length - 1
                   return (
                     <StepWrapper key={idx}>
                       <Step showOtherStepsOnMobile number={idx + 1} variant={stepVariant} title={step.title} />
@@ -136,9 +157,9 @@ export const NFTForm: React.FC<NFTFormProps> = ({
               </StepperInnerWrapper>
             </StepperWrapper>
             {stepsContent[nftCurrentStepIdx]}
-          </NFTFormWrapper>
-        </NFTFormScrolling>
-      </NFTWorkspaceFormWrapper>
+          </NftFormWrapper>
+        </NftFormScrolling>
+      </NftWorkspaceFormWrapper>
     </ScrollableWrapper>
   )
 }

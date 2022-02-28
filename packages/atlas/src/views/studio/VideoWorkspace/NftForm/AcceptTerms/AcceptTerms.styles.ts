@@ -16,7 +16,11 @@ export const TermsBox = styled.div`
   padding: ${sizes(4)};
 
   ${media.md} {
-    left: ${sizes(1)};
+    position: fixed;
+    left: 50%;
+    bottom: 80px;
+    right: 0;
+    width: calc(50% - 8px);
   }
 `
 
