@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
 type Variant = 'default' | 'compact'
@@ -85,4 +86,8 @@ export const AvatarWrapper = styled.div<AvatarWrapperProps>`
 
 export const Content = styled.div`
   width: 100%;
+`
+
+export const CheckboxSkeleton = styled(SkeletonLoader)`
+  border-radius: 2px;
 `

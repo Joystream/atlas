@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { formatDateAgo } from '@/utils/time'
 
-import { AvatarWrapper, Content, Title, Wrapper } from './NotificationTile.styles'
+import { AvatarWrapper, CheckboxSkeleton, Content, Title, Wrapper } from './NotificationTile.styles'
 
 export type NotificationProps = {
   id: string
@@ -57,7 +57,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
       {!loading ? (
         variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} value={selected} />
       ) : (
-        <SkeletonLoader width={16} height={16} />
+        <CheckboxSkeleton width={16} height={16} />
       )}
       <AvatarWrapper tileVariant={variant}>
         {!loading ? (
