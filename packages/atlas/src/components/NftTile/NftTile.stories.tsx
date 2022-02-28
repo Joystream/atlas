@@ -24,7 +24,6 @@ export default {
     role: 'owner',
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     auction: 'none',
-    bid: 1234,
     minBid: 1234,
     buyNowPrice: 0,
     topBid: 123,

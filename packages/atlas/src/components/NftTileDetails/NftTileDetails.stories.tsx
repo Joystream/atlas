@@ -17,10 +17,10 @@ export default {
   args: {
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     role: 'owner',
-    bid: 1234,
     auction: 'none',
     minBid: 1234,
     topBid: 123,
+    buyNowPrice: 0,
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
     loading: false,
