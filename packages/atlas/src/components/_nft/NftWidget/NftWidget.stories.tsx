@@ -14,15 +14,15 @@ export default {
       control: { type: 'select', options: ['small', 'medium'] },
     },
     status: {
-      control: { type: 'select', options: ['iddle', 'buy-now', 'auction'] },
+      control: { type: 'select', options: ['idle', 'buy-now', 'auction'] },
     },
     nftState: { table: { disable: true } },
   },
   args: {
     ownerHandle: 'ye 🖤',
-    ownerAvatarUri: 'https://54.172.37.177.nip.io/distributor-1/api/v1/assets/3',
+    ownerAvatarUri: 'https://picsum.photos/40/40',
     size: 'medium',
-    status: 'iddle',
+    status: 'idle',
     startingPrice: 15800,
     buyNowPrice: 36900,
     topBid: 15800,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useMeasure from 'react-use-measure'
 
 import { GridItem } from '@/components/LayoutGrid'
@@ -44,18 +44,30 @@ export type NftWidgetProps = {
   ownerAvatarUri?: string
   isOwner: boolean
   nftState:
-    | { status: 'iddle'; lastPrice?: number; lastTransactionDate?: Date }
+    | { status: 'idle'; lastPrice?: number; lastTransactionDate?: Date }
     | { status: 'buy-now'; buyNowPrice: number }
     | Auction
 }
+
+const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 // TODO: Update Joy icon with the right variant once it is exported correctly
 // TODO: remove dummy dollar values
 export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
   const [containerRef, { width = 281 }] = useMeasure()
-  const size: Size = width > 280 ? 'medium' : 'small'
+  const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 
   const content = React.useMemo(() => {
+    // const priceToTJoy
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+
+      // These options are needed to round to whole numbers if that's what you want.
+      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    })
+
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
@@ -75,7 +87,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       ) : null
 
     switch (nftState.status) {
-      case 'iddle':
+      case 'idle':
         return (
           <>
             {nftState.lastPrice ? (
@@ -203,39 +215,35 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 )}
               </>
             ) : nftState.buyNowPrice ? (
-              <>
-                <GridItem colSpan={buttonColumnSpan}>
-                  <ButtonGrid data-size={size} data-two-columns>
-                    <Button fullWidth variant="secondary" size={buttonSize}>
-                      Place a bid
-                    </Button>
-                    <Button fullWidth size={buttonSize}>
-                      Buy now
-                    </Button>
-                    {/* second row button */}
-                    {nftState.canWithdrawBid && (
-                      <GridItem colSpan={2}>
-                        <Button fullWidth size={buttonSize} variant="destructive-secondary">
-                          Withdraw a bid
-                        </Button>
-                      </GridItem>
-                    )}
-                  </ButtonGrid>
-                </GridItem>
-              </>
+              <GridItem colSpan={buttonColumnSpan}>
+                <ButtonGrid data-size={size} data-two-columns>
+                  <Button fullWidth variant="secondary" size={buttonSize}>
+                    Place a bid
+                  </Button>
+                  <Button fullWidth size={buttonSize}>
+                    Buy now
+                  </Button>
+                  {/* second row button */}
+                  {nftState.canWithdrawBid && (
+                    <GridItem colSpan={2}>
+                      <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                        Withdraw a bid
+                      </Button>
+                    </GridItem>
+                  )}
+                </ButtonGrid>
+              </GridItem>
             ) : (
-              <>
-                <GridItem colSpan={buttonColumnSpan}>
-                  <ButtonGrid data-size={size}>
-                    <Button fullWidth size={buttonSize}>
-                      Place a bid
-                    </Button>
-                    <Button fullWidth size={buttonSize} variant="destructive-secondary">
-                      Withdraw a bid
-                    </Button>
-                  </ButtonGrid>
-                </GridItem>
-              </>
+              <GridItem colSpan={buttonColumnSpan}>
+                <ButtonGrid data-size={size}>
+                  <Button fullWidth size={buttonSize}>
+                    Place a bid
+                  </Button>
+                  <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                    Withdraw a bid
+                  </Button>
+                </ButtonGrid>
+              </GridItem>
             )}
           </>
         )
@@ -279,19 +287,18 @@ const NFTInfoItem: React.FC<NFTInfoItemProps> = ({ size, label, content, seconda
   )
 }
 
+const getTimeInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - new Date().getTime()) / 1000))
 const NFTTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
-  const [, rerender] = React.useState({})
-  const forceUpdate = React.useCallback(() => rerender({}), [])
+  const [timeInSeconds, setTimeInSeconds] = useState<number>(getTimeInSeconds(time))
 
-  const timeInSeconds = Math.max(0, Math.round((time.getTime() - new Date().getTime()) / 1000))
   const lessThanAMinuteLeft: boolean = timeInSeconds < 60
 
   useEffect(() => {
-    const interval = setInterval(forceUpdate, 1000)
+    const interval = setInterval(() => setTimeInSeconds(getTimeInSeconds(time)), 1000)
     return () => {
       clearInterval(interval)
     }
-  }, [forceUpdate])
+  }, [time])
 
   return (
     <InfoItemContainer data-size={size}>
