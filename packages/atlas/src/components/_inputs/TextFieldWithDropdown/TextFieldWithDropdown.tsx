@@ -63,8 +63,9 @@ export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextField
     },
   })
 
+  // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
-    if (!textFieldRef.current || !textFieldWithDropdownWrapperRef.current) {
+    if (!textFieldRef.current || !textFieldWithDropdownWrapperRef.current || !textFieldProps.helperText) {
       return
     }
     const { y: wrapperY } = textFieldWithDropdownWrapperRef.current.getBoundingClientRect()

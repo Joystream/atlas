@@ -13,7 +13,7 @@ export const ListWrapper = styled.ul<{ topPosition?: number }>`
   background: ${cVar('colorBackgroundStrong')};
   padding: 0;
   position: absolute;
-  top: ${({ topPosition = 0 }) => topPosition}px;
+  top: ${({ topPosition }) => (topPosition ? `${topPosition}px` : 'unset')};
   left: 0;
   width: 100%;
   z-index: ${zIndex.globalOverlay};

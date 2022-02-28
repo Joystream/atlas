@@ -30,7 +30,7 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
   const [isError, setIsError] = useState(false)
 
   const debounceFetchMembers = useRef(
-    debouncePromise(async (val?: string, selectedMembers?: Member[]) => {
+    debouncePromise(async (val?: string) => {
       if (!val) {
         setMembers([])
         return
@@ -43,29 +43,25 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
           variables: { where: { handle_startsWith: val } },
         })
         setIsLoading(false)
-        const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
-        const filteredMembers = memberships
-          .map(({ handle, id, metadata: { avatar } }) => ({
-            handle,
-            avatarUri: avatar?.__typename === 'AvatarUri' ? avatar.avatarUri : undefined,
-            id,
-          }))
-          .filter((member) => {
-            return !selectedMembersLookup[member.id]
-          })
-        setMembers(filteredMembers)
+
+        const members = memberships.map(({ handle, id, metadata: { avatar } }) => ({
+          handle,
+          avatarUri: avatar?.__typename === 'AvatarUri' ? avatar.avatarUri : undefined,
+          id,
+        }))
+        setMembers(members)
       } catch (error) {
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
         setIsError(true)
       }
-    }, 500)
+    }, 250)
   )
 
   const handleSelect = (item?: Member) => {
     if (!item) {
       return
     }
-    setSelectedMembers((prevItems) => [item, ...prevItems])
+    setSelectedMembers((prevItems) => [{ id: item.id, avatarUri: item.avatarUri, handle: item.handle }, ...prevItems])
     setMembers([])
   }
 
@@ -87,10 +83,12 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
     nodeStart: <SvgActionCancel />,
   }
 
+  const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
+
   return (
     <div>
       <TextFieldWithDropdown<Member>
-        items={dropdownItems}
+        items={dropdownItems.filter((member) => !selectedMembersLookup[member.id])}
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}
         resetOnSelect
@@ -101,7 +99,7 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
         onInputValueChange={(val) => {
           setIsError(false)
           setIsLoading(true)
-          debounceFetchMembers.current(val, selectedMembers)
+          debounceFetchMembers.current(val)
         }}
       />
       <MemberBadgesWrapper>
