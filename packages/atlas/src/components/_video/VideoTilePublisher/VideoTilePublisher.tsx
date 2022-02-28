@@ -178,6 +178,18 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       return
     }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
+    const getLasStatus = () => {
+      if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
+        return 'inProgress'
+      }
+      if (uploadVideoStatus?.lastStatus === 'processing' || uploadThumbnailStatus?.lastStatus === 'processing') {
+        return 'processing'
+      }
+      if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
+        return 'completed'
+      }
+    }
+
     const getContentSlot = () => {
       if (hasAssetUploadFailed) {
         return
@@ -187,7 +199,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           <UploadProgressTransition>
             <UploadProgressBar
               progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
-              lastStatus={uploadVideoStatus?.lastStatus || uploadThumbnailStatus?.lastStatus}
+              lastStatus={getLasStatus()}
               withLoadingIndicator
             />
           </UploadProgressTransition>
