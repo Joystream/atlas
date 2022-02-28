@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { NftTileDetails } from '@/components/NftTileDetails'
 import { Pill, PillGroup } from '@/components/Pill'
@@ -12,22 +12,22 @@ import { Container } from './NftTile.styles'
 export type Member = {
   assetUrl?: string | null
   name: string
+  onClick?: () => void
+  loading?: boolean
 }
 
 export type NftTileProps = {
-  auction: 'none' | 'minBid' | 'topBid' | 'waiting'
-  buyNow?: boolean
-  thumbnail: VideoThumbnailProps
+  auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
+  thumbnail?: VideoThumbnailProps
+  title?: string | null
+  owner?: Member
+  creator?: Member
   loading?: boolean
-  title: string
-  owner: Member
-  creator: Member
-  timer?: string
   duration?: number | null
   views?: number | null
-  bid: number
-  minBid?: number
-  topBid?: number
+  buyNowPrice?: number | null
+  minBid?: number | null
+  topBid?: number | null
   timeLeft?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
@@ -35,7 +35,6 @@ export type NftTileProps = {
 
 export const NftTile: React.FC<NftTileProps> = ({
   auction,
-  buyNow,
   thumbnail,
   loading,
   title,
@@ -43,54 +42,35 @@ export const NftTile: React.FC<NftTileProps> = ({
   owner,
   duration,
   views,
-  bid,
+  buyNowPrice,
   minBid,
   topBid,
   timeLeft,
   role,
   fullWidth,
 }) => {
-  const [calculatedTimeLeft, setCalculatedTimeLeft] = useState(0)
   const [hovered, setHovered] = useState(false)
-
-  useEffect(() => {
-    if (!timeLeft) {
-      return
-    }
-
-    setCalculatedTimeLeft(timeLeft)
-    const timeLeftInterval = setInterval(() => {
-      setCalculatedTimeLeft((prevState) => {
-        if (prevState <= 1) {
-          clearInterval(timeLeftInterval)
-        }
-        return --prevState
-      })
-    }, 1000)
-
-    return () => {
-      clearInterval(timeLeftInterval)
-    }
-  }, [timeLeft])
 
   const getBottomLeft = useMemo(() => {
     switch (auction) {
       case 'none':
-        return <Pill icon={buyNow ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" variant="overlay" />
+        return (
+          <Pill icon={buyNowPrice ? <SvgActionBuyNow /> : <SvgActionNotForSale />} size="medium" variant="overlay" />
+        )
       case 'minBid':
       case 'topBid':
       case 'waiting':
-        return buyNow ? (
+        return buyNowPrice ? (
           <PillGroup
             items={[
               {
                 icon: <SvgActionAuction />,
                 label: timeLeft
-                  ? calculatedTimeLeft < 60
+                  ? timeLeft < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(calculatedTimeLeft, true)
+                    : formatDurationShort(timeLeft, true)
                   : undefined,
-                variant: timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay',
+                variant: timeLeft && timeLeft < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -99,27 +79,22 @@ export const NftTile: React.FC<NftTileProps> = ({
         ) : (
           <Pill
             icon={<SvgActionAuction />}
-            label={
-              timeLeft
-                ? calculatedTimeLeft < 60
-                  ? 'Less than a minute'
-                  : formatDurationShort(calculatedTimeLeft, true)
-                : undefined
-            }
+            label={timeLeft ? (timeLeft < 60 ? 'Less than a minute' : formatDurationShort(timeLeft, true)) : undefined}
             size="medium"
-            variant={timeLeft && calculatedTimeLeft < 3600 ? 'danger' : 'overlay'}
+            variant={timeLeft && timeLeft < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNow, calculatedTimeLeft, timeLeft])
+  }, [auction, buyNowPrice, timeLeft])
 
   return (
     <Container fullWidth={fullWidth}>
       <VideoThumbnail
+        videoHref={thumbnail?.videoHref}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         loading={loading}
-        thumbnailUrl={thumbnail.thumbnailUrl}
+        thumbnailUrl={thumbnail?.thumbnailUrl}
         clickable={false}
         slots={{
           topLeft: views
@@ -139,14 +114,13 @@ export const NftTile: React.FC<NftTileProps> = ({
         hovered={hovered}
         owner={owner}
         auction={auction}
-        bid={bid}
+        buyNowPrice={buyNowPrice}
         loading={loading}
         topBid={topBid}
         creator={creator}
         role={role}
         title={title}
         minBid={minBid}
-        buyNow={buyNow}
       />
     </Container>
   )
