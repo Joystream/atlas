@@ -58,7 +58,7 @@
     "bn.js": "4.12.0",
     "vite": "2.7.13",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
-    "@joystream/types": "patch:@joystream/types@npm:0.18.0#.yarn/patches/@joystream-types-npm-0.18.0-2010b5923e"
+    "@joystream/types@0.18.1": "patch:@joystream/types@npm:0.18.1#.yarn/patches/@joystream-types-npm-0.18.1-b0eda385e8"
   },
   "engines": {
     "node": ">=14"

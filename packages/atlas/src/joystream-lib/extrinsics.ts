@@ -10,8 +10,7 @@ import {
 import { DataObjectId } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { bool } from '@polkadot/types'
-import { BTreeSet, Option, GenericAccountId as RuntimeAccountId } from '@polkadot/types'
+import { BTreeSet, Option, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
 
 import { SentryLogger } from '@/utils/logs'
 
