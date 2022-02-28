@@ -20,8 +20,13 @@ export const useTokenPrice = () => {
 
   const convertToUSD = useCallback(
     (tokens: number) => {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })
+
       const price = getTokenPrice()
-      return tokens * price
+      return formatter.format(tokens * price)
     },
     [getTokenPrice]
   )

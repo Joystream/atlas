@@ -22,9 +22,6 @@ module.exports = {
     },
   },
   rules: {
-    // taken care of by typescript
-    'react/prop-types': 'off',
-
     // disable explicit return types
     '@typescript-eslint/explicit-module-boundary-types': 'off',
 
@@ -33,6 +30,8 @@ module.exports = {
       'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true, 'varsIgnorePattern': '^_+$' },
     ],
+    // taken care of by typescript
+    'react/prop-types': 'off',
     'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
     'react/self-closing-comp': [
       'warn',
@@ -41,8 +40,15 @@ module.exports = {
         'html': true,
       },
     ],
-    '@typescript-eslint/no-empty-function': 'warn',
+    // add exhaustive deps check to custom hooks
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        'additionalHooks': 'useDeepMemo',
+      },
+    ],
     'react/no-unescaped-entities': 'off',
+    '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/ban-ts-comment': [
       'error',

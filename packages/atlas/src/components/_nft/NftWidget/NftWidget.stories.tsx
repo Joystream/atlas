@@ -1,13 +1,19 @@
+import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import { add } from 'date-fns'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { createApolloClient } from '@/api'
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { JoystreamProvider } from '@/providers/joystream'
+import { ActiveUserProvider } from '@/providers/user'
+
 import { NftWidget, NftWidgetProps } from '.'
 
 export default {
-  title: 'NFT/NFT Widget',
+  title: 'NFT/Nft Widget',
   component: NftWidget,
   argTypes: {
     size: {
@@ -37,9 +43,18 @@ export default {
   },
   decorators: [
     (Story) => {
+      const apolloClient = createApolloClient()
       return (
         <BrowserRouter>
-          <Story />
+          <ApolloProvider client={apolloClient}>
+            <ConfirmationModalProvider>
+              <ActiveUserProvider>
+                <JoystreamProvider>
+                  <Story />
+                </JoystreamProvider>
+              </ActiveUserProvider>
+            </ConfirmationModalProvider>
+          </ApolloProvider>
         </BrowserRouter>
       )
     },

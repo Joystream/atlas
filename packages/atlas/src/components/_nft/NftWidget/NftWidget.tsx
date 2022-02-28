@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import useMeasure from 'react-use-measure'
 
 import { GridItem } from '@/components/LayoutGrid'
@@ -6,28 +6,25 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { cVar } from '@/styles'
+import { useDeepMemo } from '@/hooks/useDeepMemo'
+import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
-import { formatDateTime, formatDurationShort } from '@/utils/time'
+import { formatDateTime } from '@/utils/time'
 
+import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
   Container,
   Content,
-  InfoItemContainer,
-  InfoItemContent,
   JoyTokenIcon,
-  Label,
-  NFTHistoryHeader,
-  NFTOwnerContainer,
+  NftHistoryHeader,
+  NftOwnerContainer,
   OwnerAvatar,
   OwnerHandle,
   OwnerLabel,
-  SecondaryText,
-  TimerSecondaryText,
 } from './NftWidget.styles'
 
-type Size = 'medium' | 'small'
+export type Size = 'medium' | 'small'
 
 export type Auction = {
   status: 'auction'
@@ -52,28 +49,19 @@ export type NftWidgetProps = {
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 // TODO: Update Joy icon with the right variant once it is exported correctly
-// TODO: remove dummy dollar values
 export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
   const [containerRef, { width = 281 }] = useMeasure()
+  const { convertToUSD } = useTokenPrice()
+
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 
-  const content = React.useMemo(() => {
-    // const priceToTJoy
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-
-      // These options are needed to round to whole numbers if that's what you want.
-      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    })
-
+  const content = useDeepMemo(() => {
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
-        <NFTInfoItem
+        <NftInfoItem
           size={size}
           label="Buy now"
           content={
@@ -82,7 +70,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
               <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
             </>
           }
-          secondaryText="$9,629.25"
+          secondaryText={convertToUSD(buyNowPrice)}
         />
       ) : null
 
@@ -91,7 +79,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
         return (
           <>
             {nftState.lastPrice ? (
-              <NFTInfoItem
+              <NftInfoItem
                 size={size}
                 label="Last price"
                 content={
@@ -105,7 +93,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 secondaryText={nftState.lastTransactionDate && formatDateTime(nftState.lastTransactionDate)}
               />
             ) : (
-              <NFTInfoItem
+              <NftInfoItem
                 size={size}
                 label="status"
                 content={
@@ -118,7 +106,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
             {isOwner && (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth variant="secondary" size={buttonSize}>
-                  Start sale of this NFT
+                  Start sale of this nft
                 </Button>
               </GridItem>
             )}
@@ -151,7 +139,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       case 'auction':
         return nftState.isCompleted ? (
           <>
-            <NFTInfoItem
+            <NftInfoItem
               size={size}
               label="You have won with"
               content={
@@ -160,7 +148,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                   <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid ?? 0)}</Text>
                 </>
               }
-              secondaryText="$9,629.25"
+              secondaryText={convertToUSD(nftState.topBid ?? 0)}
             />
             <GridItem colSpan={buttonColumnSpan}>
               <Button fullWidth size={buttonSize}>
@@ -171,7 +159,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
         ) : (
           <>
             {nftState.topBid ? (
-              <NFTInfoItem
+              <NftInfoItem
                 size={size}
                 label="Top bid"
                 content={
@@ -180,10 +168,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid)}</Text>
                   </>
                 }
-                secondaryText="$9,629.25"
+                secondaryText={convertToUSD(nftState.topBid)}
               />
             ) : (
-              <NFTInfoItem
+              <NftInfoItem
                 size={size}
                 label="Starting Price"
                 content={
@@ -192,11 +180,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.startingPrice)}</Text>
                   </>
                 }
-                secondaryText="$9,629.25"
+                secondaryText={convertToUSD(nftState.startingPrice)}
               />
             )}
             <BuyNow buyNowPrice={nftState.buyNowPrice} />
-            {!!nftState.auctionPlannedEndDate && <NFTTimerItem size={size} time={nftState.auctionPlannedEndDate} />}
+            {!!nftState.auctionPlannedEndDate && <NftTimerItem size={size} time={nftState.auctionPlannedEndDate} />}
             {isOwner ? (
               <>
                 {!nftState.auctionPlannedEndDate && !nftState.topBid && (
@@ -248,80 +236,26 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           </>
         )
     }
-  }, [size, nftState, isOwner])
+  }, [size, nftState, convertToUSD, isOwner])
 
   return (
     <Container ref={containerRef}>
-      <NFTOwnerContainer data-size={size}>
+      <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
-          This NFT is owned by
+          This nft is owned by
         </OwnerLabel>
         <OwnerHandle to={ownerHandle && absoluteRoutes.viewer.member(ownerHandle)} variant="secondary" textOnly>
           {ownerHandle}
         </OwnerHandle>
-      </NFTOwnerContainer>
+      </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
 
       {/* TODO: add history */}
-      <NFTHistoryHeader data-size={size}>
+      <NftHistoryHeader data-size={size}>
         <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
         <SvgActionChevronB />
-      </NFTHistoryHeader>
+      </NftHistoryHeader>
     </Container>
-  )
-}
-
-type NFTInfoItemProps = { size: Size; label: string; content: React.ReactNode; secondaryText?: string }
-const NFTInfoItem: React.FC<NFTInfoItemProps> = ({ size, label, content, secondaryText }) => {
-  return (
-    <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
-        {label}
-      </Label>
-      <InfoItemContent data-size={size}>{content}</InfoItemContent>
-      <SecondaryText as="p" variant="t100" secondary data-size={size}>
-        {secondaryText}
-      </SecondaryText>
-    </InfoItemContainer>
-  )
-}
-
-const getTimeInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - new Date().getTime()) / 1000))
-const NFTTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
-  const [timeInSeconds, setTimeInSeconds] = useState<number>(getTimeInSeconds(time))
-
-  const lessThanAMinuteLeft: boolean = timeInSeconds < 60
-
-  useEffect(() => {
-    const interval = setInterval(() => setTimeInSeconds(getTimeInSeconds(time)), 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [time])
-
-  return (
-    <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
-        Auction ends in
-      </Label>
-      <InfoItemContent data-size={size}>
-        <Text
-          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-          variant={size === 'small' ? 'h400' : 'h600'}
-        >
-          {formatDurationShort(timeInSeconds, true)}
-        </Text>
-      </InfoItemContent>
-      <TimerSecondaryText
-        color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-        as="p"
-        variant="t100"
-        data-size={size}
-        data-ends-soon={lessThanAMinuteLeft}
-      >
-        Less than a minute
-      </TimerSecondaryText>
-    </InfoItemContainer>
   )
 }

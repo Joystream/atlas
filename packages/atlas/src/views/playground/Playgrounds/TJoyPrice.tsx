@@ -6,7 +6,7 @@ export const TJoyPrice = () => {
   const { convertToUSD, convertToTJoy } = useTokenPrice()
   const [toConvert, setToConvert] = useState(0)
   const [unit, setUnit] = useState('tJoy')
-  const [converted, setConverted] = useState(0)
+  const [converted, setConverted] = useState<number | string>(0)
   const [showConverted, setShowConverted] = useState(false)
   const convert = () => {
     setShowConverted(true)
