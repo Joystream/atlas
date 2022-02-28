@@ -20,7 +20,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const { convertBlockToDate, convertDateToBlock } = useBlockTimeEstimation()
 
-  const [timeleft, setTimeLeft] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(0)
 
   useEffect(() => {
     if (
@@ -35,18 +35,18 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
         nft.transactionalStatus.auction?.plannedEndAtBlock
       ) {
-        const timeleft = Math.round(
+        const timeLeft = Math.round(
           (convertBlockToDate(nft.transactionalStatus.auction?.plannedEndAtBlock) - Date.now()) / 1000
         )
-        if (timeleft >= 0) {
-          setTimeLeft(timeleft)
+        if (timeLeft >= 0) {
+          setTimeLeft(timeLeft)
         }
       }
     }, 1000)
     return () => {
       clearInterval(timeLeftInterval)
     }
-  }, [convertBlockToDate, nft?.transactionalStatus.__typename, nft?.transactionalStatus, timeleft, convertDateToBlock])
+  }, [convertBlockToDate, nft?.transactionalStatus.__typename, nft?.transactionalStatus, timeLeft, convertDateToBlock])
 
   const getNftProps = (nft?: AllNftFieldsFragment): NftTileProps => {
     const nftCommponProps = {
@@ -93,7 +93,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         }
       case 'TransactionalStatusAuction': {
         const isEnded =
-          (nft.transactionalStatus.auction?.endedAtBlock || timeleft <= 0) &&
+          (nft.transactionalStatus.auction?.endedAtBlock || timeLeft <= 0) &&
           nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish'
         return {
           ...nftCommponProps,
@@ -101,7 +101,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
           buyNowPrice: isEnded ? undefined : nft.transactionalStatus.auction?.buyNowPrice,
           minBid: nft.transactionalStatus.auction?.startingPrice,
           topBid: nft.transactionalStatus.auction?.lastBid?.amount,
-          timeleft,
+          timeLeft,
         }
       }
       default:

@@ -28,7 +28,7 @@ export type NftTileProps = {
   buyNowPrice?: number | null
   minBid?: number | null
   topBid?: number | null
-  timeleft?: number
+  timeLeft?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
 }
@@ -45,7 +45,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   buyNowPrice,
   minBid,
   topBid,
-  timeleft,
+  timeLeft,
   role,
   fullWidth,
 }) => {
@@ -65,12 +65,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: timeleft
-                  ? timeleft < 60
+                label: timeLeft
+                  ? timeLeft < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(timeleft, true)
+                    : formatDurationShort(timeLeft, true)
                   : undefined,
-                variant: timeleft && timeleft < 3600 ? 'danger' : 'overlay',
+                variant: timeLeft && timeLeft < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -79,13 +79,13 @@ export const NftTile: React.FC<NftTileProps> = ({
         ) : (
           <Pill
             icon={<SvgActionAuction />}
-            label={timeleft ? (timeleft < 60 ? 'Less than a minute' : formatDurationShort(timeleft, true)) : undefined}
+            label={timeLeft ? (timeLeft < 60 ? 'Less than a minute' : formatDurationShort(timeLeft, true)) : undefined}
             size="medium"
-            variant={timeleft && timeleft < 3600 ? 'danger' : 'overlay'}
+            variant={timeLeft && timeLeft < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNowPrice, timeleft])
+  }, [auction, buyNowPrice, timeLeft])
 
   return (
     <Container fullWidth={fullWidth}>
