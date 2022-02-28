@@ -36,6 +36,7 @@ import {
   CategoryWrapper,
   ChannelContainer,
   DescriptionContainer,
+  DescriptionLink,
   DescriptionSkeletonLoader,
   DescriptionTitle,
   DetailsWrapper,
@@ -156,9 +157,9 @@ export const VideoView: React.FC = () => {
     const parts = text.split(urlRegex)
     return parts.reduce((acc, part, idx) => {
       const node = urlRegex.test(part) ? (
-        <Button size="large" textOnly key={`description-link-${idx}`} to={part}>
+        <DescriptionLink size="large" textOnly key={`description-link-${idx}`} to={part}>
           {part}
-        </Button>
+        </DescriptionLink>
       ) : (
         part
       )

@@ -47,6 +47,8 @@ const filteredProps = ['colStart', 'colSpan', 'rowStart', 'rowSpan']
 export const GridItem = styled('div', {
   shouldForwardProp: (prop) => !filteredProps.includes(prop as string),
 })<GridItemProps>`
+  min-width: 0;
+
   ${({ colStart }) => !isResponsivenessObject(colStart) && colStart && `grid-column-start: ${colStart};`}
   ${({ colSpan }) => !isResponsivenessObject(colSpan) && colSpan && `grid-column-end: span ${colSpan};`}
   ${({ rowStart }) => !isResponsivenessObject(rowStart) && rowStart && `grid-row-start: ${rowStart};`}

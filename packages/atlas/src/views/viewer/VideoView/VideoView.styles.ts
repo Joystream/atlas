@@ -207,3 +207,7 @@ export const SeeMoreButton = styled(Button)`
 export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
   margin-top: ${sizes(16)};
 `
+
+export const DescriptionLink = styled(Button)`
+  word-break: break-all;
+`
