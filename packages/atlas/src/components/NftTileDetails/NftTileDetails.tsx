@@ -36,10 +36,10 @@ export type NftTileDetailsProps = {
   creator?: Member
   role?: 'owner' | 'viewer'
   auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
-  buyNowPrice?: number | null | undefined
-  minBid?: number | null | undefined
-  topBid?: number | null | undefined
-  title?: string | null | undefined
+  buyNowPrice?: number | null
+  minBid?: number | null
+  topBid?: number | null
+  title?: string | null
   hovered?: boolean
 }
 
@@ -234,7 +234,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       )}
       <Details>
         {getDetails}
-        {!loading && buyNowPrice && buyNowPrice > 0 && (
+        {!loading && !!buyNowPrice && buyNowPrice > 0 && (
           <DetailsContent caption="Buy now" content={formatNumberShort(buyNowPrice)} icon={<SvgActionJoyToken />} />
         )}
       </Details>

@@ -10,7 +10,6 @@ export default {
   argTypes: {
     title: {
       type: 'string',
-      defaultValue: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     },
     thumbnail: {
       thumbnailUrl: {
@@ -20,16 +19,14 @@ export default {
     creator: { table: { disable: true } },
     supporters: { table: { disable: true } },
     owner: { table: { disable: true } },
-    auction: { control: { type: 'select', options: ['none', 'minBid', 'topBid', 'waiting'] }, defaultValue: 'none' },
-    role: { control: { type: 'radio', options: ['owner', 'viewer'] } },
-    timeLeft: { type: 'number' },
   },
   args: {
-    buyNow: false,
     role: 'owner',
+    title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
     auction: 'none',
     bid: 1234,
     minBid: 1234,
+    buyNowPrice: 0,
     topBid: 123,
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
