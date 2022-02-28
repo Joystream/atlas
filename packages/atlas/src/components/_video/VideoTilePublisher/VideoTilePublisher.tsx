@@ -64,7 +64,11 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const hasThumbnailUploadFailed =
       (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isUploading) || false
     const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isUploading) || false
-    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
+
+    const hasAssetUploadFailed =
+      (hasThumbnailUploadFailed || hasVideoUploadFailed) &&
+      uploadVideoStatus?.lastStatus !== 'completed' &&
+      uploadThumbnailStatus?.lastStatus !== 'completed'
 
     const isUnlisted = video?.isPublic === false
 
@@ -178,7 +182,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       return
     }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
-    const getLasStatus = () => {
+    const getAllFilesLasStatus = useCallback(() => {
       if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
         return 'inProgress'
       }
@@ -188,7 +192,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
         return 'completed'
       }
-    }
+    }, [uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
     const getContentSlot = () => {
       return (
@@ -202,7 +206,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           <UploadProgressTransition>
             <UploadProgressBar
               progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
-              lastStatus={getLasStatus()}
+              lastStatus={getAllFilesLasStatus()}
               withLoadingIndicator
             />
           </UploadProgressTransition>
