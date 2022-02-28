@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { formatDateAgo } from '@/utils/time'
 
-import { AvatarWrapper, CheckboxSkeleton, Content, Title, Wrapper } from './NotificationTile.styles'
+import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrapper } from './NotificationTile.styles'
 
 export type NotificationProps = {
   id: string
@@ -38,8 +38,6 @@ export const NotificationTile: React.FC<NotificationProps> = ({
   variant = 'default',
   className,
 }) => {
-  const titleVariant = variant === 'default' ? 'h300' : 't200-strong'
-  const avatarSkeletonSize = variant === 'default' ? 40 : 32
   const formattedDate = useMemo(() => {
     const differenceDays = differenceInDays(new Date(), date)
     const differenceYears = differenceInCalendarYears(new Date(), date)
@@ -52,38 +50,62 @@ export const NotificationTile: React.FC<NotificationProps> = ({
     return formatDateAgo(date)
   }, [date])
 
+  if (variant === 'compact') {
+    return (
+      <StyledListItem
+        loading={loading}
+        read={read}
+        variant="compact"
+        nodeStart={
+          !loading ? <Avatar size="default" assetUrl={avatarUrl} /> : <SkeletonLoader width={32} height={32} rounded />
+        }
+        caption={!loading ? `${formattedDate} • ${videoTitle}` : <SkeletonLoader width="50%" height={19} />}
+        label={
+          !loading ? (
+            <>
+              <Text as="span" variant="t200-strong" secondary>
+                {`${author} `}
+              </Text>
+              <Text as="span" variant="t200-strong">
+                {text}
+              </Text>
+            </>
+          ) : (
+            <SkeletonLoader width="40%" height={20} bottomSpace={2} />
+          )
+        }
+      />
+    )
+  }
+
   return (
-    <Wrapper read={read} selected={selected} loading={loading} className={className} variant={variant}>
+    <Wrapper read={read} selected={selected} loading={loading} className={className} variant="default">
       {!loading ? (
-        variant === 'default' && <Checkbox onChange={() => onSelect?.(id)} value={selected} />
+        <Checkbox onChange={() => onSelect?.(id)} value={selected} />
       ) : (
         <CheckboxSkeleton width={16} height={16} />
       )}
-      <AvatarWrapper tileVariant={variant}>
-        {!loading ? (
-          <Avatar size={variant === 'default' ? 'small' : 'default'} assetUrl={avatarUrl} />
-        ) : (
-          <SkeletonLoader width={avatarSkeletonSize} height={avatarSkeletonSize} rounded />
-        )}
+      <AvatarWrapper>
+        {!loading ? <Avatar size="small" assetUrl={avatarUrl} /> : <SkeletonLoader width={40} height={40} rounded />}
       </AvatarWrapper>
       {!loading ? (
         <Content>
           <Title>
-            <Text as="span" variant={titleVariant} secondary>
+            <Text as="span" variant="h300" secondary>
               {`${author} `}
             </Text>
-            <Text as="span" variant={titleVariant}>
+            <Text as="span" variant="h300">
               {text}
             </Text>
           </Title>
-          <Text variant={variant === 'default' ? 't200' : 't100'} secondary>
+          <Text variant="t200" secondary>
             {formattedDate} • {videoTitle}
           </Text>
         </Content>
       ) : (
         <Content>
-          <SkeletonLoader width="40%" height={variant === 'default' ? 24 : 20} bottomSpace={2} />
-          <SkeletonLoader width="50%" height={variant === 'default' ? 20 : 19} />
+          <SkeletonLoader width="40%" height={24} bottomSpace={2} />
+          <SkeletonLoader width="50%" height={20} />
         </Content>
       )}
     </Wrapper>

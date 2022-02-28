@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { ListItem } from '@/components/ListItem'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes } from '@/styles'
 
@@ -10,10 +11,10 @@ type NotificationWrapperProps = {
   read?: boolean
   selected?: boolean
   loading?: boolean
-  variant: Variant
+  variant?: Variant
 }
 
-const getNotificationWrapperStyles = ({ read, selected, loading, variant }: NotificationWrapperProps) => {
+const getNotificationWrapperStyles = ({ read, selected, loading }: NotificationWrapperProps) => {
   if (selected) {
     return css`
       background-color: ${cVar('colorBackgroundElevated')};
@@ -21,7 +22,7 @@ const getNotificationWrapperStyles = ({ read, selected, loading, variant }: Noti
   }
   if (!read) {
     return css`
-      background-color: ${variant === 'default' ? cVar('colorBackground') : cVar('colorBackgroundMutedAlpha')};
+      background-color: ${cVar('colorBackground')};
 
       :hover {
         background-color: ${cVar('colorBackgroundStrong')};
@@ -33,7 +34,7 @@ const getNotificationWrapperStyles = ({ read, selected, loading, variant }: Noti
   }
 
   return css`
-    background-color: ${variant === 'default' ? cVar('colorBackgroundMuted') : 'transparent'};
+    background-color: ${cVar('colorBackgroundMuted')};
 
     :hover {
       background-color: ${cVar('colorBackground')};
@@ -41,8 +42,9 @@ const getNotificationWrapperStyles = ({ read, selected, loading, variant }: Noti
   `
 }
 
-const getReadNotificationVariant = ({ read, variant }: NotificationWrapperProps) =>
+const getReadNotificationVariant = ({ read, variant, loading }: NotificationWrapperProps) =>
   !read &&
+  !loading &&
   css`
     ::after {
       content: '';
@@ -74,14 +76,8 @@ export const Title = styled.div`
   margin-bottom: ${sizes(0.5)};
 `
 
-type AvatarWrapperProps = {
-  tileVariant: Variant
-}
-
-export const AvatarWrapper = styled.div<AvatarWrapperProps>`
+export const AvatarWrapper = styled.div`
   margin: 0 ${sizes(4)};
-  margin-left: ${({ tileVariant }) => sizes(tileVariant === 'default' ? 4 : 0)};
-  margin-right: ${({ tileVariant }) => sizes(tileVariant === 'default' ? 4 : 3)};
 `
 
 export const Content = styled.div`
@@ -90,4 +86,32 @@ export const Content = styled.div`
 
 export const CheckboxSkeleton = styled(SkeletonLoader)`
   border-radius: 2px;
+`
+
+type StyledListItemProps = {
+  read?: boolean
+  variant: Variant
+  loading?: boolean
+}
+
+const getListItemStyles = ({ read, loading }: StyledListItemProps) => {
+  if (loading) {
+    return
+  }
+  if (!read) {
+    return css`
+      background-color: ${cVar('colorBackgroundMutedAlpha')};
+
+      :hover {
+        background-color: ${cVar('colorBackgroundStrong')};
+      }
+    `
+  }
+}
+
+export const StyledListItem = styled(ListItem)<StyledListItemProps>`
+  ${getReadNotificationVariant};
+  ${getListItemStyles};
+
+  position: relative;
 `
