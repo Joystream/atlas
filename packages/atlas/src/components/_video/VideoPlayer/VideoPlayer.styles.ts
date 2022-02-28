@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { SvgControlsSoundOff } from '@/components/_icons'
-import { media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.styles'
@@ -325,14 +325,13 @@ export const Container = styled.div<ContainerProps>`
   }
 `
 
-export const BigPlayButtonOverlay = styled.div`
+export const BigPlayButtonContainer = styled.div`
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: ${zIndex.overlay};
-  background: ${oldColors.transparentBlack[86]};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -340,19 +339,23 @@ export const BigPlayButtonOverlay = styled.div`
 
 export const BigPlayButton = styled(ControlButton)`
   display: flex;
-  width: ${sizes(20)};
-  height: ${sizes(20)};
   justify-content: center;
   align-items: center;
-  position: absolute;
-  background-color: ${oldColors.transparentPrimary[18]};
-  backdrop-filter: blur(${sizes(8)});
+  padding: ${sizes(6)};
+  backdrop-filter: blur(32px);
+  background-color: ${cVar('colorCoreNeutral500Darken')};
+
+  :hover {
+    background-color: ${cVar('colorCoreNeutral400Darken')};
+  }
+
+  :focus,
+  :active {
+    background-color: ${cVar('colorCoreNeutral600Darken')};
+  }
 
   > svg {
-    width: ${sizes(10)};
-    height: ${sizes(10)};
-  }
-  @media (hover: hover) {
-    cursor: pointer;
+    width: 48px;
+    height: 48px;
   }
 `
