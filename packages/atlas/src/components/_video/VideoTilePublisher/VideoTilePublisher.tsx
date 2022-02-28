@@ -62,8 +62,8 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const isUploading = isVideoUploading || isThumbnailUploading
 
     const hasThumbnailUploadFailed =
-      (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isThumbnailUploading) || false
-    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isVideoUploading) || false
+      (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isUploading) || false
+    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isUploading) || false
     const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const isUnlisted = video?.isPublic === false
@@ -191,11 +191,14 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     }
 
     const getContentSlot = () => {
-      if (hasAssetUploadFailed) {
-        return
-      }
       return (
-        <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
+        <CSSTransition
+          in={isUploading && !hasAssetUploadFailed}
+          timeout={1000}
+          classNames={DELAYED_FADE_CLASSNAME}
+          unmountOnExit
+          mountOnEnter
+        >
           <UploadProgressTransition>
             <UploadProgressBar
               progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
