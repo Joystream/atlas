@@ -46,13 +46,13 @@ export const Default = Template.bind({})
 export const WithLessThan5Collectors = Template.bind({})
 WithLessThan5Collectors.args = {
   collectors: [
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'William', nftsAmount: 6 },
     {
-      assetUrl: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
+      url: 'https://eu-central-1.linodeobjects.com/atlas-assets/channel-posters/2.jpg',
       tooltipText: 'Someone',
       nftsAmount: 1,
     },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'Someone else', nftsAmount: 7 },
   ],
 }
 

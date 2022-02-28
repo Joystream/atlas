@@ -6,6 +6,7 @@ import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
+import { useMemberAvatar } from '@/providers/assets'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
@@ -24,6 +25,7 @@ export const ChannelAbout = () => {
   const { id } = useParams()
   const { channel } = useChannel(id ?? '')
   const { videoCount } = useChannelVideoCount(id ?? '')
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, sm: 8 }} rowStart={{ xxs: 2, sm: 1 }}>
@@ -40,7 +42,7 @@ export const ChannelAbout = () => {
         <DetailsText variant="h400">Details</DetailsText>
 
         <DetailsMember>
-          <StyledAvatar size="small" assetUrl={channel?.ownerMember?.avatarUri} />
+          <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
           <MemberContainer>
             <Text variant="t100" secondary>
               Owned by member

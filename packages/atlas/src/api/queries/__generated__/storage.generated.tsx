@@ -2,31 +2,9 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
+import { DistributionBucketOperatorFieldFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type StorageDataObjectFieldsFragment = {
-  __typename?: 'StorageDataObject'
-  id: string
-  createdAt: Date
-  size: number
-  isAccepted: boolean
-  ipfsHash: string
-  storageBag: { __typename?: 'StorageBag'; id: string }
-  type:
-    | { __typename: 'DataObjectTypeChannelAvatar' }
-    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-    | { __typename: 'DataObjectTypeUnknown' }
-    | { __typename: 'DataObjectTypeVideoMedia' }
-    | { __typename: 'DataObjectTypeVideoThumbnail' }
-}
-
-export type DistributionBucketOperatorFieldFragment = {
-  __typename?: 'DistributionBucketOperator'
-  id: string
-  status: Types.DistributionBucketOperatorStatus
-  metadata?: { __typename?: 'DistributionBucketOperatorMetadata'; nodeEndpoint?: string | null } | null
-}
-
 export type GetDistributionBucketsWithOperatorsQueryVariables = Types.Exact<{ [key: string]: never }>
 
 export type GetDistributionBucketsWithOperatorsQuery = {
@@ -56,30 +34,6 @@ export type GetStorageBucketsQuery = {
   }>
 }
 
-export const StorageDataObjectFieldsFragmentDoc = gql`
-  fragment StorageDataObjectFields on StorageDataObject {
-    id
-    createdAt
-    size
-    isAccepted
-    ipfsHash
-    storageBag {
-      id
-    }
-    type {
-      __typename
-    }
-  }
-`
-export const DistributionBucketOperatorFieldFragmentDoc = gql`
-  fragment DistributionBucketOperatorField on DistributionBucketOperator {
-    id
-    metadata {
-      nodeEndpoint
-    }
-    status
-  }
-`
 export const GetDistributionBucketsWithOperatorsDocument = gql`
   query GetDistributionBucketsWithOperators {
     distributionBuckets(limit: 50, where: { distributing_eq: true }) {

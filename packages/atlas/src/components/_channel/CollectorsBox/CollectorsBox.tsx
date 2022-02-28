@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
-import { AvatarGroup, AvatarGroupSingleAvatar } from '@/components/Avatar/AvatarGroup'
+import { AvatarGroup, AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionPlus } from '@/components/_icons'
@@ -10,7 +10,7 @@ import { cVar } from '@/styles'
 
 import { CollectorsBoxWrapper, PlusIconBackground, PlusIconWrapper } from './CollectorsBox.styles'
 
-export type Collector = AvatarGroupSingleAvatar & { nftsAmount?: number }
+export type Collector = AvatarGroupUrlAvatar & { nftsAmount?: number }
 
 export type CollectorsBoxProps = {
   collectors: Collector[]
@@ -69,7 +69,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
       <DialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
         {sortedCollectors.map((collector, idx) => (
           <ListItem
-            nodeStart={<Avatar size="small" assetUrl={collector.assetUrl} />}
+            nodeStart={<Avatar size="small" assetUrl={collector.url} />}
             nodeEnd={
               <Text variant="t100" secondary>
                 Owns {collector.nftsAmount}

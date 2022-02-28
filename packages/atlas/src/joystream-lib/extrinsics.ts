@@ -1,15 +1,16 @@
+import { MemberId as RuntimeMemberId } from '@joystream/types/common'
 import {
   ChannelCreationParameters,
   ChannelUpdateParameters,
   ContentActor,
+  NftIssuanceParameters,
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
-import { MemberId as RuntimeMemberId } from '@joystream/types/members'
 import { DataObjectId } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Option, GenericAccountId as RuntimeAccountId } from '@polkadot/types'
+import { BTreeSet, Option, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
 
 import { SentryLogger } from '@/utils/logs'
 
@@ -20,7 +21,7 @@ import {
   getInputDataObjectsIds,
   sendExtrinsicAndParseEvents,
 } from './helpers'
-import { parseChannelExtrinsicInput, parseVideoExtrinsicInput } from './metadata'
+import { parseChannelExtrinsicInput, parseMemberExtrinsicInput, parseVideoExtrinsicInput } from './metadata'
 import {
   AccountId,
   ChannelExtrinsicResult,
@@ -30,8 +31,9 @@ import {
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
-  MemberExtrisincResult,
+  MemberExtrinsicResult,
   MemberId,
+  MemberInputMetadata,
   SendExtrinsicResult,
   VideoExtrinsicResult,
   VideoId,
@@ -110,6 +112,7 @@ export class JoystreamLibExtrinsics {
       meta: channelMetadata,
       assets: channelAssets,
       collaborators: new BTreeSet(this.api.registry, RuntimeMemberId),
+      moderators: new BTreeSet(this.api.registry, RuntimeMemberId),
       reward_account: new Option<RuntimeAccountId>(this.api.registry, RuntimeAccountId),
     })
 
@@ -172,6 +175,8 @@ export class JoystreamLibExtrinsics {
     const creationParameters = new VideoCreationParameters(this.api.registry, {
       meta: videoMetadata,
       assets: videoAssets,
+      enable_comments: new bool(this.api.registry, false),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -203,6 +208,7 @@ export class JoystreamLibExtrinsics {
       new_meta: videoMetadata,
       assets_to_upload: videoAssets,
       assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
+      enable_comments: new Option(this.api.registry, bool),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -240,12 +246,14 @@ export class JoystreamLibExtrinsics {
   async updateMember(
     memberId: MemberId,
     handle: string | null,
-    avatarUri: string | null,
-    about: string | null,
+    inputMetadata: MemberInputMetadata,
     cb?: ExtrinsicStatusCallbackFn
-  ): Promise<MemberExtrisincResult> {
+  ): Promise<MemberExtrinsicResult> {
     await this.ensureApi()
-    const tx = this.api.tx.members.updateMembership(memberId, handle, avatarUri, about)
+
+    const [memberMetadata] = await parseMemberExtrinsicInput(this.api, inputMetadata, undefined)
+
+    const tx = this.api.tx.members.updateProfile(memberId, handle, memberMetadata)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 

@@ -9,6 +9,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { absoluteRoutes } from '@/config/routes'
+import { useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
@@ -38,6 +39,7 @@ export const MemberView: React.FC = () => {
     }
   )
   const member = memberships?.find((member) => member.handle === handle)
+  const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(member)
 
   const handleSetCurrentTab = async (tab: number) => {
     setSearchParams({ 'tab': TABS[tab] }, { replace: true })
@@ -88,7 +90,8 @@ export const MemberView: React.FC = () => {
     <ViewWrapper>
       <LimitedWidthContainer>
         <StyledMembershipInfo
-          avatarUrl={member?.avatarUri ?? undefined}
+          avatarUrl={avatarUrl}
+          avatarLoading={avatarLoading}
           handle={member?.handle}
           address={member?.controllerAccount}
           loading={loadingMember}

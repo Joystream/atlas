@@ -1,25 +1,3 @@
-fragment StorageDataObjectFields on StorageDataObject {
-  id
-  createdAt
-  size
-  isAccepted
-  ipfsHash
-  storageBag {
-    id
-  }
-  type {
-    __typename
-  }
-}
-
-fragment DistributionBucketOperatorField on DistributionBucketOperator {
-  id
-  metadata {
-    nodeEndpoint
-  }
-  status
-}
-
 query GetDistributionBucketsWithOperators {
   distributionBuckets(limit: 50, where: { distributing_eq: true }) {
     id
