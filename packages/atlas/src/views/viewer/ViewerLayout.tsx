@@ -17,6 +17,7 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
+import { Notifications } from '@/views/notifications'
 import {
   CategoryView,
   ChannelView,
@@ -44,6 +45,8 @@ const viewerRoutes = [
   { path: relativeRoutes.viewer.category(), element: <CategoryView /> },
   { path: relativeRoutes.viewer.member(), element: <MemberView /> },
 ]
+
+const ENTRY_POINT_ROUTE = absoluteRoutes.viewer.index()
 
 export const ViewerLayout: React.FC = () => {
   const location = useLocation()
@@ -86,7 +89,17 @@ export const ViewerLayout: React.FC = () => {
                     <PrivateRoute
                       isAuth={!!activeMemberId}
                       element={<EditMembershipView />}
-                      redirectTo={absoluteRoutes.viewer.index()}
+                      redirectTo={ENTRY_POINT_ROUTE}
+                    />
+                  }
+                />
+                <Route
+                  path={absoluteRoutes.viewer.notifications()}
+                  element={
+                    <PrivateRoute
+                      isAuth={!!activeMemberId}
+                      element={<Notifications />}
+                      redirectTo={ENTRY_POINT_ROUTE}
                     />
                   }
                 />

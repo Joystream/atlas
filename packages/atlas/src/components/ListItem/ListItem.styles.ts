@@ -83,6 +83,7 @@ export const LabelContainer = styled.div`
 `
 
 export const LabelText = styled(Text)`
+  width: 100%;
   word-break: break-word;
 `
 
