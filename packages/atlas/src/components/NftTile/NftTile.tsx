@@ -4,6 +4,7 @@ import { NftTileDetails } from '@/components/NftTileDetails'
 import { Pill, PillGroup } from '@/components/Pill'
 import { SvgActionAuction, SvgActionBuyNow, SvgActionNotForSale, SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
@@ -28,7 +29,7 @@ export type NftTileProps = {
   buyNowPrice?: number | null
   minBid?: number | null
   topBid?: number | null
-  timeLeft?: number
+  expireMsTimestamp?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
 }
@@ -45,11 +46,13 @@ export const NftTile: React.FC<NftTileProps> = ({
   buyNowPrice,
   minBid,
   topBid,
-  timeLeft,
+  expireMsTimestamp,
   role,
   fullWidth,
 }) => {
   const [hovered, setHovered] = useState(false)
+  const msTimestamp = useMsTimestamp()
+  const secondsLeft = expireMsTimestamp && Math.round((expireMsTimestamp - msTimestamp) / 1000)
 
   const getBottomLeft = useMemo(() => {
     switch (auction) {
@@ -65,12 +68,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: timeLeft
-                  ? timeLeft < 60
+                label: secondsLeft
+                  ? secondsLeft < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(timeLeft, true)
+                    : formatDurationShort(secondsLeft, true)
                   : undefined,
-                variant: timeLeft && timeLeft < 3600 ? 'danger' : 'overlay',
+                variant: secondsLeft && secondsLeft < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -79,13 +82,19 @@ export const NftTile: React.FC<NftTileProps> = ({
         ) : (
           <Pill
             icon={<SvgActionAuction />}
-            label={timeLeft ? (timeLeft < 60 ? 'Less than a minute' : formatDurationShort(timeLeft, true)) : undefined}
+            label={
+              secondsLeft
+                ? secondsLeft < 60
+                  ? 'Less than a minute'
+                  : formatDurationShort(secondsLeft, true)
+                : undefined
+            }
             size="medium"
-            variant={timeLeft && timeLeft < 3600 ? 'danger' : 'overlay'}
+            variant={secondsLeft && secondsLeft < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNowPrice, timeLeft])
+  }, [auction, buyNowPrice, secondsLeft])
 
   return (
     <Container fullWidth={fullWidth}>

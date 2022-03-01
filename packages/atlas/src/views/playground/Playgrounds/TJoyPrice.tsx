@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useTokenPrice } from '@/providers/joystream'
 
 export const TJoyPrice = () => {
-  const { price, convertToUSD, convertToTJoy } = useTokenPrice()
+  const { convertToUSD, convertToTJoy } = useTokenPrice()
   const [toConvert, setToConvert] = useState(0)
   const [unit, setUnit] = useState('tJoy')
   const [converted, setConverted] = useState(0)
@@ -15,9 +15,8 @@ export const TJoyPrice = () => {
   const convertedUnit = unit === 'usd' ? 'tJoy' : 'usd'
   return (
     <div>
-      <div>tJoy price: {price}$ / tJoy</div>
       <div>
-        Converter:{' '}
+        Converter:
         <input
           type="number"
           value={toConvert}
