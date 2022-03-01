@@ -3,7 +3,7 @@ import React from 'react'
 
 import { SvgActionCancel } from '@/components/_icons'
 
-import { TextFieldWithDropdown, TextFieldWithDropdownProps } from './'
+import { ComboBox, ComboBoxProps } from '.'
 
 const MEMBERS = [
   'Klaudiusz',
@@ -24,8 +24,8 @@ const MEMBERS = [
 ]
 
 export default {
-  title: 'inputs/TextFieldWithDropdown',
-  component: TextFieldWithDropdown,
+  title: 'inputs/ComboBox',
+  component: ComboBox,
   argTypes: {
     items: { table: { disable: true } },
     type: { table: { disable: true } },
@@ -59,8 +59,8 @@ export default {
   },
 } as Meta
 
-const Template: Story<TextFieldWithDropdownProps> = (args) => {
-  return <TextFieldWithDropdown items={MEMBERS.map((member) => ({ label: member }))} {...args} />
+const Template: Story<ComboBoxProps> = (args) => {
+  return <ComboBox items={MEMBERS.map((member) => ({ label: member }))} {...args} />
 }
 
 export const Default = Template.bind({})

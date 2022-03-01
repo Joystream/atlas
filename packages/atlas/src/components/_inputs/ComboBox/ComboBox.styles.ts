@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { cVar, zIndex } from '@/styles'
 
-export const TextFieldWithDropdownWrapper = styled.div`
+export const ComboBoxWrapper = styled.div`
   position: relative;
   width: 100%;
 `

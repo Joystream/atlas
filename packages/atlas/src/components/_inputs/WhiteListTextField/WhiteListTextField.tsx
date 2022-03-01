@@ -16,7 +16,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './WhiteListTextField.styles'
 
-import { TextFieldWithDropdown } from '../TextFieldWithDropdown'
+import { ComboBox } from '../ComboBox'
 
 export type Member = {
   id: string
@@ -27,9 +27,14 @@ export type Member = {
 type WhiteListTextFieldProps = {
   selectedMembers: Member[]
   setSelectedMembers: React.Dispatch<React.SetStateAction<Member[]>>
+  className?: string
 }
 
-export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selectedMembers, setSelectedMembers }) => {
+export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
+  selectedMembers,
+  setSelectedMembers,
+  className,
+}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<Member[]>([])
   const client = useApolloClient()
@@ -102,8 +107,8 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
   const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
 
   return (
-    <div>
-      <TextFieldWithDropdown<Member>
+    <div className={className}>
+      <ComboBox<Member>
         items={dropdownItems.filter((member) => !selectedMembersLookup[member.id])}
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}

@@ -4,14 +4,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { SvgActionLoader } from '@/components/_icons'
 
-import { ListWrapper, TextFieldWithDropdownWrapper } from './TextFieldWithDropdown.styles'
+import { ComboBoxWrapper, ListWrapper } from './ComboBox.styles'
 
 import { TextField, TextFieldProps } from '../TextField'
 
-export type TextFieldWithDropdownProps<ItemType = unknown> = {
-  items?: (ListItemProps & ItemType)[]
+export type ComboBoxProps<T = unknown> = {
+  items?: (ListItemProps & T)[]
   loading?: boolean
-  onSelectedItemChange?: (item?: ListItemProps & ItemType) => void
+  onSelectedItemChange?: (item?: ListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
   notFoundNode?: ListItemProps | null
@@ -20,7 +20,7 @@ export type TextFieldWithDropdownProps<ItemType = unknown> = {
 // don't use React.FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextFieldWithDropdownProps<ItemType>) => {
+export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   const {
     loading,
     items = [],
@@ -31,8 +31,8 @@ export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextField
     error,
     ...textFieldProps
   } = props
-  const [inputItems, setInputItems] = useState<(ListItemProps & ItemType)[]>([])
-  const textFieldWithDropdownWrapperRef = useRef<HTMLDivElement>(null)
+  const [inputItems, setInputItems] = useState<(ListItemProps & T)[]>([])
+  const comboBoxWrapperRef = useRef<HTMLDivElement>(null)
   const textFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -67,16 +67,16 @@ export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextField
 
   // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
-    if (!textFieldRef.current || !textFieldWithDropdownWrapperRef.current || !textFieldProps.helperText) {
+    if (!textFieldRef.current || !comboBoxWrapperRef.current || !textFieldProps.helperText) {
       return
     }
-    const { y: wrapperY } = textFieldWithDropdownWrapperRef.current.getBoundingClientRect()
+    const { y: wrapperY } = comboBoxWrapperRef.current.getBoundingClientRect()
     const { y: inputY, height: inputHeight } = textFieldRef.current.getBoundingClientRect()
     return inputY - wrapperY + inputHeight
   }
 
   return (
-    <TextFieldWithDropdownWrapper ref={textFieldWithDropdownWrapperRef}>
+    <ComboBoxWrapper ref={comboBoxWrapperRef}>
       <div {...getComboboxProps()}>
         <TextField
           {...textFieldProps}
@@ -103,6 +103,6 @@ export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextField
           <ListItem {...notFoundNode} size="large" onClick={() => reset()} />
         )}
       </ListWrapper>
-    </TextFieldWithDropdownWrapper>
+    </ComboBoxWrapper>
   )
 }
