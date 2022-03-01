@@ -17,8 +17,8 @@ import {
 export type ListItemSizes = 'small' | 'medium' | 'large'
 
 export type ListItemProps = {
-  label: string
-  caption?: string
+  label: React.ReactNode
+  caption?: React.ReactNode
   selected?: boolean
   disabled?: boolean
   // indicative that onClick will perform a destructive action of some kind
