@@ -2,9 +2,15 @@ import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
 import React, { useRef, useState } from 'react'
 
-import { GetMembershipsDocument, GetMembershipsQuery, GetMembershipsQueryVariables } from '@/api/queries'
+import {
+  BasicMembershipFieldsFragment,
+  GetMembershipsDocument,
+  GetMembershipsQuery,
+  GetMembershipsQueryVariables,
+} from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { SvgActionCancel } from '@/components/_icons'
+import { useRawAssetResolver } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
@@ -28,6 +34,16 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
   const [members, setMembers] = useState<Member[]>([])
   const client = useApolloClient()
   const [isError, setIsError] = useState(false)
+  const resolveAsset = useRawAssetResolver()
+
+  const getAvatarUri = (avatar?: BasicMembershipFieldsFragment['metadata']['avatar']) => {
+    if (avatar?.__typename === 'AvatarUri') {
+      return avatar.avatarUri
+    }
+    if (avatar?.__typename === 'AvatarObject' && avatar.avatarObject?.id) {
+      return resolveAsset(avatar.avatarObject?.id)?.url
+    }
+  }
 
   const debounceFetchMembers = useRef(
     debouncePromise(async (val?: string) => {
@@ -46,7 +62,7 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
 
         const members = memberships.map(({ handle, id, metadata: { avatar } }) => ({
           handle,
-          avatarUri: avatar?.__typename === 'AvatarUri' ? avatar.avatarUri : undefined,
+          avatarUri: getAvatarUri(avatar),
           id,
         }))
         setMembers(members)
@@ -54,7 +70,7 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({ selected
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
         setIsError(true)
       }
-    }, 250)
+    }, 500)
   )
 
   const handleSelect = (item?: Member) => {

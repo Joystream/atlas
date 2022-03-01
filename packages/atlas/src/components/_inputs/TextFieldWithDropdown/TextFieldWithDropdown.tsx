@@ -12,11 +12,13 @@ export type TextFieldWithDropdownProps<ItemType = unknown> = {
   items?: (ListItemProps & ItemType)[]
   loading?: boolean
   onSelectedItemChange?: (item?: ListItemProps & ItemType) => void
-  onInputValueChange?: ((item?: string) => void) | ((item?: string) => Promise<void>)
+  onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
   notFoundNode?: ListItemProps | null
 } & Omit<TextFieldProps, 'charactersCount'>
 
+// don't use React.FC so we can use a generic type on a component
+// `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const TextFieldWithDropdown = <ItemType extends unknown>(props: TextFieldWithDropdownProps<ItemType>) => {
   const {
