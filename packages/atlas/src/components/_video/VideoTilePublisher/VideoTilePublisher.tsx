@@ -140,7 +140,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         {
           icon: <SvgActionCopy />,
           onClick: () => {
-            copyToClipboard(videoHref ? location.origin + videoHref : '')
+            copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
           },
           title: 'Copy video URL',
         },

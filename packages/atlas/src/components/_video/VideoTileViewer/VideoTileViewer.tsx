@@ -27,7 +27,7 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
     })
 
   const handleCopyVideoURLClick = useCallback(() => {
-    copyToClipboard(videoHref ? location.origin + videoHref : '')
+    copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
   }, [videoHref, copyToClipboard])
 
   const channelHref = absoluteRoutes.viewer.channel(video?.channel.id)
