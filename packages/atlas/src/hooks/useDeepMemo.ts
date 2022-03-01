@@ -1,4 +1,4 @@
-import { equal as isEqual } from '@wry/equality'
+import { isEqual } from 'lodash-es'
 import { useRef } from 'react'
 
 // * Gracefully copied from https://github.com/apollographql/react-apollo/blob/master/packages/hooks/src/utils/useDeepMemo.ts

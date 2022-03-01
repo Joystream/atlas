@@ -9,9 +9,9 @@ export const InfoItemContainer = styled.div<SizeProps>`
   display: grid;
   gap: ${sizes(1)};
   grid-template:
-    'label' auto
-    'content' auto
-    'secondary' auto / 1fr;
+    'label' min-content
+    'content' min-content
+    'secondary' min-content / 1fr;
 
   &[data-size='small'] {
     gap: ${sizes(2)};
@@ -42,15 +42,10 @@ export const SecondaryText = styled(Text)<SizeProps>`
   }
 `
 
-export const TimerSecondaryText = styled(SecondaryText)<SizeProps & { 'data-ends-soon': boolean }>`
+export const TimerSecondaryText = styled(SecondaryText)<SizeProps>`
   grid-area: secondary;
-  visibility: hidden;
 
   &[data-size='small'] {
     justify-self: end;
-  }
-
-  &[data-ends-soon='true'] {
-    visibility: visible;
   }
 `

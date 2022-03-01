@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { Text } from '@/components/Text'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
@@ -22,18 +23,16 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   )
 }
 
-const getTimeInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - new Date().getTime()) / 1000))
+const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))
 export const NftTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
-  const [timeInSeconds, setTimeInSeconds] = useState<number>(getTimeInSeconds(time))
-
+  useMsTimestamp()
+  const timeInSeconds = getTimeDiffInSeconds(time)
   const lessThanAMinuteLeft: boolean = timeInSeconds < 60
 
-  useEffect(() => {
-    const interval = setInterval(() => setTimeInSeconds(getTimeInSeconds(time)), 1000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [time])
+  const formatedDuration = formatDurationShort(timeInSeconds, true)
+
+  // [hours,minutes,seconds]
+  const hoursMinutesSecondsArray = formatedDuration.split(':')
 
   return (
     <InfoItemContainer data-size={size}>
@@ -41,22 +40,54 @@ export const NftTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time 
         Auction ends in
       </Label>
       <InfoItemContent data-size={size}>
-        <Text
-          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-          variant={size === 'small' ? 'h400' : 'h600'}
-        >
-          {formatDurationShort(timeInSeconds, true)}
-        </Text>
+        <div>
+          <Text
+            as="span"
+            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            variant={size === 'small' ? 'h400' : 'h600'}
+          >
+            {hoursMinutesSecondsArray[0]}
+          </Text>
+          <Text
+            as="span"
+            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            variant={size === 'small' ? 'h400' : 'h600'}
+          >
+            :
+          </Text>
+          <Text
+            as="span"
+            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            variant={size === 'small' ? 'h400' : 'h600'}
+          >
+            {hoursMinutesSecondsArray[1]}
+          </Text>
+          <Text
+            as="span"
+            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            variant={size === 'small' ? 'h400' : 'h600'}
+          >
+            :
+          </Text>
+          <Text
+            as="span"
+            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            variant={size === 'small' ? 'h400' : 'h600'}
+          >
+            {hoursMinutesSecondsArray[2]}
+          </Text>
+        </div>
       </InfoItemContent>
-      <TimerSecondaryText
-        color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-        as="p"
-        variant="t100"
-        data-size={size}
-        data-ends-soon={lessThanAMinuteLeft}
-      >
-        Less than a minute
-      </TimerSecondaryText>
+      {lessThanAMinuteLeft && (
+        <TimerSecondaryText
+          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+          as="p"
+          variant="t100"
+          data-size={size}
+        >
+          Less than a minute
+        </TimerSecondaryText>
+      )}
     </InfoItemContainer>
   )
 }

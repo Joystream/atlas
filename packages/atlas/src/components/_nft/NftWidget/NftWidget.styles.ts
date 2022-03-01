@@ -3,13 +3,14 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
+import { BorderWrapper } from '@/components/_buttons/ButtonBase/ButtonBase.styles'
 import { SvgActionJoyToken } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 type SizeProps = { 'data-size': 'medium' | 'small' }
 
 export const Container = styled.div`
-  background-color: ${cVar('colorCoreNeutral900')};
+  background-color: ${cVar('colorBackgroundMuted')};
   min-width: 0;
 `
 
@@ -65,6 +66,10 @@ export const OwnerLabel = styled(Text)`
 export const OwnerHandle = styled(Button)`
   grid-area: owner;
   justify-content: start;
+
+  ${BorderWrapper} {
+    border-bottom: none;
+  }
 `
 
 export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean }>`
@@ -80,6 +85,4 @@ export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean 
   }
 `
 
-export const JoyTokenIcon = styled(SvgActionJoyToken)`
-  /* /TODO: unnable to style svg like design */
-`
+export const JoyTokenIcon = styled(SvgActionJoyToken)``

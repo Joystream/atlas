@@ -50,7 +50,7 @@ const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 // TODO: Update Joy icon with the right variant once it is exported correctly
 export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
-  const [containerRef, { width = 281 }] = useMeasure()
+  const [containerRef, { width = SMALL_VARIANT_MAXIMUM_SIZE + 1 }] = useMeasure()
   const { convertToUSD } = useTokenPrice()
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
@@ -106,7 +106,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
             {isOwner && (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth variant="secondary" size={buttonSize}>
-                  Start sale of this nft
+                  Start sale of this NFT
                 </Button>
               </GridItem>
             )}
@@ -243,10 +243,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
-          This nft is owned by
+          This NFT is owned by
         </OwnerLabel>
         <OwnerHandle to={ownerHandle && absoluteRoutes.viewer.member(ownerHandle)} variant="secondary" textOnly>
-          {ownerHandle}
+          <Text variant="h300">{ownerHandle}</Text>
         </OwnerHandle>
       </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
