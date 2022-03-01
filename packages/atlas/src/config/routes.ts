@@ -32,6 +32,7 @@ export const relativeRoutes = {
     video: (id = ':id') => `video/${id}`,
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
+    notifications: () => 'notifications',
   },
   legal: {
     index: () => '',
@@ -46,6 +47,7 @@ export const relativeRoutes = {
     videoWorkspace: () => 'video-workspace',
     uploads: () => 'uploads',
     signIn: () => 'signin',
+    notifications: () => 'notifications',
   },
   playground: {
     index: () => '',
