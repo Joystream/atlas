@@ -14,21 +14,17 @@ import { useMemberAvatar } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
-import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './WhiteListTextField.styles'
+import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './MemberComboBox.styles'
 
 import { ComboBox } from '../ComboBox'
 
-type WhiteListTextFieldProps = {
+type MemberComboBoxProps = {
   selectedMembers: BasicMembershipFieldsFragment[]
   setSelectedMembers: React.Dispatch<React.SetStateAction<BasicMembershipFieldsFragment[]>>
   className?: string
 }
 
-export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
-  selectedMembers,
-  setSelectedMembers,
-  className,
-}) => {
+export const MemberComboBox: React.FC<MemberComboBoxProps> = ({ selectedMembers, setSelectedMembers, className }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
   const client = useApolloClient()
