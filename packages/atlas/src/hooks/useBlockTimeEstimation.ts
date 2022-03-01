@@ -1,63 +1,43 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 
 import { useJoystream } from '@/providers/joystream'
 
-const ESTIMATED_BLOCK_TIME = 6000
+const ESTIMATED_BLOCK_TIME_MS = 6000
 
 export const useBlockTimeEstimation = () => {
-  const { joystream, proxyCallback } = useJoystream()
-  const currentBlockRef = useRef(0)
-  const timeOfTheLastBlockRef = useRef(0)
+  const { getCurrentBlock, getCurrentBlockMsTimestamp } = useJoystream()
 
-  useEffect(() => {
-    if (!joystream) {
-      return
-    }
+  const convertBlockToMsTimestamp = useCallback(
+    (targetBlock: number) => {
+      const nowMs = Date.now()
+      const deltaBlocks = targetBlock - getCurrentBlock()
+      const msSinceLastBlock = nowMs - getCurrentBlockMsTimestamp()
 
-    let unsubscribe
-    const init = async () => {
-      unsubscribe = await joystream.subscribeCurrentBlock(
-        proxyCallback((number) => {
-          currentBlockRef.current = number
-          timeOfTheLastBlockRef.current = Date.now()
-        })
-      )
-    }
-    init()
+      const deltaMs = deltaBlocks * ESTIMATED_BLOCK_TIME_MS - msSinceLastBlock
+      const targetTimestamp = nowMs + deltaMs
 
-    return unsubscribe
-  }, [joystream, proxyCallback])
+      return targetTimestamp
+    },
+    [getCurrentBlock, getCurrentBlockMsTimestamp]
+  )
 
-  const convertBlockToDate = useCallback((block: number) => {
-    const now = Date.now()
-    const differenceBetweenProvidedBlockAndCurrentBlock = block - currentBlockRef.current
-    const differenceBetweenNowAndTimeofTheLastBlock = now - timeOfTheLastBlockRef.current
-
-    const estimatedTime =
-      differenceBetweenProvidedBlockAndCurrentBlock * ESTIMATED_BLOCK_TIME - differenceBetweenNowAndTimeofTheLastBlock
-    const date = now + estimatedTime
-
-    return date
-  }, [])
-
-  const convertDateToBlock = useCallback(
-    (date: number) => {
-      if (!date) {
+  const convertMsTimestampToBlock = useCallback(
+    (targetTimestamp: number) => {
+      if (!targetTimestamp) {
         return
       }
-      const timeOfTheFirstBlock = convertBlockToDate(0)
+      const deltaMs = targetTimestamp - getCurrentBlockMsTimestamp()
 
-      const differenceBetweenTimeofTheFirstBlockAndDate = date - timeOfTheFirstBlock
+      const deltaBlocks = Math.round(deltaMs / ESTIMATED_BLOCK_TIME_MS)
+      const targetBlock = getCurrentBlock() + deltaBlocks
 
-      const block = Math.round(differenceBetweenTimeofTheFirstBlockAndDate / ESTIMATED_BLOCK_TIME)
-
-      return block
+      return targetBlock
     },
-    [convertBlockToDate]
+    [getCurrentBlock, getCurrentBlockMsTimestamp]
   )
 
   return {
-    convertBlockToDate: convertBlockToDate,
-    convertDateToBlock: convertDateToBlock,
+    convertBlockToMsTimestamp,
+    convertMsTimestampToBlock,
   }
 }

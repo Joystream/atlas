@@ -13,11 +13,12 @@ import { useUser } from '../user'
 
 const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
+type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
+
 type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
-  proxyCallback: <T extends object>(callback: T) => T & ProxyMarked
-  price: number
-}
+  proxyCallback: ProxyCallbackFn
+} & ReturnType<typeof useJoystreamUtilFns>
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
@@ -28,7 +29,6 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)
   const [initialized, setInitialized] = useState(false)
-  const [price, setPrice] = useState(0)
   const handleNodeConnectionUpdate = useCallback(
     (connected: boolean) => {
       setNodeConnection(connected ? 'connected' : 'disconnected')
@@ -39,18 +39,9 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
-  useEffect(() => {
-    const getPrice = async () => {
-      try {
-        const data = await fetch(JOYSTREAM_STATUS_URL)
-        const json = await data.json()
-        setPrice(parseFloat(json.price))
-      } catch (e) {
-        SentryLogger.error('Failed to fetch tJoy price', e)
-      }
-    }
-    getPrice()
-  }, [setPrice])
+  const utilFns = useJoystreamUtilFns(joystream.current, proxyCallback)
+
+  // initialize Joystream Lib
   useEffect(() => {
     const getJoystream = async () => {
       try {
@@ -69,6 +60,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
+  // update Joystream Lib selected on change
   useEffect(() => {
     if (!initialized) {
       return
@@ -103,8 +95,60 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [activeAccountId, accounts, initialized])
 
   return (
-    <JoystreamContext.Provider value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, price }}>
+    <JoystreamContext.Provider
+      value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, ...utilFns }}
+    >
       {children}
     </JoystreamContext.Provider>
   )
+}
+
+const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyCallback: ProxyCallbackFn) => {
+  const tokenPriceRef = useRef(0)
+  const currentBlockRef = useRef(0)
+  const currentBlockMsTimestampRef = useRef(0)
+
+  // fetch JOY token price from the status server
+  useEffect(() => {
+    const getPrice = async () => {
+      try {
+        const data = await fetch(JOYSTREAM_STATUS_URL)
+        const json = await data.json()
+        tokenPriceRef.current = parseFloat(json.price)
+      } catch (e) {
+        SentryLogger.error('Failed to fetch tJoy price', e)
+      }
+    }
+    getPrice()
+  }, [])
+
+  // subscribe to block updates
+  useEffect(() => {
+    if (!joystream) {
+      return
+    }
+
+    let unsubscribe
+    const init = async () => {
+      unsubscribe = await joystream.subscribeCurrentBlock(
+        proxyCallback((number) => {
+          currentBlockRef.current = number
+          currentBlockMsTimestampRef.current = Date.now()
+        })
+      )
+    }
+    init()
+
+    return unsubscribe
+  }, [joystream, proxyCallback])
+
+  const getTokenPrice = useCallback(() => tokenPriceRef.current, [])
+  const getCurrentBlock = useCallback(() => currentBlockRef.current, [])
+  const getCurrentBlockMsTimestamp = useCallback(() => currentBlockMsTimestampRef.current, [])
+
+  return {
+    getTokenPrice,
+    getCurrentBlock,
+    getCurrentBlockMsTimestamp,
+  }
 }
