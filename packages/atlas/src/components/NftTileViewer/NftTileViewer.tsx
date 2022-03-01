@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router'
 
 import { useNft } from '@/api/hooks'
 import { AllNftFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useAsset } from '@/providers/assets'
+import { useJoystream } from '@/providers/joystream'
 
 import { NftTile, NftTileProps } from '../NftTile'
 
@@ -18,38 +20,13 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
-  const { convertBlockToDate, convertDateToBlock } = useBlockTimeEstimation()
 
-  const [timeLeft, setTimeLeft] = useState(0)
-
-  useEffect(() => {
-    if (
-      nft?.transactionalStatus.__typename !== 'TransactionalStatusAuction' ||
-      !nft?.transactionalStatus.auction?.plannedEndAtBlock
-    ) {
-      return
-    }
-
-    const timeLeftInterval = setInterval(() => {
-      if (
-        nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-        nft.transactionalStatus.auction?.plannedEndAtBlock
-      ) {
-        const timeLeft = Math.round(
-          (convertBlockToDate(nft.transactionalStatus.auction?.plannedEndAtBlock) - Date.now()) / 1000
-        )
-        if (timeLeft >= 0) {
-          setTimeLeft(timeLeft)
-        }
-      }
-    }, 1000)
-    return () => {
-      clearInterval(timeLeftInterval)
-    }
-  }, [convertBlockToDate, nft?.transactionalStatus.__typename, nft?.transactionalStatus, timeLeft, convertDateToBlock])
+  const { getCurrentBlock } = useJoystream()
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const msTimestamp = useMsTimestamp()
 
   const getNftProps = (nft?: AllNftFieldsFragment): NftTileProps => {
-    const nftCommponProps = {
+    const nftCommonProps = {
       title: nft?.video?.title,
       duration: nft?.video?.duration,
       views: nft?.video?.views,
@@ -82,31 +59,33 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       case 'TransactionalStatusIdle':
       case 'TransactionalStatusInitiatedOfferToMember':
         return {
-          ...nftCommponProps,
+          ...nftCommonProps,
           auction: 'none',
         }
       case 'TransactionalStatusBuyNow':
         return {
-          ...nftCommponProps,
+          ...nftCommonProps,
           auction: 'none',
           buyNowPrice: nft.transactionalStatus.price,
         }
       case 'TransactionalStatusAuction': {
-        const isEnded =
-          (nft.transactionalStatus.auction?.endedAtBlock || timeLeft <= 0) &&
-          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish'
+        const auctionPlannedEndBlock = nft.transactionalStatus.auction?.plannedEndAtBlock || undefined
+        const isEnded = auctionPlannedEndBlock && getCurrentBlock() >= auctionPlannedEndBlock
+        const plannedEndMsTimestamp =
+          !isEnded && !!auctionPlannedEndBlock && convertBlockToMsTimestamp(auctionPlannedEndBlock)
+
         return {
-          ...nftCommponProps,
+          ...nftCommonProps,
           auction: isEnded ? 'none' : nft.transactionalStatus.auction?.lastBid?.amount ? 'topBid' : 'minBid',
           buyNowPrice: isEnded ? undefined : nft.transactionalStatus.auction?.buyNowPrice,
           minBid: nft.transactionalStatus.auction?.startingPrice,
           topBid: nft.transactionalStatus.auction?.lastBid?.amount,
-          timeLeft,
+          timeLeftMs: plannedEndMsTimestamp ? plannedEndMsTimestamp - msTimestamp : undefined,
         }
       }
       default:
         return {
-          ...nftCommponProps,
+          ...nftCommonProps,
           auction: 'none',
         }
     }
