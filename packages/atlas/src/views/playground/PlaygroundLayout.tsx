@@ -30,6 +30,7 @@ import {
   TJoyPrice,
   UploadFiles,
   VideoMetaData,
+  WhitelistingMembers,
 } from './Playgrounds'
 
 const playgroundRoutes = [
@@ -54,6 +55,7 @@ const playgroundRoutes = [
   { path: 'block-time', element: <EstimatingBlockTime />, name: 'Estimating block time' },
   { path: 'nft-extrinsics', element: <PlaygroundNFTExtrinsics />, name: 'NFT extrinsics' },
   { path: 'tjoy-price', element: <TJoyPrice />, name: 'TJoy Price' },
+  { path: 'whitelisting-members', element: <WhitelistingMembers />, name: 'Whitelisting members' },
 ]
 
 const PlaygroundLayout = () => {
