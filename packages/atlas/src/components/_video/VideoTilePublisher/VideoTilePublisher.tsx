@@ -65,10 +65,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isUploading) || false
     const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isUploading) || false
 
-    const hasAssetUploadFailed =
-      (hasThumbnailUploadFailed || hasVideoUploadFailed) &&
-      uploadVideoStatus?.lastStatus !== 'completed' &&
-      uploadThumbnailStatus?.lastStatus !== 'completed'
+    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
 
     const isUnlisted = video?.isPublic === false
 
@@ -213,7 +210,6 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         </CSSTransition>
       )
     }
-
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
@@ -224,7 +220,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
         loadingDetails={loading}
-        loadingThumbnail={isLoadingThumbnail}
+        loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
