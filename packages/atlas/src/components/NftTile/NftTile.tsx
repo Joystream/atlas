@@ -28,7 +28,7 @@ export type NftTileProps = {
   buyNowPrice?: number | null
   minBid?: number | null
   topBid?: number | null
-  timeLeft?: number
+  timeLeftMs?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
 }
@@ -45,11 +45,12 @@ export const NftTile: React.FC<NftTileProps> = ({
   buyNowPrice,
   minBid,
   topBid,
-  timeLeft,
+  timeLeftMs,
   role,
   fullWidth,
 }) => {
   const [hovered, setHovered] = useState(false)
+  const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
 
   const getBottomLeft = useMemo(() => {
     switch (auction) {
@@ -65,12 +66,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: timeLeft
-                  ? timeLeft < 60
+                label: timeLeftSec
+                  ? timeLeftSec < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(timeLeft, true)
+                    : formatDurationShort(timeLeftSec, true)
                   : undefined,
-                variant: timeLeft && timeLeft < 3600 ? 'danger' : 'overlay',
+                variant: timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -79,13 +80,19 @@ export const NftTile: React.FC<NftTileProps> = ({
         ) : (
           <Pill
             icon={<SvgActionAuction />}
-            label={timeLeft ? (timeLeft < 60 ? 'Less than a minute' : formatDurationShort(timeLeft, true)) : undefined}
+            label={
+              timeLeftSec
+                ? timeLeftSec < 60
+                  ? 'Less than a minute'
+                  : formatDurationShort(timeLeftSec, true)
+                : undefined
+            }
             size="medium"
-            variant={timeLeft && timeLeft < 3600 ? 'danger' : 'overlay'}
+            variant={timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNowPrice, timeLeft])
+  }, [auction, buyNowPrice, timeLeftSec])
 
   return (
     <Container fullWidth={fullWidth}>
