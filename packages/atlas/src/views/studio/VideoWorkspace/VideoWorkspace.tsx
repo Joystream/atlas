@@ -133,7 +133,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     }
   }
 
-  const NftActionBarDisabled = useMemo(() => {
+  const nftActionBarDisabled = useMemo(() => {
     if (nftCurrentStepIdx === 0) {
       return !!listingType
     }
@@ -210,8 +210,8 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             // 2. the video is a new one OR the form is dirty  (some edit has been made)
             canSubmit={
               (isIssuedAsNft && nftCurrentStepIdx >= 0
-                ? NftActionBarDisabled
-                : formStatus?.isValid && (isEdit ? formStatus.isDirty : true)) || false
+                ? nftActionBarDisabled
+                : formStatus?.isValid && (isEdit ? formStatus.isDirty || isIssuedAsNft : true)) || false
             }
             canReset={formStatus?.isDirty || isIssuedAsNft || false}
             onPrimaryButtonClick={onPrimaryButtonClick}
