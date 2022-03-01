@@ -5,6 +5,7 @@ import { useNft } from '@/api/hooks'
 import { AllNftFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useAsset } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
 
@@ -22,13 +23,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
 
   const { getCurrentBlock } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-
-  const auctionPlannedEndBlock =
-    (nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-      nft.transactionalStatus.auction?.plannedEndAtBlock) ||
-    undefined
-
-  const auctionPlannedEndMsTimestamp = auctionPlannedEndBlock && convertBlockToMsTimestamp(auctionPlannedEndBlock)
+  const msTimestamp = useMsTimestamp()
 
   const getNftProps = (nft?: AllNftFieldsFragment): NftTileProps => {
     const nftCommonProps = {
@@ -74,14 +69,18 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
           buyNowPrice: nft.transactionalStatus.price,
         }
       case 'TransactionalStatusAuction': {
+        const auctionPlannedEndBlock = nft.transactionalStatus.auction?.plannedEndAtBlock || undefined
         const isEnded = auctionPlannedEndBlock && getCurrentBlock() >= auctionPlannedEndBlock
+        const plannedEndMsTimestamp =
+          !isEnded && !!auctionPlannedEndBlock && convertBlockToMsTimestamp(auctionPlannedEndBlock)
+
         return {
           ...nftCommonProps,
           auction: isEnded ? 'none' : nft.transactionalStatus.auction?.lastBid?.amount ? 'topBid' : 'minBid',
           buyNowPrice: isEnded ? undefined : nft.transactionalStatus.auction?.buyNowPrice,
           minBid: nft.transactionalStatus.auction?.startingPrice,
           topBid: nft.transactionalStatus.auction?.lastBid?.amount,
-          expireMsTimestamp: (!isEnded && auctionPlannedEndMsTimestamp) || undefined,
+          timeLeftMs: plannedEndMsTimestamp ? plannedEndMsTimestamp - msTimestamp : undefined,
         }
       }
       default:

@@ -4,7 +4,6 @@ import { NftTileDetails } from '@/components/NftTileDetails'
 import { Pill, PillGroup } from '@/components/Pill'
 import { SvgActionAuction, SvgActionBuyNow, SvgActionNotForSale, SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
-import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
@@ -29,7 +28,7 @@ export type NftTileProps = {
   buyNowPrice?: number | null
   minBid?: number | null
   topBid?: number | null
-  expireMsTimestamp?: number
+  timeLeftMs?: number
   role: 'owner' | 'viewer'
   fullWidth?: boolean
 }
@@ -46,13 +45,12 @@ export const NftTile: React.FC<NftTileProps> = ({
   buyNowPrice,
   minBid,
   topBid,
-  expireMsTimestamp,
+  timeLeftMs,
   role,
   fullWidth,
 }) => {
   const [hovered, setHovered] = useState(false)
-  const msTimestamp = useMsTimestamp()
-  const secondsLeft = expireMsTimestamp && Math.round((expireMsTimestamp - msTimestamp) / 1000)
+  const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
 
   const getBottomLeft = useMemo(() => {
     switch (auction) {
@@ -68,12 +66,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: secondsLeft
-                  ? secondsLeft < 60
+                label: timeLeftSec
+                  ? timeLeftSec < 60
                     ? 'Less than a minute'
-                    : formatDurationShort(secondsLeft, true)
+                    : formatDurationShort(timeLeftSec, true)
                   : undefined,
-                variant: secondsLeft && secondsLeft < 3600 ? 'danger' : 'overlay',
+                variant: timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -83,18 +81,18 @@ export const NftTile: React.FC<NftTileProps> = ({
           <Pill
             icon={<SvgActionAuction />}
             label={
-              secondsLeft
-                ? secondsLeft < 60
+              timeLeftSec
+                ? timeLeftSec < 60
                   ? 'Less than a minute'
-                  : formatDurationShort(secondsLeft, true)
+                  : formatDurationShort(timeLeftSec, true)
                 : undefined
             }
             size="medium"
-            variant={secondsLeft && secondsLeft < 3600 ? 'danger' : 'overlay'}
+            variant={timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [auction, buyNowPrice, secondsLeft])
+  }, [auction, buyNowPrice, timeLeftSec])
 
   return (
     <Container fullWidth={fullWidth}>
