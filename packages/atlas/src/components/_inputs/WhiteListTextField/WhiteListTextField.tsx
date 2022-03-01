@@ -10,7 +10,7 @@ import {
 } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { SvgActionCancel } from '@/components/_icons'
-import { useRawAssetResolver } from '@/providers/assets'
+import { useMemberAvatar } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
@@ -18,15 +18,9 @@ import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './Wh
 
 import { ComboBox } from '../ComboBox'
 
-export type Member = {
-  id: string
-  handle?: string | null
-  avatarUri?: string | null
-}
-
 type WhiteListTextFieldProps = {
-  selectedMembers: Member[]
-  setSelectedMembers: React.Dispatch<React.SetStateAction<Member[]>>
+  selectedMembers: BasicMembershipFieldsFragment[]
+  setSelectedMembers: React.Dispatch<React.SetStateAction<BasicMembershipFieldsFragment[]>>
   className?: string
 }
 
@@ -36,19 +30,9 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
   className,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [members, setMembers] = useState<Member[]>([])
+  const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
   const client = useApolloClient()
   const [isError, setIsError] = useState(false)
-  const resolveAsset = useRawAssetResolver()
-
-  const getAvatarUri = (avatar?: BasicMembershipFieldsFragment['metadata']['avatar']) => {
-    if (avatar?.__typename === 'AvatarUri') {
-      return avatar.avatarUri
-    }
-    if (avatar?.__typename === 'AvatarObject' && avatar.avatarObject?.id) {
-      return resolveAsset(avatar.avatarObject?.id)?.url
-    }
-  }
 
   const debounceFetchMembers = useRef(
     debouncePromise(async (val?: string) => {
@@ -65,12 +49,7 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
         })
         setIsLoading(false)
 
-        const members = memberships.map(({ handle, id, metadata: { avatar } }) => ({
-          handle,
-          avatarUri: getAvatarUri(avatar),
-          id,
-        }))
-        setMembers(members)
+        setMembers(memberships)
       } catch (error) {
         SentryLogger.error('Failed to fetch memberships', 'WhiteListTextField', error)
         setIsError(true)
@@ -78,11 +57,11 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
     }, 500)
   )
 
-  const handleSelect = (item?: Member) => {
+  const handleSelect = (item?: BasicMembershipFieldsFragment) => {
     if (!item) {
       return
     }
-    setSelectedMembers((prevItems) => [{ id: item.id, avatarUri: item.avatarUri, handle: item.handle }, ...prevItems])
+    setSelectedMembers((prevItems) => [item, ...prevItems])
     setMembers([])
   }
 
@@ -91,25 +70,27 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
     setSelectedMembers(filteredMembers)
   }
 
-  const dropdownItems = members.map((member) => ({
-    label: member.handle || '',
-    nodeStart: <Avatar assetUrl={member.avatarUri} />,
-    id: member.id,
-    handle: member.handle,
-    avatarUri: member.avatarUri,
-  }))
+  const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
+
+  const dropdownItems = members
+    .map((member) => {
+      return {
+        ...member,
+        nodeStart: <AvatarWithResolvedAsset member={member} />,
+        label: member.handle,
+      }
+    })
+    .filter((member) => !selectedMembersLookup[member.id])
 
   const notFoundNode = {
     label: `We couldn't find this member. Please check if spelling is correct.`,
     nodeStart: <SvgActionCancel />,
   }
 
-  const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
-
   return (
     <div className={className}>
-      <ComboBox<Member>
-        items={dropdownItems.filter((member) => !selectedMembersLookup[member.id])}
+      <ComboBox<BasicMembershipFieldsFragment>
+        items={dropdownItems}
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}
         resetOnSelect
@@ -125,15 +106,40 @@ export const WhiteListTextField: React.FC<WhiteListTextFieldProps> = ({
       />
       <MemberBadgesWrapper>
         {selectedMembers.length > 0 && <StyledSelectedText variant="t200-strong">Selected: </StyledSelectedText>}
-        {selectedMembers.map(({ id, handle, avatarUri }) => (
-          <StyledMemberBadge
-            key={id}
-            handle={handle}
-            avatarUri={avatarUri}
-            onDeleteClick={() => handleDeleteClick(id)}
+        {selectedMembers.map((member) => (
+          <MemberBadgeWithResolvedAsset
+            key={member.id}
+            member={member}
+            onDeleteClick={() => handleDeleteClick(member.id)}
           />
         ))}
       </MemberBadgesWrapper>
     </div>
+  )
+}
+
+type AvatarWithResolvedAssetProps = {
+  member: BasicMembershipFieldsFragment
+}
+
+const AvatarWithResolvedAsset: React.FC<AvatarWithResolvedAssetProps> = ({ member }) => {
+  const { url, isLoadingAsset } = useMemberAvatar(member)
+  return <Avatar assetUrl={url} loading={isLoadingAsset} />
+}
+
+type MemberBadgeWithResolvedAssetProps = {
+  member: BasicMembershipFieldsFragment
+  onDeleteClick: () => void
+}
+
+const MemberBadgeWithResolvedAsset: React.FC<MemberBadgeWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
+  const { url, isLoadingAsset } = useMemberAvatar(member)
+  return (
+    <StyledMemberBadge
+      handle={member.handle}
+      onDeleteClick={onDeleteClick}
+      avatarUri={url}
+      isLoadingAvatar={isLoadingAsset}
+    />
   )
 }

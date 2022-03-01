@@ -9,11 +9,18 @@ export type MemberBadgeProps = {
   handle?: string | null
   onDeleteClick?: () => void
   className?: string
+  isLoadingAvatar?: boolean
 }
-export const MemberBadge: React.FC<MemberBadgeProps> = ({ avatarUri, handle, onDeleteClick, className }) => {
+export const MemberBadge: React.FC<MemberBadgeProps> = ({
+  avatarUri,
+  handle,
+  onDeleteClick,
+  className,
+  isLoadingAvatar,
+}) => {
   return (
     <MemberBadgeWrapper className={className}>
-      <Avatar size="bid" assetUrl={avatarUri} />
+      <Avatar size="bid" assetUrl={avatarUri} loading={isLoadingAvatar} />
       <StyledHandleText variant="t100" as="p">
         {handle}
       </StyledHandleText>

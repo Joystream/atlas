@@ -1,14 +1,9 @@
 import React, { useState } from 'react'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { WhiteListTextField } from '@/components/_inputs/WhiteListTextField'
 
-type Member = {
-  id: string
-  handle?: string | null
-  avatarUri?: string | null
-}
-
 export const WhitelistingMembers = () => {
-  const [selectedMembers, setSelectedMembers] = useState<Member[]>([])
+  const [selectedMembers, setSelectedMembers] = useState<BasicMembershipFieldsFragment[]>([])
   return <WhiteListTextField selectedMembers={selectedMembers} setSelectedMembers={setSelectedMembers} />
 }
