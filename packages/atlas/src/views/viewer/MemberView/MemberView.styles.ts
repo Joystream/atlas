@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { MembershipInfo } from '@/components/MembershipInfo'
 import { Tabs } from '@/components/Tabs'
-import { cVar, media, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const NotFoundMemberContainer = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ export const FilterButtonContainer = styled.div`
 `
 
 export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
-  z-index: 99;
+  z-index: ${zIndex.transactionBar};
   position: relative;
   ${media.sm} {
     margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 8)};
