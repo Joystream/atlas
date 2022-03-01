@@ -8,13 +8,17 @@ import { ComboBoxWrapper, ListWrapper } from './ComboBox.styles'
 
 import { TextField, TextFieldProps } from '../TextField'
 
+type ModifiedListItemProps = ListItemProps & {
+  label: string
+}
+
 export type ComboBoxProps<T = unknown> = {
-  items?: (ListItemProps & T)[]
+  items?: (ModifiedListItemProps & T)[]
   loading?: boolean
-  onSelectedItemChange?: (item?: ListItemProps & T) => void
+  onSelectedItemChange?: (item?: ModifiedListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
-  notFoundNode?: ListItemProps | null
+  notFoundNode?: ModifiedListItemProps | null
 } & Omit<TextFieldProps, 'charactersCount'>
 
 // don't use React.FC so we can use a generic type on a component
@@ -31,7 +35,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     error,
     ...textFieldProps
   } = props
-  const [inputItems, setInputItems] = useState<(ListItemProps & T)[]>([])
+  const [inputItems, setInputItems] = useState<(ModifiedListItemProps & T)[]>([])
   const comboBoxWrapperRef = useRef<HTMLDivElement>(null)
   const textFieldRef = useRef<HTMLInputElement>(null)
 
