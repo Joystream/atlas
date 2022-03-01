@@ -43,11 +43,6 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   },
   ref
 ) => {
-  /*
-  const [nodeLeftRef, nodeLeftBounds] = useMeasure()
-  const [nodeRightRef, nodeRightBounds] = useMeasure()
-*/
-
   const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 1 } = useResizeObserver()
   const { ref: nodeRightRef, width: nodeRightBoundsWidth = 1 } = useResizeObserver()
 
