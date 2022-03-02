@@ -13,9 +13,9 @@ import { Select, SelectProps } from '../Select'
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
-  value: string | null
-  onChange: (value: string | null) => void
-} & Omit<SelectProps, 'onChange'>
+  value: Date | string | null
+  onChange: (value: Date | string | null) => void
+} & Omit<SelectProps<Date | string | null>, 'onChange'>
 
 const PICK_DATE = 'pick-date'
 
@@ -25,6 +25,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   onChange,
   label,
   minDate = new Date(),
+  size = 'small',
   ...rest
 }) => {
   const selectRef = useRef(null)
@@ -63,7 +64,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   return (
     <Container>
       <Select
-        size="small"
+        size={size}
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
         iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
@@ -81,7 +82,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           onChange={(date) => {
             if (date) {
               setStartDate(date)
-              onChange?.(date?.toString())
+              onChange?.(date)
             }
           }}
           openToDate={minDate ?? undefined}

@@ -36,8 +36,13 @@ export const useBlockTimeEstimation = () => {
     [getCurrentBlock, getCurrentBlockMsTimestamp]
   )
 
+  const convertDurationToBlocks = useCallback((milliseconds: number) => {
+    return Math.round(milliseconds / ESTIMATED_BLOCK_TIME_MS)
+  }, [])
+
   return {
     convertBlockToMsTimestamp,
     convertMsTimestampToBlock,
+    convertDurationToBlocks,
   }
 }
