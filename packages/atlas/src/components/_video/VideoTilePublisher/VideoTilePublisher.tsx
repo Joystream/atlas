@@ -71,7 +71,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const isUnlisted = video?.isPublic === false
 
     const getSlots = useCallback<() => undefined | SlotsObject>(() => {
-      if (!hasAssetUploadFailed || loading) {
+      if ((isUploading && !hasAssetUploadFailed) || loading) {
         return
       }
       const slots: SlotsObject = {
@@ -112,10 +112,10 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         }
       }
       return slots
-    }, [hasAssetUploadFailed, isUnlisted, loading, onEditClick, owner, video?.duration])
+    }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, owner, video?.duration])
 
     const getPublisherKebabMenuItems = useCallback(() => {
-      if (!hasAssetUploadFailed) {
+      if (isUploading && !hasAssetUploadFailed) {
         return
       }
       const assetFailedKebabItems = [
@@ -157,7 +157,15 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       ]
 
       return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
-    }, [hasAssetUploadFailed, onDeleteVideoClick, onEditClick, onOpenInTabClick, onReuploadVideoClick, videoHref])
+    }, [
+      hasAssetUploadFailed,
+      isUploading,
+      onDeleteVideoClick,
+      onEditClick,
+      onOpenInTabClick,
+      onReuploadVideoClick,
+      videoHref,
+    ])
 
     const getVideoSubtitle = useCallback(() => {
       if (hasAssetUploadFailed) {
