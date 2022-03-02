@@ -29,19 +29,18 @@ export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
 
 type ContentProps = {
   loading?: boolean
+  shouldHover?: boolean
   tileSize?: 'small' | 'medium'
 }
 
-const containerHoverStyles = ({ loading }: ContentProps) => {
-  if (!loading) {
+const containerHoverStyles = ({ loading, shouldHover = true }: ContentProps) => {
+  if (!loading && shouldHover) {
     return css`
-      :hover {
-        background-color: ${cVar('colorBackground')};
+      background-color: ${cVar('colorBackground')};
 
-        ${KebabMenuButtonIcon} {
-          opacity: 1;
-          pointer-events: auto;
-        }
+      ${KebabMenuButtonIcon} {
+        opacity: 1;
+        pointer-events: auto;
       }
     `
   }
@@ -63,12 +62,12 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => `
 
 const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize'
 export const Content = styled('div', { shouldForwardProp: isContentPropValid })<ContentProps>`
-  ${containerHoverStyles};
-  ${tileSizeVariants};
-
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};
   transition: ${cVar('animationTransitionFast')};
+
+  ${containerHoverStyles};
+  ${tileSizeVariants};
 `
 
 export const StyledAvatarGroup = styled(AvatarGroup)`

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { Member } from '@/components/NftTile'
@@ -17,6 +17,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { cVar } from '@/styles'
+import { copyToClipboard } from '@/utils/browser'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -35,22 +36,24 @@ export type NftTileDetailsProps = {
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
-  auction?: 'none' | 'minBid' | 'topBid' | 'waiting'
+  nftState?: 'idle' | 'on-sale' | 'auction'
   buyNowPrice?: number | null
-  minBid?: number | null
+  startingPrice?: number | null
   topBid?: number | null
   title?: string | null
   hovered?: boolean
+  interactable?: boolean
+  videoHref?: string
 }
 
 type TileSize = 'small' | 'medium'
 
-type DetailsContent = {
+type DetailsContentProps = {
   caption: string
   icon: React.ReactNode
   content: string | number
   secondary?: boolean
-  tileSize?: TileSize
+  tileSize: TileSize | undefined
 }
 
 const SMALL_SIZE_WIDTH = 288
@@ -60,12 +63,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   creator,
   owner,
   role,
-  auction,
-  minBid,
-  topBid,
+  nftState,
+  startingPrice,
   buyNowPrice,
+  topBid,
   title,
   hovered,
+  videoHref,
+  interactable = true,
 }) => {
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
@@ -85,20 +90,25 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     },
   })
 
+  const handleCopyVideoURLClick = useCallback(() => {
+    copyToClipboard(videoHref ? location.origin + videoHref : '')
+  }, [videoHref])
+
   const getContextMenuContent = useMemo(() => {
     const elements: MenuItemProps[] = [
       {
         icon: <SvgActionCopy />,
         title: 'Copy video URL',
+        onClick: handleCopyVideoURLClick,
       },
     ]
     if (role === 'owner') {
-      if (auction === 'none' && !buyNowPrice) {
+      if (nftState === 'idle') {
         elements.unshift({
           icon: <SvgActionSell />,
           title: 'Start sale',
         })
-      } else {
+      } else if (nftState === 'on-sale') {
         elements.unshift(
           {
             icon: <SvgActionCancel />,
@@ -112,7 +122,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         )
       }
     } else {
-      if (auction !== 'none') {
+      if (nftState === 'auction') {
         elements.unshift(
           ...(buyNowPrice
             ? [
@@ -127,36 +137,15 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
             title: 'Place bid',
           }
         )
-      } else {
-        elements.unshift(
-          ...(buyNowPrice
-            ? [
-                {
-                  icon: <SvgActionBuyNow />,
-                  title: 'Buy now',
-                },
-              ]
-            : [])
-        )
+      } else if (nftState === 'on-sale') {
+        elements.unshift({
+          icon: <SvgActionBuyNow />,
+          title: 'Buy now',
+        })
       }
     }
     return elements
-  }, [auction, buyNowPrice, role])
-
-  const DetailsContent: React.FC<DetailsContent> = React.memo(({ caption, icon, content, secondary }) => (
-    <div>
-      <Text variant={tileSize === 'medium' ? 't200' : 't100'} secondary>
-        {caption}
-      </Text>
-      <DetailsContentWrapper secondary={secondary}>
-        {icon}{' '}
-        <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} secondary={secondary}>
-          {content}
-        </Text>
-      </DetailsContentWrapper>
-    </div>
-  ))
-  DetailsContent.displayName = 'DetailsContent'
+  }, [buyNowPrice, handleCopyVideoURLClick, nftState, role])
 
   const getDetails = useMemo(() => {
     if (loading) {
@@ -167,44 +156,56 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         </CaptionSkeletonWrapper>
       )
     }
-    switch (auction) {
-      case 'none':
-        return (
-          !buyNowPrice && (
-            <DetailsContent caption="Status" content="Not for sale" icon={<SvgActionNotForSale />} secondary />
-          )
-        )
-      case 'minBid':
-        return (
-          !!minBid && (
-            <DetailsContent
-              caption="Min bid"
-              content={formatNumberShort(minBid)}
-              icon={<JoyTokenIcon size={16} variant="regular" />}
-            />
-          )
-        )
-      case 'topBid':
-        return (
-          !!topBid && (
-            <DetailsContent
-              caption="Top bid"
-              content={formatNumberShort(topBid)}
-              icon={<JoyTokenIcon size={16} variant="regular" />}
-            />
-          )
-        )
-      case 'waiting':
+    switch (nftState) {
+      case 'idle':
         return (
           <DetailsContent
+            tileSize={tileSize}
             caption="Status"
-            content="Place first bid"
-            icon={<JoyTokenIcon size={16} variant="regular" />}
+            content="Not for sale"
+            icon={<SvgActionNotForSale />}
             secondary
           />
         )
+      case 'on-sale':
+        return (
+          <DetailsContent
+            tileSize={tileSize}
+            caption="Buy now"
+            content={formatNumberShort(buyNowPrice ?? 0)}
+            icon={<JoyTokenIcon size={16} variant="regular" />}
+          />
+        )
+      case 'auction':
+        return (
+          <>
+            {topBid ? (
+              <DetailsContent
+                tileSize={tileSize}
+                caption="Top bid"
+                content={formatNumberShort(topBid)}
+                icon={<JoyTokenIcon size={16} variant="regular" />}
+              />
+            ) : (
+              <DetailsContent
+                tileSize={tileSize}
+                caption="Min bid"
+                content={formatNumberShort(startingPrice ?? 0)}
+                icon={<JoyTokenIcon size={16} variant="regular" />}
+              />
+            )}
+            {!!buyNowPrice && (
+              <DetailsContent
+                tileSize={tileSize}
+                caption="Buy now"
+                content={formatNumberShort(buyNowPrice)}
+                icon={<JoyTokenIcon size={16} variant="regular" />}
+              />
+            )}
+          </>
+        )
     }
-  }, [DetailsContent, auction, buyNowPrice, loading, minBid, tileSize, topBid])
+  }, [loading, nftState, tileSize, buyNowPrice, topBid, startingPrice])
 
   return (
     <Content
@@ -213,11 +214,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       onMouseEnter={toggleContentHover}
       onMouseLeave={toggleContentHover}
       tileSize={tileSize}
+      shouldHover={(contentHovered || hovered) && interactable}
     >
       <Header>
         <StyledAvatarGroup
           avatarStrokeColor={
-            contentHovered || hovered ? cVar('colorBackground', true) : cVar('colorBackgroundMuted', true)
+            (contentHovered || hovered) && interactable
+              ? cVar('colorBackground', true)
+              : cVar('colorBackgroundMuted', true)
           }
           loading={loading}
           avatars={[
@@ -248,16 +252,22 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       ) : (
         <Title variant={tileSize === 'medium' ? 'h400' : 'h300'}>{title}</Title>
       )}
-      <Details>
-        {getDetails}
-        {!loading && !!buyNowPrice && buyNowPrice > 0 && (
-          <DetailsContent
-            caption="Buy now"
-            content={formatNumberShort(buyNowPrice)}
-            icon={<JoyTokenIcon size={16} variant="regular" />}
-          />
-        )}
-      </Details>
+      <Details>{getDetails}</Details>
     </Content>
   )
 }
+
+const DetailsContent: React.FC<DetailsContentProps> = React.memo(({ tileSize, caption, icon, content, secondary }) => (
+  <div>
+    <Text variant={tileSize === 'medium' ? 't200' : 't100'} secondary>
+      {caption}
+    </Text>
+    <DetailsContentWrapper secondary={secondary}>
+      {icon}{' '}
+      <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} secondary={secondary}>
+        {content}
+      </Text>
+    </DetailsContentWrapper>
+  </div>
+))
+DetailsContent.displayName = 'DetailsContent'
