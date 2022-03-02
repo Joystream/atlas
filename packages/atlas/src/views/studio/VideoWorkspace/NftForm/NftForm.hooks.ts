@@ -8,7 +8,6 @@ export const useNftForm = () => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [listingType, setListingType] = useState<Listing>(undefined)
   const [currentStep, setCurrentStep] = useState(0)
-  const [actionBarPrimaryText, setActionBarPrimaryText] = useState('Next step')
 
   const getTotalDaysAndHoursText = (start: Date, end: Date) => {
     const { days, hours } = intervalToDuration({
@@ -31,8 +30,6 @@ export const useNftForm = () => {
       setListingType,
       currentStep,
       setCurrentStep,
-      actionBarPrimaryText,
-      setActionBarPrimaryText,
     },
   }
 }

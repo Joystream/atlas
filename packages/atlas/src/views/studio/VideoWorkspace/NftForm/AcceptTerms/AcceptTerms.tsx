@@ -1,4 +1,4 @@
-import { differenceInMilliseconds, format } from 'date-fns'
+import { differenceInMilliseconds, format, isValid } from 'date-fns'
 import React from 'react'
 
 import { Banner } from '@/components/Banner'
@@ -36,7 +36,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   const startDate = formData.startDate as Date
   const endDate = formData.endDate as Date
 
-  const validDate = formData.startDate instanceof Date && formData.endDate instanceof Date
+  const validDate = isValid(formData.startDate) && isValid(formData.endDate)
 
   const numberOfBlocks = validDate ? convertDurationToBlocks(differenceInMilliseconds(endDate, startDate)) : null
 

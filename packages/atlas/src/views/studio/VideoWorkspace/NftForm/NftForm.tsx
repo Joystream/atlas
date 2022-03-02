@@ -52,8 +52,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
       setTermsAccepted,
       activeInputs,
       setActiveInputs,
-      actionBarPrimaryText,
-      setActionBarPrimaryText,
       listingType,
       setListingType,
       setCurrentStep,
@@ -113,6 +111,13 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
     return termsAccepted
   }, [currentStep, isValid, listingType, termsAccepted])
 
+  const actionBarPrimaryText = useMemo(() => {
+    if (currentStep === 2) {
+      return 'Upload & issue'
+    }
+    return 'Next step'
+  }, [currentStep])
+
   const formStatus: VideoWorkspaceFormStatus<NftFormData> = useMemo(
     () => ({
       isDirty,
@@ -132,14 +137,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
   useEffect(() => {
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
-
-  useEffect(() => {
-    if (currentStep === 2) {
-      setActionBarPrimaryText('Upload & issue')
-      return
-    }
-    setActionBarPrimaryText('Next step')
-  }, [currentStep, setActionBarPrimaryText])
 
   // Clear form on listing type change
   useEffect(() => {

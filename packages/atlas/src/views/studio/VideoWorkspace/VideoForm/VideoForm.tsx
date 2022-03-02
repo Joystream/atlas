@@ -76,7 +76,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
   ({ onSubmit, setFormStatus, isIssuedAsNft, setIsIssuedAsNft, videoFormDataForNft }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
-    const [actionBarPrimaryText, setActionBarPrimaryText] = useState('')
 
     const { editedVideoInfo } = useVideoWorkspace()
     const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -252,6 +251,16 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       return false
     }, [isValid, isEdit, isDirty, isIssuedAsNft])
 
+    const actionBarPrimaryText = useMemo(() => {
+      if (isIssuedAsNft) {
+        return 'Next'
+      }
+      if (isEdit) {
+        return 'Publish changes'
+      }
+      return 'Upload'
+    }, [isEdit, isIssuedAsNft])
+
     const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
     const formStatus: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> = useMemo(
       () => ({
@@ -270,18 +279,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
     useEffect(() => {
       setFormStatus(formStatus)
     }, [formStatus, setFormStatus])
-
-    useEffect(() => {
-      if (isIssuedAsNft) {
-        setActionBarPrimaryText('Next')
-        return
-      }
-      if (isEdit) {
-        setActionBarPrimaryText('Publish changes')
-        return
-      }
-      setActionBarPrimaryText('Upload')
-    }, [isEdit, isIssuedAsNft])
 
     const handleDeleteVideo = () => {
       editedVideoInfo && deleteVideo(editedVideoInfo.id)
@@ -392,17 +389,17 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                 )}
               />
             </ExtendedMarginFormField>
-            <SwitchFormField title="Issue as Nft">
+            <SwitchFormField title="Issue as NFT">
               <SwitchNftWrapper>
                 <Switch
-                  label="Toggle to list this video as an Nft"
+                  label="Toggle to list this video as an NFT"
                   value={isIssuedAsNft}
                   onChange={(e) => setIsIssuedAsNft(e?.currentTarget.checked || false)}
                 />
                 <Information
                   placement="top"
                   arrowDisabled
-                  text="By issuing your video as an Nft you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+                  text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
                 />
               </SwitchNftWrapper>
               {isIssuedAsNft && (
@@ -412,7 +409,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                   icon={<StyledSvgWarning width={24} height={24} />}
                   description={
                     <>
-                      <Text variant="t200">After issuing this as an Nft </Text>
+                      <Text variant="t200">After issuing this as an NFT </Text>
                       <YellowText variant="t200">editing options of this video will be disabled</YellowText>
                     </>
                   }

@@ -157,7 +157,12 @@ export const SetUp: React.FC<SetUpProps> = ({
                 text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
               }}
             >
-              <TextField type="text" nodeEnd={<Pill label="tJOY" />} disabled={!activeInputs.includes('buyNowPrice')} />
+              <TextField
+                {...register('buyNowPrice')}
+                type="text"
+                nodeEnd={<Pill label="tJOY" />}
+                disabled={!activeInputs.includes('buyNowPrice')}
+              />
             </FormField>
             <FormField
               title="Auction duration"
