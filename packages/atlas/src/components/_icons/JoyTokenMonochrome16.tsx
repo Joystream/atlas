@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { SVGProps, memo } from 'react'
 
-const SvgActionJoyToken = (props: SVGProps<SVGSVGElement>) => (
+const SvgJoyTokenMonochrome16 = (props: SVGProps<SVGSVGElement>) => (
   <svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
@@ -13,5 +13,5 @@ const SvgActionJoyToken = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
-const Memo = memo(SvgActionJoyToken)
-export { Memo as SvgActionJoyToken }
+const Memo = memo(SvgJoyTokenMonochrome16)
+export { Memo as SvgJoyTokenMonochrome16 }

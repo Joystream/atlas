@@ -8,7 +8,7 @@ const SvgSocialMediaMessengerOnLight = (props: SVGProps<SVGSVGElement>) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M12 2.86c-5.281 0-9.375 3.868-9.375 9.093 0 2.733 1.12 5.095 2.944 6.726.153.137.246.33.252.535l.051 1.668a.75.75 0 0 0 1.053.663l1.86-.822a.748.748 0 0 1 .501-.037c.855.236 1.765.36 2.714.36 5.281 0 9.375-3.868 9.375-9.093S17.281 2.86 12 2.86Z"
-      fill="url(#a)"
+      fill="url(#paint0_radial_603_409)"
     />
     <path
       fillRule="evenodd"
@@ -18,7 +18,7 @@ const SvgSocialMediaMessengerOnLight = (props: SVGProps<SVGSVGElement>) => (
     />
     <defs>
       <radialGradient
-        id="a"
+        id="paint0_radial_603_409"
         cx={0}
         cy={0}
         r={1}

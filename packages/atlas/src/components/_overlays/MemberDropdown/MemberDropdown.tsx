@@ -12,7 +12,6 @@ import {
   SvgActionAddVideo,
   SvgActionChevronL,
   SvgActionChevronR,
-  SvgActionJoyToken,
   SvgActionMember,
   SvgActionNewChannel,
   SvgActionPlay,
@@ -20,6 +19,7 @@ import {
 } from '@/components/_icons'
 import { SvgActionSwitchMember } from '@/components/_icons/ActionSwitchMember'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
@@ -205,7 +205,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                           {accountBalance !== undefined ? (
                             <>
                               <BalanceContainer>
-                                <SvgActionJoyToken />
+                                <JoyTokenIcon size={16} variant="regular" />
                                 <Text variant="t200-strong">{formatNumberShort(accountBalance)}</Text>
                               </BalanceContainer>
                             </>

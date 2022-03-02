@@ -9,11 +9,11 @@ import {
   SvgActionCancel,
   SvgActionChangePrice,
   SvgActionCopy,
-  SvgActionJoyToken,
   SvgActionMore,
   SvgActionNotForSale,
   SvgActionSell,
 } from '@/components/_icons'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { cVar } from '@/styles'
@@ -176,17 +176,32 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       case 'minBid':
         return (
           !!minBid && (
-            <DetailsContent caption="Min bid" content={formatNumberShort(minBid)} icon={<SvgActionJoyToken />} />
+            <DetailsContent
+              caption="Min bid"
+              content={formatNumberShort(minBid)}
+              icon={<JoyTokenIcon size={16} variant="regular" />}
+            />
           )
         )
       case 'topBid':
         return (
           !!topBid && (
-            <DetailsContent caption="Top bid" content={formatNumberShort(topBid)} icon={<SvgActionJoyToken />} />
+            <DetailsContent
+              caption="Top bid"
+              content={formatNumberShort(topBid)}
+              icon={<JoyTokenIcon size={16} variant="regular" />}
+            />
           )
         )
       case 'waiting':
-        return <DetailsContent caption="Status" content="Place first bid" icon={<SvgActionJoyToken />} secondary />
+        return (
+          <DetailsContent
+            caption="Status"
+            content="Place first bid"
+            icon={<JoyTokenIcon size={16} variant="regular" />}
+            secondary
+          />
+        )
     }
   }, [DetailsContent, auction, buyNowPrice, loading, minBid, tileSize, topBid])
 
@@ -235,7 +250,11 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       <Details>
         {getDetails}
         {!loading && !!buyNowPrice && buyNowPrice > 0 && (
-          <DetailsContent caption="Buy now" content={formatNumberShort(buyNowPrice)} icon={<SvgActionJoyToken />} />
+          <DetailsContent
+            caption="Buy now"
+            content={formatNumberShort(buyNowPrice)}
+            icon={<JoyTokenIcon size={16} variant="regular" />}
+          />
         )}
       </Details>
     </Content>
