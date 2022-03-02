@@ -58,9 +58,11 @@ export type VideoFormData = {
 export type VideoWorkspaceFormStatus<T> = {
   isValid: boolean
   isDirty: boolean
+  isDisabled: boolean
   hasUnsavedAssets?: boolean
-  triggerVideoFormSubmit?: () => void
-  triggerNftFormSubmit?: () => void
+  handleGoBack?: () => void
+  actionBarPrimaryText: string
+  triggerFormSubmit?: () => void
   resetForm: UseFormReset<T>
   termsAccepted?: boolean
   activeFields?: string[]

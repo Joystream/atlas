@@ -16,7 +16,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
     <>
       <Header variant="h500">Choose listing type</Header>
       <Text variant="t300" secondary>
-        Choose “Not for sale” if you don’t want to sell your Nft right away or “Put on marketplace” to sell it on
+        Choose “Not for sale” if you don’t want to sell your NFT right away or “Put on marketplace” to sell it on
         auction, or for a fixed price.
       </Text>
       <OptionsWrapper>
@@ -42,7 +42,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
           value="Not for sale"
           label="Not for sale"
           icon={<SvgActionLock />}
-          helperText="Suitable for holding Nft without receiving offers for it. Can be changed later."
+          helperText="Suitable for holding NFT without receiving offers for it. Can be changed later."
         />
       </OptionsWrapper>
     </>

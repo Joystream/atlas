@@ -76,6 +76,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
   ({ onSubmit, setFormStatus, isIssuedAsNft, setIsIssuedAsNft, videoFormDataForNft }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
+    const [actionBarPrimaryText, setActionBarPrimaryText] = useState('')
 
     const { editedVideoInfo } = useVideoWorkspace()
     const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -244,22 +245,42 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       videoHashPromise,
     ])
 
+    const formDisabled = useMemo(() => {
+      if (isValid) {
+        return isEdit ? isDirty || isIssuedAsNft : true
+      }
+      return false
+    }, [isValid, isEdit, isDirty, isIssuedAsNft])
+
     const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
     const formStatus: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> = useMemo(
       () => ({
         hasUnsavedAssets,
         isDirty,
+        isDisabled: formDisabled,
+        actionBarPrimaryText,
         isValid: isFormValid,
         resetForm: reset,
-        triggerVideoFormSubmit: handleSubmit,
+        triggerFormSubmit: handleSubmit,
       }),
-      [handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
+      [actionBarPrimaryText, formDisabled, handleSubmit, hasUnsavedAssets, isDirty, isFormValid, reset]
     )
 
     // sent updates on form status to VideoWorkspace
     useEffect(() => {
       setFormStatus(formStatus)
     }, [formStatus, setFormStatus])
+
+    useEffect(() => {
+      if (isIssuedAsNft) {
+        setActionBarPrimaryText('Next')
+        return
+      }
+      if (isEdit) {
+        setActionBarPrimaryText('Publish changes')
+      }
+      setActionBarPrimaryText('Upload')
+    }, [isEdit, isIssuedAsNft])
 
     const handleDeleteVideo = () => {
       editedVideoInfo && deleteVideo(editedVideoInfo.id)

@@ -21,7 +21,7 @@ import {
   StepperWrapper,
 } from './NftForm.styles'
 import { SetUp } from './SetUp'
-import { Listing, NftFormData } from './types'
+import { NftFormData } from './types'
 
 const DUMMY_Nft_TILE_PROPS = {
   buyNow: false,
@@ -40,22 +40,25 @@ const DUMMY_Nft_TILE_PROPS = {
 }
 
 type NftFormProps = {
-  listingType: Listing
   setFormStatus: (data: VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null) => void
-  setListingType: (listingType: Listing) => void
-  nftCurrentStepIdx: number
   onSubmit: (data: NftFormData) => void
+  setIsNftFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const NftForm: React.FC<NftFormProps> = ({
-  nftCurrentStepIdx,
-  listingType,
-  setFormStatus,
-  setListingType,
-  onSubmit,
-}) => {
+export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIsNftFormOpen }) => {
   const {
-    state: { termsAccepted, setTermsAccepted, activeInputs, setActiveInputs },
+    state: {
+      termsAccepted,
+      setTermsAccepted,
+      activeInputs,
+      setActiveInputs,
+      actionBarPrimaryText,
+      setActionBarPrimaryText,
+      listingType,
+      setListingType,
+      setCurrentStep,
+      currentStep,
+    },
   } = useNftForm()
   const {
     handleSubmit: createSubmitHandler,
@@ -81,29 +84,62 @@ export const NftForm: React.FC<NftFormProps> = ({
   ]
 
   const handleSubmit = useCallback(() => {
-    createSubmitHandler(onSubmit)
-  }, [createSubmitHandler, onSubmit])
+    if (currentStep === 2) {
+      createSubmitHandler(onSubmit)
+      return
+    }
+    setCurrentStep((prevState) => prevState + 1)
+  }, [createSubmitHandler, currentStep, onSubmit, setCurrentStep])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
   }
 
+  const onGoBack = useCallback(() => {
+    if (currentStep === 0) {
+      setIsNftFormOpen(false)
+      return
+    }
+    setCurrentStep((prevState) => prevState - 1)
+  }, [currentStep, setCurrentStep, setIsNftFormOpen])
+
+  const formDisabled = useMemo(() => {
+    if (currentStep === 0) {
+      return !!listingType
+    }
+    if (currentStep === 1) {
+      return isValid
+    }
+    return termsAccepted
+  }, [currentStep, isValid, listingType, termsAccepted])
+
   const formStatus: VideoWorkspaceFormStatus<NftFormData> = useMemo(
     () => ({
       isDirty,
       isValid,
+      isDisabled: formDisabled,
+      handleGoBack: onGoBack,
       resetForm: reset,
-      triggerNftFormSubmit: handleSubmit,
+      actionBarPrimaryText,
+      triggerFormSubmit: handleSubmit,
       termsAccepted,
       activeInputs,
     }),
-    [activeInputs, handleSubmit, isDirty, isValid, reset, termsAccepted]
+    [actionBarPrimaryText, activeInputs, formDisabled, handleSubmit, isDirty, isValid, onGoBack, reset, termsAccepted]
   )
 
   // sent updates on form status to VideoWorkspace
   useEffect(() => {
     setFormStatus(formStatus)
   }, [formStatus, setFormStatus])
+
+  useEffect(() => {
+    if (currentStep === 2) {
+      setActionBarPrimaryText('Issue Nft')
+      return
+    }
+    setActionBarPrimaryText('Next step')
+  }, [currentStep, setActionBarPrimaryText])
 
   // Clear form on listing type change
   useEffect(() => {
@@ -141,11 +177,11 @@ export const NftForm: React.FC<NftFormProps> = ({
           <NftTile title="title" {...DUMMY_Nft_TILE_PROPS} />
         </NftPreview>
         <NftFormScrolling>
-          <NftFormWrapper lastStep={nftCurrentStepIdx === 2}>
+          <NftFormWrapper lastStep={currentStep === 2}>
             <StepperWrapper>
               <StepperInnerWrapper>
                 {issueNftSteps.map((step, idx) => {
-                  const stepVariant = getStepVariant(nftCurrentStepIdx, idx)
+                  const stepVariant = getStepVariant(currentStep, idx)
                   const isLast = idx === issueNftSteps.length - 1
                   return (
                     <StepWrapper key={idx}>
@@ -156,7 +192,7 @@ export const NftForm: React.FC<NftFormProps> = ({
                 })}
               </StepperInnerWrapper>
             </StepperWrapper>
-            {stepsContent[nftCurrentStepIdx]}
+            {stepsContent[currentStep]}
           </NftFormWrapper>
         </NftFormScrolling>
       </NftWorkspaceFormWrapper>

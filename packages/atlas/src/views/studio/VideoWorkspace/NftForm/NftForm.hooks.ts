@@ -1,9 +1,15 @@
 import { intervalToDuration } from 'date-fns'
 import { useState } from 'react'
 
+import { Listing } from '@/views/studio/VideoWorkspace/NftForm/types'
+
 export const useNftForm = () => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [listingType, setListingType] = useState<Listing>(undefined)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [actionBarPrimaryText, setActionBarPrimaryText] = useState('Next step')
+
   const getTotalDaysAndHoursText = (start: Date, end: Date) => {
     const { days, hours } = intervalToDuration({
       start,
@@ -14,5 +20,19 @@ export const useNftForm = () => {
     return `${parsedDays} ${parsedHours}`
   }
 
-  return { getTotalDaysAndHoursText, state: { activeInputs, setActiveInputs, termsAccepted, setTermsAccepted } }
+  return {
+    getTotalDaysAndHoursText,
+    state: {
+      activeInputs,
+      setActiveInputs,
+      termsAccepted,
+      setTermsAccepted,
+      listingType,
+      setListingType,
+      currentStep,
+      setCurrentStep,
+      actionBarPrimaryText,
+      setActionBarPrimaryText,
+    },
+  }
 }
