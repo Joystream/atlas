@@ -186,22 +186,28 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
             <BuyNow buyNowPrice={nftState.buyNowPrice} />
             {!!nftState.auctionPlannedEndDate && <NftTimerItem size={size} time={nftState.auctionPlannedEndDate} />}
             {isOwner ? (
-              <>
-                {!nftState.auctionPlannedEndDate && !nftState.topBid && (
-                  <GridItem colSpan={buttonColumnSpan}>
-                    <Button fullWidth variant="destructive" size={buttonSize}>
+              (!nftState.auctionPlannedEndDate ||
+                // english auction with no bids
+                (nftState.auctionPlannedEndDate && !nftState.topBid)) && (
+                <GridItem colSpan={buttonColumnSpan}>
+                  <ButtonGrid data-size={size}>
+                    {!nftState.auctionPlannedEndDate && !!nftState.topBid && (
+                      <Button fullWidth size={buttonSize}>
+                        Review and accept bid
+                      </Button>
+                    )}
+                    <Button
+                      fullWidth
+                      variant={
+                        !nftState.auctionPlannedEndDate && !!nftState.topBid ? 'destructive-secondary' : 'destructive'
+                      }
+                      size={buttonSize}
+                    >
                       Remove from sale
                     </Button>
-                  </GridItem>
-                )}
-                {!nftState.auctionPlannedEndDate && !!nftState.topBid && (
-                  <GridItem colSpan={buttonColumnSpan}>
-                    <Button fullWidth size={buttonSize}>
-                      Review and accept bid
-                    </Button>
-                  </GridItem>
-                )}
-              </>
+                  </ButtonGrid>
+                </GridItem>
+              )
             ) : nftState.buyNowPrice ? (
               <GridItem colSpan={buttonColumnSpan}>
                 <ButtonGrid data-size={size} data-two-columns>
