@@ -6,11 +6,11 @@ const SvgSocialMediaWhatsAppOnDark = (props: SVGProps<SVGSVGElement>) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="m2.342 21.652 1.36-4.958a9.57 9.57 0 0 1-1.279-4.782c0-5.277 4.298-9.57 9.57-9.57 2.562 0 4.963.998 6.77 2.805a9.51 9.51 0 0 1 2.8 6.77c0 5.276-4.298 9.57-9.57 9.57h-.005a9.575 9.575 0 0 1-4.573-1.166l-5.073 1.331Z"
-      fill="url(#a)"
+      fill="url(#paint0_linear_603_427)"
     />
     <path
       d="m2 22 1.407-5.134a9.871 9.871 0 0 1-1.321-4.954C2.086 6.445 6.536 2 12.002 2a9.837 9.837 0 0 1 7.013 2.905 9.829 9.829 0 0 1 2.9 7.012c0 5.467-4.45 9.912-9.917 9.912h-.005a9.92 9.92 0 0 1-4.74-1.208L2 22Zm5.5-3.176.3.181a8.263 8.263 0 0 0 4.193 1.15h.005c4.54 0 8.238-3.693 8.238-8.238a8.2 8.2 0 0 0-2.41-5.829 8.176 8.176 0 0 0-5.828-2.415c-4.545 0-8.244 3.694-8.244 8.24 0 1.554.433 3.07 1.26 4.382l.195.314-.827 3.033 3.118-.818Z"
-      fill="url(#b)"
+      fill="url(#paint1_linear_603_427)"
     />
     <path
       fillRule="evenodd"
@@ -19,11 +19,25 @@ const SvgSocialMediaWhatsAppOnDark = (props: SVGProps<SVGSVGElement>) => (
       fill="#fff"
     />
     <defs>
-      <linearGradient id="a" x1={11.956} y1={21.652} x2={11.956} y2={2.342} gradientUnits="userSpaceOnUse">
+      <linearGradient
+        id="paint0_linear_603_427"
+        x1={11.956}
+        y1={21.652}
+        x2={11.956}
+        y2={2.342}
+        gradientUnits="userSpaceOnUse"
+      >
         <stop stopColor="#20B038" />
         <stop offset={1} stopColor="#60D66A" />
       </linearGradient>
-      <linearGradient id="b" x1={11.956} y1={21.999} x2={11.956} y2={1.996} gradientUnits="userSpaceOnUse">
+      <linearGradient
+        id="paint1_linear_603_427"
+        x1={11.956}
+        y1={21.999}
+        x2={11.956}
+        y2={1.996}
+        gradientUnits="userSpaceOnUse"
+      >
         <stop stopColor="#F9F9F9" />
         <stop offset={1} stopColor="#fff" />
       </linearGradient>

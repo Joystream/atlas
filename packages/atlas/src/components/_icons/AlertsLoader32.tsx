@@ -4,7 +4,7 @@ import { SVGProps, memo } from 'react'
 
 const SvgAlertsLoader32 = (props: SVGProps<SVGSVGElement>) => (
   <svg width={32} height={32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <g clipPath="url(#a)">
+    <g clipPath="url(#clip0_603_277)">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -17,7 +17,7 @@ const SvgAlertsLoader32 = (props: SVGProps<SVGSVGElement>) => (
       />
     </g>
     <defs>
-      <clipPath id="a">
+      <clipPath id="clip0_603_277">
         <path fill="#fff" d="M0 0h32v32H0z" />
       </clipPath>
     </defs>

@@ -9,11 +9,11 @@ import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionBid,
   SvgActionEdit,
-  SvgActionJoyToken,
   SvgAlertsWarning24,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
 } from '@/components/_icons'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { cVar } from '@/styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
@@ -36,7 +36,7 @@ export default {
                 label: 'NFT',
               },
               {
-                icon: <SvgActionJoyToken />,
+                icon: <JoyTokenIcon size={16} variant="regular" />,
                 label: '24K tJOY',
               },
             ]}
