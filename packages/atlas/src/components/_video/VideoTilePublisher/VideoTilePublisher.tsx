@@ -49,6 +49,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
 
+    const isCompleted =
+      uploadThumbnailStatus?.lastStatus === 'completed' && uploadVideoStatus?.lastStatus === 'completed'
+
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
       uploadVideoStatus?.lastStatus === 'processing' ||
@@ -58,14 +61,12 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       uploadThumbnailStatus?.lastStatus === 'inProgress' ||
       uploadThumbnailStatus?.lastStatus === 'processing' ||
       uploadThumbnailStatus?.lastStatus === 'reconnecting'
-
     const isUploading = isVideoUploading || isThumbnailUploading
 
-    const hasThumbnailUploadFailed =
-      (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isUploading) || false
-    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isUploading) || false
+    const hasThumbnailUploadFailed = (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted) || false
+    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted) || false
 
-    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
+    const hasAssetUploadFailed = (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading && !isCompleted
 
     const isUnlisted = video?.isPublic === false
 
