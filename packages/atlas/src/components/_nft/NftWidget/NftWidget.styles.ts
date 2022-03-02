@@ -4,7 +4,6 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BorderWrapper } from '@/components/_buttons/ButtonBase/ButtonBase.styles'
-import { SvgActionJoyToken } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
 type SizeProps = { 'data-size': 'medium' | 'small' }
@@ -84,5 +83,3 @@ export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean 
     grid-template-columns: 1fr 1fr;
   }
 `
-
-export const JoyTokenIcon = styled(SvgActionJoyToken)``

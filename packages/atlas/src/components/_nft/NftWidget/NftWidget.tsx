@@ -5,6 +5,7 @@ import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB } from '@/components/_icons'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useTokenPrice } from '@/providers/joystream'
@@ -16,7 +17,6 @@ import {
   ButtonGrid,
   Container,
   Content,
-  JoyTokenIcon,
   NftHistoryHeader,
   NftOwnerContainer,
   OwnerAvatar,
@@ -66,7 +66,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           label="Buy now"
           content={
             <>
-              <JoyTokenIcon />
+              <JoyTokenIcon size={16} variant="silver" />
               <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
             </>
           }
@@ -84,7 +84,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Last price"
                 content={
                   <>
-                    <JoyTokenIcon />
+                    <JoyTokenIcon size={16} variant="silver" />
                     <Text variant={contentTextVariant} secondary>
                       {formatNumberShort(nftState.lastPrice)}
                     </Text>
@@ -144,7 +144,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
               label="You have won with"
               content={
                 <>
-                  <JoyTokenIcon />
+                  <JoyTokenIcon size={16} variant="silver" />
                   <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid ?? 0)}</Text>
                 </>
               }
@@ -164,7 +164,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Top bid"
                 content={
                   <>
-                    <JoyTokenIcon />
+                    <JoyTokenIcon size={16} variant="silver" />
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid)}</Text>
                   </>
                 }
@@ -176,7 +176,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Starting Price"
                 content={
                   <>
-                    <JoyTokenIcon />
+                    <JoyTokenIcon size={16} variant="silver" />
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.startingPrice)}</Text>
                   </>
                 }
