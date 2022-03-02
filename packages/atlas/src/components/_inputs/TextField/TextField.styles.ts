@@ -8,6 +8,16 @@ export const TextInput = styled.input<NodeWidth>`
   width: 100%;
   padding-left: ${({ leftNodeWidth }) => (leftNodeWidth ? `${leftNodeWidth}px !important` : 'inherit')};
   padding-right: ${({ rightNodeWidth }) => (rightNodeWidth ? `${rightNodeWidth}px !important` : 'inherit')};
+
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    appearance: textfield;
+  }
 `
 
 export const TextFieldContainer = styled.div`

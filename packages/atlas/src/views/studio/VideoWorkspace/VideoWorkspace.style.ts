@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
+import { Text } from '@/components/Text'
+import { SvgActionWarning } from '@/components/_icons'
 import { cVar, zIndex } from '@/styles'
 
 export const DrawerOverlay = styled.div`
@@ -73,4 +75,14 @@ export const StyledActionBar = styled(ActionBar)`
   bottom: 0;
   width: 100%;
   left: 0;
+`
+
+export const StyledSvgWarning = styled(SvgActionWarning)`
+  path {
+    fill: ${cVar('colorCoreYellow100')};
+  }
+`
+
+export const YellowText = styled(Text)`
+  color: ${cVar('colorCoreYellow100')};
 `

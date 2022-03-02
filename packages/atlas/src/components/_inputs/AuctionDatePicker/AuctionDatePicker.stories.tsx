@@ -11,8 +11,8 @@ export default {
 } as Meta
 
 const Template: Story<AuctionDatePickerProps> = (args) => {
-  const [startDate, setStartDate] = useState<string | null>(null)
-  const [expirationDate, setExpirationDate] = useState<string | null>(null)
+  const [startDate, setStartDate] = useState<Date | string | null>(null)
+  const [expirationDate, setExpirationDate] = useState<Date | string | null>(null)
   // eslint-disable-next-line no-console
   console.log({ startDate, expirationDate })
   return (
@@ -21,7 +21,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
         {...args}
         items={[
           {
-            value: 'Fri Jan 7 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
+            value: new Date(),
             name: 'Right after listing',
           },
         ]}
