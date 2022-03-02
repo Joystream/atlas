@@ -278,6 +278,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       }
       if (isEdit) {
         setActionBarPrimaryText('Publish changes')
+        return
       }
       setActionBarPrimaryText('Upload')
     }, [isEdit, isIssuedAsNft])

@@ -135,7 +135,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
 
   useEffect(() => {
     if (currentStep === 2) {
-      setActionBarPrimaryText('Issue Nft')
+      setActionBarPrimaryText('Upload & issue')
       return
     }
     setActionBarPrimaryText('Next step')
