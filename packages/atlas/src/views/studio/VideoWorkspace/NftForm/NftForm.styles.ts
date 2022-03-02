@@ -1,14 +1,13 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgActionChevronR } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const ScrollableWrapper = styled.div`
   height: 100%;
 `
 
-export const NFTWorkspaceFormWrapper = styled.div`
+export const NftWorkspaceFormWrapper = styled.div`
   height: 100%;
   justify-content: flex-end;
   display: flex;
@@ -19,12 +18,13 @@ export const NFTWorkspaceFormWrapper = styled.div`
   }
 `
 
-export const NFTPreview = styled.div`
+export const NftPreview = styled.div`
   background: black;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: ${sizes(16)} ${sizes(4)};
+
   ${media.md} {
     width: 50%;
     position: fixed;
@@ -34,18 +34,24 @@ export const NFTPreview = styled.div`
   }
 `
 
-export const NFTFormScrolling = styled.div`
+export const NftFormScrolling = styled.div`
   padding: ${sizes(8)};
   flex-grow: 1;
   position: relative;
+
   ${media.md} {
     left: 50%;
     max-width: 50%;
   }
 `
 
-export const NFTFormWrapper = styled.div`
+type NftFormWrapperProps = {
+  lastStep: boolean
+}
+
+export const NftFormWrapper = styled.div<NftFormWrapperProps>`
   height: 100%;
+  padding-bottom: ${({ lastStep }) => lastStep && '40px'};
 `
 export const StepperWrapper = styled.div`
   max-width: 100%;
@@ -53,6 +59,7 @@ export const StepperWrapper = styled.div`
   padding-bottom: ${sizes(8)};
   box-shadow: ${cVar('effectDividersBottom')};
   scrollbar-width: none;
+  margin-bottom: ${sizes(8)};
 
   ::-webkit-scrollbar {
     display: none;
@@ -74,13 +81,12 @@ export const StepWrapper = styled.div<{ isLast?: boolean }>`
   align-items: center;
 `
 
-export const StyledChevron = styled(SvgActionChevronR)``
-
-export const Title = styled(Text)`
-  margin-top: ${sizes(8)};
-  margin-bottom: ${sizes(4)};
-`
-
 export const Paragraph = styled(Text)`
   margin-bottom: ${sizes(12)};
+`
+
+export const AuctionDurationTooltipFooter = styled.div`
+  padding: ${sizes(2)};
+  margin-top: 10px;
+  background-color: ${cVar('colorBackgroundElevated')};
 `
