@@ -52,7 +52,6 @@ export const RankingNumber = styled.div<RankingNumberProps>`
   font-weight: 600;
   line-height: 85%;
   color: black;
-  overflow: hidden;
   -webkit-text-stroke-width: 4px;
   -webkit-text-stroke-color: var(--color-border);
   overflow: visible;
