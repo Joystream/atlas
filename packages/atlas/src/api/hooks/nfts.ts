@@ -10,9 +10,26 @@ export const useNft = (videoId: string) => {
 }
 
 export const useChannelNfts = (channelId: string) => {
-  const { data, ...rest } = useGetChannelNftsQuery({ variables: { channelId: channelId }, skip: !channelId })
+  const { data, ...rest } = useGetChannelNftsQuery({
+    variables: {
+      where: {
+        channel: { id_eq: channelId },
+        nft: { metadata_contains: '' },
+        isPublic_eq: true,
+        isCensored_eq: false,
+        thumbnailPhoto: {
+          isAccepted_eq: true,
+        },
+        media: {
+          isAccepted_eq: true,
+        },
+      },
+    },
+  })
+  console.log(data)
   return {
-    nfts: data?.videos.map((video) => video.nft),
+    nfts: data?.videosConnection.edges.map((video) => video.node.nft),
+    totalCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }
