@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
@@ -94,13 +95,20 @@ const video = {
   'license': { '__typename': 'License', 'id': '83655-5', 'code': 1002, 'attribution': null, 'customText': null },
 }
 
+const SetWidthDiv = styled.div`
+  width: 280px;
+  height: 256px;
+`
+
 const RankingNumberTemplate: Story<{ doubleDigits: boolean; rankingNumber: number }> = ({
   doubleDigits = false,
   rankingNumber,
 }) => {
   return (
     <RankingNumberTile rankingNumber={rankingNumber} doubleDigits={doubleDigits}>
-      <VideoTileViewer id={video.id} />
+      <SetWidthDiv>
+        <VideoTileViewer id={video.id} />
+      </SetWidthDiv>
     </RankingNumberTile>
   )
 }
