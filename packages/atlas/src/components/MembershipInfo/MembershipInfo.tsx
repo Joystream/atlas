@@ -54,7 +54,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
     if (!address) {
       return
     }
-    copyToClipboard(address, 'Video URL copied to clipboard')
+    copyToClipboard(address, 'Account address copied to clipboard')
     setCopyButtonClicked(true)
     setTimeout(() => {
       setCopyButtonClicked(false)
