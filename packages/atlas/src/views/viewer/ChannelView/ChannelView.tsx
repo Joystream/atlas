@@ -1,9 +1,9 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannel, useVideosConnection } from '@/api/hooks'
-import { SearchQuery, VideoFieldsFragment, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
+import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { Grid } from '@/components/Grid'
@@ -14,7 +14,7 @@ import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
-import { SvgActionCheck, SvgActionFilters, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
+import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { absoluteRoutes } from '@/config/routes'
@@ -30,19 +30,17 @@ import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
 import { ChannelAbout } from './ChannelAbout'
+import { ChannelSearch } from './ChannelSearch'
 import {
   CollectorsBoxContainer,
   FilterButtonContainer,
   NotFoundChannelContainer,
   PaginationContainer,
-  SearchButton,
-  SearchContainer,
   SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
   StyledTabs,
-  StyledTextField,
   SubTitle,
   SubTitleSkeletonLoader,
   TabsContainer,
@@ -53,8 +51,9 @@ import {
   TitleSkeletonLoader,
   VideoSection,
 } from './ChannelView.styles'
+import { usePagination, useSearchVideos } from './hooks'
 
-const TABS = ['Videos', 'NFTs', 'Information'] as const
+export const TABS = ['Videos', 'NFTs', 'Information'] as const
 const INITIAL_FIRST = 50
 const INITIAL_VIDEOS_PER_ROW = 4
 export const ChannelView: React.FC = () => {
@@ -316,7 +315,7 @@ export const ChannelView: React.FC = () => {
             />
             {['Videos', 'NFTs'].includes(currentTab) && (
               <>
-                <Search
+                <ChannelSearch
                   searchInputRef={searchInputRef}
                   isSearchInputOpen={isSearchInputOpen}
                   setIsSearchingInputOpen={setIsSearchingInputOpen}
@@ -354,163 +353,5 @@ export const ChannelView: React.FC = () => {
         {tabContent}
       </LimitedWidthContainer>
     </ViewWrapper>
-  )
-}
-
-const usePagination = (currentTab: number) => {
-  const [currentPage, setCurrentPage] = useState(0)
-  const [currentSearchPage, setCurrentSearchPage] = useState(0)
-  // reset the pagination when changing tabs
-  useEffect(() => {
-    setCurrentPage(0)
-    setCurrentSearchPage(0)
-  }, [currentTab])
-  return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
-}
-
-const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
-  if (loading || !data) {
-    return { channels: [], videos: [] }
-  }
-  const searchVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
-    result.item.__typename === 'Video' ? [result.item] : []
-  )
-  return { searchVideos }
-}
-type UseSearchVideosParams = {
-  id: string
-  onError: (error: unknown) => void
-}
-const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
-  const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery({
-    onError,
-  })
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const search = useCallback(
-    (searchQuery: string) => {
-      setSearchQuery(searchQuery)
-      searchVideo({
-        variables: {
-          text: searchQuery,
-          whereVideo: {
-            channel: {
-              id_eq: id,
-            },
-            isPublic_eq: true,
-            isCensored_eq: false,
-            thumbnailPhoto: {
-              isAccepted_eq: true,
-            },
-            media: {
-              isAccepted_eq: true,
-            },
-          },
-          limit: 100,
-        },
-      })
-    },
-    [id, searchVideo]
-  )
-
-  const { searchVideos } = useMemo(
-    () => getVideosFromSearch(loadingSearch, searchData?.search),
-    [loadingSearch, searchData]
-  )
-
-  return {
-    searchVideos,
-    search,
-    loadingSearch,
-    isSearchInputOpen,
-    setIsSearchingInputOpen,
-    errorSearch,
-    isSearching,
-    setIsSearching,
-    searchInputRef,
-    searchQuery,
-  }
-}
-
-type SearchProps = {
-  searchInputRef: React.RefObject<HTMLInputElement>
-  isSearchInputOpen: boolean
-  setIsSearchingInputOpen: (isOpen: boolean) => void
-  setIsSearching: (isOpen: boolean) => void
-  isSearching?: boolean
-  search: (searchQuery: string) => void
-  setCurrentTab: (tab: typeof TABS[number]) => void
-}
-const Search: React.FC<SearchProps> = ({
-  searchInputRef,
-  isSearchInputOpen,
-  setIsSearching,
-  isSearching,
-  search,
-  setIsSearchingInputOpen,
-  setCurrentTab,
-}) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const handleSearchInputKeyPress = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' || event.key === 'NumpadEnter') {
-        if (searchQuery.trim() === '') {
-          setSearchQuery('')
-          setIsSearching(false)
-          setCurrentTab('Videos')
-        } else {
-          search(searchQuery)
-          setIsSearching(true)
-        }
-      }
-      if (event.key === 'Escape' || event.key === 'Esc') {
-        setIsSearchingInputOpen(false)
-        searchInputRef.current?.blur()
-        setSearchQuery('')
-      }
-    },
-    [search, searchInputRef, searchQuery, setCurrentTab, setIsSearching, setIsSearchingInputOpen]
-  )
-
-  const toggleSearchInput = useCallback(() => {
-    if (isSearchInputOpen) {
-      setIsSearchingInputOpen(false)
-      searchInputRef.current?.blur()
-    } else {
-      setIsSearchingInputOpen(true)
-      searchInputRef.current?.focus()
-    }
-  }, [isSearchInputOpen, searchInputRef, setIsSearchingInputOpen])
-
-  useEffect(() => {
-    const onClickOutsideSearch = (event: Event) => {
-      if (!isSearching && isSearchInputOpen && searchInputRef.current !== event.target) {
-        toggleSearchInput()
-      }
-    }
-    window.addEventListener('click', onClickOutsideSearch)
-    return () => {
-      window.removeEventListener('click', onClickOutsideSearch)
-    }
-  }, [isSearching, isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
-
-  return (
-    <SearchContainer isOpen={isSearchInputOpen}>
-      <StyledTextField
-        ref={searchInputRef}
-        isOpen={isSearchInputOpen}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleSearchInputKeyPress}
-        placeholder="Search"
-        type="search"
-        isSearching={isSearching}
-      />
-      <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
-        <SvgActionSearch />
-      </SearchButton>
-    </SearchContainer>
   )
 }
