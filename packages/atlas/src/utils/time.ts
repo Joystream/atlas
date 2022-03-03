@@ -24,7 +24,7 @@ export const formatDurationShort = (duration: number, showHours?: boolean): stri
   const seconds = remaining
 
   if (hours || showHours) {
-    return `${hours || '00'}:${normalize(minutes)}:${normalize(seconds)}`
+    return `${normalize(hours)}:${normalize(minutes)}:${normalize(seconds)}`
   }
 
   return `${minutes}:${normalize(seconds)}`
