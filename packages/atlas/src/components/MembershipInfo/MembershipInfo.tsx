@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/clipboard/hooks'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useClipboard } from '@/providers/clipboard/hooks'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
 
