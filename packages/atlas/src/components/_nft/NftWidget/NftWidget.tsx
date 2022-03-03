@@ -66,7 +66,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           label="Buy now"
           content={
             <>
-              <JoyTokenIcon size={16} variant="silver" />
+              <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
               <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
             </>
           }
@@ -84,7 +84,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Last price"
                 content={
                   <>
-                    <JoyTokenIcon size={16} variant="silver" />
+                    <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant} secondary>
                       {formatNumberShort(nftState.lastPrice)}
                     </Text>
@@ -144,7 +144,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
               label="You have won with"
               content={
                 <>
-                  <JoyTokenIcon size={16} variant="silver" />
+                  <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                   <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid ?? 0)}</Text>
                 </>
               }
@@ -164,7 +164,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Top bid"
                 content={
                   <>
-                    <JoyTokenIcon size={16} variant="silver" />
+                    <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid)}</Text>
                   </>
                 }
@@ -176,7 +176,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 label="Starting Price"
                 content={
                   <>
-                    <JoyTokenIcon size={16} variant="silver" />
+                    <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant}>{formatNumberShort(nftState.startingPrice)}</Text>
                   </>
                 }
