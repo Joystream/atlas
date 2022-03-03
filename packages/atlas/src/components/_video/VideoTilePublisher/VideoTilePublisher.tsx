@@ -58,13 +58,17 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       uploadThumbnailStatus?.lastStatus === 'inProgress' ||
       uploadThumbnailStatus?.lastStatus === 'processing' ||
       uploadThumbnailStatus?.lastStatus === 'reconnecting'
-
     const isUploading = isVideoUploading || isThumbnailUploading
 
     const hasThumbnailUploadFailed =
-      (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isThumbnailUploading) || false
-    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isVideoUploading) || false
-    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
+      (video?.thumbnailPhoto &&
+        !video.thumbnailPhoto.isAccepted &&
+        uploadThumbnailStatus?.lastStatus !== 'completed') ||
+      false
+    const hasVideoUploadFailed =
+      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed') || false
+
+    const hasAssetUploadFailed = (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading
 
     const isUnlisted = video?.isPublic === false
 
@@ -178,23 +182,37 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       return
     }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
-    const getContentSlot = () => {
-      if (hasAssetUploadFailed) {
-        return
+    const getAllFilesLasStatus = useCallback(() => {
+      if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
+        return 'inProgress'
       }
+      if (uploadVideoStatus?.lastStatus === 'processing' || uploadThumbnailStatus?.lastStatus === 'processing') {
+        return 'processing'
+      }
+      if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
+        return 'completed'
+      }
+    }, [uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
+
+    const getContentSlot = () => {
       return (
-        <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
+        <CSSTransition
+          in={isUploading && !hasAssetUploadFailed}
+          timeout={1000}
+          classNames={DELAYED_FADE_CLASSNAME}
+          unmountOnExit
+          mountOnEnter
+        >
           <UploadProgressTransition>
             <UploadProgressBar
               progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
-              lastStatus={uploadVideoStatus?.lastStatus || uploadThumbnailStatus?.lastStatus}
+              lastStatus={getAllFilesLasStatus()}
               withLoadingIndicator
             />
           </UploadProgressTransition>
         </CSSTransition>
       )
     }
-
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
@@ -205,7 +223,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
         loadingDetails={loading}
-        loadingThumbnail={isLoadingThumbnail}
+        loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}
