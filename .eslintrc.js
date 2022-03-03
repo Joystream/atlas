@@ -60,6 +60,13 @@ module.exports = {
         'html': true,
       },
     ],
+    // add exhaustive deps check to custom hooks
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        'additionalHooks': 'useDeepMemo',
+      },
+    ],
     'react/no-unescaped-entities': 'off',
 
     // make sure we use the proper Emotion imports
