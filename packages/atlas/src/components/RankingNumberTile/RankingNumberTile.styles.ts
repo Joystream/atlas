@@ -63,6 +63,7 @@ export const ChildrenWrapper = styled.div`
   position: relative;
   right: 32px;
   background-color: black;
+  width: 100%;
 `
 
 export const DropShadow = styled.div`
