@@ -3,3 +3,12 @@ query GetNft($videoId: ID!) {
     ...AllNftFields
   }
 }
+
+# We cannot filter nfts by channel id, that's why we're using videos query here
+query GetChannelNfts($channelId: ID) {
+  videos(where: { nft: { metadata_contains: "" }, channel: { id_eq: $channelId } }) {
+    nft {
+      ...AllNftFields
+    }
+  }
+}
