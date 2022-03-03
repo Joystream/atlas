@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { SearchQuery, VideoFieldsFragment, useSearchLazyQuery } from '@/api/queries'
 
@@ -17,10 +17,10 @@ const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | und
   if (loading || !data) {
     return { channels: [], videos: [] }
   }
-  const searchVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
+  const foundVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
     result.item.__typename === 'Video' ? [result.item] : []
   )
-  return { searchVideos }
+  return { foundVideos }
 }
 type UseSearchVideosParams = {
   id: string
@@ -31,13 +31,15 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
   const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery({
-    onError,
-  })
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const search = useCallback(
+  // TODO: we should use useVideosLazyQuery here, it's more reliable.
+  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch, variables }] = useSearchLazyQuery(
+    {
+      onError,
+    }
+  )
+
+  const submitSearch = useCallback(
     (searchQuery: string) => {
-      setSearchQuery(searchQuery)
       searchVideo({
         variables: {
           text: searchQuery,
@@ -61,21 +63,22 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
     [id, searchVideo]
   )
 
-  const { searchVideos } = useMemo(
+  const { foundVideos } = useMemo(
     () => getVideosFromSearch(loadingSearch, searchData?.search),
     [loadingSearch, searchData]
   )
 
   return {
-    searchVideos,
-    search,
+    foundVideos,
+    submitSearch,
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
     errorSearch,
     isSearching,
     setIsSearching,
-    searchInputRef,
+    searchedText: isSearching ? variables?.text : undefined,
     searchQuery,
+    setSearchQuery,
   }
 }

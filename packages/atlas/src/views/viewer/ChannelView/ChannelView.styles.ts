@@ -138,7 +138,10 @@ export const TabsContainer = styled.div`
   display: grid;
   padding-top: ${sizes(8)};
   gap: ${sizes(4)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort filter' auto / 1fr 1fr;
+  grid-template:
+    'tabs tabs tabs' 1fr
+    'search search search' auto
+    'sort sort filter' auto / 1fr 1fr;
   background-color: #000;
 
   ${media.sm} {

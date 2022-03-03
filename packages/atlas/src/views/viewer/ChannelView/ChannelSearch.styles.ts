@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -18,8 +17,6 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   ${media.sm} {
     max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
   }
-
-  ${({ isSearching }) => isSearching && activeUnderline}
 
   input {
     height: 40px;
@@ -44,36 +41,11 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   }
 `
 
-type SearchButttonProps = {
-  isSearching?: boolean
-  isOpen?: boolean
-}
-
-const activeUnderline = css`
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    background-color: ${oldColors.blue[500]};
-    bottom: -${sizes(3)};
-  }
-`
-
-export const SearchButton = styled(IconButton)<SearchButttonProps>`
+export const SearchButton = styled(IconButton)`
   position: absolute;
-
-  ${media.sm} {
-    ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
-  }
 `
 
-type SearchContainerProps = {
-  isOpen?: boolean
-}
-
-export const SearchContainer = styled.div<SearchContainerProps>`
+export const SearchContainerForm = styled.form`
   display: flex;
   grid-area: search;
   align-items: center;

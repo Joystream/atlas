@@ -1,48 +1,42 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useRef } from 'react'
 
 import { SvgActionSearch } from '@/components/_icons'
 
-import { SearchButton, SearchContainer, StyledTextField } from './ChannelSearch.styles'
+import { SearchButton, SearchContainerForm, StyledTextField } from './ChannelSearch.styles'
 
 import { TABS } from '.'
 
 type SearchProps = {
-  searchInputRef: React.RefObject<HTMLInputElement>
   isSearchInputOpen: boolean
   setIsSearchingInputOpen: (isOpen: boolean) => void
   setIsSearching: (isOpen: boolean) => void
   isSearching?: boolean
-  search: (searchQuery: string) => void
+  submitSearch: (searchQuery: string) => void
   setCurrentTab: (tab: typeof TABS[number]) => void
+  searchQuery: string
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const ChannelSearch: React.FC<SearchProps> = ({
-  searchInputRef,
   isSearchInputOpen,
   setIsSearching,
   isSearching,
-  search,
+  submitSearch,
   setIsSearchingInputOpen,
+  setSearchQuery,
+  searchQuery,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const handleSearchInputKeyPress = useCallback(
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  const handleEscape = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' || event.key === 'NumpadEnter') {
-        if (searchQuery.trim() === '') {
-          setSearchQuery('')
-          setIsSearching(false)
-        } else {
-          search(searchQuery)
-          setIsSearching(true)
-        }
-      }
       if (event.key === 'Escape' || event.key === 'Esc') {
         setIsSearchingInputOpen(false)
-        searchInputRef.current?.blur()
+        event.currentTarget.blur()
         setSearchQuery('')
       }
     },
-    [search, searchInputRef, searchQuery, setIsSearching, setIsSearchingInputOpen]
+    [setIsSearchingInputOpen, setSearchQuery]
   )
 
   const toggleSearchInput = useCallback(() => {
@@ -67,21 +61,31 @@ export const ChannelSearch: React.FC<SearchProps> = ({
     }
   }, [isSearching, isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim() === '') {
+      setIsSearching(false)
+    } else {
+      submitSearch(searchQuery)
+      setIsSearching(true)
+    }
+  }
+
   return (
-    <SearchContainer isOpen={isSearchInputOpen}>
+    <SearchContainerForm onSubmit={handleSubmit}>
       <StyledTextField
         ref={searchInputRef}
         isOpen={isSearchInputOpen}
+        isSearching={isSearching}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleSearchInputKeyPress}
+        onKeyDown={handleEscape}
         placeholder="Search"
         type="search"
-        isSearching={isSearching}
       />
-      <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
+      <SearchButton onClick={toggleSearchInput} variant="tertiary">
         <SvgActionSearch />
       </SearchButton>
-    </SearchContainer>
+    </SearchContainerForm>
   )
 }
