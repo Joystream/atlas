@@ -35,19 +35,15 @@ export type FiltersBarProps = {
 
 const nftStatuses = [
   {
-    id: '0',
-    name: 'Open auction',
+    id: 'TransactionalStatusIdle',
+    name: 'Auction',
   },
   {
-    id: '1',
-    name: 'English auction',
-  },
-  {
-    id: '2',
+    id: 'TransactionalStatusBuyNow',
     name: 'Fixed price',
   },
   {
-    id: '3',
+    id: 'TransactionalStatusAuction',
     name: 'Not for sale',
   },
 ]

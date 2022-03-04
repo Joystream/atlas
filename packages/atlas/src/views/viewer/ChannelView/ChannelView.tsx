@@ -7,18 +7,19 @@ import { VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
-import { Select } from '@/components/_inputs/Select'
 import { absoluteRoutes } from '@/config/routes'
 import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
+import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -31,12 +32,12 @@ import { ChannelVideos } from './ChannelVideos'
 import { useSearchVideos } from './ChannelView.hooks'
 import {
   CollectorsBoxContainer,
-  FilterButtonContainer,
+  FilterButton,
   NotFoundChannelContainer,
-  SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledSelect,
   StyledTabs,
   SubTitle,
   SubTitleSkeletonLoader,
@@ -50,10 +51,15 @@ import {
 
 export const TABS = ['Videos', 'NFTs', 'Information'] as const
 export const INITIAL_FIRST = 50
-export const INITIAL_VIDEOS_PER_ROW = 4
+export const INITIAL_TILES_PER_ROW = 2
+
 export const ChannelView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const videoRows = useVideoGridRows('main')
+
+  const tilesPerPage = videoRows * tilesPerRow
 
   // At mount set the tab from the search params
   // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
@@ -84,7 +90,7 @@ export const ChannelView: React.FC = () => {
     isSearching,
     setIsSearching,
     submitSearch,
-    errorSearch,
+    searchError,
     searchQuery,
     setSearchQuery,
     searchedText,
@@ -113,6 +119,7 @@ export const ChannelView: React.FC = () => {
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
+    videoWhereInput: { category },
     canClearFilters: { canClearAllFilters, clearAllFilters },
   } = filtersBarLogic
 
@@ -134,24 +141,39 @@ export const ChannelView: React.FC = () => {
     setSearchParams({ tab: TABS[tab] }, { replace: true })
   }
 
+  const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
+
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
-  const tabContent =
-    currentTab === 'Videos' ? (
-      <ChannelVideos
-        channelError={channelError}
-        searchError={errorSearch}
-        isSearching={isSearching}
-        searchedText={searchedText}
-        channelId={id || ''}
-        foundVideos={foundVideos}
-        loadingSearch={loadingSearch}
-        sortVideosBy={sortVideosBy}
-      />
-    ) : currentTab === 'NFTs' ? (
-      <ChannelNfts isSearching={isSearching} searchQuery={searchedText} channelId={id || ''} />
-    ) : (
-      <ChannelAbout />
-    )
+
+  const getChannelContent = (tab: typeof TABS[number]) => {
+    switch (tab) {
+      case 'Videos':
+        return (
+          <ChannelVideos
+            tilesPerPage={tilesPerPage}
+            onResize={handleOnResizeGrid}
+            isSearching={isSearching}
+            searchedText={searchedText}
+            channelId={id || ''}
+            foundVideos={foundVideos}
+            loadingSearch={loadingSearch}
+            sortVideosBy={sortVideosBy}
+          />
+        )
+      case 'NFTs':
+        return (
+          <ChannelNfts
+            tilesPerPage={tilesPerPage}
+            sortNftsBy={sortVideosBy}
+            category={category}
+            onResize={handleOnResizeGrid}
+            channelId={id || ''}
+          />
+        )
+      case 'Information':
+        return <ChannelAbout />
+    }
+  }
 
   useEffect(() => {
     if (currentTabName) {
@@ -177,6 +199,10 @@ export const ChannelView: React.FC = () => {
         />
       </NotFoundChannelContainer>
     )
+  }
+
+  if (channelError || searchError) {
+    return <ViewErrorFallback />
   }
 
   return (
@@ -226,7 +252,7 @@ export const ChannelView: React.FC = () => {
               tabs={mappedTabs}
               onSelectTab={handleSetCurrentTab}
             />
-            {['Videos', 'NFTs'].includes(currentTab) && (
+            {currentTab !== 'Information' && (
               <>
                 <ChannelSearch
                   isSearchInputOpen={isSearchInputOpen}
@@ -238,33 +264,31 @@ export const ChannelView: React.FC = () => {
                   isSearching={isSearching}
                   setCurrentTab={setCurrentTab}
                 />
-                <SortContainer>
-                  <Select
-                    size="small"
-                    labelPosition="left"
-                    disabled={isSearching}
-                    value={!isSearching ? sortVideosBy : 0}
-                    placeholder={isSearching ? 'Best match' : undefined}
-                    items={!isSearching ? SORT_OPTIONS : []}
-                    onChange={!isSearching ? handleSorting : undefined}
-                  />
-                </SortContainer>
-                <FilterButtonContainer>
-                  <Button
+                <StyledSelect
+                  size="small"
+                  labelPosition="left"
+                  disabled={isSearching}
+                  value={!isSearching ? sortVideosBy : 0}
+                  placeholder={isSearching ? 'Best match' : undefined}
+                  items={!isSearching ? SORT_OPTIONS : []}
+                  onChange={!isSearching ? handleSorting : undefined}
+                />
+                {currentTab === 'NFTs' && (
+                  <FilterButton
                     badge={canClearAllFilters}
                     variant="secondary"
                     icon={<SvgActionFilters />}
                     onClick={toggleFilters}
                   >
                     {smMatch && 'Filters'}
-                  </Button>
-                </FilterButtonContainer>
+                  </FilterButton>
+                )}
               </>
             )}
           </TabsContainer>
-          <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />
+          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />}
         </TabsWrapper>
-        {tabContent}
+        {getChannelContent(currentTab)}
       </LimitedWidthContainer>
     </ViewWrapper>
   )

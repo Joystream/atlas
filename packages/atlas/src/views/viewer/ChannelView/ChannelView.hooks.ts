@@ -32,7 +32,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
   const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   // TODO: we should use useVideosLazyQuery here, it's more reliable.
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch, variables }] = useSearchLazyQuery(
+  const [searchVideo, { loading: loadingSearch, data: searchData, error: searchError, variables }] = useSearchLazyQuery(
     {
       onError,
     }
@@ -74,7 +74,7 @@ export const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
-    errorSearch,
+    searchError,
     isSearching,
     setIsSearching,
     searchedText: isSearching ? variables?.text : undefined,

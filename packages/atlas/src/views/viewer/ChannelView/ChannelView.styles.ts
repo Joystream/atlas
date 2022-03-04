@@ -4,6 +4,7 @@ import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
+import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
@@ -47,7 +48,7 @@ export const Title = styled(Text)`
   margin-bottom: 0;
 `
 
-export const SortContainer = styled.div`
+export const StyledSelect = styled(Select)`
   grid-area: sort;
 
   ${media.sm} {
@@ -55,7 +56,7 @@ export const SortContainer = styled.div`
   }
 `
 
-export const FilterButtonContainer = styled.div`
+export const FilterButton = styled(Button)`
   grid-area: filter;
   grid-gap: 8px;
 

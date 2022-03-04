@@ -30,7 +30,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       title: nft?.video?.title,
       duration: nft?.video?.duration,
       views: nft?.video?.views,
-      loading,
+      loading: loading || !nftId,
       thumbnail: {
         videoHref: absoluteRoutes.viewer.video(nft?.video.id),
         thumbnailUrl: thumbnail.url,
