@@ -30,7 +30,7 @@ import {
   SearchView,
   VideoView,
 } from '@/views/viewer'
-import { PlaceBid } from '@/views/viewer/PlaceBid'
+import { AuctionView } from '@/views/viewer/AuctionView'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
@@ -110,7 +110,7 @@ export const ViewerLayout: React.FC = () => {
           </SwitchTransition>
         </ErrorBoundary>
       </MainContainer>
-      <PlaceBid />
+      <AuctionView />
       {!mdMatch && !searchOpen && <BottomNav />}
     </PlaceBidProvider>
   )

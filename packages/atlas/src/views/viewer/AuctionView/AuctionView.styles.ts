@@ -103,11 +103,6 @@ export const InnerContainer = styled.div`
   }
 `
 
-export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
-  filter: drop-shadow(0 6px 11px rgb(0 0 0 / 0.65)) drop-shadow(0 1.808px 3.316px rgb(0 0 0 / 0.4235))
-    drop-shadow(0 0.7512px 1.377px rgb(0 0 0 / 0.325)) drop-shadow(0 0.2717px 0.4981px rgb(0 0 0 / 0.2264));
-`
-
 export const Header = styled.div`
   margin-bottom: ${sizes(6)};
 
@@ -157,24 +152,24 @@ export const BidderName = styled(Text)`
   text-overflow: ellipsis;
 `
 
+export const ActionBarCell = styled.div`
+  width: 50%;
+  padding: ${sizes(3.5)} ${sizes(4)};
+
+  :nth-of-type(2) {
+    border-left: 1px solid ${cVar('colorBorderMutedAlpha')};
+  }
+`
+
 export const ActiveBidWrapper = styled.div`
   display: flex;
-
-  > div {
-    width: 50%;
-    padding: ${sizes(3.5)} ${sizes(4)};
-
-    :nth-of-type(2) {
-      border-left: 1px solid ${cVar('colorBorderMutedAlpha')};
-    }
-  }
 `
 
 export const CurrentBidAvatar = styled(Avatar)`
   margin-right: ${sizes(2)};
 `
 
-export const CurrentBidJoyToken = styled(StyledJoyTokenIcon)`
+export const CurrentBidJoyToken = styled(JoyTokenIcon)`
   margin-right: ${sizes(1)};
 `
 
@@ -206,7 +201,6 @@ export const StyledActionBar = styled(ActionBar)`
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 999;
   width: 100%;
 `
 export const PaymentSplitWrapper = styled.div`
