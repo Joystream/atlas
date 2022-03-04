@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Tabs } from '@/components/Tabs'
@@ -7,6 +8,8 @@ import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+
+import { TABS } from '.'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
@@ -135,22 +138,48 @@ export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
   }
 `
 
-export const TabsContainer = styled.div`
+type TabsContainerProps = {
+  tab: typeof TABS[number]
+}
+
+const geTabsContainerGridTemplate = ({ tab }: TabsContainerProps) => {
+  switch (tab) {
+    case 'Videos':
+    case 'Information':
+      return css`
+        grid-template:
+          'tabs tabs tabs' 1fr
+          'search search search' auto
+          'sort sort sort' auto / 1fr 1fr;
+        ${media.sm} {
+          grid-template: 1fr / auto 1fr 160px;
+        }
+      `
+    case 'NFTs':
+      return css`
+        grid-template:
+          'tabs tabs tabs' 1fr
+          'search search search' auto
+          'sort sort filter' auto / 1fr 1fr;
+        ${media.sm} {
+          grid-template: 1fr / 1fr 160px 99px;
+        }
+      `
+  }
+}
+
+export const TabsContainer = styled.div<TabsContainerProps>`
   display: grid;
   padding-top: ${sizes(8)};
   gap: ${sizes(4)};
-  grid-template:
-    'tabs tabs tabs' 1fr
-    'search search search' auto
-    'sort sort filter' auto / 1fr 1fr;
   background-color: #000;
 
   ${media.sm} {
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
-    gap: ${sizes(4)};
-    grid-template: 1fr / auto 1fr 160px 99px;
   }
+
+  ${geTabsContainerGridTemplate}
 `
 
 export const StyledTabs = styled(Tabs)`

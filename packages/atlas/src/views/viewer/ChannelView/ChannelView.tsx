@@ -245,7 +245,7 @@ export const ChannelView: React.FC = () => {
           </StyledButtonContainer>
         </TitleSection>
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
-          <TabsContainer>
+          <TabsContainer tab={currentTab}>
             <StyledTabs
               selected={TABS.findIndex((x) => x === currentTab)}
               initialIndex={0}
@@ -254,16 +254,18 @@ export const ChannelView: React.FC = () => {
             />
             {currentTab !== 'Information' && (
               <>
-                <ChannelSearch
-                  isSearchInputOpen={isSearchInputOpen}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  setIsSearchingInputOpen={setIsSearchingInputOpen}
-                  setIsSearching={setIsSearching}
-                  submitSearch={submitSearch}
-                  isSearching={isSearching}
-                  setCurrentTab={setCurrentTab}
-                />
+                {currentTab === 'Videos' && (
+                  <ChannelSearch
+                    isSearchInputOpen={isSearchInputOpen}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    setIsSearchingInputOpen={setIsSearchingInputOpen}
+                    setIsSearching={setIsSearching}
+                    submitSearch={submitSearch}
+                    isSearching={isSearching}
+                    setCurrentTab={setCurrentTab}
+                  />
+                )}
                 <StyledSelect
                   size="small"
                   labelPosition="left"
@@ -286,7 +288,7 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TabsContainer>
-          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />}
+          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['categories']} />}
         </TabsWrapper>
         {getChannelContent(currentTab)}
       </LimitedWidthContainer>
