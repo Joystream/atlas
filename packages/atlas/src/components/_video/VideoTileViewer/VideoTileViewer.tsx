@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { Pill } from '@/components/Pill'
 import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/clipboard/hooks'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { formatDurationShort } from '@/utils/time'
 

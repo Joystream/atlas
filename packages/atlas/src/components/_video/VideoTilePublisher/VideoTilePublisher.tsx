@@ -18,7 +18,7 @@ import {
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { useClipboard } from '@/hooks/clipboard/hooks'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { formatDurationShort } from '@/utils/time'
