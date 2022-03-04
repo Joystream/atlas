@@ -36,6 +36,7 @@ import {
   CategoryWrapper,
   ChannelContainer,
   DescriptionContainer,
+  DescriptionCopy,
   DescriptionLink,
   DescriptionSkeletonLoader,
   DescriptionTitle,
@@ -228,9 +229,9 @@ export const VideoView: React.FC = () => {
               <>
                 <DescriptionTitle variant="h100">Description</DescriptionTitle>
                 {video.description?.split('\n').map((line, idx) => (
-                  <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
                     {replaceUrls(line)}
-                  </Text>
+                  </DescriptionCopy>
                 ))}
               </>
             )

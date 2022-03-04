@@ -130,6 +130,10 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
+export const DescriptionCopy = styled(Text)`
+  word-break: break-word;
+`
+
 export const Category = styled(Link)`
   display: flex;
   align-items: center;
