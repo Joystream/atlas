@@ -9,7 +9,7 @@ export const useClipboard = () => {
     (value: string, message?: string) => {
       navigator.clipboard.writeText(value)
       if (message) {
-        displaySnackbar({ title: message, iconType: 'info' })
+        displaySnackbar({ title: message, iconType: 'info', timeout: 3000 })
       }
     },
     [displaySnackbar]
