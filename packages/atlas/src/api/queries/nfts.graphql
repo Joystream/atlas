@@ -1,29 +1,11 @@
-query GetNft($videoId: ID!) {
-  ownedNfts(where: { video: { id_eq: $videoId } }) {
+query GetNft($id: ID!) {
+  ownedNftByUniqueInput(where: { id: $id }) {
     ...AllNftFields
   }
 }
 
-# We cannot filter nfts by channel id, that's why we're using videos query here
-query GetChannelNfts(
-  $where: VideoWhereInput
-  $first: Int
-  $after: String
-  $orderBy: VideoOrderByInput! = createdAt_DESC
-) {
-  videosConnection(first: $first, after: $after, where: $where, orderBy: [$orderBy]) {
-    edges {
-      node {
-        id
-        nft {
-          ...AllNftFields
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-    totalCount
+query GetNfts($where: OwnedNftWhereInput) {
+  ownedNfts(where: $where) {
+    ...AllNftFields
   }
 }

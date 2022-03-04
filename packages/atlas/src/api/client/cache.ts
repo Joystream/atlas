@@ -125,6 +125,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
+  ownedNftByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'OwnedNft',
+        id: args?.where.id,
+      })
+    )
+  },
   // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
   search: offsetLimitPagination(getSearchKeyArgs),
 }
