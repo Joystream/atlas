@@ -1,3 +1,4 @@
+export * from './Auction'
 export * from './AutomaticCrop'
 export * from './Modals'
 export * from './FileHashing'

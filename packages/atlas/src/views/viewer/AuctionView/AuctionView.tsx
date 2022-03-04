@@ -13,10 +13,10 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { useCountdown } from '@/hooks/useCountdown'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
+import { useAuction } from '@/providers/auction/hooks'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
-import { usePlaceBid } from '@/providers/placeBid/hooks'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
@@ -60,7 +60,7 @@ const DUMMY_NFT_TILE_PROPS = {
 const TRANSACTION_FEE = 19
 const FIXED_PRICE = 500
 const MINIMUM_BID = 301
-const TIME_LEFT = 80
+const END_TIME = Date.now() + 80000
 const BID = {
   bidder: {
     name: 'Mike Shipa',
@@ -70,14 +70,15 @@ const BID = {
 
 export const AuctionView: React.FC = () => {
   const [type, setType] = useState<'auction' | 'buy_now'>('auction')
-  const { isPlaceBidOpen, setIsPlaceBidOpen } = usePlaceBid()
+  const { isAuctionOpen, setAuctionOpen } = useAuction()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const { joystream } = useJoystream()
   const { activeMembership } = useUser()
   const [placedBid, setPlacedBid] = useState<number | undefined>()
   const [accountBalance, setAccountBalance] = useState<number | undefined>()
-  const timeLeft = useCountdown(TIME_LEFT)
+  const timestamp = useMsTimestamp()
+  const timeLeft = Math.trunc((END_TIME - timestamp) / 1000)
 
   const onPlaceBid = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPlacedBid(Number(event.target.value))
@@ -93,14 +94,15 @@ export const AuctionView: React.FC = () => {
     init()
   }, [activeMembership, joystream])
 
-  const onCloseClick = () => setIsPlaceBidOpen(false)
+  const onCloseClick = () => setAuctionOpen(false)
 
   const bidError = !!(placedBid && placedBid < MINIMUM_BID)
   const timeLeftUnderMinute = timeLeft && timeLeft < 60
+  const insufficientFoundsError = !!placedBid && !!accountBalance && placedBid + TRANSACTION_FEE < accountBalance
 
   return (
     <CSSTransition
-      in={isPlaceBidOpen}
+      in={isAuctionOpen}
       appear
       mountOnEnter
       unmountOnExit
@@ -204,8 +206,14 @@ export const AuctionView: React.FC = () => {
                     nodeEnd={!!placedBid && <Pill variant="overlay" label={`$${convertToUSD(placedBid)}`} />}
                     onChange={onPlaceBid}
                     type="number"
-                    error={bidError}
-                    helperText={bidError ? 'Your bid must be higher than minimum bid' : undefined}
+                    error={bidError || insufficientFoundsError}
+                    helperText={
+                      bidError
+                        ? 'Your bid must be higher than minimum bid'
+                        : insufficientFoundsError
+                        ? 'Insufficient funds.'
+                        : undefined
+                    }
                   />
                   {!!placedBid && placedBid > FIXED_PRICE && (
                     <Text variant="t100" spacing={{ top: 2 }}>
@@ -272,7 +280,7 @@ export const AuctionView: React.FC = () => {
                 Price breakdown
               </Text>
               <Row>
-                <Text variant="t100" secondary>
+                <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
                   Your balance
                 </Text>
                 {accountBalance ? (

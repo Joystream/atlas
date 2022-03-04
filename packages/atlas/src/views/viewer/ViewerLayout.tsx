@@ -13,7 +13,7 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { PlaceBidProvider } from '@/providers/placeBid/provider'
+import { AuctionProvider } from '@/providers/auction/provider'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
@@ -62,7 +62,7 @@ export const ViewerLayout: React.FC = () => {
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (
-    <PlaceBidProvider>
+    <AuctionProvider>
       <Modal show={isLoading} noBoxShadow>
         <Loader variant="xlarge" />
       </Modal>
@@ -112,7 +112,7 @@ export const ViewerLayout: React.FC = () => {
       </MainContainer>
       <AuctionView />
       {!mdMatch && !searchOpen && <BottomNav />}
-    </PlaceBidProvider>
+    </AuctionProvider>
   )
 }
 

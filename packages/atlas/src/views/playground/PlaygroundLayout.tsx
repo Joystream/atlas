@@ -3,6 +3,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { AuctionProvider } from '@/providers/auction'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { ActiveUserProvider } from '@/providers/user'
@@ -10,6 +11,7 @@ import { oldColors } from '@/styles'
 
 import {
   Animations,
+  Auction,
   AutomaticCrop,
   DesignTokens,
   EstimatingBlockTime,
@@ -35,6 +37,7 @@ import {
 
 const playgroundRoutes = [
   { path: 'animations', element: <Animations />, name: 'Animations' },
+  { path: 'auction', element: <Auction />, name: 'Auction' },
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
   { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
@@ -60,27 +63,29 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   return (
-    <ActiveUserProvider>
-      <ConfirmationModalProvider>
-        <Container>
-          <NavContainer>
-            {playgroundRoutes.map((route) => (
-              <Link key={route.path} to={`/playground/${route.path}`}>
-                {route.name}
-              </Link>
-            ))}
-          </NavContainer>
-          <ContentContainer>
-            <Routes>
+    <AuctionProvider>
+      <ActiveUserProvider>
+        <ConfirmationModalProvider>
+          <Container>
+            <NavContainer>
               {playgroundRoutes.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
+                <Link key={route.path} to={`/playground/${route.path}`}>
+                  {route.name}
+                </Link>
               ))}
-            </Routes>
-          </ContentContainer>
-        </Container>
-        <ConnectionStatusManager />
-      </ConfirmationModalProvider>
-    </ActiveUserProvider>
+            </NavContainer>
+            <ContentContainer>
+              <Routes>
+                {playgroundRoutes.map((route) => (
+                  <Route key={route.path} path={route.path} element={route.element} />
+                ))}
+              </Routes>
+            </ContentContainer>
+          </Container>
+          <ConnectionStatusManager />
+        </ConfirmationModalProvider>
+      </ActiveUserProvider>
+    </AuctionProvider>
   )
 }
 

@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { ElementType } from 'react'
@@ -60,6 +61,6 @@ const shadowCss = css`
     drop-shadow(0 0.7513px 1.377px rgba(0 0 0 / 0.325)) drop-shadow(0 0.2717px 0.4982px rgba(0 0 0 / 0.2265));
 `
 
-const JoyTokenIconWrapper = styled.div<{ hasShadow: boolean }>`
+const JoyTokenIconWrapper = styled('div', { shouldForwardProp: isPropValid })<{ hasShadow: boolean }>`
   ${({ hasShadow }) => hasShadow && shadowCss};
 `
