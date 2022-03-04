@@ -21,6 +21,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
+import { openInNewTab } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -31,7 +32,6 @@ type VideoTilePublisherProps = {
   onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
-  onOpenInTabClick?: () => void
   owner?: {
     handle: string
     avatarUrl?: string
@@ -41,7 +41,7 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, owner }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, owner }) => {
     const { copyToClipboard } = useClipboard()
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
@@ -135,6 +135,12 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
       ]
 
+      const onOpenInTabClick = () => {
+        if (videoHref) {
+          openInNewTab(videoHref, true)
+        }
+      }
+
       const publisherBasicKebabItems = [
         {
           icon: <SvgActionPlay />,
@@ -167,7 +173,6 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       isUploading,
       onDeleteVideoClick,
       onEditClick,
-      onOpenInTabClick,
       onReuploadVideoClick,
       copyToClipboard,
       videoHref,
