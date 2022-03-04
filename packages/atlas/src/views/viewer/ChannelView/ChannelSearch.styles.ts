@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
 import { TextField } from '@/components/_inputs/TextField'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 type TextFieldProps = {
   isOpen?: boolean
@@ -21,7 +21,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   input {
     height: 40px;
     padding: 10px 16px 10px 42px;
-    caret-color: ${oldColors.blue[500]};
+    caret-color: ${cVar('colorCoreBlue500')};
     font: ${cVar('typographyDesktopT200')};
     letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
@@ -31,7 +31,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     }
 
     :focus {
-      border: 1px solid ${oldColors.white};
+      border: 1px solid ${cVar('colorCoreNeutral50')};
     }
 
     ::-webkit-search-cancel-button {

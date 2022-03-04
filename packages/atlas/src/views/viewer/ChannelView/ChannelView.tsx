@@ -138,6 +138,7 @@ export const ChannelView: React.FC = () => {
       setIsSearchingInputOpen(false)
     }
     setIsSearching(false)
+    setSearchQuery('')
     setSearchParams({ tab: TABS[tab] }, { replace: true })
   }
 
