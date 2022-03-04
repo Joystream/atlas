@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { InputBase, InputBaseProps } from '@/components/_inputs/InputBase'
 
@@ -43,8 +43,9 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   },
   ref
 ) => {
-  const [nodeLeftRef, nodeLeftBounds] = useMeasure()
-  const [nodeRightRef, nodeRightBounds] = useMeasure()
+  const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
+  const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
+
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <TextFieldContainer>
@@ -54,8 +55,8 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
           </NodeContainer>
         )}
         <TextInput
-          leftNodeWidth={nodeLeftBounds.width}
-          rightNodeWidth={nodeRightBounds.width}
+          leftNodeWidth={nodeLeftBoundsWidth}
+          rightNodeWidth={nodeRightBoundsWidth}
           autoComplete={autoComplete}
           ref={ref}
           name={name}

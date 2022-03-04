@@ -26,7 +26,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const [paginationLength, setPaginationLength] = useState(maxPaginationLinks)
 
-  const { width, ref: paginationWrapperRef } = useResizeObserver()
+  const { width, ref: paginationWrapperRef } = useResizeObserver({ box: 'border-box' })
 
   useLayoutEffect(() => {
     if (!width) {

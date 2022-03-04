@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { MembershipInfo } from '@/components/MembershipInfo'
@@ -17,7 +17,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 export const EditMembershipView: React.FC = () => {
   const navigate = useNavigate()
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
-  const [actionBarRef, actionBarBounds] = useMeasure()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 
@@ -96,7 +96,7 @@ export const EditMembershipView: React.FC = () => {
           editable
           handle={getValues('handle')}
         />
-        <Wrapper actionBarHeight={actionBarBounds.height}>
+        <Wrapper actionBarHeight={actionBarBoundsHeight}>
           <TextFieldsWrapper>
             <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
           </TextFieldsWrapper>

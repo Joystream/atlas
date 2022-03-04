@@ -2,7 +2,7 @@ import { easings, useSpringRef, useTransition } from '@react-spring/web'
 import React, { useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { useChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
@@ -64,7 +64,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
     const containerRef = useRef<HTMLDivElement>(null)
     const { joystream, proxyCallback } = useJoystream()
-    const [measureContainerRef, { height: containerHeight }] = useMeasure()
+    const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()
     const transitions = useTransition(isSwitchingMember, {
       ref: transRef,

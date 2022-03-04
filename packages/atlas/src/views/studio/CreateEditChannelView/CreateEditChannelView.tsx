@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { useChannel } from '@/api/hooks'
 import { ActionBar } from '@/components/ActionBar'
@@ -88,7 +88,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const navigate = useNavigate()
-  const [actionBarRef, actionBarBounds] = useMeasure()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
   const {
     channel,
@@ -460,7 +460,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
         </TitleContainer>
       </StyledTitleSection>
       <LimitedWidthContainer>
-        <InnerFormContainer actionBarHeight={actionBarBounds.height}>
+        <InnerFormContainer actionBarHeight={actionBarBoundsHeight}>
           <FormField title="Description">
             <Tooltip text="Click to edit channel description">
               <TextArea

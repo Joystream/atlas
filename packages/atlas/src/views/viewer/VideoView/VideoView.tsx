@@ -2,7 +2,6 @@ import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import useResizeObserver from 'use-resize-observer'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -80,7 +79,6 @@ export const VideoView: React.FC = () => {
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
-  const { ref: videoGridRef } = useResizeObserver()
 
   // Restore an interrupted video state
   useEffect(() => {
@@ -296,7 +294,7 @@ export const VideoView: React.FC = () => {
     <>
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
-          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }} ref={videoGridRef}>
+          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
             <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
               {!isMediaLoading && video ? (
                 <VideoPlayer
