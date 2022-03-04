@@ -27,6 +27,7 @@ export const Grid: React.FC<GridProps> = ({
   const gridRef = useRef<HTMLImageElement>(null)
   useResizeObserver<HTMLDivElement>({
     ref: gridRef,
+    box: 'border-box',
     onResize: () => {
       if (onResize && gridRef.current) {
         const computedStyles = window.getComputedStyle(gridRef.current)

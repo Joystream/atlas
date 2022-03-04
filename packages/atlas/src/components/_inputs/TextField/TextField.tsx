@@ -43,8 +43,8 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   },
   ref
 ) => {
-  const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 1 } = useResizeObserver()
-  const { ref: nodeRightRef, width: nodeRightBoundsWidth = 1 } = useResizeObserver()
+  const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
+  const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>

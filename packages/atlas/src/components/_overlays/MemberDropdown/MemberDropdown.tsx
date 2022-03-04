@@ -64,7 +64,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
     const containerRef = useRef<HTMLDivElement>(null)
     const { joystream, proxyCallback } = useJoystream()
-    const { ref: measureContainerRef, height: containerHeight = 1 } = useResizeObserver()
+    const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()
     const transitions = useTransition(isSwitchingMember, {
       ref: transRef,

@@ -17,7 +17,7 @@ import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipVie
 export const EditMembershipView: React.FC = () => {
   const navigate = useNavigate()
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
-  const { ref: actionBarRef, height: actionBarBoundsHeight = 1 } = useResizeObserver()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 

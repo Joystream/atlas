@@ -88,7 +88,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const addNewChannelIdToUploadsStore = useUploadsStore((state) => state.actions.addNewChannelId)
   const navigate = useNavigate()
-  const { ref: actionBarRef, height: actionBarBoundsHeight = 1 } = useResizeObserver()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
   const {
     channel,

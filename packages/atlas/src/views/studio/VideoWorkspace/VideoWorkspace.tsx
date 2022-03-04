@@ -117,7 +117,7 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   onResize,
 }) => {
   const mdMatch = useMediaMatch('md')
-  const { ref: actionBarRef, height: actionBarBoundsHeight = 1 } = useResizeObserver()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
   const isActive = !isEdit || canSubmit
   const height = isActive ? actionBarBoundsHeight : 0

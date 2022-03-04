@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 
 const StylesWrapperDecorator = (styleFn) => {
   const ref = useRef(null)
-  const { width, height } = useResizeObserver({ ref })
+  const { width, height } = useResizeObserver({ ref, box: 'border-box' })
   return (
     <Wrapper ref={ref}>
       <div style={{ position: 'absolute', fontSize: '12px', right: '4px', top: '4px' }}>

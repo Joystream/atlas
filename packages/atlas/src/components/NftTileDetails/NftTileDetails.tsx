@@ -73,6 +73,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
   const [tileSize, setTileSize] = useState<TileSize>()
   const { ref: contentRef } = useResizeObserver<HTMLDivElement>({
+    box: 'border-box',
     onResize: (size) => {
       const { width } = size
       if (width) {
