@@ -19,7 +19,7 @@ type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content
 export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...rest }) => {
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
-    <Popover hideOnClick ref={contextMenuInstanceRef} {...rest} placement="left">
+    <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
       <StyledContainer>
         {items.map((item, index) => (
           <ListItem
