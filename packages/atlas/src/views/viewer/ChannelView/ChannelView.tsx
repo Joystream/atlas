@@ -25,10 +25,7 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
-import { ChannelAbout } from './ChannelAbout'
-import { ChannelNfts } from './ChannelNfts'
 import { ChannelSearch } from './ChannelSearch'
-import { ChannelVideos } from './ChannelVideos'
 import { useSearchVideos } from './ChannelView.hooks'
 import {
   CollectorsBoxContainer,
@@ -48,6 +45,7 @@ import {
   TitleSection,
   TitleSkeletonLoader,
 } from './ChannelView.styles'
+import { ChannelAbout, ChannelNfts, ChannelVideos } from './ChannelViewTabs'
 
 export const TABS = ['Videos', 'NFTs', 'Information'] as const
 export const INITIAL_FIRST = 50
@@ -172,7 +170,7 @@ export const ChannelView: React.FC = () => {
           />
         )
       case 'Information':
-        return <ChannelAbout />
+        return <ChannelAbout channel={channel} />
     }
   }
 

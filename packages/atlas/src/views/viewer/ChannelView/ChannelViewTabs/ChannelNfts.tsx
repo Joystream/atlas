@@ -9,8 +9,8 @@ import { Pagination } from '@/components/Pagination'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { transitions } from '@/styles'
 
-import { usePagination } from './ChannelView.hooks'
-import { PaginationContainer, VideoSection } from './ChannelView.styles'
+import { usePagination } from '../ChannelView.hooks'
+import { PaginationContainer, VideoSection } from '../ChannelView.styles'
 
 type ChannelNftsProps = {
   channelId: string
@@ -29,18 +29,9 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
 }) => {
   const { currentPage, setCurrentPage } = usePagination(0)
 
-  const {
-    nfts: _nfts,
-    totalCount,
-    loading,
-    error,
-    fetchMore,
-    pageInfo,
-  } = useChannelNfts(channelId, { category, sortNftsBy })
+  const { nfts, totalCount, loading, error, fetchMore, pageInfo } = useChannelNfts(channelId, { category, sortNftsBy })
 
-  const nfts = _nfts ?? []
-
-  const paginatedNfts = nfts.slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
+  const paginatedNfts = (nfts || []).slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
 
   const placeholderItems = Array.from(
     { length: loading ? tilesPerPage - (paginatedNfts ? paginatedNfts.length : 0) : 0 },

@@ -10,10 +10,9 @@ import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { usePagination } from './ChannelView.hooks'
-import { PaginationContainer, VideoSection } from './ChannelView.styles'
-
-import { INITIAL_FIRST } from '.'
+import { INITIAL_FIRST } from '..'
+import { usePagination } from '../ChannelView.hooks'
+import { PaginationContainer, VideoSection } from '../ChannelView.styles'
 
 type ChannelVideosProps = {
   isSearching?: boolean
