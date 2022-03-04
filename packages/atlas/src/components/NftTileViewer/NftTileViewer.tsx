@@ -25,7 +25,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 
-  const getNftProps = (nft?: AllNftFieldsFragment): NftTileProps => {
+  const getNftProps = (nft?: AllNftFieldsFragment | null): NftTileProps => {
     const nftCommonProps = {
       title: nft?.video?.title,
       duration: nft?.video?.duration,
