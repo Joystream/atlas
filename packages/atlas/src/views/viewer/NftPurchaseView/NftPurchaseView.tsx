@@ -25,6 +25,7 @@ import {
   ActionBarCell,
   ActiveBidWrapper,
   BidderName,
+  BuyNowInfo,
   Container,
   Content,
   CurrentBidAvatar,
@@ -210,10 +211,10 @@ export const NftPurchaseView: React.FC = () => {
                     }
                   />
                   {!!placedBid && placedBid > FIXED_PRICE && (
-                    <Text variant="t100" spacing={{ top: 2 }}>
+                    <BuyNowInfo variant="t100" spacing={{ top: 2 }}>
                       Max bid cannot be more than buy now price. Bidding for amount higher than Buy now will
                       automatically end the auction and make you an owner of that NFT.
-                    </Text>
+                    </BuyNowInfo>
                   )}
                 </>
               ) : (

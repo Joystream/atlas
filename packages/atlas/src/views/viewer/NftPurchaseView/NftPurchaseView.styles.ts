@@ -99,6 +99,7 @@ export const InnerContainer = styled.div`
     padding-bottom: ${sizes(18)};
   }
   ${media.lg} {
+    padding: 0;
     max-width: 560px;
   }
 `
@@ -178,6 +179,12 @@ export const MinimumBidWrapper = styled.div`
 
   justify-content: space-between;
   margin-bottom: ${sizes(4)};
+`
+
+export const BuyNowInfo = styled(Text)`
+  ${media.md} {
+    max-width: 527px;
+  }
 `
 
 export const MinimumBid = styled.div`
