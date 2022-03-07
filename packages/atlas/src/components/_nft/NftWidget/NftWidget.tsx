@@ -1,5 +1,5 @@
-import React from 'react'
-import useMeasure from 'react-use-measure'
+import React, { useRef, useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -50,10 +50,14 @@ const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 // TODO: Update Joy icon with the right variant once it is exported correctly
 export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
-  const [containerRef, { width = SMALL_VARIANT_MAXIMUM_SIZE + 1 }] = useMeasure()
+  const [size, setSize] = useState<'medium' | 'small'>('medium')
+  const containerRef = useRef(null)
+  const { width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
+    ref: containerRef,
+    box: 'border-box',
+    onResize: () => setSize(width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'),
+  })
   const { convertToUSD } = useTokenPrice()
-
-  const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 
   const content = useDeepMemo(() => {
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
-import { NotificationTile } from '@/components/NotificationTile'
 import { Pill } from '@/components/Pill'
+import { NotificationTile } from '@/components/_notifications/NotificationTile'
 import { media, sizes } from '@/styles'
 
 export const StyledLayoutGrid = styled(LayoutGrid)`

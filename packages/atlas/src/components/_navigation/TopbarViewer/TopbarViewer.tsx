@@ -8,6 +8,7 @@ import { SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
+import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -121,7 +122,7 @@ export const TopbarViewer: React.FC = () => {
               {topbarButtonLoaded ? (
                 isLoggedIn ? (
                   <SignedButtonsWrapper>
-                    <NotificationsButton />
+                    <NotificationsWidget trigger={<NotificationsButton />} />
                     {!mdMatch && !searchOpen && (
                       <StyledAvatar
                         size="small"
