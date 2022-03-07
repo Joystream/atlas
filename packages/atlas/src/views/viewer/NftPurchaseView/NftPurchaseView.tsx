@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
@@ -15,9 +15,9 @@ import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
+import { useTokenPrice } from '@/providers/joystream'
 import { useNftPurchase } from '@/providers/nftPurchase'
-import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
@@ -73,26 +73,14 @@ export const NftPurchaseView: React.FC = () => {
   const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
-  const { joystream } = useJoystream()
-  const { activeMembership } = useUser()
   const [placedBid, setPlacedBid] = useState<number | undefined>()
-  const [accountBalance, setAccountBalance] = useState<number | undefined>()
+  const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp()
   const timeLeft = Math.trunc((END_TIME - timestamp) / 1000)
 
   const onPlaceBid = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPlacedBid(Number(event.target.value))
   }
-
-  useEffect(() => {
-    const init = async () => {
-      if (activeMembership) {
-        const balance = await joystream?.getAccountBalance(activeMembership?.controllerAccount)
-        setAccountBalance(balance)
-      }
-    }
-    init()
-  }, [activeMembership, joystream])
 
   const onCloseClick = () => setIsNftPurchaseOpen(false)
 
