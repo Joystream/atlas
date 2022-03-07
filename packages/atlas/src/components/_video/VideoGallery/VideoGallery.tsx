@@ -105,7 +105,7 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
     <Gallery title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
-          <RankingNumberTile rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
+          <RankingNumberTile number={idx + 1} key={`${idx}-${video.id}`}>
             <StyledVideoTile id={video.id} />
           </RankingNumberTile>
         ) : (

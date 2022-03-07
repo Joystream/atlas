@@ -43,9 +43,11 @@ export const Arrow = styled(IconButton)`
 `
 
 export const GliderContainer = styled.div`
+  padding-left: ${sizes(2)};
+  padding-top: ${sizes(2)};
+
   /* hides scrollbar on firefox */
   scrollbar-width: none;
-  overflow: visible;
 `
 
 export const Track = styled.div`
@@ -59,7 +61,7 @@ export const Track = styled.div`
 `
 
 export const Dots = styled.div`
-  padding: ${sizes(3.5)} 0;
+  margin-top: 48px;
   display: none;
 
   ${media.md} {

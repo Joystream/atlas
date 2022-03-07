@@ -3,26 +3,36 @@ import styled from '@emotion/styled'
 
 import { cVar, media, zIndex } from '@/styles'
 
-export const RankingNumberTileWrapper = styled.div`
+export const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const variantStyles = (doubleDigits: boolean) => {
+export const NumberWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 40px;
+  min-width: 40px;
+  ${media.sm} {
+    width: 64px;
+    min-width: 64px;
+  }
+`
+
+const getRankingNumberTypographyCss = ({ doubleDigits }: RankingNumberProps) => {
   return doubleDigits
     ? css`
         line-height: 85%;
-        ${media.xxs} {
-          font-size: 96px;
-        }
+        font-size: 96px;
         ${media.sm} {
           font-size: 136px;
         }
       `
     : css`
-        ${media.xxs} {
-          font-size: 104px;
-        }
+        line-height: 100%;
+        font-size: 104px;
         ${media.sm} {
           font-size: 160px;
         }
@@ -33,42 +43,33 @@ type RankingNumberProps = {
   doubleDigits: boolean
 }
 
-export const RankingNumber = styled.div<RankingNumberProps>`
-  ${media.xxs} {
-    width: 40px;
-  }
-  ${media.sm} {
-    width: 64px;
-  }
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+export const RankingNumber = styled.span<RankingNumberProps>`
   z-index: ${zIndex.closeBackground};
-  writing-mode: vertical-rl;
-  text-orientation: upright;
+  min-width: 0;
   font-family: ${cVar('typographyFontsPrimary')};
-  font-style: normal;
   font-weight: 600;
-  line-height: 85%;
-  color: black;
+  text-align: left;
+  color: ${cVar('colorCoreBaseBlack')};
+  word-break: break-all;
   -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: var(--color-border);
-  overflow: visible;
+  -webkit-text-stroke-color: ${cVar('colorBorder')};
 
-  ${({ doubleDigits }) => variantStyles(doubleDigits)};
-`
-
-export const ChildrenWrapper = styled.div`
-  position: relative;
-  right: 32px;
-  background-color: black;
-  width: 100%;
+  ${getRankingNumberTypographyCss};
 `
 
 export const DropShadow = styled.div`
-  width: 32px;
+  width: 20px;
+  ${media.sm} {
+    width: 32px;
+  }
+
   background: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, #000 100%);
-  position: relative;
-  right: 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+`
+
+export const ChildrenWrapper = styled.div`
+  width: 100%;
 `

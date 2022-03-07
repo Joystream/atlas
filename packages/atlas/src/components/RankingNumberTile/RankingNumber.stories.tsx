@@ -6,22 +6,15 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { createApolloClient } from '@/api'
 
-import { RankingNumberTile } from './RankingNumberTile'
+import { RankingNumberTile, RankingNumberTileProps } from './RankingNumberTile'
 
 import { VideoTileViewer } from '../_video/VideoTileViewer'
 
 export default {
   title: 'other/RankingNumberTile',
   component: RankingNumberTile,
-  argTypes: {
-    doubleDigits: {
-      control: { type: 'select', options: [true, false] },
-    },
-    rankingNumber: { control: { type: 'number' } },
-  },
   args: {
-    rankingNumber: 1,
-    doubleDigits: false,
+    number: 1,
   },
   decorators: [
     (Story) => {
@@ -95,22 +88,16 @@ const video = {
   'license': { '__typename': 'License', 'id': '83655-5', 'code': 1002, 'attribution': null, 'customText': null },
 }
 
-const SetWidthDiv = styled.div`
-  width: 280px;
-  height: 256px;
-`
-
-const RankingNumberTemplate: Story<{ doubleDigits: boolean; rankingNumber: number }> = ({
-  doubleDigits = false,
-  rankingNumber,
-}) => {
+const RankingNumberTemplate: Story<RankingNumberTileProps> = (props) => {
   return (
-    <RankingNumberTile rankingNumber={rankingNumber} doubleDigits={doubleDigits}>
-      <SetWidthDiv>
-        <VideoTileViewer id={video.id} />
-      </SetWidthDiv>
-    </RankingNumberTile>
+    <StyledRankingNumberTile {...props}>
+      <VideoTileViewer id={video.id} />
+    </StyledRankingNumberTile>
   )
 }
+
+const StyledRankingNumberTile = styled(RankingNumberTile)`
+  max-width: 500px;
+`
 
 export const RankingNumber = RankingNumberTemplate.bind({})
