@@ -1,7 +1,7 @@
 import React from 'react'
-import { useParams } from 'react-router'
 
-import { useChannel, useChannelVideoCount } from '@/api/hooks'
+import { useChannelVideoCount } from '@/api/hooks'
+import { AllChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
@@ -21,10 +21,12 @@ import {
   TextContainer,
 } from './ChannelAbout.styles'
 
-export const ChannelAbout = () => {
-  const { id } = useParams()
-  const { channel } = useChannel(id ?? '')
-  const { videoCount } = useChannelVideoCount(id ?? '')
+type ChannelAboutProps = {
+  channel?: AllChannelFieldsFragment | null
+}
+
+export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
+  const { videoCount } = useChannelVideoCount(channel?.id ?? '')
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>

@@ -25,12 +25,12 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 
-  const getNftProps = (nft?: AllNftFieldsFragment): NftTileProps => {
+  const getNftProps = (nft?: AllNftFieldsFragment | null): NftTileProps => {
     const nftCommonProps = {
       title: nft?.video?.title,
       duration: nft?.video?.duration,
       views: nft?.video?.views,
-      loading,
+      loading: loading || !nftId,
       thumbnail: {
         videoHref: absoluteRoutes.viewer.video(nft?.video.id),
         thumbnailUrl: thumbnail.url,
@@ -90,5 +90,5 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         }
     }
   }
-  return <NftTile {...getNftProps(nft)} role="viewer" />
+  return <NftTile {...getNftProps(nft)} role="viewer" fullWidth />
 }
