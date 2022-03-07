@@ -4,15 +4,14 @@ import { useVideosConnection } from '@/api/hooks'
 import { VideoFieldsFragment, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
-import { Pagination } from '@/components/Pagination'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import { INITIAL_FIRST } from '..'
+import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
+
 import { usePagination } from '../ChannelView.hooks'
-import { PaginationContainer, VideoSection } from '../ChannelView.styles'
 
 type ChannelVideosProps = {
   isSearching?: boolean
@@ -48,7 +47,6 @@ export const ChannelVideos: React.FC<ChannelVideosProps> = ({
     pageInfo,
   } = useVideosConnection(
     {
-      first: INITIAL_FIRST,
       orderBy: sortVideosBy,
       where: {
         channel: {
@@ -106,11 +104,11 @@ export const ChannelVideos: React.FC<ChannelVideosProps> = ({
     })
   )
 
+  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
+
   if (videosError) {
     return <ViewErrorFallback />
   }
-
-  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   return (
     <>
       <VideoSection className={transitions.names.slide}>
@@ -126,15 +124,13 @@ export const ChannelVideos: React.FC<ChannelVideosProps> = ({
           ))}
         </Grid>
       </VideoSection>
-      <PaginationContainer>
-        <Pagination
-          onChangePage={handleChangePage}
-          page={isSearching ? currentSearchPage : currentPage}
-          itemsPerPage={tilesPerPage}
-          totalCount={isSearching ? foundVideos?.length : totalCount}
-          maxPaginationLinks={7}
-        />
-      </PaginationContainer>
+      <StyledPagination
+        onChangePage={handleChangePage}
+        page={isSearching ? currentSearchPage : currentPage}
+        itemsPerPage={tilesPerPage}
+        totalCount={isSearching ? foundVideos?.length : totalCount}
+        maxPaginationLinks={7}
+      />
     </>
   )
 }

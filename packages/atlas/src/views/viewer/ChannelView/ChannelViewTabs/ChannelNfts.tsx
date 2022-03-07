@@ -5,12 +5,12 @@ import { VideoCategoryWhereInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { NftTileViewer } from '@/components/NftTileViewer'
-import { Pagination } from '@/components/Pagination'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { transitions } from '@/styles'
 
+import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
+
 import { usePagination } from '../ChannelView.hooks'
-import { PaginationContainer, VideoSection } from '../ChannelView.styles'
 
 type ChannelNftsProps = {
   channelId: string
@@ -40,10 +40,6 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
     })
   )
 
-  if (error) {
-    return <ViewErrorFallback />
-  }
-
   const handleChangePage = (page: number) => {
     setCurrentPage(page)
     if (!!nfts && page * tilesPerPage + tilesPerPage > nfts?.length && nfts?.length < (totalCount ?? 0)) {
@@ -57,6 +53,11 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
   }
 
   const nftsWithPlaceholders = [...(paginatedNfts || []), ...placeholderItems]
+
+  if (error) {
+    return <ViewErrorFallback />
+  }
+
   return (
     <>
       <VideoSection className={transitions.names.slide}>
@@ -69,15 +70,13 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
           ))}
         </Grid>
       </VideoSection>
-      <PaginationContainer>
-        <Pagination
-          onChangePage={handleChangePage}
-          page={currentPage}
-          itemsPerPage={tilesPerPage}
-          totalCount={totalCount}
-          maxPaginationLinks={7}
-        />
-      </PaginationContainer>
+      <StyledPagination
+        onChangePage={handleChangePage}
+        page={currentPage}
+        itemsPerPage={tilesPerPage}
+        totalCount={totalCount}
+        maxPaginationLinks={7}
+      />
     </>
   )
 }

@@ -48,8 +48,7 @@ import {
 import { ChannelAbout, ChannelNfts, ChannelVideos } from './ChannelViewTabs'
 
 export const TABS = ['Videos', 'NFTs', 'Information'] as const
-export const INITIAL_FIRST = 50
-export const INITIAL_TILES_PER_ROW = 2
+export const INITIAL_TILES_PER_ROW = 4
 
 export const ChannelView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()

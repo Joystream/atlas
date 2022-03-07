@@ -74,10 +74,6 @@ export const SubTitle = styled(Text)`
   display: inline-block;
 `
 
-export const VideoSection = styled.section`
-  position: relative;
-`
-
 export const StyledChannelLink = styled(ChannelLink)`
   position: relative;
   border: solid 8px black;
@@ -121,10 +117,6 @@ export const StyledButtonContainer = styled.div`
 
 export const StyledButton = styled(Button)`
   width: 100%;
-`
-
-export const PaginationContainer = styled.div`
-  padding-top: ${sizes(6)};
 `
 
 export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`

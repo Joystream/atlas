@@ -22,6 +22,7 @@ type ChannelNftsOpts = {
 }
 
 export const useChannelNfts = (channelId: string, opts?: ChannelNftsOpts) => {
+  // TODO replace videosConnection query with ownedNftsConnection query once the filtering by owner is available in query node
   const {
     data: videosConnectionData,
     loading: videosConnectionLoading,
@@ -32,7 +33,7 @@ export const useChannelNfts = (channelId: string, opts?: ChannelNftsOpts) => {
       where: {
         channel: { id_eq: channelId },
         nft: {
-          metadata_contains: '',
+          metadata_contains: '', // this will filter all the videos with NFT issued.
         },
         isPublic_eq: true,
         isCensored_eq: false,
