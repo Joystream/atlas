@@ -130,6 +130,10 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
+export const DescriptionCopy = styled(Text)`
+  word-break: break-word;
+`
+
 export const Category = styled(Link)`
   display: flex;
   align-items: center;
@@ -206,4 +210,8 @@ export const SeeMoreButton = styled(Button)`
 
 export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
   margin-top: ${sizes(16)};
+`
+
+export const DescriptionLink = styled(Button)`
+  word-break: break-all;
 `

@@ -35,6 +35,8 @@ import {
   CategoryWrapper,
   ChannelContainer,
   DescriptionContainer,
+  DescriptionCopy,
+  DescriptionLink,
   DescriptionSkeletonLoader,
   DescriptionTitle,
   DetailsWrapper,
@@ -154,9 +156,9 @@ export const VideoView: React.FC = () => {
     const parts = text.split(urlRegex)
     return parts.reduce((acc, part, idx) => {
       const node = urlRegex.test(part) ? (
-        <Button size="large" textOnly key={`description-link-${idx}`} to={part}>
+        <DescriptionLink size="large" textOnly key={`description-link-${idx}`} to={part}>
           {part}
-        </Button>
+        </DescriptionLink>
       ) : (
         part
       )
@@ -225,9 +227,9 @@ export const VideoView: React.FC = () => {
               <>
                 <DescriptionTitle variant="h100">Description</DescriptionTitle>
                 {video.description?.split('\n').map((line, idx) => (
-                  <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
                     {replaceUrls(line)}
-                  </Text>
+                  </DescriptionCopy>
                 ))}
               </>
             )
