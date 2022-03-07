@@ -86,7 +86,7 @@ export const NftPreview = styled.div`
 export const PlaceBidWrapper = styled.div`
   padding-bottom: ${sizes(6)};
 
-  ${media.sm} {
+  ${media.md} {
     height: calc(100% - ${ACTION_BAR_HEIGHT});
     overflow-y: auto;
     padding-bottom: unset;
