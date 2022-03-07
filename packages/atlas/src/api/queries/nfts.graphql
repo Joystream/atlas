@@ -1,5 +1,11 @@
-query GetNft($videoId: ID!) {
-  ownedNfts(where: { video: { id_eq: $videoId } }) {
+query GetNft($id: ID!) {
+  ownedNftByUniqueInput(where: { id: $id }) {
+    ...AllNftFields
+  }
+}
+
+query GetNfts($where: OwnedNftWhereInput) {
+  ownedNfts(where: $where) {
     ...AllNftFields
   }
 }

@@ -4,28 +4,17 @@ import styled from '@emotion/styled'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { TextField } from '@/components/_inputs/TextField'
+import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
+
+import { TABS } from '.'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
 const SM_SUBTITLE_HEIGHT = '24px'
 const SUBTITLE_HEIGHT = '27px'
-
-const activeUnderline = css`
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    background-color: ${oldColors.blue[500]};
-    bottom: -${sizes(3)};
-  }
-`
 
 export const TitleSection = styled.div`
   margin-top: -${sizes(6)};
@@ -62,8 +51,16 @@ export const Title = styled(Text)`
   margin-bottom: 0;
 `
 
-export const SortContainer = styled.div`
+export const StyledSelect = styled(Select)`
   grid-area: sort;
+
+  ${media.sm} {
+    grid-area: initial;
+  }
+`
+
+export const FilterButton = styled(Button)`
+  grid-area: filter;
   grid-gap: 8px;
 
   ${media.sm} {
@@ -73,12 +70,7 @@ export const SortContainer = styled.div`
 
 export const SubTitle = styled(Text)`
   margin: ${sizes(2)} 0;
-  color: ${oldColors.gray[300]};
   display: inline-block;
-`
-
-export const VideoSection = styled.section`
-  position: relative;
 `
 
 export const StyledChannelLink = styled(ChannelLink)`
@@ -126,44 +118,64 @@ export const StyledButton = styled(Button)`
   width: 100%;
 `
 
-export const PaginationContainer = styled.div`
-  padding-top: ${sizes(6)};
+export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
+  z-index: ${zIndex.transactionBar};
+  position: relative;
+  margin-bottom: ${sizes(8)};
+
+  ${media.sm} {
+    margin-bottom: ${({ isFiltersOpen }) => sizes(isFiltersOpen ? 30 : 12)};
+    transition: margin-bottom ${transitions.timings.routing} ${transitions.easing};
+  }
 `
 
-export const TabsContainer = styled.div`
+type TabsContainerProps = {
+  tab: typeof TABS[number]
+}
+
+const geTabsContainerGridTemplate = ({ tab }: TabsContainerProps) => {
+  switch (tab) {
+    case 'Videos':
+    case 'Information':
+      return css`
+        grid-template:
+          'tabs tabs tabs' 1fr
+          'search search search' auto
+          'sort sort sort' auto / 1fr 1fr;
+        ${media.sm} {
+          grid-template: 1fr / auto 1fr 160px;
+        }
+      `
+    case 'NFTs':
+      return css`
+        grid-template:
+          'tabs tabs tabs' 1fr
+          'search search search' auto
+          'sort sort filter' auto / 1fr 1fr;
+        ${media.sm} {
+          grid-template: 1fr / 1fr 160px 99px;
+        }
+      `
+  }
+}
+
+export const TabsContainer = styled.div<TabsContainerProps>`
   display: grid;
   padding-top: ${sizes(8)};
-  margin-bottom: ${sizes(8)};
-  gap: ${sizes(2)};
-  grid-template: 'tabs tabs tabs' 1fr 'search search search' auto 'sort sort sort' auto / 1fr 1fr;
-  align-items: baseline;
+  gap: ${sizes(4)};
+  background-color: #000;
 
   ${media.sm} {
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
-    gap: ${sizes(8)};
-    grid-template: 1fr / auto 1fr 160px;
   }
-`
 
-type SearchContainerProps = {
-  isOpen?: boolean
-}
-export const SearchContainer = styled.div<SearchContainerProps>`
-  display: flex;
-  grid-area: search;
-  align-items: center;
-  margin: ${sizes(6)} 0 ${sizes(2)} 0;
-  position: relative;
-  ${media.sm} {
-    grid-area: initial;
-    margin: 0;
-  }
+  ${geTabsContainerGridTemplate}
 `
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[700]};
+  border-bottom: solid 1px ${cVar('colorCoreNeutral700')};
 
   ${media.sm} {
     border-bottom: none;
@@ -171,51 +183,6 @@ export const StyledTabs = styled(Tabs)`
   }
 `
 
-type TextFieldProps = {
-  isOpen?: boolean
-  isSearching?: boolean
-}
-export const StyledTextField = styled(TextField)<TextFieldProps>`
-  transition: all ${transitions.timings.regular} ${transitions.easing};
-  will-change: max-width;
-  align-items: center;
-  position: relative;
-
-  ${media.sm} {
-    max-width: ${({ isOpen }) => (isOpen ? '200px' : '0px')};
-  }
-
-  ${({ isSearching }) => isSearching && activeUnderline}
-
-  input {
-    height: 40px;
-    padding: 10px 16px 10px 42px;
-    caret-color: ${oldColors.blue[500]};
-    font: ${cVar('typographyDesktopT200')};
-    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopT200TextTransform')};
-    border-radius: 0;
-
-    ${media.sm} {
-      ${({ isOpen }) => isOpen === false && 'border: none !important'};
-    }
-
-    :focus {
-      border: 1px solid ${oldColors.white};
-    }
-
-    ::-webkit-search-cancel-button,
-    &[type='search'] {
-      /* stylelint-disable-next-line property-no-vendor-prefix */
-      -webkit-appearance: none;
-    }
-  }
-`
-
-type SearchButttonProps = {
-  isSearching?: boolean
-  isOpen?: boolean
-}
 export const NotFoundChannelContainer = styled.div`
   display: flex;
   align-items: center;
@@ -223,13 +190,6 @@ export const NotFoundChannelContainer = styled.div`
   height: calc(100vh - var(--size-topbar-height));
 `
 
-export const SearchButton = styled(IconButton)<SearchButttonProps>`
-  position: absolute;
-
-  ${media.sm} {
-    ${({ isSearching, isOpen }) => isSearching && !isOpen && activeUnderline}
-  }
-`
 export const CollectorsBoxContainer = styled.div`
   display: flex;
   height: 64px;

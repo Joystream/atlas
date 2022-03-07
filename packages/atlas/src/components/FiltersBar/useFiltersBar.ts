@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { VideoWhereInput } from '@/api/queries'
 
@@ -70,14 +70,14 @@ export const useFiltersBar = () => {
     })
   }
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     clearDateUploadedFilter()
     clearVideoLengthFilter()
     clearCategoriesFilter()
     clearOtherFilters()
     clearCategoriesFilter()
     clearNftStatusFilter()
-  }
+  }, [])
 
   return {
     videoWhereInput,
