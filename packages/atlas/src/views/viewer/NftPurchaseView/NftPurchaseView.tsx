@@ -69,7 +69,7 @@ const BID = {
 }
 
 export const NftPurchaseView: React.FC = () => {
-  const [type, setType] = useState<'auction' | 'buy_now'>('auction')
+  const [type, setType] = useState<'auction' | 'open_auction' | 'buy_now'>('auction')
   const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
@@ -98,9 +98,13 @@ export const NftPurchaseView: React.FC = () => {
       classNames="place-bid"
     >
       <Container role="dialog">
+        {/* this needs to be removed after integration */}
         <div style={{ position: 'fixed', top: '10px', left: '10px' }}>
           <Button variant="tertiary" onClick={() => setType('auction')}>
             auction
+          </Button>
+          <Button variant="tertiary" onClick={() => setType('auction')}>
+            open auction
           </Button>
           <Button variant="tertiary" onClick={() => setType('buy_now')}>
             buy now
@@ -115,30 +119,32 @@ export const NftPurchaseView: React.FC = () => {
             <InnerContainer>
               <Header>
                 <Text variant="h600">{type === 'auction' ? 'Place a bid' : 'Buy NFT'}</Text>
-                <FlexWrapper>
-                  <EndingTime>
-                    <Text variant="h300" secondary>
-                      Ending in:
-                    </Text>
-                    <Timer
-                      variant="h200"
-                      spacing={{ left: 4, right: 2 }}
-                      color={timeLeftUnderMinute ? cVar('colorTextError', true) : undefined}
-                    >
-                      {timeLeft && (!timeLeftUnderMinute ? formatDurationShort(timeLeft, true) : 'Under 1 min')}
-                    </Timer>
-                  </EndingTime>
+                {type !== 'open_auction' && (
                   <FlexWrapper>
-                    <Text variant="t100" secondary spacing={{ left: 2, right: 1 }}>
-                      1508 blocks
-                    </Text>
-                    <Information
-                      text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
-                      footer={<Text variant="t100">Auctions closing block: 123115234</Text>}
-                      placement="top"
-                    />
+                    <EndingTime>
+                      <Text variant="h300" secondary>
+                        Ending in:
+                      </Text>
+                      <Timer
+                        variant="h200"
+                        spacing={{ left: 4, right: 2 }}
+                        color={timeLeftUnderMinute ? cVar('colorTextError', true) : undefined}
+                      >
+                        {timeLeft && (!timeLeftUnderMinute ? formatDurationShort(timeLeft, true) : 'Under 1 min')}
+                      </Timer>
+                    </EndingTime>
+                    <FlexWrapper>
+                      <Text variant="t100" secondary spacing={{ left: 2, right: 1 }}>
+                        1508 blocks
+                      </Text>
+                      <Information
+                        text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
+                        footer={<Text variant="t100">Auctions closing block: 123115234</Text>}
+                        placement="top"
+                      />
+                    </FlexWrapper>
                   </FlexWrapper>
-                </FlexWrapper>
+                )}
               </Header>
               {type === 'auction' ? (
                 <>

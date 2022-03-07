@@ -138,7 +138,7 @@ export const EndingTime = styled.div`
 `
 
 export const Timer = styled(Text)`
-  padding-right: ${sizes(4)};
+  min-width: 77px;
 `
 
 export const CurrentBidWrapper = styled.div`
