@@ -17,7 +17,7 @@ export type Member = {
 }
 
 export type NftTileProps = {
-  nftState?: 'idle' | 'on-sale' | 'auction'
+  nftStatus?: 'idle' | 'on-sale' | 'auction'
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -36,7 +36,7 @@ export type NftTileProps = {
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
-  nftState,
+  nftStatus,
   thumbnail,
   loading,
   title,
@@ -53,9 +53,10 @@ export const NftTile: React.FC<NftTileProps> = ({
   interactable = true,
 }) => {
   const [hovered, setHovered] = useState(false)
+  const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
 
   const getBottomLeft = useMemo(() => {
-    switch (nftState) {
+    switch (nftStatus) {
       case 'idle':
         return <Pill icon={<SvgActionNotForSale />} size="medium" variant="overlay" />
       case 'on-sale':
@@ -66,12 +67,12 @@ export const NftTile: React.FC<NftTileProps> = ({
             items={[
               {
                 icon: <SvgActionAuction />,
-                label: timeLeftMs
-                  ? calculatedTimeLeft < 60
+                label: timeLeftSec
+                  ? timeLeftSec < 60
                     ? 'Less than a minute'
                     : formatDurationShort(timeLeftSec, true)
                   : undefined,
-                variant: timeLeftMs && calculatedTimeLeft < 3600 ? 'danger' : 'overlay',
+                variant: timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay',
               },
               { icon: <SvgActionBuyNow /> },
             ]}
@@ -81,18 +82,18 @@ export const NftTile: React.FC<NftTileProps> = ({
           <Pill
             icon={<SvgActionAuction />}
             label={
-              timeLeftMs
-                ? calculatedTimeLeft < 60
+              timeLeftSec
+                ? timeLeftSec < 60
                   ? 'Less than a minute'
                   : formatDurationShort(timeLeftSec, true)
                 : undefined
             }
             size="medium"
-            variant={timeLeftMs && calculatedTimeLeft < 3600 ? 'danger' : 'overlay'}
+            variant={timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay'}
           />
         )
     }
-  }, [buyNowPrice, calculatedTimeLeft, nftState, timeLeftMs])
+  }, [nftStatus, buyNowPrice, timeLeftSec])
 
   return (
     <Container fullWidth={fullWidth}>
@@ -121,7 +122,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}
-        nftState={nftState}
+        nftStatus={nftStatus}
         buyNowPrice={buyNowPrice}
         loading={loading}
         topBid={topBid}

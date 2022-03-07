@@ -36,7 +36,7 @@ export type NftTileDetailsProps = {
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
-  nftState?: 'idle' | 'on-sale' | 'auction'
+  nftStatus?: 'idle' | 'on-sale' | 'auction'
   buyNowPrice?: number | null
   startingPrice?: number | null
   topBid?: number | null
@@ -63,7 +63,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   creator,
   owner,
   role,
-  nftState,
+  nftStatus,
   startingPrice,
   buyNowPrice,
   topBid,
@@ -103,12 +103,12 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       },
     ]
     if (role === 'owner') {
-      if (nftState === 'idle') {
+      if (nftStatus === 'idle') {
         elements.unshift({
           icon: <SvgActionSell />,
           title: 'Start sale',
         })
-      } else if (nftState === 'on-sale') {
+      } else if (nftStatus === 'on-sale') {
         elements.unshift(
           {
             icon: <SvgActionCancel />,
@@ -122,7 +122,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         )
       }
     } else {
-      if (nftState === 'auction') {
+      if (nftStatus === 'auction') {
         elements.unshift(
           ...(buyNowPrice
             ? [
@@ -137,7 +137,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
             title: 'Place bid',
           }
         )
-      } else if (nftState === 'on-sale') {
+      } else if (nftStatus === 'on-sale') {
         elements.unshift({
           icon: <SvgActionBuyNow />,
           title: 'Buy now',
@@ -145,7 +145,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       }
     }
     return elements
-  }, [buyNowPrice, handleCopyVideoURLClick, nftState, role])
+  }, [buyNowPrice, handleCopyVideoURLClick, nftStatus, role])
 
   const getDetails = useMemo(() => {
     if (loading) {
@@ -156,7 +156,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         </CaptionSkeletonWrapper>
       )
     }
-    switch (nftState) {
+    switch (nftStatus) {
       case 'idle':
         return (
           <DetailsContent
@@ -205,7 +205,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           </>
         )
     }
-  }, [loading, nftState, tileSize, buyNowPrice, topBid, startingPrice])
+  }, [loading, nftStatus, tileSize, buyNowPrice, topBid, startingPrice])
 
   return (
     <Content

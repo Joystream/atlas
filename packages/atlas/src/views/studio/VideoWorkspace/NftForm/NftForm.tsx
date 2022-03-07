@@ -144,7 +144,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
     }
   }, [listingType, reset, setActiveInputs])
 
-  const getNftState = () => {
+  const getNftStatus = () => {
     switch (listingType) {
       case 'Not for sale':
         return 'idle'
@@ -156,11 +156,11 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
   }
 
   const nftTileProps: NftTileProps = {
-    nftState: getNftState(),
+    nftStatus: getNftStatus(),
     thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
     title: video?.title,
     owner:
-      getNftState() === 'auction'
+      getNftStatus() === 'auction'
         ? { assetUrl: null, name: 'Owner: Auction winner' }
         : { assetUrl: memberAvatarUri, name: activeMembership?.handle },
     creator: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
