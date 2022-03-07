@@ -13,6 +13,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
@@ -77,6 +78,7 @@ export const NftPurchaseView: React.FC = () => {
   const [placedBid, setPlacedBid] = useState<number | undefined>()
   const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp()
+  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const timeLeftSeconds = Math.trunc((END_TIME - timestamp) / 1000)
 
   const onPlaceBid = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +139,7 @@ export const NftPurchaseView: React.FC = () => {
                     </EndingTime>
                     <FlexWrapper>
                       <Text variant="t100" secondary spacing={{ left: 2, right: 1 }}>
-                        1508 blocks
+                        {convertMsTimestampToBlock(END_TIME)} blocks
                       </Text>
                       <Information
                         text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
