@@ -77,7 +77,7 @@ export const NftPurchaseView: React.FC = () => {
   const [placedBid, setPlacedBid] = useState<number | undefined>()
   const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp()
-  const timeLeft = Math.trunc((END_TIME - timestamp) / 1000)
+  const timeLeftSeconds = Math.trunc((END_TIME - timestamp) / 1000)
 
   const onPlaceBid = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPlacedBid(Number(event.target.value))
@@ -86,7 +86,7 @@ export const NftPurchaseView: React.FC = () => {
   const handleCloseClick = () => setIsNftPurchaseOpen(false)
 
   const bidError = !!(placedBid && placedBid < MINIMUM_BID)
-  const timeLeftUnderMinute = timeLeft && timeLeft < 60
+  const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const insufficientFoundsError = !!placedBid && !!accountBalance && placedBid + TRANSACTION_FEE < accountBalance
 
   return (
@@ -131,7 +131,8 @@ export const NftPurchaseView: React.FC = () => {
                         spacing={{ left: 4, right: 2 }}
                         color={timeLeftUnderMinute ? cVar('colorTextError', true) : undefined}
                       >
-                        {timeLeft && (!timeLeftUnderMinute ? formatDurationShort(timeLeft, true) : 'Under 1 min')}
+                        {timeLeftSeconds &&
+                          (!timeLeftUnderMinute ? formatDurationShort(timeLeftSeconds, true) : 'Under 1 min')}
                       </Timer>
                     </EndingTime>
                     <FlexWrapper>
