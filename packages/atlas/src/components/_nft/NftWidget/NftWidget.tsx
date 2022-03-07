@@ -261,7 +261,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
 
-      <NftHistory size={size} />
+      <NftHistory size={size} width={width} />
     </Container>
   )
 }

@@ -2,7 +2,6 @@ import { format } from 'date-fns'
 import React from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
-import useMeasure from 'react-use-measure'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -28,10 +27,9 @@ import {
 import { Size } from './NftWidget'
 import { OwnerHandle } from './NftWidget.styles'
 
-export const NftHistory: React.FC<{ size: Size }> = ({ size }) => {
+export const NftHistory: React.FC<{ size: Size; width: number }> = ({ size, width }) => {
   const [isOpen, toggleIsOpen] = useToggle(true)
   const { convertToUSD } = useTokenPrice()
-  const [historyHeaderRef, { width }] = useMeasure()
 
   const dummyData: HistoryItemProps[] = [
     {
@@ -106,7 +104,7 @@ export const NftHistory: React.FC<{ size: Size }> = ({ size }) => {
 
   return (
     <>
-      <NftHistoryHeader ref={historyHeaderRef} data-size={size} onClick={toggleIsOpen}>
+      <NftHistoryHeader data-size={size} onClick={toggleIsOpen}>
         <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
         <StyledChevronButton data-open={isOpen} iconOnly variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
