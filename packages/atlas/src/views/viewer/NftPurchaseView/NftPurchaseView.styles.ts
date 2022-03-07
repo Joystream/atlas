@@ -7,6 +7,8 @@ import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
+const ACTION_BAR_HEIGHT = '80px'
+
 const flexStyles = css`
   display: flex;
   align-items: center;
@@ -85,7 +87,7 @@ export const PlaceBidWrapper = styled.div`
   padding-bottom: ${sizes(6)};
 
   ${media.sm} {
-    height: calc(100% - 80px);
+    height: calc(100% - ${ACTION_BAR_HEIGHT});
     overflow-y: auto;
     padding-bottom: unset;
   }
