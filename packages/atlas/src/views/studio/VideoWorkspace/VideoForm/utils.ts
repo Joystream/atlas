@@ -1,7 +1,11 @@
 import { VideoFormData, VideoWorkspaceVideoFormFields } from '@/providers/videoWorkspace'
 
+type Public = {
+  isPublic?: boolean
+}
+
 export const convertVideoFormDataToFormFields = (
-  videoFormData: VideoFormData
+  videoFormData: Omit<VideoFormData, 'isPublic'> & Public
 ): Partial<VideoWorkspaceVideoFormFields> => {
   const {
     metadata: {
@@ -57,7 +61,7 @@ export const convertVideoFormDataToFormFields = (
     ...(category ? { category: category?.toString() } : {}),
     ...(hasMarketing ? { hasMarketing } : {}),
     ...(language ? { language } : {}),
-    ...(isPublic ? { isPublic } : {}),
+    ...(isPublic !== undefined ? { isPublic } : {}),
     ...(isExplicit ? { isExplicit } : {}),
     ...(license?.attribution ? { licenseAttribution: license?.attribution } : {}),
     ...(license?.code ? { licenseCode: license?.code } : {}),

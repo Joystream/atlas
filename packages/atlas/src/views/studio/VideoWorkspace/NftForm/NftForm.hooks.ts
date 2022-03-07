@@ -6,7 +6,7 @@ import { Listing } from '@/views/studio/VideoWorkspace/NftForm/types'
 export const useNftForm = () => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])
   const [termsAccepted, setTermsAccepted] = useState(false)
-  const [listingType, setListingType] = useState<Listing>(undefined)
+  const [listingType, setListingType] = useState<Listing>('Auction')
   const [currentStep, setCurrentStep] = useState(0)
 
   const getTotalDaysAndHoursText = (start: Date, end: Date) => {
