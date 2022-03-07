@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { CSSTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
@@ -75,21 +76,25 @@ export const NftPurchaseView: React.FC = () => {
   const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
-  const [placedBid, setPlacedBid] = useState<number | undefined>()
   const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp()
   const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const timeLeftSeconds = Math.trunc((END_TIME - timestamp) / 1000)
-
-  const onPlaceBid = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlacedBid(Number(event.target.value))
-  }
+  const {
+    handleSubmit: createSubmitHandler,
+    getValues,
+    register,
+    formState: { errors },
+  } = useForm({ mode: 'onSubmit' })
 
   const handleCloseClick = () => setIsNftPurchaseOpen(false)
+  const handleSubmit = useCallback(() => {
+    return createSubmitHandler((_) => null)
+  }, [createSubmitHandler])
 
-  const bidError = !!(placedBid && placedBid < MINIMUM_BID)
+  const placedBid = getValues().bid
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
-  const insufficientFoundsError = !!placedBid && !!accountBalance && placedBid + TRANSACTION_FEE < accountBalance
+  const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
 
   return (
     <CSSTransition
@@ -199,19 +204,25 @@ export const NftPurchaseView: React.FC = () => {
                     </div>
                   </MinimumBidWrapper>
                   <TextField
+                    {...register('bid', {
+                      required: true,
+                      validate: {
+                        bidTooLow: (value) =>
+                          Number(value) >= MINIMUM_BID ? true : 'Your bid must be higher than minimum bid',
+                        bidTooHigh: (value) =>
+                          accountBalance
+                            ? Number(value) + TRANSACTION_FEE > accountBalance
+                              ? 'Insufficient funds.'
+                              : true
+                            : true,
+                      },
+                    })}
                     placeholder={`Min. ${MINIMUM_BID} tJOY`}
                     nodeStart={<JoyTokenIcon variant="silver" size={24} />}
-                    nodeEnd={!!placedBid && <Pill variant="overlay" label={`$${convertToUSD(placedBid)}`} />}
-                    onChange={onPlaceBid}
+                    nodeEnd={!!placedBid && <Pill variant="overlay" label={`${convertToUSD(placedBid)}`} />}
                     type="number"
-                    error={bidError || insufficientFoundsError}
-                    helperText={
-                      bidError
-                        ? 'Your bid must be higher than minimum bid'
-                        : insufficientFoundsError
-                        ? 'Insufficient funds.'
-                        : undefined
-                    }
+                    error={!!errors.bid}
+                    helperText={errors.bid && errors.bid.message}
                   />
                   {!!placedBid && placedBid > FIXED_PRICE && (
                     <BuyNowInfo variant="t100" spacing={{ top: 2 }}>
@@ -314,7 +325,7 @@ export const NftPurchaseView: React.FC = () => {
                       You will pay
                     </Text>
                     <Text variant="h500">
-                      {type === 'buy_now' ? FIXED_PRICE : (placedBid || 0) + TRANSACTION_FEE} tJOY
+                      {type === 'buy_now' ? FIXED_PRICE : (Number(placedBid) || 0) + TRANSACTION_FEE} tJOY
                     </Text>
                   </Row>
                 </>
@@ -330,7 +341,13 @@ export const NftPurchaseView: React.FC = () => {
             </InnerContainer>
           </PlaceBidWrapper>
         </Content>
-        <StyledActionBar primaryButton={{ text: 'Place bid', disabled: !placedBid }} />
+        <StyledActionBar
+          primaryButton={{
+            text: 'Place bid',
+            disabled: placedBid ? !placedBid.length : true,
+            onClick: handleSubmit(),
+          }}
+        />
       </Container>
     </CSSTransition>
   )
