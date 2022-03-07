@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { TABS } from '.'
 
@@ -70,7 +70,6 @@ export const FilterButton = styled(Button)`
 
 export const SubTitle = styled(Text)`
   margin: ${sizes(2)} 0;
-  color: ${oldColors.gray[300]};
   display: inline-block;
 `
 
@@ -120,7 +119,7 @@ export const StyledButton = styled(Button)`
 `
 
 export const TabsWrapper = styled.div<{ isFiltersOpen: boolean }>`
-  z-index: 99;
+  z-index: ${zIndex.transactionBar};
   position: relative;
   margin-bottom: ${sizes(8)};
 
@@ -176,7 +175,7 @@ export const TabsContainer = styled.div<TabsContainerProps>`
 
 export const StyledTabs = styled(Tabs)`
   grid-area: tabs;
-  border-bottom: solid 1px ${oldColors.gray[700]};
+  border-bottom: solid 1px ${cVar('colorCoreNeutral700')};
 
   ${media.sm} {
     border-bottom: none;

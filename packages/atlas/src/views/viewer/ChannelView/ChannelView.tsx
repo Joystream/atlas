@@ -219,7 +219,9 @@ export const ChannelView: React.FC = () => {
             {channel ? (
               <>
                 <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
-                <SubTitle variant="t300">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                <SubTitle variant="t300" secondary>
+                  {channel.follows ? formatNumberShort(channel.follows) : 0} Followers
+                </SubTitle>
               </>
             ) : (
               <>
