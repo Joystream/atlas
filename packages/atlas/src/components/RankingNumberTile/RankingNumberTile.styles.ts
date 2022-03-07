@@ -47,7 +47,7 @@ export const RankingNumber = styled.span<RankingNumberProps>`
   z-index: ${zIndex.closeBackground};
   min-width: 0;
   font-family: ${cVar('typographyFontsPrimary')};
-  font-weight: 600;
+  font-weight: 700;
   text-align: left;
   color: ${cVar('colorCoreBaseBlack')};
   word-break: break-all;
