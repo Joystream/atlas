@@ -47,7 +47,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, getComboboxProps, reset } = useCombobox({
     items: inputItems,
-    itemToString: (item) => (item ? item.label : ''),
+    itemToString: (item) => (item ? (item.label as string) : ''),
     onSelectedItemChange: ({ selectedItem }) => {
       if (!selectedItem) {
         return
@@ -63,7 +63,9 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
         reset()
         return
       }
-      const filteredItems = items.filter((item) => item.label.toLowerCase().startsWith(inputValue?.toLowerCase()))
+      const filteredItems = items.filter((item) =>
+        (item.label as string)?.toLowerCase().startsWith(inputValue?.toLowerCase())
+      )
       setInputItems(filteredItems)
       onInputValueChange?.(inputValue)
     },

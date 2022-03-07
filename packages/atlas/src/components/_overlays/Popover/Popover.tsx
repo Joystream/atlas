@@ -32,7 +32,7 @@ const onTrigger = (instance: Instance<unknown>) => {
   })
 }
 
-const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverProps> = (
+const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
   {
     hideOnClick = true,
     onHide,
@@ -56,6 +56,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverP
 
   return (
     <Tippy
+      maxWidth="100vw"
       disabled={disabled}
       trigger={triggerMode}
       hideOnClick={hideOnClick}
