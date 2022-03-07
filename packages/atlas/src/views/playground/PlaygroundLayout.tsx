@@ -3,15 +3,14 @@ import React from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { AuctionProvider } from '@/providers/auction'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
+import { NftPurchaseProvider } from '@/providers/nftPurchase'
 import { ActiveUserProvider } from '@/providers/user'
 import { oldColors } from '@/styles'
 
 import {
   Animations,
-  Auction,
   AutomaticCrop,
   DesignTokens,
   EstimatingBlockTime,
@@ -20,6 +19,7 @@ import {
   ImageDownsizing,
   IndirectSignInDialog,
   Modals,
+  NftPurchase,
   OrionTesting,
   PlaygroundBreakpoints,
   PlaygroundCommonStore,
@@ -37,7 +37,7 @@ import {
 
 const playgroundRoutes = [
   { path: 'animations', element: <Animations />, name: 'Animations' },
-  { path: 'auction', element: <Auction />, name: 'Auction' },
+  { path: 'nft-purchase', element: <NftPurchase />, name: 'Nft Purchase' },
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
   { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
@@ -63,7 +63,7 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   return (
-    <AuctionProvider>
+    <NftPurchaseProvider>
       <ActiveUserProvider>
         <ConfirmationModalProvider>
           <Container>
@@ -85,7 +85,7 @@ const PlaygroundLayout = () => {
           <ConnectionStatusManager />
         </ConfirmationModalProvider>
       </ActiveUserProvider>
-    </AuctionProvider>
+    </NftPurchaseProvider>
   )
 }
 

@@ -15,8 +15,8 @@ import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { useAuction } from '@/providers/auction/hooks'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useNftPurchase } from '@/providers/nftPurchase'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
@@ -45,7 +45,7 @@ import {
   Row,
   StyledActionBar,
   Timer,
-} from './AuctionView.styles'
+} from './NftPurchaseView.styles'
 
 const DUMMY_NFT_TILE_PROPS = {
   role: 'owner' as const,
@@ -68,9 +68,9 @@ const BID = {
   amount: 341,
 }
 
-export const AuctionView: React.FC = () => {
+export const NftPurchaseView: React.FC = () => {
   const [type, setType] = useState<'auction' | 'buy_now'>('auction')
-  const { isAuctionOpen, setAuctionOpen } = useAuction()
+  const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const { joystream } = useJoystream()
@@ -94,7 +94,7 @@ export const AuctionView: React.FC = () => {
     init()
   }, [activeMembership, joystream])
 
-  const onCloseClick = () => setAuctionOpen(false)
+  const onCloseClick = () => setIsNftPurchaseOpen(false)
 
   const bidError = !!(placedBid && placedBid < MINIMUM_BID)
   const timeLeftUnderMinute = timeLeft && timeLeft < 60
@@ -102,7 +102,7 @@ export const AuctionView: React.FC = () => {
 
   return (
     <CSSTransition
-      in={isAuctionOpen}
+      in={isNftPurchaseOpen}
       appear
       mountOnEnter
       unmountOnExit
