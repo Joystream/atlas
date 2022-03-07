@@ -12,15 +12,21 @@ NftPurchaseContext.displayName = 'NftPurchaseContext'
 
 export const NftPurchaseProvider: React.FC = ({ children }) => {
   const [isNftPurchaseOpen, setIsNftPurchaseOpen] = useState(false)
+  const [cachedIsNftPurchaseOpen, setCachedIsNftPurchaseOpen] = useState(false)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
+    if (isNftPurchaseOpen === cachedIsNftPurchaseOpen) {
+      return
+    }
+    setCachedIsNftPurchaseOpen(isNftPurchaseOpen)
+
     if (isNftPurchaseOpen) {
       incrementOverlaysOpenCount()
     } else {
       decrementOverlaysOpenCount()
     }
-  }, [decrementOverlaysOpenCount, incrementOverlaysOpenCount, isNftPurchaseOpen])
+  }, [cachedIsNftPurchaseOpen, decrementOverlaysOpenCount, incrementOverlaysOpenCount, isNftPurchaseOpen])
 
   const value = useMemo(
     () => ({
