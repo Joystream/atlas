@@ -83,7 +83,7 @@ export const NftPurchaseView: React.FC = () => {
     setPlacedBid(Number(event.target.value))
   }
 
-  const onCloseClick = () => setIsNftPurchaseOpen(false)
+  const handleCloseClick = () => setIsNftPurchaseOpen(false)
 
   const bidError = !!(placedBid && placedBid < MINIMUM_BID)
   const timeLeftUnderMinute = timeLeft && timeLeft < 60
@@ -111,7 +111,7 @@ export const NftPurchaseView: React.FC = () => {
             buy now
           </Button>
         </div>
-        <DrawerHeader onCloseClick={onCloseClick} />
+        <DrawerHeader onCloseClick={handleCloseClick} />
         <Content>
           <NftPreview>
             <NftCard title="title" {...DUMMY_NFT_TILE_PROPS} fullWidth={!mdMatch} />
