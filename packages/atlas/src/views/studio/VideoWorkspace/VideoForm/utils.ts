@@ -1,11 +1,7 @@
 import { VideoFormData, VideoWorkspaceVideoFormFields } from '@/providers/videoWorkspace'
 
-type Public = {
-  isPublic?: boolean
-}
-
 export const convertVideoFormDataToFormFields = (
-  videoFormData: Omit<VideoFormData, 'isPublic'> & Public
+  videoFormData: VideoFormData
 ): Partial<VideoWorkspaceVideoFormFields> => {
   const {
     metadata: {
