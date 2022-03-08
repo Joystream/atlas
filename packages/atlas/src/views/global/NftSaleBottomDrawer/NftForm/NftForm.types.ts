@@ -1,8 +1,19 @@
 export type Listing = 'Auction' | 'Fixed price' | undefined
 
+export enum AuctionDuration {
+  NoExpiration = 'No expiration date',
+  OneDay = '1 day',
+  ThreeDays = '3 days',
+  FiveDays = '5 days',
+  SevenDays = '7 days',
+}
+
+export type StartDate = Date | string | null | 'Right after listing'
+export type EndDate = Date | string | null | AuctionDuration
+
 export type AuctionDate = {
-  startDate: Date | string | null
-  endDate: Date | string | null
+  startDate: StartDate
+  endDate: EndDate
 }
 
 export type NftFormData = {

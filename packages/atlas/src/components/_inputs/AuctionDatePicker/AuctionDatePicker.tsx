@@ -8,14 +8,15 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { cVar } from '@/styles'
+import { EndDate, StartDate } from '@/views/studio/VideoWorkspace/NftForm/types'
 
 import { Select, SelectProps } from '../Select'
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
-  value: Date | string | null
-  onChange: (value: Date | string | null) => void
-} & Omit<SelectProps<Date | string | null>, 'onChange'>
+  value: StartDate | EndDate
+  onChange: (value: StartDate | EndDate) => void
+} & Omit<SelectProps<StartDate | EndDate>, 'onChange'>
 
 const PICK_DATE = 'pick-date'
 
@@ -25,7 +26,6 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   onChange,
   label,
   minDate = new Date(),
-  size = 'small',
   ...rest
 }) => {
   const selectRef = useRef(null)
@@ -64,7 +64,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   return (
     <Container>
       <Select
-        size={size}
+        size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
         iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
@@ -74,7 +74,18 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         ref={selectRef}
         {...rest}
       />
-      <Popover offset={[0, 8]} ref={popOverRef} triggerMode="manual" triggerTarget={selectRef.current} trigger={null}>
+      <Popover
+        offset={[0, 8]}
+        ref={popOverRef}
+        triggerMode="manual"
+        triggerTarget={selectRef.current}
+        trigger={null}
+        onHide={() => {
+          if (value === 'pick-date') {
+            onChange(null)
+          }
+        }}
+      >
         <DatePicker
           open
           inline
