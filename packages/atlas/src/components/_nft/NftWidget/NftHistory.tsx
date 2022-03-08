@@ -168,7 +168,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
       {!!joyAmount && (
         <ValueContainer>
           <JoyPlusIcon>
-            <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
+            <JoyTokenIcon size={16} variant="silver" />
             <Text variant={size === 'medium' ? 'h300' : 'h200'}>{formatNumberShort(joyAmount)}</Text>
           </JoyPlusIcon>
           <DollarValue variant="t100" secondary>
