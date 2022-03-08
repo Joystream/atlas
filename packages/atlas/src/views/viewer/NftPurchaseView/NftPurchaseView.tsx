@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CSSTransition } from 'react-transition-group'
 
@@ -73,6 +73,7 @@ const BID = {
 
 export const NftPurchaseView: React.FC = () => {
   const [type, setType] = useState<'auction' | 'open_auction' | 'buy_now'>('auction')
+  const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
@@ -81,11 +82,32 @@ export const NftPurchaseView: React.FC = () => {
   const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const timeLeftSeconds = Math.trunc((END_TIME - timestamp) / 1000)
   const {
+    watch,
+    setValue,
     handleSubmit: createSubmitHandler,
     getValues,
     register,
     formState: { errors },
   } = useForm({ mode: 'onSubmit' })
+
+  // check if input value isn't bigger than fixed price
+  useEffect(() => {
+    if (type === 'buy_now') {
+      return
+    }
+    const subscription = watch(({ bid }) => {
+      if (bid >= FIXED_PRICE) {
+        setBuyNowInfo(true)
+      } else {
+        setBuyNowInfo(false)
+      }
+      if (bid > FIXED_PRICE) {
+        setValue('bid', FIXED_PRICE.toString())
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [setValue, type, watch])
 
   const handleCloseClick = () => setIsNftPurchaseOpen(false)
   const handleSubmit = useCallback(() => {
@@ -95,6 +117,7 @@ export const NftPurchaseView: React.FC = () => {
   const placedBid = getValues().bid
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
+  const primaryButtonText = type === 'buy_now' || placedBid >= FIXED_PRICE ? 'Buy NFT' : 'Place bid'
 
   return (
     <CSSTransition
@@ -224,7 +247,7 @@ export const NftPurchaseView: React.FC = () => {
                     error={!!errors.bid}
                     helperText={errors.bid && errors.bid.message}
                   />
-                  {!!placedBid && placedBid > FIXED_PRICE && (
+                  {showBuyNowInfo && (
                     <BuyNowInfo variant="t100" spacing={{ top: 2 }}>
                       Max bid cannot be more than buy now price. Bidding for amount higher than Buy now will
                       automatically end the auction and make you an owner of that NFT.
@@ -343,7 +366,7 @@ export const NftPurchaseView: React.FC = () => {
         </Content>
         <StyledActionBar
           primaryButton={{
-            text: 'Place bid',
+            text: primaryButtonText,
             disabled: placedBid ? !placedBid.length : true,
             onClick: handleSubmit(),
           }}
