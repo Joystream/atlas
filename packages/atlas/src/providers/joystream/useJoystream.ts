@@ -23,6 +23,7 @@ export const useTokenPrice = () => {
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
+        maximumSignificantDigits: 2,
       })
 
       const price = getTokenPrice()
