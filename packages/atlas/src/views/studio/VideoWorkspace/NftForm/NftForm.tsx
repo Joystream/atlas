@@ -7,7 +7,7 @@ import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
 import { NftAuctionInputMetadata } from '@/joystream-lib'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
 import { sizes } from '@/styles'
@@ -76,8 +76,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
-  const memberAvatarUri =
-    activeMembership?.metadata.avatar?.__typename === 'AvatarUri' ? activeMembership?.metadata.avatar.avatarUri : null
+  const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
   const handleSubmit = useCallback(() => {
     if (currentStep === 2) {

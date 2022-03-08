@@ -60,7 +60,7 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => `
   }
 `
 
-const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize'
+const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize' && prop !== 'shouldHover'
 export const Content = styled('div', { shouldForwardProp: isContentPropValid })<ContentProps>`
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};

@@ -48,14 +48,6 @@ export type NftTileDetailsProps = {
 
 type TileSize = 'small' | 'medium'
 
-type DetailsContentProps = {
-  caption: string
-  icon: React.ReactNode
-  content: string | number
-  secondary?: boolean
-  tileSize: TileSize | undefined
-}
-
 const SMALL_SIZE_WIDTH = 288
 
 export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
@@ -257,6 +249,13 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   )
 }
 
+type DetailsContentProps = {
+  caption: string
+  icon: React.ReactNode
+  content: string | number
+  secondary?: boolean
+  tileSize: TileSize | undefined
+}
 const DetailsContent: React.FC<DetailsContentProps> = React.memo(({ tileSize, caption, icon, content, secondary }) => (
   <div>
     <Text variant={tileSize === 'medium' ? 't200' : 't100'} secondary>
