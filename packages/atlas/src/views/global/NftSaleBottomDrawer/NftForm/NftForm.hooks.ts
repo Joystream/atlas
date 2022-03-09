@@ -1,7 +1,7 @@
 import { differenceInMilliseconds, intervalToDuration } from 'date-fns'
 import { useCallback, useState } from 'react'
 
-import { SelectedAuctionOption } from '@/components/_inputs/AuctionDatePicker'
+import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { pluralizeNoun } from '@/utils/misc'
 import { daysToMilliseconds } from '@/utils/time'
@@ -29,35 +29,32 @@ export const useNftForm = () => {
   const nextStep = useCallback(() => setCurrentStep((step) => step + 1), [])
   const previousStep = useCallback(() => setCurrentStep((step) => step - 1), [])
 
-  const getNumberOfBlocksAndDaysLeft = (startDate: SelectedAuctionOption, endDate: SelectedAuctionOption) => {
-    const startDatePickedValue = startDate?.pickedValue
-    const endDatePickedValue = endDate?.pickedValue
-
-    const isStartDateAndEndDateValid = startDatePickedValue instanceof Date && endDatePickedValue instanceof Date
+  const getNumberOfBlocksAndDaysLeft = (startDate: AuctionDatePickerValue, endDate: AuctionDatePickerValue) => {
+    const isStartDateAndEndDateValid = startDate instanceof Date && endDate instanceof Date
     const now = new Date(Date.now())
 
     if (isStartDateAndEndDateValid) {
       return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDatePickedValue, startDatePickedValue)),
-        daysAndHoursText: getTotalDaysAndHoursText(startDatePickedValue, endDatePickedValue),
+        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate, startDate)),
+        daysAndHoursText: getTotalDaysAndHoursText(startDate, endDate),
       }
     }
-    if (endDatePickedValue instanceof Date) {
+    if (endDate instanceof Date) {
       return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDatePickedValue, now)),
-        daysAndHoursText: getTotalDaysAndHoursText(endDatePickedValue, now),
+        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate, now)),
+        daysAndHoursText: getTotalDaysAndHoursText(endDate, now),
       }
     }
-    if (endDate?.type === 'duration') {
-      if (endDate?.pickedValue === 0) {
-        return {
-          blocks: 0,
-          daysAndHoursText: 'No expiration date',
-        }
-      }
+    if (typeof endDate === 'string' && endDate === 'initial') {
       return {
-        blocks: convertDurationToBlocks(daysToMilliseconds(endDate.pickedValue)),
-        daysAndHoursText: pluralizeNoun(endDate.pickedValue, 'day'),
+        blocks: 0,
+        daysAndHoursText: 'No expiration date',
+      }
+    }
+    if (typeof endDate === 'number') {
+      return {
+        blocks: convertDurationToBlocks(daysToMilliseconds(endDate)),
+        daysAndHoursText: pluralizeNoun(endDate, 'day'),
       }
     }
   }

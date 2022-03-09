@@ -3,7 +3,7 @@ import { UseFormRegister, UseFormReset, UseFormSetValue } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { AuctionDatePicker, SelectedAuctionOption } from '@/components/_inputs/AuctionDatePicker'
+import { AuctionDatePicker, AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { SelectItem } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
@@ -28,11 +28,6 @@ type SetUpProps = {
 
 const INITIAL_START_DATE_VALUE = 'Right after listing'
 
-const DEFAULT_DATE = {
-  type: 'duration',
-  pickedValue: 0,
-} as const
-
 export const SetUp: React.FC<SetUpProps> = ({
   register,
   selectedType,
@@ -43,13 +38,13 @@ export const SetUp: React.FC<SetUpProps> = ({
   formData,
 }) => {
   const [auctionDate, setAuctionDate] = useState<AuctionDate>({
-    startDate: formData.startDate || DEFAULT_DATE,
-    endDate: formData.endDate || DEFAULT_DATE,
+    startDate: formData.startDate,
+    endDate: formData.endDate,
   })
 
   const { getNumberOfBlocksAndDaysLeft } = useNftForm()
 
-  const setAuctionDuration = (date: { startDate?: SelectedAuctionOption; endDate?: SelectedAuctionOption }) => {
+  const setAuctionDuration = (date: Partial<AuctionDate>) => {
     setAuctionDate((prevState) => ({ ...prevState, ...date }))
   }
 
@@ -94,12 +89,11 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }
 
-  const expirationDateItems: SelectItem<SelectedAuctionOption>[] = [0, 1, 3, 5, 7].map((item) => ({
-    name: item === 0 ? 'No expiration date' : pluralizeNoun(item, 'day'),
-    value: {
-      type: 'duration',
-      pickedValue: item,
-    },
+  const days = ['initial', 1, 3, 5, 7] as const
+
+  const expirationDateItems: SelectItem<AuctionDatePickerValue>[] = days.map((value) => ({
+    name: value === 'initial' ? 'No expiration date' : pluralizeNoun(value, 'day'),
+    value: value,
   }))
 
   return (
@@ -166,30 +160,27 @@ export const SetUp: React.FC<SetUpProps> = ({
                   size="regular"
                   label="Starting date"
                   minDate={new Date()}
-                  maxDate={(auctionDate.endDate?.type === 'date' && auctionDate.endDate?.pickedValue) || undefined}
+                  maxDate={(auctionDate.endDate instanceof Date && auctionDate.endDate) || undefined}
                   disabled={!activeInputs.includes('auctionDuration')}
                   items={[
                     {
-                      value: {
-                        type: 'duration',
-                        pickedValue: 0,
-                      },
+                      value: 'initial',
                       name: INITIAL_START_DATE_VALUE,
                     },
                   ]}
                   onChange={(value) => setAuctionDuration({ startDate: value })}
-                  value={auctionDate.startDate || DEFAULT_DATE}
+                  value={auctionDate.startDate || 'initial'}
                 />
                 <AuctionDatePicker
                   size="regular"
                   label="expiration date"
-                  minDate={(auctionDate.startDate?.type === 'date' && auctionDate.startDate?.pickedValue) || new Date()}
+                  minDate={(auctionDate.startDate instanceof Date && auctionDate.startDate) || new Date()}
                   disabled={!activeInputs.includes('auctionDuration')}
                   onChange={(value) => {
                     setAuctionDuration({ endDate: value })
                   }}
                   items={expirationDateItems}
-                  value={auctionDate.endDate || DEFAULT_DATE}
+                  value={auctionDate.endDate || 'initial'}
                 />
               </AuctionDatePickerWrapper>
             </FormField>

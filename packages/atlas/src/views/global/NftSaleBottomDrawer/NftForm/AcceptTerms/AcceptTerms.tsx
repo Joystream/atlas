@@ -42,8 +42,8 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
 
   const { startDate, endDate } = formData
 
-  const isStartDateValid = startDate?.type === 'date' && isDateValid(startDate?.pickedValue)
-  const isEndDateValid = endDate?.type === 'date' && isDateValid(endDate?.pickedValue)
+  const isStartDateValid = startDate instanceof Date && isDateValid(startDate)
+  const isEndDateValid = endDate instanceof Date && isDateValid(endDate)
 
   const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(startDate, endDate)
 
@@ -117,7 +117,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isStartDateValid ? formatDate(startDate?.pickedValue as Date, DATE_FORMAT) : 'Right after listing'}
+            {isStartDateValid ? formatDate(startDate as Date, DATE_FORMAT) : 'Right after listing'}
           </DescriptionText>
         </Description>
       </Row>
@@ -131,9 +131,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isEndDateValid
-              ? formatDate(endDate?.pickedValue as Date, DATE_FORMAT)
-              : numberOfBlocksAndDaysLeft?.daysAndHoursText}
+            {isEndDateValid ? formatDate(endDate as Date, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
           </DescriptionText>
         </Description>
       </Row>
