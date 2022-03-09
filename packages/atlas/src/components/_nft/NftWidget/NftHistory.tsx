@@ -1,7 +1,6 @@
 import { format } from 'date-fns'
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { CSSTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -10,7 +9,6 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
 import { useTokenPrice } from '@/providers/joystream'
-import { transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
 import {
