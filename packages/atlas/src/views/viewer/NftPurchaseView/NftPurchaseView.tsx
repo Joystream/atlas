@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { CSSTransition } from 'react-transition-group'
+import useResizeObserver from 'use-resize-observer'
 
 import { Avatar } from '@/components/Avatar'
 import { DrawerHeader } from '@/components/DrawerHeader'
@@ -72,14 +73,15 @@ const BID = {
 }
 
 export const NftPurchaseView: React.FC = () => {
-  const [type, setType] = useState<'auction' | 'open_auction' | 'buy_now'>('auction')
+  const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp()
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
+  const { convertDurationToBlocks } = useBlockTimeEstimation()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
   const timeLeftSeconds = Math.trunc((END_TIME - timestamp) / 1000)
   const {
     watch,
@@ -118,6 +120,7 @@ export const NftPurchaseView: React.FC = () => {
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
   const primaryButtonText = type === 'buy_now' || placedBid >= FIXED_PRICE ? 'Buy NFT' : 'Place bid'
+  const blocksLeft = convertDurationToBlocks(END_TIME - timestamp)
 
   return (
     <CSSTransition
@@ -131,10 +134,10 @@ export const NftPurchaseView: React.FC = () => {
       <Container role="dialog">
         {/* this needs to be removed after integration */}
         <div style={{ position: 'fixed', top: '10px', left: '10px' }}>
-          <Button variant="tertiary" onClick={() => setType('auction')}>
+          <Button variant="tertiary" onClick={() => setType('english_auction')}>
             auction
           </Button>
-          <Button variant="tertiary" onClick={() => setType('auction')}>
+          <Button variant="tertiary" onClick={() => setType('open_auction')}>
             open auction
           </Button>
           <Button variant="tertiary" onClick={() => setType('buy_now')}>
@@ -146,10 +149,10 @@ export const NftPurchaseView: React.FC = () => {
           <NftPreview>
             <NftCard title="title" {...DUMMY_NFT_TILE_PROPS} fullWidth={!mdMatch} />
           </NftPreview>
-          <PlaceBidWrapper>
+          <PlaceBidWrapper actionBarHeight={actionBarBoundsHeight}>
             <InnerContainer>
               <Header>
-                <Text variant="h600">{type === 'auction' ? 'Place a bid' : 'Buy NFT'}</Text>
+                <Text variant="h600">{type !== 'buy_now' ? 'Place a bid' : 'Buy NFT'}</Text>
                 {type !== 'open_auction' && (
                   <FlexWrapper>
                     <EndingTime>
@@ -158,16 +161,15 @@ export const NftPurchaseView: React.FC = () => {
                       </Text>
                       <Timer
                         variant="h200"
-                        spacing={{ left: 4, right: 2 }}
+                        margin={{ left: 4, right: 2 }}
                         color={timeLeftUnderMinute ? cVar('colorTextError', true) : undefined}
                       >
-                        {timeLeftSeconds &&
-                          (!timeLeftUnderMinute ? formatDurationShort(timeLeftSeconds, true) : 'Under 1 min')}
+                        {!timeLeftUnderMinute ? formatDurationShort(timeLeftSeconds, true) : 'Under 1 min'}
                       </Timer>
                     </EndingTime>
                     <FlexWrapper>
-                      <Text variant="t100" secondary spacing={{ left: 2, right: 1 }}>
-                        {convertMsTimestampToBlock(END_TIME)} blocks
+                      <Text variant="t100" secondary margin={{ left: 2, right: 1 }}>
+                        {blocksLeft > 0 ? blocksLeft : 0} {blocksLeft === 1 ? 'block' : 'blocks'}
                       </Text>
                       <Information
                         text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
@@ -178,13 +180,13 @@ export const NftPurchaseView: React.FC = () => {
                   </FlexWrapper>
                 )}
               </Header>
-              {type === 'auction' ? (
+              {type !== 'buy_now' ? (
                 <>
                   <CurrentBidWrapper>
                     {BID ? (
                       <ActiveBidWrapper>
                         <ActionBarCell>
-                          <Text variant="h300" secondary spacing={{ bottom: 2 }}>
+                          <Text variant="h300" secondary margin={{ bottom: 2 }}>
                             Current bid
                           </Text>
                           <FlexWrapper>
@@ -193,7 +195,7 @@ export const NftPurchaseView: React.FC = () => {
                           </FlexWrapper>
                         </ActionBarCell>
                         <ActionBarCell>
-                          <Text variant="h300" secondary spacing={{ bottom: 2 }}>
+                          <Text variant="h300" secondary margin={{ bottom: 2 }}>
                             Bid amount
                           </Text>
                           <FlexWrapper>
@@ -205,7 +207,7 @@ export const NftPurchaseView: React.FC = () => {
                     ) : (
                       <ActiveBidWrapper>
                         <ActionBarCell>
-                          <Text variant="h300" secondary spacing={{ bottom: 2 }}>
+                          <Text variant="h300" secondary margin={{ bottom: 2 }}>
                             Current bid
                           </Text>
                           <Text variant="h400">Nobody has bid yet</Text>
@@ -248,7 +250,7 @@ export const NftPurchaseView: React.FC = () => {
                     helperText={errors.bid && errors.bid.message}
                   />
                   {showBuyNowInfo && (
-                    <BuyNowInfo variant="t100" spacing={{ top: 2 }}>
+                    <BuyNowInfo variant="t100" margin={{ top: 2 }}>
                       Max bid cannot be more than buy now price. Bidding for amount higher than Buy now will
                       automatically end the auction and make you an owner of that NFT.
                     </BuyNowInfo>
@@ -279,7 +281,7 @@ export const NftPurchaseView: React.FC = () => {
                   </Text>
                   <PaymentSplitValues>
                     <Avatar size="bid" />
-                    <Text variant="h400" secondary spacing={{ left: 2 }}>
+                    <Text variant="h400" secondary margin={{ left: 2 }}>
                       88%
                     </Text>
                   </PaymentSplitValues>
@@ -290,7 +292,7 @@ export const NftPurchaseView: React.FC = () => {
                   </Text>
                   <PaymentSplitValues>
                     <Avatar size="bid" />
-                    <Text variant="h400" secondary spacing={{ left: 2 }}>
+                    <Text variant="h400" secondary margin={{ left: 2 }}>
                       10%
                     </Text>
                   </PaymentSplitValues>
@@ -301,14 +303,14 @@ export const NftPurchaseView: React.FC = () => {
                   </Text>
                   <PaymentSplitValues>
                     <SvgJoystreamLogoShort />
-                    <Text variant="h400" secondary spacing={{ left: 2 }}>
+                    <Text variant="h400" secondary margin={{ left: 2 }}>
                       2%
                     </Text>
                   </PaymentSplitValues>
                 </div>
               </PaymentSplitWrapper>
               <Divider />
-              <Text variant="h400" spacing={{ bottom: 4 }}>
+              <Text variant="h400" margin={{ bottom: 4 }}>
                 Price breakdown
               </Text>
               <Row>
@@ -325,11 +327,11 @@ export const NftPurchaseView: React.FC = () => {
               </Row>
               <Row>
                 <Text variant="t100" secondary>
-                  {!placedBid && type === 'auction' ? 'You need to fill out the amount first' : 'Your bid'}
+                  {!placedBid && type !== 'buy_now' ? 'You need to fill out the amount first' : 'Your bid'}
                 </Text>
                 {placedBid && (
                   <Text variant="t100" secondary>
-                    {type === 'auction' ? placedBid : FIXED_PRICE}
+                    {type !== 'buy_now' ? placedBid : FIXED_PRICE} tJOY
                   </Text>
                 )}
               </Row>
@@ -348,15 +350,15 @@ export const NftPurchaseView: React.FC = () => {
                       You will pay
                     </Text>
                     <Text variant="h500">
-                      {type === 'buy_now' ? FIXED_PRICE : (Number(placedBid) || 0) + TRANSACTION_FEE} tJOY
+                      {(type === 'buy_now' ? FIXED_PRICE : Number(placedBid) || 0) + TRANSACTION_FEE} tJOY
                     </Text>
                   </Row>
                 </>
               )}
-              {type === 'auction' && (
+              {type !== 'buy_now' && (
                 <Messages>
                   <SvgAlertsWarning24 />
-                  <Text variant="t200" secondary spacing={{ left: 2 }}>
+                  <Text variant="t200" secondary margin={{ left: 2 }}>
                     if your bid was not successful, it can be withdrawn in {'{X}'} hours
                   </Text>
                 </Messages>
@@ -365,6 +367,7 @@ export const NftPurchaseView: React.FC = () => {
           </PlaceBidWrapper>
         </Content>
         <StyledActionBar
+          ref={actionBarRef}
           primaryButton={{
             text: primaryButtonText,
             disabled: placedBid ? !placedBid.length : true,

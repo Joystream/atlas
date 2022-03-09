@@ -7,8 +7,6 @@ import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
-const ACTION_BAR_HEIGHT = '80px'
-
 const flexStyles = css`
   display: flex;
   align-items: center;
@@ -83,11 +81,11 @@ export const NftPreview = styled.div`
   }
 `
 
-export const PlaceBidWrapper = styled.div`
+export const PlaceBidWrapper = styled.div<{ actionBarHeight: number }>`
   padding-bottom: ${sizes(6)};
 
   ${media.md} {
-    height: calc(100% - ${ACTION_BAR_HEIGHT});
+    height: calc(100% - ${({ actionBarHeight }) => `${actionBarHeight}px`});
     overflow-y: auto;
     padding-bottom: unset;
   }
