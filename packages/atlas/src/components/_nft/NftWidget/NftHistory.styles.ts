@@ -8,7 +8,7 @@ import { SizeProps, sizeObj } from './NftWidget.styles'
 
 type OpenProps = { 'data-open': boolean }
 
-export const NftHistoryHeader = styled.div<SizeProps>`
+export const NftHistoryHeader = styled.div<SizeProps & OpenProps>`
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
@@ -18,6 +18,10 @@ export const NftHistoryHeader = styled.div<SizeProps>`
 
   &[data-size=${sizeObj.small}] {
     padding: ${sizes(4)};
+  }
+
+  &[data-open='true'] {
+    padding-bottom: 0;
   }
 `
 
@@ -31,45 +35,47 @@ export const StyledChevronButton = styled(Button)<OpenProps>`
   }
 `
 
-type HistoryPanelProps = { width: number } & SizeProps
+export const FadingBlock = styled.div<{ width: number } & { 'data-bottom'?: boolean } & SizeProps>`
+  height: ${sizes(6)};
+  background: linear-gradient(0deg, rgb(11 12 15 / 0) 0%, #0b0c0f 100%);
+  position: absolute;
+  width: ${({ width }) => width}px;
+  z-index: 1;
+
+  &[data-size=${sizeObj.small}] {
+    height: ${sizes(4)};
+  }
+
+  &[data-bottom] {
+    transform: rotate(180deg);
+    bottom: 0;
+  }
+`
+
+type HistoryPanelProps = { width: number } & SizeProps & OpenProps
 export const HistoryPanel = styled.div<HistoryPanelProps>`
   background-color: ${cVar('colorBackgroundMuted')};
-  position: absolute;
+  position: relative;
   width: ${({ width }) => width}px;
   display: grid;
   gap: ${sizes(6)};
   height: 280px;
-  padding: 0 ${sizes(6)} ${sizes(6)} ${sizes(6)};
+  padding: ${sizes(6)};
   overflow: hidden auto;
-  transition: transform ${cVar('animationTransitionMedium')}, height ${cVar('animationTransitionMedium')};
-  will-change: height, transform;
+  transition: transform ${cVar('animationTransitionFast')};
+  will-change: transform;
 
   &[data-size=${sizeObj.small}] {
     gap: ${sizes(4)};
-    padding: 0 ${sizes(4)} ${sizes(4)} ${sizes(4)};
+    padding: ${sizes(4)};
   }
 
-  &.history-enter {
-    transform: translateY(-100%);
-    z-index: -1;
-  }
+  transform: translateY(-100%);
+  z-index: -1;
 
-  &.history-enter-active {
-    transform: translateY(0);
-  }
-
-  &.history-enter-done {
-    z-index: unset;
-  }
-
-  &.history-exit {
+  &[data-open='true'] {
     transform: translateY(0);
     z-index: unset;
-  }
-
-  &.history-exit-active {
-    transform: translateY(-100%);
-    z-index: -1;
   }
 `
 

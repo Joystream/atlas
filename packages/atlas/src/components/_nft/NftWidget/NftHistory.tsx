@@ -16,6 +16,7 @@ import { formatNumberShort } from '@/utils/number'
 import {
   CopyContainer,
   DollarValue,
+  FadingBlock,
   HistoryItemContainer,
   HistoryPanel,
   JoyPlusIcon,
@@ -104,24 +105,22 @@ export const NftHistory: React.FC<{ size: Size; width: number }> = ({ size, widt
 
   return (
     <>
-      <NftHistoryHeader data-size={size} onClick={toggleIsOpen}>
+      <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
         <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
         <StyledChevronButton data-open={isOpen} iconOnly variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
-      <CSSTransition
-        in={isOpen}
-        timeout={parseInt(transitions.timings.sharp)}
-        classNames="history"
-        mountOnEnter
-        unmountOnExit
-      >
-        <HistoryPanel width={width} data-size={size}>
-          {/* TODO: remove dummy data */}
-          {dummyData.map((props: HistoryItemProps, index) => (
-            <HistoryItem key={index} {...props} />
-          ))}
-        </HistoryPanel>
-      </CSSTransition>
+      {isOpen && (
+        <div style={{ position: 'relative' }}>
+          <FadingBlock data-size={size} width={width} />
+          <HistoryPanel width={width} data-size={size} data-open={isOpen}>
+            {/* TODO: remove dummy data */}
+            {dummyData.map((props: HistoryItemProps, index) => (
+              <HistoryItem key={index} {...props} />
+            ))}
+          </HistoryPanel>
+          <FadingBlock data-size={size} width={width} data-bottom />
+        </div>
+      )}
     </>
   )
 }
