@@ -10,7 +10,6 @@ import { NftAuctionInputMetadata } from '@/joystream-lib'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
-import { sizes } from '@/styles'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
@@ -75,6 +74,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
   } = useForm<NftFormData>({ mode: 'onChange' })
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
+  const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
@@ -158,11 +158,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
     nftStatus: getNftStatus(),
     thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
     title: video?.title,
-    owner:
-      getNftStatus() === 'auction'
-        ? { assetUrl: null, name: 'Owner: Auction winner' }
-        : { assetUrl: memberAvatarUri, name: activeMembership?.handle },
-    creator: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
+    owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
+    creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
     loading: loadingVideo,
     duration: video?.duration,
     views: video?.views,
@@ -197,7 +194,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
       <NftWorkspaceFormWrapper>
         <NftPreview>
           <NftTile interactable={false} {...nftTileProps} />
-          <Text margin={{ top: sizes(4) }} variant="h100" secondary>
+          <Text margin={{ top: 4 }} variant="h100" secondary>
             Your nft preview
           </Text>
         </NftPreview>

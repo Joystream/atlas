@@ -16,8 +16,8 @@ import {
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
+import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
-import { copyToClipboard } from '@/utils/browser'
 import { formatNumberShort } from '@/utils/number'
 
 import {
@@ -64,6 +64,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   videoHref,
   interactable = true,
 }) => {
+  const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
   const [tileSize, setTileSize] = useState<TileSize>()
@@ -84,7 +85,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '')
-  }, [videoHref])
+  }, [copyToClipboard, videoHref])
 
   const getContextMenuContent = useMemo(() => {
     const elements: MenuItemProps[] = [
