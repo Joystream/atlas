@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export type TextBaseProps = {
   color?: string
@@ -12,20 +12,21 @@ export type TextBaseProps = {
 
 type MarginProps =
   | {
-      top?: string
-      bottom?: string
-      left?: string
-      right?: string
+      top?: number
+      bottom?: number
+      left?: number
+      right?: number
     }
-  | string
+  | number
 
 const marginStyles = ({ margin }: TextBaseProps) =>
-  typeof margin !== 'string' && !!margin
+  typeof margin !== 'number' && !!margin
     ? css`
-        margin: ${margin.top} ${margin.right} ${margin.bottom} ${margin.left};
+        margin: ${sizes(margin.top ?? 0)} ${sizes(margin.right ?? 0)} ${sizes(margin.bottom ?? 0)}
+          ${sizes(margin.left ?? 0)};
       `
     : css`
-        margin: ${margin ?? 0};
+        margin: ${sizes(margin ?? 0)};
       `
 
 const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
