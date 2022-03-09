@@ -15,7 +15,7 @@ const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 
-type JoystreamContextValue = {
+export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
 } & ReturnType<typeof useJoystreamUtilFns>
@@ -147,8 +147,10 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
   const getCurrentBlockMsTimestamp = useCallback(() => currentBlockMsTimestampRef.current, [])
 
   return {
+    tokenPrice: tokenPriceRef.current,
     getTokenPrice,
     getCurrentBlock,
+    currentBlock: currentBlockRef.current,
     getCurrentBlockMsTimestamp,
   }
 }

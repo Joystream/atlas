@@ -1,13 +1,17 @@
 import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { useNft } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
-import { useTokenPrice } from '@/providers/joystream'
+import { useMemberAvatar } from '@/providers/assets'
+import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useUser } from '@/providers/user'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -33,14 +37,15 @@ export type Auction = {
   topBid?: number
   isCompleted?: boolean
   canWithdrawBid?: boolean
+  needsSettling: boolean
   auctionPlannedEndDate?: Date
 }
 
 export type NftWidgetProps = {
   ownerHandle?: string
-  ownerAvatarUri?: string
-  isOwner: boolean
-  nftStatus:
+  ownerAvatarUri?: string | null
+  isOwner?: boolean
+  nftStatus?:
     | { status: 'idle'; lastPrice?: number; lastTransactionDate?: Date }
     | { status: 'buy-now'; buyNowPrice: number }
     | Auction
@@ -48,14 +53,19 @@ export type NftWidgetProps = {
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
-export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftStatus, ownerAvatarUri }) => {
+export const NftWidget: React.FC<NftWidgetProps> = ({
+  ownerHandle,
+  isOwner,
+  nftStatus = { status: 'idle' },
+  ownerAvatarUri,
+}) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
   })
+
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
 
   const { convertToUSD } = useTokenPrice()
-
   const content = useDeepMemo(() => {
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
@@ -138,7 +148,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           </>
         )
       case 'auction':
-        return nftStatus.isCompleted ? (
+        return nftStatus.needsSettling ? (
           <>
             <NftInfoItem
               size={size}
@@ -211,7 +221,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
               )
             ) : nftStatus.buyNowPrice ? (
               <GridItem colSpan={buttonColumnSpan}>
-                <ButtonGrid data-size={size} data-two-columns>
+                <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                   <Button fullWidth variant="secondary" size={buttonSize}>
                     Place a bid
                   </Button>
@@ -245,8 +255,8 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
     }
   }, [size, nftStatus, convertToUSD, isOwner])
   return (
-    <Container>
-      <NftOwnerContainer ref={ref} data-size={size}>
+    <Container ref={ref}>
+      <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
           This NFT is owned by
@@ -260,4 +270,74 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       <NftHistory size={size} width={width} />
     </Container>
   )
+}
+
+type HookReturn = NftWidgetProps & { shouldRenderWidget: boolean }
+export const useNftWidget = (videoId?: string): HookReturn => {
+  const { nft } = useNft(videoId ?? '')
+  const { activeMembership } = useUser()
+  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
+  const { currentBlock, getCurrentBlock } = useJoystream()
+
+  const owner = nft?.ownerMember ?? nft?.video.channel.ownerMember
+
+  const { url: ownerAvatarUri } = useMemberAvatar(owner)
+
+  const isOwner = owner?.id === activeMembership?.id
+
+  switch (nft?.transactionalStatus.__typename) {
+    case 'TransactionalStatusAuction': {
+      const userBid = nft.transactionalStatus.auction?.bids.find(
+        (bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id
+      )
+      return {
+        ownerHandle: owner?.handle,
+        ownerAvatarUri,
+        isOwner,
+        nftStatus: {
+          status: 'auction',
+          needsSettling:
+            !!nft.transactionalStatus.auction?.lastBid &&
+            !!nft.transactionalStatus.auction?.plannedEndAtBlock &&
+            nft.transactionalStatus.auction?.plannedEndAtBlock <= getCurrentBlock(),
+          startingPrice: nft.transactionalStatus.auction?.startingPrice ?? 0,
+          buyNowPrice: nft.transactionalStatus.auction?.buyNowPrice ?? undefined,
+          topBid: nft.transactionalStatus.auction?.lastBid?.amount,
+          isCompleted: nft.transactionalStatus.auction?.isCompleted,
+          canWithdrawBid:
+            nft.transactionalStatus.auction?.isCompleted ||
+            (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
+              userBid &&
+              nft?.transactionalStatus?.auction?.auctionType.bidLockingTime + userBid.createdInBlock > currentBlock),
+          auctionPlannedEndDate: nft.transactionalStatus.auction?.plannedEndAtBlock
+            ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.plannedEndAtBlock))
+            : undefined,
+        },
+        shouldRenderWidget: true,
+      }
+    }
+    case 'TransactionalStatusBuyNow':
+      return {
+        ownerHandle: owner?.handle,
+        ownerAvatarUri,
+        isOwner,
+        nftStatus: {
+          status: 'buy-now',
+          buyNowPrice: nft.transactionalStatus.price,
+        },
+        shouldRenderWidget: true,
+      }
+    case 'TransactionalStatusIdle':
+      return {
+        ownerHandle: owner?.handle,
+        ownerAvatarUri,
+        isOwner,
+        nftStatus: {
+          status: 'idle',
+        },
+        shouldRenderWidget: true,
+      }
+  }
+
+  return { shouldRenderWidget: false }
 }
