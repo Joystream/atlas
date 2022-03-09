@@ -40,12 +40,12 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
 }) => {
   const { getNumberOfBlocksAndDaysLeft } = useNftForm()
 
-  const isStartDateValid = isDateValid(formData.startDate)
-  const isEndDateValid = isDateValid(formData.endDate)
+  const { startDate, endDate } = formData
 
-  const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(formData.startDate, formData.endDate)
+  const isStartDateValid = startDate?.type === 'date' && isDateValid(startDate?.pickedValue)
+  const isEndDateValid = endDate?.type === 'date' && isDateValid(endDate?.pickedValue)
 
-  const validStartAndEndingDate = isStartDateValid && isEndDateValid
+  const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(startDate, endDate)
 
   return (
     <>
@@ -110,32 +110,34 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       <Row>
         <Title>
           <TitleText>Starting date</TitleText>
-          <Information
+          <StyledInformation
             text="It’s the time when your auction will become active and buyer will be able to make an offer"
             placement="top"
           />
         </Title>
         <Description>
           <DescriptionText>
-            {validStartAndEndingDate ? formatDate(formData.startDate as Date, DATE_FORMAT) : 'Right after listing'}
+            {isStartDateValid ? formatDate(startDate?.pickedValue as Date, DATE_FORMAT) : 'Right after listing'}
           </DescriptionText>
         </Description>
       </Row>
       <Row>
         <Title>
           <TitleText>Expiration date</TitleText>
-          <Information
+          <StyledInformation
             text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
             placement="top"
           />
         </Title>
         <Description>
           <DescriptionText>
-            {isEndDateValid ? formatDate(formData.endDate as Date, DATE_FORMAT) : 'No expiration date'}
+            {isEndDateValid
+              ? formatDate(endDate?.pickedValue as Date, DATE_FORMAT)
+              : numberOfBlocksAndDaysLeft?.daysAndHoursText}
           </DescriptionText>
         </Description>
       </Row>
-      {numberOfBlocksAndDaysLeft && (
+      {numberOfBlocksAndDaysLeft && numberOfBlocksAndDaysLeft.blocks !== 0 && (
         <Row>
           <Title>
             <TitleText>Total auction duration</TitleText>
@@ -154,7 +156,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Description>
             <DescriptionText>{numberOfBlocksAndDaysLeft.daysAndHoursText}</DescriptionText>
             <Text variant="h400" secondary>
-              &nbsp;/ {numberOfBlocksAndDaysLeft.blocks}
+              &nbsp;/ {numberOfBlocksAndDaysLeft.blocks} Blocks
             </Text>
           </Description>
         </Row>

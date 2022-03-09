@@ -1,4 +1,4 @@
-export type Listing = 'Auction' | 'Fixed price' | undefined
+import { SelectedAuctionOption } from '@/components/_inputs/AuctionDatePicker'
 
 export enum AuctionDuration {
   NoExpiration = 'No expiration date',
@@ -8,12 +8,11 @@ export enum AuctionDuration {
   SevenDays = '7 days',
 }
 
-export type StartDate = Date | string | null | 'Right after listing'
-export type EndDate = Date | string | null | AuctionDuration
+export type Listing = 'Auction' | 'Fixed price' | 'Not for sale' | undefined
 
 export type AuctionDate = {
-  startDate: StartDate
-  endDate: EndDate
+  startDate: SelectedAuctionOption
+  endDate: SelectedAuctionOption
 }
 
 export type NftFormData = {
