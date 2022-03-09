@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 
+import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { SvgActionArrowRight } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
@@ -55,4 +56,8 @@ export const Divider = styled.hr`
   border: 0;
   box-shadow: ${cVar('effectDividersTop')};
   margin: ${sizes(10)} 0;
+`
+
+export const StyledInformation = styled(Information)`
+  margin-left: ${sizes(1)};
 `

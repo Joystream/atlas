@@ -36,7 +36,7 @@ export type VideoWorkspaceVideoFormFields = {
   licenseCustomText: string | null
   licenseAttribution: string | null
   hasMarketing: boolean | null
-  isPublic: boolean
+  isPublic: boolean | null
   isExplicit: boolean
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceVideoAssets

@@ -16,7 +16,7 @@ export const OptionsWrapper = styled.div`
 export const AuctionDatePickerWrapper = styled.div`
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
   gap: ${sizes(4)};
 `
 

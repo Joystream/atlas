@@ -57,7 +57,7 @@ export const convertVideoFormDataToFormFields = (
     ...(category ? { category: category?.toString() } : {}),
     ...(hasMarketing ? { hasMarketing } : {}),
     ...(language ? { language } : {}),
-    ...(isPublic ? { isPublic } : {}),
+    ...(isPublic !== undefined ? { isPublic } : {}),
     ...(isExplicit ? { isExplicit } : {}),
     ...(license?.attribution ? { licenseAttribution: license?.attribution } : {}),
     ...(license?.code ? { licenseCode: license?.code } : {}),
