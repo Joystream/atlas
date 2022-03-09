@@ -24,13 +24,13 @@ export const NftPreview = styled.div`
   justify-content: center;
   align-items: center;
   padding: ${sizes(16)} ${sizes(4)};
+  flex-direction: column;
 
   ${media.md} {
     width: 50%;
     position: fixed;
     left: 0;
     height: 100%;
-    flex-direction: row;
   }
 `
 
