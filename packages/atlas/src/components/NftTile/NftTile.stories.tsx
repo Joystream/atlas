@@ -23,8 +23,8 @@ export default {
   args: {
     role: 'owner',
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    auction: 'none',
-    minBid: 1234,
+    nftStatus: 'none',
+    startingPrice: 1234,
     buyNowPrice: 0,
     topBid: 123,
     thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },

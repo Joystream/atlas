@@ -146,6 +146,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
                   />
                 ) : (
                   <NftForm
+                    videoId={editedVideoInfo?.id ?? ''}
                     setFormStatus={setFormStatus}
                     onSubmit={handleNftSubmit}
                     setIsNftFormOpen={setIsNftFormOpen}

@@ -60,12 +60,12 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       case 'TransactionalStatusInitiatedOfferToMember':
         return {
           ...nftCommonProps,
-          auction: 'none',
+          nftStatus: 'idle',
         }
       case 'TransactionalStatusBuyNow':
         return {
           ...nftCommonProps,
-          auction: 'none',
+          nftStatus: 'on-sale',
           buyNowPrice: nft.transactionalStatus.price,
         }
       case 'TransactionalStatusAuction': {
@@ -76,9 +76,9 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
 
         return {
           ...nftCommonProps,
-          auction: isEnded ? 'none' : nft.transactionalStatus.auction?.lastBid?.amount ? 'topBid' : 'minBid',
+          nftStatus: isEnded ? 'idle' : 'auction',
           buyNowPrice: isEnded ? undefined : nft.transactionalStatus.auction?.buyNowPrice,
-          minBid: nft.transactionalStatus.auction?.startingPrice,
+          startingPrice: nft.transactionalStatus.auction?.startingPrice,
           topBid: nft.transactionalStatus.auction?.lastBid?.amount,
           timeLeftMs: plannedEndMsTimestamp ? plannedEndMsTimestamp - msTimestamp : undefined,
         }
@@ -86,7 +86,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       default:
         return {
           ...nftCommonProps,
-          auction: 'none',
+          nftStatus: 'idle',
         }
     }
   }
