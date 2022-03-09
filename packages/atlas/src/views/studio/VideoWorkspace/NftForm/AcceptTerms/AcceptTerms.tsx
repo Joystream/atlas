@@ -2,12 +2,20 @@ import { differenceInMilliseconds, format, isValid } from 'date-fns'
 import React from 'react'
 
 import { Banner } from '@/components/Banner'
-import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 
-import { Description, Divider, Header, Row, StyledSvgActionArrowRight, TermsBox, Title } from './AcceptTerms.styles'
+import {
+  Description,
+  Divider,
+  Header,
+  Row,
+  StyledInformation,
+  StyledSvgActionArrowRight,
+  TermsBox,
+  Title,
+} from './AcceptTerms.styles'
 
 import { StyledSvgWarning, YellowText } from '../../VideoWorkspace.style'
 import { useNftForm } from '../NftForm.hooks'
@@ -61,7 +69,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       <Row>
         <Title>
           <TitleText>Listing type</TitleText>
-          <Information
+          <StyledInformation
             text="Offers can be received. You can accept any bid at any time unless auction duration is set (then the highest offer wins)"
             placement="top"
           />
@@ -74,13 +82,15 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         <Row>
           <Title>
             <TitleText>Minimum bid</TitleText>
-            <Information
+            <StyledInformation
               text="Its the starting price of your auction. No lower bids will be accepted"
               placement="top"
             />
           </Title>
           <Description>
-            <DescriptionText>{formData.startingPrice}</DescriptionText>
+            <DescriptionText>
+              {Number(formData.startingPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJoy
+            </DescriptionText>
           </Description>
         </Row>
       )}
@@ -88,13 +98,15 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         <Row>
           <Title>
             <TitleText>Fixed price</TitleText>
-            <Information
+            <StyledInformation
               text="Sell your NFT for a predefined price. When this price is reached it automatically ends auction"
               placement="top"
             />
           </Title>
           <Description>
-            <DescriptionText>{formData.buyNowPrice}</DescriptionText>
+            <DescriptionText>
+              {Number(formData.buyNowPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJoy
+            </DescriptionText>
           </Description>
         </Row>
       )}
@@ -103,7 +115,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Row>
             <Title>
               <TitleText>Starting date</TitleText>
-              <Information
+              <StyledInformation
                 text="It’s the time when your auction will become active and buyer will be able to make an offer"
                 placement="top"
               />
@@ -115,7 +127,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Row>
             <Title>
               <TitleText>Expiration date</TitleText>
-              <Information
+              <StyledInformation
                 text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
                 placement="top"
               />
@@ -130,7 +142,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         <Row>
           <Title>
             <TitleText>Total auction duration</TitleText>
-            <Information
+            <StyledInformation
               text="Auctions are run and settled on-chain and use tJoy’s blocks, rather than clock time."
               footer={
                 <AuctionDurationTooltipFooter>
@@ -145,7 +157,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Description>
             <DescriptionText>{daysAndHours}</DescriptionText>
             <Text variant="h400" secondary>
-              &nbsp;/ {numberOfBlocks}
+              &nbsp;/ {numberOfBlocks} Blocks
             </Text>
           </Description>
         </Row>
@@ -154,7 +166,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         <Row>
           <Title>
             <TitleText>Royalties</TitleText>
-            <Information
+            <StyledInformation
               text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
               footer={<RoyaltiesTooltipFooter />}
               placement="top"
@@ -170,7 +182,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       <Row>
         <Title>
           <TitleText>Fee</TitleText>
-          <Information
+          <StyledInformation
             text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
             footer={<RoyaltiesTooltipFooter />}
             placement="top"

@@ -248,12 +248,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       if (isValid) {
         return isEdit ? isDirty || isIssuedAsNft : true
       }
-      return false
+      return isIssuedAsNft
     }, [isValid, isEdit, isDirty, isIssuedAsNft])
 
     const actionBarPrimaryText = useMemo(() => {
       if (isIssuedAsNft) {
-        return 'Next'
+        return 'Next step'
       }
       if (isEdit) {
         return 'Publish changes'
