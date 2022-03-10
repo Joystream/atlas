@@ -52,6 +52,7 @@ const Template: Story<BottomDrawerProps> = (args) => {
             onClick: () => setActionBarOpen(false),
           },
         }}
+        coverTopbar={args.coverTopbar}
       >
         <Content>
           <Button onClick={() => setActionBarOpen((prev) => !prev)}>Toggle action bar</Button>

@@ -28,15 +28,18 @@ export const DrawerOverlay = styled.div`
   }
 `
 
-export const Container = styled.div`
+type ContainerProps = {
+  coverTopbar: boolean
+}
+export const Container = styled.div<ContainerProps>`
   transform: translateY(100%);
   opacity: 0;
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
-  top: var(--size-topbar-height);
+  top: ${({ coverTopbar }) => (coverTopbar ? 0 : 'var(--size-topbar-height)')};
   left: 0;
   right: 0;
-  height: calc(100vh - var(--size-topbar-height));
+  height: calc(100vh - ${({ coverTopbar }) => (coverTopbar ? 0 : 'var(--size-topbar-height)')};);
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
@@ -62,7 +65,6 @@ export const Container = styled.div`
 
 type ScrollContainerProps = {
   actionBarHeight?: number
-  isEdit?: boolean
 }
 export const ScrollContainer = styled.div<ScrollContainerProps>`
   flex: 1;

@@ -16,6 +16,7 @@ export type BottomDrawerProps = {
   title?: string
   titleLabel?: string
   actionBar?: ActionBarProps
+  coverTopbar?: boolean
 }
 
 export const BottomDrawer: React.FC<BottomDrawerProps> = ({
@@ -25,6 +26,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
   titleLabel,
   children,
   actionBar: actionBarProps,
+  coverTopbar,
 }) => {
   const headTags = useHeadTags(title)
 
@@ -68,7 +70,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
         classNames="bottom-drawer"
       >
-        <Container role="dialog">
+        <Container role="dialog" coverTopbar={!!coverTopbar}>
           <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
           <ScrollContainer actionBarHeight={actionBarHeight}>{children}</ScrollContainer>
           {actionBarProps ? <StyledActionBar ref={actionBarRef} {...actionBarProps} /> : null}
