@@ -13,7 +13,7 @@ import { Select } from '@/components/_inputs/Select'
 import { VideoTileDraft } from '@/components/_video/VideoTileDraft'
 import { VideoTilePublisher } from '@/components/_video/VideoTilePublisher'
 import { absoluteRoutes } from '@/config/routes'
-import { SORT_OPTIONS } from '@/config/sorting'
+import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -261,7 +261,7 @@ export const MyVideosView = () => {
       labelPosition="left"
       label="Sort by"
       value={sortVideosBy}
-      items={SORT_OPTIONS}
+      items={VIDEO_SORT_OPTIONS}
       onChange={handleSorting}
     />
   )
@@ -336,7 +336,7 @@ export const MyVideosView = () => {
               labelPosition="left"
               label="Sort by"
               value={sortVideosBy}
-              items={SORT_OPTIONS}
+              items={VIDEO_SORT_OPTIONS}
               onChange={handleSorting}
             />
           )}

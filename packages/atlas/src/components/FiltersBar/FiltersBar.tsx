@@ -52,6 +52,8 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
+  ownedNftWhereInput,
+  setOwnedNftWhereInput,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
@@ -92,21 +94,17 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
   const { categories } = useCategories()
-
   const nftStatusInputs = useMemo(
     () => (
       <FilterContentContainer>
         {nftStatuses.map((status) => (
-          <Checkbox
+          <RadioButton
             name="nft-status"
             label={status.name}
             key={`nft-status-${status.id}`}
-            value={!!nftStatusFilter?.includes(status.id)}
-            onChange={(value) => {
-              setNftStatusFilter((statuses) =>
-                value ? [...(statuses ?? []), status.id] : statuses?.filter((id) => id !== status.id)
-              )
-            }}
+            value={status.id}
+            selectedValue={nftStatusFilter}
+            onChange={(event) => setNftStatusFilter(event.target.value)}
           />
         ))}
       </FilterContentContainer>
@@ -330,6 +328,14 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   : undefined,
               ...getDurationRules(),
             }))
+            setOwnedNftWhereInput((value) => ({
+              ...value,
+              transactionalStatus_json: nftStatusFilter
+                ? {
+                    isTypeOf_eq: nftStatusFilter,
+                  }
+                : undefined,
+            }))
             setIsFiltersOpen(false)
           },
         }}
@@ -358,16 +364,24 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
-                <Button variant="secondary" badge={canClearNftStatusFilter && nftStatusFilter?.length}>
+                <Button variant="secondary" badge={!!ownedNftWhereInput.transactionalStatus_json}>
                   Status
                 </Button>
               }
               dividers
               primaryButton={{
                 text: 'Apply',
-                disabled: (!nftStatusFilter || !nftStatusFilter.length) && !canClearNftStatusFilter,
+                disabled: !nftStatusFilter && !canClearNftStatusFilter,
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
+                  setOwnedNftWhereInput((value) => ({
+                    ...value,
+                    transactionalStatus_json: nftStatusFilter
+                      ? {
+                          isTypeOf_eq: nftStatusFilter,
+                        }
+                      : undefined,
+                  }))
                 },
               }}
               secondaryButton={{

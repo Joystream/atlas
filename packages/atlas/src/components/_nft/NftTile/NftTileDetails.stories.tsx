@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { NftTileDetails, NftTileDetailsProps } from './NftTileDetails'
+import { NftTileDetails, NftTileDetailsProps } from '.'
 
 export default {
   title: 'NFT/Tile Details',
