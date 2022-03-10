@@ -8,7 +8,7 @@ import { Tab, TabContainer, TabTitle, Tabbar } from './DrawerHeader.styles'
 
 export type DrawerHeaderProps = {
   title?: string
-  label: string
+  label?: string
   onCloseClick: () => void
 }
 
