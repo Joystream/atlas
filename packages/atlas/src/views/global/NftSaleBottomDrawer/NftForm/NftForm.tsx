@@ -1,5 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { useVideo } from '@/api/hooks'
 import { NftTile, NftTileProps } from '@/components/NftTile'
@@ -64,6 +66,58 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
+  const schema = z.object({
+    startDate: z
+      .union([z.literal('initial'), z.literal('pick-date'), z.number(), z.date()])
+      .nullable()
+      .optional()
+      .refine(
+        (val) => {
+          if (!(val instanceof Date)) {
+            return true
+          }
+          const now = new Date()
+          if (now > val) {
+            return false
+          } else {
+            return true
+          }
+        },
+        { message: 'You cannot select a past date as a start of an auction' }
+      ),
+    endDate: z
+      .union([z.literal('initial'), z.literal('pick-date'), z.number(), z.date()])
+      .nullable()
+      .optional()
+      .refine(
+        (val) => {
+          if (!(val instanceof Date)) {
+            return true
+          }
+          const now = new Date()
+          if (now > val) {
+            return false
+          } else {
+            return true
+          }
+        },
+        { message: 'You cannot select a past date as a start of an auction' }
+      )
+      .refine(
+        (val) => {
+          if (!(val instanceof Date)) {
+            return true
+          }
+          const endDate = getValues('startDate')
+          if (endDate instanceof Date && endDate < val) {
+            return true
+          } else {
+            return false
+          }
+        },
+        { message: 'Expiration date cannot be earlier than starting date' }
+      ),
+  })
 
   const {
     handleSubmit: createSubmitHandler,
@@ -71,9 +125,18 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     reset,
     getValues,
     setValue,
+    control,
     watch,
-    formState: { isValid },
-  } = useForm<NftFormData>({ mode: 'onChange' })
+    formState: { isValid, errors },
+  } = useForm<NftFormData>({
+    mode: 'onChange',
+    resolver: zodResolver(schema),
+    reValidateMode: 'onChange',
+    defaultValues: {
+      startDate: 'initial',
+      endDate: 'initial',
+    },
+  })
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
@@ -159,6 +222,9 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
       key="step-content-2"
+      watch={watch}
+      control={control}
+      errors={errors}
       register={register}
       selectedType={listingType}
       setValue={setValue}
