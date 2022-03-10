@@ -22,8 +22,8 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
+import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
@@ -55,15 +55,14 @@ export type MemberDropdownProps = {
 
 export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
-    const [accountBalance, setAccountBalance] = useState<number | undefined>(undefined)
     const { pathname } = useLocation()
 
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
+    const accountBalance = useSubsribeAccountBalance()
     const containerRef = useRef<HTMLDivElement>(null)
-    const { joystream, proxyCallback } = useJoystream()
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()
     const transitions = useTransition(isSwitchingMember, {
@@ -116,23 +115,6 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
         navigate(absoluteRoutes.studio.index())
       }
     }
-
-    useEffect(() => {
-      if (!activeMembership || !joystream) {
-        return
-      }
-
-      let unsubscribe
-      const init = async () => {
-        unsubscribe = await joystream.subscribeAccountBalance(
-          activeMembership.controllerAccount,
-          proxyCallback(setAccountBalance)
-        )
-      }
-      init()
-
-      return unsubscribe
-    }, [activeMembership, joystream, proxyCallback])
 
     useEffect(() => {
       if (!isActive) {
