@@ -39,7 +39,7 @@ export const Container = styled.div<ContainerProps>`
   top: ${({ coverTopbar }) => (coverTopbar ? 0 : 'var(--size-topbar-height)')};
   left: 0;
   right: 0;
-  height: calc(100vh - ${({ coverTopbar }) => (coverTopbar ? 0 : 'var(--size-topbar-height)')};);
+  height: calc(100vh - ${({ coverTopbar }) => (coverTopbar ? '0px' : 'var(--size-topbar-height)')});
   display: flex;
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
