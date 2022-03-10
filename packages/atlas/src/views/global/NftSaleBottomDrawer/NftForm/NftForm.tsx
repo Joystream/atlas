@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format as formatDate } from 'date-fns'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -9,6 +10,7 @@ import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -26,6 +28,8 @@ import {
 } from './NftForm.styles'
 import { NftFormData, NftFormStatus } from './NftForm.types'
 import { SetUp } from './SetUp'
+
+const DATE_FORMAT = 'dd MMM yyyy, HH:mm'
 
 const issueNftSteps: StepProps[] = [
   {
@@ -144,6 +148,48 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
   const handleSubmit = useCallback(() => createSubmitHandler(onSubmit), [createSubmitHandler, onSubmit])
+
+  // TODO add modal
+  // const [openModal, closeModal] = useConfirmationModal()
+  // const handleSubmit = useCallback(() => {
+  //   if (currentStep === 2) {
+  //     const startDate = getValues('startDate')
+
+  //     if (startDate instanceof Date && new Date() > startDate) {
+  //       openModal({
+  //         title: 'Starting date you set has already past!',
+  //         children: (
+  //           <Text variant="t200" secondary>
+  //             You can’t list on <Text variant="t200">{formatDate(startDate, DATE_FORMAT)} </Text>
+  //             as this time has already past. Issue with current time or go back to change starting date.
+  //           </Text>
+  //         ),
+  //         primaryButton: {
+  //           variant: 'warning',
+  //           size: 'large',
+  //           text: 'Issue with current time',
+  //           onClick: () => {
+  //             setValue('startDate', 'initial')
+  //             closeModal()
+  //           },
+  //         },
+  //         secondaryButton: {
+  //           variant: 'secondary',
+  //           size: 'large',
+  //           text: 'Change starting date',
+  //           onClick: () => {
+  //             setCurrentStep(1)
+  //             closeModal()
+  //           },
+  //         },
+  //       })
+  //     } else {
+  //       createSubmitHandler(onSubmit)
+  //     }
+  //     return
+  //   }
+  //   setCurrentStep((prevState) => prevState + 1)
+  // }, [closeModal, createSubmitHandler, currentStep, getValues, onSubmit, openModal, setCurrentStep, setValue])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
