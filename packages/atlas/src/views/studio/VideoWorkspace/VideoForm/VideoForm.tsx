@@ -84,6 +84,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
 
     const deleteVideo = useDeleteVideo()
     const isEdit = !editedVideoInfo?.isDraft
+    const isNew = !isEdit
 
     const { categories, error: categoriesError } = useCategories(undefined, {
       onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
@@ -140,8 +141,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       flushDraftSave()
 
       const handler = createSubmitHandler(async (data) => {
-        const isNew = !isEdit
-
         if (!editedVideoInfo) {
           return
         }
@@ -237,7 +236,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       dirtyFields,
       editedVideoInfo,
       flushDraftSave,
-      isEdit,
+      isNew,
       onSubmit,
       resolveAsset,
       thumbnailHashPromise,
@@ -389,33 +388,35 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
                 )}
               />
             </ExtendedMarginFormField>
-            <SwitchFormField title="Issue as NFT">
-              <SwitchNftWrapper>
-                <Switch
-                  label="Toggle to list this video as an NFT"
-                  value={isIssuedAsNft}
-                  onChange={(e) => setIsIssuedAsNft(e?.currentTarget.checked || false)}
-                />
-                <Information
-                  placement="top"
-                  arrowDisabled
-                  text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
-                />
-              </SwitchNftWrapper>
-              {isIssuedAsNft && (
-                <Banner
-                  id="issuing-nft"
-                  dismissable={false}
-                  icon={<StyledSvgWarning width={24} height={24} />}
-                  description={
-                    <>
-                      <Text variant="t200">After issuing this as an NFT </Text>
-                      <YellowText variant="t200">editing options of this video will be disabled</YellowText>
-                    </>
-                  }
-                />
-              )}
-            </SwitchFormField>
+            {!isNew && (
+              <SwitchFormField title="Issue as NFT">
+                <SwitchNftWrapper>
+                  <Switch
+                    label="Toggle to list this video as an NFT"
+                    value={isIssuedAsNft}
+                    onChange={(e) => setIsIssuedAsNft(e?.currentTarget.checked || false)}
+                  />
+                  <Information
+                    placement="top"
+                    arrowDisabled
+                    text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+                  />
+                </SwitchNftWrapper>
+                {isIssuedAsNft && (
+                  <Banner
+                    id="issuing-nft"
+                    dismissable={false}
+                    icon={<StyledSvgWarning width={24} height={24} />}
+                    description={
+                      <>
+                        <Text variant="t200">After issuing this as an NFT </Text>
+                        <YellowText variant="t200">editing options of this video will be disabled</YellowText>
+                      </>
+                    }
+                  />
+                )}
+              </SwitchFormField>
+            )}
           </FormField>
           <MoreSettingsHeader>
             <Button
