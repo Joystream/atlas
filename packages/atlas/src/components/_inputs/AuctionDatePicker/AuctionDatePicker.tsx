@@ -11,7 +11,7 @@ import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
-export type AuctionDatePickerValue = Date | 'initial' | 1 | 3 | 5 | 7 | 'pick-date' | null
+export type AuctionDatePickerValue = Date | 'initial' | number | 'pick-date' | null
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null

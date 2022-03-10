@@ -80,12 +80,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
           if (!(val instanceof Date)) {
             return true
           }
-          const now = new Date()
-          if (now > val) {
-            return false
-          } else {
-            return true
-          }
+          return new Date() > val
         },
         { message: 'You cannot select a past date as a start of an auction' }
       ),
@@ -98,12 +93,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
           if (!(val instanceof Date)) {
             return true
           }
-          const now = new Date()
-          if (now > val) {
-            return false
-          } else {
-            return true
-          }
+          return new Date() > val
         },
         { message: 'You cannot select a past date as a start of an auction' }
       )
@@ -112,8 +102,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
           if (!(val instanceof Date)) {
             return true
           }
-          const endDate = getValues('startDate')
-          if (endDate instanceof Date && endDate < val) {
+          const startDate = getValues('startDate')
+          if (startDate instanceof Date && startDate < val) {
             return true
           } else {
             return false
