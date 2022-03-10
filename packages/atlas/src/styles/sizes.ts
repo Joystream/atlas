@@ -10,6 +10,7 @@ export function sizes(n: number, raw?: boolean) {
 }
 
 export const zIndex = {
+  closeBackground: -5,
   background: -10,
   farBackground: -20,
   overlay: 10,

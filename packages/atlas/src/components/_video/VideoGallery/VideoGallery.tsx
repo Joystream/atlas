@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/components/Gallery'
-import { breakpointsOfGrid } from '@/components/Grid'
 import { RankingNumberTile } from '@/components/RankingNumberTile'
+import { breakpoints } from '@/styles/breakpoints'
 
 import { VideoTileViewer } from '../VideoTileViewer'
 
@@ -31,10 +31,6 @@ type VideoGalleryProps = {
 }
 
 const PLACEHOLDERS_COUNT = 12
-const MIN_VIDEO_PREVIEW_WIDTH = 281
-const CAROUSEL_SMALL_BREAKPOINT = 688
-const FRACTIONAL_LEVEL = 1.3
-const FRACTIONAL_LEVEL_RANKING = 1.4
 
 export const VideoGallery: React.FC<VideoGalleryProps> = ({
   title,
@@ -44,31 +40,57 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
   hasRanking = false,
   className,
 }) => {
-  const breakpoints = useMemo(() => {
-    return breakpointsOfGrid({
-      breakpoints: 6,
-      minItemWidth: 300,
-      gridColumnGap: 24,
-      viewportContainerDifference: 64,
-    }).map((breakpoint, idx) => {
-      if (breakpoint <= CAROUSEL_SMALL_BREAKPOINT && hasRanking) {
-        return {
-          breakpoint,
-          settings: {
-            slidesToShow: idx + FRACTIONAL_LEVEL,
-            slidesToScroll: idx + 1,
-          },
-        }
-      }
-      return {
-        breakpoint,
-        settings: {
-          slidesToShow: idx + (breakpoint <= CAROUSEL_SMALL_BREAKPOINT ? FRACTIONAL_LEVEL_RANKING : 1),
-          slidesToScroll: idx + 1,
-        },
-      }
-    })
-  }, [hasRanking])
+  const responsive = [
+    {
+      breakpoint: parseInt(breakpoints.xxs),
+      settings: {
+        slidesToShow: 12 / 11,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.xs),
+      settings: {
+        slidesToShow: 12 / 10,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.sm),
+      settings: {
+        slidesToShow: 12 / 7,
+        slidesToScroll: 1,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.md),
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.lg),
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.xl),
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 4,
+      },
+    },
+    {
+      breakpoint: parseInt(breakpoints.xxl),
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 5,
+      },
+    },
+  ]
 
   if (loading === false && videos?.length === 0) {
     return null
@@ -78,18 +100,12 @@ export const VideoGallery: React.FC<VideoGalleryProps> = ({
     id: undefined,
     progress: undefined,
   }))
+
   return (
-    <Gallery
-      title={title}
-      responsive={breakpoints}
-      itemWidth={MIN_VIDEO_PREVIEW_WIDTH}
-      dotsVisible
-      seeAllUrl={seeAllUrl}
-      className={className}
-    >
+    <Gallery title={title} responsive={responsive} dotsVisible seeAllUrl={seeAllUrl} className={className}>
       {[...(videos ? videos : []), ...placeholderItems]?.map((video, idx) =>
         hasRanking ? (
-          <RankingNumberTile variant="video" rankingNumber={idx + 1} key={`${idx}-${video.id}`}>
+          <RankingNumberTile number={idx + 1} key={`${idx}-${video.id}`}>
             <StyledVideoTile id={video.id} />
           </RankingNumberTile>
         ) : (

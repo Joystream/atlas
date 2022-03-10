@@ -2,6 +2,14 @@
   "color": {
     "type": "color",
     "core": {
+      "base": {
+        "black": {
+          "value": "#000"
+        },
+        "white": {
+          "value": "#FFF"
+        }
+      },
       "neutral": {
         "50": {
           "default": {
