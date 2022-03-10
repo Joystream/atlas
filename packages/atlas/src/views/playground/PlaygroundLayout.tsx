@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
+import { NftPurchaseProvider } from '@/providers/nftPurchase'
 import { ActiveUserProvider } from '@/providers/user'
 import { oldColors } from '@/styles'
 
@@ -18,6 +19,7 @@ import {
   ImageDownsizing,
   IndirectSignInDialog,
   Modals,
+  NftPurchase,
   OrionTesting,
   PlaygroundBreakpoints,
   PlaygroundCommonStore,
@@ -35,6 +37,7 @@ import {
 
 const playgroundRoutes = [
   { path: 'animations', element: <Animations />, name: 'Animations' },
+  { path: 'nft-purchase', element: <NftPurchase />, name: 'Nft Purchase' },
   { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
   { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
   { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
@@ -60,27 +63,29 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   return (
-    <ActiveUserProvider>
-      <ConfirmationModalProvider>
-        <Container>
-          <NavContainer>
-            {playgroundRoutes.map((route) => (
-              <Link key={route.path} to={`/playground/${route.path}`}>
-                {route.name}
-              </Link>
-            ))}
-          </NavContainer>
-          <ContentContainer>
-            <Routes>
+    <NftPurchaseProvider>
+      <ActiveUserProvider>
+        <ConfirmationModalProvider>
+          <Container>
+            <NavContainer>
               {playgroundRoutes.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
+                <Link key={route.path} to={`/playground/${route.path}`}>
+                  {route.name}
+                </Link>
               ))}
-            </Routes>
-          </ContentContainer>
-        </Container>
-        <ConnectionStatusManager />
-      </ConfirmationModalProvider>
-    </ActiveUserProvider>
+            </NavContainer>
+            <ContentContainer>
+              <Routes>
+                {playgroundRoutes.map((route) => (
+                  <Route key={route.path} path={route.path} element={route.element} />
+                ))}
+              </Routes>
+            </ContentContainer>
+          </Container>
+          <ConnectionStatusManager />
+        </ConfirmationModalProvider>
+      </ActiveUserProvider>
+    </NftPurchaseProvider>
   )
 }
 

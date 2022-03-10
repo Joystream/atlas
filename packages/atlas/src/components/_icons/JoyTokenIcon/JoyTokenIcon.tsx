@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { ElementType } from 'react'
@@ -23,6 +24,7 @@ type JoyTokenIconSize = 16 | 24 | 32 | 48
 export type JoyTokenIconProps = {
   variant?: JoyTokenIconVariant
   size?: JoyTokenIconSize
+  className?: string
 }
 
 const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyTokenIconSize, ElementType>> = {
@@ -46,8 +48,12 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
   },
 }
 
-export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16 }) => (
-  <JoyTokenIconWrapper as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]} hasShadow={variant !== 'regular'} />
+export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
+  <JoyTokenIconWrapper
+    as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
+    hasShadow={variant !== 'regular'}
+    className={className}
+  />
 )
 
 const shadowCss = css`
@@ -55,6 +61,6 @@ const shadowCss = css`
     drop-shadow(0 0.7513px 1.377px rgba(0 0 0 / 0.325)) drop-shadow(0 0.2717px 0.4982px rgba(0 0 0 / 0.2265));
 `
 
-const JoyTokenIconWrapper = styled.div<{ hasShadow: boolean }>`
+const JoyTokenIconWrapper = styled('div', { shouldForwardProp: isPropValid })<{ hasShadow: boolean }>`
   ${({ hasShadow }) => hasShadow && shadowCss};
 `
