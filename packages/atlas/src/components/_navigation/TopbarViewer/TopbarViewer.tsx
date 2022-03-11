@@ -141,9 +141,11 @@ export const TopbarViewer: React.FC = () => {
                     )}
                   </SignedButtonsWrapper>
                 ) : (
-                  <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
-                    Sign In
-                  </Button>
+                  mdMatch && (
+                    <Button icon={<SvgActionMember />} iconPlacement="left" size="medium" onClick={signIn}>
+                      Sign In
+                    </Button>
+                  )
                 )
               ) : (
                 <SignedButtonsWrapper>
