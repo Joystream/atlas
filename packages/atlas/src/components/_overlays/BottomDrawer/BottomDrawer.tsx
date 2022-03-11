@@ -15,6 +15,7 @@ export type BottomDrawerProps = {
   onClose: () => void
   title?: string
   titleLabel?: string
+  pageTitle?: string
   actionBar?: ActionBarProps
   coverTopbar?: boolean
 }
@@ -24,11 +25,12 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
   onClose,
   title,
   titleLabel,
+  pageTitle,
   children,
   actionBar: actionBarProps,
   coverTopbar,
 }) => {
-  const headTags = useHeadTags(title)
+  const headTags = useHeadTags(pageTitle || title)
 
   const [cachedIsOpen, setCachedIsOpen] = useState(false)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
