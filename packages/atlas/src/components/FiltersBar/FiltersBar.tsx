@@ -35,7 +35,7 @@ export type FiltersBarProps = {
 
 const nftStatuses = [
   {
-    id: 'TransactionalStatusIdle',
+    id: 'TransactionalStatusAuction',
     name: 'Auction',
   },
   {
@@ -43,7 +43,7 @@ const nftStatuses = [
     name: 'Fixed price',
   },
   {
-    id: 'TransactionalStatusAuction',
+    id: 'TransactionalStatusIdle',
     name: 'Not for sale',
   },
 ]
