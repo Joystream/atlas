@@ -17,11 +17,11 @@ import {
   Title,
 } from './AcceptTerms.styles'
 
-import { StyledSvgWarning, YellowText } from '../../VideoWorkspace.style'
+import { StyledSvgWarning, YellowText } from '../../../VideoWorkspace/VideoWorkspace.style'
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
+import { Listing, NftFormData } from '../NftForm.types'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
-import { Listing, NftFormData } from '../types'
 
 type AcceptTermsProps = {
   selectedType: Listing
@@ -159,21 +159,6 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
             <Text variant="h400" secondary>
               &nbsp;/ {numberOfBlocks} Blocks
             </Text>
-          </Description>
-        </Row>
-      )}
-      {formData.royalty && (
-        <Row>
-          <Title>
-            <TitleText>Royalties</TitleText>
-            <StyledInformation
-              text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
-              footer={<RoyaltiesTooltipFooter />}
-              placement="top"
-            />
-          </Title>
-          <Description>
-            <DescriptionText>{formData.royalty}</DescriptionText>
           </Description>
         </Row>
       )}

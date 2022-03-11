@@ -226,6 +226,46 @@ export type GetNftQuery = {
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
+      nft?: {
+        __typename?: 'OwnedNft'
+        id: string
+        createdAt: Date
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: number
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        } | null
+        transactionalStatus:
+          | { __typename: 'TransactionalStatusAuction' }
+          | { __typename: 'TransactionalStatusBuyNow' }
+          | { __typename: 'TransactionalStatusIdle' }
+          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+      } | null
     }
   } | null
 }
@@ -450,6 +490,46 @@ export type GetNftsQuery = {
           | { __typename: 'DataObjectTypeUnknown' }
           | { __typename: 'DataObjectTypeVideoMedia' }
           | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      nft?: {
+        __typename?: 'OwnedNft'
+        id: string
+        createdAt: Date
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: number
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        } | null
+        transactionalStatus:
+          | { __typename: 'TransactionalStatusAuction' }
+          | { __typename: 'TransactionalStatusBuyNow' }
+          | { __typename: 'TransactionalStatusIdle' }
+          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       } | null
     }
   }>

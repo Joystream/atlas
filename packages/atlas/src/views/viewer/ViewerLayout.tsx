@@ -13,7 +13,6 @@ import { TopbarViewer } from '@/components/_navigation/TopbarViewer'
 import { Modal } from '@/components/_overlays/Modal'
 import { absoluteRoutes, relativeRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { NftPurchaseProvider } from '@/providers/nftPurchase'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
@@ -30,7 +29,6 @@ import {
   SearchView,
   VideoView,
 } from '@/views/viewer'
-import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
@@ -62,7 +60,7 @@ export const ViewerLayout: React.FC = () => {
   const displayedLocation = locationState?.overlaidLocation || location
 
   return (
-    <NftPurchaseProvider>
+    <>
       <Modal show={isLoading} noBoxShadow>
         <Loader variant="xlarge" />
       </Modal>
@@ -110,9 +108,8 @@ export const ViewerLayout: React.FC = () => {
           </SwitchTransition>
         </ErrorBoundary>
       </MainContainer>
-      <NftPurchaseView />
       {!mdMatch && !searchOpen && <BottomNav />}
-    </NftPurchaseProvider>
+    </>
   )
 }
 

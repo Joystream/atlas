@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { NftPurchaseProvider } from '@/providers/nftPurchase'
+import { NftActionsProvider } from '@/providers/nftActions'
 import { ActiveUserProvider } from '@/providers/user'
 import { oldColors } from '@/styles'
 
@@ -63,7 +63,7 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   return (
-    <NftPurchaseProvider>
+    <NftActionsProvider>
       <ActiveUserProvider>
         <ConfirmationModalProvider>
           <Container>
@@ -85,7 +85,7 @@ const PlaygroundLayout = () => {
           <ConnectionStatusManager />
         </ConfirmationModalProvider>
       </ActiveUserProvider>
-    </NftPurchaseProvider>
+    </NftActionsProvider>
   )
 }
 

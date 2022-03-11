@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
 import { ActionBarVariant } from '@/components/ActionBar'
@@ -7,7 +7,7 @@ import { DrawerHeader } from '@/components/DrawerHeader'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { NftAuctionInputMetadata, NftIssuanceInputMetadata } from '@/joystream-lib'
+import { NftAuctionInputMetadata } from '@/joystream-lib'
 import {
   VideoFormData,
   VideoWorkspaceFormStatus,
@@ -15,22 +15,18 @@ import {
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
-import { cVar, transitions } from '@/styles'
+import { cVar } from '@/styles'
 
-import { NftForm } from './NftForm'
 import { VideoForm } from './VideoForm'
+import { useHandleVideoWorkspaceSubmit } from './VideoWorkspace.hooks'
 import { Container, DrawerOverlay, ScrollContainer, StyledActionBar } from './VideoWorkspace.style'
-import { useHandleVideoWorkspaceSubmit } from './hooks'
 
 type FormStatus = VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields & NftAuctionInputMetadata> | null
 
 export const VideoWorkspace: React.FC = React.memo(() => {
   const [formStatus, setFormStatus] = useState<FormStatus>(null)
-  const [videoFormDataForNft, setVideoFormDataForNft] = useState<VideoFormData | null>(null)
-  const [isNftFormOpen, setIsNftFormOpen] = useState(false)
 
   const [actionBarHeight, setActionBarHeight] = useState(0)
-  const [isIssuedAsNft, setIsIssuedAsNft] = useState(false)
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()
   const { tabData } = useVideoWorkspaceData()
@@ -38,23 +34,13 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   const { openWarningDialog } = useDisplayDataLostWarning()
 
   const handleVideoWorkspaceSubmit = useHandleVideoWorkspaceSubmit()
-  const handleNftWorkspaceSubmit = () => null
 
   const handleVideoSubmit = useCallback(
     (data: VideoFormData) => {
-      if (isIssuedAsNft) {
-        setVideoFormDataForNft(data)
-        setIsNftFormOpen(true)
-      } else {
-        handleVideoWorkspaceSubmit(data)
-      }
+      handleVideoWorkspaceSubmit(data)
     },
-    [handleVideoWorkspaceSubmit, isIssuedAsNft]
+    [handleVideoWorkspaceSubmit]
   )
-
-  const handleNftSubmit = useCallback((_: NftAuctionInputMetadata | NftIssuanceInputMetadata) => {
-    handleNftWorkspaceSubmit()
-  }, [])
 
   const isEdit = !editedVideoInfo?.isDraft
   const headTags = useHeadTags(isEdit ? 'Edit video' : 'New video')
@@ -73,17 +59,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     }
   }, [formStatus?.hasUnsavedAssets, isWorkspaceOpen])
 
-  // clear videoFormDataForNft when closing VideoWorkspace
-  useEffect(() => {
-    if (isWorkspaceOpen) {
-      return
-    }
-    setVideoFormDataForNft(null)
-  }, [isWorkspaceOpen])
-
   const closeVideoWorkspace = useCallback(() => {
-    setIsIssuedAsNft(false)
-    setIsNftFormOpen(false)
     if (formStatus?.hasUnsavedAssets) {
       openWarningDialog({ onConfirm: () => setIsWorkspaceOpen(false) })
     } else {
@@ -92,13 +68,8 @@ export const VideoWorkspace: React.FC = React.memo(() => {
   }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
   const onSecondaryButtonClick = () => {
-    if (isNftFormOpen) {
-      formStatus?.handleGoBack?.()
-    } else {
-      if (tabData) {
-        formStatus?.resetForm(tabData)
-      }
-      setIsIssuedAsNft(false)
+    if (tabData) {
+      formStatus?.resetForm(tabData)
     }
   }
 
@@ -126,45 +97,26 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         <Container role="dialog">
           <DrawerHeader
             title={tabData?.title || 'New video'}
-            label={isNftFormOpen ? 'NFT' : editedVideoInfo.isNew || editedVideoInfo.isDraft ? 'New' : 'Edit'}
+            label={editedVideoInfo.isNew || editedVideoInfo.isDraft ? 'New' : 'Edit'}
             onCloseClick={closeVideoWorkspace}
           />
           <ScrollContainer actionBarHeight={actionBarHeight}>
-            <SwitchTransition>
-              <CSSTransition
-                key={String(isNftFormOpen)}
-                classNames={transitions.names.fade}
-                timeout={parseInt(cVar('animationTimingFast', true))}
-              >
-                {!isNftFormOpen ? (
-                  <VideoForm
-                    videoFormDataForNft={videoFormDataForNft}
-                    setFormStatus={setFormStatus}
-                    onSubmit={handleVideoSubmit}
-                    setIsIssuedAsNft={setIsIssuedAsNft}
-                    isIssuedAsNft={isIssuedAsNft}
-                  />
-                ) : (
-                  <NftForm
-                    videoId={editedVideoInfo?.id ?? ''}
-                    setFormStatus={setFormStatus}
-                    onSubmit={handleNftSubmit}
-                    setIsNftFormOpen={setIsNftFormOpen}
-                  />
-                )}
-              </CSSTransition>
-            </SwitchTransition>
+            <VideoForm
+              setFormStatus={setFormStatus}
+              onSubmit={handleVideoSubmit}
+              isIssuedAsNft={false}
+              setIsIssuedAsNft={() => false}
+            />
           </ScrollContainer>
           <VideoWorkspaceActionBar
             isEdit={isEdit}
-            isIssuedAsNft={isIssuedAsNft}
-            variant={isNftFormOpen ? 'nft' : isEdit ? 'edit' : 'new'}
+            variant={isEdit ? 'edit' : 'new'}
             primaryButtonText={formStatus?.actionBarPrimaryText || ''}
             // form can be submitted if both:
             // 1. form is valid
             // 2. the video is a new one OR the form is dirty  (some edit has been made)
             canSubmit={!!formStatus?.isDisabled}
-            canReset={formStatus?.isDirty || isIssuedAsNft || false}
+            canReset={formStatus?.isDirty || false}
             onPrimaryButtonClick={formStatus?.triggerFormSubmit}
             onSecondaryButtonClick={onSecondaryButtonClick}
             onResize={setActionBarHeight}
@@ -179,7 +131,6 @@ VideoWorkspace.displayName = 'VideoWorkspace'
 type VideoWorkspaceActionBarProps = {
   variant?: ActionBarVariant
   isEdit: boolean
-  isIssuedAsNft?: boolean
   canReset: boolean
   canSubmit: boolean
   primaryButtonText: string
@@ -191,7 +142,6 @@ type VideoWorkspaceActionBarProps = {
 const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   variant = 'new',
   isEdit,
-  isIssuedAsNft,
   canReset,
   canSubmit,
   primaryButtonText,
@@ -202,7 +152,7 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   const mdMatch = useMediaMatch('md')
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const isActive = variant === 'new' || canSubmit || isIssuedAsNft
+  const isActive = variant === 'new' || canSubmit
   const height = isActive ? actionBarBoundsHeight : 0
 
   // send update to VideoWorkspace whenever height changes

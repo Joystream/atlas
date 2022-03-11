@@ -34,8 +34,8 @@ import {
 } from '@/providers/videoWorkspace'
 import { pastDateValidation, requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
-import { useVideoFormAssets, useVideoFormDraft } from '@/views/studio/VideoWorkspace/VideoForm/hooks'
 
+import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
   DeleteVideoButton,
   ExtendedMarginFormField,
@@ -51,7 +51,6 @@ import {
   SwitchFormField,
   SwitchNftWrapper,
 } from './VideoForm.styles'
-import { convertVideoFormDataToFormFields } from './utils'
 
 import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 
@@ -67,13 +66,12 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
 type VideoFormProps = {
   onSubmit: (data: VideoFormData) => void
   setFormStatus: (data: VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields> | null) => void
-  videoFormDataForNft: VideoFormData | null
   setIsIssuedAsNft: (isIssuedAsNft: boolean) => void
   isIssuedAsNft: boolean
 }
 
 export const VideoForm: React.FC<VideoFormProps> = React.memo(
-  ({ onSubmit, setFormStatus, isIssuedAsNft, setIsIssuedAsNft, videoFormDataForNft }) => {
+  ({ onSubmit, setFormStatus, isIssuedAsNft, setIsIssuedAsNft }) => {
     const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
     const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
 
@@ -127,16 +125,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(
       setCachedEditedVideoId(editedVideoInfo.id)
 
       reset(tabData)
-
-      if (videoFormDataForNft) {
-        setTimeout(() => {
-          const videoFormFields = convertVideoFormDataToFormFields(videoFormDataForNft)
-          Object.entries(videoFormFields).forEach(([key, value]) => {
-            setValue(key as keyof VideoWorkspaceVideoFormFields, value, { shouldDirty: true })
-          })
-        }, 0)
-      }
-    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue, videoFormDataForNft])
+    }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue])
     const handleSubmit = useCallback(() => {
       flushDraftSave()
 

@@ -20,7 +20,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
 import { useTokenPrice } from '@/providers/joystream'
-import { useNftPurchase } from '@/providers/nftPurchase'
+import { useNftActions } from '@/providers/nftActions'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
@@ -75,7 +75,7 @@ const BID = {
 export const NftPurchaseView: React.FC = () => {
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
-  const { isNftPurchaseOpen, setIsNftPurchaseOpen } = useNftPurchase()
+  const { currentAction, closeNftAction } = useNftActions()
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const accountBalance = useSubsribeAccountBalance()
@@ -111,7 +111,6 @@ export const NftPurchaseView: React.FC = () => {
     return () => subscription.unsubscribe()
   }, [setValue, type, watch])
 
-  const handleCloseClick = () => setIsNftPurchaseOpen(false)
   const handleSubmit = useCallback(() => {
     return createSubmitHandler((_) => null)
   }, [createSubmitHandler])
@@ -124,7 +123,7 @@ export const NftPurchaseView: React.FC = () => {
 
   return (
     <CSSTransition
-      in={isNftPurchaseOpen}
+      in={currentAction === 'purchase'}
       appear
       mountOnEnter
       unmountOnExit
@@ -144,7 +143,7 @@ export const NftPurchaseView: React.FC = () => {
             buy now
           </Button>
         </div>
-        <DrawerHeader onCloseClick={handleCloseClick} />
+        <DrawerHeader onCloseClick={closeNftAction} />
         <Content>
           <NftPreview>
             <NftCard title="title" {...DUMMY_NFT_TILE_PROPS} fullWidth={!mdMatch} />

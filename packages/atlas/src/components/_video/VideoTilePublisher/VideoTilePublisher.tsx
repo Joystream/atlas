@@ -12,6 +12,7 @@ import {
   SvgActionHide,
   SvgActionPlay,
   SvgActionReupload,
+  SvgActionSell,
   SvgActionTrash,
   SvgActionWarning,
   SvgIllustrativePlay,
@@ -20,6 +21,7 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
+import { useNftActions } from '@/providers/nftActions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { openInNewTab } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
@@ -47,8 +49,12 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       id,
     })
 
+    const { openNftPutOnSale } = useNftActions()
+
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
+
+    const hasNft = !!video?.nft
 
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
@@ -160,6 +166,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           onClick: onEditClick,
           title: 'Edit video',
         },
+        ...(hasNft
+          ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start NFT sale' }]
+          : []),
         {
           icon: <SvgActionTrash />,
           onClick: onDeleteVideoClick,
@@ -170,13 +179,16 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
       return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
     }, [
-      hasAssetUploadFailed,
       isUploading,
+      hasAssetUploadFailed,
+      onReuploadVideoClick,
       onDeleteVideoClick,
       onEditClick,
-      onReuploadVideoClick,
-      copyToClipboard,
+      hasNft,
       videoHref,
+      copyToClipboard,
+      openNftPutOnSale,
+      id,
     ])
 
     const getVideoSubtitle = useCallback(() => {

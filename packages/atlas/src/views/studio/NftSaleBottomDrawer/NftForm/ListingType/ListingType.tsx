@@ -1,10 +1,11 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgActionAuction, SvgActionBuyNow, SvgActionLock } from '@/components/_icons'
-import { Listing } from '@/views/studio/VideoWorkspace/NftForm/types'
+import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
 
 import { Header, OptionsWrapper, StyledOptionCardRadio } from './ListingTypes.styles'
+
+import { Listing } from '../NftForm.types'
 
 type ListingTypeProps = {
   selectedType?: string
@@ -16,8 +17,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
     <>
       <Header variant="h500">Choose listing type</Header>
       <Text variant="t300" secondary>
-        Choose “Not for sale” if you don’t want to sell your NFT right away or “Put on marketplace” to sell it on
-        auction, or for a fixed price.
+        Pick the listing type for your NFT.
       </Text>
       <OptionsWrapper>
         <StyledOptionCardRadio
@@ -35,14 +35,6 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
           label="Fixed price"
           icon={<SvgActionBuyNow />}
           helperText="Sell it for a fixed price only. No bids accepted."
-        />
-        <StyledOptionCardRadio
-          onChange={() => onSelectType('Not for sale')}
-          selectedValue={selectedType}
-          value="Not for sale"
-          label="Not for sale"
-          icon={<SvgActionLock />}
-          helperText="Suitable for holding NFT without receiving offers for it. Can be changed later."
         />
       </OptionsWrapper>
     </>

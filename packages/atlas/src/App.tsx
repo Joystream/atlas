@@ -6,7 +6,10 @@ import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { NftActionsProvider } from '@/providers/nftActions'
 import { GlobalStyles } from '@/styles'
+import { NftSaleBottomDrawer } from '@/views/studio/NftSaleBottomDrawer'
+import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 import { MainLayout } from './MainLayout'
 import { SignInStepsStepper } from './components/_auth/SignInSteps'
@@ -32,11 +35,15 @@ export const App = () => {
               <ConfirmationModalProvider>
                 <ActiveUserProvider>
                   <JoystreamProvider>
-                    <MainLayout />
-                    <Snackbars />
-                    <AssetsManager />
-                    <TransactionManager />
-                    <SignInStepsStepper />
+                    <NftActionsProvider>
+                      <MainLayout />
+                      <Snackbars />
+                      <AssetsManager />
+                      <TransactionManager />
+                      <SignInStepsStepper />
+                      <NftPurchaseView />
+                      <NftSaleBottomDrawer />
+                    </NftActionsProvider>
                   </JoystreamProvider>
                 </ActiveUserProvider>
               </ConfirmationModalProvider>
