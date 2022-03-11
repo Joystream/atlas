@@ -16,7 +16,7 @@ import { useStartFileUpload } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
 import { writeVideoDataInCache } from '@/utils/cachingAssets'
-import { SentryLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
   const { setIsWorkspaceOpen, editedVideoInfo, setEditedVideo } = useVideoWorkspace()
@@ -36,6 +36,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
   const handleSubmit = useCallback(
     async (data: VideoFormData) => {
       if (!joystream) {
+        ConsoleLogger.error('No Joystream instance! Has webworker been initialized?')
         return
       }
 
