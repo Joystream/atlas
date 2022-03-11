@@ -1,7 +1,7 @@
 import { intervalToDuration } from 'date-fns'
 import { useCallback, useState } from 'react'
 
-import { Listing } from '@/views/studio/NftSaleBottomDrawer/NftForm/NftForm.types'
+import { Listing } from './NftForm.types'
 
 export const useNftForm = () => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])

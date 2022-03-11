@@ -13,11 +13,12 @@ import {
   Row,
   StyledInformation,
   StyledSvgActionArrowRight,
+  StyledSvgWarning,
   TermsBox,
   Title,
+  YellowText,
 } from './AcceptTerms.styles'
 
-import { StyledSvgWarning, YellowText } from '../../../VideoWorkspace/VideoWorkspace.style'
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormData } from '../NftForm.types'

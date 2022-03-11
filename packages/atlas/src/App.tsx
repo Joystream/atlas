@@ -8,7 +8,7 @@ import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { GlobalStyles } from '@/styles'
-import { NftSaleBottomDrawer } from '@/views/studio/NftSaleBottomDrawer'
+import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 import { MainLayout } from './MainLayout'
