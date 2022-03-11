@@ -7,11 +7,9 @@ import { DrawerHeader } from '@/components/DrawerHeader'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { NftAuctionInputMetadata } from '@/joystream-lib'
 import {
   VideoFormData,
   VideoWorkspaceFormStatus,
-  VideoWorkspaceVideoFormFields,
   useVideoWorkspace,
   useVideoWorkspaceData,
 } from '@/providers/videoWorkspace'
@@ -21,10 +19,8 @@ import { VideoForm } from './VideoForm'
 import { useHandleVideoWorkspaceSubmit } from './VideoWorkspace.hooks'
 import { Container, DrawerOverlay, ScrollContainer, StyledActionBar } from './VideoWorkspace.style'
 
-type FormStatus = VideoWorkspaceFormStatus<VideoWorkspaceVideoFormFields & NftAuctionInputMetadata> | null
-
 export const VideoWorkspace: React.FC = React.memo(() => {
-  const [formStatus, setFormStatus] = useState<FormStatus>(null)
+  const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
 
   const [actionBarHeight, setActionBarHeight] = useState(0)
 
@@ -67,12 +63,6 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     }
   }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
-  const onSecondaryButtonClick = () => {
-    if (tabData) {
-      formStatus?.resetForm(tabData)
-    }
-  }
-
   return (
     <>
       {isWorkspaceOpen && headTags}
@@ -101,12 +91,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             onCloseClick={closeVideoWorkspace}
           />
           <ScrollContainer actionBarHeight={actionBarHeight}>
-            <VideoForm
-              setFormStatus={setFormStatus}
-              onSubmit={handleVideoSubmit}
-              isIssuedAsNft={false}
-              setIsIssuedAsNft={() => false}
-            />
+            <VideoForm setFormStatus={setFormStatus} onSubmit={handleVideoSubmit} />
           </ScrollContainer>
           <VideoWorkspaceActionBar
             isEdit={isEdit}
@@ -118,7 +103,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
             canSubmit={!!formStatus?.isDisabled}
             canReset={formStatus?.isDirty || false}
             onPrimaryButtonClick={formStatus?.triggerFormSubmit}
-            onSecondaryButtonClick={onSecondaryButtonClick}
+            onSecondaryButtonClick={formStatus?.triggerReset}
             onResize={setActionBarHeight}
           />
         </Container>

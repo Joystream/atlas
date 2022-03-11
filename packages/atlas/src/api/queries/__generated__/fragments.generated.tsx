@@ -288,6 +288,7 @@ export type BasicVideoFieldsFragment = {
     __typename?: 'OwnedNft'
     id: string
     createdAt: Date
+    creatorRoyalty?: number | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -412,6 +413,7 @@ export type VideoFieldsFragment = {
     __typename?: 'OwnedNft'
     id: string
     createdAt: Date
+    creatorRoyalty?: number | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -491,6 +493,7 @@ export type BasicNftFieldsFragment = {
   __typename?: 'OwnedNft'
   id: string
   createdAt: Date
+  creatorRoyalty?: number | null
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -747,6 +750,7 @@ export type AllNftFieldsFragment = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -901,6 +905,7 @@ export const BasicNftFieldsFragmentDoc = gql`
   fragment BasicNftFields on OwnedNft {
     id
     createdAt
+    creatorRoyalty
     ownerMember {
       ...BasicMembershipFields
     }

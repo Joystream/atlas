@@ -169,6 +169,7 @@ fragment AllBidFields on Bid {
 fragment BasicNftFields on OwnedNft {
   id
   createdAt
+  creatorRoyalty
   ownerMember {
     ...BasicMembershipFields
   }

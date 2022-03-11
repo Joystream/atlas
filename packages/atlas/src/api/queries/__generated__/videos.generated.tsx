@@ -97,6 +97,7 @@ export type GetVideoQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -237,6 +238,7 @@ export type GetVideosConnectionQuery = {
           __typename?: 'OwnedNft'
           id: string
           createdAt: Date
+          creatorRoyalty?: number | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -374,6 +376,7 @@ export type GetVideosQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -483,6 +486,7 @@ export type GetBasicVideosQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -590,6 +594,7 @@ export type GetBasicVideoQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -732,6 +737,7 @@ export type GetMostViewedVideosConnectionQuery = {
           __typename?: 'OwnedNft'
           id: string
           createdAt: Date
+          creatorRoyalty?: number | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -866,6 +872,7 @@ export type GetTop10VideosThisWeekQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -997,6 +1004,7 @@ export type GetTop10VideosThisMonthQuery = {
       __typename?: 'OwnedNft'
       id: string
       createdAt: Date
+      creatorRoyalty?: number | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string

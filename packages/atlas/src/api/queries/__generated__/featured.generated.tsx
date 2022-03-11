@@ -101,6 +101,7 @@ export type GetVideoHeroQuery = {
         __typename?: 'OwnedNft'
         id: string
         createdAt: Date
+        creatorRoyalty?: number | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -239,6 +240,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           __typename?: 'OwnedNft'
           id: string
           createdAt: Date
+          creatorRoyalty?: number | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -376,6 +378,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         __typename?: 'OwnedNft'
         id: string
         createdAt: Date
+        creatorRoyalty?: number | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string

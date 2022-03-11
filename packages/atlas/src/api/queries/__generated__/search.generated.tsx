@@ -175,6 +175,7 @@ export type SearchQuery = {
             __typename?: 'OwnedNft'
             id: string
             createdAt: Date
+            creatorRoyalty?: number | null
             ownerMember?: {
               __typename?: 'Membership'
               id: string
