@@ -6,7 +6,6 @@ import { Searchbar } from '@/components/Searchbar'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionMember } from '@/components/_icons'
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NotificationsButton } from '@/components/_navigation/NotificationsButton'
 import { NotificationsWidget } from '@/components/_notifications/NotificationsWidget'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
@@ -149,8 +148,7 @@ export const TopbarViewer: React.FC = () => {
                 )
               ) : (
                 <SignedButtonsWrapper>
-                  <StyledButtonSkeletonLoader width={140} height={40} />
-                  <SkeletonLoader rounded width={40} height={40} />
+                  <StyledButtonSkeletonLoader width={mdMatch ? 102 : 78} height={40} />
                 </SignedButtonsWrapper>
               )}
               {!searchQuery && !mdMatch && !isLoggedIn && topbarButtonLoaded && (
