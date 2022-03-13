@@ -7,6 +7,7 @@ import { Container, Content, Details, Separator, Title } from './NftCard.styles'
 
 export type NftCardProps = {
   title: string
+  loading?: boolean
   thumbnail: VideoThumbnailProps
   creator: Member
   supporters?: Member[]

@@ -29,6 +29,7 @@ import {
   PlaygroundMemberDropdown,
   PlaygroundNFTExtrinsics,
   PlaygroundValidationForm,
+  SettlingAuction,
   TJoyPrice,
   UploadFiles,
   VideoMetaData,
@@ -59,6 +60,7 @@ const playgroundRoutes = [
   { path: 'nft-extrinsics', element: <PlaygroundNFTExtrinsics />, name: 'NFT extrinsics' },
   { path: 'tjoy-price', element: <TJoyPrice />, name: 'TJoy Price' },
   { path: 'whitelisting-members', element: <WhitelistingMembers />, name: 'Whitelisting members' },
+  { path: 'settling-auction', element: <SettlingAuction />, name: 'Settling an auction' },
 ]
 
 const PlaygroundLayout = () => {
