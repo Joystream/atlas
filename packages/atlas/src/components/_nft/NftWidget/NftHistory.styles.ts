@@ -35,9 +35,10 @@ export const StyledChevronButton = styled(Button)<OpenProps>`
   }
 `
 
-export const FadingBlock = styled.div<{ width: number } & { 'data-bottom'?: boolean } & SizeProps>`
+type FadingBlockProps = { width: number; 'data-bottom'?: boolean } & SizeProps
+export const FadingBlock = styled.div<FadingBlockProps>`
   height: ${sizes(6)};
-  background: linear-gradient(0deg, rgb(11 12 15 / 0) 0%, #0b0c0f 100%);
+  background: linear-gradient(0deg, rgb(11 12 15 / 0) 0%, ${cVar('colorCoreNeutral900')} 100%);
   position: absolute;
   width: ${({ width }) => width}px;
   z-index: 1;
@@ -52,11 +53,10 @@ export const FadingBlock = styled.div<{ width: number } & { 'data-bottom'?: bool
   }
 `
 
-type HistoryPanelProps = { width: number } & SizeProps & OpenProps
+type HistoryPanelProps = SizeProps & OpenProps
 export const HistoryPanel = styled.div<HistoryPanelProps>`
   background-color: ${cVar('colorBackgroundMuted')};
   position: relative;
-  width: ${({ width }) => width}px;
   display: grid;
   gap: ${sizes(6)};
   height: 280px;
@@ -115,4 +115,8 @@ export const JoyPlusIcon = styled.div`
 
 export const DollarValue = styled(Text)`
   text-align: end;
+`
+
+export const HistoryPanelContainer = styled.div`
+  position: relative;
 `
