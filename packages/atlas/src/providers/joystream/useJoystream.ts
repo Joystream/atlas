@@ -26,16 +26,14 @@ export const useTokenPrice = () => {
         maximumSignificantDigits: 2,
       })
 
-      const price = tokenPrice
-      return formatter.format(tokens * price)
+      return formatter.format(tokens * tokenPrice)
     },
     [tokenPrice]
   )
   const convertToTJoy = useCallback(
     (dollars: number) => {
-      const price = tokenPrice
-      if (!price) return 0
-      return dollars / price
+      if (!tokenPrice) return 0
+      return dollars / tokenPrice
     },
     [tokenPrice]
   )

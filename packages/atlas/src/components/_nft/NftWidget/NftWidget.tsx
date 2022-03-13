@@ -71,7 +71,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
-      buyNowPrice ? (
+      buyNowPrice && Number(buyNowPrice) ? ( // TODO: remove `&& Number(buyNowPrice)` when the payload type of buyNowPrice is fixed and it doesn't return strings anymore
         <NftInfoItem
           size={size}
           label="Buy now"
@@ -272,8 +272,8 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   )
 }
 
-type HookReturn = NftWidgetProps & { shouldRenderWidget: boolean }
-export const useNftWidget = (videoId?: string): HookReturn => {
+type UseNftWidgetReturn = NftWidgetProps | null
+export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { nft } = useNft(videoId ?? '')
   const { activeMembership } = useUser()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
@@ -313,7 +313,6 @@ export const useNftWidget = (videoId?: string): HookReturn => {
             ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.plannedEndAtBlock))
             : undefined,
         },
-        shouldRenderWidget: true,
       }
     }
     case 'TransactionalStatusBuyNow':
@@ -325,7 +324,6 @@ export const useNftWidget = (videoId?: string): HookReturn => {
           status: 'buy-now',
           buyNowPrice: nft.transactionalStatus.price,
         },
-        shouldRenderWidget: true,
       }
     case 'TransactionalStatusIdle':
       return {
@@ -335,9 +333,8 @@ export const useNftWidget = (videoId?: string): HookReturn => {
         nftStatus: {
           status: 'idle',
         },
-        shouldRenderWidget: true,
       }
   }
 
-  return { shouldRenderWidget: false }
+  return null
 }

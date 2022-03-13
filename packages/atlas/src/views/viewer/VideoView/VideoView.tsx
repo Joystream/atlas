@@ -197,7 +197,7 @@ export const VideoView: React.FC = () => {
 
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
-      {nftWidgetProps.shouldRenderWidget && <NftWidget {...nftWidgetProps} />}
+      {!!nftWidgetProps && <NftWidget {...nftWidgetProps} />}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
     </GridItem>

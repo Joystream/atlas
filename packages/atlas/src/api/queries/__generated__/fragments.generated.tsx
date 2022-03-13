@@ -580,6 +580,8 @@ export type AllBidFieldsFragment = {
   amount: number
   createdAt: Date
   isCanceled: boolean
+  createdInBlock: number
+  id: string
   bidder: {
     __typename?: 'Membership'
     id: string
@@ -1186,6 +1188,7 @@ export const BasicVideoFieldsFragmentDoc = gql`
     }
   }
   ${StorageDataObjectFieldsFragmentDoc}
+  ${BasicChannelFieldsFragmentDoc}
   ${BasicNftFieldsFragmentDoc}
 `
 export const AllNftFieldsFragmentDoc = gql`

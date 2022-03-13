@@ -154,15 +154,6 @@ fragment VideoFields on Video {
   }
 }
 
-fragment AllBidFields on Bid {
-  bidder {
-    ...BasicMembershipFields
-  }
-  amount
-  createdAt
-  isCanceled
-}
-
 fragment BasicNftFields on OwnedNft {
   id
   createdAt
