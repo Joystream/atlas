@@ -226,7 +226,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     videoHashPromise,
   ])
 
-  const actionBarPrimaryText = isEdit ? 'Publish changes' : watch('mintNft') ? 'Publish & mint' : 'Publish & upload'
+  const actionBarPrimaryText = watch('mintNft') ? 'Publish & mint' : !isEdit ? 'Publish & upload' : 'Publish changes'
 
   const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
   const formStatus: VideoWorkspaceFormStatus = useMemo(
