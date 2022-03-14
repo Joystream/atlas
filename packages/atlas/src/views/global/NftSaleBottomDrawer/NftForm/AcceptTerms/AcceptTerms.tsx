@@ -1,4 +1,4 @@
-import { format as formatDate, isValid as isDateValid } from 'date-fns'
+import { format as formatDate } from 'date-fns'
 import React from 'react'
 
 import { Banner } from '@/components/Banner'
@@ -42,8 +42,8 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
 
   const { startDate, endDate } = formData
 
-  const isStartDateValid = startDate instanceof Date && isDateValid(startDate)
-  const isEndDateValid = endDate instanceof Date && isDateValid(endDate)
+  const isStartDateValid = startDate instanceof Date
+  const isEndDateValid = endDate instanceof Date
 
   const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(startDate, endDate)
 
@@ -117,7 +117,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isStartDateValid ? formatDate(startDate as Date, DATE_FORMAT) : 'Right after listing'}
+            {isStartDateValid ? formatDate(startDate, DATE_FORMAT) : 'Right after listing'}
           </DescriptionText>
         </Description>
       </Row>
@@ -131,7 +131,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isEndDateValid ? formatDate(endDate as Date, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
+            {isEndDateValid ? formatDate(endDate, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
           </DescriptionText>
         </Description>
       </Row>
