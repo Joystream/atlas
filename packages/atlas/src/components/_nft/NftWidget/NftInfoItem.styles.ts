@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
-type SizeProps = { 'data-size': 'medium' | 'small' }
+import { SizeProps, sizeObj } from './NftWidget.styles'
 
 export const InfoItemContainer = styled.div<SizeProps>`
   display: grid;
@@ -13,7 +13,7 @@ export const InfoItemContainer = styled.div<SizeProps>`
     'content' min-content
     'secondary' min-content / 1fr;
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     gap: ${sizes(2)};
     align-items: center;
     justify-content: space-between;
@@ -37,7 +37,7 @@ export const Label = styled(Text)`
 export const SecondaryText = styled(Text)<SizeProps>`
   grid-area: secondary;
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     justify-self: end;
   }
 `
@@ -45,7 +45,7 @@ export const SecondaryText = styled(Text)<SizeProps>`
 export const TimerSecondaryText = styled(SecondaryText)<SizeProps>`
   grid-area: secondary;
 
-  &[data-size='small'] {
+  &[data-size=${sizeObj.small}] {
     justify-self: end;
   }
 `

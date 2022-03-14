@@ -33,23 +33,6 @@ module.exports = {
       'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true, 'varsIgnorePattern': '^_+$' },
     ],
-    '@typescript-eslint/no-empty-function': 'warn',
-    '@typescript-eslint/class-name-casing': 'off',
-    '@typescript-eslint/ban-ts-comment': [
-      'error',
-      {
-        'ts-ignore': 'allow-with-description',
-      },
-    ],
-    '@typescript-eslint/ban-types': [
-      'error',
-      {
-        types: {
-          object: false,
-        },
-      },
-    ],
-
     // taken care of by typescript
     'react/prop-types': 'off',
     'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
@@ -68,6 +51,22 @@ module.exports = {
       },
     ],
     'react/no-unescaped-entities': 'off',
+    '@typescript-eslint/no-empty-function': 'warn',
+    '@typescript-eslint/class-name-casing': 'off',
+    '@typescript-eslint/ban-ts-comment': [
+      'error',
+      {
+        'ts-ignore': 'allow-with-description',
+      },
+    ],
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        types: {
+          object: false,
+        },
+      },
+    ],
 
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',
