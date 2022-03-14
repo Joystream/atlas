@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { useNft } from '@/api/hooks'
 import confetti from '@/assets/animations/confetti.json'
 import { GridItem } from '@/components/LayoutGrid'
 import { NftCard } from '@/components/NftCard'
@@ -7,32 +8,60 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useJoystream } from '@/providers/joystream'
+import { useTransaction } from '@/providers/transactionManager'
+import { useAuthorizedUser } from '@/providers/user'
 
 import { Content, StyledLayoutGrid, StyledLimitedContainer, StyledLottie } from './NftSettlementBottomDrawer.styles'
 
 type NftSettlementBottomDrawerProps = {
   isOpen: boolean
+  nftId?: string
   onClose: () => void
 }
 
-const DUMMY_NFT_TILE_PROPS = {
-  role: 'owner' as const,
-  auction: 'none' as const,
-  thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
-  creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
-  owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
-  loading: false,
-}
-
-export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps> = ({ isOpen, onClose }) => {
+export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps> = ({ isOpen, onClose, nftId }) => {
   const xsMatch = useMediaMatch('xs')
+  const { nft, loading } = useNft(nftId || '')
+  const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
+  const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
+  const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { activeMemberId } = useAuthorizedUser()
+
+  const handleSettleAuction = () => {
+    if (!joystream || !nftId) return
+
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).settleEnglishAuction(nftId, activeMemberId, proxyCallback(updateStatus)),
+      onTxSync: async (_) => onClose(),
+      successMessage: {
+        title: 'Bid cancelled',
+        description: 'Good job',
+      },
+    })
+  }
   return (
     <BottomDrawer isOpen={isOpen} onClose={onClose} coverTopbar>
       <StyledLottie play={isOpen} loop={false} animationData={confetti} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>
           <GridItem rowStart={{ base: 2, sm: 1 }} colSpan={{ base: 12, sm: 6, md: 5, lg: 4 }} colStart={{ lg: 3 }}>
-            <NftCard title="some title" {...DUMMY_NFT_TILE_PROPS} fullWidth />
+            <NftCard
+              title={nft?.video.title}
+              thumbnail={{
+                loading: thumbnailLoading,
+                thumbnailUrl: thumbnailUrl,
+              }}
+              creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
+              owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
+              fullWidth
+              loading={loading}
+            />
           </GridItem>
           <GridItem
             rowStart={{ base: 1, sm: 1 }}
@@ -44,7 +73,7 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
               <Text variant="t300" secondary margin={{ top: 4, bottom: 10 }}>
                 Congratulations! To update the ownership, you need to settle the auction.
               </Text>
-              <Button size="large" fullWidth={!xsMatch}>
+              <Button size="large" fullWidth={!xsMatch} onClick={handleSettleAuction}>
                 Settle the auction
               </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>

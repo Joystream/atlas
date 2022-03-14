@@ -5,8 +5,10 @@ import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoTh
 import { Member, Members } from './Members'
 import { Container, Content, Details, Separator, Title } from './NftCard.styles'
 
+import { SkeletonLoader } from '../_loaders/SkeletonLoader'
+
 export type NftCardProps = {
-  title: string
+  title?: string | null
   loading?: boolean
   thumbnail: VideoThumbnailProps
   creator: Member
@@ -15,21 +17,33 @@ export type NftCardProps = {
   fullWidth?: boolean
 }
 
-export const NftCard: React.FC<NftCardProps> = ({ title, creator, supporters, owner, thumbnail, fullWidth }) => {
+export const NftCard: React.FC<NftCardProps> = ({
+  title,
+  creator,
+  supporters,
+  owner,
+  thumbnail,
+  fullWidth,
+  loading,
+}) => {
   return (
     <Container fullWidth={fullWidth}>
       <VideoThumbnail clickable={false} thumbnailUrl={thumbnail.thumbnailUrl} />
       <Details>
-        <Title variant="h400">{title}</Title>
+        {loading ? (
+          <SkeletonLoader width="55.6%" height={24} bottomSpace={24} />
+        ) : (
+          <Title variant="h400">{title}</Title>
+        )}
         <Content>
-          <Members caption="Creator" members={creator} />
+          <Members loading={loading} caption="Creator" members={creator} />
           {supporters && !!supporters.length && (
             <>
               <Members caption="Supporters" members={supporters} />
               <Separator />
             </>
           )}
-          <Members caption="Owner" members={owner} />
+          <Members loading={loading} caption="Owner" members={owner} />
         </Content>
       </Details>
     </Container>
