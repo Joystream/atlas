@@ -10,10 +10,14 @@ export const StyledLimitedContainer = styled(LimitedWidthContainer)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 100%;
 `
 export const StyledLayoutGrid = styled(LayoutGrid)`
   padding: 0 ${sizes(4)};
+  padding-top: 54px;
+  ${media.sm} {
+    padding-top: 0;
+  }
 `
 
 export const StyledLottie = styled(Lottie)`

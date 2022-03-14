@@ -6,6 +6,7 @@ import { NftCard } from '@/components/NftCard'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { Content, StyledLayoutGrid, StyledLimitedContainer, StyledLottie } from './NftSettlementBottomDrawer.styles'
 
@@ -24,6 +25,7 @@ const DUMMY_NFT_TILE_PROPS = {
 }
 
 export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps> = ({ isOpen, onClose }) => {
+  const xsMatch = useMediaMatch('xs')
   return (
     <BottomDrawer isOpen={isOpen} onClose={onClose} coverTopbar>
       <StyledLottie play={isOpen} loop={false} animationData={confetti} />
@@ -42,7 +44,9 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
               <Text variant="t300" secondary margin={{ top: 4, bottom: 10 }}>
                 Congratulations! To update the ownership, you need to settle the auction.
               </Text>
-              <Button size="large">Settle the auction</Button>
+              <Button size="large" fullWidth={!xsMatch}>
+                Settle the auction
+              </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>
                 Transaction fee: <Text variant="t100">19 tJoy</Text>
               </Text>
