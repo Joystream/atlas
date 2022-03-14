@@ -10,6 +10,7 @@ import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useAuthorizedUser } from '@/providers/user'
 
@@ -29,6 +30,7 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
       nft.transactionalStatus.auction?.lastBid?.bidder) ||
     null
 
+  const { displaySnackbar } = useSnackbar()
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: memberAvatarUrl } = useMemberAvatar(lastBidder)
@@ -46,7 +48,14 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
       onTxSync: async (_) => {
         onClose()
       },
-      onTxFinalize: () => refetch(),
+      onTxFinalize: () => {
+        displaySnackbar({
+          title: 'Auction settled',
+          description: 'Your auction has been settled. You are now the owner of this NFT',
+          iconType: 'success',
+        })
+        return refetch()
+      },
       successMessage: {
         title: 'Auction settled',
         description: 'Good job',
