@@ -98,6 +98,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
       titleLabel={editedVideoInfo.isNew || editedVideoInfo.isDraft ? 'New' : 'Edit'}
       pageTitle={isEdit ? 'Edit video' : 'New video'}
       actionBar={actionBarProps}
+      fixedScrollbar
     >
       <VideoForm setFormStatus={setFormStatus} onSubmit={handleVideoSubmit} />
     </BottomDrawer>

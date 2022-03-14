@@ -65,11 +65,12 @@ export const Container = styled.div<ContainerProps>`
 
 type ScrollContainerProps = {
   actionBarHeight?: number
+  fixedScrollbar?: boolean
 }
 export const ScrollContainer = styled.div<ScrollContainerProps>`
   flex: 1;
   margin-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
-  overflow-y: auto;
+  overflow-y: ${({ fixedScrollbar }) => (fixedScrollbar ? 'scroll' : 'auto')};
   overflow-x: hidden;
 `
 
