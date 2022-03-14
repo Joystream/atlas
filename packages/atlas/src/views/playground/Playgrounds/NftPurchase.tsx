@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { useNftPurchase } from '@/providers/nftPurchase'
+import { useNftActions } from '@/providers/nftActions'
 import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 export const NftPurchase: React.FC = () => {
-  const { setIsNftPurchaseOpen } = useNftPurchase()
+  const { openNftPurchase } = useNftActions()
   return (
     <>
-      <Button onClick={() => setIsNftPurchaseOpen(true)}>Open auction overlay</Button>
+      <Button onClick={() => openNftPurchase('1')}>Open auction overlay</Button>
       <NftPurchaseView />
     </>
   )

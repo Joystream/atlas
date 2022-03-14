@@ -1,5 +1,3 @@
-import { UseFormReset } from 'react-hook-form'
-
 import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
 import { VideoAssets, VideoInputMetadata } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -38,6 +36,8 @@ export type VideoWorkspaceVideoFormFields = {
   hasMarketing: boolean | null
   isPublic: boolean | null
   isExplicit: boolean
+  mintNft: boolean
+  nftRoyaltiesPercent?: number
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceVideoAssets
 }
@@ -55,15 +55,12 @@ export type VideoFormData = {
   }>
 }
 
-export type VideoWorkspaceFormStatus<T> = {
+export type VideoWorkspaceFormStatus = {
   isValid: boolean
   isDirty: boolean
   isDisabled: boolean
-  hasUnsavedAssets?: boolean
-  handleGoBack?: () => void
+  hasUnsavedAssets: boolean
   actionBarPrimaryText: string
-  triggerFormSubmit?: () => void
-  resetForm: UseFormReset<T>
-  termsAccepted?: boolean
-  activeFields?: string[]
+  triggerFormSubmit: () => void
+  triggerReset: () => void
 }

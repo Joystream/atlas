@@ -6,10 +6,8 @@ import { NftTile, NftTileProps } from '@/components/NftTile'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
-import { NftAuctionInputMetadata } from '@/joystream-lib'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
-import { VideoWorkspaceFormStatus } from '@/providers/videoWorkspace'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
@@ -24,8 +22,8 @@ import {
   StepperInnerWrapper,
   StepperWrapper,
 } from './NftForm.styles'
+import { NftFormData, NftFormStatus } from './NftForm.types'
 import { SetUp } from './SetUp'
-import { NftFormData } from './types'
 
 const issueNftSteps: StepProps[] = [
   {
@@ -43,13 +41,12 @@ const issueNftSteps: StepProps[] = [
 ]
 
 type NftFormProps = {
-  setFormStatus: (data: VideoWorkspaceFormStatus<NftAuctionInputMetadata> | null) => void
+  setFormStatus: (data: NftFormStatus) => void
   onSubmit: (data: NftFormData) => void
-  setIsNftFormOpen: React.Dispatch<React.SetStateAction<boolean>>
   videoId: string
 }
 
-export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIsNftFormOpen, videoId }) => {
+export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership } = useUser()
   const {
     state: {
@@ -59,10 +56,15 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
       setActiveInputs,
       listingType,
       setListingType,
-      setCurrentStep,
       currentStep,
+      previousStep,
+      nextStep,
     },
   } = useNftForm()
+
+  const isOnFirstStep = currentStep === 0
+  const isOnLastStep = currentStep === 2
+
   const {
     handleSubmit: createSubmitHandler,
     register,
@@ -70,7 +72,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
     getValues,
     setValue,
     watch,
-    formState: { isDirty, isValid },
+    formState: { isValid },
   } = useForm<NftFormData>({ mode: 'onChange' })
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
@@ -78,56 +80,43 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
-  const handleSubmit = useCallback(() => {
-    if (currentStep === 2) {
-      createSubmitHandler(onSubmit)
-      return
-    }
-    setCurrentStep((prevState) => prevState + 1)
-  }, [createSubmitHandler, currentStep, onSubmit, setCurrentStep])
+  const handleSubmit = useCallback(() => createSubmitHandler(onSubmit), [createSubmitHandler, onSubmit])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
   }
 
-  const onGoBack = useCallback(() => {
-    if (currentStep === 0) {
-      setIsNftFormOpen(false)
-      return
-    }
-    setCurrentStep((prevState) => prevState - 1)
-  }, [currentStep, setCurrentStep, setIsNftFormOpen])
+  const handleGoForward = useCallback(() => {
+    if (isOnLastStep) return
+    nextStep()
+  }, [isOnLastStep, nextStep])
+
+  const handleGoBack = useCallback(() => {
+    if (isOnFirstStep) return
+    previousStep()
+  }, [isOnFirstStep, previousStep])
 
   const formDisabled = useMemo(() => {
     if (currentStep === 0) {
-      return !!listingType
+      return !listingType
     }
     if (currentStep === 1) {
-      return isValid
+      return !isValid
     }
-    return termsAccepted
+    return !termsAccepted
   }, [currentStep, isValid, listingType, termsAccepted])
 
-  const actionBarPrimaryText = useMemo(() => {
-    if (currentStep === 2) {
-      return 'Upload & issue'
-    }
-    return 'Next step'
-  }, [currentStep])
-
-  const formStatus: VideoWorkspaceFormStatus<NftFormData> = useMemo(
+  const formStatus: NftFormStatus = useMemo(
     () => ({
-      isDirty,
       isValid,
       isDisabled: formDisabled,
-      handleGoBack: onGoBack,
-      resetForm: reset,
-      actionBarPrimaryText,
-      triggerFormSubmit: handleSubmit,
-      termsAccepted,
-      activeInputs,
+      canGoBack: !isOnFirstStep,
+      canGoForward: !isOnLastStep,
+      triggerGoBack: handleGoBack,
+      triggerGoForward: handleGoForward,
+      triggerSubmit: handleSubmit,
     }),
-    [actionBarPrimaryText, activeInputs, formDisabled, handleSubmit, isDirty, isValid, onGoBack, reset, termsAccepted]
+    [isValid, formDisabled, isOnFirstStep, isOnLastStep, handleGoBack, handleGoForward, handleSubmit]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -145,8 +134,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, setIs
 
   const getNftStatus = () => {
     switch (listingType) {
-      case 'Not for sale':
-        return 'idle'
       case 'Fixed price':
         return 'on-sale'
       case 'Auction':

@@ -93,6 +93,47 @@ export type GetVideoQuery = {
       attribution?: string | null
       customText?: string | null
     } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+    } | null
   } | null
 }
 
@@ -193,6 +234,47 @@ export type GetVideosConnectionQuery = {
           attribution?: string | null
           customText?: string | null
         } | null
+        nft?: {
+          __typename?: 'OwnedNft'
+          id: string
+          createdAt: Date
+          creatorRoyalty?: number | null
+          ownerMember?: {
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: number
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          } | null
+          transactionalStatus:
+            | { __typename: 'TransactionalStatusAuction' }
+            | { __typename: 'TransactionalStatusBuyNow' }
+            | { __typename: 'TransactionalStatusIdle' }
+            | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+        } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -290,6 +372,47 @@ export type GetVideosQuery = {
       attribution?: string | null
       customText?: string | null
     } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+    } | null
   }>
 }
 
@@ -359,6 +482,47 @@ export type GetBasicVideosQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+    } | null
   }>
 }
 
@@ -425,6 +589,47 @@ export type GetBasicVideoQuery = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     } | null
   } | null
 }
@@ -528,6 +733,47 @@ export type GetMostViewedVideosConnectionQuery = {
           attribution?: string | null
           customText?: string | null
         } | null
+        nft?: {
+          __typename?: 'OwnedNft'
+          id: string
+          createdAt: Date
+          creatorRoyalty?: number | null
+          ownerMember?: {
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: number
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          } | null
+          transactionalStatus:
+            | { __typename: 'TransactionalStatusAuction' }
+            | { __typename: 'TransactionalStatusBuyNow' }
+            | { __typename: 'TransactionalStatusIdle' }
+            | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+        } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -622,6 +868,47 @@ export type GetTop10VideosThisWeekQuery = {
       attribution?: string | null
       customText?: string | null
     } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+    } | null
   }>
 }
 
@@ -712,6 +999,47 @@ export type GetTop10VideosThisMonthQuery = {
       code?: number | null
       attribution?: string | null
       customText?: string | null
+    } | null
+    nft?: {
+      __typename?: 'OwnedNft'
+      id: string
+      createdAt: Date
+      creatorRoyalty?: number | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+      transactionalStatus:
+        | { __typename: 'TransactionalStatusAuction' }
+        | { __typename: 'TransactionalStatusBuyNow' }
+        | { __typename: 'TransactionalStatusIdle' }
+        | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     } | null
   }>
 }
