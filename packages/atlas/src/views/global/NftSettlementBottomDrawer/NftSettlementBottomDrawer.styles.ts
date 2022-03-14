@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import Lottie from 'react-lottie-player'
 
-import { LayoutGrid } from '@/components/LayoutGrid'
+import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { media, sizes, zIndex } from '@/styles'
 
@@ -18,6 +18,11 @@ export const StyledLayoutGrid = styled(LayoutGrid)`
   ${media.sm} {
     padding-top: 0;
   }
+`
+
+export const StyledGridItem = styled(GridItem)`
+  display: flex;
+  align-items: center;
 `
 
 export const StyledLottie = styled(Lottie)`

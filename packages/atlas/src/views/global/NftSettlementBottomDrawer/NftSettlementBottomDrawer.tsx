@@ -15,7 +15,13 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 
-import { Content, StyledLayoutGrid, StyledLimitedContainer, StyledLottie } from './NftSettlementBottomDrawer.styles'
+import {
+  Content,
+  StyledGridItem,
+  StyledLayoutGrid,
+  StyledLimitedContainer,
+  StyledLottie,
+} from './NftSettlementBottomDrawer.styles'
 
 export const NftSettlementBottomDrawer: React.FC = () => {
   const xsMatch = useMediaMatch('xs')
@@ -78,7 +84,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
               loading={loading}
             />
           </GridItem>
-          <GridItem
+          <StyledGridItem
             rowStart={{ base: 1, sm: 1 }}
             colSpan={{ base: 12, md: 6, lg: 4 }}
             colStart={{ sm: 8, md: 7, lg: 8 }}
@@ -95,7 +101,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
                 Transaction fee: <Text variant="t100">19 tJoy</Text>
               </Text>
             </Content>
-          </GridItem>
+          </StyledGridItem>
         </StyledLayoutGrid>
       </StyledLimitedContainer>
     </BottomDrawer>
