@@ -136,50 +136,47 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
+  const [openModal, closeModal] = useConfirmationModal()
 
-  const handleSubmit = useCallback(() => createSubmitHandler(onSubmit), [createSubmitHandler, onSubmit])
+  const handleSubmit = useCallback(() => {
+    if (isOnLastStep) {
+      const startDate = getValues('startDate')
 
-  // TODO add modal
-  // const [openModal, closeModal] = useConfirmationModal()
-  // const handleSubmit = useCallback(() => {
-  //   if (currentStep === 2) {
-  //     const startDate = getValues('startDate')
-
-  //     if (startDate instanceof Date && new Date() > startDate) {
-  //       openModal({
-  //         title: 'Starting date you set has already past!',
-  //         children: (
-  //           <Text variant="t200" secondary>
-  //             You can’t list on <Text variant="t200">{formatDate(startDate, DATE_FORMAT)} </Text>
-  //             as this time has already past. Issue with current time or go back to change starting date.
-  //           </Text>
-  //         ),
-  //         primaryButton: {
-  //           variant: 'warning',
-  //           size: 'large',
-  //           text: 'Issue with current time',
-  //           onClick: () => {
-  //             setValue('startDate', 'initial')
-  //             closeModal()
-  //           },
-  //         },
-  //         secondaryButton: {
-  //           variant: 'secondary',
-  //           size: 'large',
-  //           text: 'Change starting date',
-  //           onClick: () => {
-  //             setCurrentStep(1)
-  //             closeModal()
-  //           },
-  //         },
-  //       })
-  //     } else {
-  //       createSubmitHandler(onSubmit)
-  //     }
-  //     return
-  //   }
-  //   setCurrentStep((prevState) => prevState + 1)
-  // }, [closeModal, createSubmitHandler, currentStep, getValues, onSubmit, openModal, setCurrentStep, setValue])
+      if (startDate instanceof Date && new Date() > startDate) {
+        openModal({
+          title: 'Starting date you set has already past!',
+          children: (
+            <Text variant="t200" secondary>
+              You can’t list on <Text variant="t200">{formatDate(startDate, DATE_FORMAT)} </Text>
+              as this time has already past. Issue with current time or go back to change starting date.
+            </Text>
+          ),
+          primaryButton: {
+            variant: 'warning',
+            size: 'large',
+            text: 'Issue with current time',
+            onClick: () => {
+              setValue('startDate', 'initial')
+              closeModal()
+            },
+          },
+          secondaryButton: {
+            variant: 'secondary',
+            size: 'large',
+            text: 'Change starting date',
+            onClick: () => {
+              previousStep()
+              closeModal()
+            },
+          },
+        })
+      } else {
+        createSubmitHandler(onSubmit)
+      }
+      return
+    }
+    previousStep()
+  }, [closeModal, createSubmitHandler, getValues, isOnLastStep, onSubmit, openModal, previousStep, setValue])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
