@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { SvgActionArrowRight } from '@/components/_icons'
+import { SvgActionArrowRight, SvgActionWarning } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const TermsBox = styled.div`
@@ -60,4 +60,14 @@ export const Divider = styled.hr`
 
 export const StyledInformation = styled(Information)`
   margin-left: ${sizes(1)};
+`
+
+export const StyledSvgWarning = styled(SvgActionWarning)`
+  path {
+    fill: ${cVar('colorCoreYellow100')};
+  }
+`
+
+export const YellowText = styled(Text)`
+  color: ${cVar('colorCoreYellow100')};
 `

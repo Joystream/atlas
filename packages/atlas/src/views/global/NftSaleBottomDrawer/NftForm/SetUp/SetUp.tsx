@@ -14,8 +14,7 @@ import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledF
 
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
-import { AuctionDate, Listing, NftFormData } from '../types'
+import { AuctionDate, Listing, NftFormData } from '../NftForm.types'
 
 type SetUpProps = {
   register: UseFormRegister<NftFormData>
@@ -105,27 +104,6 @@ export const SetUp: React.FC<SetUpProps> = ({
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
             <TextField {...register('buyNowPrice', { required: true })} type="number" nodeEnd={<Pill label="tJoy" />} />
-          </StyledFormField>
-        )}
-        {selectedType === 'Not for sale' && (
-          <StyledFormField
-            title="Royalties"
-            switchProps={{
-              name: 'royalty',
-              onChange: toggleActiveInput,
-              value: activeInputs.includes('royalty'),
-            }}
-            infoTooltip={{
-              text: 'By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid.',
-              footer: <RoyaltiesTooltipFooter />,
-            }}
-          >
-            <TextField
-              {...register('royalty')}
-              type="number"
-              nodeEnd={<Pill label="%" />}
-              disabled={!activeInputs.includes('royalty')}
-            />
           </StyledFormField>
         )}
         {selectedType === 'Auction' && (

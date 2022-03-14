@@ -113,6 +113,9 @@ fragment BasicVideoFields on Video {
   thumbnailPhoto {
     ...StorageDataObjectFields
   }
+  nft {
+    ...BasicNftFields
+  }
 }
 
 fragment VideoFields on Video {
@@ -148,6 +151,30 @@ fragment VideoFields on Video {
   }
   license {
     ...LicenseFields
+  }
+  nft {
+    ...BasicNftFields
+  }
+}
+
+fragment AllBidFields on Bid {
+  bidder {
+    ...BasicMembershipFields
+  }
+  amount
+  createdAt
+  isCanceled
+}
+
+fragment BasicNftFields on OwnedNft {
+  id
+  createdAt
+  creatorRoyalty
+  ownerMember {
+    ...BasicMembershipFields
+  }
+  transactionalStatus {
+    __typename
   }
 }
 
@@ -204,13 +231,4 @@ fragment AllNftFields on OwnedNft {
   video {
     ...BasicVideoFields
   }
-}
-
-fragment AllBidFields on Bid {
-  bidder {
-    ...BasicMembershipFields
-  }
-  amount
-  createdAt
-  isCanceled
 }
