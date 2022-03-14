@@ -207,7 +207,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     views: video?.views,
     buyNowPrice: watch('buyNowPrice') || 0,
     startingPrice: watch('startingPrice') || 0,
-    role: 'owner',
   }
 
   const stepsContent = [

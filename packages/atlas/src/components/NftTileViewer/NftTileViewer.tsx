@@ -90,5 +90,5 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         }
     }
   }
-  return <NftTile {...getNftProps(nft)} role="viewer" fullWidth />
+  return <NftTile {...getNftProps(nft)} fullWidth nftId={nftId} />
 }

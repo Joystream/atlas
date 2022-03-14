@@ -30,9 +30,9 @@ export type NftTileProps = {
   startingPrice?: number | null
   topBid?: number | null
   timeLeftMs?: number
-  role: 'owner' | 'viewer'
   fullWidth?: boolean
   interactable?: boolean
+  nftId?: string
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
@@ -48,9 +48,9 @@ export const NftTile: React.FC<NftTileProps> = ({
   startingPrice,
   topBid,
   timeLeftMs,
-  role,
   fullWidth,
   interactable = true,
+  nftId,
 }) => {
   const [hovered, setHovered] = useState(false)
   const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
@@ -127,10 +127,10 @@ export const NftTile: React.FC<NftTileProps> = ({
         loading={loading}
         topBid={topBid}
         creator={creator}
-        role={role}
         title={title}
         startingPrice={startingPrice}
         interactable={interactable}
+        nftId={nftId}
       />
     </Container>
   )
