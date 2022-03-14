@@ -23,10 +23,15 @@ type NftSettlementBottomDrawerProps = {
 
 export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps> = ({ isOpen, onClose, nftId }) => {
   const xsMatch = useMediaMatch('xs')
-  const { nft, loading } = useNft(nftId || '')
+  const { nft, loading, refetch } = useNft(nftId || '')
+  const lastBidder =
+    (nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
+      nft.transactionalStatus.auction?.lastBid?.bidder) ||
+    null
+
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
-  const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+  const { url: memberAvatarUrl } = useMemberAvatar(lastBidder)
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -38,9 +43,12 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).settleEnglishAuction(nftId, activeMemberId, proxyCallback(updateStatus)),
-      onTxSync: async (_) => onClose(),
+      onTxSync: async (_) => {
+        onClose()
+      },
+      onTxFinalize: () => refetch(),
       successMessage: {
-        title: 'Bid cancelled',
+        title: 'Auction settled',
         description: 'Good job',
       },
     })
@@ -58,7 +66,7 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
                 thumbnailUrl: thumbnailUrl,
               }}
               creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
-              owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
+              owner={{ name: lastBidder?.handle, assetUrl: memberAvatarUrl }}
               fullWidth
               loading={loading}
             />
