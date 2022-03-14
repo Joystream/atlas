@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar } from '@/styles'
 
 import {
@@ -11,8 +12,6 @@ import {
   StyledAvatar,
   StyledAvatarGroup,
 } from './NftCard.styles'
-
-import { SkeletonLoader } from '../_loaders/SkeletonLoader'
 
 export type Member = {
   assetUrl?: string | null
