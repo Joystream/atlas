@@ -1,10 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
@@ -12,19 +11,20 @@ import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
+import { NftHistory } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
   Container,
   Content,
-  NftHistoryHeader,
   NftOwnerContainer,
   OwnerAvatar,
   OwnerHandle,
   OwnerLabel,
+  sizeObj,
 } from './NftWidget.styles'
 
-export type Size = 'medium' | 'small'
+export type Size = keyof typeof sizeObj
 
 export type Auction = {
   status: 'auction'
@@ -40,7 +40,7 @@ export type NftWidgetProps = {
   ownerHandle?: string
   ownerAvatarUri?: string
   isOwner: boolean
-  nftState:
+  nftStatus:
     | { status: 'idle'; lastPrice?: number; lastTransactionDate?: Date }
     | { status: 'buy-now'; buyNowPrice: number }
     | Auction
@@ -48,15 +48,12 @@ export type NftWidgetProps = {
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
-// TODO: Update Joy icon with the right variant once it is exported correctly
-export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftState, ownerAvatarUri }) => {
-  const [size, setSize] = useState<'medium' | 'small'>('medium')
-  const containerRef = useRef(null)
-  const { width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
-    ref: containerRef,
+export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftStatus, ownerAvatarUri }) => {
+  const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
-    onResize: () => setSize(width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'),
   })
+  const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
+
   const { convertToUSD } = useTokenPrice()
 
   const content = useDeepMemo(() => {
@@ -78,11 +75,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
         />
       ) : null
 
-    switch (nftState.status) {
+    switch (nftStatus.status) {
       case 'idle':
         return (
           <>
-            {nftState.lastPrice ? (
+            {nftStatus.lastPrice ? (
               <NftInfoItem
                 size={size}
                 label="Last price"
@@ -90,11 +87,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant} secondary>
-                      {formatNumberShort(nftState.lastPrice)}
+                      {formatNumberShort(nftStatus.lastPrice)}
                     </Text>
                   </>
                 }
-                secondaryText={nftState.lastTransactionDate && formatDateTime(nftState.lastTransactionDate)}
+                secondaryText={nftStatus.lastTransactionDate && formatDateTime(nftStatus.lastTransactionDate)}
               />
             ) : (
               <NftInfoItem
@@ -119,7 +116,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       case 'buy-now':
         return (
           <>
-            <BuyNow buyNowPrice={nftState.buyNowPrice} />
+            <BuyNow buyNowPrice={nftStatus.buyNowPrice} />
             {isOwner ? (
               <GridItem colSpan={buttonColumnSpan}>
                 <ButtonGrid data-size={size}>
@@ -141,7 +138,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           </>
         )
       case 'auction':
-        return nftState.isCompleted ? (
+        return nftStatus.isCompleted ? (
           <>
             <NftInfoItem
               size={size}
@@ -149,10 +146,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
               content={
                 <>
                   <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                  <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid ?? 0)}</Text>
+                  <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.topBid ?? 0)}</Text>
                 </>
               }
-              secondaryText={convertToUSD(nftState.topBid ?? 0)}
+              secondaryText={convertToUSD(nftStatus.topBid ?? 0)}
             />
             <GridItem colSpan={buttonColumnSpan}>
               <Button fullWidth size={buttonSize}>
@@ -162,17 +159,17 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           </>
         ) : (
           <>
-            {nftState.topBid ? (
+            {nftStatus.topBid ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
                 content={
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <Text variant={contentTextVariant}>{formatNumberShort(nftState.topBid)}</Text>
+                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.topBid)}</Text>
                   </>
                 }
-                secondaryText={convertToUSD(nftState.topBid)}
+                secondaryText={convertToUSD(nftStatus.topBid)}
               />
             ) : (
               <NftInfoItem
@@ -181,21 +178,21 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                 content={
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <Text variant={contentTextVariant}>{formatNumberShort(nftState.startingPrice)}</Text>
+                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.startingPrice)}</Text>
                   </>
                 }
-                secondaryText={convertToUSD(nftState.startingPrice)}
+                secondaryText={convertToUSD(nftStatus.startingPrice)}
               />
             )}
-            <BuyNow buyNowPrice={nftState.buyNowPrice} />
-            {!!nftState.auctionPlannedEndDate && <NftTimerItem size={size} time={nftState.auctionPlannedEndDate} />}
+            <BuyNow buyNowPrice={nftStatus.buyNowPrice} />
+            {!!nftStatus.auctionPlannedEndDate && <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />}
             {isOwner ? (
-              (!nftState.auctionPlannedEndDate ||
+              (!nftStatus.auctionPlannedEndDate ||
                 // english auction with no bids
-                (nftState.auctionPlannedEndDate && !nftState.topBid)) && (
+                (nftStatus.auctionPlannedEndDate && !nftStatus.topBid)) && (
                 <GridItem colSpan={buttonColumnSpan}>
                   <ButtonGrid data-size={size}>
-                    {!nftState.auctionPlannedEndDate && !!nftState.topBid && (
+                    {!nftStatus.auctionPlannedEndDate && !!nftStatus.topBid && (
                       <Button fullWidth size={buttonSize}>
                         Review and accept bid
                       </Button>
@@ -203,7 +200,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                     <Button
                       fullWidth
                       variant={
-                        !nftState.auctionPlannedEndDate && !!nftState.topBid ? 'destructive-secondary' : 'destructive'
+                        !nftStatus.auctionPlannedEndDate && !!nftStatus.topBid ? 'destructive-secondary' : 'destructive'
                       }
                       size={buttonSize}
                     >
@@ -212,7 +209,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                   </ButtonGrid>
                 </GridItem>
               )
-            ) : nftState.buyNowPrice ? (
+            ) : nftStatus.buyNowPrice ? (
               <GridItem colSpan={buttonColumnSpan}>
                 <ButtonGrid data-size={size} data-two-columns>
                   <Button fullWidth variant="secondary" size={buttonSize}>
@@ -222,7 +219,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
                     Buy now
                   </Button>
                   {/* second row button */}
-                  {nftState.canWithdrawBid && (
+                  {nftStatus.canWithdrawBid && (
                     <GridItem colSpan={2}>
                       <Button fullWidth size={buttonSize} variant="destructive-secondary">
                         Withdraw a bid
@@ -246,11 +243,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
           </>
         )
     }
-  }, [size, nftState, convertToUSD, isOwner])
-
+  }, [size, nftStatus, convertToUSD, isOwner])
   return (
-    <Container ref={containerRef}>
-      <NftOwnerContainer data-size={size}>
+    <Container>
+      <NftOwnerContainer ref={ref} data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
           This NFT is owned by
@@ -261,11 +257,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({ ownerHandle, isOwner, nftS
       </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
 
-      {/* TODO: add history */}
-      <NftHistoryHeader data-size={size}>
-        <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
-        <SvgActionChevronB />
-      </NftHistoryHeader>
+      <NftHistory size={size} width={width} />
     </Container>
   )
 }

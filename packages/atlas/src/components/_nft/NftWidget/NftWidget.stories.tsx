@@ -22,7 +22,7 @@ export default {
     status: {
       control: { type: 'select', options: ['idle', 'buy-now', 'auction'] },
     },
-    nftState: { table: { disable: true } },
+    nftStatus: { table: { disable: true } },
   },
   args: {
     ownerHandle: 'ye 🖤',
@@ -78,8 +78,8 @@ const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: st
   <Container data-size={size}>
     <NftWidget
       {...others}
-      nftState={{
-        status: status,
+      nftStatus={{
+        status,
         startingPrice,
         buyNowPrice,
         topBid,
