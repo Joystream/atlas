@@ -21,8 +21,9 @@ export const useNftForm = () => {
       start,
       end,
     })
+
     const parsedDays = days ? pluralizeNoun(days, 'Day') : ''
-    const parsedHours = hours ? pluralizeNoun(hours, 'Hour') : ''
+    const parsedHours = hours !== undefined ? (hours >= 1 ? pluralizeNoun(hours, 'Hour') : 'Less than an hour') : ''
     return `${parsedDays} ${parsedHours}`
   }
 

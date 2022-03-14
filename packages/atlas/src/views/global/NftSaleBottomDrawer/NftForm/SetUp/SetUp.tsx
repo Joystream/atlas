@@ -205,7 +205,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 />
               </AuctionDatePickerWrapper>
             </FormField>
-            {numberOfBlocksAndDaysLeft && numberOfBlocksAndDaysLeft.blocks !== 0 && (
+            {numberOfBlocksAndDaysLeft && numberOfBlocksAndDaysLeft.blocks > 0 && (
               <DaysSummary>
                 <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
                   Total:
