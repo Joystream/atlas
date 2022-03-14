@@ -8,9 +8,9 @@ import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { GlobalStyles } from '@/styles'
+import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
 import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
 import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
-import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 import { MainLayout } from './MainLayout'
 import { SignInStepsStepper } from './components/_auth/SignInSteps'
@@ -42,8 +42,8 @@ export const App = () => {
                       <AssetsManager />
                       <TransactionManager />
                       <SignInStepsStepper />
-                      <NftPurchaseView />
                       <NftSettlementBottomDrawer />
+                      <NftPurchaseBottomDrawer />
                       <NftSaleBottomDrawer />
                     </NftActionsProvider>
                   </JoystreamProvider>
