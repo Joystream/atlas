@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
+import { TitleWrapper } from '@/components/_channel/ChannelLink/ChannelLink.styles'
 import { media, oldColors, sizes, zIndex } from '@/styles'
 
 type OverlayBackgroundProps = {
@@ -107,27 +108,29 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
   }
 
+  ${TitleWrapper} {
+    flex: unset;
+  }
+
   span {
     font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(5) : '14px')};
     display: flex;
     align-items: center;
-    margin-left: ${sizes(2)};
 
     ${media.md} {
       font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(4))};
-      margin-left: ${sizes(3)};
     }
   }
 
-  div {
+  > a {
     width: ${sizes(6)};
-    height: ${sizes(6)};
+    min-height: ${sizes(6)};
     min-width: ${sizes(6)};
+    margin-right: ${sizes(2)};
 
     ${media.md} {
-      margin-right: ${sizes(1)};
+      margin-right: ${sizes(3)};
       width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
-      height: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       min-width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
     }
   }
