@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
 
+import { useNft } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { DrawerHeader } from '@/components/DrawerHeader'
 import { Information } from '@/components/Information'
@@ -61,6 +62,10 @@ const DUMMY_NFT_TILE_PROPS = {
   fullWidth: false,
 }
 
+type NftPurchaseViewProps = {
+  nftId?: string
+}
+
 const TRANSACTION_FEE = 19
 const FIXED_PRICE = 500
 const MINIMUM_BID = 301
@@ -72,7 +77,9 @@ const BID = {
   amount: 341,
 }
 
-export const NftPurchaseView: React.FC = () => {
+export const NftPurchaseView: React.FC<NftPurchaseViewProps> = ({ nftId }) => {
+  const { nft, loading } = useNft(nftId || '')
+  console.log(nft)
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction } = useNftActions()
