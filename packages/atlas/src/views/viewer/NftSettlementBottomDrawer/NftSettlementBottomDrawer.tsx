@@ -13,7 +13,7 @@ import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useUser } from '@/providers/user'
 
 import { Content, StyledLayoutGrid, StyledLimitedContainer, StyledLottie } from './NftSettlementBottomDrawer.styles'
 
@@ -34,10 +34,10 @@ export const NftSettlementBottomDrawer: React.FC = () => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
+  const { activeMemberId } = useUser()
 
   const handleSettleAuction = () => {
-    if (!joystream || !currentNftId) return
+    if (!joystream || !currentNftId || !activeMemberId) return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
