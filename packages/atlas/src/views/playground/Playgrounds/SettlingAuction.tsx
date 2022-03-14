@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
-import { NftSettlementBottomDrawer } from '@/views/viewer/NftSettlementBottomDrawer/NftSettlementBottomDrawer'
+import { useNftActions } from '@/providers/nftActions'
 
 export const SettlingAuction = () => {
-  const [drawerOpen, setIsDrawerOpen] = useState(false)
+  const { openNftSettlement } = useNftActions()
   const [nftId, setNftId] = useState('')
 
   return (
@@ -13,12 +13,7 @@ export const SettlingAuction = () => {
       <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} label="Video ID" />
       <br />
       <br />
-      {nftId && (
-        <>
-          <Button onClick={() => setIsDrawerOpen(true)}>Open drawer</Button>
-          <NftSettlementBottomDrawer isOpen={drawerOpen} onClose={() => setIsDrawerOpen(false)} nftId={nftId} />
-        </>
-      )}
+      {nftId && <Button onClick={() => openNftSettlement(nftId)}>Open drawer</Button>}
     </>
   )
 }

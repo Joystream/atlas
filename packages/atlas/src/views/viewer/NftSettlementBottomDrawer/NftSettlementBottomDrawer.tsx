@@ -10,21 +10,18 @@ import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
+import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useAuthorizedUser } from '@/providers/user'
 
 import { Content, StyledLayoutGrid, StyledLimitedContainer, StyledLottie } from './NftSettlementBottomDrawer.styles'
 
-type NftSettlementBottomDrawerProps = {
-  isOpen: boolean
-  nftId?: string
-  onClose: () => void
-}
-
-export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps> = ({ isOpen, onClose, nftId }) => {
+export const NftSettlementBottomDrawer: React.FC = () => {
   const xsMatch = useMediaMatch('xs')
-  const { nft, loading, refetch } = useNft(nftId || '')
+  const { currentNftId, closeNftAction, currentAction } = useNftActions()
+  const { nft, loading, refetch } = useNft(currentNftId || '')
+
   const lastBidder =
     (nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
       nft.transactionalStatus.auction?.lastBid?.bidder) ||
@@ -40,13 +37,13 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
   const { activeMemberId } = useAuthorizedUser()
 
   const handleSettleAuction = () => {
-    if (!joystream || !nftId) return
+    if (!joystream || !currentNftId) return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).settleEnglishAuction(nftId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).settleEnglishAuction(currentNftId, activeMemberId, proxyCallback(updateStatus)),
       onTxSync: async (_) => {
-        onClose()
+        closeNftAction()
       },
       onTxFinalize: () => {
         displaySnackbar({
@@ -62,8 +59,9 @@ export const NftSettlementBottomDrawer: React.FC<NftSettlementBottomDrawerProps>
       },
     })
   }
+  const isOpen = currentAction === 'settle'
   return (
-    <BottomDrawer isOpen={isOpen} onClose={onClose} coverTopbar>
+    <BottomDrawer isOpen={isOpen} onClose={closeNftAction} coverTopbar>
       <StyledLottie play={isOpen} loop={false} animationData={confetti} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>

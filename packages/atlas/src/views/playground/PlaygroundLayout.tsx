@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { NftActionsProvider } from '@/providers/nftActions'
 import { ActiveUserProvider } from '@/providers/user'
 import { oldColors } from '@/styles'
 
@@ -65,29 +64,27 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   return (
-    <NftActionsProvider>
-      <ActiveUserProvider>
-        <ConfirmationModalProvider>
-          <Container>
-            <NavContainer>
+    <ActiveUserProvider>
+      <ConfirmationModalProvider>
+        <Container>
+          <NavContainer>
+            {playgroundRoutes.map((route) => (
+              <Link key={route.path} to={`/playground/${route.path}`}>
+                {route.name}
+              </Link>
+            ))}
+          </NavContainer>
+          <ContentContainer>
+            <Routes>
               {playgroundRoutes.map((route) => (
-                <Link key={route.path} to={`/playground/${route.path}`}>
-                  {route.name}
-                </Link>
+                <Route key={route.path} path={route.path} element={route.element} />
               ))}
-            </NavContainer>
-            <ContentContainer>
-              <Routes>
-                {playgroundRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </ContentContainer>
-          </Container>
-          <ConnectionStatusManager />
-        </ConfirmationModalProvider>
-      </ActiveUserProvider>
-    </NftActionsProvider>
+            </Routes>
+          </ContentContainer>
+        </Container>
+        <ConnectionStatusManager />
+      </ConfirmationModalProvider>
+    </ActiveUserProvider>
   )
 }
 
