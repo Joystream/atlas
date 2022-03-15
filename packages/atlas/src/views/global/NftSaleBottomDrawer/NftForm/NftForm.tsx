@@ -95,7 +95,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
           }
           return new Date() < val
         },
-        { message: 'You cannot select a past date as a start of an auction' }
+        { message: 'You cannot select a past date as an end of an auction' }
       )
       .refine(
         (val) => {

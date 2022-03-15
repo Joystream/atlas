@@ -30,7 +30,7 @@ type AcceptTermsProps = {
   toggleTermsAccept: () => void
 }
 
-const DATE_FORMAT = 'dd MMM yyyy, HH:mm OOOO'
+const DATE_FORMAT = 'dd MMM yyyy, HH:mm'
 
 export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   selectedType,

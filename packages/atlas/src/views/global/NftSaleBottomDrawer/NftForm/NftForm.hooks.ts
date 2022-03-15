@@ -46,7 +46,7 @@ export const useNftForm = () => {
         daysAndHoursText: getTotalDaysAndHoursText(endDate, now),
       }
     }
-    if (typeof endDate === 'string' && endDate === 'initial') {
+    if (endDate === 'initial') {
       return {
         blocks: 0,
         daysAndHoursText: 'No expiration date',
