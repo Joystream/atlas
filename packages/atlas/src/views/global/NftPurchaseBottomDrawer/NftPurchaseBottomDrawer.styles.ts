@@ -1,11 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { ActionBar } from '@/components/ActionBar'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 const flexStyles = css`
   display: flex;

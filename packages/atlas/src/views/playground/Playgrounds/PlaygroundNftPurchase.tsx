@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
+import { TextField } from '@/components/_inputs/TextField'
 import { useNftActions } from '@/providers/nftActions'
-import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
 
 export const PlaygroundNftPurchase: React.FC = () => {
   const { openNftPurchase } = useNftActions()
+
+  const [nftId, setNftId] = useState('')
+
   return (
     <>
-      <Button onClick={() => openNftPurchase('1')}>Open auction overlay</Button>
-      <NftPurchaseBottomDrawer />
+      <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} label="Video ID" />
+      <br />
+      <br />
+      {nftId && <Button onClick={() => openNftPurchase(nftId)}>Open drawer</Button>}
     </>
   )
 }
