@@ -277,7 +277,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { nft } = useNft(videoId ?? '')
   const { activeMembership } = useUser()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const { currentBlock, getCurrentBlock } = useJoystream()
+  const { getCurrentBlock } = useJoystream()
 
   const owner = nft?.ownerMember ?? nft?.video.channel.ownerMember
 
@@ -308,7 +308,8 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
             nft.transactionalStatus.auction?.isCompleted ||
             (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
               userBid &&
-              nft?.transactionalStatus?.auction?.auctionType.bidLockingTime + userBid.createdInBlock > currentBlock),
+              nft?.transactionalStatus?.auction?.auctionType.bidLockingTime + userBid.createdInBlock >
+                getCurrentBlock()),
           auctionPlannedEndDate: nft.transactionalStatus.auction?.plannedEndAtBlock
             ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.plannedEndAtBlock))
             : undefined,
