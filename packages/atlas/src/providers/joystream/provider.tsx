@@ -15,7 +15,7 @@ const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
 
 type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 
-type JoystreamContextValue = {
+export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
 } & ReturnType<typeof useJoystreamUtilFns>
@@ -104,7 +104,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 }
 
 const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyCallback: ProxyCallbackFn) => {
-  const tokenPriceRef = useRef(0)
+  const [tokenPrice, setTokenPrice] = useState(0)
   const currentBlockRef = useRef(0)
   const currentBlockMsTimestampRef = useRef(0)
 
@@ -114,7 +114,7 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
       try {
         const data = await fetch(JOYSTREAM_STATUS_URL)
         const json = await data.json()
-        tokenPriceRef.current = parseFloat(json.price)
+        setTokenPrice(parseFloat(json.price))
       } catch (e) {
         SentryLogger.error('Failed to fetch tJoy price', e)
       }
@@ -142,12 +142,11 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     return unsubscribe
   }, [joystream, proxyCallback])
 
-  const getTokenPrice = useCallback(() => tokenPriceRef.current, [])
   const getCurrentBlock = useCallback(() => currentBlockRef.current, [])
   const getCurrentBlockMsTimestamp = useCallback(() => currentBlockMsTimestampRef.current, [])
 
   return {
-    getTokenPrice,
+    tokenPrice,
     getCurrentBlock,
     getCurrentBlockMsTimestamp,
   }
