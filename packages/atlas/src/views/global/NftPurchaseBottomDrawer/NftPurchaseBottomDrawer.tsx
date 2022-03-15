@@ -18,8 +18,10 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useTokenPrice } from '@/providers/joystream'
+import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
+import { useTransaction } from '@/providers/transactionManager'
+import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { formatDurationShort } from '@/utils/time'
 
@@ -61,8 +63,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const accountBalance = useSubsribeAccountBalance()
-  const timestamp = useMsTimestamp()
+  const timestamp = useMsTimestamp({ shouldStop: !currentAction || type !== 'english_auction' })
   const { convertDurationToBlocks, convertBlockToMsTimestamp } = useBlockTimeEstimation()
+
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { activeMemberId } = useUser()
 
   const {
     watch,
@@ -70,8 +76,11 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     handleSubmit: createSubmitHandler,
     getValues,
     register,
-    formState: { errors },
-  } = useForm({ mode: 'onSubmit' })
+    reset,
+    formState: { errors, isValid },
+  } = useForm<{ bid: string }>({ mode: 'onChange', defaultValues: { bid: '' } })
+
+  const isAuction = nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
 
   const isBuyNow = nft?.transactionalStatus.__typename === 'TransactionalStatusBuyNow'
 
@@ -82,6 +91,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const isOpenAuction =
     nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
     nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
+
+  useEffect(() => {
+    if (!currentAction) {
+      reset({ bid: '' })
+    }
+  }, [currentAction, reset])
 
   useEffect(() => {
     if (isBuyNow) {
@@ -116,6 +131,16 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       ? nft.transactionalStatus.auction.lastBid
       : null
 
+  const lastBidAmount = lastBid?.amount || 0
+
+  const bidStep =
+    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
+    nft.transactionalStatus.auction?.minimalBidStep
+      ? nft.transactionalStatus.auction?.minimalBidStep
+      : 0
+
+  const calculatedMinimumBid = minimumBid > lastBidAmount ? minimumBid : lastBidAmount + bidStep
+
   const endAtBlock =
     nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
     nft.transactionalStatus.auction?.plannedEndAtBlock
@@ -131,7 +156,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       return
     }
     const subscription = watch(({ bid }) => {
-      if (bid >= auctionBuyNowPrice) {
+      if (Number(bid) >= auctionBuyNowPrice) {
         setBuyNowInfo(true)
       } else {
         setBuyNowInfo(false)
@@ -144,11 +169,50 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     return () => subscription.unsubscribe()
   }, [auctionBuyNowPrice, setValue, type, watch])
 
-  const handleSubmit = useCallback(() => {
-    return createSubmitHandler((_) => null)
-  }, [createSubmitHandler])
+  const handleSubmit = useCallback(
+    () =>
+      createSubmitHandler((data) => {
+        if (!joystream || !currentNftId || !activeMemberId) return
+        if (isAuction) {
+          handleTransaction({
+            txFactory: async (updateStatus) =>
+              (await joystream.extrinsics).makeNftBid(
+                currentNftId,
+                activeMemberId,
+                Number(data.bid),
+                proxyCallback(updateStatus)
+              ),
+            successMessage: {
+              title: 'Bid placed',
+              description: 'Good job',
+            },
+          })
+        }
+        if (isBuyNow) {
+          handleTransaction({
+            txFactory: async (updateStatus) =>
+              (await joystream.extrinsics).buyNftNow(currentNftId, activeMemberId, proxyCallback(updateStatus)),
+            // onTxSync: async (_) => onSuccess(),
+            successMessage: {
+              title: 'NFT bought',
+              description: 'Good job',
+            },
+          })
+        }
+      }),
+    [
+      activeMemberId,
+      createSubmitHandler,
+      currentNftId,
+      handleTransaction,
+      isAuction,
+      isBuyNow,
+      joystream,
+      proxyCallback,
+    ]
+  )
 
-  const placedBid = getValues().bid
+  const placedBid = Number(getValues().bid)
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type !== 'open_auction' && timeLeftSeconds === 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
@@ -156,7 +220,6 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const blocksLeft = (endTime && convertDurationToBlocks(endTime - timestamp)) || 0
 
   const isOpen = currentAction === 'purchase'
-
   return (
     <BottomDrawer
       isOpen={isOpen}
@@ -165,7 +228,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       actionBar={{
         primaryButton: {
           text: primaryButtonText,
-          disabled: placedBid ? !placedBid.length : true,
+          disabled: !isValid,
           onClick: handleSubmit(),
         },
       }}
@@ -261,7 +324,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       <Text variant="h300" secondary>
                         Minimum bid:
                       </Text>
-                      <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{minimumBid}</Text>
+                      <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{calculatedMinimumBid}</Text>
                     </MinimumBid>
                     <div>
                       <Text variant="t100" secondary>
@@ -275,7 +338,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     required: true,
                     validate: {
                       bidTooLow: (value) =>
-                        Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
+                        Number(value) >= calculatedMinimumBid ? true : 'Your bid must be higher than minimum bid',
                       bidTooHigh: (value) =>
                         accountBalance
                           ? Number(value) + TRANSACTION_FEE > accountBalance
@@ -285,7 +348,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     },
                   })}
                   disabled={auctionEnded}
-                  placeholder={auctionEnded ? 'Auction ended' : `Min. ${minimumBid} tJOY`}
+                  placeholder={auctionEnded ? 'Auction ended' : `Min. ${calculatedMinimumBid} tJOY`}
                   nodeStart={<JoyTokenIcon variant="silver" size={24} />}
                   nodeEnd={!!placedBid && <Pill variant="overlay" label={`${convertToUSD(placedBid)}`} />}
                   type="number"
