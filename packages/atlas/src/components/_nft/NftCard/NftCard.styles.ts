@@ -53,7 +53,6 @@ export const MembersWrapper = styled.div`
     &:nth-of-type(even) {
       border: 0;
       padding-top: 0;
-      text-align: right;
       justify-self: flex-end;
     }
   }
@@ -91,4 +90,8 @@ export const StyledAvatarGroup = styled(AvatarGroup)`
 
 export const StyledAvatar = styled(Avatar)`
   margin-right: ${sizes(2)};
+`
+
+export const MemberName = styled(Text)`
+  word-break: break-word;
 `
