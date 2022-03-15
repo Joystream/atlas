@@ -5,7 +5,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { TitleWrapper } from '@/components/_channel/ChannelLink/ChannelLink.styles'
 import { media, oldColors, sizes, zIndex } from '@/styles'
 
 type OverlayBackgroundProps = {
@@ -106,10 +105,6 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
 
   ${media.md} {
     margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
-  }
-
-  ${TitleWrapper} {
-    flex: unset;
   }
 
   span {
