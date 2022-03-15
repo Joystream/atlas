@@ -114,58 +114,63 @@ index e0e86c1012dd917e75c93f7379ae3f8bcf8da7d5..1a1d5c2fe7d7d643f58ba7d0a5b4656a
      Title,
      UpdatedTitle,
 diff --git a/bounty.js b/bounty.js
-index dfa0b552935fe0116c7fca9eb05842562966fda0..bd4bb3c60136e05d643a057a3876ae85c19ad9e2 100644
+index 111c3503fabcae26d751e35056c9961e486f5194..29a3eca481479124751a5170f655f25e238cc8f2 100644
 --- a/bounty.js
 +++ b/bounty.js
-@@ -1,80 +1,65 @@
+@@ -1,120 +1,98 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
--exports.bountyTypes = exports.Entry = exports.OracleJudgment = exports.OracleWorkEntryJudgment = exports.OracleWorkEntryJudgment_Winner = exports.BountyCreationParameters = exports.FundingType = exports.FundingType_Limited = exports.FundingType_Perpetual = exports.AssuranceContractType = exports.BountyActor = exports.EntryId = exports.BountyId = void 0;
+-exports.bountyTypes = exports.Bounty = exports.BountyMilestone = exports.BountyMilestone_JudgmentSubmitted = exports.BountyMilestone_WorkSubmitted = exports.BountyMilestone_BountyMaxFundingReached = exports.BountyMilestone_Created = exports.Entry = exports.OracleJudgment = exports.OracleWorkEntryJudgment = exports.OracleWorkEntryJudgment_Winner = exports.BountyCreationParameters = exports.FundingType = exports.FundingType_Limited = exports.FundingType_Perpetual = exports.AssuranceContractType = exports.AssuranceContractType_Closed = exports.BountyActor = exports.EntryId = exports.BountyId = void 0;
 -const types_1 = require("@polkadot/types");
 -const common_1 = require("./common");
--class BountyId extends types_1.u32 {
-+import { Null, u32, u128, bool, Option, Vec, BTreeMap } from '@polkadot/types';
-+import { JoyEnum, JoyStructDecorated, MemberId, AccountId } from './common';
-+export class BountyId extends u32 {
- }
+-class BountyId extends types_1.u64 {
+-}
 -exports.BountyId = BountyId;
--class EntryId extends types_1.u32 {
-+export class EntryId extends u32 {
- }
+-class EntryId extends types_1.u64 {
+-}
 -exports.EntryId = EntryId;
 -class BountyActor extends (0, common_1.JoyEnum)({
 -    Council: types_1.Null,
 -    Member: common_1.MemberId,
++import { Null, u32, u64, bool, Option, BTreeSet, BTreeMap } from '@polkadot/types';
++import { JoyEnum, JoyStructDecorated, MemberId, AccountId, Balance, BlockNumber } from './common';
++export class BountyId extends u64 {
++}
++export class EntryId extends u64 {
++}
 +export class BountyActor extends JoyEnum({
 +    Council: Null,
 +    Member: MemberId,
  }) {
  }
 -exports.BountyActor = BountyActor;
+-class AssuranceContractType_Closed extends types_1.BTreeSet.with(common_1.MemberId) {
++export class AssuranceContractType_Closed extends BTreeSet.with(MemberId) {
+ }
+-exports.AssuranceContractType_Closed = AssuranceContractType_Closed;
 -class AssuranceContractType extends (0, common_1.JoyEnum)({
 -    Open: types_1.Null,
--    Closed: types_1.Vec.with(common_1.MemberId), // FIXME: @polkadot/typegen Error: Enum: AssuranceContractType: Unhandled nested "BTreeSet"
 +export class AssuranceContractType extends JoyEnum({
 +    Open: Null,
-+    Closed: Vec.with(MemberId), // FIXME: @polkadot/typegen Error: Enum: AssuranceContractType: Unhandled nested "BTreeSet"
+     Closed: AssuranceContractType_Closed,
  }) {
  }
 -exports.AssuranceContractType = AssuranceContractType;
 -class FundingType_Perpetual extends (0, common_1.JoyStructDecorated)({
--    target: types_1.u128, // Balance
+-    target: common_1.Balance,
 +export class FundingType_Perpetual extends JoyStructDecorated({
-+    target: u128, // Balance
++    target: Balance,
  }) {
  }
 -exports.FundingType_Perpetual = FundingType_Perpetual;
 -class FundingType_Limited extends (0, common_1.JoyStructDecorated)({
--    min_funding_amount: types_1.u128,
--    max_funding_amount: types_1.u128,
--    funding_period: types_1.u32, // BlockNumber
+-    min_funding_amount: common_1.Balance,
+-    max_funding_amount: common_1.Balance,
+-    funding_period: common_1.BlockNumber,
 +export class FundingType_Limited extends JoyStructDecorated({
-+    min_funding_amount: u128,
-+    max_funding_amount: u128,
-+    funding_period: u32, // BlockNumber
++    min_funding_amount: Balance,
++    max_funding_amount: Balance,
++    funding_period: BlockNumber,
  }) {
  }
 -exports.FundingType_Limited = FundingType_Limited;
@@ -181,22 +186,22 @@ index dfa0b552935fe0116c7fca9eb05842562966fda0..bd4bb3c60136e05d643a057a3876ae85
      oracle: BountyActor,
      contract_type: AssuranceContractType,
      creator: BountyActor,
--    cherry: types_1.u128,
--    entrant_stake: types_1.u128,
-+    cherry: u128,
-+    entrant_stake: u128,
+-    cherry: common_1.Balance,
+-    entrant_stake: common_1.Balance,
++    cherry: Balance,
++    entrant_stake: Balance,
      funding_type: FundingType,
--    work_period: types_1.u32,
--    judging_period: types_1.u32, // BlockNumber
-+    work_period: u32,
-+    judging_period: u32, // BlockNumber
+-    work_period: common_1.BlockNumber,
+-    judging_period: common_1.BlockNumber,
++    work_period: BlockNumber,
++    judging_period: BlockNumber,
  }) {
  }
 -exports.BountyCreationParameters = BountyCreationParameters;
 -class OracleWorkEntryJudgment_Winner extends (0, common_1.JoyStructDecorated)({
--    reward: types_1.u128, // Balance
+-    reward: common_1.Balance,
 +export class OracleWorkEntryJudgment_Winner extends JoyStructDecorated({
-+    reward: u128, // Balance
++    reward: Balance,
  }) {
  }
 -exports.OracleWorkEntryJudgment_Winner = OracleWorkEntryJudgment_Winner;
@@ -215,26 +220,76 @@ index dfa0b552935fe0116c7fca9eb05842562966fda0..bd4bb3c60136e05d643a057a3876ae85
 -class Entry extends (0, common_1.JoyStructDecorated)({
 -    member_id: common_1.MemberId,
 -    staking_account_id: common_1.AccountId,
--    submitted_at: types_1.u32,
+-    submitted_at: common_1.BlockNumber,
 -    work_submitted: types_1.bool,
--    oracle_judgment_result: types_1.Option.with(OracleJudgment),
+-    oracle_judgment_result: types_1.Option.with(OracleWorkEntryJudgment),
 +export class Entry extends JoyStructDecorated({
 +    member_id: MemberId,
 +    staking_account_id: AccountId,
-+    submitted_at: u32,
++    submitted_at: BlockNumber,
 +    work_submitted: bool,
-+    oracle_judgment_result: Option.with(OracleJudgment),
++    oracle_judgment_result: Option.with(OracleWorkEntryJudgment),
  }) {
  }
 -exports.Entry = Entry;
+-class BountyMilestone_Created extends (0, common_1.JoyStructDecorated)({
+-    created_at: common_1.BlockNumber,
+-    has_contributions: types_1.bool,
++export class BountyMilestone_Created extends JoyStructDecorated({
++    created_at: BlockNumber,
++    has_contributions: bool,
+ }) {
+ }
+-exports.BountyMilestone_Created = BountyMilestone_Created;
+-class BountyMilestone_BountyMaxFundingReached extends (0, common_1.JoyStructDecorated)({
+-    max_funding_reached_at: common_1.BlockNumber,
++export class BountyMilestone_BountyMaxFundingReached extends JoyStructDecorated({
++    max_funding_reached_at: BlockNumber,
+ }) {
+ }
+-exports.BountyMilestone_BountyMaxFundingReached = BountyMilestone_BountyMaxFundingReached;
+-class BountyMilestone_WorkSubmitted extends (0, common_1.JoyStructDecorated)({
+-    work_period_started_at: common_1.BlockNumber,
++export class BountyMilestone_WorkSubmitted extends JoyStructDecorated({
++    work_period_started_at: BlockNumber,
+ }) {
+ }
+-exports.BountyMilestone_WorkSubmitted = BountyMilestone_WorkSubmitted;
+-class BountyMilestone_JudgmentSubmitted extends (0, common_1.JoyStructDecorated)({
+-    successful_bounty: types_1.bool,
++export class BountyMilestone_JudgmentSubmitted extends JoyStructDecorated({
++    successful_bounty: bool,
+ }) {
+ }
+-exports.BountyMilestone_JudgmentSubmitted = BountyMilestone_JudgmentSubmitted;
+-class BountyMilestone extends (0, common_1.JoyEnum)({
++export class BountyMilestone extends JoyEnum({
+     Created: BountyMilestone_Created,
+     BountyMaxFundingReached: BountyMilestone_BountyMaxFundingReached,
+     WorkSubmitted: BountyMilestone_WorkSubmitted,
+     JudgmentSubmitted: BountyMilestone_JudgmentSubmitted,
+ }) {
+ }
+-exports.BountyMilestone = BountyMilestone;
+-class Bounty extends (0, common_1.JoyStructDecorated)({
++export class Bounty extends JoyStructDecorated({
+     creation_params: BountyCreationParameters,
+-    total_funding: common_1.Balance,
++    total_funding: Balance,
+     milestone: BountyMilestone,
+-    active_work_entry_count: types_1.u32,
++    active_work_entry_count: u32,
+ }) {
+ }
+-exports.Bounty = Bounty;
 -exports.bountyTypes = {
 +export const bountyTypes = {
      BountyId,
      EntryId,
      BountyActor,
-@@ -88,4 +73,4 @@ exports.bountyTypes = {
-     OracleJudgment,
-     Entry,
+@@ -135,4 +113,4 @@ exports.bountyTypes = {
+     BountyMilestone,
+     Bounty,
  };
 -exports.default = exports.bountyTypes;
 +export default bountyTypes;
@@ -436,14 +491,14 @@ index d277ee3a9dbe2bb572cc3d5b3eecd05fc1b993dd..118a6505210c6de62723a53dd868681d
 -exports.default = exports.constitutionTypes;
 +export default constitutionTypes;
 diff --git a/content/index.js b/content/index.js
-index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f0137eba1 100644
+index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983ad404872b 100644
 --- a/content/index.js
 +++ b/content/index.js
-@@ -1,341 +1,282 @@
+@@ -1,307 +1,253 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
--exports.PullPayment = exports.VideoPostDeletionParameters = exports.VideoPostCreationParameters = exports.ProofElement = exports.Side = exports.VideoPost = exports.VideoPostType = exports.ChannelMigrationConfig = exports.VideoMigrationConfig = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.NftIssuanceParameters = exports.InitTransactionalStatus = exports.AuctionParams = exports.OwnedNft = exports.NftOwner = exports.TransactionalStatus = exports.Auction = exports.Bid = exports.AuctionType = exports.OpenAuctionDetails = exports.EnglishAuctionDetails = exports.IsExtended = exports.Royalty = exports.CurrencyAmount = exports.CurrencyOf = exports.ReactionId = exports.VideoPostId = exports.IsCensored = exports.MaxNumber = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
--exports.contentTypes = exports.OwnedNFT = exports.NFTOwner = exports.AuctionRecord = exports.NftMetadata = exports.ModeratorSet = void 0;
+-exports.NftMetadata = exports.ModeratorSet = exports.PullPayment = exports.VideoPostDeletionParameters = exports.VideoPostCreationParameters = exports.ProofElement = exports.Side = exports.VideoPost = exports.VideoPostType = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.NftIssuanceParameters = exports.InitTransactionalStatus = exports.AuctionParams = exports.OwnedNft = exports.NftOwner = exports.TransactionalStatus = exports.Auction = exports.Bid = exports.AuctionType = exports.OpenAuctionDetails = exports.EnglishAuctionDetails = exports.IsExtended = exports.Royalty = exports.CurrencyAmount = exports.CurrencyOf = exports.ReactionId = exports.VideoPostId = exports.IsCensored = exports.MaxNumber = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
+-exports.contentTypes = void 0;
 -const types_1 = require("@polkadot/types");
 -const primitive_1 = require("@polkadot/types/primitive");
 -const common_1 = require("../common");
@@ -451,7 +506,7 @@ index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f
 -const storage_1 = require("../storage");
 -class CuratorId extends primitive_1.u64 {
 +import { Vec, Option, Tuple, BTreeSet, UInt } from '@polkadot/types';
-+import { bool, u8, u32, u64, u128, Null, Bytes } from '@polkadot/types/primitive';
++import { bool, u8, u32, u64, Null, Bytes } from '@polkadot/types/primitive';
 +import { JoyStructDecorated, JoyEnum, ChannelId, MemberId, Balance, Hash, BlockNumber, BalanceOf } from '../common';
 +import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
 +import { DataObjectId, DataObjectCreationParameters } from '../storage';
@@ -499,8 +554,8 @@ index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f
  }
 -exports.CurrencyAmount = CurrencyAmount;
  // NFT types
--class Royalty extends types_1.UInt {
-+export class Royalty extends UInt {
+-class Royalty extends types_1.UInt.with(32, 'Perbill') {
++export class Royalty extends UInt.with(32, 'Perbill') {
  }
 -exports.Royalty = Royalty;
 -class IsExtended extends primitive_1.bool {
@@ -599,20 +654,24 @@ index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f
 -    buy_now_price: types_1.Option.with(common_1.Balance),
 -    starts_at: types_1.Option.with(common_1.BlockNumber),
 -    whitelist: types_1.BTreeSet.with(common_1.MemberId),
+-}) {
+-}
+-exports.AuctionParams = AuctionParams;
+-class InitTransactionalStatus extends (0, common_1.JoyEnum)({
+-    Idle: primitive_1.Null,
+-    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
+-    BuyNow: common_1.Balance,
 +    starting_price: Balance,
 +    minimal_bid_step: Balance,
 +    buy_now_price: Option.with(Balance),
 +    starts_at: Option.with(BlockNumber),
 +    whitelist: BTreeSet.with(MemberId),
- }) {
- }
--exports.AuctionParams = AuctionParams;
--class InitTransactionalStatus extends (0, common_1.JoyEnum)({
--    Idle: primitive_1.Null,
--    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
++}) {
++}
 +export class InitTransactionalStatus extends JoyEnum({
 +    Idle: Null,
 +    InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
++    BuyNow: Balance,
      Auction: AuctionParams,
  }) {
  }
@@ -806,30 +865,16 @@ index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f
 -    new_meta: types_1.Option.with(primitive_1.Bytes),
 -    assets_to_remove: types_1.BTreeSet.with(storage_1.DataObjectId),
 -    enable_comments: types_1.Option.with(primitive_1.bool),
+-    auto_issue_nft: types_1.Option.with(NftIssuanceParameters),
 +export class VideoUpdateParameters extends JoyStructDecorated({
 +    assets_to_upload: Option.with(StorageAssets),
 +    new_meta: Option.with(Bytes),
 +    assets_to_remove: BTreeSet.with(DataObjectId),
 +    enable_comments: Option.with(bool),
++    auto_issue_nft: Option.with(NftIssuanceParameters),
  }) {
  }
 -exports.VideoUpdateParameters = VideoUpdateParameters;
--class VideoMigrationConfig extends (0, common_1.JoyStructDecorated)({
-+export class VideoMigrationConfig extends JoyStructDecorated({
-     current_id: VideoId,
-     final_id: VideoId,
- }) {
- }
--exports.VideoMigrationConfig = VideoMigrationConfig;
--class ChannelMigrationConfig extends (0, common_1.JoyStructDecorated)({
--    current_id: common_1.ChannelId,
--    final_id: common_1.ChannelId,
-+export class ChannelMigrationConfig extends JoyStructDecorated({
-+    current_id: ChannelId,
-+    final_id: ChannelId,
- }) {
- }
--exports.ChannelMigrationConfig = ChannelMigrationConfig;
 -class VideoPostType extends (0, common_1.JoyEnum)({
 -    Description: primitive_1.Null,
 +export class VideoPostType extends JoyEnum({
@@ -901,49 +946,13 @@ index daec95c197e415b055d036ed8e6a8704c30909ca..4c059cb434030c221d9e54d1dd26c89f
 +export class NftMetadata extends Vec.with(u8) {
  }
 -exports.NftMetadata = NftMetadata;
--class AuctionRecord extends (0, common_1.JoyStructDecorated)({
--    starting_price: primitive_1.u128,
--    buy_now_price: primitive_1.u128,
-+export class AuctionRecord extends JoyStructDecorated({
-+    starting_price: u128,
-+    buy_now_price: u128,
-     auction_type: AuctionType,
--    minimal_bid_step: primitive_1.u128,
--    last_bid: types_1.Option.with(Bid),
--    starts_at: types_1.Option.with(primitive_1.u32),
--    whitelist: types_1.BTreeSet.with(common_1.MemberId),
-+    minimal_bid_step: u128,
-+    last_bid: Option.with(Bid),
-+    starts_at: Option.with(u32),
-+    whitelist: BTreeSet.with(MemberId),
- }) {
- }
--exports.AuctionRecord = AuctionRecord;
--class NFTOwner extends (0, common_1.JoyEnum)({
--    ChannelOwner: primitive_1.Null,
--    Member: common_1.MemberId,
-+export class NFTOwner extends JoyEnum({
-+    ChannelOwner: Null,
-+    Member: MemberId,
- }) {
- }
--exports.NFTOwner = NFTOwner;
--class OwnedNFT extends (0, common_1.JoyStructDecorated)({
-+export class OwnedNFT extends JoyStructDecorated({
-     owner: NFTOwner,
-     transactional_status: TransactionalStatus,
--    creator_royalty: types_1.Option.with(Royalty),
-+    creator_royalty: Option.with(Royalty),
- }) {
- }
--exports.OwnedNFT = OwnedNFT;
 -exports.contentTypes = {
 +export const contentTypes = {
      CuratorId,
      CuratorGroupId,
      CuratorGroup,
-@@ -393,4 +334,4 @@ exports.contentTypes = {
-     OwnedNFT,
+@@ -354,4 +300,4 @@ exports.contentTypes = {
+     NftIssuanceParameters,
      NftMetadata,
  };
 -exports.default = exports.contentTypes;
@@ -1344,18 +1353,18 @@ index ef18bc981a93d1fed3d84eeb3616a9f9d66f0660..ec7bd5e0eb0fc67f23068dbb85361499
 -exports.default = exports.membersTypes;
 +export default membersTypes;
 diff --git a/package.json b/package.json
-index e91337f74a0d1007a6ade8b021fa9c7111cad839..a4a9a5eacf18e791ae9927a75ce41d647efbd06a 100644
+index 59d0646d82be8189fe901d7f674fb254469be9ec..7ea14469ea9567b8f3111bbb5356fb95c623be67 100644
 --- a/package.json
 +++ b/package.json
 @@ -3,6 +3,8 @@
-   "version": "0.18.0",
+   "version": "0.19.2",
    "description": "Types for Joystream Substrate Runtime - Olympia release",
    "main": "index.js",
 +  "type": "module",
 +  "module": "index.js",
    "types": "index.d.ts",
    "scripts": {
-     "prepublishOnly": "npm run build",
+     "prepublishOnly": "yarn clean && yarn build",
 diff --git a/proposals.js b/proposals.js
 index 217b35d79b9612629cf4dec9aa866832cae8accb..e4dc2a352bb1f0fef4c536f79cca0a5b06b7d027 100644
 --- a/proposals.js

@@ -215,6 +215,7 @@ export class JoystreamLibExtrinsics {
       assets_to_upload: videoAssets,
       assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
       enable_comments: new Option(this.api.registry, bool),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -322,10 +323,15 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  async buyNftNow(videoId: VideoId, memberId: MemberId, cb?: ExtrinsicStatusCallbackFn): Promise<NftExtrinsicResult> {
+  async buyNftNow(
+    videoId: VideoId,
+    memberId: MemberId,
+    priceCommitment: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
 
-    const tx = this.api.tx.content.buyNft(videoId, new RuntimeMemberId(this.api.registry, memberId))
+    const tx = this.api.tx.content.buyNft(videoId, new RuntimeMemberId(this.api.registry, memberId), priceCommitment)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
