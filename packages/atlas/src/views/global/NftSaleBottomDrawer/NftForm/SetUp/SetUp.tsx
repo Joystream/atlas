@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import {
   Control,
   Controller,
+  ControllerRenderProps,
   DeepMap,
   FieldError,
   UseFormRegister,
@@ -12,7 +13,7 @@ import {
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { AuctionDatePicker, AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
+import { AuctionDatePicker, SelectValue } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar } from '@/styles'
@@ -22,7 +23,7 @@ import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledF
 
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { Listing, NftFormData } from '../NftForm.types'
+import { AuctionDatePickerValue, Listing, NftFormData } from '../NftForm.types'
 
 type SetUpProps = {
   register: UseFormRegister<NftFormData>
@@ -109,8 +110,23 @@ export const SetUp: React.FC<SetUpProps> = ({
     if (val?.type === 'duration') {
       return val.durationDays || ('default' as const)
     }
-    return 'default'
+    return val
   }, [])
+
+  const handleChange = (
+    onChangeCb: ControllerRenderProps<NftFormData, 'startDate' | 'endDate'>['onChange'],
+    val: SelectValue
+  ) => {
+    if (val instanceof Date) {
+      onChangeCb({ type: 'date', date: val })
+    }
+    if (typeof val === 'number') {
+      onChangeCb({ type: 'duration', durationDays: val })
+    }
+    if (val === 'default') {
+      onChangeCb({ type: 'duration', durationDays: null })
+    }
+  }
 
   return (
     <>
@@ -190,7 +206,9 @@ export const SetUp: React.FC<SetUpProps> = ({
                           name: INITIAL_START_DATE_VALUE,
                         },
                       ]}
-                      onChange={onChange}
+                      onChange={(val) => {
+                        handleChange(onChange, val)
+                      }}
                       value={getDatePickerValue(value)}
                     />
                   )}
@@ -206,7 +224,9 @@ export const SetUp: React.FC<SetUpProps> = ({
                       helperText={error?.message}
                       minDate={(startDate instanceof Date && startDate) || new Date()}
                       disabled={!activeInputs.includes('auctionDuration')}
-                      onChange={onChange}
+                      onChange={(val) => {
+                        handleChange(onChange, val)
+                      }}
                       items={expirationDateItems}
                       value={getDatePickerValue(value)}
                     />

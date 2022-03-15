@@ -1,12 +1,11 @@
 import { differenceInMilliseconds, intervalToDuration } from 'date-fns'
 import { useCallback, useState } from 'react'
 
-import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { pluralizeNoun } from '@/utils/misc'
 import { daysToMilliseconds } from '@/utils/time'
 
-import { Listing } from './NftForm.types'
+import { AuctionDatePickerValue, Listing } from './NftForm.types'
 
 export const useNftForm = () => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])

@@ -11,24 +11,13 @@ import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
-export type AuctionDatePickerValue =
-  | {
-      type: 'date'
-      date: Date
-    }
-  | {
-      type: 'duration'
-      durationDays: number | null
-    }
-  | null
-
 export type SelectValue = Date | 'pick-date' | 'default' | number | null | undefined
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
   maxDate?: Date | null
   value: SelectValue
-  onChange: (value: AuctionDatePickerValue) => void
+  onChange: (value: SelectValue) => void
 } & Omit<SelectProps<SelectValue>, 'onChange'>
 
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
@@ -71,15 +60,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
 
   const handleSelect = (value: SelectValue) => {
     setPickedValue(value)
-    if (value instanceof Date) {
-      onChange({ type: 'date', date: value })
-    }
-    if (typeof value === 'number') {
-      onChange({ type: 'duration', durationDays: value })
-    }
-    if (value === 'default') {
-      onChange({ type: 'duration', durationDays: null })
-    }
+    onChange(value)
   }
 
   const handlePickDate = (date: Date | null) => {
@@ -88,10 +69,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     }
     setPickedValue(date)
     setStartDate(date)
-    onChange?.({
-      type: 'date',
-      date,
-    })
+    onChange(date)
   }
 
   return (

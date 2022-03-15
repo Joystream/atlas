@@ -23,7 +23,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
             name: 'Right after listing',
           },
         ]}
-        onChange={(val) => setStartDate(val?.type === 'date' ? val.date : val?.durationDays)}
+        onChange={setStartDate}
         value={startDate}
         label="starting date"
       />
@@ -48,7 +48,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
           },
         ]}
         minDate={startDate instanceof Date ? startDate : null}
-        onChange={(val) => setExpirationDate(val?.type === 'date' ? val.date : val?.durationDays)}
+        onChange={setExpirationDate}
         value={expirationDate}
         label="expiration date"
       />
