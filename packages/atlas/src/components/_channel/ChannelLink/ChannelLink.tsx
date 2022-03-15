@@ -22,7 +22,7 @@ import {
   TitleWrapper,
 } from './ChannelLink.styles'
 
-type ChannelLinkProps = {
+export type ChannelLinkProps = {
   id?: string
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
   hideHandle?: boolean
@@ -89,7 +89,7 @@ export const ChannelLink: React.FC<ChannelLinkProps> = ({
             timeout={parseInt(transitions.timings.regular)}
           >
             {displayedChannel ? (
-              <TitleWrapper>
+              <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
                   <StyledText variant={_textVariant} isSecondary={!!textSecondary}>
                     {customTitle || displayedChannel?.title}
