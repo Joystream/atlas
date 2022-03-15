@@ -31,7 +31,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     cancelNftSale(nftId, !!isBuyNow)
   }
 
-  const { getCurrentBlock } = useJoystream()
+  const { currentBlock } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 
@@ -72,7 +72,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         }
       case 'TransactionalStatusAuction': {
         const auctionPlannedEndBlock = nftStatus.status === 'auction' && nftStatus?.auctionPlannedEndBlock
-        const isEnded = auctionPlannedEndBlock && getCurrentBlock() >= auctionPlannedEndBlock
+        const isEnded = auctionPlannedEndBlock && currentBlock >= auctionPlannedEndBlock
         const plannedEndMsTimestamp =
           !isEnded && !!auctionPlannedEndBlock && convertBlockToMsTimestamp(auctionPlannedEndBlock)
 

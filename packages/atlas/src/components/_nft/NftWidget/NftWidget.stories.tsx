@@ -22,6 +22,9 @@ export default {
     status: {
       control: { type: 'select', options: ['idle', 'buy-now', 'auction'] },
     },
+    state: {
+      control: { type: 'select', options: ['expired', 'running', 'upcoming'] },
+    },
     nftStatus: { table: { disable: true } },
   },
   args: {
@@ -32,6 +35,8 @@ export default {
     startingPrice: 15800,
     buyNowPrice: 36900,
     topBid: 15800,
+    topBidderHandle: 'Swim',
+    topBidderAvatarUri: 'https://picsum.photos/40/40',
     lastTransactionDate: new Date(),
     lastPrice: 25900,
     isCompleted: false,
@@ -40,6 +45,11 @@ export default {
       minutes: 110,
       seconds: 10,
     }),
+    startsAtDate: add(new Date(), {
+      minutes: 110,
+      seconds: 10,
+    }),
+    state: 'upcoming',
   },
   decorators: [
     (Story) => {
@@ -64,30 +74,14 @@ export default {
 // worth typing?
 const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: string]: never }> = ({
   size,
-  status,
-  startingPrice,
-  buyNowPrice,
-  topBid,
-  lastTransactionDate,
-  lastPrice,
-  isCompleted,
-  canWithdrawBid,
-  auctionPlannedEndDate,
   ...others
 }) => (
   <Container data-size={size}>
     <NftWidget
       {...others}
       nftStatus={{
-        status,
-        startingPrice,
-        buyNowPrice,
-        topBid,
-        lastTransactionDate,
-        lastPrice,
-        canWithdrawBid,
-        isCompleted,
-        auctionPlannedEndDate,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...(others as any),
       }}
     />
   </Container>

@@ -73,3 +73,35 @@ export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean 
     grid-template-columns: 1fr 1fr;
   }
 `
+
+export const TopBidderTokenContainer = styled.div<SizeProps>`
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: -4px;
+
+  &::before {
+    display: inline-block;
+    position: absolute;
+    content: '';
+    width: 28px;
+    height: 28px;
+    background: ${cVar('colorBackgroundMuted')};
+    border-radius: 100%;
+    left: -2px;
+    top: -2px;
+  }
+
+  &[data-size=${sizeObj.small}] {
+    &::before {
+      width: 21px;
+      height: 21px;
+      left: -2.5px;
+      top: 1.5px;
+    }
+  }
+`
+
+export const TopBidderContainer = styled.div`
+  display: flex;
+`

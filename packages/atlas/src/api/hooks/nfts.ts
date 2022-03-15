@@ -16,8 +16,8 @@ export type NftStatus =
       status: 'auction'
       type: 'open-auction' | 'english-auction'
       startingPrice: number
-      buyNowPrice?: number
-      topBid?: number
+      buyNowPrice: number | undefined
+      topBid: number | undefined
       topBidder?: BasicMembershipFieldsFragment
       title?: string | null
       duration?: number | null
