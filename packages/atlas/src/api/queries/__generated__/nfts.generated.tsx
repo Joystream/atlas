@@ -46,6 +46,59 @@ export type GetNftQuery = {
           | null
       }
     } | null
+    creatorChannel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      createdAt: Date
+      views: number
+      follows: number
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: number
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+    }
     transactionalStatus:
       | {
           __typename: 'TransactionalStatusAuction'
@@ -379,6 +432,59 @@ export type GetNftsQuery = {
           | null
       }
     } | null
+    creatorChannel: {
+      __typename?: 'Channel'
+      id: string
+      title?: string | null
+      createdAt: Date
+      views: number
+      follows: number
+      avatarPhoto?: {
+        __typename?: 'StorageDataObject'
+        id: string
+        createdAt: Date
+        size: number
+        isAccepted: boolean
+        ipfsHash: string
+        storageBag: { __typename?: 'StorageBag'; id: string }
+        type:
+          | { __typename: 'DataObjectTypeChannelAvatar' }
+          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+          | { __typename: 'DataObjectTypeUnknown' }
+          | { __typename: 'DataObjectTypeVideoMedia' }
+          | { __typename: 'DataObjectTypeVideoThumbnail' }
+      } | null
+      ownerMember?: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: number
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      } | null
+    }
     transactionalStatus:
       | {
           __typename: 'TransactionalStatusAuction'
