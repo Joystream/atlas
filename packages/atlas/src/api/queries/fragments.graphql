@@ -12,6 +12,10 @@ fragment BasicChannelFields on Channel {
   avatarPhoto {
     ...StorageDataObjectFields
   }
+
+  ownerMember {
+    ...BasicMembershipFields
+  }
 }
 
 fragment AllChannelFields on Channel {
@@ -22,9 +26,6 @@ fragment AllChannelFields on Channel {
   language {
     id
     iso
-  }
-  ownerMember {
-    ...BasicMembershipFields
   }
   coverPhoto {
     ...StorageDataObjectFields
@@ -104,11 +105,7 @@ fragment BasicVideoFields on Video {
     ...StorageDataObjectFields
   }
   channel {
-    id
-    title
-    avatarPhoto {
-      ...StorageDataObjectFields
-    }
+    ...BasicChannelFields
   }
   thumbnailPhoto {
     ...StorageDataObjectFields
@@ -157,15 +154,6 @@ fragment VideoFields on Video {
   }
 }
 
-fragment AllBidFields on Bid {
-  bidder {
-    ...BasicMembershipFields
-  }
-  amount
-  createdAt
-  isCanceled
-}
-
 fragment BasicNftFields on OwnedNft {
   id
   createdAt
@@ -206,7 +194,9 @@ fragment AllNftFields on OwnedNft {
           }
         }
         isCompleted
-
+        initialOwner {
+          ...BasicMembershipFields
+        }
         buyNowPrice
         minimalBidStep
         startingPrice
@@ -231,4 +221,15 @@ fragment AllNftFields on OwnedNft {
   video {
     ...BasicVideoFields
   }
+}
+
+fragment AllBidFields on Bid {
+  bidder {
+    ...BasicMembershipFields
+  }
+  amount
+  createdAt
+  isCanceled
+  createdInBlock
+  id
 }

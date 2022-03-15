@@ -1,8 +1,8 @@
 import { useCallback, useContext } from 'react'
 
-import { JoystreamContext } from './provider'
+import { JoystreamContext, JoystreamContextValue } from './provider'
 
-export const useJoystream = () => {
+export const useJoystream = (): JoystreamContextValue => {
   const ctx = useContext(JoystreamContext)
   if (!ctx) {
     throw new Error('useJoystream must be used within JoystreamProvider')
@@ -16,7 +16,7 @@ export const useTokenPrice = () => {
     throw new Error('useJoystream must be used within JoystreamProvider')
   }
 
-  const { getTokenPrice } = ctx
+  const { tokenPrice } = ctx
 
   const convertToUSD = useCallback(
     (tokens: number) => {
@@ -26,18 +26,16 @@ export const useTokenPrice = () => {
         maximumSignificantDigits: 2,
       })
 
-      const price = getTokenPrice()
-      return formatter.format(tokens * price)
+      return formatter.format(tokens * tokenPrice)
     },
-    [getTokenPrice]
+    [tokenPrice]
   )
   const convertToTJoy = useCallback(
     (dollars: number) => {
-      const price = getTokenPrice()
-      if (!price) return 0
-      return dollars / price
+      if (!tokenPrice) return 0
+      return dollars / tokenPrice
     },
-    [getTokenPrice]
+    [tokenPrice]
   )
 
   return {

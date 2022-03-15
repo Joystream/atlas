@@ -14,6 +14,7 @@ import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
@@ -59,6 +60,7 @@ export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
+  const nftWidgetProps = useNftWidget(id)
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -195,6 +197,7 @@ export const VideoView: React.FC = () => {
 
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
+      {!!nftWidgetProps && <NftWidget {...nftWidgetProps} />}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
     </GridItem>

@@ -29,7 +29,7 @@ import { OwnerHandle } from './NftWidget.styles'
 
 type HitoryProps = { size: Size; width: number }
 export const NftHistory: React.FC<HitoryProps> = ({ size, width }) => {
-  const [isOpen, toggleIsOpen] = useToggle(true)
+  const [isOpen, toggleIsOpen] = useToggle()
   const { convertToUSD } = useTokenPrice()
 
   const dummyData: HistoryItemProps[] = [

@@ -33,26 +33,6 @@ export type GetBasicChannelQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
-  } | null
-}
-
-export type GetChannelQueryVariables = Types.Exact<{
-  where: Types.ChannelWhereUniqueInput
-}>
-
-export type GetChannelQuery = {
-  __typename?: 'Query'
-  channelByUniqueInput?: {
-    __typename?: 'Channel'
-    description?: string | null
-    isPublic?: boolean | null
-    isCensored: boolean
-    id: string
-    title?: string | null
-    createdAt: Date
-    views: number
-    follows: number
-    language?: { __typename?: 'Language'; id: string; iso: string } | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -83,6 +63,26 @@ export type GetChannelQuery = {
           | null
       }
     } | null
+  } | null
+}
+
+export type GetChannelQueryVariables = Types.Exact<{
+  where: Types.ChannelWhereUniqueInput
+}>
+
+export type GetChannelQuery = {
+  __typename?: 'Query'
+  channelByUniqueInput?: {
+    __typename?: 'Channel'
+    description?: string | null
+    isPublic?: boolean | null
+    isCensored: boolean
+    id: string
+    title?: string | null
+    createdAt: Date
+    views: number
+    follows: number
+    language?: { __typename?: 'Language'; id: string; iso: string } | null
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -112,6 +112,36 @@ export type GetChannelQuery = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
     } | null
   } | null
 }
@@ -144,36 +174,6 @@ export type GetChannelsQuery = {
     views: number
     follows: number
     language?: { __typename?: 'Language'; id: string; iso: string } | null
-    ownerMember?: {
-      __typename?: 'Membership'
-      id: string
-      handle: string
-      metadata: {
-        __typename?: 'MemberMetadata'
-        about?: string | null
-        avatar?:
-          | {
-              __typename?: 'AvatarObject'
-              avatarObject?: {
-                __typename?: 'StorageDataObject'
-                id: string
-                createdAt: Date
-                size: number
-                isAccepted: boolean
-                ipfsHash: string
-                storageBag: { __typename?: 'StorageBag'; id: string }
-                type:
-                  | { __typename: 'DataObjectTypeChannelAvatar' }
-                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                  | { __typename: 'DataObjectTypeUnknown' }
-                  | { __typename: 'DataObjectTypeVideoMedia' }
-                  | { __typename: 'DataObjectTypeVideoThumbnail' }
-              } | null
-            }
-          | { __typename?: 'AvatarUri'; avatarUri: string }
-          | null
-      }
-    } | null
     coverPhoto?: {
       __typename?: 'StorageDataObject'
       id: string
@@ -204,6 +204,36 @@ export type GetChannelsQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
   }>
 }
 
@@ -233,36 +263,6 @@ export type GetChannelsConnectionQuery = {
         views: number
         follows: number
         language?: { __typename?: 'Language'; id: string; iso: string } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: number
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
         coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -292,6 +292,36 @@ export type GetChannelsConnectionQuery = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
+        } | null
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: number
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
         } | null
       }
     }>
@@ -344,36 +374,6 @@ export type GetMostViewedChannelsConnectionQuery = {
         views: number
         follows: number
         language?: { __typename?: 'Language'; id: string; iso: string } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: number
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
         coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -403,6 +403,36 @@ export type GetMostViewedChannelsConnectionQuery = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
+        } | null
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: number
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
         } | null
       }
     }>
@@ -437,36 +467,6 @@ export type GetMostFollowedChannelsConnectionQuery = {
         views: number
         follows: number
         language?: { __typename?: 'Language'; id: string; iso: string } | null
-        ownerMember?: {
-          __typename?: 'Membership'
-          id: string
-          handle: string
-          metadata: {
-            __typename?: 'MemberMetadata'
-            about?: string | null
-            avatar?:
-              | {
-                  __typename?: 'AvatarObject'
-                  avatarObject?: {
-                    __typename?: 'StorageDataObject'
-                    id: string
-                    createdAt: Date
-                    size: number
-                    isAccepted: boolean
-                    ipfsHash: string
-                    storageBag: { __typename?: 'StorageBag'; id: string }
-                    type:
-                      | { __typename: 'DataObjectTypeChannelAvatar' }
-                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-                      | { __typename: 'DataObjectTypeUnknown' }
-                      | { __typename: 'DataObjectTypeVideoMedia' }
-                      | { __typename: 'DataObjectTypeVideoThumbnail' }
-                  } | null
-                }
-              | { __typename?: 'AvatarUri'; avatarUri: string }
-              | null
-          }
-        } | null
         coverPhoto?: {
           __typename?: 'StorageDataObject'
           id: string
@@ -496,6 +496,36 @@ export type GetMostFollowedChannelsConnectionQuery = {
             | { __typename: 'DataObjectTypeUnknown' }
             | { __typename: 'DataObjectTypeVideoMedia' }
             | { __typename: 'DataObjectTypeVideoThumbnail' }
+        } | null
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: number
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
         } | null
       }
     }>
@@ -531,6 +561,36 @@ export type GetTop10ChannelsQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
   }>
 }
 
@@ -561,6 +621,36 @@ export type GetPromisingChannelsQuery = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
     } | null
   }>
 }
@@ -593,6 +683,36 @@ export type GetDiscoverChannelsQuery = {
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
     } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
   }>
 }
 
@@ -623,6 +743,36 @@ export type GetPopularChannelsQuery = {
         | { __typename: 'DataObjectTypeUnknown' }
         | { __typename: 'DataObjectTypeVideoMedia' }
         | { __typename: 'DataObjectTypeVideoThumbnail' }
+    } | null
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: number
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
     } | null
   }>
 }
