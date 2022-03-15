@@ -22,7 +22,7 @@ export type AuctionDatePickerValue =
     }
   | null
 
-type SelectValue = Date | 'pick-date' | 'default' | number | null | undefined
+export type SelectValue = Date | 'pick-date' | 'default' | number | null | undefined
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
