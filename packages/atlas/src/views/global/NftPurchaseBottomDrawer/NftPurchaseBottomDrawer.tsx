@@ -51,6 +51,7 @@ import {
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 19
+const PLATFORM_ROYALTY = 0
 
 export const NftPurchaseBottomDrawer: React.FC = () => {
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
@@ -149,6 +150,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   const endTime = endAtBlock && convertBlockToMsTimestamp(endAtBlock)
   const timeLeftSeconds = endTime ? Math.trunc((endTime - timestamp) / 1000) : 0
+
+  const creatorRoyalty = nft?.creatorRoyalty || 0
+  const ownerRoyalty = 100 - creatorRoyalty - PLATFORM_ROYALTY
 
   // check if input value isn't bigger than fixed price
   useEffect(() => {
@@ -388,7 +392,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 <PaymentSplitValues>
                   <Avatar size="bid" />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
-                    88%
+                    {ownerRoyalty}%
                   </Text>
                 </PaymentSplitValues>
               </div>
@@ -399,7 +403,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 <PaymentSplitValues>
                   <Avatar size="bid" />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
-                    10%
+                    ${creatorRoyalty}%
                   </Text>
                 </PaymentSplitValues>
               </div>
@@ -410,7 +414,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 <PaymentSplitValues>
                   <SvgJoystreamLogoShort />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
-                    2%
+                    {PLATFORM_ROYALTY}%
                   </Text>
                 </PaymentSplitValues>
               </div>
