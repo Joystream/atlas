@@ -48,15 +48,13 @@ export const NftSettlementBottomDrawer: React.FC = () => {
     handleTransaction({
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).settleEnglishAuction(currentNftId, activeMemberId, proxyCallback(updateStatus)),
-      onTxSync: async (_) => {
-        closeNftAction()
-      },
       onTxFinalize: () => {
         displaySnackbar({
           title: 'Auction settled',
           description: 'Your auction has been settled. You are now the owner of this NFT',
           iconType: 'success',
         })
+        closeNftAction()
         return refetch()
       },
       successMessage: {
@@ -98,7 +96,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
                 Settle the auction
               </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>
-                Transaction fee: <Text variant="t100">19 tJoy</Text>
+                Transaction fee: <Text variant="t100">0 tJoy</Text>
               </Text>
             </Content>
           </StyledGridItem>
