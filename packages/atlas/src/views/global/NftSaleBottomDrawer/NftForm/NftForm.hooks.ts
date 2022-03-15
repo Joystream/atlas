@@ -31,31 +31,32 @@ export const useNftForm = () => {
   const previousStep = useCallback(() => setCurrentStep((step) => step - 1), [])
 
   const getNumberOfBlocksAndDaysLeft = (startDate: AuctionDatePickerValue, endDate: AuctionDatePickerValue) => {
-    const isStartDateAndEndDateValid = startDate instanceof Date && endDate instanceof Date
+    const isStartDateAndEndDateValid = startDate?.type === 'date' && endDate?.type === 'date'
     const now = new Date(Date.now())
 
     if (isStartDateAndEndDateValid) {
       return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate, startDate)),
-        daysAndHoursText: getTotalDaysAndHoursText(startDate, endDate),
+        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate.date, startDate.date)),
+        daysAndHoursText: getTotalDaysAndHoursText(startDate.date, endDate.date),
       }
     }
-    if (endDate instanceof Date) {
+    if (endDate?.type === 'date') {
       return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate, now)),
-        daysAndHoursText: getTotalDaysAndHoursText(endDate, now),
+        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate.date, now)),
+        daysAndHoursText: getTotalDaysAndHoursText(endDate.date, now),
       }
     }
-    if (endDate === 'initial') {
+    if (endDate?.type === 'duration') {
+      return {
+        blocks: endDate.durationDays === null ? 0 : convertDurationToBlocks(daysToMilliseconds(endDate.durationDays)),
+        daysAndHoursText:
+          endDate.durationDays === null ? 'No expiration date' : pluralizeNoun(endDate.durationDays, 'day'),
+      }
+    }
+    if (!endDate) {
       return {
         blocks: 0,
         daysAndHoursText: 'No expiration date',
-      }
-    }
-    if (typeof endDate === 'number') {
-      return {
-        blocks: convertDurationToBlocks(daysToMilliseconds(endDate)),
-        daysAndHoursText: pluralizeNoun(endDate, 'day'),
       }
     }
   }

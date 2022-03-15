@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   Control,
   Controller,
@@ -14,7 +14,6 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { AuctionDatePicker, AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
-import { SelectItem } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
@@ -72,8 +71,8 @@ export const SetUp: React.FC<SetUpProps> = ({
         return [...prevState, name]
       }
       if (name === 'auctionDuration') {
-        setValue('startDate', 'initial')
-        setValue('endDate', 'initial')
+        setValue('startDate', null)
+        setValue('endDate', null)
       } else {
         reset({ ...formData, [name]: undefined })
       }
@@ -96,12 +95,22 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }
 
-  const days = ['initial', 1, 3, 5, 7] as const
+  const days = ['default', 1, 3, 5, 7] as const
 
-  const expirationDateItems: SelectItem<AuctionDatePickerValue>[] = days.map((value) => ({
-    name: value === 'initial' ? 'No expiration date' : pluralizeNoun(value, 'day'),
+  const expirationDateItems = days.map((value) => ({
+    name: value === 'default' ? 'No expiration date' : pluralizeNoun(value, 'day'),
     value: value,
   }))
+
+  const getDatePickerValue = useCallback((val: AuctionDatePickerValue) => {
+    if (val?.type === 'date') {
+      return val.date
+    }
+    if (val?.type === 'duration') {
+      return val.durationDays || ('default' as const)
+    }
+    return 'default'
+  }, [])
 
   return (
     <>
@@ -177,12 +186,12 @@ export const SetUp: React.FC<SetUpProps> = ({
                       disabled={!activeInputs.includes('auctionDuration')}
                       items={[
                         {
-                          value: 'initial',
+                          value: 'default',
                           name: INITIAL_START_DATE_VALUE,
                         },
                       ]}
                       onChange={onChange}
-                      value={value || 'initial'}
+                      value={getDatePickerValue(value)}
                     />
                   )}
                 />
@@ -199,7 +208,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                       disabled={!activeInputs.includes('auctionDuration')}
                       onChange={onChange}
                       items={expirationDateItems}
-                      value={value || 'initial'}
+                      value={getDatePickerValue(value)}
                     />
                   )}
                 />

@@ -42,11 +42,10 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
 
   const { startDate, endDate } = formData
 
-  const isStartDateValid = startDate instanceof Date
-  const isEndDateValid = endDate instanceof Date
+  const isStartDateValid = startDate?.type === 'date'
+  const isEndDateValid = endDate?.type === 'date'
 
   const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(startDate, endDate)
-
   return (
     <>
       <Header variant="h500">Accept listing terms</Header>
@@ -117,7 +116,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isStartDateValid ? formatDate(startDate, DATE_FORMAT) : 'Right after listing'}
+            {isStartDateValid ? formatDate(startDate.date, DATE_FORMAT) : 'Right after listing'}
           </DescriptionText>
         </Description>
       </Row>
@@ -131,7 +130,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isEndDateValid ? formatDate(endDate, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
+            {isEndDateValid ? formatDate(endDate.date, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
           </DescriptionText>
         </Description>
       </Row>

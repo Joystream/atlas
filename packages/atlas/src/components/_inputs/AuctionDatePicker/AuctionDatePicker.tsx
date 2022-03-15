@@ -11,14 +11,25 @@ import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
-export type AuctionDatePickerValue = Date | 'initial' | number | 'pick-date' | null
+export type AuctionDatePickerValue =
+  | {
+      type: 'date'
+      date: Date
+    }
+  | {
+      type: 'duration'
+      durationDays: number | null
+    }
+  | null
+
+type SelectValue = Date | 'pick-date' | 'default' | number | null | undefined
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
   maxDate?: Date | null
-  value: AuctionDatePickerValue
+  value: SelectValue
   onChange: (value: AuctionDatePickerValue) => void
-} & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
+} & Omit<SelectProps<SelectValue>, 'onChange'>
 
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   items,
@@ -32,8 +43,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
-
-  const pickDateItem: SelectItem<AuctionDatePickerValue> = React.useMemo(
+  const pickDateItem: SelectItem<SelectValue> = React.useMemo(
     () => ({
       value: 'pick-date',
       name: 'Pick specific date',
@@ -42,10 +52,8 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     }),
     []
   )
-
   const isPickDate = (!!value && !items.find((item) => item.value === value)) || value === 'pick-date'
-
-  const mappedItems: SelectItem<AuctionDatePickerValue>[] = useMemo(() => {
+  const mappedItems: SelectItem<SelectValue>[] = useMemo(() => {
     return isPickDate && isValid(new Date(value))
       ? [
           ...items,
@@ -59,21 +67,43 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         ]
       : [...items, pickDateItem]
   }, [isPickDate, items, pickDateItem, value])
+  const [pickedValue, setPickedValue] = useState<SelectValue>(value)
+
+  const handleSelect = (value: SelectValue) => {
+    setPickedValue(value)
+    if (value instanceof Date) {
+      onChange({ type: 'date', date: value })
+    }
+    if (typeof value === 'number') {
+      onChange({ type: 'duration', durationDays: value })
+    }
+    if (value === 'default') {
+      onChange({ type: 'duration', durationDays: null })
+    }
+  }
+
+  const handlePickDate = (date: Date | null) => {
+    if (!date) {
+      return
+    }
+    setPickedValue(date)
+    setStartDate(date)
+    onChange?.({
+      type: 'date',
+      date,
+    })
+  }
 
   return (
     <Container>
-      <Select<AuctionDatePickerValue>
+      <Select<SelectValue>
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
         iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
-        value={value}
+        value={pickedValue}
         items={mappedItems}
-        onChange={(value) => {
-          if (value) {
-            onChange(value ?? null)
-          }
-        }}
+        onChange={handleSelect}
         ref={selectRef}
         {...rest}
       />
@@ -94,12 +124,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           inline
           selected={startDate}
           timeFormat="HH:mm"
-          onChange={(date) => {
-            if (date) {
-              setStartDate(date)
-              onChange?.(date)
-            }
-          }}
+          onChange={handlePickDate}
           openToDate={minDate ?? undefined}
           minDate={minDate} // TODO: value to be discussed
           maxDate={maxDate || addMonths(new Date(), 5)} // TODO: value to be discussed

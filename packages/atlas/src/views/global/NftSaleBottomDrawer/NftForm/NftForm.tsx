@@ -70,44 +70,52 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
+
+  const auctionDateType = z
+    .union([
+      z.object({
+        type: z.literal('date'),
+        date: z.date(),
+      }),
+      z.object({
+        type: z.literal('duration'),
+        durationDays: z.number().nullable(),
+      }),
+    ])
+    .nullable()
+    .optional()
+
   const schema = z.object({
-    startDate: z
-      .union([z.literal('initial'), z.literal('pick-date'), z.number(), z.date()])
-      .nullable()
-      .optional()
+    startDate: auctionDateType.refine(
+      (val) => {
+        if (val?.type === 'date') {
+          return new Date() < val.date
+        }
+        return true
+      },
+      { message: 'You cannot select a past date as a start of an auction' }
+    ),
+    endDate: auctionDateType
       .refine(
         (val) => {
-          if (!(val instanceof Date)) {
-            return true
+          if (val?.type === 'date') {
+            return new Date() < val.date
           }
-          return new Date() < val
-        },
-        { message: 'You cannot select a past date as a start of an auction' }
-      ),
-    endDate: z
-      .union([z.literal('initial'), z.literal('pick-date'), z.number(), z.date()])
-      .nullable()
-      .optional()
-      .refine(
-        (val) => {
-          if (!(val instanceof Date)) {
-            return true
-          }
-          return new Date() < val
+          return true
         },
         { message: 'You cannot select a past date as an end of an auction' }
       )
       .refine(
         (val) => {
-          if (!(val instanceof Date)) {
-            return true
-          }
           const startDate = getValues('startDate')
-          if (startDate instanceof Date && startDate < val) {
-            return true
-          } else {
-            return false
+          if (val?.type === 'date' && startDate?.type === 'date') {
+            if (startDate.date < val.date) {
+              return true
+            } else {
+              return false
+            }
           }
+          return true
         },
         { message: 'Expiration date cannot be earlier than starting date' }
       ),
@@ -127,8 +135,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     resolver: zodResolver(schema),
     reValidateMode: 'onChange',
     defaultValues: {
-      startDate: 'initial',
-      endDate: 'initial',
+      startDate: null,
+      endDate: null,
     },
   })
 
@@ -156,7 +164,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             size: 'large',
             text: 'Issue with current time',
             onClick: () => {
-              setValue('startDate', 'initial')
+              setValue('startDate', null)
               closeModal()
             },
           },
