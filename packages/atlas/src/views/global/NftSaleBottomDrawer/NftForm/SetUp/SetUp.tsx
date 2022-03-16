@@ -37,8 +37,6 @@ type SetUpProps = {
   errors: DeepMap<NftFormData, FieldError>
 }
 
-const INITIAL_START_DATE_VALUE = 'Right after listing'
-
 export const SetUp: React.FC<SetUpProps> = ({
   register,
   selectedType,
@@ -104,31 +102,6 @@ export const SetUp: React.FC<SetUpProps> = ({
       durationDays: value,
     } as AuctionDatePickerValue,
   }))
-
-  // const getDatePickerValue = useCallback((val: AuctionDatePickerValue) => {
-  //   if (val?.type === 'date') {
-  //     return val.date
-  //   }
-  //   if (val?.type === 'duration') {
-  //     return val.durationDays || ('default' as const)
-  //   }
-  //   return val
-  // }, [])
-
-  // const handleChange = (
-  //   onChangeCb: ControllerRenderProps<NftFormData, 'startDate' | 'endDate'>['onChange'],
-  //   val: AuctionDatePickerValue
-  // ) => {
-  //   if (val instanceof Date) {
-  //     onChangeCb({ type: 'date', date: val })
-  //   }
-  //   if (typeof val === 'number') {
-  //     onChangeCb({ type: 'duration', durationDays: val })
-  //   }
-  //   if (val === 'default') {
-  //     onChangeCb({ type: 'duration', durationDays: null })
-  //   }
-  // }
 
   return (
     <>
@@ -205,7 +178,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                       items={[
                         {
                           value: { durationDays: null, type: 'duration' },
-                          name: INITIAL_START_DATE_VALUE,
+                          name: 'Right after listing',
                         },
                       ]}
                       onChange={onChange}

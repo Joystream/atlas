@@ -67,7 +67,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           ...items,
           {
             value,
-            name: format(new Date(pickedValue?.date || 0), 'd MMM yyyy, HH:mm'),
+            name: format(new Date(pickedValue.date), 'd MMM yyyy, HH:mm'),
             hideInMenu: true,
             pickDateItem,
           },
