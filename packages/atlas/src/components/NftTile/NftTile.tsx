@@ -17,7 +17,7 @@ export type Member = {
 }
 
 export type NftTileProps = {
-  nftStatus?: 'idle' | 'on-sale' | 'auction'
+  status?: 'idle' | 'on-sale' | 'auction'
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -32,11 +32,15 @@ export type NftTileProps = {
   timeLeftMs?: number
   fullWidth?: boolean
   interactable?: boolean
-  nftId?: string
+  canPutOnSale?: boolean
+  canCancelSale?: boolean
+  canBuyNow?: boolean
+  canMakeBid?: boolean
+  handleRemoveFromSale?: () => void
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
-  nftStatus,
+  status,
   thumbnail,
   loading,
   title,
@@ -50,13 +54,17 @@ export const NftTile: React.FC<NftTileProps> = ({
   timeLeftMs,
   fullWidth,
   interactable = true,
-  nftId,
+  canPutOnSale,
+  canCancelSale,
+  canBuyNow,
+  canMakeBid,
+  handleRemoveFromSale,
 }) => {
   const [hovered, setHovered] = useState(false)
   const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
 
   const getBottomLeft = useMemo(() => {
-    switch (nftStatus) {
+    switch (status) {
       case 'idle':
         return <Pill icon={<SvgActionNotForSale />} size="medium" variant="overlay" />
       case 'on-sale':
@@ -93,7 +101,7 @@ export const NftTile: React.FC<NftTileProps> = ({
           />
         )
     }
-  }, [nftStatus, buyNowPrice, timeLeftSec])
+  }, [status, buyNowPrice, timeLeftSec])
 
   return (
     <Container fullWidth={fullWidth}>
@@ -122,7 +130,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}
-        nftStatus={nftStatus}
+        nftStatus={status}
         buyNowPrice={buyNowPrice}
         loading={loading}
         topBid={topBid}
@@ -130,7 +138,11 @@ export const NftTile: React.FC<NftTileProps> = ({
         title={title}
         startingPrice={startingPrice}
         interactable={interactable}
-        nftId={nftId}
+        handleRemoveFromSale={handleRemoveFromSale}
+        canBuyNow={canBuyNow}
+        canCancelSale={canCancelSale}
+        canMakeBid={canMakeBid}
+        canPutOnSale={canPutOnSale}
       />
     </Container>
   )

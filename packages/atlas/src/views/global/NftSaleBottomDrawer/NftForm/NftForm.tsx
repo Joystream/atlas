@@ -193,11 +193,13 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
         return 'on-sale'
       case 'Auction':
         return 'auction'
+      default:
+        return 'idle'
     }
   }
 
   const nftTileProps: NftTileProps = {
-    nftStatus: getNftStatus(),
+    status: getNftStatus(),
     thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
     title: video?.title,
     owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },

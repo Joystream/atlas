@@ -9,6 +9,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
+import { useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
@@ -46,8 +47,21 @@ export type NftWidgetProps = {
   ownerAvatarUri?: string | null
   isOwner?: boolean
   nftStatus?:
-    | { status: 'idle'; lastPrice?: number; lastTransactionDate?: Date }
-    | { status: 'buy-now'; buyNowPrice: number }
+    | {
+        status: 'idle'
+        lastPrice?: number
+        lastTransactionDate?: Date
+        needsSettling?: boolean
+        canWithdrawBid?: boolean
+        auctionPlannedEndDate?: Date
+      }
+    | {
+        status: 'buy-now'
+        buyNowPrice: number
+        needsSettling?: boolean
+        canWithdrawBid?: boolean
+        auctionPlannedEndDate?: Date
+      }
     | Auction
 }
 
@@ -274,18 +288,17 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
-  const { nft } = useNft(videoId ?? '')
+  const { nft, nftStatus } = useNft(videoId ?? '')
+  const { isOwner } = useNftState(nft)
   const { activeMembership } = useUser()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
   const { getCurrentBlock } = useJoystream()
 
-  const owner = nft?.ownerMember ?? nft?.video.channel.ownerMember
+  const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
 
-  const isOwner = owner?.id === activeMembership?.id
-
-  switch (nft?.transactionalStatus.__typename) {
+  switch (nft?.transactionalStatus?.__typename) {
     case 'TransactionalStatusAuction': {
       const userBid = nft.transactionalStatus.auction?.bids.find(
         (bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id
@@ -295,7 +308,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         ownerAvatarUri,
         isOwner,
         nftStatus: {
-          status: 'auction',
+          ...nftStatus,
           needsSettling:
             !!nft.transactionalStatus.auction?.lastBid &&
             !!nft.transactionalStatus.auction?.plannedEndAtBlock &&

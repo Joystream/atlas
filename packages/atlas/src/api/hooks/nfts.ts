@@ -1,4 +1,7 @@
+import { QueryResult } from '@apollo/client'
+
 import {
+  AllNftFieldsFragment,
   VideoCategoryWhereInput,
   VideoOrderByInput,
   useGetNftQuery,
@@ -7,11 +10,73 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
-export const useNft = (id: string) => {
+export type NftStatus =
+  | {
+      status: 'auction'
+      startingPrice: number
+      buyNowPrice?: number
+      topBid?: number
+      isCompleted?: boolean
+      title?: string | null
+      duration?: number | null
+      views?: number
+      auctionPlannedEndBlock?: number
+      needsSettling?: boolean
+    }
+  | {
+      status: 'idle'
+      lastPrice?: number
+      lastTransactionDate?: Date
+      auctionPlannedEndBlock?: number
+    }
+  | {
+      status: 'buy-now'
+      buyNowPrice: number
+      auctionPlannedEndBlock?: number
+    }
+export type Nft = AllNftFieldsFragment | null
+export type UseNftData = Omit<QueryResult, 'data'> & { nft?: Nft; nftStatus: NftStatus }
+
+export const useNft = (id: string): UseNftData => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id })
+  const nft = data?.ownedNftByUniqueInput
+
+  const commonProperties = {
+    title: nft?.video?.title,
+    duration: nft?.video?.duration,
+    views: nft?.video?.views,
+  }
+
+  const getNftProperies = (): NftStatus => {
+    switch (nft?.transactionalStatus.__typename) {
+      case 'TransactionalStatusAuction': {
+        return {
+          ...commonProperties,
+          status: 'auction',
+          startingPrice: nft.transactionalStatus.auction?.startingPrice ?? 0,
+          buyNowPrice: nft.transactionalStatus.auction?.buyNowPrice ?? undefined,
+          topBid: nft.transactionalStatus.auction?.lastBid?.amount,
+          isCompleted: nft.transactionalStatus.auction?.isCompleted,
+          auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
+        }
+      }
+      case 'TransactionalStatusBuyNow':
+        return {
+          ...commonProperties,
+          status: 'buy-now',
+          buyNowPrice: nft.transactionalStatus.price,
+        }
+      default:
+        return {
+          ...commonProperties,
+          status: 'idle',
+        }
+    }
+  }
 
   return {
-    nft: data?.ownedNftByUniqueInput,
+    nft,
+    nftStatus: getNftProperies(),
     ...rest,
   }
 }

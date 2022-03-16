@@ -2,6 +2,8 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+
 import { NftTile, NftTileProps } from './NftTile'
 
 export default {
@@ -34,12 +36,18 @@ export default {
     views: 123456789,
     loading: false,
     fullWidth: false,
+    canPutOnSale: false,
+    canCancelSale: false,
+    canBuyNow: false,
+    canMakeBid: false,
   },
   decorators: [
     (Story) => {
       return (
         <BrowserRouter>
-          <Story />
+          <ConfirmationModalProvider>
+            <Story />
+          </ConfirmationModalProvider>
         </BrowserRouter>
       )
     },
