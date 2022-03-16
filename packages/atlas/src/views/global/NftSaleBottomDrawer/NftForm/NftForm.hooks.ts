@@ -1,4 +1,4 @@
-import { differenceInMilliseconds, intervalToDuration } from 'date-fns'
+import { differenceInMilliseconds, formatDuration, intervalToDuration } from 'date-fns'
 import { useCallback, useState } from 'react'
 
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
@@ -16,54 +16,38 @@ export const useNftForm = () => {
 
   const { convertDurationToBlocks } = useBlockTimeEstimation()
 
-  const getTotalDaysAndHoursText = (start: Date, end: Date) => {
-    const { days, hours } = intervalToDuration({
-      start,
-      end,
-    })
+  const getTotalDaysAndHours = (startDate: AuctionDatePickerValue, endDate: AuctionDatePickerValue) => {
+    const start = (startDate?.type === 'date' && startDate.date) || new Date()
 
-    const parsedDays = days ? pluralizeNoun(days, 'Day') : ''
-    const parsedHours = hours !== undefined ? (hours >= 1 ? pluralizeNoun(hours, 'Hour') : 'Less than an hour') : ''
-    return `${parsedDays} ${parsedHours}`
+    if (endDate?.type === 'date') {
+      const { days, hours } = intervalToDuration({ start: start, end: endDate.date })
+      const duration = formatDuration({ hours: hours, days: days }, { format: ['days', 'hours'] })
+      return duration ? duration : 'Less than 1 hour'
+    }
+    if (endDate?.type === 'duration') {
+      return pluralizeNoun(endDate.durationDays, 'Day')
+    }
   }
 
   const nextStep = useCallback(() => setCurrentStep((step) => step + 1), [])
   const previousStep = useCallback(() => setCurrentStep((step) => step - 1), [])
 
-  const getNumberOfBlocksAndDaysLeft = (startDate: AuctionDatePickerValue, endDate: AuctionDatePickerValue) => {
-    const isStartDateAndEndDateValid = startDate?.type === 'date' && endDate?.type === 'date'
-    const now = new Date(Date.now())
-
-    if (isStartDateAndEndDateValid) {
-      return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate.date, startDate.date)),
-        daysAndHoursText: getTotalDaysAndHoursText(startDate.date, endDate.date),
-      }
-    }
+  const getNumberOfBlocks = (startDate: AuctionDatePickerValue, endDate: AuctionDatePickerValue) => {
+    const start = (startDate?.type === 'date' && startDate.date) || new Date()
     if (endDate?.type === 'date') {
-      return {
-        blocks: convertDurationToBlocks(differenceInMilliseconds(endDate.date, now)),
-        daysAndHoursText: getTotalDaysAndHoursText(endDate.date, now),
-      }
+      return convertDurationToBlocks(differenceInMilliseconds(endDate.date, start))
     }
     if (endDate?.type === 'duration') {
-      return {
-        blocks: endDate.durationDays === null ? 0 : convertDurationToBlocks(daysToMilliseconds(endDate.durationDays)),
-        daysAndHoursText:
-          endDate.durationDays === null ? 'No expiration date' : pluralizeNoun(endDate.durationDays, 'day'),
-      }
+      return convertDurationToBlocks(daysToMilliseconds(endDate.durationDays))
     }
     if (!endDate) {
-      return {
-        blocks: 0,
-        daysAndHoursText: 'No expiration date',
-      }
+      return 0
     }
   }
 
   return {
-    getTotalDaysAndHoursText,
-    getNumberOfBlocksAndDaysLeft,
+    getTotalDaysAndHours,
+    getNumberOfBlocks,
     state: {
       activeInputs,
       setActiveInputs,

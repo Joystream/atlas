@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { addMonths, format } from 'date-fns'
+import { format } from 'date-fns'
 import { isEqual } from 'lodash-es'
 import React, { useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
@@ -18,7 +19,7 @@ export type AuctionDatePickerValue =
     }
   | {
       type: 'duration'
-      durationDays: number | null
+      durationDays: number
     }
   | null
 
@@ -26,7 +27,11 @@ export type PickDateValue = {
   type: 'pick-date'
 }
 
-type AuctionDatePickerValueWithPickDate = AuctionDatePickerValue | PickDateValue
+export type DefaultValue = {
+  type: 'default'
+}
+
+type AuctionDatePickerValueWithPickDate = AuctionDatePickerValue | PickDateValue | DefaultValue
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
@@ -56,6 +61,16 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     }),
     []
   )
+
+  const msTimestamp = useMsTimestamp()
+
+  const convertedItems = items.map((item) => {
+    if (item.value === null) {
+      return { value: { type: 'default' as const }, name: item.name }
+    }
+    return item
+  })
+
   const [pickedValue, setPickedValue] = useState<AuctionDatePickerValueWithPickDate>(value)
 
   const isPickDate =
@@ -64,7 +79,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const mappedItems: SelectItem<AuctionDatePickerValueWithPickDate>[] = useMemo(() => {
     return isPickDate && pickedValue.type === 'date'
       ? [
-          ...items,
+          ...convertedItems,
           {
             value,
             name: format(new Date(pickedValue.date), 'd MMM yyyy, HH:mm'),
@@ -73,14 +88,17 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           },
           pickDateItem,
         ]
-      : [...items, pickDateItem]
-  }, [isPickDate, items, pickDateItem, pickedValue, value])
+      : [...convertedItems, pickDateItem]
+  }, [isPickDate, convertedItems, pickDateItem, pickedValue, value])
 
   const handleSelect = (value?: AuctionDatePickerValueWithPickDate) => {
     if (!value) {
       return
     }
     if (value?.type !== 'pick-date') {
+      onChange(null)
+    }
+    if (value.type !== 'default' && value.type !== 'pick-date') {
       onChange(value)
     }
     setPickedValue(value)
@@ -102,7 +120,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
         iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
-        value={pickedValue}
+        value={pickedValue || { type: 'default' }}
         items={mappedItems}
         onChange={handleSelect}
         ref={selectRef}
@@ -116,8 +134,8 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         trigger={null}
         onHide={() => {
           if (pickedValue?.type === 'pick-date') {
-            setPickedValue({ durationDays: null, type: 'duration' })
-            onChange({ durationDays: null, type: 'duration' })
+            setPickedValue(null)
+            onChange(null)
           }
         }}
       >
@@ -128,8 +146,8 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           timeFormat="HH:mm"
           onChange={handlePickDate}
           openToDate={minDate ?? undefined}
-          minDate={minDate} // TODO: value to be discussed
-          maxDate={maxDate || addMonths(new Date(), 5)} // TODO: value to be discussed
+          minDate={new Date(msTimestamp)}
+          maxDate={maxDate}
           showDisabledMonthNavigation
           showTimeSelect
         />

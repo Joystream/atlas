@@ -1,5 +1,5 @@
-export const formatNumber = (num: number): string => {
-  return num.toLocaleString('en-US').split(',').join(' ')
+export const formatNumber = (num: number, opts?: Intl.NumberFormatOptions): string => {
+  return num.toLocaleString('no', opts).split(',').join(' ')
 }
 
 export const formatNumberShort = (num: number): string => {

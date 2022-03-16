@@ -1,9 +1,10 @@
-import { format as formatDate } from 'date-fns'
 import React from 'react'
 
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
+import { formatNumber } from '@/utils/number'
+import { formatDateTime } from '@/utils/time'
 
 import {
   Description,
@@ -30,22 +31,21 @@ type AcceptTermsProps = {
   toggleTermsAccept: () => void
 }
 
-const DATE_FORMAT = 'dd MMM yyyy, HH:mm'
-
 export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   selectedType,
   formData,
   termsAccepted,
   toggleTermsAccept,
 }) => {
-  const { getNumberOfBlocksAndDaysLeft } = useNftForm()
+  const { getTotalDaysAndHours } = useNftForm()
 
   const { startDate, endDate } = formData
+
+  const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
   const isStartDateValid = startDate?.type === 'date'
   const isEndDateValid = endDate?.type === 'date'
 
-  const numberOfBlocksAndDaysLeft = getNumberOfBlocksAndDaysLeft(startDate, endDate)
   return (
     <>
       <Header variant="h500">Accept listing terms</Header>
@@ -115,9 +115,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           />
         </Title>
         <Description>
-          <DescriptionText>
-            {isStartDateValid ? formatDate(startDate.date, DATE_FORMAT) : 'Right after listing'}
-          </DescriptionText>
+          <DescriptionText>{isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}</DescriptionText>
         </Description>
       </Row>
       <Row>
@@ -130,11 +128,11 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         </Title>
         <Description>
           <DescriptionText>
-            {isEndDateValid ? formatDate(endDate.date, DATE_FORMAT) : numberOfBlocksAndDaysLeft?.daysAndHoursText}
+            {isEndDateValid ? formatDateTime(endDate.date) : totalDaysAndHours || 'No expiration date'}
           </DescriptionText>
         </Description>
       </Row>
-      {numberOfBlocksAndDaysLeft && numberOfBlocksAndDaysLeft.blocks !== 0 && (
+      {formData?.auctionDurationBlocks && formData.auctionDurationBlocks > 0 && (
         <Row>
           <Title>
             <TitleText>Total auction duration</TitleText>
@@ -143,7 +141,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
               footer={
                 <AuctionDurationTooltipFooter>
                   <Text variant="t100">
-                    {numberOfBlocksAndDaysLeft.daysAndHoursText} = {numberOfBlocksAndDaysLeft.blocks}
+                    {totalDaysAndHours} = {formData.auctionDurationBlocks}
                   </Text>
                 </AuctionDurationTooltipFooter>
               }
@@ -151,9 +149,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
             />
           </Title>
           <Description>
-            <DescriptionText>{numberOfBlocksAndDaysLeft.daysAndHoursText}</DescriptionText>
+            <DescriptionText>{totalDaysAndHours}</DescriptionText>
             <Text variant="h400" secondary>
-              &nbsp;/ {numberOfBlocksAndDaysLeft.blocks} Blocks
+              &nbsp;/ {formatNumber(formData.auctionDurationBlocks)} Blocks
             </Text>
           </Description>
         </Row>

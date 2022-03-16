@@ -19,10 +19,13 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
 
   const expirationDateItems = days.map((value) => ({
     name: value === null ? 'No expiration date' : pluralizeNoun(value, 'day'),
-    value: {
-      type: 'duration',
-      durationDays: value,
-    } as AuctionDatePickerValue,
+    value:
+      value === null
+        ? null
+        : {
+            type: 'duration' as const,
+            durationDays: value,
+          },
   }))
   return (
     <div style={{ display: 'flex', gap: '8px', width: '652px' }}>
@@ -30,10 +33,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
         {...args}
         items={[
           {
-            value: {
-              type: 'duration',
-              durationDays: null,
-            },
+            value: null,
             name: 'Right after listing',
           },
         ]}

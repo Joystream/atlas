@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format as formatDate } from 'date-fns'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -12,6 +11,7 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
+import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
@@ -28,8 +28,6 @@ import {
 } from './NftForm.styles'
 import { NftFormData, NftFormStatus } from './NftForm.types'
 import { SetUp } from './SetUp'
-
-const DATE_FORMAT = 'dd MMM yyyy, HH:mm'
 
 const issueNftSteps: StepProps[] = [
   {
@@ -79,22 +77,37 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       }),
       z.object({
         type: z.literal('duration'),
-        durationDays: z.number().nullable(),
+        durationDays: z.number(),
       }),
     ])
     .nullable()
     .optional()
 
   const schema = z.object({
-    startDate: auctionDateType.refine(
-      (val) => {
-        if (val?.type === 'date') {
-          return new Date() < val.date
-        }
-        return true
-      },
-      { message: 'You cannot select a past date as a start of an auction' }
-    ),
+    startDate: auctionDateType
+      .refine(
+        (val) => {
+          if (val?.type === 'date') {
+            return new Date() < val.date
+          }
+          return true
+        },
+        { message: 'You cannot select a past date as a start of an auction' }
+      )
+      .refine(
+        (val) => {
+          const endDate = getValues('endDate')
+          if (val?.type === 'date' && endDate?.type === 'date') {
+            if (endDate.date > val.date) {
+              return true
+            } else {
+              return false
+            }
+          }
+          return true
+        },
+        { message: 'Expiration date cannot be earlier than starting date' }
+      ),
     endDate: auctionDateType
       .refine(
         (val) => {
@@ -150,12 +163,12 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     if (isOnLastStep) {
       const startDate = getValues('startDate')
 
-      if (startDate instanceof Date && new Date() > startDate) {
+      if (startDate?.type === 'date' && new Date() > startDate.date) {
         openModal({
           title: 'Starting date you set has already past!',
           children: (
             <Text variant="t200" secondary>
-              You can’t list on <Text variant="t200">{formatDate(startDate, DATE_FORMAT)} </Text>
+              You can’t list on <Text variant="t200">{formatDateTime(startDate.date)} </Text>
               as this time has already past. Issue with current time or go back to change starting date.
             </Text>
           ),
