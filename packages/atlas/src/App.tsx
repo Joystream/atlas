@@ -9,6 +9,7 @@ import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { GlobalStyles } from '@/styles'
 import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
+import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDrawer'
 import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
 import { MainLayout } from './MainLayout'
@@ -42,6 +43,7 @@ export const App = () => {
                       <TransactionManager />
                       <SignInStepsStepper />
                       <NftPurchaseView />
+                      <NftSettlementBottomDrawer />
                       <NftSaleBottomDrawer />
                     </NftActionsProvider>
                   </JoystreamProvider>

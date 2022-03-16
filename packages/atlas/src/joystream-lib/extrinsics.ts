@@ -367,6 +367,20 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
+  async settleEnglishAuction(
+    videoId: VideoId,
+    memberId: MemberId,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
+    await this.ensureApi()
+
+    const tx = this.api.tx.content.claimWonEnglishAuction(new RuntimeMemberId(this.api.registry, memberId), videoId)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
   async updateMember(
     memberId: MemberId,
     handle: string | null,

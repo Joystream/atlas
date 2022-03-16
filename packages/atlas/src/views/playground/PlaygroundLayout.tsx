@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { NftActionsProvider } from '@/providers/nftActions'
 import { ActiveUserProvider } from '@/providers/user'
 import { oldColors } from '@/styles'
 
@@ -29,6 +28,7 @@ import {
   PlaygroundMemberDropdown,
   PlaygroundNFTExtrinsics,
   PlaygroundValidationForm,
+  SettlingAuction,
   TJoyPrice,
   UploadFiles,
   VideoMetaData,
@@ -59,33 +59,32 @@ const playgroundRoutes = [
   { path: 'nft-extrinsics', element: <PlaygroundNFTExtrinsics />, name: 'NFT extrinsics' },
   { path: 'tjoy-price', element: <TJoyPrice />, name: 'TJoy Price' },
   { path: 'whitelisting-members', element: <WhitelistingMembers />, name: 'Whitelisting members' },
+  { path: 'settling-auction', element: <SettlingAuction />, name: 'Settling an auction' },
 ]
 
 const PlaygroundLayout = () => {
   return (
-    <NftActionsProvider>
-      <ActiveUserProvider>
-        <ConfirmationModalProvider>
-          <Container>
-            <NavContainer>
+    <ActiveUserProvider>
+      <ConfirmationModalProvider>
+        <Container>
+          <NavContainer>
+            {playgroundRoutes.map((route) => (
+              <Link key={route.path} to={`/playground/${route.path}`}>
+                {route.name}
+              </Link>
+            ))}
+          </NavContainer>
+          <ContentContainer>
+            <Routes>
               {playgroundRoutes.map((route) => (
-                <Link key={route.path} to={`/playground/${route.path}`}>
-                  {route.name}
-                </Link>
+                <Route key={route.path} path={route.path} element={route.element} />
               ))}
-            </NavContainer>
-            <ContentContainer>
-              <Routes>
-                {playgroundRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </ContentContainer>
-          </Container>
-          <ConnectionStatusManager />
-        </ConfirmationModalProvider>
-      </ActiveUserProvider>
-    </NftActionsProvider>
+            </Routes>
+          </ContentContainer>
+        </Container>
+        <ConnectionStatusManager />
+      </ConfirmationModalProvider>
+    </ActiveUserProvider>
   )
 }
 
