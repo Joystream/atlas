@@ -491,10 +491,10 @@ index d277ee3a9dbe2bb572cc3d5b3eecd05fc1b993dd..118a6505210c6de62723a53dd868681d
 -exports.default = exports.constitutionTypes;
 +export default constitutionTypes;
 diff --git a/content/index.js b/content/index.js
-index 6353666d8e1bee17622349c1801cda2fe1d43584..71cc6d7a75b06e4b362eb271ff96ac918408f880 100644
+index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983ad404872b 100644
 --- a/content/index.js
 +++ b/content/index.js
-@@ -1,305 +1,251 @@
+@@ -1,307 +1,253 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
 -exports.NftMetadata = exports.ModeratorSet = exports.PullPayment = exports.VideoPostDeletionParameters = exports.VideoPostCreationParameters = exports.ProofElement = exports.Side = exports.VideoPost = exports.VideoPostType = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.NftIssuanceParameters = exports.InitTransactionalStatus = exports.AuctionParams = exports.OwnedNft = exports.NftOwner = exports.TransactionalStatus = exports.Auction = exports.Bid = exports.AuctionType = exports.OpenAuctionDetails = exports.EnglishAuctionDetails = exports.IsExtended = exports.Royalty = exports.CurrencyAmount = exports.CurrencyOf = exports.ReactionId = exports.VideoPostId = exports.IsCensored = exports.MaxNumber = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
@@ -554,8 +554,8 @@ index 6353666d8e1bee17622349c1801cda2fe1d43584..71cc6d7a75b06e4b362eb271ff96ac91
  }
 -exports.CurrencyAmount = CurrencyAmount;
  // NFT types
--class Royalty extends types_1.UInt {
-+export class Royalty extends UInt {
+-class Royalty extends types_1.UInt.with(32, 'Perbill') {
++export class Royalty extends UInt.with(32, 'Perbill') {
  }
 -exports.Royalty = Royalty;
 -class IsExtended extends primitive_1.bool {
@@ -654,20 +654,24 @@ index 6353666d8e1bee17622349c1801cda2fe1d43584..71cc6d7a75b06e4b362eb271ff96ac91
 -    buy_now_price: types_1.Option.with(common_1.Balance),
 -    starts_at: types_1.Option.with(common_1.BlockNumber),
 -    whitelist: types_1.BTreeSet.with(common_1.MemberId),
+-}) {
+-}
+-exports.AuctionParams = AuctionParams;
+-class InitTransactionalStatus extends (0, common_1.JoyEnum)({
+-    Idle: primitive_1.Null,
+-    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
+-    BuyNow: common_1.Balance,
 +    starting_price: Balance,
 +    minimal_bid_step: Balance,
 +    buy_now_price: Option.with(Balance),
 +    starts_at: Option.with(BlockNumber),
 +    whitelist: BTreeSet.with(MemberId),
- }) {
- }
--exports.AuctionParams = AuctionParams;
--class InitTransactionalStatus extends (0, common_1.JoyEnum)({
--    Idle: primitive_1.Null,
--    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
++}) {
++}
 +export class InitTransactionalStatus extends JoyEnum({
 +    Idle: Null,
 +    InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
++    BuyNow: Balance,
      Auction: AuctionParams,
  }) {
  }
@@ -861,11 +865,13 @@ index 6353666d8e1bee17622349c1801cda2fe1d43584..71cc6d7a75b06e4b362eb271ff96ac91
 -    new_meta: types_1.Option.with(primitive_1.Bytes),
 -    assets_to_remove: types_1.BTreeSet.with(storage_1.DataObjectId),
 -    enable_comments: types_1.Option.with(primitive_1.bool),
+-    auto_issue_nft: types_1.Option.with(NftIssuanceParameters),
 +export class VideoUpdateParameters extends JoyStructDecorated({
 +    assets_to_upload: Option.with(StorageAssets),
 +    new_meta: Option.with(Bytes),
 +    assets_to_remove: BTreeSet.with(DataObjectId),
 +    enable_comments: Option.with(bool),
++    auto_issue_nft: Option.with(NftIssuanceParameters),
  }) {
  }
 -exports.VideoUpdateParameters = VideoUpdateParameters;
@@ -945,7 +951,7 @@ index 6353666d8e1bee17622349c1801cda2fe1d43584..71cc6d7a75b06e4b362eb271ff96ac91
      CuratorId,
      CuratorGroupId,
      CuratorGroup,
-@@ -352,4 +298,4 @@ exports.contentTypes = {
+@@ -354,4 +300,4 @@ exports.contentTypes = {
      NftIssuanceParameters,
      NftMetadata,
  };
@@ -1212,10 +1218,10 @@ index 42fa984f42ed97cef6a6ca1ae1213dd627a3dea6..56673f84497a4e72da54725eb50e4c2c
 -exports.default = exports.forumTypes;
 +export default forumTypes;
 diff --git a/index.js b/index.js
-index ad7ccaebc60da7377f04b1b6ad309c6e05aaf134..b8e0d6f767f895078f6a9042d922e8baa796c045 100644
+index ffaa37f1c400b510e57c3ca5ea220a97142eb1a9..cfa191ab3d2b2b1dd471564ddf0cb4825fdcda79 100644
 --- a/index.js
 +++ b/index.js
-@@ -1,38 +1,25 @@
+@@ -1,36 +1,23 @@
 -"use strict";
 -var __importDefault = (this && this.__importDefault) || function (mod) {
 -    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -1259,9 +1265,7 @@ index ad7ccaebc60da7377f04b1b6ad309c6e05aaf134..b8e0d6f767f895078f6a9042d922e8ba
 +export { common, members, council, forum, workingGroup, proposals, content };
 +export const types = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, common), members), council), forum), workingGroup), storage), blog), proposals), referendum), constitution), bounty), content), { 
      // https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#351-jan-18-2020
-     AccountInfo: 'AccountInfoWithRefCount', 
-     // Required for compatibility with @polkadot/api version >= 6.0
-     ValidatorPrefs: 'ValidatorPrefsWithCommission' });
+     AccountInfo: 'AccountInfoWithRefCount' });
  // Allows creating types without api instance (it's not a recommended way though, so should be used just for mocks)
 -exports.registry = new types_1.TypeRegistry();
 -exports.registry.register(exports.types);
@@ -1349,11 +1353,11 @@ index ef18bc981a93d1fed3d84eeb3616a9f9d66f0660..ec7bd5e0eb0fc67f23068dbb85361499
 -exports.default = exports.membersTypes;
 +export default membersTypes;
 diff --git a/package.json b/package.json
-index fc0c247d28c48f0edaddb76e639036dc3353601b..4bce89d726607a52df72ca59a03f8a6e57b0ee9a 100644
+index 59d0646d82be8189fe901d7f674fb254469be9ec..7ea14469ea9567b8f3111bbb5356fb95c623be67 100644
 --- a/package.json
 +++ b/package.json
 @@ -3,6 +3,8 @@
-   "version": "0.18.3",
+   "version": "0.19.2",
    "description": "Types for Joystream Substrate Runtime - Olympia release",
    "main": "index.js",
 +  "type": "module",
