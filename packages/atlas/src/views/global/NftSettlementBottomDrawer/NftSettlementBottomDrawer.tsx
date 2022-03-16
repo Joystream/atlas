@@ -28,15 +28,10 @@ export const NftSettlementBottomDrawer: React.FC = () => {
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
-  const lastBidder =
-    (nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-      nft.transactionalStatus.auction?.lastBid?.bidder) ||
-    null
-
   const { displaySnackbar } = useSnackbar()
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
-  const { url: memberAvatarUrl } = useMemberAvatar(lastBidder)
+  const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -77,7 +72,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
                 thumbnailUrl: thumbnailUrl,
               }}
               creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
-              owner={{ name: lastBidder?.handle, assetUrl: memberAvatarUrl }}
+              owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
               fullWidth
               loading={loading}
             />
@@ -96,7 +91,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
                 Settle the auction
               </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>
-                Transaction fee: <Text variant="t100">0 tJoy</Text>
+                Transaction fee: <Text variant="t100">0 tJOY</Text>
               </Text>
             </Content>
           </StyledGridItem>
