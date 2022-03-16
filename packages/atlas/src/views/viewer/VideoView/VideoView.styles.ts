@@ -37,9 +37,6 @@ const getPlayerWrapperCinematicStyles = ({ cinematicView }: CinematicView) =>
         margin: 0 calc(-1 * var(--size-global-horizontal-padding));
       `
     : css`
-        display: flex;
-        justify-content: center;
-
         ${media.md} {
           padding-top: ${sizes(8)};
         }
