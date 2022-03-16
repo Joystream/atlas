@@ -1,3 +1,5 @@
+import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
+
 export enum AuctionDuration {
   NoExpiration = 'No expiration date',
   OneDay = '1 day',
@@ -7,17 +9,6 @@ export enum AuctionDuration {
 }
 
 export type Listing = 'Auction' | 'Fixed price' | 'Not for sale' | undefined
-
-export type AuctionDatePickerValue =
-  | {
-      type: 'date'
-      date: Date
-    }
-  | {
-      type: 'duration'
-      durationDays: number | null
-    }
-  | null
 
 export type AuctionDate = {
   startDate: AuctionDatePickerValue

@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
   Control,
   Controller,
-  ControllerRenderProps,
   DeepMap,
   FieldError,
   UseFormRegister,
@@ -13,7 +12,7 @@ import {
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
-import { AuctionDatePicker, SelectValue } from '@/components/_inputs/AuctionDatePicker'
+import { AuctionDatePicker, AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar } from '@/styles'
@@ -23,7 +22,7 @@ import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledF
 
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { AuctionDatePickerValue, Listing, NftFormData } from '../NftForm.types'
+import { Listing, NftFormData } from '../NftForm.types'
 
 type SetUpProps = {
   register: UseFormRegister<NftFormData>
@@ -96,37 +95,40 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }
 
-  const days = ['default', 1, 3, 5, 7] as const
+  const days = [null, 1, 3, 5, 7] as const
 
   const expirationDateItems = days.map((value) => ({
-    name: value === 'default' ? 'No expiration date' : pluralizeNoun(value, 'day'),
-    value: value,
+    name: value === null ? 'No expiration date' : pluralizeNoun(value, 'day'),
+    value: {
+      type: 'duration',
+      durationDays: value,
+    } as AuctionDatePickerValue,
   }))
 
-  const getDatePickerValue = useCallback((val: AuctionDatePickerValue) => {
-    if (val?.type === 'date') {
-      return val.date
-    }
-    if (val?.type === 'duration') {
-      return val.durationDays || ('default' as const)
-    }
-    return val
-  }, [])
+  // const getDatePickerValue = useCallback((val: AuctionDatePickerValue) => {
+  //   if (val?.type === 'date') {
+  //     return val.date
+  //   }
+  //   if (val?.type === 'duration') {
+  //     return val.durationDays || ('default' as const)
+  //   }
+  //   return val
+  // }, [])
 
-  const handleChange = (
-    onChangeCb: ControllerRenderProps<NftFormData, 'startDate' | 'endDate'>['onChange'],
-    val: SelectValue
-  ) => {
-    if (val instanceof Date) {
-      onChangeCb({ type: 'date', date: val })
-    }
-    if (typeof val === 'number') {
-      onChangeCb({ type: 'duration', durationDays: val })
-    }
-    if (val === 'default') {
-      onChangeCb({ type: 'duration', durationDays: null })
-    }
-  }
+  // const handleChange = (
+  //   onChangeCb: ControllerRenderProps<NftFormData, 'startDate' | 'endDate'>['onChange'],
+  //   val: AuctionDatePickerValue
+  // ) => {
+  //   if (val instanceof Date) {
+  //     onChangeCb({ type: 'date', date: val })
+  //   }
+  //   if (typeof val === 'number') {
+  //     onChangeCb({ type: 'duration', durationDays: val })
+  //   }
+  //   if (val === 'default') {
+  //     onChangeCb({ type: 'duration', durationDays: null })
+  //   }
+  // }
 
   return (
     <>
@@ -198,18 +200,16 @@ export const SetUp: React.FC<SetUpProps> = ({
                       error={!!error}
                       helperText={error?.message}
                       minDate={new Date()}
-                      maxDate={(endDate instanceof Date && endDate) || undefined}
+                      maxDate={(endDate?.type === 'date' && endDate.date) || undefined}
                       disabled={!activeInputs.includes('auctionDuration')}
                       items={[
                         {
-                          value: 'default',
+                          value: { durationDays: null, type: 'duration' },
                           name: INITIAL_START_DATE_VALUE,
                         },
                       ]}
-                      onChange={(val) => {
-                        handleChange(onChange, val)
-                      }}
-                      value={getDatePickerValue(value)}
+                      onChange={onChange}
+                      value={value || { durationDays: null, type: 'duration' }}
                     />
                   )}
                 />
@@ -222,13 +222,11 @@ export const SetUp: React.FC<SetUpProps> = ({
                       label="expiration date"
                       error={!!error}
                       helperText={error?.message}
-                      minDate={(startDate instanceof Date && startDate) || new Date()}
+                      minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
                       disabled={!activeInputs.includes('auctionDuration')}
-                      onChange={(val) => {
-                        handleChange(onChange, val)
-                      }}
+                      onChange={onChange}
                       items={expirationDateItems}
-                      value={getDatePickerValue(value)}
+                      value={value || { durationDays: null, type: 'duration' }}
                     />
                   )}
                 />

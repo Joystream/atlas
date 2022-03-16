@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { addMonths, format } from 'date-fns'
-import { isValid } from 'date-fns/esm'
+import { isEqual } from 'lodash-es'
 import React, { useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -11,14 +11,29 @@ import { cVar } from '@/styles'
 
 import { Select, SelectItem, SelectProps } from '../Select'
 
-export type SelectValue = Date | 'pick-date' | 'default' | number | null | undefined
+export type AuctionDatePickerValue =
+  | {
+      type: 'date'
+      date: Date
+    }
+  | {
+      type: 'duration'
+      durationDays: number | null
+    }
+  | null
+
+export type PickDateValue = {
+  type: 'pick-date'
+}
+
+type AuctionDatePickerValueWithPickDate = AuctionDatePickerValue | PickDateValue
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
   maxDate?: Date | null
-  value: SelectValue
-  onChange: (value: SelectValue) => void
-} & Omit<SelectProps<SelectValue>, 'onChange'>
+  value: AuctionDatePickerValue
+  onChange: (value: AuctionDatePickerValue) => void
+} & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
 
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   items,
@@ -32,49 +47,57 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
-  const pickDateItem: SelectItem<SelectValue> = React.useMemo(
+  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
     () => ({
-      value: 'pick-date',
+      value: { type: 'pick-date' },
       name: 'Pick specific date',
       menuName: 'Pick specific date',
       onClick: () => popOverRef.current?.show(),
     }),
     []
   )
-  const isPickDate = (!!value && !items.find((item) => item.value === value)) || value === 'pick-date'
-  const mappedItems: SelectItem<SelectValue>[] = useMemo(() => {
-    return isPickDate && isValid(new Date(value))
+  const [pickedValue, setPickedValue] = useState<AuctionDatePickerValueWithPickDate>(value)
+
+  const isPickDate =
+    (!!pickedValue && !items.find((item) => isEqual(pickedValue, item.value))) || pickedValue?.type === 'pick-date'
+
+  const mappedItems: SelectItem<AuctionDatePickerValueWithPickDate>[] = useMemo(() => {
+    return isPickDate && pickedValue.type === 'date'
       ? [
           ...items,
-          // selected date
           {
             value,
-            name: format(new Date(value), 'd MMM yyyy, HH:mm'),
+            name: format(new Date(pickedValue?.date || 0), 'd MMM yyyy, HH:mm'),
             hideInMenu: true,
+            pickDateItem,
           },
           pickDateItem,
         ]
       : [...items, pickDateItem]
-  }, [isPickDate, items, pickDateItem, value])
-  const [pickedValue, setPickedValue] = useState<SelectValue>(value)
+  }, [isPickDate, items, pickDateItem, pickedValue, value])
 
-  const handleSelect = (value: SelectValue) => {
+  const handleSelect = (value?: AuctionDatePickerValueWithPickDate) => {
+    if (!value) {
+      return
+    }
+    if (value?.type !== 'pick-date') {
+      onChange(value)
+    }
     setPickedValue(value)
-    onChange(value)
   }
 
   const handlePickDate = (date: Date | null) => {
     if (!date) {
       return
     }
-    setPickedValue(date)
+    setPickedValue({ type: 'date', date })
+    onChange({ type: 'date', date })
     setStartDate(date)
-    onChange(date)
   }
 
   return (
     <Container>
-      <Select<SelectValue>
+      <Select<AuctionDatePickerValueWithPickDate>
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
@@ -92,8 +115,9 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         triggerTarget={selectRef.current}
         trigger={null}
         onHide={() => {
-          if (value === 'pick-date') {
-            onChange(null)
+          if (pickedValue?.type === 'pick-date') {
+            setPickedValue({ durationDays: null, type: 'duration' })
+            onChange({ durationDays: null, type: 'duration' })
           }
         }}
       >
