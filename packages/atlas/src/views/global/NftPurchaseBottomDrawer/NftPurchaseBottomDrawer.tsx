@@ -20,6 +20,7 @@ import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
@@ -54,6 +55,7 @@ const TRANSACTION_FEE = 19
 const PLATFORM_ROYALTY = 0
 
 export const NftPurchaseBottomDrawer: React.FC = () => {
+  const { displaySnackbar } = useSnackbar()
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId } = useNftActions()
@@ -186,6 +188,20 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 Number(data.bid),
                 proxyCallback(updateStatus)
               ),
+            onTxSync: async (_) => {
+              if (Number(data.bid) === auctionBuyNowPrice) {
+                displaySnackbar({
+                  title: 'You have successfully bought NFT.',
+                  iconType: 'success',
+                })
+              } else {
+                displaySnackbar({
+                  title: 'Your bid has been placed.',
+                  description: 'We will notify you about any changes.',
+                  iconType: 'success',
+                })
+              }
+            },
             successMessage: {
               title: 'Bid placed',
               description: 'Good job',
@@ -195,8 +211,18 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         if (isBuyNow) {
           handleTransaction({
             txFactory: async (updateStatus) =>
-              (await joystream.extrinsics).buyNftNow(currentNftId, activeMemberId, proxyCallback(updateStatus)),
-            // onTxSync: async (_) => onSuccess(),
+              (await joystream.extrinsics).buyNftNow(
+                currentNftId,
+                activeMemberId,
+                buyNowPrice,
+                proxyCallback(updateStatus)
+              ),
+            onTxSync: async (_) =>
+              displaySnackbar({
+                title: 'You have successfully bought NFT.',
+                iconType: 'success',
+              }),
+
             successMessage: {
               title: 'NFT bought',
               description: 'Good job',
@@ -206,8 +232,11 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       }),
     [
       activeMemberId,
+      auctionBuyNowPrice,
+      buyNowPrice,
       createSubmitHandler,
       currentNftId,
+      displaySnackbar,
       handleTransaction,
       isAuction,
       isBuyNow,
