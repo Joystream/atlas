@@ -173,6 +173,9 @@ fragment AllNftFields on OwnedNft {
   ownerMember {
     ...BasicMembershipFields
   }
+  creatorChannel {
+    ...BasicChannelFields
+  }
   transactionalStatus {
     __typename
     ... on TransactionalStatusIdle {

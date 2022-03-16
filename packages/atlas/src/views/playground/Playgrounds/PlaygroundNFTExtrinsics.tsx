@@ -283,17 +283,22 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 }
 
 const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+  const {
+    register,
+    handleSubmit: createSubmitHandler,
+    formState: { errors },
+  } = useForm<BuyNowInputs>()
+
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (data: BuyNowInputs) => {
     if (!joystream) return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, data.buyNowPrice, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
       successMessage: {
         title: 'NFT bought',
@@ -304,7 +309,14 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={createSubmitHandler(handleSubmit)}>
+        <FormField title="Price">
+          <TextField
+            {...register('buyNowPrice')}
+            error={!!errors.buyNowPrice}
+            helperText={errors.buyNowPrice?.message}
+          />
+        </FormField>
         <Button type="submit">Buy now</Button>
       </form>
     </div>

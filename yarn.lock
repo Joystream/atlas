@@ -3902,7 +3902,7 @@ __metadata:
     "@hookform/resolvers": ^2.8.8
     "@joystream/metadata-protobuf": 2.0.0
     "@joystream/prettier-config": ^1.0.0
-    "@joystream/types": 0.18.0
+    "@joystream/types": 0.19.2
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
     "@polkadot/extension-dapp": ~0.40.1
@@ -4016,9 +4016,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joystream/types@npm:0.18.0":
-  version: 0.18.0
-  resolution: "@joystream/types@npm:0.18.0"
+"@joystream/types@npm:0.19.2":
+  version: 0.19.2
+  resolution: "@joystream/types@npm:0.19.2"
   dependencies:
     "@polkadot/api": 5.9.1
     "@polkadot/keyring": 7.3.1
@@ -4028,13 +4028,13 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: b8e665e1b79b8bcec96591cdfcf6746ef4f1792b02dfee2978b76397d28dd1efdf6c5429906b6afaab5e3d0e4b0bb17afa725fa68fc85a467bdb75c63b5b07b5
+  checksum: b48d4ee175ded05ea188b68e54f3721a65b28651c904fba8d0a27dc6190ba4cd0f725b0ffa10e35b22c18e58991a37259a7a4912c9a761c7a931c13ebe3d4a43
   languageName: node
   linkType: hard
 
-"@joystream/types@patch:@joystream/types@npm:0.18.0#.yarn/patches/@joystream-types-npm-0.18.0-2010b5923e::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 0.18.0
-  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.18.0#.yarn/patches/@joystream-types-npm-0.18.0-2010b5923e::version=0.18.0&hash=e69e21&locator=root-workspace-0b6124%40workspace%3A."
+"@joystream/types@patch:@joystream/types@npm:0.19.2#.yarn/patches/@joystream-types-npm-0.19.2-3d8744373b::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.19.2
+  resolution: "@joystream/types@patch:@joystream/types@npm%3A0.19.2#.yarn/patches/@joystream-types-npm-0.19.2-3d8744373b::version=0.19.2&hash=279aa8&locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
     "@polkadot/api": 5.9.1
     "@polkadot/keyring": 7.3.1
@@ -4044,7 +4044,7 @@ __metadata:
     ajv: ^6.11.0
     lodash: ^4.17.15
     moment: ^2.24.0
-  checksum: 7530f7c403ffb62f098e22d96240468138cdd6f23566ed201e03d787eafd0b5f0899fc728b8aa75fc7521e196ccdb65532db62e467a9abb9e59b6047c93392e6
+  checksum: 5546c1bcd52301bbf7042401d8078bb3d389f8e36f87f55e80fc0a998a29d6d999d56e43927c21993688769930eee8e25ec848f2387a7d7ad54c91457ada50e8
   languageName: node
   linkType: hard
 
