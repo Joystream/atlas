@@ -11,35 +11,34 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
-export type NftStatus =
+type CommonNftProperties = {
+  title: string | null | undefined
+  duration: number | null | undefined
+  views: number | undefined
+}
+
+export type NftStatus = (
   | {
       status: 'auction'
-      type: 'open-auction' | 'english-auction'
+      type: 'open' | 'english'
       startingPrice: number
       buyNowPrice: number | undefined
       topBid: number | undefined
-      topBidder?: BasicMembershipFieldsFragment
-      title?: string | null
-      duration?: number | null
-      views?: number
+      topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock?: number
-      startsAtDate?: Date
+      startsAtDate: Date | undefined
     }
   | {
-      title?: string | null
-      duration?: number | null
       status: 'idle'
       lastPrice?: number
       lastTransactionDate?: Date
-      views?: number
     }
   | {
-      title?: string | null
-      duration?: number | null
       status: 'buy-now'
       buyNowPrice: number
-      views?: number
     }
+) &
+  CommonNftProperties
 
 export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus: NftStatus }
 
@@ -56,18 +55,58 @@ export const useNft = (id: string): UseNftData => {
   const getNftProperties = (): NftStatus => {
     switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusAuction': {
+    //TODO:
+    const hasBidFromPreviousAuction = true
+    const bidFromUser = undefined
+
+    const userBid = nft?.transactionalStatus.auction?.bids.find(
+      (bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id
+    )
+    const type = nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' ? 'open' : 'english'
+    const canWithdrawBid =
+      nft.transactionalStatus.auction?.isCompleted ||
+      (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
+        userBid &&
+        nft?.transactionalStatus?.auction?.auctionType.bidLockingTime + userBid.createdInBlock > currentBlock)
+
+    const isExpired =
+      !!nft.transactionalStatus.auction?.plannedEndAtBlock &&
+      nft.transactionalStatus.auction?.plannedEndAtBlock <= currentBlock
+    const isRunning =
+      !!nft.transactionalStatus.auction?.startsAtBlock &&
+      currentBlock >= nft.transactionalStatus.auction?.startsAtBlock
+    const isUpcoming =
+      !!nft.transactionalStatus.auction?.startsAtBlock &&
+      currentBlock <= nft.transactionalStatus.auction?.startsAtBlock
+    const needsSettling = !!nft.transactionalStatus.auction?.lastBid && isExpired
+
+    const startsAtDate = nft.transactionalStatus.auction?.startsAtBlock
+      ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.startsAtBlock))
+      : undefined
+    const auctionPlannedEndDate = nft.transactionalStatus.auction?.plannedEndAtBlock
+      ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.plannedEndAtBlock))
+      : undefined
+    const englishTimerState: EnglishTimerState = isExpired
+      ? 'expired'
+      : isRunning
+      ? 'running'
+      : isUpcoming
+      ? 'upcoming'
+      : null
+
+        const startsAtDate = nft.transactionalStatus.auction?.startsAtBlock
+          ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.startsAtBlock))
+          : undefined
         return {
           ...commonProperties,
           status: 'auction',
-          type:
-            nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
-              ? 'open-auction'
-              : 'english-auction',
+          type: nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' ? 'open' : 'english',
           startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
           buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
           topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
           topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
           auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
+          startsAtDate,
         }
       }
       case 'TransactionalStatusBuyNow':
@@ -155,4 +194,7 @@ export const useChannelNfts = (channelId: string, opts?: ChannelNftsOpts) => {
     loading: nftsLoading || videosConnectionLoading,
     ...rest,
   }
+}
+function convertBlockToMsTimestamp(startsAtBlock: number): string | number | Date {
+  throw new Error('Function not implemented.')
 }

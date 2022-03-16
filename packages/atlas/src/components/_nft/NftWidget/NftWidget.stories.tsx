@@ -19,10 +19,13 @@ export default {
     size: {
       control: { type: 'select', options: ['small', 'medium'] },
     },
+    type: {
+      control: { type: 'select', options: ['open', 'english'] },
+    },
     status: {
       control: { type: 'select', options: ['idle', 'buy-now', 'auction'] },
     },
-    state: {
+    englishTimerState: {
       control: { type: 'select', options: ['expired', 'running', 'upcoming'] },
     },
     nftStatus: { table: { disable: true } },
@@ -34,13 +37,17 @@ export default {
     status: 'idle',
     startingPrice: 15800,
     buyNowPrice: 36900,
+    bidFromUser: 100,
     topBid: 15800,
     topBidderHandle: 'Swim',
     topBidderAvatarUri: 'https://picsum.photos/40/40',
+    topBidderIsUser: false,
     lastTransactionDate: new Date(),
     lastPrice: 25900,
-    isCompleted: false,
     canWithdrawBid: false,
+    needsSettling: false,
+    hasBids: false,
+    type: 'open',
     auctionPlannedEndDate: add(new Date(), {
       minutes: 110,
       seconds: 10,
@@ -49,7 +56,7 @@ export default {
       minutes: 110,
       seconds: 10,
     }),
-    state: 'upcoming',
+    englishTimerState: 'upcoming',
   },
   decorators: [
     (Story) => {
