@@ -19,9 +19,9 @@ import {
   YellowText,
 } from './AcceptTerms.styles'
 
-import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormData } from '../NftForm.types'
+import { getTotalDaysAndHours } from '../NftForm.utils'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 
 type AcceptTermsProps = {
@@ -37,8 +37,6 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   termsAccepted,
   toggleTermsAccept,
 }) => {
-  const { getTotalDaysAndHours } = useNftForm()
-
   const { startDate, endDate } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)

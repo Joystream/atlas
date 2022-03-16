@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { useVideo } from '@/api/hooks'
 import { NftTile, NftTileProps } from '@/components/NftTile'
@@ -27,6 +26,7 @@ import {
   StepperWrapper,
 } from './NftForm.styles'
 import { NftFormData, NftFormStatus } from './NftForm.types'
+import { createValidationSchema } from './NftForm.utils'
 import { SetUp } from './SetUp'
 
 const issueNftSteps: StepProps[] = [
@@ -69,71 +69,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
 
-  const auctionDateType = z
-    .union([
-      z.object({
-        type: z.literal('date'),
-        date: z.date(),
-      }),
-      z.object({
-        type: z.literal('duration'),
-        durationDays: z.number(),
-      }),
-    ])
-    .nullable()
-    .optional()
-
-  const schema = z.object({
-    startDate: auctionDateType
-      .refine(
-        (val) => {
-          if (val?.type === 'date') {
-            return new Date() < val.date
-          }
-          return true
-        },
-        { message: 'You cannot select a past date as a start of an auction' }
-      )
-      .refine(
-        (val) => {
-          const endDate = getValues('endDate')
-          if (val?.type === 'date' && endDate?.type === 'date') {
-            if (endDate.date > val.date) {
-              return true
-            } else {
-              return false
-            }
-          }
-          return true
-        },
-        { message: 'Expiration date cannot be earlier than starting date' }
-      ),
-    endDate: auctionDateType
-      .refine(
-        (val) => {
-          if (val?.type === 'date') {
-            return new Date() < val.date
-          }
-          return true
-        },
-        { message: 'You cannot select a past date as an end of an auction' }
-      )
-      .refine(
-        (val) => {
-          const startDate = getValues('startDate')
-          if (val?.type === 'date' && startDate?.type === 'date') {
-            if (startDate.date < val.date) {
-              return true
-            } else {
-              return false
-            }
-          }
-          return true
-        },
-        { message: 'Expiration date cannot be earlier than starting date' }
-      ),
-  })
-
   const {
     handleSubmit: createSubmitHandler,
     register,
@@ -145,7 +80,10 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     formState: { isValid, errors },
   } = useForm<NftFormData>({
     mode: 'onChange',
-    resolver: zodResolver(schema),
+    resolver: (data, ctx, options) => {
+      const resolver = zodResolver(createValidationSchema(data))
+      return resolver(data, ctx, options)
+    },
     reValidateMode: 'onChange',
     defaultValues: {
       startDate: null,

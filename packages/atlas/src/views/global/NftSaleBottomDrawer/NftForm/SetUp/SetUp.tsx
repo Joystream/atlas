@@ -25,6 +25,7 @@ import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledF
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormData } from '../NftForm.types'
+import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
   register: UseFormRegister<NftFormData>
@@ -55,7 +56,7 @@ export const SetUp: React.FC<SetUpProps> = ({
   const startDate = watch('startDate')
   const endDate = watch('endDate')
 
-  const { getNumberOfBlocks, getTotalDaysAndHours } = useNftForm()
+  const { getNumberOfBlocks } = useNftForm()
 
   const numberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
 
