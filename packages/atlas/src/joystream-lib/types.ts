@@ -59,9 +59,10 @@ type NftBuyNowInputMetadata = {
   type: 'buyNow'
   buyNowPrice: number
 }
-type NftCommonAuctionInputMetadata = Partial<Omit<NftBuyNowInputMetadata, 'type'>> & {
+type NftCommonAuctionInputMetadata = {
   startingPrice: number
   minimalBidStep: number
+  buyNowPrice?: number
   // if startsAtBlock is empty, current block (in which extrinsic is processed) will be used
   startsAtBlock?: number
   whitelistedMembersIds?: string[]

@@ -7,9 +7,12 @@ import { NftTile, NftTileProps } from '@/components/NftTile'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
+import { NFT_MIN_BID_STEP_MULTIPLIER } from '@/config/nft'
+import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
+import { SentryLogger } from '@/utils/logs'
 import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
@@ -25,7 +28,7 @@ import {
   StepperInnerWrapper,
   StepperWrapper,
 } from './NftForm.styles'
-import { NftFormData, NftFormStatus } from './NftForm.types'
+import { NftFormData, NftFormFields, NftFormStatus } from './NftForm.types'
 import { createValidationSchema } from './NftForm.utils'
 import { SetUp } from './SetUp'
 
@@ -78,7 +81,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     control,
     watch,
     formState: { isValid, errors },
-  } = useForm<NftFormData>({
+  } = useForm<NftFormFields>({
     mode: 'onChange',
     resolver: (data, ctx, options) => {
       const resolver = zodResolver(createValidationSchema(data))
@@ -92,21 +95,26 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   })
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
+
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
+
+  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const [openModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
-    if (isOnLastStep) {
-      const startDate = getValues('startDate')
+    const handler = createSubmitHandler((data) => {
+      const startDate = data.startDate?.type === 'date' && data.startDate.date
 
-      if (startDate?.type === 'date' && new Date() > startDate.date) {
+      if (startDate && new Date() > startDate) {
+        // the start date is in the past, abort the submit and show a modal
+
         openModal({
           title: 'Starting date you set has already past!',
           children: (
             <Text variant="t200" secondary>
-              You can’t list on <Text variant="t200">{formatDateTime(startDate.date)} </Text>
+              You can’t list on <Text variant="t200">{formatDateTime(startDate)} </Text>
               as this time has already past. Issue with current time or go back to change starting date.
             </Text>
           ),
@@ -129,13 +137,63 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             },
           },
         })
-      } else {
-        createSubmitHandler(onSubmit)
+        return
       }
-      return
-    }
-    previousStep()
-  }, [closeModal, createSubmitHandler, getValues, isOnLastStep, onSubmit, openModal, previousStep, setValue])
+
+      if (listingType === 'Fixed price') {
+        if (!data.buyNowPrice) {
+          SentryLogger.error('Missing buy now price for fixed price NFT', 'NftForm', null, {
+            form: { data, listingType },
+          })
+          return
+        }
+
+        onSubmit({
+          type: 'buyNow',
+          buyNowPrice: data.buyNowPrice,
+        })
+      } else if (listingType === 'Auction') {
+        const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
+        const startingPrice = data.startingPrice || 1 // TODO: this should use a chain constant for minimum bid
+        const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
+
+        if (data.auctionDurationBlocks) {
+          // auction has duration, assume english
+          onSubmit({
+            type: 'english',
+            startsAtBlock,
+            startingPrice,
+            minimalBidStep,
+            buyNowPrice: data.buyNowPrice,
+            auctionDurationBlocks: data.auctionDurationBlocks,
+          })
+        } else {
+          // auction has no duration, assume open
+          onSubmit({
+            type: 'open',
+            startsAtBlock,
+            startingPrice,
+            minimalBidStep,
+            buyNowPrice: data.buyNowPrice,
+          })
+        }
+      } else {
+        SentryLogger.error('Unknown listing type', 'NftForm', null, {
+          form: { data, listingType },
+        })
+      }
+    })
+    return handler()
+  }, [
+    closeModal,
+    convertMsTimestampToBlock,
+    createSubmitHandler,
+    listingType,
+    onSubmit,
+    openModal,
+    previousStep,
+    setValue,
+  ])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
