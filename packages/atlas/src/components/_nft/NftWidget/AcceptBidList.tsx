@@ -70,7 +70,7 @@ export const BidRow: React.FC<BidRowProps> = ({
       </div>
       <Price>
         <TokenPrice>
-          <JoyTokenIcon variant={selected ? 'regular' : 'silver'} hasShadow={false} />
+          <JoyTokenIcon variant={selected ? 'regular' : 'gray'} />
           <Text variant="h300" margin={{ left: 1 }} secondary={!selected}>
             {bid}
           </Text>
