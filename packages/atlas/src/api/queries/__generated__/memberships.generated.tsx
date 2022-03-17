@@ -28,7 +28,7 @@ export type GetMembershipQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -53,7 +53,7 @@ export type GetMembershipQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -80,7 +80,7 @@ export type GetMembershipQuery = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
@@ -121,7 +121,7 @@ export type GetMembershipsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -146,7 +146,7 @@ export type GetMembershipsQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -173,7 +173,7 @@ export type GetMembershipsQuery = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }

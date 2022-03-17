@@ -77,9 +77,9 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
         return {
           ...nftCommonProps,
           nftStatus: isEnded ? 'idle' : 'auction',
-          buyNowPrice: isEnded ? undefined : nft.transactionalStatus.auction?.buyNowPrice,
-          startingPrice: nft.transactionalStatus.auction?.startingPrice,
-          topBid: nft.transactionalStatus.auction?.lastBid?.amount,
+          buyNowPrice: isEnded ? undefined : Number(nft.transactionalStatus.auction?.buyNowPrice),
+          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice),
+          topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
           timeLeftMs: plannedEndMsTimestamp ? plannedEndMsTimestamp - msTimestamp : undefined,
         }
       }

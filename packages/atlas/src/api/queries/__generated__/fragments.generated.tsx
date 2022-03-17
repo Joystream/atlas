@@ -15,7 +15,7 @@ export type BasicChannelFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -40,7 +40,7 @@ export type BasicChannelFieldsFragment = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
@@ -73,7 +73,7 @@ export type AllChannelFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -88,7 +88,7 @@ export type AllChannelFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -113,7 +113,7 @@ export type AllChannelFieldsFragment = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
@@ -145,7 +145,7 @@ export type BasicMembershipFieldsFragment = {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
-            size: number
+            size: string
             isAccepted: boolean
             ipfsHash: string
             storageBag: { __typename?: 'StorageBag'; id: string }
@@ -179,7 +179,7 @@ export type AllMembershipFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -204,7 +204,7 @@ export type AllMembershipFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -231,7 +231,7 @@ export type AllMembershipFieldsFragment = {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
-            size: number
+            size: string
             isAccepted: boolean
             ipfsHash: string
             storageBag: { __typename?: 'StorageBag'; id: string }
@@ -252,7 +252,7 @@ export type StorageDataObjectFieldsFragment = {
   __typename?: 'StorageDataObject'
   id: string
   createdAt: Date
-  size: number
+  size: string
   isAccepted: boolean
   ipfsHash: string
   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -298,7 +298,7 @@ export type BasicVideoFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -320,7 +320,7 @@ export type BasicVideoFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -345,7 +345,7 @@ export type BasicVideoFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -366,7 +366,7 @@ export type BasicVideoFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -396,7 +396,7 @@ export type BasicVideoFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -446,7 +446,7 @@ export type VideoFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -461,7 +461,7 @@ export type VideoFieldsFragment = {
     __typename?: 'StorageDataObject'
     id: string
     createdAt: Date
-    size: number
+    size: string
     isAccepted: boolean
     ipfsHash: string
     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -483,7 +483,7 @@ export type VideoFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -508,7 +508,7 @@ export type VideoFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -551,7 +551,7 @@ export type VideoFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -594,7 +594,7 @@ export type BasicNftFieldsFragment = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
@@ -636,7 +636,7 @@ export type AllNftFieldsFragment = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
@@ -663,7 +663,7 @@ export type AllNftFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -688,7 +688,7 @@ export type AllNftFieldsFragment = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -711,9 +711,9 @@ export type AllNftFieldsFragment = {
         auction?: {
           __typename?: 'Auction'
           isCompleted: boolean
-          buyNowPrice?: number | null
-          minimalBidStep: number
-          startingPrice: number
+          buyNowPrice?: string | null
+          minimalBidStep: string
+          startingPrice: string
           startsAtBlock: number
           plannedEndAtBlock?: number | null
           endedAtBlock?: number | null
@@ -734,7 +734,7 @@ export type AllNftFieldsFragment = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -752,7 +752,7 @@ export type AllNftFieldsFragment = {
           } | null
           lastBid?: {
             __typename?: 'Bid'
-            amount: number
+            amount: string
             createdAt: Date
             isCanceled: boolean
             createdInBlock: number
@@ -771,7 +771,7 @@ export type AllNftFieldsFragment = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -790,7 +790,7 @@ export type AllNftFieldsFragment = {
           } | null
           bids: Array<{
             __typename?: 'Bid'
-            amount: number
+            amount: string
             createdAt: Date
             isCanceled: boolean
             createdInBlock: number
@@ -809,7 +809,7 @@ export type AllNftFieldsFragment = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -840,7 +840,7 @@ export type AllNftFieldsFragment = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -873,7 +873,7 @@ export type AllNftFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -895,7 +895,7 @@ export type AllNftFieldsFragment = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -920,7 +920,7 @@ export type AllNftFieldsFragment = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -941,7 +941,7 @@ export type AllNftFieldsFragment = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -971,7 +971,7 @@ export type AllNftFieldsFragment = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -998,7 +998,7 @@ export type AllNftFieldsFragment = {
 
 export type AllBidFieldsFragment = {
   __typename?: 'Bid'
-  amount: number
+  amount: string
   createdAt: Date
   isCanceled: boolean
   createdInBlock: number
@@ -1017,7 +1017,7 @@ export type AllBidFieldsFragment = {
               __typename?: 'StorageDataObject'
               id: string
               createdAt: Date
-              size: number
+              size: string
               isAccepted: boolean
               ipfsHash: string
               storageBag: { __typename?: 'StorageBag'; id: string }
