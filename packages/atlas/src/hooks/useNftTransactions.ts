@@ -5,10 +5,10 @@ import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
-import { useAuthorizedUser } from '@/providers/user'
+import { useUser } from '@/providers/user'
 
 export const useNftTransactions = () => {
-  const { activeMemberId } = useAuthorizedUser()
+  const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const [openModal, closeModal] = useConfirmationModal()
@@ -27,7 +27,7 @@ export const useNftTransactions = () => {
 
   const cancelNftSale = useCallback(
     (id: string, videoId: string, isBuyNow?: boolean, cb?: () => Promise<unknown>) => {
-      if (!joystream) {
+      if (!joystream || !activeMemberId) {
         return
       }
       const handleCancelTransaction = () =>
