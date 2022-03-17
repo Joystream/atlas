@@ -185,7 +185,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
-  const assetSize = formatBytes(asset.size)
+  const assetSize = formatBytes(Number(asset.size))
 
   const assetsDialogs = {
     avatar: avatarDialogRef,

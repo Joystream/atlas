@@ -16,7 +16,7 @@ export type AssetUpload = {
   owner: ChannelId
   type: AssetType
   // size in bytes
-  size: number
+  size: string
   dimensions?: AssetDimensions
   imageCropData?: ImageCropData
   metadata?: string
