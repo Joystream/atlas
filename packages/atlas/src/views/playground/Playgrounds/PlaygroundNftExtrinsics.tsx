@@ -23,7 +23,7 @@ const TABS: TabItem[] = [
   { name: 'Cancel auction bid' },
 ]
 
-export const PlaygroundNFTExtrinsics: React.FC = () => {
+export const PlaygroundNftExtrinsics: React.FC = () => {
   const [videoId, setVideoId] = useState('')
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const { nft, refetch } = useNft(videoId)
