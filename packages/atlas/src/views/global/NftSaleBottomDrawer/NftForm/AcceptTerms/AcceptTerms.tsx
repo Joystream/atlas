@@ -44,6 +44,8 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   const isStartDateValid = startDate?.type === 'date'
   const isEndDateValid = endDate?.type === 'date'
 
+  const durationBlocks = formData.auctionDurationBlocks || 0
+
   return (
     <>
       <Header variant="h500">Accept listing terms</Header>
@@ -130,7 +132,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </DescriptionText>
         </Description>
       </Row>
-      {formData?.auctionDurationBlocks && formData.auctionDurationBlocks > 0 && (
+      {durationBlocks > 0 && (
         <Row>
           <Title>
             <TitleText>Total auction duration</TitleText>
@@ -149,7 +151,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <Description>
             <DescriptionText>{totalDaysAndHours}</DescriptionText>
             <Text variant="h400" secondary>
-              &nbsp;/ {formatNumber(formData.auctionDurationBlocks)} Blocks
+              &nbsp;/ {formatNumber(durationBlocks)} Blocks
             </Text>
           </Description>
         </Row>
