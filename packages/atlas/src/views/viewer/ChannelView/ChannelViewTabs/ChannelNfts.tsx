@@ -65,8 +65,8 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
           <EmptyFallback title="This channel does not have any NFTs issued yet" variant="small" />
         )}
         <Grid maxColumns={null} onResize={onResize}>
-          {nftsWithPlaceholders?.map((nft) => (
-            <NftTileViewer key={nft.id} nftId={nft.id} />
+          {nftsWithPlaceholders?.map((nft, idx) => (
+            <NftTileViewer key={`${nft.id}-${idx}`} nftId={nft.id} />
           ))}
         </Grid>
       </VideoSection>

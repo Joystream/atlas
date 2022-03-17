@@ -18,6 +18,8 @@ export type Member = {
 
 export type NftTileProps = {
   status?: 'idle' | 'buy-now' | 'auction'
+  onNftPurchase?: () => void
+  onNftBuyNow?: () => void
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -41,6 +43,8 @@ export type NftTileProps = {
 
 export const NftTile: React.FC<NftTileProps> = ({
   status,
+  onNftPurchase,
+  onNftBuyNow,
   thumbnail,
   loading,
   title,
@@ -127,6 +131,8 @@ export const NftTile: React.FC<NftTileProps> = ({
         }}
       />
       <NftTileDetails
+        onNftPurchase={onNftPurchase}
+        onNftBuyNow={onNftBuyNow}
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}

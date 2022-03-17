@@ -7,10 +7,11 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
-
+  boughtForFixedPrice: boolean | undefined
   setCurrentAction: React.Dispatch<React.SetStateAction<NftAction | null>>
   setCurrentNftId: React.Dispatch<React.SetStateAction<string | null>>
   closeNftAction: () => void
+  setBoughtForFixedPrice: React.Dispatch<React.SetStateAction<boolean | undefined>>
 }
 
 export const NftActionsContext = React.createContext<
@@ -23,6 +24,7 @@ type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-pr
 export const NftActionsProvider: React.FC = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const transactions = useNftTransactions()
+  const [boughtForFixedPrice, setBoughtForFixedPrice] = useState<boolean>()
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
 
   const closeNftAction = useCallback(() => {
@@ -33,12 +35,14 @@ export const NftActionsProvider: React.FC = ({ children }) => {
     () => ({
       currentAction,
       currentNftId,
+      boughtForFixedPrice,
+      setBoughtForFixedPrice,
       setCurrentAction,
       setCurrentNftId,
       closeNftAction,
       ...transactions,
     }),
-    [closeNftAction, currentAction, currentNftId, transactions]
+    [boughtForFixedPrice, closeNftAction, currentAction, currentNftId, transactions]
   )
 
   return (

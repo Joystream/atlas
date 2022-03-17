@@ -57,7 +57,10 @@ export type NftWidgetProps = {
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
   bidFromPreviousAuction: AllBidFieldsFragment | undefined
-  nftStatus:
+  onNftPurchase?: () => void
+  onNftSettlement?: () => void
+  onNftBuyNow?: () => void
+  nftStatus?:
     | {
         status: 'idle'
         lastPrice?: number
@@ -88,6 +91,9 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   bidFromPreviousAuction,
   onNftCancelSale,
   onNftChangePrice,
+  onNftPurchase,
+  onNftSettlement,
+  onNftBuyNow,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
@@ -203,7 +209,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               </GridItem>
             ) : (
               <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth size={buttonSize}>
+                <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
                   Buy now
                 </Button>
               </GridItem>
@@ -290,7 +296,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   secondaryText={convertToUSD(nftStatus.topBid ?? 0)}
                 />
                 <GridItem colSpan={buttonColumnSpan}>
-                  <Button fullWidth size={buttonSize}>
+                  <Button fullWidth size={buttonSize} onClick={onNftSettlement}>
                     Settle auction
                   </Button>
                 </GridItem>
@@ -407,10 +413,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               ) : nftStatus.buyNowPrice ? (
                 <GridItem colSpan={buttonColumnSpan}>
                   <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
-                    <Button fullWidth variant="secondary" size={buttonSize}>
+                    <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
                       Place a bid
                     </Button>
-                    <Button fullWidth size={buttonSize}>
+                    <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
                       Buy now
                     </Button>
                     {/* second row button */}
@@ -450,8 +456,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     onNftPutOnSale,
     onNftChangePrice,
     onNftCancelSale,
+    onNftPurchase,
     needsSettling,
+    onNftSettlement,
     onNftAcceptBid,
+    onNftBuyNow,
   ])
 
   if (!nftStatus) return null

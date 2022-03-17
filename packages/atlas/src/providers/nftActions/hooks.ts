@@ -6,6 +6,10 @@ import { NftActionsContext } from './provider'
 
 import { useUser } from '../user'
 
+type OpenNftPurchaseOpts = {
+  fixedPrice?: boolean
+}
+
 export const useNftActions = () => {
   const ctx = useContext(NftActionsContext)
   if (ctx === undefined) {
@@ -23,6 +27,8 @@ export const useNftActions = () => {
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
+    boughtForFixedPrice,
+    setBoughtForFixedPrice,
   } = ctx
 
   const checkIfSigned = useCallback(() => {
@@ -33,14 +39,15 @@ export const useNftActions = () => {
   }, [isSignedIn, openSignInDialog, signIn])
 
   const openNftPurchase = useCallback(
-    (nftId: string) => {
+    (nftId: string, opts?: OpenNftPurchaseOpts) => {
       if (!checkIfSigned()) {
         return
       }
       setCurrentNftId(nftId)
       setCurrentAction('purchase')
+      setBoughtForFixedPrice(opts?.fixedPrice)
     },
-    [checkIfSigned, setCurrentAction, setCurrentNftId]
+    [checkIfSigned, setBoughtForFixedPrice, setCurrentAction, setCurrentNftId]
   )
 
   const openNftPutOnSale = useCallback(
@@ -83,6 +90,7 @@ export const useNftActions = () => {
 
   return {
     currentAction,
+    boughtForFixedPrice,
     currentNftId,
     openNftPurchase,
     openNftPutOnSale,
