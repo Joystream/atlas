@@ -25,6 +25,7 @@ export type JoyTokenIconProps = {
   variant?: JoyTokenIconVariant
   size?: JoyTokenIconSize
   className?: string
+  hasShadow?: boolean
 }
 
 const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyTokenIconSize, ElementType>> = {
@@ -48,10 +49,10 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
   },
 }
 
-export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
+export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className, hasShadow }) => (
   <JoyTokenIconWrapper
     as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
-    hasShadow={variant !== 'regular'}
+    hasShadow={hasShadow !== undefined ? hasShadow : variant !== 'regular'}
     className={className}
   />
 )
