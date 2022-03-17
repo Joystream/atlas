@@ -25,6 +25,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
+import { useNftActions } from '@/providers/nftActions'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -60,6 +61,7 @@ export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
+  const { openNftPutOnSale } = useNftActions()
   const nftWidgetProps = useNftWidget(id)
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
@@ -197,7 +199,7 @@ export const VideoView: React.FC = () => {
 
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
-      {!!nftWidgetProps && <NftWidget {...nftWidgetProps} />}
+      {!!nftWidgetProps && <NftWidget {...nftWidgetProps} onNftPutOnSale={() => id && openNftPutOnSale(id)} />}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
     </GridItem>
