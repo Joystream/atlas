@@ -22,7 +22,7 @@ export type GetBasicChannelQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -47,7 +47,7 @@ export type GetBasicChannelQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -87,7 +87,7 @@ export type GetChannelQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -102,7 +102,7 @@ export type GetChannelQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -127,7 +127,7 @@ export type GetChannelQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -178,7 +178,7 @@ export type GetChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -193,7 +193,7 @@ export type GetChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -218,7 +218,7 @@ export type GetChannelsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -267,7 +267,7 @@ export type GetChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -282,7 +282,7 @@ export type GetChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -307,7 +307,7 @@ export type GetChannelsConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -378,7 +378,7 @@ export type GetMostViewedChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -393,7 +393,7 @@ export type GetMostViewedChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -418,7 +418,7 @@ export type GetMostViewedChannelsConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -471,7 +471,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -486,7 +486,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -511,7 +511,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -550,7 +550,7 @@ export type GetTop10ChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -575,7 +575,7 @@ export type GetTop10ChannelsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -611,7 +611,7 @@ export type GetPromisingChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -636,7 +636,7 @@ export type GetPromisingChannelsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -672,7 +672,7 @@ export type GetDiscoverChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -697,7 +697,7 @@ export type GetDiscoverChannelsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -733,7 +733,7 @@ export type GetPopularChannelsQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -758,7 +758,7 @@ export type GetPopularChannelsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
