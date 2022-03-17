@@ -1,5 +1,5 @@
 import { ImageInputMetadata, MediaInputMetadata } from '@/components/_inputs/MultiFileSelect'
-import { VideoAssets, VideoInputMetadata } from '@/joystream-lib'
+import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joystream-lib'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 export type VideoWorkspaceVideoAssets = {
@@ -42,17 +42,20 @@ export type VideoWorkspaceVideoFormFields = {
   assets: VideoWorkspaceVideoAssets
 }
 
+export type VideoFormAssets = VideoAssets<{
+  id: string
+  originalId?: string
+  hashPromise: Promise<string>
+  blob: Blob
+  url?: string
+  dimensions?: AssetDimensions
+  cropData?: ImageCropData
+}>
+
 export type VideoFormData = {
   metadata: VideoInputMetadata
-  assets: VideoAssets<{
-    id: string
-    originalId?: string
-    hashPromise: Promise<string>
-    blob: Blob
-    url?: string
-    dimensions?: AssetDimensions
-    cropData?: ImageCropData
-  }>
+  nftMetadata?: NftIssuanceInputMetadata
+  assets: VideoFormAssets
 }
 
 export type VideoWorkspaceFormStatus = {

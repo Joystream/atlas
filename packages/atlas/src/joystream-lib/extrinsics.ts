@@ -4,21 +4,20 @@ import {
   ChannelUpdateParameters,
   ContentActor,
   NftIssuanceParameters,
-  Royalty,
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
 import { DataObjectId } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Bytes, Option, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
+import { BTreeSet, Option, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
 
 import { SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
 import {
   createNftAuctionParams,
-  createNftIssuanceTransactionalStatus,
+  createNftIssuanceParameters,
   extractChannelResultAssetsIds,
   extractVideoResultAssetsIds,
   getInputDataObjectsIds,
@@ -172,17 +171,21 @@ export class JoystreamLibExtrinsics {
     memberId: MemberId,
     channelId: ChannelId,
     inputMetadata: VideoInputMetadata,
+    nftInputMetadata: NftIssuanceInputMetadata | undefined,
     inputAssets: VideoInputAssets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<VideoExtrinsicResult> {
     await this.ensureApi()
 
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+
+    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
+
     const creationParameters = new VideoCreationParameters(this.api.registry, {
       meta: videoMetadata,
       assets: videoAssets,
       enable_comments: new bool(this.api.registry, false),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -204,18 +207,22 @@ export class JoystreamLibExtrinsics {
     videoId: VideoId,
     memberId: MemberId,
     inputMetadata: VideoInputMetadata,
+    nftInputMetadata: NftIssuanceInputMetadata | undefined,
     inputAssets: VideoInputAssets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<VideoExtrinsicResult> {
     await this.ensureApi()
 
     const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+
+    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
+
     const updateParameters = new VideoUpdateParameters(this.api.registry, {
       new_meta: videoMetadata,
       assets_to_upload: videoAssets,
       assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
       enable_comments: new Option(this.api.registry, bool),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
@@ -259,19 +266,19 @@ export class JoystreamLibExtrinsics {
   ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
 
-    const transactionalStatus = createNftIssuanceTransactionalStatus(this.api.registry, inputMetadata)
+    const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, inputMetadata)
 
-    const issueNftParameters = new NftIssuanceParameters(this.api.registry, {
-      nft_metadata: new Bytes(this.api.registry, '0x0'),
-      init_transactional_status: transactionalStatus,
-      non_channel_owner: new Option(this.api.registry, RuntimeMemberId),
-      royalty: new Option(this.api.registry, Royalty),
-    })
+    if (!nftIssuanceParameters) {
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: 'Failed to construct NftIssuanceParameters',
+      })
+    }
 
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
-    const tx = this.api.tx.content.issueNft(contentActor, videoId, issueNftParameters)
+    const tx = this.api.tx.content.issueNft(contentActor, videoId, nftIssuanceParameters)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 

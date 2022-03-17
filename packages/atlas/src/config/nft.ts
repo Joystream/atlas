@@ -1,0 +1,1 @@
+export const NFT_MIN_BID_STEP_MULTIPLIER = 0.02

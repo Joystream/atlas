@@ -20,13 +20,13 @@ import {
 } from './AcceptTerms.styles'
 
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { Listing, NftFormData } from '../NftForm.types'
+import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 
 type AcceptTermsProps = {
   selectedType: Listing
-  formData: NftFormData
+  formData: NftFormFields
   termsAccepted: boolean
   toggleTermsAccept: () => void
 }

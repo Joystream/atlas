@@ -4,9 +4,9 @@ import { z } from 'zod'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { pluralizeNoun } from '@/utils/misc'
 
-import { NftFormData } from './NftForm.types'
+import { NftFormFields } from './NftForm.types'
 
-export const createValidationSchema = (data: NftFormData) => {
+export const createValidationSchema = (data: NftFormFields) => {
   const auctionDateType = z
     .union([
       z.object({
