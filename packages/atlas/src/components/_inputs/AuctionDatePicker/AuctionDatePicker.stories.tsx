@@ -1,8 +1,9 @@
 import { Meta, Story } from '@storybook/react'
-import { isValid } from 'date-fns'
 import React, { useState } from 'react'
 
-import { AuctionDatePicker, AuctionDatePickerProps } from './AuctionDatePicker'
+import { pluralizeNoun } from '@/utils/misc'
+
+import { AuctionDatePicker, AuctionDatePickerProps, AuctionDatePickerValue } from './AuctionDatePicker'
 
 export default {
   title: 'inputs/AuctionDatePicker',
@@ -11,17 +12,28 @@ export default {
 } as Meta
 
 const Template: Story<AuctionDatePickerProps> = (args) => {
-  const [startDate, setStartDate] = useState<Date | string | null>(null)
-  const [expirationDate, setExpirationDate] = useState<Date | string | null>(null)
-  // eslint-disable-next-line no-console
-  console.log({ startDate, expirationDate })
+  const [startDate, setStartDate] = useState<AuctionDatePickerValue>(null)
+  const [expirationDate, setExpirationDate] = useState<AuctionDatePickerValue>(null)
+
+  const days = [null, 1, 3, 5, 7] as const
+
+  const expirationDateItems = days.map((value) => ({
+    name: value === null ? 'No expiration date' : pluralizeNoun(value, 'day'),
+    value:
+      value === null
+        ? null
+        : {
+            type: 'duration' as const,
+            durationDays: value,
+          },
+  }))
   return (
     <div style={{ display: 'flex', gap: '8px', width: '652px' }}>
       <AuctionDatePicker
         {...args}
         items={[
           {
-            value: new Date(),
+            value: null,
             name: 'Right after listing',
           },
         ]}
@@ -31,25 +43,8 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
       />
       <AuctionDatePicker
         {...args}
-        items={[
-          {
-            value: 'Fri Jan 21 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
-            name: '1 day',
-          },
-          {
-            value: 'Fri Jan 22 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
-            name: '3 days',
-          },
-          {
-            value: 'Fri Jan 23 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
-            name: '5 days',
-          },
-          {
-            value: 'Fri Jan 24 2022 14:40:12 GMT+0100 (hora estándar de Europa central)',
-            name: '7 days',
-          },
-        ]}
-        minDate={isValid(new Date(startDate ?? '')) ? new Date(startDate as string) : undefined}
+        items={expirationDateItems}
+        minDate={startDate instanceof Date ? startDate : null}
         onChange={setExpirationDate}
         value={expirationDate}
         label="expiration date"

@@ -1,20 +1,31 @@
-import { addDays, differenceInMilliseconds } from 'date-fns'
-import React, { useEffect, useState } from 'react'
-import { UseFormRegister, UseFormReset, UseFormSetValue } from 'react-hook-form'
+import { addMonths } from 'date-fns'
+import React, { useEffect } from 'react'
+import {
+  Control,
+  Controller,
+  DeepMap,
+  FieldError,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+  UseFormWatch,
+} from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { cVar } from '@/styles'
+import { pluralizeNoun } from '@/utils/misc'
+import { formatNumber } from '@/utils/number'
 
 import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
 
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { AuctionDate, Listing, NftFormData } from '../NftForm.types'
+import { Listing, NftFormData } from '../NftForm.types'
+import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
   register: UseFormRegister<NftFormData>
@@ -24,7 +35,12 @@ type SetUpProps = {
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
   reset: UseFormReset<NftFormData>
   formData: NftFormData
+  watch: UseFormWatch<NftFormData>
+  control: Control<NftFormData>
+  errors: DeepMap<NftFormData, FieldError>
 }
+
+const MAX_DATE = addMonths(new Date(), 5) // TODO: value to be discussed
 
 export const SetUp: React.FC<SetUpProps> = ({
   register,
@@ -34,32 +50,24 @@ export const SetUp: React.FC<SetUpProps> = ({
   setActiveInputs,
   reset,
   formData,
+  watch,
+  control,
 }) => {
-  const [auctionDate, setAuctionDate] = useState<AuctionDate>({
-    startDate: formData.startDate || null,
-    endDate: formData.endDate || null,
-  })
-  const { convertDurationToBlocks } = useBlockTimeEstimation()
-  const { getTotalDaysAndHoursText } = useNftForm()
+  const startDate = watch('startDate')
+  const endDate = watch('endDate')
 
-  const setAuctionDuration = (date: { startDate?: Date | string | null; endDate?: Date | string | null }) => {
-    setAuctionDate((prevState) => ({ ...prevState, ...date }))
-  }
-  const startDate = auctionDate.startDate as Date
-  const endDate = auctionDate.endDate as Date
-  const validDate = auctionDate.startDate instanceof Date && auctionDate.endDate instanceof Date
+  const { getNumberOfBlocks } = useNftForm()
 
-  const numberOfBlocks = validDate ? convertDurationToBlocks(differenceInMilliseconds(endDate, startDate)) : null
+  const numberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
+
+  const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
   useEffect(() => {
-    if (numberOfBlocks) {
-      setValue('auctionDurationBlocks', numberOfBlocks as never)
-      setValue('startDate', auctionDate.startDate)
-      setValue('endDate', auctionDate.endDate)
+    if (!numberOfBlocks) {
+      return
     }
-  }, [auctionDate, numberOfBlocks, setValue])
-
-  const daysAndHours = validDate && getTotalDaysAndHoursText(startDate, endDate)
+    setValue('auctionDurationBlocks', numberOfBlocks as never)
+  }, [numberOfBlocks, setValue])
 
   const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
     if (!event) {
@@ -71,7 +79,8 @@ export const SetUp: React.FC<SetUpProps> = ({
         return [...prevState, name]
       }
       if (name === 'auctionDuration') {
-        setAuctionDate({ startDate: null, endDate: null })
+        setValue('startDate', null)
+        setValue('endDate', null)
       } else {
         reset({ ...formData, [name]: undefined })
       }
@@ -93,6 +102,19 @@ export const SetUp: React.FC<SetUpProps> = ({
       caption: 'No bids will be accepted, only a purchase for fixed price will complete the sale.',
     },
   }
+
+  const days = [null, 1, 3, 5, 7] as const
+
+  const expirationDateItems = days.map((value) => ({
+    name: value === null ? 'No expiration date' : pluralizeNoun(value, 'day'),
+    value:
+      value === null
+        ? null
+        : {
+            type: 'duration' as const,
+            durationDays: value,
+          },
+  }))
 
   return (
     <>
@@ -118,7 +140,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
             >
               <TextField
-                {...register('startingPrice')}
+                {...register('startingPrice', { valueAsNumber: true })}
                 type="number"
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('startingPrice')}
@@ -136,8 +158,8 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
             >
               <TextField
-                {...register('buyNowPrice')}
-                type="text"
+                {...register('buyNowPrice', { valueAsNumber: true })}
+                type="number"
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('buyNowPrice')}
               />
@@ -154,58 +176,59 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
             >
               <AuctionDatePickerWrapper>
-                <AuctionDatePicker
-                  size="regular"
-                  label="Starting date"
-                  minDate={new Date()}
-                  disabled={!activeInputs.includes('auctionDuration')}
-                  items={[
-                    {
-                      value: new Date(),
-                      name: 'Right after listing',
-                    },
-                  ]}
-                  onChange={(value) => setAuctionDuration({ startDate: value })}
-                  value={auctionDate.startDate}
+                <Controller
+                  name="startDate"
+                  control={control}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AuctionDatePicker
+                      size="regular"
+                      label="Starting date"
+                      error={!!error}
+                      helperText={error?.message}
+                      minDate={new Date()}
+                      maxDate={(endDate?.type === 'date' && endDate.date) || MAX_DATE}
+                      disabled={!activeInputs.includes('auctionDuration')}
+                      items={[
+                        {
+                          value: null,
+                          name: 'Right after listing',
+                        },
+                      ]}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
                 />
-                <AuctionDatePicker
-                  size="regular"
-                  label="expiration date"
-                  minDate={new Date()}
-                  disabled={!activeInputs.includes('auctionDuration') || !auctionDate.startDate}
-                  onChange={(value) => setAuctionDuration({ endDate: value })}
-                  items={[
-                    {
-                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 1),
-                      name: '1 day',
-                    },
-                    {
-                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 3),
-                      name: '3 days',
-                    },
-                    {
-                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 5),
-                      name: '5 days',
-                    },
-                    {
-                      value: auctionDate.startDate && addDays(new Date(auctionDate.startDate), 7),
-                      name: '7 days',
-                    },
-                  ]}
-                  value={auctionDate.endDate}
+                <Controller
+                  name="endDate"
+                  control={control}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AuctionDatePicker
+                      size="regular"
+                      label="expiration date"
+                      error={!!error}
+                      helperText={error?.message}
+                      minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
+                      maxDate={MAX_DATE}
+                      disabled={!activeInputs.includes('auctionDuration')}
+                      onChange={onChange}
+                      items={expirationDateItems}
+                      value={value}
+                    />
+                  )}
                 />
               </AuctionDatePickerWrapper>
             </FormField>
-            {auctionDate.startDate instanceof Date && auctionDate.endDate instanceof Date && (
+            {numberOfBlocks > 0 && (
               <DaysSummary>
                 <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
                   Total:
                 </Text>
                 &nbsp;
-                <Text variant="t200-strong">{daysAndHours}</Text>
+                <Text variant="t200-strong">{totalDaysAndHours}</Text>
                 &nbsp;
                 <Text variant="t200-strong" secondary>
-                  / {numberOfBlocks?.toLocaleString('no', { maximumFractionDigits: 1 })} Blocks
+                  / {formatNumber(numberOfBlocks)} Blocks
                 </Text>
                 <DaysSummaryInfo
                   text="It’s the time when your auction will become active and buyer will be able to make an offer"
@@ -213,7 +236,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                   footer={
                     <AuctionDurationTooltipFooter>
                       <Text variant="t100">
-                        {daysAndHours} = {numberOfBlocks}
+                        {totalDaysAndHours} = {formatNumber(numberOfBlocks)}
                       </Text>
                     </AuctionDurationTooltipFooter>
                   }
