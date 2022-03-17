@@ -11,7 +11,7 @@ export type Scalars = {
   Int: number
   Float: number
   /** GraphQL representation of BigInt */
-  BigInt: number
+  BigInt: string
   /** GraphQL representation of Bytes */
   Bytes: any
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */

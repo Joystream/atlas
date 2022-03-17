@@ -37,7 +37,7 @@ export type GetVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -52,7 +52,7 @@ export type GetVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -74,7 +74,7 @@ export type GetVideoQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -99,7 +99,7 @@ export type GetVideoQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -142,7 +142,7 @@ export type GetVideoQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -208,7 +208,7 @@ export type GetVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -223,7 +223,7 @@ export type GetVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -245,7 +245,7 @@ export type GetVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
-            size: number
+            size: string
             isAccepted: boolean
             ipfsHash: string
             storageBag: { __typename?: 'StorageBag'; id: string }
@@ -270,7 +270,7 @@ export type GetVideosConnectionQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -313,7 +313,7 @@ export type GetVideosConnectionQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -376,7 +376,7 @@ export type GetVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -391,7 +391,7 @@ export type GetVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -413,7 +413,7 @@ export type GetVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -438,7 +438,7 @@ export type GetVideosQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -481,7 +481,7 @@ export type GetVideosQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -526,7 +526,7 @@ export type GetBasicVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -548,7 +548,7 @@ export type GetBasicVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -573,7 +573,7 @@ export type GetBasicVideosQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -594,7 +594,7 @@ export type GetBasicVideosQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -624,7 +624,7 @@ export type GetBasicVideosQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -667,7 +667,7 @@ export type GetBasicVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -689,7 +689,7 @@ export type GetBasicVideoQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -714,7 +714,7 @@ export type GetBasicVideoQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -735,7 +735,7 @@ export type GetBasicVideoQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -765,7 +765,7 @@ export type GetBasicVideoQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -833,7 +833,7 @@ export type GetMostViewedVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -848,7 +848,7 @@ export type GetMostViewedVideosConnectionQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -870,7 +870,7 @@ export type GetMostViewedVideosConnectionQuery = {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
-            size: number
+            size: string
             isAccepted: boolean
             ipfsHash: string
             storageBag: { __typename?: 'StorageBag'; id: string }
@@ -895,7 +895,7 @@ export type GetMostViewedVideosConnectionQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -938,7 +938,7 @@ export type GetMostViewedVideosConnectionQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -998,7 +998,7 @@ export type GetTop10VideosThisWeekQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1013,7 +1013,7 @@ export type GetTop10VideosThisWeekQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1035,7 +1035,7 @@ export type GetTop10VideosThisWeekQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1060,7 +1060,7 @@ export type GetTop10VideosThisWeekQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1103,7 +1103,7 @@ export type GetTop10VideosThisWeekQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1160,7 +1160,7 @@ export type GetTop10VideosThisMonthQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1175,7 +1175,7 @@ export type GetTop10VideosThisMonthQuery = {
       __typename?: 'StorageDataObject'
       id: string
       createdAt: Date
-      size: number
+      size: string
       isAccepted: boolean
       ipfsHash: string
       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1197,7 +1197,7 @@ export type GetTop10VideosThisMonthQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1222,7 +1222,7 @@ export type GetTop10VideosThisMonthQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -1265,7 +1265,7 @@ export type GetTop10VideosThisMonthQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }

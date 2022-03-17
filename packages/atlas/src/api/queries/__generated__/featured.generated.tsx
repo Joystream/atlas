@@ -41,7 +41,7 @@ export type GetVideoHeroQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -56,7 +56,7 @@ export type GetVideoHeroQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -78,7 +78,7 @@ export type GetVideoHeroQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -103,7 +103,7 @@ export type GetVideoHeroQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -146,7 +146,7 @@ export type GetVideoHeroQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -210,7 +210,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -225,7 +225,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -247,7 +247,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
             __typename?: 'StorageDataObject'
             id: string
             createdAt: Date
-            size: number
+            size: string
             isAccepted: boolean
             ipfsHash: string
             storageBag: { __typename?: 'StorageBag'; id: string }
@@ -272,7 +272,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -315,7 +315,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                       __typename?: 'StorageDataObject'
                       id: string
                       createdAt: Date
-                      size: number
+                      size: string
                       isAccepted: boolean
                       ipfsHash: string
                       storageBag: { __typename?: 'StorageBag'; id: string }
@@ -378,7 +378,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -393,7 +393,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -415,7 +415,7 @@ export type GetCategoriesFeaturedVideosQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -440,7 +440,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -483,7 +483,7 @@ export type GetCategoriesFeaturedVideosQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }

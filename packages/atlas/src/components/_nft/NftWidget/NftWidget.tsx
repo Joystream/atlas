@@ -300,9 +300,9 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
             !!nft.transactionalStatus.auction?.lastBid &&
             !!nft.transactionalStatus.auction?.plannedEndAtBlock &&
             nft.transactionalStatus.auction?.plannedEndAtBlock <= getCurrentBlock(),
-          startingPrice: nft.transactionalStatus.auction?.startingPrice ?? 0,
-          buyNowPrice: nft.transactionalStatus.auction?.buyNowPrice ?? undefined,
-          topBid: nft.transactionalStatus.auction?.lastBid?.amount,
+          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice ?? 0),
+          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice ?? undefined),
+          topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
           isCompleted: nft.transactionalStatus.auction?.isCompleted,
           canWithdrawBid:
             nft.transactionalStatus.auction?.isCompleted ||

@@ -30,7 +30,7 @@ export type GetNftQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -57,7 +57,7 @@ export type GetNftQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -82,7 +82,7 @@ export type GetNftQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -105,9 +105,9 @@ export type GetNftQuery = {
           auction?: {
             __typename?: 'Auction'
             isCompleted: boolean
-            buyNowPrice?: number | null
-            minimalBidStep: number
-            startingPrice: number
+            buyNowPrice?: string | null
+            minimalBidStep: string
+            startingPrice: string
             startsAtBlock: number
             plannedEndAtBlock?: number | null
             endedAtBlock?: number | null
@@ -128,7 +128,7 @@ export type GetNftQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -146,7 +146,7 @@ export type GetNftQuery = {
             } | null
             lastBid?: {
               __typename?: 'Bid'
-              amount: number
+              amount: string
               createdAt: Date
               isCanceled: boolean
               createdInBlock: number
@@ -165,7 +165,7 @@ export type GetNftQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           createdAt: Date
-                          size: number
+                          size: string
                           isAccepted: boolean
                           ipfsHash: string
                           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -184,7 +184,7 @@ export type GetNftQuery = {
             } | null
             bids: Array<{
               __typename?: 'Bid'
-              amount: number
+              amount: string
               createdAt: Date
               isCanceled: boolean
               createdInBlock: number
@@ -203,7 +203,7 @@ export type GetNftQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           createdAt: Date
-                          size: number
+                          size: string
                           isAccepted: boolean
                           ipfsHash: string
                           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -234,7 +234,7 @@ export type GetNftQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -267,7 +267,7 @@ export type GetNftQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -289,7 +289,7 @@ export type GetNftQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -314,7 +314,7 @@ export type GetNftQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -335,7 +335,7 @@ export type GetNftQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -365,7 +365,7 @@ export type GetNftQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -416,7 +416,7 @@ export type GetNftsQuery = {
                 __typename?: 'StorageDataObject'
                 id: string
                 createdAt: Date
-                size: number
+                size: string
                 isAccepted: boolean
                 ipfsHash: string
                 storageBag: { __typename?: 'StorageBag'; id: string }
@@ -443,7 +443,7 @@ export type GetNftsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -468,7 +468,7 @@ export type GetNftsQuery = {
                   __typename?: 'StorageDataObject'
                   id: string
                   createdAt: Date
-                  size: number
+                  size: string
                   isAccepted: boolean
                   ipfsHash: string
                   storageBag: { __typename?: 'StorageBag'; id: string }
@@ -491,9 +491,9 @@ export type GetNftsQuery = {
           auction?: {
             __typename?: 'Auction'
             isCompleted: boolean
-            buyNowPrice?: number | null
-            minimalBidStep: number
-            startingPrice: number
+            buyNowPrice?: string | null
+            minimalBidStep: string
+            startingPrice: string
             startsAtBlock: number
             plannedEndAtBlock?: number | null
             endedAtBlock?: number | null
@@ -514,7 +514,7 @@ export type GetNftsQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -532,7 +532,7 @@ export type GetNftsQuery = {
             } | null
             lastBid?: {
               __typename?: 'Bid'
-              amount: number
+              amount: string
               createdAt: Date
               isCanceled: boolean
               createdInBlock: number
@@ -551,7 +551,7 @@ export type GetNftsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           createdAt: Date
-                          size: number
+                          size: string
                           isAccepted: boolean
                           ipfsHash: string
                           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -570,7 +570,7 @@ export type GetNftsQuery = {
             } | null
             bids: Array<{
               __typename?: 'Bid'
-              amount: number
+              amount: string
               createdAt: Date
               isCanceled: boolean
               createdInBlock: number
@@ -589,7 +589,7 @@ export type GetNftsQuery = {
                           __typename?: 'StorageDataObject'
                           id: string
                           createdAt: Date
-                          size: number
+                          size: string
                           isAccepted: boolean
                           ipfsHash: string
                           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -620,7 +620,7 @@ export type GetNftsQuery = {
                         __typename?: 'StorageDataObject'
                         id: string
                         createdAt: Date
-                        size: number
+                        size: string
                         isAccepted: boolean
                         ipfsHash: string
                         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -653,7 +653,7 @@ export type GetNftsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -675,7 +675,7 @@ export type GetNftsQuery = {
           __typename?: 'StorageDataObject'
           id: string
           createdAt: Date
-          size: number
+          size: string
           isAccepted: boolean
           ipfsHash: string
           storageBag: { __typename?: 'StorageBag'; id: string }
@@ -700,7 +700,7 @@ export type GetNftsQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
@@ -721,7 +721,7 @@ export type GetNftsQuery = {
         __typename?: 'StorageDataObject'
         id: string
         createdAt: Date
-        size: number
+        size: string
         isAccepted: boolean
         ipfsHash: string
         storageBag: { __typename?: 'StorageBag'; id: string }
@@ -751,7 +751,7 @@ export type GetNftsQuery = {
                     __typename?: 'StorageDataObject'
                     id: string
                     createdAt: Date
-                    size: number
+                    size: string
                     isAccepted: boolean
                     ipfsHash: string
                     storageBag: { __typename?: 'StorageBag'; id: string }
