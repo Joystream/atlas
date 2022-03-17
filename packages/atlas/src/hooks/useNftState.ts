@@ -16,67 +16,43 @@ export const useNftState = (nft?: Nft) => {
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
 
   const isBuyNow = nft && nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
-  const isAuction = nft && nft.transactionalStatus.__typename === 'TransactionalStatusAuction'
+  const auction =
+    (nft && nft.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction) ||
+    null
+  const isAuction = !!auction
 
-  const canBuyNow =
-    nft &&
-    !isOwner &&
-    (isBuyNow ||
-      (nft.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-        !!nft.transactionalStatus.auction?.buyNowPrice))
+  const canBuyNow = nft && !isOwner && (isBuyNow || !!auction?.buyNowPrice)
 
-  const canMakeBid = nft && !isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusAuction'
+  const canMakeBid = nft && !isOwner && isAuction
 
   const canCancelSale =
-    nft &&
-    isOwner &&
-    ['TransactionalStatusAuction', 'TransactionalStatusBuyNow'].includes(nft.transactionalStatus.__typename)
+    auction?.auctionType.__typename === 'AuctionTypeEnglish'
+      ? !auction?.bids.length
+      : auction?.auctionType.__typename === 'AuctionTypeOpen'
 
   const canWithdrawBid =
-    (nft &&
-      nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-      nft.transactionalStatus.auction?.isCompleted) ||
-    (nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-      nft?.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
+    auction?.isCompleted ||
+    (auction?.auctionType.__typename === 'AuctionTypeOpen' &&
       userBid &&
-      nft?.transactionalStatus.auction.auctionType.bidLockingTime + userBid.createdInBlock > getCurrentBlock())
+      auction.auctionType.bidLockingTime + userBid.createdInBlock > getCurrentBlock())
 
   const canPutOnSale = nft && isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusIdle'
 
   const auctionPlannedEndDate =
-    nft &&
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.plannedEndAtBlock &&
-    new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction.plannedEndAtBlock))
+    auction?.plannedEndAtBlock && new Date(convertBlockToMsTimestamp(auction.plannedEndAtBlock))
 
-  const isExpired =
-    nft &&
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    !!nft.transactionalStatus.auction?.plannedEndAtBlock &&
-    nft.transactionalStatus.auction.plannedEndAtBlock <= getCurrentBlock()
+  const isExpired = !!auction?.plannedEndAtBlock && auction.plannedEndAtBlock <= getCurrentBlock()
 
-  const isRunning =
-    nft &&
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    !!nft.transactionalStatus.auction?.startsAtBlock &&
-    getCurrentBlock() >= nft.transactionalStatus.auction.startsAtBlock
+  const isRunning = !!auction?.startsAtBlock && getCurrentBlock() >= auction.startsAtBlock
 
-  const isUpcoming =
-    nft &&
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    !!nft.transactionalStatus.auction?.startsAtBlock &&
-    getCurrentBlock() <= nft.transactionalStatus.auction?.startsAtBlock
+  const isUpcoming = !!auction?.startsAtBlock && getCurrentBlock() <= auction?.startsAtBlock
 
-  const needsSettling =
-    nft &&
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    !!nft.transactionalStatus.auction?.lastBid &&
-    isExpired
+  const needsSettling = auction?.lastBid && isExpired
 
   return {
     canBuyNow: !!canBuyNow || false,
     canMakeBid: !!canMakeBid || false,
-    canCancelSale: !!canCancelSale || false,
+    canCancelSale: canCancelSale || false,
     canPutOnSale: !!canPutOnSale || false,
     needsSettling: !!needsSettling || false,
     canWithdrawBid: !!canWithdrawBid || false,

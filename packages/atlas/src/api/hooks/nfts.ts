@@ -26,12 +26,16 @@ export type NftStatus =
       startsAtDate?: Date
     }
   | {
+      title?: string | null
+      duration?: number | null
       status: 'idle'
       lastPrice?: number
       lastTransactionDate?: Date
       views?: number
     }
   | {
+      title?: string | null
+      duration?: number | null
       status: 'buy-now'
       buyNowPrice: number
       views?: number

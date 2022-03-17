@@ -44,7 +44,7 @@ export type NftTileDetailsProps = {
   hovered?: boolean
   interactable?: boolean
   videoHref?: string
-  handleRemoveFromSale?: () => void
+  onRemoveFromSale?: () => void
   canPutOnSale?: boolean
   canCancelSale?: boolean
   canBuyNow?: boolean
@@ -67,7 +67,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   hovered,
   videoHref,
   interactable = true,
-  handleRemoveFromSale,
+  onRemoveFromSale,
   canPutOnSale,
   canCancelSale,
   canBuyNow,
@@ -116,7 +116,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           icon: <SvgActionCancel />,
           title: 'Remove from sale',
           destructive: true,
-          onClick: handleRemoveFromSale,
+          onClick: onRemoveFromSale,
         },
         {
           icon: <SvgActionChangePrice />,
@@ -137,7 +137,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       })
     }
     return elements
-  }, [handleCopyVideoURLClick, canPutOnSale, canCancelSale, canBuyNow, canMakeBid, handleRemoveFromSale])
+  }, [handleCopyVideoURLClick, canPutOnSale, canCancelSale, canBuyNow, canMakeBid, onRemoveFromSale])
 
   const getDetails = useMemo(() => {
     if (loading) {

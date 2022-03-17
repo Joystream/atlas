@@ -8,7 +8,6 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useAsset } from '@/providers/assets'
-import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 
 import { NftTile, NftTileProps } from '../NftTile'
@@ -23,27 +22,13 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const thumbnail = useAsset(nft?.video?.thumbnailPhoto)
   const creatorAvatar = useAsset(nft?.video?.channel.avatarPhoto)
   const { canPutOnSale, canMakeBid, canCancelSale, canBuyNow } = useNftState(nft)
-  const [openModal, closeModal] = useConfirmationModal()
-  const { cancelNftSale } = useNftTransactions(nft?.video.id)
+  const { cancelNftSale } = useNftTransactions()
 
-  const handleRemoveFromSale = () => {
-    openModal({
-      title: 'Remove from sale',
-      description: 'Do you really want to remove your item from sale? You can put it on sale anytime.',
-      primaryButton: {
-        variant: 'destructive',
-        text: 'Remove',
-        onClick: () => {
-          cancelNftSale(false)
-          closeModal()
-        },
-      },
-      secondaryButton: {
-        variant: 'secondary',
-        text: 'Cancel',
-        onClick: () => closeModal(),
-      },
-    })
+  const onRemoveFromSale = () => {
+    if (!nftId || !nft?.video.id) {
+      return
+    }
+    cancelNftSale(nftId, nft.video.id, false)
   }
 
   const { getCurrentBlock } = useJoystream()
@@ -114,7 +99,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       canBuyNow={canBuyNow}
       canCancelSale={canCancelSale}
       canMakeBid={canMakeBid}
-      handleRemoveFromSale={handleRemoveFromSale}
+      onRemoveFromSale={onRemoveFromSale}
     />
   )
 }
