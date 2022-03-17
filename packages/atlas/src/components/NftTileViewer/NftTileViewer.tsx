@@ -24,7 +24,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { canPutOnSale, canMakeBid, canCancelSale, canBuyNow } = useNftState(nft)
   const { cancelNftSale } = useNftTransactions()
 
-  const onRemoveFromSale = () => {
+  const handleRemoveOnSale = () => {
     if (!nftId || !nft?.video.id) {
       return
     }
@@ -99,7 +99,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       canBuyNow={canBuyNow}
       canCancelSale={canCancelSale}
       canMakeBid={canMakeBid}
-      onRemoveFromSale={onRemoveFromSale}
+      onRemoveFromSale={handleRemoveOnSale}
     />
   )
 }
