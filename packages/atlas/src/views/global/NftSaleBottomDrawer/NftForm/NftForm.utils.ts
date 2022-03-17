@@ -62,6 +62,11 @@ export const createValidationSchema = (data: NftFormData) => {
         },
         { message: 'Expiration date cannot be earlier than starting date' }
       ),
+    royalty: z.number().nullable().optional(),
+    startingPrice: z.number().nullable().optional(),
+    buyNowPrice: z.number().nullable().optional(),
+    auctionDurationBlocks: z.number().nullable().optional(),
+    whitelistedMembersIds: z.array(z.string()).nullable().optional(),
   })
 }
 

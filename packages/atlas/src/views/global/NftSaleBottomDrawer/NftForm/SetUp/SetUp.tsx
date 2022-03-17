@@ -63,6 +63,9 @@ export const SetUp: React.FC<SetUpProps> = ({
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
   useEffect(() => {
+    if (!numberOfBlocks) {
+      return
+    }
     setValue('auctionDurationBlocks', numberOfBlocks as never)
   }, [numberOfBlocks, setValue])
 
@@ -137,7 +140,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
             >
               <TextField
-                {...register('startingPrice')}
+                {...register('startingPrice', { valueAsNumber: true })}
                 type="number"
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('startingPrice')}
@@ -155,8 +158,8 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
             >
               <TextField
-                {...register('buyNowPrice')}
-                type="text"
+                {...register('buyNowPrice', { valueAsNumber: true })}
+                type="number"
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('buyNowPrice')}
               />
