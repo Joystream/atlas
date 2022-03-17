@@ -7,7 +7,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
@@ -37,30 +36,25 @@ export type Auction = {
   buyNowPrice?: number
   topBid?: number
   isCompleted?: boolean
-  canWithdrawBid?: boolean
-  needsSettling: boolean
   auctionPlannedEndDate?: Date
+  startsAtDate?: Date
+  canWithdrawBid?: boolean
 }
 
 export type NftWidgetProps = {
   ownerHandle?: string
   ownerAvatarUri?: string | null
   isOwner?: boolean
+  needsSettling?: boolean
   nftStatus?:
     | {
         status: 'idle'
         lastPrice?: number
         lastTransactionDate?: Date
-        needsSettling?: boolean
-        canWithdrawBid?: boolean
-        auctionPlannedEndDate?: Date
       }
     | {
         status: 'buy-now'
         buyNowPrice: number
-        needsSettling?: boolean
-        canWithdrawBid?: boolean
-        auctionPlannedEndDate?: Date
       }
     | Auction
 }
@@ -71,6 +65,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerHandle,
   isOwner,
   nftStatus = { status: 'idle' },
+  needsSettling,
   ownerAvatarUri,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -162,7 +157,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           </>
         )
       case 'auction':
-        return nftStatus.needsSettling ? (
+        return needsSettling ? (
           <>
             <NftInfoItem
               size={size}
@@ -267,7 +262,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           </>
         )
     }
-  }, [size, nftStatus, convertToUSD, isOwner])
+  }, [size, nftStatus, convertToUSD, isOwner, needsSettling])
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
@@ -289,63 +284,44 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { nft, nftStatus } = useNft(videoId ?? '')
-  const { isOwner } = useNftState(nft)
-  const { activeMembership } = useUser()
-  const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
-  const { getCurrentBlock } = useJoystream()
+  const { isOwner, canWithdrawBid, needsSettling, auctionPlannedEndDate } = useNftState(nft)
 
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
 
-  switch (nft?.transactionalStatus?.__typename) {
-    case 'TransactionalStatusAuction': {
-      const userBid = nft.transactionalStatus.auction?.bids.find(
-        (bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id
-      )
+  switch (nftStatus.status) {
+    case 'auction': {
       return {
         ownerHandle: owner?.handle,
         ownerAvatarUri,
         isOwner,
+        needsSettling,
         nftStatus: {
           ...nftStatus,
-          needsSettling:
-            !!nft.transactionalStatus.auction?.lastBid &&
-            !!nft.transactionalStatus.auction?.plannedEndAtBlock &&
-            nft.transactionalStatus.auction?.plannedEndAtBlock <= getCurrentBlock(),
-          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice ?? 0),
-          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice ?? undefined),
-          topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
-          isCompleted: nft.transactionalStatus.auction?.isCompleted,
-          canWithdrawBid:
-            nft.transactionalStatus.auction?.isCompleted ||
-            (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-              userBid &&
-              nft?.transactionalStatus?.auction?.auctionType.bidLockingTime + userBid.createdInBlock >
-                getCurrentBlock()),
-          auctionPlannedEndDate: nft.transactionalStatus.auction?.plannedEndAtBlock
-            ? new Date(convertBlockToMsTimestamp(nft.transactionalStatus.auction?.plannedEndAtBlock))
-            : undefined,
+          canWithdrawBid,
+          auctionPlannedEndDate,
         },
       }
     }
-    case 'TransactionalStatusBuyNow':
+    case 'buy-now':
       return {
         ownerHandle: owner?.handle,
         ownerAvatarUri,
         isOwner,
+        needsSettling,
         nftStatus: {
-          status: 'buy-now',
-          buyNowPrice: nft.transactionalStatus.price,
+          ...nftStatus,
         },
       }
-    case 'TransactionalStatusIdle':
+    case 'idle':
       return {
         ownerHandle: owner?.handle,
         ownerAvatarUri,
         isOwner,
+        needsSettling,
         nftStatus: {
-          status: 'idle',
+          ...nftStatus,
         },
       }
   }

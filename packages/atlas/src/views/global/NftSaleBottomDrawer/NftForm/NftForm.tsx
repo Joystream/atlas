@@ -190,7 +190,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const getNftStatus = () => {
     switch (listingType) {
       case 'Fixed price':
-        return 'on-sale'
+        return 'buy-now'
       case 'Auction':
         return 'auction'
       default:

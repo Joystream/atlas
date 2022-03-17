@@ -2,6 +2,7 @@ import { QueryResult } from '@apollo/client'
 
 import {
   AllNftFieldsFragment,
+  BasicMembershipFieldsFragment,
   VideoCategoryWhereInput,
   VideoOrderByInput,
   useGetNftQuery,
@@ -13,26 +14,27 @@ import { createLookup } from '@/utils/data'
 export type NftStatus =
   | {
       status: 'auction'
+      type: 'open-auction' | 'english-auction'
       startingPrice: number
       buyNowPrice?: number
       topBid?: number
-      isCompleted?: boolean
+      topBidder?: BasicMembershipFieldsFragment
       title?: string | null
       duration?: number | null
       views?: number
       auctionPlannedEndBlock?: number
-      needsSettling?: boolean
+      startsAtDate?: Date
     }
   | {
       status: 'idle'
       lastPrice?: number
       lastTransactionDate?: Date
-      auctionPlannedEndBlock?: number
+      views?: number
     }
   | {
       status: 'buy-now'
       buyNowPrice: number
-      auctionPlannedEndBlock?: number
+      views?: number
     }
 export type Nft = AllNftFieldsFragment | null
 export type UseNftData = Omit<QueryResult, 'data'> & { nft?: Nft; nftStatus: NftStatus }
@@ -47,16 +49,20 @@ export const useNft = (id: string): UseNftData => {
     views: nft?.video?.views,
   }
 
-  const getNftProperies = (): NftStatus => {
+  const getNftProperties = (): NftStatus => {
     switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusAuction': {
         return {
           ...commonProperties,
           status: 'auction',
-          startingPrice: nft.transactionalStatus.auction?.startingPrice ?? 0,
-          buyNowPrice: nft.transactionalStatus.auction?.buyNowPrice ?? undefined,
-          topBid: nft.transactionalStatus.auction?.lastBid?.amount,
-          isCompleted: nft.transactionalStatus.auction?.isCompleted,
+          type:
+            nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
+              ? 'open-auction'
+              : 'english-auction',
+          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) ?? 0,
+          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) ?? undefined,
+          topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
+          topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
           auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
         }
       }
@@ -64,7 +70,7 @@ export const useNft = (id: string): UseNftData => {
         return {
           ...commonProperties,
           status: 'buy-now',
-          buyNowPrice: nft.transactionalStatus.price,
+          buyNowPrice: Number(nft.transactionalStatus.price),
         }
       default:
         return {
@@ -76,7 +82,7 @@ export const useNft = (id: string): UseNftData => {
 
   return {
     nft,
-    nftStatus: getNftProperies(),
+    nftStatus: getNftProperties(),
     ...rest,
   }
 }

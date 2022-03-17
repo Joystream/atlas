@@ -17,7 +17,7 @@ export type Member = {
 }
 
 export type NftTileProps = {
-  status?: 'idle' | 'on-sale' | 'auction'
+  status?: 'idle' | 'buy-now' | 'auction'
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -67,7 +67,7 @@ export const NftTile: React.FC<NftTileProps> = ({
     switch (status) {
       case 'idle':
         return <Pill icon={<SvgActionNotForSale />} size="medium" variant="overlay" />
-      case 'on-sale':
+      case 'buy-now':
         return <Pill icon={<SvgActionBuyNow />} size="medium" variant="overlay" />
       case 'auction':
         return buyNowPrice ? (

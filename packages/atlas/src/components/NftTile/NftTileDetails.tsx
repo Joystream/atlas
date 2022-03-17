@@ -36,7 +36,7 @@ export type NftTileDetailsProps = {
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
-  nftStatus?: 'idle' | 'on-sale' | 'auction'
+  nftStatus?: 'idle' | 'buy-now' | 'auction'
   buyNowPrice?: number | null
   startingPrice?: number | null
   topBid?: number | null
@@ -159,7 +159,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
             secondary
           />
         )
-      case 'on-sale':
+      case 'buy-now':
         return (
           <DetailsContent
             tileSize={tileSize}
