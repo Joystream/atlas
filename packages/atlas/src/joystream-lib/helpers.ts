@@ -5,7 +5,9 @@ import {
   AuctionType,
   EnglishAuctionDetails,
   InitTransactionalStatus,
+  NftIssuanceParameters,
   OpenAuctionDetails,
+  Royalty,
   StorageAssets,
 } from '@joystream/types/content'
 import { DataObjectCreationParameters } from '@joystream/types/storage'
@@ -242,7 +244,7 @@ export const createNftAuctionParams = (registry: Registry, inputMetadata: NftAuc
   throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown auction type`, details: { inputMetadata } })
 }
 
-export const createNftIssuanceTransactionalStatus = (
+const createNftIssuanceTransactionalStatus = (
   registry: Registry,
   inputMetadata: NftIssuanceInputMetadata
 ): InitTransactionalStatus => {
@@ -256,4 +258,22 @@ export const createNftIssuanceTransactionalStatus = (
 
   const auction = createNftAuctionParams(registry, inputMetadata.sale)
   return new InitTransactionalStatus(registry, { auction })
+}
+
+export const createNftIssuanceParameters = (
+  registry: Registry,
+  inputMetadata?: NftIssuanceInputMetadata
+): NftIssuanceParameters | null => {
+  if (!inputMetadata) {
+    return null
+  }
+
+  const initTransactionalStatus = createNftIssuanceTransactionalStatus(registry, inputMetadata)
+
+  return new NftIssuanceParameters(registry, {
+    nft_metadata: new Bytes(registry, '0x0'),
+    royalty: new Option(registry, Royalty, inputMetadata.royalty),
+    init_transactional_status: initTransactionalStatus,
+    non_channel_owner: new Option(registry, RuntimeMemberId),
+  })
 }

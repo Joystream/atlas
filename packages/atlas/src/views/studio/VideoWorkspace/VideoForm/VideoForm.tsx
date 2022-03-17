@@ -22,10 +22,11 @@ import { TextField } from '@/components/_inputs/TextField'
 import { languages } from '@/config/languages'
 import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
-import { VideoInputMetadata } from '@/joystream-lib'
+import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import {
   DEFAULT_LICENSE_ID,
+  VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
   VideoWorkspaceVideoFormFields,
@@ -181,35 +182,43 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
 
       const videoWidth = videoInputFile?.mediaPixelWidth
       const videoHeight = videoInputFile?.mediaPixelHeight
+      const assets: VideoFormAssets = {
+        ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
+          ? {
+              media: {
+                id: videoInputFile.id,
+                blob: videoAsset.blob,
+                url: videoAsset.url || undefined,
+                hashPromise: videoHashPromise,
+                dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
+              },
+            }
+          : {}),
+        ...(thumbnailAsset?.blob && thumbnailInputFile.cropId && thumbnailInputFile.originalId && thumbnailHashPromise
+          ? {
+              thumbnailPhoto: {
+                id: thumbnailInputFile.cropId,
+                originalId: thumbnailInputFile.originalId,
+                blob: thumbnailAsset.blob,
+                url: thumbnailAsset.url || undefined,
+                hashPromise: thumbnailHashPromise,
+                dimensions: thumbnailInputFile?.assetDimensions,
+                cropData: thumbnailInputFile?.imageCropData,
+              },
+            }
+          : {}),
+      }
+
+      const nftMetadata: NftIssuanceInputMetadata | undefined = data.mintNft
+        ? {
+            royalty: data.nftRoyaltiesPercent || undefined,
+          }
+        : undefined
 
       onSubmit({
         metadata,
-        assets: {
-          ...(videoAsset?.blob && videoInputFile.id && videoHashPromise
-            ? {
-                media: {
-                  id: videoInputFile.id,
-                  blob: videoAsset.blob,
-                  url: videoAsset.url || undefined,
-                  hashPromise: videoHashPromise,
-                  dimensions: videoWidth && videoHeight ? { height: videoHeight, width: videoWidth } : undefined,
-                },
-              }
-            : {}),
-          ...(thumbnailAsset?.blob && thumbnailInputFile.cropId && thumbnailInputFile.originalId && thumbnailHashPromise
-            ? {
-                thumbnailPhoto: {
-                  id: thumbnailInputFile.cropId,
-                  originalId: thumbnailInputFile.originalId,
-                  blob: thumbnailAsset.blob,
-                  url: thumbnailAsset.url || undefined,
-                  hashPromise: thumbnailHashPromise,
-                  dimensions: thumbnailInputFile?.assetDimensions,
-                  cropData: thumbnailInputFile?.imageCropData,
-                },
-              }
-            : {}),
-        },
+        assets,
+        nftMetadata,
       })
     })
 

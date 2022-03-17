@@ -1,4 +1,5 @@
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
+import { NftSaleInputMetadata } from '@/joystream-lib'
 
 export enum AuctionDuration {
   NoExpiration = 'No expiration date',
@@ -8,20 +9,22 @@ export enum AuctionDuration {
   SevenDays = '7 days',
 }
 
-export type Listing = 'Auction' | 'Fixed price' | 'Not for sale' | undefined
+export type Listing = 'Auction' | 'Fixed price' | undefined
 
 export type AuctionDate = {
   startDate: AuctionDatePickerValue
   endDate: AuctionDatePickerValue
 }
 
-export type NftFormData = {
+export type NftFormFields = {
   royalty?: number
   startingPrice?: number
   buyNowPrice?: number
   whitelistedMembersIds?: string[] // to be used later
   auctionDurationBlocks?: number
 } & AuctionDate
+
+export type NftFormData = NftSaleInputMetadata
 
 export type NftFormStatus = {
   isValid: boolean

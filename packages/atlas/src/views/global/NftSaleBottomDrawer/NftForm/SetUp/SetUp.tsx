@@ -24,23 +24,23 @@ import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledF
 
 import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
-import { Listing, NftFormData } from '../NftForm.types'
+import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
-  register: UseFormRegister<NftFormData>
+  register: UseFormRegister<NftFormFields>
   selectedType: Listing
-  setValue: UseFormSetValue<NftFormData>
+  setValue: UseFormSetValue<NftFormFields>
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
-  reset: UseFormReset<NftFormData>
-  formData: NftFormData
-  watch: UseFormWatch<NftFormData>
-  control: Control<NftFormData>
-  errors: DeepMap<NftFormData, FieldError>
+  reset: UseFormReset<NftFormFields>
+  formData: NftFormFields
+  watch: UseFormWatch<NftFormFields>
+  control: Control<NftFormFields>
+  errors: DeepMap<NftFormFields, FieldError>
 }
 
-const MAX_DATE = addMonths(new Date(), 5) // TODO: value to be discussed
+const MAX_DATE = addMonths(new Date(), 5) // TODO: should use chain constant for max auction duration
 
 export const SetUp: React.FC<SetUpProps> = ({
   register,
@@ -66,7 +66,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     if (!numberOfBlocks) {
       return
     }
-    setValue('auctionDurationBlocks', numberOfBlocks as never)
+    setValue('auctionDurationBlocks', numberOfBlocks)
   }, [numberOfBlocks, setValue])
 
   const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +125,11 @@ export const SetUp: React.FC<SetUpProps> = ({
       <form>
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
-            <TextField {...register('buyNowPrice', { required: true })} type="number" nodeEnd={<Pill label="tJoy" />} />
+            <TextField
+              {...register('buyNowPrice', { required: true, valueAsNumber: true })}
+              type="number"
+              nodeEnd={<Pill label="tJoy" />}
+            />
           </StyledFormField>
         )}
         {selectedType === 'Auction' && (

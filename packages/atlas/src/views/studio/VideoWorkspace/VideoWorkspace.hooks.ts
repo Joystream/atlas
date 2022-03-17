@@ -141,10 +141,24 @@ export const useHandleVideoWorkspaceSubmit = () => {
           isNew
             ? (
                 await joystream.extrinsics
-              ).createVideo(activeMemberId, activeChannelId, data.metadata, assets, proxyCallback(updateStatus))
+              ).createVideo(
+                activeMemberId,
+                activeChannelId,
+                data.metadata,
+                data.nftMetadata,
+                assets,
+                proxyCallback(updateStatus)
+              )
             : (
                 await joystream.extrinsics
-              ).updateVideo(editedVideoInfo.id, activeMemberId, data.metadata, assets, proxyCallback(updateStatus)),
+              ).updateVideo(
+                editedVideoInfo.id,
+                activeMemberId,
+                data.metadata,
+                data.nftMetadata,
+                assets,
+                proxyCallback(updateStatus)
+              ),
         onTxSync: refetchDataAndUploadAssets,
         successMessage: {
           title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
