@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -7,7 +8,9 @@ import { Step, StepProps, getStepVariant } from '@/components/Step'
 import { Text } from '@/components/Text'
 import { SvgActionChevronR } from '@/components/_icons'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
+import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
@@ -23,6 +26,7 @@ import {
   StepperWrapper,
 } from './NftForm.styles'
 import { NftFormData, NftFormStatus } from './NftForm.types'
+import { createValidationSchema } from './NftForm.utils'
 import { SetUp } from './SetUp'
 
 const issueNftSteps: StepProps[] = [
@@ -71,16 +75,67 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     reset,
     getValues,
     setValue,
+    control,
     watch,
-    formState: { isValid },
-  } = useForm<NftFormData>({ mode: 'onChange' })
+    formState: { isValid, errors },
+  } = useForm<NftFormData>({
+    mode: 'onChange',
+    resolver: (data, ctx, options) => {
+      const resolver = zodResolver(createValidationSchema(data))
+      return resolver(data, ctx, options)
+    },
+    reValidateMode: 'onChange',
+    defaultValues: {
+      startDate: null,
+      endDate: null,
+    },
+  })
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
   const { url: channelAvatarUrl } = useAsset(video?.channel.avatarPhoto)
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
+  const [openModal, closeModal] = useConfirmationModal()
 
-  const handleSubmit = useCallback(() => createSubmitHandler(onSubmit), [createSubmitHandler, onSubmit])
+  const handleSubmit = useCallback(() => {
+    if (isOnLastStep) {
+      const startDate = getValues('startDate')
+
+      if (startDate?.type === 'date' && new Date() > startDate.date) {
+        openModal({
+          title: 'Starting date you set has already past!',
+          children: (
+            <Text variant="t200" secondary>
+              You can’t list on <Text variant="t200">{formatDateTime(startDate.date)} </Text>
+              as this time has already past. Issue with current time or go back to change starting date.
+            </Text>
+          ),
+          primaryButton: {
+            variant: 'warning',
+            size: 'large',
+            text: 'Issue with current time',
+            onClick: () => {
+              setValue('startDate', null)
+              closeModal()
+            },
+          },
+          secondaryButton: {
+            variant: 'secondary',
+            size: 'large',
+            text: 'Change starting date',
+            onClick: () => {
+              previousStep()
+              closeModal()
+            },
+          },
+        })
+      } else {
+        createSubmitHandler(onSubmit)
+      }
+      return
+    }
+    previousStep()
+  }, [closeModal, createSubmitHandler, getValues, isOnLastStep, onSubmit, openModal, previousStep, setValue])
 
   const toggleTermsAccept = () => {
     setTermsAccepted((prevState) => !prevState)
@@ -159,6 +214,9 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
       key="step-content-2"
+      watch={watch}
+      control={control}
+      errors={errors}
       register={register}
       selectedType={listingType}
       setValue={setValue}

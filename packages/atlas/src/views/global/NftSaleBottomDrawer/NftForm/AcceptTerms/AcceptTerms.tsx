@@ -1,10 +1,10 @@
-import { differenceInMilliseconds, format, isValid } from 'date-fns'
 import React from 'react'
 
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
-import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { formatNumber } from '@/utils/number'
+import { formatDateTime } from '@/utils/time'
 
 import {
   Description,
@@ -19,9 +19,9 @@ import {
   YellowText,
 } from './AcceptTerms.styles'
 
-import { useNftForm } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormData } from '../NftForm.types'
+import { getTotalDaysAndHours } from '../NftForm.utils'
 import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 
 type AcceptTermsProps = {
@@ -31,25 +31,20 @@ type AcceptTermsProps = {
   toggleTermsAccept: () => void
 }
 
-const DATE_FORMAT = 'dd MMM yyyy, HH:mm OOOO'
-
 export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   selectedType,
   formData,
   termsAccepted,
   toggleTermsAccept,
 }) => {
-  const { getTotalDaysAndHoursText } = useNftForm()
-  const { convertDurationToBlocks } = useBlockTimeEstimation()
+  const { startDate, endDate } = formData
 
-  const startDate = formData.startDate as Date
-  const endDate = formData.endDate as Date
+  const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
-  const validDate = isValid(formData.startDate) && isValid(formData.endDate)
+  const isStartDateValid = startDate?.type === 'date'
+  const isEndDateValid = endDate?.type === 'date'
 
-  const numberOfBlocks = validDate ? convertDurationToBlocks(differenceInMilliseconds(endDate, startDate)) : null
-
-  const daysAndHours = validDate && getTotalDaysAndHoursText(startDate as Date, endDate)
+  const durationBlocks = formData.auctionDurationBlocks || 0
 
   return (
     <>
@@ -111,35 +106,33 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </Description>
         </Row>
       )}
-      {validDate && (
-        <>
-          <Row>
-            <Title>
-              <TitleText>Starting date</TitleText>
-              <StyledInformation
-                text="It’s the time when your auction will become active and buyer will be able to make an offer"
-                placement="top"
-              />
-            </Title>
-            <Description>
-              <DescriptionText>{format(startDate, DATE_FORMAT)}</DescriptionText>
-            </Description>
-          </Row>
-          <Row>
-            <Title>
-              <TitleText>Expiration date</TitleText>
-              <StyledInformation
-                text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
-                placement="top"
-              />
-            </Title>
-            <Description>
-              <DescriptionText>{format(endDate, DATE_FORMAT)}</DescriptionText>
-            </Description>
-          </Row>
-        </>
-      )}
-      {validDate && (
+      <Row>
+        <Title>
+          <TitleText>Starting date</TitleText>
+          <StyledInformation
+            text="It’s the time when your auction will become active and buyer will be able to make an offer"
+            placement="top"
+          />
+        </Title>
+        <Description>
+          <DescriptionText>{isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}</DescriptionText>
+        </Description>
+      </Row>
+      <Row>
+        <Title>
+          <TitleText>Expiration date</TitleText>
+          <StyledInformation
+            text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
+            placement="top"
+          />
+        </Title>
+        <Description>
+          <DescriptionText>
+            {isEndDateValid ? formatDateTime(endDate.date) : totalDaysAndHours || 'No expiration date'}
+          </DescriptionText>
+        </Description>
+      </Row>
+      {durationBlocks > 0 && (
         <Row>
           <Title>
             <TitleText>Total auction duration</TitleText>
@@ -148,7 +141,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
               footer={
                 <AuctionDurationTooltipFooter>
                   <Text variant="t100">
-                    {daysAndHours} = {numberOfBlocks}
+                    {totalDaysAndHours} = {formData.auctionDurationBlocks}
                   </Text>
                 </AuctionDurationTooltipFooter>
               }
@@ -156,9 +149,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
             />
           </Title>
           <Description>
-            <DescriptionText>{daysAndHours}</DescriptionText>
+            <DescriptionText>{totalDaysAndHours}</DescriptionText>
             <Text variant="h400" secondary>
-              &nbsp;/ {numberOfBlocks} Blocks
+              &nbsp;/ {formatNumber(durationBlocks)} Blocks
             </Text>
           </Description>
         </Row>

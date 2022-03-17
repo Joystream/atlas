@@ -29,3 +29,7 @@ export const formatDurationShort = (duration: number, showHours?: boolean): stri
 
   return `${minutes}:${normalize(seconds)}`
 }
+
+export const daysToMilliseconds = (days: number) => {
+  return days * 24 * 60 * 60 * 1000
+}
