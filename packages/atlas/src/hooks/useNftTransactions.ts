@@ -15,18 +15,17 @@ export const useNftTransactions = () => {
   const client = useApolloClient()
 
   const _refetchData = useCallback(
-    (id: string) => {
+    (id: string) =>
       client.query<GetNftQuery, GetNftQueryVariables>({
         query: GetNftDocument,
         variables: { id },
         fetchPolicy: 'network-only',
-      })
-    },
+      }),
     [client]
   )
 
   const cancelNftSale = useCallback(
-    (id: string, videoId: string, isBuyNow?: boolean, cb?: () => Promise<unknown>) => {
+    (id: string, isBuyNow?: boolean) => {
       if (!joystream || !activeMemberId) {
         return
       }
@@ -34,13 +33,12 @@ export const useNftTransactions = () => {
         handleTransaction({
           txFactory: async (updateStatus) =>
             (await joystream.extrinsics).cancelNftSale(
-              videoId,
+              id,
               activeMemberId,
               isBuyNow || false,
               proxyCallback(updateStatus)
             ),
           onTxSync: async (_) => _refetchData(id),
-          onTxFinalize: cb ? () => cb() : undefined,
         })
 
       openModal({

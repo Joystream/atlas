@@ -1,9 +1,9 @@
-import { Nft } from '@/api/hooks'
+import { AllNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
-export const useNftState = (nft?: Nft) => {
+export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { activeMembership } = useUser()
   const { getCurrentBlock } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
@@ -26,9 +26,9 @@ export const useNftState = (nft?: Nft) => {
   const canMakeBid = nft && !isOwner && isAuction
 
   const canCancelSale =
-    auction?.auctionType.__typename === 'AuctionTypeEnglish'
+    isOwner && auction?.auctionType.__typename === 'AuctionTypeEnglish'
       ? !auction?.bids.length
-      : auction?.auctionType.__typename === 'AuctionTypeOpen'
+      : auction?.auctionType.__typename === 'AuctionTypeOpen' || isBuyNow
 
   const canWithdrawBid =
     auction?.isCompleted ||

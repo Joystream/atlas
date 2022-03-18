@@ -40,8 +40,8 @@ export type NftStatus =
       buyNowPrice: number
       views?: number
     }
-export type Nft = AllNftFieldsFragment | null
-export type UseNftData = Omit<QueryResult, 'data'> & { nft?: Nft; nftStatus: NftStatus }
+
+export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus: NftStatus }
 
 export const useNft = (id: string): UseNftData => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id })
@@ -63,8 +63,8 @@ export const useNft = (id: string): UseNftData => {
             nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
               ? 'open-auction'
               : 'english-auction',
-          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) ?? 0,
-          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) ?? undefined,
+          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
+          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
           topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
           topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
           auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
