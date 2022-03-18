@@ -36,7 +36,7 @@ const TABS = ['NFTs owned', 'Activity', 'About'] as const
 export const MemberView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const [sortVideosBy, setSortVideosBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { activeMemberId, activeMembership } = useUser()
   const { handle } = useParams()
@@ -54,7 +54,7 @@ export const MemberView: React.FC = () => {
         video: { category },
         transactionalStatus_json,
       },
-      orderBy: sortVideosBy,
+      orderBy: sortNftsBy,
     },
     { skip: !handle }
   )
@@ -76,7 +76,7 @@ export const MemberView: React.FC = () => {
   }
   const handleSorting = (value?: unknown) => {
     if (value) {
-      setSortVideosBy(value as OwnedNftOrderByInput)
+      setSortNftsBy(value as OwnedNftOrderByInput)
     }
   }
   const handleSetCurrentTab = async (tab: number) => {
@@ -85,7 +85,7 @@ export const MemberView: React.FC = () => {
 
   const mappedTabs = TABS.map((tab) => ({
     name: tab,
-    pillText: tab === 'NFTs owned' ? (nfts ? nfts.length : undefined) : undefined,
+    pillText: tab === 'NFTs owned' && nfts ? nfts.length : undefined,
   }))
   const tabContent = React.useMemo(() => {
     switch (currentTab) {
@@ -156,7 +156,7 @@ export const MemberView: React.FC = () => {
                 <Select
                   size="small"
                   labelPosition="left"
-                  value={sortVideosBy}
+                  value={sortNftsBy}
                   items={NFT_SORT_OPTIONS}
                   onChange={handleSorting}
                 />

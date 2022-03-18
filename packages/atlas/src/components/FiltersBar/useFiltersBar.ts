@@ -22,7 +22,6 @@ export const useFiltersBar = () => {
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
-  // TODO: this needs to be replaced after graphql nft implementation
   const canClearNftStatusFilter = !!ownedNftWhereInput?.transactionalStatus_json
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||

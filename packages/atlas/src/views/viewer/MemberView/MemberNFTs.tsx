@@ -37,7 +37,7 @@ export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner }) 
         <EmptyFallback
           title={owner ? 'Start your collection' : 'No NFTs collected'}
           subtitle={
-            owner ? 'This member hadn’t started the collection yet.' : "This member hasn't started the collection yet."
+            owner ? "This member hadn't started the collection yet." : "This member hasn't started the collection yet."
           }
           variant="small"
         />
