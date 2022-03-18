@@ -4,9 +4,9 @@ import { z } from 'zod'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { pluralizeNoun } from '@/utils/misc'
 
-import { NftFormFields } from './NftForm.types'
+import { Listing, NftFormFields } from './NftForm.types'
 
-export const createValidationSchema = (data: NftFormFields) => {
+export const createValidationSchema = (data: NftFormFields, listingType: Listing, minStartingPrice: number) => {
   const auctionDateType = z
     .union([
       z.object({
@@ -20,6 +20,10 @@ export const createValidationSchema = (data: NftFormFields) => {
     ])
     .nullable()
     .optional()
+
+  const buyNowPrice = z
+    .number({ required_error: 'Buy now price must be provided', invalid_type_error: 'Buy now price must be a number' })
+    .min(1, 'Buy now price cannot be lower than 1')
 
   return z.object({
     startDate: auctionDateType
@@ -63,8 +67,11 @@ export const createValidationSchema = (data: NftFormFields) => {
         { message: 'Expiration date cannot be earlier than starting date' }
       ),
     royalty: z.number().nullable().optional(),
-    startingPrice: z.number().nullable().optional(),
-    buyNowPrice: z.number().nullable().optional(),
+    startingPrice: z
+      .number({ invalid_type_error: 'Minimum bid must be a number' })
+      .min(minStartingPrice, `Minimum bid cannot be lower than ${minStartingPrice}`)
+      .optional(),
+    buyNowPrice: listingType === 'Auction' ? buyNowPrice.nullable().optional() : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
     whitelistedMembersIds: z.array(z.string()).nullable().optional(),
   })
