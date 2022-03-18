@@ -18,7 +18,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   preProcess?: () => void | Promise<void>
   onTxFinalize?: (data: T) => Promise<unknown>
   onTxSync?: (data: T) => Promise<unknown>
-  successMessage: SuccessMessage
+  successMessage?: SuccessMessage
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 

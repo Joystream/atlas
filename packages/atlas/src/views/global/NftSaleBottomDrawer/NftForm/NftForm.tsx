@@ -248,14 +248,16 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const getNftStatus = () => {
     switch (listingType) {
       case 'Fixed price':
-        return 'on-sale'
+        return 'buy-now'
       case 'Auction':
         return 'auction'
+      default:
+        return 'idle'
     }
   }
 
   const nftTileProps: NftTileProps = {
-    nftStatus: getNftStatus(),
+    status: getNftStatus(),
     thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
     title: video?.title,
     owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
@@ -265,7 +267,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     views: video?.views,
     buyNowPrice: watch('buyNowPrice') || 0,
     startingPrice: watch('startingPrice') || 0,
-    role: 'owner',
   }
 
   const stepsContent = [
