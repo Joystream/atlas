@@ -24,6 +24,10 @@ export default {
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     owner: { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
     loading: false,
+    canPutOnSale: false,
+    canCancelSale: false,
+    canBuyNow: false,
+    canMakeBid: false,
   },
 } as Meta
 

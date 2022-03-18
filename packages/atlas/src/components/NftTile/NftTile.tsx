@@ -17,7 +17,7 @@ export type Member = {
 }
 
 export type NftTileProps = {
-  nftStatus?: 'idle' | 'on-sale' | 'auction'
+  status?: 'idle' | 'buy-now' | 'auction'
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -30,13 +30,17 @@ export type NftTileProps = {
   startingPrice?: number | null
   topBid?: number | null
   timeLeftMs?: number
-  role: 'owner' | 'viewer'
   fullWidth?: boolean
   interactable?: boolean
+  canPutOnSale?: boolean
+  canCancelSale?: boolean
+  canBuyNow?: boolean
+  canMakeBid?: boolean
+  onRemoveFromSale?: () => void
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
-  nftStatus,
+  status,
   thumbnail,
   loading,
   title,
@@ -48,18 +52,22 @@ export const NftTile: React.FC<NftTileProps> = ({
   startingPrice,
   topBid,
   timeLeftMs,
-  role,
   fullWidth,
   interactable = true,
+  canPutOnSale,
+  canCancelSale,
+  canBuyNow,
+  canMakeBid,
+  onRemoveFromSale,
 }) => {
   const [hovered, setHovered] = useState(false)
   const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
 
   const getBottomLeft = useMemo(() => {
-    switch (nftStatus) {
+    switch (status) {
       case 'idle':
         return <Pill icon={<SvgActionNotForSale />} size="medium" variant="overlay" />
-      case 'on-sale':
+      case 'buy-now':
         return <Pill icon={<SvgActionBuyNow />} size="medium" variant="overlay" />
       case 'auction':
         return buyNowPrice ? (
@@ -93,7 +101,7 @@ export const NftTile: React.FC<NftTileProps> = ({
           />
         )
     }
-  }, [nftStatus, buyNowPrice, timeLeftSec])
+  }, [status, buyNowPrice, timeLeftSec])
 
   return (
     <Container fullWidth={fullWidth}>
@@ -122,15 +130,19 @@ export const NftTile: React.FC<NftTileProps> = ({
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}
-        nftStatus={nftStatus}
+        nftStatus={status}
         buyNowPrice={buyNowPrice}
         loading={loading}
         topBid={topBid}
         creator={creator}
-        role={role}
         title={title}
         startingPrice={startingPrice}
         interactable={interactable}
+        onRemoveFromSale={onRemoveFromSale}
+        canBuyNow={canBuyNow}
+        canCancelSale={canCancelSale}
+        canMakeBid={canMakeBid}
+        canPutOnSale={canPutOnSale}
       />
     </Container>
   )

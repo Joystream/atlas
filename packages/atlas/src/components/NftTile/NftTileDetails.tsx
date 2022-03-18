@@ -36,7 +36,7 @@ export type NftTileDetailsProps = {
   owner?: Member
   creator?: Member
   role?: 'owner' | 'viewer'
-  nftStatus?: 'idle' | 'on-sale' | 'auction'
+  nftStatus?: 'idle' | 'buy-now' | 'auction'
   buyNowPrice?: number | null
   startingPrice?: number | null
   topBid?: number | null
@@ -44,6 +44,11 @@ export type NftTileDetailsProps = {
   hovered?: boolean
   interactable?: boolean
   videoHref?: string
+  onRemoveFromSale?: () => void
+  canPutOnSale?: boolean
+  canCancelSale?: boolean
+  canBuyNow?: boolean
+  canMakeBid?: boolean
 }
 
 type TileSize = 'small' | 'medium'
@@ -54,7 +59,6 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   loading,
   creator,
   owner,
-  role,
   nftStatus,
   startingPrice,
   buyNowPrice,
@@ -63,6 +67,11 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   hovered,
   videoHref,
   interactable = true,
+  onRemoveFromSale,
+  canPutOnSale,
+  canCancelSale,
+  canBuyNow,
+  canMakeBid,
 }) => {
   const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
@@ -95,50 +104,40 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         onClick: handleCopyVideoURLClick,
       },
     ]
-    if (role === 'owner') {
-      if (nftStatus === 'idle') {
-        elements.unshift({
-          icon: <SvgActionSell />,
-          title: 'Start sale',
-        })
-      } else if (nftStatus === 'on-sale') {
-        elements.unshift(
-          {
-            icon: <SvgActionCancel />,
-            title: 'Remove from sale',
-            destructive: true,
-          },
-          {
-            icon: <SvgActionChangePrice />,
-            title: 'Change price',
-          }
-        )
-      }
-    } else {
-      if (nftStatus === 'auction') {
-        elements.unshift(
-          ...(buyNowPrice
-            ? [
-                {
-                  icon: <SvgActionBuyNow />,
-                  title: 'Buy now',
-                },
-              ]
-            : []),
-          {
-            icon: <SvgActionBid />,
-            title: 'Place bid',
-          }
-        )
-      } else if (nftStatus === 'on-sale') {
-        elements.unshift({
-          icon: <SvgActionBuyNow />,
-          title: 'Buy now',
-        })
-      }
+    if (canPutOnSale) {
+      elements.unshift({
+        icon: <SvgActionSell />,
+        title: 'Start sale',
+      })
+    }
+    if (canCancelSale) {
+      elements.unshift(
+        {
+          icon: <SvgActionCancel />,
+          title: 'Remove from sale',
+          destructive: true,
+          onClick: onRemoveFromSale,
+        },
+        {
+          icon: <SvgActionChangePrice />,
+          title: 'Change price',
+        }
+      )
+    }
+    if (canBuyNow) {
+      elements.unshift({
+        icon: <SvgActionBuyNow />,
+        title: 'Buy now',
+      })
+    }
+    if (canMakeBid) {
+      elements.unshift({
+        icon: <SvgActionBid />,
+        title: 'Place bid',
+      })
     }
     return elements
-  }, [buyNowPrice, handleCopyVideoURLClick, nftStatus, role])
+  }, [handleCopyVideoURLClick, canPutOnSale, canCancelSale, canBuyNow, canMakeBid, onRemoveFromSale])
 
   const getDetails = useMemo(() => {
     if (loading) {
@@ -160,7 +159,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
             secondary
           />
         )
-      case 'on-sale':
+      case 'buy-now':
         return (
           <DetailsContent
             tileSize={tileSize}
