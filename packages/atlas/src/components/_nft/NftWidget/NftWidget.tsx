@@ -10,7 +10,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
@@ -19,7 +18,6 @@ import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
-import { AcceptBidList } from './AcceptBidList'
 import { NftHistory } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
@@ -34,6 +32,8 @@ import {
   TopBidderTokenContainer,
   sizeObj,
 } from './NftWidget.styles'
+
+import { AllNftDialogs } from '../NftDialogs'
 
 export type Size = keyof typeof sizeObj
 
@@ -74,6 +74,8 @@ export type NftWidgetProps = {
   onNftPutOnSale?: () => void
 }
 
+type OpenedDialogs = 'accept-bid'
+
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 export const NftWidget: React.FC<NftWidgetProps> = ({
@@ -90,100 +92,9 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const [selectedBid, setSelectedBid] = useState<string | undefined>()
-  const [showAcceptBidModal, setShowAcceptBidModal] = useState(false)
+  const [openedDialog, setOpenedDialog] = useState<OpenedDialogs | undefined>()
   const { convertToUSD } = useTokenPrice()
-  const ITEMS = [
-    {
-      id: '1',
-      date: new Date(),
-      bid: 50,
-      bidUSD: convertToUSD(50),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '2',
-      date: new Date(),
-      bid: 100,
-      bidUSD: convertToUSD(100),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '3',
-      date: new Date(),
-      bid: 200,
-      bidUSD: convertToUSD(200),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '4',
-      date: new Date(),
-      bid: 300,
-      bidUSD: convertToUSD(300),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '5',
-      date: new Date(),
-      bid: 400,
-      bidUSD: convertToUSD(400),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '6',
-      date: new Date(),
-      bid: 500,
-      bidUSD: convertToUSD(500),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '7',
-      date: new Date(),
-      bid: 600,
-      bidUSD: convertToUSD(600),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '8',
-      date: new Date(),
-      bid: 700,
-      bidUSD: convertToUSD(700),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '9',
-      date: new Date(),
-      bid: 800,
-      bidUSD: convertToUSD(800),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '10',
-      date: new Date(),
-      bid: 900,
-      bidUSD: convertToUSD(900),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-  ]
 
-  const handleReviewBid = () => {
-    setShowAcceptBidModal(true)
-  }
-
-  const handleAcceptBidModalClose = () => {
-    setSelectedBid(undefined)
-    setShowAcceptBidModal(false)
-  }
   const content = useDeepMemo(() => {
     if (!nftStatus) return
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
@@ -476,7 +387,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
                       {nftStatus.type === 'open' && !!nftStatus.topBid && (
-                        <Button fullWidth size={buttonSize}>
+                        <Button fullWidth size={buttonSize} onClick={() => setOpenedDialog('accept-bid'}>
                           Review and accept bid
                         </Button>
                       )}
@@ -535,22 +446,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
   return (
     <Container ref={ref}>
-      <DialogModal
-        title="Accept bid"
-        show={showAcceptBidModal}
-        dividers
-        noContentPadding
-        primaryButton={{
-          text: 'Accept bid',
-          disabled: !selectedBid,
-        }}
-        secondaryButton={{
-          text: 'Cancel',
-          onClick: handleAcceptBidModalClose,
-        }}
-      >
-        <AcceptBidList items={ITEMS} handleSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
-      </DialogModal>
+      <AllNftDialogs openedDialog={openedDialog} onModalClose={() => setOpenedDialog(undefined)} />
       <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
