@@ -24,11 +24,11 @@ export const useNftActions = () => {
     currentNftId,
     setCurrentAction,
     setCurrentNftId,
+    isBuyNowClicked,
+    setIsBuyNowClicked,
     closeNftAction,
     cancelNftSale,
     changeNftPrice,
-    boughtForFixedPrice,
-    setBoughtForFixedPrice,
   } = ctx
 
   const checkIfSigned = useCallback(() => {
@@ -45,9 +45,9 @@ export const useNftActions = () => {
       }
       setCurrentNftId(nftId)
       setCurrentAction('purchase')
-      setBoughtForFixedPrice(opts?.fixedPrice)
+      setIsBuyNowClicked(opts?.fixedPrice)
     },
-    [checkIfSigned, setBoughtForFixedPrice, setCurrentAction, setCurrentNftId]
+    [checkIfSigned, setCurrentNftId, setCurrentAction, setIsBuyNowClicked]
   )
 
   const openNftPutOnSale = useCallback(
@@ -90,7 +90,7 @@ export const useNftActions = () => {
 
   return {
     currentAction,
-    boughtForFixedPrice,
+    isBuyNowClicked,
     currentNftId,
     openNftPurchase,
     openNftPutOnSale,

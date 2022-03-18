@@ -53,13 +53,14 @@ import {
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 0
-const PLATFORM_ROYALTY = 0
+//TODO this is temporary, we should get platform royalty from the chain
+const PLATFORM_ROYALTY = 1
 
 export const NftPurchaseBottomDrawer: React.FC = () => {
   const { displaySnackbar } = useSnackbar()
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
-  const { currentAction, closeNftAction, currentNftId, boughtForFixedPrice } = useNftActions()
+  const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
@@ -81,7 +82,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     register,
     reset,
     formState: { errors, isValid },
-  } = useForm<{ bid: string }>({ mode: 'onChange', defaultValues: { bid: '' } })
+  } = useForm<{ bid: string }>({ defaultValues: { bid: '' }, reValidateMode: 'onChange' })
 
   const isAuction = nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
 
@@ -115,7 +116,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   const auctionBuyNowPrice =
     nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction?.buyNowPrice
-      ? nft.transactionalStatus.auction?.buyNowPrice
+      ? Number(nft.transactionalStatus.auction?.buyNowPrice)
       : 0
 
   const bidLockingTime =
@@ -163,7 +164,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   // check if input value isn't bigger than fixed price
   useEffect(() => {
-    if (type === 'buy_now') {
+    if (type === 'buy_now' || !auctionBuyNowPrice) {
       return
     }
     const subscription = watch(({ bid }) => {
@@ -180,9 +181,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     return () => subscription.unsubscribe()
   }, [auctionBuyNowPrice, setValue, type, watch])
 
-  const handleBuyNow = useCallback(() => {
+  const handleBuyNow = useCallback(async () => {
     if (!joystream || !currentNftId || !activeMemberId) return
-    handleTransaction({
+    const completed = await handleTransaction({
       txFactory: async (updateStatus) => {
         if (!isAuction) {
           return (await joystream.extrinsics).buyNftNow(
@@ -200,19 +201,19 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
           )
         }
       },
-      onTxSync: async (_) => {
-        displaySnackbar({
-          title: 'You have successfully bought NFT.',
-          iconType: 'success',
-        })
-        closeNftAction()
-        refetch()
-      },
+      onTxSync: async (_) => refetch(),
       successMessage: {
         title: 'NFT bought',
         description: 'Good job',
       },
     })
+    if (completed) {
+      closeNftAction()
+      displaySnackbar({
+        title: 'You have successfully bought NFT.',
+        iconType: 'success',
+      })
+    }
   }, [
     activeMemberId,
     auctionBuyNowPrice,
@@ -228,37 +229,34 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   ])
 
   const handleBidOnAuction = useCallback(() => {
-    const submit = createSubmitHandler((data) => {
+    const submit = createSubmitHandler(async (data) => {
       if (!joystream || !currentNftId || !activeMemberId) return
-      handleTransaction({
+      const completed = await handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).makeNftBid(
-            currentNftId,
-            activeMemberId,
-            Number(data.bid),
-            proxyCallback(updateStatus)
-          ),
-        onTxSync: async (_) => {
-          if (Number(data.bid) === auctionBuyNowPrice) {
-            displaySnackbar({
-              title: 'You have successfully bought NFT.',
-              iconType: 'success',
-            })
-          } else {
-            displaySnackbar({
-              title: 'Your bid has been placed.',
-              description: 'We will notify you about any changes.',
-              iconType: 'success',
-            })
-          }
-          closeNftAction()
-          refetch()
-        },
+          (
+            await joystream.extrinsics
+          ).makeNftBid(currentNftId, activeMemberId, Number(data.bid), proxyCallback(updateStatus)),
+        onTxSync: (_) => refetch(),
         successMessage: {
           title: 'Bid placed',
           description: 'Good job',
         },
       })
+      if (completed) {
+        if (Number(data.bid) === auctionBuyNowPrice) {
+          displaySnackbar({
+            title: 'You have successfully bought NFT.',
+            iconType: 'success',
+          })
+        } else {
+          displaySnackbar({
+            title: 'Your bid has been placed.',
+            description: 'We will notify you about any changes.',
+            iconType: 'success',
+          })
+        }
+        closeNftAction()
+      }
     })
     submit()
   }, [
@@ -279,8 +277,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds === 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
-  const primaryButtonText =
-    type === 'buy_now' || bid >= auctionBuyNowPrice || boughtForFixedPrice ? 'Buy NFT' : 'Place bid'
+  const primaryButtonText = type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked ? 'Buy NFT' : 'Place bid'
   const blocksLeft = (endTime && convertDurationToBlocks(endTime - timestamp)) || 0
 
   const isOpen = currentAction === 'purchase'
@@ -293,8 +290,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       actionBar={{
         primaryButton: {
           text: primaryButtonText,
-          disabled: boughtForFixedPrice || type === 'buy_now' ? !isBuyNowAffordable : !isValid,
-          onClick: () => (boughtForFixedPrice || type === 'buy_now' ? handleBuyNow() : handleBidOnAuction()),
+          disabled: isBuyNowClicked || type === 'buy_now' ? !isBuyNowAffordable : !isValid,
+          onClick: () => (isBuyNowClicked || type === 'buy_now' ? handleBuyNow() : handleBidOnAuction()),
         },
       }}
     >
@@ -315,7 +312,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         <PlaceBidWrapper>
           <InnerContainer>
             <Header>
-              <Text variant="h600">{type !== 'buy_now' && !boughtForFixedPrice ? 'Place a bid' : 'Buy NFT'}</Text>
+              <Text variant="h600">{type !== 'buy_now' && !isBuyNowClicked ? 'Place a bid' : 'Buy NFT'}</Text>
               {type === 'english_auction' && (
                 <FlexWrapper>
                   <EndingTime>
@@ -348,7 +345,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 </FlexWrapper>
               )}
             </Header>
-            {type !== 'buy_now' && !boughtForFixedPrice ? (
+            {type !== 'buy_now' && !isBuyNowClicked ? (
               <>
                 <CurrentBidWrapper>
                   {lastBid ? (
@@ -391,16 +388,18 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       </Text>
                       <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{calculatedMinimumBid}</Text>
                     </MinimumBid>
-                    <div>
-                      <Text variant="t100" secondary>
-                        Buy now: {auctionBuyNowPrice} tJOY
-                      </Text>
-                    </div>
+                    {auctionBuyNowPrice > 0 && (
+                      <div>
+                        <Text variant="t100" secondary>
+                          Buy now: {auctionBuyNowPrice} tJOY
+                        </Text>
+                      </div>
+                    )}
                   </MinimumBidWrapper>
                 )}
                 <TextField
                   {...register('bid', {
-                    required: true,
+                    required: { value: true, message: 'Your bid must be higher than minimum bid' },
                     validate: {
                       bidTooLow: (value) =>
                         Number(value) >= calculatedMinimumBid ? true : 'Your bid must be higher than minimum bid',
@@ -499,15 +498,15 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             </Row>
             <Row>
               <Text variant="t100" secondary>
-                {type === 'buy_now' || boughtForFixedPrice
+                {type === 'buy_now' || isBuyNowClicked
                   ? 'Price'
                   : bid
                   ? 'Your bid'
                   : 'You need to fill out the amount first'}
               </Text>
-              {(bid > 0 || boughtForFixedPrice || type === 'buy_now') && (
+              {(bid > 0 || isBuyNowClicked || type === 'buy_now') && (
                 <Text variant="t100" secondary>
-                  {type !== 'buy_now' ? (boughtForFixedPrice ? auctionBuyNowPrice : bid) : buyNowPrice} tJOY
+                  {type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice} tJOY
                 </Text>
               )}
             </Row>
@@ -542,7 +541,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 </Text>
               </Messages>
             )}
-            {type === 'english_auction' && !boughtForFixedPrice && (
+            {type === 'english_auction' && !isBuyNowClicked && (
               <Messages>
                 <SvgAlertsWarning24 />
                 <Text variant="t200" secondary margin={{ left: 2 }}>
@@ -550,7 +549,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 </Text>
               </Messages>
             )}
-            {type === 'english_auction' && !boughtForFixedPrice && (
+            {type === 'english_auction' && !isBuyNowClicked && (
               <Messages>
                 <SvgAlertsWarning24 />
                 <Text variant="t200" secondary margin={{ left: 2 }}>

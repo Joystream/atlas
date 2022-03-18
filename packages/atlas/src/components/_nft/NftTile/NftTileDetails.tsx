@@ -143,7 +143,16 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       })
     }
     return elements
-  }, [handleCopyVideoURLClick, canPutOnSale, canCancelSale, canBuyNow, canMakeBid, onRemoveFromSale])
+  }, [
+    handleCopyVideoURLClick,
+    canPutOnSale,
+    canCancelSale,
+    canBuyNow,
+    canMakeBid,
+    onRemoveFromSale,
+    onNftBuyNow,
+    onNftPurchase,
+  ])
 
   const getDetails = useMemo(() => {
     if (loading) {
