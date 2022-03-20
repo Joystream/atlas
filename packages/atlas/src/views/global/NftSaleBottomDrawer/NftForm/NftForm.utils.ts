@@ -79,7 +79,10 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
         : startingPriceBase.optional(),
     buyNowPrice: listingType === 'Auction' ? buyNowPrice.nullable().optional() : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
-    whitelistedMembersIds: z.array(z.string()).nullable().optional(),
+    whitelistedMembers: z
+      .array(z.object({ id: z.string() }))
+      .nullable()
+      .optional(),
   })
 }
 
