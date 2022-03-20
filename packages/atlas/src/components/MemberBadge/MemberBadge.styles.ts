@@ -5,11 +5,12 @@ import { cVar, sizes } from '@/styles'
 import { Text } from '../Text'
 import { SvgActionClose } from '../_icons'
 
-export const MemberBadgeWrapper = styled.div`
+export const MemberBadgeWrapper = styled.div<{ withoutButton?: boolean }>`
   background-color: ${cVar('colorBackgroundStrong')};
   display: inline-flex;
   align-items: center;
   padding-left: ${sizes(2)};
+  padding: ${({ withoutButton }) => (withoutButton ? `${sizes(1)} ${sizes(2)}` : `0 0 0 ${sizes(2)}`)};
 `
 
 export const StyledHandleText = styled(Text)`
