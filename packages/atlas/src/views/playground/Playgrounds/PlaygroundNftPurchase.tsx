@@ -12,8 +12,6 @@ export const PlaygroundNftPurchase: React.FC = () => {
   return (
     <>
       <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} label="Video ID" />
-      <br />
-      <br />
       {nftId && <Button onClick={() => openNftPurchase(nftId)}>Open drawer</Button>}
     </>
   )

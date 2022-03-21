@@ -7,7 +7,7 @@ import { useNftTransactions } from '@/hooks/useNftTransactions'
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
-  isBuyNowClicked: boolean | undefined
+  isBuyNowClicked?: boolean
   setCurrentAction: React.Dispatch<React.SetStateAction<NftAction | null>>
   setCurrentNftId: React.Dispatch<React.SetStateAction<string | null>>
   closeNftAction: () => void
