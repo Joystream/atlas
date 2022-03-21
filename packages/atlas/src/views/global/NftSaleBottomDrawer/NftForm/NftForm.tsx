@@ -167,6 +167,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             minimalBidStep,
             buyNowPrice: data.buyNowPrice,
             auctionDurationBlocks: data.auctionDurationBlocks,
+            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
         } else {
           // auction has no duration, assume open

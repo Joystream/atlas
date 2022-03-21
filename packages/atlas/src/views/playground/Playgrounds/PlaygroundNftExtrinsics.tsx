@@ -260,7 +260,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
         <FormField title="Whitelisted members (comma-separated IDs)" optional>
           <TextField
             {...register('whitelistedMembers')}
-            type="number"
+            type="text"
             error={!!errors.whitelistedMembers}
             helperText={errors.whitelistedMembers?.message}
           />
