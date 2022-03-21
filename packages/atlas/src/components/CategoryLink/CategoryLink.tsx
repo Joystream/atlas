@@ -59,7 +59,7 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
           >
             {id ? (
               <Text variant={_textVariant} secondary={!!textSecondary}>
-                More from {name}
+                More in {name}
               </Text>
             ) : (
               <SkeletonLoader height={16} width={150} />
