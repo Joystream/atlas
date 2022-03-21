@@ -194,6 +194,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     font: ${cVar('typographyDesktopT200')};
     letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
+    border-radius: 0;
 
     ${media.sm} {
       ${({ isOpen }) => isOpen === false && 'border: none !important'};
@@ -203,7 +204,8 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
       border: 1px solid ${oldColors.white};
     }
 
-    ::-webkit-search-cancel-button {
+    ::-webkit-search-cancel-button,
+    &[type='search'] {
       /* stylelint-disable-next-line property-no-vendor-prefix */
       -webkit-appearance: none;
     }
