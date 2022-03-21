@@ -2,6 +2,7 @@ import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { useNft } from '@/api/hooks'
+import { AllBidFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
@@ -13,7 +14,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
-import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -42,10 +43,9 @@ export type Auction = {
   topBid: number | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
-  topBidderIsUser: boolean | undefined
-  userBid: number | undefined
+  isUserTopBidder: boolean | undefined
+  userBidAmount: number | undefined
   canWithdrawBid: boolean | undefined
-  needsSettling: boolean
   englishTimerState: EnglishTimerState | undefined
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
@@ -56,9 +56,7 @@ export type NftWidgetProps = {
   ownerAvatarUri?: string | null
   isOwner?: boolean
   needsSettling: boolean | undefined
-  hasBidFromPreviousAuction: boolean | undefined
-  bidFromPreviousAuction: number | undefined
-  bidFromPreviousAuctionDate: Date | undefined
+  bidFromPreviousAuction: AllBidFieldsFragment | undefined
   nftStatus?:
     | {
         status: 'idle'
@@ -82,7 +80,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   needsSettling,
   ownerAvatarUri,
   onNftPutOnSale,
-  hasBidFromPreviousAuction,
+  bidFromPreviousAuction,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
@@ -153,7 +151,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 }
               />
             )}
-            {hasBidFromPreviousAuction && (
+            {bidFromPreviousAuction && (
               <>
                 <InfoBanner
                   title="Withdraw your bid"
@@ -175,7 +173,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         return (
           <>
             <BuyNow buyNowPrice={nftStatus.buyNowPrice} />
-            {hasBidFromPreviousAuction && (
+            {bidFromPreviousAuction && (
               <>
                 <InfoBanner
                   title="Withdraw your bid"
@@ -208,7 +206,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         const getInfoBannerProps = () => {
           const hasBids = nftStatus.topBid
 
-          if (nftStatus.type === 'open' && hasBidFromPreviousAuction) {
+          if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
               description:
@@ -222,7 +220,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               description: 'This auction has ended, but no one made an offer. You can now remove this NFT from sale.',
             }
           }
-          if (nftStatus.englishTimerState === 'expired' && !hasBidFromPreviousAuction && !hasBids && !isOwner) {
+          if (nftStatus.englishTimerState === 'expired' && !bidFromPreviousAuction && !hasBids && !isOwner) {
             return {
               title: 'Auction ended',
               description:
@@ -231,10 +229,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           }
           if (
             nftStatus.englishTimerState === 'expired' &&
-            !hasBidFromPreviousAuction &&
+            !bidFromPreviousAuction &&
             hasBids &&
             !isOwner &&
-            !nftStatus.topBidderIsUser
+            !nftStatus.isUserTopBidder
           ) {
             return {
               title: 'Auction ended',
@@ -242,14 +240,14 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 'We are waiting for this auction to be settled by the auction winner or the current NFT owner.',
             }
           }
-          if (nftStatus.englishTimerState === 'expired' && hasBidFromPreviousAuction) {
+          if (nftStatus.englishTimerState === 'expired' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid',
               description: 'You placed a bid in a previous auction that you can now withdraw to claim back your money.',
             }
           }
 
-          if (nftStatus.englishTimerState === 'running' && hasBidFromPreviousAuction) {
+          if (nftStatus.englishTimerState === 'running' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
               description:
@@ -257,7 +255,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             }
           }
 
-          if (nftStatus.englishTimerState === 'upcoming' && hasBidFromPreviousAuction) {
+          if (nftStatus.englishTimerState === 'upcoming' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
               description:
@@ -363,7 +361,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             )}
             {infoBannerProps && <InfoBanner {...infoBannerProps} />}
 
-            {nftStatus.needsSettling && (nftStatus.topBidderIsUser || isOwner) && (
+            {needsSettling && (nftStatus.isUserTopBidder || isOwner) && (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth size={buttonSize}>
                   Settle auction
@@ -371,10 +369,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               </GridItem>
             )}
 
-            {hasBidFromPreviousAuction && <WithdrawLastBit />}
+            {bidFromPreviousAuction && <WithdrawLastBit />}
 
-            {!nftStatus.needsSettling &&
-              !hasBidFromPreviousAuction &&
+            {!needsSettling &&
+              !bidFromPreviousAuction &&
               (isOwner ? (
                 (nftStatus.type === 'open' ||
                   // english auction with no bids
@@ -435,7 +433,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, hasBidFromPreviousAuction, isOwner, onNftPutOnSale, needsSettling, ownerAvatarUri])
+  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri])
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
@@ -454,19 +452,25 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   )
 }
 
-type UseNftWidgetReturn = NftWidgetProps | null | any
+type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { nft, nftStatus } = useNft(videoId ?? '')
-  const { isOwner, canWithdrawBid, needsSettling, auctionPlannedEndDate, userBid, auction } = useNftState(nft)
+  const {
+    isOwner,
+    englishTimerState,
+    canWithdrawBid,
+    needsSettling,
+    auctionPlannedEndDate,
+    userBid,
+    startsAtDate,
+    isUserTopBidder,
+    bidFromPreviousAuction,
+  } = useNftState(nft)
 
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
-  const { url: topBidderAvatarUri } = useMemberAvatar(
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
-      ? nft?.transactionalStatus?.auction?.lastBid?.bidder
-      : undefined
-  )
+  const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus.status === 'auction' ? nftStatus.topBidder : undefined)
 
   switch (nftStatus.status) {
     case 'auction': {
@@ -474,27 +478,28 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         ownerHandle: owner?.handle,
         ownerAvatarUri,
         isOwner,
+        needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
-          topBidderAvatarUri,
-          canWithdrawBid,
-          needsSettling,
-          englishTimerState,
           startsAtDate,
+          canWithdrawBid,
+          englishTimerState,
           auctionPlannedEndDate,
-          type,
-          userBid: userBid?.amount,
+          topBidderAvatarUri,
+          isUserTopBidder,
+          topBidderHandle: nftStatus.topBidder?.handle,
+          userBidAmount: Number(userBid?.amount),
         },
       }
     }
     case 'buy-now':
       return {
         ownerHandle: owner?.handle,
-        // TODO:
-        hasBidFromPreviousAuction: auction?.isCompleted && false,
         ownerAvatarUri,
         isOwner,
         needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
         },
@@ -502,10 +507,10 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     case 'idle':
       return {
         ownerHandle: owner?.handle,
-        hasBidFromPreviousAuction,
         ownerAvatarUri,
         isOwner,
         needsSettling,
+        bidFromPreviousAuction,
         nftStatus: {
           ...nftStatus,
         },
