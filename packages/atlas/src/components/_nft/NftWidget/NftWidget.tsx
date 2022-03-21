@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { useNft } from '@/api/hooks'
@@ -15,6 +15,7 @@ import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
+import { useNftDialog } from '@/providers/nftDialogs'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -32,8 +33,6 @@ import {
   TopBidderTokenContainer,
   sizeObj,
 } from './NftWidget.styles'
-
-import { AllNftDialogs } from '../NftDialogs'
 
 export type Size = keyof typeof sizeObj
 
@@ -74,8 +73,6 @@ export type NftWidgetProps = {
   onNftPutOnSale?: () => void
 }
 
-type OpenedDialogs = 'accept-bid'
-
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
 
 export const NftWidget: React.FC<NftWidgetProps> = ({
@@ -92,7 +89,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const [openedDialog, setOpenedDialog] = useState<OpenedDialogs | undefined>()
+  const { setOpenedDialog } = useNftDialog()
   const { convertToUSD } = useTokenPrice()
 
   const content = useDeepMemo(() => {
@@ -387,7 +384,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
                       {nftStatus.type === 'open' && !!nftStatus.topBid && (
-                        <Button fullWidth size={buttonSize} onClick={() => setOpenedDialog('accept-bid'}>
+                        <Button fullWidth size={buttonSize} onClick={() => setOpenedDialog('accept-bid')}>
                           Review and accept bid
                         </Button>
                       )}
@@ -440,13 +437,12 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling])
+  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri, setOpenedDialog])
 
   if (!nftStatus) return null
 
   return (
     <Container ref={ref}>
-      <AllNftDialogs openedDialog={openedDialog} onModalClose={() => setOpenedDialog(undefined)} />
       <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
