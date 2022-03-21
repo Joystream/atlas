@@ -237,6 +237,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const isBuyNowAffordable = Number(buyNowPrice || auctionBuyNowPrice) + TRANSACTION_FEE < (accountBalance || 0)
 
   const bid = Number(watch('bid'))
+  const isBidTooLow = bid < minimumBid
   const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds === 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
@@ -253,7 +254,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       actionBar={{
         primaryButton: {
           text: primaryButtonText,
-          disabled: isBuyNowClicked || type === 'buy_now' ? !isBuyNowAffordable : !isValid,
+          disabled: isBuyNowClicked || type === 'buy_now' ? !isBuyNowAffordable : !isValid || isBidTooLow,
           onClick: () => (isBuyNowClicked || type === 'buy_now' ? handleBuyNow() : handleBidOnAuction()),
         },
       }}
@@ -362,10 +363,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 )}
                 <TextField
                   {...register('bid', {
-                    required: { value: true, message: 'Your bid must be higher than minimum bid' },
                     validate: {
-                      bidTooLow: (value) =>
-                        Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
                       bidTooHigh: (value) =>
                         accountBalance
                           ? Number(value) + TRANSACTION_FEE > accountBalance
