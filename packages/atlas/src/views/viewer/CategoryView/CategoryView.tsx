@@ -69,7 +69,7 @@ export const CategoryView = () => {
         videos={videoHeroVideos}
       />
 
-      {categoriesFeaturedVideos?.length && (
+      {!!categoriesFeaturedVideos?.length && (
         <>
           <TitleContainer>
             <Text variant="h500">Featured category videos</Text>
