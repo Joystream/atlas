@@ -84,6 +84,26 @@ export class JoystreamLib {
     return new BN(balance.freeBalance).toNumber()
   }
 
+  async getCurrentBlock(): Promise<number> {
+    await this.ensureApi()
+    const header = await this.api.rpc.chain.getHeader()
+    const { number } = header
+    return number.toNumber()
+  }
+
+  async getMaxAuctionDuration(): Promise<number> {
+    await this.ensureApi()
+
+    const maxDuration = await this.api.query.content.maxAuctionDuration()
+    return new BN(maxDuration).toNumber()
+  }
+
+  async getAuctionStartsAtMaxDelta(): Promise<number> {
+    await this.ensureApi()
+    const auctionStartsAtMaxDelta = await this.api.query.content.auctionStartsAtMaxDelta()
+    return new BN(auctionStartsAtMaxDelta).toNumber()
+  }
+
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
