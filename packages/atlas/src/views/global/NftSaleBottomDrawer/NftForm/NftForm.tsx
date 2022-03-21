@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { addMilliseconds } from 'date-fns'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -50,10 +51,18 @@ const issueNftSteps: StepProps[] = [
 type NftFormProps = {
   setFormStatus: (data: NftFormStatus) => void
   onSubmit: (data: NftFormData) => void
+  maxEndDateInBlocks: number
+  maxStartDateInBlocks: number
   videoId: string
 }
 
-export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
+export const NftForm: React.FC<NftFormProps> = ({
+  setFormStatus,
+  onSubmit,
+  videoId,
+  maxEndDateInBlocks,
+  maxStartDateInBlocks,
+}) => {
   const { activeMembership } = useUser()
   const {
     state: {
@@ -69,14 +78,19 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     },
   } = useNftForm()
   const { chainState } = useNftFormUtils()
+  const { convertMsTimestampToBlock, converBlocksToDuration } = useBlockTimeEstimation()
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
+  const maxStartDate = addMilliseconds(new Date(), converBlocksToDuration(maxStartDateInBlocks))
+  const maxEndDate = addMilliseconds(new Date(), converBlocksToDuration(maxEndDateInBlocks))
 
   const formMethods = useForm<NftFormFields>({
     mode: 'onChange',
     resolver: (data, ctx, options) => {
-      const resolver = zodResolver(createValidationSchema(data, listingType, chainState.nftMinStartingPrice))
+      const resolver = zodResolver(
+        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
+      )
       return resolver(data, ctx, options)
     },
     reValidateMode: 'onChange',
@@ -101,7 +115,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const [openModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
@@ -279,6 +292,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const stepsContent = [
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
+      // maxStartDate={maxStartDate}
+      // maxEndDate={maxEndDate}
       key="step-content-2"
       selectedType={listingType}
       activeInputs={activeInputs}

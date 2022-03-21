@@ -1,4 +1,3 @@
-import { addMonths } from 'date-fns'
 import React, { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -24,8 +23,6 @@ type SetUpProps = {
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
 }
-
-const MAX_DATE = addMonths(new Date(), 5) // TODO: should use chain constant for max auction duration
 
 export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setActiveInputs }) => {
   const {
@@ -194,7 +191,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={new Date()}
-                      maxDate={(endDate?.type === 'date' && endDate.date) || MAX_DATE}
+                      // maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       items={[
                         {
@@ -217,7 +214,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                      maxDate={MAX_DATE}
+                      // maxDate={maxEndDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       onChange={onChange}
                       items={expirationDateItems}

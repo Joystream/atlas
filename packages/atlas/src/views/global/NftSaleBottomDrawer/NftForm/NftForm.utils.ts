@@ -3,10 +3,17 @@ import { z } from 'zod'
 
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { pluralizeNoun } from '@/utils/misc'
+import { formatDateTime } from '@/utils/time'
 
 import { Listing, NftFormFields } from './NftForm.types'
 
-export const createValidationSchema = (data: NftFormFields, listingType: Listing, minStartingPrice: number) => {
+export const createValidationSchema = (
+  data: NftFormFields,
+  maxStartDate: Date,
+  maxEndDate: Date,
+  listingType: Listing,
+  minStartingPrice: number
+) => {
   const auctionDateType = z
     .union([
       z.object({
@@ -34,6 +41,15 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
       .refine(
         (val) => {
           if (val?.type === 'date') {
+            return maxStartDate > val.date
+          }
+          return true
+        },
+        { message: `Starting date cannot be later than ${formatDateTime(maxStartDate)}` }
+      )
+      .refine(
+        (val) => {
+          if (val?.type === 'date') {
             return new Date() < val.date
           }
           return true
@@ -51,6 +67,15 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
         { message: 'Expiration date cannot be earlier than starting date' }
       ),
     endDate: auctionDateType
+      .refine(
+        (val) => {
+          if (val?.type === 'date') {
+            return maxEndDate > val.date
+          }
+          return true
+        },
+        { message: `Expiration date cannot be later than ${formatDateTime(maxEndDate)}` }
+      )
       .refine(
         (val) => {
           if (val?.type === 'date') {
