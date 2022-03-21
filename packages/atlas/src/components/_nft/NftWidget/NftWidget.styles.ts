@@ -79,6 +79,7 @@ export const TopBidderTokenContainer = styled.div<SizeProps>`
   align-items: center;
   position: relative;
   left: -4px;
+  z-index: 10;
 
   &::before {
     display: inline-block;
