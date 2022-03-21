@@ -40,6 +40,8 @@ export type NftStatus = (
       topBid: number | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock?: number
+      bidLockingTime: number | undefined
+      minimalBidStep: number | undefined
     }
   | {
       status: 'idle'
@@ -77,6 +79,11 @@ export const useNft = (id: string): UseNftData => {
           topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
           topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
           auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
+          bidLockingTime:
+            (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
+              nft.transactionalStatus.auction.auctionType.bidLockingTime) ||
+            undefined,
+          minimalBidStep: Number(nft.transactionalStatus.auction?.minimalBidStep) || undefined,
         }
       }
       case 'TransactionalStatusBuyNow':

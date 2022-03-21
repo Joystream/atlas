@@ -61,7 +61,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
-  const { nft, loading, refetch } = useNft(currentNftId || '')
+  const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
@@ -82,19 +82,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     register,
     reset,
     formState: { errors, isValid },
-  } = useForm<{ bid: string }>({ defaultValues: { bid: '' }, reValidateMode: 'onChange' })
+  } = useForm<{ bid: string }>({ defaultValues: { bid: '' }, mode: 'onBlur', reValidateMode: 'onChange' })
 
-  const isAuction = nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
-
-  const isBuyNow = nft?.transactionalStatus.__typename === 'TransactionalStatusBuyNow'
-
-  const isEnglishAuction =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish'
-
-  const isOpenAuction =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
+  const isAuction = nftStatus.status === 'auction'
+  const isBuyNow = nftStatus.status === 'buy-now'
+  const isEnglishAuction = nftStatus.status === 'auction' && nftStatus.type === 'english-auction'
+  const isOpenAuction = nftStatus.status === 'auction' && nftStatus.type === 'open-auction'
 
   useEffect(() => {
     if (!currentAction) {
@@ -114,49 +107,19 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     }
   }, [isBuyNow, isEnglishAuction, isOpenAuction])
 
-  const auctionBuyNowPrice =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction?.buyNowPrice
-      ? Number(nft.transactionalStatus.auction?.buyNowPrice)
-      : 0
+  const auctionBuyNowPrice = (isAuction && nftStatus.buyNowPrice) || 0
+  const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
+  const buyNowPrice = (isBuyNow && nftStatus.buyNowPrice) || 0
+  const startingPrice = isAuction && nftStatus.startingPrice
+  const topBidder = isAuction && nftStatus.topBidder
+  const topBid = Number((isAuction && nftStatus.topBid) || 0)
+  const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
+  const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
-  const bidLockingTime =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-    convertBlocksToDuration(nft.transactionalStatus.auction.auctionType.bidLockingTime)
-
-  const buyNowPrice =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusBuyNow' && nft.transactionalStatus.price
-      ? nft.transactionalStatus.price
-      : 0
-
-  const minimumBid =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.startingPrice
-      ? nft.transactionalStatus.auction?.startingPrice
-      : 0
-
-  const lastBid =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction?.lastBid
-      ? nft.transactionalStatus.auction.lastBid
-      : null
-
-  const lastBidAmount = Number(lastBid?.amount || 0)
-
-  const bidStep =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.minimalBidStep
-      ? Number(nft.transactionalStatus.auction?.minimalBidStep)
-      : 0
-
-  const calculatedMinimumBid = minimumBid > lastBidAmount ? minimumBid : lastBidAmount + bidStep
-
-  const endAtBlock =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction' &&
-    nft.transactionalStatus.auction?.plannedEndAtBlock
-      ? nft.transactionalStatus.auction?.plannedEndAtBlock
-      : null
+  const minimumBid = startingPrice > topBid ? startingPrice : topBid + minimalBidStep
 
   const endTime = endAtBlock && convertBlockToMsTimestamp(endAtBlock)
+
   const timeLeftSeconds = endTime ? Math.trunc((endTime - timestamp) / 1000) : 0
 
   const creatorRoyalty = nft?.creatorRoyalty || 0
@@ -348,7 +311,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             {type !== 'buy_now' && !isBuyNowClicked ? (
               <>
                 <CurrentBidWrapper>
-                  {lastBid ? (
+                  {topBidder ? (
                     <ActiveBidWrapper>
                       <ActionBarCell>
                         <Text variant="h300" secondary margin={{ bottom: 2 }}>
@@ -356,7 +319,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                         </Text>
                         <FlexWrapper>
                           <CurrentBidAvatar size="bid" />
-                          <BidderName variant="h400">{lastBid?.bidder.handle}</BidderName>
+                          <BidderName variant="h400">{topBidder.handle}</BidderName>
                         </FlexWrapper>
                       </ActionBarCell>
                       <ActionBarCell>
@@ -365,7 +328,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                         </Text>
                         <FlexWrapper>
                           <CurrentBidJoyToken size={24} variant="silver" />
-                          <Text variant="h400">{lastBid?.amount}</Text>
+                          <Text variant="h400">{topBid}</Text>
                         </FlexWrapper>
                       </ActionBarCell>
                     </ActiveBidWrapper>
@@ -386,7 +349,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       <Text variant="h300" secondary>
                         Minimum bid:
                       </Text>
-                      <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{calculatedMinimumBid}</Text>
+                      <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <div>
@@ -402,7 +365,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     required: { value: true, message: 'Your bid must be higher than minimum bid' },
                     validate: {
                       bidTooLow: (value) =>
-                        Number(value) >= calculatedMinimumBid ? true : 'Your bid must be higher than minimum bid',
+                        Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
                       bidTooHigh: (value) =>
                         accountBalance
                           ? Number(value) + TRANSACTION_FEE > accountBalance
@@ -412,7 +375,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     },
                   })}
                   disabled={auctionEnded}
-                  placeholder={auctionEnded ? 'Auction ended' : `Min. ${calculatedMinimumBid} tJOY`}
+                  placeholder={auctionEnded ? 'Auction ended' : `Min. ${minimumBid} tJOY`}
                   nodeStart={<JoyTokenIcon variant="silver" size={24} />}
                   nodeEnd={!!bid && <Pill variant="overlay" label={`${convertToUSD(bid)}`} />}
                   type="number"
