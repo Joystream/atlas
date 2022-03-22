@@ -11,37 +11,35 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
-export type NftStatus =
+type CommonNftProperties = {
+  title: string | null | undefined
+  duration: number | null | undefined
+  views: number | undefined
+}
+
+export type NftStatus = (
   | {
       status: 'auction'
-      type: 'open-auction' | 'english-auction'
+      type: 'open' | 'english'
       startingPrice: number
-      buyNowPrice?: number
-      topBid?: number
-      topBidder?: BasicMembershipFieldsFragment
-      title?: string | null
-      duration?: number | null
-      views?: number
+      buyNowPrice: number | undefined
+      topBid: number | undefined
+      topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock?: number
-      startsAtDate?: Date
     }
   | {
-      title?: string | null
-      duration?: number | null
       status: 'idle'
       lastPrice?: number
       lastTransactionDate?: Date
-      views?: number
     }
   | {
-      title?: string | null
-      duration?: number | null
       status: 'buy-now'
       buyNowPrice: number
-      views?: number
     }
+) &
+  CommonNftProperties
 
-export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus: NftStatus }
+export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus?: NftStatus }
 
 export const useNft = (id: string): UseNftData => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id })
@@ -53,16 +51,13 @@ export const useNft = (id: string): UseNftData => {
     views: nft?.video?.views,
   }
 
-  const getNftProperties = (): NftStatus => {
+  const getNftProperties = (): NftStatus | undefined => {
     switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusAuction': {
         return {
           ...commonProperties,
           status: 'auction',
-          type:
-            nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen'
-              ? 'open-auction'
-              : 'english-auction',
+          type: nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' ? 'open' : 'english',
           startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
           buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
           topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
@@ -76,11 +71,13 @@ export const useNft = (id: string): UseNftData => {
           status: 'buy-now',
           buyNowPrice: Number(nft.transactionalStatus.price),
         }
-      default:
+      case 'TransactionalStatusIdle':
         return {
           ...commonProperties,
           status: 'idle',
         }
+      default:
+        return undefined
     }
   }
 

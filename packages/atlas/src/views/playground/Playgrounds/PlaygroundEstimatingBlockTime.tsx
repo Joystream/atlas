@@ -12,7 +12,7 @@ export const PlaygroundEstimatingBlockTime = () => {
   const [datetimeLocal, setDatetimeLocal] = useState('')
   const [blockNumber, setBlockNumber] = useState(0)
 
-  const { getCurrentBlock } = useJoystream()
+  const { currentBlock } = useJoystream()
   const { convertBlockToMsTimestamp, convertMsTimestampToBlock } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 
@@ -20,7 +20,7 @@ export const PlaygroundEstimatingBlockTime = () => {
     <div>
       <div>
         <Text variant="h700">Current state</Text>
-        <Text variant="h300">Current block number: {getCurrentBlock()}</Text>
+        <Text variant="h300">Current block number: {currentBlock}</Text>
         <Text variant="h300">Current time: {new Date(msTimestamp).toLocaleString()}</Text>
       </div>
       <br />
