@@ -4,7 +4,7 @@ import { Button } from '@/components/_buttons/Button'
 import { useNftActions } from '@/providers/nftActions'
 import { NftPurchaseView } from '@/views/viewer/NftPurchaseView'
 
-export const NftPurchase: React.FC = () => {
+export const PlaygroundNftPurchase: React.FC = () => {
   const { openNftPurchase } = useNftActions()
   return (
     <>

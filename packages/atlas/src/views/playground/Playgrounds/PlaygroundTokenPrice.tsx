@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useTokenPrice } from '@/providers/joystream'
 
-export const TJoyPrice = () => {
+export const PlaygroundTokenPrice = () => {
   const { convertToUSD, convertToTJoy } = useTokenPrice()
   const [toConvert, setToConvert] = useState(0)
   const [unit, setUnit] = useState('tJoy')

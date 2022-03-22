@@ -23,7 +23,7 @@ const TABS: TabItem[] = [
   { name: 'Cancel auction bid' },
 ]
 
-export const PlaygroundNFTExtrinsics: React.FC = () => {
+export const PlaygroundNftExtrinsics: React.FC = () => {
   const [videoId, setVideoId] = useState('')
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const { nft, refetch } = useNft(videoId)
@@ -55,7 +55,9 @@ export const PlaygroundNFTExtrinsics: React.FC = () => {
     <div>
       <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
       {getTabContents()}
-      <NftTileViewer nftId={videoId} />
+      <div style={{ maxWidth: 320 }}>
+        <NftTileViewer nftId={videoId} />
+      </div>
       <pre>{JSON.stringify(nft, null, 2)}</pre>
     </div>
   )
