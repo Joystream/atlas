@@ -46,6 +46,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
         await client.query<GetNftQuery, GetNftQueryVariables>({
           query: GetNftDocument,
           variables: { id: currentNftId },
+          fetchPolicy: 'network-only',
         })
       }
 
