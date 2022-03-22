@@ -55,7 +55,9 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
     <div>
       <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
       {getTabContents()}
-      <NftTileViewer nftId={videoId} />
+      <div style={{ maxWidth: 320 }}>
+        <NftTileViewer nftId={videoId} />
+      </div>
       <pre>{JSON.stringify(nft, null, 2)}</pre>
     </div>
   )
