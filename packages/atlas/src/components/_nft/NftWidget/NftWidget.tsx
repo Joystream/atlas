@@ -77,7 +77,7 @@ const SMALL_VARIANT_MAXIMUM_SIZE = 280
 export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerHandle,
   isOwner,
-  nftStatus = { status: 'idle' },
+  nftStatus,
   needsSettling,
   ownerAvatarUri,
   onNftPutOnSale,
@@ -91,11 +91,12 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
   const { convertToUSD } = useTokenPrice()
   const content = useDeepMemo(() => {
+    if (!nftStatus) return
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
-      buyNowPrice && Number(buyNowPrice) ? ( // TODO: remove `&& Number(buyNowPrice)` when the payload type of buyNowPrice is fixed and it doesn't return strings anymore
+      buyNowPrice ? (
         <NftInfoItem
           size={size}
           label="Buy now"
@@ -435,6 +436,9 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       }
     }
   }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri])
+
+  if (!nftStatus) return null
+
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
