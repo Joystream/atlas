@@ -437,7 +437,17 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri, onNftAcceptBid])
+  }, [
+    size,
+    nftStatus,
+    convertToUSD,
+    onNftPutOnSale,
+    bidFromPreviousAuction,
+    isOwner,
+    needsSettling,
+    ownerAvatarUri,
+    onNftAcceptBid,
+  ])
 
   if (!nftStatus) return null
 
