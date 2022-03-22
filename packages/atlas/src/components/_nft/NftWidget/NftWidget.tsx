@@ -52,12 +52,12 @@ export type Auction = {
 }
 
 export type NftWidgetProps = {
-  ownerHandle?: string
-  ownerAvatarUri?: string | null
-  isOwner?: boolean
+  ownerHandle: string | undefined
+  ownerAvatarUri: string | null | undefined
+  isOwner: boolean | undefined
   needsSettling: boolean | undefined
   bidFromPreviousAuction: AllBidFieldsFragment | undefined
-  nftStatus?:
+  nftStatus:
     | {
         status: 'idle'
         lastPrice?: number
@@ -68,7 +68,8 @@ export type NftWidgetProps = {
         buyNowPrice: number
       }
     | Auction
-  onNftPutOnSale?: () => void
+    | undefined
+  onNftPutOnSale: () => void | undefined
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -480,6 +481,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
+        onNftPutOnSale: () => undefined,
         nftStatus: {
           ...nftStatus,
           startsAtDate,
@@ -500,6 +502,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
+        onNftPutOnSale: () => undefined,
         nftStatus: {
           ...nftStatus,
         },
@@ -511,6 +514,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         isOwner,
         needsSettling,
         bidFromPreviousAuction,
+        onNftPutOnSale: () => undefined,
         nftStatus: {
           ...nftStatus,
         },
