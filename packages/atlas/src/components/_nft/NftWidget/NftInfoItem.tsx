@@ -8,7 +8,7 @@ import { formatDurationShort } from '@/utils/time'
 import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
 import { Size } from './NftWidget'
 
-type NftInfoItemProps = { size: Size; label: string; content: React.ReactNode; secondaryText?: string }
+type NftInfoItemProps = { size: Size; label: string; content: React.ReactNode; secondaryText?: React.ReactNode }
 export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText }) => {
   return (
     <InfoItemContainer data-size={size}>
@@ -16,7 +16,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
-      <SecondaryText as="p" variant="t100" secondary data-size={size}>
+      <SecondaryText as="div" variant="t100" secondary data-size={size}>
         {secondaryText}
       </SecondaryText>
     </InfoItemContainer>

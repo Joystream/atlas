@@ -23,9 +23,8 @@ export const useTokenPrice = () => {
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        maximumSignificantDigits: 2,
+        maximumSignificantDigits: 3,
       })
-
       return formatter.format(tokens * tokenPrice)
     },
     [tokenPrice]
