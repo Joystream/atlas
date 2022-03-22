@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { useOverlayManager } from '@/providers/overlayManager'
 
 type ContextValue = {
@@ -8,12 +9,13 @@ type ContextValue = {
 
   setCurrentAction: React.Dispatch<React.SetStateAction<NftAction | null>>
   setCurrentNftId: React.Dispatch<React.SetStateAction<string | null>>
+  closeNftAction: () => void
 }
 
 export const NftActionsContext = React.createContext<ContextValue | undefined>(undefined)
 NftActionsContext.displayName = 'NftActionsContext'
 
-type NftAction = 'putOnSale' | 'purchase' | 'settle'
+type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-price'
 
 export const NftActionsProvider: React.FC = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
@@ -38,15 +40,25 @@ export const NftActionsProvider: React.FC = ({ children }) => {
   }, [cachedCurrentAction, currentAction, decrementOverlaysOpenCount, incrementOverlaysOpenCount])
   // --END--
 
+  const closeNftAction = useCallback(() => {
+    setCurrentAction(null)
+  }, [setCurrentAction])
+
   const value = useMemo(
     () => ({
       currentAction,
       currentNftId,
       setCurrentAction,
       setCurrentNftId,
+      closeNftAction,
     }),
-    [currentAction, currentNftId]
+    [closeNftAction, currentAction, currentNftId]
   )
 
-  return <NftActionsContext.Provider value={value}>{children}</NftActionsContext.Provider>
+  return (
+    <NftActionsContext.Provider value={value}>
+      <AcceptBidDialog isOpen={currentAction === 'accept-bid'} onModalClose={closeNftAction} />
+      {children}
+    </NftActionsContext.Provider>
+  )
 }

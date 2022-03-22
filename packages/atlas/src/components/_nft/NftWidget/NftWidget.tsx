@@ -15,7 +15,6 @@ import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
-import { useNftDialog } from '@/providers/nftDialogs'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -71,6 +70,7 @@ export type NftWidgetProps = {
     | Auction
     | undefined
   onNftPutOnSale?: () => void
+  onNftAcceptBid?: () => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -82,6 +82,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   needsSettling,
   ownerAvatarUri,
   onNftPutOnSale,
+  onNftAcceptBid,
   bidFromPreviousAuction,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -89,7 +90,6 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const { setOpenedDialog } = useNftDialog()
   const { convertToUSD } = useTokenPrice()
 
   const content = useDeepMemo(() => {
@@ -384,7 +384,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
                       {nftStatus.type === 'open' && !!nftStatus.topBid && (
-                        <Button fullWidth size={buttonSize} onClick={() => setOpenedDialog('accept-bid')}>
+                        <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
                           Review and accept bid
                         </Button>
                       )}
@@ -437,7 +437,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri, setOpenedDialog])
+  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri, onNftAcceptBid])
 
   if (!nftStatus) return null
 
