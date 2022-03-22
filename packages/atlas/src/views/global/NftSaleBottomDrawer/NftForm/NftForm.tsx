@@ -177,6 +177,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             startingPrice,
             minimalBidStep,
             buyNowPrice: data.buyNowPrice,
+            whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
         }
       } else {
