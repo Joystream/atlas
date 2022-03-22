@@ -17,17 +17,17 @@ type BidRowProps = {
   bidUSD: string
   memberAvatarUri: string
   selectedValue?: string
-  handleSelect?: (selectedBid: string) => void
+  onSelect?: (selectedBid: string) => void
   size?: 'medium' | 'small'
 }
 
 type AcceptBidListProps = {
   items: BidRowProps[]
-  handleSelect?: (selectedBid: string) => void
+  onSelect?: (selectedBid: string) => void
   selectedBid?: string
 }
 
-export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, handleSelect, selectedBid }) => {
+export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, selectedBid }) => {
   return (
     <>
       {items.map((item) => (
@@ -35,8 +35,8 @@ export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, handleSelec
           key={`bidRow-${item.id}`}
           {...item}
           selectedValue={selectedBid || ''}
-          handleSelect={(value) => {
-            handleSelect?.(value)
+          onSelect={(value) => {
+            onSelect?.(value)
           }}
         />
       ))}
@@ -52,13 +52,13 @@ export const BidRow: React.FC<BidRowProps> = ({
   bidUSD,
   memberAvatarUri,
   selectedValue,
-  handleSelect,
+  onSelect,
 }) => {
   const xsMatch = useMediaMatch('xs')
   const selected = selectedValue === id
   return (
     <BidRowWrapper selected={selected}>
-      <RadioInput onChange={() => handleSelect?.(id)} selectedValue={selectedValue} value={id} />
+      <RadioInput onChange={() => onSelect?.(id)} selectedValue={selectedValue} value={id} />
       {xsMatch && <Avatar assetUrl={memberAvatarUri} size="small" />}
       <div>
         <Text variant="h300" margin={{ bottom: 1 }} secondary={!selected}>

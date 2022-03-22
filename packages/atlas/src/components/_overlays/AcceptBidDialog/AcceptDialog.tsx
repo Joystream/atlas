@@ -117,7 +117,7 @@ export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({ onModalClose, 
         onClick: handleModalClose,
       }}
     >
-      <AcceptBidList items={ITEMS} handleSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
+      <AcceptBidList items={ITEMS} onSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
     </DialogModal>
   )
 }

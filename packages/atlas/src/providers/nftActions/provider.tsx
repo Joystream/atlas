@@ -21,8 +21,6 @@ export const NftActionsProvider: React.FC = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
   const [currentNftId, setCurrentNftId] = useState<string | null>(null)
 
-  // TODO: remove following code once NftPurchaseView uses BottomDrawer
-  // --START--
   const [cachedCurrentAction, setCachedCurrentAction] = useState<NftAction | null>(null)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
@@ -38,7 +36,6 @@ export const NftActionsProvider: React.FC = ({ children }) => {
       decrementOverlaysOpenCount()
     }
   }, [cachedCurrentAction, currentAction, decrementOverlaysOpenCount, incrementOverlaysOpenCount])
-  // --END--
 
   const closeNftAction = useCallback(() => {
     setCurrentAction(null)
