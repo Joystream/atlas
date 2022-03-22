@@ -23,7 +23,9 @@ type MemberComboBoxProps = {
   className?: string
   onSelectMember?: (member: BasicMembershipFieldsFragment) => void
   onRemoveMember?: (memberId: string) => void
+  helperText?: string
   disabled?: boolean
+  error?: boolean
 }
 
 export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
@@ -32,6 +34,8 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
   onSelectMember,
   onRemoveMember,
   disabled,
+  error,
+  helperText,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
@@ -101,9 +105,9 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
         notFoundNode={notFoundNode}
         resetOnSelect
         loading={isLoading}
-        error={isError}
+        error={isError || error}
         onSelectedItemChange={handleSelect}
-        helperText={isError ? 'Something went wrong' : ''}
+        helperText={isError ? 'Something went wrong' : helperText}
         onInputValueChange={(val) => {
           setIsError(false)
           setIsLoading(true)

@@ -265,11 +265,13 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
               <Controller
                 name="whitelistedMembers"
                 control={control}
-                render={({ field: { onChange, value: existingMembers } }) => {
+                render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
                   return (
                     <MemberComboBox
                       disabled={!activeInputs.includes('whitelistedMembers')}
                       selectedMembers={existingMembers || []}
+                      error={!!error}
+                      helperText={error?.message}
                       onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
                       onRemoveMember={(memberId) =>
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
