@@ -8,7 +8,7 @@ import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useJoystream } from '@/providers/joystream'
 
-export const EstimatingBlockTime = () => {
+export const PlaygroundEstimatingBlockTime = () => {
   const [datetimeLocal, setDatetimeLocal] = useState('')
   const [blockNumber, setBlockNumber] = useState(0)
 

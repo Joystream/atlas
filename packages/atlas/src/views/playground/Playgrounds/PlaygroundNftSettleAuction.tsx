@@ -4,7 +4,7 @@ import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
 import { useNftActions } from '@/providers/nftActions'
 
-export const SettlingAuction = () => {
+export const PlaygroundNftSettleAuction = () => {
   const { openNftSettlement } = useNftActions()
   const [nftId, setNftId] = useState('')
 

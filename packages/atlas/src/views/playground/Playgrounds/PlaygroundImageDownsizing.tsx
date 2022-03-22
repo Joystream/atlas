@@ -55,7 +55,7 @@ const StyledImg = styled.img`
   display: block;
 `
 
-export const ImageDownsizing = () => {
+export const PlaygroundImageDownsizing = () => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const avatarImgRef = useRef<HTMLImageElement | null>(null)
