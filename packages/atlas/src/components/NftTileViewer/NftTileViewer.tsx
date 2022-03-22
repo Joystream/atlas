@@ -71,7 +71,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
           ...nftCommonProps,
         }
       case 'TransactionalStatusAuction': {
-        const auctionPlannedEndBlock = nftStatus.status === 'auction' && nftStatus?.auctionPlannedEndBlock
+        const auctionPlannedEndBlock = nftStatus?.status === 'auction' && nftStatus?.auctionPlannedEndBlock
         const isEnded = auctionPlannedEndBlock && currentBlock >= auctionPlannedEndBlock
         const plannedEndMsTimestamp =
           !isEnded && !!auctionPlannedEndBlock && convertBlockToMsTimestamp(auctionPlannedEndBlock)

@@ -39,7 +39,7 @@ export type NftStatus = (
 ) &
   CommonNftProperties
 
-export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus: NftStatus }
+export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus?: NftStatus }
 
 export const useNft = (id: string): UseNftData => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id })
@@ -51,7 +51,7 @@ export const useNft = (id: string): UseNftData => {
     views: nft?.video?.views,
   }
 
-  const getNftProperties = (): NftStatus => {
+  const getNftProperties = (): NftStatus | undefined => {
     switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusAuction': {
         return {
@@ -71,11 +71,13 @@ export const useNft = (id: string): UseNftData => {
           status: 'buy-now',
           buyNowPrice: Number(nft.transactionalStatus.price),
         }
-      default:
+      case 'TransactionalStatusIdle':
         return {
           ...commonProperties,
           status: 'idle',
         }
+      default:
+        return undefined
     }
   }
 
