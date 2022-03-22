@@ -59,6 +59,11 @@ export function useGlider<T extends HTMLElement>({
       }
     }
   }, [])
+
+  /**
+   * because gliderOptions changes it's reference through renders,
+   * we need to avoid unnecessary glider refresh by comparing gliderOptions value
+   */
   useLayoutEffect(() => {
     if (!glider || isEqual(gliderOptions, gliderOptionsRef.current)) {
       return
