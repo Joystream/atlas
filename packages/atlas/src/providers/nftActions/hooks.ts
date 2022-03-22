@@ -1,12 +1,19 @@
 import { useCallback, useContext } from 'react'
 
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+
 import { NftActionsContext } from './provider'
+
+import { useUser } from '../user'
 
 export const useNftActions = () => {
   const ctx = useContext(NftActionsContext)
   if (ctx === undefined) {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
+  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const isSignedIn = activeMemberId && activeAccountId
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   const {
     currentAction,
@@ -20,26 +27,38 @@ export const useNftActions = () => {
 
   const openNftPurchase = useCallback(
     (nftId: string) => {
+      if (!isSignedIn) {
+        openSignInDialog({ onConfirm: signIn })
+        return
+      }
       setCurrentNftId(nftId)
       setCurrentAction('purchase')
     },
-    [setCurrentAction, setCurrentNftId]
+    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
   )
 
   const openNftPutOnSale = useCallback(
     (nftId: string) => {
+      if (!isSignedIn) {
+        openSignInDialog({ onConfirm: signIn })
+        return
+      }
       setCurrentNftId(nftId)
       setCurrentAction('putOnSale')
     },
-    [setCurrentAction, setCurrentNftId]
+    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
   )
 
   const openNftSettlement = useCallback(
     (nftId: string) => {
+      if (!isSignedIn) {
+        openSignInDialog({ onConfirm: signIn })
+        return
+      }
       setCurrentNftId(nftId)
       setCurrentAction('settle')
     },
-    [setCurrentAction, setCurrentNftId]
+    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
   )
 
   const openNftAcceptBid = useCallback(
