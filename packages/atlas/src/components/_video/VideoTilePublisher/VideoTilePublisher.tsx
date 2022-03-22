@@ -3,6 +3,7 @@ import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
+import { useNft } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -11,6 +12,7 @@ import {
   SvgActionCopy,
   SvgActionEdit,
   SvgActionHide,
+  SvgActionMint,
   SvgActionPlay,
   SvgActionReupload,
   SvgActionSell,
@@ -22,6 +24,7 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
+import { useNftState } from '@/hooks/useNftState'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
@@ -47,9 +50,11 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
+    const { nft } = useNft(video?.id || '')
+    const { isOwner: isNftOwner, canPutOnSale, canCancelSale, isBuyNow } = useNftState(nft)
     const navigate = useNavigate()
 
-    const { openNftPutOnSale } = useNftActions()
+    const { openNftPutOnSale, cancelNftSale } = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
@@ -196,14 +201,32 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           title: 'Edit video',
         },
         ...(hasNft
-          ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start NFT sale' }]
+          ? [
+              ...(isNftOwner && canPutOnSale
+                ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
+                : []),
+              ...(isNftOwner && canCancelSale
+                ? [
+                    {
+                      icon: <SvgActionTrash />,
+                      onClick: () => cancelNftSale(nft?.id || '', !!isBuyNow),
+                      title: 'Remove from sale',
+                      destructive: true,
+                    },
+                  ]
+                : []),
+            ]
+          : [{ icon: <SvgActionMint />, onClick: onEditClick, title: 'Mint NFT' }]),
+        ...(!hasNft && !canCancelSale
+          ? [
+              {
+                icon: <SvgActionTrash />,
+                onClick: onDeleteVideoClick,
+                title: 'Delete video',
+                destructive: true,
+              },
+            ]
           : []),
-        {
-          icon: <SvgActionTrash />,
-          onClick: onDeleteVideoClick,
-          title: 'Delete video',
-          destructive: true,
-        },
       ]
 
       return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
@@ -214,10 +237,16 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       onDeleteVideoClick,
       onEditClick,
       hasNft,
+      isNftOwner,
+      canPutOnSale,
+      canCancelSale,
       videoHref,
       copyToClipboard,
       openNftPutOnSale,
       id,
+      cancelNftSale,
+      nft?.id,
+      isBuyNow,
     ])
 
     const getVideoSubtitle = useCallback(() => {
