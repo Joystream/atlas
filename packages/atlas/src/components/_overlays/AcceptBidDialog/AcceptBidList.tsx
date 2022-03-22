@@ -7,7 +7,7 @@ import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDateTime } from '@/utils/time'
 
-import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
+import { BidRowWrapper, Date, Price, PriceUsd, TokenPrice } from './AcceptBidList.styles'
 
 type BidRowProps = {
   id: string
@@ -61,12 +61,12 @@ export const BidRow: React.FC<BidRowProps> = ({
       <RadioInput selectedValue={selectedValue} value={id} />
       {xsMatch && <Avatar assetUrl={memberAvatarUri} size="small" />}
       <div>
-        <Text variant="h300" secondary={!selected}>
+        <Text variant="h300" secondary={!selected} margin={{ bottom: 1 }}>
           {memberHandle}
         </Text>
-        <Text secondary variant="t100">
+        <Date secondary variant="t100">
           {formatDateTime(date)}
-        </Text>
+        </Date>
       </div>
       <Price>
         <TokenPrice>
@@ -75,9 +75,9 @@ export const BidRow: React.FC<BidRowProps> = ({
             {bid}
           </Text>
         </TokenPrice>
-        <Text variant="t100" secondary>
+        <PriceUsd variant="t100" secondary>
           {bidUSD}
-        </Text>
+        </PriceUsd>
       </Price>
     </BidRowWrapper>
   )
