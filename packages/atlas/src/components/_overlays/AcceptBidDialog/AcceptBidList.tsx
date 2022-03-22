@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import React from 'react'
 
 import { Avatar } from '@/components/Avatar'
@@ -6,6 +5,7 @@ import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { formatDateTime } from '@/utils/time'
 
 import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
 
@@ -57,15 +57,15 @@ export const BidRow: React.FC<BidRowProps> = ({
   const xsMatch = useMediaMatch('xs')
   const selected = selectedValue === id
   return (
-    <BidRowWrapper selected={selected}>
-      <RadioInput onChange={() => onSelect?.(id)} selectedValue={selectedValue} value={id} />
+    <BidRowWrapper selected={selected} onClick={() => onSelect?.(id)}>
+      <RadioInput selectedValue={selectedValue} value={id} />
       {xsMatch && <Avatar assetUrl={memberAvatarUri} size="small" />}
       <div>
-        <Text variant="h300" margin={{ bottom: 1 }} secondary={!selected}>
+        <Text variant="h300" secondary={!selected}>
           {memberHandle}
         </Text>
         <Text secondary variant="t100">
-          {format(date, "LLL dd yyy 'at' HH:mm")}
+          {formatDateTime(date)}
         </Text>
       </div>
       <Price>

@@ -8,8 +8,9 @@ export const BidRowWrapper = styled.div<{ selected: boolean }>`
   grid-template-columns: auto 2fr auto;
   gap: ${sizes(4)};
   align-items: center;
-  padding: ${sizes(3)} ${sizes(4)};
-  background-color: ${({ selected }) => selected && cVar('colorBackgroundAlpha')};
+  padding: ${sizes(2)} ${sizes(4)};
+  background-color: ${({ selected }) => selected && cVar('colorBackgroundMutedAlpha')};
+  cursor: pointer;
 
   ${media.xs} {
     grid-template-columns: repeat(2, auto) 2fr auto;
@@ -20,7 +21,7 @@ export const BidRowWrapper = styled.div<{ selected: boolean }>`
   }
 
   :hover {
-    background-color: ${({ selected }) => !selected && cVar('colorBackgroundMutedAlpha')};
+    background-color: ${({ selected }) => !selected && cVar('colorBackgroundAlpha')};
   }
 `
 
@@ -31,6 +32,5 @@ export const Price = styled.div`
 export const TokenPrice = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: ${sizes(1)};
   justify-content: flex-end;
 `

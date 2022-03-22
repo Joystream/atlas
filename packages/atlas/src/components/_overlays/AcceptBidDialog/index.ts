@@ -1,1 +1,1 @@
-export * from './AcceptDialog'
+export * from './AcceptBidDialog'
