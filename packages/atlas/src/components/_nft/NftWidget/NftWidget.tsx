@@ -56,6 +56,7 @@ export type NftWidgetProps = {
         buyNowPrice: number
       }
     | Auction
+  onNftPutOnSale?: () => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -66,6 +67,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   nftStatus = { status: 'idle' },
   needsSettling,
   ownerAvatarUri,
+  onNftPutOnSale,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
@@ -124,7 +126,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             )}
             {isOwner && (
               <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth variant="secondary" size={buttonSize}>
+                <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPutOnSale}>
                   Start sale of this NFT
                 </Button>
               </GridItem>
@@ -261,7 +263,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           </>
         )
     }
-  }, [size, nftStatus, convertToUSD, isOwner, needsSettling])
+  }, [size, nftStatus, convertToUSD, isOwner, needsSettling, onNftPutOnSale])
   return (
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
