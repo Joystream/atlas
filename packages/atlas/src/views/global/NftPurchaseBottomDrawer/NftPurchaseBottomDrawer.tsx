@@ -84,10 +84,10 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     formState: { errors, isValid, touchedFields },
   } = useForm<{ bid: string }>({ defaultValues: { bid: '' }, mode: 'onTouched', reValidateMode: 'onChange' })
 
-  const isAuction = nftStatus.status === 'auction'
-  const isBuyNow = nftStatus.status === 'buy-now'
-  const isEnglishAuction = nftStatus.status === 'auction' && nftStatus.type === 'english-auction'
-  const isOpenAuction = nftStatus.status === 'auction' && nftStatus.type === 'open-auction'
+  const isAuction = nftStatus?.status === 'auction'
+  const isBuyNow = nftStatus?.status === 'buy-now'
+  const isEnglishAuction = nftStatus?.status === 'auction' && nftStatus.type === 'english'
+  const isOpenAuction = nftStatus?.status === 'auction' && nftStatus?.type === 'open'
 
   useEffect(() => {
     if (!currentAction) {
