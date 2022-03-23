@@ -1,8 +1,10 @@
-import { QueryResult } from '@apollo/client'
+import { QueryHookOptions, QueryResult } from '@apollo/client'
 
 import {
   AllNftFieldsFragment,
   BasicMembershipFieldsFragment,
+  GetNftsQuery,
+  GetNftsQueryVariables,
   VideoCategoryWhereInput,
   VideoOrderByInput,
   useGetNftQuery,
@@ -10,6 +12,18 @@ import {
   useGetVideosConnectionQuery,
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
+
+export const useNfts = (
+  variables?: GetNftsQueryVariables,
+  opts?: QueryHookOptions<GetNftsQuery, GetNftsQueryVariables>
+) => {
+  const { data, ...rest } = useGetNftsQuery({ variables, ...opts })
+
+  return {
+    nfts: data?.ownedNfts,
+    ...rest,
+  }
+}
 
 type CommonNftProperties = {
   title: string | null | undefined

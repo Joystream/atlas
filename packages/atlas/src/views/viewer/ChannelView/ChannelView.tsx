@@ -14,7 +14,7 @@ import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SORT_OPTIONS } from '@/config/sorting'
+import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -272,7 +272,7 @@ export const ChannelView: React.FC = () => {
                   disabled={isSearching}
                   value={!isSearching ? sortVideosBy : 0}
                   placeholder={isSearching ? 'Best match' : undefined}
-                  items={!isSearching ? SORT_OPTIONS : []}
+                  items={!isSearching ? VIDEO_SORT_OPTIONS : []}
                   onChange={!isSearching ? handleSorting : undefined}
                 />
                 {currentTab === 'NFTs' && (
