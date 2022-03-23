@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { Member } from '@/components/NftTile'
 import { Text } from '@/components/Text'
 import {
   SvgActionBid,
@@ -20,6 +19,7 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
+import { Member } from './NftTile'
 import {
   CaptionSkeletonWrapper,
   Content,

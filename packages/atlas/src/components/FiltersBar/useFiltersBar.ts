@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { VideoWhereInput } from '@/api/queries'
+import { OwnedNftWhereInput, VideoWhereInput } from '@/api/queries'
 
 export type VideoLengthOptions = '0-to-4' | '4-to-10' | '10-to-9999'
 
@@ -10,19 +10,19 @@ export const useFiltersBar = () => {
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
   const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
-  const [nftStatusFilter, setNftStatusFilter] = useState<string[]>()
+  const [nftStatusFilter, setNftStatusFilter] = useState<string>()
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
   const [language, setLanguage] = useState<string | null | undefined>('undefined')
 
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [videoWhereInput, setVideoWhereInput] = useState<VideoWhereInput>({})
+  const [ownedNftWhereInput, setOwnedNftWhereInput] = useState<OwnedNftWhereInput>({})
 
   const canClearDateUploadedFilter = videoWhereInput?.createdAt_gte !== undefined
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
-  // TODO: this needs to be replaced after graphql nft implementation
-  const canClearNftStatusFilter = !!nftStatusFilter?.length
+  const canClearNftStatusFilter = !!ownedNftWhereInput?.transactionalStatus_json
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
     false
@@ -60,6 +60,10 @@ export const useFiltersBar = () => {
 
   const clearNftStatusFilter = () => {
     setNftStatusFilter(undefined)
+    setOwnedNftWhereInput((value) => {
+      delete value.transactionalStatus_json
+      return value
+    })
   }
 
   const clearCategoriesFilter = () => {
@@ -81,7 +85,9 @@ export const useFiltersBar = () => {
 
   return {
     videoWhereInput,
+    ownedNftWhereInput,
     setVideoWhereInput,
+    setOwnedNftWhereInput,
     filters: {
       isFiltersOpen,
       setIsFiltersOpen,

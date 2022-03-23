@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 
-import { NftTile, NftTileProps } from './NftTile'
+import { NftTile, NftTileProps } from '.'
 
 export default {
   title: 'NFT/Tile',
