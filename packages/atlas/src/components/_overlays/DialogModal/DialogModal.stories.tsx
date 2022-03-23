@@ -9,6 +9,11 @@ import { DialogModal, DialogModalProps } from './DialogModal'
 export default {
   title: 'overlays/DialogModal',
   component: DialogModal,
+  argTypes: {
+    onSubmit: { table: { disable: true } },
+    onExitClick: { table: { disable: true } },
+    as: { table: { disable: true } },
+  },
   args: {
     title: 'There is an information of the utmost importance!',
     primaryButton: { text: 'Confirm' },

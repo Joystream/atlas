@@ -17,8 +17,9 @@ import {
   SvgJoyTokenSilver32,
   SvgJoyTokenSilver48,
 } from '@/components/_icons'
+import { cVar } from '@/styles'
 
-type JoyTokenIconVariant = 'primary' | 'silver' | 'regular'
+type JoyTokenIconVariant = 'primary' | 'silver' | 'regular' | 'gray'
 type JoyTokenIconSize = 16 | 24 | 32 | 48
 
 export type JoyTokenIconProps = {
@@ -46,13 +47,20 @@ const VARIANT_SIZE_COMPONENT_MAPPING: Record<JoyTokenIconVariant, Record<JoyToke
     32: SvgJoyTokenMonochrome32,
     48: SvgJoyTokenMonochrome48,
   },
+  gray: {
+    16: SvgJoyTokenMonochrome16,
+    24: SvgJoyTokenMonochrome24,
+    32: SvgJoyTokenMonochrome32,
+    48: SvgJoyTokenMonochrome48,
+  },
 }
 
 export const JoyTokenIcon: React.FC<JoyTokenIconProps> = ({ variant = 'regular', size = 16, className }) => (
   <JoyTokenIconWrapper
     as={VARIANT_SIZE_COMPONENT_MAPPING[variant][size]}
-    hasShadow={variant !== 'regular'}
+    hasShadow={!['regular', 'gray'].includes(variant)}
     className={className}
+    variant={variant}
   />
 )
 
@@ -61,6 +69,22 @@ const shadowCss = css`
     drop-shadow(0 0.7513px 1.377px rgba(0 0 0 / 0.325)) drop-shadow(0 0.2717px 0.4982px rgba(0 0 0 / 0.2265));
 `
 
-const JoyTokenIconWrapper = styled('div', { shouldForwardProp: isPropValid })<{ hasShadow: boolean }>`
+const fillCss = ({ variant }: { variant: JoyTokenIconVariant }) => {
+  if (variant === 'gray') {
+    return css`
+      path {
+        fill: ${cVar('colorText')};
+      }
+    `
+  }
+  return css``
+}
+
+const JoyTokenIconWrapper = styled('div', { shouldForwardProp: isPropValid })<{
+  hasShadow: boolean
+  variant: JoyTokenIconVariant
+}>`
+  ${fillCss};
+
   ${({ hasShadow }) => hasShadow && shadowCss};
 `

@@ -20,6 +20,7 @@ type SizeProps = {
 
 type ContentProps = {
   denseHeader: boolean
+  noContentPadding?: boolean
 }
 
 const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
@@ -74,8 +75,9 @@ export const HeaderIconContainer = styled.div`
   margin-bottom: ${sizes(4)};
 `
 
-const getDenseHeaderContentStyles = ({ denseHeader }: ContentProps) =>
+const getDenseHeaderContentStyles = ({ denseHeader, noContentPadding }: ContentProps) =>
   denseHeader &&
+  !noContentPadding &&
   css`
     padding-top: ${sizes(3)};
   `
@@ -83,7 +85,7 @@ const getDenseHeaderContentStyles = ({ denseHeader }: ContentProps) =>
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
-  padding: var(--local-size-dialog-padding);
+  padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
   ${getDenseHeaderContentStyles};
 `
 
