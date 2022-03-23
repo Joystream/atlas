@@ -48,7 +48,7 @@
       },
       "medium": {
         "type": "{animation.transition.transitionType}",
-        "description": "Transitions of large UI elements, such as dialogs, pages, sections, etc.",
+        "description": "Transitions of large UI elements, such as dialogs, windows, drawers, pages, sections, etc.",
         "value": {
           "timing": "{animation.timing.medium}",
           "easing": "{animation.easing.medium}"
