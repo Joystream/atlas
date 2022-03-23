@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
+import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 
@@ -11,6 +12,7 @@ export const useNftTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const { displaySnackbar } = useSnackbar()
   const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
@@ -22,6 +24,26 @@ export const useNftTransactions = () => {
         fetchPolicy: 'network-only',
       }),
     [client]
+  )
+
+  const withdrawBid = useCallback(
+    async (id: string) => {
+      if (!joystream || !activeMemberId) {
+        return
+      }
+      const completed = await handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).cancelNftBid(id, activeMemberId, proxyCallback(updateStatus)),
+        onTxSync: async (_) => _refetchData(id),
+      })
+      if (completed) {
+        displaySnackbar({
+          title: 'Your bid was withdrawn successfully',
+          iconType: 'success',
+        })
+      }
+    },
+    [_refetchData, activeMemberId, displaySnackbar, handleTransaction, joystream, proxyCallback]
   )
 
   const cancelNftSale = useCallback(
@@ -82,5 +104,6 @@ export const useNftTransactions = () => {
   return {
     cancelNftSale,
     changeNftPrice,
+    withdrawBid,
   }
 }

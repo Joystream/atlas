@@ -22,6 +22,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
@@ -61,9 +62,10 @@ export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
-  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice } = useNftActions()
+  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
+    useNftActions()
+  const { withdrawBid } = useNftTransactions()
   const nftWidgetProps = useNftWidget(id)
-  const { openNftPurchase, openNftSettlement } = useNftActions()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -209,6 +211,7 @@ export const VideoView: React.FC = () => {
           onNftPurchase={() => id && openNftPurchase(id)}
           onNftSettlement={() => id && openNftSettlement(id)}
           onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
+          onWithdrawBid={() => id && withdrawBid(id)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />

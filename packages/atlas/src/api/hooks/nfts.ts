@@ -1,6 +1,7 @@
 import { QueryHookOptions, QueryResult } from '@apollo/client'
 
 import {
+  AllBidFieldsFragment,
   AllNftFieldsFragment,
   BasicMembershipFieldsFragment,
   GetNftsQuery,
@@ -37,7 +38,8 @@ export type NftStatus = (
       type: 'open' | 'english'
       startingPrice: number
       buyNowPrice: number | undefined
-      topBid: number | undefined
+      topBid: AllBidFieldsFragment | undefined
+      topBidAmount: number | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock?: number
       bidLockingTime: number | undefined
@@ -76,7 +78,8 @@ export const useNft = (id: string): UseNftData => {
           type: nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' ? 'open' : 'english',
           startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
           buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
-          topBid: Number(nft.transactionalStatus.auction?.lastBid?.amount),
+          topBidAmount: Number(nft.transactionalStatus.auction?.lastBid?.amount),
+          topBid: nft.transactionalStatus.auction?.lastBid || undefined,
           topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
           auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
           bidLockingTime:
