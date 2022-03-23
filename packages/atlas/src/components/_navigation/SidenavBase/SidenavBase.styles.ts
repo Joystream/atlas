@@ -14,7 +14,7 @@ export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
   top: var(--size-banner-height);
   bottom: 0;
-  height: 100%;
+  height: calc(100% - var(--size-banner-height));
   z-index: ${zIndex.sideNav};
 
   --size-sidenav-width-expanded: 320px;
