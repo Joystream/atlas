@@ -12,7 +12,7 @@ export const NAVBAR_LEFT_PADDING = 24
 
 export const SidebarNav = styled.nav<ExpandableElementProps>`
   position: fixed;
-  top: 0;
+  top: var(--size-banner-height);
   bottom: 0;
   height: 100%;
   z-index: ${zIndex.sideNav};
@@ -105,11 +105,11 @@ export const LegalLink = styled(Link)`
 
 export const StyledHamburgerButton = styled(HamburgerButton)`
   position: fixed;
-  top: ${sizes(2)};
+  top: calc(${sizes(2)} + var(--size-banner-height));
   left: ${sizes(3)};
   z-index: ${zIndex.sideNav};
   ${media.md} {
-    top: ${sizes(4)};
+    top: calc(${sizes(4)} + var(--size-banner-height));
   }
 `
 

@@ -31,7 +31,7 @@ export const Container = styled.div`
   opacity: 0;
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
-  top: var(--size-topbar-height);
+  top: calc(var(--size-topbar-height) + var(--size-banner-height));
   left: 0;
   right: 0;
   height: calc(100vh - var(--size-topbar-height));

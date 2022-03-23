@@ -13,7 +13,7 @@ const paddingStyles = css`
 export const Container = styled.div`
   position: fixed;
   right: ${sizes(4)};
-  top: 0;
+  top: var(--size-banner-height);
   width: 280px;
   height: 0;
   z-index: ${zIndex.nearTransactionBar};

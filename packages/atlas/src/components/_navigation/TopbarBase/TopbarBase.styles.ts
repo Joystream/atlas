@@ -5,7 +5,7 @@ import { media, oldColors, sizes, zIndex } from '@/styles'
 
 export const Header = styled.header`
   position: fixed;
-  top: 0;
+  top: var(--size-banner-height);
   left: 0;
   right: 0;
   z-index: ${zIndex.header};
