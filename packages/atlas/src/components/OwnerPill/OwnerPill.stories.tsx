@@ -10,7 +10,7 @@ export default {
   component: OwnerPill,
   args: {
     handle: 'verylonghandle',
-    avatar: 'https://thispersondoesnotexist.com/image',
+    avatar: { assetUrl: 'https://thispersondoesnotexist.com/image' },
   },
 } as Meta
 
