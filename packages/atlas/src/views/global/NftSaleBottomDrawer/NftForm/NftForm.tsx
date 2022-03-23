@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import { useVideo } from '@/api/hooks'
 import { Step, StepProps, getStepVariant } from '@/components/Step'
@@ -17,7 +17,7 @@ import { formatDateTime } from '@/utils/time'
 
 import { AcceptTerms } from './AcceptTerms'
 import { ListingType } from './ListingType'
-import { useNftForm } from './NftForm.hooks'
+import { useNftForm, useNftFormUtils } from './NftForm.hooks'
 import {
   NftFormScrolling,
   NftFormWrapper,
@@ -68,31 +68,32 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       nextStep,
     },
   } = useNftForm()
+  const { chainState } = useNftFormUtils()
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
 
-  const {
-    handleSubmit: createSubmitHandler,
-    register,
-    reset,
-    getValues,
-    setValue,
-    control,
-    watch,
-    formState: { isValid, errors },
-  } = useForm<NftFormFields>({
+  const formMethods = useForm<NftFormFields>({
     mode: 'onChange',
     resolver: (data, ctx, options) => {
-      const resolver = zodResolver(createValidationSchema(data))
+      const resolver = zodResolver(createValidationSchema(data, listingType, chainState.nftMinStartingPrice))
       return resolver(data, ctx, options)
     },
     reValidateMode: 'onChange',
     defaultValues: {
       startDate: null,
       endDate: null,
+      startingPrice: chainState.nftMinStartingPrice || undefined,
     },
   })
+  const {
+    handleSubmit: createSubmitHandler,
+    reset,
+    getValues,
+    setValue,
+    watch,
+    formState: { isValid },
+  } = formMethods
 
   const { video, loading: loadingVideo } = useVideo(videoId, { fetchPolicy: 'cache-only' })
 
@@ -154,7 +155,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
         })
       } else if (listingType === 'Auction') {
         const startsAtBlock = startDate ? convertMsTimestampToBlock(startDate.getTime()) : undefined
-        const startingPrice = data.startingPrice || 1 // TODO: this should use a chain constant for minimum bid
+        const startingPrice = data.startingPrice || chainState.nftMinStartingPrice
         const minimalBidStep = Math.ceil(startingPrice * NFT_MIN_BID_STEP_MULTIPLIER)
 
         if (data.auctionDurationBlocks) {
@@ -185,6 +186,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     })
     return handler()
   }, [
+    chainState.nftMinStartingPrice,
     closeModal,
     convertMsTimestampToBlock,
     createSubmitHandler,
@@ -239,11 +241,14 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
 
   // Clear form on listing type change
   useEffect(() => {
-    if (listingType) {
-      reset()
-      setActiveInputs([])
+    reset()
+    if (listingType === 'Fixed price') {
+      setTimeout(() => {
+        setValue('buyNowPrice', 1)
+      })
     }
-  }, [listingType, reset, setActiveInputs])
+    setActiveInputs([])
+  }, [listingType, reset, setActiveInputs, setValue])
 
   const getNftStatus = () => {
     switch (listingType) {
@@ -273,16 +278,9 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
       key="step-content-2"
-      watch={watch}
-      control={control}
-      errors={errors}
-      register={register}
       selectedType={listingType}
-      setValue={setValue}
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
-      reset={reset}
-      formData={getValues()}
     />,
     <AcceptTerms
       key="step-content-3"
@@ -303,23 +301,25 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
           </Text>
         </NftPreview>
         <NftFormScrolling>
-          <NftFormWrapper lastStep={currentStep === 2}>
-            <StepperWrapper>
-              <StepperInnerWrapper>
-                {issueNftSteps.map((step, idx) => {
-                  const stepVariant = getStepVariant(currentStep, idx)
-                  const isLast = idx === issueNftSteps.length - 1
-                  return (
-                    <StepWrapper key={idx}>
-                      <Step showOtherStepsOnMobile number={idx + 1} variant={stepVariant} title={step.title} />
-                      {!isLast && <SvgActionChevronR />}
-                    </StepWrapper>
-                  )
-                })}
-              </StepperInnerWrapper>
-            </StepperWrapper>
-            {stepsContent[currentStep]}
-          </NftFormWrapper>
+          <FormProvider {...formMethods}>
+            <NftFormWrapper lastStep={currentStep === 2}>
+              <StepperWrapper>
+                <StepperInnerWrapper>
+                  {issueNftSteps.map((step, idx) => {
+                    const stepVariant = getStepVariant(currentStep, idx)
+                    const isLast = idx === issueNftSteps.length - 1
+                    return (
+                      <StepWrapper key={idx}>
+                        <Step showOtherStepsOnMobile number={idx + 1} variant={stepVariant} title={step.title} />
+                        {!isLast && <SvgActionChevronR />}
+                      </StepWrapper>
+                    )
+                  })}
+                </StepperInnerWrapper>
+              </StepperWrapper>
+              {stepsContent[currentStep]}
+            </NftFormWrapper>
+          </FormProvider>
         </NftFormScrolling>
       </NftWorkspaceFormWrapper>
     </ScrollableWrapper>

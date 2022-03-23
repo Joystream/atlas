@@ -11,12 +11,7 @@ export const useJoystream = (): JoystreamContextValue => {
 }
 
 export const useTokenPrice = () => {
-  const ctx = useContext(JoystreamContext)
-  if (!ctx) {
-    throw new Error('useJoystream must be used within JoystreamProvider')
-  }
-
-  const { tokenPrice } = ctx
+  const { tokenPrice } = useJoystream()
 
   const convertToUSD = useCallback(
     (tokens: number) => {
