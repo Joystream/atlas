@@ -61,7 +61,7 @@ export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
-  const { openNftPutOnSale, openNftAcceptBid } = useNftActions()
+  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid } = useNftActions()
   const nftWidgetProps = useNftWidget(id)
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
@@ -196,13 +196,13 @@ export const VideoView: React.FC = () => {
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
   const isCinematic = cinematicView || !mdMatch
-
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
       {!!nftWidgetProps && (
         <NftWidget
           {...nftWidgetProps}
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
+          onNftCancelSale={() => id && cancelNftSale(id, nftWidgetProps?.nftStatus?.status === 'buy-now')}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
         />
       )}
