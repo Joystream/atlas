@@ -34,6 +34,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
     getValues,
     watch,
     control,
+    trigger,
     formState: { errors },
   } = useFormContext<NftFormFields>()
 
@@ -62,6 +63,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
       if (!prevState.includes(name)) {
         if (name === 'buyNowPrice') {
           setValue('buyNowPrice', 1)
+          trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
       }
@@ -163,6 +165,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 helperText={errors.buyNowPrice?.message}
+                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
               />
             </FormField>
             <FormField

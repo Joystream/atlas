@@ -25,6 +25,10 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
     .number({ required_error: 'Buy now price must be provided', invalid_type_error: 'Buy now price must be a number' })
     .min(1, 'Buy now price cannot be lower than 1')
 
+  const startingPriceBase = z
+    .number({ invalid_type_error: 'Minimum bid must be a number' })
+    .min(minStartingPrice, `Minimum bid cannot be lower than ${minStartingPrice}`)
+
   return z.object({
     startDate: auctionDateType
       .refine(
@@ -67,10 +71,12 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
         { message: 'Expiration date cannot be earlier than starting date' }
       ),
     royalty: z.number().nullable().optional(),
-    startingPrice: z
-      .number({ invalid_type_error: 'Minimum bid must be a number' })
-      .min(minStartingPrice, `Minimum bid cannot be lower than ${minStartingPrice}`)
-      .optional(),
+    startingPrice:
+      data.buyNowPrice && listingType === 'Auction'
+        ? startingPriceBase
+            .max(data.buyNowPrice - 1, 'Starting price needs to be lower than the buy now price.')
+            .optional()
+        : startingPriceBase.optional(),
     buyNowPrice: listingType === 'Auction' ? buyNowPrice.nullable().optional() : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
     whitelistedMembersIds: z.array(z.string()).nullable().optional(),
