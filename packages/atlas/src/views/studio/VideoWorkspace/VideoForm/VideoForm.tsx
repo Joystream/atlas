@@ -81,6 +81,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const deleteVideo = useDeleteVideo()
   const isEdit = !editedVideoInfo?.isDraft
   const isNew = !isEdit
+  const mintNft = editedVideoInfo?.mintNft
 
   const { categories, error: categoriesError } = useCategories(undefined, {
     onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
@@ -122,8 +123,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     }
     setCachedEditedVideoId(editedVideoInfo.id)
 
-    reset(tabData)
-  }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue])
+    reset({ ...tabData, mintNft: tabData.mintNft || !!mintNft })
+  }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
   const handleSubmit = useCallback(() => {
     flushDraftSave()
 
@@ -242,13 +243,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? isDirty : isFormValid,
+      isDisabled: isEdit ? isDirty || !!mintNft : isFormValid,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
       triggerReset: reset,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, mintNft, reset]
   )
 
   // sent updates on form status to VideoWorkspace

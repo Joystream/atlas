@@ -13,6 +13,7 @@ const generateVideo = () => ({
   id: createId(),
   isDraft: true,
   isNew: true,
+  mintNft: false,
 })
 
 export const VideoWorkspaceProvider: React.FC = ({ children }) => {

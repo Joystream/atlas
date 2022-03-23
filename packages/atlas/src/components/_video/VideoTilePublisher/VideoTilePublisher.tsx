@@ -38,6 +38,7 @@ import { VideoTile } from '../VideoTile'
 type VideoTilePublisherProps = {
   id?: string
   onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
+  onMintNftClick?: (e?: React.MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
 }
@@ -45,7 +46,7 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
@@ -216,7 +217,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
                   ]
                 : []),
             ]
-          : [{ icon: <SvgActionMint />, onClick: onEditClick, title: 'Mint NFT' }]),
+          : [{ icon: <SvgActionMint />, onClick: onMintNftClick, title: 'Mint NFT' }]),
         ...(!hasNft && !canCancelSale
           ? [
               {
@@ -240,6 +241,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       isNftOwner,
       canPutOnSale,
       canCancelSale,
+      onMintNftClick,
       videoHref,
       copyToClipboard,
       openNftPutOnSale,

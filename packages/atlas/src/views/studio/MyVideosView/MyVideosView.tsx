@@ -144,12 +144,16 @@ export const MyVideosView = () => {
   type HandleVideoClickOpts = {
     draft?: boolean
     minimized?: boolean
+    mintNft?: boolean
   }
-  const handleVideoClick = (id?: string, opts: HandleVideoClickOpts = { draft: false, minimized: false }) => {
+  const handleVideoClick = (
+    id?: string,
+    opts: HandleVideoClickOpts = { draft: false, minimized: false, mintNft: false }
+  ) => {
     if (!id) {
       return
     }
-    setEditedVideo({ id, isNew: false, isDraft: opts.draft })
+    setEditedVideo({ id, isNew: false, isDraft: opts.draft, mintNft: opts.mintNft })
     if (opts.minimized) {
       addToTabNotificationsCount.current++
       if (addToTabNotificationsCount.current > 1) {
@@ -242,6 +246,11 @@ export const MyVideosView = () => {
               e?.stopPropagation()
               e?.preventDefault()
               handleVideoClick(video.id)
+            }}
+            onMintNftClick={(e) => {
+              e?.stopPropagation()
+              e?.preventDefault()
+              handleVideoClick(video.id, { mintNft: true })
             }}
             onDeleteVideoClick={() => video.id && deleteVideo(video.id)}
             onReuploadVideoClick={() => navigate(absoluteRoutes.studio.uploads(), { state: { highlightFailed: true } })}
