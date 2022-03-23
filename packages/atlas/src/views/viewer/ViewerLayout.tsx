@@ -102,6 +102,6 @@ export const ViewerLayout: React.FC = () => {
 
 const MainContainer = styled.main`
   position: relative;
-  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
+  padding: calc(var(--size-topbar-height) + var(--size-banner-height)) var(--size-global-horizontal-padding) 0;
   margin-left: var(--size-sidenav-width-collapsed);
 `
