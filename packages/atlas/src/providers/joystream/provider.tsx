@@ -18,7 +18,9 @@ type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
 export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
   proxyCallback: ProxyCallbackFn
+  chainState: ReturnType<typeof useJoystreamChainState>
 } & ReturnType<typeof useJoystreamUtilFns>
+
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
@@ -40,6 +42,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
   const utilFns = useJoystreamUtilFns(joystream.current, proxyCallback)
+  const chainState = useJoystreamChainState(joystream.current)
 
   // initialize Joystream Lib
   useEffect(() => {
@@ -96,7 +99,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   return (
     <JoystreamContext.Provider
-      value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, ...utilFns }}
+      value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, chainState, ...utilFns }}
     >
       {children}
     </JoystreamContext.Provider>
@@ -108,7 +111,7 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
   const [currentBlock, setCurrentBlock] = useState(0)
   const currentBlockMsTimestampRef = useRef(0)
 
-  // fetch JOY token price from the status server
+  // fetch tJOY token price from the status server
   useEffect(() => {
     const getPrice = async () => {
       try {
@@ -149,4 +152,28 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     currentBlock,
     getCurrentBlockMsTimestamp,
   }
+}
+
+type JoystreamChainState = {
+  nftMinStartingPrice: number
+  nftMaxAuctionDuration: number
+}
+const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
+  const [chainState, setChainState] = useState<JoystreamChainState>({
+    nftMinStartingPrice: 1,
+    nftMaxAuctionDuration: 1_296_000,
+  })
+
+  useEffect(() => {
+    if (!joystream) return
+
+    joystream.getNftChainState().then((nftChainState) =>
+      setChainState({
+        nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
+        nftMinStartingPrice: nftChainState.minStartingPrice,
+      })
+    )
+  }, [joystream])
+
+  return chainState
 }

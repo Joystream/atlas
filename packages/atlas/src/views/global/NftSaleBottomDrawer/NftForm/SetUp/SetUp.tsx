@@ -1,15 +1,6 @@
 import { addMonths } from 'date-fns'
 import React, { useEffect } from 'react'
-import {
-  Control,
-  Controller,
-  DeepMap,
-  FieldError,
-  UseFormRegister,
-  UseFormReset,
-  UseFormSetValue,
-  UseFormWatch,
-} from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
@@ -22,41 +13,35 @@ import { formatNumber } from '@/utils/number'
 
 import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
 
-import { useNftForm } from '../NftForm.hooks'
+import { useNftFormUtils } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
-  register: UseFormRegister<NftFormFields>
   selectedType: Listing
-  setValue: UseFormSetValue<NftFormFields>
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
-  reset: UseFormReset<NftFormFields>
-  formData: NftFormFields
-  watch: UseFormWatch<NftFormFields>
-  control: Control<NftFormFields>
-  errors: DeepMap<NftFormFields, FieldError>
 }
 
 const MAX_DATE = addMonths(new Date(), 5) // TODO: should use chain constant for max auction duration
 
-export const SetUp: React.FC<SetUpProps> = ({
-  register,
-  selectedType,
-  setValue,
-  activeInputs,
-  setActiveInputs,
-  reset,
-  formData,
-  watch,
-  control,
-}) => {
+export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setActiveInputs }) => {
+  const {
+    register,
+    setValue,
+    reset,
+    getValues,
+    watch,
+    control,
+    trigger,
+    formState: { errors },
+  } = useFormContext<NftFormFields>()
+
   const startDate = watch('startDate')
   const endDate = watch('endDate')
 
-  const { getNumberOfBlocks } = useNftForm()
+  const { getNumberOfBlocks, chainState } = useNftFormUtils()
 
   const numberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
 
@@ -76,13 +61,19 @@ export const SetUp: React.FC<SetUpProps> = ({
     const { name } = event.target
     setActiveInputs((prevState) => {
       if (!prevState.includes(name)) {
+        if (name === 'buyNowPrice') {
+          setValue('buyNowPrice', 1)
+          trigger() // trigger form validation to make sure starting price is valid
+        }
         return [...prevState, name]
       }
       if (name === 'auctionDuration') {
         setValue('startDate', null)
         setValue('endDate', null)
+      } else if (name === 'startingPrice') {
+        setValue('startingPrice', chainState.nftMinStartingPrice || undefined)
       } else {
-        reset({ ...formData, [name]: undefined })
+        reset({ ...getValues(), [name]: undefined })
       }
       return prevState.filter((inputName) => inputName !== name)
     })
@@ -126,9 +117,11 @@ export const SetUp: React.FC<SetUpProps> = ({
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
             <TextField
-              {...register('buyNowPrice', { required: true, valueAsNumber: true })}
+              {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
               nodeEnd={<Pill label="tJoy" />}
+              error={!!errors.buyNowPrice}
+              helperText={errors.buyNowPrice?.message}
             />
           </StyledFormField>
         )}
@@ -146,8 +139,11 @@ export const SetUp: React.FC<SetUpProps> = ({
               <TextField
                 {...register('startingPrice', { valueAsNumber: true })}
                 type="number"
+                defaultValue={chainState.nftMinStartingPrice?.toString()}
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('startingPrice')}
+                error={!!errors.startingPrice}
+                helperText={errors.startingPrice?.message}
               />
             </FormField>
             <FormField
@@ -163,9 +159,13 @@ export const SetUp: React.FC<SetUpProps> = ({
             >
               <TextField
                 {...register('buyNowPrice', { valueAsNumber: true })}
+                placeholder="—"
                 type="number"
                 nodeEnd={<Pill label="tJOY" />}
                 disabled={!activeInputs.includes('buyNowPrice')}
+                error={!!errors.buyNowPrice}
+                helperText={errors.buyNowPrice?.message}
+                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
               />
             </FormField>
             <FormField

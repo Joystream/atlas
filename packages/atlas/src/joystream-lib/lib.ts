@@ -102,4 +102,18 @@ export class JoystreamLib {
     })
     return proxy(unsubscribe)
   }
+
+  async getNftChainState() {
+    await this.ensureApi()
+
+    const [maxAuctionDuration, minStartingPrice] = await Promise.all([
+      this.api.query.content.maxAuctionDuration(),
+      this.api.query.content.minStartingPrice(),
+    ])
+
+    return {
+      maxAuctionDuration: maxAuctionDuration.toNumber(),
+      minStartingPrice: minStartingPrice.toNumber(),
+    }
+  }
 }
