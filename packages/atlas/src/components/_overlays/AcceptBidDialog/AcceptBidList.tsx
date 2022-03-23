@@ -7,7 +7,7 @@ import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { formatDateTime } from '@/utils/time'
 
-import { BidRowWrapper, Date, Price, PriceUsd, TokenPrice } from './AcceptBidList.styles'
+import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
 
 type BidRowProps = {
   id: string
@@ -64,9 +64,9 @@ export const BidRow: React.FC<BidRowProps> = ({
         <Text variant="h300" secondary={!selected} margin={{ bottom: 1 }}>
           {memberHandle}
         </Text>
-        <Date secondary variant="t100">
+        <Text as="p" secondary variant="t100">
           {formatDateTime(date)}
-        </Date>
+        </Text>
       </div>
       <Price>
         <TokenPrice>
@@ -75,9 +75,9 @@ export const BidRow: React.FC<BidRowProps> = ({
             {bid}
           </Text>
         </TokenPrice>
-        <PriceUsd variant="t100" secondary>
+        <Text as="p" variant="t100" secondary>
           {bidUSD}
-        </PriceUsd>
+        </Text>
       </Price>
     </BidRowWrapper>
   )

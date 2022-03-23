@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
 export const BidRowWrapper = styled.div<{ selected: boolean }>`
@@ -35,12 +34,4 @@ export const TokenPrice = styled.div`
   align-items: center;
   justify-content: flex-end;
   margin-bottom: ${sizes(1)};
-`
-
-export const Date = styled(Text)`
-  display: block;
-`
-
-export const PriceUsd = styled(Text)`
-  display: block;
 `

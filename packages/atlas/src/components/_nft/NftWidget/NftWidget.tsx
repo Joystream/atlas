@@ -453,7 +453,6 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
   return (
     <Container ref={ref}>
-      <Button onClick={onNftAcceptBid}>Test</Button>
       <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
         <OwnerLabel variant="t100" secondary>
