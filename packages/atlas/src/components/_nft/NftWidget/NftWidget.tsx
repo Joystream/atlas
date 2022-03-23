@@ -296,7 +296,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 content={
                   <>
                     <TopBidderContainer>
-                      <Avatar assetUrl={ownerAvatarUri} size="bid" />
+                      <Avatar assetUrl={nftStatus.topBidderAvatarUri} size="bid" />
                       <TopBidderTokenContainer data-size={size}>
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
@@ -435,7 +435,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, ownerAvatarUri])
+  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling])
 
   if (!nftStatus) return null
 
