@@ -25,40 +25,44 @@ export const useNftActions = () => {
     changeNftPrice,
   } = ctx
 
+  const checkIfSigned = useCallback(() => {
+    if (!isSignedIn) {
+      openSignInDialog({ onConfirm: signIn })
+    }
+    return isSignedIn
+  }, [isSignedIn, openSignInDialog, signIn])
+
   const openNftPurchase = useCallback(
     (nftId: string) => {
-      if (!isSignedIn) {
-        openSignInDialog({ onConfirm: signIn })
+      if (!checkIfSigned()) {
         return
       }
       setCurrentNftId(nftId)
       setCurrentAction('purchase')
     },
-    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
+    [checkIfSigned, setCurrentAction, setCurrentNftId]
   )
 
   const openNftPutOnSale = useCallback(
     (nftId: string) => {
-      if (!isSignedIn) {
-        openSignInDialog({ onConfirm: signIn })
+      if (!checkIfSigned()) {
         return
       }
       setCurrentNftId(nftId)
       setCurrentAction('putOnSale')
     },
-    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
+    [checkIfSigned, setCurrentAction, setCurrentNftId]
   )
 
   const openNftSettlement = useCallback(
     (nftId: string) => {
-      if (!isSignedIn) {
-        openSignInDialog({ onConfirm: signIn })
+      if (!checkIfSigned()) {
         return
       }
       setCurrentNftId(nftId)
       setCurrentAction('settle')
     },
-    [isSignedIn, openSignInDialog, setCurrentAction, setCurrentNftId, signIn]
+    [checkIfSigned, setCurrentAction, setCurrentNftId]
   )
 
   const openNftAcceptBid = useCallback(
