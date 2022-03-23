@@ -15,7 +15,7 @@ const fetchTokenUrlsFromGithub = async () => {
   }
 }
 
-const TOKEN_WHITE_LIST = ['colors', 'animation', 'typography', 'effects']
+const TOKEN_WHITE_LIST = ['colors', 'animation', 'typography', 'effects', 'radii']
 
 const fetchTokens = async () => {
   fs.mkdir(TOKENS_DIR, { recursive: true }, (err) => {
