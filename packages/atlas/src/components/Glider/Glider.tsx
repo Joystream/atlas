@@ -1,5 +1,6 @@
 import Glider, { GliderEvent, GliderEventMap, Options } from 'glider-js'
 import 'glider-js/glider.min.css'
+import { isEqual } from 'lodash-es'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 type GliderEventListeners = {
@@ -43,6 +44,7 @@ export function useGlider<T extends HTMLElement>({
 }: GliderProps) {
   const [glider, setGlider] = useState<Glider<HTMLElement>>()
   const element = useRef<T>(null)
+  const gliderOptionsRef = useRef(gliderOptions)
 
   useLayoutEffect(() => {
     if (!element.current) {
@@ -57,10 +59,16 @@ export function useGlider<T extends HTMLElement>({
       }
     }
   }, [])
+
+  /**
+   * because gliderOptions changes it's reference through renders,
+   * we need to avoid unnecessary glider refresh by comparing gliderOptions value
+   */
   useLayoutEffect(() => {
-    if (!glider) {
+    if (!glider || isEqual(gliderOptions, gliderOptionsRef.current)) {
       return
     }
+    gliderOptionsRef.current = gliderOptions
     glider.setOption({ skipTrack: true, ...gliderOptions }, true)
     glider.refresh(true)
   }, [gliderOptions, glider])
