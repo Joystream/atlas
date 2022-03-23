@@ -70,6 +70,7 @@ export type NftWidgetProps = {
     | Auction
     | undefined
   onNftPutOnSale?: () => void
+  onNftAcceptBid?: () => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -81,6 +82,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   needsSettling,
   ownerAvatarUri,
   onNftPutOnSale,
+  onNftAcceptBid,
   bidFromPreviousAuction,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
@@ -88,8 +90,8 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-
   const { convertToUSD } = useTokenPrice()
+
   const content = useDeepMemo(() => {
     if (!nftStatus) return
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
@@ -382,7 +384,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
                       {nftStatus.type === 'open' && !!nftStatus.topBid && (
-                        <Button fullWidth size={buttonSize}>
+                        <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
                           Review and accept bid
                         </Button>
                       )}
@@ -435,7 +437,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       }
     }
-  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling])
+  }, [size, nftStatus, convertToUSD, onNftPutOnSale, bidFromPreviousAuction, isOwner, needsSettling, onNftAcceptBid])
 
   if (!nftStatus) return null
 

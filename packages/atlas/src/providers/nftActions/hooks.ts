@@ -10,7 +10,7 @@ export const useNftActions = () => {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
 
-  const { currentAction, currentNftId, setCurrentAction, setCurrentNftId } = ctx
+  const { currentAction, currentNftId, setCurrentAction, setCurrentNftId, closeNftAction } = ctx
   const transactions = useNftTransactions()
 
   const openNftPurchase = useCallback(
@@ -37,9 +37,13 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId]
   )
 
-  const closeNftAction = useCallback(() => {
-    setCurrentAction(null)
-  }, [setCurrentAction])
+  const openNftAcceptBid = useCallback(
+    (nftId: string) => {
+      setCurrentNftId(nftId)
+      setCurrentAction('accept-bid')
+    },
+    [setCurrentAction, setCurrentNftId]
+  )
 
   return {
     currentAction,
@@ -48,6 +52,7 @@ export const useNftActions = () => {
     openNftPutOnSale,
     openNftSettlement,
     closeNftAction,
+    openNftAcceptBid,
     ...transactions,
   }
 }
