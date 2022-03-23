@@ -6,7 +6,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
-import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useAsset } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
@@ -24,13 +23,20 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { openNftPurchase } = useNftActions()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const { canPutOnSale, canMakeBid, canCancelSale, canBuyNow, isBuyNow } = useNftState(nft)
-  const { cancelNftSale } = useNftTransactions()
+  const { cancelNftSale, openNftPutOnSale } = useNftActions()
 
   const handleRemoveOnSale = () => {
     if (!nftId || !nft?.video.id) {
       return
     }
     cancelNftSale(nftId, !!isBuyNow)
+  }
+
+  const handlePutOnSale = () => {
+    if (!nftId) {
+      return
+    }
+    openNftPutOnSale(nftId)
   }
 
   const { currentBlock } = useJoystream()
@@ -104,6 +110,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       onRemoveFromSale={handleRemoveOnSale}
       onNftPurchase={() => nftId && openNftPurchase(nftId)}
       onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
+      onPutOnSale={handlePutOnSale}
     />
   )
 }
