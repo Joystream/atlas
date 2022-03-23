@@ -1,17 +1,20 @@
 import React from 'react'
 
-import { ChildrenWrapper, RankingNumber, RankingNumberTileWrapper } from './RankingNumberTile.styles'
+import { ChildrenWrapper, DropShadow, MainContainer, NumberWrapper, RankingNumber } from './RankingNumberTile.styles'
 
-type RankingNumberTileProps = {
-  rankingNumber: number
-  variant: 'channel' | 'video'
+export type RankingNumberTileProps = {
+  number: number
+  className?: string
 }
 
-export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ rankingNumber, children, variant }) => {
+export const RankingNumberTile: React.FC<RankingNumberTileProps> = ({ number, children, className }) => {
   return (
-    <RankingNumberTileWrapper>
-      <RankingNumber variant={variant}>{rankingNumber}</RankingNumber>
+    <MainContainer className={className}>
+      <NumberWrapper>
+        <RankingNumber doubleDigits={number >= 10}>{number}</RankingNumber>
+        <DropShadow />
+      </NumberWrapper>
       <ChildrenWrapper>{children}</ChildrenWrapper>
-    </RankingNumberTileWrapper>
+    </MainContainer>
   )
 }

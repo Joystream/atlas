@@ -121,7 +121,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               <StyledChannelLink
                 onClick={stopPropagationx}
                 id={channelId}
-                avatarSize="default"
+                avatarSize={mdMatch ? 'default' : 'bid'}
                 textVariant={mdMatch ? 't300' : 't200'}
               />
             </VideoInfo>
@@ -148,7 +148,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               </SubHeading>
               <StyledChannelLink
                 id={channelId}
-                avatarSize="small"
+                avatarSize={mdMatch ? 'small' : 'bid'}
                 noNextVideo
                 textVariant={mdMatch ? 'h700' : 'h400'}
               />

@@ -1,73 +1,75 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, media, oldColors } from '@/styles'
+import { cVar, media, zIndex } from '@/styles'
 
-export const RankingNumberTileWrapper = styled.div`
-  position: relative;
+export const MainContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row;
 `
 
-const variantStyles = (variant: 'channel' | 'video') => {
-  switch (variant) {
-    case 'channel':
-      return css`
-        ${media.md} {
-          top: 0;
-          align-items: flex-start;
-          font-size: 140px;
-        }
-        ${media.xl} {
-          font-size: 180px;
-        }
-      `
-    case 'video':
-      return css`
-        ${media.md} {
-          line-height: 0.7;
-          font-size: 140px;
-        }
-        ${media.xl} {
-          padding-top: 0;
-          font-size: 180px;
-        }
-      `
-    default:
-      return null
+export const NumberWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 40px;
+  min-width: 40px;
+  ${media.sm} {
+    width: 64px;
+    min-width: 64px;
   }
+`
+
+const getRankingNumberTypographyCss = ({ doubleDigits }: RankingNumberProps) => {
+  return doubleDigits
+    ? css`
+        line-height: 85%;
+        font-size: 96px;
+        ${media.sm} {
+          font-size: 136px;
+        }
+      `
+    : css`
+        line-height: 100%;
+        font-size: 104px;
+        ${media.sm} {
+          font-size: 160px;
+        }
+      `
 }
 
 type RankingNumberProps = {
-  variant: 'channel' | 'video'
+  doubleDigits: boolean
 }
-export const RankingNumber = styled.div<RankingNumberProps>`
-  position: absolute;
-  z-index: -5;
-  left: 0;
-  color: black;
-  -webkit-text-stroke-width: 4px;
-  -webkit-text-stroke-color: ${oldColors.gray[500]};
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: -0.17em;
-  font-family: ${cVar('typographyFontsPrimary')};
-  font-size: 100px;
-  height: 0;
-  padding-top: 3%;
 
-  ${({ variant }) => variantStyles(variant)};
+export const RankingNumber = styled.span<RankingNumberProps>`
+  z-index: ${zIndex.closeBackground};
+  min-width: 0;
+  font-family: ${cVar('typographyFontsPrimary')};
+  font-weight: 700;
+  text-align: left;
+  color: ${cVar('colorCoreBaseBlack')};
+  word-break: break-all;
+  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-color: ${cVar('colorBorder')};
+
+  ${getRankingNumberTypographyCss};
+`
+
+export const DropShadow = styled.div`
+  width: 20px;
+  ${media.sm} {
+    width: 32px;
+  }
+
+  background: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, #000 100%);
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
 `
 
 export const ChildrenWrapper = styled.div`
-  align-self: baseline;
-  --ranking-number-gap: 48px;
-
-  width: calc(100% - var(--ranking-number-gap));
-  ${media.md} {
-    --ranking-number-gap: 72px;
-  }
-  ${media.xl} {
-    --ranking-number-gap: 92px;
-  }
+  width: 100%;
 `

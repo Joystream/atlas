@@ -103,6 +103,11 @@ export const useStartFileUpload = () => {
 
         const setUploadProgress = ({ loaded, total }: ProgressEvent) => {
           setAssetStatus({ progress: (loaded / total) * 100 })
+
+          if ((loaded / total) * 100 === 100) {
+            addProcessingAssetId(asset.id)
+            setAssetStatus({ lastStatus: 'processing', progress: (loaded / total) * 100 })
+          }
         }
 
         pendingUploadingNotificationsCounts.current++
@@ -134,9 +139,6 @@ export const useStartFileUpload = () => {
           raxConfig,
           onUploadProgress: setUploadProgress,
         })
-
-        setAssetStatus({ lastStatus: 'processing', progress: 100 })
-        addProcessingAssetId(asset.id)
 
         assetsNotificationsCount.current.uploaded[assetKey] =
           (assetsNotificationsCount.current.uploaded[assetKey] || 0) + 1

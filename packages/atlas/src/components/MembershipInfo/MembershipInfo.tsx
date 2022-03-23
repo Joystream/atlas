@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 import { shortenAddress } from '@/utils/address'
-import { copyToClipboard } from '@/utils/browser'
 
 import {
   MembershipDetails,
@@ -46,6 +46,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
   editable,
   className,
 }) => {
+  const { copyToClipboard } = useClipboard()
   const [copyButtonClicked, setCopyButtonClicked] = useState(false)
   const smMatch = useMediaMatch('sm')
 
@@ -53,7 +54,7 @@ export const MembershipInfo: React.FC<MembershipInfoProps> = ({
     if (!address) {
       return
     }
-    copyToClipboard(address)
+    copyToClipboard(address, 'Account address copied to clipboard')
     setCopyButtonClicked(true)
     setTimeout(() => {
       setCopyButtonClicked(false)

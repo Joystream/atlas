@@ -18,9 +18,10 @@ import {
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useUploadsStore } from '@/providers/uploadsManager'
-import { copyToClipboard } from '@/utils/browser'
+import { openInNewTab } from '@/utils/browser'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -31,7 +32,6 @@ type VideoTilePublisherProps = {
   onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
-  onOpenInTabClick?: () => void
   owner?: {
     handle: string
     avatarUrl?: string
@@ -41,7 +41,8 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onOpenInTabClick, owner }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, owner }) => {
+    const { copyToClipboard } = useClipboard()
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
@@ -58,13 +59,17 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       uploadThumbnailStatus?.lastStatus === 'inProgress' ||
       uploadThumbnailStatus?.lastStatus === 'processing' ||
       uploadThumbnailStatus?.lastStatus === 'reconnecting'
-
     const isUploading = isVideoUploading || isThumbnailUploading
 
     const hasThumbnailUploadFailed =
-      (video?.thumbnailPhoto && !video.thumbnailPhoto.isAccepted && !isThumbnailUploading) || false
-    const hasVideoUploadFailed = (video?.media && !video.media.isAccepted && !isVideoUploading) || false
-    const hasAssetUploadFailed = hasThumbnailUploadFailed || hasVideoUploadFailed
+      (video?.thumbnailPhoto &&
+        !video.thumbnailPhoto.isAccepted &&
+        uploadThumbnailStatus?.lastStatus !== 'completed') ||
+      false
+    const hasVideoUploadFailed =
+      (video?.media && !video.media.isAccepted && uploadVideoStatus?.lastStatus !== 'completed') || false
+
+    const hasAssetUploadFailed = (hasThumbnailUploadFailed || hasVideoUploadFailed) && !isUploading
 
     const isUnlisted = video?.isPublic === false
 
@@ -130,6 +135,12 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
       ]
 
+      const onOpenInTabClick = () => {
+        if (videoHref) {
+          openInNewTab(videoHref, true)
+        }
+      }
+
       const publisherBasicKebabItems = [
         {
           icon: <SvgActionPlay />,
@@ -138,7 +149,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
         {
           icon: <SvgActionCopy />,
-          onClick: () => copyToClipboard(videoHref ? location.origin + videoHref : ''),
+          onClick: () => {
+            copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
+          },
           title: 'Copy video URL',
         },
         {
@@ -160,8 +173,8 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       isUploading,
       onDeleteVideoClick,
       onEditClick,
-      onOpenInTabClick,
       onReuploadVideoClick,
+      copyToClipboard,
       videoHref,
     ])
 
@@ -178,23 +191,37 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       return
     }, [hasAssetUploadFailed, uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
 
-    const getContentSlot = () => {
-      if (hasAssetUploadFailed) {
-        return
+    const getAllFilesLasStatus = useCallback(() => {
+      if (uploadVideoStatus?.lastStatus === 'inProgress' || uploadThumbnailStatus?.lastStatus === 'inProgress') {
+        return 'inProgress'
       }
+      if (uploadVideoStatus?.lastStatus === 'processing' || uploadThumbnailStatus?.lastStatus === 'processing') {
+        return 'processing'
+      }
+      if (uploadVideoStatus?.lastStatus === 'completed' || uploadThumbnailStatus?.lastStatus === 'completed') {
+        return 'completed'
+      }
+    }, [uploadThumbnailStatus?.lastStatus, uploadVideoStatus?.lastStatus])
+
+    const getContentSlot = () => {
       return (
-        <CSSTransition in={isUploading} timeout={1000} classNames={DELAYED_FADE_CLASSNAME} unmountOnExit mountOnEnter>
+        <CSSTransition
+          in={isUploading && !hasAssetUploadFailed}
+          timeout={1000}
+          classNames={DELAYED_FADE_CLASSNAME}
+          unmountOnExit
+          mountOnEnter
+        >
           <UploadProgressTransition>
             <UploadProgressBar
               progress={uploadVideoStatus?.progress || uploadThumbnailStatus?.progress}
-              lastStatus={uploadVideoStatus?.lastStatus || uploadThumbnailStatus?.lastStatus}
+              lastStatus={getAllFilesLasStatus()}
               withLoadingIndicator
             />
           </UploadProgressTransition>
         </CSSTransition>
       )
     }
-
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
@@ -205,7 +232,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
         loadingDetails={loading}
-        loadingThumbnail={isLoadingThumbnail}
+        loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={thumbnailPhotoUrl}
         createdAt={video?.createdAt}
         videoTitle={video?.title}

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { DrawerHeader } from '@/components/DrawerHeader'
 import { SvgControlsCancel } from '@/components/_icons'
@@ -117,10 +117,10 @@ const VideoWorkspaceActionBar: React.FC<VideoWorkspaceActionBarProps> = ({
   onResize,
 }) => {
   const mdMatch = useMediaMatch('md')
-  const [actionBarRef, actionBarBounds] = useMeasure()
+  const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })
 
   const isActive = !isEdit || canSubmit
-  const height = isActive ? actionBarBounds.height : 0
+  const height = isActive ? actionBarBoundsHeight : 0
 
   // send update to VideoWorkspace whenever height changes
   useEffect(() => {

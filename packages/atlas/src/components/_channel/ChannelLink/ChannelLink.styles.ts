@@ -34,8 +34,8 @@ export const StyledText = styled(Text)<HandleProps>`
   ${({ isSecondary }) => isSecondary && secondaryTextCss}
 `
 
-export const TitleWrapper = styled.div`
-  flex: 1;
+export const TitleWrapper = styled.div<{ followButton?: boolean }>`
+  flex: ${({ followButton }) => followButton && 1};
   display: flex;
   align-items: center;
 `

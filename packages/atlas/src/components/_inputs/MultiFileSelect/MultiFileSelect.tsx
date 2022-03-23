@@ -75,6 +75,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
     const [underlineLeft, setUnderlineLeft] = useState(0)
 
     useResizeObserver({
+      box: 'border-box',
       ref: thumbnailStepRef,
       onResize: () => {
         setUnderlineWidth(thumbnailStepRef?.current?.offsetWidth || 0)

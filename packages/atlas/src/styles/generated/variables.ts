@@ -12,6 +12,8 @@ export const variables = css`
     --animation-transition-medium: var(--animation-timing-medium) var(--animation-easing-medium);
     --animation-transition-slow: var(--animation-timing-slow) var(--animation-easing-medium);
     --animation-transition-callout: var(--animation-timing-medium) var(--animation-easing-bounce);
+    --color-core-base-black: #000;
+    --color-core-base-white: #fff;
     --color-core-neutral-50: #f4f6f8;
     --color-core-neutral-50-lighten: #fafafafa;
     --color-core-neutral-50-darken: #234a710d;
@@ -126,6 +128,8 @@ export const variables = css`
     --effect-elevation-16-layer2: 0 4px 8px 0 #0000001a;
     --effect-elevation-24-layer1: 0 24px 40px 0 #00000029;
     --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
+    --radius-small: 2px;
+    --radius-medium: 4px;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
@@ -291,6 +295,8 @@ export const theme = {
     variable: 'var(--animation-transition-callout)',
     value: '250ms cubic-bezier(0.3,1.5,0.6,0.95)',
   },
+  colorCoreBaseBlack: { variable: 'var(--color-core-base-black)', value: '#000' },
+  colorCoreBaseWhite: { variable: 'var(--color-core-base-white)', value: '#FFF' },
   colorCoreNeutral50: { variable: 'var(--color-core-neutral-50)', value: '#F4F6F8' },
   colorCoreNeutral50Lighten: { variable: 'var(--color-core-neutral-50-lighten)', value: '#FAFAFAFA' },
   colorCoreNeutral50Darken: { variable: 'var(--color-core-neutral-50-darken)', value: '#234A710D' },
@@ -405,6 +411,8 @@ export const theme = {
   effectElevation16Layer2: { variable: 'var(--effect-elevation-16-layer2)', value: ' 0 4px 8px 0 #0000001A' },
   effectElevation24Layer1: { variable: 'var(--effect-elevation-24-layer1)', value: ' 0 24px 40px 0 #00000029' },
   effectElevation24Layer2: { variable: 'var(--effect-elevation-24-layer2)', value: ' 0 8px 8px 0 #0000001F' },
+  radiusSmall: { variable: 'var(--radius-small)', value: '2px' },
+  radiusMedium: { variable: 'var(--radius-medium)', value: '4px' },
   typographyFontsPrimary: {
     variable: 'var(--typography-fonts-primary)',
     value:

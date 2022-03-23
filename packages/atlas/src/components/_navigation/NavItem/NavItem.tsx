@@ -36,7 +36,7 @@ export const NavItem: React.FC<NavItemProps> = ({
   badgeNumber,
   isSecondary,
 }) => {
-  const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>()
+  const { height: subitemsHeight, ref: subitemsRef } = useResizeObserver<HTMLUListElement>({ box: 'border-box' })
   const match = useMatch(to)
   return (
     <SidebarNavItem data-badge={badgeNumber} expanded={expanded}>

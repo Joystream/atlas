@@ -111,23 +111,21 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
     font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(5) : '14px')};
     display: flex;
     align-items: center;
-    margin-left: ${sizes(2)};
 
     ${media.md} {
       font-size: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(4))};
-      margin-left: ${sizes(3)};
     }
   }
 
-  div {
+  > a {
     width: ${sizes(6)};
-    height: ${sizes(6)};
+    min-height: ${sizes(6)};
     min-width: ${sizes(6)};
+    margin-right: ${sizes(2)};
 
     ${media.md} {
-      margin-right: ${sizes(1)};
+      margin-right: ${sizes(3)};
       width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
-      height: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
       min-width: ${({ noNextVideo }) => (noNextVideo ? sizes(10) : sizes(8))};
     }
   }

@@ -2,7 +2,6 @@ import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import useResizeObserver from 'use-resize-observer'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -36,6 +35,8 @@ import {
   CategoryWrapper,
   ChannelContainer,
   DescriptionContainer,
+  DescriptionCopy,
+  DescriptionLink,
   DescriptionSkeletonLoader,
   DescriptionTitle,
   DetailsWrapper,
@@ -80,7 +81,6 @@ export const VideoView: React.FC = () => {
   const headTags = useHeadTags(video?.title, videoMetaTags)
 
   const { startTimestamp, setStartTimestamp } = useVideoStartTimestamp(video?.duration)
-  const { ref: videoGridRef } = useResizeObserver()
 
   // Restore an interrupted video state
   useEffect(() => {
@@ -156,9 +156,9 @@ export const VideoView: React.FC = () => {
     const parts = text.split(urlRegex)
     return parts.reduce((acc, part, idx) => {
       const node = urlRegex.test(part) ? (
-        <Button size="large" textOnly key={`description-link-${idx}`} to={part}>
+        <DescriptionLink size="large" textOnly key={`description-link-${idx}`} to={part}>
           {part}
-        </Button>
+        </DescriptionLink>
       ) : (
         part
       )
@@ -227,9 +227,9 @@ export const VideoView: React.FC = () => {
               <>
                 <DescriptionTitle variant="h100">Description</DescriptionTitle>
                 {video.description?.split('\n').map((line, idx) => (
-                  <Text variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
                     {replaceUrls(line)}
-                  </Text>
+                  </DescriptionCopy>
                 ))}
               </>
             )
@@ -296,7 +296,7 @@ export const VideoView: React.FC = () => {
     <>
       <PlayerGridWrapper cinematicView={isCinematic}>
         <PlayerWrapper cinematicView={isCinematic}>
-          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }} ref={videoGridRef}>
+          <PlayerGridItem colSpan={{ xxs: 12, md: cinematicView ? 12 : 8 }}>
             <PlayerContainer className={transitions.names.slide} cinematicView={cinematicView}>
               {!isMediaLoading && video ? (
                 <VideoPlayer
