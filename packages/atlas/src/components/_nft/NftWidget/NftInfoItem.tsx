@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from '@/components/Text'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar } from '@/styles'
-import { formatDurationShort } from '@/utils/time'
+import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
 import { Size } from './NftWidget'
@@ -23,7 +23,6 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   )
 }
 
-const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))
 export const NftTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
   useMsTimestamp()
   const timeInSeconds = getTimeDiffInSeconds(time)

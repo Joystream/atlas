@@ -9,4 +9,5 @@ export type PillProps = {
   iconPlacement?: 'left' | 'right'
   size?: Sizes
   variant?: Variants
+  title?: string
 }
