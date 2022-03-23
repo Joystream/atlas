@@ -33,3 +33,5 @@ export const formatDurationShort = (duration: number, showHours?: boolean): stri
 export const daysToMilliseconds = (days: number) => {
   return days * 24 * 60 * 60 * 1000
 }
+
+export const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))

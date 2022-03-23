@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
+import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
 import { OwnerPill } from '@/components/OwnerPill'
@@ -20,7 +21,9 @@ import {
 } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
+import { useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { openInNewTab } from '@/utils/browser'
@@ -34,22 +37,23 @@ type VideoTilePublisherProps = {
   onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
-  owner?: {
-    handle: string
-    avatarUrl?: string
-  }
 }
 
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, owner }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick }) => {
     const { copyToClipboard } = useClipboard()
     const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
       id,
     })
+    const navigate = useNavigate()
 
     const { openNftPutOnSale } = useNftActions()
+    const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
+
+    const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
+    const nftTilePublisher = useGetNftSlot(id)
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
@@ -87,11 +91,24 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         bottomRight: {
           element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
-        topLeft: owner && {
-          element: <OwnerPill avatar={owner.avatarUrl} handle={owner.handle} />,
-          clickable: true,
-          halfWidth: true,
-        },
+        bottomLeft: nftTilePublisher,
+        topLeft: owner
+          ? {
+              element: (
+                <OwnerPill
+                  onClick={(e) => {
+                    e?.preventDefault()
+                    navigate(absoluteRoutes.viewer.member(owner.handle))
+                  }}
+                  avatar={{ assetUrl: ownerAvatar.url, loading: ownerAvatar.isLoadingAsset }}
+                  handle={owner.handle}
+                  title={owner.handle}
+                />
+              ),
+              clickable: true,
+              halfWidth: true,
+            }
+          : undefined,
         topRight: {
           element: (
             <IconButton size="small" onClick={onEditClick}>
@@ -115,14 +132,26 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           type: 'hover',
         }
         slots.topRight = undefined
+        slots.bottomLeft = nftTilePublisher
       }
       if (isUnlisted) {
-        slots.bottomLeft = {
+        slots.bottomLeft = nftTilePublisher && {
           element: <Pill variant="overlay" label="Unlisted" icon={<SvgActionHide />} />,
         }
       }
       return slots
-    }, [hasAssetUploadFailed, isUnlisted, isUploading, loading, onEditClick, owner, video?.duration])
+    }, [
+      hasAssetUploadFailed,
+      isUnlisted,
+      isUploading,
+      loading,
+      navigate,
+      nftTilePublisher,
+      onEditClick,
+      owner,
+      ownerAvatar,
+      video?.duration,
+    ])
 
     const getPublisherKebabMenuItems = useCallback(() => {
       if (isUploading && !hasAssetUploadFailed) {

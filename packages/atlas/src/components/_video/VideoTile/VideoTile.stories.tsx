@@ -162,7 +162,9 @@ export const Publisher = Template.bind({})
 Publisher.args = {
   slots: {
     topLeft: {
-      element: <OwnerPill avatar="https://thispersondoesnotexist.com/image" handle="thishandledoesntexists" />,
+      element: (
+        <OwnerPill avatar={{ assetUrl: 'https://thispersondoesnotexist.com/image' }} handle="thishandledoesntexists" />
+      ),
       clickable: true,
       halfWidth: true,
     },

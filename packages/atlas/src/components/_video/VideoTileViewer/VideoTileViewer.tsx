@@ -5,6 +5,7 @@ import { Pill } from '@/components/Pill'
 import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { formatDurationShort } from '@/utils/time'
 
@@ -25,6 +26,7 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
     useVideoTileSharedLogic({
       id,
     })
+  const nftBottomLeftSlot = useGetNftSlot(id)
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
@@ -40,14 +42,17 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
       channelHref={channelHref}
       onChannelAvatarClick={() => navigate(channelHref)}
       loadingDetails={loading}
-      thumbnailUrl={thumbnailPhotoUrl}
       loadingThumbnail={isLoadingThumbnail}
+      thumbnailUrl={thumbnailPhotoUrl}
       views={video?.views}
       createdAt={video?.createdAt}
       slots={{
         bottomRight: {
-          element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
+          element: video?.duration ? (
+            <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
+          ) : null,
         },
+        bottomLeft: nftBottomLeftSlot,
         center: {
           element: <SvgIllustrativePlay />,
           type: 'hover',
