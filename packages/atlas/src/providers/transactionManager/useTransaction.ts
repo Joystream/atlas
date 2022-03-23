@@ -11,7 +11,7 @@ import { useSnackbar } from '../snackbars'
 type UpdateStatusFn = (status: TransactionDialogStep) => void
 type SuccessMessage = {
   title: string
-  description: string
+  description?: string
 }
 type HandleTransactionOpts<T extends ExtrinsicResult> = {
   txFactory: (updateStatus: UpdateStatusFn) => Promise<T>
@@ -23,6 +23,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
+const TX_SIGN_COMPLETED_SNACKBAR_TIMEOUT = 5000
 
 export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, setDialogStep } = useTransactionManagerStore((state) => state.actions)
@@ -30,7 +31,7 @@ export const useTransaction = (): HandleTransactionFn => {
   const { displaySnackbar } = useSnackbar()
 
   return useCallback(
-    async ({ preProcess, txFactory, onTxFinalize, onTxSync }) => {
+    async ({ preProcess, txFactory, onTxFinalize, onTxSync, successMessage }) => {
       try {
         if (nodeConnectionStatus !== 'connected') {
           setDialogStep(ExtrinsicStatus.Error)
@@ -75,6 +76,12 @@ export const useTransaction = (): HandleTransactionFn => {
         return new Promise((resolve) => {
           queryNodeSyncPromise.then(() => {
             setDialogStep(ExtrinsicStatus.Completed)
+            successMessage &&
+              displaySnackbar({
+                ...successMessage,
+                iconType: 'success',
+                timeout: TX_SIGN_COMPLETED_SNACKBAR_TIMEOUT,
+              })
             resolve(true)
           })
         })

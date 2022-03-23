@@ -71,6 +71,9 @@ export const useNftTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).changeNftPrice(activeMemberId, id, price, proxyCallback(updateStatus)),
         onTxSync: async (_) => _refetchData(id),
+        successMessage: {
+          title: 'NFT price changed',
+        },
       })
     },
     [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]
