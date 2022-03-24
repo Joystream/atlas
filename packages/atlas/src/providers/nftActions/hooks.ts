@@ -1,7 +1,5 @@
 import { useCallback, useContext } from 'react'
 
-import { useNftTransactions } from '@/hooks/useNftTransactions'
-
 import { NftActionsContext } from './provider'
 
 export const useNftActions = () => {
@@ -10,8 +8,15 @@ export const useNftActions = () => {
     throw new Error('useNftActions must be used within NftActionsProvider')
   }
 
-  const { currentAction, currentNftId, setCurrentAction, setCurrentNftId, closeNftAction } = ctx
-  const transactions = useNftTransactions()
+  const {
+    currentAction,
+    currentNftId,
+    setCurrentAction,
+    setCurrentNftId,
+    closeNftAction,
+    cancelNftSale,
+    changeNftPrice,
+  } = ctx
 
   const openNftPurchase = useCallback(
     (nftId: string) => {
@@ -45,6 +50,14 @@ export const useNftActions = () => {
     [setCurrentAction, setCurrentNftId]
   )
 
+  const openNftChangePrice = useCallback(
+    (nftId: string) => {
+      setCurrentNftId(nftId)
+      setCurrentAction('change-price')
+    },
+    [setCurrentAction, setCurrentNftId]
+  )
+
   return {
     currentAction,
     currentNftId,
@@ -53,6 +66,8 @@ export const useNftActions = () => {
     openNftSettlement,
     closeNftAction,
     openNftAcceptBid,
-    ...transactions,
+    openNftChangePrice,
+    cancelNftSale,
+    changeNftPrice,
   }
 }

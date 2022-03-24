@@ -62,7 +62,25 @@ export const useNftTransactions = () => {
     [_refetchData, activeMemberId, closeModal, handleTransaction, joystream, openModal, proxyCallback]
   )
 
+  const changeNftPrice = useCallback(
+    (id: string, price: number) => {
+      if (!joystream || !activeMemberId) {
+        return
+      }
+      handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).changeNftPrice(activeMemberId, id, price, proxyCallback(updateStatus)),
+        onTxSync: async (_) => _refetchData(id),
+        snackbarSuccessMessage: {
+          title: 'NFT price changed',
+        },
+      })
+    },
+    [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]
+  )
+
   return {
     cancelNftSale,
+    changeNftPrice,
   }
 }
