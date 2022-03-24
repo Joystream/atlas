@@ -20,7 +20,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
-  const { openNftPurchase } = useNftActions()
+  const { openNftPurchase, openNftChangePrice } = useNftActions()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const { canPutOnSale, canMakeBid, canCancelSale, canBuyNow, isBuyNow } = useNftState(nft)
   const { cancelNftSale, openNftPutOnSale } = useNftActions()
@@ -111,6 +111,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       onNftPurchase={() => nftId && openNftPurchase(nftId)}
       onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
       onPutOnSale={handlePutOnSale}
+      onNftChangePrice={() => nftId && openNftChangePrice(nftId)}
     />
   )
 }

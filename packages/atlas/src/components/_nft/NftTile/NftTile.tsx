@@ -40,6 +40,7 @@ export type NftTileProps = {
   canMakeBid?: boolean
   onRemoveFromSale?: () => void
   onPutOnSale?: () => void
+  onNftChangePrice?: () => void
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
@@ -65,6 +66,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   canMakeBid,
   onRemoveFromSale,
   onPutOnSale,
+  onNftChangePrice,
 }) => {
   const [hovered, setHovered] = useState(false)
   const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
@@ -152,6 +154,7 @@ export const NftTile: React.FC<NftTileProps> = ({
         canMakeBid={canMakeBid}
         canPutOnSale={canPutOnSale}
         onPutOnSale={onPutOnSale}
+        onNftChangePrice={onNftChangePrice}
       />
     </Container>
   )
