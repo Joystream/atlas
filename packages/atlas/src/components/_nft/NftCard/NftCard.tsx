@@ -27,7 +27,7 @@ export const NftCard: React.FC<NftCardProps> = ({
 }) => {
   return (
     <Container fullWidth={fullWidth}>
-      <VideoThumbnail clickable={false} thumbnailUrl={thumbnail.thumbnailUrl} />
+      <VideoThumbnail clickable={false} {...thumbnail} />
       <Details>
         {loading ? <SkeletonLoader width="70%" height={24} bottomSpace={24} /> : <Title variant="h400">{title}</Title>}
         <Content>

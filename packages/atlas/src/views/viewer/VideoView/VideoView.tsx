@@ -63,6 +63,7 @@ export const VideoView: React.FC = () => {
   const { id } = useParams()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice } = useNftActions()
   const nftWidgetProps = useNftWidget(id)
+  const { openNftPurchase, openNftSettlement } = useNftActions()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -205,6 +206,9 @@ export const VideoView: React.FC = () => {
           onNftCancelSale={() => id && cancelNftSale(id, nftWidgetProps?.nftStatus?.status === 'buy-now')}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
           onNftChangePrice={() => id && openNftChangePrice(id)}
+          onNftPurchase={() => id && openNftPurchase(id)}
+          onNftSettlement={() => id && openNftSettlement(id)}
+          onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
@@ -303,7 +307,6 @@ export const VideoView: React.FC = () => {
       </DetailsWrapper>
     </>
   )
-
   return (
     <>
       <PlayerGridWrapper cinematicView={isCinematic}>

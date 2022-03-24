@@ -8,6 +8,7 @@ import {
   AvatarGroupWrapper,
   AvatarWrapper,
   Caption,
+  MemberName,
   MembersWrapper,
   StyledAvatar,
   StyledAvatarGroup,
@@ -53,7 +54,7 @@ export const Members: React.FC<MembersProps> = ({ caption, members, loading }) =
       {!isArray && (
         <AvatarWrapper>
           <StyledAvatar size="bid" assetUrl={members.assetUrl} loading={loading} />
-          {loading ? <SkeletonLoader width={64} height={24} /> : <Text variant="h300">{members.name}</Text>}
+          {loading ? <SkeletonLoader width={64} height={24} /> : <MemberName variant="h300">{members.name}</MemberName>}
         </AvatarWrapper>
       )}
     </MembersWrapper>

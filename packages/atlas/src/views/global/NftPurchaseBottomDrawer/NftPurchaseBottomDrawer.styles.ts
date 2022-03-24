@@ -1,11 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { ActionBar } from '@/components/ActionBar'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 const flexStyles = css`
   display: flex;
@@ -15,39 +14,6 @@ const flexStyles = css`
 export const FlexWrapper = styled.div`
   ${flexStyles};
 `
-
-export const Container = styled.div`
-  transform: translateY(100%);
-  opacity: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: ${cVar('colorBackground')};
-  box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
-  transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
-  will-change: transform, opacity;
-  z-index: ${zIndex.globalOverlay};
-
-  &.place-bid {
-    &-exit,
-    &-enter-active,
-    &-enter-done {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    &-enter,
-    &-exit-active {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-  }
-`
-
 export const Content = styled.div`
   padding-top: ${sizes(8)};
   display: flex;
@@ -81,11 +47,11 @@ export const NftPreview = styled.div`
   }
 `
 
-export const PlaceBidWrapper = styled.div<{ actionBarHeight: number }>`
+export const PlaceBidWrapper = styled.div`
   padding-bottom: ${sizes(6)};
 
   ${media.md} {
-    height: calc(100% - ${({ actionBarHeight }) => `${actionBarHeight}px`});
+    height: 100%;
     overflow-y: auto;
     padding-bottom: unset;
   }
@@ -204,12 +170,6 @@ export const Divider = styled.hr`
   margin-bottom: ${sizes(4)};
 `
 
-export const StyledActionBar = styled(ActionBar)`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-`
 export const PaymentSplitWrapper = styled.div`
   display: grid;
   grid-template-rows: auto;

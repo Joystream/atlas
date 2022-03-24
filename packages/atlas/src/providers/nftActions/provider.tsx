@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
 import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useOverlayManager } from '@/providers/overlayManager'
 
 type ContextValue = {
   currentAction: NftAction | null
   currentNftId: string | null
-
+  isBuyNowClicked?: boolean
   setCurrentAction: React.Dispatch<React.SetStateAction<NftAction | null>>
   setCurrentNftId: React.Dispatch<React.SetStateAction<string | null>>
   closeNftAction: () => void
+  setIsBuyNowClicked: React.Dispatch<React.SetStateAction<boolean | undefined>>
 }
 
 export const NftActionsContext = React.createContext<
@@ -23,42 +23,27 @@ type NftAction = 'putOnSale' | 'purchase' | 'settle' | 'accept-bid' | 'change-pr
 
 export const NftActionsProvider: React.FC = ({ children }) => {
   const [currentAction, setCurrentAction] = useState<NftAction | null>(null)
-  const [currentNftId, setCurrentNftId] = useState<string | null>(null)
-
-  // TODO: remove following code once NftPurchaseView uses BottomDrawer
-  // --START--
-  const [cachedCurrentAction, setCachedCurrentAction] = useState<NftAction | null>(null)
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const transactions = useNftTransactions()
-
-  useEffect(() => {
-    if (currentAction === cachedCurrentAction) {
-      return
-    }
-    setCachedCurrentAction(currentAction)
-
-    if (currentAction === 'purchase') {
-      incrementOverlaysOpenCount()
-    } else {
-      decrementOverlaysOpenCount()
-    }
-  }, [cachedCurrentAction, currentAction, decrementOverlaysOpenCount, incrementOverlaysOpenCount])
-  // --END--
+  const [isBuyNowClicked, setIsBuyNowClicked] = useState<boolean>()
+  const [currentNftId, setCurrentNftId] = useState<string | null>(null)
 
   const closeNftAction = useCallback(() => {
     setCurrentAction(null)
+    setIsBuyNowClicked(false)
   }, [setCurrentAction])
 
   const value = useMemo(
     () => ({
       currentAction,
       currentNftId,
+      isBuyNowClicked,
+      setIsBuyNowClicked,
       setCurrentAction,
       setCurrentNftId,
       closeNftAction,
       ...transactions,
     }),
-    [closeNftAction, currentAction, currentNftId, transactions]
+    [closeNftAction, currentAction, currentNftId, isBuyNowClicked, transactions]
   )
 
   return (

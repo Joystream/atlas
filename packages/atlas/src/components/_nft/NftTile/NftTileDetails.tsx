@@ -49,6 +49,8 @@ export type NftTileDetailsProps = {
   canCancelSale?: boolean
   canBuyNow?: boolean
   canMakeBid?: boolean
+  onNftPurchase?: () => void
+  onNftBuyNow?: () => void
 }
 
 type TileSize = 'small' | 'medium'
@@ -72,6 +74,8 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   canCancelSale,
   canBuyNow,
   canMakeBid,
+  onNftPurchase,
+  onNftBuyNow,
 }) => {
   const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
@@ -128,16 +132,27 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       elements.unshift({
         icon: <SvgActionBuyNow />,
         title: 'Buy now',
+        onClick: onNftBuyNow,
       })
     }
     if (canMakeBid) {
       elements.unshift({
         icon: <SvgActionBid />,
         title: 'Place bid',
+        onClick: onNftPurchase,
       })
     }
     return elements
-  }, [handleCopyVideoURLClick, canPutOnSale, canCancelSale, canBuyNow, canMakeBid, onRemoveFromSale])
+  }, [
+    handleCopyVideoURLClick,
+    canPutOnSale,
+    canCancelSale,
+    canBuyNow,
+    canMakeBid,
+    onRemoveFromSale,
+    onNftBuyNow,
+    onNftPurchase,
+  ])
 
   const getDetails = useMemo(() => {
     if (loading) {
