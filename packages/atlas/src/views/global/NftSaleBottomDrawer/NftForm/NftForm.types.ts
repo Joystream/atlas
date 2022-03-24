@@ -2,14 +2,6 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { NftSaleInputMetadata } from '@/joystream-lib'
 
-export enum AuctionDuration {
-  NoExpiration = 'No expiration date',
-  OneDay = '1 day',
-  ThreeDays = '3 days',
-  FiveDays = '5 days',
-  SevenDays = '7 days',
-}
-
 export type Listing = 'Auction' | 'Fixed price' | undefined
 
 export type AuctionDate = {
