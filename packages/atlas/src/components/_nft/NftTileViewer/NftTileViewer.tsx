@@ -9,6 +9,7 @@ import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useAsset } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
+import { useNftActions } from '@/providers/nftActions'
 
 import { NftTile, NftTileProps } from '../NftTile'
 
@@ -19,8 +20,9 @@ type NftTileViewerProps = {
 export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
-  const thumbnail = useAsset(nft?.video?.thumbnailPhoto)
-  const creatorAvatar = useAsset(nft?.video?.channel.avatarPhoto)
+  const thumbnail = useAsset(nft?.video.thumbnailPhoto)
+  const { openNftPurchase } = useNftActions()
+  const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const { canPutOnSale, canMakeBid, canCancelSale, canBuyNow, isBuyNow } = useNftState(nft)
   const { cancelNftSale } = useNftTransactions()
 
@@ -100,6 +102,8 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       canCancelSale={canCancelSale}
       canMakeBid={canMakeBid}
       onRemoveFromSale={handleRemoveOnSale}
+      onNftPurchase={() => nftId && openNftPurchase(nftId)}
+      onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
     />
   )
 }

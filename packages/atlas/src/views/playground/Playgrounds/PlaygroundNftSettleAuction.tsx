@@ -11,8 +11,6 @@ export const PlaygroundNftSettleAuction = () => {
   return (
     <>
       <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} label="Video ID" />
-      <br />
-      <br />
       {nftId && <Button onClick={() => openNftSettlement(nftId)}>Open drawer</Button>}
     </>
   )
