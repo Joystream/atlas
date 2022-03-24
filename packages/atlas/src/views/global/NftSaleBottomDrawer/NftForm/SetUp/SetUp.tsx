@@ -36,7 +36,6 @@ export const SetUp: React.FC<SetUpProps> = ({
   const {
     register,
     setValue,
-    reset,
     getValues,
     watch,
     control,
@@ -58,28 +57,6 @@ export const SetUp: React.FC<SetUpProps> = ({
     }
     setValue('auctionDurationBlocks', numberOfBlocks)
   }, [numberOfBlocks, setValue])
-
-  const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event) {
-      return
-    }
-    const { name } = event.target
-    setActiveInputs((prevState) => {
-      if (!prevState.includes(name)) {
-        return [...prevState, name]
-      }
-      if (name === 'whitelistedMembers') {
-        setValue('whitelistedMembers', [])
-      }
-      if (name === 'auctionDuration') {
-        setValue('startDate', null)
-        setValue('endDate', null)
-      } else {
-        reset({ ...getValues(), [name]: undefined })
-      }
-      return prevState.filter((inputName) => inputName !== name)
-    })
-  }
 
   const handleToggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
     if (!event) {
@@ -145,11 +122,11 @@ export const SetUp: React.FC<SetUpProps> = ({
             <Controller
               name="startingPrice"
               control={control}
-              render={({ field: { onChange, value }, fieldState: { error } }) => (
+              render={({ field: { onChange, value, name }, fieldState: { error } }) => (
                 <FormField
                   title="Minimum bid"
                   switchProps={{
-                    name: 'startingPrice',
+                    name,
                     onChange: (event) => {
                       onChange(chainState.nftMinStartingPrice)
                       handleToggleActiveInput(event)
@@ -175,15 +152,16 @@ export const SetUp: React.FC<SetUpProps> = ({
             <Controller
               name="buyNowPrice"
               control={control}
-              render={({ field: { onChange, value }, fieldState: { error } }) => (
+              render={({ field: { onChange, value, name }, fieldState: { error } }) => (
                 <FormField
                   title="Fixed price"
                   switchProps={{
-                    name: 'buyNowPrice',
+                    name,
                     onChange: (event) => {
                       if (event?.currentTarget.checked) {
                         // fixed price need to be higher than starting price
-                        onChange(chainState.nftMinStartingPrice + 1)
+                        const declaredStartingPrice = getValues('startingPrice')
+                        onChange(declaredStartingPrice ? declaredStartingPrice + 1 : chainState.nftMinStartingPrice + 1)
                       } else {
                         onChange('')
                       }
@@ -214,7 +192,14 @@ export const SetUp: React.FC<SetUpProps> = ({
               title="Auction duration"
               switchProps={{
                 name: 'auctionDuration',
-                onChange: toggleActiveInput,
+                onChange: (event) => {
+                  handleToggleActiveInput(event)
+                  if (event?.currentTarget.checked) {
+                    setValue('startDate', null)
+                    setValue('endDate', null)
+                    setValue('auctionDurationBlocks', undefined)
+                  }
+                },
                 value: activeInputs.includes('auctionDuration'),
               }}
               infoTooltip={{
@@ -293,7 +278,12 @@ export const SetUp: React.FC<SetUpProps> = ({
               title="Whitelist"
               switchProps={{
                 name: 'whitelistedMembers',
-                onChange: toggleActiveInput,
+                onChange: (event) => {
+                  handleToggleActiveInput(event)
+                  if (!event?.currentTarget.checked) {
+                    setValue('whitelistedMembers', [])
+                  }
+                },
                 value: activeInputs.includes('whitelistedMembers'),
               }}
               infoTooltip={{
