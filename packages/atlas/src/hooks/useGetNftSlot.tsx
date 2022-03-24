@@ -17,7 +17,7 @@ export const useGetNftSlot = (id?: string) => {
   const { auctionPlannedEndDate, isExpired } = useNftState(nft)
 
   const getNftPills = useCallback(
-    (nftStatus: NftStatus): PillProps[] => {
+    (nftStatus?: NftStatus): PillProps[] => {
       const hasEndDate = auctionPlannedEndDate && !isExpired
       const lessThanMinute = hasEndDate && differenceInSeconds(auctionPlannedEndDate, msTimestamp) < 60
       const lessThanHour = hasEndDate && differenceInHours(auctionPlannedEndDate, msTimestamp) < 1
@@ -30,7 +30,7 @@ export const useGetNftSlot = (id?: string) => {
         title: 'Buy now',
       }
 
-      switch (nftStatus.status) {
+      switch (nftStatus?.status) {
         case 'auction':
           return [
             {
