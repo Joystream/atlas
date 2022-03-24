@@ -19,12 +19,20 @@ import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
+  maxStartDate: Date
+  maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setActiveInputs }) => {
+export const SetUp: React.FC<SetUpProps> = ({
+  selectedType,
+  activeInputs,
+  setActiveInputs,
+  maxEndDate,
+  maxStartDate,
+}) => {
   const {
     register,
     setValue,
@@ -191,7 +199,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={new Date()}
-                      // maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       items={[
                         {
@@ -214,7 +222,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                      // maxDate={maxEndDate}
+                      maxDate={maxEndDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       onChange={onChange}
                       items={expirationDateItems}

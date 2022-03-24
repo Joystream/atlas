@@ -110,33 +110,6 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
   const [tokenPrice, setTokenPrice] = useState(0)
   const [currentBlock, setCurrentBlock] = useState(0)
   const currentBlockMsTimestampRef = useRef(0)
-  const [auctionEndsAtMaxDelta, setAuctionEndsAtMaxDelta] = useState(0)
-  const [auctionStartsAtMaxDelta, setAuctionStartsAtMaxDelta] = useState(0)
-
-  useEffect(() => {
-    // if auctionStartsAtMaxDelta is already set we don't need to run this again. The value is constant
-    if (!joystream || auctionStartsAtMaxDelta) {
-      return
-    }
-    const getMaxAuctionStart = async () => {
-      const startsAtMaxDelta = await joystream.getAuctionStartsAtMaxDelta()
-      setAuctionStartsAtMaxDelta(startsAtMaxDelta)
-    }
-    getMaxAuctionStart()
-  }, [auctionStartsAtMaxDelta, joystream])
-
-  useEffect(() => {
-    // if auctionEndsAtMaxDelta is already set we don't need to run this again. The value is constant
-    if (!joystream || auctionEndsAtMaxDelta) {
-      return
-    }
-    const getMaxAuctionEnd = async () => {
-      const duration = await joystream.getMaxAuctionDuration()
-      const currentBlock = await joystream.getCurrentBlock()
-      setAuctionEndsAtMaxDelta(duration - currentBlock)
-    }
-    getMaxAuctionEnd()
-  }, [auctionEndsAtMaxDelta, joystream])
 
   // fetch tJOY token price from the status server
   useEffect(() => {
@@ -178,19 +151,19 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     tokenPrice,
     currentBlock,
     getCurrentBlockMsTimestamp,
-    auctionEndsAtMaxDelta,
-    auctionStartsAtMaxDelta,
   }
 }
 
 type JoystreamChainState = {
   nftMinStartingPrice: number
   nftMaxAuctionDuration: number
+  nftAuctionStartsAtMaxDelta: number
 }
 const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainState, setChainState] = useState<JoystreamChainState>({
     nftMinStartingPrice: 1,
     nftMaxAuctionDuration: 1_296_000,
+    nftAuctionStartsAtMaxDelta: 432_000,
   })
 
   useEffect(() => {
@@ -200,6 +173,7 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
       setChainState({
         nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
         nftMinStartingPrice: nftChainState.minStartingPrice,
+        nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
       })
     )
   }, [joystream])

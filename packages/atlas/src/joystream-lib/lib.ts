@@ -91,19 +91,6 @@ export class JoystreamLib {
     return number.toNumber()
   }
 
-  async getMaxAuctionDuration(): Promise<number> {
-    await this.ensureApi()
-
-    const maxDuration = await this.api.query.content.maxAuctionDuration()
-    return new BN(maxDuration).toNumber()
-  }
-
-  async getAuctionStartsAtMaxDelta(): Promise<number> {
-    await this.ensureApi()
-    const auctionStartsAtMaxDelta = await this.api.query.content.auctionStartsAtMaxDelta()
-    return new BN(auctionStartsAtMaxDelta).toNumber()
-  }
-
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
@@ -126,14 +113,16 @@ export class JoystreamLib {
   async getNftChainState() {
     await this.ensureApi()
 
-    const [maxAuctionDuration, minStartingPrice] = await Promise.all([
+    const [maxAuctionDuration, minStartingPrice, auctionStartsAtMaxDelta] = await Promise.all([
       this.api.query.content.maxAuctionDuration(),
       this.api.query.content.minStartingPrice(),
+      this.api.query.content.auctionStartsAtMaxDelta(),
     ])
 
     return {
       maxAuctionDuration: maxAuctionDuration.toNumber(),
       minStartingPrice: minStartingPrice.toNumber(),
+      auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
     }
   }
 }

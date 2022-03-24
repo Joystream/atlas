@@ -23,7 +23,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
 
   const { activeMemberId } = useUser()
-  const { joystream, proxyCallback, auctionEndsAtMaxDelta, auctionStartsAtMaxDelta } = useJoystream()
+  const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const client = useApolloClient()
   const { displaySnackbar } = useSnackbar()
@@ -94,13 +94,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction} actionBar={actionBarProps}>
       {isOpen && currentNftId && (
-        <NftForm
-          onSubmit={handleSubmit}
-          videoId={currentNftId}
-          setFormStatus={setFormStatus}
-          maxStartDateInBlocks={auctionStartsAtMaxDelta}
-          maxEndDateInBlocks={auctionEndsAtMaxDelta}
-        />
+        <NftForm onSubmit={handleSubmit} videoId={currentNftId} setFormStatus={setFormStatus} />
       )}
     </BottomDrawer>
   )

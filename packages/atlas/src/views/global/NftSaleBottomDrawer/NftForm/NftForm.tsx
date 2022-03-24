@@ -51,18 +51,10 @@ const issueNftSteps: StepProps[] = [
 type NftFormProps = {
   setFormStatus: (data: NftFormStatus) => void
   onSubmit: (data: NftFormData) => void
-  maxEndDateInBlocks: number
-  maxStartDateInBlocks: number
   videoId: string
 }
 
-export const NftForm: React.FC<NftFormProps> = ({
-  setFormStatus,
-  onSubmit,
-  videoId,
-  maxEndDateInBlocks,
-  maxStartDateInBlocks,
-}) => {
+export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership } = useUser()
   const {
     state: {
@@ -82,8 +74,8 @@ export const NftForm: React.FC<NftFormProps> = ({
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
-  const maxStartDate = addMilliseconds(new Date(), converBlocksToDuration(maxStartDateInBlocks))
-  const maxEndDate = addMilliseconds(new Date(), converBlocksToDuration(maxEndDateInBlocks))
+  const maxStartDate = addMilliseconds(new Date(), converBlocksToDuration(chainState.nftAuctionStartsAtMaxDelta))
+  const maxEndDate = addMilliseconds(new Date(), converBlocksToDuration(chainState.nftMaxAuctionDuration))
 
   const formMethods = useForm<NftFormFields>({
     mode: 'onChange',
@@ -292,8 +284,8 @@ export const NftForm: React.FC<NftFormProps> = ({
   const stepsContent = [
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
-      // maxStartDate={maxStartDate}
-      // maxEndDate={maxEndDate}
+      maxStartDate={maxStartDate}
+      maxEndDate={maxEndDate}
       key="step-content-2"
       selectedType={listingType}
       activeInputs={activeInputs}
