@@ -160,10 +160,6 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         }
       },
       onTxSync: async (_) => refetch(),
-      successMessage: {
-        title: 'NFT bought',
-        description: 'Good job',
-      },
     })
     if (completed) {
       closeNftAction()
@@ -195,10 +191,6 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             await joystream.extrinsics
           ).makeNftBid(currentNftId, activeMemberId, Number(data.bid), proxyCallback(updateStatus)),
         onTxSync: (_) => refetch(),
-        successMessage: {
-          title: 'Bid placed',
-          description: 'Good job',
-        },
       })
       if (completed) {
         if (Number(data.bid) === auctionBuyNowPrice) {
