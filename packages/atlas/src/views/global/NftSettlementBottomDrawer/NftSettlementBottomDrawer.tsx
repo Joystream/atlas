@@ -52,10 +52,6 @@ export const NftSettlementBottomDrawer: React.FC = () => {
         closeNftAction()
         return refetch()
       },
-      successMessage: {
-        title: 'Auction settled',
-        description: 'Good job',
-      },
     })
   }
   const isOpen = currentAction === 'settle'

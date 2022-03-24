@@ -31,10 +31,6 @@ export const useDeleteVideo = () => {
           removeAssetsWithParentFromUploads('video', videoId)
           onTxSync?.()
         },
-        successMessage: {
-          title: 'Video successfully deleted!',
-          description: 'Your video was marked as deleted and it will no longer show up on Joystream.',
-        },
       })
     },
     [activeMemberId, client, handleTransaction, joystream, proxyCallback, removeAssetsWithParentFromUploads]

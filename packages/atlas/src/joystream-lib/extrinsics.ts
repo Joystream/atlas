@@ -310,6 +310,17 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
+  async changeNftPrice(memberId: MemberId, videoId: VideoId, price: number, cb?: ExtrinsicStatusCallbackFn) {
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.updateBuyNowPrice(contentActor, videoId, price)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
   async cancelNftSale(
     videoId: VideoId,
     memberId: MemberId,

@@ -160,12 +160,6 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
-        successMessage: {
-          title: isNew ? 'Video successfully created!' : 'Video successfully updated!',
-          description: isNew
-            ? 'Your video was created and saved on the blockchain. Upload of video assets may still be in progress.'
-            : 'Changes to your video were saved on the blockchain.',
-        },
       })
 
       if (completed) {

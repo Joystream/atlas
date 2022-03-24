@@ -61,7 +61,7 @@ export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedGizaContent({ type: 'video' })
   const { id } = useParams()
-  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid } = useNftActions()
+  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice } = useNftActions()
   const nftWidgetProps = useNftWidget(id)
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
@@ -204,6 +204,7 @@ export const VideoView: React.FC = () => {
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
           onNftCancelSale={() => id && cancelNftSale(id, nftWidgetProps?.nftStatus?.status === 'buy-now')}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
+          onNftChangePrice={() => id && openNftChangePrice(id)}
         />
       )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />

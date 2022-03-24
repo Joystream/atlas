@@ -72,6 +72,7 @@ export type NftWidgetProps = {
   onNftPutOnSale?: () => void
   onNftAcceptBid?: () => void
   onNftCancelSale?: () => void
+  onNftChangePrice?: () => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -86,6 +87,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   onNftAcceptBid,
   bidFromPreviousAuction,
   onNftCancelSale,
+  onNftChangePrice,
 }) => {
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
@@ -191,7 +193,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             {isOwner ? (
               <GridItem colSpan={buttonColumnSpan}>
                 <ButtonGrid data-size={size}>
-                  <Button fullWidth variant="secondary" size={buttonSize}>
+                  <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftChangePrice}>
                     Change price
                   </Button>
                   <Button fullWidth variant="destructive" size={buttonSize} onClick={onNftCancelSale}>
@@ -446,6 +448,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     bidFromPreviousAuction,
     isOwner,
     onNftPutOnSale,
+    onNftChangePrice,
     onNftCancelSale,
     needsSettling,
     onNftAcceptBid,
