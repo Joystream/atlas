@@ -26,59 +26,69 @@ if (!indexHtml) {
 }
 
 app.get('/video/:id', async (req, res) => {
-  const id = req.params['id']
-  const video = await getVideo(id)
+  try {
+    const id = req.params['id']
+    const video = await getVideo(id)
 
-  if (!video) {
-    return res.status(404).send('Video not found')
+    if (!video) {
+      return res.status(404).send('Video not found')
+    }
+
+    const html = parseHtml(indexHtml)
+    const head = html.querySelector('head')
+    const title = html.querySelector('title')
+
+    if (title) {
+      title.innerHTML = `${video.title} - Joystream`
+    }
+
+    const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
+
+    const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl)
+    const videoMetaTagsHtml = generateMetaHtml(videoMetaTags)
+    const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl)
+
+    head?.insertAdjacentHTML('beforeend', videoMetaTagsHtml)
+    head?.insertAdjacentHTML('beforeend', videoSchemaTagsHtml)
+
+    return res.send(html.toString())
+  } catch (err) {
+    console.error(err)
+    return res.status(500).send()
   }
-
-  const html = parseHtml(indexHtml)
-  const head = html.querySelector('head')
-  const title = html.querySelector('title')
-
-  if (title) {
-    title.innerHTML = `${video.title} - Joystream`
-  }
-
-  const thumbnailUrl = video.thumbnailPhoto ? generateAssetUrl(video.thumbnailPhoto) : ''
-
-  const videoMetaTags = generateVideoMetaTags(video, thumbnailUrl)
-  const videoMetaTagsHtml = generateMetaHtml(videoMetaTags)
-  const videoSchemaTagsHtml = generateVideoSchemaTagsHtml(video, thumbnailUrl)
-
-  head?.insertAdjacentHTML('beforeend', videoMetaTagsHtml)
-  head?.insertAdjacentHTML('beforeend', videoSchemaTagsHtml)
-
-  return res.send(html.toString())
 })
 
 app.get('/channel/:id', async (req, res) => {
-  const id = req.params['id']
-  const channel = await getChannel(id)
+  try {
+    const id = req.params['id']
+    const channel = await getChannel(id)
 
-  if (!channel) {
-    return res.status(404).send('Channel not found')
+    if (!channel) {
+      return res.status(404).send('Channel not found')
+    }
+
+    const html = parseHtml(indexHtml)
+    const head = html.querySelector('head')
+    const title = html.querySelector('title')
+
+    if (title) {
+      title.innerHTML = `${channel.title} - Joystream`
+    }
+
+    const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''
+
+    const channelMetaTags = generateChannelMetaTags(channel, avatarUrl)
+    const channelMetaTagsHtml = generateMetaHtml(channelMetaTags)
+    const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl)
+
+    head?.insertAdjacentHTML('beforeend', channelMetaTagsHtml)
+    head?.insertAdjacentHTML('beforeend', channelSchemaTagsHtml)
+
+    return res.send(html.toString())
+  } catch (err) {
+    console.error(err)
+    return res.status(500).send()
   }
-
-  const html = parseHtml(indexHtml)
-  const head = html.querySelector('head')
-  const title = html.querySelector('title')
-
-  if (title) {
-    title.innerHTML = `${channel.title} - Joystream`
-  }
-
-  const avatarUrl = channel.avatarPhoto ? generateAssetUrl(channel.avatarPhoto) : ''
-
-  const channelMetaTags = generateChannelMetaTags(channel, avatarUrl)
-  const channelMetaTagsHtml = generateMetaHtml(channelMetaTags)
-  const channelSchemaTagsHtml = generateChannelSchemaTagsHtml(channel, avatarUrl)
-
-  head?.insertAdjacentHTML('beforeend', channelMetaTagsHtml)
-  head?.insertAdjacentHTML('beforeend', channelSchemaTagsHtml)
-
-  return res.send(html.toString())
 })
 
 app.get('/*', (req, res) => {
