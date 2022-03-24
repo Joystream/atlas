@@ -70,12 +70,12 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     },
   } = useNftForm()
   const { chainState } = useNftFormUtils()
-  const { convertMsTimestampToBlock, converBlocksToDuration } = useBlockTimeEstimation()
+  const { convertMsTimestampToBlock, convertBlocksToDuration } = useBlockTimeEstimation()
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
-  const maxStartDate = addMilliseconds(new Date(), converBlocksToDuration(chainState.nftAuctionStartsAtMaxDelta))
-  const maxEndDate = addMilliseconds(new Date(), converBlocksToDuration(chainState.nftMaxAuctionDuration))
+  const maxStartDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftAuctionStartsAtMaxDelta))
+  const maxEndDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftMaxAuctionDuration))
 
   const formMethods = useForm<NftFormFields>({
     mode: 'onChange',
@@ -90,6 +90,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       startDate: null,
       endDate: null,
       startingPrice: chainState.nftMinStartingPrice || undefined,
+      buyNowPrice: '',
     },
   })
   const {
@@ -170,7 +171,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             startsAtBlock,
             startingPrice,
             minimalBidStep,
-            buyNowPrice: data.buyNowPrice,
+            buyNowPrice: data.buyNowPrice || undefined,
             auctionDurationBlocks: data.auctionDurationBlocks,
             whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
@@ -181,7 +182,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             startsAtBlock,
             startingPrice,
             minimalBidStep,
-            buyNowPrice: data.buyNowPrice,
+            buyNowPrice: data.buyNowPrice || undefined,
             whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
         }
