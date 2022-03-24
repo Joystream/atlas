@@ -11,6 +11,17 @@ import { ContextMenu } from './ContextMenu'
 export default {
   title: 'overlays/ContextMenu',
   component: ContextMenu,
+  argTypes: {
+    onHide: { table: { disable: true } },
+    className: { table: { disable: true } },
+    items: { table: { disable: true } },
+    triggerTarget: { table: { disable: true } },
+    trigger: { table: { disable: true } },
+    size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
+  },
+  args: {
+    scrollable: false,
+  },
   decorators: [
     (Story) => (
       <OverlayManagerProvider>
@@ -25,7 +36,43 @@ const Template: Story = (args) => {
     <>
       <div>
         <ContextMenu
+          scrollable
           items={[
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
+            {
+              icon: <SvgActionCopy />,
+              onClick: () => {},
+              title: 'Copy video URL',
+            },
             {
               icon: <SvgActionCopy />,
               onClick: () => {},
