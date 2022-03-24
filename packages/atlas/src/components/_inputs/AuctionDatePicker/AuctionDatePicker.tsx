@@ -99,12 +99,10 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     if (!value) {
       return
     }
-    if (value?.type === 'pick-date') {
-      onChange(null)
-    }
     if (value.type !== 'default' && value.type !== 'pick-date') {
       onChange(value)
     }
+    onChange(null)
     setPickedValue(value)
   }
 
