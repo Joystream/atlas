@@ -38,6 +38,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue,
     getValues,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useFormContext<NftFormFields>()
@@ -194,10 +195,12 @@ export const SetUp: React.FC<SetUpProps> = ({
                 name: 'auctionDuration',
                 onChange: (event) => {
                   handleToggleActiveInput(event)
-                  if (event?.currentTarget.checked) {
-                    setValue('startDate', null)
-                    setValue('endDate', null)
-                    setValue('auctionDurationBlocks', undefined)
+                  if (!event?.currentTarget.checked) {
+                    reset({
+                      startDate: null,
+                      endDate: null,
+                      auctionDurationBlocks: undefined,
+                    })
                   }
                 },
                 value: activeInputs.includes('auctionDuration'),
