@@ -92,9 +92,24 @@ export const useNftTransactions = () => {
     [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]
   )
 
+  const acceptNftBid = useCallback(
+    (bidderId: string, id: string) => {
+      if (!joystream || !activeMemberId) {
+        return
+      }
+      handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).acceptNftBid(bidderId, id, proxyCallback(updateStatus)),
+        onTxSync: async (_) => _refetchData(id),
+      })
+    },
+    [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]
+  )
+
   return {
     cancelNftSale,
     changeNftPrice,
     withdrawBid,
+    acceptNftBid,
   }
 }
