@@ -1,3 +1,4 @@
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AuctionDatePickerValue } from '@/components/_inputs/AuctionDatePicker'
 import { NftSaleInputMetadata } from '@/joystream-lib'
 
@@ -20,8 +21,8 @@ export type NftFormFields = {
   royalty?: number
   startingPrice?: number
   buyNowPrice?: number
-  whitelistedMembersIds?: string[] // to be used later
   auctionDurationBlocks?: number
+  whitelistedMembers?: BasicMembershipFieldsFragment[]
 } & AuctionDate
 
 export type NftFormData = NftSaleInputMetadata

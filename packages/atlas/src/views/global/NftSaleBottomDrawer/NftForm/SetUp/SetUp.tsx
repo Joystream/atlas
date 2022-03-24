@@ -6,6 +6,7 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
+import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
@@ -66,6 +67,9 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
           trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
+      }
+      if (name === 'whitelistedMembers') {
+        setValue('whitelistedMembers', [])
       }
       if (name === 'auctionDuration') {
         setValue('startDate', null)
@@ -247,6 +251,36 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                 />
               </DaysSummary>
             )}
+            <FormField
+              title="Whitelist"
+              switchProps={{
+                name: 'whitelistedMembers',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('whitelistedMembers'),
+              }}
+              infoTooltip={{
+                text: 'Only people on your whitelist will be able to bid/buy this particular NFT.',
+              }}
+            >
+              <Controller
+                name="whitelistedMembers"
+                control={control}
+                render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
+                  return (
+                    <MemberComboBox
+                      disabled={!activeInputs.includes('whitelistedMembers')}
+                      selectedMembers={existingMembers || []}
+                      error={!!error}
+                      helperText={error?.message}
+                      onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
+                      onRemoveMember={(memberId) =>
+                        onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
+                      }
+                    />
+                  )
+                }}
+              />
+            </FormField>
           </>
         )}
       </form>

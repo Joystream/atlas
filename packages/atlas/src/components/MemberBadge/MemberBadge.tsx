@@ -19,14 +19,16 @@ export const MemberBadge: React.FC<MemberBadgeProps> = ({
   isLoadingAvatar,
 }) => {
   return (
-    <MemberBadgeWrapper className={className}>
+    <MemberBadgeWrapper className={className} withoutButton={!onDeleteClick}>
       <Avatar size="bid" assetUrl={avatarUri} loading={isLoadingAvatar} />
       <StyledHandleText variant="t100" as="p">
         {handle}
       </StyledHandleText>
-      <RemoveButton onClick={onDeleteClick}>
-        <StyledSVGCloseIcon />
-      </RemoveButton>
+      {onDeleteClick && (
+        <RemoveButton type="button" onClick={onDeleteClick}>
+          <StyledSVGCloseIcon />
+        </RemoveButton>
+      )}
     </MemberBadgeWrapper>
   )
 }

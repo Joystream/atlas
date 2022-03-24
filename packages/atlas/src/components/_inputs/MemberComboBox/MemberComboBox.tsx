@@ -20,11 +20,23 @@ import { ComboBox } from '../ComboBox'
 
 type MemberComboBoxProps = {
   selectedMembers: BasicMembershipFieldsFragment[]
-  setSelectedMembers: React.Dispatch<React.SetStateAction<BasicMembershipFieldsFragment[]>>
   className?: string
+  onSelectMember?: (member: BasicMembershipFieldsFragment) => void
+  onRemoveMember?: (memberId: string) => void
+  helperText?: string
+  disabled?: boolean
+  error?: boolean
 }
 
-export const MemberComboBox: React.FC<MemberComboBoxProps> = ({ selectedMembers, setSelectedMembers, className }) => {
+export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
+  selectedMembers,
+  className,
+  onSelectMember,
+  onRemoveMember,
+  disabled,
+  error,
+  helperText,
+}) => {
   const [isLoading, setIsLoading] = useState(false)
   const [members, setMembers] = useState<BasicMembershipFieldsFragment[]>([])
   const client = useApolloClient()
@@ -57,13 +69,14 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({ selectedMembers,
     if (!item) {
       return
     }
-    setSelectedMembers((prevItems) => [item, ...prevItems])
+    onSelectMember?.(item)
     setMembers([])
   }
 
   const handleDeleteClick = (memberId: string) => {
-    const filteredMembers = selectedMembers.filter((member) => member.id !== memberId)
-    setSelectedMembers(filteredMembers)
+    if (memberId) {
+      onRemoveMember?.(memberId)
+    }
   }
 
   const selectedMembersLookup = selectedMembers ? createLookup(selectedMembers) : {}
@@ -87,13 +100,14 @@ export const MemberComboBox: React.FC<MemberComboBoxProps> = ({ selectedMembers,
     <div className={className}>
       <ComboBox<BasicMembershipFieldsFragment>
         items={dropdownItems}
+        disabled={disabled}
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}
         resetOnSelect
         loading={isLoading}
-        error={isError}
+        error={isError || error}
         onSelectedItemChange={handleSelect}
-        helperText={isError ? 'Something went wrong' : ''}
+        helperText={isError ? 'Something went wrong' : helperText}
         onInputValueChange={(val) => {
           setIsError(false)
           setIsLoading(true)
