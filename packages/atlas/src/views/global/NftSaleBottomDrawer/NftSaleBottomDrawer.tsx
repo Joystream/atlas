@@ -54,10 +54,6 @@ export const NftSaleBottomDrawer: React.FC = () => {
         txFactory: async (cb) =>
           (await joystream.extrinsics).putNftOnSale(currentNftId, activeMemberId, data, proxyCallback(cb)),
         onTxSync: refetchData,
-        successMessage: {
-          title: 'NFT put on sale',
-          description: 'Your NFT sale has started. Visit its video page for more details.',
-        },
       })
       if (completed) {
         displaySnackbar({

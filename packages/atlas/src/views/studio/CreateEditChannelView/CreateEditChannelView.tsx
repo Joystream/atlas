@@ -329,12 +329,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               await joystream.extrinsics
             ).updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, proxyCallback(updateStatus)),
       onTxSync: refetchDataAndUploadAssets,
-      successMessage: {
-        title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
-        description: newChannel
-          ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
-          : 'Changes to your channel were saved on the blockchain.',
-      },
     })
 
     if (completed && newChannel) {

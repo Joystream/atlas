@@ -101,10 +101,6 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).issueNft(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'NFT issued',
-        description: 'Good job',
-      },
     })
   }
 
@@ -149,10 +145,6 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'NFT buy now started',
-        description: 'Good job',
-      },
     })
   }
 
@@ -218,10 +210,6 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'NFT put on auction',
-        description: 'Good job',
-      },
     })
   }
 
@@ -302,10 +290,6 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, data.buyNowPrice, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'NFT bought',
-        description: 'Good job',
-      },
     })
   }
 
@@ -346,10 +330,6 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'Bid placed',
-        description: 'Good job',
-      },
     })
   }
 
@@ -378,10 +358,6 @@ const CancelBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, true, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'Buy now cancelled',
-        description: 'Good job',
-      },
     })
   }
 
@@ -407,10 +383,6 @@ const CancelAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, false, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'Auction cancelled',
-        description: 'Good job',
-      },
     })
   }
 
@@ -436,10 +408,6 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).cancelNftBid(videoId, activeMemberId, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
-      successMessage: {
-        title: 'Bid cancelled',
-        description: 'Good job',
-      },
     })
   }
 
