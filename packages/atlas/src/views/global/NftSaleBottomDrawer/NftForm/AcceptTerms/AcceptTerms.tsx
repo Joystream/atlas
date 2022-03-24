@@ -1,8 +1,10 @@
 import React from 'react'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
+import { useMemberAvatar } from '@/providers/assets'
 import { formatNumber } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
@@ -10,12 +12,15 @@ import {
   Description,
   Divider,
   Header,
+  MembersList,
   Row,
   StyledInformation,
+  StyledMemberBadge,
   StyledSvgActionArrowRight,
   StyledSvgWarning,
   TermsBox,
   Title,
+  WhiteListRow,
   YellowText,
 } from './AcceptTerms.styles'
 
@@ -156,6 +161,22 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </Description>
         </Row>
       )}
+      {(formData.whitelistedMembers || []).length > 0 && (
+        <WhiteListRow>
+          <Title>
+            <TitleText>WhiteList</TitleText>
+            <StyledInformation
+              text="Only people on your whitelist will be able to bid/buy this particular NFT."
+              placement="top"
+            />
+          </Title>
+          <MembersList>
+            {formData.whitelistedMembers?.map((member) => (
+              <MemberWithResolvedAvatar key={member.id} member={member} />
+            ))}
+          </MembersList>
+        </WhiteListRow>
+      )}
       <Divider />
       <Text variant="h400">Transaction</Text>
       <Row>
@@ -181,6 +202,11 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       </TermsBox>
     </>
   )
+}
+
+export const MemberWithResolvedAvatar: React.FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
+  const { isLoadingAsset, url } = useMemberAvatar(member)
+  return <StyledMemberBadge avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} />
 }
 
 export const TitleText: React.FC = ({ children }) => (

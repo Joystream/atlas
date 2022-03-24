@@ -79,7 +79,13 @@ export const createValidationSchema = (data: NftFormFields, listingType: Listing
         : startingPriceBase.optional(),
     buyNowPrice: listingType === 'Auction' ? buyNowPrice.nullable().optional() : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
-    whitelistedMembersIds: z.array(z.string()).nullable().optional(),
+    whitelistedMembers: z
+      .array(z.object({ id: z.string() }))
+      .refine((val) => val.length === 0 || val.length >= 2, {
+        message: 'Whitelist need to contain at least two members',
+      })
+      .nullable()
+      .optional(),
   })
 }
 

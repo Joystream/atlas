@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
+import { MemberBadge } from '@/components/MemberBadge'
 import { Text } from '@/components/Text'
 import { SvgActionArrowRight, SvgActionWarning } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
@@ -45,6 +46,34 @@ export const Title = styled.div`
 
 export const Description = styled.div`
   display: flex;
+`
+
+export const WhiteListRow = styled(Row)`
+  ${media.md} {
+    align-items: flex-start;
+    margin-bottom: -${sizes(2)};
+  }
+`
+
+export const MembersList = styled.div`
+  display: flex;
+  flex-basis: 70%;
+  flex-wrap: wrap;
+  margin-top: ${sizes(2)};
+  ${media.md} {
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+`
+
+export const StyledMemberBadge = styled(MemberBadge)`
+  justify-content: flex-end;
+  margin-bottom: ${sizes(2)};
+  margin-right: ${sizes(2)};
+  ${media.md} {
+    margin-right: 0;
+    margin-left: ${sizes(2)};
+  }
 `
 
 export const Header = styled(Text)`
