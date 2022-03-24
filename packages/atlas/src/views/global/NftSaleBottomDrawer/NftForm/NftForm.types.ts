@@ -22,7 +22,7 @@ export type NftFormFields = {
   startingPrice?: number
   buyNowPrice?: number
   auctionDurationBlocks?: number
-  whitelistedMembers?: BasicMembershipFieldsFragment[] // to be used later
+  whitelistedMembers?: BasicMembershipFieldsFragment[]
 } & AuctionDate
 
 export type NftFormData = NftSaleInputMetadata
