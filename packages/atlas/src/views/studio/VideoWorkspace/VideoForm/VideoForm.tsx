@@ -123,7 +123,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     }
     setCachedEditedVideoId(editedVideoInfo.id)
 
-    reset({ ...tabData, mintNft: tabData.mintNft || !!mintNft })
+    reset(tabData)
+    setTimeout(() => setValue('mintNft', tabData.mintNft || !!mintNft), 0)
   }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
   const handleSubmit = useCallback(() => {
     flushDraftSave()
