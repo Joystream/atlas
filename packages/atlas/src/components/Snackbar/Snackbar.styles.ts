@@ -18,6 +18,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
   z-index: ${zIndex.overlay};
   overflow: hidden;
   transform: translateY(500px) translateX(0);
+  border-radius: ${cVar('radiusSmall')};
 
   &.snackbar-enter {
     transform: translateY(500px) translateX(0);
@@ -42,14 +43,14 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     transform: translateY(0) translateX(-150%);
     height: 0;
     margin-bottom: 0;
-    transition: transform ${cVar('animationTransitionFast')},
-      height ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')},
-      margin-bottom ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
+    transition: transform ${cVar('animationTransitionCallout')},
+      height ${cVar('animationTransitionCallout')} ${cVar('animationTimingMedium')},
+      margin-bottom ${cVar('animationTransitionCallout')} ${cVar('animationTimingMedium')};
   }
 
   &.snackbar-enter-active {
-    transition: height ${cVar('animationTransitionFast')}, margin-bottom ${cVar('animationTransitionFast')},
-      transform ${cVar('animationTransitionFast')} ${cVar('animationTimingFast')};
+    transition: height ${cVar('animationTransitionCallout')}, margin-bottom ${cVar('animationTransitionCallout')},
+      transform ${cVar('animationTransitionCallout')};
   }
 `
 
