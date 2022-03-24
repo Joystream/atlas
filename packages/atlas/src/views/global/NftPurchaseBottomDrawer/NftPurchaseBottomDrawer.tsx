@@ -25,6 +25,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
+import { pluralizeNoun } from '@/utils/misc'
 import { formatDurationShort } from '@/utils/time'
 
 import {
@@ -69,9 +70,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const { convertToUSD } = useTokenPrice()
   const accountBalance = useSubsribeAccountBalance()
   const timestamp = useMsTimestamp({ shouldStop: !currentAction || type !== 'english_auction' })
-  const { convertDurationToBlocks, convertBlockToMsTimestamp, convertBlocksToDuration } = useBlockTimeEstimation()
+  const { convertBlockToMsTimestamp, convertBlocksToDuration } = useBlockTimeEstimation()
 
-  const { joystream, proxyCallback } = useJoystream()
+  const { joystream, proxyCallback, currentBlock } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
 
@@ -234,7 +235,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const auctionEnded = type === 'english_auction' && timeLeftSeconds === 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
   const primaryButtonText = type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked ? 'Buy NFT' : 'Place bid'
-  const blocksLeft = (endTime && convertDurationToBlocks(endTime - timestamp)) || 0
+  const blocksLeft = endAtBlock && endAtBlock - currentBlock
 
   const isOpen = currentAction === 'purchase'
 
@@ -294,14 +295,18 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     </Timer>
                   </EndingTime>
                   <FlexWrapper>
-                    <Text variant="t100" secondary margin={{ left: 2, right: 1 }}>
-                      {blocksLeft > 0 ? blocksLeft : 0} {blocksLeft === 1 ? 'block' : 'blocks'}
-                    </Text>
-                    <Information
-                      text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
-                      footer={<Text variant="t100">Auctions closing block: 123115234</Text>}
-                      placement="top"
-                    />
+                    {blocksLeft && (
+                      <Text variant="t100" secondary margin={{ left: 2, right: 1 }}>
+                        {pluralizeNoun(blocksLeft > 0 ? blocksLeft : 0, 'block')}
+                      </Text>
+                    )}
+                    {endAtBlock && (
+                      <Information
+                        text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
+                        footer={<Text variant="t100">Auctions closing block: {endAtBlock}</Text>}
+                        placement="top"
+                      />
+                    )}
                   </FlexWrapper>
                 </FlexWrapper>
               )}
