@@ -10,7 +10,7 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
 } from '@/components/_icons'
-import { cVar, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 
@@ -42,7 +42,7 @@ export const Snackbars: React.FC = () => {
     <SnackbarsContainer>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
-          <CSSTransition key={id} timeout={parseInt(cVar('animationTimingFast', true)) * 2} classNames="snackbar">
+          <CSSTransition key={id} timeout={parseInt(cVar('animationTimingMedium', true)) * 2} classNames="snackbar">
             <Snackbar
               {...snackbarProps}
               onActionClick={() => {
@@ -73,8 +73,12 @@ export const SnackbarsContainer = styled.div`
   left: var(--size-sidenav-width-collapsed);
   bottom: ${sizes(18)};
   margin-left: ${sizes(4)};
-  max-width: 360px;
-  width: 100%;
   display: grid;
   z-index: ${zIndex.nearVideoWorkspaceOverlay};
+  width: calc(100% - ${sizes(8)});
+
+  ${media.xs} {
+    width: 100%;
+    max-width: 360px;
+  }
 `
