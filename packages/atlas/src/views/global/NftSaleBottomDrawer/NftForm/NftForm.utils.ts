@@ -37,10 +37,11 @@ export const createValidationSchema = (
 
   const buyNowPriceAuction = z
     .union([
-      buyNowPriceNumber.min(
-        data.startingPrice ? data.startingPrice + 1 : minStartingPrice + 1,
-        'Fixed price must be higher than the minimum bid'
-      ),
+      buyNowPriceNumber
+        .min(2, 'Fixed price cannot be lower than 2')
+        .refine((val) => (data.startingPrice ? val > data.startingPrice : val > minStartingPrice), {
+          message: 'Fixed price must be higher than the minimum bid',
+        }),
       z.literal(''),
     ])
     .nullable()

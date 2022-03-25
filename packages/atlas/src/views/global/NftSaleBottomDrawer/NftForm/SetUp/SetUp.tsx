@@ -38,6 +38,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue,
     getValues,
     watch,
+    clearErrors,
     reset,
     control,
     formState: { errors },
@@ -131,6 +132,12 @@ export const SetUp: React.FC<SetUpProps> = ({
                     onChange: (event) => {
                       onChange(chainState.nftMinStartingPrice)
                       handleToggleActiveInput(event)
+                      clearErrors('startingPrice')
+
+                      // if there is custom error on buyNowPrice which says "Fixed price must be higher than the minimum bid", clear it
+                      if (!event?.currentTarget.checked && errors.buyNowPrice?.type === 'custom') {
+                        clearErrors('buyNowPrice')
+                      }
                     },
                     value: activeInputs.includes('startingPrice'),
                   }}
@@ -164,6 +171,9 @@ export const SetUp: React.FC<SetUpProps> = ({
                         const declaredStartingPrice = getValues('startingPrice')
                         onChange(declaredStartingPrice ? declaredStartingPrice + 1 : chainState.nftMinStartingPrice + 1)
                       } else {
+                        if (errors.startingPrice?.type === 'too_big') {
+                          clearErrors('startingPrice')
+                        }
                         onChange('')
                       }
                       handleToggleActiveInput(event)

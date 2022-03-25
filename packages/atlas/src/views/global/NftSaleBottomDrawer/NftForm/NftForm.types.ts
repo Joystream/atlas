@@ -13,7 +13,6 @@ export type NftFormFields = {
   royalty?: number
   startingPrice?: number
   buyNowPrice?: number | ''
-  whitelistedMembersIds?: string[]
   auctionDurationBlocks?: number
   whitelistedMembers?: BasicMembershipFieldsFragment[]
 } & AuctionDate
