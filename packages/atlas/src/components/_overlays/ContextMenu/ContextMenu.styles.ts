@@ -38,5 +38,5 @@ export const StyledContainer = styled.div<StyledContainerProps>`
   word-break: break-all;
   border-radius: ${cVar('radiusSmall')};
   overflow: auto;
-  padding: ${({ scrollable }) => sizes(scrollable ? 2 : 1)} 0;
+  padding: ${sizes(1)} 0;
 `
