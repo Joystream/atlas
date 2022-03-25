@@ -236,7 +236,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       case 'auction': {
         const getInfoBannerProps = () => {
-          const hasBids = nftStatus.topBidAmount
+          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
 
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
