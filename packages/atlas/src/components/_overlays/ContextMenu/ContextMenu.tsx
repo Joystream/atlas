@@ -2,7 +2,7 @@ import React, { ReactNode, useRef } from 'react'
 
 import { ListItem } from '@/components/ListItem'
 
-import { StyledContainer } from './ContextMenu.styles'
+import { ContextMenuSizes, StyledContainer } from './ContextMenu.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
@@ -14,15 +14,25 @@ export type MenuItemProps = {
   destructive?: boolean
 }
 
-type ContextMenuProps = { items: MenuItemProps[] } & Omit<PopoverProps, 'content' | 'instanceRef'>
+export type ContextMenuProps = { items: MenuItemProps[]; scrollable?: boolean; size?: ContextMenuSizes } & Omit<
+  PopoverProps,
+  'content' | 'instanceRef'
+>
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({ children, items, ...rest }) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({
+  children,
+  items,
+  scrollable = false,
+  size = 'medium',
+  ...rest
+}) => {
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
-      <StyledContainer>
+      <StyledContainer scrollable={scrollable} size={size}>
         {items.map((item, index) => (
           <ListItem
+            size={size}
             key={index}
             onClick={() => {
               item.onClick?.()
