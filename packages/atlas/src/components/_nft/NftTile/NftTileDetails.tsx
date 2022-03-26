@@ -52,6 +52,7 @@ export type NftTileDetailsProps = {
   onNftPurchase?: () => void
   onNftBuyNow?: () => void
   onPutOnSale?: () => void
+  onNftChangePrice?: () => void
 }
 
 type TileSize = 'small' | 'medium'
@@ -78,6 +79,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   onNftPurchase,
   onNftBuyNow,
   onPutOnSale,
+  onNftChangePrice,
 }) => {
   const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
@@ -128,6 +130,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         {
           icon: <SvgActionChangePrice />,
           title: 'Change price',
+          onClick: onNftChangePrice,
         }
       )
     }
@@ -156,6 +159,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     onNftBuyNow,
     onNftPurchase,
     onPutOnSale,
+    onNftChangePrice,
   ])
 
   const getDetails = useMemo(() => {
