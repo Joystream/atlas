@@ -34,7 +34,11 @@ export const CancelButton = styled(IconButton)`
   margin-right: ${sizes(2)};
 
   path {
-    stroke: ${oldColors.gray[300]};
+    fill: ${cVar('colorText')};
+  }
+
+  &:hover path {
+    fill: ${cVar('colorTextStrong')};
   }
 
   ${media.md} {

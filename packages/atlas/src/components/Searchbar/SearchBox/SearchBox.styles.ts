@@ -176,7 +176,7 @@ export const DeleteButton = styled(IconButton)`
   margin-left: ${sizes(2)};
 
   path {
-    stroke: ${oldColors.gray[300]};
+    fill: ${cVar('colorText')};
   }
 `
 
