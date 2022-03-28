@@ -31,7 +31,7 @@ export type NftTileProps = {
   views?: number | null
   buyNowPrice?: number | null
   startingPrice?: number | null
-  topBid?: number | null
+  topBidAmount?: number | null
   fullWidth?: boolean
   interactable?: boolean
   canPutOnSale?: boolean
@@ -61,7 +61,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   views,
   buyNowPrice,
   startingPrice,
-  topBid,
+  topBidAmount: topBid,
   fullWidth,
   interactable = true,
   canPutOnSale,

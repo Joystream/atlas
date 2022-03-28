@@ -90,7 +90,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       {...nftCommonProps}
       timerLoading={timerLoading}
       buyNowPrice={Number(buyNowPrice)}
-      topBid={Number(topBidAmount)}
+      topBidAmount={Number(topBidAmount)}
       auctionPlannedEndDate={auctionPlannedEndDate}
       needsSettling={needsSettling}
       startsAtDate={startsAtDate}
