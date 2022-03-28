@@ -7,7 +7,7 @@ export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
 export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { activeMembership } = useUser()
-  const { currentBlock } = useJoystream()
+  const { currentBlock, currentBlockMsTimestamp } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
@@ -34,7 +34,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
   const startsAtDate = startsAtDateBlockTimestamp ? new Date(startsAtDateBlockTimestamp) : undefined
 
-  const canBuyNow = nft && !isOwner && (isBuyNow || !!auction?.buyNowPrice)
+  const canBuyNow = nft && !isOwner && (isBuyNow || !!Number(auction?.buyNowPrice))
 
   const canMakeBid = nft && !isOwner && isAuction
 
@@ -67,6 +67,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     : null
 
   return {
+    timerLoading: !currentBlockMsTimestamp,
     canBuyNow: !!canBuyNow,
     canMakeBid: !!canMakeBid,
     canCancelSale: !!canCancelSale,

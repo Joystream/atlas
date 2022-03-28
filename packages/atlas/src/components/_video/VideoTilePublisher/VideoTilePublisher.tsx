@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { useVideo } from '@/api/hooks'
+import { useNft, useVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -54,15 +54,38 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
     const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
-    const nft = video?.nft
-    const { isOwner: isNftOwner, canPutOnSale, canCancelSale, isBuyNow } = useNftState(nft)
     const navigate = useNavigate()
 
     const { openNftPutOnSale, cancelNftSale } = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
-    const nftTilePublisher = useGetNftSlot(video?.nft ? id : undefined)
+
+    // TODO: figure out how to not fetch every single nft for a video
+    // unfortuantely, we cannot fetch data about auctions from video query - we're getting null from query node
+    const { nft, nftStatus } = useNft(id || '')
+
+    const {
+      auctionPlannedEndDate,
+      englishTimerState,
+      needsSettling,
+      startsAtDate,
+      timerLoading,
+      isOwner: isNftOwner,
+      canPutOnSale,
+      canCancelSale,
+      isBuyNow,
+    } = useNftState(nft)
+
+    const nftTilePublisher = useGetNftSlot({
+      auctionPlannedEndDate,
+      status: nftStatus?.status,
+      englishTimerState,
+      needsSettling,
+      startsAtDate,
+      withNftLabel: true,
+      timerLoading,
+    })
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
@@ -100,7 +123,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         bottomRight: {
           element: video?.duration ? <Pill variant="overlay" label={formatDurationShort(video?.duration)} /> : null,
         },
-        bottomLeft: nftTilePublisher,
+        bottomLeft: video?.nft ? nftTilePublisher : undefined,
         topLeft: owner
           ? {
               element: (
@@ -158,8 +181,10 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       nftTilePublisher,
       onEditClick,
       owner,
-      ownerAvatar,
+      ownerAvatar.isLoadingAsset,
+      ownerAvatar.url,
       video?.duration,
+      video?.nft,
     ])
 
     const getPublisherKebabMenuItems = useCallback(() => {
