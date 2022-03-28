@@ -23,7 +23,7 @@ export const ModalContent = styled.div<ModalContentProps>`
   z-index: ${zIndex.globalOverlay};
   position: fixed;
   left: 50%;
-  top: calc(50% + calc(var(--size-banner-height) / 2));
+  top: 50%;
   transform: translate(-50%, -50%);
   max-height: 90vh;
   max-width: 90vw;

@@ -2,7 +2,6 @@ import loadable from '@loadable/component'
 import React, { useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 
-import { OlympiaBanner } from '@/components/OlympiaBanner'
 import { SvgJoystreamLogoStudio } from '@/components/_illustrations'
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
 import { AdminOverlay } from '@/components/_overlays/AdminOverlay'
@@ -87,7 +86,6 @@ export const MainLayout: React.FC = () => {
         <Route path={BASE_PATHS.playground + '/*'} element={<LoadablePlaygroundLayout />} />
       </Routes>
       <AdminOverlay />
-      <OlympiaBanner />
     </>
   )
 }

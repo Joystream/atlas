@@ -152,7 +152,7 @@ const MainContainer = styled.main<{ hasSidebar: boolean }>`
 
   position: relative;
   height: 100%;
-  padding: calc(var(--size-topbar-height) + var(--size-banner-height)) var(--size-global-horizontal-padding) 0;
+  padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
   margin-left: var(--size-sidenav-width);
 `
 
