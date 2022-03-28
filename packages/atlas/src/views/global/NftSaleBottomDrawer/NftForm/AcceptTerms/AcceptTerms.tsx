@@ -79,7 +79,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <DescriptionText>{selectedType}</DescriptionText>
         </Description>
       </Row>
-      {formData.startingPrice && (
+      {formData.startingPrice && selectedType === 'Auction' && (
         <Row>
           <Title>
             <TitleText>Minimum bid</TitleText>
