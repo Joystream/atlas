@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { useNft } from '@/api/hooks'
+import { useVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -30,6 +30,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { openInNewTab } from '@/utils/browser'
+import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -48,10 +49,15 @@ export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
   ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
-    const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
-      id,
+    const { video, loading } = useVideo(id ?? '', {
+      skip: !id,
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
     })
-    const { nft } = useNft(video?.id || '')
+    const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic({
+      video,
+      loading,
+    })
+    const nft = video?.nft
     const { isOwner: isNftOwner, canPutOnSale, canCancelSale, isBuyNow } = useNftState(nft)
     const navigate = useNavigate()
 
