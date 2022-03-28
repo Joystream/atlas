@@ -1,3 +1,4 @@
+import { differenceInDays, differenceInSeconds } from 'date-fns'
 import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
@@ -17,7 +18,7 @@ import { NftSaleType } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
-import { formatDateTime } from '@/utils/time'
+import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
 import { NftHistory } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
@@ -52,6 +53,7 @@ export type Auction = {
   englishTimerState: EnglishTimerState | undefined
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
+  plannedEndAtBlock?: number | null
 }
 
 export type NftWidgetProps = {
@@ -83,7 +85,7 @@ export type NftWidgetProps = {
   onWithdrawBid?: () => void
 }
 
-const SMALL_VARIANT_MAXIMUM_SIZE = 280
+const SMALL_VARIANT_MAXIMUM_SIZE = 340
 
 export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerHandle,
@@ -109,14 +111,22 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   const { convertToUSD, isLoadingPrice } = useTokenPrice()
 
   const content = useDeepMemo(() => {
-    if (!nftStatus) return
+    if (!nftStatus) {
+      return
+    }
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
+    const timerColumnSpan = 2
+    const auctionBeginsDifference =
+      nftStatus?.status === 'auction' && nftStatus.startsAtDate
+        ? differenceInDays(nftStatus.startsAtDate, new Date())
+        : 0
     const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
         <NftInfoItem
           size={size}
+          loading={!buyNowPrice || convertToUSD(buyNowPrice) === '$0'}
           label="Buy now"
           content={
             <>
@@ -352,6 +362,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             ) : (
               <NftInfoItem
                 size={size}
+                loading={!nftStatus.startingPrice || convertToUSD(nftStatus.startingPrice) === '$0'}
                 label="Starting Price"
                 content={
                   <>
@@ -365,33 +376,44 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             <BuyNow buyNowPrice={nftStatus.buyNowPrice} />
 
             {nftStatus.englishTimerState === 'expired' && (
-              <NftInfoItem
-                size={size}
-                label="Auction ended on"
-                content={
-                  nftStatus.auctionPlannedEndDate && (
-                    <Text variant="h400" secondary>
-                      {formatDateTime(nftStatus.auctionPlannedEndDate)}
-                    </Text>
-                  )
-                }
-              />
+              <GridItem colSpan={timerColumnSpan}>
+                <NftInfoItem
+                  size={size}
+                  label="Auction ended on"
+                  loading={!nftStatus.auctionPlannedEndDate}
+                  content={
+                    nftStatus.auctionPlannedEndDate && (
+                      <Text variant={size === 'medium' ? 'h600' : 'h400'} secondary>
+                        {formatDateTime(nftStatus.auctionPlannedEndDate)}
+                      </Text>
+                    )
+                  }
+                />
+              </GridItem>
             )}
-            {!!nftStatus.auctionPlannedEndDate && nftStatus.englishTimerState === 'running' && (
-              <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />
+            {nftStatus.englishTimerState === 'running' && nftStatus?.plannedEndAtBlock && (
+              <GridItem colSpan={timerColumnSpan}>
+                <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />
+              </GridItem>
             )}
             {nftStatus.englishTimerState === 'upcoming' && (
-              <NftInfoItem
-                size={size}
-                label="Auction begins on"
-                content={
-                  nftStatus.startsAtDate && (
-                    <Text variant="h400" secondary>
-                      {formatDateTime(nftStatus.startsAtDate)}
-                    </Text>
-                  )
-                }
-              />
+              <GridItem colSpan={timerColumnSpan}>
+                <NftInfoItem
+                  size={size}
+                  label="Auction begins on"
+                  loading={!nftStatus.startsAtDate}
+                  content={
+                    nftStatus.startsAtDate && (
+                      <Text variant={size === 'medium' ? 'h600' : 'h400'} secondary>
+                        {auctionBeginsDifference > 1 && formatDateTime(nftStatus.startsAtDate)}
+                        {auctionBeginsDifference === 1 && `Tomorrow at ${formatTime(nftStatus.startsAtDate)}`}
+                        {auctionBeginsDifference < 1 &&
+                          formatDurationShort(differenceInSeconds(nftStatus.startsAtDate, new Date()))}
+                      </Text>
+                    )
+                  }
+                />
+              </GridItem>
             )}
             {infoBannerProps && <InfoBanner {...infoBannerProps} />}
 

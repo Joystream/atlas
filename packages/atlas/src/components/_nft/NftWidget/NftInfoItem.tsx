@@ -2,6 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar, transitions } from '@/styles'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
@@ -14,8 +15,18 @@ type NftInfoItemProps = {
   label: string
   content: React.ReactNode
   secondaryText?: React.ReactNode | null
+  loading?: boolean
 }
-export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText }) => {
+export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
+  if (loading) {
+    return (
+      <InfoItemContainer data-size={size}>
+        <SkeletonLoader width="32%" height={16} />
+        <SkeletonLoader width="64%" height={40} />
+        {secondaryText && <SkeletonLoader width="32%" height={16} />}
+      </InfoItemContainer>
+    )
+  }
   return (
     <InfoItemContainer data-size={size}>
       <Label variant="h100" secondary>
@@ -39,8 +50,18 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   )
 }
 
-export const NftTimerItem: React.FC<{ size: Size; time: Date }> = ({ size, time }) => {
+export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time }) => {
   useMsTimestamp()
+
+  if (!time) {
+    return (
+      <InfoItemContainer data-size={size}>
+        <SkeletonLoader width="32%" height={16} />
+        <SkeletonLoader width="64%" height={40} />
+      </InfoItemContainer>
+    )
+  }
+
   const timeInSeconds = getTimeDiffInSeconds(time)
   const lessThanAMinuteLeft: boolean = timeInSeconds < 60
 
