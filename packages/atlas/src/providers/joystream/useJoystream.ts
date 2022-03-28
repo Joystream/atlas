@@ -20,7 +20,7 @@ export const useTokenPrice = () => {
         currency: 'USD',
         maximumSignificantDigits: 3,
       })
-      return formatter.format(tokens * tokenPrice)
+      return tokenPrice ? formatter.format(tokens * tokenPrice) : null
     },
     [tokenPrice]
   )
@@ -31,9 +31,11 @@ export const useTokenPrice = () => {
     },
     [tokenPrice]
   )
+  const isLoadingPrice = tokenPrice === 0
 
   return {
     convertToUSD,
     convertToTJoy,
+    isLoadingPrice,
   }
 }

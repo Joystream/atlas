@@ -100,7 +100,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   })
 
   const size: Size = width > SMALL_VARIANT_MAXIMUM_SIZE ? 'medium' : 'small'
-  const { convertToUSD } = useTokenPrice()
+  const { convertToUSD, isLoadingPrice } = useTokenPrice()
 
   const content = useDeepMemo(() => {
     if (!nftStatus) return
@@ -317,16 +317,18 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   </>
                 }
                 secondaryText={
-                  <>
-                    {convertToUSD(nftStatus.topBid)} from{' '}
-                    <OwnerHandle
-                      to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}
-                      variant="secondary"
-                      textOnly
-                    >
-                      <Text variant="t100">{nftStatus.topBidderHandle}</Text>
-                    </OwnerHandle>
-                  </>
+                  !isLoadingPrice ? (
+                    <>
+                      {convertToUSD(nftStatus.topBid)} from{' '}
+                      <OwnerHandle
+                        to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}
+                        variant="secondary"
+                        textOnly
+                      >
+                        <Text variant="t100">{nftStatus.topBidderHandle}</Text>
+                      </OwnerHandle>
+                    </>
+                  ) : null
                 }
               />
             ) : (
@@ -451,6 +453,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     nftStatus,
     size,
     convertToUSD,
+    isLoadingPrice,
     bidFromPreviousAuction,
     isOwner,
     onNftPutOnSale,
