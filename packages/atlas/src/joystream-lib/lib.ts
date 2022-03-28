@@ -101,6 +101,13 @@ export class JoystreamLib {
     return proxy(unsubscribe)
   }
 
+  async getCurrentBlock(): Promise<number> {
+    await this.ensureApi()
+    const header = await this.api.rpc.chain.getHeader()
+    const { number } = header
+    return number.toNumber()
+  }
+
   async subscribeCurrentBlock(callback: (currentBlock: number) => void) {
     await this.ensureApi()
     const unsubscribe = await this.api.rpc.chain.subscribeNewHeads((result) => {
