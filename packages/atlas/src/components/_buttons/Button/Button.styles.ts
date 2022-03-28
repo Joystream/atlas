@@ -1,8 +1,9 @@
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { smallBadgeStyles } from '@/components/Badge'
 import { Text } from '@/components/Text'
-import { cVar, oldColors, sizes, square } from '@/styles'
+import { sizes } from '@/styles'
 
 import { ButtonBase, ButtonSize, ButtonVariant } from '../ButtonBase'
 
@@ -56,6 +57,13 @@ const sizeOverwriteStyles = ({
 
 export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
   ${sizeOverwriteStyles};
+  ${smallBadgeStyles};
+
+  &[data-badge]::after {
+    position: absolute;
+    right: -6px;
+    top: -6px;
+  }
 
   position: relative;
 `
@@ -89,33 +97,4 @@ export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: B
 
 export const StyledText = styled(Text)<TextProps>`
   color: inherit;
-`
-
-const badgeDotStyles = css`
-  &::after {
-    ${square(8)}
-
-    content: '';
-    background-color: ${oldColors.white};
-    border-radius: 50%;
-    display: block;
-  }
-`
-
-export const Badge = styled.div<{ dot?: boolean }>`
-  ${square(16)}
-
-  font: ${cVar('typographyDesktopT100Strong')};
-  letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${oldColors.blue[500]};
-  position: absolute;
-  border-radius: 50%;
-  top: -${sizes(2)};
-  right: -${sizes(2)};
-  ${({ dot }) => dot && badgeDotStyles}
 `
