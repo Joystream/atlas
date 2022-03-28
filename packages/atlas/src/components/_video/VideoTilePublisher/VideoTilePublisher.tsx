@@ -62,7 +62,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
 
     // TODO: figure out how to not fetch every single nft for a video
-    // unfortuantely, we cannot fetch data about auctions from video query - we're getting null from query node
+    // unfortunately, we cannot fetch all data about auctions using videos queries - auctions objects are null
     const { nft, nftStatus } = useNft(id || '')
 
     const {
