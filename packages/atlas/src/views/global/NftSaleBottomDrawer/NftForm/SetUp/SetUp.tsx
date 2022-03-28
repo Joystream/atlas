@@ -40,9 +40,25 @@ export const SetUp: React.FC<SetUpProps> = ({
     watch,
     clearErrors,
     reset,
+    trigger,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useFormContext<NftFormFields>()
+
+  // trigger checking errors when the form is not valid and errors are not showing up
+  // this is needed because errors on startingPrice input are also dependent on the buyNowPrice input
+  useEffect(() => {
+    if (!isValid && !Object.keys(errors).length) {
+      trigger()
+    }
+  }, [errors, isValid, trigger])
+
+  // make sure that errors are cleared when the form is valid
+  useEffect(() => {
+    if (isValid) {
+      clearErrors()
+    }
+  }, [clearErrors, isValid])
 
   const startDate = watch('startDate')
   const endDate = watch('endDate')
@@ -132,12 +148,6 @@ export const SetUp: React.FC<SetUpProps> = ({
                     onChange: (event) => {
                       onChange(chainState.nftMinStartingPrice)
                       handleToggleActiveInput(event)
-                      clearErrors('startingPrice')
-
-                      // if there is custom error on buyNowPrice which says "Fixed price must be higher than the minimum bid", clear it
-                      if (!event?.currentTarget.checked && errors.buyNowPrice?.type === 'custom') {
-                        clearErrors('buyNowPrice')
-                      }
                     },
                     value: activeInputs.includes('startingPrice'),
                   }}
@@ -167,13 +177,9 @@ export const SetUp: React.FC<SetUpProps> = ({
                     name,
                     onChange: (event) => {
                       if (event?.currentTarget.checked) {
-                        // fixed price need to be higher than starting price
                         const declaredStartingPrice = getValues('startingPrice')
                         onChange(declaredStartingPrice ? declaredStartingPrice + 1 : chainState.nftMinStartingPrice + 1)
                       } else {
-                        if (errors.startingPrice?.type === 'too_big') {
-                          clearErrors('startingPrice')
-                        }
                         onChange('')
                       }
                       handleToggleActiveInput(event)
