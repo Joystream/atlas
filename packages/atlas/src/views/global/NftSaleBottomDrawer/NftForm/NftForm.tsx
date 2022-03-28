@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { addMilliseconds } from 'date-fns'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -69,14 +70,19 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     },
   } = useNftForm()
   const { chainState } = useNftFormUtils()
+  const { convertMsTimestampToBlock, convertBlocksToDuration } = useBlockTimeEstimation()
 
   const isOnFirstStep = currentStep === 0
   const isOnLastStep = currentStep === 2
+  const maxStartDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftAuctionStartsAtMaxDelta))
+  const maxEndDate = addMilliseconds(new Date(), convertBlocksToDuration(chainState.nftMaxAuctionDuration))
 
   const formMethods = useForm<NftFormFields>({
     mode: 'onChange',
     resolver: (data, ctx, options) => {
-      const resolver = zodResolver(createValidationSchema(data, listingType, chainState.nftMinStartingPrice))
+      const resolver = zodResolver(
+        createValidationSchema(data, maxStartDate, maxEndDate, listingType, chainState.nftMinStartingPrice)
+      )
       return resolver(data, ctx, options)
     },
     reValidateMode: 'onChange',
@@ -101,7 +107,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
-  const { convertMsTimestampToBlock } = useBlockTimeEstimation()
   const [openModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
@@ -165,7 +170,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             startsAtBlock,
             startingPrice,
             minimalBidStep,
-            buyNowPrice: data.buyNowPrice,
+            buyNowPrice: data.buyNowPrice || undefined,
             auctionDurationBlocks: data.auctionDurationBlocks,
             whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
@@ -176,7 +181,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
             startsAtBlock,
             startingPrice,
             minimalBidStep,
-            buyNowPrice: data.buyNowPrice,
+            buyNowPrice: data.buyNowPrice || undefined,
             whitelistedMembersIds: data.whitelistedMembers?.map((member) => member.id),
           })
         }
@@ -279,6 +284,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const stepsContent = [
     <ListingType key="step-content-1" selectedType={listingType} onSelectType={setListingType} />,
     <SetUp
+      maxStartDate={maxStartDate}
+      maxEndDate={maxEndDate}
       key="step-content-2"
       selectedType={listingType}
       activeInputs={activeInputs}

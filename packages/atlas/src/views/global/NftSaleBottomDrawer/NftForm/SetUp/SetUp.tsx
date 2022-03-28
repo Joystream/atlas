@@ -1,4 +1,3 @@
-import { addMonths } from 'date-fns'
 import React, { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -20,22 +19,28 @@ import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 
 type SetUpProps = {
+  maxStartDate: Date
+  maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const MAX_DATE = addMonths(new Date(), 5) // TODO: should use chain constant for max auction duration
-
-export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setActiveInputs }) => {
+export const SetUp: React.FC<SetUpProps> = ({
+  selectedType,
+  activeInputs,
+  setActiveInputs,
+  maxEndDate,
+  maxStartDate,
+}) => {
   const {
     register,
     setValue,
-    reset,
     getValues,
     watch,
-    control,
+    reset,
     trigger,
+    control,
     formState: { errors },
   } = useFormContext<NftFormFields>()
 
@@ -63,7 +68,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
     setActiveInputs((prevState) => {
       if (!prevState.includes(name)) {
         if (name === 'buyNowPrice') {
-          setValue('buyNowPrice', 1)
+          setValue('buyNowPrice', 2)
           trigger() // trigger form validation to make sure starting price is valid
         }
         return [...prevState, name]
@@ -194,7 +199,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={new Date()}
-                      maxDate={(endDate?.type === 'date' && endDate.date) || MAX_DATE}
+                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       items={[
                         {
@@ -217,7 +222,7 @@ export const SetUp: React.FC<SetUpProps> = ({ selectedType, activeInputs, setAct
                       error={!!error}
                       helperText={error?.message}
                       minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                      maxDate={MAX_DATE}
+                      maxDate={maxEndDate}
                       disabled={!activeInputs.includes('auctionDuration')}
                       onChange={onChange}
                       items={expirationDateItems}

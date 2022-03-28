@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
-import { isEqual } from 'lodash-es'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -73,8 +72,13 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
 
   const [pickedValue, setPickedValue] = useState<AuctionDatePickerValueWithPickDate>(value)
 
-  const isPickDate =
-    (!!pickedValue && !items.find((item) => isEqual(pickedValue, item.value))) || pickedValue?.type === 'pick-date'
+  useEffect(() => {
+    if (value === null) {
+      setPickedValue({ type: 'default' })
+    }
+  }, [value])
+
+  const isPickDate = pickedValue?.type === 'pick-date' || pickedValue?.type === 'date'
 
   const mappedItems: SelectItem<AuctionDatePickerValueWithPickDate>[] = useMemo(() => {
     return isPickDate && pickedValue.type === 'date'
@@ -95,11 +99,10 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     if (!value) {
       return
     }
-    if (value?.type !== 'pick-date') {
-      onChange(null)
-    }
     if (value.type !== 'default' && value.type !== 'pick-date') {
       onChange(value)
+    } else {
+      onChange(null)
     }
     setPickedValue(value)
   }
@@ -119,7 +122,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
-        iconLeft={isPickDate && pickedValue.type !== 'default' ? <SvgControlsCalendar /> : undefined}
+        iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
         value={pickedValue || { type: 'default' }}
         items={mappedItems}
         onChange={handleSelect}
