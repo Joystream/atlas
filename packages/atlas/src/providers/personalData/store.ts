@@ -1,6 +1,6 @@
 import { round } from 'lodash-es'
 
-import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedGizaIdMappings.json'
+import { channelIdsMapEntries, videoIdsMapEntries } from '@/data/migratedContentIdMappings.json'
 import { createStore } from '@/store'
 
 import { DismissedMessage, FollowedChannel, RecentSearch, WatchedVideo, WatchedVideoStatus } from './types'

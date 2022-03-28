@@ -10,7 +10,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { absoluteRoutes } from '@/config/routes'
-import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
+import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
@@ -18,7 +18,7 @@ import { SentryLogger } from '@/utils/logs'
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
 export const EmbeddedView: React.FC = () => {
-  useRedirectMigratedGizaContent({ type: 'embedded-video' })
+  useRedirectMigratedContent({ type: 'embedded-video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),

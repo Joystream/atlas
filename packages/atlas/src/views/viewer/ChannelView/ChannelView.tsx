@@ -21,7 +21,7 @@ import { SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
+import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
@@ -59,7 +59,7 @@ export const ChannelView: React.FC = () => {
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
 
   // At mount set the tab from the search params
-  // This hook has to come before useRedirectMigratedGizaContent so it doesn't messes it's navigate call
+  // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
   const initialRender = useRef(true)
   useEffect(() => {
     if (initialRender.current) {
@@ -69,7 +69,7 @@ export const ChannelView: React.FC = () => {
     }
   })
 
-  useRedirectMigratedGizaContent({ type: 'channel' })
+  useRedirectMigratedContent({ type: 'channel' })
   const videoRows = useVideoGridRows('main')
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
