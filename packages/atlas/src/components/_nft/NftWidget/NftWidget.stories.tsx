@@ -88,10 +88,11 @@ const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: st
   <Container data-size={size}>
     <NftWidget
       {...others}
+      // @ts-ignore works for now
+      bidFromPreviousAuction={hasBidFromPreviousAuction ? { createdAt: new Date(), amount: 100000 } : undefined}
       nftStatus={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(others as any),
-        bidFromPreviousAuction: hasBidFromPreviousAuction ? {} : undefined,
       }}
     />
   </Container>

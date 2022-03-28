@@ -19,7 +19,7 @@ export const Content = styled.div<SizeProps>`
   gap: ${sizes(6)};
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
-  box-shadow: inset 2px 0 0 ${cVar('colorCoreBlue500')}, ${cVar('effectDividersTop')}, ${cVar('effectDividersBottom')};
+  box-shadow: ${cVar('effectDividersTop')}, ${cVar('effectDividersBottom')};
   padding: ${sizes(6)};
 
   &[data-size=${sizeObj.small}] {

@@ -126,14 +126,25 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         <Banner id="" dismissable={false} icon={<SvgAlertsInformative24 />} {...{ title, description }} />
       </GridItem>
     )
-    const WithdrawLastBit = ({ secondary }: { secondary?: boolean }) => (
-      <GridItem colSpan={buttonColumnSpan}>
-        <ButtonGrid data-size={size}>
-          <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize}>
-            Withdraw last bid
-          </Button>
-        </ButtonGrid>
-      </GridItem>
+    const WithdrawLastBid = ({ secondary }: { secondary?: boolean }) =>
+      bidFromPreviousAuction ? (
+        <>
+          <GridItem colSpan={buttonColumnSpan}>
+            <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize}>
+              Withdraw last bid
+            </Button>
+            <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
+              You bid {formatNumberShort(Number(bidFromPreviousAuction?.amount))} tJOY on{' '}
+              {formatDateTime(bidFromPreviousAuction.createdAt)}
+            </Text>
+          </GridItem>
+        </>
+      ) : null
+
+    const BidPlacingInfoText = () => (
+      <Text as="p" variant="t100" secondary align="center">
+        Placing a bid will withdraw your last bid
+      </Text>
     )
 
     switch (nftStatus.status) {
@@ -171,7 +182,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   title="Withdraw your bid"
                   description="You placed a bid in a previous auction that you can now withdraw to claim back your money."
                 />
-                <WithdrawLastBit />
+                <WithdrawLastBid />
               </>
             )}
             {isOwner && (
@@ -187,33 +198,36 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         return (
           <>
             <BuyNow buyNowPrice={nftStatus.buyNowPrice} />
-            {bidFromPreviousAuction && (
-              <>
-                <InfoBanner
-                  title="Withdraw your bid"
-                  description="You placed a bid in a previous auction that you can now withdraw to claim back your money."
-                />
-                <WithdrawLastBit />
-              </>
-            )}
-            {isOwner ? (
-              <GridItem colSpan={buttonColumnSpan}>
-                <ButtonGrid data-size={size}>
-                  <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftChangePrice}>
-                    Change price
-                  </Button>
-                  <Button fullWidth variant="destructive" size={buttonSize} onClick={onNftCancelSale}>
-                    Remove from sale
-                  </Button>
-                </ButtonGrid>
-              </GridItem>
-            ) : (
-              <GridItem colSpan={buttonColumnSpan}>
-                <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                  Buy now
-                </Button>
-              </GridItem>
-            )}
+
+            <GridItem colSpan={buttonColumnSpan}>
+              <ButtonGrid data-size={size}>
+                {isOwner ? (
+                  <>
+                    <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftChangePrice}>
+                      Change price
+                    </Button>
+                    <Button fullWidth variant="destructive" size={buttonSize} onClick={onNftCancelSale}>
+                      Remove from sale
+                    </Button>
+                  </>
+                ) : (
+                  <GridItem colSpan={buttonColumnSpan}>
+                    <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
+                      Buy now
+                    </Button>
+                  </GridItem>
+                )}
+                {bidFromPreviousAuction && (
+                  <>
+                    <InfoBanner
+                      title="Withdraw your bid"
+                      description="You placed a bid in a previous auction that you can now withdraw to claim back your money."
+                    />
+                    <WithdrawLastBid secondary />
+                  </>
+                )}
+              </ButtonGrid>
+            </GridItem>
           </>
         )
       case 'auction': {
@@ -383,7 +397,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               </GridItem>
             )}
 
-            {bidFromPreviousAuction && <WithdrawLastBit />}
+            {bidFromPreviousAuction && <WithdrawLastBid />}
 
             {!needsSettling &&
               !bidFromPreviousAuction &&
@@ -421,10 +435,16 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     </Button>
                     {/* second row button */}
                     {nftStatus.canWithdrawBid && (
-                      <GridItem colSpan={2}>
+                      <GridItem colSpan={buttonColumnSpan}>
                         <Button fullWidth size={buttonSize} variant="destructive-secondary">
                           Withdraw a bid
                         </Button>
+                      </GridItem>
+                    )}
+
+                    {!!nftStatus.userBidAmount && (
+                      <GridItem colSpan={buttonColumnSpan}>
+                        <BidPlacingInfoText />
                       </GridItem>
                     )}
                   </ButtonGrid>
@@ -435,6 +455,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
                       Place a bid
                     </Button>
+                    {!!nftStatus.userBidAmount && <BidPlacingInfoText />}
                     {nftStatus.canWithdrawBid && (
                       <Button fullWidth size={buttonSize} variant="destructive-secondary">
                         Withdraw a bid
