@@ -28,10 +28,9 @@ export const createValidationSchema = (
     .nullable()
     .optional()
 
-  const buyNowPriceBase = z.number({
-    required_error: 'Buy now price must be provided',
-    invalid_type_error: 'Buy now price must be a number',
-  })
+  const buyNowPrice = z
+    .number({ required_error: 'Buy now price must be provided', invalid_type_error: 'Buy now price must be a number' })
+    .min(1, 'Buy now price cannot be lower than 1')
 
   const startingPriceBase = z
     .number({ invalid_type_error: 'Minimum bid must be a number' })
@@ -105,8 +104,8 @@ export const createValidationSchema = (
         : startingPriceBase.optional(),
     buyNowPrice:
       listingType === 'Auction'
-        ? z.union([buyNowPriceBase.min(2, 'Buy now price cannot be lower than 2').nullable().optional(), z.literal('')])
-        : buyNowPriceBase.min(1, 'Buy now price cannot be lower than 1'),
+        ? buyNowPrice.min(1, 'Buy now price cannot be lower than 1').nullable().optional()
+        : buyNowPrice,
     auctionDurationBlocks: z.number().nullable().optional(),
     whitelistedMembers: z
       .array(z.object({ id: z.string() }))

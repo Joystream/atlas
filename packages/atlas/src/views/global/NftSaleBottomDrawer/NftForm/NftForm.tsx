@@ -90,7 +90,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       startDate: null,
       endDate: null,
       startingPrice: chainState.nftMinStartingPrice || undefined,
-      buyNowPrice: '',
     },
   })
   const {

@@ -38,27 +38,11 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue,
     getValues,
     watch,
-    clearErrors,
     reset,
     trigger,
     control,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useFormContext<NftFormFields>()
-
-  // trigger checking errors when the form is not valid and errors are not showing up
-  // this is needed because errors on startingPrice input are also dependent on the buyNowPrice input
-  useEffect(() => {
-    if (!isValid && !Object.keys(errors).length) {
-      trigger()
-    }
-  }, [errors, isValid, trigger])
-
-  // make sure that errors are cleared when the form is valid
-  useEffect(() => {
-    if (isValid) {
-      clearErrors()
-    }
-  }, [clearErrors, isValid])
 
   const startDate = watch('startDate')
   const endDate = watch('endDate')
@@ -76,14 +60,29 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue('auctionDurationBlocks', numberOfBlocks)
   }, [numberOfBlocks, setValue])
 
-  const handleToggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
     if (!event) {
       return
     }
     const { name } = event.target
     setActiveInputs((prevState) => {
       if (!prevState.includes(name)) {
+        if (name === 'buyNowPrice') {
+          setValue('buyNowPrice', 2)
+          trigger() // trigger form validation to make sure starting price is valid
+        }
         return [...prevState, name]
+      }
+      if (name === 'whitelistedMembers') {
+        setValue('whitelistedMembers', [])
+      }
+      if (name === 'auctionDuration') {
+        setValue('startDate', null)
+        setValue('endDate', null)
+      } else if (name === 'startingPrice') {
+        setValue('startingPrice', chainState.nftMinStartingPrice || undefined)
+      } else {
+        reset({ ...getValues(), [name]: undefined })
       }
       return prevState.filter((inputName) => inputName !== name)
     })
@@ -137,88 +136,52 @@ export const SetUp: React.FC<SetUpProps> = ({
         )}
         {selectedType === 'Auction' && (
           <>
-            <Controller
-              name="startingPrice"
-              control={control}
-              render={({ field: { onChange, value, name }, fieldState: { error } }) => (
-                <FormField
-                  title="Minimum bid"
-                  switchProps={{
-                    name,
-                    onChange: (event) => {
-                      onChange(chainState.nftMinStartingPrice)
-                      handleToggleActiveInput(event)
-                    },
-                    value: activeInputs.includes('startingPrice'),
-                  }}
-                  infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
-                >
-                  <TextField
-                    onChange={(e) => {
-                      return onChange(Number(e.target.value))
-                    }}
-                    type="number"
-                    value={value}
-                    nodeEnd={<Pill label="tJOY" />}
-                    disabled={!activeInputs.includes('startingPrice')}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                </FormField>
-              )}
-            />
-            <Controller
-              name="buyNowPrice"
-              control={control}
-              render={({ field: { onChange, value, name }, fieldState: { error } }) => (
-                <FormField
-                  title="Fixed price"
-                  switchProps={{
-                    name,
-                    onChange: (event) => {
-                      if (event?.currentTarget.checked) {
-                        const declaredStartingPrice = getValues('startingPrice')
-                        onChange(declaredStartingPrice ? declaredStartingPrice + 1 : chainState.nftMinStartingPrice + 1)
-                      } else {
-                        onChange('')
-                      }
-                      handleToggleActiveInput(event)
-                    },
-                    value: activeInputs.includes('buyNowPrice'),
-                  }}
-                  infoTooltip={{
-                    text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
-                  }}
-                >
-                  <TextField
-                    placeholder="—"
-                    type="number"
-                    value={value}
-                    onChange={(e) => {
-                      onChange(Number(e.target.value))
-                    }}
-                    nodeEnd={<Pill label="tJOY" />}
-                    disabled={!activeInputs.includes('buyNowPrice')}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                </FormField>
-              )}
-            />
+            <FormField
+              title="Minimum bid"
+              switchProps={{
+                name: 'startingPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('startingPrice'),
+              }}
+              infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
+            >
+              <TextField
+                {...register('startingPrice', { valueAsNumber: true })}
+                type="number"
+                defaultValue={chainState.nftMinStartingPrice?.toString()}
+                nodeEnd={<Pill label="tJOY" />}
+                disabled={!activeInputs.includes('startingPrice')}
+                error={!!errors.startingPrice}
+                helperText={errors.startingPrice?.message}
+              />
+            </FormField>
+            <FormField
+              title="Fixed price"
+              switchProps={{
+                name: 'buyNowPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('buyNowPrice'),
+              }}
+              infoTooltip={{
+                text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
+              }}
+            >
+              <TextField
+                {...register('buyNowPrice', { valueAsNumber: true })}
+                placeholder="—"
+                type="number"
+                nodeEnd={<Pill label="tJOY" />}
+                disabled={!activeInputs.includes('buyNowPrice')}
+                error={!!errors.buyNowPrice}
+                helperText={errors.buyNowPrice?.message}
+                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
+              />
+            </FormField>
             <FormField
               title="Auction duration"
               switchProps={{
                 name: 'auctionDuration',
-                onChange: (event) => {
-                  handleToggleActiveInput(event)
-                  if (!event?.currentTarget.checked) {
-                    reset({
-                      startDate: null,
-                      endDate: null,
-                      auctionDurationBlocks: undefined,
-                    })
-                  }
-                },
+                onChange: toggleActiveInput,
                 value: activeInputs.includes('auctionDuration'),
               }}
               infoTooltip={{
@@ -297,12 +260,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               title="Whitelist"
               switchProps={{
                 name: 'whitelistedMembers',
-                onChange: (event) => {
-                  handleToggleActiveInput(event)
-                  if (!event?.currentTarget.checked) {
-                    setValue('whitelistedMembers', [])
-                  }
-                },
+                onChange: toggleActiveInput,
                 value: activeInputs.includes('whitelistedMembers'),
               }}
               infoTooltip={{
