@@ -10,6 +10,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMemberAvatar } from '@/providers/assets'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
@@ -27,11 +28,12 @@ import {
 } from './TopbarViewer.styles'
 
 export const TopbarViewer: React.FC = () => {
-  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn, activeMembershipLoading } =
-    useUser()
+  const { activeAccountId, extensionConnected, activeMemberId, activeMembership, signIn } = useUser()
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
   const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
+
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
 
   const { pathname, search } = useLocation()
   const mdMatch = useMediaMatch('md')
@@ -107,7 +109,12 @@ export const TopbarViewer: React.FC = () => {
             />
           </CSSTransition>
           {!mdMatch && isLoggedIn && !searchOpen && topbarButtonLoaded && (
-            <StyledAvatar size="small" assetUrl={activeMembership?.avatarUri} onClick={handleDrawerToggle} />
+            <StyledAvatar
+              size="small"
+              assetUrl={memberAvatarUrl}
+              loading={memberAvatarLoading}
+              onClick={handleDrawerToggle}
+            />
           )}
         </SearchbarContainer>
         <SwitchTransition>
@@ -133,9 +140,9 @@ export const TopbarViewer: React.FC = () => {
                       </Button>
                       <StyledAvatar
                         size="small"
-                        assetUrl={activeMembership?.avatarUri}
+                        assetUrl={memberAvatarUrl}
                         onClick={handleDrawerToggle}
-                        loading={activeMembershipLoading}
+                        loading={memberAvatarLoading}
                       />
                     </SignedButtonsWrapper>
                   ) : (

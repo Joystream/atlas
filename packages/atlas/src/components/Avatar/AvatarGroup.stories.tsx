@@ -37,9 +37,9 @@ export const Default = Template.bind({})
 
 Default.args = {
   avatars: [
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane' },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'John' },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'William' },
-    { assetUrl: 'https://thispersondoesnotexist.com/image', tooltipText: 'One line description' },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'Jane' },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'John' },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'William' },
+    { url: 'https://thispersondoesnotexist.com/image', tooltipText: 'One line description' },
   ],
 }

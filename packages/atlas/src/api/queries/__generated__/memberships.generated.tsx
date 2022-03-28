@@ -2,42 +2,9 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { BasicChannelFieldsFragmentDoc } from './channels.generated'
+import { AllMembershipFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type BasicMembershipFieldsFragment = {
-  __typename?: 'Membership'
-  id: string
-  handle: string
-  avatarUri?: string | null
-  about?: string | null
-  controllerAccount: string
-  createdAt: Date
-  channels: Array<{
-    __typename?: 'Channel'
-    id: string
-    title?: string | null
-    createdAt: Date
-    views: number
-    follows: number
-    avatarPhoto?: {
-      __typename?: 'StorageDataObject'
-      id: string
-      createdAt: Date
-      size: number
-      isAccepted: boolean
-      ipfsHash: string
-      storageBag: { __typename?: 'StorageBag'; id: string }
-      type:
-        | { __typename: 'DataObjectTypeChannelAvatar' }
-        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-        | { __typename: 'DataObjectTypeUnknown' }
-        | { __typename: 'DataObjectTypeVideoMedia' }
-        | { __typename: 'DataObjectTypeVideoThumbnail' }
-    } | null
-  }>
-}
-
 export type GetMembershipQueryVariables = Types.Exact<{
   where: Types.MembershipWhereUniqueInput
 }>
@@ -46,12 +13,10 @@ export type GetMembershipQuery = {
   __typename?: 'Query'
   membershipByUniqueInput?: {
     __typename?: 'Membership'
-    id: string
-    handle: string
-    avatarUri?: string | null
-    about?: string | null
     controllerAccount: string
     createdAt: Date
+    id: string
+    handle: string
     channels: Array<{
       __typename?: 'Channel'
       id: string
@@ -75,6 +40,31 @@ export type GetMembershipQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
+    metadata: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject?: {
+              __typename?: 'StorageDataObject'
+              id: string
+              createdAt: Date
+              size: number
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeUnknown' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+            } | null
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    }
   } | null
 }
 
@@ -86,12 +76,10 @@ export type GetMembershipsQuery = {
   __typename?: 'Query'
   memberships: Array<{
     __typename?: 'Membership'
-    id: string
-    handle: string
-    avatarUri?: string | null
-    about?: string | null
     controllerAccount: string
     createdAt: Date
+    id: string
+    handle: string
     channels: Array<{
       __typename?: 'Channel'
       id: string
@@ -115,30 +103,41 @@ export type GetMembershipsQuery = {
           | { __typename: 'DataObjectTypeVideoThumbnail' }
       } | null
     }>
+    metadata: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject?: {
+              __typename?: 'StorageDataObject'
+              id: string
+              createdAt: Date
+              size: number
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeUnknown' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+            } | null
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    }
   }>
 }
 
-export const BasicMembershipFieldsFragmentDoc = gql`
-  fragment BasicMembershipFields on Membership {
-    id
-    handle
-    avatarUri
-    about
-    controllerAccount
-    createdAt
-    channels {
-      ...BasicChannelFields
-    }
-  }
-  ${BasicChannelFieldsFragmentDoc}
-`
 export const GetMembershipDocument = gql`
   query GetMembership($where: MembershipWhereUniqueInput!) {
     membershipByUniqueInput(where: $where) {
-      ...BasicMembershipFields
+      ...AllMembershipFields
     }
   }
-  ${BasicMembershipFieldsFragmentDoc}
+  ${AllMembershipFieldsFragmentDoc}
 `
 
 /**
@@ -175,10 +174,10 @@ export type GetMembershipQueryResult = Apollo.QueryResult<GetMembershipQuery, Ge
 export const GetMembershipsDocument = gql`
   query GetMemberships($where: MembershipWhereInput!) {
     memberships(where: $where, orderBy: [createdAt_ASC]) {
-      ...BasicMembershipFields
+      ...AllMembershipFields
     }
   }
-  ${BasicMembershipFieldsFragmentDoc}
+  ${AllMembershipFieldsFragmentDoc}
 `
 
 /**

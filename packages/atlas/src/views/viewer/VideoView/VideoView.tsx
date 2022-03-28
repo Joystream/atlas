@@ -21,7 +21,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
+import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -57,7 +57,7 @@ import {
 
 export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
-  useRedirectMigratedGizaContent({ type: 'video' })
+  useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
