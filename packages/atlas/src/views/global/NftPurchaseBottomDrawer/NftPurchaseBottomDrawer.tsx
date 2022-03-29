@@ -38,7 +38,6 @@ import {
   CurrentBidJoyToken,
   CurrentBidWrapper,
   Divider,
-  EndingTime,
   FlexWrapper,
   Header,
   InnerContainer,
@@ -50,7 +49,6 @@ import {
   PaymentSplitWrapper,
   PlaceBidWrapper,
   Row,
-  Timer,
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 0
@@ -232,8 +230,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   ])
   const isBuyNowAffordable = (buyNowPrice || auctionBuyNowPrice) + TRANSACTION_FEE < (accountBalance || 0)
   const bid = watch('bid')
-  const timeLeftUnderMinute = timeLeftSeconds && timeLeftSeconds < 60
-  const auctionEnded = type === 'english_auction' && timeLeftSeconds === 0
+  const timeLeftUnderMinute = !!timeLeftSeconds && timeLeftSeconds < 60
+  const auctionEnded = type === 'english_auction' && timeLeftSeconds <= 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
   const primaryButtonText = type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked ? 'Buy NFT' : 'Place bid'
   const blocksLeft = endAtBlock && endAtBlock - currentBlock
@@ -277,29 +275,31 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Text variant="h600">{type !== 'buy_now' && !isBuyNowClicked ? 'Place a bid' : 'Buy NFT'}</Text>
               {type === 'english_auction' && (
                 <FlexWrapper>
-                  <EndingTime>
-                    <Text variant="h300" secondary>
-                      Ending in:
+                  <Text variant="h200" secondary>
+                    Ending in:
+                  </Text>
+                  <Text
+                    variant="h200"
+                    margin={{ left: 2, right: 2 }}
+                    color={
+                      auctionEnded
+                        ? cVar('colorTextMuted', true)
+                        : timeLeftUnderMinute
+                        ? cVar('colorTextError')
+                        : undefined
+                    }
+                  >
+                    {!auctionEnded
+                      ? !timeLeftUnderMinute
+                        ? formatDurationShort(timeLeftSeconds, true)
+                        : 'Under 1 min'
+                      : 'Auction ended'}
+                    <Text variant="h200" as="span" secondary>
+                      {' '}
+                      / {pluralizeNoun(blocksLeft && blocksLeft > 0 ? blocksLeft : 0, 'block')}
                     </Text>
-                    <Timer
-                      variant="h200"
-                      margin={{ left: 4, right: 2 }}
-                      color={timeLeftUnderMinute ? cVar('colorTextError', true) : undefined}
-                      secondary={auctionEnded}
-                    >
-                      {!auctionEnded
-                        ? !timeLeftUnderMinute
-                          ? formatDurationShort(timeLeftSeconds, true)
-                          : 'Under 1 min'
-                        : 'Auction ended'}
-                    </Timer>
-                  </EndingTime>
+                  </Text>
                   <FlexWrapper>
-                    {blocksLeft && (
-                      <Text variant="t100" secondary margin={{ left: 2, right: 1 }}>
-                        {pluralizeNoun(blocksLeft > 0 ? blocksLeft : 0, 'block')}
-                      </Text>
-                    )}
                     {endAtBlock && (
                       <Information
                         text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."

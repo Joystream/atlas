@@ -88,26 +88,6 @@ export const Header = styled.div`
   }
 `
 
-export const EndingTime = styled.div`
-  ${flexStyles};
-
-  position: relative;
-
-  ::after {
-    content: '';
-    display: block;
-    position: absolute;
-    right: 0;
-    width: 1px;
-    height: 32px;
-    background-color: ${cVar('colorBorderMutedAlpha')};
-  }
-`
-
-export const Timer = styled(Text)`
-  min-width: 77px;
-`
-
 export const CurrentBidWrapper = styled.div`
   margin-bottom: ${sizes(6)};
   background-color: ${cVar('colorBackgroundStrong')};
