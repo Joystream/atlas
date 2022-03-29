@@ -56,14 +56,15 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
     const navigate = useNavigate()
 
+    const hasNft = !!video?.nft
+
     const { openNftPutOnSale, cancelNftSale } = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
 
-    // TODO: figure out how to not fetch every single nft for a video
-    // unfortunately, we cannot fetch all data about auctions using videos queries - auctions objects are null
-    const { nft, nftStatus } = useNft(id || '')
+    // TODO: remove this and use video.nft instead once QN support fetching auctions field
+    const { nft, nftStatus } = useNft(id || '', { fetchPolicy: 'network-only', skip: !hasNft })
 
     const {
       auctionPlannedEndDate,
@@ -72,11 +73,10 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       startsAtDate,
       timerLoading,
       isOwner: isNftOwner,
-      canPutOnSale,
       canCancelSale,
+      canPutOnSale,
       isBuyNow,
     } = useNftState(nft)
-
     const nftTilePublisher = useGetNftSlot({
       auctionPlannedEndDate,
       status: nftStatus?.status,
@@ -89,8 +89,6 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
-
-    const hasNft = !!video?.nft
 
     const isVideoUploading =
       uploadVideoStatus?.lastStatus === 'inProgress' ||
