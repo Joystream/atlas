@@ -1,5 +1,5 @@
 import { formatISO } from 'date-fns'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
@@ -56,6 +56,8 @@ import {
 import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 
 const CUSTOM_LICENSE_CODE = 1000
+const SCROLL_TIMEOUT = 700
+const MINT_NFT_TIMEOUT = 1200
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
@@ -72,6 +74,7 @@ type VideoFormProps = {
 export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFormStatus }) => {
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
+  const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -81,6 +84,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const deleteVideo = useDeleteVideo()
   const isEdit = !editedVideoInfo?.isDraft
   const isNew = !isEdit
+  const mintNft = editedVideoInfo?.mintNft
 
   const { categories, error: categoriesError } = useCategories(undefined, {
     onError: (error) => SentryLogger.error('Failed to fetch categories', 'VideoWorkspace', error),
@@ -123,7 +127,25 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     setCachedEditedVideoId(editedVideoInfo.id)
 
     reset(tabData)
-  }, [tabData, tabDataLoading, reset, editedVideoInfo.id, cachedEditedVideoId, setValue])
+  }, [tabData, tabDataLoading, reset, mintNft, editedVideoInfo.id, cachedEditedVideoId, setValue])
+
+  // animate scroll to Mint an NFT switch and toggle it, if user selected it from video tile context menu
+  useEffect(() => {
+    if (!mintNft || !mintNftFormFieldRef.current || !tabData || getValues('mintNft')) {
+      return
+    }
+    const scrollTimeout = setTimeout(
+      () => mintNftFormFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+      SCROLL_TIMEOUT
+    )
+    const setMintNftTimeout = setTimeout(() => setValue('mintNft', tabData.mintNft || mintNft), MINT_NFT_TIMEOUT)
+
+    return () => {
+      clearTimeout(scrollTimeout)
+      clearTimeout(setMintNftTimeout)
+    }
+  }, [mintNft, setValue, tabData, getValues])
+
   const handleSubmit = useCallback(() => {
     flushDraftSave()
 
@@ -242,13 +264,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? isDirty : isFormValid,
+      isDisabled: isEdit ? isDirty || !!mintNft : isFormValid,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
       triggerReset: reset,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, mintNft, reset]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -366,7 +388,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             )}
           />
         </ExtendedMarginFormField>
-        <SwitchFormField title="Mint an NFT">
+        <SwitchFormField title="Mint an NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
             <Controller
               name="mintNft"

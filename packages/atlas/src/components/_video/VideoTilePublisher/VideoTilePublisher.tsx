@@ -3,6 +3,7 @@ import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
+import { useVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -11,6 +12,7 @@ import {
   SvgActionCopy,
   SvgActionEdit,
   SvgActionHide,
+  SvgActionMint,
   SvgActionPlay,
   SvgActionReupload,
   SvgActionSell,
@@ -22,11 +24,13 @@ import {
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
+import { useNftState } from '@/hooks/useNftState'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
 import { useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { openInNewTab } from '@/utils/browser'
+import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { SlotsObject } from '../VideoThumbnail'
@@ -35,6 +39,7 @@ import { VideoTile } from '../VideoTile'
 type VideoTilePublisherProps = {
   id?: string
   onEditClick?: (e?: React.MouseEvent<HTMLElement>) => void
+  onMintNftClick?: (e?: React.MouseEvent<HTMLElement>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
 }
@@ -42,18 +47,25 @@ type VideoTilePublisherProps = {
 export const DELAYED_FADE_CLASSNAME = 'delayed-fade'
 
 export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
-  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick }) => {
+  ({ id, onEditClick, onDeleteVideoClick, onReuploadVideoClick, onMintNftClick }) => {
     const { copyToClipboard } = useClipboard()
-    const { isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } = useVideoTileSharedLogic({
-      id,
+    const { video, loading } = useVideo(id ?? '', {
+      skip: !id,
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
+    const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic({
+      video,
+      loading,
+    })
+    const nft = video?.nft
+    const { isOwner: isNftOwner, canPutOnSale, canCancelSale, isBuyNow } = useNftState(nft)
     const navigate = useNavigate()
 
-    const { openNftPutOnSale } = useNftActions()
+    const { openNftPutOnSale, cancelNftSale } = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
-    const nftTilePublisher = useGetNftSlot(id)
+    const nftTilePublisher = useGetNftSlot(video?.nft ? id : undefined)
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
@@ -196,14 +208,32 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           title: 'Edit video',
         },
         ...(hasNft
-          ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start NFT sale' }]
+          ? [
+              ...(isNftOwner && canPutOnSale
+                ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
+                : []),
+              ...(isNftOwner && canCancelSale
+                ? [
+                    {
+                      icon: <SvgActionTrash />,
+                      onClick: () => cancelNftSale(nft?.id || '', !!isBuyNow),
+                      title: 'Remove from sale',
+                      destructive: true,
+                    },
+                  ]
+                : []),
+            ]
+          : [{ icon: <SvgActionMint />, onClick: onMintNftClick, title: 'Mint NFT' }]),
+        ...(!hasNft && !canCancelSale
+          ? [
+              {
+                icon: <SvgActionTrash />,
+                onClick: onDeleteVideoClick,
+                title: 'Delete video',
+                destructive: true,
+              },
+            ]
           : []),
-        {
-          icon: <SvgActionTrash />,
-          onClick: onDeleteVideoClick,
-          title: 'Delete video',
-          destructive: true,
-        },
       ]
 
       return hasAssetUploadFailed ? assetFailedKebabItems : publisherBasicKebabItems
@@ -214,10 +244,17 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       onDeleteVideoClick,
       onEditClick,
       hasNft,
+      isNftOwner,
+      canPutOnSale,
+      canCancelSale,
+      onMintNftClick,
       videoHref,
       copyToClipboard,
       openNftPutOnSale,
       id,
+      cancelNftSale,
+      nft?.id,
+      isBuyNow,
     ])
 
     const getVideoSubtitle = useCallback(() => {
@@ -264,6 +301,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         </CSSTransition>
       )
     }
+
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
@@ -273,7 +311,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
-        loadingDetails={loading}
+        loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={thumbnailPhotoUrl}
         createdAt={video?.createdAt}

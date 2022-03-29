@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
+import { useBasicVideo } from '@/api/hooks'
 import { Pill } from '@/components/Pill'
 import { SvgActionCopy, SvgIllustrativePlay } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useClipboard } from '@/hooks/useClipboard'
-import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { useVideoTileSharedLogic } from '@/hooks/useVideoTileSharedLogic'
+import { SentryLogger } from '@/utils/logs'
 import { formatDurationShort } from '@/utils/time'
 
 import { VideoTile } from '../VideoTile'
@@ -22,11 +23,16 @@ type VideoTileViewerProps = {
 export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
   const { copyToClipboard } = useClipboard()
   const navigate = useNavigate()
-  const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, loading, video, videoHref } =
-    useVideoTileSharedLogic({
-      id,
-    })
-  const nftBottomLeftSlot = useGetNftSlot(id)
+  const { video, loading } = useBasicVideo(id ?? '', {
+    skip: !id,
+    onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
+  })
+  const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(
+    {
+      video,
+      loading,
+    }
+  )
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
@@ -52,7 +58,12 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
             <Pill variant="overlay" label={formatDurationShort(video?.duration)} title="Video duration" />
           ) : null,
         },
-        bottomLeft: nftBottomLeftSlot,
+        bottomLeft:
+          video && video?.nft
+            ? {
+                element: <Pill label="NFT" variant="overlay" title="NFT" />,
+              }
+            : undefined,
         center: {
           element: <SvgIllustrativePlay />,
           type: 'hover',

@@ -1,24 +1,19 @@
-import { useBasicVideo } from '@/api/hooks'
+import { BasicVideoFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
-import { SentryLogger } from '@/utils/logs'
 
 type UseVideoSharedLogicOpts = {
-  id?: string
+  video?: BasicVideoFieldsFragment | VideoFieldsFragment | null
+  loading?: boolean
   isDraft?: boolean
   onNotFound?: () => void
 }
-export const useVideoTileSharedLogic = ({ id, isDraft, onNotFound }: UseVideoSharedLogicOpts) => {
-  const { video, loading } = useBasicVideo(id ?? '', {
-    skip: !id || isDraft,
-    onCompleted: (data) => !data && onNotFound?.(),
-    onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
-  })
+export const useVideoTileSharedLogic = ({ video, loading }: UseVideoSharedLogicOpts) => {
   const { url: thumbnailPhotoUrl, isLoadingAsset: isLoadingThumbnail } = useAsset(video?.thumbnailPhoto)
   const { url: avatarPhotoUrl, isLoadingAsset: isLoadingAvatar } = useAsset(video?.channel?.avatarPhoto)
 
-  const internalIsLoadingState = loading || !id
-  const videoHref = id ? absoluteRoutes.viewer.video(id) : undefined
+  const internalIsLoadingState = loading || !video
+  const videoHref = video ? absoluteRoutes.viewer.video(video.id) : undefined
 
   return {
     video,

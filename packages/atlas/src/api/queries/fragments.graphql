@@ -150,7 +150,7 @@ fragment VideoFields on Video {
     ...LicenseFields
   }
   nft {
-    ...BasicNftFields
+    ...AllNftFields
   }
 }
 

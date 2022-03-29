@@ -16,6 +16,7 @@ export type VideoWorkspace = {
   id: string
   isDraft?: boolean
   isNew?: boolean
+  mintNft?: boolean
 }
 
 export type ContextValue = {
