@@ -7,6 +7,7 @@ import { createApolloClient } from '@/api'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { NftActionsProvider } from '@/providers/nftActions'
+import { NotificationsManager } from '@/providers/notifications'
 import { GlobalStyles } from '@/styles'
 import { NftPurchaseBottomDrawer } from '@/views/global/NftPurchaseBottomDrawer'
 import { NftSaleBottomDrawer } from '@/views/global/NftSaleBottomDrawer'
@@ -41,6 +42,7 @@ export const App = () => {
                       <Snackbars />
                       <AssetsManager />
                       <TransactionManager />
+                      <NotificationsManager />
                       <SignInStepsStepper />
                       <NftSettlementBottomDrawer />
                       <NftPurchaseBottomDrawer />
