@@ -51,7 +51,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const { copyToClipboard } = useClipboard()
     const { video, loading } = useVideo(id ?? '', {
       skip: !id,
-      onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
+      onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
     const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic({
       video,
@@ -301,6 +301,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         </CSSTransition>
       )
     }
+
     return (
       <VideoTile
         clickable={!isUploading || hasAssetUploadFailed}
@@ -310,7 +311,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         linkState={hasAssetUploadFailed ? { highlightFailed: true } : undefined}
         videoSubTitle={getVideoSubtitle()}
         detailsVariant="withoutChannel"
-        loadingDetails={loading}
+        loadingDetails={loading || !video}
         loadingThumbnail={isLoadingThumbnail && !hasThumbnailUploadFailed}
         thumbnailUrl={thumbnailPhotoUrl}
         createdAt={video?.createdAt}
