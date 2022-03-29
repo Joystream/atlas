@@ -9,7 +9,6 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
@@ -49,6 +48,7 @@ import {
   PaymentSplitWrapper,
   PlaceBidWrapper,
   Row,
+  StyledSvgJoystreamLogoShort,
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 0
@@ -380,7 +380,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   disabled={auctionEnded}
                   placeholder={auctionEnded ? 'Auction ended' : `Min. ${minimumBid} tJOY`}
                   nodeStart={<JoyTokenIcon variant="silver" size={24} />}
-                  nodeEnd={!!bid && <Pill variant="overlay" label={`${convertToUSD(bid)}`} />}
+                  nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
                   type="number"
                   error={!!errors.bid}
                   helperText={errors.bid && errors.bid.message}
@@ -439,7 +439,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   Platform
                 </Text>
                 <PaymentSplitValues>
-                  <SvgJoystreamLogoShort />
+                  <StyledSvgJoystreamLogoShort />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
                     {PLATFORM_ROYALTY}%
                   </Text>

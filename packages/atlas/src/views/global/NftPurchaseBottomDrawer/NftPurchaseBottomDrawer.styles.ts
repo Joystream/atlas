@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes } from '@/styles'
 
 const flexStyles = css`
@@ -18,7 +19,7 @@ export const Content = styled.div`
   padding-top: ${sizes(8)};
   display: flex;
   flex-direction: column-reverse;
-  height: 100%;
+  min-height: 100%;
   overflow-y: auto;
   padding-bottom: 130px;
 
@@ -32,6 +33,10 @@ export const Content = styled.div`
       flex: 50%;
     }
   }
+`
+
+export const StyledSvgJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
+  transform: scale(0.75);
 `
 
 export const NftPreview = styled.div`
