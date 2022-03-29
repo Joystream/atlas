@@ -126,7 +126,6 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       buyNowPrice ? (
         <NftInfoItem
           size={size}
-          loading={!buyNowPrice || convertToUSD(buyNowPrice) === '$0'}
           label="Buy now"
           content={
             <>
@@ -362,7 +361,6 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             ) : (
               <NftInfoItem
                 size={size}
-                loading={!nftStatus.startingPrice || convertToUSD(nftStatus.startingPrice) === '$0'}
                 label="Starting Price"
                 content={
                   <>
