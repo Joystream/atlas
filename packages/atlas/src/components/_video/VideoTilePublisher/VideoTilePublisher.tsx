@@ -65,7 +65,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
-    const nftTilePublisher = useGetNftSlot(id)
+    const nftTilePublisher = useGetNftSlot(video?.nft ? id : undefined)
 
     const uploadVideoStatus = useUploadsStore((state) => state.uploadsStatus[video?.media?.id || ''])
     const uploadThumbnailStatus = useUploadsStore((state) => state.uploadsStatus[video?.thumbnailPhoto?.id || ''])
