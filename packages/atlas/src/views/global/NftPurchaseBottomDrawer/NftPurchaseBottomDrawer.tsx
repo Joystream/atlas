@@ -16,6 +16,7 @@ import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
+import { useNftState } from '@/hooks/useNftState'
 import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
@@ -25,16 +26,15 @@ import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
+import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
 import {
   ActionBarCell,
   ActiveBidWrapper,
-  BidderName,
+  BidAmount,
   BuyNowInfo,
   Content,
-  CurrentBidAvatar,
-  CurrentBidJoyToken,
   CurrentBidWrapper,
   Divider,
   FlexWrapper,
@@ -48,7 +48,9 @@ import {
   PaymentSplitWrapper,
   PlaceBidWrapper,
   Row,
+  StyledJoyTokenIcon,
   StyledSvgJoystreamLogoShort,
+  TokenWrapper,
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 0
@@ -61,6 +63,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
+  const { userBid } = useNftState(nft)
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
@@ -104,7 +107,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
   const buyNowPrice = (isBuyNow && nftStatus.buyNowPrice) || 0
   const startingPrice = isAuction && nftStatus.startingPrice
-  const topBidder = isAuction && nftStatus.topBidder
+  const topBidder = (isAuction && nftStatus.topBidder) || undefined
   const topBidAmount = (isAuction && nftStatus.topBidAmount) || 0
   const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
@@ -240,6 +243,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   const hasErrors = !!Object.keys(errors).length
 
+  const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = useMemberAvatar(userBid?.bidder)
+  const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = useMemberAvatar(topBidder)
+
   return (
     <BottomDrawer
       isOpen={isOpen}
@@ -318,28 +324,42 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     <ActiveBidWrapper>
                       <ActionBarCell>
                         <Text variant="h300" secondary margin={{ bottom: 2 }}>
-                          Current bid
+                          Top bid
                         </Text>
                         <FlexWrapper>
-                          <CurrentBidAvatar size="bid" />
-                          <BidderName variant="h400">{topBidder.handle}</BidderName>
+                          <Avatar size="bid" assetUrl={topBidderAvatarUrl} loading={topBidderAvatarLoading} />
+                          <TokenWrapper>
+                            <StyledJoyTokenIcon variant="gray" size={24} />
+                          </TokenWrapper>
+                          <BidAmount variant="h400">{formatNumberShort(topBidAmount)}</BidAmount>
                         </FlexWrapper>
-                      </ActionBarCell>
-                      <ActionBarCell>
-                        <Text variant="h300" secondary margin={{ bottom: 2 }}>
-                          Bid amount
+                        <Text variant="t100" secondary margin={{ top: 1 }}>
+                          {topBidder.handle}
                         </Text>
-                        <FlexWrapper>
-                          <CurrentBidJoyToken size={24} variant="silver" />
-                          <Text variant="h400">{topBidAmount}</Text>
-                        </FlexWrapper>
                       </ActionBarCell>
+                      {userBid && (
+                        <ActionBarCell>
+                          <Text variant="h300" secondary margin={{ bottom: 2 }}>
+                            Your Bid
+                          </Text>
+                          <FlexWrapper>
+                            <Avatar size="bid" assetUrl={userBidAvatarUrl} loading={userBidAvatarLoading} />
+                            <TokenWrapper>
+                              <StyledJoyTokenIcon variant="gray" size={24} />
+                            </TokenWrapper>
+                            <BidAmount variant="h400">{formatNumberShort(Number(userBid.amount))}</BidAmount>
+                          </FlexWrapper>
+                          <Text variant="t100" secondary margin={{ top: 1 }}>
+                            You
+                          </Text>
+                        </ActionBarCell>
+                      )}
                     </ActiveBidWrapper>
                   ) : (
                     <ActiveBidWrapper>
                       <ActionBarCell>
                         <Text variant="h300" secondary margin={{ bottom: 2 }}>
-                          Current bid
+                          Top bid
                         </Text>
                         <Text variant="h400">Nobody has bid yet</Text>
                       </ActionBarCell>
@@ -352,7 +372,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       <Text variant="h300" secondary>
                         Minimum bid:
                       </Text>
-                      <JoyTokenIcon variant="silver" size={24} /> <Text variant="h400">{minimumBid}</Text>
+                      <JoyTokenIcon variant="gray" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <div>

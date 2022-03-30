@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
@@ -98,7 +97,31 @@ export const CurrentBidWrapper = styled.div`
   background-color: ${cVar('colorBackgroundStrong')};
 `
 
-export const BidderName = styled(Text)`
+export const TokenWrapper = styled.div`
+  position: relative;
+  left: -4px;
+  z-index: 10;
+  margin-right: ${sizes(2)};
+
+  /* token background */
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-color: ${cVar('colorBackgroundStrong')};
+    border-radius: 100%;
+    left: -2px;
+    top: -2px;
+  }
+`
+
+export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
+  position: relative;
+`
+
+export const BidAmount = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -107,22 +130,10 @@ export const BidderName = styled(Text)`
 export const ActionBarCell = styled.div`
   width: 50%;
   padding: ${sizes(3.5)} ${sizes(4)};
-
-  :nth-of-type(2) {
-    border-left: 1px solid ${cVar('colorBorderMutedAlpha')};
-  }
 `
 
 export const ActiveBidWrapper = styled.div`
   display: flex;
-`
-
-export const CurrentBidAvatar = styled(Avatar)`
-  margin-right: ${sizes(2)};
-`
-
-export const CurrentBidJoyToken = styled(JoyTokenIcon)`
-  margin-right: ${sizes(1)};
 `
 
 export const MinimumBidWrapper = styled.div`
