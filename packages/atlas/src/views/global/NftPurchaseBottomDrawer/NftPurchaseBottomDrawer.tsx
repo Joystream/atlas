@@ -63,7 +63,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
-  const { userBid } = useNftState(nft)
+  const { userBid, canChangeBid } = useNftState(nft)
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
@@ -237,7 +237,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const timeLeftUnderMinute = !!timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds <= 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
-  const primaryButtonText = type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked ? 'Buy NFT' : 'Place bid'
+  const primaryButtonText =
+    type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked
+      ? 'Buy NFT'
+      : canChangeBid
+      ? 'Change bid'
+      : 'Place bid'
   const blocksLeft = endAtBlock && endAtBlock - currentBlock
 
   const isOpen = currentAction === 'purchase'
@@ -279,7 +284,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         <PlaceBidWrapper>
           <InnerContainer>
             <Header>
-              <Text variant="h600">{type !== 'buy_now' && !isBuyNowClicked ? 'Place a bid' : 'Buy NFT'}</Text>
+              <Text variant="h600">
+                {type !== 'buy_now' && !isBuyNowClicked ? (canChangeBid ? 'Change a bid' : 'Place a bid') : 'Buy NFT'}
+              </Text>
               {type === 'english_auction' && (
                 <FlexWrapper>
                   <Text variant="h200" secondary>
@@ -335,7 +342,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                           <BidAmount variant="h400">{formatNumberShort(topBidAmount)}</BidAmount>
                         </FlexWrapper>
                         <Text variant="t100" secondary margin={{ top: 1 }}>
-                          {topBidder.handle}
+                          {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
                         </Text>
                       </ActionBarCell>
                       {userBid && (

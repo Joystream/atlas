@@ -51,6 +51,7 @@ export type Auction = {
   userBidAmount: number | undefined
   userBidUnlockDate: Date | undefined
   canWithdrawBid: boolean | undefined
+  canChangeBid: boolean | undefined
   englishTimerState: EnglishTimerState | undefined
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
@@ -457,7 +458,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 <GridItem colSpan={buttonColumnSpan}>
                   <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                     <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
-                      Place a bid
+                      {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
                     </Button>
                     <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
                       Buy now
@@ -479,7 +480,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <ButtonGrid data-size={size}>
                     <GridItem colSpan={buttonColumnSpan}>
                       <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                        Place a bid
+                        {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
                       </Button>
                     </GridItem>
                     {nftStatus.canWithdrawBid && (
@@ -553,6 +554,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     userBidUnlockDate,
     saleType,
     startsAtBlock,
+    canChangeBid,
   } = useNftState(nft)
 
   const owner = nft?.ownerMember
@@ -572,6 +574,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           ...nftStatus,
           startsAtDate,
           canWithdrawBid,
+          canChangeBid,
           englishTimerState,
           auctionPlannedEndDate,
           topBidderAvatarUri,
