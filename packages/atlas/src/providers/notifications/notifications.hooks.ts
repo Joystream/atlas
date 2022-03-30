@@ -52,7 +52,7 @@ const parseNotification = (
       id: event.id,
       type: 'open-auction-ended',
       date: event.createdAt,
-      // this will be accessible directly on event object in the future
+      // TODO: this will be accessible directly on event object in the future
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       member: event.video.nft!.ownerMember!,
       video: {

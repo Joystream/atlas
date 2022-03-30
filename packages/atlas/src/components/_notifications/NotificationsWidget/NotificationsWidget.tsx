@@ -15,7 +15,7 @@ type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
 
 export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
-  const { notifications } = useNotifications()
+  const { notifications, markNotificationAsRead } = useNotifications()
 
   return (
     <Popover hideOnClick ref={popoverRef} {...rest}>
@@ -32,6 +32,7 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
               variant="compact"
               key={`notification-${notification.id}-${idx}`}
               notification={notification}
+              onClick={() => markNotificationAsRead(notification.id)}
             />
           ))}
         </Content>
