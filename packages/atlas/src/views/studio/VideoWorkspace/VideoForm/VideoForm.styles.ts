@@ -118,6 +118,5 @@ export const VideoLink = styled(Link)`
 `
 
 export const DescriptionTextArea = styled(TextArea)`
-  opacity: 0.5;
   margin-top: ${({ disabled }) => disabled && '40px'};
 `

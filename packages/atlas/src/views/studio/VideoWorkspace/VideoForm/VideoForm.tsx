@@ -107,7 +107,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     mode: 'onChange',
   })
 
-  const videoFieldsLocked = getValues('mintNft') && isEdit
+  const videoFieldsLocked = tabData?.mintNft && isEdit
 
   // manage assets used by the form
   const {
