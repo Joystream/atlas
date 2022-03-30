@@ -18,7 +18,9 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const isAuction = !!auction
   const isUserTopBidder = auction?.lastBid?.bidder.id === activeMembership?.id
 
-  const userBid = auction?.bids.find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
+  const userBid = [...(auction?.bids ?? [])]
+    .reverse()
+    .find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
   const userBidUnlockBlock =
     auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
       ? userBid?.createdInBlock + auction.auctionType.bidLockingTime
@@ -37,10 +39,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
 
   const canWithdrawBid =
     auction?.isCompleted ||
-    (auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-      userBid &&
-      auction.auctionType.bidLockingTime + userBid.createdInBlock > currentBlock)
-
+    (auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
   const canPutOnSale = nft && isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusIdle'
 
   const auctionPlannedEndDate = auction?.plannedEndAtBlock

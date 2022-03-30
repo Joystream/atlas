@@ -447,13 +447,17 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               ) : (
                 <GridItem colSpan={buttonColumnSpan}>
                   <ButtonGrid data-size={size}>
-                    <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                      Place a bid
-                    </Button>
-                    {nftStatus.canWithdrawBid && (
-                      <Button fullWidth size={buttonSize} variant="destructive-secondary">
-                        Withdraw a bid
+                    <GridItem colSpan={buttonColumnSpan}>
+                      <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
+                        Place a bid
                       </Button>
+                    </GridItem>
+                    {nftStatus.canWithdrawBid && (
+                      <GridItem colSpan={buttonColumnSpan}>
+                        <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                          Withdraw a bid
+                        </Button>
+                      </GridItem>
                     )}
                     {infoTextNode}
                   </ButtonGrid>
