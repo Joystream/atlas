@@ -112,7 +112,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
-  const minimumBid = startingPrice > topBidAmount ? startingPrice : topBidAmount + minimalBidStep
+  const minimumBidEnglishAuction = startingPrice > topBidAmount ? startingPrice : topBidAmount + minimalBidStep
+  const minimumBid = type === 'open_auction' ? startingPrice : minimumBidEnglishAuction
 
   const endTime = endAtBlock && convertBlockToMsTimestamp(endAtBlock)
 
@@ -370,7 +371,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   <MinimumBidWrapper>
                     <MinimumBid>
                       <Text variant="h300" secondary>
-                        Minimum bid:
+                        {type === 'open_auction' ? 'Starting price' : 'Minimum bid'}
                       </Text>
                       <JoyTokenIcon variant="gray" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
