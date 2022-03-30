@@ -5,20 +5,20 @@ import { useJoystream } from '@/providers/joystream'
 const ESTIMATED_BLOCK_TIME_MS = 6000
 
 export const useBlockTimeEstimation = () => {
-  const { currentBlock, getCurrentBlockMsTimestamp } = useJoystream()
+  const { currentBlock, currentBlockMsTimestamp } = useJoystream()
 
   const convertBlockToMsTimestamp = useCallback(
     (targetBlock: number) => {
       const nowMs = Date.now()
       const deltaBlocks = targetBlock - currentBlock
-      const msSinceLastBlock = nowMs - getCurrentBlockMsTimestamp()
+      const msSinceLastBlock = nowMs - currentBlockMsTimestamp
 
       const deltaMs = deltaBlocks * ESTIMATED_BLOCK_TIME_MS - msSinceLastBlock
       const targetTimestamp = nowMs + deltaMs
 
       return targetTimestamp
     },
-    [currentBlock, getCurrentBlockMsTimestamp]
+    [currentBlock, currentBlockMsTimestamp]
   )
 
   const convertMsTimestampToBlock = useCallback(
@@ -26,14 +26,14 @@ export const useBlockTimeEstimation = () => {
       if (!targetTimestamp) {
         return
       }
-      const deltaMs = targetTimestamp - getCurrentBlockMsTimestamp()
+      const deltaMs = targetTimestamp - currentBlockMsTimestamp
 
       const deltaBlocks = Math.round(deltaMs / ESTIMATED_BLOCK_TIME_MS)
       const targetBlock = currentBlock + deltaBlocks
 
       return targetBlock
     },
-    [currentBlock, getCurrentBlockMsTimestamp]
+    [currentBlock, currentBlockMsTimestamp]
   )
 
   const convertDurationToBlocks = useCallback((milliseconds: number) => {

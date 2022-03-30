@@ -109,7 +109,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyCallback: ProxyCallbackFn) => {
   const [tokenPrice, setTokenPrice] = useState(0)
   const [currentBlock, setCurrentBlock] = useState(0)
-  const currentBlockMsTimestampRef = useRef(0)
+  const [currentBlockMsTimestamp, setCurrentBlockMsTimestamp] = useState(0)
 
   // fetch tJOY token price from the status server
   useEffect(() => {
@@ -136,7 +136,7 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
       unsubscribe = await joystream.subscribeCurrentBlock(
         proxyCallback((number) => {
           setCurrentBlock(number)
-          currentBlockMsTimestampRef.current = Date.now()
+          setCurrentBlockMsTimestamp(Date.now())
         })
       )
     }
@@ -145,12 +145,10 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     return unsubscribe
   }, [joystream, proxyCallback])
 
-  const getCurrentBlockMsTimestamp = useCallback(() => currentBlockMsTimestampRef.current, [])
-
   return {
     tokenPrice,
     currentBlock,
-    getCurrentBlockMsTimestamp,
+    currentBlockMsTimestamp,
   }
 }
 
