@@ -17,6 +17,10 @@ type ButtonSizeProps = {
   size: ButtonSize
 }
 
+type ButtonBaseProps = {
+  'data-badge'?: string | number | boolean
+} & ButtonSizeProps
+
 type TextProps = {
   textColorVariant?: ButtonVariant
   textOnly?: boolean
@@ -55,7 +59,7 @@ const sizeOverwriteStyles = ({
   }
 }
 
-export const StyledButtonBase = styled(ButtonBase)<ButtonSizeProps>`
+export const StyledButtonBase = styled(ButtonBase)<ButtonBaseProps>`
   ${sizeOverwriteStyles};
   ${smallBadgeStyles};
 
