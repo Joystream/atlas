@@ -88,6 +88,12 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
   margin: ${sizes(4)} 0 0;
 `
 
+export const VideoUtils = styled.div`
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr auto;
+`
+
 export const Meta = styled(Text)`
   display: block;
   margin-top: ${sizes(2)};
