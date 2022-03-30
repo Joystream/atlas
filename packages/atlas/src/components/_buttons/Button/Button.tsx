@@ -2,7 +2,7 @@ import React from 'react'
 
 import { TextVariant } from '@/components/Text'
 
-import { Badge, ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.styles'
+import { ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.styles'
 
 import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
 
@@ -30,6 +30,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         textOnly={textOnly}
         variant={variant}
         iconOnly={iconOnly}
+        data-badge={badge}
       >
         {icon && iconPlacement === 'left' && (
           <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>
@@ -51,7 +52,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {icon}
           </ButtonIconWrapper>
         )}
-        {!!badge && <Badge dot={badge === true}>{badge !== true && badge}</Badge>}
       </StyledButtonBase>
     )
   }
