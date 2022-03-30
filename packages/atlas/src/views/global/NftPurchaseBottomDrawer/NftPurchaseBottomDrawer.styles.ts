@@ -137,10 +137,15 @@ export const ActiveBidWrapper = styled.div`
 `
 
 export const MinimumBidWrapper = styled.div`
-  ${flexStyles};
-
-  justify-content: space-between;
   margin-bottom: ${sizes(4)};
+  flex-direction: column;
+
+  ${media.md} {
+    ${flexStyles};
+
+    justify-content: space-between;
+    flex-direction: row;
+  }
 `
 
 export const BuyNowInfo = styled(Text)`
@@ -152,9 +157,15 @@ export const BuyNowInfo = styled(Text)`
 export const MinimumBid = styled.div`
   ${flexStyles};
 
+  margin-bottom: ${sizes(2)};
+
   svg {
     margin-left: ${sizes(2)};
     margin-right: ${sizes(1)};
+  }
+
+  ${media.md} {
+    margin-bottom: unset;
   }
 `
 

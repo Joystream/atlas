@@ -375,11 +375,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       <JoyTokenIcon variant="gray" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
-                      <div>
-                        <Text variant="t100" secondary>
-                          Buy now: {auctionBuyNowPrice} tJOY
-                        </Text>
-                      </div>
+                      <Text variant="t100" secondary>
+                        Buy now: {auctionBuyNowPrice} tJOY
+                      </Text>
                     )}
                   </MinimumBidWrapper>
                 )}
