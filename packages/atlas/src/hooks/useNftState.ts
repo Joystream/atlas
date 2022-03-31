@@ -47,8 +47,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
   const canWithdrawBid = auction?.isCompleted || (openAuction && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
 
-  const canChangeBid =
-    !auction?.isCompleted && !isRunning && auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
+  const canChangeBid = !auction?.isCompleted && auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
 
   const englishTimerState: EnglishTimerState = isExpired
     ? 'expired'

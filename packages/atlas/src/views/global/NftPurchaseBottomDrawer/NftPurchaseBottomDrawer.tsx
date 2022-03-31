@@ -107,8 +107,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const bidLockingTime = isAuction && nftStatus.bidLockingTime && convertBlocksToDuration(nftStatus.bidLockingTime)
   const buyNowPrice = (isBuyNow && nftStatus.buyNowPrice) || 0
   const startingPrice = isAuction && nftStatus.startingPrice
-  const topBidder = (isAuction && nftStatus.topBidder) || undefined
-  const topBidAmount = (isAuction && nftStatus.topBidAmount) || 0
+  const topBidder = isAuction && nftStatus.topBidder ? nftStatus.topBidder : undefined
+  const topBidAmount = (isAuction && !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount) || 0
   const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
@@ -237,8 +237,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const timeLeftUnderMinute = !!timeLeftSeconds && timeLeftSeconds < 60
   const auctionEnded = type === 'english_auction' && timeLeftSeconds <= 0
   const insufficientFoundsError = errors.bid && errors.bid.type === 'bidTooHigh'
+
   const primaryButtonText =
-    type === 'buy_now' || bid >= auctionBuyNowPrice || isBuyNowClicked
+    type === 'buy_now' || (auctionBuyNowPrice && auctionBuyNowPrice <= bid) || isBuyNowClicked
       ? 'Buy NFT'
       : canChangeBid
       ? 'Change bid'
@@ -328,7 +329,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             {type !== 'buy_now' && !isBuyNowClicked ? (
               <>
                 <CurrentBidWrapper>
-                  {topBidder ? (
+                  {topBidder && !!topBidAmount ? (
                     <ActiveBidWrapper>
                       <ActionBarCell>
                         <Text variant="h300" secondary margin={{ bottom: 2 }}>

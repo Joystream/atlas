@@ -433,10 +433,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               (isOwner ? (
                 (nftStatus.type === 'open' ||
                   // english auction with no bids
-                  !nftStatus.topBid) && (
+                  !nftStatus.topBidAmount ||
+                  nftStatus.topBid?.isCanceled) && (
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
-                      {nftStatus.type === 'open' && !!nftStatus.topBid && !nftStatus.topBid.isCanceled && (
+                      {nftStatus.type === 'open' && !nftStatus.topBid?.isCanceled && (
                         <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
                           Review and accept bid
                         </Button>
@@ -445,7 +446,9 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                         fullWidth
                         onClick={onNftCancelSale}
                         variant={
-                          nftStatus.type === 'open' && !!nftStatus.topBid ? 'destructive-secondary' : 'destructive'
+                          nftStatus.type === 'open' && !nftStatus.topBid?.isCanceled
+                            ? 'destructive-secondary'
+                            : 'destructive'
                         }
                         size={buttonSize}
                       >
