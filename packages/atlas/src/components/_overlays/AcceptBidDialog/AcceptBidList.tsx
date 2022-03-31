@@ -1,10 +1,12 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar, transitions } from '@/styles'
 import { formatDateTime } from '@/utils/time'
 
 import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
@@ -14,7 +16,7 @@ type BidRowProps = {
   memberHandle: string
   date: Date
   bid: number
-  bidUSD: string
+  bidUSD: string | null
   memberAvatarUri: string
   selectedValue?: string
   onSelect?: (selectedBid: string) => void
@@ -75,9 +77,17 @@ export const BidRow: React.FC<BidRowProps> = ({
             {bid}
           </Text>
         </TokenPrice>
-        <Text as="p" variant="t100" secondary>
-          {bidUSD}
-        </Text>
+        <SwitchTransition>
+          <CSSTransition
+            key={bidUSD ? 'placeholder' : 'content'}
+            timeout={parseInt(cVar('animationTransitionFast', true))}
+            classNames={transitions.names.fade}
+          >
+            <Text as="p" variant="t100" secondary>
+              {bidUSD ?? '‌'}
+            </Text>
+          </CSSTransition>
+        </SwitchTransition>
       </Price>
     </BidRowWrapper>
   )

@@ -1,14 +1,20 @@
 import React from 'react'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { cVar } from '@/styles'
+import { cVar, transitions } from '@/styles'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
 import { Size } from './NftWidget'
 
-type NftInfoItemProps = { size: Size; label: string; content: React.ReactNode; secondaryText?: React.ReactNode }
+type NftInfoItemProps = {
+  size: Size
+  label: string
+  content: React.ReactNode
+  secondaryText?: React.ReactNode | null
+}
 export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText }) => {
   return (
     <InfoItemContainer data-size={size}>
@@ -16,9 +22,19 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
-      <SecondaryText as="div" variant="t100" secondary data-size={size}>
-        {secondaryText}
-      </SecondaryText>
+      <SwitchTransition>
+        <CSSTransition
+          key={secondaryText ? 'placeholder' : 'content'}
+          timeout={parseInt(cVar('animationTransitionFast', true))}
+          classNames={transitions.names.fade}
+        >
+          <div>
+            <SecondaryText as="div" variant="t100" secondary data-size={size}>
+              {secondaryText ?? '‌'}
+            </SecondaryText>
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
     </InfoItemContainer>
   )
 }

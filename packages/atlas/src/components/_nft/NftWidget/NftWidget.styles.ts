@@ -56,6 +56,9 @@ export const OwnerHandle = styled(Button)`
   grid-area: owner;
   justify-content: start;
 
+  /* hardcoding as we need this to be exactly 16px */
+  height: 16px;
+
   ${BorderWrapper} {
     border-bottom: none;
   }
