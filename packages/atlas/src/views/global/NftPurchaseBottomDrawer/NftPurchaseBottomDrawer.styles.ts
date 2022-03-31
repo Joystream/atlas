@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 const flexStyles = css`
   display: flex;
@@ -15,7 +15,6 @@ export const FlexWrapper = styled.div`
   ${flexStyles};
 `
 export const Content = styled.div`
-  padding-top: ${sizes(8)};
   display: flex;
   flex-direction: column-reverse;
   min-height: 100%;
@@ -23,7 +22,7 @@ export const Content = styled.div`
   padding-bottom: 130px;
 
   ${media.md} {
-    padding-top: ${sizes(16)};
+    height: 100%;
     flex-direction: row;
     overflow-y: unset;
     padding-bottom: unset;
@@ -43,11 +42,15 @@ export const NftPreview = styled.div`
   justify-content: center;
   flex: 1 0 auto;
   align-items: baseline;
-  padding: 0 ${sizes(4)};
+  padding: ${sizes(8)} ${sizes(4)} 0 ${sizes(4)};
+
+  ${media.md} {
+    padding-top: ${sizes(16)};
+  }
 
   ${media.lg} {
     flex: 50%;
-    padding: 0;
+    padding: ${sizes(16)} 0 0 0;
   }
 `
 
@@ -62,14 +65,14 @@ export const PlaceBidWrapper = styled.div`
 `
 
 export const InnerContainer = styled.div`
-  padding: 0 ${sizes(4)};
+  padding: ${sizes(8)} ${sizes(4)} 0 ${sizes(4)};
 
   ${media.md} {
+    padding: ${sizes(16)} ${sizes(4)} ${sizes(18)} ${sizes(4)};
     max-width: 550px;
-    padding-bottom: ${sizes(18)};
   }
   ${media.lg} {
-    padding: 0;
+    padding-top: ${sizes(16)} 0 0 0;
     max-width: 560px;
   }
 `
@@ -100,7 +103,7 @@ export const CurrentBidWrapper = styled.div`
 export const TokenWrapper = styled.div`
   position: relative;
   left: -4px;
-  z-index: 10;
+  z-index: ${zIndex.overlay};
   margin-right: ${sizes(2)};
 
   /* token background */
@@ -201,4 +204,8 @@ export const Messages = styled.div`
   ${flexStyles};
 
   margin-top: ${sizes(8)};
+
+  svg {
+    flex-shrink: 0;
+  }
 `
