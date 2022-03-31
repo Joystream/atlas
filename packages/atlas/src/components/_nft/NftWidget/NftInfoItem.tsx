@@ -30,7 +30,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
         >
           <div>
             <SecondaryText as="div" variant="t100" secondary data-size={size}>
-              {secondaryText ? secondaryText : '‌'}
+              {secondaryText ?? '‌'}
             </SecondaryText>
           </div>
         </CSSTransition>

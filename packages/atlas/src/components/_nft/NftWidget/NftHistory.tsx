@@ -179,7 +179,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
               classNames={transitions.names.fade}
             >
               <DollarValue variant="t100" secondary>
-                {dollarValue ? dollarValue : '‌'}
+                {dollarValue ?? '‌'}
               </DollarValue>
             </CSSTransition>
           </SwitchTransition>

@@ -84,7 +84,7 @@ export const BidRow: React.FC<BidRowProps> = ({
             classNames={transitions.names.fade}
           >
             <Text as="p" variant="t100" secondary>
-              {bidUSD ? bidUSD : '‌'}
+              {bidUSD ?? '‌'}
             </Text>
           </CSSTransition>
         </SwitchTransition>
