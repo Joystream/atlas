@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react'
+import useMouse from '@react-hook/mouse-position'
+import React, { useEffect, useRef, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -28,12 +29,17 @@ export const NftCard: React.FC<NftCardProps> = ({
   fullWidth,
   loading,
 }) => {
-  const [ref, isHovered] = useHover<HTMLDivElement>()
+  const ref = useRef<HTMLDivElement>(null)
   // const [hovered, setHovered] = useState(false)
   const { width = 1, height = 1 } = useResizeObserver({ ref: ref, box: 'border-box' })
-  const [mousePos, setMousePos] = useState<[number, number]>([1, 1])
+  // const [mousePos, setMousePos] = useState<[number, number]>([1, 1])
 
-  const pos = mousePos
+  const mouse = useMouse(ref, {
+    fps: 60,
+  })
+
+  // const pos = mousePos
+  const pos = [mouse.clientX ?? 0, mouse.clientY ?? 0]
   // math for mouse position
   const left = pos[0]
   const top = pos[1]
@@ -54,25 +60,15 @@ export const NftCard: React.FC<NftCardProps> = ({
   const spark_pos = `${px_spark}% ${py_spark}%`
   const opacity = p_opc / 100
   // need to use a <style> tag for psuedo elements
-  const style = `
-      .card:hover:before { ${grad_pos} }  /* gradient */
-      .card:hover:after { ${spark_pos} ${opacity} }   /* sparkles */ 
-    `
-
-  // console.log({ opacity })
 
   return (
     <Container
       ref={ref}
       fullWidth={fullWidth}
-      style={{ transform: isHovered ? `rotateX(${transformY}deg) rotateY(${transformX}deg) ` : undefined }}
+      style={{ transform: `rotateX(${transformY}deg) rotateY(${transformX}deg) ` }}
       gradientPos={grad_pos}
       sparkPos={spark_pos}
       opacity={opacity}
-      onMouseLeave={() => setMousePos([0, 0])}
-      onMouseMove={(e) => {
-        setMousePos([e.nativeEvent.offsetX, e.nativeEvent.offsetY])
-      }}
     >
       <VideoThumbnail clickable={false} {...thumbnail} />
       <Details>

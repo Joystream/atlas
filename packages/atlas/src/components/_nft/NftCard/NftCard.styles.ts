@@ -66,14 +66,22 @@ const shinyStyles = ({ opacity, gradientPos, sparkPos }: ContainerProps) => css`
 
     /* pattern */
     background-image: url('https://i.imgur.com/Y9uPQ9n.png');
+    background-image: url('https://i.imgur.com/uPpc6dE.png');
     background-position: 50% 50%;
     background-size: 120%;
-    background-blend-mode: overlay;
+
+    /* background-blend-mode: overlay; */
     z-index: 20;
     filter: brightness(0.31) contrast(0.31);
     transition: all 0.33s ease;
     mix-blend-mode: color-dodge;
     opacity: 0;
+
+    /* mask-image: url(https://i.imgur.com/uPpc6dE.png); */
+    mask-mode: alpha;
+    mask-repeat: no-repeat;
+    mask-size: 100%;
+    mask-position: center;
   }
 
   &:hover::after {
@@ -87,16 +95,17 @@ const shinyStyles = ({ opacity, gradientPos, sparkPos }: ContainerProps) => css`
     transition: box-shadow 0.1s ease-out;
   }
 
-  &:hover::before {
+  /* &:hover::before {
     animation: none;
-    background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%);
+    background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%),
+      url('https://i.imgur.com/AjBArhU.png');
     background-position: 50% 50%;
-    background-size: 250% 250%;
+    background-size: 500% 500%;
     opacity: 0.88;
     filter: brightness(0.66) contrast(1.33);
     transition: none;
     background-position: ${gradientPos};
-  }
+  } */
 
   &:hover::before,
   &:hover::after {
