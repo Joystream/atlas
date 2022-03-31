@@ -25,7 +25,7 @@ export default {
   args: {
     role: 'owner',
     title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    nftStatus: 'none',
+    status: 'buy-now',
     startingPrice: 1234,
     buyNowPrice: 0,
     topBid: 123,

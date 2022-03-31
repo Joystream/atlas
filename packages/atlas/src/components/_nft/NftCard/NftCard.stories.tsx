@@ -23,7 +23,7 @@ export default {
     fullWidth: { type: 'boolean', defaultValue: false },
   },
   args: {
-    thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
+    thumbnail: { thumbnailUrl: 'https://placedoag.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     supporters: [
       { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
