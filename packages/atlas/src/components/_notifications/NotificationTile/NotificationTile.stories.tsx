@@ -1,7 +1,9 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { NotificationProps, NotificationTile } from './NotificationTile'
+import { NotificationRecord } from '@/providers/notifications'
+
+import { NotificationTile } from './NotificationTile'
 
 export default {
   title: 'Other/NotificationTile',
@@ -12,22 +14,52 @@ export default {
     className: { table: { disable: true } },
     selected: { table: { disable: true } },
     date: { control: { type: 'date' } },
+    type: { options: ['bid-made', 'bought', 'open-auction-ended'], control: { type: 'radio' } },
   },
   args: {
-    avatarUrl: 'https://placedog.net/400/400?random&1',
-    videoTitle: 'Lorem ipsum',
-    author: 'Света Василенко',
-    text: 'outbid you at an auction for 32K tJOY',
-    date: new Date(Date.now() - 10000000),
     read: false,
+    type: 'bid-made',
+    bidAmount: 32000,
+    memberHandle: 'member',
+    memberAvatarUrl: 'https://placedog.net/400/400?random&1',
+    videoTitle: 'Video title',
     loading: false,
     variant: 'default',
   },
 } as Meta
 
-const Template: Story<NotificationProps> = (args) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Template: Story<any> = (args) => {
   const [selected, setSelected] = useState(false)
-  return <NotificationTile {...args} selected={selected} onSelect={() => setSelected(!selected)} />
+  const notification: NotificationRecord = {
+    id: 'id',
+    date: new Date(Date.now() - 10000000),
+    read: args.read,
+    type: args.type,
+    bidAmount: args.bidAmount,
+    member: {
+      id: 'member',
+      handle: args.memberHandle,
+      metadata: {
+        avatar: {
+          __typename: 'AvatarUri',
+          avatarUri: args.memberAvatarUrl,
+        },
+      },
+    },
+    video: {
+      id: 'video',
+      title: args.videoTitle,
+    },
+  }
+  return (
+    <NotificationTile
+      {...args}
+      notification={notification}
+      selected={selected}
+      onSelect={() => setSelected(!selected)}
+    />
+  )
 }
 
 export const Default = Template.bind({})

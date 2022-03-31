@@ -10,6 +10,7 @@ type RadioAndCheckboxBaseProps = {
   label?: string
   helperText?: string
   error?: boolean
+  onClick?: (e: React.MouseEvent) => void
 }
 
 export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
@@ -19,9 +20,10 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
   helperText,
   error,
   className,
+  onClick,
 }) => {
   return (
-    <RadioAndCheckboxLabel hasLabel={!!label} disabled={disabled} className={className}>
+    <RadioAndCheckboxLabel hasLabel={!!label} disabled={disabled} className={className} onClick={onClick}>
       {children}
       {label && (
         <Text variant="t200" secondary={disabled}>

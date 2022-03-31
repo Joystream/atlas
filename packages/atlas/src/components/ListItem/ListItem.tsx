@@ -27,7 +27,7 @@ export type ListItemProps = {
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
   captionPosition?: 'right' | 'bottom'
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent) => void
   className?: string
   highlight?: boolean
 }

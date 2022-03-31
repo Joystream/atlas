@@ -1,0 +1,60 @@
+query GetNftNotifications {
+  events(
+    orderBy: [createdAt_DESC]
+    where: {
+      type_in: [AuctionBidMadeEvent, NftBoughtEvent, BidMadeCompletingAuctionEvent, OpenAuctionBidAcceptedEvent]
+    }
+  ) {
+    inBlock
+    ... on AuctionBidMadeEvent {
+      id
+      createdAt
+      member {
+        ...BasicMembershipFields
+      }
+      video {
+        id
+        title
+      }
+      bidAmount
+    }
+
+    ... on NftBoughtEvent {
+      id
+      createdAt
+      member {
+        ...BasicMembershipFields
+      }
+      video {
+        id
+        title
+      }
+    }
+
+    ... on BidMadeCompletingAuctionEvent {
+      id
+      createdAt
+      member {
+        ...BasicMembershipFields
+      }
+      video {
+        id
+        title
+      }
+    }
+
+    ... on OpenAuctionBidAcceptedEvent {
+      id
+      createdAt
+      video {
+        id
+        title
+        nft {
+          ownerMember {
+            ...BasicMembershipFields
+          }
+        }
+      }
+    }
+  }
+}

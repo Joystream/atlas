@@ -158,6 +158,26 @@ const cache = new InMemoryCache({
     Channel: {
       fields: channelCacheFields,
     },
+    AuctionBidMadeEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    NftBoughtEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BidMadeCompletingAuctionEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    OpenAuctionBidAcceptedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
     StorageDataObject: {
       fields: {
         size: {
