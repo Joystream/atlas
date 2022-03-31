@@ -1,4 +1,4 @@
-import { differenceInDays, differenceInSeconds } from 'date-fns'
+import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
@@ -13,6 +13,7 @@ import { SvgAlertsInformative24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
@@ -54,6 +55,9 @@ export type Auction = {
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
   plannedEndAtBlock?: number | null
+  startsAtBlock?: number | null
+  auctionBeginsDifferenceDays: number
+  auctionBeginsDifferenceSeconds: number
 }
 
 export type NftWidgetProps = {
@@ -103,6 +107,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   onNftSettlement,
   onNftBuyNow,
 }) => {
+  const timestamp = useMsTimestamp()
   const { ref, width = SMALL_VARIANT_MAXIMUM_SIZE + 1 } = useResizeObserver({
     box: 'border-box',
   })
@@ -117,11 +122,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     const contentTextVariant = size === 'small' ? 'h400' : 'h600'
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
-    const timerColumnSpan = 2
-    const auctionBeginsDifference =
-      nftStatus?.status === 'auction' && nftStatus.startsAtDate
-        ? differenceInDays(nftStatus.startsAtDate, new Date())
-        : 0
+    const timerColumnSpan = size === 'small' ? 1 : 2
     const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
         <NftInfoItem
@@ -381,7 +382,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   loading={!nftStatus.auctionPlannedEndDate}
                   content={
                     nftStatus.auctionPlannedEndDate && (
-                      <Text variant={size === 'medium' ? 'h600' : 'h400'} secondary>
+                      <Text variant={contentTextVariant} secondary>
                         {formatDateTime(nftStatus.auctionPlannedEndDate)}
                       </Text>
                     )
@@ -389,12 +390,12 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 />
               </GridItem>
             )}
-            {nftStatus.englishTimerState === 'running' && nftStatus?.plannedEndAtBlock && (
+            {nftStatus.englishTimerState === 'running' && nftStatus?.auctionPlannedEndDate && (
               <GridItem colSpan={timerColumnSpan}>
                 <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />
               </GridItem>
             )}
-            {nftStatus.englishTimerState === 'upcoming' && (
+            {nftStatus.startsAtBlock && nftStatus.auctionBeginsDifferenceSeconds >= 0 && (
               <GridItem colSpan={timerColumnSpan}>
                 <NftInfoItem
                   size={size}
@@ -402,11 +403,12 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   loading={!nftStatus.startsAtDate}
                   content={
                     nftStatus.startsAtDate && (
-                      <Text variant={size === 'medium' ? 'h600' : 'h400'} secondary>
-                        {auctionBeginsDifference > 1 && formatDateTime(nftStatus.startsAtDate)}
-                        {auctionBeginsDifference === 1 && `Tomorrow at ${formatTime(nftStatus.startsAtDate)}`}
-                        {auctionBeginsDifference < 1 &&
-                          formatDurationShort(differenceInSeconds(nftStatus.startsAtDate, new Date()))}
+                      <Text variant={contentTextVariant} secondary>
+                        {nftStatus.auctionBeginsDifferenceDays > 1 && formatDateTime(nftStatus.startsAtDate)}
+                        {nftStatus.auctionBeginsDifferenceDays === 1 &&
+                          `Tomorrow at ${formatTime(nftStatus.startsAtDate)}`}
+                        {nftStatus.auctionBeginsDifferenceDays < 1 &&
+                          formatDurationShort(differenceInSeconds(nftStatus.startsAtDate, timestamp))}
                       </Text>
                     )
                   }
@@ -506,6 +508,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     onNftChangePrice,
     onNftCancelSale,
     onNftPurchase,
+    timestamp,
     needsSettling,
     onNftSettlement,
     onNftAcceptBid,
@@ -548,6 +551,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     bidFromPreviousAuction,
     userBidUnlockDate,
     saleType,
+    startsAtBlock,
   } = useNftState(nft)
 
   const owner = nft?.ownerMember
@@ -572,6 +576,9 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           topBidderAvatarUri,
           isUserTopBidder,
           userBidUnlockDate,
+          startsAtBlock,
+          auctionBeginsDifferenceDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
+          auctionBeginsDifferenceSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
           userBidAmount: Number(userBid?.amount),
         },
