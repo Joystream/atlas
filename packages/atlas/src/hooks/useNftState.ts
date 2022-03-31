@@ -50,11 +50,11 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
 
   const auctionPlannedEndDate = plannedEndDAteBlockTimesamp ? new Date(plannedEndDAteBlockTimesamp) : undefined
 
-  const isExpired = !!auction?.plannedEndAtBlock && currentBlock >= auction.plannedEndAtBlock
+  const isExpired = !!auction?.plannedEndAtBlock && currentBlock && currentBlock >= auction.plannedEndAtBlock
 
-  const isRunning = !!auction?.startsAtBlock && currentBlock >= auction.startsAtBlock && !isExpired
+  const isRunning = !!auction?.startsAtBlock && currentBlock && currentBlock >= auction.startsAtBlock && !isExpired
 
-  const isUpcoming = !!auction?.startsAtBlock && currentBlock <= auction.startsAtBlock
+  const isUpcoming = !!auction?.startsAtBlock && currentBlock && currentBlock <= auction.startsAtBlock
 
   const needsSettling = auction?.lastBid && isExpired
 
@@ -65,6 +65,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     : isUpcoming
     ? 'upcoming'
     : null
+
   return {
     canBuyNow: !!canBuyNow,
     canMakeBid: !!canMakeBid,

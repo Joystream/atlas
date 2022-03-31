@@ -378,7 +378,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             {!!nftStatus.auctionPlannedEndDate && nftStatus.englishTimerState === 'running' && (
               <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />
             )}
-            {nftStatus.englishTimerState === 'upcoming' && nftStatus.startsAtDate && (
+            {nftStatus.englishTimerState === 'upcoming' && (
               <NftInfoItem
                 size={size}
                 label="Auction begins on"
