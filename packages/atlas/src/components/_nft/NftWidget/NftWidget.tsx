@@ -299,7 +299,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         }
         const infoBannerProps = getInfoBannerProps()
 
-        const infoTextNode = !!nftStatus.userBidAmount && (
+        const infoTextNode = !!nftStatus.userBidAmount && nftStatus.userBidUnlockDate && (
           <GridItem colSpan={buttonColumnSpan}>
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
@@ -308,7 +308,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 {nftStatus.canWithdrawBid
                   ? `Your last bid: ${nftStatus.userBidAmount} tJOY`
                   : `Your last bid (${nftStatus.userBidAmount} tJOY) becomes withdrawable on ${formatDateTime(
-                      nftStatus.userBidUnlockDate as Date
+                      nftStatus.userBidUnlockDate
                     )}`}
               </Text>
             )}
@@ -317,7 +317,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
         return (
           <>
-            {nftStatus.topBidAmount ? (
+            {nftStatus.topBidAmount && !nftStatus.topBid?.isCanceled ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
@@ -378,7 +378,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             {!!nftStatus.auctionPlannedEndDate && nftStatus.englishTimerState === 'running' && (
               <NftTimerItem size={size} time={nftStatus.auctionPlannedEndDate} />
             )}
-            {nftStatus.englishTimerState === 'upcoming' && (
+            {nftStatus.englishTimerState === 'upcoming' && nftStatus.startsAtDate && (
               <NftInfoItem
                 size={size}
                 label="Auction begins on"

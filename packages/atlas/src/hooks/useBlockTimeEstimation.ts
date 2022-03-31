@@ -9,6 +9,9 @@ export const useBlockTimeEstimation = () => {
 
   const convertBlockToMsTimestamp = useCallback(
     (targetBlock: number) => {
+      if (!currentBlockMsTimestamp) {
+        return
+      }
       const nowMs = Date.now()
       const deltaBlocks = targetBlock - currentBlock
       const msSinceLastBlock = nowMs - currentBlockMsTimestamp
