@@ -8,6 +8,7 @@ export type TextBaseProps = {
   secondary?: boolean
   clampAfterLine?: number
   margin?: MarginProps
+  align?: AlignProps
 }
 
 type MarginProps =
@@ -18,6 +19,14 @@ type MarginProps =
       right?: number
     }
   | number
+
+type AlignProps = 'left' | 'center' | 'right' | 'justify'
+
+const alignStyles = ({ align }: TextBaseProps) =>
+  !!align &&
+  css`
+    text-align: ${align};
+  `
 
 const marginStyles = ({ margin }: TextBaseProps) =>
   typeof margin !== 'number' && !!margin
@@ -37,11 +46,12 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
   overflow: hidden;
 `
 
-const baseStyles = ({ color, secondary, clampAfterLine, margin }: TextBaseProps) => css`
+const baseStyles = ({ color, secondary, clampAfterLine, margin, align }: TextBaseProps) => css`
   color: ${color ? color : secondary ? cVar('colorText') : cVar('colorTextStrong')};
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}
+  ${alignStyles({ align })}
 `
 
 export const styledVariants = {

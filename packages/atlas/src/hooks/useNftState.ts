@@ -18,8 +18,14 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const isAuction = !!auction
   const isUserTopBidder = auction?.lastBid?.bidder.id === activeMembership?.id
 
-  const userBid = auction?.bids.find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
-
+  const userBid = [...(auction?.bids ?? [])]
+    .reverse()
+    .find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
+  const userBidUnlockBlock =
+    auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
+      ? userBid?.createdInBlock + auction.auctionType.bidLockingTime
+      : undefined
+  const userBidUnlockDate = userBidUnlockBlock ? new Date(convertBlockToMsTimestamp(userBidUnlockBlock)) : undefined
   const startsAtDate = isAuction ? new Date(convertBlockToMsTimestamp(auction.startsAtBlock)) : undefined
 
   const canBuyNow = nft && !isOwner && (isBuyNow || !!auction?.buyNowPrice)
@@ -33,10 +39,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
 
   const canWithdrawBid =
     auction?.isCompleted ||
-    (auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-      userBid &&
-      auction.auctionType.bidLockingTime + userBid.createdInBlock > currentBlock)
-
+    (auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
   const canPutOnSale = nft && isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusIdle'
 
   const auctionPlannedEndDate = auction?.plannedEndAtBlock
@@ -67,7 +70,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     canWithdrawBid: !!canWithdrawBid,
     auctionPlannedEndDate: auctionPlannedEndDate,
     //TODO: bidFromPreviousAuction
-    bidFromPreviousAuction: userBid,
+    bidFromPreviousAuction: undefined,
     isUserTopBidder,
     isOwner,
     isBuyNow,
@@ -78,6 +81,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     isUpcoming,
     videoId: nft?.video.id,
     userBid,
+    userBidUnlockDate,
     auction,
     startsAtDate,
   }

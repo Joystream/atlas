@@ -26,7 +26,7 @@ export default {
       control: { type: 'select', options: ['idle', 'buy-now', 'auction'] },
     },
     englishTimerState: {
-      control: { type: 'select', options: ['expired', 'running', 'upcoming'] },
+      control: { type: 'select', options: ['expired', 'running', 'upcoming', null] },
     },
     nftStatus: { table: { disable: true } },
     bidFromPreviousAuction: { table: { disable: true } },
@@ -43,6 +43,10 @@ export default {
     topBidderHandle: 'Swim',
     topBidderAvatarUri: 'https://picsum.photos/40/40',
     isUserTopBidder: false,
+    userBidUnlockDate: add(new Date(), {
+      minutes: 110,
+      seconds: 10,
+    }),
     needsSettling: false,
     lastTransactionDate: new Date(),
     lastPrice: 25900,
@@ -88,10 +92,11 @@ const Template: Story<NftWidgetProps & { size: 'medium' | 'small' } & { [key: st
   <Container data-size={size}>
     <NftWidget
       {...others}
+      // @ts-ignore works for now
+      bidFromPreviousAuction={hasBidFromPreviousAuction ? { createdAt: new Date(), amount: 100000 } : undefined}
       nftStatus={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(others as any),
-        bidFromPreviousAuction: hasBidFromPreviousAuction ? {} : undefined,
       }}
     />
   </Container>
