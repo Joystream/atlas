@@ -17,7 +17,6 @@ export const FlexWrapper = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column-reverse;
-  min-height: 100%;
   overflow-y: auto;
   padding-bottom: 130px;
 
