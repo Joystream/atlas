@@ -27,12 +27,8 @@ export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, d
     skip: !id,
     onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTile', error, { video: { id } }),
   })
-  const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(
-    {
-      video,
-      loading,
-    }
-  )
+  const { avatarPhotoUrl, isLoadingAvatar, isLoadingThumbnail, thumbnailPhotoUrl, videoHref } =
+    useVideoTileSharedLogic(video)
 
   const handleCopyVideoURLClick = useCallback(() => {
     copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
