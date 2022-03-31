@@ -53,10 +53,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       skip: !id,
       onError: (error) => SentryLogger.error('Failed to fetch video', 'VideoTilePublisher', error, { video: { id } }),
     })
-    const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic({
-      video,
-      loading,
-    })
+    const { isLoadingThumbnail, thumbnailPhotoUrl, videoHref } = useVideoTileSharedLogic(video)
     const nft = video?.nft
     const { isOwner: isNftOwner, canPutOnSale, canCancelSale, isBuyNow } = useNftState(nft)
     const navigate = useNavigate()
