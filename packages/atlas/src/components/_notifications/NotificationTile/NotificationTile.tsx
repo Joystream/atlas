@@ -26,7 +26,7 @@ const getNotificationText = (notification: NotificationRecord): string => {
 export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
-  onSelect?: () => void
+  onCheckboxChange?: (selected: boolean) => void
   onClick?: () => void
   selected?: boolean
   variant?: 'default' | 'compact'
@@ -36,7 +36,7 @@ export type NotificationProps = {
 export const NotificationTile: React.FC<NotificationProps> = ({
   notification,
   loading,
-  onSelect,
+  onCheckboxChange,
   onClick,
   selected = false,
   variant = 'default',
@@ -100,7 +100,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
       onClick={onClick}
     >
       {!loading ? (
-        <Checkbox onChange={() => onSelect?.()} value={selected} />
+        <Checkbox onChange={onCheckboxChange} value={selected} />
       ) : (
         <CheckboxSkeleton width={16} height={16} />
       )}

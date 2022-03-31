@@ -16,7 +16,7 @@ import {
 } from './Notifications.styles'
 
 export const Notifications = () => {
-  const { selectedNotifications, toggleSelected } = useSelectedNotifications()
+  const { selectedNotifications, setNotificationSelected } = useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
 
   const { notifications, markNotificationAsRead } = useNotifications()
@@ -44,7 +44,7 @@ export const Notifications = () => {
               key={`notification-${notification.id}-${idx}`}
               notification={notification}
               selected={selectedNotifications.includes(notification.id)}
-              onSelect={() => toggleSelected(notification.id)}
+              onCheckboxChange={(selected) => setNotificationSelected(notification.id, selected)}
               onClick={() => markNotificationAsRead(notification.id)}
             />
           ))}
