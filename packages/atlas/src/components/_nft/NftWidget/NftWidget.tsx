@@ -13,6 +13,7 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
+import { NftSaleType } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
 import { formatNumberShort } from '@/utils/number'
@@ -59,6 +60,7 @@ export type NftWidgetProps = {
   isOwner: boolean | undefined
   needsSettling: boolean | undefined
   bidFromPreviousAuction: AllBidFieldsFragment | undefined
+  saleType: NftSaleType | null
   nftStatus?:
     | {
         status: 'idle'
@@ -525,6 +527,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     isUserTopBidder,
     bidFromPreviousAuction,
     userBidUnlockDate,
+    saleType,
   } = useNftState(nft)
 
   const owner = nft?.ownerMember
@@ -552,6 +555,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           topBidderHandle: nftStatus.topBidder?.handle,
           userBidAmount: Number(userBid?.amount),
         },
+        saleType,
       }
     }
     case 'buy-now':
@@ -564,6 +568,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         nftStatus: {
           ...nftStatus,
         },
+        saleType,
       }
     case 'idle':
       return {
@@ -575,6 +580,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
         nftStatus: {
           ...nftStatus,
         },
+        saleType,
       }
   }
 

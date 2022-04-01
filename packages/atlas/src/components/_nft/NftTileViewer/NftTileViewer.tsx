@@ -25,22 +25,22 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     canMakeBid,
     canCancelSale,
     canBuyNow,
-    isBuyNow,
     auctionPlannedEndDate,
     needsSettling,
     startsAtDate,
     englishTimerState,
     timerLoading,
+    saleType,
   } = useNftState(nft)
 
   const { cancelNftSale, openNftPutOnSale } = useNftActions()
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
   const handleRemoveOnSale = () => {
-    if (!nftId || !nft?.video.id) {
+    if (!nftId || !saleType) {
       return
     }
-    cancelNftSale(nftId, !!isBuyNow)
+    cancelNftSale(nftId, saleType)
   }
 
   const handlePutOnSale = () => {
@@ -75,20 +75,12 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     },
   }
 
-  const buyNowPrice =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
-      ? nft.transactionalStatus.auction?.buyNowPrice
-      : undefined
-  const topBidAmount =
-    nft?.transactionalStatus.__typename === 'TransactionalStatusAuction'
-      ? nft.transactionalStatus.auction?.lastBid?.amount
-      : undefined
   return (
     <NftTile
       {...nftCommonProps}
       timerLoading={timerLoading}
-      buyNowPrice={Number(buyNowPrice)}
-      topBidAmount={Number(topBidAmount)}
+      buyNowPrice={nftStatus?.status === 'auction' ? nftStatus.buyNowPrice : undefined}
+      topBidAmount={nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined}
       auctionPlannedEndDate={auctionPlannedEndDate}
       needsSettling={needsSettling}
       startsAtDate={startsAtDate}

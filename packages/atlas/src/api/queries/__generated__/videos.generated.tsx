@@ -218,14 +218,18 @@ export type GetVideoQuery = {
               __typename?: 'Auction'
               isCompleted: boolean
               buyNowPrice?: string | null
-              minimalBidStep: string
               startingPrice: string
               startsAtBlock: number
-              plannedEndAtBlock?: number | null
               endedAtBlock?: number | null
               auctionType:
-                | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                | {
+                    __typename: 'AuctionTypeEnglish'
+                    duration: number
+                    extensionPeriod: number
+                    minimalBidStep: number
+                    plannedEndAtBlock: number
+                  }
+                | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
               initialOwner?: {
                 __typename?: 'Membership'
                 id: string
@@ -256,7 +260,7 @@ export type GetVideoQuery = {
                     | null
                 }
               } | null
-              lastBid?: {
+              topBid?: {
                 __typename?: 'Bid'
                 amount: string
                 createdAt: Date
@@ -726,14 +730,18 @@ export type GetVideosConnectionQuery = {
                   __typename?: 'Auction'
                   isCompleted: boolean
                   buyNowPrice?: string | null
-                  minimalBidStep: string
                   startingPrice: string
                   startsAtBlock: number
-                  plannedEndAtBlock?: number | null
                   endedAtBlock?: number | null
                   auctionType:
-                    | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                    | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                    | {
+                        __typename: 'AuctionTypeEnglish'
+                        duration: number
+                        extensionPeriod: number
+                        minimalBidStep: number
+                        plannedEndAtBlock: number
+                      }
+                    | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
                   initialOwner?: {
                     __typename?: 'Membership'
                     id: string
@@ -764,7 +772,7 @@ export type GetVideosConnectionQuery = {
                         | null
                     }
                   } | null
-                  lastBid?: {
+                  topBid?: {
                     __typename?: 'Bid'
                     amount: string
                     createdAt: Date
@@ -1231,14 +1239,18 @@ export type GetVideosQuery = {
               __typename?: 'Auction'
               isCompleted: boolean
               buyNowPrice?: string | null
-              minimalBidStep: string
               startingPrice: string
               startsAtBlock: number
-              plannedEndAtBlock?: number | null
               endedAtBlock?: number | null
               auctionType:
-                | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                | {
+                    __typename: 'AuctionTypeEnglish'
+                    duration: number
+                    extensionPeriod: number
+                    minimalBidStep: number
+                    plannedEndAtBlock: number
+                  }
+                | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
               initialOwner?: {
                 __typename?: 'Membership'
                 id: string
@@ -1269,7 +1281,7 @@ export type GetVideosQuery = {
                     | null
                 }
               } | null
-              lastBid?: {
+              topBid?: {
                 __typename?: 'Bid'
                 amount: string
                 createdAt: Date
@@ -2025,14 +2037,18 @@ export type GetMostViewedVideosConnectionQuery = {
                   __typename?: 'Auction'
                   isCompleted: boolean
                   buyNowPrice?: string | null
-                  minimalBidStep: string
                   startingPrice: string
                   startsAtBlock: number
-                  plannedEndAtBlock?: number | null
                   endedAtBlock?: number | null
                   auctionType:
-                    | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                    | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                    | {
+                        __typename: 'AuctionTypeEnglish'
+                        duration: number
+                        extensionPeriod: number
+                        minimalBidStep: number
+                        plannedEndAtBlock: number
+                      }
+                    | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
                   initialOwner?: {
                     __typename?: 'Membership'
                     id: string
@@ -2063,7 +2079,7 @@ export type GetMostViewedVideosConnectionQuery = {
                         | null
                     }
                   } | null
-                  lastBid?: {
+                  topBid?: {
                     __typename?: 'Bid'
                     amount: string
                     createdAt: Date
@@ -2527,14 +2543,18 @@ export type GetTop10VideosThisWeekQuery = {
               __typename?: 'Auction'
               isCompleted: boolean
               buyNowPrice?: string | null
-              minimalBidStep: string
               startingPrice: string
               startsAtBlock: number
-              plannedEndAtBlock?: number | null
               endedAtBlock?: number | null
               auctionType:
-                | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                | {
+                    __typename: 'AuctionTypeEnglish'
+                    duration: number
+                    extensionPeriod: number
+                    minimalBidStep: number
+                    plannedEndAtBlock: number
+                  }
+                | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
               initialOwner?: {
                 __typename?: 'Membership'
                 id: string
@@ -2565,7 +2585,7 @@ export type GetTop10VideosThisWeekQuery = {
                     | null
                 }
               } | null
-              lastBid?: {
+              topBid?: {
                 __typename?: 'Bid'
                 amount: string
                 createdAt: Date
@@ -3026,14 +3046,18 @@ export type GetTop10VideosThisMonthQuery = {
               __typename?: 'Auction'
               isCompleted: boolean
               buyNowPrice?: string | null
-              minimalBidStep: string
               startingPrice: string
               startsAtBlock: number
-              plannedEndAtBlock?: number | null
               endedAtBlock?: number | null
               auctionType:
-                | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-                | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+                | {
+                    __typename: 'AuctionTypeEnglish'
+                    duration: number
+                    extensionPeriod: number
+                    minimalBidStep: number
+                    plannedEndAtBlock: number
+                  }
+                | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
               initialOwner?: {
                 __typename?: 'Membership'
                 id: string
@@ -3064,7 +3088,7 @@ export type GetTop10VideosThisMonthQuery = {
                     | null
                 }
               } | null
-              lastBid?: {
+              topBid?: {
                 __typename?: 'Bid'
                 amount: string
                 createdAt: Date

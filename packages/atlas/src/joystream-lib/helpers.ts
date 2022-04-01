@@ -1,12 +1,10 @@
 import { DataObjectId } from '@joystream/types/augment-codec/all'
 import { Balance, BlockNumber, Hash, MemberId as RuntimeMemberId } from '@joystream/types/common'
 import {
-  AuctionParams,
-  AuctionType,
-  EnglishAuctionDetails,
+  EnglishAuctionParams,
   InitTransactionalStatus,
   NftIssuanceParameters,
-  OpenAuctionDetails,
+  OpenAuctionParams,
   Royalty,
   StorageAssets,
 } from '@joystream/types/content'
@@ -29,13 +27,17 @@ import {
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   NftAuctionInputMetadata,
+  NftEnglishAuctionInputMetadata,
   NftIssuanceInputMetadata,
+  NftOpenAuctionInputMetadata,
   VideoAssets,
   VideoAssetsIds,
   VideoInputAssets,
 } from './'
 import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
 import { JoystreamLibError } from './errors'
+
+const NFT_PERBILL_PERCENT = 10_000_000
 
 export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMetadata: DataObjectMetadata[]) => {
   if (!dataObjectsMetadata.length) {
@@ -213,35 +215,35 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
   }
 }
 
-type AuctionDetails = { open: OpenAuctionDetails } | { english: EnglishAuctionDetails }
-export const createNftAuctionParams = (registry: Registry, inputMetadata: NftAuctionInputMetadata): AuctionParams => {
-  const getParams = (auctionDetails: AuctionDetails) => {
-    return new AuctionParams(registry, {
-      starting_price: new Balance(registry, inputMetadata.startingPrice),
-      buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
-      auction_type: new AuctionType(registry, auctionDetails),
-      minimal_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
-      starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
-      whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
-    })
+const createCommonAuctionParams = (registry: Registry, inputMetadata: NftAuctionInputMetadata) => {
+  return {
+    starting_price: new Balance(registry, inputMetadata.startingPrice),
+    buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
+    starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
+    whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
   }
+}
 
-  if (inputMetadata.type === 'open') {
-    const openAuctionDetails = new OpenAuctionDetails(registry, {
-      bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
-    })
-    return getParams({ open: openAuctionDetails })
-  }
+export const createNftOpenAuctionParams = (
+  registry: Registry,
+  inputMetadata: NftOpenAuctionInputMetadata
+): OpenAuctionParams => {
+  return new OpenAuctionParams(registry, {
+    ...createCommonAuctionParams(registry, inputMetadata),
+    bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
+  })
+}
 
-  if (inputMetadata.type === 'english') {
-    const englishAuctionDetails = new EnglishAuctionDetails(registry, {
-      auction_duration: new BlockNumber(registry, inputMetadata.auctionDurationBlocks),
-      extension_period: new BlockNumber(registry, inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
-    })
-    return getParams({ english: englishAuctionDetails })
-  }
-
-  throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown auction type`, details: { inputMetadata } })
+export const createNftEnglishAuctionParams = (
+  registry: Registry,
+  inputMetadata: NftEnglishAuctionInputMetadata
+): EnglishAuctionParams => {
+  return new EnglishAuctionParams(registry, {
+    ...createCommonAuctionParams(registry, inputMetadata),
+    duration: new BlockNumber(registry, inputMetadata.auctionDurationBlocks),
+    min_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
+    extension_period: new BlockNumber(registry, inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
+  })
 }
 
 const createNftIssuanceTransactionalStatus = (
@@ -254,10 +256,17 @@ const createNftIssuanceTransactionalStatus = (
 
   if (inputMetadata.sale.type === 'buyNow') {
     return new InitTransactionalStatus(registry, { buyNow: new Balance(registry, inputMetadata.sale.buyNowPrice) })
+  } else if (inputMetadata.sale.type === 'open') {
+    return new InitTransactionalStatus(registry, {
+      OpenAuction: createNftOpenAuctionParams(registry, inputMetadata.sale),
+    })
+  } else if (inputMetadata.sale.type === 'english') {
+    return new InitTransactionalStatus(registry, {
+      EnglishAuction: createNftEnglishAuctionParams(registry, inputMetadata.sale),
+    })
+  } else {
+    throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown sale type`, details: { inputMetadata } })
   }
-
-  const auction = createNftAuctionParams(registry, inputMetadata.sale)
-  return new InitTransactionalStatus(registry, { auction })
 }
 
 export const createNftIssuanceParameters = (
@@ -272,7 +281,11 @@ export const createNftIssuanceParameters = (
 
   return new NftIssuanceParameters(registry, {
     nft_metadata: new Bytes(registry, '0x0'),
-    royalty: new Option(registry, Royalty, inputMetadata.royalty),
+    royalty: new Option(
+      registry,
+      Royalty,
+      inputMetadata.royalty ? inputMetadata.royalty * NFT_PERBILL_PERCENT : undefined
+    ),
     init_transactional_status: initTransactionalStatus,
     non_channel_owner: new Option(registry, RuntimeMemberId),
   })

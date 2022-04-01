@@ -78,6 +78,8 @@ export type NftEnglishAuctionInputMetadata = NftCommonAuctionInputMetadata & {
 }
 export type NftAuctionInputMetadata = NftOpenAuctionInputMetadata | NftEnglishAuctionInputMetadata
 export type NftSaleInputMetadata = NftBuyNowInputMetadata | NftAuctionInputMetadata
+export type NftAuctionType = NftAuctionInputMetadata['type']
+export type NftSaleType = NftSaleInputMetadata['type']
 export type NftIssuanceInputMetadata = {
   royalty?: number
   sale?: NftSaleInputMetadata

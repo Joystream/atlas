@@ -205,7 +205,7 @@ export const VideoView: React.FC = () => {
         <NftWidget
           {...nftWidgetProps}
           onNftPutOnSale={() => id && openNftPutOnSale(id)}
-          onNftCancelSale={() => id && cancelNftSale(id, nftWidgetProps?.nftStatus?.status === 'buy-now')}
+          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
           onNftAcceptBid={() => id && openNftAcceptBid(id)}
           onNftChangePrice={() => id && openNftChangePrice(id)}
           onNftPurchase={() => id && openNftPurchase(id)}

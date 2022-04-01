@@ -56,6 +56,874 @@ index ddc9cc6a032a244d9d8a3dcf9bfb604a821caeaf..e1b6592beb400065c64d63a5f9458eaa
      return JoyStructCustom(fields);
  }
 -exports.JoyStructDecorated = JoyStructDecorated;
+diff --git a/augment/all/defs.json b/augment/all/defs.json
+index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b16a5dc6e 100644
+--- a/augment/all/defs.json
++++ b/augment/all/defs.json
+@@ -773,40 +773,54 @@
+     },
+     "ModeratorSet": "BTreeSet<MemberId>",
+     "Royalty": "Perbill",
+-    "IsExtended": "bool",
+-    "EnglishAuctionDetails": {
++    "EnglishAuctionParams": {
++        "starting_price": "u128",
++        "buy_now_price": "Option<u128>",
++        "whitelist": "BTreeSet<MemberId>",
++        "starts_at": "Option<u32>",
++        "duration": "u32",
+         "extension_period": "u32",
+-        "auction_duration": "u32"
++        "min_bid_step": "u128"
+     },
+-    "OpenAuctionDetails": {
++    "OpenAuctionParams": {
++        "starting_price": "u128",
++        "buy_now_price": "Option<u128>",
++        "whitelist": "BTreeSet<MemberId>",
++        "starts_at": "Option<u32>",
+         "bid_lock_duration": "u32"
+     },
+-    "AuctionType": {
+-        "_enum": {
+-            "English": "EnglishAuctionDetails",
+-            "Open": "OpenAuctionDetails"
+-        }
+-    },
+-    "Bid": {
+-        "bidder": "MemberId",
+-        "bidder_account_id": "GenericAccountId",
+-        "amount": "u128",
+-        "made_at_block": "u32"
++    "EnglishAuction": {
++        "starting_price": "u128",
++        "buy_now_price": "Option<u128>",
++        "top_bid": "Option<EnglishAuctionBid>",
++        "whitelist": "BTreeSet<MemberId>",
++        "extension_period": "u32",
++        "min_bid_step": "u128",
++        "end": "u32",
++        "start": "u32"
+     },
+-    "Auction": {
++    "OpenAuction": {
+         "starting_price": "u128",
+         "buy_now_price": "Option<u128>",
+-        "auction_type": "AuctionType",
+-        "minimal_bid_step": "u128",
+-        "last_bid": "Option<Bid>",
+-        "starts_at": "u32",
+-        "whitelist": "BTreeSet<MemberId>"
++        "whitelist": "BTreeSet<MemberId>",
++        "start": "u32",
++        "bid_lock_duration": "u32"
++    },
++    "OpenAuctionBid": {
++        "amount": "u128",
++        "made_at_block": "u32",
++        "auction_id": "OpenAuctionId"
++    },
++    "EnglishAuctionBid": {
++        "amount": "u128",
++        "bidder_id": "MemberId"
+     },
+     "TransactionalStatus": {
+         "_enum": {
+             "Idle": "Null",
+             "InitiatedOfferToMember": "(MemberId,Option<u128>)",
+-            "Auction": "Auction",
++            "EnglishAuction": "EnglishAuction",
++            "OpenAuction": "OpenAuction",
+             "BuyNow": "u128"
+         }
+     },
+@@ -819,24 +833,18 @@
+     "OwnedNft": {
+         "owner": "NftOwner",
+         "transactional_status": "TransactionalStatus",
+-        "creator_royalty": "Option<Royalty>"
+-    },
+-    "AuctionParams": {
+-        "auction_type": "AuctionType",
+-        "starting_price": "u128",
+-        "minimal_bid_step": "u128",
+-        "buy_now_price": "Option<u128>",
+-        "starts_at": "Option<u32>",
+-        "whitelist": "BTreeSet<MemberId>"
++        "creator_royalty": "Option<Royalty>",
++        "open_auctions_nonce": "OpenAuctionId"
+     },
+     "CurrencyOf": "u128",
+     "CurrencyAmount": "u128",
+     "InitTransactionalStatus": {
+         "_enum": {
+             "Idle": "Null",
+-            "InitiatedOfferToMember": "(MemberId,Option<u128>)",
+             "BuyNow": "u128",
+-            "Auction": "AuctionParams"
++            "InitiatedOfferToMember": "(MemberId,Option<u128>)",
++            "EnglishAuction": "EnglishAuctionParams",
++            "OpenAuction": "OpenAuctionParams"
+         }
+     },
+     "NftIssuanceParameters": {
+@@ -846,5 +854,7 @@
+         "init_transactional_status": "InitTransactionalStatus"
+     },
+     "NftMetadata": "Vec<u8>",
+-    "AccountInfo": "AccountInfoWithRefCount"
++    "OpenAuctionId": "u64",
++    "AccountInfo": "AccountInfoWithRefCount",
++    "ValidatorPrefs": "ValidatorPrefsWithCommission"
+ }
+\ No newline at end of file
+diff --git a/augment/all/types.ts b/augment/all/types.ts
+index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc00f1a4c4b 100644
+--- a/augment/all/types.ts
++++ b/augment/all/types.ts
+@@ -4,6 +4,7 @@
+ import type { BTreeMap, BTreeSet, Bytes, Enum, GenericAccountId, Option, Struct, Text, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types';
+ import type { ITuple } from '@polkadot/types/types';
+ import type { AccountId, Balance, Hash, Perbill } from '@polkadot/types/interfaces/runtime';
++import type { ValidatorPrefsWithCommission } from '@polkadot/types/interfaces/staking';
+ import type { AccountInfoWithRefCount } from '@polkadot/types/interfaces/system';
+ 
+ /** @name AccountInfo */
+@@ -66,35 +67,6 @@ export interface AssuranceContractType extends Enum {
+ /** @name AssuranceContractType_Closed */
+ export interface AssuranceContractType_Closed extends BTreeSet<MemberId> {}
+ 
+-/** @name Auction */
+-export interface Auction extends Struct {
+-  readonly starting_price: u128;
+-  readonly buy_now_price: Option<u128>;
+-  readonly auction_type: AuctionType;
+-  readonly minimal_bid_step: u128;
+-  readonly last_bid: Option<Bid>;
+-  readonly starts_at: u32;
+-  readonly whitelist: BTreeSet<MemberId>;
+-}
+-
+-/** @name AuctionParams */
+-export interface AuctionParams extends Struct {
+-  readonly auction_type: AuctionType;
+-  readonly starting_price: u128;
+-  readonly minimal_bid_step: u128;
+-  readonly buy_now_price: Option<u128>;
+-  readonly starts_at: Option<u32>;
+-  readonly whitelist: BTreeSet<MemberId>;
+-}
+-
+-/** @name AuctionType */
+-export interface AuctionType extends Enum {
+-  readonly isEnglish: boolean;
+-  readonly asEnglish: EnglishAuctionDetails;
+-  readonly isOpen: boolean;
+-  readonly asOpen: OpenAuctionDetails;
+-}
+-
+ /** @name Bag */
+ export interface Bag extends Struct {
+   readonly stored_by: BTreeSet<StorageBucketId>;
+@@ -126,14 +98,6 @@ export interface BalanceKind extends Enum {
+   readonly isNegative: boolean;
+ }
+ 
+-/** @name Bid */
+-export interface Bid extends Struct {
+-  readonly bidder: MemberId;
+-  readonly bidder_account_id: GenericAccountId;
+-  readonly amount: u128;
+-  readonly made_at_block: u32;
+-}
+-
+ /** @name BlockAndTime */
+ export interface BlockAndTime extends Struct {
+   readonly block: u32;
+@@ -487,10 +451,33 @@ export interface DynamicBagType extends Enum {
+   readonly isChannel: boolean;
+ }
+ 
+-/** @name EnglishAuctionDetails */
+-export interface EnglishAuctionDetails extends Struct {
++/** @name EnglishAuction */
++export interface EnglishAuction extends Struct {
++  readonly starting_price: u128;
++  readonly buy_now_price: Option<u128>;
++  readonly top_bid: Option<EnglishAuctionBid>;
++  readonly whitelist: BTreeSet<MemberId>;
++  readonly extension_period: u32;
++  readonly min_bid_step: u128;
++  readonly end: u32;
++  readonly start: u32;
++}
++
++/** @name EnglishAuctionBid */
++export interface EnglishAuctionBid extends Struct {
++  readonly amount: u128;
++  readonly bidder_id: MemberId;
++}
++
++/** @name EnglishAuctionParams */
++export interface EnglishAuctionParams extends Struct {
++  readonly starting_price: u128;
++  readonly buy_now_price: Option<u128>;
++  readonly whitelist: BTreeSet<MemberId>;
++  readonly starts_at: Option<u32>;
++  readonly duration: u32;
+   readonly extension_period: u32;
+-  readonly auction_duration: u32;
++  readonly min_bid_step: u128;
+ }
+ 
+ /** @name Entry */
+@@ -572,12 +559,14 @@ export interface GeneralProposalParameters extends Struct {
+ /** @name InitTransactionalStatus */
+ export interface InitTransactionalStatus extends Enum {
+   readonly isIdle: boolean;
+-  readonly isInitiatedOfferToMember: boolean;
+-  readonly asInitiatedOfferToMember: ITuple<[MemberId, Option<u128>]>;
+   readonly isBuyNow: boolean;
+   readonly asBuyNow: u128;
+-  readonly isAuction: boolean;
+-  readonly asAuction: AuctionParams;
++  readonly isInitiatedOfferToMember: boolean;
++  readonly asInitiatedOfferToMember: ITuple<[MemberId, Option<u128>]>;
++  readonly isEnglishAuction: boolean;
++  readonly asEnglishAuction: EnglishAuctionParams;
++  readonly isOpenAuction: boolean;
++  readonly asOpenAuction: OpenAuctionParams;
+ }
+ 
+ /** @name InputValidationLengthConstraint */
+@@ -598,9 +587,6 @@ export interface InviteMembershipParameters extends Struct {
+ /** @name IsCensored */
+ export interface IsCensored extends bool {}
+ 
+-/** @name IsExtended */
+-export interface IsExtended extends bool {}
+-
+ /** @name LookupSource */
+ export interface LookupSource extends AccountId {}
+ 
+@@ -643,8 +629,31 @@ export interface NftOwner extends Enum {
+   readonly asMember: MemberId;
+ }
+ 
+-/** @name OpenAuctionDetails */
+-export interface OpenAuctionDetails extends Struct {
++/** @name OpenAuction */
++export interface OpenAuction extends Struct {
++  readonly starting_price: u128;
++  readonly buy_now_price: Option<u128>;
++  readonly whitelist: BTreeSet<MemberId>;
++  readonly start: u32;
++  readonly bid_lock_duration: u32;
++}
++
++/** @name OpenAuctionBid */
++export interface OpenAuctionBid extends Struct {
++  readonly amount: u128;
++  readonly made_at_block: u32;
++  readonly auction_id: OpenAuctionId;
++}
++
++/** @name OpenAuctionId */
++export interface OpenAuctionId extends u64 {}
++
++/** @name OpenAuctionParams */
++export interface OpenAuctionParams extends Struct {
++  readonly starting_price: u128;
++  readonly buy_now_price: Option<u128>;
++  readonly whitelist: BTreeSet<MemberId>;
++  readonly starts_at: Option<u32>;
+   readonly bid_lock_duration: u32;
+ }
+ 
+@@ -693,6 +702,7 @@ export interface OwnedNft extends Struct {
+   readonly owner: NftOwner;
+   readonly transactional_status: TransactionalStatus;
+   readonly creator_royalty: Option<Royalty>;
++  readonly open_auctions_nonce: OpenAuctionId;
+ }
+ 
+ /** @name ParticipantId */
+@@ -1088,8 +1098,10 @@ export interface TransactionalStatus extends Enum {
+   readonly isIdle: boolean;
+   readonly isInitiatedOfferToMember: boolean;
+   readonly asInitiatedOfferToMember: ITuple<[MemberId, Option<u128>]>;
+-  readonly isAuction: boolean;
+-  readonly asAuction: Auction;
++  readonly isEnglishAuction: boolean;
++  readonly asEnglishAuction: EnglishAuction;
++  readonly isOpenAuction: boolean;
++  readonly asOpenAuction: OpenAuction;
+   readonly isBuyNow: boolean;
+   readonly asBuyNow: u128;
+ }
+@@ -1111,6 +1123,9 @@ export interface UploadParameters extends Struct {
+ /** @name Url */
+ export interface Url extends Text {}
+ 
++/** @name ValidatorPrefs */
++export interface ValidatorPrefs extends ValidatorPrefsWithCommission {}
++
+ /** @name Video */
+ export interface Video extends Struct {
+   readonly in_channel: ChannelId;
+diff --git a/augment/augment-api-errors.ts b/augment/augment-api-errors.ts
+index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24aa37cc64 100644
+--- a/augment/augment-api-errors.ts
++++ b/augment/augment-api-errors.ts
+@@ -281,7 +281,7 @@ declare module '@polkadot/api/types/errors' {
+       /**
+        * Actor is not a last bidder
+        **/
+-      ActorIsNotALastBidder: AugmentedError<ApiType>;
++      ActorIsNotBidder: AugmentedError<ApiType>;
+       /**
+        * Actor is not A Member
+        **/
+@@ -302,10 +302,6 @@ declare module '@polkadot/api/types/errors' {
+        * Auction cannot be completed
+        **/
+       AuctionCannotBeCompleted: AugmentedError<ApiType>;
+-      /**
+-       * Auction for given video did not start
+-       **/
+-      AuctionDidNotStart: AugmentedError<ApiType>;
+       /**
+        * Auction duration lower bound exceeded
+        **/
+@@ -318,6 +314,14 @@ declare module '@polkadot/api/types/errors' {
+        * Expected root or signed origin
+        **/
+       BadOrigin: AugmentedError<ApiType>;
++      /**
++       * Auction does not have bids
++       **/
++      BidDoesNotExist: AugmentedError<ApiType>;
++      /**
++       * Selected Bid is for past open auction
++       **/
++      BidIsForPastAuction: AugmentedError<ApiType>;
+       /**
+        * Bid lock duration is not expired
+        **/
+@@ -434,6 +438,10 @@ declare module '@polkadot/api/types/errors' {
+        * Bag Size specified is not valid
+        **/
+       InvalidBagSizeSpecified: AugmentedError<ApiType>;
++      /**
++       * Commit verification for bid amount
++       **/
++      InvalidBidAmountSpecified: AugmentedError<ApiType>;
+       /**
+        * Invalid Buy Now price commit provided
+        **/
+@@ -450,10 +458,6 @@ declare module '@polkadot/api/types/errors' {
+        * Auction type is not `Open`
+        **/
+       IsNotOpenAuctionType: AugmentedError<ApiType>;
+-      /**
+-       * Auction does not have bids
+-       **/
+-      LastBidDoesNotExist: AugmentedError<ApiType>;
+       /**
+        * Lead authentication failed
+        **/
+diff --git a/augment/augment-api-events.ts b/augment/augment-api-events.ts
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec442aa46694 100644
+--- a/augment/augment-api-events.ts
++++ b/augment/augment-api-events.ts
+@@ -2,7 +2,7 @@
+ /* eslint-disable */
+ 
+ import type { BTreeMap, BTreeSet, Bytes, Option, Text, Vec, bool, u32, u64, u8 } from '@polkadot/types';
+-import type { ActorId, ApplicationId, ApplicationIdToWorkerIdMap, ApplyOnOpeningParameters, AuctionParams, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyAmount, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EntryId, ExecutionStatus, ExtendedPostId, ForumUserId, GeneralProposalParameters, InviteMembershipParameters, IsCensored, IsExtended, MemberId, ModeratorId, ModeratorSet, NftIssuanceParameters, OpeningId, OpeningType, OptionResult, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProposalDecision, ProposalDetailsOf, ProposalId, ProposalStatus, ReactionId, ReplyId, RewardPaymentType, StakePolicy, StorageBucketId, ThreadId, ThreadMode, Title, UpdatedBody, UpdatedTitle, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostId, VideoUpdateParameters, VoteKind, Voucher, WorkerId, WorkingGroup } from './all';
++import type { ActorId, ApplicationId, ApplicationIdToWorkerIdMap, ApplyOnOpeningParameters, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyAmount, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuctionParams, EntryId, ExecutionStatus, ExtendedPostId, ForumUserId, GeneralProposalParameters, InviteMembershipParameters, IsCensored, MemberId, ModeratorId, ModeratorSet, NftIssuanceParameters, OpenAuctionId, OpenAuctionParams, OpeningId, OpeningType, OptionResult, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProposalDecision, ProposalDetailsOf, ProposalId, ProposalStatus, ReactionId, ReplyId, RewardPaymentType, StakePolicy, StorageBucketId, ThreadId, ThreadMode, Title, UpdatedBody, UpdatedTitle, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostId, VideoUpdateParameters, VoteKind, Voucher, WorkerId, WorkingGroup } from './all';
+ import type { BalanceStatus } from '@polkadot/types/interfaces/balances';
+ import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
+ import type { AuthorityList } from '@polkadot/types/interfaces/grandpa';
+@@ -237,10 +237,9 @@ declare module '@polkadot/api/types/events' {
+     };
+     content: {
+       AuctionBidCanceled: AugmentedEvent<ApiType, [MemberId, VideoId]>;
+-      AuctionBidMade: AugmentedEvent<ApiType, [MemberId, VideoId, CurrencyAmount, IsExtended]>;
++      AuctionBidMade: AugmentedEvent<ApiType, [MemberId, VideoId, CurrencyAmount, Option<MemberId>]>;
+       AuctionCanceled: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
+-      AuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, AuctionParams]>;
+-      BidMadeCompletingAuction: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      BidMadeCompletingAuction: AugmentedEvent<ApiType, [MemberId, VideoId, Option<MemberId>]>;
+       BuyNowCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
+       BuyNowPriceUpdated: AugmentedEvent<ApiType, [VideoId, ContentActor, CurrencyAmount]>;
+       ChannelAssetsRemoved: AugmentedEvent<ApiType, [ContentActor, ChannelId, BTreeSet<DataObjectId>, Channel]>;
+@@ -264,6 +263,7 @@ declare module '@polkadot/api/types/events' {
+       CuratorGroupStatusSet: AugmentedEvent<ApiType, [CuratorGroupId, bool]>;
+       CuratorRemoved: AugmentedEvent<ApiType, [CuratorGroupId, CuratorId]>;
+       EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      EnglishAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, EnglishAuctionParams]>;
+       FeaturedVideosSet: AugmentedEvent<ApiType, [ContentActor, Vec<VideoId>]>;
+       MaxRewardUpdated: AugmentedEvent<ApiType, [Balance]>;
+       MinCashoutUpdated: AugmentedEvent<ApiType, [Balance]>;
+@@ -276,7 +276,8 @@ declare module '@polkadot/api/types/events' {
+       OfferAccepted: AugmentedEvent<ApiType, [VideoId]>;
+       OfferCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
+       OfferStarted: AugmentedEvent<ApiType, [VideoId, ContentActor, MemberId, Option<CurrencyAmount>]>;
+-      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
++      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, CurrencyAmount]>;
++      OpenAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, OpenAuctionParams, OpenAuctionId]>;
+       ReactionToVideo: AugmentedEvent<ApiType, [MemberId, VideoId, ReactionId]>;
+       ReactionToVideoPost: AugmentedEvent<ApiType, [MemberId, VideoId, VideoPostId, ReactionId]>;
+       VideoCategoryCreated: AugmentedEvent<ApiType, [ContentActor, VideoCategoryId, VideoCategoryCreationParameters]>;
+@@ -1979,8 +1980,9 @@ declare module '@polkadot/api/types/events' {
+        * - Id of a newly created proposal after it was saved in storage.
+        * - General proposal parameter. Parameters shared by all proposals
+        * - Proposal Details. Parameter of proposal with a variant for each kind of proposal
++       * - Id of a newly created proposal thread
+        **/
+-      ProposalCreated: AugmentedEvent<ApiType, [ProposalId, GeneralProposalParameters, ProposalDetailsOf]>;
++      ProposalCreated: AugmentedEvent<ApiType, [ProposalId, GeneralProposalParameters, ProposalDetailsOf, ThreadId]>;
+     };
+     proposalsDiscussion: {
+       /**
+diff --git a/augment/augment-api-query.ts b/augment/augment-api-query.ts
+index f72e77f696a104c15481a7de64906db9e7ec07ae..d61b8636d3caf30e77aa98b31e250d8b18435794 100644
+--- a/augment/augment-api-query.ts
++++ b/augment/augment-api-query.ts
+@@ -3,7 +3,7 @@
+ 
+ import type { Bytes, Option, Vec, bool, u16, u32, u64, u8 } from '@polkadot/types';
+ import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
+-import type { Application, ApplicationId, Bag, BagId, BountyActor, BountyId, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryId, ChannelId, Cid, ConstitutionInfo, CouncilMemberOf, CouncilStageUpdate, CuratorGroup, CuratorGroupId, CurrencyOf, DataObject, DataObjectId, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketIndex, DynamicBagCreationPolicy, DynamicBagType, Entry, EntryId, ForumUserId, MaxNumber, MemberId, Membership, ModeratorId, Opening, OpeningId, Post, PostId, ProposalId, ProposalOf, ReferendumStage, Reply, ReplyId, StakingAccountMemberBinding, StorageBucket, StorageBucketId, ThreadId, ThreadOf, Video, VideoCategory, VideoCategoryId, VideoId, VideoPost, VideoPostId, VoteKind, Worker, WorkerId } from './all';
++import type { Application, ApplicationId, Bag, BagId, BountyActor, BountyId, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryId, ChannelId, Cid, ConstitutionInfo, CouncilMemberOf, CouncilStageUpdate, CuratorGroup, CuratorGroupId, CurrencyOf, DataObject, DataObjectId, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketIndex, DynamicBagCreationPolicy, DynamicBagType, Entry, EntryId, ForumUserId, MaxNumber, MemberId, Membership, ModeratorId, OpenAuctionBid, Opening, OpeningId, Post, PostId, ProposalId, ProposalOf, ReferendumStage, Reply, ReplyId, StakingAccountMemberBinding, StorageBucket, StorageBucketId, ThreadId, ThreadOf, Video, VideoCategory, VideoCategoryId, VideoId, VideoPost, VideoPostId, VoteKind, Worker, WorkerId } from './all';
+ import type { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
+ import type { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Randomness } from '@polkadot/types/interfaces/babe';
+ import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
+@@ -236,6 +236,10 @@ declare module '@polkadot/api/types/storage' {
+       nextVideoCategoryId: AugmentedQuery<ApiType, () => Observable<VideoCategoryId>, []>;
+       nextVideoId: AugmentedQuery<ApiType, () => Observable<VideoId>, []>;
+       nextVideoPostId: AugmentedQuery<ApiType, () => Observable<VideoPostId>, []>;
++      /**
++       * Bids for open auctions
++       **/
++      openAuctionBidByVideoAndMember: AugmentedQuery<ApiType, (arg1: VideoId | AnyNumber | Uint8Array, arg2: MemberId | AnyNumber | Uint8Array) => Observable<OpenAuctionBid>, [VideoId, MemberId]>;
+       /**
+        * Platform fee percentage
+        **/
+diff --git a/augment/augment-api-tx.ts b/augment/augment-api-tx.ts
+index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d6e584963 100644
+--- a/augment/augment-api-tx.ts
++++ b/augment/augment-api-tx.ts
+@@ -3,7 +3,7 @@
+ 
+ import type { BTreeMap, BTreeSet, Bytes, Compact, Option, Vec, bool, u16, u32, u64, u8 } from '@polkadot/types';
+ import type { AnyNumber } from '@polkadot/types/types';
+-import type { ActorId, ApplicationId, ApplyOnOpeningParameters, AuctionParams, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyOf, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrize, DynamicBagId, DynamicBagType, EntryId, ExtendedPostId, ForumUserId, FundingRequestParameters, GeneralProposalParameters, InviteMembershipParameters, MemberId, ModeratorId, NftIssuanceParameters, OpeningId, OpeningType, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDetailsOf, ProposalId, PullPayment, ReactionId, ReplyId, ReplyToDelete, StakePolicy, StorageBucketId, ThreadId, ThreadMode, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoUpdateParameters, VoteKind, WorkerId, WorkingGroup } from './all';
++import type { ActorId, ApplicationId, ApplyOnOpeningParameters, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyOf, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrize, DynamicBagId, DynamicBagType, EnglishAuctionParams, EntryId, ExtendedPostId, ForumUserId, FundingRequestParameters, GeneralProposalParameters, InviteMembershipParameters, MemberId, ModeratorId, NftIssuanceParameters, OpenAuctionParams, OpeningId, OpeningType, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDetailsOf, ProposalId, PullPayment, ReactionId, ReplyId, ReplyToDelete, StakePolicy, StorageBucketId, ThreadId, ThreadMode, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoUpdateParameters, VoteKind, WorkerId, WorkingGroup } from './all';
+ import type { BabeEquivocationProof } from '@polkadot/types/interfaces/babe';
+ import type { Extrinsic, Signature } from '@polkadot/types/interfaces/extrinsics';
+ import type { GrandpaEquivocationProof, KeyOwnerProof } from '@polkadot/types/interfaces/grandpa';
+@@ -410,11 +410,12 @@ declare module '@polkadot/api/types/submittable' {
+        * Cancel Nft sell order
+        **/
+       cancelBuyNow: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+-      cancelNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      cancelEnglishAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+       /**
+        * Cancel Nft offer
+        **/
+       cancelOffer: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      cancelOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+       /**
+        * Cancel open auction bid
+        **/
+@@ -459,7 +460,11 @@ declare module '@polkadot/api/types/submittable' {
+       /**
+        * Make auction bid
+        **/
+-      makeBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bid: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
++      makeEnglishAuctionBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bidAmount: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
++      /**
++       * Make auction bid
++       **/
++      makeOpenAuctionBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bidAmount: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
+       /**
+        * NFT owner remark
+        **/
+@@ -472,7 +477,7 @@ declare module '@polkadot/api/types/submittable' {
+        * Accept open auction bid
+        * Should only be called by auctioneer
+        **/
+-      pickOpenAuctionWinner: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      pickOpenAuctionWinner: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, winnerId: MemberId | AnyNumber | Uint8Array, commit: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, MemberId, CurrencyOf]>;
+       reactToPost: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, postId: VideoPostId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, VideoPostId, ReactionId]>;
+       reactToVideo: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, ReactionId]>;
+       /**
+@@ -493,9 +498,13 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       slingNftBack: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array, ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId, ContentActor]>;
+       /**
+-       * Start video nft auction
++       * Start video nft english auction
++       **/
++      startEnglishAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: EnglishAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; duration?: any; extension_period?: any; min_bid_step?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, EnglishAuctionParams]>;
++      /**
++       * Start video nft open auction
+        **/
+-      startNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: AuctionParams | { auction_type?: any; starting_price?: any; minimal_bid_step?: any; buy_now_price?: any; starts_at?: any; whitelist?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, AuctionParams]>;
++      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
+       /**
+        * Update Buy now nft price
+        **/
+@@ -3749,7 +3758,7 @@ declare module '@polkadot/api/types/submittable' {
+        * - Write: Nominators, Validators
+        * # </weight>
+        **/
+-      validate: AugmentedSubmittable<(prefs: ValidatorPrefs | { commission?: any; blocked?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ValidatorPrefs]>;
++      validate: AugmentedSubmittable<(prefs: ValidatorPrefs | { commission?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ValidatorPrefs]>;
+       /**
+        * Remove any unlocked chunks from the `unlocking` queue from our management.
+        * 
+diff --git a/augment/augment-types.ts b/augment/augment-types.ts
+index 23e0a050c46bf03737d3bffb5b277bf9307ffd13..d9e436a154cce5cbd0b7a3cba683de7b58aef380 100644
+--- a/augment/augment-types.ts
++++ b/augment/augment-types.ts
+@@ -2,7 +2,7 @@
+ /* eslint-disable */
+ 
+ import type { BitVec, Bool, Bytes, Data, I128, I16, I256, I32, I64, I8, Json, Null, Raw, StorageKey, Text, Type, U128, U16, U256, U32, U64, U8, USize, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types';
+-import type { ActorId, Application, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationInfo, ApplyOnOpeningParameters, Approved, AssuranceContractType, AssuranceContractType_Closed, Auction, AuctionParams, AuctionType, Bag, BagId, BagIdType, BalanceKind, BlockAndTime, BountyActor, BountyCreationParameters, BountyId, BountyMilestone, BountyMilestone_BountyMaxFundingReached, BountyMilestone_Created, BountyMilestone_JudgmentSubmitted, BountyMilestone_WorkSubmitted, BuyMembershipParameters, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelOwner, ChannelUpdateParameters, Cid, ConstitutionInfo, ContentActor, ContentIdSet, CouncilMemberOf, CouncilStage, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CreateOpeningParameters, CuratorGroup, CuratorGroupId, CuratorId, CurrencyAmount, CurrencyOf, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DistributionBucketIndexSet, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuctionDetails, Entry, EntryId, ExecutionFailed, ExecutionStatus, ExtendedPostId, FillOpeningParameters, ForumUserId, FundingRequestParameters, FundingType, FundingType_Limited, FundingType_Perpetual, GeneralProposalParameters, InitTransactionalStatus, InputValidationLengthConstraint, InviteMembershipParameters, IsCensored, IsExtended, MaxNumber, MemberId, Membership, ModeratorId, ModeratorSet, NftIssuanceParameters, NftMetadata, NftOwner, OpenAuctionDetails, Opening, OpeningId, OpeningType, OptionResult, OracleJudgment, OracleWorkEntryJudgment, OracleWorkEntryJudgment_Winner, OwnedNft, ParticipantId, Penalty, Poll, PollAlternative, PollInput, Post, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDecision, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, PullPayment, ReactionId, ReferendumStage, ReferendumStageRevealing, ReferendumStageVoting, Reply, ReplyId, ReplyToDelete, RewardPaymentType, Royalty, SetLeadParams, Side, StakeParameters, StakePolicy, StakingAccountMemberBinding, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageProviderId, TerminateRoleParameters, Thread, ThreadId, ThreadMode, ThreadOf, Title, TransactionalStatus, UpdatedBody, UpdatedTitle, UploadParameters, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoPostType, VideoUpdateParameters, VoteKind, VotePower, VotingResults, Voucher, Worker, WorkerId, WorkerInfo, WorkingGroup } from './all';
++import type { ActorId, Application, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationInfo, ApplyOnOpeningParameters, Approved, AssuranceContractType, AssuranceContractType_Closed, Bag, BagId, BagIdType, BalanceKind, BlockAndTime, BountyActor, BountyCreationParameters, BountyId, BountyMilestone, BountyMilestone_BountyMaxFundingReached, BountyMilestone_Created, BountyMilestone_JudgmentSubmitted, BountyMilestone_WorkSubmitted, BuyMembershipParameters, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelOwner, ChannelUpdateParameters, Cid, ConstitutionInfo, ContentActor, ContentIdSet, CouncilMemberOf, CouncilStage, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CreateOpeningParameters, CuratorGroup, CuratorGroupId, CuratorId, CurrencyAmount, CurrencyOf, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DistributionBucketIndexSet, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuction, EnglishAuctionBid, EnglishAuctionParams, Entry, EntryId, ExecutionFailed, ExecutionStatus, ExtendedPostId, FillOpeningParameters, ForumUserId, FundingRequestParameters, FundingType, FundingType_Limited, FundingType_Perpetual, GeneralProposalParameters, InitTransactionalStatus, InputValidationLengthConstraint, InviteMembershipParameters, IsCensored, MaxNumber, MemberId, Membership, ModeratorId, ModeratorSet, NftIssuanceParameters, NftMetadata, NftOwner, OpenAuction, OpenAuctionBid, OpenAuctionId, OpenAuctionParams, Opening, OpeningId, OpeningType, OptionResult, OracleJudgment, OracleWorkEntryJudgment, OracleWorkEntryJudgment_Winner, OwnedNft, ParticipantId, Penalty, Poll, PollAlternative, PollInput, Post, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDecision, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, PullPayment, ReactionId, ReferendumStage, ReferendumStageRevealing, ReferendumStageVoting, Reply, ReplyId, ReplyToDelete, RewardPaymentType, Royalty, SetLeadParams, Side, StakeParameters, StakePolicy, StakingAccountMemberBinding, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageProviderId, TerminateRoleParameters, Thread, ThreadId, ThreadMode, ThreadOf, Title, TransactionalStatus, UpdatedBody, UpdatedTitle, UploadParameters, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoPostType, VideoUpdateParameters, VoteKind, VotePower, VotingResults, Voucher, Worker, WorkerId, WorkerInfo, WorkingGroup } from './all';
+ import type { AssetApproval, AssetApprovalKey, AssetBalance, AssetDestroyWitness, AssetDetails, AssetMetadata, TAssetBalance, TAssetDepositBalance } from '@polkadot/types/interfaces/assets';
+ import type { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
+ import type { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
+@@ -120,10 +120,7 @@ declare module '@polkadot/types/types/registry' {
+     AssuranceContractType: AssuranceContractType;
+     AssuranceContractType_Closed: AssuranceContractType_Closed;
+     AttestedCandidate: AttestedCandidate;
+-    Auction: Auction;
+     AuctionIndex: AuctionIndex;
+-    AuctionParams: AuctionParams;
+-    AuctionType: AuctionType;
+     AuthIndex: AuthIndex;
+     AuthorityDiscoveryId: AuthorityDiscoveryId;
+     AuthorityId: AuthorityId;
+@@ -368,7 +365,9 @@ declare module '@polkadot/types/types/registry' {
+     ElectionStatus: ElectionStatus;
+     EncodedFinalityProofs: EncodedFinalityProofs;
+     EncodedJustification: EncodedJustification;
+-    EnglishAuctionDetails: EnglishAuctionDetails;
++    EnglishAuction: EnglishAuction;
++    EnglishAuctionBid: EnglishAuctionBid;
++    EnglishAuctionParams: EnglishAuctionParams;
+     Entry: Entry;
+     EntryId: EntryId;
+     EpochAuthorship: EpochAuthorship;
+@@ -577,7 +576,6 @@ declare module '@polkadot/types/types/registry' {
+     InvalidTransaction: InvalidTransaction;
+     InviteMembershipParameters: InviteMembershipParameters;
+     IsCensored: IsCensored;
+-    IsExtended: IsExtended;
+     Json: Json;
+     Junction: Junction;
+     Junctions: Junctions;
+@@ -701,7 +699,10 @@ declare module '@polkadot/types/types/registry' {
+     OpaqueNetworkState: OpaqueNetworkState;
+     OpaquePeerId: OpaquePeerId;
+     OpaqueTimeSlot: OpaqueTimeSlot;
+-    OpenAuctionDetails: OpenAuctionDetails;
++    OpenAuction: OpenAuction;
++    OpenAuctionBid: OpenAuctionBid;
++    OpenAuctionId: OpenAuctionId;
++    OpenAuctionParams: OpenAuctionParams;
+     Opening: Opening;
+     OpeningId: OpeningId;
+     OpeningType: OpeningType;
+diff --git a/augment-codec/all.ts b/augment-codec/all.ts
+index 3d5a23184becf79b77cd9f333d820840a418b26e..cfa708cc5c046b39cc64497da7c4d77359f7d573 100644
+--- a/augment-codec/all.ts
++++ b/augment-codec/all.ts
+@@ -10,6 +10,6 @@ import { ReferendumStageVoting, ReferendumStageRevealing, ReferendumStage, Optio
+ import { ConstitutionInfo } from '../constitution';
+ import { ParticipantId, Title, UpdatedTitle, UpdatedBody, ReplyId, Reply, ReplyToDelete } from '../blog';
+ import { BountyId, EntryId, BountyActor, AssuranceContractType_Closed, AssuranceContractType, FundingType_Limited, FundingType_Perpetual, FundingType, BountyCreationParameters, OracleWorkEntryJudgment_Winner, OracleWorkEntryJudgment, OracleJudgment, Entry, BountyMilestone_Created, BountyMilestone_BountyMaxFundingReached, BountyMilestone_WorkSubmitted, BountyMilestone_JudgmentSubmitted, BountyMilestone, Bounty } from '../bounty';
+-import { CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, MaxNumber, IsCensored, VideoPostId, ReactionId, VideoPostType, VideoPost, Side, ProofElement, VideoPostCreationParameters, VideoPostDeletionParameters, PullPayment, ModeratorSet, Royalty, IsExtended, EnglishAuctionDetails, OpenAuctionDetails, AuctionType, Bid, Auction, TransactionalStatus, NftOwner, OwnedNft, AuctionParams, CurrencyOf, CurrencyAmount, InitTransactionalStatus, NftIssuanceParameters, NftMetadata } from '../content';
++import { CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, MaxNumber, IsCensored, VideoPostId, ReactionId, VideoPostType, VideoPost, Side, ProofElement, VideoPostCreationParameters, VideoPostDeletionParameters, PullPayment, ModeratorSet, Royalty, EnglishAuctionParams, OpenAuctionParams, EnglishAuction, OpenAuction, OpenAuctionBid, EnglishAuctionBid, TransactionalStatus, NftOwner, OwnedNft, CurrencyOf, CurrencyAmount, InitTransactionalStatus, NftIssuanceParameters, NftMetadata, OpenAuctionId } from '../content';
+ 
+-export { ActorId, MemberId, BlockAndTime, ThreadId, PostId, InputValidationLengthConstraint, WorkingGroup, BalanceKind, Address, LookupSource, ChannelId, Url, Membership, StakingAccountMemberBinding, BuyMembershipParameters, InviteMembershipParameters, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CouncilStage, Candidate, CouncilMemberOf, CastVoteOf, ForumUserId, ModeratorId, CategoryId, PostReactionId, Category, Thread, Post, PollAlternative, Poll, PrivilegedActor, PollInput, ThreadOf, ExtendedPostId, ApplicationId, Application, ApplicationInfo, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, Worker, WorkerInfo, Opening, OpeningId, StakePolicy, StakeParameters, StorageProviderId, OpeningType, ApplyOnOpeningParameters, Penalty, RewardPaymentType, StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketIndex, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIndexSet, DynamicBagCreationPolicyDistributorFamiliesMap, ProposalId, ProposalStatus, ProposalOf, ProposalDetails, ProposalDetailsOf, VotingResults, ProposalParameters, GeneralProposalParameters, VoteKind, DiscussionThread, DiscussionPost, CreateOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ProposalDecision, ExecutionFailed, Approved, SetLeadParams, ThreadMode, ExecutionStatus, FundingRequestParameters, ReferendumStageVoting, ReferendumStageRevealing, ReferendumStage, OptionResult, VotePower, ConstitutionInfo, ParticipantId, Title, UpdatedTitle, UpdatedBody, ReplyId, Reply, ReplyToDelete, BountyId, EntryId, BountyActor, AssuranceContractType_Closed, AssuranceContractType, FundingType_Limited, FundingType_Perpetual, FundingType, BountyCreationParameters, OracleWorkEntryJudgment_Winner, OracleWorkEntryJudgment, OracleJudgment, Entry, BountyMilestone_Created, BountyMilestone_BountyMaxFundingReached, BountyMilestone_WorkSubmitted, BountyMilestone_JudgmentSubmitted, BountyMilestone, Bounty, CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, MaxNumber, IsCensored, VideoPostId, ReactionId, VideoPostType, VideoPost, Side, ProofElement, VideoPostCreationParameters, VideoPostDeletionParameters, PullPayment, ModeratorSet, Royalty, IsExtended, EnglishAuctionDetails, OpenAuctionDetails, AuctionType, Bid, Auction, TransactionalStatus, NftOwner, OwnedNft, AuctionParams, CurrencyOf, CurrencyAmount, InitTransactionalStatus, NftIssuanceParameters, NftMetadata };
+\ No newline at end of file
++export { ActorId, MemberId, BlockAndTime, ThreadId, PostId, InputValidationLengthConstraint, WorkingGroup, BalanceKind, Address, LookupSource, ChannelId, Url, Membership, StakingAccountMemberBinding, BuyMembershipParameters, InviteMembershipParameters, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CouncilStage, Candidate, CouncilMemberOf, CastVoteOf, ForumUserId, ModeratorId, CategoryId, PostReactionId, Category, Thread, Post, PollAlternative, Poll, PrivilegedActor, PollInput, ThreadOf, ExtendedPostId, ApplicationId, Application, ApplicationInfo, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, Worker, WorkerInfo, Opening, OpeningId, StakePolicy, StakeParameters, StorageProviderId, OpeningType, ApplyOnOpeningParameters, Penalty, RewardPaymentType, StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketIndex, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIndexSet, DynamicBagCreationPolicyDistributorFamiliesMap, ProposalId, ProposalStatus, ProposalOf, ProposalDetails, ProposalDetailsOf, VotingResults, ProposalParameters, GeneralProposalParameters, VoteKind, DiscussionThread, DiscussionPost, CreateOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ProposalDecision, ExecutionFailed, Approved, SetLeadParams, ThreadMode, ExecutionStatus, FundingRequestParameters, ReferendumStageVoting, ReferendumStageRevealing, ReferendumStage, OptionResult, VotePower, ConstitutionInfo, ParticipantId, Title, UpdatedTitle, UpdatedBody, ReplyId, Reply, ReplyToDelete, BountyId, EntryId, BountyActor, AssuranceContractType_Closed, AssuranceContractType, FundingType_Limited, FundingType_Perpetual, FundingType, BountyCreationParameters, OracleWorkEntryJudgment_Winner, OracleWorkEntryJudgment, OracleJudgment, Entry, BountyMilestone_Created, BountyMilestone_BountyMaxFundingReached, BountyMilestone_WorkSubmitted, BountyMilestone_JudgmentSubmitted, BountyMilestone, Bounty, CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, MaxNumber, IsCensored, VideoPostId, ReactionId, VideoPostType, VideoPost, Side, ProofElement, VideoPostCreationParameters, VideoPostDeletionParameters, PullPayment, ModeratorSet, Royalty, EnglishAuctionParams, OpenAuctionParams, EnglishAuction, OpenAuction, OpenAuctionBid, EnglishAuctionBid, TransactionalStatus, NftOwner, OwnedNft, CurrencyOf, CurrencyAmount, InitTransactionalStatus, NftIssuanceParameters, NftMetadata, OpenAuctionId };
+\ No newline at end of file
+diff --git a/augment-codec/augment-api-errors.ts b/augment-codec/augment-api-errors.ts
+index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24aa37cc64 100644
+--- a/augment-codec/augment-api-errors.ts
++++ b/augment-codec/augment-api-errors.ts
+@@ -281,7 +281,7 @@ declare module '@polkadot/api/types/errors' {
+       /**
+        * Actor is not a last bidder
+        **/
+-      ActorIsNotALastBidder: AugmentedError<ApiType>;
++      ActorIsNotBidder: AugmentedError<ApiType>;
+       /**
+        * Actor is not A Member
+        **/
+@@ -302,10 +302,6 @@ declare module '@polkadot/api/types/errors' {
+        * Auction cannot be completed
+        **/
+       AuctionCannotBeCompleted: AugmentedError<ApiType>;
+-      /**
+-       * Auction for given video did not start
+-       **/
+-      AuctionDidNotStart: AugmentedError<ApiType>;
+       /**
+        * Auction duration lower bound exceeded
+        **/
+@@ -318,6 +314,14 @@ declare module '@polkadot/api/types/errors' {
+        * Expected root or signed origin
+        **/
+       BadOrigin: AugmentedError<ApiType>;
++      /**
++       * Auction does not have bids
++       **/
++      BidDoesNotExist: AugmentedError<ApiType>;
++      /**
++       * Selected Bid is for past open auction
++       **/
++      BidIsForPastAuction: AugmentedError<ApiType>;
+       /**
+        * Bid lock duration is not expired
+        **/
+@@ -434,6 +438,10 @@ declare module '@polkadot/api/types/errors' {
+        * Bag Size specified is not valid
+        **/
+       InvalidBagSizeSpecified: AugmentedError<ApiType>;
++      /**
++       * Commit verification for bid amount
++       **/
++      InvalidBidAmountSpecified: AugmentedError<ApiType>;
+       /**
+        * Invalid Buy Now price commit provided
+        **/
+@@ -450,10 +458,6 @@ declare module '@polkadot/api/types/errors' {
+        * Auction type is not `Open`
+        **/
+       IsNotOpenAuctionType: AugmentedError<ApiType>;
+-      /**
+-       * Auction does not have bids
+-       **/
+-      LastBidDoesNotExist: AugmentedError<ApiType>;
+       /**
+        * Lead authentication failed
+        **/
+diff --git a/augment-codec/augment-api-events.ts b/augment-codec/augment-api-events.ts
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec442aa46694 100644
+--- a/augment-codec/augment-api-events.ts
++++ b/augment-codec/augment-api-events.ts
+@@ -2,7 +2,7 @@
+ /* eslint-disable */
+ 
+ import type { BTreeMap, BTreeSet, Bytes, Option, Text, Vec, bool, u32, u64, u8 } from '@polkadot/types';
+-import type { ActorId, ApplicationId, ApplicationIdToWorkerIdMap, ApplyOnOpeningParameters, AuctionParams, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyAmount, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EntryId, ExecutionStatus, ExtendedPostId, ForumUserId, GeneralProposalParameters, InviteMembershipParameters, IsCensored, IsExtended, MemberId, ModeratorId, ModeratorSet, NftIssuanceParameters, OpeningId, OpeningType, OptionResult, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProposalDecision, ProposalDetailsOf, ProposalId, ProposalStatus, ReactionId, ReplyId, RewardPaymentType, StakePolicy, StorageBucketId, ThreadId, ThreadMode, Title, UpdatedBody, UpdatedTitle, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostId, VideoUpdateParameters, VoteKind, Voucher, WorkerId, WorkingGroup } from './all';
++import type { ActorId, ApplicationId, ApplicationIdToWorkerIdMap, ApplyOnOpeningParameters, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyAmount, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuctionParams, EntryId, ExecutionStatus, ExtendedPostId, ForumUserId, GeneralProposalParameters, InviteMembershipParameters, IsCensored, MemberId, ModeratorId, ModeratorSet, NftIssuanceParameters, OpenAuctionId, OpenAuctionParams, OpeningId, OpeningType, OptionResult, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProposalDecision, ProposalDetailsOf, ProposalId, ProposalStatus, ReactionId, ReplyId, RewardPaymentType, StakePolicy, StorageBucketId, ThreadId, ThreadMode, Title, UpdatedBody, UpdatedTitle, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostId, VideoUpdateParameters, VoteKind, Voucher, WorkerId, WorkingGroup } from './all';
+ import type { BalanceStatus } from '@polkadot/types/interfaces/balances';
+ import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
+ import type { AuthorityList } from '@polkadot/types/interfaces/grandpa';
+@@ -237,10 +237,9 @@ declare module '@polkadot/api/types/events' {
+     };
+     content: {
+       AuctionBidCanceled: AugmentedEvent<ApiType, [MemberId, VideoId]>;
+-      AuctionBidMade: AugmentedEvent<ApiType, [MemberId, VideoId, CurrencyAmount, IsExtended]>;
++      AuctionBidMade: AugmentedEvent<ApiType, [MemberId, VideoId, CurrencyAmount, Option<MemberId>]>;
+       AuctionCanceled: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
+-      AuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, AuctionParams]>;
+-      BidMadeCompletingAuction: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      BidMadeCompletingAuction: AugmentedEvent<ApiType, [MemberId, VideoId, Option<MemberId>]>;
+       BuyNowCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
+       BuyNowPriceUpdated: AugmentedEvent<ApiType, [VideoId, ContentActor, CurrencyAmount]>;
+       ChannelAssetsRemoved: AugmentedEvent<ApiType, [ContentActor, ChannelId, BTreeSet<DataObjectId>, Channel]>;
+@@ -264,6 +263,7 @@ declare module '@polkadot/api/types/events' {
+       CuratorGroupStatusSet: AugmentedEvent<ApiType, [CuratorGroupId, bool]>;
+       CuratorRemoved: AugmentedEvent<ApiType, [CuratorGroupId, CuratorId]>;
+       EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      EnglishAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, EnglishAuctionParams]>;
+       FeaturedVideosSet: AugmentedEvent<ApiType, [ContentActor, Vec<VideoId>]>;
+       MaxRewardUpdated: AugmentedEvent<ApiType, [Balance]>;
+       MinCashoutUpdated: AugmentedEvent<ApiType, [Balance]>;
+@@ -276,7 +276,8 @@ declare module '@polkadot/api/types/events' {
+       OfferAccepted: AugmentedEvent<ApiType, [VideoId]>;
+       OfferCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
+       OfferStarted: AugmentedEvent<ApiType, [VideoId, ContentActor, MemberId, Option<CurrencyAmount>]>;
+-      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
++      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, CurrencyAmount]>;
++      OpenAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, OpenAuctionParams, OpenAuctionId]>;
+       ReactionToVideo: AugmentedEvent<ApiType, [MemberId, VideoId, ReactionId]>;
+       ReactionToVideoPost: AugmentedEvent<ApiType, [MemberId, VideoId, VideoPostId, ReactionId]>;
+       VideoCategoryCreated: AugmentedEvent<ApiType, [ContentActor, VideoCategoryId, VideoCategoryCreationParameters]>;
+@@ -1979,8 +1980,9 @@ declare module '@polkadot/api/types/events' {
+        * - Id of a newly created proposal after it was saved in storage.
+        * - General proposal parameter. Parameters shared by all proposals
+        * - Proposal Details. Parameter of proposal with a variant for each kind of proposal
++       * - Id of a newly created proposal thread
+        **/
+-      ProposalCreated: AugmentedEvent<ApiType, [ProposalId, GeneralProposalParameters, ProposalDetailsOf]>;
++      ProposalCreated: AugmentedEvent<ApiType, [ProposalId, GeneralProposalParameters, ProposalDetailsOf, ThreadId]>;
+     };
+     proposalsDiscussion: {
+       /**
+diff --git a/augment-codec/augment-api-query.ts b/augment-codec/augment-api-query.ts
+index f72e77f696a104c15481a7de64906db9e7ec07ae..d61b8636d3caf30e77aa98b31e250d8b18435794 100644
+--- a/augment-codec/augment-api-query.ts
++++ b/augment-codec/augment-api-query.ts
+@@ -3,7 +3,7 @@
+ 
+ import type { Bytes, Option, Vec, bool, u16, u32, u64, u8 } from '@polkadot/types';
+ import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
+-import type { Application, ApplicationId, Bag, BagId, BountyActor, BountyId, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryId, ChannelId, Cid, ConstitutionInfo, CouncilMemberOf, CouncilStageUpdate, CuratorGroup, CuratorGroupId, CurrencyOf, DataObject, DataObjectId, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketIndex, DynamicBagCreationPolicy, DynamicBagType, Entry, EntryId, ForumUserId, MaxNumber, MemberId, Membership, ModeratorId, Opening, OpeningId, Post, PostId, ProposalId, ProposalOf, ReferendumStage, Reply, ReplyId, StakingAccountMemberBinding, StorageBucket, StorageBucketId, ThreadId, ThreadOf, Video, VideoCategory, VideoCategoryId, VideoId, VideoPost, VideoPostId, VoteKind, Worker, WorkerId } from './all';
++import type { Application, ApplicationId, Bag, BagId, BountyActor, BountyId, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryId, ChannelId, Cid, ConstitutionInfo, CouncilMemberOf, CouncilStageUpdate, CuratorGroup, CuratorGroupId, CurrencyOf, DataObject, DataObjectId, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketIndex, DynamicBagCreationPolicy, DynamicBagType, Entry, EntryId, ForumUserId, MaxNumber, MemberId, Membership, ModeratorId, OpenAuctionBid, Opening, OpeningId, Post, PostId, ProposalId, ProposalOf, ReferendumStage, Reply, ReplyId, StakingAccountMemberBinding, StorageBucket, StorageBucketId, ThreadId, ThreadOf, Video, VideoCategory, VideoCategoryId, VideoId, VideoPost, VideoPostId, VoteKind, Worker, WorkerId } from './all';
+ import type { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
+ import type { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Randomness } from '@polkadot/types/interfaces/babe';
+ import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
+@@ -236,6 +236,10 @@ declare module '@polkadot/api/types/storage' {
+       nextVideoCategoryId: AugmentedQuery<ApiType, () => Observable<VideoCategoryId>, []>;
+       nextVideoId: AugmentedQuery<ApiType, () => Observable<VideoId>, []>;
+       nextVideoPostId: AugmentedQuery<ApiType, () => Observable<VideoPostId>, []>;
++      /**
++       * Bids for open auctions
++       **/
++      openAuctionBidByVideoAndMember: AugmentedQuery<ApiType, (arg1: VideoId | AnyNumber | Uint8Array, arg2: MemberId | AnyNumber | Uint8Array) => Observable<OpenAuctionBid>, [VideoId, MemberId]>;
+       /**
+        * Platform fee percentage
+        **/
+diff --git a/augment-codec/augment-api-tx.ts b/augment-codec/augment-api-tx.ts
+index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d6e584963 100644
+--- a/augment-codec/augment-api-tx.ts
++++ b/augment-codec/augment-api-tx.ts
+@@ -3,7 +3,7 @@
+ 
+ import type { BTreeMap, BTreeSet, Bytes, Compact, Option, Vec, bool, u16, u32, u64, u8 } from '@polkadot/types';
+ import type { AnyNumber } from '@polkadot/types/types';
+-import type { ActorId, ApplicationId, ApplyOnOpeningParameters, AuctionParams, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyOf, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrize, DynamicBagId, DynamicBagType, EntryId, ExtendedPostId, ForumUserId, FundingRequestParameters, GeneralProposalParameters, InviteMembershipParameters, MemberId, ModeratorId, NftIssuanceParameters, OpeningId, OpeningType, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDetailsOf, ProposalId, PullPayment, ReactionId, ReplyId, ReplyToDelete, StakePolicy, StorageBucketId, ThreadId, ThreadMode, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoUpdateParameters, VoteKind, WorkerId, WorkingGroup } from './all';
++import type { ActorId, ApplicationId, ApplyOnOpeningParameters, BagId, BalanceKind, BountyActor, BountyCreationParameters, BountyId, BuyMembershipParameters, CategoryId, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelUpdateParameters, Cid, ContentActor, CuratorGroupId, CuratorId, CurrencyOf, DataObjectId, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DynamicBagDeletionPrize, DynamicBagId, DynamicBagType, EnglishAuctionParams, EntryId, ExtendedPostId, ForumUserId, FundingRequestParameters, GeneralProposalParameters, InviteMembershipParameters, MemberId, ModeratorId, NftIssuanceParameters, OpenAuctionParams, OpeningId, OpeningType, OracleJudgment, ParticipantId, PollInput, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDetailsOf, ProposalId, PullPayment, ReactionId, ReplyId, ReplyToDelete, StakePolicy, StorageBucketId, ThreadId, ThreadMode, UploadParameters, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoUpdateParameters, VoteKind, WorkerId, WorkingGroup } from './all';
+ import type { BabeEquivocationProof } from '@polkadot/types/interfaces/babe';
+ import type { Extrinsic, Signature } from '@polkadot/types/interfaces/extrinsics';
+ import type { GrandpaEquivocationProof, KeyOwnerProof } from '@polkadot/types/interfaces/grandpa';
+@@ -410,11 +410,12 @@ declare module '@polkadot/api/types/submittable' {
+        * Cancel Nft sell order
+        **/
+       cancelBuyNow: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+-      cancelNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      cancelEnglishAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+       /**
+        * Cancel Nft offer
+        **/
+       cancelOffer: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      cancelOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
+       /**
+        * Cancel open auction bid
+        **/
+@@ -459,7 +460,11 @@ declare module '@polkadot/api/types/submittable' {
+       /**
+        * Make auction bid
+        **/
+-      makeBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bid: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
++      makeEnglishAuctionBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bidAmount: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
++      /**
++       * Make auction bid
++       **/
++      makeOpenAuctionBid: AugmentedSubmittable<(participantId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, bidAmount: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, CurrencyOf]>;
+       /**
+        * NFT owner remark
+        **/
+@@ -472,7 +477,7 @@ declare module '@polkadot/api/types/submittable' {
+        * Accept open auction bid
+        * Should only be called by auctioneer
+        **/
+-      pickOpenAuctionWinner: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId]>;
++      pickOpenAuctionWinner: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, winnerId: MemberId | AnyNumber | Uint8Array, commit: CurrencyOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, MemberId, CurrencyOf]>;
+       reactToPost: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, postId: VideoPostId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, VideoPostId, ReactionId]>;
+       reactToVideo: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, ReactionId]>;
+       /**
+@@ -493,9 +498,13 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       slingNftBack: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array, ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId, ContentActor]>;
+       /**
+-       * Start video nft auction
++       * Start video nft english auction
++       **/
++      startEnglishAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: EnglishAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; duration?: any; extension_period?: any; min_bid_step?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, EnglishAuctionParams]>;
++      /**
++       * Start video nft open auction
+        **/
+-      startNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: AuctionParams | { auction_type?: any; starting_price?: any; minimal_bid_step?: any; buy_now_price?: any; starts_at?: any; whitelist?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, AuctionParams]>;
++      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
+       /**
+        * Update Buy now nft price
+        **/
+@@ -3749,7 +3758,7 @@ declare module '@polkadot/api/types/submittable' {
+        * - Write: Nominators, Validators
+        * # </weight>
+        **/
+-      validate: AugmentedSubmittable<(prefs: ValidatorPrefs | { commission?: any; blocked?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ValidatorPrefs]>;
++      validate: AugmentedSubmittable<(prefs: ValidatorPrefs | { commission?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ValidatorPrefs]>;
+       /**
+        * Remove any unlocked chunks from the `unlocking` queue from our management.
+        * 
+diff --git a/augment-codec/augment-types.ts b/augment-codec/augment-types.ts
+index 23e0a050c46bf03737d3bffb5b277bf9307ffd13..d9e436a154cce5cbd0b7a3cba683de7b58aef380 100644
+--- a/augment-codec/augment-types.ts
++++ b/augment-codec/augment-types.ts
+@@ -2,7 +2,7 @@
+ /* eslint-disable */
+ 
+ import type { BitVec, Bool, Bytes, Data, I128, I16, I256, I32, I64, I8, Json, Null, Raw, StorageKey, Text, Type, U128, U16, U256, U32, U64, U8, USize, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types';
+-import type { ActorId, Application, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationInfo, ApplyOnOpeningParameters, Approved, AssuranceContractType, AssuranceContractType_Closed, Auction, AuctionParams, AuctionType, Bag, BagId, BagIdType, BalanceKind, BlockAndTime, BountyActor, BountyCreationParameters, BountyId, BountyMilestone, BountyMilestone_BountyMaxFundingReached, BountyMilestone_Created, BountyMilestone_JudgmentSubmitted, BountyMilestone_WorkSubmitted, BuyMembershipParameters, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelOwner, ChannelUpdateParameters, Cid, ConstitutionInfo, ContentActor, ContentIdSet, CouncilMemberOf, CouncilStage, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CreateOpeningParameters, CuratorGroup, CuratorGroupId, CuratorId, CurrencyAmount, CurrencyOf, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DistributionBucketIndexSet, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuctionDetails, Entry, EntryId, ExecutionFailed, ExecutionStatus, ExtendedPostId, FillOpeningParameters, ForumUserId, FundingRequestParameters, FundingType, FundingType_Limited, FundingType_Perpetual, GeneralProposalParameters, InitTransactionalStatus, InputValidationLengthConstraint, InviteMembershipParameters, IsCensored, IsExtended, MaxNumber, MemberId, Membership, ModeratorId, ModeratorSet, NftIssuanceParameters, NftMetadata, NftOwner, OpenAuctionDetails, Opening, OpeningId, OpeningType, OptionResult, OracleJudgment, OracleWorkEntryJudgment, OracleWorkEntryJudgment_Winner, OwnedNft, ParticipantId, Penalty, Poll, PollAlternative, PollInput, Post, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDecision, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, PullPayment, ReactionId, ReferendumStage, ReferendumStageRevealing, ReferendumStageVoting, Reply, ReplyId, ReplyToDelete, RewardPaymentType, Royalty, SetLeadParams, Side, StakeParameters, StakePolicy, StakingAccountMemberBinding, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageProviderId, TerminateRoleParameters, Thread, ThreadId, ThreadMode, ThreadOf, Title, TransactionalStatus, UpdatedBody, UpdatedTitle, UploadParameters, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoPostType, VideoUpdateParameters, VoteKind, VotePower, VotingResults, Voucher, Worker, WorkerId, WorkerInfo, WorkingGroup } from './all';
++import type { ActorId, Application, ApplicationId, ApplicationIdSet, ApplicationIdToWorkerIdMap, ApplicationInfo, ApplyOnOpeningParameters, Approved, AssuranceContractType, AssuranceContractType_Closed, Bag, BagId, BagIdType, BalanceKind, BlockAndTime, BountyActor, BountyCreationParameters, BountyId, BountyMilestone, BountyMilestone_BountyMaxFundingReached, BountyMilestone_Created, BountyMilestone_JudgmentSubmitted, BountyMilestone_WorkSubmitted, BuyMembershipParameters, Candidate, CastVoteOf, Category, CategoryId, Channel, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryId, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelId, ChannelOwner, ChannelUpdateParameters, Cid, ConstitutionInfo, ContentActor, ContentIdSet, CouncilMemberOf, CouncilStage, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CreateOpeningParameters, CuratorGroup, CuratorGroupId, CuratorId, CurrencyAmount, CurrencyOf, DataObject, DataObjectCreationParameters, DataObjectId, DataObjectIdMap, DataObjectIdSet, DiscussionPost, DiscussionThread, DistributionBucket, DistributionBucketFamily, DistributionBucketFamilyId, DistributionBucketId, DistributionBucketIndex, DistributionBucketIndexSet, Dynamic, DynamicBagCreationPolicy, DynamicBagCreationPolicyDistributorFamiliesMap, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, DynamicBagId, DynamicBagType, EnglishAuction, EnglishAuctionBid, EnglishAuctionParams, Entry, EntryId, ExecutionFailed, ExecutionStatus, ExtendedPostId, FillOpeningParameters, ForumUserId, FundingRequestParameters, FundingType, FundingType_Limited, FundingType_Perpetual, GeneralProposalParameters, InitTransactionalStatus, InputValidationLengthConstraint, InviteMembershipParameters, IsCensored, MaxNumber, MemberId, Membership, ModeratorId, ModeratorSet, NftIssuanceParameters, NftMetadata, NftOwner, OpenAuction, OpenAuctionBid, OpenAuctionId, OpenAuctionParams, Opening, OpeningId, OpeningType, OptionResult, OracleJudgment, OracleWorkEntryJudgment, OracleWorkEntryJudgment_Winner, OwnedNft, ParticipantId, Penalty, Poll, PollAlternative, PollInput, Post, PostId, PostReactionId, PrivilegedActor, ProofElement, ProposalDecision, ProposalDetails, ProposalDetailsOf, ProposalId, ProposalOf, ProposalParameters, ProposalStatus, PullPayment, ReactionId, ReferendumStage, ReferendumStageRevealing, ReferendumStageVoting, Reply, ReplyId, ReplyToDelete, RewardPaymentType, Royalty, SetLeadParams, Side, StakeParameters, StakePolicy, StakingAccountMemberBinding, Static, StaticBagId, StorageAssets, StorageBucket, StorageBucketId, StorageBucketIdSet, StorageBucketOperatorStatus, StorageBucketsPerBagValueConstraint, StorageProviderId, TerminateRoleParameters, Thread, ThreadId, ThreadMode, ThreadOf, Title, TransactionalStatus, UpdatedBody, UpdatedTitle, UploadParameters, Url, Video, VideoCategory, VideoCategoryCreationParameters, VideoCategoryId, VideoCategoryUpdateParameters, VideoCreationParameters, VideoId, VideoPost, VideoPostCreationParameters, VideoPostDeletionParameters, VideoPostId, VideoPostType, VideoUpdateParameters, VoteKind, VotePower, VotingResults, Voucher, Worker, WorkerId, WorkerInfo, WorkingGroup } from './all';
+ import type { AssetApproval, AssetApprovalKey, AssetBalance, AssetDestroyWitness, AssetDetails, AssetMetadata, TAssetBalance, TAssetDepositBalance } from '@polkadot/types/interfaces/assets';
+ import type { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
+ import type { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
+@@ -120,10 +120,7 @@ declare module '@polkadot/types/types/registry' {
+     AssuranceContractType: AssuranceContractType;
+     AssuranceContractType_Closed: AssuranceContractType_Closed;
+     AttestedCandidate: AttestedCandidate;
+-    Auction: Auction;
+     AuctionIndex: AuctionIndex;
+-    AuctionParams: AuctionParams;
+-    AuctionType: AuctionType;
+     AuthIndex: AuthIndex;
+     AuthorityDiscoveryId: AuthorityDiscoveryId;
+     AuthorityId: AuthorityId;
+@@ -368,7 +365,9 @@ declare module '@polkadot/types/types/registry' {
+     ElectionStatus: ElectionStatus;
+     EncodedFinalityProofs: EncodedFinalityProofs;
+     EncodedJustification: EncodedJustification;
+-    EnglishAuctionDetails: EnglishAuctionDetails;
++    EnglishAuction: EnglishAuction;
++    EnglishAuctionBid: EnglishAuctionBid;
++    EnglishAuctionParams: EnglishAuctionParams;
+     Entry: Entry;
+     EntryId: EntryId;
+     EpochAuthorship: EpochAuthorship;
+@@ -577,7 +576,6 @@ declare module '@polkadot/types/types/registry' {
+     InvalidTransaction: InvalidTransaction;
+     InviteMembershipParameters: InviteMembershipParameters;
+     IsCensored: IsCensored;
+-    IsExtended: IsExtended;
+     Json: Json;
+     Junction: Junction;
+     Junctions: Junctions;
+@@ -701,7 +699,10 @@ declare module '@polkadot/types/types/registry' {
+     OpaqueNetworkState: OpaqueNetworkState;
+     OpaquePeerId: OpaquePeerId;
+     OpaqueTimeSlot: OpaqueTimeSlot;
+-    OpenAuctionDetails: OpenAuctionDetails;
++    OpenAuction: OpenAuction;
++    OpenAuctionBid: OpenAuctionBid;
++    OpenAuctionId: OpenAuctionId;
++    OpenAuctionParams: OpenAuctionParams;
+     Opening: Opening;
+     OpeningId: OpeningId;
+     OpeningType: OpeningType;
 diff --git a/blog.js b/blog.js
 index e0e86c1012dd917e75c93f7379ae3f8bcf8da7d5..1a1d5c2fe7d7d643f58ba7d0a5b4656a52cfee81 100644
 --- a/blog.js
@@ -490,11 +1358,189 @@ index d277ee3a9dbe2bb572cc3d5b3eecd05fc1b993dd..118a6505210c6de62723a53dd868681d
  };
 -exports.default = exports.constitutionTypes;
 +export default constitutionTypes;
+diff --git a/content/index.d.ts b/content/index.d.ts
+index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d115d56671 100644
+--- a/content/index.d.ts
++++ b/content/index.d.ts
+@@ -3,6 +3,8 @@ import { bool, u8, u32, u64, Null, Bytes } from '@polkadot/types/primitive';
+ import { ChannelId, MemberId, Balance, Hash, BlockNumber, BalanceOf } from '../common';
+ import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
+ import { DataObjectId, DataObjectCreationParameters } from '../storage';
++export declare class OpenAuctionId extends u64 {
++}
+ export declare class CuratorId extends u64 {
+ }
+ export declare class CuratorGroupId extends u64 {
+@@ -28,48 +30,45 @@ export declare class CurrencyAmount extends CurrencyOf {
+ declare const Royalty_base: import("@polkadot/types/types").Constructor<UInt>;
+ export declare class Royalty extends Royalty_base {
+ }
+-export declare class IsExtended extends bool {
+-}
+-declare const EnglishAuctionDetails_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+-    extension_period: typeof BlockNumber;
+-    auction_duration: typeof BlockNumber;
+-}>;
+-export declare class EnglishAuctionDetails extends EnglishAuctionDetails_base {
+-}
+-declare const OpenAuctionDetails_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+-    bid_lock_duration: typeof BlockNumber;
++declare const OpenAuctionBid_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++    amount: typeof Balance;
++    made_at_block: typeof BlockNumber;
++    auction_id: typeof OpenAuctionId;
+ }>;
+-export declare class OpenAuctionDetails extends OpenAuctionDetails_base {
++export declare class OpenAuctionBid extends OpenAuctionBid_base {
+ }
+-declare const AuctionType_base: import("../JoyEnum").ExtendedEnumConstructor<{
+-    English: typeof EnglishAuctionDetails;
+-    Open: typeof OpenAuctionDetails;
++declare const EnglishAuctionBid_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++    amount: typeof Balance;
++    bidder_id: typeof MemberId;
+ }>;
+-export declare class AuctionType extends AuctionType_base {
++export declare class EnglishAuctionBid extends EnglishAuctionBid_base {
+ }
+-declare const Bid_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+-    bidder: typeof MemberId;
+-    bidder_account_id: typeof AccountId;
+-    amount: typeof Balance;
+-    made_at_block: typeof BlockNumber;
++declare const EnglishAuction_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++    starting_price: typeof Balance;
++    buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
++    top_bid: import("@polkadot/types/types").Constructor<Option<EnglishAuctionBid>>;
++    whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
++    extension_period: typeof BlockNumber;
++    min_bid_step: typeof Balance;
++    end: typeof BlockNumber;
++    start: typeof BlockNumber;
+ }>;
+-export declare class Bid extends Bid_base {
++export declare class EnglishAuction extends EnglishAuction_base {
+ }
+-declare const Auction_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++declare const OpenAuction_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+     starting_price: typeof Balance;
+     buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
+-    auction_type: typeof AuctionType;
+-    minimal_bid_step: typeof Balance;
+-    last_bid: import("@polkadot/types/types").Constructor<Option<Bid>>;
+-    starts_at: typeof BlockNumber;
+     whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
++    start: typeof BlockNumber;
++    bid_lock_duration: typeof BlockNumber;
+ }>;
+-export declare class Auction extends Auction_base {
++export declare class OpenAuction extends OpenAuction_base {
+ }
+ declare const TransactionalStatus_base: import("../JoyEnum").ExtendedEnumConstructor<{
+     Idle: typeof Null;
+     InitiatedOfferToMember: import("@polkadot/types/types").Constructor<Tuple>;
+-    Auction: typeof Auction;
++    EnglishAuction: typeof EnglishAuction;
++    OpenAuction: typeof OpenAuction;
+     BuyNow: typeof Balance;
+ }>;
+ export declare class TransactionalStatus extends TransactionalStatus_base {
+@@ -84,24 +83,36 @@ declare const OwnedNft_base: import("../JoyStruct").ExtendedStructDecoratedConst
+     owner: typeof NftOwner;
+     transactional_status: typeof TransactionalStatus;
+     creator_royalty: import("@polkadot/types/types").Constructor<Option<Royalty>>;
++    open_auctions_nonce: typeof OpenAuctionId;
+ }>;
+ export declare class OwnedNft extends OwnedNft_base {
+ }
+-declare const AuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+-    auction_type: typeof AuctionType;
++declare const EnglishAuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
+     starting_price: typeof Balance;
+-    minimal_bid_step: typeof Balance;
+     buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
++    whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
+     starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
++    duration: typeof BlockNumber;
++    extension_period: typeof BlockNumber;
++    min_bid_step: typeof Balance;
++}>;
++export declare class EnglishAuctionParams extends EnglishAuctionParams_base {
++}
++declare const OpenAuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++    starting_price: typeof Balance;
++    buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
+     whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
++    starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
++    bid_lock_duration: typeof BlockNumber;
+ }>;
+-export declare class AuctionParams extends AuctionParams_base {
++export declare class OpenAuctionParams extends OpenAuctionParams_base {
+ }
+ declare const InitTransactionalStatus_base: import("../JoyEnum").ExtendedEnumConstructor<{
+     Idle: typeof Null;
+-    InitiatedOfferToMember: import("@polkadot/types/types").Constructor<Tuple>;
+     BuyNow: typeof Balance;
+-    Auction: typeof AuctionParams;
++    InitiatedOfferToMember: import("@polkadot/types/types").Constructor<Tuple>;
++    EnglishAuction: typeof EnglishAuctionParams;
++    OpenAuction: typeof OpenAuctionParams;
+ }>;
+ export declare class InitTransactionalStatus extends InitTransactionalStatus_base {
+ }
+@@ -279,6 +290,19 @@ export declare class ModeratorSet extends ModeratorSet_base {
+ declare const NftMetadata_base: import("@polkadot/types/types").Constructor<Vec<u8>>;
+ export declare class NftMetadata extends NftMetadata_base {
+ }
++declare const NFTOwner_base: import("../JoyEnum").ExtendedEnumConstructor<{
++    ChannelOwner: typeof Null;
++    Member: typeof MemberId;
++}>;
++export declare class NFTOwner extends NFTOwner_base {
++}
++declare const OwnedNFT_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
++    owner: typeof NFTOwner;
++    transactional_status: typeof TransactionalStatus;
++    creator_royalty: import("@polkadot/types/types").Constructor<Option<Royalty>>;
++}>;
++export declare class OwnedNFT extends OwnedNFT_base {
++}
+ export declare const contentTypes: {
+     CuratorId: typeof CuratorId;
+     CuratorGroupId: typeof CuratorGroupId;
+@@ -314,20 +338,20 @@ export declare const contentTypes: {
+     PullPayment: typeof PullPayment;
+     ModeratorSet: typeof ModeratorSet;
+     Royalty: typeof Royalty;
+-    IsExtended: typeof IsExtended;
+-    EnglishAuctionDetails: typeof EnglishAuctionDetails;
+-    OpenAuctionDetails: typeof OpenAuctionDetails;
+-    AuctionType: typeof AuctionType;
+-    Bid: typeof Bid;
+-    Auction: typeof Auction;
++    EnglishAuctionParams: typeof EnglishAuctionParams;
++    OpenAuctionParams: typeof OpenAuctionParams;
++    EnglishAuction: typeof EnglishAuction;
++    OpenAuction: typeof OpenAuction;
++    OpenAuctionBid: typeof OpenAuctionBid;
++    EnglishAuctionBid: typeof EnglishAuctionBid;
+     TransactionalStatus: typeof TransactionalStatus;
+     NftOwner: typeof NftOwner;
+     OwnedNft: typeof OwnedNft;
+-    AuctionParams: typeof AuctionParams;
+     CurrencyOf: typeof CurrencyOf;
+     CurrencyAmount: typeof CurrencyAmount;
+     InitTransactionalStatus: typeof InitTransactionalStatus;
+     NftIssuanceParameters: typeof NftIssuanceParameters;
+     NftMetadata: typeof NftMetadata;
++    OpenAuctionId: typeof OpenAuctionId;
+ };
+ export default contentTypes;
 diff --git a/content/index.js b/content/index.js
-index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983ad404872b 100644
+index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec81798669fa1 100644
 --- a/content/index.js
 +++ b/content/index.js
-@@ -1,307 +1,253 @@
+@@ -1,307 +1,275 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
 -exports.NftMetadata = exports.ModeratorSet = exports.PullPayment = exports.VideoPostDeletionParameters = exports.VideoPostCreationParameters = exports.ProofElement = exports.Side = exports.VideoPost = exports.VideoPostType = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.NftIssuanceParameters = exports.InitTransactionalStatus = exports.AuctionParams = exports.OwnedNft = exports.NftOwner = exports.TransactionalStatus = exports.Auction = exports.Bid = exports.AuctionType = exports.OpenAuctionDetails = exports.EnglishAuctionDetails = exports.IsExtended = exports.Royalty = exports.CurrencyAmount = exports.CurrencyOf = exports.ReactionId = exports.VideoPostId = exports.IsCensored = exports.MaxNumber = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
@@ -510,78 +1556,80 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
 +import { JoyStructDecorated, JoyEnum, ChannelId, MemberId, Balance, Hash, BlockNumber, BalanceOf } from '../common';
 +import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId';
 +import { DataObjectId, DataObjectCreationParameters } from '../storage';
-+export class CuratorId extends u64 {
++export class OpenAuctionId extends u64 {
  }
 -exports.CuratorId = CuratorId;
 -class CuratorGroupId extends primitive_1.u64 {
-+export class CuratorGroupId extends u64 {
++export class CuratorId extends u64 {
  }
 -exports.CuratorGroupId = CuratorGroupId;
 -class ChannelCategoryId extends primitive_1.u64 {
-+export class ChannelCategoryId extends u64 {
++export class CuratorGroupId extends u64 {
  }
 -exports.ChannelCategoryId = ChannelCategoryId;
 -class VideoId extends primitive_1.u64 {
-+export class VideoId extends u64 {
++export class ChannelCategoryId extends u64 {
  }
 -exports.VideoId = VideoId;
 -class VideoCategoryId extends primitive_1.u64 {
-+export class VideoCategoryId extends u64 {
++export class VideoId extends u64 {
  }
 -exports.VideoCategoryId = VideoCategoryId;
 -class MaxNumber extends primitive_1.u32 {
-+export class MaxNumber extends u32 {
++export class VideoCategoryId extends u64 {
  }
 -exports.MaxNumber = MaxNumber;
 -class IsCensored extends primitive_1.bool {
-+export class IsCensored extends bool {
++export class MaxNumber extends u32 {
  }
 -exports.IsCensored = IsCensored;
 -class VideoPostId extends primitive_1.u64 {
-+export class VideoPostId extends u64 {
++export class IsCensored extends bool {
  }
 -exports.VideoPostId = VideoPostId;
 -class ReactionId extends primitive_1.u64 {
-+export class ReactionId extends u64 {
++export class VideoPostId extends u64 {
  }
 -exports.ReactionId = ReactionId;
 -class CurrencyOf extends common_1.BalanceOf {
-+export class CurrencyOf extends BalanceOf {
++export class ReactionId extends u64 {
  }
 -exports.CurrencyOf = CurrencyOf;
 -class CurrencyAmount extends CurrencyOf {
-+export class CurrencyAmount extends CurrencyOf {
++export class CurrencyOf extends BalanceOf {
  }
 -exports.CurrencyAmount = CurrencyAmount;
- // NFT types
+-// NFT types
 -class Royalty extends types_1.UInt.with(32, 'Perbill') {
-+export class Royalty extends UInt.with(32, 'Perbill') {
- }
+-}
 -exports.Royalty = Royalty;
 -class IsExtended extends primitive_1.bool {
-+export class IsExtended extends bool {
++export class CurrencyAmount extends CurrencyOf {
  }
 -exports.IsExtended = IsExtended;
 -class EnglishAuctionDetails extends (0, common_1.JoyStructDecorated)({
 -    extension_period: common_1.BlockNumber,
 -    auction_duration: common_1.BlockNumber,
-+export class EnglishAuctionDetails extends JoyStructDecorated({
-+    extension_period: BlockNumber,
-+    auction_duration: BlockNumber,
- }) {
+-}) {
++// NFT types
++export class Royalty extends UInt.with(32, 'Perbill') {
  }
 -exports.EnglishAuctionDetails = EnglishAuctionDetails;
 -class OpenAuctionDetails extends (0, common_1.JoyStructDecorated)({
 -    bid_lock_duration: common_1.BlockNumber,
-+export class OpenAuctionDetails extends JoyStructDecorated({
-+    bid_lock_duration: BlockNumber,
++export class OpenAuctionBid extends JoyStructDecorated({
++    amount: Balance,
++    made_at_block: BlockNumber,
++    auction_id: OpenAuctionId,
  }) {
  }
 -exports.OpenAuctionDetails = OpenAuctionDetails;
 -class AuctionType extends (0, common_1.JoyEnum)({
-+export class AuctionType extends JoyEnum({
-     English: EnglishAuctionDetails,
-     Open: OpenAuctionDetails,
+-    English: EnglishAuctionDetails,
+-    Open: OpenAuctionDetails,
++export class EnglishAuctionBid extends JoyStructDecorated({
++    amount: Balance,
++    bidder_id: MemberId,
  }) {
  }
 -exports.AuctionType = AuctionType;
@@ -590,40 +1638,45 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
 -    bidder_account_id: AccountId_1.GenericAccountId,
 -    amount: common_1.Balance,
 -    made_at_block: common_1.BlockNumber,
-+export class Bid extends JoyStructDecorated({
-+    bidder: MemberId,
-+    bidder_account_id: AccountId,
-+    amount: Balance,
-+    made_at_block: BlockNumber,
++export class EnglishAuction extends JoyStructDecorated({
++    starting_price: Balance,
++    buy_now_price: Option.with(Balance),
++    top_bid: Option.with(EnglishAuctionBid),
++    whitelist: BTreeSet.with(MemberId),
++    extension_period: BlockNumber,
++    min_bid_step: Balance,
++    end: BlockNumber,
++    start: BlockNumber,
  }) {
  }
 -exports.Bid = Bid;
 -class Auction extends (0, common_1.JoyStructDecorated)({
 -    starting_price: common_1.Balance,
 -    buy_now_price: types_1.Option.with(common_1.Balance),
-+export class Auction extends JoyStructDecorated({
-+    starting_price: Balance,
-+    buy_now_price: Option.with(Balance),
-     auction_type: AuctionType,
+-    auction_type: AuctionType,
 -    minimal_bid_step: common_1.Balance,
 -    last_bid: types_1.Option.with(Bid),
 -    starts_at: common_1.BlockNumber,
 -    whitelist: types_1.BTreeSet.with(common_1.MemberId),
-+    minimal_bid_step: Balance,
-+    last_bid: Option.with(Bid),
-+    starts_at: BlockNumber,
++export class OpenAuction extends JoyStructDecorated({
++    starting_price: Balance,
++    buy_now_price: Option.with(Balance),
 +    whitelist: BTreeSet.with(MemberId),
++    start: BlockNumber,
++    bid_lock_duration: BlockNumber,
  }) {
  }
 -exports.Auction = Auction;
 -class TransactionalStatus extends (0, common_1.JoyEnum)({
 -    Idle: primitive_1.Null,
 -    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
+-    Auction,
+-    BuyNow: common_1.Balance,
 +export class TransactionalStatus extends JoyEnum({
 +    Idle: Null,
 +    InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
-     Auction,
--    BuyNow: common_1.Balance,
++    EnglishAuction: EnglishAuction,
++    OpenAuction: OpenAuction,
 +    BuyNow: Balance,
  }) {
  }
@@ -643,36 +1696,39 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
      transactional_status: TransactionalStatus,
 -    creator_royalty: types_1.Option.with(Royalty),
 +    creator_royalty: Option.with(Royalty),
++    open_auctions_nonce: OpenAuctionId,
  }) {
  }
 -exports.OwnedNft = OwnedNft;
 -class AuctionParams extends (0, common_1.JoyStructDecorated)({
-+export class AuctionParams extends JoyStructDecorated({
-     auction_type: AuctionType,
+-    auction_type: AuctionType,
 -    starting_price: common_1.Balance,
 -    minimal_bid_step: common_1.Balance,
 -    buy_now_price: types_1.Option.with(common_1.Balance),
 -    starts_at: types_1.Option.with(common_1.BlockNumber),
 -    whitelist: types_1.BTreeSet.with(common_1.MemberId),
--}) {
--}
++export class EnglishAuctionParams extends JoyStructDecorated({
++    starting_price: Balance,
++    buy_now_price: Option.with(Balance),
++    whitelist: BTreeSet.with(MemberId),
++    starts_at: Option.with(BlockNumber),
++    duration: BlockNumber,
++    extension_period: BlockNumber,
++    min_bid_step: Balance,
+ }) {
+ }
 -exports.AuctionParams = AuctionParams;
 -class InitTransactionalStatus extends (0, common_1.JoyEnum)({
 -    Idle: primitive_1.Null,
 -    InitiatedOfferToMember: types_1.Tuple.with([common_1.MemberId, types_1.Option.with(common_1.Balance)]),
 -    BuyNow: common_1.Balance,
+-    Auction: AuctionParams,
++export class OpenAuctionParams extends JoyStructDecorated({
 +    starting_price: Balance,
-+    minimal_bid_step: Balance,
 +    buy_now_price: Option.with(Balance),
-+    starts_at: Option.with(BlockNumber),
 +    whitelist: BTreeSet.with(MemberId),
-+}) {
-+}
-+export class InitTransactionalStatus extends JoyEnum({
-+    Idle: Null,
-+    InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
-+    BuyNow: Balance,
-     Auction: AuctionParams,
++    starts_at: Option.with(BlockNumber),
++    bid_lock_duration: BlockNumber,
  }) {
  }
 -exports.InitTransactionalStatus = InitTransactionalStatus;
@@ -680,6 +1736,14 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
 -    royalty: types_1.Option.with(Royalty),
 -    nft_metadata: primitive_1.Bytes,
 -    non_channel_owner: types_1.Option.with(common_1.MemberId),
++export class InitTransactionalStatus extends JoyEnum({
++    Idle: Null,
++    BuyNow: Balance,
++    InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
++    EnglishAuction: EnglishAuctionParams,
++    OpenAuction: OpenAuctionParams,
++}) {
++}
 +export class NftIssuanceParameters extends JoyStructDecorated({
 +    royalty: Option.with(Royalty),
 +    nft_metadata: Bytes,
@@ -940,10 +2004,21 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
 -exports.PullPayment = PullPayment;
 -class ModeratorSet extends types_1.BTreeSet.with(common_1.MemberId) {
 +export class ModeratorSet extends BTreeSet.with(MemberId) {
++}
++export class NftMetadata extends Vec.with(u8) {
  }
 -exports.ModeratorSet = ModeratorSet;
 -class NftMetadata extends types_1.Vec.with(primitive_1.u8) {
-+export class NftMetadata extends Vec.with(u8) {
++export class NFTOwner extends JoyEnum({
++    ChannelOwner: Null,
++    Member: MemberId,
++}) {
++}
++export class OwnedNFT extends JoyStructDecorated({
++    owner: NFTOwner,
++    transactional_status: TransactionalStatus,
++    creator_royalty: Option.with(Royalty),
++}) {
  }
 -exports.NftMetadata = NftMetadata;
 -exports.contentTypes = {
@@ -951,9 +2026,32 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..8c530ea781c420a7d69c67811a7f983a
      CuratorId,
      CuratorGroupId,
      CuratorGroup,
-@@ -354,4 +300,4 @@ exports.contentTypes = {
+@@ -338,20 +306,20 @@ exports.contentTypes = {
+     ModeratorSet,
+     // Nft
+     Royalty,
+-    IsExtended,
+-    EnglishAuctionDetails,
+-    OpenAuctionDetails,
+-    AuctionType,
+-    Bid,
+-    Auction,
++    EnglishAuctionParams,
++    OpenAuctionParams,
++    EnglishAuction,
++    OpenAuction,
++    OpenAuctionBid,
++    EnglishAuctionBid,
+     TransactionalStatus,
+     NftOwner,
+     OwnedNft,
+-    AuctionParams,
+     CurrencyOf,
+     CurrencyAmount,
+     InitTransactionalStatus,
      NftIssuanceParameters,
      NftMetadata,
++    OpenAuctionId,
  };
 -exports.default = exports.contentTypes;
 +export default contentTypes;
@@ -1218,10 +2316,10 @@ index 42fa984f42ed97cef6a6ca1ae1213dd627a3dea6..56673f84497a4e72da54725eb50e4c2c
 -exports.default = exports.forumTypes;
 +export default forumTypes;
 diff --git a/index.js b/index.js
-index ffaa37f1c400b510e57c3ca5ea220a97142eb1a9..cfa191ab3d2b2b1dd471564ddf0cb4825fdcda79 100644
+index ffaa37f1c400b510e57c3ca5ea220a97142eb1a9..b8e0d6f767f895078f6a9042d922e8baa796c045 100644
 --- a/index.js
 +++ b/index.js
-@@ -1,36 +1,23 @@
+@@ -1,36 +1,25 @@
 -"use strict";
 -var __importDefault = (this && this.__importDefault) || function (mod) {
 -    return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -1265,7 +2363,10 @@ index ffaa37f1c400b510e57c3ca5ea220a97142eb1a9..cfa191ab3d2b2b1dd471564ddf0cb482
 +export { common, members, council, forum, workingGroup, proposals, content };
 +export const types = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, common), members), council), forum), workingGroup), storage), blog), proposals), referendum), constitution), bounty), content), { 
      // https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#351-jan-18-2020
-     AccountInfo: 'AccountInfoWithRefCount' });
+-    AccountInfo: 'AccountInfoWithRefCount' });
++    AccountInfo: 'AccountInfoWithRefCount', 
++    // Required for compatibility with @polkadot/api version >= 6.0
++    ValidatorPrefs: 'ValidatorPrefsWithCommission' });
  // Allows creating types without api instance (it's not a recommended way though, so should be used just for mocks)
 -exports.registry = new types_1.TypeRegistry();
 -exports.registry.register(exports.types);
@@ -1825,6 +2926,182 @@ index 35d805e84d1436e3fc8c247a337fdde4b119787e..6141254ecd102ad317d4e5bc9852cf84
  };
 -exports.default = exports.referendumTypes;
 +export default referendumTypes;
+diff --git a/src/content/index.ts b/src/content/index.ts
+index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582274c17fd 100644
+--- a/src/content/index.ts
++++ b/src/content/index.ts
+@@ -5,6 +5,7 @@ import { JoyStructDecorated, JoyEnum, ChannelId, MemberId, Balance, Hash, BlockN
+ import { GenericAccountId as AccountId } from '@polkadot/types/generic/AccountId'
+ import { DataObjectId, DataObjectCreationParameters } from '../storage'
+ 
++export class OpenAuctionId extends u64 {}
+ export class CuratorId extends u64 {}
+ export class CuratorGroupId extends u64 {}
+ export class ChannelCategoryId extends u64 {}
+@@ -20,43 +21,42 @@ export class CurrencyAmount extends CurrencyOf {}
+ // NFT types
+ 
+ export class Royalty extends UInt.with(32, 'Perbill') {}
+-export class IsExtended extends bool {}
+ 
+-export class EnglishAuctionDetails extends JoyStructDecorated({
+-  extension_period: BlockNumber,
+-  auction_duration: BlockNumber,
+-}) {}
+-
+-export class OpenAuctionDetails extends JoyStructDecorated({
+-  bid_lock_duration: BlockNumber,
++export class OpenAuctionBid extends JoyStructDecorated({
++  amount: Balance,
++  made_at_block: BlockNumber,
++  auction_id: OpenAuctionId,
+ }) {}
+ 
+-export class AuctionType extends JoyEnum({
+-  English: EnglishAuctionDetails,
+-  Open: OpenAuctionDetails,
++export class EnglishAuctionBid extends JoyStructDecorated({
++  amount: Balance,
++  bidder_id: MemberId,
+ }) {}
+ 
+-export class Bid extends JoyStructDecorated({
+-  bidder: MemberId,
+-  bidder_account_id: AccountId,
+-  amount: Balance,
+-  made_at_block: BlockNumber,
++export class EnglishAuction extends JoyStructDecorated({
++  starting_price: Balance,
++  buy_now_price: Option.with(Balance),
++  top_bid: Option.with(EnglishAuctionBid),
++  whitelist: BTreeSet.with(MemberId),
++  extension_period: BlockNumber,
++  min_bid_step: Balance,
++  end: BlockNumber,
++  start: BlockNumber,
+ }) {}
+ 
+-export class Auction extends JoyStructDecorated({
++export class OpenAuction extends JoyStructDecorated({
+   starting_price: Balance,
+   buy_now_price: Option.with(Balance),
+-  auction_type: AuctionType,
+-  minimal_bid_step: Balance,
+-  last_bid: Option.with(Bid),
+-  starts_at: BlockNumber,
+   whitelist: BTreeSet.with(MemberId),
++  start: BlockNumber,
++  bid_lock_duration: BlockNumber,
+ }) {}
+ 
+ export class TransactionalStatus extends JoyEnum({
+   Idle: Null,
+   InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
+-  Auction,
++  EnglishAuction: EnglishAuction,
++  OpenAuction: OpenAuction,
+   BuyNow: Balance,
+ }) {}
+ 
+@@ -69,22 +69,33 @@ export class OwnedNft extends JoyStructDecorated({
+   owner: NftOwner,
+   transactional_status: TransactionalStatus,
+   creator_royalty: Option.with(Royalty),
++  open_auctions_nonce: OpenAuctionId,
+ }) {}
+ 
+-export class AuctionParams extends JoyStructDecorated({
+-  auction_type: AuctionType,
++export class EnglishAuctionParams extends JoyStructDecorated({
+   starting_price: Balance,
+-  minimal_bid_step: Balance,
+   buy_now_price: Option.with(Balance),
++  whitelist: BTreeSet.with(MemberId),
+   starts_at: Option.with(BlockNumber),
++  duration: BlockNumber,
++  extension_period: BlockNumber,
++  min_bid_step: Balance,
++}) {}
++
++export class OpenAuctionParams extends JoyStructDecorated({
++  starting_price: Balance,
++  buy_now_price: Option.with(Balance),
+   whitelist: BTreeSet.with(MemberId),
++  starts_at: Option.with(BlockNumber),
++  bid_lock_duration: BlockNumber,
+ }) {}
+ 
+ export class InitTransactionalStatus extends JoyEnum({
+   Idle: Null,
+-  InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
+   BuyNow: Balance,
+-  Auction: AuctionParams,
++  InitiatedOfferToMember: Tuple.with([MemberId, Option.with(Balance)]),
++  EnglishAuction: EnglishAuctionParams,
++  OpenAuction: OpenAuctionParams,
+ }) {}
+ 
+ export class NftIssuanceParameters extends JoyStructDecorated({
+@@ -240,6 +251,17 @@ export class ModeratorSet extends BTreeSet.with(MemberId) {}
+ 
+ export class NftMetadata extends Vec.with(u8) {}
+ 
++export class NFTOwner extends JoyEnum({
++  ChannelOwner: Null,
++  Member: MemberId,
++}) {}
++
++export class OwnedNFT extends JoyStructDecorated({
++  owner: NFTOwner,
++  transactional_status: TransactionalStatus,
++  creator_royalty: Option.with(Royalty),
++}) {}
++
+ export const contentTypes = {
+   CuratorId,
+   CuratorGroupId,
+@@ -277,21 +299,21 @@ export const contentTypes = {
+   ModeratorSet,
+   // Nft
+   Royalty,
+-  IsExtended,
+-  EnglishAuctionDetails,
+-  OpenAuctionDetails,
+-  AuctionType,
+-  Bid,
+-  Auction,
++  EnglishAuctionParams,
++  OpenAuctionParams,
++  EnglishAuction,
++  OpenAuction,
++  OpenAuctionBid,
++  EnglishAuctionBid,
+   TransactionalStatus,
+   NftOwner,
+   OwnedNft,
+-  AuctionParams,
+   CurrencyOf,
+   CurrencyAmount,
+   InitTransactionalStatus,
+   NftIssuanceParameters,
+   NftMetadata,
++  OpenAuctionId,
+ }
+ 
+ export default contentTypes
+diff --git a/src/index.ts b/src/index.ts
+index 18045ed16c60b062fff2c58976d7352f35d5087a..e58b8dde8f67b45ea5a083d7bf9d3878db8ebfb0 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -34,6 +34,8 @@ export const types: RegistryTypes = {
+   ...content,
+   // https://github.com/polkadot-js/api/blob/master/CHANGELOG.md#351-jan-18-2020
+   AccountInfo: 'AccountInfoWithRefCount',
++  // Required for compatibility with @polkadot/api version >= 6.0
++  ValidatorPrefs: 'ValidatorPrefsWithCommission',
+ }
+ 
+ // Allows creating types without api instance (it's not a recommended way though, so should be used just for mocks)
 diff --git a/storage.js b/storage.js
 index 94f7f3b4226a0711f257d70a7513e29e2e80b305..d040bbfb12ff0605844e539a137d7740c53b716e 100644
 --- a/storage.js

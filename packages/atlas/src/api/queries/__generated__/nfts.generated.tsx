@@ -106,14 +106,18 @@ export type GetNftQuery = {
             __typename?: 'Auction'
             isCompleted: boolean
             buyNowPrice?: string | null
-            minimalBidStep: string
             startingPrice: string
             startsAtBlock: number
-            plannedEndAtBlock?: number | null
             endedAtBlock?: number | null
             auctionType:
-              | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-              | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+              | {
+                  __typename: 'AuctionTypeEnglish'
+                  duration: number
+                  extensionPeriod: number
+                  minimalBidStep: number
+                  plannedEndAtBlock: number
+                }
+              | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
             initialOwner?: {
               __typename?: 'Membership'
               id: string
@@ -144,7 +148,7 @@ export type GetNftQuery = {
                   | null
               }
             } | null
-            lastBid?: {
+            topBid?: {
               __typename?: 'Bid'
               amount: string
               createdAt: Date
@@ -493,14 +497,18 @@ export type GetNftsQuery = {
             __typename?: 'Auction'
             isCompleted: boolean
             buyNowPrice?: string | null
-            minimalBidStep: string
             startingPrice: string
             startsAtBlock: number
-            plannedEndAtBlock?: number | null
             endedAtBlock?: number | null
             auctionType:
-              | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-              | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+              | {
+                  __typename: 'AuctionTypeEnglish'
+                  duration: number
+                  extensionPeriod: number
+                  minimalBidStep: number
+                  plannedEndAtBlock: number
+                }
+              | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
             initialOwner?: {
               __typename?: 'Membership'
               id: string
@@ -531,7 +539,7 @@ export type GetNftsQuery = {
                   | null
               }
             } | null
-            lastBid?: {
+            topBid?: {
               __typename?: 'Bid'
               amount: string
               createdAt: Date

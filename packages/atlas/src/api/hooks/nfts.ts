@@ -74,21 +74,24 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
   const getNftProperties = (): NftStatus | undefined => {
     switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusAuction': {
+        const englishAuction =
+          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish' &&
+          nft.transactionalStatus.auction.auctionType
+        const openAuction =
+          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
+          nft.transactionalStatus.auction.auctionType
         return {
           ...commonProperties,
           status: 'auction',
-          type: nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' ? 'open' : 'english',
+          type: openAuction ? 'open' : 'english',
           startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
           buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
-          topBidAmount: Number(nft.transactionalStatus.auction?.lastBid?.amount),
-          topBid: nft.transactionalStatus.auction?.lastBid || undefined,
-          topBidder: nft.transactionalStatus.auction?.lastBid?.bidder,
-          auctionPlannedEndBlock: nft.transactionalStatus.auction?.plannedEndAtBlock || undefined,
-          bidLockingTime:
-            (nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-              nft.transactionalStatus.auction.auctionType.bidLockingTime) ||
-            undefined,
-          minimalBidStep: Number(nft.transactionalStatus.auction?.minimalBidStep) || undefined,
+          topBid: nft.transactionalStatus.auction?.topBid || undefined,
+          topBidAmount: Number(nft.transactionalStatus.auction?.topBid?.amount),
+          topBidder: nft.transactionalStatus.auction?.topBid?.bidder,
+          auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
+          bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
+          minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
         }
       }
       case 'TransactionalStatusBuyNow':
