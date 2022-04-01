@@ -24,6 +24,23 @@ export const useNftTransactions = () => {
     [client]
   )
 
+  const withdrawBid = useCallback(
+    (id: string) => {
+      if (!joystream || !activeMemberId) {
+        return
+      }
+      handleTransaction({
+        snackbarSuccessMessage: {
+          title: 'Your bid was withdrawn successfully',
+        },
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).cancelNftBid(id, activeMemberId, proxyCallback(updateStatus)),
+        onTxSync: async (_) => _refetchData(id),
+      })
+    },
+    [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]
+  )
+
   const cancelNftSale = useCallback(
     (id: string, isBuyNow?: boolean) => {
       if (!joystream || !activeMemberId) {
@@ -82,5 +99,6 @@ export const useNftTransactions = () => {
   return {
     cancelNftSale,
     changeNftPrice,
+    withdrawBid,
   }
 }

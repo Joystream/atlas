@@ -107,11 +107,11 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const buyNowPrice = (isBuyNow && nftStatus.buyNowPrice) || 0
   const startingPrice = isAuction && nftStatus.startingPrice
   const topBidder = isAuction && nftStatus.topBidder
-  const topBid = Number((isAuction && nftStatus.topBid) || 0)
+  const topBidAmount = (isAuction && nftStatus.topBidAmount) || 0
   const minimalBidStep = (isAuction && nftStatus.minimalBidStep) || 0
   const endAtBlock = isAuction && nftStatus.auctionPlannedEndBlock
 
-  const minimumBid = startingPrice > topBid ? startingPrice : topBid + minimalBidStep
+  const minimumBid = startingPrice > topBidAmount ? startingPrice : topBidAmount + minimalBidStep
 
   const endTime = endAtBlock && convertBlockToMsTimestamp(endAtBlock)
 
@@ -323,7 +323,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                         </Text>
                         <FlexWrapper>
                           <CurrentBidJoyToken size={24} variant="silver" />
-                          <Text variant="h400">{topBid}</Text>
+                          <Text variant="h400">{topBidAmount}</Text>
                         </FlexWrapper>
                       </ActionBarCell>
                     </ActiveBidWrapper>

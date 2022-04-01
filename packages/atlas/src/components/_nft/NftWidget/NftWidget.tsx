@@ -40,7 +40,8 @@ export type Auction = {
   type: 'open' | 'english'
   startingPrice: number
   buyNowPrice: number | undefined
-  topBid: number | undefined
+  topBid: AllBidFieldsFragment | undefined
+  topBidAmount: number | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
   isUserTopBidder: boolean | undefined
@@ -77,6 +78,7 @@ export type NftWidgetProps = {
   onNftAcceptBid?: () => void
   onNftCancelSale?: () => void
   onNftChangePrice?: () => void
+  onWithdrawBid?: () => void
 }
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 280
@@ -89,6 +91,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerAvatarUri,
   onNftPutOnSale,
   onNftAcceptBid,
+  onWithdrawBid,
   bidFromPreviousAuction,
   onNftCancelSale,
   onNftChangePrice,
@@ -131,7 +134,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       bidFromPreviousAuction ? (
         <>
           <GridItem colSpan={buttonColumnSpan}>
-            <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize}>
+            <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize} onClick={onWithdrawBid}>
               Withdraw last bid
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
@@ -233,7 +236,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         )
       case 'auction': {
         const getInfoBannerProps = () => {
-          const hasBids = nftStatus.topBid
+          const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
 
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
@@ -296,7 +299,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         }
         const infoBannerProps = getInfoBannerProps()
 
-        const infoTextNode = !!nftStatus.userBidAmount && (
+        const infoTextNode = !!nftStatus.userBidAmount && nftStatus.userBidUnlockDate && (
           <GridItem colSpan={buttonColumnSpan}>
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
@@ -305,7 +308,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 {nftStatus.canWithdrawBid
                   ? `Your last bid: ${nftStatus.userBidAmount} tJOY`
                   : `Your last bid (${nftStatus.userBidAmount} tJOY) becomes withdrawable on ${formatDateTime(
-                      nftStatus.userBidUnlockDate as Date
+                      nftStatus.userBidUnlockDate
                     )}`}
               </Text>
             )}
@@ -314,7 +317,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
         return (
           <>
-            {nftStatus.topBid ? (
+            {nftStatus.topBidAmount && !nftStatus.topBid?.isCanceled ? (
               <NftInfoItem
                 size={size}
                 label="Top bid"
@@ -326,13 +329,13 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
                     </TopBidderContainer>
-                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.topBid)}</Text>
+                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.topBidAmount)}</Text>
                   </>
                 }
                 secondaryText={
-                  !isLoadingPrice ? (
+                  !isLoadingPrice && nftStatus.topBidAmount ? (
                     <>
-                      {convertToUSD(nftStatus.topBid)} from{' '}
+                      {convertToUSD(nftStatus.topBidAmount)} from{' '}
                       <OwnerHandle
                         to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}
                         variant="secondary"
@@ -437,7 +440,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     {/* second row button */}
                     {nftStatus.canWithdrawBid && (
                       <GridItem colSpan={buttonColumnSpan}>
-                        <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                        <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
                           Withdraw a bid
                         </Button>
                       </GridItem>
@@ -456,7 +459,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     </GridItem>
                     {nftStatus.canWithdrawBid && (
                       <GridItem colSpan={buttonColumnSpan}>
-                        <Button fullWidth size={buttonSize} variant="destructive-secondary">
+                        <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
                           Withdraw a bid
                         </Button>
                       </GridItem>
@@ -474,6 +477,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     size,
     convertToUSD,
     isLoadingPrice,
+    onWithdrawBid,
     bidFromPreviousAuction,
     isOwner,
     onNftPutOnSale,

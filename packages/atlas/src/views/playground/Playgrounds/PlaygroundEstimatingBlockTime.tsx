@@ -16,6 +16,8 @@ export const PlaygroundEstimatingBlockTime = () => {
   const { convertBlockToMsTimestamp, convertMsTimestampToBlock } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 
+  const blockNumberMsTimeStamp = convertBlockToMsTimestamp(blockNumber)
+
   return (
     <div>
       <div>
@@ -35,9 +37,14 @@ export const PlaygroundEstimatingBlockTime = () => {
         </FormField>
         <Text variant="h500">Results:</Text>
         <Text variant="h300">Block number: {blockNumber}</Text>
-        <Text variant="h300">Date: {new Date(convertBlockToMsTimestamp(blockNumber)).toLocaleString()} </Text>
         <Text variant="h300">
-          Timeleft: {formatDistanceToNowStrict(new Date(convertBlockToMsTimestamp(blockNumber)), { addSuffix: true })}{' '}
+          Date: {blockNumberMsTimeStamp ? new Date(blockNumberMsTimeStamp).toLocaleString() : null}{' '}
+        </Text>
+        <Text variant="h300">
+          Timeleft:{' '}
+          {blockNumberMsTimeStamp
+            ? formatDistanceToNowStrict(new Date(blockNumberMsTimeStamp), { addSuffix: true })
+            : null}{' '}
         </Text>
       </div>
       <br />

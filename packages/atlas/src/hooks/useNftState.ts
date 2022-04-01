@@ -25,8 +25,14 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
       ? userBid?.createdInBlock + auction.auctionType.bidLockingTime
       : undefined
-  const userBidUnlockDate = userBidUnlockBlock ? new Date(convertBlockToMsTimestamp(userBidUnlockBlock)) : undefined
-  const startsAtDate = isAuction ? new Date(convertBlockToMsTimestamp(auction.startsAtBlock)) : undefined
+
+  const userBidUnlockBlockTimestamp = userBidUnlockBlock && convertBlockToMsTimestamp(userBidUnlockBlock)
+  const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
+  const plannedEndDAteBlockTimesamp =
+    auction?.plannedEndAtBlock && convertBlockToMsTimestamp(auction?.plannedEndAtBlock)
+
+  const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
+  const startsAtDate = startsAtDateBlockTimestamp ? new Date(startsAtDateBlockTimestamp) : undefined
 
   const canBuyNow = nft && !isOwner && (isBuyNow || !!auction?.buyNowPrice)
 
@@ -42,15 +48,13 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     (auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
   const canPutOnSale = nft && isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusIdle'
 
-  const auctionPlannedEndDate = auction?.plannedEndAtBlock
-    ? new Date(convertBlockToMsTimestamp(auction.plannedEndAtBlock))
-    : undefined
+  const auctionPlannedEndDate = plannedEndDAteBlockTimesamp ? new Date(plannedEndDAteBlockTimesamp) : undefined
 
-  const isExpired = !!auction?.plannedEndAtBlock && currentBlock >= auction.plannedEndAtBlock
+  const isExpired = !!auction?.plannedEndAtBlock && currentBlock && currentBlock >= auction.plannedEndAtBlock
 
-  const isRunning = !!auction?.startsAtBlock && currentBlock >= auction.startsAtBlock && !isExpired
+  const isRunning = !!auction?.startsAtBlock && currentBlock && currentBlock >= auction.startsAtBlock && !isExpired
 
-  const isUpcoming = !!auction?.startsAtBlock && currentBlock <= auction.startsAtBlock
+  const isUpcoming = !!auction?.startsAtBlock && currentBlock && currentBlock <= auction.startsAtBlock
 
   const needsSettling = auction?.lastBid && isExpired
 
@@ -61,6 +65,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     : isUpcoming
     ? 'upcoming'
     : null
+
   return {
     canBuyNow: !!canBuyNow,
     canMakeBid: !!canMakeBid,
