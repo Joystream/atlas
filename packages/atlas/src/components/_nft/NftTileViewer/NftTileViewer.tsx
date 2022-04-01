@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import { useNft } from '@/api/hooks'
 import { absoluteRoutes } from '@/config/routes'
 import { useNftState } from '@/hooks/useNftState'
-import { useAsset } from '@/providers/assets'
+import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 
 import { NftTile, NftTileProps } from '../NftTile'
@@ -34,6 +34,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   } = useNftState(nft)
 
   const { cancelNftSale, openNftPutOnSale } = useNftActions()
+  const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
 
   const handleRemoveOnSale = () => {
     if (!nftId || !nft?.video.id) {
@@ -61,10 +62,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     owner: nft?.ownerMember?.id
       ? {
           name: nft?.ownerMember?.handle,
-          assetUrl:
-            nft?.ownerMember?.metadata.avatar?.__typename === 'AvatarUri'
-              ? nft.ownerMember?.metadata.avatar.avatarUri
-              : '',
+          assetUrl: ownerMemberAvatarUrl,
           loading,
           onClick: () => navigate(absoluteRoutes.viewer.member(nft?.ownerMember?.handle)),
         }
