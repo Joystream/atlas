@@ -4,6 +4,8 @@ import {
   AllBidFieldsFragment,
   AllNftFieldsFragment,
   BasicMembershipFieldsFragment,
+  GetNftQuery,
+  GetNftQueryVariables,
   GetNftsQuery,
   GetNftsQueryVariables,
   VideoCategoryWhereInput,
@@ -59,9 +61,8 @@ export type NftStatus = (
 
 export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus?: NftStatus }
 
-export const useNft = (id: string): UseNftData => {
-  // TODO remove fetch policy once QN bug with not fetching auctions in video query is resolved
-  const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, fetchPolicy: 'network-only' })
+export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>): UseNftData => {
+  const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
   const nft = data?.ownedNftByUniqueInput
 
   const commonProperties = {

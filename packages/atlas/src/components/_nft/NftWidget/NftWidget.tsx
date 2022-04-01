@@ -512,7 +512,8 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
-  const { nft, nftStatus } = useNft(videoId ?? '')
+  // TODO remove fetch policy once QN bug with not fetching auctions in video query is resolved
+  const { nft, nftStatus } = useNft(videoId ?? '', { fetchPolicy: 'network-only' })
   const {
     isOwner,
     englishTimerState,

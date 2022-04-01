@@ -110,6 +110,7 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
   const [tokenPrice, setTokenPrice] = useState(0)
   const [currentBlock, setCurrentBlock] = useState(0)
   const [currentBlockMsTimestamp, setCurrentBlockMsTimestamp] = useState(0)
+  const firstRender = useRef(true)
 
   // fetch tJOY token price from the status server
   useEffect(() => {
@@ -124,6 +125,17 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     }
     getPrice()
   }, [])
+
+  // fetch current block from the chain, but only just once
+  useEffect(() => {
+    if (!firstRender.current || !joystream) {
+      return
+    }
+    joystream.getCurrentBlock().then((block) => {
+      setCurrentBlock(block)
+      firstRender.current = false
+    })
+  }, [joystream])
 
   // subscribe to block updates
   useEffect(() => {

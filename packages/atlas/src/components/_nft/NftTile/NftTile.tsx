@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
-import { Pill, PillGroup } from '@/components/Pill'
-import { SvgActionAuction, SvgActionBuyNow, SvgActionNotForSale, SvgActionShow } from '@/components/_icons'
+import { Pill } from '@/components/Pill'
+import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
+import { useGetNftSlot } from '@/hooks/useGetNftSlot'
+import { EnglishTimerState } from '@/hooks/useNftState'
 import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
@@ -25,19 +27,22 @@ export type NftTileProps = {
   owner?: Member
   creator?: Member
   loading?: boolean
-  timer?: string
   duration?: number | null
   views?: number | null
   buyNowPrice?: number | null
   startingPrice?: number | null
-  topBid?: number | null
-  timeLeftMs?: number
+  topBidAmount?: number | null
   fullWidth?: boolean
   interactable?: boolean
   canPutOnSale?: boolean
   canCancelSale?: boolean
   canBuyNow?: boolean
   canMakeBid?: boolean
+  timerLoading?: boolean
+  needsSettling?: boolean
+  englishTimerState?: EnglishTimerState
+  startsAtDate?: Date
+  auctionPlannedEndDate?: Date
   onRemoveFromSale?: () => void
   onPutOnSale?: () => void
   onNftChangePrice?: () => void
@@ -56,60 +61,33 @@ export const NftTile: React.FC<NftTileProps> = ({
   views,
   buyNowPrice,
   startingPrice,
-  topBid,
-  timeLeftMs,
+  topBidAmount: topBid,
   fullWidth,
   interactable = true,
   canPutOnSale,
   canCancelSale,
   canBuyNow,
   canMakeBid,
+  timerLoading,
+  needsSettling,
+  englishTimerState,
+  startsAtDate,
+  auctionPlannedEndDate,
   onRemoveFromSale,
   onPutOnSale,
   onNftChangePrice,
 }) => {
   const [hovered, setHovered] = useState(false)
-  const timeLeftSec = timeLeftMs && Math.max(Math.round(timeLeftMs / 1000), 1) // provide 1s fallback if the timer runs slightly faster than the auction end block is processed
-
-  const getBottomLeft = useMemo(() => {
-    switch (status) {
-      case 'idle':
-        return <Pill icon={<SvgActionNotForSale />} size="medium" variant="overlay" />
-      case 'buy-now':
-        return <Pill icon={<SvgActionBuyNow />} size="medium" variant="overlay" />
-      case 'auction':
-        return buyNowPrice ? (
-          <PillGroup
-            items={[
-              {
-                icon: <SvgActionAuction />,
-                label: timeLeftSec
-                  ? timeLeftSec < 60
-                    ? 'Less than a minute'
-                    : formatDurationShort(timeLeftSec, true)
-                  : undefined,
-                variant: timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay',
-              },
-              { icon: <SvgActionBuyNow /> },
-            ]}
-            size="medium"
-          />
-        ) : (
-          <Pill
-            icon={<SvgActionAuction />}
-            label={
-              timeLeftSec
-                ? timeLeftSec < 60
-                  ? 'Less than a minute'
-                  : formatDurationShort(timeLeftSec, true)
-                : undefined
-            }
-            size="medium"
-            variant={timeLeftSec && timeLeftSec < 3600 ? 'danger' : 'overlay'}
-          />
-        )
-    }
-  }, [status, buyNowPrice, timeLeftSec])
+  const leftBottomPills = useGetNftSlot({
+    withNftLabel: false,
+    hasBuyNowPrice: !!buyNowPrice,
+    timerLoading,
+    needsSettling,
+    status,
+    englishTimerState,
+    startsAtDate,
+    auctionPlannedEndDate,
+  })
 
   return (
     <Container fullWidth={fullWidth}>
@@ -128,7 +106,7 @@ export const NftTile: React.FC<NftTileProps> = ({
                 ),
               }
             : undefined,
-          bottomLeft: { element: getBottomLeft },
+          bottomLeft: leftBottomPills,
           bottomRight: duration
             ? { element: <Pill label={formatDurationShort(duration)} size="medium" variant="overlay" /> }
             : undefined,
