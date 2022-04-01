@@ -10,9 +10,15 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
 } from '@/components/_icons'
+import { Spinner } from '@/components/_loaders/Spinner'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
+
+export const StyledSpinner = styled(Spinner)`
+  margin-bottom: 0;
+  margin-top: ${sizes(1)};
+`
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertsInformative24 />,
@@ -20,6 +26,7 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   error: <SvgAlertsError24 />,
   warning: <SvgAlertsWarning24 />,
   uploading: <SvgActionUpload />,
+  loading: <StyledSpinner size="small" />,
 }
 
 const SNACKBARS_LIMIT = 3
@@ -29,14 +36,15 @@ export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 export const Snackbars: React.FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
+  const nonStickedSnackbars = snackbars.filter((snackbar) => !snackbar.sticked)
 
   useEffect(() => {
-    if (snackbars.length > SNACKBARS_LIMIT) {
+    if (nonStickedSnackbars.length > SNACKBARS_LIMIT) {
       setTimeout(() => {
-        closeSnackbar(snackbars[0].id)
+        closeSnackbar(nonStickedSnackbars[0].id)
       }, 500)
     }
-  }, [snackbars, closeSnackbar])
+  }, [nonStickedSnackbars, closeSnackbar])
 
   return (
     <SnackbarsContainer>
