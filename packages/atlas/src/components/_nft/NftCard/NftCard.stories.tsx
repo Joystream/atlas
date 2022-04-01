@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
@@ -23,7 +24,7 @@ export default {
     fullWidth: { type: 'boolean', defaultValue: false },
   },
   args: {
-    thumbnail: { thumbnailUrl: 'https://placedoag.net/360/203' },
+    thumbnail: { thumbnailUrl: 'https://placedog.net/360/203' },
     creator: { assetUrl: 'https://placedog.net/100/100?random=1', name: 'Jane' },
     supporters: [
       { assetUrl: 'https://placedog.net/100/100?random=2', name: 'Kate' },
@@ -46,7 +47,11 @@ export default {
   ],
 } as Meta
 
-const Template: Story<NftCardProps> = (args) => <NftCard {...args} />
+const Template: Story<NftCardProps> = (args) => (
+  <Container>
+    <NftCard {...args} />
+  </Container>
+)
 
 export const Default = Template.bind({})
 export const NoSupporters = Template.bind({})
@@ -54,3 +59,10 @@ export const NoSupporters = Template.bind({})
 NoSupporters.args = {
   supporters: undefined,
 }
+
+const Container = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

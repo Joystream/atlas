@@ -1,17 +1,29 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { animated } from 'react-spring'
 
 import { Avatar } from '@/components/Avatar'
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
-const shinyStyles = ({ opacity, gradientPos, sparkPos }: ContainerProps) => css`
+const shinyStyles = ({ opacity, gradientPos, sparkPos, patternPos }: ContainerProps) => css``
+type ContainerProps = {
+  fullWidth?: boolean
+  opacity: number
+  gradientPos: string
+  patternPos: string
+  sparkPos: string
+}
+
+export const Container = styled(animated.div)<ContainerProps>`
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
+
   --color1: #efb2fb;
   --color2: #acc6f8;
 
-  width: 61vw;
-  height: 75vw;
+  /* width: 61vw;
+  height: 75vw; */
   box-shadow: -7px -7px 10px -5px transparent, 7px 7px 10px -5px transparent, 0 0 5px 0 rgb(255 255 255 / 0),
     0 55px 35px -20px rgb(0 0 0 / 0.5);
   position: relative;
@@ -23,94 +35,15 @@ const shinyStyles = ({ opacity, gradientPos, sparkPos }: ContainerProps) => css`
   transition: transform 0.5s ease, box-shadow 0.2s ease;
   will-change: transform, filter;
   background-color: #040712;
-  background-image: var(--front);
+  background-color: ${cVar('colorBackgroundStrong')};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   transform-origin: center;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    background-repeat: no-repeat;
-    opacity: 0.5;
-    mix-blend-mode: color-dodge;
-    transition: all 0.33s ease;
-  }
-
-  &::before {
-    background-position: 50% 50%;
-    background-size: 300% 300%;
-    background-image: linear-gradient(
-      115deg,
-      transparent 0%,
-      var(--color1) 25%,
-      transparent 47%,
-      transparent 53%,
-      var(--color2) 75%,
-      transparent 100%
-    );
-    opacity: 0.5;
-    filter: brightness(0.5) contrast(1);
-    z-index: 1;
-  }
-
-  &::after {
-    /* background-image: url('https://assets.codepen.io/13471/sparkles.gif'), url(https://assets.codepen.io/13471/holo.png),
-      linear-gradient(125deg, #ff008450 15%, #fca40040 30%, #ffff0030 40%, #00ff8a20 60%, #00cfff40 70%, #cc4cfa50 85%); */
-
-    /* pattern */
-    background-image: url('https://i.imgur.com/Y9uPQ9n.png');
-    background-image: url('https://i.imgur.com/uPpc6dE.png');
-    background-position: 50% 50%;
-    background-size: 120%;
-
-    /* background-blend-mode: overlay; */
-    z-index: 20;
-    filter: brightness(0.31) contrast(0.31);
-    transition: all 0.33s ease;
-    mix-blend-mode: color-dodge;
-    opacity: 0;
-
-    /* mask-image: url(https://i.imgur.com/uPpc6dE.png); */
-    mask-mode: alpha;
-    mask-repeat: no-repeat;
-    mask-size: 100%;
-    mask-position: center;
-  }
-
-  &:hover::after {
-    filter: brightness(0.51) contrast(0.251);
-    opacity: ${opacity || 1};
-    background-position: ${sparkPos};
-  }
-
   &:hover {
     animation: none;
     transition: box-shadow 0.1s ease-out;
-  }
-
-  /* &:hover::before {
-    animation: none;
-    background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%),
-      url('https://i.imgur.com/AjBArhU.png');
-    background-position: 50% 50%;
-    background-size: 500% 500%;
-    opacity: 0.88;
-    filter: brightness(0.66) contrast(1.33);
-    transition: none;
-    background-position: ${gradientPos};
-  } */
-
-  &:hover::before,
-  &:hover::after {
-    animation: none;
-    transition: none;
   }
 
   @keyframes holoSparkle {
@@ -184,39 +117,7 @@ const shinyStyles = ({ opacity, gradientPos, sparkPos }: ContainerProps) => css`
     }
   }
 
-  @keyframes holoCard {
-    0%,
-    100% {
-      transform: rotateZ(0deg) rotateX(0deg) rotateY(0deg);
-    }
-
-    5%,
-    8% {
-      transform: rotateZ(0deg) rotateX(6deg) rotateY(-20deg);
-    }
-
-    13%,
-    16% {
-      transform: rotateZ(0deg) rotateX(-9deg) rotateY(32deg);
-    }
-
-    35%,
-    38% {
-      transform: rotateZ(3deg) rotateX(12deg) rotateY(20deg);
-    }
-
-    55% {
-      transform: rotateZ(-3deg) rotateX(-12deg) rotateY(-27deg);
-    }
-  }
-`
-
-type ContainerProps = { fullWidth?: boolean; opacity: number; gradientPos: string; sparkPos: string }
-export const Container = styled.div<ContainerProps>`
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
-  background-color: ${cVar('colorBackgroundStrong')};
-
-  ${shinyStyles}
+  /* ${shinyStyles} */
 `
 
 export const Title = styled(Text)`
