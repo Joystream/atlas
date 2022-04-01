@@ -35,9 +35,25 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
   onLike,
   state,
 }) => {
-  const [loaded, setLoaded] = useState(false)
+  const [shouldRunLikeAnimation, setShouldRunLikeAnimation] = useState(false)
+  const [shouldRunDislikeAnimation, setShouldRunDislikeAnimation] = useState(false)
   const total = likes + dislikes
   const likesPercent = total ? Number((likes / total).toFixed(4)) : 0
+
+  const handleLike = () => {
+    if (state === 'liked') {
+      return
+    }
+    setShouldRunLikeAnimation(true)
+    onLike?.()
+  }
+  const handleDislike = () => {
+    if (state === 'disliked') {
+      return
+    }
+    setShouldRunDislikeAnimation(true)
+    onDislike?.()
+  }
 
   return (
     <ReactionStepperWrapper>
@@ -52,9 +68,16 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
           ) : (
             <Button
               disabled={state === 'processing'}
-              onClick={onLike}
+              onClick={handleLike}
+              onAnimationEnd={() => setShouldRunLikeAnimation(false)}
               variant="tertiary"
-              icon={state === 'liked' ? <StyledSvgActionLikeSolid /> : <SvgActionLikeOutline />}
+              icon={
+                state === 'liked' ? (
+                  <StyledSvgActionLikeSolid shouldRunAnimation={shouldRunLikeAnimation} />
+                ) : (
+                  <SvgActionLikeOutline />
+                )
+              }
             >
               <ReactionsCounter type="like" state={state} variant="t200">
                 {formatNumberShort(likes)}
@@ -67,19 +90,23 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
         <CSSTransition
           key={(state === 'loading').toString()}
           classNames={transitions.names.fade}
-          // we want to delay the animation of the progress bar to avoid layout shifts
-          onExited={() => state === 'loading' && setLoaded(state === 'loading')}
-          onExit={() => state !== 'loading' && setLoaded(false)}
           timeout={parseInt(cVar('animationTimingFast', true))}
         >
           {state === 'loading' ? (
             <ReactionButtonLoader />
           ) : (
             <Button
-              onClick={onDislike}
+              onClick={handleDislike}
+              onAnimationEnd={() => setShouldRunDislikeAnimation(false)}
               variant="tertiary"
               disabled={state === 'processing'}
-              icon={state === 'disliked' ? <StyledSvgActionDislikeSolid /> : <SvgActionDislikeOutline />}
+              icon={
+                state === 'disliked' ? (
+                  <StyledSvgActionDislikeSolid shouldRunAnimation={shouldRunDislikeAnimation} />
+                ) : (
+                  <SvgActionDislikeOutline />
+                )
+              }
             >
               <ReactionsCounter type="dislike" state={state} variant="t200">
                 {formatNumberShort(dislikes)}
@@ -88,8 +115,8 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
           )}
         </CSSTransition>
       </SwitchTransition>
-      <ReactionBar loaded={loaded}>
-        <ReactionBarProgress likesPercent={likesPercent} />
+      <ReactionBar loaded={state !== 'loading'}>
+        <ReactionBarProgress likesPercent={likesPercent} isProcessing={state === 'processing'} />
       </ReactionBar>
     </ReactionStepperWrapper>
   )
@@ -98,7 +125,7 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
 const ReactionButtonLoader: React.FC = () => {
   return (
     <LoadingWrapper>
-      <SkeletonLoader rounded width={16} height={16} /> <SkeletonLoader height={20} width={32} />{' '}
+      <SkeletonLoader rounded width={16} height={16} /> <SkeletonLoader height={20} width={32} />
     </LoadingWrapper>
   )
 }

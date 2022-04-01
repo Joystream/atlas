@@ -10,6 +10,7 @@ export type ButtonBaseProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   onMouseMove?: (e: React.MouseEvent<HTMLButtonElement>) => void
   onMouseOut?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onAnimationEnd?: (e: React.AnimationEvent<HTMLButtonElement>) => void
   to?: To
   newTab?: boolean
   type?: 'button' | 'submit'
