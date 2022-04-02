@@ -4,7 +4,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 
 import { Member, Members } from './Members'
-import { Container, Content, Details, Separator, Title } from './NftCard.styles'
+import { Container, Content, Details, ReflectionContent, ReflectionGridCell, Separator, Title } from './NftCard.styles'
 
 export type NftCardProps = {
   title?: string | null
@@ -25,22 +25,52 @@ export const NftCard: React.FC<NftCardProps> = ({
   fullWidth,
   loading,
 }) => {
+  const reflectionCells = Array.from({ length: 100 })
   return (
     <Container fullWidth={fullWidth}>
-      <VideoThumbnail clickable={false} {...thumbnail} />
-      <Details>
-        {loading ? <SkeletonLoader width="70%" height={24} bottomSpace={24} /> : <Title variant="h400">{title}</Title>}
-        <Content>
-          <Members loading={loading} caption="Creator" members={creator} />
-          {supporters && !!supporters.length && (
-            <>
-              <Members caption="Supporters" members={supporters} />
-              <Separator />
-            </>
+      {reflectionCells.map((_, idx) => {
+        const row = Math.floor(idx / 10)
+        const column = idx % 10
+        const lp = 50 + (column - 50) / 1.5
+        const tp = 50 + (row - 50) / 1.5
+        const pxSpark = 50 + (column - 50) / 7
+        const pySpark = 50 + (row - 50) / 7
+        return (
+          <ReflectionGridCell
+            row={row}
+            lp={lp}
+            tp={tp}
+            pxSpark={pxSpark}
+            pySpark={pySpark}
+            column={column}
+            key={idx}
+            style={{
+              top: `calc(${row} * 10%)`,
+              left: `calc(${column} * 10%)`,
+            }}
+          />
+        )
+      })}
+      <ReflectionContent>
+        <VideoThumbnail clickable={false} {...thumbnail} />
+        <Details>
+          {loading ? (
+            <SkeletonLoader width="70%" height={24} bottomSpace={24} />
+          ) : (
+            <Title variant="h400">{title}</Title>
           )}
-          <Members loading={loading} caption="Owner" members={owner} />
-        </Content>
-      </Details>
+          <Content>
+            <Members loading={loading} caption="Creator" members={creator} />
+            {supporters && !!supporters.length && (
+              <>
+                <Members caption="Supporters" members={supporters} />
+                <Separator />
+              </>
+            )}
+            <Members loading={loading} caption="Owner" members={owner} />
+          </Content>
+        </Details>
+      </ReflectionContent>
     </Container>
   )
 }

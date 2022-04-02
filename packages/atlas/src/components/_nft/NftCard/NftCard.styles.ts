@@ -7,7 +7,33 @@ import { cVar, media, sizes } from '@/styles'
 
 export const Container = styled.div<{ fullWidth?: boolean }>`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
-  background-color: ${cVar('colorBackgroundStrong')};
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  position: relative;
+`
+
+export const ReflectionContent = styled.div`
+  transform: rotateX(0) rotateY(0);
+  transition: 100ms linear transform;
+  box-shadow: transparent -7px -7px 10px -5px, transparent 7px 7px 10px -5px, rgb(255 255 255 / 0) 0 0 5px 0,
+    rgb(0 0 0 / 0.5) 0 55px 35px -20px;
+`
+
+export const ReflectionGridCell = styled.div<{
+  row: number
+  column: number
+  lp: number
+  tp: number
+  pxSpark: number
+  pySpark: number
+}>`
+  position: absolute;
+  z-index: 1;
+  width: 10%;
+  height: 10%;
+  :hover ~ ${ReflectionContent} {
+    transform: rotateX(${({ row }) => row * -5 + 25}deg) rotateY(${({ column }) => -25 + column * 5}deg);
+  }
 `
 
 export const Title = styled(Text)`
@@ -20,6 +46,7 @@ export const Title = styled(Text)`
 
 export const Details = styled.div`
   padding: ${sizes(4)};
+  background-color: ${cVar('colorBackgroundStrong')};
 
   ${media.sm} {
     padding: ${sizes(6)};
