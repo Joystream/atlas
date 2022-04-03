@@ -56,7 +56,6 @@ export const GradientBackground = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  background-position: 50% 50%;
   background-size: 300% 300%;
   opacity: 0;
   transition: background-position 0.1s ease;
@@ -99,6 +98,7 @@ export const ReflectionGridCell = styled.div<{
 }>`
   position: absolute;
   z-index: 1;
+  transform: translateZ(80px);
   width: 10%;
   height: 10%;
   :hover ~ ${ReflectionContent} {
