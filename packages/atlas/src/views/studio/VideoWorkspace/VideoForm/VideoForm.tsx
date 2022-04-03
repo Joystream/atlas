@@ -396,6 +396,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               onVideoChange={handleVideoFileChange}
               onThumbnailChange={handleThumbnailFileChange}
               editMode={isEdit}
+              disabled={videoFieldsLocked}
               maxVideoSize={10 * 1024 * 1024 * 1024}
             />
           </div>
@@ -449,12 +450,18 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   !videoFieldsLocked ? (
                     <>
                       <Text variant="t200">After issuing this as an NFT </Text>
-                      <YellowText variant="t200">editing options of this video will be disabled</YellowText>
+                      <Text variant="t200">
+                        <YellowText>editing options of this video will be disabled</YellowText>
+                      </Text>
                     </>
                   ) : (
                     <>
                       <Text variant="t200">Many fields are disabled after minting an NFT for this video - </Text>
-                      <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>go to it's video page.</VideoLink>
+                      <Text variant="t200">
+                        <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
+                          go to it's video page.
+                        </VideoLink>
+                      </Text>
                     </>
                   )
                 }

@@ -55,6 +55,7 @@ export type MultiFileSelectProps = {
   maxImageSize?: number // in bytes
   maxVideoSize?: number // in bytes
   editMode?: boolean
+  disabled?: boolean
   className?: string
 }
 
@@ -62,7 +63,7 @@ const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
 const VIDEO_SELECT_TITLE = 'Select video file'
 
 export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
-  ({ onVideoChange, onThumbnailChange, files, maxImageSize, maxVideoSize, editMode = false, className }) => {
+  ({ onVideoChange, onThumbnailChange, files, maxImageSize, maxVideoSize, editMode = false, disabled, className }) => {
     const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
     const [step, setStep] = useState<FileType>('video')
     const [isImgLoading, setIsImgLoading] = useState(false)
@@ -263,7 +264,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
                 : VIDEO_SELECT_TITLE
             }
             variant={getStepVariant(step === 'video' && stepsActive, !!files.video)}
-            disabled={editMode}
+            disabled={editMode || disabled}
             onDelete={handleDeleteVideoFile}
             isLoading={isVideoLoading}
           />
@@ -286,6 +287,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
             onDelete={handleDeleteImageFile}
             ref={thumbnailStepRef}
             isLoading={isImgLoading}
+            disabled={disabled}
           />
           {stepsActive && (
             <CSSTransition in={step === 'image'} timeout={400} classNames="underline">

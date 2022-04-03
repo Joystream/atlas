@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { SvgActionWarning } from '@/components/_icons'
 import { cVar } from '@/styles'
 
@@ -10,6 +9,6 @@ export const StyledSvgWarning = styled(SvgActionWarning)`
   }
 `
 
-export const YellowText = styled(Text)`
+export const YellowText = styled.span`
   color: ${cVar('colorCoreYellow100')};
 `

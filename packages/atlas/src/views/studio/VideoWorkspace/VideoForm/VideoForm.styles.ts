@@ -110,13 +110,10 @@ export const SwitchNftWrapper = styled.div`
 `
 
 export const VideoLink = styled(Link)`
-  font: ${cVar('typographyDesktopT200')};
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200TextTransform')};
   color: ${cVar('colorCoreBlue300')};
   text-decoration: none;
 `
 
 export const DescriptionTextArea = styled(TextArea)`
-  margin-top: ${({ disabled }) => disabled && '40px'};
+  margin-top: ${({ disabled }) => (disabled ? sizes(10) : '')};
 `
