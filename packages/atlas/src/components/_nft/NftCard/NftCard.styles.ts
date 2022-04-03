@@ -12,20 +12,90 @@ export const Container = styled.div<{ fullWidth?: boolean }>`
   position: relative;
 `
 
+export const SparksBackgroundMask = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  mask-position: 50% 50%;
+  transition: all 0.1s ease;
+  mask-image: linear-gradient(
+    104deg,
+    rgb(0 0 0 / 1) 0%,
+    rgb(0 0 0 / 1) 5%,
+    rgb(0 0 0 / 0.2) 20%,
+    rgb(0 0 0 / 0) 40%,
+    rgb(0 0 0 / 0) 60%,
+    rgb(0 0 0 / 0.2) 80%,
+    rgb(0 0 0 / 1) 95%,
+    rgb(0 0 0 / 1) 100%
+  );
+  mask-size: 250%;
+  mask-mode: alpha;
+`
+
+export const SparksBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url('https://i.imgur.com/AjBArhU.png');
+  background-position: 50% 50%;
+  background-size: 300%;
+  z-index: 2;
+  transition: all 0.1s ease;
+  mask-image: url('https://i.imgur.com/Y9uPQ9n.png');
+  mask-position: 50% 50%;
+`
+
+export const GradientBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-position: 50% 50%;
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: background-position 0.1s ease;
+  filter: brightness(0.5) contrast(1.2);
+  background-image: linear-gradient(
+    70deg,
+    rgba(0 0 0 / 0) 15%,
+    ${cVar('colorCoreNeutral900Lighten')} 30%,
+    ${cVar('colorCoreNeutral600Lighten')} 48%,
+    ${cVar('colorCoreNeutral600Lighten')} 52%,
+    ${cVar('colorCoreNeutral900Lighten')} 70%,
+    rgba(0 0 0 / 0) 85%
+  );
+`
+
 export const ReflectionContent = styled.div`
   transform: rotateX(0) rotateY(0);
-  transition: 100ms linear transform;
-  box-shadow: transparent -7px -7px 10px -5px, transparent 7px 7px 10px -5px, rgb(255 255 255 / 0) 0 0 5px 0,
-    rgb(0 0 0 / 0.5) 0 55px 35px -20px;
+  transition: transform 300ms, box-shadow 300ms;
+  box-shadow: 0 0 0 0 ${cVar('colorCoreNeutral600')}, 0 55px 35px -60px rgb(0 0 0 / 0.5);
 `
+
+const generateEdges = (num: number) => {
+  if (num > 6) {
+    return -3
+  }
+  if (num < 2) {
+    return 2
+  }
+  if (num < 3) {
+    return 3
+  }
+  return 0
+}
 
 export const ReflectionGridCell = styled.div<{
   row: number
   column: number
   lp: number
   tp: number
-  pxSpark: number
-  pySpark: number
 }>`
   position: absolute;
   z-index: 1;
@@ -33,6 +103,21 @@ export const ReflectionGridCell = styled.div<{
   height: 10%;
   :hover ~ ${ReflectionContent} {
     transform: rotateX(${({ row }) => row * -5 + 25}deg) rotateY(${({ column }) => -25 + column * 5}deg);
+    box-shadow: ${({ row, column }) =>
+        `${generateEdges(column)}px ${generateEdges(row)}px 0 0 ${cVar('colorCoreNeutral600')}`},
+      0 55px 35px -20px rgb(0 0 0 / 0.5);
+  }
+  :hover ~ ${ReflectionContent} ${SparksBackground} {
+    opacity: 1;
+    background-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
+  }
+  :hover ~ ${ReflectionContent} ${SparksBackgroundMask} {
+    opacity: 1;
+    mask-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
+  }
+  :hover ~ ${ReflectionContent} ${GradientBackground} {
+    opacity: 1;
+    background-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
   }
 `
 

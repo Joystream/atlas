@@ -4,7 +4,18 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 
 import { Member, Members } from './Members'
-import { Container, Content, Details, ReflectionContent, ReflectionGridCell, Separator, Title } from './NftCard.styles'
+import {
+  Container,
+  Content,
+  Details,
+  GradientBackground,
+  ReflectionContent,
+  ReflectionGridCell,
+  Separator,
+  SparksBackground,
+  SparksBackgroundMask,
+  Title,
+} from './NftCard.styles'
 
 export type NftCardProps = {
   title?: string | null
@@ -31,18 +42,16 @@ export const NftCard: React.FC<NftCardProps> = ({
       {reflectionCells.map((_, idx) => {
         const row = Math.floor(idx / 10)
         const column = idx % 10
-        const lp = 50 + (column - 50) / 1.5
-        const tp = 50 + (row - 50) / 1.5
-        const pxSpark = 50 + (column - 50) / 7
-        const pySpark = 50 + (row - 50) / 7
+
+        const lp = 50 + (column * 10 - 50) / 1.5
+        const tp = 50 + (row * 10 - 50) / 1.5
+
         return (
           <ReflectionGridCell
             row={row}
+            column={column}
             lp={lp}
             tp={tp}
-            pxSpark={pxSpark}
-            pySpark={pySpark}
-            column={column}
             key={idx}
             style={{
               top: `calc(${row} * 10%)`,
@@ -70,6 +79,10 @@ export const NftCard: React.FC<NftCardProps> = ({
             <Members loading={loading} caption="Owner" members={owner} />
           </Content>
         </Details>
+        <SparksBackgroundMask>
+          <SparksBackground />
+        </SparksBackgroundMask>
+        <GradientBackground />
       </ReflectionContent>
     </Container>
   )
