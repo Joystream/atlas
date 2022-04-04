@@ -35,6 +35,7 @@ import {
   Category,
   CategoryWrapper,
   ChannelContainer,
+  CopyLink,
   DescriptionContainer,
   DescriptionCopy,
   DescriptionLink,
@@ -224,9 +225,9 @@ export const VideoView: React.FC = () => {
               <SkeletonLoader height={24} width={200} />
             )}
           </Meta>
-          <Button variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
+          <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
             Copy link
-          </Button>
+          </CopyLink>
         </VideoUtils>
       </TitleContainer>
       <ChannelContainer>
