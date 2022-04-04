@@ -406,7 +406,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   })}
                   disabled={auctionEnded}
                   placeholder={auctionEnded ? 'Auction ended' : `Min. ${minimumBid} tJOY`}
-                  nodeStart={<JoyTokenIcon variant="silver" size={24} />}
+                  nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                   nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
                   type="number"
                   error={!!errors.bid}
