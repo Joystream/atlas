@@ -456,10 +456,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                     </>
                   ) : (
                     <>
-                      <Text variant="t200">Many fields are disabled after minting an NFT for this video - </Text>
                       <Text variant="t200">
+                        Many fields are disabled after minting an NFT for this video -
                         <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
-                          go to it's video page.
+                          &nbsp;go to it's video page.
                         </VideoLink>
                       </Text>
                     </>
