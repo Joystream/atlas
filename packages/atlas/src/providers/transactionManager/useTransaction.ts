@@ -99,7 +99,7 @@ export const useTransaction = (): HandleTransactionFn => {
       } catch (error) {
         removePendingSign(transactionId)
         const errorName = error.name as JoystreamLibErrorType
-        if (errorName === 'SignCancelledError' && !minimized) {
+        if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           setDialogStep(null)
           displaySnackbar({

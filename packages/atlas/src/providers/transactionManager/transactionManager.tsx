@@ -53,7 +53,7 @@ export const TransactionManager: React.FC = () => {
   }, [blockActions, lastIndexedBlock, removeOldBlockActions])
 
   useEffect(() => {
-    if (!minimized || !dialogStep) {
+    if (!minimized) {
       return
     }
     if (dialogStep === ExtrinsicStatus.Unsigned) {
@@ -76,7 +76,11 @@ export const TransactionManager: React.FC = () => {
             : `You have ${pendingSigns.length} transactions pending for you signature in Polkadot extension.`,
       })
     }
-    if (dialogStep === ExtrinsicStatus.Signed || (dialogStep === ExtrinsicStatus.Error && !pendingSigns.length)) {
+    if (
+      dialogStep === ExtrinsicStatus.Signed ||
+      (dialogStep === ExtrinsicStatus.Error && !pendingSigns.length) ||
+      (!dialogStep && !pendingSigns.length)
+    ) {
       closeSnackbar(SNACKBAR_ID)
     }
     if (dialogStep === ExtrinsicStatus.Error) {
@@ -84,7 +88,6 @@ export const TransactionManager: React.FC = () => {
         title: 'Something went wrong',
         description: minimized.signErrorMessage,
         iconType: 'error',
-        actionText: 'Retry',
         timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
       })
     }
