@@ -12,12 +12,14 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
+import {  SvgActionLinkUrl } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
+import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
@@ -34,6 +36,7 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
 import {
+  CopyLink,
   ChannelContainer,
   Meta,
   NotFoundVideoContainer,
@@ -45,6 +48,7 @@ import {
   StyledCallToActionWrapper,
   TitleContainer,
   TitleText,
+  VideoUtils,
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
@@ -53,6 +57,7 @@ export const VideoView: React.FC = () => {
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
   const { withdrawBid } = useNftTransactions()
+  const { copyToClipboard } = useClipboard()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
@@ -151,6 +156,10 @@ export const VideoView: React.FC = () => {
     }
   }, [thumbnailUrl, video])
 
+  const handleCopyLink = () => {
+    copyToClipboard(window.location.href, 'Video URL copied to clipboard')
+  }
+
   if (error) {
     return <ViewErrorFallback />
   }
@@ -200,13 +209,18 @@ export const VideoView: React.FC = () => {
         ) : (
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
-        <Meta variant={mdMatch ? 't300' : 't100'} secondary>
-          {video ? (
-            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
-          ) : (
-            <SkeletonLoader height={24} width={200} />
-          )}
-        </Meta>
+        <VideoUtils>
+          <Meta variant={mdMatch ? 't300' : 't100'} secondary>
+            {video ? (
+              formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+            ) : (
+              <SkeletonLoader height={24} width={200} />
+            )}
+          </Meta>
+          <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
+            Copy link
+          </CopyLink>
+        </VideoUtils>
       </TitleContainer>
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />

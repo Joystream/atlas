@@ -82,13 +82,27 @@ export const TitleContainer = styled.div`
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
 `
 
+export const VideoUtils = styled.div`
+  display: grid;
+  margin-top: ${sizes(2)};
+  grid-template: 'meta meta' 1fr '. link' / 1fr auto;
+  justify-items: baseline;
+  gap: ${sizes(4)};
+  ${media.md} {
+    align-items: center;
+    margin-top: ${sizes(4)};
+    grid-template: 'meta meta link' 1fr / 1fr auto;
+  }
+`
+
 export const Meta = styled(Text)`
   display: block;
-  margin-top: ${sizes(2)};
+  grid-area: meta;
+  grid-column: 1 / span 2;
+`
 
-  ${media.md} {
-    margin-top: ${sizes(4)};
-  }
+export const CopyLink = styled(Button)`
+  grid-area: link;
 `
 
 export const TitleText = styled(Text)`
