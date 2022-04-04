@@ -74,7 +74,6 @@ export const LightReflection = styled.div`
     var(--color2) 75%,
     transparent 100%
   );
-  opacity: 0.5;
   filter: brightness(0.5) contrast(1);
 `
 
