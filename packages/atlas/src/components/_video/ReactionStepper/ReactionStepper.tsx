@@ -9,6 +9,7 @@ export type ReactionStepperProps = {
   onLike?: () => void
   onDislike?: () => void
   state: ReactionSteppperState
+  className?: string
 }
 
 export const ReactionStepper: React.FC<ReactionStepperProps> = ({
@@ -17,12 +18,13 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
   onDislike,
   onLike,
   state,
+  className,
 }) => {
   const total = likes + dislikes
   const likesPercent = total ? Number((likes / total).toFixed(4)) : 0
 
   return (
-    <ReactionStepperWrapper>
+    <ReactionStepperWrapper className={className}>
       <ReactionButton state={state} onReact={onLike} type="like" reactionsNumber={likes} />
       <ReactionButton state={state} onReact={onDislike} type="dislike" reactionsNumber={dislikes} />
       <ReactionBar loaded={state !== 'loading'}>
