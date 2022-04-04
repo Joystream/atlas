@@ -448,21 +448,17 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 icon={<StyledSvgWarning width={24} height={24} />}
                 description={
                   !videoFieldsLocked ? (
-                    <>
-                      <Text variant="t200">After issuing this as an NFT </Text>
-                      <Text variant="t200">
-                        <YellowText>editing options of this video will be disabled</YellowText>
-                      </Text>
-                    </>
+                    <Text variant="t200">
+                      After issuing this as an NFT
+                      <YellowText>&nbsp;editing options of this video will be disabled</YellowText>
+                    </Text>
                   ) : (
-                    <>
-                      <Text variant="t200">
-                        Many fields are disabled after minting an NFT for this video -
-                        <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
-                          &nbsp;go to it's video page.
-                        </VideoLink>
-                      </Text>
-                    </>
+                    <Text variant="t200">
+                      Many fields are disabled after minting an NFT for this video -
+                      <VideoLink to={absoluteRoutes.viewer.video(editedVideoInfo.id)}>
+                        &nbsp;go to it's video page.
+                      </VideoLink>
+                    </Text>
                   )
                 }
               />
