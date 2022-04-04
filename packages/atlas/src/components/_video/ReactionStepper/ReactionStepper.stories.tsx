@@ -1,15 +1,22 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 
+import { Button } from '@/components/_buttons/Button'
+import { usePersonalDataStore } from '@/providers/personalData'
+
 import { ReactionStepper, ReactionStepperProps } from './ReactionStepper'
 
 export default {
   title: 'video/ReactionStepper',
   component: ReactionStepper,
   args: {
-    likes: 0,
-    dislikes: 0,
+    likes: 666,
+    dislikes: 420,
     state: 'default',
+  },
+  argTypes: {
+    onDislike: { table: { disable: true } },
+    onLike: { table: { disable: true } },
   },
 } as Meta<ReactionStepperProps>
 
@@ -22,11 +29,13 @@ const Template: Story<ReactionStepperProps> = (args) => {
     </>
   )
 }
-const InteractableTemplate: Story<ReactionStepperProps> = (args) => {
+const InteractableTemplate: Story<ReactionStepperProps> = () => {
   const [likes, setLikes] = useState(6)
   const [dislikes, setDislikes] = useState(9)
   const [state, setState] = React.useState<ReactionStepperProps['state']>('default')
   const [reactionTriggered, setReactionTriggered] = useState<'like' | 'dislike' | null>(null)
+  const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
 
   useEffect(() => {
     if (!reactionTriggered) {
@@ -57,19 +66,18 @@ const InteractableTemplate: Story<ReactionStepperProps> = (args) => {
 
   return (
     <>
-      <ReactionStepper
-        {...args}
-        likes={likes}
-        dislikes={dislikes}
-        onLike={handleLike}
-        onDislike={handleDislike}
-        state={state}
-      />
+      <ReactionStepper likes={likes} dislikes={dislikes} onLike={handleLike} onDislike={handleDislike} state={state} />
       <div style={{ width: '100%', height: '1px', background: '#272D33' }} />
       <p>(Divider is not a part of the component, it's only for presentional purposes)</p>
+      <Button disabled={!reactionPopoverDismissed} onClick={() => setReactionPopoverDismission(false)}>
+        Reset popover
+      </Button>
     </>
   )
 }
 
 export const Default = Template.bind({})
 export const Interactable = InteractableTemplate.bind({})
+Interactable.parameters = {
+  controls: { hideNoControlsWarning: true },
+}
