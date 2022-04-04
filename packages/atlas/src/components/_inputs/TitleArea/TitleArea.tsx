@@ -13,6 +13,7 @@ export type TitleAreaProps = {
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
+  disabled?: boolean
 }
 
 export const TitleArea: React.FC<TitleAreaProps> = ({
@@ -24,6 +25,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
   className,
   max = 60,
   min = 5,
+  disabled,
 }) => {
   const [touched, setTouched] = useState(false)
   const invalidInput = (value?.length || 0) < min || (value?.length || 0) > max
@@ -51,6 +53,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
         onChange={onChange}
         onKeyDown={handleKeyDown}
         onBlur={onBlur}
+        disabled={disabled}
       />
 
       <TitleAreaInfo visible={(touched && !value?.length) || (!!value?.length && invalidInput)}>
