@@ -27,6 +27,7 @@ type DialogButtonProps = {
 type DialogIconType = 'success' | 'warning' | 'error'
 
 export type DialogProps = {
+  headerNode?: React.ReactNode
   title?: string
   description?: string
   iconType?: DialogIconType
@@ -60,6 +61,7 @@ export const Dialog: React.FC<DialogProps> = ({
   primaryButton,
   secondaryButton,
   additionalActionsNode,
+  headerNode,
   onExitClick,
   children,
   className,
@@ -76,6 +78,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return (
     <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
+      {headerNode && headerNode}
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
