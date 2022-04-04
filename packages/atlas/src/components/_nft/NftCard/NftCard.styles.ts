@@ -12,7 +12,7 @@ export const Container = styled.div<{ fullWidth?: boolean }>`
   position: relative;
 `
 
-export const SparksBackgroundMask = styled.div`
+export const FadeMask = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -23,19 +23,19 @@ export const SparksBackgroundMask = styled.div`
   mask-image: linear-gradient(
     104deg,
     rgb(0 0 0 / 1) 0%,
-    rgb(0 0 0 / 1) 5%,
-    rgb(0 0 0 / 0.2) 20%,
+    rgb(0 0 0 / 1) 7%,
+    rgb(0 0 0 / 0.5) 10%,
     rgb(0 0 0 / 0) 40%,
     rgb(0 0 0 / 0) 60%,
-    rgb(0 0 0 / 0.2) 80%,
-    rgb(0 0 0 / 1) 95%,
+    rgb(0 0 0 / 0.5) 90%,
+    rgb(0 0 0 / 1) 92%,
     rgb(0 0 0 / 1) 100%
   );
-  mask-size: 250%;
+  mask-size: 300%;
   mask-mode: alpha;
 `
 
-export const SparksBackground = styled.div`
+export const Pattern = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -43,32 +43,39 @@ export const SparksBackground = styled.div`
   right: 0;
   background-image: url('https://i.imgur.com/AjBArhU.png');
   background-position: 50% 50%;
-  background-size: 300%;
+  background-size: 1000%;
   z-index: 2;
   transition: all 0.1s ease;
   mask-image: url('https://i.imgur.com/Y9uPQ9n.png');
   mask-position: 50% 50%;
 `
 
-export const GradientBackground = styled.div`
+export const LightReflection = styled.div`
+  --color1: #efb2fb;
+  --color2: #acc6f8;
+
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
+  opacity: 0.5;
+  transition: all 0.33s ease;
+  mix-blend-mode: color-dodge;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
   background-size: 300% 300%;
-  opacity: 0;
-  transition: background-position 0.1s ease;
-  filter: brightness(0.5) contrast(1.2);
   background-image: linear-gradient(
-    70deg,
-    rgba(0 0 0 / 0) 15%,
-    ${cVar('colorCoreNeutral900Lighten')} 30%,
-    ${cVar('colorCoreNeutral600Lighten')} 48%,
-    ${cVar('colorCoreNeutral600Lighten')} 52%,
-    ${cVar('colorCoreNeutral900Lighten')} 70%,
-    rgba(0 0 0 / 0) 85%
+    115deg,
+    transparent 0%,
+    var(--color1) 25%,
+    transparent 47%,
+    transparent 53%,
+    var(--color2) 75%,
+    transparent 100%
   );
+  opacity: 0.5;
+  filter: brightness(0.5) contrast(1);
 `
 
 export const ReflectionContent = styled.div`
@@ -107,17 +114,29 @@ export const ReflectionGridCell = styled.div<{
         `${generateEdges(column)}px ${generateEdges(row)}px 0 0 ${cVar('colorCoreNeutral600')}`},
       0 55px 35px -20px rgb(0 0 0 / 0.5);
   }
-  :hover ~ ${ReflectionContent} ${SparksBackground} {
-    opacity: 1;
-    background-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
+  :hover ~ ${ReflectionContent} ${Pattern} {
+    opacity: 0.65;
+    background-position: ${({ lp, tp }) => `${lp * 0.25}% ${tp * 0.5}%`};
   }
-  :hover ~ ${ReflectionContent} ${SparksBackgroundMask} {
+  :hover ~ ${ReflectionContent} ${FadeMask} {
     opacity: 1;
-    mask-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
+    mask-position: ${({ lp, tp }) => `${lp * 1.15}% ${tp}%`};
+    mask-image: linear-gradient(
+      104deg,
+      rgb(0 0 0 / 1) 0%,
+      rgb(0 0 0 / 0.8) 10%,
+      rgb(0 0 0 / 0) 35%,
+      rgb(0 0 0 / 0) 65%,
+      rgb(0 0 0 / 0.8) 90%,
+      rgb(0 0 0 / 1) 100%
+    );
+    mask-size: 190%;
   }
-  :hover ~ ${ReflectionContent} ${GradientBackground} {
-    opacity: 1;
+  :hover ~ ${ReflectionContent} ${LightReflection} {
     background-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
+    background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%);
+    opacity: 0.628;
+    filter: brightness(0.66) contrast(1.33);
   }
 `
 
