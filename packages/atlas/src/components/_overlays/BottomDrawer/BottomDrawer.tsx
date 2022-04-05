@@ -17,7 +17,6 @@ export type BottomDrawerProps = {
   titleLabel?: string
   pageTitle?: string
   actionBar?: ActionBarProps
-  coverTopbar?: boolean
   fixedScrollbar?: boolean
 }
 
@@ -29,7 +28,6 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
   pageTitle,
   children,
   actionBar: actionBarProps,
-  coverTopbar,
   fixedScrollbar,
 }) => {
   const headTags = useHeadTags(pageTitle || title)
@@ -74,7 +72,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
         classNames="bottom-drawer"
       >
-        <Container role="dialog" coverTopbar={!!coverTopbar}>
+        <Container role="dialog">
           <DrawerHeader title={title} label={titleLabel} onCloseClick={onClose} />
           <ScrollContainer actionBarHeight={actionBarHeight} fixedScrollbar={fixedScrollbar}>
             {children}
