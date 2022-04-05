@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { useNft } from '@/api/hooks'
 import { AcceptBidDialog } from '@/components/_overlays/AcceptBidDialog'
@@ -6,7 +6,6 @@ import { ChangePriceDialog } from '@/components/_overlays/ChangePriceDialog'
 import { useNftState } from '@/hooks/useNftState'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useTokenPrice } from '@/providers/joystream'
-import { useOverlayManager } from '@/providers/overlayManager'
 
 type ContextValue = {
   currentAction: NftAction | null
@@ -34,10 +33,6 @@ export const NftActionsProvider: React.FC = ({ children }) => {
   const { auction } = useNftState(nft)
   const { convertToUSD } = useTokenPrice()
 
-  // TODO: remove following code once NftPurchaseView uses BottomDrawer
-  // --START--
-  const [cachedCurrentAction, setCachedCurrentAction] = useState<NftAction | null>(null)
-  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
   const mappedBids = auction?.bids
     ? auction?.bids.map(({ id, createdAt, amount, bidder }) => ({
         id,
@@ -47,20 +42,6 @@ export const NftActionsProvider: React.FC = ({ children }) => {
         bidder,
       }))
     : []
-
-  useEffect(() => {
-    if (currentAction === cachedCurrentAction) {
-      return
-    }
-    setCachedCurrentAction(currentAction)
-
-    if (currentAction === 'purchase') {
-      incrementOverlaysOpenCount()
-    } else {
-      decrementOverlaysOpenCount()
-    }
-  }, [cachedCurrentAction, currentAction, decrementOverlaysOpenCount, incrementOverlaysOpenCount])
-  // --END--
 
   const closeNftAction = useCallback(() => {
     setCurrentAction(null)
@@ -89,6 +70,7 @@ export const NftActionsProvider: React.FC = ({ children }) => {
         bids={mappedBids}
         onAcceptBid={transactions.acceptNftBid}
         nftId={currentNftId}
+        ownerId={nft?.ownerMember?.id}
       />
       <ChangePriceDialog
         isOpen={currentAction === 'change-price'}

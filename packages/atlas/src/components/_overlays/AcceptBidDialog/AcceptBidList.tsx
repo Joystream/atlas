@@ -13,16 +13,21 @@ import { formatDateTime } from '@/utils/time'
 import { Bid } from './AcceptBidDialog.types'
 import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
 
+type SelectedBidder = {
+  id: string
+  amount: string
+}
+
 type BidRowProps = {
-  selectedValue?: string
-  onSelect?: (selectedBid: string) => void
+  selectedValue?: SelectedBidder
+  onSelect?: (selectedBid: string, price: string) => void
   size?: 'medium' | 'small'
 } & Bid
 
 type AcceptBidListProps = {
   items: BidRowProps[]
-  onSelect?: (selectedBid: string) => void
-  selectedBidder?: string
+  onSelect?: ({ id, amount }: SelectedBidder) => void
+  selectedBidder?: SelectedBidder
 }
 
 export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, selectedBidder }) => {
@@ -30,11 +35,11 @@ export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, s
     <>
       {items.map((item) => (
         <BidRow
-          key={`bidRow-${item.id}`}
+          key={`bidRow-${item.bidder.id}-${item.amount}`}
           {...item}
-          selectedValue={selectedBidder || ''}
-          onSelect={(value) => {
-            onSelect?.(value)
+          selectedValue={selectedBidder}
+          onSelect={(id, amount) => {
+            onSelect?.({ id, amount })
           }}
         />
       ))}
@@ -42,28 +47,20 @@ export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, s
   )
 }
 
-export const BidRow: React.FC<BidRowProps> = ({
-  id,
-  bidder,
-  createdAt,
-  amount,
-  amountUSD,
-  selectedValue,
-  onSelect,
-}) => {
+export const BidRow: React.FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedValue, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
-  const selected = selectedValue === id
+  const selected = selectedValue?.id === bidder.id
   const { url, isLoadingAsset } = useMemberAvatar(bidder)
   return (
-    <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id)}>
-      <RadioInput selectedValue={selectedValue} value={id} />
+    <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id, amount)}>
+      <RadioInput selectedValue={selectedValue?.id} value={bidder.id} onChange={() => onSelect?.(bidder.id, amount)} />
       {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size="small" />}
       <div>
         <Text variant="h300" secondary={!selected} margin={{ bottom: 1 }}>
           {bidder?.handle}
         </Text>
         <Text as="p" secondary variant="t100">
-          {formatDateTime(createdAt)}
+          {formatDateTime(new Date(createdAt))}
         </Text>
       </div>
       <Price>

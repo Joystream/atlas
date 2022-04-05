@@ -9,12 +9,25 @@ type AcceptBidDialogProps = {
   onModalClose: () => void
   isOpen: boolean
   bids: Bid[]
-  onAcceptBid: (bidderId: string, id: string) => void
+  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: string) => void
   nftId: string | null
+  ownerId?: string
 }
 
-export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({ onModalClose, isOpen, bids, onAcceptBid, nftId }) => {
-  const [selectedBidder, setSelectedBidder] = useState<string | undefined>()
+type SelectedBidder = {
+  id: string
+  amount: string
+}
+
+export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({
+  onModalClose,
+  isOpen,
+  bids,
+  onAcceptBid,
+  nftId,
+  ownerId,
+}) => {
+  const [selectedBidder, setSelectedBidder] = useState<SelectedBidder | undefined>()
 
   const handleModalClose = () => {
     setSelectedBidder(undefined)
@@ -22,10 +35,10 @@ export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({ onModalClose, 
   }
 
   const handleAcceptBid = () => {
-    if (!selectedBidder || !nftId) {
+    if (!selectedBidder || !nftId || !ownerId) {
       return
     }
-    onAcceptBid(selectedBidder, nftId)
+    onAcceptBid(ownerId, nftId, selectedBidder.id, selectedBidder.amount)
     handleModalClose()
   }
 
