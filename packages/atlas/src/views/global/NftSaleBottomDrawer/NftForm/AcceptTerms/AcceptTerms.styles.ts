@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Information } from '@/components/Information'
 import { MemberBadge } from '@/components/MemberBadge'
 import { Text } from '@/components/Text'
-import { SvgActionArrowRight, SvgActionWarning } from '@/components/_icons'
+import { SvgActionArrowRight } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const TermsBox = styled.div`
@@ -36,6 +36,7 @@ export const Row = styled.div`
   ${media.md} {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 `
 
@@ -89,14 +90,4 @@ export const Divider = styled.hr`
 
 export const StyledInformation = styled(Information)`
   margin-left: ${sizes(1)};
-`
-
-export const StyledSvgWarning = styled(SvgActionWarning)`
-  path {
-    fill: ${cVar('colorCoreYellow100')};
-  }
-`
-
-export const YellowText = styled(Text)`
-  color: ${cVar('colorCoreYellow100')};
 `

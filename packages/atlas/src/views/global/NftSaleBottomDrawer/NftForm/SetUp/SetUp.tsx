@@ -3,15 +3,25 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
+import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { TextField } from '@/components/_inputs/TextField'
+import { useTokenPrice } from '@/providers/joystream'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumber } from '@/utils/number'
 
-import { AuctionDatePickerWrapper, DaysSummary, DaysSummaryInfo, Header, StyledFormField } from './SetUp.styles'
+import {
+  AuctionDatePickerWrapper,
+  DaysSummary,
+  DaysSummaryInfo,
+  Header,
+  OptionCardRadioWrapper,
+  StyledFormField,
+} from './SetUp.styles'
 
 import { useNftFormUtils } from '../NftForm.hooks'
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
@@ -48,10 +58,28 @@ export const SetUp: React.FC<SetUpProps> = ({
   const endDate = watch('endDate')
 
   const { getNumberOfBlocks, chainState } = useNftFormUtils()
+  const { convertToUSD } = useTokenPrice()
 
   const numberOfBlocks = getNumberOfBlocks(startDate, endDate) || 0
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
+  const isEnglishAuction = watch('type') === 'english'
+  const buyNowPrice = watch('buyNowPrice')
+  const startingPrice = watch('startingPrice')
+
+  useEffect(() => {
+    setTimeout(() => {
+      setValue(
+        'endDate',
+        isEnglishAuction
+          ? {
+              type: 'duration',
+              durationDays: 1,
+            }
+          : null
+      )
+    }, 0)
+  }, [isEnglishAuction, setValue])
 
   useEffect(() => {
     if (!numberOfBlocks) {
@@ -91,7 +119,7 @@ export const SetUp: React.FC<SetUpProps> = ({
   const headerText = {
     'Auction': {
       header: 'Auction',
-      caption: 'Choose settings of your listing. All fields are optional.',
+      caption: 'All fields are optional. If minimum bid is not specified collectors can make any offer.',
     },
     'Fixed price': {
       header: 'Buy now',
@@ -103,17 +131,14 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }
 
-  const days = [null, 1, 3, 5, 7] as const
+  const days = [1, 3, 5, 7] as const
 
   const expirationDateItems = days.map((value) => ({
-    name: value === null ? 'No expiration date' : pluralizeNoun(value, 'day'),
-    value:
-      value === null
-        ? null
-        : {
-            type: 'duration' as const,
-            durationDays: value,
-          },
+    name: pluralizeNoun(value, 'day'),
+    value: {
+      type: 'duration' as const,
+      durationDays: value,
+    },
   }))
 
   return (
@@ -128,7 +153,8 @@ export const SetUp: React.FC<SetUpProps> = ({
             <TextField
               {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
-              nodeEnd={<Pill label="tJoy" />}
+              nodeStart={<JoyTokenIcon variant="gray" size={24} />}
+              nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
               error={!!errors.buyNowPrice}
               helperText={errors.buyNowPrice?.message}
             />
@@ -136,82 +162,53 @@ export const SetUp: React.FC<SetUpProps> = ({
         )}
         {selectedType === 'Auction' && (
           <>
-            <FormField
-              title="Minimum bid"
-              switchProps={{
-                name: 'startingPrice',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('startingPrice'),
-              }}
-              infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
-            >
-              <TextField
-                {...register('startingPrice', { valueAsNumber: true })}
-                type="number"
-                defaultValue={chainState.nftMinStartingPrice?.toString()}
-                nodeEnd={<Pill label="tJOY" />}
-                disabled={!activeInputs.includes('startingPrice')}
-                error={!!errors.startingPrice}
-                helperText={errors.startingPrice?.message}
+            <Controller
+              name="type"
+              control={control}
+              defaultValue="open"
+              render={({ field: { value, onChange } }) => (
+                <OptionCardRadioWrapper>
+                  <OptionCardRadio
+                    value="open"
+                    label="Open auction"
+                    helperText="Cancel anytime & pick the winning bid"
+                    onChange={() => onChange('open')}
+                    selectedValue={value}
+                  />
+                  <OptionCardRadio
+                    value="english"
+                    label="Timed auction"
+                    helperText="Cannot be canceled & highest bidder wins"
+                    onChange={() => onChange('english')}
+                    selectedValue={value}
+                  />
+                </OptionCardRadioWrapper>
+              )}
+            />
+            <AuctionDatePickerWrapper columns={isEnglishAuction ? 2 : 1}>
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <AuctionDatePicker
+                    size="regular"
+                    label="Starting date"
+                    error={!!error}
+                    helperText={error?.message}
+                    minDate={new Date()}
+                    maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                    items={[
+                      {
+                        value: null,
+                        name: 'Right after listing',
+                      },
+                    ]}
+                    onChange={onChange}
+                    value={value}
+                  />
+                )}
               />
-            </FormField>
-            <FormField
-              title="Fixed price"
-              switchProps={{
-                name: 'buyNowPrice',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('buyNowPrice'),
-              }}
-              infoTooltip={{
-                text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
-              }}
-            >
-              <TextField
-                {...register('buyNowPrice', { valueAsNumber: true })}
-                placeholder="—"
-                type="number"
-                nodeEnd={<Pill label="tJOY" />}
-                disabled={!activeInputs.includes('buyNowPrice')}
-                error={!!errors.buyNowPrice}
-                helperText={errors.buyNowPrice?.message}
-                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
-              />
-            </FormField>
-            <FormField
-              title="Auction duration"
-              switchProps={{
-                name: 'auctionDuration',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('auctionDuration'),
-              }}
-              infoTooltip={{
-                text: 'You can set the auction expiration date by setting its duration. When active - highest bid wins at the time of auction end.',
-              }}
-            >
-              <AuctionDatePickerWrapper>
-                <Controller
-                  name="startDate"
-                  control={control}
-                  render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <AuctionDatePicker
-                      size="regular"
-                      label="Starting date"
-                      error={!!error}
-                      helperText={error?.message}
-                      minDate={new Date()}
-                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
-                      disabled={!activeInputs.includes('auctionDuration')}
-                      items={[
-                        {
-                          value: null,
-                          name: 'Right after listing',
-                        },
-                      ]}
-                      onChange={onChange}
-                      value={value}
-                    />
-                  )}
-                />
+              {isEnglishAuction && (
                 <Controller
                   name="endDate"
                   control={control}
@@ -223,15 +220,19 @@ export const SetUp: React.FC<SetUpProps> = ({
                       helperText={error?.message}
                       minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
                       maxDate={maxEndDate}
-                      disabled={!activeInputs.includes('auctionDuration')}
                       onChange={onChange}
                       items={expirationDateItems}
-                      value={value}
+                      value={
+                        value || {
+                          type: 'duration',
+                          durationDays: 1,
+                        }
+                      }
                     />
                   )}
                 />
-              </AuctionDatePickerWrapper>
-            </FormField>
+              )}
+            </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
                 <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
@@ -256,6 +257,49 @@ export const SetUp: React.FC<SetUpProps> = ({
                 />
               </DaysSummary>
             )}
+            <FormField
+              title="Minimum bid"
+              switchProps={{
+                name: 'startingPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('startingPrice'),
+              }}
+              infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
+            >
+              <TextField
+                {...register('startingPrice', { valueAsNumber: true })}
+                type="number"
+                defaultValue={chainState.nftMinStartingPrice?.toString()}
+                nodeStart={<JoyTokenIcon variant="gray" size={24} />}
+                nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
+                disabled={!activeInputs.includes('startingPrice')}
+                error={!!errors.startingPrice}
+                helperText={errors.startingPrice?.message}
+              />
+            </FormField>
+            <FormField
+              title="Fixed price"
+              switchProps={{
+                name: 'buyNowPrice',
+                onChange: toggleActiveInput,
+                value: activeInputs.includes('buyNowPrice'),
+              }}
+              infoTooltip={{
+                text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
+              }}
+            >
+              <TextField
+                {...register('buyNowPrice', { valueAsNumber: true })}
+                placeholder="—"
+                type="number"
+                nodeStart={<JoyTokenIcon variant="gray" size={24} />}
+                nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
+                disabled={!activeInputs.includes('buyNowPrice')}
+                error={!!errors.buyNowPrice}
+                helperText={errors.buyNowPrice?.message}
+                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
+              />
+            </FormField>
             <FormField
               title="Whitelist"
               switchProps={{

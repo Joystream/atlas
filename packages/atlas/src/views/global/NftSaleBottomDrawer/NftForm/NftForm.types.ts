@@ -10,6 +10,7 @@ export type AuctionDate = {
 }
 
 export type NftFormFields = {
+  type: 'open' | 'english' | 'buyNow'
   royalty?: number
   startingPrice?: number
   buyNowPrice?: number | ''

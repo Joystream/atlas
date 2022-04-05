@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
-import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { useMemberAvatar } from '@/providers/assets'
@@ -17,11 +16,9 @@ import {
   StyledInformation,
   StyledMemberBadge,
   StyledSvgActionArrowRight,
-  StyledSvgWarning,
   TermsBox,
   Title,
   WhiteListRow,
-  YellowText,
 } from './AcceptTerms.styles'
 
 import { AuctionDurationTooltipFooter } from '../NftForm.styles'
@@ -54,17 +51,6 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   return (
     <>
       <Header variant="h500">Accept listing terms</Header>
-      <Banner
-        id="issuing-nft"
-        dismissable={false}
-        icon={<StyledSvgWarning width={24} height={24} />}
-        description={
-          <>
-            <Text variant="t200">After issuing this as an NFT </Text>
-            <YellowText variant="t200">editing options of this video will be disabled</YellowText>
-          </>
-        }
-      />
       <Divider />
       <Text variant="h400">Listing settings</Text>
       <Row>
@@ -90,7 +76,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </Title>
           <Description>
             <DescriptionText>
-              {Number(formData.startingPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJoy
+              {Number(formData.startingPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJOY
             </DescriptionText>
           </Description>
         </Row>
@@ -106,7 +92,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </Title>
           <Description>
             <DescriptionText>
-              {Number(formData.buyNowPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJoy
+              {Number(formData.buyNowPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJOY
             </DescriptionText>
           </Description>
         </Row>
@@ -123,43 +109,47 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <DescriptionText>{isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}</DescriptionText>
         </Description>
       </Row>
-      <Row>
-        <Title>
-          <TitleText>Expiration date</TitleText>
-          <StyledInformation
-            text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
-            placement="top"
-          />
-        </Title>
-        <Description>
-          <DescriptionText>
-            {isEndDateValid ? formatDateTime(endDate.date) : totalDaysAndHours || 'No expiration date'}
-          </DescriptionText>
-        </Description>
-      </Row>
-      {durationBlocks > 0 && (
-        <Row>
-          <Title>
-            <TitleText>Total auction duration</TitleText>
-            <StyledInformation
-              text="Auctions are run and settled on-chain and use tJoy’s blocks, rather than clock time."
-              footer={
-                <AuctionDurationTooltipFooter>
-                  <Text variant="t100">
-                    {totalDaysAndHours} = {formData.auctionDurationBlocks}
-                  </Text>
-                </AuctionDurationTooltipFooter>
-              }
-              placement="top"
-            />
-          </Title>
-          <Description>
-            <DescriptionText>{totalDaysAndHours}</DescriptionText>
-            <Text variant="h400" secondary>
-              &nbsp;/ {formatNumber(durationBlocks)} Blocks
-            </Text>
-          </Description>
-        </Row>
+      {formData.endDate && (
+        <>
+          <Row>
+            <Title>
+              <TitleText>Expiration date</TitleText>
+              <StyledInformation
+                text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
+                placement="top"
+              />
+            </Title>
+            <Description>
+              <DescriptionText>
+                {isEndDateValid ? formatDateTime(endDate.date) : totalDaysAndHours || 'No expiration date'}
+              </DescriptionText>
+            </Description>
+          </Row>
+          {durationBlocks > 0 && (
+            <Row>
+              <Title>
+                <TitleText>Total auction duration</TitleText>
+                <StyledInformation
+                  text="Auctions are run and settled on-chain and use tJOY’s blocks, rather than clock time."
+                  footer={
+                    <AuctionDurationTooltipFooter>
+                      <Text variant="t100">
+                        {totalDaysAndHours} = {formData.auctionDurationBlocks}
+                      </Text>
+                    </AuctionDurationTooltipFooter>
+                  }
+                  placement="top"
+                />
+              </Title>
+              <Description>
+                <DescriptionText>{totalDaysAndHours}</DescriptionText>
+                <Text variant="h400" secondary>
+                  &nbsp;/ {formatNumber(durationBlocks)} Blocks
+                </Text>
+              </Description>
+            </Row>
+          )}
+        </>
       )}
       {(formData.whitelistedMembers || []).length > 0 && (
         <WhiteListRow>
@@ -189,7 +179,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           />
         </Title>
         <Description>
-          <DescriptionText>0 tJoy</DescriptionText>
+          <DescriptionText>0 tJOY</DescriptionText>
         </Description>
       </Row>
       <TermsBox>
