@@ -372,7 +372,7 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
  export interface Video extends Struct {
    readonly in_channel: ChannelId;
 diff --git a/augment/augment-api-errors.ts b/augment/augment-api-errors.ts
-index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24aa37cc64 100644
+index 513f0a709d5b7bd6ff054225da2489c34e829bda..d998893f5033a59d4dea718f0739aa898c1b5d67 100644
 --- a/augment/augment-api-errors.ts
 +++ b/augment/augment-api-errors.ts
 @@ -281,7 +281,7 @@ declare module '@polkadot/api/types/errors' {
@@ -384,18 +384,16 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Actor is not A Member
         **/
-@@ -302,10 +302,6 @@ declare module '@polkadot/api/types/errors' {
-        * Auction cannot be completed
+@@ -303,7 +303,7 @@ declare module '@polkadot/api/types/errors' {
         **/
        AuctionCannotBeCompleted: AugmentedError<ApiType>;
--      /**
--       * Auction for given video did not start
--       **/
--      AuctionDidNotStart: AugmentedError<ApiType>;
        /**
-        * Auction duration lower bound exceeded
+-       * Auction for given video did not start
++       * Auction did not started
         **/
-@@ -318,6 +314,14 @@ declare module '@polkadot/api/types/errors' {
+       AuctionDidNotStart: AugmentedError<ApiType>;
+       /**
+@@ -318,6 +318,14 @@ declare module '@polkadot/api/types/errors' {
         * Expected root or signed origin
         **/
        BadOrigin: AugmentedError<ApiType>;
@@ -410,7 +408,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Bid lock duration is not expired
         **/
-@@ -434,6 +438,10 @@ declare module '@polkadot/api/types/errors' {
+@@ -434,6 +442,10 @@ declare module '@polkadot/api/types/errors' {
         * Bag Size specified is not valid
         **/
        InvalidBagSizeSpecified: AugmentedError<ApiType>;
@@ -421,7 +419,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Invalid Buy Now price commit provided
         **/
-@@ -450,10 +458,6 @@ declare module '@polkadot/api/types/errors' {
+@@ -450,10 +462,6 @@ declare module '@polkadot/api/types/errors' {
         * Auction type is not `Open`
         **/
        IsNotOpenAuctionType: AugmentedError<ApiType>;
@@ -433,7 +431,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
         * Lead authentication failed
         **/
 diff --git a/augment/augment-api-events.ts b/augment/augment-api-events.ts
-index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec442aa46694 100644
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0a3c63130 100644
 --- a/augment/augment-api-events.ts
 +++ b/augment/augment-api-events.ts
 @@ -2,7 +2,7 @@
@@ -471,7 +469,7 @@ index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec44
        OfferCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
        OfferStarted: AugmentedEvent<ApiType, [VideoId, ContentActor, MemberId, Option<CurrencyAmount>]>;
 -      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
-+      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, CurrencyAmount]>;
++      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, MemberId, CurrencyAmount]>;
 +      OpenAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, OpenAuctionParams, OpenAuctionId]>;
        ReactionToVideo: AugmentedEvent<ApiType, [MemberId, VideoId, ReactionId]>;
        ReactionToVideoPost: AugmentedEvent<ApiType, [MemberId, VideoId, VideoPostId, ReactionId]>;
@@ -656,7 +654,7 @@ index 3d5a23184becf79b77cd9f333d820840a418b26e..cfa708cc5c046b39cc64497da7c4d773
 +export { ActorId, MemberId, BlockAndTime, ThreadId, PostId, InputValidationLengthConstraint, WorkingGroup, BalanceKind, Address, LookupSource, ChannelId, Url, Membership, StakingAccountMemberBinding, BuyMembershipParameters, InviteMembershipParameters, CouncilStageAnnouncing, CouncilStageElection, CouncilStageUpdate, CouncilStage, Candidate, CouncilMemberOf, CastVoteOf, ForumUserId, ModeratorId, CategoryId, PostReactionId, Category, Thread, Post, PollAlternative, Poll, PrivilegedActor, PollInput, ThreadOf, ExtendedPostId, ApplicationId, Application, ApplicationInfo, ApplicationIdSet, ApplicationIdToWorkerIdMap, WorkerId, Worker, WorkerInfo, Opening, OpeningId, StakePolicy, StakeParameters, StorageProviderId, OpeningType, ApplyOnOpeningParameters, Penalty, RewardPaymentType, StorageBucketId, StorageBucketsPerBagValueConstraint, DataObjectId, DynamicBagId, Voucher, DynamicBagType, DynamicBagCreationPolicy, DynamicBagDeletionPrize, DynamicBagDeletionPrizeRecord, Bag, StorageBucket, StaticBagId, Static, Dynamic, BagId, DataObjectCreationParameters, BagIdType, UploadParameters, StorageBucketIdSet, DataObjectIdSet, ContentIdSet, Cid, StorageBucketOperatorStatus, DataObject, DistributionBucketId, DistributionBucketIndex, DistributionBucketFamilyId, DistributionBucket, DistributionBucketFamily, DataObjectIdMap, DistributionBucketIndexSet, DynamicBagCreationPolicyDistributorFamiliesMap, ProposalId, ProposalStatus, ProposalOf, ProposalDetails, ProposalDetailsOf, VotingResults, ProposalParameters, GeneralProposalParameters, VoteKind, DiscussionThread, DiscussionPost, CreateOpeningParameters, FillOpeningParameters, TerminateRoleParameters, ProposalDecision, ExecutionFailed, Approved, SetLeadParams, ThreadMode, ExecutionStatus, FundingRequestParameters, ReferendumStageVoting, ReferendumStageRevealing, ReferendumStage, OptionResult, VotePower, ConstitutionInfo, ParticipantId, Title, UpdatedTitle, UpdatedBody, ReplyId, Reply, ReplyToDelete, BountyId, EntryId, BountyActor, AssuranceContractType_Closed, AssuranceContractType, FundingType_Limited, FundingType_Perpetual, FundingType, BountyCreationParameters, OracleWorkEntryJudgment_Winner, OracleWorkEntryJudgment, OracleJudgment, Entry, BountyMilestone_Created, BountyMilestone_BountyMaxFundingReached, BountyMilestone_WorkSubmitted, BountyMilestone_JudgmentSubmitted, BountyMilestone, Bounty, CuratorId, CuratorGroupId, CuratorGroup, ContentActor, StorageAssets, Channel, ChannelOwner, ChannelCategoryId, ChannelCategory, ChannelCategoryCreationParameters, ChannelCategoryUpdateParameters, ChannelCreationParameters, ChannelUpdateParameters, Video, VideoId, VideoCategoryId, VideoCategory, VideoCategoryCreationParameters, VideoCategoryUpdateParameters, VideoCreationParameters, VideoUpdateParameters, MaxNumber, IsCensored, VideoPostId, ReactionId, VideoPostType, VideoPost, Side, ProofElement, VideoPostCreationParameters, VideoPostDeletionParameters, PullPayment, ModeratorSet, Royalty, EnglishAuctionParams, OpenAuctionParams, EnglishAuction, OpenAuction, OpenAuctionBid, EnglishAuctionBid, TransactionalStatus, NftOwner, OwnedNft, CurrencyOf, CurrencyAmount, InitTransactionalStatus, NftIssuanceParameters, NftMetadata, OpenAuctionId };
 \ No newline at end of file
 diff --git a/augment-codec/augment-api-errors.ts b/augment-codec/augment-api-errors.ts
-index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24aa37cc64 100644
+index 513f0a709d5b7bd6ff054225da2489c34e829bda..d998893f5033a59d4dea718f0739aa898c1b5d67 100644
 --- a/augment-codec/augment-api-errors.ts
 +++ b/augment-codec/augment-api-errors.ts
 @@ -281,7 +281,7 @@ declare module '@polkadot/api/types/errors' {
@@ -668,18 +666,16 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Actor is not A Member
         **/
-@@ -302,10 +302,6 @@ declare module '@polkadot/api/types/errors' {
-        * Auction cannot be completed
+@@ -303,7 +303,7 @@ declare module '@polkadot/api/types/errors' {
         **/
        AuctionCannotBeCompleted: AugmentedError<ApiType>;
--      /**
--       * Auction for given video did not start
--       **/
--      AuctionDidNotStart: AugmentedError<ApiType>;
        /**
-        * Auction duration lower bound exceeded
+-       * Auction for given video did not start
++       * Auction did not started
         **/
-@@ -318,6 +314,14 @@ declare module '@polkadot/api/types/errors' {
+       AuctionDidNotStart: AugmentedError<ApiType>;
+       /**
+@@ -318,6 +318,14 @@ declare module '@polkadot/api/types/errors' {
         * Expected root or signed origin
         **/
        BadOrigin: AugmentedError<ApiType>;
@@ -694,7 +690,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Bid lock duration is not expired
         **/
-@@ -434,6 +438,10 @@ declare module '@polkadot/api/types/errors' {
+@@ -434,6 +442,10 @@ declare module '@polkadot/api/types/errors' {
         * Bag Size specified is not valid
         **/
        InvalidBagSizeSpecified: AugmentedError<ApiType>;
@@ -705,7 +701,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
        /**
         * Invalid Buy Now price commit provided
         **/
-@@ -450,10 +458,6 @@ declare module '@polkadot/api/types/errors' {
+@@ -450,10 +462,6 @@ declare module '@polkadot/api/types/errors' {
         * Auction type is not `Open`
         **/
        IsNotOpenAuctionType: AugmentedError<ApiType>;
@@ -717,7 +713,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..15147a334c41a7ce42f44af0b3493f24
         * Lead authentication failed
         **/
 diff --git a/augment-codec/augment-api-events.ts b/augment-codec/augment-api-events.ts
-index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec442aa46694 100644
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0a3c63130 100644
 --- a/augment-codec/augment-api-events.ts
 +++ b/augment-codec/augment-api-events.ts
 @@ -2,7 +2,7 @@
@@ -755,7 +751,7 @@ index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..2cc7ff1d1800e5da468be3c5f15fec44
        OfferCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
        OfferStarted: AugmentedEvent<ApiType, [VideoId, ContentActor, MemberId, Option<CurrencyAmount>]>;
 -      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId]>;
-+      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, CurrencyAmount]>;
++      OpenAuctionBidAccepted: AugmentedEvent<ApiType, [ContentActor, VideoId, MemberId, CurrencyAmount]>;
 +      OpenAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, OpenAuctionParams, OpenAuctionId]>;
        ReactionToVideo: AugmentedEvent<ApiType, [MemberId, VideoId, ReactionId]>;
        ReactionToVideoPost: AugmentedEvent<ApiType, [MemberId, VideoId, VideoPostId, ReactionId]>;
