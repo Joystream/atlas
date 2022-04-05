@@ -53,7 +53,6 @@ export type GetNftNotificationsQuery = {
         video: { __typename?: 'Video'; id: string; title?: string | null }
       }
     | { __typename?: 'AuctionCanceledEvent'; inBlock: number }
-    | { __typename?: 'AuctionStartedEvent'; inBlock: number }
     | {
         __typename?: 'BidMadeCompletingAuctionEvent'
         id: string
@@ -105,6 +104,7 @@ export type GetNftNotificationsQuery = {
     | { __typename?: 'BudgetRefillPlannedEvent'; inBlock: number }
     | { __typename?: 'BudgetSetEvent'; inBlock: number }
     | { __typename?: 'BudgetSpendingEvent'; inBlock: number }
+    | { __typename?: 'BudgetUpdatedEvent'; inBlock: number }
     | { __typename?: 'BuyNowCanceledEvent'; inBlock: number }
     | { __typename?: 'CandidacyNoteSetEvent'; inBlock: number }
     | { __typename?: 'CandidacyStakeReleaseEvent'; inBlock: number }
@@ -116,6 +116,7 @@ export type GetNftNotificationsQuery = {
     | { __typename?: 'CategoryStickyThreadUpdateEvent'; inBlock: number }
     | { __typename?: 'CouncilorRewardUpdatedEvent'; inBlock: number }
     | { __typename?: 'EnglishAuctionCompletedEvent'; inBlock: number }
+    | { __typename?: 'EnglishAuctionStartedEvent'; inBlock: number }
     | { __typename?: 'InitialInvitationBalanceUpdatedEvent'; inBlock: number }
     | { __typename?: 'InitialInvitationCountUpdatedEvent'; inBlock: number }
     | { __typename?: 'InvitesTransferredEvent'; inBlock: number }
@@ -219,6 +220,7 @@ export type GetNftNotificationsQuery = {
           } | null
         }
       }
+    | { __typename?: 'OpenAuctionStartedEvent'; inBlock: number }
     | { __typename?: 'OpeningAddedEvent'; inBlock: number }
     | { __typename?: 'OpeningCanceledEvent'; inBlock: number }
     | { __typename?: 'OpeningFilledEvent'; inBlock: number }

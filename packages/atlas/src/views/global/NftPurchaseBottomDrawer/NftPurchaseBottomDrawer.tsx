@@ -155,6 +155,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             currentNftId,
             activeMemberId,
             Number(auctionBuyNowPrice),
+            isEnglishAuction ? 'english' : 'open',
             proxyCallback(updateStatus)
           )
         }
@@ -178,6 +179,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     handleTransaction,
     isAuction,
     joystream,
+    isEnglishAuction,
     proxyCallback,
     refetch,
   ])
@@ -189,7 +191,13 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         txFactory: async (updateStatus) =>
           (
             await joystream.extrinsics
-          ).makeNftBid(currentNftId, activeMemberId, Number(data.bid), proxyCallback(updateStatus)),
+          ).makeNftBid(
+            currentNftId,
+            activeMemberId,
+            Number(data.bid),
+            isEnglishAuction ? 'english' : 'open',
+            proxyCallback(updateStatus)
+          ),
         onTxSync: (_) => refetch(),
       })
       if (completed) {
@@ -217,6 +225,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
     currentNftId,
     displaySnackbar,
     handleTransaction,
+    isEnglishAuction,
     joystream,
     proxyCallback,
     refetch,

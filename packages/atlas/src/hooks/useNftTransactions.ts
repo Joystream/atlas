@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
+import { NftSaleType } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -42,19 +43,14 @@ export const useNftTransactions = () => {
   )
 
   const cancelNftSale = useCallback(
-    (id: string, isBuyNow?: boolean) => {
+    (id: string, saleType: NftSaleType) => {
       if (!joystream || !activeMemberId) {
         return
       }
       const handleCancelTransaction = () =>
         handleTransaction({
           txFactory: async (updateStatus) =>
-            (await joystream.extrinsics).cancelNftSale(
-              id,
-              activeMemberId,
-              isBuyNow || false,
-              proxyCallback(updateStatus)
-            ),
+            (await joystream.extrinsics).cancelNftSale(id, activeMemberId, saleType, proxyCallback(updateStatus)),
           onTxSync: async (_) => _refetchData(id),
         })
 
@@ -84,7 +80,7 @@ export const useNftTransactions = () => {
       if (!joystream || !activeMemberId) {
         return
       }
-      handleTransaction({
+      return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).changeNftPrice(activeMemberId, id, price, proxyCallback(updateStatus)),
         onTxSync: async (_) => _refetchData(id),

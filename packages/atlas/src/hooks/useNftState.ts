@@ -1,5 +1,6 @@
 import { AllNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
+import { NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
@@ -11,52 +12,40 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
-  const isBuyNow = nft && nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
+  const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
+  const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
   const auction =
     (nft && nft.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction) ||
     null
+  const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
+  const openAuction = auction?.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
   const isAuction = !!auction
-  const isUserTopBidder = auction?.lastBid?.bidder.id === activeMembership?.id
+  const isUserTopBidder = auction?.topBid?.bidder.id === activeMembership?.id
+  const saleType: NftSaleType | null = isIdle ? null : isBuyNow ? 'buyNow' : englishAuction ? 'english' : 'open'
 
   const userBid = [...(auction?.bids ?? [])]
     .reverse()
     .find((bid) => !bid.isCanceled && bid.bidder.id === activeMembership?.id)
-  const userBidUnlockBlock =
-    auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid
-      ? userBid?.createdInBlock + auction.auctionType.bidLockingTime
-      : undefined
-
+  const userBidUnlockBlock = openAuction && userBid ? userBid?.createdInBlock + openAuction.bidLockDuration : undefined
   const userBidUnlockBlockTimestamp = userBidUnlockBlock && convertBlockToMsTimestamp(userBidUnlockBlock)
-  const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
-  const plannedEndDAteBlockTimesamp =
-    auction?.plannedEndAtBlock && convertBlockToMsTimestamp(auction?.plannedEndAtBlock)
-
   const userBidUnlockDate = userBidUnlockBlockTimestamp ? new Date(userBidUnlockBlockTimestamp) : undefined
+
+  const startsAtDateBlockTimestamp = isAuction && convertBlockToMsTimestamp(auction?.startsAtBlock)
   const startsAtDate = startsAtDateBlockTimestamp ? new Date(startsAtDateBlockTimestamp) : undefined
 
-  const canBuyNow = nft && !isOwner && (isBuyNow || !!Number(auction?.buyNowPrice))
+  const plannedEndDateBlockTimestamp = englishAuction && convertBlockToMsTimestamp(englishAuction.plannedEndAtBlock)
+  const auctionPlannedEndDate = plannedEndDateBlockTimestamp ? new Date(plannedEndDateBlockTimestamp) : undefined
 
-  const canMakeBid = nft && !isOwner && isAuction
-
-  const canCancelSale =
-    isOwner && auction?.auctionType.__typename === 'AuctionTypeEnglish'
-      ? !auction?.bids.length
-      : auction?.auctionType.__typename === 'AuctionTypeOpen' || isBuyNow
-
-  const canWithdrawBid =
-    auction?.isCompleted ||
-    (auction?.auctionType.__typename === 'AuctionTypeOpen' && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
-  const canPutOnSale = nft && isOwner && nft.transactionalStatus.__typename === 'TransactionalStatusIdle'
-
-  const auctionPlannedEndDate = plannedEndDAteBlockTimesamp ? new Date(plannedEndDAteBlockTimesamp) : undefined
-
-  const isExpired = !!auction?.plannedEndAtBlock && currentBlock && currentBlock >= auction.plannedEndAtBlock
-
+  const isExpired = englishAuction && currentBlock && currentBlock >= englishAuction.plannedEndAtBlock
   const isRunning = !!auction?.startsAtBlock && currentBlock && currentBlock >= auction.startsAtBlock && !isExpired
-
   const isUpcoming = !!auction?.startsAtBlock && currentBlock && currentBlock <= auction.startsAtBlock
+  const needsSettling = auction?.topBid && isExpired
 
-  const needsSettling = auction?.lastBid && isExpired
+  const canBuyNow = !isOwner && (isBuyNow || !!auction?.buyNowPrice) && isRunning
+  const canMakeBid = !isOwner && isAuction && isRunning
+  const canPutOnSale = isOwner && isIdle
+  const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
+  const canWithdrawBid = auction?.isCompleted || (openAuction && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
 
   const englishTimerState: EnglishTimerState = isExpired
     ? 'expired'
@@ -90,5 +79,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     userBidUnlockDate,
     auction,
     startsAtDate,
+    saleType,
   }
 }

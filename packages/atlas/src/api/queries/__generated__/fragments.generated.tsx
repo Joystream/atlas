@@ -627,14 +627,18 @@ export type VideoFieldsFragment = {
             __typename?: 'Auction'
             isCompleted: boolean
             buyNowPrice?: string | null
-            minimalBidStep: string
             startingPrice: string
             startsAtBlock: number
-            plannedEndAtBlock?: number | null
             endedAtBlock?: number | null
             auctionType:
-              | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-              | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+              | {
+                  __typename: 'AuctionTypeEnglish'
+                  duration: number
+                  extensionPeriod: number
+                  minimalBidStep: number
+                  plannedEndAtBlock: number
+                }
+              | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
             initialOwner?: {
               __typename?: 'Membership'
               id: string
@@ -665,7 +669,7 @@ export type VideoFieldsFragment = {
                   | null
               }
             } | null
-            lastBid?: {
+            topBid?: {
               __typename?: 'Bid'
               amount: string
               createdAt: Date
@@ -1049,14 +1053,18 @@ export type AllNftFieldsFragment = {
           __typename?: 'Auction'
           isCompleted: boolean
           buyNowPrice?: string | null
-          minimalBidStep: string
           startingPrice: string
           startsAtBlock: number
-          plannedEndAtBlock?: number | null
           endedAtBlock?: number | null
           auctionType:
-            | { __typename: 'AuctionTypeEnglish'; duration: number; extensionPeriod?: number | null }
-            | { __typename: 'AuctionTypeOpen'; bidLockingTime: number }
+            | {
+                __typename: 'AuctionTypeEnglish'
+                duration: number
+                extensionPeriod: number
+                minimalBidStep: number
+                plannedEndAtBlock: number
+              }
+            | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
           initialOwner?: {
             __typename?: 'Membership'
             id: string
@@ -1087,7 +1095,7 @@ export type AllNftFieldsFragment = {
                 | null
             }
           } | null
-          lastBid?: {
+          topBid?: {
             __typename?: 'Bid'
             amount: string
             createdAt: Date
@@ -1562,9 +1570,11 @@ export const AllNftFieldsFragmentDoc = gql`
             ... on AuctionTypeEnglish {
               duration
               extensionPeriod
+              minimalBidStep
+              plannedEndAtBlock
             }
             ... on AuctionTypeOpen {
-              bidLockingTime
+              bidLockDuration
             }
           }
           isCompleted
@@ -1572,12 +1582,10 @@ export const AllNftFieldsFragmentDoc = gql`
             ...BasicMembershipFields
           }
           buyNowPrice
-          minimalBidStep
           startingPrice
           startsAtBlock
-          plannedEndAtBlock
           endedAtBlock
-          lastBid {
+          topBid {
             ...AllBidFields
           }
           bids {

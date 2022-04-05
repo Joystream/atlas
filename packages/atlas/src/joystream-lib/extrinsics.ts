@@ -16,8 +16,9 @@ import { SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibError } from './errors'
 import {
-  createNftAuctionParams,
+  createNftEnglishAuctionParams,
   createNftIssuanceParameters,
+  createNftOpenAuctionParams,
   extractChannelResultAssetsIds,
   extractVideoResultAssetsIds,
   getInputDataObjectsIds,
@@ -36,9 +37,11 @@ import {
   MemberExtrinsicResult,
   MemberId,
   MemberInputMetadata,
+  NftAuctionType,
   NftExtrinsicResult,
   NftIssuanceInputMetadata,
   NftSaleInputMetadata,
+  NftSaleType,
   SendExtrinsicResult,
   VideoExtrinsicResult,
   VideoId,
@@ -299,10 +302,16 @@ export class JoystreamLibExtrinsics {
     const tx =
       inputMetadata.type === 'buyNow'
         ? this.api.tx.content.sellNft(videoId, contentActor, inputMetadata.buyNowPrice)
-        : this.api.tx.content.startNftAuction(
+        : inputMetadata.type === 'open'
+        ? this.api.tx.content.startOpenAuction(
             contentActor,
             videoId,
-            createNftAuctionParams(this.api.registry, inputMetadata)
+            createNftOpenAuctionParams(this.api.registry, inputMetadata)
+          )
+        : this.api.tx.content.startEnglishAuction(
+            contentActor,
+            videoId,
+            createNftEnglishAuctionParams(this.api.registry, inputMetadata)
           )
 
     const { block } = await this.sendExtrinsic(tx, cb)
@@ -324,7 +333,7 @@ export class JoystreamLibExtrinsics {
   async cancelNftSale(
     videoId: VideoId,
     memberId: MemberId,
-    isBuyNow: boolean,
+    saleType: NftSaleType,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
@@ -332,9 +341,12 @@ export class JoystreamLibExtrinsics {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
-    const tx = isBuyNow
-      ? this.api.tx.content.cancelBuyNow(contentActor, videoId)
-      : this.api.tx.content.cancelNftAuction(contentActor, videoId)
+    const tx =
+      saleType === 'buyNow'
+        ? this.api.tx.content.cancelBuyNow(contentActor, videoId)
+        : saleType === 'open'
+        ? this.api.tx.content.cancelOpenAuction(contentActor, videoId)
+        : this.api.tx.content.cancelEnglishAuction(contentActor, videoId)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 
@@ -360,11 +372,15 @@ export class JoystreamLibExtrinsics {
     videoId: VideoId,
     memberId: MemberId,
     bidPrice: number,
+    auctionType: NftAuctionType,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
 
-    const tx = this.api.tx.content.makeBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
+    const tx =
+      auctionType === 'open'
+        ? this.api.tx.content.makeOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
+        : this.api.tx.content.makeEnglishAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
 
     const { block } = await this.sendExtrinsic(tx, cb)
 

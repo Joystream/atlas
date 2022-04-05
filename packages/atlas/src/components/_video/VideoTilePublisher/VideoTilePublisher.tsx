@@ -72,10 +72,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       needsSettling,
       startsAtDate,
       timerLoading,
-      isOwner: isNftOwner,
       canCancelSale,
       canPutOnSale,
-      isBuyNow,
+      saleType,
     } = useNftState(nft)
     const nftTilePublisher = useGetNftSlot({
       auctionPlannedEndDate,
@@ -229,14 +228,14 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
         ...(hasNft
           ? [
-              ...(isNftOwner && canPutOnSale
+              ...(canPutOnSale
                 ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
                 : []),
-              ...(isNftOwner && canCancelSale
+              ...(canCancelSale && saleType
                 ? [
                     {
                       icon: <SvgActionTrash />,
-                      onClick: () => cancelNftSale(nft?.id || '', !!isBuyNow),
+                      onClick: () => cancelNftSale(nft?.id || '', saleType),
                       title: 'Remove from sale',
                       destructive: true,
                     },
@@ -264,9 +263,9 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       onDeleteVideoClick,
       onEditClick,
       hasNft,
-      isNftOwner,
       canPutOnSale,
       canCancelSale,
+      saleType,
       onMintNftClick,
       videoHref,
       copyToClipboard,
@@ -274,7 +273,6 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       id,
       cancelNftSale,
       nft?.id,
-      isBuyNow,
     ])
 
     const getVideoSubtitle = useCallback(() => {

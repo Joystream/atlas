@@ -191,9 +191,11 @@ fragment AllNftFields on OwnedNft {
           ... on AuctionTypeEnglish {
             duration
             extensionPeriod
+            minimalBidStep
+            plannedEndAtBlock
           }
           ... on AuctionTypeOpen {
-            bidLockingTime
+            bidLockDuration
           }
         }
         isCompleted
@@ -201,14 +203,12 @@ fragment AllNftFields on OwnedNft {
           ...BasicMembershipFields
         }
         buyNowPrice
-        minimalBidStep
         startingPrice
 
         startsAtBlock
-        plannedEndAtBlock
         endedAtBlock
 
-        lastBid {
+        topBid {
           ...AllBidFields
         }
         bids {

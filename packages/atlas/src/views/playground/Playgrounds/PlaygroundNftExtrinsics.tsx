@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
-import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata } from '@/joystream-lib'
+import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata, NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useAuthorizedUser } from '@/providers/user'
@@ -16,8 +16,7 @@ const TABS: TabItem[] = [
   { name: 'Issue NFT' },
   { name: 'Start buy now' },
   { name: 'Start auction' },
-  { name: 'Cancel buy now' },
-  { name: 'Cancel auction' },
+  { name: 'Cancel sale' },
   { name: 'Buy now' },
   { name: 'Make auction bid' },
   { name: 'Cancel auction bid' },
@@ -26,28 +25,34 @@ const TABS: TabItem[] = [
 export const PlaygroundNftExtrinsics: React.FC = () => {
   const [videoId, setVideoId] = useState('')
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
-  const { nft, refetch } = useNft(videoId)
+  const { nft, nftStatus, refetch } = useNft(videoId)
 
   const handleSuccess = () => refetch()
 
   const getTabContents = () => {
+    const type: NftSaleType | null =
+      (nftStatus?.status === 'buy-now' ? 'buyNow' : nftStatus?.status === 'idle' ? null : nftStatus?.type) || null
+    const props = {
+      videoId,
+      onSuccess: handleSuccess,
+      type,
+    }
+
     switch (selectedTabIdx) {
       case 0:
-        return <Issue videoId={videoId} onSuccess={handleSuccess} />
+        return <Issue {...props} />
       case 1:
-        return <StartBuyNow videoId={videoId} onSuccess={handleSuccess} />
+        return <StartBuyNow {...props} />
       case 2:
-        return <StartAuction videoId={videoId} onSuccess={handleSuccess} />
+        return <StartAuction {...props} />
       case 3:
-        return <CancelBuyNow videoId={videoId} onSuccess={handleSuccess} />
+        return <CancelSale {...props} />
       case 4:
-        return <CancelAuction videoId={videoId} onSuccess={handleSuccess} />
+        return <BuyNow {...props} />
       case 5:
-        return <BuyNow videoId={videoId} onSuccess={handleSuccess} />
+        return <MakeBid {...props} />
       case 6:
-        return <MakeBid videoId={videoId} onSuccess={handleSuccess} />
-      case 7:
-        return <CancelBid videoId={videoId} onSuccess={handleSuccess} />
+        return <CancelBid {...props} />
     }
   }
 
@@ -76,6 +81,7 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
 type FormProps = {
   videoId: string
   onSuccess: () => void
+  type: NftSaleType | null
 }
 
 type IssueInputs = {
@@ -312,7 +318,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 type MakeBidInputs = {
   bid: number
 }
-const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -324,11 +330,11 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
   const { activeMemberId } = useAuthorizedUser()
 
   const handleSubmit = (data: MakeBidInputs) => {
-    if (!joystream) return
+    if (!joystream || !type || type === 'buyNow') return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -345,18 +351,18 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
   )
 }
 
-const CancelBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!joystream) return
+    if (!joystream || !type) return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, true, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }
@@ -364,32 +370,7 @@ const CancelBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <Button type="submit">Cancel buy now</Button>
-      </form>
-    </div>
-  )
-}
-
-const CancelAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
-  const { joystream, proxyCallback } = useJoystream()
-  const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (!joystream) return
-
-    handleTransaction({
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, false, proxyCallback(updateStatus)),
-      onTxSync: async (_) => onSuccess(),
-    })
-  }
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Button type="submit">Cancel auction</Button>
+        <Button type="submit">Cancel sale</Button>
       </form>
     </div>
   )
