@@ -1,15 +1,13 @@
 import React from 'react'
 
-import { useAllCategoriesFeaturedVideos, useCategories, useVideoCount } from '@/api/hooks'
+import { useAllCategoriesFeaturedVideos, useCategories } from '@/api/hooks'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_video/VideoCategoryCard'
 import { useCategoriesMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { createLookup } from '@/utils/data'
-import { SentryLogger } from '@/utils/logs'
 
 import {
   FeaturedCategoriesContainer,
@@ -18,7 +16,7 @@ import {
 } from './DiscoverView.styles'
 
 export const DiscoverView: React.FC = () => {
-  const { categories } = useCategories()
+  const { categories, totalVideosCount, loading } = useCategories()
   const mappedVideoCategories = useCategoriesMatch()
 
   const { allCategoriesFeaturedVideos } = useAllCategoriesFeaturedVideos()
@@ -57,19 +55,9 @@ export const DiscoverView: React.FC = () => {
     return null
   }, [categories, mappedVideoCategories, categoriesFeaturedVideos])
 
-  const { videoCount, error } = useVideoCount(
-    {},
-    {
-      onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
-    }
-  )
   const isMdBreakpoint = useMediaMatch('md')
 
   const headTags = useHeadTags('Discover')
-
-  if (error) {
-    return <ViewErrorFallback />
-  }
 
   return (
     <StyledLimitedWidthContainer big>
@@ -99,13 +87,13 @@ export const DiscoverView: React.FC = () => {
         {(mappedVideoCategories ?? new Array(15).fill(null))?.map((category, i) => (
           <GridItem key={i} colSpan={{ base: 6, lg: 4, xl: 3 }}>
             <VideoCategoryCard
-              isLoading={category === null}
+              isLoading={category === null || loading}
               title={category?.name ?? ''}
+              categoryVideosCount={category?.activeVideosCounter}
               coverImg={category?.coverImg ?? ''}
-              categoryId={category?.id}
               color={category?.color ?? 'white'}
               icon={category?.icon}
-              videosTotalCount={videoCount}
+              videosTotalCount={totalVideosCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}
               id={category?.id}
             />
