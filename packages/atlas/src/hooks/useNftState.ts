@@ -64,7 +64,8 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     needsSettling: !!needsSettling,
     canWithdrawBid: !!canWithdrawBid,
     auctionPlannedEndDate,
-    plannedEndAtBlock: auction?.plannedEndAtBlock,
+    plannedEndAtBlock:
+      auction?.auctionType.__typename === 'AuctionTypeEnglish' ? auction?.auctionType.plannedEndAtBlock : undefined,
     startsAtBlock: auction?.startsAtBlock,
     //TODO: bidFromPreviousAuction
     bidFromPreviousAuction: undefined,
