@@ -8,7 +8,7 @@ import { cVar, media, sizes } from '@/styles'
 export const Container = styled.div<{ fullWidth?: boolean }>`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
   transform-style: preserve-3d;
-  perspective: 1000px;
+  perspective: 2000px;
   position: relative;
 `
 
@@ -31,8 +31,9 @@ export const FadeMask = styled.div`
     rgb(0 0 0 / 1) 92%,
     rgb(0 0 0 / 1) 100%
   );
-  mask-size: 300%;
   mask-mode: alpha;
+  mix-blend-mode: hard-light;
+  opacity: 0;
 `
 
 export const Pattern = styled.div`
@@ -61,7 +62,7 @@ export const LightReflection = styled.div`
   right: 0;
   opacity: 0.5;
   transition: all 0.33s ease;
-  mix-blend-mode: color-dodge;
+  mix-blend-mode: overlay;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: 300% 300%;
@@ -134,8 +135,8 @@ export const ReflectionGridCell = styled.div<{
   :hover ~ ${ReflectionContent} ${LightReflection} {
     background-position: ${({ lp, tp }) => `${lp}% ${tp}%`};
     background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%);
-    opacity: 0.628;
-    filter: brightness(0.66) contrast(1.33);
+    opacity: 0.5;
+    filter: brightness(1.66) contrast(1.33);
   }
 `
 
