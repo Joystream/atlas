@@ -6,6 +6,7 @@ import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
 import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
+import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
@@ -25,6 +26,7 @@ import knownLicenses from '@/data/knownLicenses.json'
 import { useDeleteVideo } from '@/hooks/useDeleteVideo'
 import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
+import { useJoystream } from '@/providers/joystream'
 import {
   DEFAULT_LICENSE_ID,
   VideoFormAssets,
@@ -82,6 +84,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
 
+  const {
+    chainState: { nftMaxCreatorRoyaltyPercentage, nftMinCreatorRoyaltyPercentage },
+  } = useJoystream()
   const resolveAsset = useRawAssetResolver()
 
   const deleteVideo = useDeleteVideo()
@@ -462,26 +467,36 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   )
                 }
               />
-              <FormField title="NFT creator royalties">
+              <FormField title="Set creator's royalties">
                 <TextField
                   type="number"
                   {...register('nftRoyaltiesPercent', {
                     valueAsNumber: true,
+                    validate: (value) => {
+                      if (value && value < nftMinCreatorRoyaltyPercentage) {
+                        return `Creator royalties must be at least ${nftMinCreatorRoyaltyPercentage}%`
+                      }
+                    },
                     required: {
                       value: watch('mintNft'),
                       message: 'Creator royalties must be set',
                     },
                     min: {
                       value: 0,
-                      message: 'Creator royalties cannot be lower than 0',
+                      message: 'Creator royalties cannot be lower than 0%',
                     },
                     max: {
-                      value: 50,
-                      message: 'Creator royalties cannot be higher than 50',
+                      value: nftMaxCreatorRoyaltyPercentage,
+                      message: `Creator royalties cannot be higher than ${nftMaxCreatorRoyaltyPercentage}%`,
                     },
                   })}
                   error={!!errors.nftRoyaltiesPercent}
-                  helperText={errors.nftRoyaltiesPercent?.message}
+                  helperText={
+                    errors.nftRoyaltiesPercent?.message
+                      ? errors.nftRoyaltiesPercent?.message
+                      : `Suggested: 0%, 10%, 20%, 30%. Maximum is ${nftMaxCreatorRoyaltyPercentage}%`
+                  }
+                  nodeEnd={<Pill variant="default" label="%" />}
                   disabled={videoFieldsLocked}
                 />
               </FormField>

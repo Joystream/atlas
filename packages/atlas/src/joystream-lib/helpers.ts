@@ -37,7 +37,7 @@ import {
 import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
 import { JoystreamLibError } from './errors'
 
-const NFT_PERBILL_PERCENT = 10_000_000
+export const NFT_PERBILL_PERCENT = 10_000_000
 
 export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMetadata: DataObjectMetadata[]) => {
   if (!dataObjectsMetadata.length) {

@@ -54,8 +54,6 @@ import {
 } from './NftPurchaseBottomDrawer.styles'
 
 const TRANSACTION_FEE = 0
-//TODO this is temporary, we should get platform royalty from the chain
-const PLATFORM_ROYALTY = 1
 
 export const NftPurchaseBottomDrawer: React.FC = () => {
   const { displaySnackbar } = useSnackbar()
@@ -73,7 +71,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const timestamp = useMsTimestamp({ shouldStop: !currentAction || type !== 'english_auction' })
   const { convertBlockToMsTimestamp, convertBlocksToDuration } = useBlockTimeEstimation()
 
-  const { joystream, proxyCallback, currentBlock } = useJoystream()
+  const {
+    joystream,
+    proxyCallback,
+    currentBlock,
+    chainState: { nftPlatformFeePercentage },
+  } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
 
@@ -120,7 +123,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const timeLeftSeconds = endTime ? Math.trunc((endTime - timestamp) / 1000) : 0
 
   const creatorRoyalty = nft?.creatorRoyalty || 0
-  const ownerRoyalty = 100 - creatorRoyalty - PLATFORM_ROYALTY
+  const ownerRoyalty = 100 - creatorRoyalty - nftPlatformFeePercentage
 
   // check if input value isn't bigger than fixed price
   useEffect(() => {
@@ -468,7 +471,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 <PaymentSplitValues>
                   <SvgJoystreamLogoShort height={24} viewBox="0 0 26 32" />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
-                    {PLATFORM_ROYALTY}%
+                    {nftPlatformFeePercentage}%
                   </Text>
                 </PaymentSplitValues>
               </div>

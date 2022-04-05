@@ -168,12 +168,18 @@ type JoystreamChainState = {
   nftMinStartingPrice: number
   nftMaxAuctionDuration: number
   nftAuctionStartsAtMaxDelta: number
+  nftMaxCreatorRoyaltyPercentage: number
+  nftMinCreatorRoyaltyPercentage: number
+  nftPlatformFeePercentage: number
 }
 const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
   const [chainState, setChainState] = useState<JoystreamChainState>({
     nftMinStartingPrice: 1,
     nftMaxAuctionDuration: 1_296_000,
     nftAuctionStartsAtMaxDelta: 432_000,
+    nftMaxCreatorRoyaltyPercentage: 50,
+    nftMinCreatorRoyaltyPercentage: 1,
+    nftPlatformFeePercentage: 1,
   })
 
   useEffect(() => {
@@ -184,6 +190,9 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
         nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
         nftMinStartingPrice: nftChainState.minStartingPrice,
         nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
+        nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
+        nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,
+        nftPlatformFeePercentage: nftChainState.platfromFeePercentage,
       })
     )
   }, [joystream])

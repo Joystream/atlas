@@ -9,6 +9,7 @@ import { JoystreamLibError } from '@/joystream-lib/errors'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibExtrinsics } from './extrinsics'
+import { NFT_PERBILL_PERCENT } from './helpers'
 import { AccountId } from './types'
 
 export class JoystreamLib {
@@ -113,16 +114,29 @@ export class JoystreamLib {
   async getNftChainState() {
     await this.ensureApi()
 
-    const [maxAuctionDuration, minStartingPrice, auctionStartsAtMaxDelta] = await Promise.all([
+    const [
+      maxAuctionDuration,
+      minStartingPrice,
+      auctionStartsAtMaxDelta,
+      maxCreatorRoyalty,
+      minCreatorRoyalty,
+      platfromFeePercentage,
+    ] = await Promise.all([
       this.api.query.content.maxAuctionDuration(),
       this.api.query.content.minStartingPrice(),
       this.api.query.content.auctionStartsAtMaxDelta(),
+      this.api.query.content.maxCreatorRoyalty(),
+      this.api.query.content.minCreatorRoyalty(),
+      this.api.query.content.platfromFeePercentage(),
     ])
 
     return {
       maxAuctionDuration: maxAuctionDuration.toNumber(),
       minStartingPrice: minStartingPrice.toNumber(),
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
+      maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
+      minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
+      platfromFeePercentage: platfromFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
     }
   }
 }
