@@ -85,7 +85,7 @@ export const MemberView: React.FC = () => {
 
   const mappedTabs = TABS.map((tab) => ({
     name: tab,
-    pillText: tab === 'NFTs owned' && nfts ? nfts.length : undefined,
+    pillText: tab === 'NFTs owned' && nfts && nfts.length ? nfts.length : undefined,
   }))
   const tabContent = React.useMemo(() => {
     switch (currentTab) {

@@ -25,6 +25,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     canMakeBid,
     canCancelSale,
     canBuyNow,
+    canChangePrice,
     auctionPlannedEndDate,
     needsSettling,
     startsAtDate,
@@ -89,12 +90,13 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       canBuyNow={canBuyNow}
       canCancelSale={canCancelSale}
       canMakeBid={canMakeBid}
+      canChangePrice={canChangePrice}
       fullWidth
       onRemoveFromSale={handleRemoveOnSale}
       onNftPurchase={() => nftId && openNftPurchase(nftId)}
       onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
       onPutOnSale={handlePutOnSale}
-      onNftChangePrice={() => nftId && openNftChangePrice(nftId)}
+      onChangePrice={() => nftId && openNftChangePrice(nftId)}
     />
   )
 }

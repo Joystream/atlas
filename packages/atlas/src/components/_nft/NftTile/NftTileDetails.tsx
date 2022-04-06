@@ -49,10 +49,11 @@ export type NftTileDetailsProps = {
   canCancelSale?: boolean
   canBuyNow?: boolean
   canMakeBid?: boolean
-  onNftPurchase?: () => void
-  onNftBuyNow?: () => void
+  canChangePrice?: boolean
+  onMakeBid?: () => void
+  onBuyNow?: () => void
   onPutOnSale?: () => void
-  onNftChangePrice?: () => void
+  onChangePrice?: () => void
 }
 
 type TileSize = 'small' | 'medium'
@@ -76,10 +77,11 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   canCancelSale,
   canBuyNow,
   canMakeBid,
-  onNftPurchase,
-  onNftBuyNow,
+  canChangePrice,
+  onMakeBid,
+  onBuyNow,
   onPutOnSale,
-  onNftChangePrice,
+  onChangePrice,
 }) => {
   const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
@@ -120,32 +122,32 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
       })
     }
     if (canCancelSale) {
-      elements.unshift(
-        {
-          icon: <SvgActionCancel />,
-          title: 'Remove from sale',
-          destructive: true,
-          onClick: onRemoveFromSale,
-        },
-        {
-          icon: <SvgActionChangePrice />,
-          title: 'Change price',
-          onClick: onNftChangePrice,
-        }
-      )
+      elements.unshift({
+        icon: <SvgActionCancel />,
+        title: 'Remove from sale',
+        destructive: true,
+        onClick: onRemoveFromSale,
+      })
+    }
+    if (canChangePrice) {
+      elements.unshift({
+        icon: <SvgActionChangePrice />,
+        title: 'Change price',
+        onClick: onChangePrice,
+      })
     }
     if (canBuyNow) {
       elements.unshift({
         icon: <SvgActionBuyNow />,
         title: 'Buy now',
-        onClick: onNftBuyNow,
+        onClick: onBuyNow,
       })
     }
     if (canMakeBid) {
       elements.unshift({
         icon: <SvgActionBid />,
         title: 'Place bid',
-        onClick: onNftPurchase,
+        onClick: onMakeBid,
       })
     }
     return elements
@@ -153,13 +155,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     handleCopyVideoURLClick,
     canPutOnSale,
     canCancelSale,
+    canChangePrice,
     canBuyNow,
     canMakeBid,
-    onRemoveFromSale,
-    onNftBuyNow,
-    onNftPurchase,
     onPutOnSale,
-    onNftChangePrice,
+    onRemoveFromSale,
+    onChangePrice,
+    onBuyNow,
+    onMakeBid,
   ])
 
   const getDetails = useMemo(() => {
