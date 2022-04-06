@@ -20,8 +20,6 @@ export type Member = {
 
 export type NftTileProps = {
   status?: 'idle' | 'buy-now' | 'auction'
-  onNftPurchase?: () => void
-  onNftBuyNow?: () => void
   thumbnail?: VideoThumbnailProps
   title?: string | null
   owner?: Member
@@ -38,6 +36,7 @@ export type NftTileProps = {
   canCancelSale?: boolean
   canBuyNow?: boolean
   canMakeBid?: boolean
+  canChangePrice?: boolean
   timerLoading?: boolean
   needsSettling?: boolean
   englishTimerState?: EnglishTimerState
@@ -45,13 +44,13 @@ export type NftTileProps = {
   auctionPlannedEndDate?: Date
   onRemoveFromSale?: () => void
   onPutOnSale?: () => void
-  onNftChangePrice?: () => void
+  onChangePrice?: () => void
+  onNftPurchase?: () => void
+  onNftBuyNow?: () => void
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
   status,
-  onNftPurchase,
-  onNftBuyNow,
   thumbnail,
   loading,
   title,
@@ -68,6 +67,7 @@ export const NftTile: React.FC<NftTileProps> = ({
   canCancelSale,
   canBuyNow,
   canMakeBid,
+  canChangePrice,
   timerLoading,
   needsSettling,
   englishTimerState,
@@ -75,7 +75,9 @@ export const NftTile: React.FC<NftTileProps> = ({
   auctionPlannedEndDate,
   onRemoveFromSale,
   onPutOnSale,
-  onNftChangePrice,
+  onChangePrice,
+  onNftPurchase,
+  onNftBuyNow,
 }) => {
   const [hovered, setHovered] = useState(false)
   const leftBottomPills = useGetNftSlot({
@@ -113,8 +115,6 @@ export const NftTile: React.FC<NftTileProps> = ({
         }}
       />
       <NftTileDetails
-        onNftPurchase={onNftPurchase}
-        onNftBuyNow={onNftBuyNow}
         videoHref={thumbnail?.videoHref as string}
         hovered={hovered}
         owner={owner}
@@ -126,13 +126,16 @@ export const NftTile: React.FC<NftTileProps> = ({
         title={title}
         startingPrice={startingPrice}
         interactable={interactable}
-        onRemoveFromSale={onRemoveFromSale}
         canBuyNow={canBuyNow}
         canCancelSale={canCancelSale}
         canMakeBid={canMakeBid}
         canPutOnSale={canPutOnSale}
+        canChangePrice={canChangePrice}
         onPutOnSale={onPutOnSale}
-        onNftChangePrice={onNftChangePrice}
+        onChangePrice={onChangePrice}
+        onRemoveFromSale={onRemoveFromSale}
+        onBuyNow={onNftBuyNow}
+        onMakeBid={onNftPurchase}
       />
     </Container>
   )
