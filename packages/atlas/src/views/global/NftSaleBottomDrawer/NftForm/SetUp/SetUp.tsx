@@ -69,13 +69,10 @@ export const SetUp: React.FC<SetUpProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      if (getValues('endDate')) {
-        return
-      }
       setValue(
         'endDate',
         isEnglishAuction
-          ? {
+          ? getValues('endDate') || {
               type: 'duration',
               durationDays: 1,
             }
