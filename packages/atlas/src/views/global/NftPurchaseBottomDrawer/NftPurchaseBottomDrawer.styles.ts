@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { cVar, media, sizes, zIndex } from '@/styles'
 
 const flexStyles = css`
@@ -30,10 +29,6 @@ export const Content = styled.div`
       flex: 50%;
     }
   }
-`
-
-export const StyledSvgJoystreamLogoShort = styled(SvgJoystreamLogoShort)`
-  transform: scale(0.75);
 `
 
 export const NftPreview = styled.div`
@@ -131,7 +126,7 @@ export const BidAmount = styled(Text)`
 
 export const ActionBarCell = styled.div`
   width: 50%;
-  padding: ${sizes(3.5)} ${sizes(4)};
+  padding: ${sizes(4)};
 `
 
 export const ActiveBidWrapper = styled.div`

@@ -9,6 +9,7 @@ import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
@@ -49,7 +50,6 @@ import {
   PlaceBidWrapper,
   Row,
   StyledJoyTokenIcon,
-  StyledSvgJoystreamLogoShort,
   TokenWrapper,
 } from './NftPurchaseBottomDrawer.styles'
 
@@ -332,7 +332,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   {topBidder && !!topBidAmount ? (
                     <ActiveBidWrapper>
                       <ActionBarCell>
-                        <Text variant="h300" secondary margin={{ bottom: 2 }}>
+                        <Text variant="h100" secondary margin={{ bottom: 2 }}>
                           Top bid
                         </Text>
                         <FlexWrapper>
@@ -348,7 +348,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       </ActionBarCell>
                       {userBid && (
                         <ActionBarCell>
-                          <Text variant="h300" secondary margin={{ bottom: 2 }}>
+                          <Text variant="h100" secondary margin={{ bottom: 2 }}>
                             Your Bid
                           </Text>
                           <FlexWrapper>
@@ -367,7 +367,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   ) : (
                     <ActiveBidWrapper>
                       <ActionBarCell>
-                        <Text variant="h300" secondary margin={{ bottom: 2 }}>
+                        <Text variant="h100" secondary margin={{ bottom: 2 }}>
                           Top bid
                         </Text>
                         <Text variant="h400">Nobody has bid yet</Text>
@@ -466,7 +466,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   Platform
                 </Text>
                 <PaymentSplitValues>
-                  <StyledSvgJoystreamLogoShort />
+                  <SvgJoystreamLogoShort height={24} viewBox="0 0 26 32" />
                   <Text variant="h400" secondary margin={{ left: 2 }}>
                     {PLATFORM_ROYALTY}%
                   </Text>
