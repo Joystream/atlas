@@ -8,7 +8,14 @@ import { PopoverWidth, StyledDialog } from './DialogPopover.styles'
 type DialogPopoverProps = Omit<PopoverProps, 'content'> &
   Pick<
     DialogProps,
-    'title' | 'dividers' | 'primaryButton' | 'secondaryButton' | 'children' | 'headerNode' | 'additionalActionsNode'
+    | 'title'
+    | 'dividers'
+    | 'primaryButton'
+    | 'secondaryButton'
+    | 'children'
+    | 'additionalActionsNode'
+    | 'additionalActionsNodeMobilePosition'
+    | 'noContentPadding'
   > & {
     popoverWidth?: PopoverWidth
   }
@@ -20,9 +27,10 @@ const _DialogPopover: React.ForwardRefRenderFunction<PopoverImperativeHandle, Di
     primaryButton,
     secondaryButton,
     children,
-    headerNode,
     popoverWidth = 'default',
     additionalActionsNode,
+    additionalActionsNodeMobilePosition,
+    noContentPadding,
     ...popoverProps
   },
   ref
@@ -30,13 +38,14 @@ const _DialogPopover: React.ForwardRefRenderFunction<PopoverImperativeHandle, Di
   return (
     <Popover {...popoverProps} ref={ref}>
       <StyledDialog
+        noContentPadding={noContentPadding}
         popoverWidth={popoverWidth}
         additionalActionsNode={additionalActionsNode}
+        additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         title={title}
         dividers={dividers}
         primaryButton={primaryButton}
         secondaryButton={secondaryButton}
-        headerNode={headerNode}
         size="compact"
       >
         {children}

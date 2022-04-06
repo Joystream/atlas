@@ -95,3 +95,6 @@ export const ReactionsCounter = styled(Text)<ReactionsCounterProps>`
 export const PopoverIllustrationWrapper = styled.div`
   background-color: ${cVar('colorBackground')};
 `
+export const PopoverContentWrapper = styled.div`
+  padding: ${sizes(4)};
+`

@@ -44,7 +44,7 @@ export const ReactionBarProgress = styled.div<{ likesPercent: number; isProcessi
   animation: ${({ isProcessing }) =>
     isProcessing
       ? css`
-          ${reactionBarAnimation} 1000ms cubic-bezier(0, 0, 0.5, 1) 1ms infinite
+          ${reactionBarAnimation} 1000ms ease-in-out infinite
         `
       : 'none'};
 `

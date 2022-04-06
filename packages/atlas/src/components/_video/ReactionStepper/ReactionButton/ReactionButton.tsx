@@ -14,6 +14,7 @@ import { formatNumberShort } from '@/utils/number'
 
 import {
   LoadingWrapper,
+  PopoverContentWrapper,
   PopoverIllustrationWrapper,
   ReactionsCounter,
   StyledSvgActionDislikeSolid,
@@ -28,16 +29,27 @@ type ReactionButtonProps = {
   onReact?: () => void
   state: ReactionSteppperState
   type: 'like' | 'dislike'
+  onPopoverShow?: () => void
+  onPopoverHide?: () => void
+  isPopoverOpen?: boolean
 }
 
-export const ReactionButton: React.FC<ReactionButtonProps> = ({ reactionsNumber, state, onReact, type }) => {
+export const ReactionButton: React.FC<ReactionButtonProps> = ({
+  reactionsNumber,
+  state,
+  type,
+  isPopoverOpen,
+  onReact,
+  onPopoverHide,
+  onPopoverShow,
+}) => {
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
   const [shouldRunAnimation, setShouldRunAnimation] = useState(false)
 
   const isLoading = state === 'loading'
-  const isProcessing = state === 'processing'
+  const isProcessing = state === 'processing' || isPopoverOpen
 
   const isReacted = type === 'like' ? state === 'liked' : state === 'disliked'
 
@@ -56,13 +68,19 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({ reactionsNumber,
     }
   }
 
-  const handleReact = () => {
+  const handleReact = (reactionPopoverDismissed: boolean) => {
     if (isReacted) {
+      return
+    }
+    if (!reactionPopoverDismissed) {
+      onPopoverShow?.()
       return
     }
     setShouldRunAnimation(true)
     onReact?.()
   }
+
+  const dialogPopoverDisabled = reactionPopoverDismissed || isReacted
 
   return (
     <SwitchTransition>
@@ -76,21 +94,23 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({ reactionsNumber,
         ) : (
           <DialogPopover
             ref={popoverRef}
+            noContentPadding
+            additionalActionsNodeMobilePosition="bottom"
+            onHide={onPopoverHide}
             dividers
-            disabled={reactionPopoverDismissed}
+            disabled={dialogPopoverDisabled}
             // TODO add proper link here
-            additionalActionsNode={<Text variant="t100-strong">Learn more</Text>}
-            headerNode={
-              <PopoverIllustrationWrapper>
-                <SvgThumbsUpIllustration />
-              </PopoverIllustrationWrapper>
+            additionalActionsNode={
+              <Button variant="tertiary" size="small">
+                Learn more
+              </Button>
             }
             popoverWidth="wide"
             primaryButton={{
               text: 'Got it',
               onClick: () => {
-                handleReact()
                 setReactionPopoverDismission(true)
+                handleReact(true)
               },
             }}
             secondaryButton={{
@@ -100,7 +120,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({ reactionsNumber,
             trigger={
               <Button
                 disabled={isProcessing}
-                onClick={() => reactionPopoverDismissed && handleReact()}
+                onClick={() => handleReact(reactionPopoverDismissed)}
                 onAnimationEnd={() => setShouldRunAnimation(false)}
                 variant="tertiary"
                 icon={isReacted ? renderSolidIcon() : renderOutlineIcon()}
@@ -111,11 +131,16 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({ reactionsNumber,
               </Button>
             }
           >
-            <Text variant="h300">We save social interactions on blockchain</Text>
-            <Text variant="t200" secondary margin={{ top: 2 }} as="p">
-              Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
-              effect. Transaction fees apply.
-            </Text>
+            <PopoverIllustrationWrapper>
+              <SvgThumbsUpIllustration />
+            </PopoverIllustrationWrapper>
+            <PopoverContentWrapper>
+              <Text variant="h300">We save social interactions on blockchain</Text>
+              <Text variant="t200" secondary margin={{ top: 2 }} as="p">
+                Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
+                effect. Transaction fees apply.
+              </Text>
+            </PopoverContentWrapper>
           </DialogPopover>
         )}
       </CSSTransition>
