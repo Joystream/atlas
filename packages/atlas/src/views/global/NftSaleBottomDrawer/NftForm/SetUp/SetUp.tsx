@@ -69,6 +69,9 @@ export const SetUp: React.FC<SetUpProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
+      if (getValues('endDate')) {
+        return
+      }
       setValue(
         'endDate',
         isEnglishAuction
@@ -79,7 +82,7 @@ export const SetUp: React.FC<SetUpProps> = ({
           : null
       )
     }, 0)
-  }, [isEnglishAuction, setValue])
+  }, [getValues, isEnglishAuction, setValue])
 
   useEffect(() => {
     if (!numberOfBlocks) {
