@@ -34,13 +34,15 @@ export const NftActionsProvider: React.FC = ({ children }) => {
   const { convertToUSD } = useTokenPrice()
 
   const mappedBids = auction?.bids
-    ? auction?.bids.map(({ id, createdAt, amount, bidder }) => ({
-        id,
-        createdAt,
-        amount,
-        amountUSD: convertToUSD(Number(amount)),
-        bidder,
-      }))
+    ? auction?.bids
+        .filter((bid) => !bid.isCanceled)
+        .map(({ id, createdAt, amount, bidder }) => ({
+          id,
+          createdAt,
+          amount,
+          amountUSD: convertToUSD(Number(amount)),
+          bidder,
+        }))
     : []
 
   const closeNftAction = useCallback(() => {
