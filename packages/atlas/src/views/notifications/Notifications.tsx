@@ -21,7 +21,7 @@ export const Notifications = () => {
   const { selectedNotifications, setNotificationSelected } = useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
 
-  const { notifications, markNotificationAsRead } = useNotifications()
+  const { notifications, markNotificationsAsRead } = useNotifications()
 
   const unreadNumber = notifications.filter((notification) => !notification.read).length
   return (
@@ -33,7 +33,11 @@ export const Notifications = () => {
             <>
               <StyledPill label={`${unreadNumber} unread`} />
               <MarkAllReadWrapper>
-                <Button variant="secondary" size="small">
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => markNotificationsAsRead(notifications.map((notif) => notif.id))}
+                >
                   Mark all as read
                 </Button>
               </MarkAllReadWrapper>
@@ -48,7 +52,7 @@ export const Notifications = () => {
                 notification={notification}
                 selected={selectedNotifications.includes(notification.id)}
                 onCheckboxChange={(selected) => setNotificationSelected(notification.id, selected)}
-                onClick={() => markNotificationAsRead(notification.id)}
+                onClick={() => markNotificationsAsRead(notification.id)}
               />
             ))
           ) : (
