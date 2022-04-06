@@ -1,106 +1,46 @@
 import React, { useState } from 'react'
 
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { useTokenPrice } from '@/providers/joystream'
 
+import { Bid } from './AcceptBidDialog.types'
 import { AcceptBidList } from './AcceptBidList'
 
 type AcceptBidDialogProps = {
   onModalClose: () => void
   isOpen: boolean
+  bids: Bid[]
+  onAcceptBid: (ownerId: string, videoId: string, bidderId: string, price: string) => void
+  nftId: string | null
+  ownerId?: string
 }
 
-export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({ onModalClose, isOpen }) => {
-  const [selectedBid, setSelectedBid] = useState<string | undefined>()
-  const { convertToUSD } = useTokenPrice()
+type SelectedBidder = {
+  id: string
+  amount: string
+}
+
+export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({
+  onModalClose,
+  isOpen,
+  bids,
+  onAcceptBid,
+  nftId,
+  ownerId,
+}) => {
+  const [selectedBidder, setSelectedBidder] = useState<SelectedBidder | undefined>()
 
   const handleModalClose = () => {
-    setSelectedBid(undefined)
+    setSelectedBidder(undefined)
     onModalClose()
   }
 
-  const ITEMS = [
-    {
-      id: '1',
-      date: new Date(),
-      bid: 50,
-      bidUSD: convertToUSD(50),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '2',
-      date: new Date(),
-      bid: 100,
-      bidUSD: convertToUSD(100),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '3',
-      date: new Date(),
-      bid: 200,
-      bidUSD: convertToUSD(200),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '4',
-      date: new Date(),
-      bid: 300,
-      bidUSD: convertToUSD(300),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '5',
-      date: new Date(),
-      bid: 400,
-      bidUSD: convertToUSD(400),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '6',
-      date: new Date(),
-      bid: 500,
-      bidUSD: convertToUSD(500),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '7',
-      date: new Date(),
-      bid: 600,
-      bidUSD: convertToUSD(600),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '8',
-      date: new Date(),
-      bid: 700,
-      bidUSD: convertToUSD(700),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '9',
-      date: new Date(),
-      bid: 800,
-      bidUSD: convertToUSD(800),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-    {
-      id: '10',
-      date: new Date(),
-      bid: 900,
-      bidUSD: convertToUSD(900),
-      memberAvatarUri: 'https://placedog.net/40/40?random',
-      memberHandle: 'Madness',
-    },
-  ]
+  const handleAcceptBid = () => {
+    if (!selectedBidder || !nftId || !ownerId) {
+      return
+    }
+    onAcceptBid(ownerId, nftId, selectedBidder.id, selectedBidder.amount)
+    handleModalClose()
+  }
 
   return (
     <DialogModal
@@ -110,14 +50,15 @@ export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({ onModalClose, 
       noContentPadding
       primaryButton={{
         text: 'Accept bid',
-        disabled: !selectedBid,
+        disabled: !selectedBidder,
+        onClick: handleAcceptBid,
       }}
       secondaryButton={{
         text: 'Cancel',
         onClick: handleModalClose,
       }}
     >
-      <AcceptBidList items={ITEMS} onSelect={(value) => setSelectedBid(value)} selectedBid={selectedBid} />
+      <AcceptBidList items={bids} onSelect={(value) => setSelectedBidder(value)} selectedBidder={selectedBidder} />
     </DialogModal>
   )
 }

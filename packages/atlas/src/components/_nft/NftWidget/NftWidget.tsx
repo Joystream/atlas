@@ -435,7 +435,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   !nftStatus.topBid) && (
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
-                      {nftStatus.type === 'open' && !!nftStatus.topBid && (
+                      {nftStatus.type === 'open' && !!nftStatus.topBid && !nftStatus.topBid.isCanceled && (
                         <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
                           Review and accept bid
                         </Button>

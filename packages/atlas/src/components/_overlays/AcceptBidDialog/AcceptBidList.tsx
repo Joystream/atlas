@@ -6,39 +6,40 @@ import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { RadioInput } from '@/components/_inputs/RadioInput'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
 import { formatDateTime } from '@/utils/time'
 
+import { Bid } from './AcceptBidDialog.types'
 import { BidRowWrapper, Price, TokenPrice } from './AcceptBidList.styles'
 
-type BidRowProps = {
+type SelectedBidder = {
   id: string
-  memberHandle: string
-  date: Date
-  bid: number
-  bidUSD: string | null
-  memberAvatarUri: string
-  selectedValue?: string
-  onSelect?: (selectedBid: string) => void
-  size?: 'medium' | 'small'
+  amount: string
 }
+
+type BidRowProps = {
+  selectedValue?: SelectedBidder
+  onSelect?: (selectedBid: string, price: string) => void
+  size?: 'medium' | 'small'
+} & Bid
 
 type AcceptBidListProps = {
   items: BidRowProps[]
-  onSelect?: (selectedBid: string) => void
-  selectedBid?: string
+  onSelect?: ({ id, amount }: SelectedBidder) => void
+  selectedBidder?: SelectedBidder
 }
 
-export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, selectedBid }) => {
+export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, selectedBidder }) => {
   return (
     <>
       {items.map((item) => (
         <BidRow
-          key={`bidRow-${item.id}`}
+          key={`bidRow-${item.bidder.id}-${item.amount}`}
           {...item}
-          selectedValue={selectedBid || ''}
-          onSelect={(value) => {
-            onSelect?.(value)
+          selectedValue={selectedBidder}
+          onSelect={(id, amount) => {
+            onSelect?.({ id, amount })
           }}
         />
       ))}
@@ -46,45 +47,37 @@ export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, s
   )
 }
 
-export const BidRow: React.FC<BidRowProps> = ({
-  id,
-  memberHandle,
-  date,
-  bid,
-  bidUSD,
-  memberAvatarUri,
-  selectedValue,
-  onSelect,
-}) => {
+export const BidRow: React.FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedValue, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
-  const selected = selectedValue === id
+  const selected = selectedValue?.id === bidder.id
+  const { url, isLoadingAsset } = useMemberAvatar(bidder)
   return (
-    <BidRowWrapper selected={selected} onClick={() => onSelect?.(id)}>
-      <RadioInput selectedValue={selectedValue} value={id} />
-      {xsMatch && <Avatar assetUrl={memberAvatarUri} size="small" />}
+    <BidRowWrapper selected={selected} onClick={() => onSelect?.(bidder.id, amount)}>
+      <RadioInput selectedValue={selectedValue?.id} value={bidder.id} onChange={() => onSelect?.(bidder.id, amount)} />
+      {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size="small" />}
       <div>
         <Text variant="h300" secondary={!selected} margin={{ bottom: 1 }}>
-          {memberHandle}
+          {bidder?.handle}
         </Text>
         <Text as="p" secondary variant="t100">
-          {formatDateTime(date)}
+          {formatDateTime(new Date(createdAt))}
         </Text>
       </div>
       <Price>
         <TokenPrice>
           <JoyTokenIcon variant={selected ? 'regular' : 'gray'} />
           <Text variant="h300" margin={{ left: 1 }} secondary={!selected}>
-            {bid}
+            {amount}
           </Text>
         </TokenPrice>
         <SwitchTransition>
           <CSSTransition
-            key={bidUSD ? 'placeholder' : 'content'}
+            key={amountUSD ? 'placeholder' : 'content'}
             timeout={parseInt(cVar('animationTransitionFast', true))}
             classNames={transitions.names.fade}
           >
             <Text as="p" variant="t100" secondary>
-              {bidUSD ?? '‌'}
+              {amountUSD ?? '‌'}
             </Text>
           </CSSTransition>
         </SwitchTransition>

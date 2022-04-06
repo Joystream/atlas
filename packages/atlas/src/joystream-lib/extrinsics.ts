@@ -401,6 +401,24 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
+  async acceptNftBid(
+    ownerId: MemberId,
+    videoId: VideoId,
+    bidderId: MemberId,
+    price: string,
+    cb?: ExtrinsicStatusCallbackFn
+  ) {
+    await this.ensureApi()
+    const contentActor = new ContentActor(this.api.registry, {
+      member: ownerId,
+    })
+    const tx = this.api.tx.content.pickOpenAuctionWinner(contentActor, videoId, bidderId, price)
+
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return { block }
+  }
+
   async settleEnglishAuction(
     videoId: VideoId,
     memberId: MemberId,
