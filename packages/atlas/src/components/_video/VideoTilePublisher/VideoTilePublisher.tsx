@@ -194,12 +194,16 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
           onClick: onReuploadVideoClick,
           title: 'Reupload file',
         },
-        {
-          icon: <SvgActionTrash />,
-          onClick: onDeleteVideoClick,
-          title: 'Delete video',
-          destructive: true,
-        },
+        ...(!hasNft
+          ? [
+              {
+                icon: <SvgActionTrash />,
+                onClick: onDeleteVideoClick,
+                title: 'Delete video',
+                destructive: true,
+              },
+            ]
+          : []),
       ]
 
       const onOpenInTabClick = () => {
