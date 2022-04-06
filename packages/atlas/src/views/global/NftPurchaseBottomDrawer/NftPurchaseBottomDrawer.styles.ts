@@ -1,10 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 const flexStyles = css`
   display: flex;
@@ -15,15 +14,13 @@ export const FlexWrapper = styled.div`
   ${flexStyles};
 `
 export const Content = styled.div`
-  padding-top: ${sizes(8)};
   display: flex;
   flex-direction: column-reverse;
-  height: 100%;
   overflow-y: auto;
   padding-bottom: 130px;
 
   ${media.md} {
-    padding-top: ${sizes(16)};
+    height: 100%;
     flex-direction: row;
     overflow-y: unset;
     padding-bottom: unset;
@@ -39,11 +36,15 @@ export const NftPreview = styled.div`
   justify-content: center;
   flex: 1 0 auto;
   align-items: baseline;
-  padding: 0 ${sizes(4)};
+  padding: ${sizes(8)} ${sizes(4)} 0 ${sizes(4)};
+
+  ${media.md} {
+    padding-top: ${sizes(16)};
+  }
 
   ${media.lg} {
     flex: 50%;
-    padding: 0;
+    padding: ${sizes(16)} 0 0 0;
   }
 `
 
@@ -58,14 +59,14 @@ export const PlaceBidWrapper = styled.div`
 `
 
 export const InnerContainer = styled.div`
-  padding: 0 ${sizes(4)};
+  padding: ${sizes(8)} ${sizes(4)} 0 ${sizes(4)};
 
   ${media.md} {
+    padding: ${sizes(16)} ${sizes(4)} ${sizes(18)} ${sizes(4)};
     max-width: 550px;
-    padding-bottom: ${sizes(18)};
   }
   ${media.lg} {
-    padding: 0;
+    padding-top: ${sizes(16)} 0 0 0;
     max-width: 560px;
   }
 `
@@ -88,32 +89,36 @@ export const Header = styled.div`
   }
 `
 
-export const EndingTime = styled.div`
-  ${flexStyles};
-
-  position: relative;
-
-  ::after {
-    content: '';
-    display: block;
-    position: absolute;
-    right: 0;
-    width: 1px;
-    height: 32px;
-    background-color: ${cVar('colorBorderMutedAlpha')};
-  }
-`
-
-export const Timer = styled(Text)`
-  min-width: 77px;
-`
-
 export const CurrentBidWrapper = styled.div`
   margin-bottom: ${sizes(6)};
   background-color: ${cVar('colorBackgroundStrong')};
 `
 
-export const BidderName = styled(Text)`
+export const TokenWrapper = styled.div`
+  position: relative;
+  left: -4px;
+  z-index: ${zIndex.overlay};
+  margin-right: ${sizes(2)};
+
+  /* token background */
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-color: ${cVar('colorBackgroundStrong')};
+    border-radius: 100%;
+    left: -2px;
+    top: -2px;
+  }
+`
+
+export const StyledJoyTokenIcon = styled(JoyTokenIcon)`
+  position: relative;
+`
+
+export const BidAmount = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,30 +126,23 @@ export const BidderName = styled(Text)`
 
 export const ActionBarCell = styled.div`
   width: 50%;
-  padding: ${sizes(3.5)} ${sizes(4)};
-
-  :nth-of-type(2) {
-    border-left: 1px solid ${cVar('colorBorderMutedAlpha')};
-  }
+  padding: ${sizes(4)};
 `
 
 export const ActiveBidWrapper = styled.div`
   display: flex;
 `
 
-export const CurrentBidAvatar = styled(Avatar)`
-  margin-right: ${sizes(2)};
-`
-
-export const CurrentBidJoyToken = styled(JoyTokenIcon)`
-  margin-right: ${sizes(1)};
-`
-
 export const MinimumBidWrapper = styled.div`
-  ${flexStyles};
-
-  justify-content: space-between;
   margin-bottom: ${sizes(4)};
+  flex-direction: column;
+
+  ${media.md} {
+    ${flexStyles};
+
+    justify-content: space-between;
+    flex-direction: row;
+  }
 `
 
 export const BuyNowInfo = styled(Text)`
@@ -156,9 +154,15 @@ export const BuyNowInfo = styled(Text)`
 export const MinimumBid = styled.div`
   ${flexStyles};
 
+  margin-bottom: ${sizes(2)};
+
   svg {
     margin-left: ${sizes(2)};
     margin-right: ${sizes(1)};
+  }
+
+  ${media.md} {
+    margin-bottom: unset;
   }
 `
 
@@ -194,4 +198,8 @@ export const Messages = styled.div`
   ${flexStyles};
 
   margin-top: ${sizes(8)};
+
+  svg {
+    flex-shrink: 0;
+  }
 `
