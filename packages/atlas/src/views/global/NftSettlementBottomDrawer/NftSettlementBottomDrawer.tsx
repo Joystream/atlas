@@ -56,7 +56,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
   }
   const isOpen = currentAction === 'settle'
   return (
-    <BottomDrawer isOpen={isOpen} onClose={closeNftAction} coverTopbar>
+    <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
       <StyledLottie play={isOpen} loop={false} animationData={confetti} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>

@@ -249,7 +249,6 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
         reset()
         closeNftAction()
       }}
-      coverTopbar
       actionBar={{
         primaryButton: {
           text: primaryButtonText,
