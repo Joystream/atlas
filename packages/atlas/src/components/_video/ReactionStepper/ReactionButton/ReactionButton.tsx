@@ -125,7 +125,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 variant="tertiary"
                 icon={isReacted ? renderSolidIcon() : renderOutlineIcon()}
               >
-                <ReactionsCounter type={type} state={state} variant="t200">
+                <ReactionsCounter type={type} state={state} variant="t200-strong">
                   {formatNumberShort(reactionsNumber || 0)}
                 </ReactionsCounter>
               </Button>
