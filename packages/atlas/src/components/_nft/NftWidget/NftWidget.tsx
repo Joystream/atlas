@@ -442,6 +442,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                       )}
                       <Button
                         fullWidth
+                        onClick={onNftCancelSale}
                         variant={
                           nftStatus.type === 'open' && !!nftStatus.topBid ? 'destructive-secondary' : 'destructive'
                         }
