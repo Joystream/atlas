@@ -44,7 +44,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   value,
   onChange,
   label,
-  minDate = new Date(),
+  minDate,
   maxDate,
   ...rest
 }) => {
@@ -149,7 +149,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
           timeFormat="HH:mm"
           onChange={handlePickDate}
           openToDate={minDate ?? undefined}
-          minDate={new Date(msTimestamp)}
+          minDate={minDate || new Date(msTimestamp)}
           maxDate={maxDate}
           showDisabledMonthNavigation
           showTimeSelect
