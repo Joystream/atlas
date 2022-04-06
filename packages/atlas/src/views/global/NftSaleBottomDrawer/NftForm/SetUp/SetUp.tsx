@@ -82,10 +82,7 @@ export const SetUp: React.FC<SetUpProps> = ({
   }, [getValues, isEnglishAuction, setValue])
 
   useEffect(() => {
-    if (!numberOfBlocks) {
-      return
-    }
-    setValue('auctionDurationBlocks', numberOfBlocks)
+    setValue('auctionDurationBlocks', numberOfBlocks || undefined)
   }, [numberOfBlocks, setValue])
 
   const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
@@ -293,7 +290,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 placeholder="—"
                 type="number"
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
+                nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 helperText={errors.buyNowPrice?.message}

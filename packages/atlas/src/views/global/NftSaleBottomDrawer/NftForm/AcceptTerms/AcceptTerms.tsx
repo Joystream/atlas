@@ -1,3 +1,4 @@
+import { addHours } from 'date-fns'
 import React from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
@@ -39,7 +40,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   termsAccepted,
   toggleTermsAccept,
 }) => {
-  const { startDate, endDate } = formData
+  const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
@@ -47,6 +48,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
   const isEndDateValid = endDate?.type === 'date'
 
   const durationBlocks = formData.auctionDurationBlocks || 0
+  const convertedEndData = !isEndDateValid
+    ? addHours(isStartDateValid ? startDate.date : new Date(), endDate ? endDate.durationDays * 24 : 0)
+    : undefined
 
   return (
     <>
@@ -62,7 +66,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           />
         </Title>
         <Description>
-          <DescriptionText>{selectedType}</DescriptionText>
+          <DescriptionText>
+            {selectedType === 'Auction' ? `${type === 'open' ? 'Open' : 'Timed'} auction` : selectedType}
+          </DescriptionText>
         </Description>
       </Row>
       {formData.startingPrice && selectedType === 'Auction' && (
@@ -97,18 +103,22 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           </Description>
         </Row>
       )}
-      <Row>
-        <Title>
-          <TitleText>Starting date</TitleText>
-          <StyledInformation
-            text="It’s the time when your auction will become active and buyer will be able to make an offer"
-            placement="top"
-          />
-        </Title>
-        <Description>
-          <DescriptionText>{isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}</DescriptionText>
-        </Description>
-      </Row>
+      {selectedType !== 'Fixed price' && (
+        <Row>
+          <Title>
+            <TitleText>Starting date</TitleText>
+            <StyledInformation
+              text="It’s the time when your auction will become active and buyer will be able to make an offer"
+              placement="top"
+            />
+          </Title>
+          <Description>
+            <DescriptionText>
+              {isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}
+            </DescriptionText>
+          </Description>
+        </Row>
+      )}
       {formData.endDate && (
         <>
           <Row>
@@ -121,7 +131,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
             </Title>
             <Description>
               <DescriptionText>
-                {isEndDateValid ? formatDateTime(endDate.date) : totalDaysAndHours || 'No expiration date'}
+                {isEndDateValid ? formatDateTime(endDate.date) : convertedEndData && formatDateTime(convertedEndData)}
               </DescriptionText>
             </Description>
           </Row>
