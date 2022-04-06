@@ -1,16 +1,27 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
 import React, { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { StyledLink } from '@/components/_video/VideoTileDetails/VideoTileDetails.styles'
+import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { NotificationRecord } from '@/providers/notifications'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
-import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrapper } from './NotificationTile.styles'
+import {
+  AvatarWrapper,
+  CheckboxSkeleton,
+  Content,
+  ContentLink,
+  StyledListItem,
+  Title,
+  Wrapper,
+} from './NotificationTile.styles'
 
 const getNotificationText = (notification: NotificationRecord): string => {
   switch (notification.type) {
@@ -59,34 +70,38 @@ export const NotificationTile: React.FC<NotificationProps> = ({
 
   if (variant === 'compact') {
     return (
-      <StyledListItem
-        loading={loading}
-        read={read}
-        variant="compact"
-        onClick={onClick}
-        nodeStart={
-          !loading ? (
-            <Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar} />
-          ) : (
-            <SkeletonLoader width={32} height={32} rounded />
-          )
-        }
-        caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
-        label={
-          !loading ? (
-            <>
-              <Text as="span" variant="t200-strong" secondary>
-                {`${member.handle} `}
-              </Text>
-              <Text as="span" variant="t200-strong">
-                {getNotificationText(notification)}
-              </Text>
-            </>
-          ) : (
-            <SkeletonLoader width="40%" height={20} bottomSpace={2} />
-          )
-        }
-      />
+      <StyledLink to={absoluteRoutes.viewer.video(notification.video.id)}>
+        <StyledListItem
+          loading={loading}
+          read={read}
+          variant="compact"
+          onClick={onClick}
+          nodeStart={
+            !loading ? (
+              <Link to={absoluteRoutes.viewer.member(notification.member.handle)}>
+                <Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar} clickable />
+              </Link>
+            ) : (
+              <SkeletonLoader width={32} height={32} rounded />
+            )
+          }
+          caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
+          label={
+            !loading ? (
+              <>
+                <Text as="span" variant="t200-strong" secondary>
+                  {`${member.handle} `}
+                </Text>
+                <Text as="span" variant="t200-strong">
+                  {getNotificationText(notification)}
+                </Text>
+              </>
+            ) : (
+              <SkeletonLoader width="40%" height={20} bottomSpace={2} />
+            )
+          }
+        />
+      </StyledLink>
     )
   }
 
@@ -106,13 +121,15 @@ export const NotificationTile: React.FC<NotificationProps> = ({
       )}
       <AvatarWrapper>
         {!loading ? (
-          <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar} />
+          <Link to={absoluteRoutes.viewer.member(notification.member.handle)}>
+            <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar} clickable />
+          </Link>
         ) : (
           <SkeletonLoader width={40} height={40} rounded />
         )}
       </AvatarWrapper>
       {!loading ? (
-        <Content>
+        <ContentLink to={absoluteRoutes.viewer.video(notification.video.id)}>
           <Title>
             <Text as="span" variant="h300" secondary>
               {`${member.handle} `}
@@ -124,7 +141,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
           <Text variant="t200" secondary>
             {formattedDate} • {video.title}
           </Text>
-        </Content>
+        </ContentLink>
       ) : (
         <Content>
           <SkeletonLoader width="40%" height={24} bottomSpace={2} />

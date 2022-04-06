@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { ListItem } from '@/components/ListItem'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -80,6 +81,10 @@ export const AvatarWrapper = styled.div`
   margin: 0 ${sizes(4)};
 `
 
+export const ContentLink = styled(Link)`
+  width: 100%;
+  text-decoration: none;
+`
 export const Content = styled.div`
   width: 100%;
 `
@@ -114,4 +119,8 @@ export const StyledListItem = styled(ListItem)<StyledListItemProps>`
   ${getListItemStyles};
 
   position: relative;
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `
