@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { LayoutGrid } from '@/components/LayoutGrid'
 import { Pill } from '@/components/Pill'
 import { NotificationTile } from '@/components/_notifications/NotificationTile'
-import { cVar, media, sizes } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export const StyledLayoutGrid = styled(LayoutGrid)`
   padding-top: ${sizes(12)};
@@ -62,4 +62,33 @@ export const NotificationEmptyRectangleWithText = styled.div`
   align-items: center;
   position: relative;
   margin-bottom: ${sizes(2)};
+`
+
+export const FloatingActionBar = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background: ${cVar('colorBackgroundStrong')};
+  z-index: ${zIndex.overlay};
+  padding: ${sizes(2)};
+  max-width: 283px;
+  position: fixed;
+  top: calc(100vh - ${sizes(8)});
+  left: 50%;
+  transform: translate(-50%, -100%);
+
+  ${media.md} {
+    justify-content: unset;
+    max-width: unset;
+    min-width: 560px;
+    display: grid;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    padding: ${sizes(4)} ${sizes(8)};
+
+    button:not(:last-child) {
+      margin-right: ${sizes(4)};
+    }
+  }
 `
