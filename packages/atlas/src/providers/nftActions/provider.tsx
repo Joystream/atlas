@@ -36,6 +36,7 @@ export const NftActionsProvider: React.FC = ({ children }) => {
   const mappedBids = auction?.bids
     ? auction?.bids
         .filter((bid) => !bid.isCanceled)
+        .sort((bidA, bidB) => Number(bidB.amount) - Number(bidA.amount))
         .map(({ id, createdAt, amount, bidder }) => ({
           id,
           createdAt,
