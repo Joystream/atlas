@@ -42,23 +42,9 @@ export const NftCard: React.FC<NftCardProps> = ({
       {reflectionCells.map((_, idx) => {
         const row = Math.floor(idx / 10)
         const column = idx % 10
-
-        const lp = 50 + (column * 10 - 50) / 1
-        const tp = 50 + (row * 10 - 50) / 1
-
-        return (
-          <ReflectionGridCell
-            row={row}
-            column={column}
-            lp={lp}
-            tp={tp}
-            key={idx}
-            style={{
-              top: `calc(${row} * 10%)`,
-              left: `calc(${column} * 10%)`,
-            }}
-          />
-        )
+        const lp = column * 10
+        const tp = row * 10
+        return <ReflectionGridCell row={row} column={column} lp={lp} tp={tp} key={idx} />
       })}
       <ReflectionContent>
         <VideoThumbnail clickable={false} {...thumbnail} />

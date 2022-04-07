@@ -5,6 +5,9 @@ import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { cVar, media, sizes } from '@/styles'
 
+import holo from './assets/holo.png'
+import pattern from './assets/pattern.png'
+
 export const Container = styled.div<{ fullWidth?: boolean }>`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '360px')};
   transform-style: preserve-3d;
@@ -42,18 +45,17 @@ export const Pattern = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  background-image: url('https://i.imgur.com/AjBArhU.png');
+  background-image: url(${holo});
   background-position: 50% 50%;
   background-size: 1000%;
-  z-index: 2;
   transition: all 0.1s ease;
-  mask-image: url('https://i.imgur.com/Y9uPQ9n.png');
+  mask-image: url(${pattern});
   mask-position: 50% 50%;
 `
 
 export const LightReflection = styled.div`
-  --color1: #efb2fb;
-  --color2: #acc6f8;
+  --color1: white;
+  --color2: white;
 
   position: absolute;
   top: 0;
@@ -104,10 +106,11 @@ export const ReflectionGridCell = styled.div<{
   tp: number
 }>`
   position: absolute;
-  z-index: 1;
   transform: translateZ(80px);
   width: 10%;
   height: 10%;
+  top: calc(${({ row }) => row} * 10%);
+  left: calc(${({ column }) => column} * 10%);
   :hover ~ ${ReflectionContent} {
     transform: rotateX(${({ row }) => row * -5 + 25}deg) rotateY(${({ column }) => -25 + column * 5}deg);
     box-shadow: ${({ row, column }) =>
