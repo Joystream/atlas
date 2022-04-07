@@ -47,7 +47,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
   const [displayedRowsCount, setDisplayedRowsCount] = useState(INITIAL_ROWS)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null | undefined>('en')
 
-  const { channels, loading, error } = useChannelsListData(queryType)
+  const { channels, loading, error } = useChannelsListData(queryType, selectedLanguage)
 
   const handleLanguageSelect = (value?: string | null) => {
     setDisplayedRowsCount(INITIAL_ROWS)
@@ -121,7 +121,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
 // this will trigger ESLint plugin for hooks rules
 // however, the true rule is that the order of hook invocations must be preserved
 // we don't break that rule since we will always call one hook and we will never change `queryType` between rerenders
-const useChannelsListData = (queryType: ChannelsQueryType) => {
+const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: string | null | undefined) => {
   const commonOpts: QueryHookOptions = {
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
   }
@@ -138,6 +138,13 @@ const useChannelsListData = (queryType: ChannelsQueryType) => {
   } else {
     // regular channels query needs explicit limit and sorting as it's not defined by Orion
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useChannels({ limit: 15, orderBy: ChannelOrderByInput.CreatedAtAsc }, commonOpts)
+    return useChannels(
+      {
+        limit: 15,
+        orderBy: ChannelOrderByInput.CreatedAtAsc,
+        where: { language: { iso_contains: selectedLanguage }, activeVideosCounter_gt: 0 },
+      },
+      commonOpts
+    )
   }
 }
