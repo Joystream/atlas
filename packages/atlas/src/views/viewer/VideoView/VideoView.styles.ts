@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { ReactionStepper } from '@/components/_video/ReactionStepper'
 import { cVar, media, sizes } from '@/styles'
 
 type CinematicView = {
@@ -77,21 +78,23 @@ export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   top: 0;
 `
 
+const titleContainerPadding = sizes(6)
+
 export const TitleContainer = styled.div`
-  padding-bottom: ${sizes(6)};
+  padding-bottom: ${titleContainerPadding};
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
 `
 
 export const VideoUtils = styled.div`
   display: grid;
   margin-top: ${sizes(2)};
-  grid-template: 'meta meta' 1fr '. link' / 1fr auto;
+  grid-template: 'meta meta' 1fr 'reactions link' / 1fr auto;
   justify-items: baseline;
   gap: ${sizes(4)};
   ${media.md} {
     align-items: center;
     margin-top: ${sizes(4)};
-    grid-template: 'meta meta link' 1fr / 1fr auto;
+    grid-template: 'meta reactions link' 1fr / 1fr auto;
   }
 `
 
@@ -99,6 +102,11 @@ export const Meta = styled(Text)`
   display: block;
   grid-area: meta;
   grid-column: 1 / span 2;
+`
+
+export const StyledReactionStepper = styled(ReactionStepper)`
+  grid-area: reactions;
+  margin-bottom: -${titleContainerPadding};
 `
 
 export const CopyLink = styled(Button)`
