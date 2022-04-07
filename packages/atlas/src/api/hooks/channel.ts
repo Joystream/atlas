@@ -135,6 +135,7 @@ export const useTop10Channels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -156,6 +157,7 @@ export const useDiscoverChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -177,6 +179,7 @@ export const usePromisingChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -198,6 +201,7 @@ export const usePopularChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
