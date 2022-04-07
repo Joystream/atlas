@@ -36,6 +36,7 @@ export type DialogProps = {
   primaryButton?: DialogButtonProps
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: React.ReactNode
+  additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   className?: string
   children?: React.ReactNode
@@ -66,6 +67,7 @@ export const Dialog: React.FC<DialogProps> = ({
   as,
   onSubmit,
   noContentPadding,
+  additionalActionsNodeMobilePosition = 'top',
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -98,9 +100,13 @@ export const Dialog: React.FC<DialogProps> = ({
         {children}
       </Content>
       {hasFooter && (
-        <Footer dividers={dividers} hasAdditionalActions={!!additionalActionsNode}>
+        <Footer
+          dividers={dividers}
+          hasAdditionalActions={!!additionalActionsNode}
+          additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
+        >
           {additionalActionsNode}
-          <FooterButtonsContainer>
+          <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
               <Button variant="secondary" {...buttonProps} {...secondaryButton}>
                 {secondaryButton.text}
