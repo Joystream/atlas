@@ -56,6 +56,7 @@ import {
   PlayerSkeletonLoader,
   PlayerWrapper,
   StyledCallToActionWrapper,
+  StyledReactionStepper,
   TitleContainer,
   TitleText,
   VideoUtils,
@@ -245,6 +246,7 @@ export const VideoView: React.FC = () => {
               <SkeletonLoader height={24} width={200} />
             )}
           </Meta>
+          <StyledReactionStepper state="liked" likes={600} dislikes={300} />
           <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
             Copy link
           </CopyLink>
