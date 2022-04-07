@@ -250,7 +250,6 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       case 'auction': {
         const getInfoBannerProps = () => {
           const hasBids = !nftStatus.topBid?.isCanceled && nftStatus.topBidAmount
-
           if (nftStatus.type === 'open' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid to participate',
@@ -437,7 +436,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   nftStatus.topBid?.isCanceled) && (
                   <GridItem colSpan={buttonColumnSpan}>
                     <ButtonGrid data-size={size}>
-                      {nftStatus.type === 'open' && !nftStatus.topBid?.isCanceled && (
+                      {nftStatus.type === 'open' && nftStatus.topBid && !nftStatus.topBid?.isCanceled && (
                         <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
                           Review and accept bid
                         </Button>
@@ -587,7 +586,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           auctionBeginsDifferenceDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
           auctionBeginsDifferenceSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
-          userBidAmount: Number(userBid?.amount),
+          userBidAmount: Number(userBid?.amount) || undefined,
         },
         saleType,
       }
