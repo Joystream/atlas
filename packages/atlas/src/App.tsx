@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
 import { OperatorsContextProvider } from '@/providers/assets'
+import { BottomNavProvider } from '@/providers/bottomNav'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { GlobalStyles } from '@/styles'
 
@@ -32,11 +33,13 @@ export const App = () => {
               <ConfirmationModalProvider>
                 <ActiveUserProvider>
                   <JoystreamProvider>
-                    <MainLayout />
-                    <Snackbars />
-                    <AssetsManager />
-                    <TransactionManager />
-                    <SignInStepsStepper />
+                    <BottomNavProvider>
+                      <MainLayout />
+                      <Snackbars />
+                      <AssetsManager />
+                      <TransactionManager />
+                      <SignInStepsStepper />
+                    </BottomNavProvider>
                   </JoystreamProvider>
                 </ActiveUserProvider>
               </ConfirmationModalProvider>

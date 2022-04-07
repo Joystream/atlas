@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { viewerNavItems } from '@/config/nav'
+import { useBottomNav } from '@/providers/bottomNav'
 import { transitions } from '@/styles'
 
 import { Container, NavLink, NavTitle } from './BottomNav.styles'
@@ -20,10 +21,10 @@ const Link: React.FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
 const OPENING_MARGIN = 24
 
 export const BottomNav = () => {
-  const [open, setOpen] = useState(true)
+  const { open, setOpen } = useBottomNav()
   const pageYOffsetRef = useRef<number | null>(null)
 
-  const toggleNavbar = () => {
+  const toggleNavbar = useCallback(() => {
     /**
      * Some browsers allows to 'overscroll' page which causes bottom navigation wrong behavior.
      * This condition checks if user scrolled out of page in both directions, top and bottom.
@@ -41,15 +42,16 @@ export const BottomNav = () => {
     if (Math.abs(scrollRange) >= OPENING_MARGIN || pageYOffsetRef.current === null) {
       pageYOffsetRef.current = window.scrollY
     }
-  }
+  }, [setOpen])
 
   useEffect(() => {
     window.addEventListener('scroll', toggleNavbar)
 
     return () => {
       window.removeEventListener('scroll', toggleNavbar)
+      setOpen(false)
     }
-  }, [])
+  }, [setOpen, toggleNavbar])
 
   return (
     <CSSTransition
