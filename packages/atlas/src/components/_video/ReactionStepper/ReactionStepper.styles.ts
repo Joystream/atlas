@@ -23,13 +23,10 @@ export const ReactionBar = styled.div<{ loaded: boolean }>`
 `
 
 const reactionBarAnimation = keyframes`
-  0% {
+  from {
     transform: translateX(-50%) scaleX(50%);
   }
-  50% {
-    transform: translateX(50%) scaleX(50%);
-  }
-  100% {
+  to {
     transform: translateX(100%) scaleX(50%);
   }
 `
