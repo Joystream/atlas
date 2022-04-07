@@ -81,6 +81,7 @@ export const StyledImage = styled.img`
 export const ZoomControl = styled.div`
   display: flex;
   align-items: center;
+  flex-grow: 2;
 `
 
 export const StyledSlider = styled(Slider)`
