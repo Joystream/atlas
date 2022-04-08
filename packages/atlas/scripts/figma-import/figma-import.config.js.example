@@ -10,4 +10,5 @@ module.exports = {
   FIGMA_TOKEN: '',
   FILE_KEY: '1uxugLps6oooI38PGmdrn9',
   FRAME_WITH_ICONS_ID: '637:380',
+  FRAME_WITH_ILLUSTRATIONS_ID: '1008:3A6558'
 }
