@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, zIndex } from '@/styles'
+import { cVar, media, zIndex } from '@/styles'
 
 export const ModalBackdrop = styled.div`
   position: fixed;
@@ -10,8 +10,8 @@ export const ModalBackdrop = styled.div`
   left: 0;
   right: 0;
   z-index: ${zIndex.globalOverlay};
-  background-color: rgba(0 0 0 / 0.4);
-  transition: opacity 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
+  background-color: ${cVar('colorBackgroundOverlay')};
+  transition: opacity ${cVar('animationTransitionMedium')};
 `
 
 type ModalContentProps = {
@@ -22,15 +22,25 @@ export const ModalContent = styled.div<ModalContentProps>`
   display: flex;
   z-index: ${zIndex.globalOverlay};
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  max-height: 90vh;
-  max-width: 90vw;
+  min-width: 100vw;
+  max-height: calc(100vh - var(--size-topbar-height));
   overflow: hidden;
+  bottom: 0;
   ${({ noBoxShadow }) =>
     !noBoxShadow &&
     css`
       box-shadow: ${cVar('effectElevation24Layer2')}, ${cVar('effectElevation24Layer1')};
     `};
+
+  ${media.sm} {
+    min-width: 480px;
+    max-height: calc(100vh - var(--size-topbar-height) * 2);
+    max-width: calc(100vw - var(--size-topbar-height) * 2);
+    bottom: initial;
+    left: 50%;
+    top: 50%;
+
+    /* to be kept in sync with the transition styles */
+    transform: translate(-50%, -50%);
+  }
 `

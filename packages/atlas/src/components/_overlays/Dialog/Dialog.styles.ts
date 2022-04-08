@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
 
@@ -32,19 +32,24 @@ const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
         --local-size-dialog-padding: ${sizes(4)};
       `
 
-export const DialogContainer = styled.div<SizeProps>`
+export const DialogContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 480px;
-  max-width: 90vw;
-  max-height: 640px;
+  width: 100%;
   overflow: hidden;
-  background-color: ${oldColors.gray[700]};
-  ${getDialogPaddingVariableStyles};
+  background-color: ${cVar('colorBackgroundStrong')};
+  border-radius: ${cVar('radiusMedium')};
+  box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
+
+  ${getDialogPaddingVariableStyles}
+
+  ${media.sm} {
+    max-width: calc(100vw - var(--size-topbar-height) * 2);
+  }
 `
 
 const headerDividersStyles = css`
-  box-shadow: inset 0 -1px 0 0 ${oldColors.gray[600]};
+  box-shadow: ${cVar('effectDividersBottom')};
   padding-bottom: var(--local-size-dialog-padding);
 `
 
@@ -86,7 +91,7 @@ export const Content = styled.div<ContentProps>`
 `
 
 export const footerDividersStyles = css`
-  box-shadow: inset 0 1px 0 0 ${oldColors.gray[600]};
+  box-shadow: ${cVar('effectDividersTop')};
   padding-top: var(--local-size-dialog-padding);
 `
 

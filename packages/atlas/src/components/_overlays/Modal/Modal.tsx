@@ -7,13 +7,15 @@ import { transitions } from '@/styles'
 
 import { ModalBackdrop, ModalContent } from './Modal.styles'
 
+import { DialogProps } from '../Dialog'
+
 export type ModalProps = {
   show?: boolean
   noBoxShadow?: boolean
   className?: string
-}
+} & Pick<DialogProps, 'onExitClick'>
 
-export const Modal: React.FC<ModalProps> = ({ children, show, className, noBoxShadow }) => {
+export const Modal: React.FC<ModalProps> = ({ children, show, onExitClick, className, noBoxShadow }) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -24,12 +26,12 @@ export const Modal: React.FC<ModalProps> = ({ children, show, className, noBoxSh
 
   return (
     <Portal containerRef={modalContainerRef}>
-      <CSSTransition in={show} timeout={200} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
-        <ModalBackdrop />
+      <CSSTransition in={show} timeout={250} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
+        <ModalBackdrop onClick={onExitClick} />
       </CSSTransition>
       <CSSTransition
         in={show}
-        timeout={200}
+        timeout={250}
         classNames={transitions.names.modal}
         mountOnEnter
         unmountOnExit

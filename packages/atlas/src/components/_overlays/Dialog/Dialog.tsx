@@ -37,7 +37,7 @@ export type DialogProps = {
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: React.ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
-  onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onExitClick?: () => void
   className?: string
   children?: React.ReactNode
   as?: React.ElementType
@@ -74,7 +74,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
-  const buttonProps: ButtonProps = { size: isCompact ? 'small' : !smMatch ? 'medium' : 'large' }
+  const buttonProps: ButtonProps = { size: isCompact ? 'small' : 'medium' }
 
   const iconNode = headerIcon || (iconType && TYPE_TO_ICON[iconType]) || null
 
@@ -84,7 +84,7 @@ export const Dialog: React.FC<DialogProps> = ({
         <Header dividers={dividers}>
           <HeaderContent>
             {iconNode ? <HeaderIconContainer>{iconNode}</HeaderIconContainer> : null}
-            <Text variant={isCompact ? 'h300' : !smMatch ? 'h400' : 'h500'}>{title}</Text>
+            <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
             <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">

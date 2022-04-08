@@ -1,5 +1,7 @@
 import { css } from '@emotion/react'
 
+import { cVar } from './generated/variables'
+import { media } from './media'
 import { sizes } from './sizes'
 
 export const transitions = {
@@ -18,7 +20,7 @@ export const transitions = {
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
     slideDown: 'slide-down',
-    modal: 'modal',
+    modal: 'atlas-modal',
   },
 }
 
@@ -86,5 +88,45 @@ export const transitionStyles = css`
 
   .${transitions.names.fade}-enter-active, .${transitions.names.fade}-exit-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} !important;
+  }
+
+  .${transitions.names.modal}-enter {
+    transform: translateY(100%);
+  }
+
+  .${transitions.names.modal}-enter-active {
+    transform: translateY(0);
+    transition: all ${cVar('animationTransitionMedium')};
+  }
+
+  .${transitions.names.modal}-exit {
+    transform: translateY(0);
+  }
+
+  .${transitions.names.modal}-exit-active {
+    transform: translateY(100%);
+    transition: all ${cVar('animationTransitionMedium')};
+  }
+
+  ${media.sm} {
+    .${transitions.names.modal}-enter {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+    }
+
+    .${transitions.names.modal}-enter-active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .${transitions.names.modal}-exit {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .${transitions.names.modal}-exit-active {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+    }
   }
 `
