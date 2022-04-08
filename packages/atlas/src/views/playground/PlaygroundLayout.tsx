@@ -104,10 +104,11 @@ const LogoWrapper = styled.div`
 `
 
 const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: end;
   grid-column: 3;
-  justify-content: space-between;
 `
 
 const Container = styled.div`
