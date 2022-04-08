@@ -1,8 +1,13 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { Button } from '@/components/_buttons/Button'
+import { SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { TopbarBase } from '@/components/_navigation/TopbarBase'
+import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
+import { absoluteRoutes } from '@/config/routes'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { ActiveUserProvider } from '@/providers/user'
@@ -31,8 +36,21 @@ const playgroundRoutes = [
 ]
 
 const PlaygroundLayout = () => {
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
   return (
     <ActiveUserProvider>
+      <TopbarBase fullLogoNode={<SvgJoystreamLogoShort />} logoLinkUrl={absoluteRoutes.viewer.index()}>
+        <ButtonContainer>
+          <Button variant="secondary" to={absoluteRoutes.viewer.index()}>
+            Go to viewer
+          </Button>
+          <Button variant="secondary" to={absoluteRoutes.studio.index()}>
+            Go to studio
+          </Button>
+          <Button onClick={() => setIsMemberDropdownActive(true)}>Open member dropdown</Button>
+        </ButtonContainer>
+      </TopbarBase>
+      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
       <ConfirmationModalProvider>
         <Container>
           <NavContainer>
@@ -56,7 +74,13 @@ const PlaygroundLayout = () => {
   )
 }
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const Container = styled.div`
+  margin-top: 80px;
   padding: 40px;
   display: flex;
 `
