@@ -3,7 +3,7 @@ import { useMatch } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { viewerNavItems } from '@/config/nav'
-import { useBottomNav } from '@/providers/bottomNav'
+import { useBottomNavStore } from '@/providers/bottomNav'
 import { transitions } from '@/styles'
 
 import { Container, NavLink, NavTitle } from './BottomNav.styles'
@@ -21,7 +21,7 @@ const Link: React.FC<typeof viewerNavItems[number]> = ({ to, icon, name }) => {
 const OPENING_MARGIN = 24
 
 export const BottomNav = () => {
-  const { open, setOpen } = useBottomNav()
+  const { open, setOpen } = useBottomNavStore((state) => ({ open: state.open, setOpen: state.actions.setOpen }))
   const pageYOffsetRef = useRef<number | null>(null)
 
   const toggleNavbar = useCallback(() => {

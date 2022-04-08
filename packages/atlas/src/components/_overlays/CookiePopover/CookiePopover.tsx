@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { useBottomNav } from '@/providers/bottomNav'
+import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 
@@ -12,7 +12,7 @@ export const CookiePopover: React.FC = () => {
     cookiesAccepted: state.cookiesAccepted,
     setCookiesAccepted: state.actions.setCookiesAccepted,
   }))
-  const { open } = useBottomNav()
+  const open = useBottomNavStore((state) => state.open)
   return (
     <CSSTransition
       in={cookiesAccepted === undefined}
