@@ -5,13 +5,12 @@ import { useNft } from '@/api/hooks'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { Select } from '@/components/_inputs/Select'
 import { TextField } from '@/components/_inputs/TextField'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata, NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
-import { useAuthorizedUser, useUser } from '@/providers/user'
+import { useAuthorizedUser } from '@/providers/user'
 
 const TABS: TabItem[] = [
   { name: 'Issue NFT' },
@@ -29,7 +28,6 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const { nft, nftStatus, refetch } = useNft(videoId)
   const handleSuccess = () => refetch()
-  const { setActiveUser, memberships, activeMembership } = useUser()
 
   const getTabContents = () => {
     const type: NftSaleType | null =
@@ -62,30 +60,8 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
   }
 
   const getDetailsContent = () => {
-    const handleMemberChange = (value: { memberId?: string; accountId?: string } | null | undefined) => {
-      setActiveUser({ accountId: value?.accountId, memberId: value?.memberId })
-    }
     return (
       <div>
-        <FormField title="Choose member">
-          <Select<{ memberId?: string; accountId?: string }>
-            placeholder="Choose member"
-            value={{
-              memberId: activeMembership?.id || '',
-              accountId: activeMembership?.controllerAccount || '',
-            }}
-            onChange={handleMemberChange}
-            items={
-              memberships?.map((member) => ({
-                name: member.handle,
-                value: {
-                  memberId: member.id,
-                  accountId: member.controllerAccount,
-                },
-              })) || []
-            }
-          />
-        </FormField>
         <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
         {getTabContents()}
         <div style={{ maxWidth: 320 }}>
@@ -98,9 +74,7 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
 
   return (
     <div>
-      <FormField title="Video ID">
-        <TextField value={videoId} onChange={(e) => setVideoId(e.target.value)} />
-      </FormField>
+      <TextField label="Video ID" value={videoId} onChange={(e) => setVideoId(e.target.value)} />
 
       {!!videoId && getDetailsContent()}
     </div>
