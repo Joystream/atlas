@@ -15,7 +15,7 @@ import { cVar, media, sizes, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 
-export const StyledSpinner = styled(Spinner)`
+const StyledSpinner = styled(Spinner)`
   margin-bottom: 0;
   margin-top: ${sizes(1)};
 `

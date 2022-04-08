@@ -44,8 +44,10 @@ export const useTransaction = (): HandleTransactionFn => {
         if (minimized) {
           addPendingSign(transactionId)
         }
-        if (nodeConnectionStatus !== 'connected' && !minimized) {
-          setDialogStep(ExtrinsicStatus.Error)
+        if (nodeConnectionStatus !== 'connected') {
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.Error)
+          }
           return false
         }
 
