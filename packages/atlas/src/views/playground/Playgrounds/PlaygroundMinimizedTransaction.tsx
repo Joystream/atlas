@@ -35,7 +35,6 @@ export const PlaygroundMinimizedTransaction = () => {
     const title = inputRef?.current?.value
     await handleTransaction({
       minimized: {
-        signMessage: 'To leave your comment you need to sign the transaction in Polkadot extension.',
         signErrorMessage: `Your comment to the video ${title} has not been posted.`,
       },
       txFactory: async (updateStatus) =>

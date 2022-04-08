@@ -21,7 +21,6 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   onTxSync?: (data: T) => Promise<unknown>
   snackbarSuccessMessage?: SnackbarSuccessMessage
   minimized?: {
-    signMessage: string
     signErrorMessage: string
   }
 }
@@ -29,9 +28,10 @@ type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOp
 
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 const TX_COMPLETED_SNACKBAR_TIMEOUT = 5000
+const MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 
 export const useTransaction = (): HandleTransactionFn => {
-  const { addBlockAction, setDialogStep, setMinimized, addPendingSign, removePendingSign } = useTransactionManagerStore(
+  const { addBlockAction, setDialogStep, addPendingSign, removePendingSign } = useTransactionManagerStore(
     (state) => state.actions
   )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
@@ -40,16 +40,20 @@ export const useTransaction = (): HandleTransactionFn => {
   return useCallback(
     async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, minimized = null }) => {
       const transactionId = createId()
-      setMinimized(minimized)
       try {
-        if (nodeConnectionStatus !== 'connected') {
+        if (minimized) {
+          addPendingSign(transactionId)
+        }
+        if (nodeConnectionStatus !== 'connected' && !minimized) {
           setDialogStep(ExtrinsicStatus.Error)
           return false
         }
 
         // if provided, do any preprocessing
         if (preProcess) {
-          setDialogStep(ExtrinsicStatus.ProcessingAssets)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.ProcessingAssets)
+          }
           try {
             await preProcess()
           } catch (e) {
@@ -58,18 +62,27 @@ export const useTransaction = (): HandleTransactionFn => {
           }
         }
 
-        addPendingSign(transactionId)
         // run txFactory and prompt for signature
-        setDialogStep(ExtrinsicStatus.Unsigned)
-        const result = await txFactory(setDialogStep)
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Unsigned)
+        }
+        const result = await txFactory(
+          !minimized
+            ? setDialogStep
+            : (status) => {
+                if (status === ExtrinsicStatus.Signed) {
+                  removePendingSign(transactionId)
+                }
+              }
+        )
         if (onTxFinalize) {
           onTxFinalize(result).catch((error) =>
             SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', error)
           )
         }
-
-        removePendingSign(transactionId)
-        setDialogStep(ExtrinsicStatus.Syncing)
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Syncing)
+        }
         const queryNodeSyncPromise = new Promise<void>((resolve) => {
           const syncCallback = async () => {
             if (onTxSync) {
@@ -86,7 +99,9 @@ export const useTransaction = (): HandleTransactionFn => {
 
         return new Promise((resolve) => {
           queryNodeSyncPromise.then(() => {
-            setDialogStep(ExtrinsicStatus.Completed)
+            if (!minimized) {
+              setDialogStep(ExtrinsicStatus.Completed)
+            }
             snackbarSuccessMessage &&
               displaySnackbar({
                 ...snackbarSuccessMessage,
@@ -97,7 +112,9 @@ export const useTransaction = (): HandleTransactionFn => {
           })
         })
       } catch (error) {
-        removePendingSign(transactionId)
+        if (minimized) {
+          removePendingSign(transactionId)
+        }
         const errorName = error.name as JoystreamLibErrorType
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
@@ -117,21 +134,24 @@ export const useTransaction = (): HandleTransactionFn => {
         }
         if (errorName === 'VoucherLimitError') {
           SentryLogger.message('Voucher size limit exceeded', 'TransactionManager', error)
-          setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
+          }
         } else {
-          setDialogStep(ExtrinsicStatus.Error)
+          if (minimized) {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: minimized.signErrorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          } else {
+            setDialogStep(ExtrinsicStatus.Error)
+          }
         }
         return false
       }
     },
-    [
-      addBlockAction,
-      addPendingSign,
-      displaySnackbar,
-      nodeConnectionStatus,
-      removePendingSign,
-      setDialogStep,
-      setMinimized,
-    ]
+    [addBlockAction, addPendingSign, displaySnackbar, nodeConnectionStatus, removePendingSign, setDialogStep]
   )
 }

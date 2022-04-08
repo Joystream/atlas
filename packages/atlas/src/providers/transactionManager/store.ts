@@ -7,15 +7,10 @@ type ProcessedBlockAction = {
 }
 
 export type TransactionDialogStep = ExtrinsicStatus | null
-export type MinimizedTransaction = {
-  signMessage: string
-  signErrorMessage: string
-}
 
 type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
   dialogStep: TransactionDialogStep
-  minimized: MinimizedTransaction | null
   pendingSigns: string[]
 }
 
@@ -23,13 +18,12 @@ type TransactionManagerStoreActions = {
   addBlockAction: (action: ProcessedBlockAction) => void
   removeOldBlockActions: (currentBlock: number) => void
   setDialogStep: (step: TransactionDialogStep) => void
-  setMinimized: (minimized: MinimizedTransaction | null) => void
   addPendingSign: (id: string) => void
   removePendingSign: (id: string) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
-  state: { blockActions: [], dialogStep: null, minimized: null, pendingSigns: [] },
+  state: { blockActions: [], dialogStep: null, pendingSigns: [] },
   actionsFactory: (set) => ({
     addBlockAction: (action) =>
       set((state) => {
@@ -42,10 +36,6 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
     setDialogStep: (step) =>
       set((state) => {
         state.dialogStep = step
-      }),
-    setMinimized: (minimized) =>
-      set((state) => {
-        state.minimized = minimized
       }),
     addPendingSign: (id) =>
       set((state) => {
