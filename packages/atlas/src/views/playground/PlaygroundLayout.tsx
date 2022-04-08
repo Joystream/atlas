@@ -3,14 +3,17 @@ import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { TopbarBase } from '@/components/_navigation/TopbarBase'
 import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
 import { absoluteRoutes } from '@/config/routes'
+import { useMemberAvatar } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { ActiveUserProvider } from '@/providers/user'
+import { ActiveUserProvider, useUser } from '@/providers/user'
 import { oldColors } from '@/styles'
 
 import {
@@ -37,9 +40,22 @@ const playgroundRoutes = [
 
 const PlaygroundLayout = () => {
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+  const { activeMembership, activeAccountId, activeMemberId, extensionConnected, signIn } = useUser()
+  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   return (
     <ActiveUserProvider>
-      <TopbarBase fullLogoNode={<SvgJoystreamLogoShort />} logoLinkUrl={absoluteRoutes.viewer.index()}>
+      <TopbarBase
+        fullLogoNode={
+          <LogoWrapper>
+            <SvgJoystreamLogoShort />
+            <Text variant="h500" margin={{ left: 2 }}>
+              Playground
+            </Text>
+          </LogoWrapper>
+        }
+        logoLinkUrl={absoluteRoutes.playground.index()}
+      >
         <ButtonContainer>
           <Button variant="secondary" to={absoluteRoutes.viewer.index()}>
             Go to viewer
@@ -47,7 +63,16 @@ const PlaygroundLayout = () => {
           <Button variant="secondary" to={absoluteRoutes.studio.index()}>
             Go to studio
           </Button>
-          <Button onClick={() => setIsMemberDropdownActive(true)}>Open member dropdown</Button>
+          {isLoggedIn ? (
+            <Avatar
+              size="small"
+              assetUrl={memberAvatarUrl}
+              loading={memberAvatarLoading}
+              onClick={() => setIsMemberDropdownActive(true)}
+            />
+          ) : (
+            <Button onClick={signIn}>Sign in</Button>
+          )}
         </ButtonContainer>
       </TopbarBase>
       <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
@@ -74,8 +99,14 @@ const PlaygroundLayout = () => {
   )
 }
 
+const LogoWrapper = styled.div`
+  display: flex;
+`
+
 const ButtonContainer = styled.div`
   display: flex;
+  width: 100%;
+  grid-column: 3;
   justify-content: space-between;
 `
 
