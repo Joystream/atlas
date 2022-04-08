@@ -2,9 +2,9 @@ const config = require('./figma-import.config')
 
 const path = require('path')
 const fs = require('fs').promises
-const {kebabCase} = require('lodash')
+const { kebabCase } = require('lodash')
 
-const {getImageContent, getNodeChildren, getSvgImageUrl} = require('./utils/api')
+const { getImageContent, getNodeChildren, getSvgImageUrl } = require('./utils/api')
 
 const type = process.argv.slice(2)[0] === '--icons' ? 'icons' : 'illustrations'
 const filesDir = path.resolve(`src/components/_${type}/svgs`)
@@ -17,7 +17,7 @@ let counter = 0
  */
 const clearFilesDir = async () => {
   try {
-    await fs.rm(filesDir, {recursive: true})
+    await fs.rm(filesDir, { recursive: true })
     console.log(`${filesDir} successfully deleted!`)
   } catch (err) {
     console.error(`Error while deleting ${filesDir}`)
@@ -43,7 +43,7 @@ const generateIconOrIllustration = async (svgNode, total) => {
     await fs.mkdir(filesDir)
   }
 
-  const {data: fileContent} = await getImageContent(fileUrl)
+  const { data: fileContent } = await getImageContent(fileUrl)
 
   await Promise.all([await fs.writeFile(path.resolve(filesDir, `${fileName}.svg`), fileContent, 'utf-8')])
 
@@ -64,7 +64,7 @@ const generateIconsOrIllustrations = async (svgNodesArr) => {
   await Promise.all(
     svgNodesArr.map((item, index) => {
       setTimeout(() => generateIconOrIllustration(item, svgNodesArr.length), 1000 * index)
-    }),
+    })
   )
 }
 
@@ -72,7 +72,7 @@ const main = async () => {
   clearFilesDir()
 
   const filesNodesArr = await getNodeChildren(
-    type === 'icons' ? config.FRAME_WITH_ICONS_ID : config.FRAME_WITH_ILLUSTRATIONS_ID,
+    type === 'icons' ? config.FRAME_WITH_ICONS_ID : config.FRAME_WITH_ILLUSTRATIONS_ID
   )
 
   await Promise.all([generateIconsOrIllustrations(filesNodesArr)])
