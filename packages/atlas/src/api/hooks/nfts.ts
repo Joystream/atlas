@@ -87,7 +87,7 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
           startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
           buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
           topBid: nft.transactionalStatus.auction?.topBid || undefined,
-          topBidAmount: Number(nft.transactionalStatus.auction?.topBid?.amount),
+          topBidAmount: Number(nft.transactionalStatus.auction?.topBid?.amount) || undefined,
           topBidder: nft.transactionalStatus.auction?.topBid?.bidder,
           auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
           bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
