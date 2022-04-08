@@ -3,7 +3,7 @@ import processingAssetsAnimation from '@/assets/animations/transaction/processin
 import processingTransactionAnimation from '@/assets/animations/transaction/processing-transaction.json'
 import propagatingChangesAnimation from '@/assets/animations/transaction/propagating-changes.json'
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicStatus, JoystreamFailedErrorCodeEnum } from '@/joystream-lib'
 
 export const TRANSACTION_STEPS_DETAILS = {
   [ExtrinsicStatus.ProcessingAssets]: {
@@ -59,8 +59,26 @@ export const TRANSACTION_STEPS_DETAILS = {
   },
   [ExtrinsicStatus.Error]: {
     title: 'Something went wrong...',
-    description:
-      'An unexpected error was encountered. The transaction may have succeeded though, refreshing the page is the safest option. If this persists, our Discord community may be a good place to find some help.',
+    description: {
+      default:
+        'An unexpected error was encountered. The transaction may have succeeded though, refreshing the page is the safest option. If this persists, our Discord community may be a good place to find some help.',
+      [JoystreamFailedErrorCodeEnum.NftAuctionIsAlreadyExpired]:
+        'You cannot bid on this auction. The auction has expired.',
+      [JoystreamFailedErrorCodeEnum.ActionHasBidsAlready]:
+        'You cannot cancel this auction. The auction has bids already.',
+      [JoystreamFailedErrorCodeEnum.ActorNotAuthorized]: `You are not authorized to perform this action.`,
+      [JoystreamFailedErrorCodeEnum.BidStepConstraintViolated]:
+        'Somebody placed a higher bid on this auction already. Choose a higher amount.',
+      [JoystreamFailedErrorCodeEnum.BidDoesNotExist]:
+        'This bid does not exists anymore. This could means that it may have been withdrawn by the bidder.',
+      [JoystreamFailedErrorCodeEnum.InvalidBuyNowPriceProvided]: `You can't buy the NFT with this price. Buy now price has changed after you wanted to buy it`,
+      [JoystreamFailedErrorCodeEnum.IsNotEnglishAuctionType]:
+        'You cannot perform this action. This could means that somebody bought this NFT for fixed price or settled it already',
+      [JoystreamFailedErrorCodeEnum.IsNotOpenAuctionType]:
+        'You cannot perform this action. This could means that open auction winner has been picked before your bid has been processed',
+      [JoystreamFailedErrorCodeEnum.NftNotInBuyNowState]:
+        'Given video nft is not in buy now state. This could means that somebody bought it already.',
+    },
     animation: {
       data: errorAnimation,
       size: {

@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ExtrinsicStatus, JoystreamFailedErrorCodeEnum } from '@/joystream-lib'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
@@ -27,9 +27,10 @@ export type TransactionModalProps = {
   status: ExtrinsicStatus | null
   onClose: () => void
   className?: string
+  errorCode?: JoystreamFailedErrorCodeEnum | null
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onClose, className }) => {
+export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onClose, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
@@ -153,7 +154,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
         description={
           status === ExtrinsicStatus.VoucherSizeLimitExceeded && activeChannelId
             ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
-            : stepDetails?.description
+            : typeof stepDetails?.description === 'string'
+            ? stepDetails?.description
+            : stepDetails?.description[errorCode || 'default']
         }
       />
     </StyledModal>

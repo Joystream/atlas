@@ -50,6 +50,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
         closeNftAction()
         return refetch()
       },
+      onError: () => refetch(),
     })
   }
   const isOpen = currentAction === 'settle'

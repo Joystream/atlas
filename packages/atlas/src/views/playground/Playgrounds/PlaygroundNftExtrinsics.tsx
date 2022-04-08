@@ -36,6 +36,7 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
     const props = {
       videoId,
       onSuccess: handleSuccess,
+      onError: () => refetch(),
       type,
     }
 
@@ -84,13 +85,14 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
 type FormProps = {
   videoId: string
   onSuccess: () => void
+  onError: () => void
   type: NftSaleType | null
 }
 
 type IssueInputs = {
   royalties?: string
 }
-const Issue: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -107,6 +109,7 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess }) => {
     }
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).issueNft(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -132,7 +135,7 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 type BuyNowInputs = {
   buyNowPrice: number
 }
-const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -151,6 +154,7 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
     }
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -181,7 +185,7 @@ type AuctionInputs = {
   auctionDurationBlocks?: string
   whitelistedMembers?: string
 }
-const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -216,6 +220,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
           ...commonAuctionFields,
         }
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).putNftOnSale(videoId, activeMemberId, metadata, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -281,7 +286,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess }) => {
   )
 }
 
-const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -296,6 +301,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
     if (!joystream) return
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).buyNftNow(videoId, activeMemberId, data.buyNowPrice, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -321,7 +327,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 type MakeBidInputs = {
   bid: number
 }
-const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
+const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -336,6 +342,7 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
     if (!joystream || !type || type === 'buyNow') return
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).makeNftBid(videoId, activeMemberId, data.bid, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -354,7 +361,7 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
   )
 }
 
-const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
+const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
@@ -364,6 +371,7 @@ const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
     if (!joystream || !type) return
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).cancelNftSale(videoId, activeMemberId, type, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
@@ -379,7 +387,7 @@ const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
   )
 }
 
-const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
+const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
@@ -389,6 +397,7 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
     if (!joystream) return
 
     handleTransaction({
+      onError,
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).cancelNftBid(videoId, activeMemberId, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
