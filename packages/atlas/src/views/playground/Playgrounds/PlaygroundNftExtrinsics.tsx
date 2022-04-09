@@ -20,6 +20,7 @@ const TABS: TabItem[] = [
   { name: 'Buy now' },
   { name: 'Make auction bid' },
   { name: 'Cancel auction bid' },
+  { name: 'Settle english auction' },
 ]
 
 export const PlaygroundNftExtrinsics: React.FC = () => {
@@ -53,6 +54,8 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
         return <MakeBid {...props} />
       case 6:
         return <CancelBid {...props} />
+      case 7:
+        return <SettleAuction {...props} />
     }
   }
 
@@ -396,6 +399,31 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
     <div>
       <form onSubmit={handleSubmit}>
         <Button type="submit">Cancel bid</Button>
+      </form>
+    </div>
+  )
+}
+
+const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
+  const { activeMemberId } = useAuthorizedUser()
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (!joystream || !type) return
+
+    handleTransaction({
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).settleEnglishAuction(videoId, activeMemberId, proxyCallback(updateStatus)),
+      onTxSync: async (_) => onSuccess(),
+    })
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <Button type="submit">Settle auction</Button>
       </form>
     </div>
   )
