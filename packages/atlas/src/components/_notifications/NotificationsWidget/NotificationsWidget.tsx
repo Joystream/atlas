@@ -32,7 +32,10 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
               variant="compact"
               key={`notification-${notification.id}-${idx}`}
               notification={notification}
-              onClick={() => markNotificationAsRead(notification.id)}
+              onClick={() => {
+                popoverRef.current?.hide()
+                markNotificationAsRead(notification.id)
+              }}
             />
           ))}
         </Content>

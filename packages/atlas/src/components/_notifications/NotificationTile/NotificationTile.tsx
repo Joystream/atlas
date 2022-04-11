@@ -1,6 +1,5 @@
 import { differenceInCalendarYears, differenceInDays, format } from 'date-fns'
 import React, { useMemo } from 'react'
-import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
@@ -13,15 +12,7 @@ import { NotificationRecord } from '@/providers/notifications'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
-import {
-  AvatarWrapper,
-  CheckboxSkeleton,
-  Content,
-  ContentLink,
-  StyledListItem,
-  Title,
-  Wrapper,
-} from './NotificationTile.styles'
+import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrapper } from './NotificationTile.styles'
 
 const getNotificationText = (notification: NotificationRecord): string => {
   switch (notification.type) {
@@ -70,21 +61,12 @@ export const NotificationTile: React.FC<NotificationProps> = ({
 
   if (variant === 'compact') {
     return (
-      <StyledLink to={absoluteRoutes.viewer.video(notification.video.id)}>
+      <StyledLink to={absoluteRoutes.viewer.video(notification.video.id)} onClick={onClick}>
         <StyledListItem
           loading={loading}
           read={read}
           variant="compact"
-          onClick={onClick}
-          nodeStart={
-            !loading ? (
-              <Link to={absoluteRoutes.viewer.member(notification.member.handle)}>
-                <Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar} clickable />
-              </Link>
-            ) : (
-              <SkeletonLoader width={32} height={32} rounded />
-            )
-          }
+          nodeStart={<Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />}
           caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
           label={
             !loading ? (
@@ -107,6 +89,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
 
   return (
     <Wrapper
+      to={absoluteRoutes.viewer.video(notification.video.id)}
       read={read}
       selected={selected}
       loading={loading}
@@ -120,16 +103,10 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         <CheckboxSkeleton width={16} height={16} />
       )}
       <AvatarWrapper>
-        {!loading ? (
-          <Link to={absoluteRoutes.viewer.member(notification.member.handle)}>
-            <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar} clickable />
-          </Link>
-        ) : (
-          <SkeletonLoader width={40} height={40} rounded />
-        )}
+        <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
       </AvatarWrapper>
       {!loading ? (
-        <ContentLink to={absoluteRoutes.viewer.video(notification.video.id)}>
+        <>
           <Title>
             <Text as="span" variant="h300" secondary>
               {`${member.handle} `}
@@ -141,7 +118,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
           <Text variant="t200" secondary>
             {formattedDate} • {video.title}
           </Text>
-        </ContentLink>
+        </>
       ) : (
         <Content>
           <SkeletonLoader width="40%" height={24} bottomSpace={2} />

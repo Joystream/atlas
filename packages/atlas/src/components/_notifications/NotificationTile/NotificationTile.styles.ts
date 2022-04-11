@@ -61,11 +61,12 @@ const getReadNotificationVariant = ({ read, variant, loading }: NotificationWrap
 
 const shouldForwardWrapperProps = (prop: PropertyKey) => prop !== 'loading' && prop !== 'read'
 
-export const Wrapper = styled('div', { shouldForwardProp: shouldForwardWrapperProps })<NotificationWrapperProps>`
+export const Wrapper = styled(Link, { shouldForwardProp: shouldForwardWrapperProps })<NotificationWrapperProps>`
   ${getNotificationWrapperStyles};
   ${getReadNotificationVariant};
 
   display: flex;
+  text-decoration: none;
   align-items: center;
   position: relative;
   padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(2)} ${sizes(4)}`)};
@@ -81,10 +82,6 @@ export const AvatarWrapper = styled.div`
   margin: 0 ${sizes(4)};
 `
 
-export const ContentLink = styled(Link)`
-  width: 100%;
-  text-decoration: none;
-`
 export const Content = styled.div`
   width: 100%;
 `
