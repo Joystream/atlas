@@ -8,7 +8,7 @@ import { cVar } from '@/styles'
 import { CommentRow, CommentRowProps } from './CommentRow'
 
 export default {
-  title: 'loaders/CommentRow',
+  title: 'comments/CommentRow',
   component: CommentRow,
   args: {
     memberAvatarUrl: 'https://placedog.net/100/100?random=2',
