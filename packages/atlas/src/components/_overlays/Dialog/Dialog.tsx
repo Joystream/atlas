@@ -27,7 +27,7 @@ type DialogButtonProps = {
 type DialogIconType = 'success' | 'warning' | 'error'
 
 export type DialogProps = {
-  title?: string
+  title?: React.ReactNode
   description?: React.ReactNode
   iconType?: DialogIconType
   headerIcon?: React.ReactNode

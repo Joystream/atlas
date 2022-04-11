@@ -5,7 +5,7 @@ import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 
-import { StyledAnchor, StyledDialog } from './CookiePopover.styles'
+import { CookieEmoticon, StyledAnchor, StyledDialog } from './CookiePopover.styles'
 
 export const CookiePopover: React.FC = () => {
   const { cookiesAccepted, setCookiesAccepted } = usePersonalDataStore((state) => ({
@@ -29,12 +29,18 @@ export const CookiePopover: React.FC = () => {
           <>
             We use cookies and other tracking technologies to store your preferences, persist local storage of Keys and
             Membership, and to provide analytics.{' '}
-            <StyledAnchor href="https://www.joystream.org/privacy-policy/">
-              You can read more about it here.
-            </StyledAnchor>
+            <p>
+              <StyledAnchor href="https://www.joystream.org/privacy-policy/">
+                You can read more about it here.
+              </StyledAnchor>
+            </p>
           </>
         }
-        title="🍪 We use cookies"
+        title={
+          <>
+            <CookieEmoticon>🍪</CookieEmoticon>We use cookies
+          </>
+        }
         primaryButton={{
           text: 'Accept',
           onClick: () => setCookiesAccepted(true),
@@ -43,6 +49,7 @@ export const CookiePopover: React.FC = () => {
           text: 'Decline',
           onClick: () => setCookiesAccepted(false),
           variant: 'tertiary',
+          textOnly: true,
         }}
       />
     </CSSTransition>
