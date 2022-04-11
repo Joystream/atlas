@@ -44,6 +44,7 @@ export type GetChannelQuery = {
   __typename?: 'Query'
   channelByUniqueInput?: {
     __typename?: 'Channel'
+    activeVideosCounter: number
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
@@ -135,6 +136,7 @@ export type GetChannelsQuery = {
   __typename?: 'Query'
   channels: Array<{
     __typename?: 'Channel'
+    activeVideosCounter: number
     description?: string | null
     isPublic?: boolean | null
     isCensored: boolean
@@ -224,6 +226,7 @@ export type GetChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
+        activeVideosCounter: number
         description?: string | null
         isPublic?: boolean | null
         isCensored: boolean
@@ -335,6 +338,7 @@ export type GetMostViewedChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
+        activeVideosCounter: number
         description?: string | null
         isPublic?: boolean | null
         isCensored: boolean
@@ -428,6 +432,7 @@ export type GetMostFollowedChannelsConnectionQuery = {
       cursor: string
       node: {
         __typename?: 'Channel'
+        activeVideosCounter: number
         description?: string | null
         isPublic?: boolean | null
         isCensored: boolean

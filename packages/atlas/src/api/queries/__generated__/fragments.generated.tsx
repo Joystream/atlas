@@ -2,7 +2,12 @@ import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: string | null }
+export type VideoCategoryFieldsFragment = {
+  __typename?: 'VideoCategory'
+  id: string
+  name?: string | null
+  activeVideosCounter: number
+}
 
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
@@ -30,6 +35,7 @@ export type BasicChannelFieldsFragment = {
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
+  activeVideosCounter: number
   description?: string | null
   isPublic?: boolean | null
   isCensored: boolean
@@ -374,6 +380,7 @@ export const VideoCategoryFieldsFragmentDoc = gql`
   fragment VideoCategoryFields on VideoCategory {
     id
     name
+    activeVideosCounter
   }
 `
 export const StorageDataObjectFieldsFragmentDoc = gql`
@@ -427,6 +434,7 @@ export const BasicMembershipFieldsFragmentDoc = gql`
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
+    activeVideosCounter
     description
     isPublic
     isCensored
