@@ -41,7 +41,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const isUpcoming = !!auction?.startsAtBlock && currentBlock && currentBlock <= auction.startsAtBlock
   const needsSettling = auction?.topBid && isExpired
 
-  const canBuyNow = !isOwner && (isBuyNow || !!auction?.buyNowPrice) && isRunning
+  const canBuyNow = !isOwner && (isBuyNow || !!Number(auction?.buyNowPrice)) && isRunning
   const canMakeBid = !isOwner && isAuction && isRunning
   const canPutOnSale = isOwner && isIdle
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
