@@ -9,7 +9,12 @@ export type GetVideoCategoriesQueryVariables = Types.Exact<{ [key: string]: neve
 
 export type GetVideoCategoriesQuery = {
   __typename?: 'Query'
-  videoCategories: Array<{ __typename?: 'VideoCategory'; id: string; name?: string | null }>
+  videoCategories: Array<{
+    __typename?: 'VideoCategory'
+    id: string
+    name?: string | null
+    activeVideosCounter: number
+  }>
 }
 
 export const GetVideoCategoriesDocument = gql`

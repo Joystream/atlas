@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { useChannel, useChannelVideoCount } from '@/api/hooks'
+import { useChannel } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
@@ -24,7 +24,7 @@ import {
 export const ChannelAbout = () => {
   const { id } = useParams()
   const { channel } = useChannel(id ?? '')
-  const { videoCount } = useChannelVideoCount(id ?? '')
+  const videoCount = channel?.activeVideosCounter
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>

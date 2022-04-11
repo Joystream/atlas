@@ -19,6 +19,7 @@ export type SearchQuery = {
     item:
       | {
           __typename?: 'Channel'
+          activeVideosCounter: number
           description?: string | null
           isPublic?: boolean | null
           isCensored: boolean
