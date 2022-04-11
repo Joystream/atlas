@@ -8,6 +8,10 @@
     "medium": {
       "value": "4px",
       "description": "Used for large overlay elements, such as dialogs, windows, drawers, etc."
+    },
+    "large": {
+      "value": "8px",
+      "description": "Used for special occasions."
     }
   }
 }

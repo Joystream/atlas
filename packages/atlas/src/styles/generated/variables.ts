@@ -130,6 +130,7 @@ export const variables = css`
     --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
     --radius-small: 2px;
     --radius-medium: 4px;
+    --radius-large: 8px;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
@@ -413,6 +414,7 @@ export const theme = {
   effectElevation24Layer2: { variable: 'var(--effect-elevation-24-layer2)', value: ' 0 8px 8px 0 #0000001F' },
   radiusSmall: { variable: 'var(--radius-small)', value: '2px' },
   radiusMedium: { variable: 'var(--radius-medium)', value: '4px' },
+  radiusLarge: { variable: 'var(--radius-large)', value: '8px' },
   typographyFontsPrimary: {
     variable: 'var(--typography-fonts-primary)',
     value:
