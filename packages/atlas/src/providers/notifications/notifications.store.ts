@@ -9,8 +9,8 @@ export type NotificationsStoreState = {
 }
 
 export type NotificationsStoreActions = {
-  markNotificationsAsRead: (ids: string[] | string, asRead?: boolean) => void
-  markNotificationsAsUnread: (ids: string[] | string) => void
+  markNotificationsAsRead: (ids: { id: string }[] | { id: string }, asRead?: boolean) => void
+  markNotificationsAsUnread: (ids: { id: string }[] | { id: string }) => void
 }
 
 export const useNotificationStore = createStore<NotificationsStoreState, NotificationsStoreActions>(
@@ -24,8 +24,8 @@ export const useNotificationStore = createStore<NotificationsStoreState, Notific
         const _ids = Array.isArray(ids) ? ids : [ids]
 
         set((state) => {
-          _ids.forEach((ids) => {
-            state.readNotificationsIdsMap[ids] = asRead
+          _ids.forEach(({ id }) => {
+            state.readNotificationsIdsMap[id] = asRead
           })
         })
       }

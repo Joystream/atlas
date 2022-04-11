@@ -34,9 +34,9 @@ export const Notifications = () => {
     <Button variant="tertiary" onClick={unselectAllNotifications} iconOnly icon={<SvgActionClose />} />
   )
 
-  const markAllAsRead = () => markNotificationsAsRead(notifications.map((notif) => notif.id))
-  const markSelectedAsRead = () => markNotificationsAsRead(selectedNotifications.map((notif) => notif.id))
-  const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications.map((notif) => notif.id))
+  const markAllAsRead = () => markNotificationsAsRead(notifications)
+  const markSelectedAsRead = () => markNotificationsAsRead(selectedNotifications)
+  const markSelectedAsUnread = () => markNotificationsAsUnread(selectedNotifications)
   return (
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, md: 10, lg: 8 }} colStart={{ md: 2, lg: 3 }}>
@@ -62,7 +62,7 @@ export const Notifications = () => {
                 notification={notification}
                 selected={!!selectedNotifications.find((notif) => notif.id === notification.id)}
                 onCheckboxChange={(selected) => setNotificationSelected(notification, selected)}
-                onClick={() => markNotificationsAsRead(notification.id)}
+                onClick={() => markNotificationsAsRead(notification)}
               />
             ))
           ) : (

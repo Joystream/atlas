@@ -23,11 +23,7 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
       <Wrapper>
         <Header>
           <Text variant="h400">Notifications</Text>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => markNotificationsAsRead(notifications.map((notif) => notif.id))}
-          >
+          <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
             Mark all as read
           </Button>
         </Header>
@@ -40,7 +36,7 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
                 notification={notification}
                 onClick={() => {
                   popoverRef.current?.hide()
-                  markNotificationAsRead(notification.id)
+                  markNotificationsAsRead(notification)
                 }}
               />
             ))
