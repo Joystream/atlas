@@ -55,10 +55,11 @@ export type Auction = {
   englishTimerState: EnglishTimerState | undefined
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
-  plannedEndAtBlock?: number | null
-  startsAtBlock?: number | null
+  plannedEndAtBlock: number | null | undefined
+  startsAtBlock: number | null | undefined
   auctionBeginsDifferenceDays: number
   auctionBeginsDifferenceSeconds: number
+  userIsNotWhitelisted: boolean | undefined
 }
 
 export type NftWidgetProps = {

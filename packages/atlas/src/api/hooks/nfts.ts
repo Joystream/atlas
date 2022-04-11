@@ -43,14 +43,15 @@ export type NftStatus = (
       topBid: AllBidFieldsFragment | undefined
       topBidAmount: number | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
-      auctionPlannedEndBlock?: number
+      auctionPlannedEndBlock: number | undefined
       bidLockingTime: number | undefined
       minimalBidStep: number | undefined
+      whitelistedMembers: BasicMembershipFieldsFragment[]
     }
   | {
       status: 'idle'
-      lastPrice?: number
-      lastTransactionDate?: Date
+      lastPrice: number | undefined
+      lastTransactionDate: Date | undefined
     }
   | {
       status: 'buy-now'
@@ -90,26 +91,8 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
         auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
         bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
         minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
+        whitelistedMembers: auction?.whitelistedMembers,
       }
-    }
-
-    if (!nft?.transactionalStatus) {
-      throw new Error('NFT missing transactional status')
-    }
-    switch (nft?.transactionalStatus.__typename) {
-      case 'TransactionalStatusBuyNow':
-        return {
-          ...commonProperties,
-          status: 'buy-now',
-          buyNowPrice: Number(nft.transactionalStatus.price),
-        }
-      case 'TransactionalStatusIdle':
-        return {
-          ...commonProperties,
-          status: 'idle',
-        }
-      default:
-        return undefined
     }
   }
 

@@ -56,6 +56,13 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     ? 'upcoming'
     : null
 
+  const isUserWhitelisted =
+    auction?.whitelistedMembers.length === 0
+      ? true
+      : auction?.whitelistedMembers.some((member) => member.id === activeMembership?.id)
+
+  console.log({ isUserWhitelisted })
+
   return {
     timerLoading: !currentBlockMsTimestamp,
     canBuyNow: !!canBuyNow,
