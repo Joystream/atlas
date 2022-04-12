@@ -2,9 +2,11 @@ import ls from '@livesession/sdk'
 import React, { useCallback, useEffect } from 'react'
 
 import { BUILD_ENV, readEnv } from '@/config/envs'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 export const AnalyticsManager: React.FC = () => {
-  const analyticsEnabled = BUILD_ENV === 'production'
+  const cookiesAccepted = usePersonalDataStore((state) => state.cookiesAccepted)
+  const analyticsEnabled = BUILD_ENV === 'production' && cookiesAccepted
 
   const initUsersnap = useCallback(() => {
     // @ts-ignore custom prop required by usersnap
