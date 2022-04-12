@@ -407,7 +407,6 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess }) => {
 const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useAuthorizedUser()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -415,7 +414,7 @@ const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).settleEnglishAuction(videoId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).settleEnglishAuction(videoId, proxyCallback(updateStatus)),
       onTxSync: async (_) => onSuccess(),
     })
   }

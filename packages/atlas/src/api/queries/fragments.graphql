@@ -176,6 +176,40 @@ fragment AllNftFields on OwnedNft {
   creatorChannel {
     ...BasicChannelFields
   }
+  transactionalStatusAuction {
+    auctionType {
+      __typename
+      ... on AuctionTypeEnglish {
+        duration
+        extensionPeriod
+        minimalBidStep
+        plannedEndAtBlock
+      }
+      ... on AuctionTypeOpen {
+        bidLockDuration
+      }
+    }
+    isCompleted
+    initialOwner {
+      ...BasicMembershipFields
+    }
+    buyNowPrice
+    startingPrice
+
+    startsAtBlock
+    endedAtBlock
+
+    topBid {
+      ...AllBidFields
+    }
+    bids {
+      ...AllBidFields
+    }
+
+    whitelistedMembers {
+      ...BasicMembershipFields
+    }
+  }
   transactionalStatus {
     __typename
     ... on TransactionalStatusIdle {
@@ -184,41 +218,12 @@ fragment AllNftFields on OwnedNft {
     ... on TransactionalStatusBuyNow {
       price
     }
-    ... on TransactionalStatusAuction {
-      auction {
-        auctionType {
-          __typename
-          ... on AuctionTypeEnglish {
-            duration
-            extensionPeriod
-            minimalBidStep
-            plannedEndAtBlock
-          }
-          ... on AuctionTypeOpen {
-            bidLockDuration
-          }
-        }
-        isCompleted
-        initialOwner {
-          ...BasicMembershipFields
-        }
-        buyNowPrice
-        startingPrice
-
-        startsAtBlock
-        endedAtBlock
-
-        topBid {
-          ...AllBidFields
-        }
-        bids {
-          ...AllBidFields
-        }
-
-        whitelistedMembers {
-          ...BasicMembershipFields
-        }
-      }
+  }
+  lastSale {
+    __typename
+    ... on LastSaleVariant {
+      price
+      date
     }
   }
   video {

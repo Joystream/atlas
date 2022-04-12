@@ -14,9 +14,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
-  const auction =
-    (nft && nft.transactionalStatus.__typename === 'TransactionalStatusAuction' && nft.transactionalStatus.auction) ||
-    null
+  const auction = nft?.transactionalStatusAuction || null
   const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
   const openAuction = auction?.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
   const isAuction = !!auction

@@ -106,6 +106,7 @@ export type GetNftNotificationsQuery = {
     | { __typename?: 'BudgetSpendingEvent'; inBlock: number }
     | { __typename?: 'BudgetUpdatedEvent'; inBlock: number }
     | { __typename?: 'BuyNowCanceledEvent'; inBlock: number }
+    | { __typename?: 'BuyNowPriceUpdatedEvent'; inBlock: number }
     | { __typename?: 'CandidacyNoteSetEvent'; inBlock: number }
     | { __typename?: 'CandidacyStakeReleaseEvent'; inBlock: number }
     | { __typename?: 'CandidacyWithdrawEvent'; inBlock: number }
@@ -115,7 +116,7 @@ export type GetNftNotificationsQuery = {
     | { __typename?: 'CategoryMembershipOfModeratorUpdatedEvent'; inBlock: number }
     | { __typename?: 'CategoryStickyThreadUpdateEvent'; inBlock: number }
     | { __typename?: 'CouncilorRewardUpdatedEvent'; inBlock: number }
-    | { __typename?: 'EnglishAuctionCompletedEvent'; inBlock: number }
+    | { __typename?: 'EnglishAuctionSettledEvent'; inBlock: number }
     | { __typename?: 'EnglishAuctionStartedEvent'; inBlock: number }
     | { __typename?: 'InitialInvitationBalanceUpdatedEvent'; inBlock: number }
     | { __typename?: 'InitialInvitationCountUpdatedEvent'; inBlock: number }
