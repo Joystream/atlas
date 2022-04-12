@@ -2,7 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { SvgActionImage, SvgActionNewChannel } from '@/components/_icons'
-import { transitions } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
 import {
   AvatarSize,
@@ -72,7 +72,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           <SwitchTransition>
             <CSSTransition
               key={loading ? 'placeholder' : 'content'}
-              timeout={parseInt(transitions.timings.loading)}
+              timeout={parseInt(cVar('animationTimingFast', true))}
               classNames={transitions.names.fade}
             >
               {loading ? (
