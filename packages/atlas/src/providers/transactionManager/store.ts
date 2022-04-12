@@ -13,6 +13,7 @@ type TransactionManagerStoreState = {
   dialogStep: TransactionDialogStep
   showFirstMintDialog: boolean
   errorCode: ErrorCode | null
+  pendingSigns: string[]
 }
 
 type TransactionManagerStoreActions = {
@@ -21,10 +22,12 @@ type TransactionManagerStoreActions = {
   setDialogStep: (step: TransactionDialogStep) => void
   setShowFistMintDialog: (show: boolean) => void
   setErrorCode: (errorCode: ErrorCode | null) => void
+  addPendingSign: (id: string) => void
+  removePendingSign: (id: string) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
-  state: { blockActions: [], dialogStep: null, showFirstMintDialog: false, errorCode: null },
+  state: { blockActions: [], dialogStep: null, showFirstMintDialog: false, errorCode: null, pendingSigns: [] },
   actionsFactory: (set) => ({
     addBlockAction: (action) =>
       set((state) => {
@@ -45,6 +48,14 @@ export const useTransactionManagerStore = createStore<TransactionManagerStoreSta
     setErrorCode: (errorCode) =>
       set((state) => {
         state.errorCode = errorCode
+      }),
+    addPendingSign: (id) =>
+      set((state) => {
+        state.pendingSigns = [...state.pendingSigns, id]
+      }),
+    removePendingSign: (id) =>
+      set((state) => {
+        state.pendingSigns = [...state.pendingSigns.filter((transaction) => transaction !== id)]
       }),
   }),
 })

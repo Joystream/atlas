@@ -3,6 +3,7 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Button } from '@/components/_buttons/Button'
+import { SvgActionTrash } from '@/components/_icons'
 import { Snackbars, useSnackbar } from '@/providers/snackbars'
 import { DisplaySnackbarArgs } from '@/providers/snackbars/store'
 
@@ -13,15 +14,24 @@ export default {
   component: Snackbar,
   argTypes: {
     iconType: {
-      control: { type: 'select', options: [null, 'error', 'success', 'info', 'warning'] },
+      control: { type: 'select', options: [null, 'error', 'success', 'info', 'warning', 'uploading', 'loading'] },
+    },
+    actionIcon: {
+      control: { type: 'inline-radio', options: [null, 'SvgActionTrash'] },
     },
     timeout: { control: { type: 'number' } },
+    icon: { table: { disable: true } },
+    onActionClick: { table: { disable: true } },
+    onClick: { table: { disable: true } },
+    onMouseEnter: { table: { disable: true } },
+    onMouseLeave: { table: { disable: true } },
   },
   args: {
     title: 'Lorem ipsul dolor',
     description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, veniam assumenda!',
     actionText: 'Action',
     timeout: null,
+    actionIcon: null,
   },
   decorators: [
     (Story) => (
@@ -38,7 +48,10 @@ export default {
 const ClickableTemplate: Story<DisplaySnackbarArgs> = ({ ...args }) => {
   const { displaySnackbar } = useSnackbar()
   return (
-    <Button size="small" onClick={() => displaySnackbar({ ...args })}>
+    <Button
+      size="small"
+      onClick={() => displaySnackbar({ ...args, actionIcon: args.actionIcon !== null && <SvgActionTrash /> })}
+    >
       Show snackbar
     </Button>
   )
