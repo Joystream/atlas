@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 
 import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibErrorType } from '@/joystream-lib'
+import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
@@ -20,28 +21,42 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
   onTxSync?: (data: T) => Promise<unknown>
   onError?: () => void
   snackbarSuccessMessage?: SnackbarSuccessMessage
+  minimized?: {
+    signErrorMessage: string
+  }
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 const TX_COMPLETED_SNACKBAR_TIMEOUT = 5000
+const MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 
 export const useTransaction = (): HandleTransactionFn => {
-  const { addBlockAction, setDialogStep, setErrorCode } = useTransactionManagerStore((state) => state.actions)
+  const { addBlockAction, setDialogStep, setErrorCode, addPendingSign, removePendingSign } = useTransactionManagerStore(
+    (state) => state.actions
+  )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
 
   return useCallback(
-    async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, onError }) => {
+    async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, onError, minimized = null }) => {
+      const transactionId = createId()
       try {
+        if (minimized) {
+          addPendingSign(transactionId)
+        }
         if (nodeConnectionStatus !== 'connected') {
-          setDialogStep(ExtrinsicStatus.Error)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.Error)
+          }
           return false
         }
 
         // if provided, do any preprocessing
         if (preProcess) {
-          setDialogStep(ExtrinsicStatus.ProcessingAssets)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.ProcessingAssets)
+          }
           try {
             await preProcess()
           } catch (e) {
@@ -51,15 +66,26 @@ export const useTransaction = (): HandleTransactionFn => {
         }
 
         // run txFactory and prompt for signature
-        setDialogStep(ExtrinsicStatus.Unsigned)
-        const result = await txFactory(setDialogStep)
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Unsigned)
+        }
+        const result = await txFactory(
+          !minimized
+            ? setDialogStep
+            : (status) => {
+                if (status === ExtrinsicStatus.Signed) {
+                  removePendingSign(transactionId)
+                }
+              }
+        )
         if (onTxFinalize) {
           onTxFinalize(result).catch((error) =>
             SentryLogger.error('Failed transaction finalize callback', 'TransactionManager', error)
           )
         }
-
-        setDialogStep(ExtrinsicStatus.Syncing)
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Syncing)
+        }
         const queryNodeSyncPromise = new Promise<void>((resolve) => {
           const syncCallback = async () => {
             if (onTxSync) {
@@ -76,7 +102,9 @@ export const useTransaction = (): HandleTransactionFn => {
 
         return new Promise((resolve) => {
           queryNodeSyncPromise.then(() => {
-            setDialogStep(ExtrinsicStatus.Completed)
+            if (!minimized) {
+              setDialogStep(ExtrinsicStatus.Completed)
+            }
             snackbarSuccessMessage &&
               displaySnackbar({
                 ...snackbarSuccessMessage,
@@ -88,6 +116,9 @@ export const useTransaction = (): HandleTransactionFn => {
         })
       } catch (error) {
         onError?.()
+        if (minimized) {
+          removePendingSign(transactionId)
+        }
         const errorName = error.name as JoystreamLibErrorType
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
@@ -109,15 +140,34 @@ export const useTransaction = (): HandleTransactionFn => {
             'TransactionManager',
             error
           )
-          setDialogStep(ExtrinsicStatus.Error)
-          errorCode && setErrorCode(errorCode as ErrorCode)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.Error)
+            errorCode && setErrorCode(errorCode as ErrorCode)
+          }
         } else {
-          setDialogStep(ExtrinsicStatus.Error)
+          if (minimized) {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: minimized.signErrorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          } else {
+            setDialogStep(ExtrinsicStatus.Error)
+          }
           SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
         }
         return false
       }
     },
-    [addBlockAction, displaySnackbar, nodeConnectionStatus, setDialogStep, setErrorCode]
+    [
+      addBlockAction,
+      addPendingSign,
+      displaySnackbar,
+      nodeConnectionStatus,
+      removePendingSign,
+      setDialogStep,
+      setErrorCode,
+    ]
   )
 }
