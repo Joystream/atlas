@@ -488,7 +488,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
             <Information
               placement="top"
-              arrowDisabled
               text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
             />
           </SwitchNftWrapper>

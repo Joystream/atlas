@@ -59,7 +59,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     )
 
     const primaryButtonNode = (
-      <ActionButtonPrimaryTooltip arrowDisabled placement="top-end" {...primaryButton?.tooltip}>
+      <ActionButtonPrimaryTooltip placement="top-end" {...primaryButton?.tooltip}>
         <ActionButtonPrimary {...primaryButton} size="large" type="submit">
           {primaryButton.text}
         </ActionButtonPrimary>
@@ -81,7 +81,7 @@ export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
     )
 
     const draftNode = draftBadge ? (
-      <Tooltip arrowDisabled placement="top-end" {...draftBadge?.tooltip}>
+      <Tooltip placement="top-end" {...draftBadge?.tooltip}>
         <DraftsBadgeContainer>
           <Text variant="t200" secondary>
             {draftBadge?.text}

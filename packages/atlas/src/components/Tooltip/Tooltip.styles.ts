@@ -17,34 +17,13 @@ export const IconWrapper = styled.div`
   margin-right: ${sizes(1)};
 `
 
-export const Arrow = styled.div`
-  &,
-  &::before {
-    position: absolute;
-    width: ${sizes(3)};
-    height: ${sizes(3)};
-    background: inherit;
-  }
-
-  & {
-    visibility: hidden;
-  }
-
-  &::before {
-    visibility: visible;
-    content: '';
-    transform: rotate(45deg);
-  }
-`
-
 type TooltipTextProps = {
   withIcon?: boolean
   footer: boolean
 }
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  max-width: ${({ footer }) => (footer ? 250 : 200)}px;
-
+  max-width: ${({ footer }) => !footer && '200px'};
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
 
@@ -56,29 +35,12 @@ export const TooltipHeader = styled.div`
 export const StyledTooltip = styled.div<StyledTooltipProps>`
   display: inline-flex;
   flex-direction: ${({ headerText, footer }) => (headerText || footer ? 'column' : 'row')};
-  padding: ${sizes(2)};
-  background-color: ${cVar('colorCoreNeutral500')};
+  padding: ${sizes(3)};
+  background-color: ${cVar('colorBackgroundElevated')};
+  border-radius: ${cVar('radiusSmall')};
+  max-width: ${({ footer }) => footer && 264}px;
 
   ${TooltipHeader} {
     align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};
-  }
-
-  &[data-placement^='top-start'] ${Arrow} {
-    bottom: -6px;
-    left: 12px;
-  }
-  &[data-placement^='top-end'] ${Arrow} {
-    bottom: -6px;
-    right: 16px;
-  }
-
-  &[data-placement^='bottom-end'] ${Arrow} {
-    top: -6px;
-    right: 16px;
-  }
-
-  &[data-placement^='bottom-start'] ${Arrow} {
-    top: -6px;
-    left: 12px;
   }
 `

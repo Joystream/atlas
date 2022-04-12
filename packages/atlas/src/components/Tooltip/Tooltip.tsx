@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { transitions } from '@/styles'
 
-import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
+import { IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
@@ -17,7 +17,6 @@ export type TooltipProps = {
   offsetY?: number
   delay?: number | [number | null, number | null] | undefined
   hideOnClick?: boolean | 'toggle'
-  arrowDisabled?: boolean
   reference?: Element | React.RefObject<Element> | null | undefined
   footer?: React.ReactNode
   className?: string
@@ -34,7 +33,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
   offsetX = 0,
   offsetY = 8,
   delay,
-  arrowDisabled,
   footer,
   className,
 }) => {
@@ -76,7 +74,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
               {text}
             </TooltipText>
             {footer}
-            {!arrowDisabled && <Arrow />}
           </StyledTooltip>
         </CSSTransition>
       )}
