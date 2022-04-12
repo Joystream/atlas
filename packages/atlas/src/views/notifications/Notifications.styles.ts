@@ -72,18 +72,17 @@ export const FloatingActionBar = styled.div`
   background: ${cVar('colorBackgroundStrong')};
   z-index: ${zIndex.overlay};
   padding: ${sizes(2)};
-  max-width: 283px;
+  width: 303px;
   position: fixed;
   top: calc(100vh - ${sizes(8)});
   left: 50%;
   transform: translate(-50%, -100%);
 
-  ${media.md} {
+  ${media.sm} {
     justify-content: unset;
-    max-width: unset;
-    min-width: 560px;
+    width: unset;
     display: grid;
-    grid-auto-columns: auto;
+    grid-auto-columns: max-content;
     grid-auto-flow: column;
     padding: ${sizes(4)} ${sizes(8)};
 

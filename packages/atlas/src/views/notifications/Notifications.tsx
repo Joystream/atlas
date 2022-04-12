@@ -6,6 +6,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNotifications } from '@/providers/notifications'
+import { formatNumberShort } from '@/utils/number'
 
 import { useSelectedNotifications } from './Notifications.hooks'
 import {
@@ -23,7 +24,6 @@ export const Notifications = () => {
   const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
     useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
-  const mdMatch = useMediaMatch('md')
 
   const { notifications, markNotificationsAsRead, markNotificationsAsUnread } = useNotifications()
 
@@ -31,7 +31,7 @@ export const Notifications = () => {
   const hasSelectedSomeUnreadNotifications = selectedNotifications.some((notification) => !notification.read)
 
   const closeButtonNode = (
-    <Button variant="tertiary" onClick={unselectAllNotifications} iconOnly icon={<SvgActionClose />} />
+    <Button variant="tertiary" size="large" onClick={unselectAllNotifications} iconOnly icon={<SvgActionClose />} />
   )
 
   const markAllAsRead = () => markNotificationsAsRead(notifications)
@@ -70,17 +70,19 @@ export const Notifications = () => {
           )}
         </div>
       </GridItem>
+
       {selectedNotifications.length > 0 && (
         <FloatingActionBar>
-          <Text variant="t300" secondary margin={{ right: mdMatch ? 8 : undefined, left: !mdMatch ? 4 : undefined }}>
-            {selectedNotifications.length} item(s) selected
+          <Text variant="t300" secondary margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}>
+            {formatNumberShort(selectedNotifications.length)} item(s) selected
           </Text>
-          {!mdMatch && closeButtonNode}
-          <Button variant="tertiary" onClick={() => selectAllNotifications(notifications)}>
+          {!smMatch && closeButtonNode}
+          <Button size="large" variant="tertiary" onClick={() => selectAllNotifications(notifications)}>
             Select all
           </Button>
           <Button
-            icon={hasSelectedSomeUnreadNotifications ? <SvgActionUnread /> : <SvgActionRead />}
+            size="large"
+            icon={smMatch ? hasSelectedSomeUnreadNotifications ? <SvgActionUnread /> : <SvgActionRead /> : undefined}
             variant="tertiary"
             onClick={() => {
               hasSelectedSomeUnreadNotifications ? markSelectedAsRead() : markSelectedAsUnread()
@@ -89,7 +91,7 @@ export const Notifications = () => {
           >
             Mark as {hasSelectedSomeUnreadNotifications ? 'read' : 'unread'}
           </Button>
-          {mdMatch && closeButtonNode}
+          {smMatch && closeButtonNode}
         </FloatingActionBar>
       )}
     </StyledLayoutGrid>
