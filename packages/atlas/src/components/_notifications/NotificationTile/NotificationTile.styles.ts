@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { ListItem } from '@/components/ListItem'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -60,11 +61,12 @@ const getReadNotificationVariant = ({ read, variant, loading }: NotificationWrap
 
 const shouldForwardWrapperProps = (prop: PropertyKey) => prop !== 'loading' && prop !== 'read'
 
-export const Wrapper = styled('div', { shouldForwardProp: shouldForwardWrapperProps })<NotificationWrapperProps>`
+export const Wrapper = styled(Link, { shouldForwardProp: shouldForwardWrapperProps })<NotificationWrapperProps>`
   ${getNotificationWrapperStyles};
   ${getReadNotificationVariant};
 
   display: flex;
+  text-decoration: none;
   align-items: center;
   position: relative;
   padding: ${({ variant }) => (variant === 'default' ? sizes(4) : `${sizes(2)} ${sizes(4)}`)};
@@ -114,4 +116,8 @@ export const StyledListItem = styled(ListItem)<StyledListItemProps>`
   ${getListItemStyles};
 
   position: relative;
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `

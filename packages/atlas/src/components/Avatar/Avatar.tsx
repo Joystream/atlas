@@ -26,6 +26,7 @@ export type AvatarProps = {
   size?: AvatarSize
   editable?: boolean
   newChannel?: boolean
+  clickable?: boolean
   onError?: () => void
 }
 
@@ -40,6 +41,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   className,
   editable,
   newChannel,
+  clickable,
   onError,
 }) => {
   const isEditable = !loading && editable && size !== 'default' && size !== 'bid'
@@ -53,7 +55,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       className={className}
       isLoading={loading}
       withoutOutline={withoutOutline}
-      isClickable={!!onClick}
+      isClickable={clickable || !!onClick}
     >
       {isEditable && (
         <EditOverlay size={size}>
