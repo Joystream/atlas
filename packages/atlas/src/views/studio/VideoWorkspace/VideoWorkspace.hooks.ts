@@ -11,7 +11,8 @@ import { VideoExtrinsicResult, VideoInputAssets } from '@/joystream-lib'
 import { useAssetStore } from '@/providers/assets'
 import { useDraftStore } from '@/providers/drafts'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { useTransaction, useTransactionManagerStore } from '@/providers/transactionManager'
 import { useStartFileUpload } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { VideoFormData, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
@@ -20,6 +21,10 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useHandleVideoWorkspaceSubmit = () => {
   const { setIsWorkspaceOpen, editedVideoInfo, setEditedVideo } = useVideoWorkspace()
+  const isNftMintDismissed = usePersonalDataStore((state) =>
+    state.dismissedMessages.some((message) => message.id === 'first-mint')
+  )
+  const { setShowFistMintDialog } = useTransactionManagerStore((state) => state.actions)
 
   const { joystream, proxyCallback } = useJoystream()
   const startFileUpload = useStartFileUpload()
@@ -164,6 +169,11 @@ export const useHandleVideoWorkspaceSubmit = () => {
 
       if (completed) {
         setIsWorkspaceOpen(false)
+        if (!isNftMintDismissed && data.nftMetadata) {
+          setTimeout(() => {
+            setShowFistMintDialog(true)
+          }, 2000)
+        }
       }
     },
     [
@@ -174,11 +184,13 @@ export const useHandleVideoWorkspaceSubmit = () => {
       editedVideoInfo.id,
       handleTransaction,
       isEdit,
+      isNftMintDismissed,
       joystream,
       proxyCallback,
       removeDrafts,
       setEditedVideo,
       setIsWorkspaceOpen,
+      setShowFistMintDialog,
       startFileUpload,
       tabData?.assets.thumbnail.cropId,
       tabData?.assets.video.id,

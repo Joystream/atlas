@@ -42,6 +42,7 @@ export type DialogProps = {
   as?: React.ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
+  actionDivider?: boolean
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
@@ -66,6 +67,7 @@ export const Dialog: React.FC<DialogProps> = ({
   as,
   onSubmit,
   noContentPadding,
+  actionDivider = false,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -98,7 +100,7 @@ export const Dialog: React.FC<DialogProps> = ({
         {children}
       </Content>
       {hasFooter && (
-        <Footer dividers={dividers} hasAdditionalActions={!!additionalActionsNode}>
+        <Footer dividers={dividers || actionDivider} hasAdditionalActions={!!additionalActionsNode}>
           {additionalActionsNode}
           <FooterButtonsContainer>
             {secondaryButton && (
