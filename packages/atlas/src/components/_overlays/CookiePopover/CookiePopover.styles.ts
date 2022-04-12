@@ -26,6 +26,7 @@ export const StyledAnchor = styled.a`
   text-decoration: none;
   color: ${cVar('colorTextPrimary')};
   display: block;
+  margin-top: ${sizes(3)};
 `
 
 export const CookieEmoticon = styled.span`
