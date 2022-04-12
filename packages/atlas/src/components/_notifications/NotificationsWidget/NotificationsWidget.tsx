@@ -41,7 +41,7 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
               />
             ))
           ) : (
-            <EmptyFallback variant="small" title="You don’t have any notifications" />
+            <EmptyFallback variant="small" title="You don't have any notifications" />
           )}
         </Content>
         <StyledButton
