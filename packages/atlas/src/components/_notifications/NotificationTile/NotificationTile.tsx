@@ -106,7 +106,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
       </AvatarWrapper>
       {!loading ? (
-        <>
+        <Content>
           <Title>
             <Text as="span" variant="h300" secondary>
               {`${member.handle} `}
@@ -118,7 +118,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
           <Text variant="t200" secondary>
             {formattedDate} • {video.title}
           </Text>
-        </>
+        </Content>
       ) : (
         <Content>
           <SkeletonLoader width="40%" height={24} bottomSpace={2} />
