@@ -340,7 +340,7 @@ export const MyVideosView = () => {
               onChange={handleSorting}
             />
           )}
-          <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(4)}>
+          <StyledGrid maxColumns={null} onResize={handleOnResizeGrid} gap={sizes(mdMatch ? 6 : 4)}>
             {gridContent}
           </StyledGrid>
           {((isDraftTab && drafts.length === 0) ||
