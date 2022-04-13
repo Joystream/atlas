@@ -308,6 +308,13 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             }
           }
 
+          if (nftStatus.isUserWhitelisted === false) {
+            return {
+              title: "You're not on the whitelist",
+              description: `This sale is available only to members whitelisted by ${ownerHandle}.`,
+            }
+          }
+
           return null
         }
         const infoBannerProps = getInfoBannerProps()
@@ -430,73 +437,75 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
             {!needsSettling &&
               !bidFromPreviousAuction &&
-              (isOwner ? (
-                (nftStatus.type === 'open' ||
-                  // english auction with no bids
-                  !nftStatus.topBidAmount ||
-                  nftStatus.topBid?.isCanceled) && (
-                  <GridItem colSpan={buttonColumnSpan}>
-                    <ButtonGrid data-size={size}>
-                      {nftStatus.type === 'open' && nftStatus.topBid && !nftStatus.topBid?.isCanceled && (
-                        <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
-                          Review and accept bid
-                        </Button>
-                      )}
-                      <Button
-                        fullWidth
-                        onClick={onNftCancelSale}
-                        variant={
-                          nftStatus.type === 'open' && !nftStatus.topBid?.isCanceled
-                            ? 'destructive-secondary'
-                            : 'destructive'
-                        }
-                        size={buttonSize}
-                      >
-                        Remove from sale
-                      </Button>
-                    </ButtonGrid>
-                  </GridItem>
-                )
-              ) : nftStatus.buyNowPrice ? (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
-                    <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
-                      {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
-                    </Button>
-                    <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
-                      Buy now
-                    </Button>
-                    {/* second row button */}
-                    {nftStatus.canWithdrawBid && (
-                      <GridItem colSpan={buttonColumnSpan}>
-                        <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
-                          Withdraw a bid
-                        </Button>
-                      </GridItem>
-                    )}
-
-                    {infoTextNode}
-                  </ButtonGrid>
-                </GridItem>
-              ) : (
-                <GridItem colSpan={buttonColumnSpan}>
-                  <ButtonGrid data-size={size}>
+              (isOwner
+                ? (nftStatus.type === 'open' ||
+                    // english auction with no bids
+                    !nftStatus.topBidAmount ||
+                    nftStatus.topBid?.isCanceled) && (
                     <GridItem colSpan={buttonColumnSpan}>
-                      <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                        {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
-                      </Button>
-                    </GridItem>
-                    {nftStatus.canWithdrawBid && (
-                      <GridItem colSpan={buttonColumnSpan}>
-                        <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
-                          Withdraw a bid
+                      <ButtonGrid data-size={size}>
+                        {nftStatus.type === 'open' && nftStatus.topBid && !nftStatus.topBid?.isCanceled && (
+                          <Button fullWidth size={buttonSize} onClick={onNftAcceptBid}>
+                            Review and accept bid
+                          </Button>
+                        )}
+                        <Button
+                          fullWidth
+                          onClick={onNftCancelSale}
+                          variant={
+                            nftStatus.type === 'open' && !nftStatus.topBid?.isCanceled
+                              ? 'destructive-secondary'
+                              : 'destructive'
+                          }
+                          size={buttonSize}
+                        >
+                          Remove from sale
                         </Button>
-                      </GridItem>
-                    )}
-                    {infoTextNode}
-                  </ButtonGrid>
-                </GridItem>
-              ))}
+                      </ButtonGrid>
+                    </GridItem>
+                  )
+                : nftStatus.englishTimerState !== 'expired' &&
+                  nftStatus.isUserWhitelisted !== false &&
+                  (nftStatus.buyNowPrice ? (
+                    <GridItem colSpan={buttonColumnSpan}>
+                      <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
+                        <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
+                          {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
+                        </Button>
+                        <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
+                          Buy now
+                        </Button>
+                        {/* second row button */}
+                        {nftStatus.canWithdrawBid && (
+                          <GridItem colSpan={buttonColumnSpan}>
+                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                              Withdraw a bid
+                            </Button>
+                          </GridItem>
+                        )}
+
+                        {infoTextNode}
+                      </ButtonGrid>
+                    </GridItem>
+                  ) : (
+                    <GridItem colSpan={buttonColumnSpan}>
+                      <ButtonGrid data-size={size}>
+                        <GridItem colSpan={buttonColumnSpan}>
+                          <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
+                            {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
+                          </Button>
+                        </GridItem>
+                        {nftStatus.canWithdrawBid && (
+                          <GridItem colSpan={buttonColumnSpan}>
+                            <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
+                              Withdraw a bid
+                            </Button>
+                          </GridItem>
+                        )}
+                        {infoTextNode}
+                      </ButtonGrid>
+                    </GridItem>
+                  )))}
           </>
         )
       }
@@ -505,19 +514,20 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     nftStatus,
     size,
     convertToUSD,
-    isLoadingPrice,
-    onWithdrawBid,
     bidFromPreviousAuction,
+    onWithdrawBid,
     isOwner,
     onNftPutOnSale,
     onNftChangePrice,
     onNftCancelSale,
     onNftPurchase,
+    isLoadingPrice,
     timestamp,
     needsSettling,
     onNftSettlement,
     onNftAcceptBid,
     onNftBuyNow,
+    ownerHandle,
   ])
 
   if (!nftStatus) return null
@@ -559,7 +569,6 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     startsAtBlock,
     canChangeBid,
     isUserWhitelisted,
-    auction,
     plannedEndAtBlock,
   } = useNftState(nft)
 
@@ -567,8 +576,6 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
-
-  console.log({ isUserWhitelisted, nft, auction })
 
   switch (nftStatus?.status) {
     case 'auction': {

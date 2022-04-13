@@ -39,8 +39,17 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const isUpcoming = !!auction?.startsAtBlock && currentBlock && currentBlock <= auction.startsAtBlock
   const needsSettling = auction?.topBid && isExpired
 
+  let isUserWhitelisted = undefined
+
+  if (activeMembership && auction) {
+    isUserWhitelisted =
+      auction.whitelistedMembers.length === 0
+        ? true
+        : auction.whitelistedMembers.some((member) => member.id === activeMembership.id)
+  }
+
   const canBuyNow = !isOwner && (isBuyNow || !!Number(auction?.buyNowPrice)) && isRunning
-  const canMakeBid = !isOwner && isAuction && isRunning
+  const canMakeBid = !isOwner && isAuction && isRunning && isUserWhitelisted
   const canPutOnSale = isOwner && isIdle
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)
   const canWithdrawBid = auction?.isCompleted || (openAuction && userBid && currentBlock >= (userBidUnlockBlock ?? 0))
@@ -55,11 +64,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     : isUpcoming
     ? 'upcoming'
     : null
-
-  const isUserWhitelisted =
-    auction?.whitelistedMembers.length === 0
-      ? true
-      : auction?.whitelistedMembers.some((member) => member.id === activeMembership?.id)
 
   return {
     timerLoading: !currentBlockMsTimestamp,
