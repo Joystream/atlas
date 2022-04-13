@@ -10,6 +10,8 @@ import { useSelectedNotifications } from './Notifications.hooks'
 import {
   Header,
   MarkAllReadWrapper,
+  NotificationEmptyRectangle,
+  NotificationEmptyRectangleWithText,
   StyledLayoutGrid,
   StyledNotificationTile,
   StyledPill,
@@ -39,17 +41,38 @@ export const Notifications = () => {
           )}
         </Header>
         <div>
-          {notifications.map((notification, idx) => (
-            <StyledNotificationTile
-              key={`notification-${notification.id}-${idx}`}
-              notification={notification}
-              selected={selectedNotifications.includes(notification.id)}
-              onCheckboxChange={(selected) => setNotificationSelected(notification.id, selected)}
-              onClick={() => markNotificationAsRead(notification.id)}
-            />
-          ))}
+          {notifications.length > 0 ? (
+            notifications.map((notification, idx) => (
+              <StyledNotificationTile
+                key={`notification-${notification.id}-${idx}`}
+                notification={notification}
+                selected={selectedNotifications.includes(notification.id)}
+                onCheckboxChange={(selected) => setNotificationSelected(notification.id, selected)}
+                onClick={() => markNotificationAsRead(notification.id)}
+              />
+            ))
+          ) : (
+            <NotificationsEmptyFallback />
+          )}
         </div>
       </GridItem>
     </StyledLayoutGrid>
+  )
+}
+
+const NotificationsEmptyFallback = () => {
+  return (
+    <>
+      <NotificationEmptyRectangle />
+      <NotificationEmptyRectangle opacity={0.8} />
+      <NotificationEmptyRectangleWithText>
+        <NotificationEmptyRectangle opacity={0.5} absolute />
+        <Text variant="h500" secondary>
+          You don’t have any notifications
+        </Text>
+      </NotificationEmptyRectangleWithText>
+      <NotificationEmptyRectangle opacity={0.3} />
+      <NotificationEmptyRectangle opacity={0.1} />
+    </>
   )
 }

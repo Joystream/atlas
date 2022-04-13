@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 
+import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionNotifications } from '@/components/_icons'
@@ -7,7 +8,7 @@ import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_ov
 import { absoluteRoutes } from '@/config/routes'
 import { useNotifications } from '@/providers/notifications'
 
-import { Content, Header, Wrapper } from './NotificationsWidget.styles'
+import { Content, Header, StyledButton, Wrapper } from './NotificationsWidget.styles'
 
 import { NotificationTile } from '../NotificationTile'
 
@@ -27,19 +28,23 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
           </Button>
         </Header>
         <Content>
-          {notifications.map((notification, idx) => (
-            <NotificationTile
-              variant="compact"
-              key={`notification-${notification.id}-${idx}`}
-              notification={notification}
-              onClick={() => {
-                popoverRef.current?.hide()
-                markNotificationAsRead(notification.id)
-              }}
-            />
-          ))}
+          {notifications.length > 0 ? (
+            notifications.map((notification, idx) => (
+              <NotificationTile
+                variant="compact"
+                key={`notification-${notification.id}-${idx}`}
+                notification={notification}
+                onClick={() => {
+                  popoverRef.current?.hide()
+                  markNotificationAsRead(notification.id)
+                }}
+              />
+            ))
+          ) : (
+            <EmptyFallback variant="small" title="You don’t have any notifications" />
+          )}
         </Content>
-        <Button
+        <StyledButton
           variant="tertiary"
           size="large"
           icon={<SvgActionNotifications />}
@@ -48,7 +53,7 @@ export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...res
           onClick={popoverRef.current?.hide}
         >
           <Text variant="t100">Go to notification center</Text>
-        </Button>
+        </StyledButton>
       </Wrapper>
     </Popover>
   )
