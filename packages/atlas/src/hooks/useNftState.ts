@@ -92,6 +92,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     isUpcoming,
     videoId: nft?.video.id,
     userBid,
+    userBidUnlockBlockTimestamp,
     userBidUnlockDate,
     auction,
     startsAtDate,

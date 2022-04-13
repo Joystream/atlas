@@ -8,7 +8,7 @@ export const formatDateAgo = (date: Date): string => {
   return `${formatDistanceToNowStrict(date)} ago`
 }
 
-export const formatDurationShort = (duration: number, showHours?: boolean): string => {
+export const formatDurationShort = (duration: number, showHours?: boolean, units?: boolean): string => {
   const MINUTES_IN_HOUR = 60
   const SECONDS_IN_HOUR = MINUTES_IN_HOUR * 60
 
@@ -25,10 +25,12 @@ export const formatDurationShort = (duration: number, showHours?: boolean): stri
   const seconds = remaining
 
   if (hours || showHours) {
-    return `${normalize(hours)}:${normalize(minutes)}:${normalize(seconds)}`
+    return `${normalize(hours) + (units ? 'h ' : ':')}${normalize(minutes) + (units ? 'm ' : ':')}${
+      normalize(seconds) + (units ? 's' : '')
+    }`
   }
 
-  return `${minutes}:${normalize(seconds)}`
+  return `${minutes + (units ? 'm ' : ':')}${normalize(seconds) + (units ? 's' : '')}`
 }
 
 export const daysToMilliseconds = (days: number) => {

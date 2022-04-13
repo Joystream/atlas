@@ -61,14 +61,14 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
-  const { userBid, canChangeBid } = useNftState(nft)
+  const { userBid, canChangeBid, userBidUnlockBlockTimestamp } = useNftState(nft)
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
   const mdMatch = useMediaMatch('md')
   const { convertToUSD } = useTokenPrice()
   const accountBalance = useSubsribeAccountBalance()
-  const timestamp = useMsTimestamp({ shouldStop: !currentAction || type !== 'english_auction' })
+  const timestamp = useMsTimestamp({ shouldStop: !currentAction })
   const { convertBlockToMsTimestamp, convertBlocksToDuration } = useBlockTimeEstimation()
 
   const {
@@ -252,11 +252,17 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   const isOpen = currentAction === 'purchase'
 
+  useEffect(() => {
+    if (!isOpen) {
+      setValue('bid', NaN)
+    }
+  }, [isOpen, setValue])
+
   const hasErrors = !!Object.keys(errors).length
 
   const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = useMemberAvatar(userBid?.bidder)
   const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = useMemberAvatar(topBidder)
-
+  const timeToUnlockSeconds = userBidUnlockBlockTimestamp ? (userBidUnlockBlockTimestamp - timestamp) / 1000 : undefined
   return (
     <BottomDrawer
       isOpen={isOpen}
@@ -398,6 +404,21 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   {...register('bid', {
                     valueAsNumber: true,
                     validate: {
+                      bidLocked: (value) => {
+                        if (
+                          isOpenAuction &&
+                          value < Number(userBid?.amount) &&
+                          timeToUnlockSeconds &&
+                          timeToUnlockSeconds > 0
+                        ) {
+                          return `Your bid is locked from placing a bid lower than your previous one. You can bid for a higher amount or try again in ${formatDurationShort(
+                            Number(timeToUnlockSeconds.toFixed()),
+                            false,
+                            true
+                          )}`
+                        }
+                        return true
+                      },
                       bidTooLow: (value) =>
                         Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
                       bidTooHigh: (value) =>
