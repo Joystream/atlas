@@ -17,7 +17,7 @@ import { useSearchStore } from '@/providers/search'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { RoutingState } from '@/types/routing'
-import { Notifications } from '@/views/notifications'
+import { NotificationsView } from '@/views/notifications'
 import {
   CategoryView,
   ChannelView,
@@ -98,7 +98,7 @@ export const ViewerLayout: React.FC = () => {
                   element={
                     <PrivateRoute
                       isAuth={!!activeMemberId}
-                      element={<Notifications />}
+                      element={<NotificationsView />}
                       redirectTo={ENTRY_POINT_ROUTE}
                     />
                   }

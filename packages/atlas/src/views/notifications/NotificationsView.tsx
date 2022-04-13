@@ -18,9 +18,9 @@ import {
   StyledLayoutGrid,
   StyledNotificationTile,
   StyledPill,
-} from './Notifications.styles'
+} from './NotificationsView.styles'
 
-export const Notifications = () => {
+export const NotificationsView = () => {
   const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
     useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
@@ -61,7 +61,11 @@ export const Notifications = () => {
                 key={`notification-${notification.id}-${idx}`}
                 notification={notification}
                 selected={!!selectedNotifications.find((notif) => notif.id === notification.id)}
-                onCheckboxChange={(selected) => setNotificationSelected(notification, selected)}
+                onCheckboxChange={(selected, e) => {
+                  setNotificationSelected(notification, selected)
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
                 onClick={() => markNotificationsAsRead(notification)}
               />
             ))

@@ -20,7 +20,7 @@ import { useUser } from '@/providers/user'
 import { VideoWorkspaceProvider, useVideoWorkspaceRouting } from '@/providers/videoWorkspace'
 import { transitions } from '@/styles'
 import { isAllowedBrowser } from '@/utils/browser'
-import { Notifications } from '@/views/notifications'
+import { NotificationsView } from '@/views/notifications'
 import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } from '@/views/studio'
 
 import { StudioWelcomeView } from './StudioWelcomeView'
@@ -140,7 +140,7 @@ const StudioLayout = () => {
               <Route
                 path={relativeRoutes.studio.notifications()}
                 element={
-                  <PrivateRoute element={<Notifications />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
+                  <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
             </Routes>
