@@ -9,3 +9,19 @@ query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = crea
     ...AllNftFields
   }
 }
+
+query GetNftsConnection($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
+  ownedNftsConnection(where: $where, orderBy: [$orderBy]) {
+    edges {
+      cursor
+      node {
+        ...AllNftFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}

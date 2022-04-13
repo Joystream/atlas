@@ -8,13 +8,12 @@ import {
   GetNftQueryVariables,
   GetNftsQuery,
   GetNftsQueryVariables,
-  VideoCategoryWhereInput,
-  VideoOrderByInput,
+  OwnedNftOrderByInput,
+  OwnedNftWhereInput,
   useGetNftQuery,
+  useGetNftsConnectionQuery,
   useGetNftsQuery,
-  useGetVideosConnectionQuery,
 } from '@/api/queries'
-import { createLookup } from '@/utils/data'
 
 export const useNfts = (
   variables?: GetNftsQueryVariables,
@@ -126,67 +125,27 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
 }
 
 type ChannelNftsOpts = {
-  category?: VideoCategoryWhereInput | null
-  sortNftsBy?: VideoOrderByInput
+  sortNftsBy?: OwnedNftOrderByInput
+  where?: OwnedNftWhereInput
 }
 
 export const useChannelNfts = (channelId: string, opts?: ChannelNftsOpts) => {
-  // TODO replace videosConnection query with ownedNftsConnection query once the filtering by owner is available in query node
-  const {
-    data: videosConnectionData,
-    loading: videosConnectionLoading,
-    ...rest
-  } = useGetVideosConnectionQuery({
+  const { data, ...rest } = useGetNftsConnectionQuery({
     variables: {
       orderBy: opts?.sortNftsBy,
       where: {
-        channel: { id_eq: channelId },
-        nft: {
-          metadata_contains: '', // this will filter all the videos with NFT issued.
+        ...opts?.where,
+        creatorChannel: {
+          id_eq: channelId,
         },
-        isPublic_eq: true,
-        isCensored_eq: false,
-
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
-        ...(opts?.category?.id_in?.length
-          ? {
-              category: {
-                id_in: opts.category.id_in,
-              },
-            }
-          : {}),
       },
     },
   })
-
-  const idIn = videosConnectionData?.videosConnection.edges.map((edge) => edge.node.id) || []
-
-  const { data: nftsData, loading: nftsLoading } = useGetNftsQuery({
-    variables: {
-      where: {
-        id_in: idIn,
-      },
-    },
-    skip: !idIn.length || videosConnectionLoading,
-  })
-
-  const nftsDataLookup = nftsData?.ownedNfts ? createLookup(nftsData?.ownedNfts) : {}
-
-  const nfts = videosConnectionData?.videosConnection.edges.map((video) => ({
-    ...video.node,
-    nft: nftsDataLookup[video.node.id],
-  }))
 
   return {
-    nfts: nftsData?.ownedNfts.length ? nfts : undefined,
-    totalCount: videosConnectionData?.videosConnection.totalCount,
-    pageInfo: videosConnectionData?.videosConnection.pageInfo,
-    loading: nftsLoading || videosConnectionLoading,
+    nfts: data?.ownedNftsConnection.edges.map(({ node }) => node),
+    totalCount: data?.ownedNftsConnection.totalCount,
+    pageInfo: data?.ownedNftsConnection.pageInfo,
     ...rest,
   }
 }

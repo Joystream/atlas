@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useChannelNfts } from '@/api/hooks'
-import { VideoCategoryWhereInput, VideoOrderByInput } from '@/api/queries'
+import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
@@ -14,22 +14,19 @@ import { usePagination } from '../ChannelView.hooks'
 
 type ChannelNftsProps = {
   channelId: string
-  sortNftsBy?: VideoOrderByInput
-  category?: VideoCategoryWhereInput | null
+  sortNftsBy?: OwnedNftOrderByInput
   onResize: (sizes: number[]) => void
   tilesPerPage: number
+  transactionalStatus_json?: string
+  ownedNftWhereInput?: OwnedNftWhereInput
 }
 
-export const ChannelNfts: React.FC<ChannelNftsProps> = ({
-  channelId,
-  tilesPerPage,
-  category,
-  sortNftsBy,
-  onResize,
-}) => {
+export const ChannelNfts: React.FC<ChannelNftsProps> = ({ channelId, tilesPerPage, onResize, ownedNftWhereInput }) => {
   const { currentPage, setCurrentPage } = usePagination(0)
 
-  const { nfts, totalCount, loading, error, fetchMore, pageInfo } = useChannelNfts(channelId, { category, sortNftsBy })
+  const { nfts, totalCount, loading, error, fetchMore, pageInfo } = useChannelNfts(channelId, {
+    where: ownedNftWhereInput,
+  })
 
   const paginatedNfts = (nfts || []).slice(currentPage * tilesPerPage, currentPage * tilesPerPage + tilesPerPage)
 

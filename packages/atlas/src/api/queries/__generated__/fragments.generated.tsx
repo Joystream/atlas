@@ -780,6 +780,7 @@ export type VideoFieldsFragment = {
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
+    lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
     video: {
       __typename?: 'Video'
       id: string
@@ -1206,6 +1207,7 @@ export type AllNftFieldsFragment = {
     | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
     | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
     | null
+  lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
   video: {
     __typename?: 'Video'
     id: string
@@ -1595,8 +1597,18 @@ export const AllNftFieldsFragmentDoc = gql`
         price
       }
     }
+<<<<<<< HEAD
     lastSalePrice
     lastSaleDate
+=======
+    lastSale {
+      __typename
+      ... on LastSaleVariant {
+        price
+        date
+      }
+    }
+>>>>>>> abcc6a8e (fix filter in channel view, use nfts connection)
     video {
       ...BasicVideoFields
     }

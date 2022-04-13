@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannel } from '@/api/hooks'
-import { VideoOrderByInput } from '@/api/queries'
+import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
@@ -14,7 +14,7 @@ import { ChannelCover } from '@/components/_channel/ChannelCover'
 import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { VIDEO_SORT_OPTIONS } from '@/config/sorting'
+import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -105,18 +105,24 @@ export const ChannelView: React.FC = () => {
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
 
+  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
-  const handleSorting = (value?: unknown) => {
+  const handleVideoSorting = (value?: unknown) => {
     if (value) {
       setSortVideosBy(value as VideoOrderByInput)
+    }
+  }
+  const handleNftSorting = (value?: unknown) => {
+    if (value) {
+      setSortNftsBy(value as OwnedNftOrderByInput)
     }
   }
 
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
-    videoWhereInput: { category },
+    ownedNftWhereInput,
     canClearFilters: { canClearAllFilters, clearAllFilters },
   } = filtersBarLogic
 
@@ -162,8 +168,8 @@ export const ChannelView: React.FC = () => {
         return (
           <ChannelNfts
             tilesPerPage={tilesPerPage}
-            sortNftsBy={sortVideosBy}
-            category={category}
+            sortNftsBy={sortNftsBy}
+            ownedNftWhereInput={ownedNftWhereInput}
             onResize={handleOnResizeGrid}
             channelId={id || ''}
           />
@@ -270,10 +276,12 @@ export const ChannelView: React.FC = () => {
                   size="small"
                   labelPosition="left"
                   disabled={isSearching}
-                  value={!isSearching ? sortVideosBy : 0}
+                  value={!isSearching ? (currentTab === 'Videos' ? sortVideosBy : sortNftsBy) : 0}
                   placeholder={isSearching ? 'Best match' : undefined}
-                  items={!isSearching ? VIDEO_SORT_OPTIONS : []}
-                  onChange={!isSearching ? handleSorting : undefined}
+                  items={!isSearching ? (currentTab === 'Videos' ? VIDEO_SORT_OPTIONS : NFT_SORT_OPTIONS) : []}
+                  onChange={
+                    !isSearching ? (currentTab === 'Videos' ? handleVideoSorting : handleNftSorting) : undefined
+                  }
                 />
                 {currentTab === 'NFTs' && (
                   <FilterButton
@@ -288,7 +296,7 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TabsContainer>
-          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['categories']} />}
+          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus']} />}
         </TabsWrapper>
         {getChannelContent(currentTab)}
       </LimitedWidthContainer>

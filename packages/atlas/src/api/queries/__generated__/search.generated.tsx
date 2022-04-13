@@ -449,6 +449,7 @@ export type SearchQuery = {
               | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
               | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
               | null
+            lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
             video: {
               __typename?: 'Video'
               id: string
