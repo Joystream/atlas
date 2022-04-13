@@ -116,15 +116,21 @@ export const DetailsWrapper = styled.div`
 `
 
 export const DescriptionContainer = styled.div`
-  margin-top: ${sizes(6)};
-  margin-bottom: ${sizes(8)};
-
-  ${media.md} {
-    margin: ${sizes(8)} 0;
-  }
+  margin: ${sizes(6)} 0;
 `
 export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
+`
+
+export const DescriptionBody = styled.div<{ detailsExpanded?: boolean }>`
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* stylelint-disable-next-line value-no-vendor-prefix */
+  display: -webkit-box;
+  -webkit-line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
+  line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
+  -webkit-box-orient: vertical;
 `
 
 export const DescriptionCopy = styled(Text)`
@@ -147,10 +153,11 @@ export const LicenceCategoryWrapper = styled.div<{ detailsExpanded: boolean }>`
   grid-template-rows: 1fr;
   gap: ${sizes(6)};
   visibility: ${({ detailsExpanded }) => (detailsExpanded ? 'visible' : 'hidden')};
-  max-height: ${({ detailsExpanded }) => (detailsExpanded ? 'auto' : '0')};
+  max-height: ${({ detailsExpanded }) => (detailsExpanded ? '400px' : '0')};
   overflow: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'hidden')};
   opacity: ${({ detailsExpanded }) => (detailsExpanded ? 1 : 0)};
-  transition: opacity 150ms ease-out;
+  margin-bottom: ${({ detailsExpanded }) => (detailsExpanded ? sizes(6) : 0)};
+  transition: opacity ${cVar('animationTransitionFast')};
 `
 
 export const LicenseCustomText = styled(Text)`
@@ -159,7 +166,7 @@ export const LicenseCustomText = styled(Text)`
 
 export const ExpandButton = styled(Button)`
   display: block;
-  margin-top: ${sizes(2)};
+  margin-bottom: ${sizes(8)};
 `
 
 export const CategoryWrapper = styled.div`

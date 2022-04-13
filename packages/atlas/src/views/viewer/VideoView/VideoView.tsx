@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -34,6 +34,7 @@ import {
   Category,
   CategoryWrapper,
   ChannelContainer,
+  DescriptionBody,
   DescriptionContainer,
   DescriptionCopy,
   DescriptionLink,
@@ -57,6 +58,7 @@ import {
 
 export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
+  const descriptionBodyRef = useRef<HTMLDivElement>(null)
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
@@ -226,11 +228,13 @@ export const VideoView: React.FC = () => {
             video?.description && (
               <>
                 <DescriptionTitle variant="h100">Description</DescriptionTitle>
-                {video.description?.split('\n').map((line, idx) => (
-                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
-                    {replaceUrls(line)}
-                  </DescriptionCopy>
-                ))}
+                <DescriptionBody ref={descriptionBodyRef} detailsExpanded={detailsExpanded}>
+                  {video.description?.split('\n').map((line, idx) => (
+                    <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                      {replaceUrls(line)}
+                    </DescriptionCopy>
+                  ))}
+                </DescriptionBody>
               </>
             )
           ) : (
@@ -241,20 +245,8 @@ export const VideoView: React.FC = () => {
               <DescriptionSkeletonLoader width="30%" />
             </>
           )}
-          {!mdMatch && (
-            <ExpandButton
-              onClick={toggleDetailsExpand}
-              iconPlacement="right"
-              size="small"
-              variant="tertiary"
-              textOnly
-              icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
-            >
-              Show {!detailsExpanded ? 'more' : 'less'}
-            </ExpandButton>
-          )}
         </DescriptionContainer>
-        <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
+        <LicenceCategoryWrapper detailsExpanded={detailsExpanded}>
           <GridItem>
             {video ? (
               <>
@@ -288,6 +280,16 @@ export const VideoView: React.FC = () => {
             )}
           </CategoryWrapper>
         </LicenceCategoryWrapper>
+        <ExpandButton
+          onClick={toggleDetailsExpand}
+          iconPlacement="right"
+          size="medium"
+          variant="tertiary"
+          textOnly
+          icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
+        >
+          Show {!detailsExpanded ? 'more' : 'less'}
+        </ExpandButton>
       </DetailsWrapper>
     </>
   )
