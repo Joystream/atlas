@@ -91,8 +91,30 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
         auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
         bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
         minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
-        whitelistedMembers: auction?.whitelistedMembers,
+        whitelistedMembers: auction.whitelistedMembers,
       }
+    }
+
+    if (!nft?.transactionalStatus) {
+      throw new Error('NFT missing transactional status')
+    }
+    switch (nft?.transactionalStatus.__typename) {
+      case 'TransactionalStatusBuyNow':
+        return {
+          ...commonProperties,
+          status: 'buy-now',
+          buyNowPrice: Number(nft.transactionalStatus.price),
+        }
+      case 'TransactionalStatusIdle':
+        return {
+          ...commonProperties,
+          status: 'idle',
+          // TODO: last transaction on iddle
+          lastPrice: undefined,
+          lastTransactionDate: undefined,
+        }
+      default:
+        return undefined
     }
   }
 
