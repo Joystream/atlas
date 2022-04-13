@@ -57,10 +57,10 @@ index ddc9cc6a032a244d9d8a3dcf9bfb604a821caeaf..e1b6592beb400065c64d63a5f9458eaa
  }
 -exports.JoyStructDecorated = JoyStructDecorated;
 diff --git a/augment/all/defs.json b/augment/all/defs.json
-index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b16a5dc6e 100644
+index 69fc7ec661f6c458522354ec199987d93dda19fc..73a0bbf01d7a978532bb033096d3755d340de645 100644
 --- a/augment/all/defs.json
 +++ b/augment/all/defs.json
-@@ -773,40 +773,54 @@
+@@ -773,40 +773,55 @@
      },
      "ModeratorSet": "BTreeSet<MemberId>",
      "Royalty": "Perbill",
@@ -80,8 +80,8 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
 +    "OpenAuctionParams": {
 +        "starting_price": "u128",
 +        "buy_now_price": "Option<u128>",
-+        "whitelist": "BTreeSet<MemberId>",
 +        "starts_at": "Option<u32>",
++        "whitelist": "BTreeSet<MemberId>",
          "bid_lock_duration": "u32"
      },
 -    "AuctionType": {
@@ -98,12 +98,12 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
 +    "EnglishAuction": {
 +        "starting_price": "u128",
 +        "buy_now_price": "Option<u128>",
-+        "top_bid": "Option<EnglishAuctionBid>",
 +        "whitelist": "BTreeSet<MemberId>",
++        "end": "u32",
++        "start": "u32",
 +        "extension_period": "u32",
 +        "min_bid_step": "u128",
-+        "end": "u32",
-+        "start": "u32"
++        "top_bid": "Option<EnglishAuctionBid>"
      },
 -    "Auction": {
 +    "OpenAuction": {
@@ -115,8 +115,9 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
 -        "starts_at": "u32",
 -        "whitelist": "BTreeSet<MemberId>"
 +        "whitelist": "BTreeSet<MemberId>",
-+        "start": "u32",
-+        "bid_lock_duration": "u32"
++        "bid_lock_duration": "u32",
++        "auction_id": "OpenAuctionId",
++        "start": "u32"
 +    },
 +    "OpenAuctionBid": {
 +        "amount": "u128",
@@ -137,7 +138,7 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
              "BuyNow": "u128"
          }
      },
-@@ -819,24 +833,18 @@
+@@ -819,24 +834,18 @@
      "OwnedNft": {
          "owner": "NftOwner",
          "transactional_status": "TransactionalStatus",
@@ -167,7 +168,7 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
          }
      },
      "NftIssuanceParameters": {
-@@ -846,5 +854,7 @@
+@@ -846,5 +855,7 @@
          "init_transactional_status": "InitTransactionalStatus"
      },
      "NftMetadata": "Vec<u8>",
@@ -178,7 +179,7 @@ index 69fc7ec661f6c458522354ec199987d93dda19fc..16cdf1ac2c49f4c7f970a883dd1b1b3b
  }
 \ No newline at end of file
 diff --git a/augment/all/types.ts b/augment/all/types.ts
-index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc00f1a4c4b 100644
+index 718d7d44528be5163f8d58e259eb9ae7ca318641..d48043f6c233ab06e2cdee3373756717c322928b 100644
 --- a/augment/all/types.ts
 +++ b/augment/all/types.ts
 @@ -4,6 +4,7 @@
@@ -250,12 +251,12 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
 +export interface EnglishAuction extends Struct {
 +  readonly starting_price: u128;
 +  readonly buy_now_price: Option<u128>;
-+  readonly top_bid: Option<EnglishAuctionBid>;
 +  readonly whitelist: BTreeSet<MemberId>;
-+  readonly extension_period: u32;
-+  readonly min_bid_step: u128;
 +  readonly end: u32;
 +  readonly start: u32;
++  readonly extension_period: u32;
++  readonly min_bid_step: u128;
++  readonly top_bid: Option<EnglishAuctionBid>;
 +}
 +
 +/** @name EnglishAuctionBid */
@@ -306,7 +307,7 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
  /** @name LookupSource */
  export interface LookupSource extends AccountId {}
  
-@@ -643,8 +629,31 @@ export interface NftOwner extends Enum {
+@@ -643,8 +629,32 @@ export interface NftOwner extends Enum {
    readonly asMember: MemberId;
  }
  
@@ -317,8 +318,9 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
 +  readonly starting_price: u128;
 +  readonly buy_now_price: Option<u128>;
 +  readonly whitelist: BTreeSet<MemberId>;
-+  readonly start: u32;
 +  readonly bid_lock_duration: u32;
++  readonly auction_id: OpenAuctionId;
++  readonly start: u32;
 +}
 +
 +/** @name OpenAuctionBid */
@@ -335,12 +337,12 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
 +export interface OpenAuctionParams extends Struct {
 +  readonly starting_price: u128;
 +  readonly buy_now_price: Option<u128>;
-+  readonly whitelist: BTreeSet<MemberId>;
 +  readonly starts_at: Option<u32>;
++  readonly whitelist: BTreeSet<MemberId>;
    readonly bid_lock_duration: u32;
  }
  
-@@ -693,6 +702,7 @@ export interface OwnedNft extends Struct {
+@@ -693,6 +703,7 @@ export interface OwnedNft extends Struct {
    readonly owner: NftOwner;
    readonly transactional_status: TransactionalStatus;
    readonly creator_royalty: Option<Royalty>;
@@ -348,7 +350,7 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
  }
  
  /** @name ParticipantId */
-@@ -1088,8 +1098,10 @@ export interface TransactionalStatus extends Enum {
+@@ -1088,8 +1099,10 @@ export interface TransactionalStatus extends Enum {
    readonly isIdle: boolean;
    readonly isInitiatedOfferToMember: boolean;
    readonly asInitiatedOfferToMember: ITuple<[MemberId, Option<u128>]>;
@@ -361,7 +363,7 @@ index 718d7d44528be5163f8d58e259eb9ae7ca318641..b46a98528c0f512a38ae22c068356fc0
    readonly isBuyNow: boolean;
    readonly asBuyNow: u128;
  }
-@@ -1111,6 +1123,9 @@ export interface UploadParameters extends Struct {
+@@ -1111,6 +1124,9 @@ export interface UploadParameters extends Struct {
  /** @name Url */
  export interface Url extends Text {}
  
@@ -431,7 +433,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..d998893f5033a59d4dea718f0739aa89
         * Lead authentication failed
         **/
 diff --git a/augment/augment-api-events.ts b/augment/augment-api-events.ts
-index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0a3c63130 100644
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..d798a1b4bece9cf2a49c0f5c29fd00cd34457eab 100644
 --- a/augment/augment-api-events.ts
 +++ b/augment/augment-api-events.ts
 @@ -2,7 +2,7 @@
@@ -456,10 +458,12 @@ index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0
        BuyNowCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
        BuyNowPriceUpdated: AugmentedEvent<ApiType, [VideoId, ContentActor, CurrencyAmount]>;
        ChannelAssetsRemoved: AugmentedEvent<ApiType, [ContentActor, ChannelId, BTreeSet<DataObjectId>, Channel]>;
-@@ -264,6 +263,7 @@ declare module '@polkadot/api/types/events' {
+@@ -263,7 +262,8 @@ declare module '@polkadot/api/types/events' {
+       CuratorGroupCreated: AugmentedEvent<ApiType, [CuratorGroupId]>;
        CuratorGroupStatusSet: AugmentedEvent<ApiType, [CuratorGroupId, bool]>;
        CuratorRemoved: AugmentedEvent<ApiType, [CuratorGroupId, CuratorId]>;
-       EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
+-      EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      EnglishAuctionSettled: AugmentedEvent<ApiType, [MemberId, AccountId, VideoId]>;
 +      EnglishAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, EnglishAuctionParams]>;
        FeaturedVideosSet: AugmentedEvent<ApiType, [ContentActor, Vec<VideoId>]>;
        MaxRewardUpdated: AugmentedEvent<ApiType, [Balance]>;
@@ -510,7 +514,7 @@ index f72e77f696a104c15481a7de64906db9e7ec07ae..d61b8636d3caf30e77aa98b31e250d8b
         * Platform fee percentage
         **/
 diff --git a/augment/augment-api-tx.ts b/augment/augment-api-tx.ts
-index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d6e584963 100644
+index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..37ca34f93b7456faeee557abb192b716ce8be029 100644
 --- a/augment/augment-api-tx.ts
 +++ b/augment/augment-api-tx.ts
 @@ -3,7 +3,7 @@
@@ -536,7 +540,19 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        /**
         * Cancel open auction bid
         **/
-@@ -459,7 +460,11 @@ declare module '@polkadot/api/types/submittable' {
+@@ -432,11 +433,6 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       channelOwnerRemark: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, channelId: ChannelId | AnyNumber | Uint8Array, msg: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelId, Bytes]>;
+       claimChannelReward: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, proof: Vec<ProofElement> | (ProofElement | { side?: any } | string | Uint8Array)[], item: PullPayment | { channel_id?: any; cumulative_payout_claimed?: any; reason?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, Vec<ProofElement>, PullPayment]>;
+-      /**
+-       * Claim won english auction
+-       * Can be called by anyone
+-       **/
+-      claimWonEnglishAuction: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId]>;
+       createChannel: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, params: ChannelCreationParameters | { assets?: any; meta?: any; reward_account?: any; collaborators?: any; moderators?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelCreationParameters]>;
+       createChannelCategory: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, params: ChannelCategoryCreationParameters | { meta?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelCategoryCreationParameters]>;
+       /**
+@@ -459,7 +455,11 @@ declare module '@polkadot/api/types/submittable' {
        /**
         * Make auction bid
         **/
@@ -549,7 +565,7 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        /**
         * NFT owner remark
         **/
-@@ -472,7 +477,7 @@ declare module '@polkadot/api/types/submittable' {
+@@ -472,7 +472,7 @@ declare module '@polkadot/api/types/submittable' {
         * Accept open auction bid
         * Should only be called by auctioneer
         **/
@@ -558,7 +574,17 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        reactToPost: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, postId: VideoPostId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, VideoPostId, ReactionId]>;
        reactToVideo: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, ReactionId]>;
        /**
-@@ -493,9 +498,13 @@ declare module '@polkadot/api/types/submittable' {
+@@ -488,14 +488,23 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       setCuratorGroupStatus: AugmentedSubmittable<(curatorGroupId: CuratorGroupId | AnyNumber | Uint8Array, isActive: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CuratorGroupId, bool]>;
+       setFeaturedVideos: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, list: Vec<VideoId> | (VideoId | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [ContentActor, Vec<VideoId>]>;
++      /**
++       * Claim won english auction
++       * Can be called by anyone
++       **/
++      settleEnglishAuction: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId]>;
+       /**
+        * Return Nft back to the original artist at no cost
         **/
        slingNftBack: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array, ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId, ContentActor]>;
        /**
@@ -570,7 +596,7 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
 +       * Start video nft open auction
         **/
 -      startNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: AuctionParams | { auction_type?: any; starting_price?: any; minimal_bid_step?: any; buy_now_price?: any; starts_at?: any; whitelist?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, AuctionParams]>;
-+      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
++      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; starts_at?: any; whitelist?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
        /**
         * Update Buy now nft price
         **/
@@ -713,7 +739,7 @@ index 513f0a709d5b7bd6ff054225da2489c34e829bda..d998893f5033a59d4dea718f0739aa89
         * Lead authentication failed
         **/
 diff --git a/augment-codec/augment-api-events.ts b/augment-codec/augment-api-events.ts
-index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0a3c63130 100644
+index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..d798a1b4bece9cf2a49c0f5c29fd00cd34457eab 100644
 --- a/augment-codec/augment-api-events.ts
 +++ b/augment-codec/augment-api-events.ts
 @@ -2,7 +2,7 @@
@@ -738,10 +764,12 @@ index 17fb52e9e36d4433a098a7f1bcaeb7eebf60ffdf..f534f918366a927fca6608a8880b98e0
        BuyNowCanceled: AugmentedEvent<ApiType, [VideoId, ContentActor]>;
        BuyNowPriceUpdated: AugmentedEvent<ApiType, [VideoId, ContentActor, CurrencyAmount]>;
        ChannelAssetsRemoved: AugmentedEvent<ApiType, [ContentActor, ChannelId, BTreeSet<DataObjectId>, Channel]>;
-@@ -264,6 +263,7 @@ declare module '@polkadot/api/types/events' {
+@@ -263,7 +262,8 @@ declare module '@polkadot/api/types/events' {
+       CuratorGroupCreated: AugmentedEvent<ApiType, [CuratorGroupId]>;
        CuratorGroupStatusSet: AugmentedEvent<ApiType, [CuratorGroupId, bool]>;
        CuratorRemoved: AugmentedEvent<ApiType, [CuratorGroupId, CuratorId]>;
-       EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
+-      EnglishAuctionCompleted: AugmentedEvent<ApiType, [MemberId, VideoId]>;
++      EnglishAuctionSettled: AugmentedEvent<ApiType, [MemberId, AccountId, VideoId]>;
 +      EnglishAuctionStarted: AugmentedEvent<ApiType, [ContentActor, VideoId, EnglishAuctionParams]>;
        FeaturedVideosSet: AugmentedEvent<ApiType, [ContentActor, Vec<VideoId>]>;
        MaxRewardUpdated: AugmentedEvent<ApiType, [Balance]>;
@@ -792,7 +820,7 @@ index f72e77f696a104c15481a7de64906db9e7ec07ae..d61b8636d3caf30e77aa98b31e250d8b
         * Platform fee percentage
         **/
 diff --git a/augment-codec/augment-api-tx.ts b/augment-codec/augment-api-tx.ts
-index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d6e584963 100644
+index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..37ca34f93b7456faeee557abb192b716ce8be029 100644
 --- a/augment-codec/augment-api-tx.ts
 +++ b/augment-codec/augment-api-tx.ts
 @@ -3,7 +3,7 @@
@@ -818,7 +846,19 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        /**
         * Cancel open auction bid
         **/
-@@ -459,7 +460,11 @@ declare module '@polkadot/api/types/submittable' {
+@@ -432,11 +433,6 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       channelOwnerRemark: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, channelId: ChannelId | AnyNumber | Uint8Array, msg: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelId, Bytes]>;
+       claimChannelReward: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, proof: Vec<ProofElement> | (ProofElement | { side?: any } | string | Uint8Array)[], item: PullPayment | { channel_id?: any; cumulative_payout_claimed?: any; reason?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, Vec<ProofElement>, PullPayment]>;
+-      /**
+-       * Claim won english auction
+-       * Can be called by anyone
+-       **/
+-      claimWonEnglishAuction: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId]>;
+       createChannel: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, params: ChannelCreationParameters | { assets?: any; meta?: any; reward_account?: any; collaborators?: any; moderators?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelCreationParameters]>;
+       createChannelCategory: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, params: ChannelCategoryCreationParameters | { meta?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, ChannelCategoryCreationParameters]>;
+       /**
+@@ -459,7 +455,11 @@ declare module '@polkadot/api/types/submittable' {
        /**
         * Make auction bid
         **/
@@ -831,7 +871,7 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        /**
         * NFT owner remark
         **/
-@@ -472,7 +477,7 @@ declare module '@polkadot/api/types/submittable' {
+@@ -472,7 +472,7 @@ declare module '@polkadot/api/types/submittable' {
         * Accept open auction bid
         * Should only be called by auctioneer
         **/
@@ -840,7 +880,17 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
        reactToPost: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, postId: VideoPostId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, VideoPostId, ReactionId]>;
        reactToVideo: AugmentedSubmittable<(memberId: MemberId | AnyNumber | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, reactionId: ReactionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MemberId, VideoId, ReactionId]>;
        /**
-@@ -493,9 +498,13 @@ declare module '@polkadot/api/types/submittable' {
+@@ -488,14 +488,23 @@ declare module '@polkadot/api/types/submittable' {
+        **/
+       setCuratorGroupStatus: AugmentedSubmittable<(curatorGroupId: CuratorGroupId | AnyNumber | Uint8Array, isActive: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CuratorGroupId, bool]>;
+       setFeaturedVideos: AugmentedSubmittable<(actor: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, list: Vec<VideoId> | (VideoId | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [ContentActor, Vec<VideoId>]>;
++      /**
++       * Claim won english auction
++       * Can be called by anyone
++       **/
++      settleEnglishAuction: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId]>;
+       /**
+        * Return Nft back to the original artist at no cost
         **/
        slingNftBack: AugmentedSubmittable<(videoId: VideoId | AnyNumber | Uint8Array, ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [VideoId, ContentActor]>;
        /**
@@ -852,7 +902,7 @@ index d7dedd48c2afe9a9d9ca2f7de5596909ec0e4d07..0599a3d39d9abed524faeca0d183399d
 +       * Start video nft open auction
         **/
 -      startNftAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: AuctionParams | { auction_type?: any; starting_price?: any; minimal_bid_step?: any; buy_now_price?: any; starts_at?: any; whitelist?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, AuctionParams]>;
-+      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; whitelist?: any; starts_at?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
++      startOpenAuction: AugmentedSubmittable<(ownerId: ContentActor | { Curator: any } | { Member: any } | { Lead: any } | string | Uint8Array, videoId: VideoId | AnyNumber | Uint8Array, auctionParams: OpenAuctionParams | { starting_price?: any; buy_now_price?: any; starts_at?: any; whitelist?: any; bid_lock_duration?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ContentActor, VideoId, OpenAuctionParams]>;
        /**
         * Update Buy now nft price
         **/
@@ -1355,7 +1405,7 @@ index d277ee3a9dbe2bb572cc3d5b3eecd05fc1b993dd..118a6505210c6de62723a53dd868681d
 -exports.default = exports.constitutionTypes;
 +export default constitutionTypes;
 diff --git a/content/index.d.ts b/content/index.d.ts
-index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d115d56671 100644
+index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..c98f5e87318a8fd610da101eda0d05d65263408c 100644
 --- a/content/index.d.ts
 +++ b/content/index.d.ts
 @@ -3,6 +3,8 @@ import { bool, u8, u32, u64, Null, Bytes } from '@polkadot/types/primitive';
@@ -1367,7 +1417,7 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
  export declare class CuratorId extends u64 {
  }
  export declare class CuratorGroupId extends u64 {
-@@ -28,48 +30,45 @@ export declare class CurrencyAmount extends CurrencyOf {
+@@ -28,48 +30,46 @@ export declare class CurrencyAmount extends CurrencyOf {
  declare const Royalty_base: import("@polkadot/types/types").Constructor<UInt>;
  export declare class Royalty extends Royalty_base {
  }
@@ -1407,12 +1457,12 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
 +declare const EnglishAuction_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
 +    starting_price: typeof Balance;
 +    buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
-+    top_bid: import("@polkadot/types/types").Constructor<Option<EnglishAuctionBid>>;
 +    whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
-+    extension_period: typeof BlockNumber;
-+    min_bid_step: typeof Balance;
 +    end: typeof BlockNumber;
 +    start: typeof BlockNumber;
++    extension_period: typeof BlockNumber;
++    min_bid_step: typeof Balance;
++    top_bid: import("@polkadot/types/types").Constructor<Option<EnglishAuctionBid>>;
  }>;
 -export declare class Bid extends Bid_base {
 +export declare class EnglishAuction extends EnglishAuction_base {
@@ -1426,8 +1476,9 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
 -    last_bid: import("@polkadot/types/types").Constructor<Option<Bid>>;
 -    starts_at: typeof BlockNumber;
      whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
-+    start: typeof BlockNumber;
 +    bid_lock_duration: typeof BlockNumber;
++    auction_id: typeof OpenAuctionId;
++    start: typeof BlockNumber;
  }>;
 -export declare class Auction extends Auction_base {
 +export declare class OpenAuction extends OpenAuction_base {
@@ -1441,7 +1492,7 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
      BuyNow: typeof Balance;
  }>;
  export declare class TransactionalStatus extends TransactionalStatus_base {
-@@ -84,24 +83,36 @@ declare const OwnedNft_base: import("../JoyStruct").ExtendedStructDecoratedConst
+@@ -84,24 +84,36 @@ declare const OwnedNft_base: import("../JoyStruct").ExtendedStructDecoratedConst
      owner: typeof NftOwner;
      transactional_status: typeof TransactionalStatus;
      creator_royalty: import("@polkadot/types/types").Constructor<Option<Royalty>>;
@@ -1452,11 +1503,10 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
 -declare const AuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
 -    auction_type: typeof AuctionType;
 +declare const EnglishAuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
-     starting_price: typeof Balance;
--    minimal_bid_step: typeof Balance;
-     buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
++    starting_price: typeof Balance;
++    buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
 +    whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
-     starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
++    starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
 +    duration: typeof BlockNumber;
 +    extension_period: typeof BlockNumber;
 +    min_bid_step: typeof Balance;
@@ -1464,10 +1514,11 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
 +export declare class EnglishAuctionParams extends EnglishAuctionParams_base {
 +}
 +declare const OpenAuctionParams_base: import("../JoyStruct").ExtendedStructDecoratedConstructor<{
-+    starting_price: typeof Balance;
-+    buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
+     starting_price: typeof Balance;
+-    minimal_bid_step: typeof Balance;
+     buy_now_price: import("@polkadot/types/types").Constructor<Option<Balance>>;
+     starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
      whitelist: import("@polkadot/types/types").Constructor<BTreeSet<MemberId>>;
-+    starts_at: import("@polkadot/types/types").Constructor<Option<BlockNumber>>;
 +    bid_lock_duration: typeof BlockNumber;
  }>;
 -export declare class AuctionParams extends AuctionParams_base {
@@ -1484,7 +1535,7 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
  }>;
  export declare class InitTransactionalStatus extends InitTransactionalStatus_base {
  }
-@@ -279,6 +290,19 @@ export declare class ModeratorSet extends ModeratorSet_base {
+@@ -279,6 +291,19 @@ export declare class ModeratorSet extends ModeratorSet_base {
  declare const NftMetadata_base: import("@polkadot/types/types").Constructor<Vec<u8>>;
  export declare class NftMetadata extends NftMetadata_base {
  }
@@ -1504,7 +1555,7 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
  export declare const contentTypes: {
      CuratorId: typeof CuratorId;
      CuratorGroupId: typeof CuratorGroupId;
-@@ -314,20 +338,20 @@ export declare const contentTypes: {
+@@ -314,20 +339,20 @@ export declare const contentTypes: {
      PullPayment: typeof PullPayment;
      ModeratorSet: typeof ModeratorSet;
      Royalty: typeof Royalty;
@@ -1533,10 +1584,10 @@ index 01f2aa0cdce5ad9eda545126fd3411de74f6dfc1..5450cb1b608bc1956a3964d3a60f97d1
  };
  export default contentTypes;
 diff --git a/content/index.js b/content/index.js
-index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec81798669fa1 100644
+index e9fbfddc4d39cf330793ba2c1322433e0d818b74..7b730bef285566574cd4fa0bfbb02105a55899dc 100644
 --- a/content/index.js
 +++ b/content/index.js
-@@ -1,307 +1,275 @@
+@@ -1,307 +1,276 @@
 -"use strict";
 -Object.defineProperty(exports, "__esModule", { value: true });
 -exports.NftMetadata = exports.ModeratorSet = exports.PullPayment = exports.VideoPostDeletionParameters = exports.VideoPostCreationParameters = exports.ProofElement = exports.Side = exports.VideoPost = exports.VideoPostType = exports.VideoUpdateParameters = exports.VideoCreationParameters = exports.Video = exports.VideoCategoryUpdateParameters = exports.VideoCategoryCreationParameters = exports.VideoCategory = exports.ChannelCategoryUpdateParameters = exports.ChannelCategoryCreationParameters = exports.ChannelCategory = exports.ChannelOwnershipTransferRequest = exports.ChannelUpdateParameters = exports.ChannelCreationParameters = exports.Channel = exports.ChannelOwner = exports.ContentActor = exports.CuratorGroup = exports.StorageAssets = exports.NftIssuanceParameters = exports.InitTransactionalStatus = exports.AuctionParams = exports.OwnedNft = exports.NftOwner = exports.TransactionalStatus = exports.Auction = exports.Bid = exports.AuctionType = exports.OpenAuctionDetails = exports.EnglishAuctionDetails = exports.IsExtended = exports.Royalty = exports.CurrencyAmount = exports.CurrencyOf = exports.ReactionId = exports.VideoPostId = exports.IsCensored = exports.MaxNumber = exports.VideoCategoryId = exports.VideoId = exports.ChannelCategoryId = exports.CuratorGroupId = exports.CuratorId = void 0;
@@ -1637,12 +1688,12 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec817
 +export class EnglishAuction extends JoyStructDecorated({
 +    starting_price: Balance,
 +    buy_now_price: Option.with(Balance),
-+    top_bid: Option.with(EnglishAuctionBid),
 +    whitelist: BTreeSet.with(MemberId),
-+    extension_period: BlockNumber,
-+    min_bid_step: Balance,
 +    end: BlockNumber,
 +    start: BlockNumber,
++    extension_period: BlockNumber,
++    min_bid_step: Balance,
++    top_bid: Option.with(EnglishAuctionBid),
  }) {
  }
 -exports.Bid = Bid;
@@ -1658,8 +1709,9 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec817
 +    starting_price: Balance,
 +    buy_now_price: Option.with(Balance),
 +    whitelist: BTreeSet.with(MemberId),
-+    start: BlockNumber,
 +    bid_lock_duration: BlockNumber,
++    auction_id: OpenAuctionId,
++    start: BlockNumber,
  }) {
  }
 -exports.Auction = Auction;
@@ -1722,8 +1774,8 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec817
 +export class OpenAuctionParams extends JoyStructDecorated({
 +    starting_price: Balance,
 +    buy_now_price: Option.with(Balance),
-+    whitelist: BTreeSet.with(MemberId),
 +    starts_at: Option.with(BlockNumber),
++    whitelist: BTreeSet.with(MemberId),
 +    bid_lock_duration: BlockNumber,
  }) {
  }
@@ -2022,7 +2074,7 @@ index e9fbfddc4d39cf330793ba2c1322433e0d818b74..40f229d9269c6ab5c3f30e50421ec817
      CuratorId,
      CuratorGroupId,
      CuratorGroup,
-@@ -338,20 +306,20 @@ exports.contentTypes = {
+@@ -338,20 +307,20 @@ exports.contentTypes = {
      ModeratorSet,
      // Nft
      Royalty,
@@ -2923,7 +2975,7 @@ index 35d805e84d1436e3fc8c247a337fdde4b119787e..6141254ecd102ad317d4e5bc9852cf84
 -exports.default = exports.referendumTypes;
 +export default referendumTypes;
 diff --git a/src/content/index.ts b/src/content/index.ts
-index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582274c17fd 100644
+index 0b7633d505f8db04d769740e70d429b062a2ff59..7834ecd32de194ae704280dde2928773ae118707 100644
 --- a/src/content/index.ts
 +++ b/src/content/index.ts
 @@ -5,6 +5,7 @@ import { JoyStructDecorated, JoyEnum, ChannelId, MemberId, Balance, Hash, BlockN
@@ -2934,7 +2986,7 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
  export class CuratorId extends u64 {}
  export class CuratorGroupId extends u64 {}
  export class ChannelCategoryId extends u64 {}
-@@ -20,43 +21,42 @@ export class CurrencyAmount extends CurrencyOf {}
+@@ -20,43 +21,43 @@ export class CurrencyAmount extends CurrencyOf {}
  // NFT types
  
  export class Royalty extends UInt.with(32, 'Perbill') {}
@@ -2969,12 +3021,12 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
 +export class EnglishAuction extends JoyStructDecorated({
 +  starting_price: Balance,
 +  buy_now_price: Option.with(Balance),
-+  top_bid: Option.with(EnglishAuctionBid),
 +  whitelist: BTreeSet.with(MemberId),
-+  extension_period: BlockNumber,
-+  min_bid_step: Balance,
 +  end: BlockNumber,
 +  start: BlockNumber,
++  extension_period: BlockNumber,
++  min_bid_step: Balance,
++  top_bid: Option.with(EnglishAuctionBid),
  }) {}
  
 -export class Auction extends JoyStructDecorated({
@@ -2986,8 +3038,9 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
 -  last_bid: Option.with(Bid),
 -  starts_at: BlockNumber,
    whitelist: BTreeSet.with(MemberId),
-+  start: BlockNumber,
 +  bid_lock_duration: BlockNumber,
++  auction_id: OpenAuctionId,
++  start: BlockNumber,
  }) {}
  
  export class TransactionalStatus extends JoyEnum({
@@ -2999,31 +3052,31 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
    BuyNow: Balance,
  }) {}
  
-@@ -69,22 +69,33 @@ export class OwnedNft extends JoyStructDecorated({
+@@ -69,22 +70,33 @@ export class OwnedNft extends JoyStructDecorated({
    owner: NftOwner,
    transactional_status: TransactionalStatus,
    creator_royalty: Option.with(Royalty),
 +  open_auctions_nonce: OpenAuctionId,
++}) {}
++
++export class EnglishAuctionParams extends JoyStructDecorated({
++  starting_price: Balance,
++  buy_now_price: Option.with(Balance),
++  whitelist: BTreeSet.with(MemberId),
++  starts_at: Option.with(BlockNumber),
++  duration: BlockNumber,
++  extension_period: BlockNumber,
++  min_bid_step: Balance,
  }) {}
  
 -export class AuctionParams extends JoyStructDecorated({
 -  auction_type: AuctionType,
-+export class EnglishAuctionParams extends JoyStructDecorated({
++export class OpenAuctionParams extends JoyStructDecorated({
    starting_price: Balance,
 -  minimal_bid_step: Balance,
    buy_now_price: Option.with(Balance),
-+  whitelist: BTreeSet.with(MemberId),
    starts_at: Option.with(BlockNumber),
-+  duration: BlockNumber,
-+  extension_period: BlockNumber,
-+  min_bid_step: Balance,
-+}) {}
-+
-+export class OpenAuctionParams extends JoyStructDecorated({
-+  starting_price: Balance,
-+  buy_now_price: Option.with(Balance),
    whitelist: BTreeSet.with(MemberId),
-+  starts_at: Option.with(BlockNumber),
 +  bid_lock_duration: BlockNumber,
  }) {}
  
@@ -3038,7 +3091,7 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
  }) {}
  
  export class NftIssuanceParameters extends JoyStructDecorated({
-@@ -240,6 +251,17 @@ export class ModeratorSet extends BTreeSet.with(MemberId) {}
+@@ -240,6 +252,17 @@ export class ModeratorSet extends BTreeSet.with(MemberId) {}
  
  export class NftMetadata extends Vec.with(u8) {}
  
@@ -3056,7 +3109,7 @@ index 0b7633d505f8db04d769740e70d429b062a2ff59..32fe26b0d7d295f909fb24a0be277582
  export const contentTypes = {
    CuratorId,
    CuratorGroupId,
-@@ -277,21 +299,21 @@ export const contentTypes = {
+@@ -277,21 +300,21 @@ export const contentTypes = {
    ModeratorSet,
    // Nft
    Royalty,

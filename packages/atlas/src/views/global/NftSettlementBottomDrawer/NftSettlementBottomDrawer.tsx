@@ -13,7 +13,6 @@ import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
-import { useUser } from '@/providers/user'
 
 import {
   Content,
@@ -35,14 +34,13 @@ export const NftSettlementBottomDrawer: React.FC = () => {
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { activeMemberId } = useUser()
 
   const handleSettleAuction = () => {
-    if (!joystream || !currentNftId || !activeMemberId) return
+    if (!joystream || !currentNftId) return
 
     handleTransaction({
       txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).settleEnglishAuction(currentNftId, activeMemberId, proxyCallback(updateStatus)),
+        (await joystream.extrinsics).settleEnglishAuction(currentNftId, proxyCallback(updateStatus)),
       onTxSync: () => {
         displaySnackbar({
           title: 'Auction settled',

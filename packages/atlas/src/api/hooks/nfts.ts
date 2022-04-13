@@ -72,28 +72,31 @@ export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQu
   }
 
   const getNftProperties = (): NftStatus | undefined => {
-    switch (nft?.transactionalStatus.__typename) {
-      case 'TransactionalStatusAuction': {
-        const englishAuction =
-          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeEnglish' &&
-          nft.transactionalStatus.auction.auctionType
-        const openAuction =
-          nft.transactionalStatus.auction?.auctionType.__typename === 'AuctionTypeOpen' &&
-          nft.transactionalStatus.auction.auctionType
-        return {
-          ...commonProperties,
-          status: 'auction',
-          type: openAuction ? 'open' : 'english',
-          startingPrice: Number(nft.transactionalStatus.auction?.startingPrice) || 0,
-          buyNowPrice: Number(nft.transactionalStatus.auction?.buyNowPrice) || undefined,
-          topBid: nft.transactionalStatus.auction?.topBid || undefined,
-          topBidAmount: Number(nft.transactionalStatus.auction?.topBid?.amount) || undefined,
-          topBidder: nft.transactionalStatus.auction?.topBid?.bidder,
-          auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
-          bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
-          minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
-        }
+    if (!nft) return undefined
+
+    if (nft?.transactionalStatusAuction) {
+      const auction = nft.transactionalStatusAuction
+      const englishAuction = auction.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
+      const openAuction = auction.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
+      return {
+        ...commonProperties,
+        status: 'auction',
+        type: openAuction ? 'open' : 'english',
+        startingPrice: Number(auction.startingPrice) || 0,
+        buyNowPrice: Number(auction.buyNowPrice) || undefined,
+        topBid: auction.topBid || undefined,
+        topBidAmount: Number(auction.topBid?.amount) || undefined,
+        topBidder: auction.topBid?.bidder,
+        auctionPlannedEndBlock: englishAuction ? englishAuction.plannedEndAtBlock : undefined,
+        bidLockingTime: openAuction ? openAuction.bidLockDuration : undefined,
+        minimalBidStep: englishAuction ? englishAuction.minimalBidStep : undefined,
       }
+    }
+
+    if (!nft?.transactionalStatus) {
+      throw new Error('NFT missing transactional status')
+    }
+    switch (nft?.transactionalStatus.__typename) {
       case 'TransactionalStatusBuyNow':
         return {
           ...commonProperties,
