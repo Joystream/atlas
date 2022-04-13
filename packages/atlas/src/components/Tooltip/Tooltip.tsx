@@ -19,6 +19,7 @@ export type TooltipProps = {
   hideOnClick?: boolean | 'toggle'
   reference?: Element | React.RefObject<Element> | null | undefined
   footer?: React.ReactNode
+  showOnCreate?: boolean
   className?: string
 }
 
@@ -34,6 +35,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   offsetY = 8,
   delay,
   footer,
+  showOnCreate,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -49,6 +51,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       placement={placement}
       reference={reference}
       offset={[offsetX, offsetY]}
+      showOnCreate={showOnCreate}
       render={(attrs) => (
         <CSSTransition
           in={isVisible}

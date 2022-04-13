@@ -10,24 +10,40 @@ export default {
   title: 'other/Tooltip',
   component: Tooltip,
   argTypes: {
-    text: { defaultValue: 'Lorem ipsum dolor amet! Lorem ipsum dolor amet!' },
-    headerText: { defaultValue: 'Lorem ipsum' },
     placement: {
       control: { type: 'select', options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'] },
-      defaultValue: 'bottom-start',
     },
     icon: { defaultValue: false },
-    offsetX: { defaultValue: 0 },
-    offsetY: { defaultValue: 0 },
     className: { table: { disable: true } },
     reference: { table: { disable: true } },
-    arrowDisabled: { table: { disable: true } },
-    footer: { control: { type: 'boolean' } },
+    hideOnClick: { table: { disable: true } },
+    footer: { type: 'boolean' },
   },
   args: {
     footer: false,
+    offsetX: 0,
+    offsetY: 0,
+    placement: 'bottom-start',
+    text: 'Lorem ipsum dolor amet! Lorem ipsum dolor amet!',
+    headerText: 'Lorem ipsum',
   },
-} as Meta
+} as Meta<TooltipProps>
+
+const DefaultTooltip: Story<TooltipProps> = (args) => (
+  <Tooltip
+    {...args}
+    showOnCreate
+    footer={
+      args.footer && (
+        <div key={0} style={{ marginTop: '12px' }}>
+          Footer content
+        </div>
+      )
+    }
+  />
+)
+
+export const Default = DefaultTooltip.bind({})
 
 const TextTooltip: Story<TooltipProps> = (args) => (
   <Tooltip

@@ -14,7 +14,7 @@ export const IconWrapper = styled.div`
   align-items: center;
   width: ${sizes(5)};
   height: ${sizes(5)};
-  margin-right: ${sizes(1)};
+  margin-right: ${sizes(2)};
 `
 
 type TooltipTextProps = {
