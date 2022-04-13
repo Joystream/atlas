@@ -46,7 +46,7 @@ export type NftStatus = (
       auctionPlannedEndBlock: number | undefined
       bidLockingTime: number | undefined
       minimalBidStep: number | undefined
-      whitelistedMembers: BasicMembershipFieldsFragment[]
+      whitelistedMembers: BasicMembershipFieldsFragment[] | undefined
     }
   | {
       status: 'idle'

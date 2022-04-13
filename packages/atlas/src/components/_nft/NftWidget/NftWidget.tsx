@@ -59,7 +59,7 @@ export type Auction = {
   startsAtBlock: number | null | undefined
   auctionBeginsDifferenceDays: number
   auctionBeginsDifferenceSeconds: number
-  userIsNotWhitelisted: boolean | undefined
+  isUserWhitelisted: boolean | undefined
 }
 
 export type NftWidgetProps = {
@@ -558,12 +558,17 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     saleType,
     startsAtBlock,
     canChangeBid,
+    isUserWhitelisted,
+    auction,
+    plannedEndAtBlock,
   } = useNftState(nft)
 
   const owner = nft?.ownerMember
 
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
+
+  console.log({ isUserWhitelisted, nft, auction })
 
   switch (nftStatus?.status) {
     case 'auction': {
@@ -584,10 +589,12 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           isUserTopBidder,
           userBidUnlockDate,
           startsAtBlock,
+          plannedEndAtBlock,
           auctionBeginsDifferenceDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
           auctionBeginsDifferenceSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
           userBidAmount: Number(userBid?.amount) || undefined,
+          isUserWhitelisted,
         },
         saleType,
       }
