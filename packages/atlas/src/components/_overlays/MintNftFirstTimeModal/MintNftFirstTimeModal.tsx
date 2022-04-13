@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { SvgVideoTileIllustration } from '@/components/_illustrations'
+import { SvgOtherVideoTile } from '@/components/_illustrations'
 import { Dialog } from '@/components/_overlays/Dialog'
 
 import { IllustrationWrapper, StyledModal } from './MintNftFirstTimeModal.styles'
@@ -18,7 +18,7 @@ export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ sh
   return (
     <StyledModal show={show}>
       <IllustrationWrapper>
-        <SvgVideoTileIllustration />
+        <SvgOtherVideoTile />
       </IllustrationWrapper>
       <Dialog
         title="Put your NFT on sale"

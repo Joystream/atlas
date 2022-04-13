@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgSignUpDialogIllustration, SvgSignUpDialogPattern } from '@/components/_illustrations'
+import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/components/_illustrations'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { cVar, media, sizes } from '@/styles'
 
@@ -10,8 +10,8 @@ const SignInDialogcontent = () => {
   return (
     <>
       <IllustrationWrapper>
-        <StyledSvgSignUpDialogIllustration />
-        <StyledSvgSignUpDialogPattern />
+        <StyledSvgLargeWall />
+        <StyledSvgOtherSignInDialogPatterns />
       </IllustrationWrapper>
       <SignInDialogTextWrapper>
         <Text variant="h500">Sign in to continue</Text>
@@ -47,7 +47,7 @@ const SignInDialogTextWrapper = styled.div`
   grid-gap: ${sizes(2)};
 `
 
-const StyledSvgSignUpDialogIllustration = styled(SvgSignUpDialogIllustration)`
+const StyledSvgLargeWall = styled(SvgLargeWall)`
   max-width: 256px;
   max-height: 135px;
   display: block;
@@ -61,7 +61,7 @@ const StyledSvgSignUpDialogIllustration = styled(SvgSignUpDialogIllustration)`
   }
 `
 
-const StyledSvgSignUpDialogPattern = styled(SvgSignUpDialogPattern)`
+const StyledSvgOtherSignInDialogPatterns = styled(SvgOtherSignInDialogPatterns)`
   position: absolute;
   top: 0;
   left: 50%;
