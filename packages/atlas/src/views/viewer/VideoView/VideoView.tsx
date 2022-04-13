@@ -246,7 +246,7 @@ export const VideoView: React.FC = () => {
             </>
           )}
         </DescriptionContainer>
-        <LicenceCategoryWrapper detailsExpanded={detailsExpanded}>
+        <LicenceCategoryWrapper detailsExpanded={detailsExpanded || !video?.description}>
           <GridItem>
             {video ? (
               <>
@@ -280,16 +280,18 @@ export const VideoView: React.FC = () => {
             )}
           </CategoryWrapper>
         </LicenceCategoryWrapper>
-        <ExpandButton
-          onClick={toggleDetailsExpand}
-          iconPlacement="right"
-          size="medium"
-          variant="tertiary"
-          textOnly
-          icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
-        >
-          Show {!detailsExpanded ? 'more' : 'less'}
-        </ExpandButton>
+        {video?.description && (
+          <ExpandButton
+            onClick={toggleDetailsExpand}
+            iconPlacement="right"
+            size="medium"
+            variant="tertiary"
+            textOnly
+            icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
+          >
+            Show {!detailsExpanded ? 'more' : 'less'}
+          </ExpandButton>
+        )}
       </DetailsWrapper>
     </>
   )
