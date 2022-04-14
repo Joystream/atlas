@@ -101,7 +101,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     setValue,
     watch,
     reset,
-    formState: { errors, dirtyFields, isDirty, isValid },
+    formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
     mode: 'onChange',
@@ -136,20 +136,23 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
 
   // animate scroll to Mint an NFT switch and toggle it, if user selected it from video tile context menu
   useEffect(() => {
-    if (!mintNft || !mintNftFormFieldRef.current || !tabData || getValues('mintNft')) {
+    if (!mintNft || !mintNftFormFieldRef.current || !tabData || getValues('mintNft') || touchedFields.mintNft) {
       return
     }
     const scrollTimeout = setTimeout(
       () => mintNftFormFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       SCROLL_TIMEOUT
     )
-    const setMintNftTimeout = setTimeout(() => setValue('mintNft', tabData.mintNft || mintNft), MINT_NFT_TIMEOUT)
+    const setMintNftTimeout = setTimeout(
+      () => setValue('mintNft', tabData.mintNft || mintNft, { shouldTouch: true }),
+      MINT_NFT_TIMEOUT
+    )
 
     return () => {
       clearTimeout(scrollTimeout)
       clearTimeout(setMintNftTimeout)
     }
-  }, [mintNft, setValue, tabData, getValues])
+  }, [touchedFields, mintNft, setValue, tabData, getValues])
 
   const handleSubmit = useCallback(() => {
     flushDraftSave()
