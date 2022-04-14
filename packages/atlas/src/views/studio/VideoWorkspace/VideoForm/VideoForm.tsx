@@ -106,6 +106,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     getValues,
     setValue,
     watch,
+    trigger,
     reset,
     formState: { errors, dirtyFields, isDirty, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
@@ -436,9 +437,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   label="Toggle to mint an NFT for this video"
                   value={value}
                   onChange={(e) => {
-                    setValue('nftRoyaltiesPercent', undefined)
-                    setRoyaltiesFieldEnabled(false)
-                    onChange(e?.target.checked)
+                    if (!e?.currentTarget.checked) {
+                      trigger()
+                      setRoyaltiesFieldEnabled(false)
+                      setValue('nftRoyaltiesPercent', undefined)
+                    }
+                    onChange(e)
                   }}
                   disabled={videoFieldsLocked}
                 />
@@ -479,7 +483,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                     if (e?.currentTarget.checked) {
                       setValue('nftRoyaltiesPercent', 1)
                     } else {
-                      setValue('nftRoyaltiesPercent', undefined)
+                      setValue('nftRoyaltiesPercent', undefined, { shouldValidate: true })
+                      trigger()
                     }
                     setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
                   },
