@@ -371,7 +371,6 @@ export type GetVideoQuery = {
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
-      lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
       video: {
         __typename?: 'Video'
         id: string
@@ -884,7 +883,6 @@ export type GetVideosConnectionQuery = {
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
-          lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
           video: {
             __typename?: 'Video'
             id: string
@@ -1394,7 +1392,6 @@ export type GetVideosQuery = {
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
-      lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
       video: {
         __typename?: 'Video'
         id: string
@@ -2193,7 +2190,6 @@ export type GetMostViewedVideosConnectionQuery = {
             | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
             | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
             | null
-          lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
           video: {
             __typename?: 'Video'
             id: string
@@ -2700,7 +2696,6 @@ export type GetTop10VideosThisWeekQuery = {
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
-      lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
       video: {
         __typename?: 'Video'
         id: string
@@ -3204,7 +3199,6 @@ export type GetTop10VideosThisMonthQuery = {
         | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
         | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
         | null
-      lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
       video: {
         __typename?: 'Video'
         id: string

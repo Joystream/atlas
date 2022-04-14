@@ -259,7 +259,6 @@ export type GetNftQuery = {
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
-    lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
     video: {
       __typename?: 'Video'
       id: string
@@ -651,7 +650,6 @@ export type GetNftsQuery = {
       | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
       | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
       | null
-    lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
     video: {
       __typename?: 'Video'
       id: string
@@ -806,6 +804,8 @@ export type GetNftsConnectionQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
+        lastSalePrice?: string | null
+        lastSaleDate?: Date | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -1047,7 +1047,6 @@ export type GetNftsConnectionQuery = {
           | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
           | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
           | null
-        lastSale?: { __typename: 'LastSaleVariant'; price: number; date: Date } | null
         video: {
           __typename?: 'Video'
           id: string
