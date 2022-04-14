@@ -83,7 +83,7 @@ export const useVideoWorkspaceData = () => {
         : video?.publishedBeforeJoystream) ?? null,
     assets,
     mintNft: !!video?.nft,
-    nftRoyaltiesPercent: video?.nft?.creatorRoyalty || 0,
+    nftRoyaltiesPercent: video?.nft?.creatorRoyalty || undefined,
   }
 
   return {

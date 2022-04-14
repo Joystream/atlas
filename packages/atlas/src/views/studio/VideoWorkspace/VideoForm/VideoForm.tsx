@@ -79,6 +79,7 @@ type VideoFormProps = {
 export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFormStatus }) => {
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
+  const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
 
   const { editedVideoInfo } = useVideoWorkspace()
@@ -467,23 +468,32 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   )
                 }
               />
-              <FormField title="Set creator's royalties">
+              <FormField
+                switchProps={{
+                  value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
+                  onChange: (e) => {
+                    if (e?.currentTarget.checked) {
+                      setValue('nftRoyaltiesPercent', 1)
+                    } else {
+                      setValue('nftRoyaltiesPercent', undefined)
+                    }
+                    setRoyaltiesFieldEnabled(!!e?.currentTarget.checked)
+                  },
+                  disabled: videoFieldsLocked,
+                }}
+                title="Set creator's royalties"
+              >
                 <TextField
                   type="number"
                   {...register('nftRoyaltiesPercent', {
                     valueAsNumber: true,
-                    validate: (value) => {
-                      if (value && value < nftMinCreatorRoyaltyPercentage) {
-                        return `Creator royalties must be at least ${nftMinCreatorRoyaltyPercentage}%`
-                      }
-                    },
                     required: {
                       value: watch('mintNft'),
                       message: 'Creator royalties must be set',
                     },
                     min: {
-                      value: 0,
-                      message: 'Creator royalties cannot be lower than 0%',
+                      value: nftMinCreatorRoyaltyPercentage,
+                      message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
                     },
                     max: {
                       value: nftMaxCreatorRoyaltyPercentage,
@@ -491,13 +501,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                     },
                   })}
                   error={!!errors.nftRoyaltiesPercent}
+                  placeholder="—"
                   helperText={
                     errors.nftRoyaltiesPercent?.message
                       ? errors.nftRoyaltiesPercent?.message
-                      : `Suggested: 0%, 10%, 20%, 30%. Maximum is ${nftMaxCreatorRoyaltyPercentage}%`
+                      : `Min ${nftMinCreatorRoyaltyPercentage}% - Max ${nftMaxCreatorRoyaltyPercentage}% (Suggested: 10%, 20%, 30%) `
                   }
                   nodeEnd={<Pill variant="default" label="%" />}
-                  disabled={videoFieldsLocked}
+                  disabled={videoFieldsLocked || !royaltiesFieldEnabled}
                 />
               </FormField>
             </>
