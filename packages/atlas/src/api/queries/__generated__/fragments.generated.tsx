@@ -537,6 +537,8 @@ export type VideoFieldsFragment = {
     id: string
     createdAt: Date
     creatorRoyalty?: number | null
+    lastSalePrice?: string | null
+    lastSaleDate?: Date | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -961,6 +963,8 @@ export type AllNftFieldsFragment = {
   id: string
   createdAt: Date
   creatorRoyalty?: number | null
+  lastSalePrice?: string | null
+  lastSaleDate?: Date | null
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -1591,6 +1595,8 @@ export const AllNftFieldsFragmentDoc = gql`
         price
       }
     }
+    lastSalePrice
+    lastSaleDate
     video {
       ...BasicVideoFields
     }

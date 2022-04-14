@@ -219,13 +219,8 @@ fragment AllNftFields on OwnedNft {
       price
     }
   }
-  lastSale {
-    __typename
-    ... on LastSaleVariant {
-      price
-      date
-    }
-  }
+  lastSalePrice
+  lastSaleDate
   video {
     ...BasicVideoFields
   }
