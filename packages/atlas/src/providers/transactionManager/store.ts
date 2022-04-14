@@ -1,4 +1,4 @@
-import { ExtrinsicStatus, JoystreamFailedErrorCodeEnum } from '@/joystream-lib'
+import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
 import { createStore } from '@/store'
 
 type ProcessedBlockAction = {
@@ -12,7 +12,7 @@ type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
   dialogStep: TransactionDialogStep
   showFirstMintDialog: boolean
-  errorCode: JoystreamFailedErrorCodeEnum | null
+  errorCode: ErrorCode | null
 }
 
 type TransactionManagerStoreActions = {
@@ -20,7 +20,7 @@ type TransactionManagerStoreActions = {
   removeOldBlockActions: (currentBlock: number) => void
   setDialogStep: (step: TransactionDialogStep) => void
   setShowFistMintDialog: (show: boolean) => void
-  setErrorCode: (errorCode: JoystreamFailedErrorCodeEnum | null) => void
+  setErrorCode: (errorCode: ErrorCode | null) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({

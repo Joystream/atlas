@@ -66,17 +66,11 @@ export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventReco
   for (const event of systemEvents) {
     if (event.method === 'ExtrinsicFailed') {
       const errorMsg = extractExtrinsicErrorMsg(registry, event)
-      if (errorMsg.includes('VoucherSizeLimitExceeded')) {
-        throw new JoystreamLibError({
-          name: 'VoucherLimitError',
-          message: errorMsg,
-        })
-      } else {
-        throw new JoystreamLibError({
-          name: 'FailedError',
-          message: errorMsg,
-        })
-      }
+
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: errorMsg,
+      })
     } else if (event.method === 'ExtrinsicSuccess') {
       return events
     } else {

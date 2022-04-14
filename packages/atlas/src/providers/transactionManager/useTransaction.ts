@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { ExtrinsicResult, ExtrinsicStatus, JoystreamFailedErrorCodeEnum, JoystreamLibErrorType } from '@/joystream-lib'
+import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibErrorType } from '@/joystream-lib'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
@@ -101,23 +101,22 @@ export const useTransaction = (): HandleTransactionFn => {
         }
 
         if (errorName === 'FailedError') {
-          SentryLogger.error('Extrinsic failed', 'TransactionManager', error)
-          const errorCode = error.message.split(' ').shift()
-          const isFailedErrorCode = Object.keys(JoystreamFailedErrorCodeEnum).includes(errorCode)
-          if (isFailedErrorCode) {
+          // extract error code from error message
+          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key))
+
+          SentryLogger.message(
+            errorCode === ErrorCode.VoucherSizeLimitExceeded ? 'Voucher size limit exceeded' : 'Extrinsic failed',
+            'TransactionManager',
+            error
+          )
+          if (errorCode) {
             setDialogStep(ExtrinsicStatus.Error)
-            setErrorCode(errorCode)
-            return false
+            setErrorCode(errorCode as ErrorCode)
           }
         } else {
           SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
         }
-        if (errorName === 'VoucherLimitError') {
-          SentryLogger.message('Voucher size limit exceeded', 'TransactionManager', error)
-          setDialogStep(ExtrinsicStatus.VoucherSizeLimitExceeded)
-        } else {
-          setDialogStep(ExtrinsicStatus.Error)
-        }
+
         return false
       }
     },

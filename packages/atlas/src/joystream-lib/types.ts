@@ -34,7 +34,6 @@ export enum ExtrinsicStatus {
   Syncing,
   Completed,
   Error,
-  VoucherSizeLimitExceeded,
 }
 export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus.Unsigned | ExtrinsicStatus.Signed) => void
 export type ExtrinsicResult<T = undefined> = T extends undefined
