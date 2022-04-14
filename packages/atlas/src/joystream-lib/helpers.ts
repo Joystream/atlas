@@ -111,22 +111,36 @@ export const sendExtrinsicAndParseEvents = (
   tx: SubmittableExtrinsic<'promise'>,
   accountId: string,
   registry: Registry,
+  endpoint: string,
   cb?: ExtrinsicStatusCallbackFn
 ) =>
   new Promise<RawExtrinsicResult>((resolve, reject) => {
     let unsub: () => void
+    let transactionInfo: string
     tx.signAndSend(accountId, (result) => {
       const { status, isError, events: rawEvents } = result
 
       if (isError) {
         unsub()
 
+        SentryLogger.error(`Transaction error: ${transactionInfo}`, 'JoystreamJs', 'error')
         reject(new JoystreamLibError({ name: 'UnknownError', message: 'Unknown extrinsic error!' }))
         return
       }
 
+      if (status.isInBlock) {
+        const hash = status.asInBlock.toString()
+        transactionInfo = [
+          rawEvents.map((event) => event.event.method).join(', '),
+          `on network: ${endpoint}`,
+          `in block: ${hash}`,
+          `more details at: https://polkadot.js.org/apps/?rpc=${endpoint}#/explorer/query/${hash}`,
+        ].join('\n')
+      }
+
       if (status.isFinalized) {
         unsub()
+        SentryLogger.message(`Successful transaction: ${transactionInfo}`, 'JoystreamJs', 'info')
 
         try {
           const events = parseExtrinsicEvents(registry, rawEvents)

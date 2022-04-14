@@ -54,10 +54,12 @@ type AccountIdAccessor = () => AccountId | null
 export class JoystreamLibExtrinsics {
   readonly api: PolkadotApi
   readonly getAccount: AccountIdAccessor
+  readonly endpoint: string
 
-  constructor(api: PolkadotApi, getAccount: AccountIdAccessor) {
+  constructor(api: PolkadotApi, getAccount: AccountIdAccessor, endpoint: string) {
     this.api = api
     this.getAccount = getAccount
+    this.endpoint = endpoint
   }
 
   private async sendExtrinsic(
@@ -72,7 +74,7 @@ export class JoystreamLibExtrinsics {
     try {
       cb?.(ExtrinsicStatus.Unsigned)
 
-      const { events, blockHash } = await sendExtrinsicAndParseEvents(tx, account, this.api.registry, cb)
+      const { events, blockHash } = await sendExtrinsicAndParseEvents(tx, account, this.api.registry, this.endpoint, cb)
 
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
 

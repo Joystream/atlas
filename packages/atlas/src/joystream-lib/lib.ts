@@ -38,7 +38,7 @@ export class JoystreamLib {
     })
 
     this.api = new ApiPromise({ provider, types })
-    const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId)
+    const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId, endpoint)
     this.extrinsics = proxy(extrinsics)
   }
 
