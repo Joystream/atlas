@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -16,10 +16,29 @@ type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
 
 export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
-  const { notifications, markNotificationsAsRead } = useNotifications()
+  const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock } = useNotifications()
+  const firstNotification = notifications[0]
+
+  const [isOpen, setIsOpen] = useState(false)
+
+  // set last seen notification block to first notification to manage the badge for notification button
+  useEffect(() => {
+    if (!firstNotification || !isOpen) return
+    setLastSeenNotificationBlock(firstNotification.block)
+  }, [firstNotification, isOpen, setLastSeenNotificationBlock])
+
+  const handleShow = () => {
+    rest.onShow?.()
+    setIsOpen(true)
+  }
+
+  const handleHide = () => {
+    rest.onHide?.()
+    setIsOpen(false)
+  }
 
   return (
-    <Popover hideOnClick ref={popoverRef} {...rest}>
+    <Popover hideOnClick ref={popoverRef} {...rest} onShow={handleShow} onHide={handleHide}>
       <Wrapper>
         <Header>
           <Text variant="h400">Notifications</Text>

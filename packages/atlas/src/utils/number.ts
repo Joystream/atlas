@@ -24,6 +24,10 @@ export const formatNumberShort = (num: number): string => {
   return `${formattedValue}${suffix}`
 }
 
+export const formatTokens = (num: number): string => {
+  return `${formatNumberShort(num)} tJOY`
+}
+
 export const getRandomIntInclusive = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }

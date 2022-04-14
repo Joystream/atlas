@@ -9,7 +9,7 @@ import { StyledLink } from '@/components/_video/VideoTileDetails/VideoTileDetail
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { NotificationRecord } from '@/providers/notifications'
-import { formatNumberShort } from '@/utils/number'
+import { formatTokens } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
 import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrapper } from './NotificationTile.styles'
@@ -17,11 +17,13 @@ import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrappe
 const getNotificationText = (notification: NotificationRecord): string => {
   switch (notification.type) {
     case 'bid-made':
-      return `bid on NFT for ${formatNumberShort(notification.bidAmount)} tJOY`
+      return `bid on your NFT for ${formatTokens(notification.bidAmount)}`
+    case 'got-outbid':
+      return `outbid you for ${formatTokens(notification.bidAmount)}`
     case 'bought':
-      return 'purchased NFT'
+      return `purchased your NFT for ${formatTokens(notification.price)}`
     case 'open-auction-ended':
-      return 'finished NFT sale'
+      return `has accepted your bid of ${formatTokens(notification.bidAmount)}`
   }
 }
 
@@ -72,7 +74,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
             !loading ? (
               <>
                 <Text as="span" variant="t200-strong" secondary>
-                  {`${member.handle} `}
+                  {`${member?.handle} `}
                 </Text>
                 <Text as="span" variant="t200-strong">
                   {getNotificationText(notification)}
@@ -109,7 +111,7 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         <Content>
           <Title>
             <Text as="span" variant="h300" secondary>
-              {`${member.handle} `}
+              {`${member?.handle} `}
             </Text>
             <Text as="span" variant="h300">
               {getNotificationText(notification)}
