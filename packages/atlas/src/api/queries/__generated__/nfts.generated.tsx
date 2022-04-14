@@ -16,6 +16,8 @@ export type GetNftQuery = {
     id: string
     createdAt: Date
     creatorRoyalty?: number | null
+    lastSalePrice?: string | null
+    lastSaleDate?: Date | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -405,6 +407,8 @@ export type GetNftsQuery = {
     id: string
     createdAt: Date
     creatorRoyalty?: number | null
+    lastSalePrice?: string | null
+    lastSaleDate?: Date | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string

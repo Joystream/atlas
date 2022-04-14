@@ -128,6 +128,8 @@ export type GetVideoQuery = {
       id: string
       createdAt: Date
       creatorRoyalty?: number | null
+      lastSalePrice?: string | null
+      lastSaleDate?: Date | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -638,6 +640,8 @@ export type GetVideosConnectionQuery = {
           id: string
           createdAt: Date
           creatorRoyalty?: number | null
+          lastSalePrice?: string | null
+          lastSaleDate?: Date | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -1145,6 +1149,8 @@ export type GetVideosQuery = {
       id: string
       createdAt: Date
       creatorRoyalty?: number | null
+      lastSalePrice?: string | null
+      lastSaleDate?: Date | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -1941,6 +1947,8 @@ export type GetMostViewedVideosConnectionQuery = {
           id: string
           createdAt: Date
           creatorRoyalty?: number | null
+          lastSalePrice?: string | null
+          lastSaleDate?: Date | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -2445,6 +2453,8 @@ export type GetTop10VideosThisWeekQuery = {
       id: string
       createdAt: Date
       creatorRoyalty?: number | null
+      lastSalePrice?: string | null
+      lastSaleDate?: Date | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
@@ -2946,6 +2956,8 @@ export type GetTop10VideosThisMonthQuery = {
       id: string
       createdAt: Date
       creatorRoyalty?: number | null
+      lastSalePrice?: string | null
+      lastSaleDate?: Date | null
       ownerMember?: {
         __typename?: 'Membership'
         id: string
