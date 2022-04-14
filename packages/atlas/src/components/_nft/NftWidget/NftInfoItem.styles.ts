@@ -38,6 +38,14 @@ export const Label = styled(Text)`
 export const SecondaryTextWrapper = styled.div`
   margin-left: auto;
 
+  ${media.xs} {
+    margin-left: unset;
+  }
+
+  ${media.md} {
+    margin-left: auto;
+  }
+
   ${media.lg} {
     margin-left: unset;
   }
