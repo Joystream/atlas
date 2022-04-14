@@ -5,7 +5,7 @@ import propagatingChangesAnimation from '@/assets/animations/transaction/propaga
 import signatureAnimation from '@/assets/animations/transaction/signature.json'
 import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
 
-export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: ErrorCode) => {
+export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: ErrorCode | null) => {
   switch (status) {
     case ExtrinsicStatus.ProcessingAssets:
       return {

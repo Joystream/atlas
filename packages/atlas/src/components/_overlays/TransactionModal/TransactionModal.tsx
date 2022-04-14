@@ -37,7 +37,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
     status != null
-      ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status)
+      ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
       : null
   const { activeChannelId } = useUser()
 

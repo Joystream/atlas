@@ -104,19 +104,17 @@ export const useTransaction = (): HandleTransactionFn => {
           // extract error code from error message
           const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key))
 
-          SentryLogger.message(
+          SentryLogger.error(
             errorCode === ErrorCode.VoucherSizeLimitExceeded ? 'Voucher size limit exceeded' : 'Extrinsic failed',
             'TransactionManager',
             error
           )
-          if (errorCode) {
-            setDialogStep(ExtrinsicStatus.Error)
-            setErrorCode(errorCode as ErrorCode)
-          }
+          setDialogStep(ExtrinsicStatus.Error)
+          errorCode && setErrorCode(errorCode as ErrorCode)
         } else {
+          setDialogStep(ExtrinsicStatus.Error)
           SentryLogger.error('Unknown sendExtrinsic error', 'TransactionManager', error)
         }
-
         return false
       }
     },
