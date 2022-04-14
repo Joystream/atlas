@@ -2,14 +2,14 @@
 import * as React from 'react'
 import { SVGProps, memo } from 'react'
 
-const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
+const SvgOtherVideoTile = (props: SVGProps<SVGSVGElement>) => (
   <svg width={320} height={260} viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <g clipPath="url(#clip0_1109_20793)">
+    <g clipPath="url(#clip0_1038_9458)">
       <path fill="#C2E0FF" fillOpacity={0.2} d="M0-136h320V44.005H0z" />
-      <g clipPath="url(#clip1_1109_20793)">
+      <g clipPath="url(#clip1_1038_9458)">
         <path fill="#272D33" d="M0-136h320V44.005H0z" />
-        <g clipPath="url(#clip2_1109_20793)">
-          <g filter="url(#filter0_b_1109_20793)">
+        <g clipPath="url(#clip2_1038_9458)">
+          <g filter="url(#filter0_b_1038_9458)">
             <path
               d="M8 14a2 2 0 0 1 2-2h33a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V14Z"
               fill="#101214"
@@ -20,24 +20,24 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
               fill="#F4F6F8"
             />
           </g>
-          <g filter="url(#filter1_b_1109_20793)">
+          <g filter="url(#filter1_b_1038_9458)">
             <path
               d="M51 14a2 2 0 0 1 2-2h20a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H53a2 2 0 0 1-2-2V14Z"
               fill="#101214"
               fillOpacity={0.75}
             />
             <path
-              d="m56.315 24.762 1.599-1.599 5.923 5.923-1.599 1.599a1.077 1.077 0 0 1-1.522 0l-4.4-4.4a1.077 1.077 0 0 1 0-1.523Z"
+              d="m56.315 24.762 1.599-1.599 5.923 5.923-1.599 1.599a1.077 1.077 0 0 1-1.523 0l-4.4-4.4a1.077 1.077 0 0 1 0-1.523Z"
               fill="#F4F6F8"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="m65.251 27.672-5.923-5.923.003-.004-3.038-3.038 1.414-1.414 3.039 3.038L64.076 17H70v5.923l-3.331 3.331 3.038 3.039-1.414 1.414-3.038-3.038-.004.003Zm1.518-6.364a1.077 1.077 0 1 0 0-2.155 1.077 1.077 0 0 0 0 2.155Z"
+              d="m65.25 27.672-5.922-5.923.003-.004-3.038-3.038 1.414-1.414 3.038 3.038L64.077 17H70v5.923l-3.332 3.331 3.039 3.039-1.414 1.414-3.039-3.038-.003.003Zm1.519-6.364a1.077 1.077 0 1 0 0-2.155 1.077 1.077 0 0 0 0 2.155Z"
               fill="#F4F6F8"
             />
           </g>
-          <g filter="url(#filter2_b_1109_20793)">
+          <g filter="url(#filter2_b_1038_9458)">
             <rect x={275} y={12} width={37} height={24} rx={2} fill="#101214" fillOpacity={0.75} />
             <rect x={281} y={19} width={25} height={10} rx={5} fill="#C2E0FF" fillOpacity={0.2} />
           </g>
@@ -47,12 +47,12 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
       <rect y={90.005} width={129} height={10} rx={5} fill="#C2E0FF" fillOpacity={0.2} />
       <rect y={122.005} width={158} height={8} rx={4} fill="#C2E0FF" fillOpacity={0.2} />
       <path
-        d="M288 76.005c0-8.837 7.163-16 16-16s16 7.163 16 16c0 8.836-7.163 16-16 16s-16-7.164-16-16Z"
+        d="M288 76.005c0-8.836 7.163-16 16-16s16 7.164 16 16c0 8.837-7.163 16-16 16s-16-7.163-16-16Z"
         fill="#BBD9F6"
         fillOpacity={0.13}
       />
       <path d="M303 69.005h2v2h-2v-2ZM303 75.005h2v2h-2v-2ZM303 81.005h2v2h-2v-2Z" fill="#F4F6F8" />
-      <g filter="url(#filter3_dd_1109_20793)">
+      <g filter="url(#filter3_dd_1038_9458)">
         <rect x={128} y={92} width={192} height={168} rx={2} fill="#272D33" />
         <circle cx={152} cy={116} r={6} fill="#C2E0FF" fillOpacity={0.2} />
         <rect x={172} y={112} width={50} height={8} rx={4} fill="#C2E0FF" fillOpacity={0.2} />
@@ -79,7 +79,7 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
     </g>
     <defs>
       <filter
-        id="filter0_b_1109_20793"
+        id="filter0_b_1038_9458"
         x={-24}
         y={-20}
         width={101}
@@ -89,11 +89,11 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feGaussianBlur in="BackgroundImage" stdDeviation={16} />
-        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1109_20793" />
-        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1109_20793" result="shape" />
+        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1038_9458" />
+        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1038_9458" result="shape" />
       </filter>
       <filter
-        id="filter1_b_1109_20793"
+        id="filter1_b_1038_9458"
         x={19}
         y={-20}
         width={88}
@@ -103,11 +103,11 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feGaussianBlur in="BackgroundImage" stdDeviation={16} />
-        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1109_20793" />
-        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1109_20793" result="shape" />
+        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1038_9458" />
+        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1038_9458" result="shape" />
       </filter>
       <filter
-        id="filter2_b_1109_20793"
+        id="filter2_b_1038_9458"
         x={243}
         y={-20}
         width={101}
@@ -117,11 +117,11 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
       >
         <feFlood floodOpacity={0} result="BackgroundImageFix" />
         <feGaussianBlur in="BackgroundImage" stdDeviation={16} />
-        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1109_20793" />
-        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1109_20793" result="shape" />
+        <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1038_9458" />
+        <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_1038_9458" result="shape" />
       </filter>
       <filter
-        id="filter3_dd_1109_20793"
+        id="filter3_dd_1038_9458"
         x={96}
         y={76}
         width={256}
@@ -134,26 +134,26 @@ const SvgVideoTileIllustration = (props: SVGProps<SVGSVGElement>) => (
         <feOffset dy={16} />
         <feGaussianBlur stdDeviation={16} />
         <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0" />
-        <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_1109_20793" />
+        <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_1038_9458" />
         <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
         <feOffset dy={4} />
         <feGaussianBlur stdDeviation={4} />
         <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-        <feBlend in2="effect1_dropShadow_1109_20793" result="effect2_dropShadow_1109_20793" />
-        <feBlend in="SourceGraphic" in2="effect2_dropShadow_1109_20793" result="shape" />
+        <feBlend in2="effect1_dropShadow_1038_9458" result="effect2_dropShadow_1038_9458" />
+        <feBlend in="SourceGraphic" in2="effect2_dropShadow_1038_9458" result="shape" />
       </filter>
-      <clipPath id="clip0_1109_20793">
+      <clipPath id="clip0_1038_9458">
         <path fill="#fff" d="M0 0h320v260H0z" />
       </clipPath>
-      <clipPath id="clip1_1109_20793">
+      <clipPath id="clip1_1038_9458">
         <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
       </clipPath>
-      <clipPath id="clip2_1109_20793">
+      <clipPath id="clip2_1038_9458">
         <path fill="#fff" transform="translate(0 -136)" d="M0 0h320v180.005H0z" />
       </clipPath>
     </defs>
   </svg>
 )
 
-const Memo = memo(SvgVideoTileIllustration)
-export { Memo as SvgVideoTileIllustration }
+const Memo = memo(SvgOtherVideoTile)
+export { Memo as SvgOtherVideoTile }
