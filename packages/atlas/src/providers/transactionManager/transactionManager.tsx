@@ -13,7 +13,8 @@ export const TransactionManager: React.FC = () => {
     blockActions,
     dialogStep,
     showFirstMintDialog,
-    actions: { removeOldBlockActions, setDialogStep, setShowFistMintDialog },
+    errorCode,
+    actions: { removeOldBlockActions, setDialogStep, setShowFistMintDialog, setErrorCode },
   } = useTransactionManagerStore((state) => state)
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
@@ -58,7 +59,14 @@ export const TransactionManager: React.FC = () => {
   return (
     <>
       <MintNftFirstTimeModal show={showFirstMintDialog} onClose={handleFirstMintDialogClose} />
-      <TransactionModal status={dialogStep} onClose={() => setDialogStep(null)} />
+      <TransactionModal
+        status={dialogStep}
+        onClose={() => {
+          setErrorCode(null)
+          setDialogStep(null)
+        }}
+        errorCode={errorCode}
+      />
     </>
   )
 }

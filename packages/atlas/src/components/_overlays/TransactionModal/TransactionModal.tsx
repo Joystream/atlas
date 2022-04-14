@@ -5,11 +5,11 @@ import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { JOYSTREAM_STORAGE_DISCORD_URL } from '@/config/urls'
-import { ExtrinsicStatus } from '@/joystream-lib'
+import { ErrorCode, ExtrinsicStatus } from '@/joystream-lib'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
-import { TRANSACTION_STEPS_DETAILS } from './TransactionModal.constants'
+import { getExtrisincStatusDetails } from './TransactionModal.constants'
 import {
   PolkadotLogoWrapper,
   Step,
@@ -27,16 +27,17 @@ export type TransactionModalProps = {
   status: ExtrinsicStatus | null
   onClose: () => void
   className?: string
+  errorCode?: ErrorCode | null
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onClose, className }) => {
+export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned
   const error = status === ExtrinsicStatus.Error
   const stepDetails =
     status != null
-      ? TRANSACTION_STEPS_DETAILS[status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status]
+      ? getExtrisincStatusDetails(status === ExtrinsicStatus.Completed ? ExtrinsicStatus.Syncing : status, errorCode)
       : null
   const { activeChannelId } = useUser()
 
@@ -67,17 +68,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
       ExtrinsicStatus.Unsigned,
       ExtrinsicStatus.Completed,
       ExtrinsicStatus.Error,
-      ExtrinsicStatus.VoucherSizeLimitExceeded,
     ].includes(status)
 
-  const transactionSteps = Object.values(TRANSACTION_STEPS_DETAILS).slice(nonUploadTransaction ? 3 : 2)
+  const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
 
   return (
     <StyledModal show={!!stepDetails} {...className}>
       <StepsBar>
         {transactionSteps.map((_, idx) => (
           <Step
-            loop={stepDetails?.animation.loop}
+            loop={stepDetails?.animation?.loop}
             key={`transactionStep-${idx}`}
             past={
               status !== null &&
@@ -106,11 +106,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
         </CSSTransition>
         {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && (
           <StyledLottie
-            loop={stepDetails?.animation.loop}
-            animationData={stepDetails?.animation.data}
+            loop={stepDetails?.animation?.loop}
+            animationData={stepDetails?.animation?.data}
             play
             onComplete={() =>
-              !stepDetails?.animation.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
+              !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
             }
           />
         )}
@@ -132,7 +132,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
       <Dialog
         title={stepDetails?.title}
         primaryButton={
-          status === ExtrinsicStatus.VoucherSizeLimitExceeded
+          status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded
             ? {
                 text: 'Open Discord',
                 to: JOYSTREAM_STORAGE_DISCORD_URL,
@@ -140,18 +140,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ status, onCl
             : undefined
         }
         secondaryButton={{
-          text:
-            status &&
-            [ExtrinsicStatus.Error, ExtrinsicStatus.VoucherSizeLimitExceeded, ExtrinsicStatus.Completed].includes(
-              status
-            )
-              ? 'Close'
-              : 'Cancel',
+          text: status && [ExtrinsicStatus.Error, ExtrinsicStatus.Completed].includes(status) ? 'Close' : 'Cancel',
           onClick: onClose,
           disabled: !canCancel,
         }}
         description={
-          status === ExtrinsicStatus.VoucherSizeLimitExceeded && activeChannelId
+          status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && activeChannelId
             ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
             : stepDetails?.description
         }

@@ -144,6 +144,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const handleBuyNow = useCallback(async () => {
     if (!joystream || !currentNftId || !activeMemberId) return
     const completed = await handleTransaction({
+      onError: () => refetch(),
       txFactory: async (updateStatus) => {
         if (!isAuction) {
           return (await joystream.extrinsics).buyNftNow(
