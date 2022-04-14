@@ -90,7 +90,7 @@ export type NftWidgetProps = {
   onWithdrawBid?: () => void
 }
 
-const SMALL_VARIANT_MAXIMUM_SIZE = 340
+const SMALL_VARIANT_MAXIMUM_SIZE = 416
 
 export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerHandle,

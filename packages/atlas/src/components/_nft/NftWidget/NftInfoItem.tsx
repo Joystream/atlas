@@ -7,7 +7,14 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar, transitions } from '@/styles'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
-import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
+import {
+  InfoItemContainer,
+  InfoItemContent,
+  Label,
+  SecondaryText,
+  SecondaryTextWrapper,
+  TimerSecondaryText,
+} from './NftInfoItem.styles'
 import { Size } from './NftWidget'
 
 type NftInfoItemProps = {
@@ -39,11 +46,11 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
           timeout={parseInt(cVar('animationTransitionFast', true))}
           classNames={transitions.names.fade}
         >
-          <div>
+          <SecondaryTextWrapper>
             <SecondaryText as="div" variant="t100" secondary data-size={size}>
               {secondaryText ?? '‌'}
             </SecondaryText>
-          </div>
+          </SecondaryTextWrapper>
         </CSSTransition>
       </SwitchTransition>
     </InfoItemContainer>
