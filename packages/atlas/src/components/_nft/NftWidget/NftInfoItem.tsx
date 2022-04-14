@@ -7,14 +7,7 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar, transitions } from '@/styles'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
-import {
-  InfoItemContainer,
-  InfoItemContent,
-  Label,
-  SecondaryText,
-  SecondaryTextWrapper,
-  TimerSecondaryText,
-} from './NftInfoItem.styles'
+import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
 import { Size } from './NftWidget'
 
 type NftInfoItemProps = {
