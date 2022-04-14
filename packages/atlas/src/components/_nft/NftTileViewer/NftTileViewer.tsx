@@ -80,7 +80,9 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     <NftTile
       {...nftCommonProps}
       timerLoading={timerLoading}
-      buyNowPrice={nftStatus?.status === 'auction' ? nftStatus.buyNowPrice : undefined}
+      buyNowPrice={
+        nftStatus?.status === 'auction' || nftStatus?.status === 'buy-now' ? nftStatus.buyNowPrice : undefined
+      }
       topBidAmount={nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined}
       auctionPlannedEndDate={auctionPlannedEndDate}
       needsSettling={needsSettling}
