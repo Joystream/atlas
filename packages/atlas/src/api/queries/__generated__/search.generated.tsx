@@ -207,8 +207,8 @@ export type SearchQuery = {
             id: string
             createdAt: Date
             creatorRoyalty?: number | null
-            lastSalePrice?: string | null
             lastSaleDate?: Date | null
+            lastSalePrice?: string | null
             ownerMember?: {
               __typename?: 'Membership'
               id: string
@@ -294,6 +294,7 @@ export type SearchQuery = {
             }
             transactionalStatusAuction?: {
               __typename?: 'Auction'
+              id: string
               isCompleted: boolean
               buyNowPrice?: string | null
               startingPrice: string
@@ -375,6 +376,13 @@ export type SearchQuery = {
                       | null
                   }
                 }
+                auction: {
+                  __typename?: 'Auction'
+                  isCompleted: boolean
+                  winningMemberId?: string | null
+                  id: string
+                  auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+                }
               } | null
               bids: Array<{
                 __typename?: 'Bid'
@@ -412,6 +420,13 @@ export type SearchQuery = {
                       | { __typename?: 'AvatarUri'; avatarUri: string }
                       | null
                   }
+                }
+                auction: {
+                  __typename?: 'Auction'
+                  isCompleted: boolean
+                  winningMemberId?: string | null
+                  id: string
+                  auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
                 }
               }>
               whitelistedMembers: Array<{

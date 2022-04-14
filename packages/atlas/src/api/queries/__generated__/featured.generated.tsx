@@ -132,8 +132,8 @@ export type GetVideoHeroQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
-        lastSalePrice?: string | null
         lastSaleDate?: Date | null
+        lastSalePrice?: string | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -219,6 +219,7 @@ export type GetVideoHeroQuery = {
         }
         transactionalStatusAuction?: {
           __typename?: 'Auction'
+          id: string
           isCompleted: boolean
           buyNowPrice?: string | null
           startingPrice: string
@@ -300,6 +301,13 @@ export type GetVideoHeroQuery = {
                   | null
               }
             }
+            auction: {
+              __typename?: 'Auction'
+              isCompleted: boolean
+              winningMemberId?: string | null
+              id: string
+              auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+            }
           } | null
           bids: Array<{
             __typename?: 'Bid'
@@ -337,6 +345,13 @@ export type GetVideoHeroQuery = {
                   | { __typename?: 'AvatarUri'; avatarUri: string }
                   | null
               }
+            }
+            auction: {
+              __typename?: 'Auction'
+              isCompleted: boolean
+              winningMemberId?: string | null
+              id: string
+              auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
             }
           }>
           whitelistedMembers: Array<{
@@ -642,8 +657,8 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           id: string
           createdAt: Date
           creatorRoyalty?: number | null
-          lastSalePrice?: string | null
           lastSaleDate?: Date | null
+          lastSalePrice?: string | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -729,6 +744,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           }
           transactionalStatusAuction?: {
             __typename?: 'Auction'
+            id: string
             isCompleted: boolean
             buyNowPrice?: string | null
             startingPrice: string
@@ -810,6 +826,13 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                     | null
                 }
               }
+              auction: {
+                __typename?: 'Auction'
+                isCompleted: boolean
+                winningMemberId?: string | null
+                id: string
+                auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+              }
             } | null
             bids: Array<{
               __typename?: 'Bid'
@@ -847,6 +870,13 @@ export type GetAllCategoriesFeaturedVideosQuery = {
                     | { __typename?: 'AvatarUri'; avatarUri: string }
                     | null
                 }
+              }
+              auction: {
+                __typename?: 'Auction'
+                isCompleted: boolean
+                winningMemberId?: string | null
+                id: string
+                auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
               }
             }>
             whitelistedMembers: Array<{
@@ -1151,8 +1181,8 @@ export type GetCategoriesFeaturedVideosQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
-        lastSalePrice?: string | null
         lastSaleDate?: Date | null
+        lastSalePrice?: string | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -1238,6 +1268,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         }
         transactionalStatusAuction?: {
           __typename?: 'Auction'
+          id: string
           isCompleted: boolean
           buyNowPrice?: string | null
           startingPrice: string
@@ -1319,6 +1350,13 @@ export type GetCategoriesFeaturedVideosQuery = {
                   | null
               }
             }
+            auction: {
+              __typename?: 'Auction'
+              isCompleted: boolean
+              winningMemberId?: string | null
+              id: string
+              auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+            }
           } | null
           bids: Array<{
             __typename?: 'Bid'
@@ -1356,6 +1394,13 @@ export type GetCategoriesFeaturedVideosQuery = {
                   | { __typename?: 'AvatarUri'; avatarUri: string }
                   | null
               }
+            }
+            auction: {
+              __typename?: 'Auction'
+              isCompleted: boolean
+              winningMemberId?: string | null
+              id: string
+              auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
             }
           }>
           whitelistedMembers: Array<{

@@ -73,8 +73,8 @@ export type NftWidgetProps = {
   nftStatus?:
     | {
         status: 'idle'
-        lastPrice?: number
-        lastTransactionDate?: Date
+        lastSalePrice: number | undefined
+        lastSaleDate: Date | undefined
       }
     | {
         status: 'buy-now'
@@ -154,7 +154,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
               You bid {formatNumberShort(Number(bidFromPreviousAuction?.amount))} tJOY on{' '}
-              {formatDateTime(bidFromPreviousAuction.createdAt)}
+              {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
             </Text>
           </GridItem>
         </>
@@ -170,7 +170,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       case 'idle':
         return (
           <>
-            {nftStatus.lastPrice ? (
+            {nftStatus.lastSalePrice ? (
               <NftInfoItem
                 size={size}
                 label="Last price"
@@ -178,11 +178,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant} secondary>
-                      {formatNumberShort(nftStatus.lastPrice)}
+                      {formatNumberShort(nftStatus.lastSalePrice)}
                     </Text>
                   </>
                 }
-                secondaryText={nftStatus.lastTransactionDate && formatDateTime(nftStatus.lastTransactionDate)}
+                secondaryText={nftStatus.lastSaleDate && formatDateTime(nftStatus.lastSaleDate)}
               />
             ) : (
               <NftInfoItem

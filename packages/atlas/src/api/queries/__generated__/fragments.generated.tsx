@@ -543,8 +543,8 @@ export type VideoFieldsFragment = {
     id: string
     createdAt: Date
     creatorRoyalty?: number | null
-    lastSalePrice?: string | null
     lastSaleDate?: Date | null
+    lastSalePrice?: string | null
     ownerMember?: {
       __typename?: 'Membership'
       id: string
@@ -630,6 +630,7 @@ export type VideoFieldsFragment = {
     }
     transactionalStatusAuction?: {
       __typename?: 'Auction'
+      id: string
       isCompleted: boolean
       buyNowPrice?: string | null
       startingPrice: string
@@ -711,6 +712,13 @@ export type VideoFieldsFragment = {
               | null
           }
         }
+        auction: {
+          __typename?: 'Auction'
+          isCompleted: boolean
+          winningMemberId?: string | null
+          id: string
+          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+        }
       } | null
       bids: Array<{
         __typename?: 'Bid'
@@ -748,6 +756,13 @@ export type VideoFieldsFragment = {
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
           }
+        }
+        auction: {
+          __typename?: 'Auction'
+          isCompleted: boolean
+          winningMemberId?: string | null
+          id: string
+          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
         }
       }>
       whitelistedMembers: Array<{
@@ -969,8 +984,8 @@ export type AllNftFieldsFragment = {
   id: string
   createdAt: Date
   creatorRoyalty?: number | null
-  lastSalePrice?: string | null
   lastSaleDate?: Date | null
+  lastSalePrice?: string | null
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -1056,6 +1071,7 @@ export type AllNftFieldsFragment = {
   }
   transactionalStatusAuction?: {
     __typename?: 'Auction'
+    id: string
     isCompleted: boolean
     buyNowPrice?: string | null
     startingPrice: string
@@ -1137,6 +1153,13 @@ export type AllNftFieldsFragment = {
             | null
         }
       }
+      auction: {
+        __typename?: 'Auction'
+        isCompleted: boolean
+        winningMemberId?: string | null
+        id: string
+        auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+      }
     } | null
     bids: Array<{
       __typename?: 'Bid'
@@ -1174,6 +1197,13 @@ export type AllNftFieldsFragment = {
             | { __typename?: 'AvatarUri'; avatarUri: string }
             | null
         }
+      }
+      auction: {
+        __typename?: 'Auction'
+        isCompleted: boolean
+        winningMemberId?: string | null
+        id: string
+        auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
       }
     }>
     whitelistedMembers: Array<{
@@ -1384,6 +1414,13 @@ export type AllBidFieldsFragment = {
         | null
     }
   }
+  auction: {
+    __typename?: 'Auction'
+    isCompleted: boolean
+    winningMemberId?: string | null
+    id: string
+    auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+  }
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1508,6 +1545,14 @@ export const AllBidFieldsFragmentDoc = gql`
     bidder {
       ...BasicMembershipFields
     }
+    auction {
+      auctionType {
+        __typename
+      }
+      isCompleted
+      winningMemberId
+      id
+    }
     amount
     createdAt
     isCanceled
@@ -1561,6 +1606,8 @@ export const AllNftFieldsFragmentDoc = gql`
     id
     createdAt
     creatorRoyalty
+    lastSaleDate
+    lastSalePrice
     ownerMember {
       ...BasicMembershipFields
     }
@@ -1568,6 +1615,7 @@ export const AllNftFieldsFragmentDoc = gql`
       ...BasicChannelFields
     }
     transactionalStatusAuction {
+      id
       auctionType {
         __typename
         ... on AuctionTypeEnglish {

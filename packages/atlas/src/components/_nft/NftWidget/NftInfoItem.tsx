@@ -46,11 +46,11 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
           timeout={parseInt(cVar('animationTransitionFast', true))}
           classNames={transitions.names.fade}
         >
-          <SecondaryTextWrapper>
-            <SecondaryText as="div" variant="t100" secondary data-size={size}>
+          <SecondaryText data-size={size}>
+            <Text as="div" variant="t100" secondary>
               {secondaryText ?? '‌'}
-            </SecondaryText>
-          </SecondaryTextWrapper>
+            </Text>
+          </SecondaryText>
         </CSSTransition>
       </SwitchTransition>
     </InfoItemContainer>

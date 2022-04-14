@@ -49,8 +49,8 @@ export type NftStatus = (
     }
   | {
       status: 'idle'
-      lastPrice: number | undefined
-      lastTransactionDate: Date | undefined
+      lastSalePrice: number | undefined
+      lastSaleDate: Date | undefined
     }
   | {
       status: 'buy-now'
@@ -103,9 +103,8 @@ export const getNftStatus = (nft?: AllNftFieldsFragment | null): NftStatus | und
       return {
         ...commonProperties,
         status: 'idle',
-        // TODO: last transaction on iddle
-        lastPrice: undefined,
-        lastTransactionDate: undefined,
+        lastSalePrice: Number(nft.lastSalePrice) || undefined,
+        lastSaleDate: nft.lastSaleDate ? new Date(nft.lastSaleDate) : undefined,
       }
     default:
       return undefined
