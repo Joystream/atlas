@@ -2,7 +2,11 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { AllChannelFieldsFragmentDoc, BasicChannelFieldsFragmentDoc } from './fragments.generated'
+import {
+  AllChannelFieldsFragmentDoc,
+  BasicChannelFieldsFragmentDoc,
+  BasicMembershipFieldsFragmentDoc,
+} from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetBasicChannelQueryVariables = Types.Exact<{
@@ -782,6 +786,50 @@ export type GetPopularChannelsQuery = {
   }>
 }
 
+export type GetChannelNftCollectorsQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.ChannelNftCollectorsWhereInput>
+  orderBy?: Types.InputMaybe<Array<Types.ChannelNftCollectorsOrderByInput> | Types.ChannelNftCollectorsOrderByInput>
+}>
+
+export type GetChannelNftCollectorsQuery = {
+  __typename?: 'Query'
+  channelNftCollectors: Array<{
+    __typename?: 'ChannelNftCollectors'
+    id: string
+    amount: number
+    member?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
+  }>
+}
+
 export const GetBasicChannelDocument = gql`
   query GetBasicChannel($where: ChannelWhereUniqueInput!) {
     channelByUniqueInput(where: $where) {
@@ -1434,4 +1482,61 @@ export type GetPopularChannelsLazyQueryHookResult = ReturnType<typeof useGetPopu
 export type GetPopularChannelsQueryResult = Apollo.QueryResult<
   GetPopularChannelsQuery,
   GetPopularChannelsQueryVariables
+>
+export const GetChannelNftCollectorsDocument = gql`
+  query GetChannelNftCollectors(
+    $where: ChannelNftCollectorsWhereInput
+    $orderBy: [ChannelNftCollectorsOrderByInput!] = [lastIncreaseAt_ASC]
+  ) {
+    channelNftCollectors(where: $where, orderBy: $orderBy) {
+      id
+      member {
+        ...BasicMembershipFields
+      }
+      amount
+    }
+  }
+  ${BasicMembershipFieldsFragmentDoc}
+`
+
+/**
+ * __useGetChannelNftCollectorsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelNftCollectorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelNftCollectorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelNftCollectorsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetChannelNftCollectorsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>(
+    GetChannelNftCollectorsDocument,
+    options
+  )
+}
+export function useGetChannelNftCollectorsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>(
+    GetChannelNftCollectorsDocument,
+    options
+  )
+}
+export type GetChannelNftCollectorsQueryHookResult = ReturnType<typeof useGetChannelNftCollectorsQuery>
+export type GetChannelNftCollectorsLazyQueryHookResult = ReturnType<typeof useGetChannelNftCollectorsLazyQuery>
+export type GetChannelNftCollectorsQueryResult = Apollo.QueryResult<
+  GetChannelNftCollectorsQuery,
+  GetChannelNftCollectorsQueryVariables
 >
