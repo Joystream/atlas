@@ -435,7 +435,11 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 <Switch
                   label="Toggle to mint an NFT for this video"
                   value={value}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    setValue('nftRoyaltiesPercent', undefined)
+                    setRoyaltiesFieldEnabled(false)
+                    onChange(e?.target.checked)
+                  }}
                   disabled={videoFieldsLocked}
                 />
               )}
@@ -487,10 +491,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   type="number"
                   {...register('nftRoyaltiesPercent', {
                     valueAsNumber: true,
-                    required: {
-                      value: watch('mintNft'),
-                      message: 'Creator royalties must be set',
-                    },
                     min: {
                       value: nftMinCreatorRoyaltyPercentage,
                       message: `Creator royalties cannot be lower than ${nftMinCreatorRoyaltyPercentage}%`,
