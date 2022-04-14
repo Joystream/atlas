@@ -43,8 +43,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
       bid.auction.winningMemberId !== activeMembership?.id
   )
 
-  console.log({ unwithdrawnUserBids, userBids })
-
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
