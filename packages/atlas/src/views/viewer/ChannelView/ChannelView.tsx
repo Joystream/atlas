@@ -168,7 +168,7 @@ export const ChannelView: React.FC = () => {
         return (
           <ChannelNfts
             tilesPerPage={tilesPerPage}
-            sortNftsBy={sortNftsBy}
+            orderBy={sortNftsBy}
             ownedNftWhereInput={ownedNftWhereInput}
             onResize={handleOnResizeGrid}
             channelId={id || ''}

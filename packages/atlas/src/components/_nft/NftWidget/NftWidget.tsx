@@ -2,8 +2,8 @@ import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
 import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { useNft } from '@/api/hooks'
-import { AllBidFieldsFragment } from '@/api/queries'
+import { getNftStatus } from '@/api/hooks'
+import { AllBidFieldsFragment, AllNftFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
@@ -551,9 +551,8 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 }
 
 type UseNftWidgetReturn = NftWidgetProps | null
-export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
-  // TODO remove fetch policy once QN bug with not fetching auctions in video query is resolved
-  const { nft, nftStatus } = useNft(videoId ?? '', { fetchPolicy: 'network-only' })
+export const useNftWidget = (nft?: AllNftFieldsFragment | null): UseNftWidgetReturn => {
+  const nftStatus = getNftStatus(nft)
   const {
     isOwner,
     englishTimerState,
