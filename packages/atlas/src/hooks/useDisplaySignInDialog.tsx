@@ -49,7 +49,7 @@ const SignInDialogTextWrapper = styled.div`
 
 const StyledSvgLargeWall = styled(SvgLargeWall)`
   max-width: 256px;
-  max-height: 135px;
+  max-height: 256px;
   display: block;
   margin: 0 auto;
   position: relative;
@@ -57,7 +57,7 @@ const StyledSvgLargeWall = styled(SvgLargeWall)`
 
   ${media.sm} {
     max-width: 320px;
-    max-height: 169px;
+    max-height: 320px;
   }
 `
 
