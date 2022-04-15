@@ -11,6 +11,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { currentBlock, currentBlockMsTimestamp } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
+  const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
@@ -96,5 +97,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     auction,
     startsAtDate,
     saleType,
+    hasTimersLoaded,
   }
 }

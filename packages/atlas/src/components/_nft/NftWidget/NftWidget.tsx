@@ -52,6 +52,7 @@ export type Auction = {
   userBidUnlockDate: Date | undefined
   canWithdrawBid: boolean | undefined
   canChangeBid: boolean | undefined
+  hasTimersLoaded: boolean | undefined
   englishTimerState: EnglishTimerState | undefined
   auctionPlannedEndDate: Date | undefined
   startsAtDate: Date | undefined
@@ -423,9 +424,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 />
               </GridItem>
             )}
-            {infoBannerProps && <InfoBanner {...infoBannerProps} />}
 
-            {needsSettling && (nftStatus.isUserTopBidder || isOwner) && (
+            {nftStatus.hasTimersLoaded && infoBannerProps && <InfoBanner {...infoBannerProps} />}
+
+            {nftStatus.hasTimersLoaded && needsSettling && (nftStatus.isUserTopBidder || isOwner) && (
               <GridItem colSpan={buttonColumnSpan}>
                 <Button fullWidth size={buttonSize} onClick={onNftSettlement}>
                   Settle auction
@@ -433,9 +435,10 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               </GridItem>
             )}
 
-            {bidFromPreviousAuction && <WithdrawBidFromPreviousAuction />}
+            {nftStatus.hasTimersLoaded && bidFromPreviousAuction && <WithdrawBidFromPreviousAuction />}
 
-            {!needsSettling &&
+            {nftStatus.hasTimersLoaded &&
+              !needsSettling &&
               !bidFromPreviousAuction &&
               (isOwner
                 ? (nftStatus.type === 'open' ||
@@ -570,6 +573,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     canChangeBid,
     isUserWhitelisted,
     plannedEndAtBlock,
+    hasTimersLoaded,
   } = useNftState(nft)
 
   const owner = nft?.ownerMember
@@ -597,6 +601,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
           userBidUnlockDate,
           startsAtBlock,
           plannedEndAtBlock,
+          hasTimersLoaded,
           auctionBeginsDifferenceDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
           auctionBeginsDifferenceSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
           topBidderHandle: nftStatus.topBidder?.handle,
