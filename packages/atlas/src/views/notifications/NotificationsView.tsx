@@ -1,5 +1,6 @@
 import React from 'react'
 
+// TODO: uncomment when we get useBottomNavStore provider
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'

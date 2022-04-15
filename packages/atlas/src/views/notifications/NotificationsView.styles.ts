@@ -64,7 +64,7 @@ export const NotificationEmptyRectangleWithText = styled.div`
   margin-bottom: ${sizes(2)};
 `
 
-export const FloatingActionBar = styled.div<{ 'data-bottomNavOpen': boolean }>`
+export const FloatingActionBar = styled.div<{ 'data-bottomNavOpen'?: boolean }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
