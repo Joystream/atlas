@@ -392,6 +392,40 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     </>
   )
 
+  const alwaysEditableFormFields = (
+    <ExtendedMarginFormField
+      title="Comments"
+      description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
+    >
+      <Controller
+        /* @ts-ignore TODO: this needs to be implemented on Query Node */
+        name="commentsEnabled"
+        control={control}
+        defaultValue="true"
+        rules={{
+          validate: (value) => value !== null,
+        }}
+        render={({ field: { value, onChange, ref } }) => (
+          <RadioButtonsContainer>
+            <RadioButton
+              ref={ref}
+              value="true"
+              label="Enable comments"
+              onChange={() => onChange(true)}
+              selectedValue={value?.toString()}
+            />
+            <RadioButton
+              value="false"
+              label="Disable comments"
+              onChange={() => onChange(false)}
+              selectedValue={value?.toString()}
+            />
+          </RadioButtonsContainer>
+        )}
+      />
+    </ExtendedMarginFormField>
+  )
+
   return (
     <FormWrapper as="form" onSubmit={handleSubmit}>
       <Controller
@@ -428,6 +462,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
           )}
         />
+        {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <SwitchFormField title="Mint an NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
@@ -588,7 +623,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               />
             </FormField>
           )}
-
+          {!videoFieldsLocked && alwaysEditableFormFields}
           <ExtendedMarginFormField
             title="Content rating"
             description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."
