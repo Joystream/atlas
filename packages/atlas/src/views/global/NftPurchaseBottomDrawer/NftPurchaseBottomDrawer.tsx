@@ -1,4 +1,4 @@
-import { formatDuration } from 'date-fns'
+import { differenceInSeconds, formatDuration } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -28,7 +28,7 @@ import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumberShort } from '@/utils/number'
-import { formatDurationShort } from '@/utils/time'
+import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
   ActionBarCell,
@@ -61,7 +61,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)
   const { currentAction, closeNftAction, currentNftId, isBuyNowClicked } = useNftActions()
   const { nft, nftStatus, loading, refetch } = useNft(currentNftId || '')
-  const { userBid, canChangeBid, userBidUnlockBlockTimestamp } = useNftState(nft)
+  const { userBid, canChangeBid, userBidUnlockDate } = useNftState(nft)
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: creatorAvatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: ownerMemberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
@@ -262,7 +262,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
 
   const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = useMemberAvatar(userBid?.bidder)
   const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = useMemberAvatar(topBidder)
-  const timeToUnlockSeconds = userBidUnlockBlockTimestamp ? (userBidUnlockBlockTimestamp - timestamp) / 1000 : undefined
+  const timeToUnlockSeconds = userBidUnlockDate ? differenceInSeconds(userBidUnlockDate, new Date()) : 0
   return (
     <BottomDrawer
       isOpen={isOpen}
@@ -405,17 +405,10 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     valueAsNumber: true,
                     validate: {
                       bidLocked: (value) => {
-                        if (
-                          isOpenAuction &&
-                          value < Number(userBid?.amount) &&
-                          timeToUnlockSeconds &&
-                          timeToUnlockSeconds > 0
-                        ) {
-                          return `Your bid is locked from placing a bid lower than your previous one. You can bid for a higher amount or try again in ${formatDurationShort(
-                            Number(timeToUnlockSeconds.toFixed()),
-                            false,
-                            true
-                          )}`
+                        if (isOpenAuction && value < Number(userBid?.amount) && timeToUnlockSeconds > 0) {
+                          return `Your bid is locked from placing a bid lower than your previous one. You can bid for a higher amount or try again at ${
+                            userBidUnlockDate && formatDateTime(userBidUnlockDate)
+                          }`
                         }
                         return true
                       },
