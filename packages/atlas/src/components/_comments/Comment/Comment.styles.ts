@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionTrash } from '@/components/_icons'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, square } from '@/styles'
 
 export const KebabMenuIconButton = styled(IconButton)<{ isActive: boolean }>`
   opacity: 0;
@@ -43,8 +43,8 @@ export const CommentHeader = styled.div`
 export const CommentHeaderDot = styled.div`
   background-color: ${cVar('colorBackgroundAlpha')};
   border-radius: 100%;
-  width: ${sizes(1)};
-  height: ${sizes(1)};
+
+  ${square(4)};
 `
 
 export const HighlightableText = styled(Text)`

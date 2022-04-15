@@ -29,6 +29,7 @@ export type CommentProps = {
   comment?: string
   loading?: boolean
   isEdited?: boolean
+  isAbleToEdit?: boolean
   type: 'default' | 'deleted' | 'options'
   onEditLabelClick?: () => void
   onEditClick?: () => void
@@ -47,6 +48,7 @@ export const Comment: React.FC<CommentProps> = ({
   memberUrl,
   memberAvatarUrl,
   isEdited,
+  isAbleToEdit,
   onEditLabelClick,
   onEditClick,
   onDeleteClick,
@@ -57,11 +59,15 @@ export const Comment: React.FC<CommentProps> = ({
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
   const contexMenuItems = [
-    {
-      icon: <SvgActionEdit />,
-      onClick: onEditClick,
-      title: 'Edit',
-    },
+    ...(isAbleToEdit
+      ? [
+          {
+            icon: <SvgActionEdit />,
+            onClick: onEditClick,
+            title: 'Edit',
+          },
+        ]
+      : []),
     {
       icon: <SvgActionTrash />,
       onClick: onDeleteClick,

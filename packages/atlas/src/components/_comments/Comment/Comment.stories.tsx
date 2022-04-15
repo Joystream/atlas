@@ -25,6 +25,9 @@ export default {
   ],
   argTypes: {
     createdAt: { control: 'date' },
+    onDeleteClick: { table: { disable: true } },
+    onEditClick: { table: { disable: true } },
+    onEditLabelClick: { table: { disable: true } },
   },
 } as Meta<CommentProps>
 
