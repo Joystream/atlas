@@ -8,14 +8,15 @@ export const useNotifications = () => {
   const { notifications: rawNotifications, error, loading } = useRawNotifications()
   const {
     readNotificationsIdsMap,
-    actions: { markNotificationAsRead },
+    actions: { markNotificationsAsRead, markNotificationsAsUnread },
   } = useNotificationStore()
   const parsedNotifications = rawNotifications.map((n) => parseNotification(n))
   const notifications = parsedNotifications.filter((n): n is NotificationRecord => !!n)
   const notificationsWithReadState = notifications.map((n) => ({ ...n, read: !!readNotificationsIdsMap[n.id] }))
   return {
     notifications: notificationsWithReadState,
-    markNotificationAsRead,
+    markNotificationsAsRead,
+    markNotificationsAsUnread,
     error,
     loading,
   }

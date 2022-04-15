@@ -1,16 +1,26 @@
 import { useState } from 'react'
 
-export const useSelectedNotifications = () => {
-  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([])
+import { NotificationRecord } from '@/providers/notifications'
 
-  const setNotificationSelected = (id: string, selected: boolean) => {
+export const useSelectedNotifications = () => {
+  const [selectedNotifications, setSelectedNotifications] = useState<NotificationRecord[]>([])
+
+  const setNotificationSelected = (notification: NotificationRecord, selected: boolean) => {
     setSelectedNotifications((prevState) => {
       if (selected) {
-        return [...prevState, id]
+        return [...prevState, notification]
       }
-      return prevState.filter((notification) => notification !== id)
+      return prevState.filter((notif) => notification.id !== notif.id)
     })
   }
 
-  return { selectedNotifications, setNotificationSelected }
+  const selectAllNotifications = (allNotifications: NotificationRecord[]) => {
+    setSelectedNotifications(allNotifications)
+  }
+
+  const unselectAllNotifications = () => {
+    setSelectedNotifications([])
+  }
+
+  return { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications }
 }

@@ -28,7 +28,7 @@ const getNotificationText = (notification: NotificationRecord): string => {
 export type NotificationProps = {
   notification: NotificationRecord
   loading?: boolean
-  onCheckboxChange?: (selected: boolean) => void
+  onCheckboxChange?: (selected: boolean, e: React.ChangeEvent<HTMLInputElement>) => void
   onClick?: () => void
   selected?: boolean
   variant?: 'default' | 'compact'
