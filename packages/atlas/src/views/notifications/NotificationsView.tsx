@@ -5,6 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useBottomNavStore } from '@/providers/bottomNav'
 import { useNotifications } from '@/providers/notifications'
 import { formatNumberShort } from '@/utils/number'
 
@@ -24,14 +25,20 @@ export const NotificationsView = () => {
   const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
     useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
-
+  const open = useBottomNavStore((state) => state.open)
   const { notifications, markNotificationsAsRead, markNotificationsAsUnread } = useNotifications()
 
   const unreadNumber = notifications.filter((notification) => !notification.read).length
   const hasSelectedSomeUnreadNotifications = selectedNotifications.some((notification) => !notification.read)
 
   const closeButtonNode = (
-    <Button variant="tertiary" size="large" onClick={unselectAllNotifications} iconOnly icon={<SvgActionClose />} />
+    <Button
+      variant="tertiary"
+      size={smMatch ? 'large' : 'medium'}
+      onClick={unselectAllNotifications}
+      iconOnly
+      icon={<SvgActionClose />}
+    />
   )
 
   const markAllAsRead = () => markNotificationsAsRead(notifications)
@@ -76,7 +83,7 @@ export const NotificationsView = () => {
       </GridItem>
 
       {selectedNotifications.length > 0 && (
-        <FloatingActionBar>
+        <FloatingActionBar data-bottomNavOpen={open}>
           <Text variant="t300" secondary margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}>
             {formatNumberShort(selectedNotifications.length)} item(s) selected
           </Text>
