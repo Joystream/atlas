@@ -64,7 +64,7 @@ export const NotificationEmptyRectangleWithText = styled.div`
   margin-bottom: ${sizes(2)};
 `
 
-export const FloatingActionBar = styled.div<{ 'data-bottomNavOpen'?: boolean }>`
+export const FloatingActionBar = styled.div<{ 'data-bottom-nav-open'?: boolean }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -74,13 +74,13 @@ export const FloatingActionBar = styled.div<{ 'data-bottomNavOpen'?: boolean }>`
   padding: ${sizes(2)};
   width: 303px;
   position: fixed;
-  bottom: ${sizes(8)};
   top: calc(100vh - ${sizes(8)});
   left: 50%;
   transform: translate(-50%, -100%);
+  transition: all ${cVar('animationTransitionSlow')};
 
-  [data-bottomNavOpen='true'] {
-    bottom: ${sizes(24)};
+  &[data-bottom-nav-open='true'] {
+    top: calc(100vh - ${sizes(24)});
   }
 
   ${media.sm} {

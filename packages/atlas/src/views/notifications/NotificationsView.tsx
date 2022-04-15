@@ -84,7 +84,7 @@ export const NotificationsView = () => {
       </GridItem>
 
       {selectedNotifications.length > 0 && (
-        <FloatingActionBar data-bottomNavOpen={open}>
+        <FloatingActionBar data-bottom-nav-open={open}>
           <Text variant="t300" secondary margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}>
             {formatNumberShort(selectedNotifications.length)} item(s) selected
           </Text>
