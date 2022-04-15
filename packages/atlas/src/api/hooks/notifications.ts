@@ -1,14 +1,19 @@
+import { QueryHookOptions } from '@apollo/client'
 import { useMemo } from 'react'
 
-import { useGetNftNotificationsQuery } from '@/api/queries'
+import { GetNftNotificationsQuery, GetNftNotificationsQueryVariables, useGetNftNotificationsQuery } from '@/api/queries'
 
-export const useRawNotifications = (memberId: string | null) => {
+export const useRawNotifications = (
+  memberId: string | null,
+  opts?: QueryHookOptions<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>
+) => {
   const { data, ...rest } = useGetNftNotificationsQuery({
     variables: {
       limit: 1000,
       memberId: memberId || '',
     },
     skip: !memberId,
+    ...opts,
   })
 
   const sortedNotifications = useMemo(() => {
