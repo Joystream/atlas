@@ -12,7 +12,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
-  console.log({ currentBlock, currentBlockMsTimestamp, hasTimersLoaded })
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
