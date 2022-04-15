@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
@@ -8,21 +8,20 @@ import { EmptyFallback, EmptyFallbackProps } from './EmptyFallback'
 
 export default {
   title: 'other/EmptyFallback',
+  args: {
+    title: 'No draft here yet',
+    subtitle: 'Each unfinished project will be saved here as a draft. Start publishing to see something here.',
+    variant: 'large',
+  },
   argTypes: {
-    title: {
-      control: { type: 'text' },
-      defaultValue: 'No draft here yet',
-    },
-    subtitle: {
-      control: { type: 'text' },
-      defaultValue: 'Each unfinished project will be saved here as a draft. Start publishing to see something here.',
-    },
     variant: {
       control: { type: 'select', options: ['small', 'large'] },
-      defaultValue: 'large',
+    },
+    className: {
+      table: { disable: true },
     },
   },
-}
+} as Meta<EmptyFallbackProps>
 
 const Template: Story<EmptyFallbackProps> = (args) => (
   <EmptyFallback
