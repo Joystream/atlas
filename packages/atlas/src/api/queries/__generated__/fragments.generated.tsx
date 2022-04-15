@@ -2,7 +2,12 @@ import { gql } from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
 
-export type VideoCategoryFieldsFragment = { __typename?: 'VideoCategory'; id: string; name?: string | null }
+export type VideoCategoryFieldsFragment = {
+  __typename?: 'VideoCategory'
+  id: string
+  name?: string | null
+  activeVideosCounter: number
+}
 
 export type BasicChannelFieldsFragment = {
   __typename?: 'Channel'
@@ -60,6 +65,7 @@ export type BasicChannelFieldsFragment = {
 
 export type AllChannelFieldsFragment = {
   __typename?: 'Channel'
+  activeVideosCounter: number
   description?: string | null
   isPublic?: boolean | null
   isCensored: boolean
@@ -69,36 +75,6 @@ export type AllChannelFieldsFragment = {
   views: number
   follows: number
   language?: { __typename?: 'Language'; id: string; iso: string } | null
-  coverPhoto?: {
-    __typename?: 'StorageDataObject'
-    id: string
-    createdAt: Date
-    size: string
-    isAccepted: boolean
-    ipfsHash: string
-    storageBag: { __typename?: 'StorageBag'; id: string }
-    type:
-      | { __typename: 'DataObjectTypeChannelAvatar' }
-      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-      | { __typename: 'DataObjectTypeUnknown' }
-      | { __typename: 'DataObjectTypeVideoMedia' }
-      | { __typename: 'DataObjectTypeVideoThumbnail' }
-  } | null
-  avatarPhoto?: {
-    __typename?: 'StorageDataObject'
-    id: string
-    createdAt: Date
-    size: string
-    isAccepted: boolean
-    ipfsHash: string
-    storageBag: { __typename?: 'StorageBag'; id: string }
-    type:
-      | { __typename: 'DataObjectTypeChannelAvatar' }
-      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
-      | { __typename: 'DataObjectTypeUnknown' }
-      | { __typename: 'DataObjectTypeVideoMedia' }
-      | { __typename: 'DataObjectTypeVideoThumbnail' }
-  } | null
   ownerMember?: {
     __typename?: 'Membership'
     id: string
@@ -128,6 +104,36 @@ export type AllChannelFieldsFragment = {
         | { __typename?: 'AvatarUri'; avatarUri: string }
         | null
     }
+  } | null
+  coverPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
+  } | null
+  avatarPhoto?: {
+    __typename?: 'StorageDataObject'
+    id: string
+    createdAt: Date
+    size: string
+    isAccepted: boolean
+    ipfsHash: string
+    storageBag: { __typename?: 'StorageBag'; id: string }
+    type:
+      | { __typename: 'DataObjectTypeChannelAvatar' }
+      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+      | { __typename: 'DataObjectTypeUnknown' }
+      | { __typename: 'DataObjectTypeVideoMedia' }
+      | { __typename: 'DataObjectTypeVideoThumbnail' }
   } | null
 }
 
@@ -1384,6 +1390,7 @@ export const VideoCategoryFieldsFragmentDoc = gql`
   fragment VideoCategoryFields on VideoCategory {
     id
     name
+    activeVideosCounter
   }
 `
 export const StorageDataObjectFieldsFragmentDoc = gql`
@@ -1441,6 +1448,7 @@ export const BasicChannelFieldsFragmentDoc = gql`
 export const AllChannelFieldsFragmentDoc = gql`
   fragment AllChannelFields on Channel {
     ...BasicChannelFields
+    activeVideosCounter
     description
     isPublic
     isCensored
@@ -1448,11 +1456,15 @@ export const AllChannelFieldsFragmentDoc = gql`
       id
       iso
     }
+    ownerMember {
+      ...BasicMembershipFields
+    }
     coverPhoto {
       ...StorageDataObjectFields
     }
   }
   ${BasicChannelFieldsFragmentDoc}
+  ${BasicMembershipFieldsFragmentDoc}
   ${StorageDataObjectFieldsFragmentDoc}
 `
 export const AllMembershipFieldsFragmentDoc = gql`

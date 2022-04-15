@@ -27,8 +27,8 @@ type DialogButtonProps = {
 type DialogIconType = 'success' | 'warning' | 'error'
 
 export type DialogProps = {
-  title?: string
-  description?: string
+  title?: React.ReactNode
+  description?: React.ReactNode
   iconType?: DialogIconType
   headerIcon?: React.ReactNode
   dividers?: boolean
@@ -104,12 +104,12 @@ export const Dialog: React.FC<DialogProps> = ({
           {additionalActionsNode}
           <FooterButtonsContainer>
             {secondaryButton && (
-              <Button variant="secondary" {...buttonProps} {...secondaryButton}>
+              <Button variant={secondaryButton.variant || 'secondary'} {...buttonProps} {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
             {primaryButton && (
-              <StyledPrimaryButton variant="primary" {...buttonProps} {...primaryButton}>
+              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} {...buttonProps} {...primaryButton}>
                 {primaryButton.text}
               </StyledPrimaryButton>
             )}

@@ -78,6 +78,10 @@ export const EditMembershipView: React.FC = () => {
           proxyCallback(updateStatus)
         )
       },
+      snackbarSuccessMessage: {
+        title: 'Member successfully updated',
+        description: 'Lorem ipsum',
+      },
     })
     const { data } = await refetchActiveMembership()
     if (success) {

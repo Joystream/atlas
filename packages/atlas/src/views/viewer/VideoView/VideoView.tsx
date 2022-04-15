@@ -23,7 +23,7 @@ import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useRedirectMigratedGizaContent } from '@/hooks/useRedirectMigratedGizaContent'
+import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
@@ -60,7 +60,7 @@ import {
 
 export const VideoView: React.FC = () => {
   const [detailsExpanded, setDetailsExpanded] = useState(false)
-  useRedirectMigratedGizaContent({ type: 'video' })
+  useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()

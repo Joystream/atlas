@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { useChannelVideoCount } from '@/api/hooks'
 import { AllChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -26,7 +25,7 @@ type ChannelAboutProps = {
 }
 
 export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
-  const { videoCount } = useChannelVideoCount(channel?.id ?? '')
+  const videoCount = channel?.activeVideosCounter
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (
     <StyledLayoutGrid>

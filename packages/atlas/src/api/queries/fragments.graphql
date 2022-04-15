@@ -1,6 +1,7 @@
 fragment VideoCategoryFields on VideoCategory {
   id
   name
+  activeVideosCounter
 }
 fragment BasicChannelFields on Channel {
   id
@@ -20,12 +21,16 @@ fragment BasicChannelFields on Channel {
 
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
+  activeVideosCounter
   description
   isPublic
   isCensored
   language {
     id
     iso
+  }
+  ownerMember {
+    ...BasicMembershipFields
   }
   coverPhoto {
     ...StorageDataObjectFields

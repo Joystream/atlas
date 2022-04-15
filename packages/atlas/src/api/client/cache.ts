@@ -21,6 +21,7 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
+  const language = stringifyValue(args?.where?.language)
   const nft = stringifyValue(args?.where?.nft)
   const idEq = args?.where?.id_eq || ''
   const idIn = args?.where?.id_in || []
@@ -34,7 +35,7 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${nft}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}`
 }
 
 const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
