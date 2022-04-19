@@ -6,12 +6,11 @@ import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionPlus } from '@/components/_icons'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { absoluteRoutes } from '@/config/routes'
 import { cVar } from '@/styles'
 
 import { CollectorsBoxWrapper, PlusIconBackground, PlusIconWrapper, StyledLink } from './CollectorsBox.styles'
 
-export type Collector = AvatarGroupUrlAvatar & { nftsAmount?: number }
+export type Collector = AvatarGroupUrlAvatar & { nftsAmount?: number; memberUrl?: string }
 
 export type CollectorsBoxProps = {
   collectors: Collector[]
@@ -69,7 +68,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
       </CollectorsBoxWrapper>
       <DialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
         {sortedCollectors.map((collector, idx) => (
-          <StyledLink key={idx} to={absoluteRoutes.viewer.member(collector.handle)}>
+          <StyledLink key={idx} to={collector.memberUrl || ''}>
             <ListItem
               nodeStart={<Avatar size="small" assetUrl={collector.url} />}
               nodeEnd={

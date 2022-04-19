@@ -195,6 +195,7 @@ export const ChannelView: React.FC = () => {
       url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
       tooltipText: member?.handle,
       onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
+      memberUrl: absoluteRoutes.viewer.member(member?.handle),
     })) || []
 
   if (!loading && !channel) {
