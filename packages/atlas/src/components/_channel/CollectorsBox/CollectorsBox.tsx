@@ -21,18 +21,16 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
   const [open, setOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  const sortedCollectors = [...collectors]
-    .sort((a, b) => (b?.nftsAmount || 0) - (a?.nftsAmount || 0))
-    .map((collector) => ({
-      ...collector,
-      onClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        e.stopPropagation()
-        collector.onClick?.(e)
-      },
-    }))
+  const mappedCollectors = [...collectors].map((collector) => ({
+    ...collector,
+    onClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      e.stopPropagation()
+      collector.onClick?.(e)
+    },
+  }))
 
   const avatarsWhenTooManyCollectors: Collector[] = [
-    ...sortedCollectors.slice(0, maxShowedCollectors - 1),
+    ...mappedCollectors.slice(0, maxShowedCollectors - 1),
     {
       children: (
         <PlusIconBackground background={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}>
@@ -41,13 +39,13 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
           </PlusIconWrapper>
         </PlusIconBackground>
       ),
-      tooltipText: `${sortedCollectors.length} collectors`,
+      tooltipText: `${mappedCollectors.length} collectors`,
       withoutOutline: true,
     },
   ]
 
   const avatars: Collector[] =
-    sortedCollectors.length < maxShowedCollectors ? sortedCollectors : avatarsWhenTooManyCollectors
+    mappedCollectors.length < maxShowedCollectors ? mappedCollectors : avatarsWhenTooManyCollectors
   return (
     <>
       <CollectorsBoxWrapper
@@ -67,7 +65,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
         />
       </CollectorsBoxWrapper>
       <DialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
-        {sortedCollectors.map((collector, idx) => (
+        {mappedCollectors.map((collector, idx) => (
           <StyledLink key={idx} to={collector.memberUrl || ''}>
             <ListItem
               nodeStart={<Avatar size="small" assetUrl={collector.url} />}

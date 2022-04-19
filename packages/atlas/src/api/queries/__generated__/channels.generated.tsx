@@ -1486,7 +1486,7 @@ export type GetPopularChannelsQueryResult = Apollo.QueryResult<
 export const GetChannelNftCollectorsDocument = gql`
   query GetChannelNftCollectors(
     $where: ChannelNftCollectorsWhereInput
-    $orderBy: [ChannelNftCollectorsOrderByInput!] = [lastIncreaseAt_ASC]
+    $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]
   ) {
     channelNftCollectors(where: $where, orderBy: $orderBy) {
       id
