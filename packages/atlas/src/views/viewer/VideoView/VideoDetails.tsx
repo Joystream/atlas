@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
@@ -13,6 +13,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import {
   Category,
   CategoryWrapper,
+  DescriptionBody,
   DescriptionContainer,
   DescriptionCopy,
   DescriptionLink,
@@ -31,6 +32,7 @@ type VideoDetailsProps = {
 export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) => {
   const mdMatch = useMediaMatch('md')
   const [detailsExpanded, setDetailsExpanded] = useState(false)
+  const descriptionBodyRef = useRef<HTMLDivElement>(null)
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
 
@@ -45,11 +47,13 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
           video?.description && (
             <>
               <DescriptionTitle variant="h100">Description</DescriptionTitle>
-              {video.description?.split('\n').map((line, idx) => (
-                <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
-                  {replaceUrls(line)}
-                </DescriptionCopy>
-              ))}
+              <DescriptionBody ref={descriptionBodyRef} detailsExpanded={detailsExpanded}>
+                {video.description?.split('\n').map((line, idx) => (
+                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                    {replaceUrls(line)}
+                  </DescriptionCopy>
+                ))}
+              </DescriptionBody>
             </>
           )
         ) : (
@@ -60,20 +64,8 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
             <DescriptionSkeletonLoader width="30%" />
           </>
         )}
-        {!mdMatch && (
-          <ExpandButton
-            onClick={toggleDetailsExpand}
-            iconPlacement="right"
-            size="small"
-            variant="tertiary"
-            textOnly
-            icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
-          >
-            Show {!detailsExpanded ? 'more' : 'less'}
-          </ExpandButton>
-        )}
       </DescriptionContainer>
-      <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
+      <LicenceCategoryWrapper detailsExpanded={detailsExpanded || !video?.description}>
         <GridItem>
           {video ? (
             <>
@@ -107,6 +99,18 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
           )}
         </CategoryWrapper>
       </LicenceCategoryWrapper>
+      {video?.description && (
+        <ExpandButton
+          onClick={toggleDetailsExpand}
+          iconPlacement="right"
+          size="medium"
+          variant="tertiary"
+          textOnly
+          icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
+        >
+          Show {!detailsExpanded ? 'more' : 'less'}
+        </ExpandButton>
+      )}
     </DetailsWrapper>
   )
 }
