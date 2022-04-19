@@ -14,8 +14,7 @@ type NftTileViewerProps = {
 }
 
 export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
-  // TODO remove fetch policy once QN bug with not fetching auctions in video query is resolved
-  const { nftStatus, nft, loading } = useNft(nftId || '', { fetchPolicy: 'network-only' })
+  const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
   const { openNftPurchase, openNftChangePrice } = useNftActions()

@@ -786,6 +786,406 @@ export type GetNftsQuery = {
   }>
 }
 
+export type GetNftsConnectionQueryVariables = Types.Exact<{
+  where?: Types.InputMaybe<Types.OwnedNftWhereInput>
+  orderBy?: Types.OwnedNftOrderByInput
+}>
+
+export type GetNftsConnectionQuery = {
+  __typename?: 'Query'
+  ownedNftsConnection: {
+    __typename?: 'OwnedNftConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'OwnedNftEdge'
+      cursor: string
+      node: {
+        __typename?: 'OwnedNft'
+        id: string
+        createdAt: Date
+        creatorRoyalty?: number | null
+        lastSalePrice?: string | null
+        lastSaleDate?: Date | null
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        } | null
+        creatorChannel: {
+          __typename?: 'Channel'
+          id: string
+          title?: string | null
+          createdAt: Date
+          views: number
+          follows: number
+          avatarPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+          ownerMember?: {
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: string
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          } | null
+        }
+        transactionalStatusAuction?: {
+          __typename?: 'Auction'
+          isCompleted: boolean
+          buyNowPrice?: string | null
+          startingPrice: string
+          startsAtBlock: number
+          endedAtBlock?: number | null
+          auctionType:
+            | {
+                __typename: 'AuctionTypeEnglish'
+                duration: number
+                extensionPeriod: number
+                minimalBidStep: number
+                plannedEndAtBlock: number
+              }
+            | { __typename: 'AuctionTypeOpen'; bidLockDuration: number }
+          initialOwner?: {
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: string
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          } | null
+          topBid?: {
+            __typename?: 'Bid'
+            amount: string
+            createdAt: Date
+            isCanceled: boolean
+            createdInBlock: number
+            id: string
+            bidder: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+          } | null
+          bids: Array<{
+            __typename?: 'Bid'
+            amount: string
+            createdAt: Date
+            isCanceled: boolean
+            createdInBlock: number
+            id: string
+            bidder: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+          }>
+          whitelistedMembers: Array<{
+            __typename?: 'Membership'
+            id: string
+            handle: string
+            metadata: {
+              __typename?: 'MemberMetadata'
+              about?: string | null
+              avatar?:
+                | {
+                    __typename?: 'AvatarObject'
+                    avatarObject?: {
+                      __typename?: 'StorageDataObject'
+                      id: string
+                      createdAt: Date
+                      size: string
+                      isAccepted: boolean
+                      ipfsHash: string
+                      storageBag: { __typename?: 'StorageBag'; id: string }
+                      type:
+                        | { __typename: 'DataObjectTypeChannelAvatar' }
+                        | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypeUnknown' }
+                        | { __typename: 'DataObjectTypeVideoMedia' }
+                        | { __typename: 'DataObjectTypeVideoThumbnail' }
+                    } | null
+                  }
+                | { __typename?: 'AvatarUri'; avatarUri: string }
+                | null
+            }
+          }>
+        } | null
+        transactionalStatus?:
+          | { __typename: 'TransactionalStatusBuyNow'; price: number }
+          | { __typename: 'TransactionalStatusIdle'; dummy?: number | null }
+          | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+          | null
+        video: {
+          __typename?: 'Video'
+          id: string
+          title?: string | null
+          views: number
+          createdAt: Date
+          duration?: number | null
+          isPublic?: boolean | null
+          media?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+          channel: {
+            __typename?: 'Channel'
+            id: string
+            title?: string | null
+            createdAt: Date
+            views: number
+            follows: number
+            avatarPhoto?: {
+              __typename?: 'StorageDataObject'
+              id: string
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeUnknown' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+            } | null
+            ownerMember?: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            } | null
+          }
+          thumbnailPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+          nft?: {
+            __typename?: 'OwnedNft'
+            id: string
+            createdAt: Date
+            creatorRoyalty?: number | null
+            ownerMember?: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            } | null
+            transactionalStatus?:
+              | { __typename: 'TransactionalStatusBuyNow' }
+              | { __typename: 'TransactionalStatusIdle' }
+              | { __typename: 'TransactionalStatusInitiatedOfferToMember' }
+              | null
+          } | null
+        }
+      }
+    }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
+  }
+}
+
 export const GetNftDocument = gql`
   query GetNft($id: ID!) {
     ownedNftByUniqueInput(where: { id: $id }) {
@@ -859,3 +1259,57 @@ export function useGetNftsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetNftsQueryHookResult = ReturnType<typeof useGetNftsQuery>
 export type GetNftsLazyQueryHookResult = ReturnType<typeof useGetNftsLazyQuery>
 export type GetNftsQueryResult = Apollo.QueryResult<GetNftsQuery, GetNftsQueryVariables>
+export const GetNftsConnectionDocument = gql`
+  query GetNftsConnection($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
+    ownedNftsConnection(where: $where, orderBy: [$orderBy]) {
+      edges {
+        cursor
+        node {
+          ...AllNftFields
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      totalCount
+    }
+  }
+  ${AllNftFieldsFragmentDoc}
+`
+
+/**
+ * __useGetNftsConnectionQuery__
+ *
+ * To run a query within a React component, call `useGetNftsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNftsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNftsConnectionQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetNftsConnectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>(GetNftsConnectionDocument, options)
+}
+export function useGetNftsConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>(
+    GetNftsConnectionDocument,
+    options
+  )
+}
+export type GetNftsConnectionQueryHookResult = ReturnType<typeof useGetNftsConnectionQuery>
+export type GetNftsConnectionLazyQueryHookResult = ReturnType<typeof useGetNftsConnectionLazyQuery>
+export type GetNftsConnectionQueryResult = Apollo.QueryResult<GetNftsConnectionQuery, GetNftsConnectionQueryVariables>

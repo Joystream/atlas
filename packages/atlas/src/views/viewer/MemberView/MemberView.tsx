@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
-import { useMemberships, useNfts } from '@/api/hooks'
+import { useMemberships, useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -43,21 +43,22 @@ export const MemberView: React.FC = () => {
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
-    videoWhereInput: { category },
-    ownedNftWhereInput: { transactionalStatus_json },
+    ownedNftWhereInput: { transactionalStatus_json, transactionalStatusAuction },
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
-  const { nfts, loading } = useNfts(
+
+  const { nfts, loading } = useNftsConnection(
     {
       where: {
         ownerMember: { handle_eq: handle },
-        video: { category },
         transactionalStatus_json,
+        transactionalStatusAuction,
       },
       orderBy: sortNftsBy,
     },
     { skip: !handle }
   )
+
   const {
     memberships,
     error,
@@ -175,7 +176,7 @@ export const MemberView: React.FC = () => {
               </FilterButtonContainer>
             )}
           </TabsContainer>
-          <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus', 'categories']} />
+          <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus']} />
         </TabsWrapper>
         {tabContent}
       </LimitedWidthContainer>

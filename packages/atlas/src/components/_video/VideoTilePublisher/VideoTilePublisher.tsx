@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition } from 'react-transition-group'
 
-import { useNft, useVideo } from '@/api/hooks'
+import { getNftStatus, useVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
@@ -63,8 +63,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
 
-    // TODO: remove this and use video.nft instead once QN support fetching auctions field
-    const { nft, nftStatus } = useNft(id || '', { fetchPolicy: 'network-only', skip: !hasNft })
+    const nftStatus = getNftStatus(video?.nft)
 
     const {
       auctionPlannedEndDate,
@@ -75,7 +74,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       canCancelSale,
       canPutOnSale,
       saleType,
-    } = useNftState(nft)
+    } = useNftState(video?.nft)
     const nftTilePublisher = useGetNftSlot({
       auctionPlannedEndDate,
       status: nftStatus?.status,
@@ -239,7 +238,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
                 ? [
                     {
                       icon: <SvgActionTrash />,
-                      onClick: () => cancelNftSale(nft?.id || '', saleType),
+                      onClick: () => cancelNftSale(video.nft?.id || '', saleType),
                       title: 'Remove from sale',
                       destructive: true,
                     },
@@ -276,7 +275,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       openNftPutOnSale,
       id,
       cancelNftSale,
-      nft?.id,
+      video?.nft?.id,
     ])
 
     const getVideoSubtitle = useCallback(() => {

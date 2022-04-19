@@ -22,7 +22,8 @@ export const useFiltersBar = () => {
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
-  const canClearNftStatusFilter = !!ownedNftWhereInput?.transactionalStatus_json
+  const canClearNftStatusFilter =
+    !!ownedNftWhereInput?.transactionalStatus_json || !!ownedNftWhereInput.transactionalStatusAuction?.auctionType_json
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
     false
@@ -62,6 +63,7 @@ export const useFiltersBar = () => {
     setNftStatusFilter(undefined)
     setOwnedNftWhereInput((value) => {
       delete value.transactionalStatus_json
+      delete value.transactionalStatusAuction
       return value
     })
   }
