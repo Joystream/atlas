@@ -23,6 +23,7 @@ type SharedAvatarGroupAvatarProps = {
 export type AvatarGroupUrlAvatar = {
   __typename?: 'AvatarGroupUrlAvatar'
   url?: string | null
+  handle?: string
 } & SharedAvatarGroupAvatarProps
 
 type AvatarGroupMemberAvatar = BasicMembershipFieldsFragment & SharedAvatarGroupAvatarProps

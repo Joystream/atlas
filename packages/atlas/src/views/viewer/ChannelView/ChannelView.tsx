@@ -1,5 +1,6 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { useChannel, useChannelNftCollectors } from '@/api/hooks'
@@ -55,6 +56,7 @@ export const ChannelView: React.FC = () => {
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const videoRows = useVideoGridRows('main')
+  const navigate = useNavigate()
 
   const tilesPerPage = videoRows * tilesPerRow
 
@@ -188,13 +190,12 @@ export const ChannelView: React.FC = () => {
     }
   }, [clearAllFilters, currentTabName, setIsFiltersOpen])
   const mappedChannelNftCollectors =
-    channelNftCollectors && channelNftCollectors.length
-      ? channelNftCollectors?.map(({ amount, member }) => ({
-          nftsAmount: amount,
-          url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
-          tooltipText: member?.handle,
-        }))
-      : []
+    channelNftCollectors?.map(({ amount, member }) => ({
+      nftsAmount: amount,
+      url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      tooltipText: member?.handle,
+      onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
+    })) || []
 
   if (!loading && !channel) {
     return (
@@ -222,9 +223,7 @@ export const ChannelView: React.FC = () => {
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>
-            {mappedChannelNftCollectors && mappedChannelNftCollectors.length > 0 && (
-              <CollectorsBox collectors={mappedChannelNftCollectors} />
-            )}
+            {mappedChannelNftCollectors.length > 0 && <CollectorsBox collectors={mappedChannelNftCollectors} />}
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>

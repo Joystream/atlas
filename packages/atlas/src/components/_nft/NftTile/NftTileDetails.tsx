@@ -250,7 +250,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               loading: creator?.loading,
             },
             ...(owner
-              ? [{ url: owner?.assetUrl, tooltipText: owner?.name, onClick: owner?.onClick, loading: owner.loading }]
+              ? [
+                  {
+                    url: owner?.assetUrl,
+                    tooltipText: owner?.name,
+                    onClick: owner?.onClick,
+                    loading: owner.loading,
+                  },
+                ]
               : []),
           ]}
         />
