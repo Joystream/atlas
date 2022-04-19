@@ -34,3 +34,35 @@ export const useRawNotifications = (
     ...rest,
   }
 }
+
+export const useRawActivities = (memberId: string | null) => {
+  const { data, ...rest } = useGetNftActivitiesQuery({
+    variables: {
+      limit: 100,
+      memberId: memberId || '',
+    },
+  })
+  const sortedActivities = useMemo(() => {
+    const allNotifications = data
+      ? [
+          ...data.auctionBidMadeEvents,
+          ...data.auctionCanceledEvents,
+          ...data.bidMadeCompletingAuctionEvents,
+          ...data.buyNowCanceledEvents,
+          ...data.buyNowPriceUpdatedEvents,
+          ...data.englishAuctionStartedEvents,
+          ...data.nftBoughtEvents,
+          ...data.nftIssuedEvents,
+          ...data.openAuctionBidAcceptedEvents,
+          ...data.openAuctionStartedEvents,
+        ]
+      : []
+
+    return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
+  }, [data])
+
+  return {
+    activities: sortedActivities,
+    ...rest,
+  }
+}
