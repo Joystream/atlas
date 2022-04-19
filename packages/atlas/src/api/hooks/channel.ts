@@ -4,6 +4,8 @@ import {
   FollowChannelMutation,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
+  GetChannelNftCollectorsQuery,
+  GetChannelNftCollectorsQueryVariables,
   GetChannelQuery,
   GetChannelQueryVariables,
   GetChannelsQuery,
@@ -19,6 +21,7 @@ import {
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
+  useGetChannelNftCollectorsQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
   useGetDiscoverChannelsQuery,
@@ -208,6 +211,18 @@ export const usePopularChannels = (
   })
   return {
     channels: data?.popularChannels,
+    ...rest,
+  }
+}
+
+export const useChannelNftCollectors = (
+  variables?: GetChannelNftCollectorsQueryVariables,
+  opts?: QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
+) => {
+  const { data, ...rest } = useGetChannelNftCollectorsQuery({ ...opts, variables })
+
+  return {
+    channelNftCollectors: data?.channelNftCollectors,
     ...rest,
   }
 }

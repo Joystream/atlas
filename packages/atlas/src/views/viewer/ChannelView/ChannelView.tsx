@@ -1,8 +1,9 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { useChannel } from '@/api/hooks'
+import { useChannel, useChannelNftCollectors } from '@/api/hooks'
 import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -11,7 +12,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
+import { CollectorsBox } from '@/components/_channel/CollectorsBox'
 import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
@@ -55,6 +56,7 @@ export const ChannelView: React.FC = () => {
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const videoRows = useVideoGridRows('main')
+  const navigate = useNavigate()
 
   const tilesPerPage = videoRows * tilesPerRow
 
@@ -98,6 +100,7 @@ export const ChannelView: React.FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
+  const { channelNftCollectors } = useChannelNftCollectors({ where: { channel: { id_eq: id } } })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
   const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
@@ -186,9 +189,14 @@ export const ChannelView: React.FC = () => {
       clearAllFilters()
     }
   }, [clearAllFilters, currentTabName, setIsFiltersOpen])
-
-  // TODO: replace with real NFT collector data
-  const collectors: Collector[] = []
+  const mappedChannelNftCollectors =
+    channelNftCollectors?.map(({ amount, member }) => ({
+      nftsAmount: amount,
+      url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      tooltipText: member?.handle,
+      onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
+      memberUrl: absoluteRoutes.viewer.member(member?.handle),
+    })) || []
 
   if (!loading && !channel) {
     return (
@@ -216,7 +224,7 @@ export const ChannelView: React.FC = () => {
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>
-            {collectors.length > 0 && <CollectorsBox collectors={collectors} />}
+            {mappedChannelNftCollectors.length > 0 && <CollectorsBox collectors={mappedChannelNftCollectors} />}
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
@@ -236,8 +244,8 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TitleContainer>
-          {smMatch || collectors.length === 0 ? null : (
-            <CollectorsBox collectors={collectors} maxShowedCollectors={4} />
+          {smMatch || mappedChannelNftCollectors.length === 0 ? null : (
+            <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
           <StyledButtonContainer>
             <StyledButton
