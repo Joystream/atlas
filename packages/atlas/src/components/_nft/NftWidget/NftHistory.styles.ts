@@ -111,6 +111,7 @@ export const JoyPlusIcon = styled.div`
   align-items: center;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+  justify-content: end;
 `
 
 export const DollarValue = styled(Text)`

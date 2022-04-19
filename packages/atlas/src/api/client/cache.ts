@@ -159,12 +159,32 @@ const cache = new InMemoryCache({
     Channel: {
       fields: channelCacheFields,
     },
-    AuctionBidMadeEvent: {
+    OwnedNft: {
       fields: {
         createdAt: createDateHandler(),
       },
     },
-    NftBoughtEvent: {
+    NftIssuedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    OpenAuctionStartedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    EnglishAuctionStartedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    NftSellOrderMadeEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionBidMadeEvent: {
       fields: {
         createdAt: createDateHandler(),
       },
@@ -174,7 +194,37 @@ const cache = new InMemoryCache({
         createdAt: createDateHandler(),
       },
     },
+    NftBoughtEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    EnglishAuctionSettledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
     OpenAuctionBidAcceptedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionBidCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BuyNowCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BuyNowPriceUpdatedEvent: {
       fields: {
         createdAt: createDateHandler(),
       },

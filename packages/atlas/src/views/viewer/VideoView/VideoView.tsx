@@ -68,7 +68,7 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
-  const nftWidgetProps = useNftWidget(video?.nft)
+  const nftWidgetProps = useNftWidget(id)
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
