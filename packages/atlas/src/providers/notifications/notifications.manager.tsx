@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-import { useRawNotifications } from '@/api/hooks'
+import { useNotifications } from './notifications.hooks'
 
 export const NotificationsManager: React.FC = () => {
-  // trigger notifications fetch
-  useRawNotifications()
+  const { startPolling, stopPolling } = useNotifications()
+
+  useEffect(() => {
+    startPolling(10000)
+
+    return stopPolling
+  }, [startPolling, stopPolling])
+
   return null
 }

@@ -34,6 +34,7 @@ const Template: Story<any> = (args) => {
   const notification: NotificationRecord = {
     id: 'id',
     date: new Date(Date.now() - 10000000),
+    block: 10000,
     read: args.read,
     type: args.type,
     bidAmount: args.bidAmount,

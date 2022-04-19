@@ -17,7 +17,8 @@ export type PopoverProps = {
   offset?: [number, number]
   hideOnClick?: boolean
   className?: string
-  onHide?(): void
+  onHide?: () => void
+  onShow?: () => void
   children?: React.ReactNode
   disabled?: boolean
 }
@@ -36,6 +37,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
   {
     hideOnClick = true,
     onHide,
+    onShow,
     triggerTarget,
     triggerMode = 'click',
     placement = 'bottom-start',
@@ -67,7 +69,10 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
         tippyRef.current = instance
       }}
       onTrigger={onTrigger}
-      onShow={onTrigger}
+      onShow={(instance) => {
+        onTrigger(instance)
+        onShow?.()
+      }}
       onHide={(instance) => {
         const box = instance.popper?.firstElementChild
         requestAnimationFrame(() => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
@@ -22,11 +22,20 @@ import {
 } from './NotificationsView.styles'
 
 export const NotificationsView = () => {
-  const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
-    useSelectedNotifications()
   const smMatch = useMediaMatch('sm')
   const open = useBottomNavStore((state) => state.open)
-  const { notifications, markNotificationsAsRead, markNotificationsAsUnread } = useNotifications()
+
+  const { selectedNotifications, setNotificationSelected, selectAllNotifications, unselectAllNotifications } =
+    useSelectedNotifications()
+  const { notifications, markNotificationsAsRead, markNotificationsAsUnread, setLastSeenNotificationBlock } =
+    useNotifications()
+  const firstNotification = notifications[0]
+
+  // set last seen notification block to first notification to manage the badge for notification button
+  useEffect(() => {
+    if (!firstNotification) return
+    setLastSeenNotificationBlock(firstNotification.block)
+  }, [firstNotification, setLastSeenNotificationBlock])
 
   const unreadNumber = notifications.filter((notification) => !notification.read).length
   const hasSelectedSomeUnreadNotifications = selectedNotifications.some((notification) => !notification.read)

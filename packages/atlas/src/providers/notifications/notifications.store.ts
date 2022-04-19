@@ -1,8 +1,8 @@
 import { createStore } from '@/store'
 
 export type NotificationsStoreState = {
-  // block number at which all notifications were last marked as read
-  lastAllReadBlock: number
+  // block number of lastly seen (not read) notification
+  lastSeenNotificationBlock: number
 
   // list of notification IDs that were already read
   readNotificationsIdsMap: Record<string, boolean>
@@ -11,34 +11,46 @@ export type NotificationsStoreState = {
 export type NotificationsStoreActions = {
   markNotificationsAsRead: (ids: { id: string }[] | { id: string }, asRead?: boolean) => void
   markNotificationsAsUnread: (ids: { id: string }[] | { id: string }) => void
+
+  setLastSeenNotificationBlock: (block: number) => void
 }
 
 export const useNotificationStore = createStore<NotificationsStoreState, NotificationsStoreActions>(
   {
     state: {
-      lastAllReadBlock: 0,
+      lastSeenNotificationBlock: 0,
       readNotificationsIdsMap: {},
     },
-    actionsFactory: (set) => {
-      const markNotificationsAsRead: NotificationsStoreActions['markNotificationsAsRead'] = (ids, asRead = true) => {
+    actionsFactory: (set) => ({
+      markNotificationsAsRead: (ids) => {
         const _ids = Array.isArray(ids) ? ids : [ids]
 
         set((state) => {
           _ids.forEach(({ id }) => {
-            state.readNotificationsIdsMap[id] = asRead
+            state.readNotificationsIdsMap[id] = true
           })
         })
-      }
-      const markNotificationsAsUnread: NotificationsStoreActions['markNotificationsAsUnread'] = (ids) =>
-        markNotificationsAsRead(ids, false)
+      },
+      markNotificationsAsUnread: (ids) => {
+        const _ids = Array.isArray(ids) ? ids : [ids]
 
-      return { markNotificationsAsUnread, markNotificationsAsRead }
-    },
+        set((state) => {
+          _ids.forEach(({ id }) => {
+            state.readNotificationsIdsMap[id] = false
+          })
+        })
+      },
+      setLastSeenNotificationBlock: (block) => {
+        set((state) => {
+          state.lastSeenNotificationBlock = block
+        })
+      },
+    }),
   },
   {
     persist: {
       key: 'notifications',
-      whitelist: ['lastAllReadBlock', 'readNotificationsIdsMap'],
+      whitelist: ['lastSeenNotificationBlock', 'readNotificationsIdsMap'],
       version: 0,
       migrate: (state) => {
         return {

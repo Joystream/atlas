@@ -1,60 +1,77 @@
-query GetNftNotifications {
-  events(
+query GetNftNotifications($memberId: ID!, $limit: Int!) {
+  auctionBidMadeEvents(
+    limit: $limit
+    where: { OR: [{ ownerMember: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
     orderBy: [createdAt_DESC]
-    where: {
-      type_in: [AuctionBidMadeEvent, NftBoughtEvent, BidMadeCompletingAuctionEvent, OpenAuctionBidAcceptedEvent]
-    }
   ) {
+    id
+    createdAt
     inBlock
-    ... on AuctionBidMadeEvent {
+    video {
       id
-      createdAt
-      member {
-        ...BasicMembershipFields
-      }
-      video {
-        id
-        title
-      }
-      bidAmount
+      title
     }
-
-    ... on NftBoughtEvent {
-      id
-      createdAt
-      member {
-        ...BasicMembershipFields
-      }
-      video {
-        id
-        title
-      }
+    member {
+      ...BasicMembershipFields
     }
-
-    ... on BidMadeCompletingAuctionEvent {
-      id
-      createdAt
-      member {
-        ...BasicMembershipFields
-      }
-      video {
-        id
-        title
-      }
+    ownerMember {
+      ...BasicMembershipFields
     }
+    previousTopBidder {
+      ...BasicMembershipFields
+    }
+    bidAmount
+  }
 
-    ... on OpenAuctionBidAcceptedEvent {
+  nftBoughtEvents(where: { ownerMember: { id_eq: $memberId } }, limit: $limit, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    inBlock
+    member {
+      ...BasicMembershipFields
+    }
+    video {
       id
-      createdAt
-      video {
-        id
-        title
-        nft {
-          ownerMember {
-            ...BasicMembershipFields
-          }
-        }
-      }
+      title
+    }
+    price
+  }
+
+  bidMadeCompletingAuctionEvents(
+    where: { ownerMember: { id_eq: $memberId } }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    member {
+      ...BasicMembershipFields
+    }
+    video {
+      id
+      title
+    }
+    price
+  }
+
+  openAuctionBidAcceptedEvents(
+    where: { winningBidder: { id_eq: $memberId } }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    video {
+      id
+      title
+    }
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    winningBid {
+      amount
     }
   }
 }
