@@ -35,7 +35,7 @@ export const useRawNotifications = (
   }
 }
 
-export const useRawActivities = (memberId: string | null) => {
+export const useRawActivities = (memberId?: string) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
     variables: {
       limit: 100,
@@ -57,7 +57,6 @@ export const useRawActivities = (memberId: string | null) => {
           ...data.openAuctionStartedEvents,
         ]
       : []
-
     return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
   }, [data])
 
