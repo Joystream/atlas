@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { cVar, media, sizes } from '@/styles'
 
@@ -42,5 +43,18 @@ export const OverviewContainer = styled.div`
 
   ${media.sm} {
     grid-template-columns: 1fr;
+  }
+`
+
+export const PriceText = styled.span`
+  color: ${cVar('colorTextStrong')};
+`
+
+export const StyledLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+  transition: color ${cVar('animationTransitionFast')};
+  :hover {
+    color: ${cVar('colorTextPrimary')};
   }
 `

@@ -35,7 +35,6 @@ export type NotificationRecord = { read?: boolean } & (
 export type NftActivitiesRecord = {
   id: string
   date: Date
-  text: string
   block: number
   video: {
     id: string
@@ -45,45 +44,46 @@ export type NftActivitiesRecord = {
 }
 export type ActivitiesRecord =
   | ({
-      type: 'bid'
+      type: 'Bid'
       bidAmount: number
-      member: BasicMembershipFieldsFragment
+      from: BasicMembershipFieldsFragment
     } & NftActivitiesRecord)
   | ({
-      type: 'purchase'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Purchase'
+      from: BasicMembershipFieldsFragment | null
       price: number
-      ownerMember: BasicMembershipFieldsFragment | null
+      to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
-      type: 'withdrawal'
-      member: BasicMembershipFieldsFragment
+      type: 'Withdrawal'
+      from: BasicMembershipFieldsFragment
     } & NftActivitiesRecord)
   | ({
-      type: 'sale'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Sale'
+      from: BasicMembershipFieldsFragment | null
       price: number
-      ownerMember: BasicMembershipFieldsFragment | null
+      to: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
-      type: 'removal'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Removal'
+      from: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
-      type: 'transfer'
-      member: BasicMembershipFieldsFragment
+      type: 'Transfer'
+      from: BasicMembershipFieldsFragment
     } & NftActivitiesRecord)
   | ({
-      type: 'listing'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Listing'
+      typeName: 'EnglishAuctionStartedEvent' | 'OpenAuctionStartedEvent' | 'NftSellOrderMadeEvent'
+      from: BasicMembershipFieldsFragment | null
       price?: number
     } & NftActivitiesRecord)
   | ({
-      type: 'mint'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Mint'
+      from: BasicMembershipFieldsFragment | null
     } & NftActivitiesRecord)
   | ({
-      type: 'price-change'
-      member: BasicMembershipFieldsFragment | null
+      type: 'Price change'
+      from: BasicMembershipFieldsFragment | null
       price: number
     } & NftActivitiesRecord)

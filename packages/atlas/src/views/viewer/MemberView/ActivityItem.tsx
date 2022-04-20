@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { ActivitiesRecord } from '@/providers/notifications/notifications.types'
 import { imageUrlValidation } from '@/utils/asset'
-import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -21,12 +21,11 @@ import {
 } from './ActivityItem.styles'
 
 export type ActivityItemProps = {
+  type: ActivitiesRecord['type']
   date: Date
-  type: string
   title: string
-  description?: string
+  description?: React.ReactNode
   thumnailUri: string
-  joy?: number
   videoUrl?: string
 }
 export const ActivityItem: React.FC<ActivityItemProps> = ({
@@ -35,7 +34,6 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
   title,
   description,
   thumnailUri,
-  joy,
   videoUrl,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
@@ -77,7 +75,6 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
         ) : (
           <Text variant={lgMatch ? 't300' : 't200'} secondary>
             {description}
-            {joy ? <Text variant={lgMatch ? 't300' : 't200'}>ツ {formatNumberShort(joy)}</Text> : null}
           </Text>
         )}
       </TitleAndDescriptionContainer>

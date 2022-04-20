@@ -91,7 +91,7 @@ const parseActivities = (
   event: ReturnType<typeof useRawActivities>['activities'][0],
   memberId?: string
 ): ActivitiesRecord | null => {
-  const commonFields: Omit<NftActivitiesRecord, 'text'> = {
+  const commonFields: NftActivitiesRecord = {
     id: event.id,
     date: event.createdAt,
     block: event.inBlock,
@@ -105,30 +105,27 @@ const parseActivities = (
     case 'AuctionBidMadeEvent':
       return {
         ...commonFields,
-        text: `${event.member.handle} placed a bid for `,
-        type: 'bid',
+        type: 'Bid',
         bidAmount: Number(event.bidAmount),
-        member: event.member,
+        from: event.member,
       }
     case 'NftBoughtEvent':
     case 'BidMadeCompletingAuctionEvent':
       if (memberId === event.ownerMember?.id) {
         return {
           ...commonFields,
-          text: `${event.member.handle} sell for `,
-          type: 'sale',
+          type: 'Sale',
           price: Number(event.price),
-          member: event.member,
-          ownerMember: event.ownerMember || null,
+          from: event.ownerMember || null,
+          to: event.member,
         }
       } else {
         return {
           ...commonFields,
-          text: `${event.member.handle} purchased for `,
-          type: 'purchase',
+          type: 'Purchase',
           price: Number(event.price),
-          member: event.member,
-          ownerMember: event.ownerMember || null,
+          from: event.member,
+          to: event.ownerMember || null,
         }
       }
     case 'EnglishAuctionStartedEvent':
@@ -136,59 +133,53 @@ const parseActivities = (
     case 'NftSellOrderMadeEvent':
       return {
         ...commonFields,
-        type: 'listing',
-        text: `${event.ownerMember?.handle} listed NFT ${event.__typename === 'NftSellOrderMadeEvent' ? 'for ' : ''}`,
-        member: event.ownerMember || null,
+        type: 'Listing',
+        typeName: event.__typename,
+        from: event.ownerMember || null,
         price: event.__typename === 'NftSellOrderMadeEvent' ? Number(event.price) : undefined,
       }
     case 'AuctionCanceledEvent':
     case 'BuyNowCanceledEvent':
       return {
         ...commonFields,
-        text: `${event.ownerMember?.handle} removed NFT from sale`,
-        type: 'removal',
-        member: event.ownerMember || null,
+        type: 'Removal',
+        from: event.ownerMember || null,
       }
     case 'NftIssuedEvent':
       return {
         ...commonFields,
-        text: `${event.ownerMember?.handle} minted new NFT`,
-        type: 'mint',
-        member: event.ownerMember || null,
+        type: 'Mint',
+        from: event.ownerMember || null,
       }
     case 'AuctionBidCanceledEvent':
       return {
         ...commonFields,
-        type: 'withdrawal',
-        text: `${event.member.handle} withdrew a bid`,
-        member: event.member,
+        type: 'Withdrawal',
+        from: event.member,
       }
     case 'BuyNowPriceUpdatedEvent':
       return {
         ...commonFields,
-        text: `${event.ownerMember?.handle} changed price to `,
-        type: 'price-change',
-        member: event.ownerMember || null,
+        type: 'Price change',
+        from: event.ownerMember || null,
         price: Number(event.newPrice),
       }
     case 'OpenAuctionBidAcceptedEvent':
       if (memberId === event.ownerMember?.id) {
         return {
           ...commonFields,
-          text: `${event.ownerMember?.handle} sell for `,
-          type: 'sale',
+          type: 'Sale',
           price: Number(event.winningBid?.amount),
-          member: event.winningBid?.bidder || null,
-          ownerMember: event.ownerMember || null,
+          to: event.winningBid?.bidder || null,
+          from: event.ownerMember || null,
         }
       } else {
         return {
           ...commonFields,
-          text: `${event.winningBid?.bidder.handle} purchased for `,
-          type: 'purchase',
+          type: 'Purchase',
           price: Number(event.winningBid?.amount),
-          member: event.winningBid?.bidder || null,
-          ownerMember: event.ownerMember || null,
+          from: event.winningBid?.bidder || null,
+          to: event.ownerMember || null,
         }
       }
 

@@ -10,25 +10,63 @@ import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 import { useActivities } from '@/providers/notifications'
 import { ActivitiesRecord } from '@/providers/notifications/notifications.types'
+import { formatNumberShort } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
-import { GridRowWrapper, OverviewContainer, OverviewItem, OverviewTextContainer } from './MemberActivity.styles'
+import {
+  GridRowWrapper,
+  OverviewContainer,
+  OverviewItem,
+  OverviewTextContainer,
+  PriceText,
+  StyledLink,
+} from './MemberActivity.styles'
 
-const getAmount = (notification: ActivitiesRecord) => {
-  switch (notification.type) {
-    case 'bid':
-      return notification.bidAmount
-    case 'purchase':
-    case 'listing':
-    case 'price-change':
-    case 'sale':
-      return notification.price
+const getDescription = (activity: ActivitiesRecord) => {
+  switch (activity.type) {
+    case 'Bid':
+      return (
+        <>
+          {activity.from.handle} placed a bid for <PriceText>ツ {formatNumberShort(activity.bidAmount)} </PriceText>
+        </>
+      )
+    case 'Sale':
+      return (
+        <>
+          {activity.from?.handle} sold NFT to{' '}
+          <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)}>{activity.to?.handle}</StyledLink> NFT for{' '}
+          <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+        </>
+      )
+    case 'Purchase':
+      return (
+        <>
+          {activity.from?.handle} purchased NFT for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText> from{' '}
+          <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)}>{activity.to?.handle} </StyledLink>
+        </>
+      )
+    case 'Listing':
+      return (
+        <>
+          {activity.from?.handle} listed NFT{' '}
+          {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
+            <>
+              for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+            </>
+          )}
+        </>
+      )
+    case 'Removal':
+      return <>{activity.from?.handle} removed NFT from sale</>
+    case 'Mint':
+      return <>{activity.from?.handle} minted new NFT</>
+    case 'Withdrawal':
+      return <>{activity.from.handle} withdrew a bid</>
+    case 'Price change':
+      return <>{activity.from?.handle} changed price to </>
   }
 }
 
-//TODO: Fetch activity from member
-//TODO: infinite scrolling
-//TODO: Sorting activity by newest oldest
 type MemberActivityProps = {
   memberId?: string
 }
@@ -51,9 +89,8 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
                     type={activity.type}
                     videoUrl={absoluteRoutes.viewer.video(activity.video.id)}
                     title={activity.video.title}
-                    description={activity.text}
+                    description={getDescription(activity)}
                     thumbnailPhoto={activity.video.thumbnailPhoto}
-                    joy={getAmount(activity)}
                   />
                 </GridItem>
               ))}
