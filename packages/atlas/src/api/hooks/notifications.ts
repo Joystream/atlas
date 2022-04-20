@@ -45,18 +45,18 @@ export const useRawActivities = (memberId?: string) => {
   const sortedActivities = useMemo(() => {
     const allNotifications = data
       ? [
-          ...data.auctionBidMadeEvents,
-          ...data.auctionCanceledEvents,
-          ...data.bidMadeCompletingAuctionEvents,
-          ...data.buyNowCanceledEvents,
-          ...data.buyNowPriceUpdatedEvents,
-          ...data.englishAuctionStartedEvents,
-          ...data.nftBoughtEvents,
-          ...data.nftIssuedEvents,
-          ...data.openAuctionBidAcceptedEvents,
-          ...data.openAuctionStartedEvents,
-          ...data.nftSellOrderMadeEvents,
-          ...data.auctionBidCanceledEvents,
+          ...data.auctionBidMadeEventsConnection.edges.map((e) => e.node),
+          ...data.purchaseNftBoughtEventsConnection.edges.map((e) => e.node),
+          ...data.purchaseBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
+          ...data.purchaseOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
+          ...data.englishAuctionStartedEventsConnection.edges.map((e) => e.node),
+          ...data.openAuctionStartedEventsConnection.edges.map((e) => e.node),
+          ...data.nftSellOrderMadeEventsConnection.edges.map((e) => e.node),
+          ...data.auctionBidCanceledEventsConnection.edges.map((e) => e.node),
+          ...data.buyNowCanceledEventsConnection.edges.map((e) => e.node),
+          ...data.auctionCanceledEventsConnection.edges.map((e) => e.node),
+          ...data.buyNowPriceUpdatedEventsConnection.edges.map((e) => e.node),
+          ...data.nftIssuedEventsConnection.edges.map((e) => e.node),
         ]
       : []
     return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
