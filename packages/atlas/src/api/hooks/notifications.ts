@@ -55,6 +55,8 @@ export const useRawActivities = (memberId?: string) => {
           ...data.nftIssuedEvents,
           ...data.openAuctionBidAcceptedEvents,
           ...data.openAuctionStartedEvents,
+          ...data.nftSellOrderMadeEvents,
+          ...data.auctionBidCanceledEvents,
         ]
       : []
     return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
