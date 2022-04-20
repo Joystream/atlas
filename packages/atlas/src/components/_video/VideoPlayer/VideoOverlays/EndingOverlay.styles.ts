@@ -44,7 +44,6 @@ export const Container = styled.div<ContainerProps>`
 
 export const InnerContainer = styled.div`
   display: flex;
-  overflow-y: auto;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -63,7 +62,7 @@ export const VideoInfo = styled.div<{ noNextVideo?: boolean }>`
   justify-content: ${({ noNextVideo }) => (noNextVideo ? 'center' : 'unset')};
 
   ${media.md} {
-    width: ${({ noNextVideo }) => (noNextVideo ? 'auto' : '320px')};
+    max-width: ${({ noNextVideo }) => (noNextVideo ? '100%' : '320px')};
     margin: unset;
     align-items: unset;
     margin-left: ${({ noNextVideo }) => (noNextVideo ? 0 : sizes(6))};
@@ -101,10 +100,11 @@ export const StyledChannelLink = styled(ChannelLink)<StyledChannelLinkProps>`
   flex-shrink: 0;
   display: flex;
   margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(3))};
-  justify-content: ${({ noNextVideo }) => (noNextVideo ? 'center' : 'unset')};
+  justify-content: center;
 
   ${media.md} {
     margin-top: ${({ noNextVideo }) => (noNextVideo ? sizes(2) : sizes(4))};
+    justify-content: ${({ noNextVideo }) => (noNextVideo ? 'center' : 'unset')};
   }
 
   span {
