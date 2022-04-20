@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { ActivitiesRecord } from '@/providers/notifications/notifications.types'
 import { imageUrlValidation } from '@/utils/asset'
 import { formatDateTime } from '@/utils/time'
 
@@ -19,6 +18,7 @@ import {
   TitleAndDescriptionContainer,
   TitleSkeletonLoader,
 } from './ActivityItem.styles'
+import { ActivitiesRecord } from './MemberActivity.hooks'
 
 export type ActivityItemProps = {
   type: ActivitiesRecord['type']

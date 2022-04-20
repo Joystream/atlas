@@ -8,11 +8,10 @@ import { SvgActionBid, SvgActionBuyNow, SvgActionSell, SvgControlsPlaceholder } 
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
-import { useActivities } from '@/providers/notifications'
-import { ActivitiesRecord } from '@/providers/notifications/notifications.types'
 import { formatNumberShort } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
+import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
 import {
   GridRowWrapper,
   OverviewContainer,
