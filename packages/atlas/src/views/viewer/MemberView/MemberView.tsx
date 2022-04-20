@@ -145,7 +145,7 @@ export const MemberView: React.FC = () => {
           isOwner={activeMemberId === member?.id}
         />
         <TabsWrapper isFiltersOpen={isFiltersOpen}>
-          <TabsContainer>
+          <TabsContainer isMemberActivityTab={currentTab === 'Activity'}>
             <StyledTabs
               selected={TABS.findIndex((x) => x === currentTab)}
               initialIndex={0}
