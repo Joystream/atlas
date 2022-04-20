@@ -3,7 +3,8 @@ import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { getNftStatus } from '@/api/hooks'
-import { AllBidFieldsFragment, AllNftFieldsFragment } from '@/api/queries'
+import { useBids } from '@/api/hooks/bids'
+import { AllBidFieldsFragment, AllNftFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
@@ -18,6 +19,8 @@ import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
+import { useUser } from '@/providers/user'
+import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
@@ -43,7 +46,7 @@ export type Auction = {
   type: 'open' | 'english'
   startingPrice: number
   buyNowPrice: number | undefined
-  topBid: AllBidFieldsFragment | undefined
+  topBid: BasicBidFieldsFragment | undefined
   topBidAmount: number | undefined
   topBidderHandle: string | undefined
   topBidderAvatarUri: string | null | undefined
@@ -73,8 +76,8 @@ export type NftWidgetProps = {
   nftStatus?:
     | {
         status: 'idle'
-        lastPrice?: number
-        lastTransactionDate?: Date
+        lastSalePrice: number | undefined
+        lastSaleDate: Date | undefined
       }
     | {
         status: 'buy-now'
@@ -154,7 +157,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
               You bid {formatNumberShort(Number(bidFromPreviousAuction?.amount))} tJOY on{' '}
-              {formatDateTime(bidFromPreviousAuction.createdAt)}
+              {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
             </Text>
           </GridItem>
         </>
@@ -170,7 +173,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       case 'idle':
         return (
           <>
-            {nftStatus.lastPrice ? (
+            {nftStatus.lastSalePrice ? (
               <NftInfoItem
                 size={size}
                 label="Last price"
@@ -178,11 +181,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                     <Text variant={contentTextVariant} secondary>
-                      {formatNumberShort(nftStatus.lastPrice)}
+                      {formatNumberShort(nftStatus.lastSalePrice)}
                     </Text>
                   </>
                 }
-                secondaryText={nftStatus.lastTransactionDate && formatDateTime(nftStatus.lastTransactionDate)}
+                secondaryText={nftStatus.lastSaleDate && formatDateTime(nftStatus.lastSaleDate)}
               />
             ) : (
               <NftInfoItem
@@ -555,6 +558,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
 
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (nft?: AllNftFieldsFragment | null): UseNftWidgetReturn => {
+  const { activeMemberId } = useUser()
   const nftStatus = getNftStatus(nft)
   const {
     isOwner,
@@ -565,7 +569,6 @@ export const useNftWidget = (nft?: AllNftFieldsFragment | null): UseNftWidgetRet
     userBid,
     startsAtDate,
     isUserTopBidder,
-    bidFromPreviousAuction,
     userBidUnlockDate,
     saleType,
     startsAtBlock,
@@ -574,6 +577,34 @@ export const useNftWidget = (nft?: AllNftFieldsFragment | null): UseNftWidgetRet
     plannedEndAtBlock,
     hasTimersLoaded,
   } = useNftState(nft)
+
+  const { bids: userBids } = useBids(
+    {
+      where: {
+        isCanceled_eq: false,
+        nft: { id_eq: nft?.id },
+        bidder: { id_eq: activeMemberId },
+      },
+    },
+    {
+      skip: !nft?.id || !activeMemberId,
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
+          data: {
+            nft: nft?.id,
+            member: activeMemberId,
+          },
+        }),
+    }
+  )
+
+  const unwithdrawnUserBids = userBids?.filter(
+    (bid) =>
+      bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
+      (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
+      bid.auction.winningMemberId !== activeMemberId
+  )
+  const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
 
   const owner = nft?.ownerMember
 

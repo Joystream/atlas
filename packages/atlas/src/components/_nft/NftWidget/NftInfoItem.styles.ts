@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { media, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 import { SizeProps, sizeObj } from './NftWidget.styles'
 
@@ -35,23 +35,7 @@ export const Label = styled(Text)`
   grid-area: label;
 `
 
-export const SecondaryTextWrapper = styled.div`
-  margin-left: auto;
-
-  ${media.xs} {
-    margin-left: unset;
-  }
-
-  ${media.md} {
-    margin-left: auto;
-  }
-
-  ${media.lg} {
-    margin-left: unset;
-  }
-`
-
-export const SecondaryText = styled(Text)<SizeProps>`
+export const SecondaryText = styled.div<SizeProps>`
   grid-area: secondary;
 
   &[data-size=${sizeObj.small}] {
@@ -59,7 +43,7 @@ export const SecondaryText = styled(Text)<SizeProps>`
   }
 `
 
-export const TimerSecondaryText = styled(SecondaryText)<SizeProps>`
+export const TimerSecondaryText = styled(Text)<SizeProps>`
   grid-area: secondary;
 
   &[data-size=${sizeObj.small}] {

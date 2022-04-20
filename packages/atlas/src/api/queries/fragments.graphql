@@ -175,6 +175,8 @@ fragment AllNftFields on OwnedNft {
   id
   createdAt
   creatorRoyalty
+  lastSaleDate
+  lastSalePrice
   ownerMember {
     ...BasicMembershipFields
   }
@@ -182,6 +184,7 @@ fragment AllNftFields on OwnedNft {
     ...BasicChannelFields
   }
   transactionalStatusAuction {
+    id
     auctionType {
       __typename
       ... on AuctionTypeEnglish {
@@ -205,10 +208,10 @@ fragment AllNftFields on OwnedNft {
     endedAtBlock
 
     topBid {
-      ...AllBidFields
+      ...BasicBidFields
     }
     bids {
-      ...AllBidFields
+      ...BasicBidFields
     }
 
     whitelistedMembers {
@@ -224,14 +227,12 @@ fragment AllNftFields on OwnedNft {
       price
     }
   }
-  lastSalePrice
-  lastSaleDate
   video {
     ...BasicVideoFields
   }
 }
 
-fragment AllBidFields on Bid {
+fragment BasicBidFields on Bid {
   bidder {
     ...BasicMembershipFields
   }
@@ -240,4 +241,16 @@ fragment AllBidFields on Bid {
   isCanceled
   createdInBlock
   id
+}
+
+fragment AllBidFields on Bid {
+  ...BasicBidFields
+  auction {
+    auctionType {
+      __typename
+    }
+    isCompleted
+    winningMemberId
+    id
+  }
 }

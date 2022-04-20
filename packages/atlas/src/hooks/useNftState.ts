@@ -11,11 +11,12 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { currentBlock, currentBlockMsTimestamp } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
+  const auction = nft?.transactionalStatusAuction || null
+
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
   const isBuyNow = nft?.transactionalStatus?.__typename === 'TransactionalStatusBuyNow'
   const isIdle = nft?.transactionalStatus?.__typename === 'TransactionalStatusIdle'
-  const auction = nft?.transactionalStatusAuction || null
   const englishAuction = auction?.auctionType.__typename === 'AuctionTypeEnglish' && auction.auctionType
   const openAuction = auction?.auctionType.__typename === 'AuctionTypeOpen' && auction.auctionType
   const isAuction = !!auction
@@ -80,8 +81,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     plannedEndAtBlock:
       auction?.auctionType.__typename === 'AuctionTypeEnglish' ? auction?.auctionType.plannedEndAtBlock : undefined,
     startsAtBlock: auction?.startsAtBlock,
-    //TODO: bidFromPreviousAuction
-    bidFromPreviousAuction: undefined,
     isUserTopBidder,
     isUserWhitelisted,
     isOwner,

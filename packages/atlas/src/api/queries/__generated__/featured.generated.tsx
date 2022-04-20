@@ -132,8 +132,8 @@ export type GetVideoHeroQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
-        lastSalePrice?: string | null
         lastSaleDate?: Date | null
+        lastSalePrice?: string | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -219,6 +219,7 @@ export type GetVideoHeroQuery = {
         }
         transactionalStatusAuction?: {
           __typename?: 'Auction'
+          id: string
           isCompleted: boolean
           buyNowPrice?: string | null
           startingPrice: string
@@ -642,8 +643,8 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           id: string
           createdAt: Date
           creatorRoyalty?: number | null
-          lastSalePrice?: string | null
           lastSaleDate?: Date | null
+          lastSalePrice?: string | null
           ownerMember?: {
             __typename?: 'Membership'
             id: string
@@ -729,6 +730,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
           }
           transactionalStatusAuction?: {
             __typename?: 'Auction'
+            id: string
             isCompleted: boolean
             buyNowPrice?: string | null
             startingPrice: string
@@ -1151,8 +1153,8 @@ export type GetCategoriesFeaturedVideosQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
-        lastSalePrice?: string | null
         lastSaleDate?: Date | null
+        lastSalePrice?: string | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -1238,6 +1240,7 @@ export type GetCategoriesFeaturedVideosQuery = {
         }
         transactionalStatusAuction?: {
           __typename?: 'Auction'
+          id: string
           isCompleted: boolean
           buyNowPrice?: string | null
           startingPrice: string
