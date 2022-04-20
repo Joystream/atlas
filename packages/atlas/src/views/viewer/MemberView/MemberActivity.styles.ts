@@ -54,6 +54,7 @@ export const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;
   transition: color ${cVar('animationTransitionFast')};
+
   :hover {
     color: ${cVar('colorTextPrimary')};
   }

@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { MembershipInfo } from '@/components/MembershipInfo'
@@ -30,18 +31,34 @@ export const TabsContainer = styled.div<{ isMemberActivityTab: boolean }>`
   display: grid;
   padding-top: ${sizes(8)};
   gap: ${sizes(8)} ${sizes(2)};
-  grid-template:
-    'tabs tabs' auto
-    ${({ isMemberActivityTab }) =>
-      isMemberActivityTab ? `'sort sort' auto / 1fr auto` : `'sort filter' auto / 1fr auto`};
   background-color: #000;
+
+  ${({ isMemberActivityTab }) =>
+    isMemberActivityTab
+      ? css`
+          grid-template:
+            'tabs tabs' auto
+            'sort sort' auto / 1fr auto;
+        `
+      : css`
+          grid-template:
+            'tabs tabs' auto
+            'sort filter' auto / 1fr auto;
+        `};
 
   ${media.sm} {
     align-items: center;
     box-shadow: ${cVar('effectDividersBottom')};
     gap: ${sizes(4)};
-    grid-template: ${({ isMemberActivityTab }) =>
-      isMemberActivityTab ? `'tabs sort' 1fr / auto 160px` : `'tabs sort filter' 1fr / auto 160px 99px;`};
+
+    ${({ isMemberActivityTab }) =>
+      isMemberActivityTab
+        ? css`
+            grid-template: 'tabs sort' 1fr / auto 160px;
+          `
+        : css`
+            grid-template: 'tabs sort filter' 1fr / auto 160px 99px;
+          `};
   }
 `
 
