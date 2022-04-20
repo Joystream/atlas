@@ -13,6 +13,7 @@ import {
   SelectMenu,
   SelectMenuWrapper,
   SelectOption,
+  SelectSizes,
   SelectWrapper,
   StyledLabelText,
   StyledPill,
@@ -21,8 +22,6 @@ import {
 } from './Select.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
-
-export type SelectSizes = 'regular' | 'small'
 
 export type SelectItem<T = string> = {
   value: T

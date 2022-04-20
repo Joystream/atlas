@@ -26,8 +26,7 @@ import {
   TextContainer,
   ValueContainer,
 } from './NftHistory.styles'
-import { Size } from './NftWidget'
-import { OwnerHandle } from './NftWidget.styles'
+import { OwnerHandle, Size } from './NftWidget.styles'
 
 type HitoryProps = { size: Size; width: number }
 export const NftHistory: React.FC<HitoryProps> = ({ size, width }) => {

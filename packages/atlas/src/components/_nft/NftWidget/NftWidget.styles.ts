@@ -7,6 +7,7 @@ import { BorderWrapper } from '@/components/_buttons/ButtonBase/ButtonBase.style
 import { cVar, sizes } from '@/styles'
 
 export const sizeObj = { small: 'small', medium: 'medium' } as const
+export type Size = keyof typeof sizeObj
 export type SizeProps = { 'data-size': keyof typeof sizeObj }
 
 export const Container = styled.div`

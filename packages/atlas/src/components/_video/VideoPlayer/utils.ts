@@ -1,5 +1,7 @@
 import { VideoJsPlayer } from 'video.js'
 
+export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
+
 export const VOLUME_STEP = 0.1
 
 export enum CustomVideojsEvents {

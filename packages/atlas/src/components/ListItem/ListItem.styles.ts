@@ -4,8 +4,9 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { ListItemSizes } from '.'
 import { SvgActionCheck } from '../_icons'
+
+export type ListItemSizes = 'small' | 'medium' | 'large'
 
 const getContainerPadding = (size: ListItemSizes) => {
   switch (size) {

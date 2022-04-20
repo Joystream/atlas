@@ -8,7 +8,7 @@ import { cVar, transitions } from '@/styles'
 import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
-import { Size } from './NftWidget'
+import { Size } from './NftWidget.styles'
 
 type NftInfoItemProps = {
   size: Size

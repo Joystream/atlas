@@ -28,7 +28,8 @@
     "docker:atlas": "ci/build-docker-atlas.sh",
     "docker:meta-server": "ci/build-docker-meta-server.sh",
     "lint-staged": "lint-staged",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "atlas:madge:circular": "yarn workspace @joystream/atlas madge:circular"
   },
   "lint-staged": {
     "*.{tsx,ts}": [

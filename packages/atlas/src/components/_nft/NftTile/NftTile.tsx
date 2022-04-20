@@ -9,14 +9,7 @@ import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
-import { NftTileDetails } from './NftTileDetails'
-
-export type Member = {
-  assetUrl?: string | null
-  name?: string
-  onClick?: () => void
-  loading?: boolean
-}
+import { Member, NftTileDetails } from './NftTileDetails'
 
 export type NftTileProps = {
   status?: 'idle' | 'buy-now' | 'auction'

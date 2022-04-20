@@ -23,11 +23,10 @@ import {
   Thumbnail,
   UploadInfoContainer,
   UploadStatusGroupContainer,
+  UploadStatusGroupSize,
 } from './UploadStatusGroup.styles'
 
 import { UploadStatus } from '../UploadStatus'
-
-export type UploadStatusGroupSize = 'large' | 'compact'
 
 type UploadGroupState = 'error' | 'completed' | 'inProgress' | 'processing' | null
 

@@ -19,7 +19,6 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
-import { Member } from './NftTile'
 import {
   CaptionSkeletonWrapper,
   Content,
@@ -30,6 +29,13 @@ import {
   StyledAvatarGroup,
   Title,
 } from './NftTileDetails.styles'
+
+export type Member = {
+  assetUrl?: string | null
+  name?: string
+  onClick?: () => void
+  loading?: boolean
+}
 
 export type NftTileDetailsProps = {
   loading?: boolean

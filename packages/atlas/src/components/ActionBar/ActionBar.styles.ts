@@ -6,7 +6,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { Button } from '@/components/_buttons/Button'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
-import { ActionBarVariant } from './ActionBar'
+export type ActionBarVariant = 'new' | 'edit' | 'nft'
 
 type ActionBarContainerProps = {
   isActive?: boolean

@@ -9,7 +9,7 @@ import { Select } from '@/components/_inputs/Select'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
-import { TABS } from '.'
+import { TABS } from './utils'
 
 const SM_TITLE_HEIGHT = '44px'
 const TITLE_HEIGHT = '51px'
