@@ -1,7 +1,12 @@
 import { QueryHookOptions } from '@apollo/client'
 import { useMemo } from 'react'
 
-import { GetNftNotificationsQuery, GetNftNotificationsQueryVariables, useGetNftNotificationsQuery } from '@/api/queries'
+import {
+  GetNftNotificationsQuery,
+  GetNftNotificationsQueryVariables,
+  useGetNftActivitiesQuery,
+  useGetNftNotificationsQuery,
+} from '@/api/queries'
 
 export const useRawNotifications = (
   memberId: string | null,

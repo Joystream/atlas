@@ -102,49 +102,51 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
               ))}
             </LayoutGrid>
           </GridItem>
-          <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-            <Text variant="h500">Overview</Text>
-            <OverviewContainer>
-              <OverviewItem>
-                <IconWrapper icon={<SvgActionBuyNow />} size="large" />
-                <OverviewTextContainer>
-                  <Text variant="t100" secondary>
-                    NFTs bought
-                  </Text>
-                  <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
-                </OverviewTextContainer>
-              </OverviewItem>
-              <OverviewItem>
-                <IconWrapper icon={<SvgActionSell />} size="large" />
-                <OverviewTextContainer>
-                  <Text variant="t100" secondary>
-                    NFTs sold
-                  </Text>
-                  <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
-                </OverviewTextContainer>
-              </OverviewItem>
-              <GridRowWrapper>
+          {!loading && (
+            <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
+              <Text variant="h500">Overview</Text>
+              <OverviewContainer>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgControlsPlaceholder />} size="large" />
+                  <IconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
-                      NFTs created
+                      NFTs bought
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
+                    <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgActionBid />} size="large" />
+                  <IconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
-                      Bid placed
+                      NFTs sold
                     </Text>
-                    <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>
+                    <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
                   </OverviewTextContainer>
                 </OverviewItem>
-              </GridRowWrapper>
-            </OverviewContainer>
-          </GridItem>
+                <GridRowWrapper>
+                  <OverviewItem>
+                    <IconWrapper icon={<SvgControlsPlaceholder />} size="large" />
+                    <OverviewTextContainer>
+                      <Text variant="t100" secondary>
+                        NFTs created
+                      </Text>
+                      <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
+                    </OverviewTextContainer>
+                  </OverviewItem>
+                  <OverviewItem>
+                    <IconWrapper icon={<SvgActionBid />} size="large" />
+                    <OverviewTextContainer>
+                      <Text variant="t100" secondary>
+                        Bid placed
+                      </Text>
+                      <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>
+                    </OverviewTextContainer>
+                  </OverviewItem>
+                </GridRowWrapper>
+              </OverviewContainer>
+            </GridItem>
+          )}
         </LayoutGrid>
       )}
     </section>
