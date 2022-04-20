@@ -93,11 +93,11 @@ export const MemberView: React.FC = () => {
       case 'NFTs owned':
         return <MemberNFTs nfts={nfts} loading={loading} owner={activeMembership?.handle === handle} />
       case 'Activity':
-        return <MemberActivity />
+        return <MemberActivity memberId={member?.id} />
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, currentTab, handle, loading, nfts])
+  }, [activeMembership?.handle, currentTab, handle, loading, member?.id, nfts])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)

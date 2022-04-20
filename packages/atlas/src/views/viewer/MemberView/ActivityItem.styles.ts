@@ -1,13 +1,15 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
-export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<{
+export const ActivityItemContainer = styled(Link, { shouldForwardProp: (prop) => prop !== 'loading' })<{
   loading?: boolean
 }>`
   padding: ${sizes(4)};
+  text-decoration: none;
   display: grid;
   gap: ${sizes(4)} 0;
   grid-template-columns: 1fr auto;

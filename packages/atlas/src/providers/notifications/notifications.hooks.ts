@@ -1,9 +1,9 @@
-import { useRawNotifications } from '@/api/hooks'
+import { useRawActivities, useRawNotifications } from '@/api/hooks'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { useNotificationStore } from './notifications.store'
-import { NftNotificationRecord, NotificationRecord } from './notifications.types'
+import { ActivitiesRecord, NftActivitiesRecord, NftNotificationRecord, NotificationRecord } from './notifications.types'
 
 export const useNotifications = () => {
   const { activeMemberId } = useUser()
@@ -32,6 +32,17 @@ export const useNotifications = () => {
     markNotificationsAsRead,
     markNotificationsAsUnread,
     ...rest,
+  }
+}
+
+export const useActivities = (memberId?: string) => {
+  const { activities: rawActivities, error, loading } = useRawActivities(memberId)
+  const parsedActivities = rawActivities.map((a) => parseActivities(a, memberId))
+  const activities = parsedActivities.filter((a): a is ActivitiesRecord => !!a)
+  return {
+    activities,
+    error,
+    loading,
   }
 }
 
@@ -73,5 +84,115 @@ const parseNotification = (
   } else {
     ConsoleLogger.error('Unknown event type for notifications')
     return null
+  }
+}
+
+const parseActivities = (
+  event: ReturnType<typeof useRawActivities>['activities'][0],
+  memberId?: string
+): ActivitiesRecord | null => {
+  const commonFields: Omit<NftActivitiesRecord, 'text'> = {
+    id: event.id,
+    date: event.createdAt,
+    block: event.inBlock,
+    video: {
+      id: event.video.id,
+      title: event.video.title || '',
+      thumbnailPhoto: event.video.thumbnailPhoto || null,
+    },
+  }
+  switch (event.__typename) {
+    case 'AuctionBidMadeEvent':
+      return {
+        ...commonFields,
+        text: `${event.member.handle} placed a bid for `,
+        type: 'bid',
+        bidAmount: Number(event.bidAmount),
+        member: event.member,
+      }
+    case 'NftBoughtEvent':
+    case 'BidMadeCompletingAuctionEvent':
+      if (memberId === event.ownerMember?.id) {
+        return {
+          ...commonFields,
+          text: `${event.member.handle} sell for `,
+          type: 'sale',
+          price: Number(event.price),
+          member: event.member,
+          ownerMember: event.ownerMember || null,
+        }
+      } else {
+        return {
+          ...commonFields,
+          text: `${event.member.handle} purchased for `,
+          type: 'purchase',
+          price: Number(event.price),
+          member: event.member,
+          ownerMember: event.ownerMember || null,
+        }
+      }
+    case 'EnglishAuctionStartedEvent':
+    case 'OpenAuctionStartedEvent':
+    case 'NftSellOrderMadeEvent':
+      return {
+        ...commonFields,
+        type: 'listing',
+        text: `${event.ownerMember?.handle} listed NFT ${event.__typename === 'NftSellOrderMadeEvent' ? 'for ' : ''}`,
+        member: event.ownerMember || null,
+        price: event.__typename === 'NftSellOrderMadeEvent' ? Number(event.price) : undefined,
+      }
+    case 'AuctionCanceledEvent':
+    case 'BuyNowCanceledEvent':
+      return {
+        ...commonFields,
+        text: `${event.ownerMember?.handle} removed NFT from sale`,
+        type: 'removal',
+        member: event.ownerMember || null,
+      }
+    case 'NftIssuedEvent':
+      return {
+        ...commonFields,
+        text: `${event.ownerMember?.handle} minted new NFT`,
+        type: 'mint',
+        member: event.ownerMember || null,
+      }
+    case 'AuctionBidCanceledEvent':
+      return {
+        ...commonFields,
+        type: 'withdrawal',
+        text: `${event.member.handle} withdrew a bid`,
+        member: event.member,
+      }
+    case 'BuyNowPriceUpdatedEvent':
+      return {
+        ...commonFields,
+        text: `${event.ownerMember?.handle} changed price to `,
+        type: 'price-change',
+        member: event.ownerMember || null,
+        price: Number(event.newPrice),
+      }
+    case 'OpenAuctionBidAcceptedEvent':
+      if (memberId === event.ownerMember?.id) {
+        return {
+          ...commonFields,
+          text: `${event.ownerMember?.handle} sell for `,
+          type: 'sale',
+          price: Number(event.winningBid?.amount),
+          member: event.winningBid?.bidder || null,
+          ownerMember: event.ownerMember || null,
+        }
+      } else {
+        return {
+          ...commonFields,
+          text: `${event.winningBid?.bidder.handle} purchased for `,
+          type: 'purchase',
+          price: Number(event.winningBid?.amount),
+          member: event.winningBid?.bidder || null,
+          ownerMember: event.ownerMember || null,
+        }
+      }
+
+    default:
+      return null
   }
 }

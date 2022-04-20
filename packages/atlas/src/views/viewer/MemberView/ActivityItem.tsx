@@ -24,11 +24,20 @@ export type ActivityItemProps = {
   date: Date
   type: string
   title: string
-  description: string
+  description?: string
   thumnailUri: string
-  joy: number
+  joy?: number
+  videoUrl?: string
 }
-export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, description, thumnailUri, joy }) => {
+export const ActivityItem: React.FC<ActivityItemProps> = ({
+  date,
+  type,
+  title,
+  description,
+  thumnailUri,
+  joy,
+  videoUrl,
+}) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
   const smMatch = useMediaMatch('sm')
   const lgMatch = useMediaMatch('lg')
@@ -53,7 +62,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
 
   const isLoading = !date || !type || !title || !thumbnailLoaded
   return (
-    <ActivityItemContainer loading={isLoading}>
+    <ActivityItemContainer loading={isLoading} to={videoUrl || ''}>
       {isLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumnailUri} />}
       <TitleAndDescriptionContainer>
         {isLoading ? (
@@ -68,7 +77,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ date, type, title, d
         ) : (
           <Text variant={lgMatch ? 't300' : 't200'} secondary>
             {description}
-            <Text variant={lgMatch ? 't300' : 't200'}>ツ {formatNumberShort(joy)}</Text>
+            {joy ? <Text variant={lgMatch ? 't300' : 't200'}>ツ {formatNumberShort(joy)}</Text> : null}
           </Text>
         )}
       </TitleAndDescriptionContainer>
