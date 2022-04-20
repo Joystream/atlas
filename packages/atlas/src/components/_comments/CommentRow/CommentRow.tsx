@@ -7,8 +7,8 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { ContentWrapper, OutlineBox } from './CommentRow.styles'
 
 export type CommentRowProps = {
-  indented: boolean
-  highlighted: boolean
+  indented?: boolean
+  highlighted?: boolean
   isMemberAvatarLoading?: boolean
   memberAvatarUrl?: string
   memberUrl?: string
@@ -40,8 +40,8 @@ export const CommentRow: React.FC<CommentRowProps> = ({
 
   const avatarSize = getAvatarSize()
   return (
-    <OutlineBox highlighted={highlighted}>
-      <ContentWrapper indented={indented}>
+    <OutlineBox highlighted={!!highlighted}>
+      <ContentWrapper indented={!!indented}>
         <Link to={memberUrl}>
           <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
         </Link>

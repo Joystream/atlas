@@ -1,5 +1,6 @@
 export * from './categories'
 export * from './channel'
+export * from './comments'
 export * from './membership'
 export * from './notifications'
 export * from './nfts'

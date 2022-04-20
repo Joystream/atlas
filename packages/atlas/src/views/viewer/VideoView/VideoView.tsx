@@ -33,6 +33,7 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
+import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
 import {
@@ -254,7 +255,12 @@ export const VideoView: React.FC = () => {
                 <PlayerSkeletonLoader />
               )}
             </PlayerContainer>
-            {!isCinematic && detailsItems}
+            {!isCinematic && (
+              <>
+                {detailsItems}
+                <CommentsSection videoAuthorId={video?.channel.ownerMember?.id || ''} />
+              </>
+            )}
           </PlayerGridItem>
           {!isCinematic && sideItems}
         </PlayerWrapper>
@@ -264,6 +270,7 @@ export const VideoView: React.FC = () => {
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
+              <CommentsSection videoAuthorId={video?.channel.ownerMember?.id || ''} />
             </GridItem>
             {sideItems}
           </LayoutGrid>

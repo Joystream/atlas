@@ -1,0 +1,31 @@
+query GetComments(
+  $limit: Int
+  $offset: Int
+  $where: CommentWhereInput
+  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+) {
+  comments(limit: $limit, offset: $offset, where: $where, orderBy: $orderBy) {
+    ...CommentFields
+  }
+}
+
+query GetCommentsConnection(
+  $first: Int
+  $after: String
+  $where: CommentWhereInput
+  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+) {
+  commentsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+    edges {
+      cursor
+      node {
+        ...CommentFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
