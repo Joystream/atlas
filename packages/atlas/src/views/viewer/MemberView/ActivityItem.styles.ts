@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
-export const ActivityItemContainer = styled(Link, { shouldForwardProp: (prop) => prop !== 'loading' })<{
+export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<{
   loading?: boolean
 }>`
   padding: ${sizes(4)};
@@ -23,7 +22,7 @@ export const ActivityItemContainer = styled(Link, { shouldForwardProp: (prop) =>
   }
 
   ${media.sm} {
-    grid-template-columns: auto 1fr 73px;
+    grid-template-columns: auto 1fr auto;
   }
 
   ${media.lg} {
@@ -108,4 +107,10 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
 
 export const DateText = styled(Text)`
   text-align: end;
+  ${media.sm} {
+    max-width: 74px;
+  }
+  ${media.lg} {
+    max-width: unset;
+  }
 `

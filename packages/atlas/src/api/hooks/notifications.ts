@@ -67,6 +67,7 @@ export const useRawActivities = (memberId?: string) => {
 
   return {
     activities: sortedActivities,
+    rawData: data,
     ...rest,
   }
 }

@@ -26,7 +26,9 @@ export type ActivityItemProps = {
   title: string
   description?: React.ReactNode
   thumnailUri: string
-  videoUrl?: string
+  thumbnailLoading?: boolean
+  loading?: boolean
+  onItemClick?: () => void
 }
 export const ActivityItem: React.FC<ActivityItemProps> = ({
   date,
@@ -34,7 +36,9 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
   title,
   description,
   thumnailUri,
-  videoUrl,
+  thumbnailLoading,
+  loading,
+  onItemClick,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false)
   const smMatch = useMediaMatch('sm')
@@ -58,19 +62,19 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
     }
   }
 
-  const isLoading = !date || !type || !title || !thumbnailLoaded
+  const isImageLoading = loading || thumbnailLoading || !thumbnailLoaded
   return (
-    <ActivityItemContainer loading={isLoading} to={videoUrl || ''}>
-      {isLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumnailUri} />}
+    <ActivityItemContainer loading={loading} onClick={onItemClick}>
+      {isImageLoading ? <ThumbnailSkeletonLoader /> : <Thumbnail src={thumnailUri} />}
       <TitleAndDescriptionContainer>
-        {isLoading ? (
+        {loading ? (
           <TitleSkeletonLoader />
         ) : (
           <Title variant={getTitleTextVariant()} clampAfterLine={smMatch ? 2 : 1}>
             {title}
           </Title>
         )}
-        {isLoading ? (
+        {loading ? (
           <DescriptionSkeletonLoader />
         ) : (
           <Text variant={lgMatch ? 't300' : 't200'} secondary>
@@ -78,11 +82,11 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
           </Text>
         )}
       </TitleAndDescriptionContainer>
-      {isLoading ? (
+      {loading ? (
         <PillSkeletonLoader />
       ) : (
         <PillAndDateContainer>
-          <Pill label={type} size="small" />
+          <Pill label={type} size="medium" />
           <DateText variant="t100" secondary>
             {formatDateTime(date)}
           </DateText>

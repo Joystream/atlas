@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { useRawActivities } from '@/api/hooks'
 import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
 
@@ -159,12 +161,32 @@ const parseActivities = (
 }
 
 export const useActivities = (memberId?: string) => {
-  const { activities: rawActivities, error, loading } = useRawActivities(memberId)
+  const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId)
   const parsedActivities = rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities.filter((a): a is ActivitiesRecord => !!a)
+
+  const totalCounts = useMemo(() => {
+    const purchaseNftBought = rawData?.purchaseNftBoughtEventsConnection.totalCount || 0
+    const auctionBidMade = rawData?.auctionBidMadeEventsConnection.totalCount || 0
+    const purchaseBidMadeCompletingAuction = rawData?.purchaseBidMadeCompletingAuctionEventsConnection.totalCount || 0
+    const purchaseOpenAuctionBidAccepted = rawData?.purchaseOpenAuctionBidAcceptedEventsConnection.totalCount || 0
+    const saleNftBought = rawData?.saleNftBoughtEventsConnection.totalCount || 0
+    const saleBidMadeCompletingAuction = rawData?.saleBidMadeCompletingAuctionEventsConnection.totalCount || 0
+    const saleOpenAuctionBidAccepted = rawData?.saleOpenAuctionBidAcceptedEventsConnection.totalCount || 0
+    const nftIssued = rawData?.nftIssuedEventsConnection.totalCount || 0
+
+    return {
+      nftsBoughts: purchaseNftBought + purchaseBidMadeCompletingAuction + purchaseOpenAuctionBidAccepted,
+      nftsSold: saleNftBought + saleBidMadeCompletingAuction + saleOpenAuctionBidAccepted,
+      nftsIssued: nftIssued,
+      nftsBidded: auctionBidMade,
+    }
+  }, [rawData])
+
   return {
-    activities,
+    activities: rawData ? activities : undefined,
+    activitiesTotalCounts: totalCounts,
     error,
-    loading,
+    loading: loading,
   }
 }
