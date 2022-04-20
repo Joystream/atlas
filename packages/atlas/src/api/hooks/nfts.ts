@@ -1,31 +1,16 @@
 import { QueryHookOptions, QueryResult } from '@apollo/client'
 
 import {
-  AllBidFieldsFragment,
   AllNftFieldsFragment,
+  BasicBidFieldsFragment,
   BasicMembershipFieldsFragment,
   GetNftQuery,
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
-  GetNftsQuery,
-  GetNftsQueryVariables,
   useGetNftQuery,
   useGetNftsConnectionQuery,
-  useGetNftsQuery,
 } from '@/api/queries'
-
-export const useNfts = (
-  variables?: GetNftsQueryVariables,
-  opts?: QueryHookOptions<GetNftsQuery, GetNftsQueryVariables>
-) => {
-  const { data, ...rest } = useGetNftsQuery({ variables, ...opts })
-
-  return {
-    nfts: data?.ownedNfts,
-    ...rest,
-  }
-}
 
 type CommonNftProperties = {
   title: string | null | undefined
@@ -36,10 +21,11 @@ type CommonNftProperties = {
 export type NftStatus = (
   | {
       status: 'auction'
+      auctionId: string
       type: 'open' | 'english'
       startingPrice: number
       buyNowPrice: number | undefined
-      topBid: AllBidFieldsFragment | undefined
+      topBid: BasicBidFieldsFragment | undefined
       topBidAmount: number | undefined
       topBidder: BasicMembershipFieldsFragment | undefined
       auctionPlannedEndBlock: number | undefined
@@ -76,6 +62,7 @@ export const getNftStatus = (nft?: AllNftFieldsFragment | null): NftStatus | und
     return {
       ...commonProperties,
       status: 'auction',
+      auctionId: auction.id,
       type: openAuction ? 'open' : 'english',
       startingPrice: Number(auction.startingPrice) || 0,
       buyNowPrice: Number(auction.buyNowPrice) || undefined,

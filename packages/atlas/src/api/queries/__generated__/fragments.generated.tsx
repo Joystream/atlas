@@ -712,13 +712,6 @@ export type VideoFieldsFragment = {
               | null
           }
         }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
-        }
       } | null
       bids: Array<{
         __typename?: 'Bid'
@@ -756,13 +749,6 @@ export type VideoFieldsFragment = {
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
           }
-        }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
         }
       }>
       whitelistedMembers: Array<{
@@ -1153,13 +1139,6 @@ export type AllNftFieldsFragment = {
             | null
         }
       }
-      auction: {
-        __typename?: 'Auction'
-        isCompleted: boolean
-        winningMemberId?: string | null
-        id: string
-        auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
-      }
     } | null
     bids: Array<{
       __typename?: 'Bid'
@@ -1197,13 +1176,6 @@ export type AllNftFieldsFragment = {
             | { __typename?: 'AvatarUri'; avatarUri: string }
             | null
         }
-      }
-      auction: {
-        __typename?: 'Auction'
-        isCompleted: boolean
-        winningMemberId?: string | null
-        id: string
-        auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
       }
     }>
     whitelistedMembers: Array<{
@@ -1377,7 +1349,7 @@ export type AllNftFieldsFragment = {
   }
 }
 
-export type AllBidFieldsFragment = {
+export type BasicBidFieldsFragment = {
   __typename?: 'Bid'
   amount: string
   createdAt: Date
@@ -1414,12 +1386,51 @@ export type AllBidFieldsFragment = {
         | null
     }
   }
+}
+
+export type AllBidFieldsFragment = {
+  __typename?: 'Bid'
+  amount: string
+  createdAt: Date
+  isCanceled: boolean
+  createdInBlock: number
+  id: string
   auction: {
     __typename?: 'Auction'
     isCompleted: boolean
     winningMemberId?: string | null
     id: string
     auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+  }
+  bidder: {
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    metadata: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject?: {
+              __typename?: 'StorageDataObject'
+              id: string
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeUnknown' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+            } | null
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    }
   }
 }
 
@@ -1540,18 +1551,10 @@ export const LicenseFieldsFragmentDoc = gql`
     customText
   }
 `
-export const AllBidFieldsFragmentDoc = gql`
-  fragment AllBidFields on Bid {
+export const BasicBidFieldsFragmentDoc = gql`
+  fragment BasicBidFields on Bid {
     bidder {
       ...BasicMembershipFields
-    }
-    auction {
-      auctionType {
-        __typename
-      }
-      isCompleted
-      winningMemberId
-      id
     }
     amount
     createdAt
@@ -1637,10 +1640,10 @@ export const AllNftFieldsFragmentDoc = gql`
       startsAtBlock
       endedAtBlock
       topBid {
-        ...AllBidFields
+        ...BasicBidFields
       }
       bids {
-        ...AllBidFields
+        ...BasicBidFields
       }
       whitelistedMembers {
         ...BasicMembershipFields
@@ -1655,15 +1658,13 @@ export const AllNftFieldsFragmentDoc = gql`
         price
       }
     }
-    lastSalePrice
-    lastSaleDate
     video {
       ...BasicVideoFields
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${BasicChannelFieldsFragmentDoc}
-  ${AllBidFieldsFragmentDoc}
+  ${BasicBidFieldsFragmentDoc}
   ${BasicVideoFieldsFragmentDoc}
 `
 export const VideoFieldsFragmentDoc = gql`
@@ -1710,4 +1711,18 @@ export const VideoFieldsFragmentDoc = gql`
   ${BasicChannelFieldsFragmentDoc}
   ${LicenseFieldsFragmentDoc}
   ${AllNftFieldsFragmentDoc}
+`
+export const AllBidFieldsFragmentDoc = gql`
+  fragment AllBidFields on Bid {
+    ...BasicBidFields
+    auction {
+      auctionType {
+        __typename
+      }
+      isCompleted
+      winningMemberId
+      id
+    }
+  }
+  ${BasicBidFieldsFragmentDoc}
 `

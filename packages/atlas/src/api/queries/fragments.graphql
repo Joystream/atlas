@@ -208,10 +208,10 @@ fragment AllNftFields on OwnedNft {
     endedAtBlock
 
     topBid {
-      ...AllBidFields
+      ...BasicBidFields
     }
     bids {
-      ...AllBidFields
+      ...BasicBidFields
     }
 
     whitelistedMembers {
@@ -232,10 +232,19 @@ fragment AllNftFields on OwnedNft {
   }
 }
 
-fragment AllBidFields on Bid {
+fragment BasicBidFields on Bid {
   bidder {
     ...BasicMembershipFields
   }
+  amount
+  createdAt
+  isCanceled
+  createdInBlock
+  id
+}
+
+fragment AllBidFields on Bid {
+  ...BasicBidFields
   auction {
     auctionType {
       __typename
@@ -244,9 +253,4 @@ fragment AllBidFields on Bid {
     winningMemberId
     id
   }
-  amount
-  createdAt
-  isCanceled
-  createdInBlock
-  id
 }

@@ -18,6 +18,13 @@ export type GetBidsQuery = {
     isCanceled: boolean
     createdInBlock: number
     id: string
+    auction: {
+      __typename?: 'Auction'
+      isCompleted: boolean
+      winningMemberId?: string | null
+      id: string
+      auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
+    }
     bidder: {
       __typename?: 'Membership'
       id: string
@@ -47,13 +54,6 @@ export type GetBidsQuery = {
           | { __typename?: 'AvatarUri'; avatarUri: string }
           | null
       }
-    }
-    auction: {
-      __typename?: 'Auction'
-      isCompleted: boolean
-      winningMemberId?: string | null
-      id: string
-      auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
     }
   }>
 }

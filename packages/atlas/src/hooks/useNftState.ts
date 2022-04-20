@@ -1,10 +1,8 @@
-import { useBids } from '@/api/hooks/bids'
 import { AllNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
-import { SentryLogger } from '@/utils/logs'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
@@ -13,35 +11,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { currentBlock, currentBlockMsTimestamp } = useJoystream()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
-  // TODO: refetch after we withdrawBid but how?
-  const { bids: userBids } = useBids(
-    {
-      where: {
-        isCanceled_eq: false,
-        nft: { id_eq: nft?.id },
-        bidder: { id_eq: activeMembership?.id },
-      },
-    },
-    {
-      skip: !nft?.id || !activeMembership?.id,
-      onError: (error) =>
-        SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
-          data: {
-            nft: nft?.id,
-            member: activeMembership?.id,
-          },
-        }),
-    }
-  )
-
   const auction = nft?.transactionalStatusAuction || null
-
-  const unwithdrawnUserBids = userBids?.filter(
-    (bid) =>
-      bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
-      bid.auction.id !== auction?.id &&
-      bid.auction.winningMemberId !== activeMembership?.id
-  )
 
   const hasTimersLoaded = !!currentBlock && !!currentBlockMsTimestamp
   const isOwner = nft?.ownerMember?.id === activeMembership?.id
@@ -111,7 +81,6 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
     plannedEndAtBlock:
       auction?.auctionType.__typename === 'AuctionTypeEnglish' ? auction?.auctionType.plannedEndAtBlock : undefined,
     startsAtBlock: auction?.startsAtBlock,
-    bidFromPreviousAuction: unwithdrawnUserBids?.[0],
     isUserTopBidder,
     isUserWhitelisted,
     isOwner,

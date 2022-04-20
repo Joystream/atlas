@@ -185,13 +185,6 @@ export type GetNftQuery = {
               | null
           }
         }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
-        }
       } | null
       bids: Array<{
         __typename?: 'Bid'
@@ -229,13 +222,6 @@ export type GetNftQuery = {
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
           }
-        }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
         }
       }>
       whitelistedMembers: Array<{
@@ -591,13 +577,6 @@ export type GetNftsQuery = {
               | null
           }
         }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
-        }
       } | null
       bids: Array<{
         __typename?: 'Bid'
@@ -635,13 +614,6 @@ export type GetNftsQuery = {
               | { __typename?: 'AvatarUri'; avatarUri: string }
               | null
           }
-        }
-        auction: {
-          __typename?: 'Auction'
-          isCompleted: boolean
-          winningMemberId?: string | null
-          id: string
-          auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
         }
       }>
       whitelistedMembers: Array<{
@@ -834,8 +806,8 @@ export type GetNftsConnectionQuery = {
         id: string
         createdAt: Date
         creatorRoyalty?: number | null
-        lastSalePrice?: string | null
         lastSaleDate?: Date | null
+        lastSalePrice?: string | null
         ownerMember?: {
           __typename?: 'Membership'
           id: string
@@ -921,6 +893,7 @@ export type GetNftsConnectionQuery = {
         }
         transactionalStatusAuction?: {
           __typename?: 'Auction'
+          id: string
           isCompleted: boolean
           buyNowPrice?: string | null
           startingPrice: string

@@ -376,13 +376,6 @@ export type SearchQuery = {
                       | null
                   }
                 }
-                auction: {
-                  __typename?: 'Auction'
-                  isCompleted: boolean
-                  winningMemberId?: string | null
-                  id: string
-                  auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
-                }
               } | null
               bids: Array<{
                 __typename?: 'Bid'
@@ -420,13 +413,6 @@ export type SearchQuery = {
                       | { __typename?: 'AvatarUri'; avatarUri: string }
                       | null
                   }
-                }
-                auction: {
-                  __typename?: 'Auction'
-                  isCompleted: boolean
-                  winningMemberId?: string | null
-                  id: string
-                  auctionType: { __typename: 'AuctionTypeEnglish' } | { __typename: 'AuctionTypeOpen' }
                 }
               }>
               whitelistedMembers: Array<{
