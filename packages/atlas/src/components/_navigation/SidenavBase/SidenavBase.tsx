@@ -1,9 +1,10 @@
-import React, { createRef } from 'react'
+import React, { createRef, useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { NavItem, NavItemType } from '@/components/_navigation/NavItem'
 import { absoluteRoutes } from '@/config/routes'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { transitions } from '@/styles'
 
 import {
@@ -45,6 +46,15 @@ const SidenavBase: React.FC<SidenavProps> = ({
     scrollContainer?.current && scrollContainer.current.scrollTo(0, 0)
     toggleSideNav(expended)
   }
+  const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
+
+  useEffect(() => {
+    if (expanded) {
+      incrementOverlaysOpenCount()
+    } else {
+      decrementOverlaysOpenCount()
+    }
+  }, [decrementOverlaysOpenCount, expanded, incrementOverlaysOpenCount])
 
   return (
     <>
