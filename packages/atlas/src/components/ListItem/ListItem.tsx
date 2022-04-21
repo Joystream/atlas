@@ -72,8 +72,8 @@ export const ListItem = React.forwardRef<HTMLDivElement, ListItemProps>(
                 destructive
                   ? cVar('colorTextError')
                   : isHovering || selected
-                  ? cVar('colorCoreNeutral50')
-                  : cVar('colorTextStrong')
+                  ? cVar('colorTextStrong')
+                  : cVar('colorText')
               }
             >
               {label}

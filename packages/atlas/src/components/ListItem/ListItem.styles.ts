@@ -92,8 +92,8 @@ const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps)
       fill: ${destructive
         ? cVar('colorTextError')
         : isHovering || isSelected
-        ? cVar('colorCoreNeutral50')
-        : cVar('colorTextStrong')};
+        ? cVar('colorTextStrong')
+        : cVar('colorText')};
     }
   `
 
