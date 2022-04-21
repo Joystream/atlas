@@ -5,8 +5,7 @@ import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { SvgActionBid, SvgActionBuyNow, SvgActionSell, SvgControlsPlaceholder } from '@/components/_icons'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
 import { formatNumberShort } from '@/utils/number'
@@ -19,6 +18,7 @@ import {
   OverviewItem,
   OverviewTextContainer,
   PriceText,
+  StyledIconWrapper,
   StyledLink,
 } from './MemberActivity.styles'
 
@@ -107,7 +107,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
               <Text variant="h500">Overview</Text>
               <OverviewContainer>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgActionBuyNow />} size="large" />
+                  <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
                       NFTs bought
@@ -116,7 +116,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
                   </OverviewTextContainer>
                 </OverviewItem>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgActionSell />} size="large" />
+                  <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
                       NFTs sold
@@ -126,7 +126,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
                 </OverviewItem>
                 <GridRowWrapper>
                   <OverviewItem>
-                    <IconWrapper icon={<SvgControlsPlaceholder />} size="large" />
+                    <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
                       <Text variant="t100" secondary>
                         NFTs created
@@ -135,7 +135,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
                     </OverviewTextContainer>
                   </OverviewItem>
                   <OverviewItem>
-                    <IconWrapper icon={<SvgActionBid />} size="large" />
+                    <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
                       <Text variant="t100" secondary>
                         Bid placed
