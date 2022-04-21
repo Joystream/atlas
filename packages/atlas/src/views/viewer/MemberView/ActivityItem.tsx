@@ -22,9 +22,9 @@ import {
 import { ActivitiesRecord } from './MemberActivity.hooks'
 
 export type ActivityItemProps = {
-  type: ActivitiesRecord['type']
-  date: Date
-  title: string
+  type?: ActivitiesRecord['type']
+  date?: Date
+  title?: string
   description?: React.ReactNode
   thumnailUri: string
   thumbnailLoading?: boolean
@@ -88,10 +88,12 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
       ) : (
         <PillAndDateContainer>
           <Pill label={type} size="medium" />
-          <DateText variant="t100" secondary>
-            <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
-            <DateRow> {format(date, 'HH:mm')}</DateRow>
-          </DateText>
+          {date && (
+            <DateText variant="t100" secondary>
+              <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
+              <DateRow> {format(date, 'HH:mm')}</DateRow>
+            </DateText>
+          )}
         </PillAndDateContainer>
       )}
     </ActivityItemContainer>

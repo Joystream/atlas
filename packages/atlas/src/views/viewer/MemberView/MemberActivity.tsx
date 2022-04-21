@@ -75,9 +75,13 @@ type MemberActivityProps = {
   memberId?: string
 }
 
+const PLACEHOLDERS_COUNT = 8
+
 export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId)
   const navigate = useNavigate()
+  const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
+  const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
 
   return (
     <section>
@@ -87,16 +91,16 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
             <LayoutGrid>
-              {activities?.map((activity, i) => (
+              {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
                   <ActivityItemWithResolvedAsset
-                    loading={loading}
-                    onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video.id))}
-                    date={activity.date}
-                    type={activity.type}
-                    title={activity.video.title}
+                    loading={false}
+                    onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
+                    date={activity?.date}
+                    type={activity?.type}
+                    title={activity?.video?.title}
                     description={getDescription(activity)}
-                    thumbnailPhoto={activity.video.thumbnailPhoto}
+                    thumbnailPhoto={activity.video?.thumbnailPhoto}
                   />
                 </GridItem>
               ))}
@@ -154,7 +158,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
 }
 
 type ActivityItemWithResolvedAssetProps = {
-  thumbnailPhoto: StorageDataObjectFieldsFragment | null
+  thumbnailPhoto?: StorageDataObjectFieldsFragment | null
 } & Omit<ActivityItemProps, 'thumnailUri'>
 
 export const ActivityItemWithResolvedAsset: React.FC<ActivityItemWithResolvedAssetProps> = ({

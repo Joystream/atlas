@@ -4,10 +4,10 @@ import { useRawActivities } from '@/api/hooks'
 import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
 
 export type NftActivitiesRecord = {
-  id: string
-  date: Date
-  block: number
-  video: {
+  id?: string
+  date?: Date
+  block?: number
+  video?: {
     id: string
     title: string
     thumbnailPhoto: StorageDataObjectFieldsFragment | null
@@ -162,8 +162,9 @@ const parseActivities = (
 
 export const useActivities = (memberId?: string) => {
   const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId)
-  const parsedActivities = rawActivities.map((a) => parseActivities(a, memberId))
-  const activities = parsedActivities.filter((a): a is ActivitiesRecord => !!a)
+  const parsedActivities =
+    !loading && rawActivities && rawData && rawActivities.map((a) => parseActivities(a, memberId))
+  const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
   const totalCounts = useMemo(() => {
     const purchaseNftBought = rawData?.purchaseNftBoughtEventsConnection.totalCount || 0
@@ -184,9 +185,9 @@ export const useActivities = (memberId?: string) => {
   }, [rawData])
 
   return {
-    activities: rawData ? activities : undefined,
+    activities,
     activitiesTotalCounts: totalCounts,
     error,
-    loading: loading,
+    loading,
   }
 }

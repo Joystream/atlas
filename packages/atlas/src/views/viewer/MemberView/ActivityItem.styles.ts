@@ -77,7 +77,6 @@ export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
   ${media.sm} {
     width: 114px;
     height: 64px;
-    margin-right: ${sizes(2)};
   }
 
   ${media.lg} {
