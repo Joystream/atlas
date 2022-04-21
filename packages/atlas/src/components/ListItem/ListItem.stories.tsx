@@ -18,6 +18,8 @@ export default {
       control: { type: 'select', options: ['bottom', 'right'] },
       defaultValue: 'bottom',
     },
+    onClick: { table: { disable: true } },
+    className: { table: { disable: true } },
   },
   args: {
     label: 'ListItem label',

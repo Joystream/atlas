@@ -73,7 +73,7 @@ const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
     text-align: right;
   `
 export const Caption = styled(Text)<CaptionPosition>`
-  ${captionRightStyles}
+  ${captionRightStyles};
 `
 
 export const LabelContainer = styled.div`
@@ -92,8 +92,8 @@ const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps)
       fill: ${destructive
         ? cVar('colorTextError')
         : isHovering || isSelected
-        ? cVar('colorCoreNeutral50')
-        : cVar('colorCoreNeutral300')};
+        ? cVar('colorTextStrong')
+        : cVar('colorText')};
     }
   `
 
