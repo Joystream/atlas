@@ -5,6 +5,8 @@ import {
   AllNftFieldsFragment,
   BasicBidFieldsFragment,
   BasicMembershipFieldsFragment,
+  GetNftHistoryQuery,
+  GetNftHistoryQueryVariables,
   GetNftQuery,
   GetNftQueryVariables,
   GetNftsConnectionQuery,
@@ -125,8 +127,11 @@ export const useNftsConnection = (
   }
 }
 
-export const useNftHistory = (id: string | null) => {
-  const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id })
+export const useNftHistory = (
+  id: string | null,
+  opts?: QueryHookOptions<GetNftHistoryQuery, GetNftHistoryQueryVariables>
+) => {
+  const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
 
   const sortedEvents = useMemo(() => {
     const allEvents = data

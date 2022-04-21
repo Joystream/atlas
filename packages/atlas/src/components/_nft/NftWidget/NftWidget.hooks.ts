@@ -1,5 +1,4 @@
 import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
-import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
@@ -11,10 +10,12 @@ import { SentryLogger } from '@/utils/logs'
 
 import { NftHistoryEntry } from './NftHistory'
 
+const POLL_INTERVAL = 10000
+
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { activeMemberId } = useUser()
-  const { nft, nftStatus, startPolling: startNftPolling, stopPolling: stopNftPolling } = useNft(videoId ?? '')
+  const { nft, nftStatus } = useNft(videoId ?? '', { pollInterval: POLL_INTERVAL })
   const {
     isOwner,
     englishTimerState,
@@ -66,22 +67,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
-  const {
-    entries: nftHistory,
-    startPolling: startHistoryPolling,
-    stopPolling: stopHistoryPolling,
-  } = useNftHistoryEntries(videoId || null)
-
-  useEffect(() => {
-    const pollingInterval = 10000
-    startNftPolling(pollingInterval)
-    startHistoryPolling(pollingInterval)
-
-    return () => {
-      stopNftPolling()
-      stopHistoryPolling()
-    }
-  }, [startHistoryPolling, startNftPolling, stopHistoryPolling, stopNftPolling])
+  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, { pollInterval: POLL_INTERVAL })
 
   switch (nftStatus?.status) {
     case 'auction': {
@@ -145,8 +131,8 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   return null
 }
 
-export const useNftHistoryEntries = (videoId: string | null) => {
-  const { events, ...rest } = useNftHistory(videoId)
+export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<typeof useNftHistory>[1]) => {
+  const { events, ...rest } = useNftHistory(videoId, opts)
 
   const mappedEvents = events
     ? events.map((e): NftHistoryEntry => {
