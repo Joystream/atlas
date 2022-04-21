@@ -1,17 +1,19 @@
-import { format } from 'date-fns'
 import React from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useToggle } from '@/hooks/useToggle'
+import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
+import { formatDateTime } from '@/utils/time'
 
 import {
   CopyContainer,
@@ -29,81 +31,9 @@ import {
 import { Size } from './NftWidget'
 import { OwnerHandle } from './NftWidget.styles'
 
-type HitoryProps = { size: Size; width: number }
-export const NftHistory: React.FC<HitoryProps> = ({ size, width }) => {
+type NftHistoryProps = { size: Size; width: number; historyItems: NftHistoryEntry[] }
+export const NftHistory: React.FC<NftHistoryProps> = ({ size, width, historyItems }) => {
   const [isOpen, toggleIsOpen] = useToggle()
-  const { convertToUSD } = useTokenPrice()
-
-  const dummyData: HistoryItemProps[] = [
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Bid made by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Listed by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      copy: 'Auction settled by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Auction won by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Bid made by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Listed by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      copy: 'Auction settled by',
-      memberHandle: 'Madness',
-    },
-    {
-      date: new Date(),
-      memberAvatarUri: 'https://picsum.photos/40/40',
-      size,
-      joyAmount: 12334,
-      dollarValue: convertToUSD(12334),
-      copy: 'Auction won by',
-      memberHandle: 'Madness',
-    },
-  ]
 
   return (
     <>
@@ -115,9 +45,8 @@ export const NftHistory: React.FC<HitoryProps> = ({ size, width }) => {
         <HistoryPanelContainer>
           <FadingBlock data-size={size} width={width} />
           <HistoryPanel data-size={size} data-open={isOpen}>
-            {/* TODO: remove dummy data */}
-            {dummyData.map((props, index) => (
-              <HistoryItem key={index} {...props} />
+            {historyItems.map((props, index) => (
+              <HistoryItem key={index} {...props} size={size} />
             ))}
           </HistoryPanel>
           <FadingBlock data-size={size} width={width} data-bottom />
@@ -127,43 +56,42 @@ export const NftHistory: React.FC<HitoryProps> = ({ size, width }) => {
   )
 }
 
-type HistoryItemProps = {
-  size: Size
-  memberAvatarUri: string
+export type NftHistoryEntry = {
+  member: BasicMembershipFieldsFragment | undefined | null
   date: Date
   joyAmount?: number
-  dollarValue?: string | null
-  copy: string
-  memberHandle: string
+  text: string
 }
-export const HistoryItem: React.FC<HistoryItemProps> = ({
-  size,
-  memberAvatarUri,
-  date,
-  joyAmount,
-  dollarValue,
-  copy,
-  memberHandle,
-}) => {
+type HistoryItemProps = {
+  size: Size
+} & NftHistoryEntry
+export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
+  const { url, isLoadingAsset } = useMemberAvatar(member)
+  const { convertToUSD } = useTokenPrice()
+
+  const dollarValue = joyAmount ? convertToUSD(joyAmount) : null
+
   return (
     <HistoryItemContainer data-size={size}>
       <Avatar
-        onClick={() => navigate(absoluteRoutes.viewer.member(memberHandle))}
-        assetUrl={memberAvatarUri}
+        onClick={() => navigate(absoluteRoutes.viewer.member(member?.handle))}
+        assetUrl={url}
+        loading={isLoadingAsset}
         size={size === 'medium' ? 'small' : 'default'}
       />
       <TextContainer>
         <CopyContainer>
           <Text variant={size === 'medium' ? 'h300' : 'h200'} secondary>
-            {copy}{' '}
-            <OwnerHandle to={absoluteRoutes.viewer.member(memberHandle)} variant="secondary" textOnly>
-              <Text variant={size === 'medium' ? 'h300' : 'h200'}>{memberHandle}</Text>
+            {text}
+            {' by '}
+            <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)} variant="secondary" textOnly>
+              <Text variant={size === 'medium' ? 'h300' : 'h200'}>{member?.handle}</Text>
             </OwnerHandle>
           </Text>
         </CopyContainer>
         <Text variant="t100" secondary>
-          {format(date, "MMM d yyyy 'at' HH:mm")}
+          {formatDateTime(date)}
         </Text>
       </TextContainer>
       {!!joyAmount && (

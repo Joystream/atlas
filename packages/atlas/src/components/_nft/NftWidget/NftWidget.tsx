@@ -1,10 +1,8 @@
-import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
+import { differenceInSeconds } from 'date-fns'
 import React from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { getNftStatus } from '@/api/hooks'
-import { useBids } from '@/api/hooks/bids'
-import { AllBidFieldsFragment, AllNftFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
+import { AllBidFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
@@ -15,16 +13,13 @@ import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { absoluteRoutes } from '@/config/routes'
 import { useDeepMemo } from '@/hooks/useDeepMemo'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { EnglishTimerState, useNftState } from '@/hooks/useNftState'
+import { EnglishTimerState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib'
-import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
-import { useUser } from '@/providers/user'
-import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
-import { NftHistory } from './NftHistory'
+import { NftHistory, NftHistoryEntry } from './NftHistory'
 import { NftInfoItem, NftTimerItem } from './NftInfoItem'
 import {
   ButtonGrid,
@@ -85,6 +80,7 @@ export type NftWidgetProps = {
       }
     | Auction
     | undefined
+  nftHistory: NftHistoryEntry[]
   onNftPurchase?: () => void
   onNftSettlement?: () => void
   onNftBuyNow?: () => void
@@ -101,6 +97,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
   ownerHandle,
   isOwner,
   nftStatus,
+  nftHistory,
   needsSettling,
   ownerAvatarUri,
   onNftPutOnSale,
@@ -551,121 +548,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
       </NftOwnerContainer>
       <Content data-size={size}>{content}</Content>
 
-      <NftHistory size={size} width={width} />
+      <NftHistory size={size} width={width} historyItems={nftHistory} />
     </Container>
   )
-}
-
-type UseNftWidgetReturn = NftWidgetProps | null
-export const useNftWidget = (nft?: AllNftFieldsFragment | null): UseNftWidgetReturn => {
-  const { activeMemberId } = useUser()
-  const nftStatus = getNftStatus(nft)
-  const {
-    isOwner,
-    englishTimerState,
-    canWithdrawBid,
-    needsSettling,
-    auctionPlannedEndDate,
-    userBid,
-    startsAtDate,
-    isUserTopBidder,
-    userBidUnlockDate,
-    saleType,
-    startsAtBlock,
-    canChangeBid,
-    isUserWhitelisted,
-    plannedEndAtBlock,
-    hasTimersLoaded,
-  } = useNftState(nft)
-
-  const { bids: userBids } = useBids(
-    {
-      where: {
-        isCanceled_eq: false,
-        nft: { id_eq: nft?.id },
-        bidder: { id_eq: activeMemberId },
-      },
-    },
-    {
-      skip: !nft?.id || !activeMemberId,
-      onError: (error) =>
-        SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
-          data: {
-            nft: nft?.id,
-            member: activeMemberId,
-          },
-        }),
-    }
-  )
-
-  const unwithdrawnUserBids = userBids?.filter(
-    (bid) =>
-      bid.auction.auctionType.__typename === 'AuctionTypeOpen' &&
-      (nftStatus?.status !== 'auction' || bid.auction.id !== nftStatus.auctionId) &&
-      bid.auction.winningMemberId !== activeMemberId
-  )
-  const bidFromPreviousAuction = unwithdrawnUserBids?.[0]
-
-  const owner = nft?.ownerMember
-
-  const { url: ownerAvatarUri } = useMemberAvatar(owner)
-  const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
-
-  switch (nftStatus?.status) {
-    case 'auction': {
-      return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
-        isOwner,
-        needsSettling,
-        bidFromPreviousAuction,
-        nftStatus: {
-          ...nftStatus,
-          startsAtDate,
-          canWithdrawBid,
-          canChangeBid,
-          englishTimerState,
-          auctionPlannedEndDate,
-          topBidderAvatarUri,
-          isUserTopBidder,
-          userBidUnlockDate,
-          startsAtBlock,
-          plannedEndAtBlock,
-          hasTimersLoaded,
-          auctionBeginsDifferenceDays: startsAtDate ? differenceInCalendarDays(startsAtDate, new Date()) : 0,
-          auctionBeginsDifferenceSeconds: startsAtDate ? differenceInSeconds(startsAtDate, new Date()) : 0,
-          topBidderHandle: nftStatus.topBidder?.handle,
-          userBidAmount: Number(userBid?.amount) || undefined,
-          isUserWhitelisted,
-        },
-        saleType,
-      }
-    }
-    case 'buy-now':
-      return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
-        isOwner,
-        needsSettling,
-        bidFromPreviousAuction,
-        nftStatus: {
-          ...nftStatus,
-        },
-        saleType,
-      }
-    case 'idle':
-      return {
-        ownerHandle: owner?.handle,
-        ownerAvatarUri,
-        isOwner,
-        needsSettling,
-        bidFromPreviousAuction,
-        nftStatus: {
-          ...nftStatus,
-        },
-        saleType,
-      }
-  }
-
-  return null
 }

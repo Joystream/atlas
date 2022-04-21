@@ -1,13 +1,17 @@
 import { QueryHookOptions, QueryResult } from '@apollo/client'
+import { useMemo } from 'react'
 
 import {
   AllNftFieldsFragment,
   BasicBidFieldsFragment,
   BasicMembershipFieldsFragment,
+  GetNftHistoryQuery,
+  GetNftHistoryQueryVariables,
   GetNftQuery,
   GetNftQueryVariables,
   GetNftsConnectionQuery,
   GetNftsConnectionQueryVariables,
+  useGetNftHistoryQuery,
   useGetNftQuery,
   useGetNftsConnectionQuery,
 } from '@/api/queries'
@@ -119,6 +123,40 @@ export const useNftsConnection = (
     nfts: data?.ownedNftsConnection.edges.map(({ node }) => node),
     totalCount: data?.ownedNftsConnection.totalCount,
     pageInfo: data?.ownedNftsConnection.pageInfo,
+    ...rest,
+  }
+}
+
+export const useNftHistory = (
+  id: string | null,
+  opts?: QueryHookOptions<GetNftHistoryQuery, GetNftHistoryQueryVariables>
+) => {
+  const { data, ...rest } = useGetNftHistoryQuery({ variables: { nftId: id || '' }, skip: !id, ...opts })
+
+  const sortedEvents = useMemo(() => {
+    const allEvents = data
+      ? [
+          ...data.nftIssuedEvents,
+          ...data.openAuctionStartedEvents,
+          ...data.englishAuctionStartedEvents,
+          ...data.nftSellOrderMadeEvents,
+          ...data.auctionBidMadeEvents,
+          ...data.bidMadeCompletingAuctionEvents,
+          ...data.nftBoughtEvents,
+          ...data.englishAuctionSettledEvents,
+          ...data.openAuctionBidAcceptedEvents,
+          ...data.auctionBidCanceledEvents,
+          ...data.auctionCanceledEvents,
+          ...data.buyNowCanceledEvents,
+          ...data.buyNowPriceUpdatedEvents,
+        ]
+      : []
+
+    return allEvents.sort((e1, e2) => e2.createdAt.getTime() - e1.createdAt.getTime())
+  }, [data])
+
+  return {
+    events: sortedEvents,
     ...rest,
   }
 }

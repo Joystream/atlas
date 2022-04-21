@@ -59,7 +59,7 @@ export const HistoryPanel = styled.div<HistoryPanelProps>`
   position: relative;
   display: grid;
   gap: ${sizes(6)};
-  height: 280px;
+  max-height: 280px;
   padding: ${sizes(6)};
   overflow: hidden auto;
   transition: transform ${cVar('animationTransitionFast')};
@@ -111,6 +111,7 @@ export const JoyPlusIcon = styled.div`
   align-items: center;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
+  justify-content: end;
 `
 
 export const DollarValue = styled(Text)`
