@@ -12,7 +12,6 @@ import { formatDate, formatDateAgo } from '@/utils/time'
 
 import {
   CommentBody,
-  CommentContent,
   CommentHeader,
   CommentHeaderDot,
   CommentWrapper,
@@ -92,13 +91,13 @@ export const Comment: React.FC<CommentProps> = ({
             classNames={transitions.names.fade}
           >
             {loading ? (
-              <CommentContent>
+              <div>
                 <SkeletonLoader width={128} height={20} bottomSpace={8} />
                 <SkeletonLoader width="100%" height={16} bottomSpace={8} />
                 <SkeletonLoader width="70%" height={16} />
-              </CommentContent>
+              </div>
             ) : (
-              <CommentContent>
+              <div>
                 <CommentHeader>
                   <Text variant="h200" margin={{ right: 2 }}>
                     {memberHandle}
@@ -127,7 +126,7 @@ export const Comment: React.FC<CommentProps> = ({
                     comment
                   )}
                 </CommentBody>
-              </CommentContent>
+              </div>
             )}
           </CSSTransition>
         </SwitchTransition>

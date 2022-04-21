@@ -29,10 +29,6 @@ export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean }>`
   }
 `
 
-export const CommentContent = styled.div`
-  margin-bottom: ${sizes(2)};
-`
-
 export const CommentHeader = styled.div`
   display: flex;
   align-items: center;
