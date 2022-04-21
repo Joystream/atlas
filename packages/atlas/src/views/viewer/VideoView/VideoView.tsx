@@ -1,6 +1,7 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -27,6 +28,7 @@ import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -78,6 +80,10 @@ export const VideoView: React.FC = () => {
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
   const category = useCategoryMatch(video?.category?.id)
+
+  const { anyOverlaysOpen } = useOverlayManager()
+  const { ref: playerRef, inView: isPlayerInView } = useInView()
+  const pausePlayNext = anyOverlaysOpen || !isPlayerInView
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
@@ -327,6 +333,8 @@ export const VideoView: React.FC = () => {
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}
+                  isPlayNextDisabled={pausePlayNext}
+                  ref={playerRef}
                 />
               ) : (
                 <PlayerSkeletonLoader />
