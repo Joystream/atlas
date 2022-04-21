@@ -84,6 +84,9 @@ export type NftIssuanceInputMetadata = {
   sale?: NftSaleInputMetadata
 }
 
+export type VideoReaction = 'like' | 'dislike'
+export type CommentReaction = number
+
 type JoystreamEvents = AugmentedEvents<'promise'>
 type JoystreamEventData<TEvent> = TEvent extends AugmentedEvent<'promise', infer X> ? X : never
 export type GetEventDataFn = <TSection extends keyof JoystreamEvents, TMethod extends keyof JoystreamEvents[TSection]>(
@@ -103,3 +106,4 @@ export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; ass
 export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
+export type MetaprotcolExtrinsicResult = ExtrinsicResult

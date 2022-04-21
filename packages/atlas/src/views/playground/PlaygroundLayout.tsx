@@ -25,6 +25,7 @@ import {
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
+  PlaygroundReactionsComments,
   PlaygroundTokenPrice,
 } from './Playgrounds'
 
@@ -42,6 +43,7 @@ const playgroundRoutes = [
     element: <PlaygroundMinimizedTransaction />,
     name: 'Minimized transaction snackbar',
   },
+  { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
 ]
 
 const PlaygroundLayout = () => {
