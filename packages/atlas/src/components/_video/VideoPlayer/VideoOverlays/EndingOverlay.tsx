@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { BasicVideoFieldsFragment } from '@/api/queries'
@@ -30,6 +30,7 @@ type EndingOverlayProps = {
   onPlayAgain?: () => void
   randomNextVideo?: BasicVideoFieldsFragment | null
   isEnded: boolean
+  isPlayNextDisabled?: boolean
 }
 // 10 seconds
 const NEXT_VIDEO_TIMEOUT = 10 * 1000
@@ -41,6 +42,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
   currentThumbnailUrl,
   randomNextVideo,
   isEnded,
+  isPlayNextDisabled,
 }) => {
   const navigate = useNavigate()
   const [countdownProgress, setCountdownProgress] = useState(0)
@@ -57,7 +59,7 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
   }, [isEnded, randomNextVideo])
 
   useEffect(() => {
-    if (!randomNextVideo || !isCountDownStarted) {
+    if (!randomNextVideo || !isCountDownStarted || isPlayNextDisabled) {
       return
     }
 
@@ -79,13 +81,23 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
     return () => {
       clearTimeout(timeout)
     }
-  }, [countdownProgress, isCountDownStarted, isEnded, navigate, randomNextVideo])
+  }, [countdownProgress, isCountDownStarted, isEnded, isPlayNextDisabled, navigate, randomNextVideo])
+
+  const disablePlayNext = useCallback(() => {
+    setIsCountDownStarted(false)
+    setCountdownProgress(0)
+  }, [])
+
+  useEffect(() => {
+    if (isPlayNextDisabled) {
+      disablePlayNext()
+    }
+  }, [disablePlayNext, isPlayNextDisabled])
 
   const handleCountDownButton = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
     if (isCountDownStarted) {
-      setIsCountDownStarted(false)
-      setCountdownProgress(0)
+      disablePlayNext()
     } else {
       navigate(absoluteRoutes.viewer.video(randomNextVideo?.id))
     }

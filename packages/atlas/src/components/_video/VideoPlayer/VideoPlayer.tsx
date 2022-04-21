@@ -55,6 +55,7 @@ export type VideoPlayerProps = {
   channelId?: string
   videoId?: string
   isEmbedded?: boolean
+  isPlayNextDisabled?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -82,6 +83,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     autoplay,
     videoStyle,
     isEmbedded,
+    isPlayNextDisabled,
     ...videoJsConfig
   },
   externalRef
@@ -591,6 +593,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
+          isPlayNextDisabled={isPlayNextDisabled}
           playerState={playerState}
           onPlay={handlePlayPause}
           channelId={channelId}
