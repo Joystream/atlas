@@ -107,10 +107,15 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
 
 export const DateText = styled(Text)`
   text-align: end;
+`
+
+export const DateRow = styled.span`
+  display: inline;
+
   ${media.sm} {
-    max-width: 74px;
+    display: block;
   }
   ${media.lg} {
-    max-width: unset;
+    display: inline;
   }
 `

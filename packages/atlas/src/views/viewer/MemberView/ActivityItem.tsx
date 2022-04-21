@@ -1,13 +1,14 @@
+import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { imageUrlValidation } from '@/utils/asset'
-import { formatDateTime } from '@/utils/time'
 
 import {
   ActivityItemContainer,
+  DateRow,
   DateText,
   DescriptionSkeletonLoader,
   PillAndDateContainer,
@@ -88,7 +89,8 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
         <PillAndDateContainer>
           <Pill label={type} size="medium" />
           <DateText variant="t100" secondary>
-            {formatDateTime(date)}
+            <DateRow>{format(date, 'd MMM yyyy')},</DateRow>
+            <DateRow> {format(date, 'HH:mm')}</DateRow>
           </DateText>
         </PillAndDateContainer>
       )}
