@@ -401,7 +401,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         /* @ts-ignore TODO: this needs to be implemented on Query Node */
         name="commentsEnabled"
         control={control}
-        defaultValue="true"
+        defaultValue={true}
         rules={{
           validate: (value) => value !== null,
         }}
