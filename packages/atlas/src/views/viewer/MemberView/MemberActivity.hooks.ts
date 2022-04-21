@@ -188,6 +188,6 @@ export const useActivities = (memberId?: string) => {
     activities,
     activitiesTotalCounts: totalCounts,
     error,
-    loading,
+    loading: loading || (!rawData && !activities?.length),
   }
 }

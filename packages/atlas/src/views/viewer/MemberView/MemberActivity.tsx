@@ -94,7 +94,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
               {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
                   <ActivityItemWithResolvedAsset
-                    loading={false}
+                    loading={loading}
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                     date={activity?.date}
                     type={activity?.type}
