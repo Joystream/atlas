@@ -104,7 +104,7 @@ export const Comment: React.FC<CommentProps> = ({
                     {memberHandle}
                   </Text>
                   <CommentHeaderDot />
-                  <Tooltip text={tooltipDate} placement="top" offsetY={4} arrowDisabled>
+                  <Tooltip text={tooltipDate} placement="top" offsetY={4} arrowDisabled delay={[1000, null]}>
                     <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
                       {formatDateAgo(createdAt || new Date())}
                     </HighlightableText>
