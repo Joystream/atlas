@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
@@ -34,6 +35,10 @@ export const CommentHeader = styled.div`
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: ${sizes(2)};
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `
 
 export const CommentHeaderDot = styled.div`

@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 
 import { Comment, CommentProps } from './Comment'
 
@@ -18,9 +18,9 @@ export default {
   },
   decorators: [
     (Story) => (
-      <BrowserRouter>
+      <MemoryRouter>
         <Story />
-      </BrowserRouter>
+      </MemoryRouter>
     ),
   ],
   argTypes: {

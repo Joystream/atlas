@@ -17,6 +17,7 @@ import {
   CommentWrapper,
   HighlightableText,
   KebabMenuIconButton,
+  StyledLink,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
@@ -99,11 +100,14 @@ export const Comment: React.FC<CommentProps> = ({
             ) : (
               <div>
                 <CommentHeader>
-                  <Text variant="h200" margin={{ right: 2 }}>
-                    {memberHandle}
-                  </Text>
+                  <StyledLink to={memberUrl || ''}>
+                    <Text variant="h200" margin={{ right: 2 }}>
+                      {memberHandle}
+                    </Text>
+                  </StyledLink>
                   <CommentHeaderDot />
                   <Tooltip text={tooltipDate} placement="top" offsetY={4} arrowDisabled delay={[1000, null]}>
+                    {/*  TODO timestamp should be a hyperlink to that comment. */}
                     <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
                       {formatDateAgo(createdAt || new Date())}
                     </HighlightableText>
