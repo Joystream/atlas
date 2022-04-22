@@ -61,7 +61,7 @@ export const createAllNotificationArray = (data: GetNftActivitiesQuery) => {
   ]
 }
 
-export const useRawActivities = (memberId?: string) => {
+export const useRawActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {
   const { data, ...rest } = useGetNftActivitiesQuery({
     variables: {
       limit: 100,
@@ -72,9 +72,13 @@ export const useRawActivities = (memberId?: string) => {
 
   const sortedActivities = useMemo(() => {
     return data
-      ? createAllNotificationArray(data).sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
+      ? createAllNotificationArray(data).sort((n1, n2) =>
+          sort === 'createdAt_DESC'
+            ? n2.createdAt.getTime() - n1.createdAt.getTime()
+            : n1.createdAt.getTime() - n2.createdAt.getTime()
+        )
       : undefined
-  }, [data])
+  }, [data, sort])
 
   return {
     activities: sortedActivities,

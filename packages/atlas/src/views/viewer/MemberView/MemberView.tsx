@@ -36,7 +36,7 @@ const TABS = ['NFTs owned', 'Activity', 'About'] as const
 export const MemberView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
-  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [sortBy, setSortBy] = useState<'createdAt_ASC' | 'createdAt_DESC'>('createdAt_DESC')
   const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
   const { activeMemberId, activeMembership } = useUser()
   const { handle } = useParams()
@@ -54,7 +54,7 @@ export const MemberView: React.FC = () => {
         transactionalStatus_json,
         transactionalStatusAuction,
       },
-      orderBy: sortNftsBy,
+      orderBy: sortBy as OwnedNftOrderByInput,
     },
     { skip: !handle }
   )
@@ -75,9 +75,9 @@ export const MemberView: React.FC = () => {
   const toggleFilters = () => {
     setIsFiltersOpen((value) => !value)
   }
-  const handleSorting = (value?: unknown) => {
+  const handleSorting = (value?: 'createdAt_ASC' | 'createdAt_DESC' | null) => {
     if (value) {
-      setSortNftsBy(value as OwnedNftOrderByInput)
+      setSortBy(value)
     }
   }
   const handleSetCurrentTab = async (tab: number) => {
@@ -93,11 +93,11 @@ export const MemberView: React.FC = () => {
       case 'NFTs owned':
         return <MemberNFTs nfts={nfts} loading={loading} owner={activeMembership?.handle === handle} />
       case 'Activity':
-        return <MemberActivity memberId={member?.id} />
+        return <MemberActivity memberId={member?.id} sort={sortBy as 'createdAt_ASC' | 'createdAt_DESC'} />
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, currentTab, handle, loading, member?.id, nfts])
+  }, [activeMembership?.handle, currentTab, handle, loading, member?.id, nfts, sortBy])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)
@@ -111,6 +111,7 @@ export const MemberView: React.FC = () => {
 
   useEffect(() => {
     if (currentTabName) {
+      setSortBy('createdAt_DESC')
       setCurrentTab(currentTabName)
       setIsFiltersOpen(false)
     }
@@ -157,7 +158,7 @@ export const MemberView: React.FC = () => {
                 <Select
                   size="small"
                   labelPosition="left"
-                  value={sortNftsBy}
+                  value={sortBy}
                   items={NFT_SORT_OPTIONS}
                   onChange={handleSorting}
                 />

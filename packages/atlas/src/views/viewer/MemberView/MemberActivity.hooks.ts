@@ -160,8 +160,8 @@ const parseActivities = (
   }
 }
 
-export const useActivities = (memberId?: string) => {
-  const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId)
+export const useActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {
+  const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId, sort)
   const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 

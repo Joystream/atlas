@@ -77,12 +77,13 @@ const getDescription = (activity: ActivitiesRecord) => {
 
 type MemberActivityProps = {
   memberId?: string
+  sort?: 'createdAt_ASC' | 'createdAt_DESC'
 }
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
-  const { activities, loading, activitiesTotalCounts } = useActivities(memberId)
+export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+  const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
   const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
