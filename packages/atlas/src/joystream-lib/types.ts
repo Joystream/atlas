@@ -51,7 +51,9 @@ export type VideoInputMetadata = Omit<
   category?: number
   nft?: NftIssuanceInputMetadata
 }
-export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'>
+export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'> & {
+  ownerAccount: AccountId
+}
 export type MemberInputMetadata = Omit<IMembershipMetadata, 'avatarObject'>
 
 type NftBuyNowInputMetadata = {

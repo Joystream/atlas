@@ -121,9 +121,9 @@ export class JoystreamLibExtrinsics {
     const creationParameters = new ChannelCreationParameters(this.api.registry, {
       meta: channelMetadata,
       assets: channelAssets,
-      collaborators: new BTreeSet(this.api.registry, RuntimeMemberId),
-      moderators: new BTreeSet(this.api.registry, RuntimeMemberId),
-      reward_account: new Option<RuntimeAccountId>(this.api.registry, RuntimeAccountId),
+      collaborators: new BTreeSet(this.api.registry, RuntimeMemberId, [memberId]),
+      moderators: new BTreeSet(this.api.registry, RuntimeMemberId, [memberId]),
+      reward_account: new Option<RuntimeAccountId>(this.api.registry, RuntimeAccountId, inputMetadata.ownerAccount),
     })
 
     const contentActor = new ContentActor(this.api.registry, {
