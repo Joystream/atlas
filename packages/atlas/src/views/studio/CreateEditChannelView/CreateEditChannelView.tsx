@@ -80,7 +80,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
-  const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
+  const { activeMemberId, activeAccountId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -222,7 +222,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   }
 
   const submit = async (data: Inputs) => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !activeMemberId || !activeAccountId) {
       return
     }
 
@@ -233,6 +233,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
       ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+      ownerAccount: activeAccountId,
     }
 
     const assets: ChannelInputAssets = {}
