@@ -67,7 +67,11 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Withdrawal':
       return <>{activity.from.handle} withdrew a bid</>
     case 'Price change':
-      return <>{activity.from?.handle} changed price to </>
+      return (
+        <>
+          {activity.from?.handle} changed price to <PriceText>ツ {formatNumberShort(activity.price)}</PriceText>
+        </>
+      )
   }
 }
 

@@ -60,7 +60,7 @@ export type ActivitiesRecord =
     } & NftActivitiesRecord)
 
 const parseActivities = (
-  event: ReturnType<typeof useRawActivities>['activities'][0],
+  event: ReturnType<typeof useRawActivities>['activities'][number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
