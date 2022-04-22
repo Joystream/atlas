@@ -1,4 +1,4 @@
-import { cVar } from '@/styles/generated/variables'
+import { cVar } from '../generated/variables'
 
 export const oldColors = {
   white: '#FFFFFF',
