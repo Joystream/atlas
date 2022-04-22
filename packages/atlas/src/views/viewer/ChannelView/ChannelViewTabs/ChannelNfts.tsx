@@ -18,6 +18,7 @@ type ChannelNftsProps = {
   tilesPerPage: number
   ownedNftWhereInput?: OwnedNftWhereInput
   orderBy?: OwnedNftOrderByInput
+  isFiltersApplied?: boolean
 }
 
 export const ChannelNfts: React.FC<ChannelNftsProps> = ({
@@ -26,6 +27,7 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
   onResize,
   ownedNftWhereInput,
   orderBy,
+  isFiltersApplied,
 }) => {
   const { currentPage, setCurrentPage } = usePagination(0)
 
@@ -70,7 +72,14 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
     <>
       <VideoSection className={transitions.names.slide}>
         {!nftsWithPlaceholders.length && (
-          <EmptyFallback title="This channel does not have any NFTs issued yet" variant="small" />
+          <EmptyFallback
+            title={
+              isFiltersApplied
+                ? 'No NFTs found that match filter criteria'
+                : 'This channel does not have any NFTs issued yet'
+            }
+            variant="small"
+          />
         )}
         <Grid maxColumns={null} onResize={onResize}>
           {nftsWithPlaceholders?.map((nft, idx) => (
