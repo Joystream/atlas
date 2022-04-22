@@ -8,6 +8,7 @@ export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) =
   loading?: boolean
 }>`
   padding: ${sizes(4)};
+  text-decoration: none;
   display: grid;
   gap: ${sizes(4)} 0;
   grid-template-columns: 1fr auto;
@@ -21,7 +22,7 @@ export const ActivityItemContainer = styled('div', { shouldForwardProp: (prop) =
   }
 
   ${media.sm} {
-    grid-template-columns: auto 1fr 73px;
+    grid-template-columns: auto 1fr auto;
   }
 
   ${media.lg} {
@@ -76,7 +77,6 @@ export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
   ${media.sm} {
     width: 114px;
     height: 64px;
-    margin-right: ${sizes(2)};
   }
 
   ${media.lg} {
@@ -106,4 +106,15 @@ export const DescriptionSkeletonLoader = styled(SkeletonLoader)`
 
 export const DateText = styled(Text)`
   text-align: end;
+`
+
+export const DateRow = styled.span`
+  display: inline;
+
+  ${media.sm} {
+    display: block;
+  }
+  ${media.lg} {
+    display: inline;
+  }
 `

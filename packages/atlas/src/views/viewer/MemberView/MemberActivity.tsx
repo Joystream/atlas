@@ -1,129 +1,174 @@
 import React from 'react'
+import { useNavigate } from 'react-router'
 
+import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { SvgActionBid, SvgActionBuyNow, SvgActionSell, SvgControlsPlaceholder } from '@/components/_icons'
-import { IconWrapper } from '@/components/_icons/IconWrapper'
+import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
+import { absoluteRoutes } from '@/config/routes'
+import { useAsset } from '@/providers/assets'
+import { formatNumberShort } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
-import { GridRowWrapper, OverviewContainer, OverviewItem, OverviewTextContainer } from './MemberActivity.styles'
+import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
+import {
+  GridRowWrapper,
+  OverviewContainer,
+  OverviewItem,
+  OverviewTextContainer,
+  PriceText,
+  StyledIconWrapper,
+  StyledLink,
+} from './MemberActivity.styles'
 
-const activity: Array<ActivityItemProps> = [
-  {
-    date: new Date('11 Nov 2021, 20:25'),
-    type: 'Bid',
-    title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    description: 'Bedeho placed a bid for  ',
-    joy: 32000,
-    thumnailUri: 'https://atlas-dev.joystream.app/distributor-1/api/v1/assets/21',
-  },
-  {
-    date: new Date('11 Nov 2021, 20:25'),
-    type: 'Withdrawl',
-    title: 'AMSTERDAM LIGHT FESTIVAL - TRAVEL VLOG 220ENTERP...',
-    description: 'Bedeho purchased NFT for ',
-    joy: 325000000,
-    thumnailUri: 'https://atlas-dev.joystream.app/distributor-1/api/v1/assets/21',
-  },
-  {
-    date: new Date('11 Nov 2021, 20:25'),
-    type: 'Purchase',
-    title: 'Did An Alternate Reality Game Gone Wrong Predict QAnon?',
-    description: 'Bedeho won auction with  ',
-    joy: 112000,
-    thumnailUri: 'https://atlas-dev.joystream.app/distributor-1/api/v1/assets/21',
-  },
-  {
-    date: new Date('11 Nov 2021, 20:25'),
-    type: 'Purchase',
-    title: 'EVERYTHING YOU LOVE & EXPERIENCE ABOUT TRAVEL',
-    description: 'Bedeho placed a bid for ',
-    joy: 32000,
-    thumnailUri: 'https://atlas-dev.joystream.app/distributor-1/api/v1/assets/21',
-  },
-  {
-    date: new Date('11 Nov 2021, 20:25'),
-    type: 'Sale',
-    title: 'closer',
-    description: 'Bedeho sold NFT for  to Lenorette ',
-    joy: 986000,
-    thumnailUri: 'https://atlas-dev.joystream.app/distributor-1/api/v1/assets/21',
-  },
-]
+const getDescription = (activity: ActivitiesRecord) => {
+  switch (activity.type) {
+    case 'Bid':
+      return (
+        <>
+          {activity.from.handle} placed a bid for <PriceText>ツ {formatNumberShort(activity.bidAmount)} </PriceText>
+        </>
+      )
+    case 'Sale':
+      return (
+        <>
+          {activity.from?.handle} sold NFT to{' '}
+          <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
+            {activity.to?.handle}
+          </StyledLink>{' '}
+          NFT for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+        </>
+      )
+    case 'Purchase':
+      return (
+        <>
+          {activity.from?.handle} purchased NFT for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText> from{' '}
+          <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
+            {activity.to?.handle}{' '}
+          </StyledLink>
+        </>
+      )
+    case 'Listing':
+      return (
+        <>
+          {activity.from?.handle} listed NFT{' '}
+          {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
+            <>
+              for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+            </>
+          )}
+        </>
+      )
+    case 'Removal':
+      return <>{activity.from?.handle} removed NFT from sale</>
+    case 'Mint':
+      return <>{activity.from?.handle} minted new NFT</>
+    case 'Withdrawal':
+      return <>{activity.from.handle} withdrew a bid</>
+    case 'Price change':
+      return (
+        <>
+          {activity.from?.handle} changed price to <PriceText>ツ {formatNumberShort(activity.price)}</PriceText>
+        </>
+      )
+  }
+}
 
-//TODO: Fetch activity from member
-//TODO: infinite scrolling
-//TODO: Sorting activity by newest oldest
-export const MemberActivity = () => {
+type MemberActivityProps = {
+  memberId?: string
+  sort?: 'createdAt_ASC' | 'createdAt_DESC'
+}
+
+const PLACEHOLDERS_COUNT = 8
+
+export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+  const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
+  const navigate = useNavigate()
+  const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
+  const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
   return (
     <section>
-      {activity.length === 0 ? (
+      {activities?.length === 0 ? (
         <EmptyFallback title="No activity" subtitle="Go out there and explore!" variant="small" />
       ) : (
         <LayoutGrid>
           <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
             <LayoutGrid>
-              {activity?.map((activity, i) => (
+              {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
-                  <ActivityItem
-                    date={activity.date}
-                    type={activity.type}
-                    title={activity.title}
-                    description={activity.description}
-                    thumnailUri={activity.thumnailUri}
-                    joy={activity.joy}
+                  <ActivityItemWithResolvedAsset
+                    loading={!activities || loading}
+                    onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
+                    date={activity?.date}
+                    type={activity?.type}
+                    title={activity?.video?.title}
+                    description={getDescription(activity)}
+                    thumbnailPhoto={activity.video?.thumbnailPhoto}
                   />
                 </GridItem>
               ))}
             </LayoutGrid>
           </GridItem>
-          <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-            <Text variant="h500">Overview</Text>
-
-            <OverviewContainer>
-              <OverviewItem>
-                <IconWrapper icon={<SvgActionBuyNow />} size="large" />
-                <OverviewTextContainer>
-                  <Text variant="t100" secondary>
-                    Bought
-                  </Text>
-                  <Text variant="t300">120</Text>
-                </OverviewTextContainer>
-              </OverviewItem>
-              <OverviewItem>
-                <IconWrapper icon={<SvgActionSell />} size="large" />
-                <OverviewTextContainer>
-                  <Text variant="t100" secondary>
-                    Sold
-                  </Text>
-                  <Text variant="t300">80</Text>
-                </OverviewTextContainer>
-              </OverviewItem>
-              <GridRowWrapper>
+          {!loading && activitiesTotalCounts && (
+            <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
+              <Text variant="h500">Overview</Text>
+              <OverviewContainer>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgControlsPlaceholder />} size="large" />
+                  <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
-                      Created
+                      NFTs bought
                     </Text>
-                    <Text variant="t300">5</Text>
+                    <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
                   </OverviewTextContainer>
                 </OverviewItem>
                 <OverviewItem>
-                  <IconWrapper icon={<SvgActionBid />} size="large" />
+                  <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
                     <Text variant="t100" secondary>
-                      Bidding
+                      NFTs sold
                     </Text>
-                    <Text variant="t300">10</Text>
+                    <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
                   </OverviewTextContainer>
                 </OverviewItem>
-              </GridRowWrapper>
-            </OverviewContainer>
-          </GridItem>
+                <GridRowWrapper>
+                  <OverviewItem>
+                    <StyledIconWrapper icon={<SvgActionMint />} size="large" />
+                    <OverviewTextContainer>
+                      <Text variant="t100" secondary>
+                        NFTs created
+                      </Text>
+                      <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
+                    </OverviewTextContainer>
+                  </OverviewItem>
+                  <OverviewItem>
+                    <StyledIconWrapper icon={<SvgActionBid />} size="large" />
+                    <OverviewTextContainer>
+                      <Text variant="t100" secondary>
+                        Bid placed
+                      </Text>
+                      <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>
+                    </OverviewTextContainer>
+                  </OverviewItem>
+                </GridRowWrapper>
+              </OverviewContainer>
+            </GridItem>
+          )}
         </LayoutGrid>
       )}
     </section>
   )
+}
+
+type ActivityItemWithResolvedAssetProps = {
+  thumbnailPhoto?: StorageDataObjectFieldsFragment | null
+} & Omit<ActivityItemProps, 'thumnailUri'>
+
+export const ActivityItemWithResolvedAsset: React.FC<ActivityItemWithResolvedAssetProps> = ({
+  thumbnailPhoto,
+  ...restProps
+}) => {
+  const { url } = useAsset(thumbnailPhoto)
+  return <ActivityItem {...restProps} thumnailUri={url || ''} />
 }

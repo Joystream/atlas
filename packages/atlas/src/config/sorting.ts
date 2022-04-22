@@ -1,4 +1,4 @@
-import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
+import { VideoOrderByInput } from '@/api/queries'
 
 export const VIDEO_SORT_OPTIONS = [
   { name: 'Newest first', value: VideoOrderByInput.CreatedAtDesc },
@@ -6,6 +6,6 @@ export const VIDEO_SORT_OPTIONS = [
 ]
 
 export const NFT_SORT_OPTIONS = [
-  { name: 'Newest first', value: OwnedNftOrderByInput.CreatedAtDesc },
-  { name: 'Oldest first', value: OwnedNftOrderByInput.CreatedAtAsc },
+  { name: 'Newest first', value: 'createdAt_DESC' as const },
+  { name: 'Oldest first', value: 'createdAt_ASC' as const },
 ]
