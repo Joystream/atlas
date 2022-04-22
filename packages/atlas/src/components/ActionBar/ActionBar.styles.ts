@@ -117,8 +117,10 @@ export const ActionButtonPrimary = styled(Button)`
 
 export const EditSecondaryButton = styled(Button)`
   grid-area: secondary-button;
+  flex-shrink: 0;
 `
 export const SecondaryButton = styled(Button)`
+  flex-shrink: 0;
   grid-area: secondary-button;
   margin-top: ${sizes(4)};
   margin-right: ${sizes(4)};

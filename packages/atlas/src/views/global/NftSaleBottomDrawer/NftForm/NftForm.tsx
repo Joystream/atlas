@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addMilliseconds } from 'date-fns'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { useVideo } from '@/api/hooks'
@@ -56,6 +56,7 @@ type NftFormProps = {
 
 export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, videoId }) => {
   const { activeMembership } = useUser()
+  const scrollableWrapperRef = useRef<HTMLDivElement>(null)
   const {
     state: {
       termsAccepted,
@@ -209,12 +210,14 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   }
 
   const handleGoForward = useCallback(() => {
+    scrollableWrapperRef.current?.scrollIntoView()
     if (isOnLastStep) return
     nextStep()
   }, [isOnLastStep, nextStep])
 
   const handleGoBack = useCallback(() => {
     if (isOnFirstStep) return
+    scrollableWrapperRef.current?.scrollIntoView()
     previousStep()
   }, [isOnFirstStep, previousStep])
 
@@ -301,7 +304,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   ]
 
   return (
-    <ScrollableWrapper>
+    <ScrollableWrapper ref={scrollableWrapperRef}>
       <NftWorkspaceFormWrapper>
         <NftPreview>
           <NftTile interactable={false} {...nftTileProps} />
