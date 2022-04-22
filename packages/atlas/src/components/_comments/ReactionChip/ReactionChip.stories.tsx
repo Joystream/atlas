@@ -5,6 +5,11 @@ import { ReactionChip, ReactionChipProps } from './ReactionChip'
 
 export default {
   title: 'comments/ReactionChip',
+  args: {
+    active: true,
+    reaction: 'love',
+    state: 'default',
+  },
   component: ReactionChip,
 } as Meta<ReactionChipProps>
 
