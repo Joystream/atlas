@@ -45,7 +45,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
 
   if (activeMembership && auction) {
     isUserWhitelisted =
-      auction.whitelistedMembers.length === 0
+      auction.whitelistedMembers.length === 0 || isOwner
         ? true
         : auction.whitelistedMembers.some((member) => member.id === activeMembership.id)
   }
