@@ -99,6 +99,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     getValues,
     setValue,
     watch,
+    trigger,
     formState: { isValid },
   } = formMethods
 
@@ -111,42 +112,42 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const [openModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
+    const startDateValue = getValues('startDate')
+    const startDate = startDateValue?.type === 'date' && startDateValue.date
+    if (startDate && new Date() > startDate) {
+      trigger('startDate')
+      // the start date is in the past, abort the submit and show a modal
+      openModal({
+        title: 'Starting date you set has already past!',
+        children: (
+          <Text variant="t200" secondary>
+            You can’t list on <Text variant="t200">{formatDateTime(startDate)} </Text>
+            as this time has already past. Issue with current time or go back to change starting date.
+          </Text>
+        ),
+        primaryButton: {
+          variant: 'warning',
+          size: 'large',
+          text: 'Issue with current time',
+          onClick: () => {
+            setValue('startDate', null)
+            closeModal()
+          },
+        },
+        secondaryButton: {
+          variant: 'secondary',
+          size: 'large',
+          text: 'Change starting date',
+          onClick: () => {
+            previousStep()
+            closeModal()
+          },
+        },
+      })
+      return
+    }
+
     const handler = createSubmitHandler((data) => {
-      const startDate = data.startDate?.type === 'date' && data.startDate.date
-
-      if (startDate && new Date() > startDate) {
-        // the start date is in the past, abort the submit and show a modal
-
-        openModal({
-          title: 'Starting date you set has already past!',
-          children: (
-            <Text variant="t200" secondary>
-              You can’t list on <Text variant="t200">{formatDateTime(startDate)} </Text>
-              as this time has already past. Issue with current time or go back to change starting date.
-            </Text>
-          ),
-          primaryButton: {
-            variant: 'warning',
-            size: 'large',
-            text: 'Issue with current time',
-            onClick: () => {
-              setValue('startDate', null)
-              closeModal()
-            },
-          },
-          secondaryButton: {
-            variant: 'secondary',
-            size: 'large',
-            text: 'Change starting date',
-            onClick: () => {
-              previousStep()
-              closeModal()
-            },
-          },
-        })
-        return
-      }
-
       if (listingType === 'Fixed price') {
         if (!data.buyNowPrice) {
           SentryLogger.error('Missing buy now price for fixed price NFT', 'NftForm', null, {
@@ -198,11 +199,13 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     closeModal,
     convertMsTimestampToBlock,
     createSubmitHandler,
+    getValues,
     listingType,
     onSubmit,
     openModal,
     previousStep,
     setValue,
+    trigger,
   ])
 
   const toggleTermsAccept = () => {
