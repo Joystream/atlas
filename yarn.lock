@@ -2823,6 +2823,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm:2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 2.1.0
+  resolution: "@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm%3A2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e::version=2.1.0&hash=faeb58&locator=root-workspace-0b6124%40workspace%3A."
+  dependencies:
+    "@types/iso-3166-2": ^1.0.0
+    "@types/long": ^4.0.1
+    google-protobuf: ^3.14.0
+    i18n-iso-countries: ^6.8.0
+    iso-3166-2: ^1.0.0
+    iso-639-1: ^2.1.9
+    long: ^4.0.0
+    protobufjs: ^6.11.2
+  checksum: ceb2f6c72105dfce6bbbc8b0d1bec8b3b13bb90dcf67757f25bb77c2efe3ac38273778bb7435a174e68797886d98e7ed74389a9de7f9109ed29f8a2064d8b2fb
+  languageName: node
+  linkType: hard
+
 "@joystream/prettier-config@npm:^1.0.0":
   version: 1.0.0
   resolution: "@joystream/prettier-config@npm:1.0.0"
@@ -5645,10 +5661,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*":
   version: 17.0.18
   resolution: "@types/node@npm:17.0.18"
   checksum: 6c4edfc2b3ba2342a9c3d56e934c5245948ab752f4dc04bd6790b9603e6ebc53bc4f5befc3662e207f7dba2ddd17ccf657f915e319ea7cdd4f77b851079d1611
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=13.7.0":
+  version: 17.0.23
+  resolution: "@types/node@npm:17.0.23"
+  checksum: a3517554737cbb042e76c30d0e5482192ac4d9bea0eeb086e2622d9cabf460a0eb52a696b99fcd18e7fcc93c96db6cc7ae507f6608f256ef0b5c1d8c87a5a470
   languageName: node
   linkType: hard
 
@@ -11936,9 +11959,9 @@ fsevents@^1.2.7:
   linkType: hard
 
 "google-protobuf@npm:^3.14.0":
-  version: 3.17.3
-  resolution: "google-protobuf@npm:3.17.3"
-  checksum: efe264f3cf854a78f7197c4d8c84eabd1ce8c4ef2806cb3e0bb7f2b5e18f559739ab31adfefbd99e81312c3683f482400fa370896a8b0cc66adfedb114256420
+  version: 3.20.0
+  resolution: "google-protobuf@npm:3.20.0"
+  checksum: 2d243504362875f24a6e61fa3412cbdf04530166204f568734c2aa1b417336787555c0086c75b065c6972cbcf5cd47c3f1af4cadfe0655f0a75da3e1f962c656
   languageName: node
   linkType: hard
 
