@@ -24,7 +24,8 @@
     "svgs:icons": "yarn svgs:icons-import && yarn svgs:icons-generate",
     "graphql": "rimraf src/api/queries/__generated__ && graphql-codegen --config codegen.config.yml -r dotenv/config",
     "test": "vitest run",
-    "test:dev": "vitest dev"
+    "test:dev": "vitest dev",
+    "madge:circular": "madge --circular ./src/* --ts-config ./tsconfig.json --extensions ts,tsx"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
@@ -121,6 +122,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "happy-dom": "^2.31.1",
+    "madge": "^5.0.1",
     "postcss-syntax": "^0.36.2",
     "react-hooks-testing-library": "^0.6.0",
     "rimraf": "^3.0.2",

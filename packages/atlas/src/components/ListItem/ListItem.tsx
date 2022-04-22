@@ -10,11 +10,10 @@ import {
   LabelCaptionContainer,
   LabelContainer,
   LabelText,
+  ListItemSizes,
   NodeContainer,
   SelectedIcon,
 } from './ListItem.styles'
-
-export type ListItemSizes = 'small' | 'medium' | 'large'
 
 export type ListItemProps = {
   label: React.ReactNode

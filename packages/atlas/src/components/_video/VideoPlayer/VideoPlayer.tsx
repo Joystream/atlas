@@ -42,7 +42,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
-import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
+import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
@@ -69,8 +69,6 @@ declare global {
 }
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
-
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {

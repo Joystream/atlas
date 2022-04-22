@@ -29,12 +29,10 @@ import {
   OwnerAvatar,
   OwnerHandle,
   OwnerLabel,
+  Size,
   TopBidderContainer,
   TopBidderTokenContainer,
-  sizeObj,
 } from './NftWidget.styles'
-
-export type Size = keyof typeof sizeObj
 
 export type Auction = {
   status: 'auction'

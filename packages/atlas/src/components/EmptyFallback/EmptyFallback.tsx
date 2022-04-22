@@ -2,9 +2,7 @@ import React, { FC, ReactNode } from 'react'
 
 import { SvgEmptyStateIllustration } from '@/components/_illustrations'
 
-import { ButtonWrapper, Container, Message, Subtitle, Title } from './EmptyFallback.styles'
-
-export type EmptyFallbackSizes = 'small' | 'large'
+import { ButtonWrapper, Container, EmptyFallbackSizes, Message, Subtitle, Title } from './EmptyFallback.styles'
 
 export type EmptyFallbackProps = {
   title: string

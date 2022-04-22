@@ -10,6 +10,7 @@ import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,
+  ActionBarVariant,
   ActionButtonPrimary,
   ActionButtonPrimaryTooltip,
   DetailsIconWrapper,
@@ -33,8 +34,6 @@ type ActionDialogDraftBadge = {
   text: string
   tooltip?: TooltipProps
 }
-
-export type ActionBarVariant = 'new' | 'edit' | 'nft'
 
 export type ActionBarProps = {
   variant?: ActionBarVariant

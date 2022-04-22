@@ -36,9 +36,8 @@ import {
   ProgressbarContainer,
   RetryButton,
   StatusText,
+  UploadStatusGroupSize,
 } from './UploadStatus.styles'
-
-import { UploadStatusGroupSize } from '../UploadStatusGroup'
 
 type UploadStatusProps = {
   isLast?: boolean

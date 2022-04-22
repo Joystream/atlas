@@ -17,6 +17,8 @@ import { Registry } from '@polkadot/types/types'
 
 import { SentryLogger } from '@/utils/logs'
 
+import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
+import { JoystreamLibError } from './errors'
 import {
   ChannelAssets,
   ChannelAssetsIds,
@@ -33,9 +35,7 @@ import {
   VideoAssets,
   VideoAssetsIds,
   VideoInputAssets,
-} from './'
-import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
-import { JoystreamLibError } from './errors'
+} from './types'
 
 export const NFT_PERBILL_PERCENT = 10_000_000
 

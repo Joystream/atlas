@@ -8,7 +8,7 @@ import { oldColors, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
-import { PlayerState } from './VideoPlayer'
+import { PlayerState } from './utils'
 
 type VideoOverlayProps = {
   playerState: PlayerState

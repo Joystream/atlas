@@ -47,8 +47,8 @@ import {
   TitleSkeletonLoader,
 } from './ChannelView.styles'
 import { ChannelAbout, ChannelNfts, ChannelVideos } from './ChannelViewTabs'
+import { TABS } from './utils'
 
-export const TABS = ['Videos', 'NFTs', 'Information'] as const
 export const INITIAL_TILES_PER_ROW = 4
 
 export const ChannelView: React.FC = () => {
