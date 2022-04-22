@@ -86,7 +86,6 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
   const items = activities && !loading ? activities : (placeholderItems as ActivitiesRecord[])
-
   return (
     <section>
       {activities?.length === 0 ? (
@@ -98,7 +97,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
               {items?.map((activity, i) => (
                 <GridItem key={i} colSpan={{ base: 12 }}>
                   <ActivityItemWithResolvedAsset
-                    loading={loading}
+                    loading={!activities || loading}
                     onItemClick={() => navigate(absoluteRoutes.viewer.video(activity.video?.id))}
                     date={activity?.date}
                     type={activity?.type}
@@ -110,7 +109,7 @@ export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId }) => {
               ))}
             </LayoutGrid>
           </GridItem>
-          {!loading && (
+          {!loading && activitiesTotalCounts && (
             <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
               <Text variant="h500">Overview</Text>
               <OverviewContainer>

@@ -2,6 +2,7 @@ import { QueryHookOptions } from '@apollo/client'
 import { useMemo } from 'react'
 
 import {
+  GetNftActivitiesQuery,
   GetNftNotificationsQuery,
   GetNftNotificationsQueryVariables,
   useGetNftActivitiesQuery,
@@ -40,34 +41,39 @@ export const useRawNotifications = (
   }
 }
 
+export const createAllNotificationArray = (data: GetNftActivitiesQuery) => {
+  return [
+    ...data.auctionBidMadeEventsConnection.edges.map((e) => e.node),
+    ...data.purchaseNftBoughtEventsConnection.edges.map((e) => e.node),
+    ...data.purchaseBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
+    ...data.purchaseOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
+    ...data.saleNftBoughtEventsConnection.edges.map((e) => e.node),
+    ...data.saleBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
+    ...data.saleOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
+    ...data.englishAuctionStartedEventsConnection.edges.map((e) => e.node),
+    ...data.openAuctionStartedEventsConnection.edges.map((e) => e.node),
+    ...data.nftSellOrderMadeEventsConnection.edges.map((e) => e.node),
+    ...data.auctionBidCanceledEventsConnection.edges.map((e) => e.node),
+    ...data.buyNowCanceledEventsConnection.edges.map((e) => e.node),
+    ...data.auctionCanceledEventsConnection.edges.map((e) => e.node),
+    ...data.buyNowPriceUpdatedEventsConnection.edges.map((e) => e.node),
+    ...data.nftIssuedEventsConnection.edges.map((e) => e.node),
+  ]
+}
+
 export const useRawActivities = (memberId?: string) => {
   const { data, ...rest } = useGetNftActivitiesQuery({
     variables: {
       limit: 100,
       memberId: memberId || '',
     },
+    skip: !memberId,
   })
+
   const sortedActivities = useMemo(() => {
-    const allNotifications = data
-      ? [
-          ...data.auctionBidMadeEventsConnection.edges.map((e) => e.node),
-          ...data.purchaseNftBoughtEventsConnection.edges.map((e) => e.node),
-          ...data.purchaseBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
-          ...data.purchaseOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
-          ...data.saleNftBoughtEventsConnection.edges.map((e) => e.node),
-          ...data.saleBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
-          ...data.saleOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
-          ...data.englishAuctionStartedEventsConnection.edges.map((e) => e.node),
-          ...data.openAuctionStartedEventsConnection.edges.map((e) => e.node),
-          ...data.nftSellOrderMadeEventsConnection.edges.map((e) => e.node),
-          ...data.auctionBidCanceledEventsConnection.edges.map((e) => e.node),
-          ...data.buyNowCanceledEventsConnection.edges.map((e) => e.node),
-          ...data.auctionCanceledEventsConnection.edges.map((e) => e.node),
-          ...data.buyNowPriceUpdatedEventsConnection.edges.map((e) => e.node),
-          ...data.nftIssuedEventsConnection.edges.map((e) => e.node),
-        ]
-      : []
-    return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
+    return data
+      ? createAllNotificationArray(data).sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
+      : undefined
   }, [data])
 
   return {

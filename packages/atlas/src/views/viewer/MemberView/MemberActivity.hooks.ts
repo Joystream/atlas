@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useRawActivities } from '@/api/hooks'
+import { createAllNotificationArray, useRawActivities } from '@/api/hooks'
 import { BasicMembershipFieldsFragment, StorageDataObjectFieldsFragment } from '@/api/queries'
 
 export type NftActivitiesRecord = {
@@ -60,7 +60,7 @@ export type ActivitiesRecord =
     } & NftActivitiesRecord)
 
 const parseActivities = (
-  event: ReturnType<typeof useRawActivities>['activities'][number],
+  event: ReturnType<typeof createAllNotificationArray>[number],
   memberId?: string
 ): ActivitiesRecord | null => {
   const commonFields: NftActivitiesRecord = {
@@ -162,8 +162,7 @@ const parseActivities = (
 
 export const useActivities = (memberId?: string) => {
   const { activities: rawActivities, rawData, error, loading } = useRawActivities(memberId)
-  const parsedActivities =
-    !loading && rawActivities && rawData && rawActivities.map((a) => parseActivities(a, memberId))
+  const parsedActivities = rawActivities && rawActivities.map((a) => parseActivities(a, memberId))
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
   const totalCounts = useMemo(() => {
@@ -176,18 +175,20 @@ export const useActivities = (memberId?: string) => {
     const saleOpenAuctionBidAccepted = rawData?.saleOpenAuctionBidAcceptedEventsConnection.totalCount || 0
     const nftIssued = rawData?.nftIssuedEventsConnection.totalCount || 0
 
-    return {
-      nftsBoughts: purchaseNftBought + purchaseBidMadeCompletingAuction + purchaseOpenAuctionBidAccepted,
-      nftsSold: saleNftBought + saleBidMadeCompletingAuction + saleOpenAuctionBidAccepted,
-      nftsIssued: nftIssued,
-      nftsBidded: auctionBidMade,
-    }
+    return rawData
+      ? {
+          nftsBoughts: purchaseNftBought + purchaseBidMadeCompletingAuction + purchaseOpenAuctionBidAccepted,
+          nftsSold: saleNftBought + saleBidMadeCompletingAuction + saleOpenAuctionBidAccepted,
+          nftsIssued: nftIssued,
+          nftsBidded: auctionBidMade,
+        }
+      : undefined
   }, [rawData])
 
   return {
     activities,
     activitiesTotalCounts: totalCounts,
     error,
-    loading: loading || (!rawData && !activities?.length),
+    loading,
   }
 }
