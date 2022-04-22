@@ -1430,14 +1430,12 @@ export type Bid = BaseGraphQlObject & {
   bidder: Membership
   bidderId: Scalars['String']
   bidmadecompletingauctioneventpreviousTopBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
-  bidmadecompletingauctioneventwinningBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
   /** Block in which the bid was placed */
   createdInBlock: Scalars['Int']
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['String']>
-  englishauctionsettledeventwinningBid?: Maybe<Array<EnglishAuctionSettledEvent>>
   id: Scalars['ID']
   /** Index of event in block where bid was made. */
   indexInBlock: Scalars['Int']
@@ -1509,8 +1507,6 @@ export type BidMadeCompletingAuctionEvent = BaseGraphQlObject &
     version: Scalars['Int']
     video: Video
     videoId: Scalars['String']
-    winningBid: Bid
-    winningBidId: Scalars['String']
   }
 
 export type BidMadeCompletingAuctionEventConnection = {
@@ -1532,7 +1528,6 @@ export type BidMadeCompletingAuctionEventCreateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price: Scalars['String']
   video: Scalars['ID']
-  winningBid: Scalars['ID']
 }
 
 export type BidMadeCompletingAuctionEventEdge = {
@@ -1570,8 +1565,6 @@ export enum BidMadeCompletingAuctionEventOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
   VideoAsc = 'video_ASC',
   VideoDesc = 'video_DESC',
-  WinningBidAsc = 'winningBid_ASC',
-  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type BidMadeCompletingAuctionEventUpdateInput = {
@@ -1586,7 +1579,6 @@ export type BidMadeCompletingAuctionEventUpdateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price?: InputMaybe<Scalars['String']>
   video?: InputMaybe<Scalars['ID']>
-  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type BidMadeCompletingAuctionEventWhereInput = {
@@ -1647,7 +1639,6 @@ export type BidMadeCompletingAuctionEventWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
-  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type BidMadeCompletingAuctionEventWhereUniqueInput = {
@@ -1705,9 +1696,6 @@ export type BidWhereInput = {
   bidmadecompletingauctioneventpreviousTopBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
-  bidmadecompletingauctioneventwinningBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
-  bidmadecompletingauctioneventwinningBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
-  bidmadecompletingauctioneventwinningBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -1729,9 +1717,6 @@ export type BidWhereInput = {
   deletedAt_lte?: InputMaybe<Scalars['DateTime']>
   deletedById_eq?: InputMaybe<Scalars['ID']>
   deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  englishauctionsettledeventwinningBid_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  englishauctionsettledeventwinningBid_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  englishauctionsettledeventwinningBid_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
   id_eq?: InputMaybe<Scalars['ID']>
   id_in?: InputMaybe<Array<Scalars['ID']>>
   indexInBlock_eq?: InputMaybe<Scalars['Int']>
@@ -6240,6 +6225,7 @@ export type Channel = BaseGraphQlObject & {
   activeVideosCounter: Scalars['Int']
   avatarPhoto?: Maybe<StorageDataObject>
   avatarPhotoId?: Maybe<Scalars['String']>
+  bannedMembers: Array<Membership>
   category?: Maybe<ChannelCategory>
   categoryId?: Maybe<Scalars['String']>
   channelNftCollectors: Array<ChannelNftCollectors>
@@ -6262,6 +6248,7 @@ export type Channel = BaseGraphQlObject & {
   isPublic?: Maybe<Scalars['Boolean']>
   language?: Maybe<Language>
   languageId?: Maybe<Scalars['String']>
+  memberbannedfromchanneleventchannel?: Maybe<Array<MemberBannedFromChannelEvent>>
   ownednftcreatorChannel?: Maybe<Array<OwnedNft>>
   ownerCuratorGroup?: Maybe<CuratorGroup>
   ownerCuratorGroupId?: Maybe<Scalars['String']>
@@ -6613,6 +6600,9 @@ export type ChannelWhereInput = {
   activeVideosCounter_lt?: InputMaybe<Scalars['Int']>
   activeVideosCounter_lte?: InputMaybe<Scalars['Int']>
   avatarPhoto?: InputMaybe<StorageDataObjectWhereInput>
+  bannedMembers_every?: InputMaybe<MembershipWhereInput>
+  bannedMembers_none?: InputMaybe<MembershipWhereInput>
+  bannedMembers_some?: InputMaybe<MembershipWhereInput>
   category?: InputMaybe<ChannelCategoryWhereInput>
   channelNftCollectors_every?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_none?: InputMaybe<ChannelNftCollectorsWhereInput>
@@ -6654,6 +6644,9 @@ export type ChannelWhereInput = {
   isPublic_eq?: InputMaybe<Scalars['Boolean']>
   isPublic_in?: InputMaybe<Array<Scalars['Boolean']>>
   language?: InputMaybe<LanguageWhereInput>
+  memberbannedfromchanneleventchannel_every?: InputMaybe<MemberBannedFromChannelEventWhereInput>
+  memberbannedfromchanneleventchannel_none?: InputMaybe<MemberBannedFromChannelEventWhereInput>
+  memberbannedfromchanneleventchannel_some?: InputMaybe<MemberBannedFromChannelEventWhereInput>
   ownednftcreatorChannel_every?: InputMaybe<OwnedNftWhereInput>
   ownednftcreatorChannel_none?: InputMaybe<OwnedNftWhereInput>
   ownednftcreatorChannel_some?: InputMaybe<OwnedNftWhereInput>
@@ -6682,6 +6675,1404 @@ export type ChannelWhereInput = {
 }
 
 export type ChannelWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type Comment = BaseGraphQlObject & {
+  __typename?: 'Comment'
+  author: Membership
+  authorId: Scalars['String']
+  commentcreatedeventcomment?: Maybe<Array<CommentCreatedEvent>>
+  commentdeletedeventcomment?: Maybe<Array<CommentDeletedEvent>>
+  commentmoderatedeventcomment?: Maybe<Array<CommentModeratedEvent>>
+  commentparentComment?: Maybe<Array<Comment>>
+  commentpinnedeventcomment?: Maybe<Array<CommentPinnedEvent>>
+  commentreactedeventcomment?: Maybe<Array<CommentReactedEvent>>
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  deletedInEvent?: Maybe<CommentDeletedEvent>
+  deletedInEventId?: Maybe<Scalars['String']>
+  edits: Array<CommentTextUpdatedEvent>
+  id: Scalars['ID']
+  /** Whether comment has been edited or not */
+  isEdited: Scalars['Boolean']
+  moderatedInEvent?: Maybe<CommentModeratedEvent>
+  moderatedInEventId?: Maybe<Scalars['String']>
+  parentComment?: Maybe<Comment>
+  parentCommentId?: Maybe<Scalars['String']>
+  reactions: Array<CommentReaction>
+  /** Total number of reactions to this comment */
+  reactionsCount: Scalars['Int']
+  reactionsCountByReactionId: Array<CommentReactionsCountByReactionId>
+  /** How many comments has replied to this comment */
+  repliesCount: Scalars['Int']
+  /** Status of the comment; either it is visible, deleted, or moderated (deleted by moderator) */
+  status: CommentStatus
+  /** Comment text */
+  text: Scalars['String']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+  videopinnedComment?: Maybe<Array<Video>>
+}
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection'
+  edges: Array<CommentEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentCreateInput = {
+  author: Scalars['ID']
+  deletedInEvent?: InputMaybe<Scalars['ID']>
+  isEdited: Scalars['Boolean']
+  moderatedInEvent?: InputMaybe<Scalars['ID']>
+  parentComment?: InputMaybe<Scalars['ID']>
+  reactionsCount: Scalars['Float']
+  repliesCount: Scalars['Float']
+  status: CommentStatus
+  text: Scalars['String']
+  video: Scalars['ID']
+}
+
+export type CommentCreatedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentCreatedEvent'
+    comment: Comment
+    commentId: Scalars['String']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Comment's original text */
+    text: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentCreatedEventConnection = {
+  __typename?: 'CommentCreatedEventConnection'
+  edges: Array<CommentCreatedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentCreatedEventCreateInput = {
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  text: Scalars['String']
+}
+
+export type CommentCreatedEventEdge = {
+  __typename?: 'CommentCreatedEventEdge'
+  cursor: Scalars['String']
+  node: CommentCreatedEvent
+}
+
+export enum CommentCreatedEventOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  TextAsc = 'text_ASC',
+  TextDesc = 'text_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentCreatedEventUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  text?: InputMaybe<Scalars['String']>
+}
+
+export type CommentCreatedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentCreatedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentCreatedEventWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  text_contains?: InputMaybe<Scalars['String']>
+  text_endsWith?: InputMaybe<Scalars['String']>
+  text_eq?: InputMaybe<Scalars['String']>
+  text_in?: InputMaybe<Array<Scalars['String']>>
+  text_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentCreatedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentDeletedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentDeletedEvent'
+    comment: Comment
+    commentId: Scalars['String']
+    commentdeletedInEvent?: Maybe<Array<Comment>>
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentDeletedEventConnection = {
+  __typename?: 'CommentDeletedEventConnection'
+  edges: Array<CommentDeletedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentDeletedEventCreateInput = {
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+}
+
+export type CommentDeletedEventEdge = {
+  __typename?: 'CommentDeletedEventEdge'
+  cursor: Scalars['String']
+  node: CommentDeletedEvent
+}
+
+export enum CommentDeletedEventOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentDeletedEventUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+}
+
+export type CommentDeletedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentDeletedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentDeletedEventWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  commentdeletedInEvent_every?: InputMaybe<CommentWhereInput>
+  commentdeletedInEvent_none?: InputMaybe<CommentWhereInput>
+  commentdeletedInEvent_some?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentDeletedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentEdge = {
+  __typename?: 'CommentEdge'
+  cursor: Scalars['String']
+  node: Comment
+}
+
+export type CommentModeratedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentModeratedEvent'
+    /** The actor responsible for the removal of comment */
+    actor: ContentActor
+    comment: Comment
+    commentId: Scalars['String']
+    commentmoderatedInEvent?: Maybe<Array<Comment>>
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Comment deletion rationale */
+    rationale: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentModeratedEventConnection = {
+  __typename?: 'CommentModeratedEventConnection'
+  edges: Array<CommentModeratedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentModeratedEventCreateInput = {
+  actor: Scalars['JSONObject']
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  rationale: Scalars['String']
+}
+
+export type CommentModeratedEventEdge = {
+  __typename?: 'CommentModeratedEventEdge'
+  cursor: Scalars['String']
+  node: CommentModeratedEvent
+}
+
+export enum CommentModeratedEventOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  RationaleAsc = 'rationale_ASC',
+  RationaleDesc = 'rationale_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentModeratedEventUpdateInput = {
+  actor?: InputMaybe<Scalars['JSONObject']>
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  rationale?: InputMaybe<Scalars['String']>
+}
+
+export type CommentModeratedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentModeratedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentModeratedEventWhereInput>>
+  actor_json?: InputMaybe<Scalars['JSONObject']>
+  comment?: InputMaybe<CommentWhereInput>
+  commentmoderatedInEvent_every?: InputMaybe<CommentWhereInput>
+  commentmoderatedInEvent_none?: InputMaybe<CommentWhereInput>
+  commentmoderatedInEvent_some?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  rationale_contains?: InputMaybe<Scalars['String']>
+  rationale_endsWith?: InputMaybe<Scalars['String']>
+  rationale_eq?: InputMaybe<Scalars['String']>
+  rationale_in?: InputMaybe<Array<Scalars['String']>>
+  rationale_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentModeratedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export enum CommentOrderByInput {
+  AuthorAsc = 'author_ASC',
+  AuthorDesc = 'author_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  DeletedInEventAsc = 'deletedInEvent_ASC',
+  DeletedInEventDesc = 'deletedInEvent_DESC',
+  IsEditedAsc = 'isEdited_ASC',
+  IsEditedDesc = 'isEdited_DESC',
+  ModeratedInEventAsc = 'moderatedInEvent_ASC',
+  ModeratedInEventDesc = 'moderatedInEvent_DESC',
+  ParentCommentAsc = 'parentComment_ASC',
+  ParentCommentDesc = 'parentComment_DESC',
+  ReactionsCountAsc = 'reactionsCount_ASC',
+  ReactionsCountDesc = 'reactionsCount_DESC',
+  RepliesCountAsc = 'repliesCount_ASC',
+  RepliesCountDesc = 'repliesCount_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  TextAsc = 'text_ASC',
+  TextDesc = 'text_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type CommentPinnedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentPinnedEvent'
+    /** The action performed. true if comment is pinned, otherwise false. */
+    action: Scalars['Boolean']
+    comment: Comment
+    commentId: Scalars['String']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentPinnedEventConnection = {
+  __typename?: 'CommentPinnedEventConnection'
+  edges: Array<CommentPinnedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentPinnedEventCreateInput = {
+  action: Scalars['Boolean']
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+}
+
+export type CommentPinnedEventEdge = {
+  __typename?: 'CommentPinnedEventEdge'
+  cursor: Scalars['String']
+  node: CommentPinnedEvent
+}
+
+export enum CommentPinnedEventOrderByInput {
+  ActionAsc = 'action_ASC',
+  ActionDesc = 'action_DESC',
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentPinnedEventUpdateInput = {
+  action?: InputMaybe<Scalars['Boolean']>
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+}
+
+export type CommentPinnedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentPinnedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentPinnedEventWhereInput>>
+  action_eq?: InputMaybe<Scalars['Boolean']>
+  action_in?: InputMaybe<Array<Scalars['Boolean']>>
+  comment?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentPinnedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentReactedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentReactedEvent'
+    comment: Comment
+    commentId: Scalars['String']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    reactingMember: Membership
+    reactingMemberId: Scalars['String']
+    /** The reaction id */
+    reactionResult: Scalars['Int']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentReactedEventConnection = {
+  __typename?: 'CommentReactedEventConnection'
+  edges: Array<CommentReactedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentReactedEventCreateInput = {
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  reactingMember: Scalars['ID']
+  reactionResult: Scalars['Float']
+}
+
+export type CommentReactedEventEdge = {
+  __typename?: 'CommentReactedEventEdge'
+  cursor: Scalars['String']
+  node: CommentReactedEvent
+}
+
+export enum CommentReactedEventOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ReactingMemberAsc = 'reactingMember_ASC',
+  ReactingMemberDesc = 'reactingMember_DESC',
+  ReactionResultAsc = 'reactionResult_ASC',
+  ReactionResultDesc = 'reactionResult_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentReactedEventUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  reactingMember?: InputMaybe<Scalars['ID']>
+  reactionResult?: InputMaybe<Scalars['Float']>
+}
+
+export type CommentReactedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentReactedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentReactedEventWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  reactingMember?: InputMaybe<MembershipWhereInput>
+  reactionResult_eq?: InputMaybe<Scalars['Int']>
+  reactionResult_gt?: InputMaybe<Scalars['Int']>
+  reactionResult_gte?: InputMaybe<Scalars['Int']>
+  reactionResult_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionResult_lt?: InputMaybe<Scalars['Int']>
+  reactionResult_lte?: InputMaybe<Scalars['Int']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentReactedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentReaction = BaseGraphQlObject & {
+  __typename?: 'CommentReaction'
+  comment: Comment
+  commentId: Scalars['String']
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  member: Membership
+  /** ID of the member that reacted */
+  memberId: Scalars['String']
+  /** The Reaction id */
+  reactionId: Scalars['Int']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+}
+
+export type CommentReactionConnection = {
+  __typename?: 'CommentReactionConnection'
+  edges: Array<CommentReactionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentReactionCreateInput = {
+  comment: Scalars['ID']
+  member: Scalars['ID']
+  memberId: Scalars['String']
+  reactionId: Scalars['Float']
+  video: Scalars['ID']
+}
+
+export type CommentReactionEdge = {
+  __typename?: 'CommentReactionEdge'
+  cursor: Scalars['String']
+  node: CommentReaction
+}
+
+export enum CommentReactionOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  MemberIdAsc = 'memberId_ASC',
+  MemberIdDesc = 'memberId_DESC',
+  MemberAsc = 'member_ASC',
+  MemberDesc = 'member_DESC',
+  ReactionIdAsc = 'reactionId_ASC',
+  ReactionIdDesc = 'reactionId_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type CommentReactionUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  member?: InputMaybe<Scalars['ID']>
+  memberId?: InputMaybe<Scalars['String']>
+  reactionId?: InputMaybe<Scalars['Float']>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type CommentReactionWhereInput = {
+  AND?: InputMaybe<Array<CommentReactionWhereInput>>
+  OR?: InputMaybe<Array<CommentReactionWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  member?: InputMaybe<MembershipWhereInput>
+  memberId_contains?: InputMaybe<Scalars['String']>
+  memberId_endsWith?: InputMaybe<Scalars['String']>
+  memberId_eq?: InputMaybe<Scalars['String']>
+  memberId_in?: InputMaybe<Array<Scalars['String']>>
+  memberId_startsWith?: InputMaybe<Scalars['String']>
+  reactionId_eq?: InputMaybe<Scalars['Int']>
+  reactionId_gt?: InputMaybe<Scalars['Int']>
+  reactionId_gte?: InputMaybe<Scalars['Int']>
+  reactionId_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionId_lt?: InputMaybe<Scalars['Int']>
+  reactionId_lte?: InputMaybe<Scalars['Int']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type CommentReactionWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentReactionsCountByReactionId = BaseGraphQlObject & {
+  __typename?: 'CommentReactionsCountByReactionId'
+  comment: Comment
+  commentId: Scalars['String']
+  /** No of times the comment has been reacted with given reaction Id */
+  count: Scalars['Int']
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  /** The reaction id */
+  reactionId: Scalars['Int']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+}
+
+export type CommentReactionsCountByReactionIdConnection = {
+  __typename?: 'CommentReactionsCountByReactionIdConnection'
+  edges: Array<CommentReactionsCountByReactionIdEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentReactionsCountByReactionIdCreateInput = {
+  comment: Scalars['ID']
+  count: Scalars['Float']
+  reactionId: Scalars['Float']
+}
+
+export type CommentReactionsCountByReactionIdEdge = {
+  __typename?: 'CommentReactionsCountByReactionIdEdge'
+  cursor: Scalars['String']
+  node: CommentReactionsCountByReactionId
+}
+
+export enum CommentReactionsCountByReactionIdOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  ReactionIdAsc = 'reactionId_ASC',
+  ReactionIdDesc = 'reactionId_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentReactionsCountByReactionIdUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  count?: InputMaybe<Scalars['Float']>
+  reactionId?: InputMaybe<Scalars['Float']>
+}
+
+export type CommentReactionsCountByReactionIdWhereInput = {
+  AND?: InputMaybe<Array<CommentReactionsCountByReactionIdWhereInput>>
+  OR?: InputMaybe<Array<CommentReactionsCountByReactionIdWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  count_eq?: InputMaybe<Scalars['Int']>
+  count_gt?: InputMaybe<Scalars['Int']>
+  count_gte?: InputMaybe<Scalars['Int']>
+  count_in?: InputMaybe<Array<Scalars['Int']>>
+  count_lt?: InputMaybe<Scalars['Int']>
+  count_lte?: InputMaybe<Scalars['Int']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  reactionId_eq?: InputMaybe<Scalars['Int']>
+  reactionId_gt?: InputMaybe<Scalars['Int']>
+  reactionId_gte?: InputMaybe<Scalars['Int']>
+  reactionId_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionId_lt?: InputMaybe<Scalars['Int']>
+  reactionId_lte?: InputMaybe<Scalars['Int']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentReactionsCountByReactionIdWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentSectionPreferenceEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentSectionPreferenceEvent'
+    /** Is comment section enabled (true if enabled) */
+    commentSectionStatus: Scalars['Boolean']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+    video: Video
+    videoId: Scalars['String']
+  }
+
+export type CommentSectionPreferenceEventConnection = {
+  __typename?: 'CommentSectionPreferenceEventConnection'
+  edges: Array<CommentSectionPreferenceEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentSectionPreferenceEventCreateInput = {
+  commentSectionStatus: Scalars['Boolean']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  video: Scalars['ID']
+}
+
+export type CommentSectionPreferenceEventEdge = {
+  __typename?: 'CommentSectionPreferenceEventEdge'
+  cursor: Scalars['String']
+  node: CommentSectionPreferenceEvent
+}
+
+export enum CommentSectionPreferenceEventOrderByInput {
+  CommentSectionStatusAsc = 'commentSectionStatus_ASC',
+  CommentSectionStatusDesc = 'commentSectionStatus_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type CommentSectionPreferenceEventUpdateInput = {
+  commentSectionStatus?: InputMaybe<Scalars['Boolean']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type CommentSectionPreferenceEventWhereInput = {
+  AND?: InputMaybe<Array<CommentSectionPreferenceEventWhereInput>>
+  OR?: InputMaybe<Array<CommentSectionPreferenceEventWhereInput>>
+  commentSectionStatus_eq?: InputMaybe<Scalars['Boolean']>
+  commentSectionStatus_in?: InputMaybe<Array<Scalars['Boolean']>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type CommentSectionPreferenceEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export enum CommentStatus {
+  Deleted = 'DELETED',
+  Moderated = 'MODERATED',
+  Visible = 'VISIBLE',
+}
+
+export type CommentTextFtsOutput = {
+  __typename?: 'CommentTextFTSOutput'
+  highlight: Scalars['String']
+  isTypeOf: Scalars['String']
+  item: CommentTextSearchResult
+  rank: Scalars['Float']
+}
+
+export type CommentTextSearchResult = Comment
+
+export type CommentTextUpdatedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'CommentTextUpdatedEvent'
+    comment: Comment
+    commentId: Scalars['String']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** New comment text */
+    newText: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type CommentTextUpdatedEventConnection = {
+  __typename?: 'CommentTextUpdatedEventConnection'
+  edges: Array<CommentTextUpdatedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type CommentTextUpdatedEventCreateInput = {
+  comment: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  newText: Scalars['String']
+}
+
+export type CommentTextUpdatedEventEdge = {
+  __typename?: 'CommentTextUpdatedEventEdge'
+  cursor: Scalars['String']
+  node: CommentTextUpdatedEvent
+}
+
+export enum CommentTextUpdatedEventOrderByInput {
+  CommentAsc = 'comment_ASC',
+  CommentDesc = 'comment_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  NewTextAsc = 'newText_ASC',
+  NewTextDesc = 'newText_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type CommentTextUpdatedEventUpdateInput = {
+  comment?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  newText?: InputMaybe<Scalars['String']>
+}
+
+export type CommentTextUpdatedEventWhereInput = {
+  AND?: InputMaybe<Array<CommentTextUpdatedEventWhereInput>>
+  OR?: InputMaybe<Array<CommentTextUpdatedEventWhereInput>>
+  comment?: InputMaybe<CommentWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  newText_contains?: InputMaybe<Scalars['String']>
+  newText_endsWith?: InputMaybe<Scalars['String']>
+  newText_eq?: InputMaybe<Scalars['String']>
+  newText_in?: InputMaybe<Array<Scalars['String']>>
+  newText_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type CommentTextUpdatedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type CommentUpdateInput = {
+  author?: InputMaybe<Scalars['ID']>
+  deletedInEvent?: InputMaybe<Scalars['ID']>
+  isEdited?: InputMaybe<Scalars['Boolean']>
+  moderatedInEvent?: InputMaybe<Scalars['ID']>
+  parentComment?: InputMaybe<Scalars['ID']>
+  reactionsCount?: InputMaybe<Scalars['Float']>
+  repliesCount?: InputMaybe<Scalars['Float']>
+  status?: InputMaybe<CommentStatus>
+  text?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type CommentWhereInput = {
+  AND?: InputMaybe<Array<CommentWhereInput>>
+  OR?: InputMaybe<Array<CommentWhereInput>>
+  author?: InputMaybe<MembershipWhereInput>
+  commentcreatedeventcomment_every?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventcomment_none?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventcomment_some?: InputMaybe<CommentCreatedEventWhereInput>
+  commentdeletedeventcomment_every?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventcomment_none?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventcomment_some?: InputMaybe<CommentDeletedEventWhereInput>
+  commentmoderatedeventcomment_every?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventcomment_none?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventcomment_some?: InputMaybe<CommentModeratedEventWhereInput>
+  commentparentComment_every?: InputMaybe<CommentWhereInput>
+  commentparentComment_none?: InputMaybe<CommentWhereInput>
+  commentparentComment_some?: InputMaybe<CommentWhereInput>
+  commentpinnedeventcomment_every?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventcomment_none?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventcomment_some?: InputMaybe<CommentPinnedEventWhereInput>
+  commentreactedeventcomment_every?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventcomment_none?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventcomment_some?: InputMaybe<CommentReactedEventWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedInEvent?: InputMaybe<CommentDeletedEventWhereInput>
+  edits_every?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  edits_none?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  edits_some?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  isEdited_eq?: InputMaybe<Scalars['Boolean']>
+  isEdited_in?: InputMaybe<Array<Scalars['Boolean']>>
+  moderatedInEvent?: InputMaybe<CommentModeratedEventWhereInput>
+  parentComment?: InputMaybe<CommentWhereInput>
+  reactionsCountByReactionId_every?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+  reactionsCountByReactionId_none?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+  reactionsCountByReactionId_some?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+  reactionsCount_eq?: InputMaybe<Scalars['Int']>
+  reactionsCount_gt?: InputMaybe<Scalars['Int']>
+  reactionsCount_gte?: InputMaybe<Scalars['Int']>
+  reactionsCount_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionsCount_lt?: InputMaybe<Scalars['Int']>
+  reactionsCount_lte?: InputMaybe<Scalars['Int']>
+  reactions_every?: InputMaybe<CommentReactionWhereInput>
+  reactions_none?: InputMaybe<CommentReactionWhereInput>
+  reactions_some?: InputMaybe<CommentReactionWhereInput>
+  repliesCount_eq?: InputMaybe<Scalars['Int']>
+  repliesCount_gt?: InputMaybe<Scalars['Int']>
+  repliesCount_gte?: InputMaybe<Scalars['Int']>
+  repliesCount_in?: InputMaybe<Array<Scalars['Int']>>
+  repliesCount_lt?: InputMaybe<Scalars['Int']>
+  repliesCount_lte?: InputMaybe<Scalars['Int']>
+  status_eq?: InputMaybe<CommentStatus>
+  status_in?: InputMaybe<Array<CommentStatus>>
+  text_contains?: InputMaybe<Scalars['String']>
+  text_endsWith?: InputMaybe<Scalars['String']>
+  text_eq?: InputMaybe<Scalars['String']>
+  text_in?: InputMaybe<Array<Scalars['String']>>
+  text_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videopinnedComment_every?: InputMaybe<VideoWhereInput>
+  videopinnedComment_none?: InputMaybe<VideoWhereInput>
+  videopinnedComment_some?: InputMaybe<VideoWhereInput>
+}
+
+export type CommentWhereUniqueInput = {
   id: Scalars['ID']
 }
 
@@ -8408,7 +9799,6 @@ export type ElectionRoundWhereUniqueInput = {
 export type EnglishAuctionSettledEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'EnglishAuctionSettledEvent'
-    bidders: Array<Membership>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -8435,8 +9825,6 @@ export type EnglishAuctionSettledEvent = BaseGraphQlObject &
     videoId: Scalars['String']
     winner: Membership
     winnerId: Scalars['String']
-    winningBid: Bid
-    winningBidId: Scalars['String']
   }
 
 export type EnglishAuctionSettledEventConnection = {
@@ -8455,7 +9843,6 @@ export type EnglishAuctionSettledEventCreateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video: Scalars['ID']
   winner: Scalars['ID']
-  winningBid: Scalars['ID']
 }
 
 export type EnglishAuctionSettledEventEdge = {
@@ -8487,8 +9874,6 @@ export enum EnglishAuctionSettledEventOrderByInput {
   VideoDesc = 'video_DESC',
   WinnerAsc = 'winner_ASC',
   WinnerDesc = 'winner_DESC',
-  WinningBidAsc = 'winningBid_ASC',
-  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type EnglishAuctionSettledEventUpdateInput = {
@@ -8500,15 +9885,11 @@ export type EnglishAuctionSettledEventUpdateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video?: InputMaybe<Scalars['ID']>
   winner?: InputMaybe<Scalars['ID']>
-  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type EnglishAuctionSettledEventWhereInput = {
   AND?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
   OR?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
-  bidders_every?: InputMaybe<MembershipWhereInput>
-  bidders_none?: InputMaybe<MembershipWhereInput>
-  bidders_some?: InputMaybe<MembershipWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -8556,7 +9937,6 @@ export type EnglishAuctionSettledEventWhereInput = {
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
   winner?: InputMaybe<MembershipWhereInput>
-  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type EnglishAuctionSettledEventWhereUniqueInput = {
@@ -8794,6 +10174,13 @@ export enum EventTypeOptions {
   CategoryDeletedEvent = 'CategoryDeletedEvent',
   CategoryMembershipOfModeratorUpdatedEvent = 'CategoryMembershipOfModeratorUpdatedEvent',
   CategoryStickyThreadUpdateEvent = 'CategoryStickyThreadUpdateEvent',
+  CommentCreatedEvent = 'CommentCreatedEvent',
+  CommentDeletedEvent = 'CommentDeletedEvent',
+  CommentModeratedEvent = 'CommentModeratedEvent',
+  CommentPinnedEvent = 'CommentPinnedEvent',
+  CommentReactedEvent = 'CommentReactedEvent',
+  CommentSectionPreferenceEvent = 'CommentSectionPreferenceEvent',
+  CommentTextUpdatedEvent = 'CommentTextUpdatedEvent',
   CouncilorRewardUpdatedEvent = 'CouncilorRewardUpdatedEvent',
   EnglishAuctionSettledEvent = 'EnglishAuctionSettledEvent',
   EnglishAuctionStartedEvent = 'EnglishAuctionStartedEvent',
@@ -8804,6 +10191,7 @@ export enum EventTypeOptions {
   LeaderSetEvent = 'LeaderSetEvent',
   LeaderUnsetEvent = 'LeaderUnsetEvent',
   MemberAccountsUpdatedEvent = 'MemberAccountsUpdatedEvent',
+  MemberBannedFromChannelEvent = 'MemberBannedFromChannelEvent',
   MemberInvitedEvent = 'MemberInvitedEvent',
   MemberProfileUpdatedEvent = 'MemberProfileUpdatedEvent',
   MemberVerificationStatusUpdatedEvent = 'MemberVerificationStatusUpdatedEvent',
@@ -8864,6 +10252,8 @@ export enum EventTypeOptions {
   ThreadMetadataUpdatedEvent = 'ThreadMetadataUpdatedEvent',
   ThreadModeratedEvent = 'ThreadModeratedEvent',
   ThreadMovedEvent = 'ThreadMovedEvent',
+  VideoReactedEvent = 'VideoReactedEvent',
+  VideoReactionsPreferenceEvent = 'VideoReactionsPreferenceEvent',
   VoteCastEvent = 'VoteCastEvent',
   VoteOnPollEvent = 'VoteOnPollEvent',
   VoteRevealedEvent = 'VoteRevealedEvent',
@@ -11372,6 +12762,147 @@ export type MemberAccountsUpdatedEventWhereUniqueInput = {
   id: Scalars['ID']
 }
 
+export type MemberBannedFromChannelEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'MemberBannedFromChannelEvent'
+    /** The action performed. true if member is banned, false if member is unbanned */
+    action: Scalars['Boolean']
+    channel: Channel
+    channelId: Scalars['String']
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    member: Membership
+    memberId: Scalars['String']
+    /** Network the block was produced in */
+    network: Network
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type MemberBannedFromChannelEventConnection = {
+  __typename?: 'MemberBannedFromChannelEventConnection'
+  edges: Array<MemberBannedFromChannelEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type MemberBannedFromChannelEventCreateInput = {
+  action: Scalars['Boolean']
+  channel: Scalars['ID']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  member: Scalars['ID']
+  network: Network
+}
+
+export type MemberBannedFromChannelEventEdge = {
+  __typename?: 'MemberBannedFromChannelEventEdge'
+  cursor: Scalars['String']
+  node: MemberBannedFromChannelEvent
+}
+
+export enum MemberBannedFromChannelEventOrderByInput {
+  ActionAsc = 'action_ASC',
+  ActionDesc = 'action_DESC',
+  ChannelAsc = 'channel_ASC',
+  ChannelDesc = 'channel_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  MemberAsc = 'member_ASC',
+  MemberDesc = 'member_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type MemberBannedFromChannelEventUpdateInput = {
+  action?: InputMaybe<Scalars['Boolean']>
+  channel?: InputMaybe<Scalars['ID']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  member?: InputMaybe<Scalars['ID']>
+  network?: InputMaybe<Network>
+}
+
+export type MemberBannedFromChannelEventWhereInput = {
+  AND?: InputMaybe<Array<MemberBannedFromChannelEventWhereInput>>
+  OR?: InputMaybe<Array<MemberBannedFromChannelEventWhereInput>>
+  action_eq?: InputMaybe<Scalars['Boolean']>
+  action_in?: InputMaybe<Array<Scalars['Boolean']>>
+  channel?: InputMaybe<ChannelWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  member?: InputMaybe<MembershipWhereInput>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type MemberBannedFromChannelEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
 export type MemberInvitedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'MemberInvitedEvent'
@@ -11981,6 +13512,9 @@ export type Membership = BaseGraphQlObject & {
   buynowpriceupdatedeventownerMember?: Maybe<Array<BuyNowPriceUpdatedEvent>>
   channels: Array<Channel>
   collaboratorInChannels: Array<Channel>
+  commentauthor?: Maybe<Array<Comment>>
+  commentreactedeventreactingMember?: Maybe<Array<CommentReactedEvent>>
+  commentreactionmember?: Maybe<Array<CommentReaction>>
   /** Member's controller account id */
   controllerAccount: Scalars['String']
   councilCandidacies: Array<Candidate>
@@ -12013,9 +13547,9 @@ export type Membership = BaseGraphQlObject & {
   isFoundingMember: Scalars['Boolean']
   /** Whether member has been verified by membership working group. */
   isVerified: Scalars['Boolean']
-  memberEnglishAuctionBids: Array<EnglishAuctionSettledEvent>
-  memberOpenAuctionBids: Array<OpenAuctionBidAcceptedEvent>
+  memberBannedFromChannels: Array<Channel>
   memberaccountsupdatedeventmember?: Maybe<Array<MemberAccountsUpdatedEvent>>
+  memberbannedfromchanneleventmember?: Maybe<Array<MemberBannedFromChannelEvent>>
   memberinvitedeventinvitingMember?: Maybe<Array<MemberInvitedEvent>>
   memberinvitedeventnewMember?: Maybe<Array<MemberInvitedEvent>>
   memberprofileupdatedeventmember?: Maybe<Array<MemberProfileUpdatedEvent>>
@@ -12057,6 +13591,8 @@ export type Membership = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['String']>
   version: Scalars['Int']
+  videoreactedeventreactingMember?: Maybe<Array<VideoReactedEvent>>
+  videoreactionmember?: Maybe<Array<VideoReaction>>
   voteonpolleventvotingMember?: Maybe<Array<VoteOnPollEvent>>
   whitelistedIn: Array<ProposalDiscussionWhitelist>
   whitelistedInAuctions: Array<Auction>
@@ -12658,6 +14194,15 @@ export type MembershipWhereInput = {
   collaboratorInChannels_every?: InputMaybe<ChannelWhereInput>
   collaboratorInChannels_none?: InputMaybe<ChannelWhereInput>
   collaboratorInChannels_some?: InputMaybe<ChannelWhereInput>
+  commentauthor_every?: InputMaybe<CommentWhereInput>
+  commentauthor_none?: InputMaybe<CommentWhereInput>
+  commentauthor_some?: InputMaybe<CommentWhereInput>
+  commentreactedeventreactingMember_every?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventreactingMember_none?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventreactingMember_some?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactionmember_every?: InputMaybe<CommentReactionWhereInput>
+  commentreactionmember_none?: InputMaybe<CommentReactionWhereInput>
+  commentreactionmember_some?: InputMaybe<CommentReactionWhereInput>
   controllerAccount_contains?: InputMaybe<Scalars['String']>
   controllerAccount_endsWith?: InputMaybe<Scalars['String']>
   controllerAccount_eq?: InputMaybe<Scalars['String']>
@@ -12732,15 +14277,15 @@ export type MembershipWhereInput = {
   isFoundingMember_in?: InputMaybe<Array<Scalars['Boolean']>>
   isVerified_eq?: InputMaybe<Scalars['Boolean']>
   isVerified_in?: InputMaybe<Array<Scalars['Boolean']>>
-  memberEnglishAuctionBids_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberEnglishAuctionBids_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberEnglishAuctionBids_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberOpenAuctionBids_every?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
-  memberOpenAuctionBids_none?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
-  memberOpenAuctionBids_some?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberBannedFromChannels_every?: InputMaybe<ChannelWhereInput>
+  memberBannedFromChannels_none?: InputMaybe<ChannelWhereInput>
+  memberBannedFromChannels_some?: InputMaybe<ChannelWhereInput>
   memberaccountsupdatedeventmember_every?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_none?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_some?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
+  memberbannedfromchanneleventmember_every?: InputMaybe<MemberBannedFromChannelEventWhereInput>
+  memberbannedfromchanneleventmember_none?: InputMaybe<MemberBannedFromChannelEventWhereInput>
+  memberbannedfromchanneleventmember_some?: InputMaybe<MemberBannedFromChannelEventWhereInput>
   memberinvitedeventinvitingMember_every?: InputMaybe<MemberInvitedEventWhereInput>
   memberinvitedeventinvitingMember_none?: InputMaybe<MemberInvitedEventWhereInput>
   memberinvitedeventinvitingMember_some?: InputMaybe<MemberInvitedEventWhereInput>
@@ -12851,6 +14396,12 @@ export type MembershipWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videoreactedeventreactingMember_every?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventreactingMember_none?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventreactingMember_some?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactionmember_every?: InputMaybe<VideoReactionWhereInput>
+  videoreactionmember_none?: InputMaybe<VideoReactionWhereInput>
+  videoreactionmember_some?: InputMaybe<VideoReactionWhereInput>
   voteonpolleventvotingMember_every?: InputMaybe<VoteOnPollEventWhereInput>
   voteonpolleventvotingMember_none?: InputMaybe<VoteOnPollEventWhereInput>
   voteonpolleventvotingMember_some?: InputMaybe<VoteOnPollEventWhereInput>
@@ -14785,7 +16336,6 @@ export type OfferStartedEventWhereUniqueInput = {
 export type OpenAuctionBidAcceptedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'OpenAuctionBidAcceptedEvent'
-    bidders: Array<Membership>
     /** Content actor that accepted the bid. */
     contentActor: ContentActor
     createdAt: Scalars['DateTime']
@@ -14887,9 +16437,6 @@ export type OpenAuctionBidAcceptedEventUpdateInput = {
 export type OpenAuctionBidAcceptedEventWhereInput = {
   AND?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
   OR?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
-  bidders_every?: InputMaybe<MembershipWhereInput>
-  bidders_none?: InputMaybe<MembershipWhereInput>
-  bidders_some?: InputMaybe<MembershipWhereInput>
   contentActor_json?: InputMaybe<Scalars['JSONObject']>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
@@ -18852,6 +20399,37 @@ export type Query = {
   channelNftCollectorsConnection: ChannelNftCollectorsConnection
   channels: Array<Channel>
   channelsConnection: ChannelConnection
+  commentByUniqueInput?: Maybe<Comment>
+  commentCreatedEventByUniqueInput?: Maybe<CommentCreatedEvent>
+  commentCreatedEvents: Array<CommentCreatedEvent>
+  commentCreatedEventsConnection: CommentCreatedEventConnection
+  commentDeletedEventByUniqueInput?: Maybe<CommentDeletedEvent>
+  commentDeletedEvents: Array<CommentDeletedEvent>
+  commentDeletedEventsConnection: CommentDeletedEventConnection
+  commentModeratedEventByUniqueInput?: Maybe<CommentModeratedEvent>
+  commentModeratedEvents: Array<CommentModeratedEvent>
+  commentModeratedEventsConnection: CommentModeratedEventConnection
+  commentPinnedEventByUniqueInput?: Maybe<CommentPinnedEvent>
+  commentPinnedEvents: Array<CommentPinnedEvent>
+  commentPinnedEventsConnection: CommentPinnedEventConnection
+  commentReactedEventByUniqueInput?: Maybe<CommentReactedEvent>
+  commentReactedEvents: Array<CommentReactedEvent>
+  commentReactedEventsConnection: CommentReactedEventConnection
+  commentReactionByUniqueInput?: Maybe<CommentReaction>
+  commentReactions: Array<CommentReaction>
+  commentReactionsConnection: CommentReactionConnection
+  commentReactionsCountByReactionIdByUniqueInput?: Maybe<CommentReactionsCountByReactionId>
+  commentReactionsCountByReactionIds: Array<CommentReactionsCountByReactionId>
+  commentReactionsCountByReactionIdsConnection: CommentReactionsCountByReactionIdConnection
+  commentSectionPreferenceEventByUniqueInput?: Maybe<CommentSectionPreferenceEvent>
+  commentSectionPreferenceEvents: Array<CommentSectionPreferenceEvent>
+  commentSectionPreferenceEventsConnection: CommentSectionPreferenceEventConnection
+  commentText: Array<CommentTextFtsOutput>
+  commentTextUpdatedEventByUniqueInput?: Maybe<CommentTextUpdatedEvent>
+  commentTextUpdatedEvents: Array<CommentTextUpdatedEvent>
+  commentTextUpdatedEventsConnection: CommentTextUpdatedEventConnection
+  comments: Array<Comment>
+  commentsConnection: CommentConnection
   councilMemberByUniqueInput?: Maybe<CouncilMember>
   councilMembers: Array<CouncilMember>
   councilMembersConnection: CouncilMemberConnection
@@ -18957,6 +20535,9 @@ export type Query = {
   memberAccountsUpdatedEventByUniqueInput?: Maybe<MemberAccountsUpdatedEvent>
   memberAccountsUpdatedEvents: Array<MemberAccountsUpdatedEvent>
   memberAccountsUpdatedEventsConnection: MemberAccountsUpdatedEventConnection
+  memberBannedFromChannelEventByUniqueInput?: Maybe<MemberBannedFromChannelEvent>
+  memberBannedFromChannelEvents: Array<MemberBannedFromChannelEvent>
+  memberBannedFromChannelEventsConnection: MemberBannedFromChannelEventConnection
   memberInvitedEventByUniqueInput?: Maybe<MemberInvitedEvent>
   memberInvitedEvents: Array<MemberInvitedEvent>
   memberInvitedEventsConnection: MemberInvitedEventConnection
@@ -19235,6 +20816,18 @@ export type Query = {
   videoMediaMetadata: Array<VideoMediaMetadata>
   videoMediaMetadataByUniqueInput?: Maybe<VideoMediaMetadata>
   videoMediaMetadataConnection: VideoMediaMetadataConnection
+  videoReactedEventByUniqueInput?: Maybe<VideoReactedEvent>
+  videoReactedEvents: Array<VideoReactedEvent>
+  videoReactedEventsConnection: VideoReactedEventConnection
+  videoReactionByUniqueInput?: Maybe<VideoReaction>
+  videoReactions: Array<VideoReaction>
+  videoReactionsConnection: VideoReactionConnection
+  videoReactionsCountByReactionTypeByUniqueInput?: Maybe<VideoReactionsCountByReactionType>
+  videoReactionsCountByReactionTypes: Array<VideoReactionsCountByReactionType>
+  videoReactionsCountByReactionTypesConnection: VideoReactionsCountByReactionTypeConnection
+  videoReactionsPreferenceEventByUniqueInput?: Maybe<VideoReactionsPreferenceEvent>
+  videoReactionsPreferenceEvents: Array<VideoReactionsPreferenceEvent>
+  videoReactionsPreferenceEventsConnection: VideoReactionsPreferenceEventConnection
   videos: Array<Video>
   videosConnection: VideoConnection
   voteCastEventByUniqueInput?: Maybe<VoteCastEvent>
@@ -20234,6 +21827,213 @@ export type QueryChannelsConnectionArgs = {
   where?: InputMaybe<ChannelWhereInput>
 }
 
+export type QueryCommentByUniqueInputArgs = {
+  where: CommentWhereUniqueInput
+}
+
+export type QueryCommentCreatedEventByUniqueInputArgs = {
+  where: CommentCreatedEventWhereUniqueInput
+}
+
+export type QueryCommentCreatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentCreatedEventOrderByInput>>
+  where?: InputMaybe<CommentCreatedEventWhereInput>
+}
+
+export type QueryCommentCreatedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentCreatedEventOrderByInput>>
+  where?: InputMaybe<CommentCreatedEventWhereInput>
+}
+
+export type QueryCommentDeletedEventByUniqueInputArgs = {
+  where: CommentDeletedEventWhereUniqueInput
+}
+
+export type QueryCommentDeletedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentDeletedEventOrderByInput>>
+  where?: InputMaybe<CommentDeletedEventWhereInput>
+}
+
+export type QueryCommentDeletedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentDeletedEventOrderByInput>>
+  where?: InputMaybe<CommentDeletedEventWhereInput>
+}
+
+export type QueryCommentModeratedEventByUniqueInputArgs = {
+  where: CommentModeratedEventWhereUniqueInput
+}
+
+export type QueryCommentModeratedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentModeratedEventOrderByInput>>
+  where?: InputMaybe<CommentModeratedEventWhereInput>
+}
+
+export type QueryCommentModeratedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentModeratedEventOrderByInput>>
+  where?: InputMaybe<CommentModeratedEventWhereInput>
+}
+
+export type QueryCommentPinnedEventByUniqueInputArgs = {
+  where: CommentPinnedEventWhereUniqueInput
+}
+
+export type QueryCommentPinnedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentPinnedEventOrderByInput>>
+  where?: InputMaybe<CommentPinnedEventWhereInput>
+}
+
+export type QueryCommentPinnedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentPinnedEventOrderByInput>>
+  where?: InputMaybe<CommentPinnedEventWhereInput>
+}
+
+export type QueryCommentReactedEventByUniqueInputArgs = {
+  where: CommentReactedEventWhereUniqueInput
+}
+
+export type QueryCommentReactedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactedEventOrderByInput>>
+  where?: InputMaybe<CommentReactedEventWhereInput>
+}
+
+export type QueryCommentReactedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactedEventOrderByInput>>
+  where?: InputMaybe<CommentReactedEventWhereInput>
+}
+
+export type QueryCommentReactionByUniqueInputArgs = {
+  where: CommentReactionWhereUniqueInput
+}
+
+export type QueryCommentReactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactionOrderByInput>>
+  where?: InputMaybe<CommentReactionWhereInput>
+}
+
+export type QueryCommentReactionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactionOrderByInput>>
+  where?: InputMaybe<CommentReactionWhereInput>
+}
+
+export type QueryCommentReactionsCountByReactionIdByUniqueInputArgs = {
+  where: CommentReactionsCountByReactionIdWhereUniqueInput
+}
+
+export type QueryCommentReactionsCountByReactionIdsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactionsCountByReactionIdOrderByInput>>
+  where?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+}
+
+export type QueryCommentReactionsCountByReactionIdsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentReactionsCountByReactionIdOrderByInput>>
+  where?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+}
+
+export type QueryCommentSectionPreferenceEventByUniqueInputArgs = {
+  where: CommentSectionPreferenceEventWhereUniqueInput
+}
+
+export type QueryCommentSectionPreferenceEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentSectionPreferenceEventOrderByInput>>
+  where?: InputMaybe<CommentSectionPreferenceEventWhereInput>
+}
+
+export type QueryCommentSectionPreferenceEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentSectionPreferenceEventOrderByInput>>
+  where?: InputMaybe<CommentSectionPreferenceEventWhereInput>
+}
+
+export type QueryCommentTextArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  text: Scalars['String']
+  whereComment?: InputMaybe<CommentWhereInput>
+}
+
+export type QueryCommentTextUpdatedEventByUniqueInputArgs = {
+  where: CommentTextUpdatedEventWhereUniqueInput
+}
+
+export type QueryCommentTextUpdatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentTextUpdatedEventOrderByInput>>
+  where?: InputMaybe<CommentTextUpdatedEventWhereInput>
+}
+
+export type QueryCommentTextUpdatedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentTextUpdatedEventOrderByInput>>
+  where?: InputMaybe<CommentTextUpdatedEventWhereInput>
+}
+
+export type QueryCommentsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentOrderByInput>>
+  where?: InputMaybe<CommentWhereInput>
+}
+
+export type QueryCommentsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<CommentOrderByInput>>
+  where?: InputMaybe<CommentWhereInput>
+}
+
 export type QueryCouncilMemberByUniqueInputArgs = {
   where: CouncilMemberWhereUniqueInput
 }
@@ -20923,6 +22723,26 @@ export type QueryMemberAccountsUpdatedEventsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<MemberAccountsUpdatedEventOrderByInput>>
   where?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
+}
+
+export type QueryMemberBannedFromChannelEventByUniqueInputArgs = {
+  where: MemberBannedFromChannelEventWhereUniqueInput
+}
+
+export type QueryMemberBannedFromChannelEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<MemberBannedFromChannelEventOrderByInput>>
+  where?: InputMaybe<MemberBannedFromChannelEventWhereInput>
+}
+
+export type QueryMemberBannedFromChannelEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<MemberBannedFromChannelEventOrderByInput>>
+  where?: InputMaybe<MemberBannedFromChannelEventWhereInput>
 }
 
 export type QueryMemberInvitedEventByUniqueInputArgs = {
@@ -22692,6 +24512,86 @@ export type QueryVideoMediaMetadataConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<VideoMediaMetadataOrderByInput>>
   where?: InputMaybe<VideoMediaMetadataWhereInput>
+}
+
+export type QueryVideoReactedEventByUniqueInputArgs = {
+  where: VideoReactedEventWhereUniqueInput
+}
+
+export type QueryVideoReactedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactedEventOrderByInput>>
+  where?: InputMaybe<VideoReactedEventWhereInput>
+}
+
+export type QueryVideoReactedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactedEventOrderByInput>>
+  where?: InputMaybe<VideoReactedEventWhereInput>
+}
+
+export type QueryVideoReactionByUniqueInputArgs = {
+  where: VideoReactionWhereUniqueInput
+}
+
+export type QueryVideoReactionsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionOrderByInput>>
+  where?: InputMaybe<VideoReactionWhereInput>
+}
+
+export type QueryVideoReactionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionOrderByInput>>
+  where?: InputMaybe<VideoReactionWhereInput>
+}
+
+export type QueryVideoReactionsCountByReactionTypeByUniqueInputArgs = {
+  where: VideoReactionsCountByReactionTypeWhereUniqueInput
+}
+
+export type QueryVideoReactionsCountByReactionTypesArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionsCountByReactionTypeOrderByInput>>
+  where?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
+}
+
+export type QueryVideoReactionsCountByReactionTypesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionsCountByReactionTypeOrderByInput>>
+  where?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
+}
+
+export type QueryVideoReactionsPreferenceEventByUniqueInputArgs = {
+  where: VideoReactionsPreferenceEventWhereUniqueInput
+}
+
+export type QueryVideoReactionsPreferenceEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionsPreferenceEventOrderByInput>>
+  where?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
+}
+
+export type QueryVideoReactionsPreferenceEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<VideoReactionsPreferenceEventOrderByInput>>
+  where?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
 }
 
 export type QueryVideosArgs = {
@@ -27814,6 +29714,11 @@ export type Video = BaseGraphQlObject & {
   categoryId?: Maybe<Scalars['String']>
   channel: Channel
   channelId: Scalars['String']
+  commentreactionvideo?: Maybe<Array<CommentReaction>>
+  comments: Array<Comment>
+  /** Comments count */
+  commentsCount: Scalars['Int']
+  commentsectionpreferenceeventvideo?: Maybe<Array<CommentSectionPreferenceEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
   createdInBlock: Scalars['Int']
@@ -27830,12 +29735,16 @@ export type Video = BaseGraphQlObject & {
   id: Scalars['ID']
   /** Flag signaling whether a video is censored. */
   isCensored: Scalars['Boolean']
+  /** Is comment section enabled (true if enabled) */
+  isCommentSectionEnabled: Scalars['Boolean']
   /** Whether the Video contains explicit material. */
   isExplicit?: Maybe<Scalars['Boolean']>
   /** Is video featured or not */
   isFeatured: Scalars['Boolean']
   /** Whether the Video is supposed to be publically displayed */
   isPublic?: Maybe<Scalars['Boolean']>
+  /** Is reactions feature enabled on video (true if enabled i.e. video can be reacted) */
+  isReactionFeatureEnabled: Scalars['Boolean']
   language?: Maybe<Language>
   languageId?: Maybe<Scalars['String']>
   license?: Maybe<License>
@@ -27855,8 +29764,14 @@ export type Video = BaseGraphQlObject & {
   offerstartedeventvideo?: Maybe<Array<OfferStartedEvent>>
   openauctionbidacceptedeventvideo?: Maybe<Array<OpenAuctionBidAcceptedEvent>>
   openauctionstartedeventvideo?: Maybe<Array<OpenAuctionStartedEvent>>
+  pinnedComment?: Maybe<Comment>
+  pinnedCommentId?: Maybe<Scalars['String']>
   /** If the Video was published on other platform before beeing published on Joystream - the original publication date */
   publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
+  reactions: Array<VideoReaction>
+  /** Reactions count */
+  reactionsCount: Scalars['Int']
+  reactionsCountByReactionId: Array<VideoReactionsCountByReactionType>
   thumbnailPhoto?: Maybe<StorageDataObject>
   thumbnailPhotoId?: Maybe<Scalars['String']>
   /** The title of the video */
@@ -27864,6 +29779,8 @@ export type Video = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['String']>
   version: Scalars['Int']
+  videoreactedeventvideo?: Maybe<Array<VideoReactedEvent>>
+  videoreactionspreferenceeventvideo?: Maybe<Array<VideoReactionsPreferenceEvent>>
   views: Scalars['Int']
 }
 
@@ -27998,20 +29915,25 @@ export type VideoConnection = {
 export type VideoCreateInput = {
   category?: InputMaybe<Scalars['ID']>
   channel: Scalars['ID']
+  commentsCount: Scalars['Float']
   createdInBlock: Scalars['Float']
   description?: InputMaybe<Scalars['String']>
   duration?: InputMaybe<Scalars['Float']>
   hasMarketing?: InputMaybe<Scalars['Boolean']>
   isCensored: Scalars['Boolean']
+  isCommentSectionEnabled: Scalars['Boolean']
   isExplicit?: InputMaybe<Scalars['Boolean']>
   isFeatured: Scalars['Boolean']
   isPublic?: InputMaybe<Scalars['Boolean']>
+  isReactionFeatureEnabled: Scalars['Boolean']
   language?: InputMaybe<Scalars['ID']>
   license?: InputMaybe<Scalars['ID']>
   media?: InputMaybe<Scalars['ID']>
   mediaMetadata?: InputMaybe<Scalars['ID']>
   nft?: InputMaybe<Scalars['ID']>
+  pinnedComment?: InputMaybe<Scalars['ID']>
   publishedBeforeJoystream?: InputMaybe<Scalars['DateTime']>
+  reactionsCount: Scalars['Float']
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
   title?: InputMaybe<Scalars['String']>
 }
@@ -28282,6 +30204,8 @@ export enum VideoOrderByInput {
   CategoryDesc = 'category_DESC',
   ChannelAsc = 'channel_ASC',
   ChannelDesc = 'channel_DESC',
+  CommentsCountAsc = 'commentsCount_ASC',
+  CommentsCountDesc = 'commentsCount_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   CreatedInBlockAsc = 'createdInBlock_ASC',
@@ -28296,12 +30220,16 @@ export enum VideoOrderByInput {
   HasMarketingDesc = 'hasMarketing_DESC',
   IsCensoredAsc = 'isCensored_ASC',
   IsCensoredDesc = 'isCensored_DESC',
+  IsCommentSectionEnabledAsc = 'isCommentSectionEnabled_ASC',
+  IsCommentSectionEnabledDesc = 'isCommentSectionEnabled_DESC',
   IsExplicitAsc = 'isExplicit_ASC',
   IsExplicitDesc = 'isExplicit_DESC',
   IsFeaturedAsc = 'isFeatured_ASC',
   IsFeaturedDesc = 'isFeatured_DESC',
   IsPublicAsc = 'isPublic_ASC',
   IsPublicDesc = 'isPublic_DESC',
+  IsReactionFeatureEnabledAsc = 'isReactionFeatureEnabled_ASC',
+  IsReactionFeatureEnabledDesc = 'isReactionFeatureEnabled_DESC',
   LanguageAsc = 'language_ASC',
   LanguageDesc = 'language_DESC',
   LicenseAsc = 'license_ASC',
@@ -28312,8 +30240,12 @@ export enum VideoOrderByInput {
   MediaDesc = 'media_DESC',
   NftAsc = 'nft_ASC',
   NftDesc = 'nft_DESC',
+  PinnedCommentAsc = 'pinnedComment_ASC',
+  PinnedCommentDesc = 'pinnedComment_DESC',
   PublishedBeforeJoystreamAsc = 'publishedBeforeJoystream_ASC',
   PublishedBeforeJoystreamDesc = 'publishedBeforeJoystream_DESC',
+  ReactionsCountAsc = 'reactionsCount_ASC',
+  ReactionsCountDesc = 'reactionsCount_DESC',
   ThumbnailPhotoAsc = 'thumbnailPhoto_ASC',
   ThumbnailPhotoDesc = 'thumbnailPhoto_DESC',
   TitleAsc = 'title_ASC',
@@ -28322,23 +30254,513 @@ export enum VideoOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
 }
 
+export type VideoReactedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'VideoReactedEvent'
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    reactingMember: Membership
+    reactingMemberId: Scalars['String']
+    /** The reaction result */
+    reactionResult: VideoReactionOptions
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+    video: Video
+    videoId: Scalars['String']
+  }
+
+export type VideoReactedEventConnection = {
+  __typename?: 'VideoReactedEventConnection'
+  edges: Array<VideoReactedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VideoReactedEventCreateInput = {
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  reactingMember: Scalars['ID']
+  reactionResult: VideoReactionOptions
+  video: Scalars['ID']
+}
+
+export type VideoReactedEventEdge = {
+  __typename?: 'VideoReactedEventEdge'
+  cursor: Scalars['String']
+  node: VideoReactedEvent
+}
+
+export enum VideoReactedEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ReactingMemberAsc = 'reactingMember_ASC',
+  ReactingMemberDesc = 'reactingMember_DESC',
+  ReactionResultAsc = 'reactionResult_ASC',
+  ReactionResultDesc = 'reactionResult_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type VideoReactedEventUpdateInput = {
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  reactingMember?: InputMaybe<Scalars['ID']>
+  reactionResult?: InputMaybe<VideoReactionOptions>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type VideoReactedEventWhereInput = {
+  AND?: InputMaybe<Array<VideoReactedEventWhereInput>>
+  OR?: InputMaybe<Array<VideoReactedEventWhereInput>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  reactingMember?: InputMaybe<MembershipWhereInput>
+  reactionResult_eq?: InputMaybe<VideoReactionOptions>
+  reactionResult_in?: InputMaybe<Array<VideoReactionOptions>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type VideoReactedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type VideoReaction = BaseGraphQlObject & {
+  __typename?: 'VideoReaction'
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  member: Membership
+  /** ID of the member that reacted */
+  memberId: Scalars['String']
+  /** The Reaction */
+  reaction: VideoReactionOptions
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+}
+
+export type VideoReactionConnection = {
+  __typename?: 'VideoReactionConnection'
+  edges: Array<VideoReactionEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VideoReactionCreateInput = {
+  member: Scalars['ID']
+  memberId: Scalars['String']
+  reaction: VideoReactionOptions
+  video: Scalars['ID']
+}
+
+export type VideoReactionEdge = {
+  __typename?: 'VideoReactionEdge'
+  cursor: Scalars['String']
+  node: VideoReaction
+}
+
+export enum VideoReactionOptions {
+  Like = 'LIKE',
+  Unlike = 'UNLIKE',
+}
+
+export enum VideoReactionOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  MemberIdAsc = 'memberId_ASC',
+  MemberIdDesc = 'memberId_DESC',
+  MemberAsc = 'member_ASC',
+  MemberDesc = 'member_DESC',
+  ReactionAsc = 'reaction_ASC',
+  ReactionDesc = 'reaction_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type VideoReactionUpdateInput = {
+  member?: InputMaybe<Scalars['ID']>
+  memberId?: InputMaybe<Scalars['String']>
+  reaction?: InputMaybe<VideoReactionOptions>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type VideoReactionWhereInput = {
+  AND?: InputMaybe<Array<VideoReactionWhereInput>>
+  OR?: InputMaybe<Array<VideoReactionWhereInput>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  member?: InputMaybe<MembershipWhereInput>
+  memberId_contains?: InputMaybe<Scalars['String']>
+  memberId_endsWith?: InputMaybe<Scalars['String']>
+  memberId_eq?: InputMaybe<Scalars['String']>
+  memberId_in?: InputMaybe<Array<Scalars['String']>>
+  memberId_startsWith?: InputMaybe<Scalars['String']>
+  reaction_eq?: InputMaybe<VideoReactionOptions>
+  reaction_in?: InputMaybe<Array<VideoReactionOptions>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type VideoReactionWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type VideoReactionsCountByReactionType = BaseGraphQlObject & {
+  __typename?: 'VideoReactionsCountByReactionType'
+  /** No of times the video has been reacted with given reaction */
+  count: Scalars['Int']
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  /** The reaction option */
+  reaction: VideoReactionOptions
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+}
+
+export type VideoReactionsCountByReactionTypeConnection = {
+  __typename?: 'VideoReactionsCountByReactionTypeConnection'
+  edges: Array<VideoReactionsCountByReactionTypeEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VideoReactionsCountByReactionTypeCreateInput = {
+  count: Scalars['Float']
+  reaction: VideoReactionOptions
+  video: Scalars['ID']
+}
+
+export type VideoReactionsCountByReactionTypeEdge = {
+  __typename?: 'VideoReactionsCountByReactionTypeEdge'
+  cursor: Scalars['String']
+  node: VideoReactionsCountByReactionType
+}
+
+export enum VideoReactionsCountByReactionTypeOrderByInput {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  ReactionAsc = 'reaction_ASC',
+  ReactionDesc = 'reaction_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type VideoReactionsCountByReactionTypeUpdateInput = {
+  count?: InputMaybe<Scalars['Float']>
+  reaction?: InputMaybe<VideoReactionOptions>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type VideoReactionsCountByReactionTypeWhereInput = {
+  AND?: InputMaybe<Array<VideoReactionsCountByReactionTypeWhereInput>>
+  OR?: InputMaybe<Array<VideoReactionsCountByReactionTypeWhereInput>>
+  count_eq?: InputMaybe<Scalars['Int']>
+  count_gt?: InputMaybe<Scalars['Int']>
+  count_gte?: InputMaybe<Scalars['Int']>
+  count_in?: InputMaybe<Array<Scalars['Int']>>
+  count_lt?: InputMaybe<Scalars['Int']>
+  count_lte?: InputMaybe<Scalars['Int']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  reaction_eq?: InputMaybe<VideoReactionOptions>
+  reaction_in?: InputMaybe<Array<VideoReactionOptions>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type VideoReactionsCountByReactionTypeWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type VideoReactionsPreferenceEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'VideoReactionsPreferenceEvent'
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** Is comment section enabled (true if enabled) */
+    reactionsStatus: Scalars['Boolean']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+    video: Video
+    videoId: Scalars['String']
+  }
+
+export type VideoReactionsPreferenceEventConnection = {
+  __typename?: 'VideoReactionsPreferenceEventConnection'
+  edges: Array<VideoReactionsPreferenceEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type VideoReactionsPreferenceEventCreateInput = {
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  reactionsStatus: Scalars['Boolean']
+  video: Scalars['ID']
+}
+
+export type VideoReactionsPreferenceEventEdge = {
+  __typename?: 'VideoReactionsPreferenceEventEdge'
+  cursor: Scalars['String']
+  node: VideoReactionsPreferenceEvent
+}
+
+export enum VideoReactionsPreferenceEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  ReactionsStatusAsc = 'reactionsStatus_ASC',
+  ReactionsStatusDesc = 'reactionsStatus_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type VideoReactionsPreferenceEventUpdateInput = {
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  reactionsStatus?: InputMaybe<Scalars['Boolean']>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type VideoReactionsPreferenceEventWhereInput = {
+  AND?: InputMaybe<Array<VideoReactionsPreferenceEventWhereInput>>
+  OR?: InputMaybe<Array<VideoReactionsPreferenceEventWhereInput>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  reactionsStatus_eq?: InputMaybe<Scalars['Boolean']>
+  reactionsStatus_in?: InputMaybe<Array<Scalars['Boolean']>>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+}
+
+export type VideoReactionsPreferenceEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
 export type VideoUpdateInput = {
   category?: InputMaybe<Scalars['ID']>
   channel?: InputMaybe<Scalars['ID']>
+  commentsCount?: InputMaybe<Scalars['Float']>
   createdInBlock?: InputMaybe<Scalars['Float']>
   description?: InputMaybe<Scalars['String']>
   duration?: InputMaybe<Scalars['Float']>
   hasMarketing?: InputMaybe<Scalars['Boolean']>
   isCensored?: InputMaybe<Scalars['Boolean']>
+  isCommentSectionEnabled?: InputMaybe<Scalars['Boolean']>
   isExplicit?: InputMaybe<Scalars['Boolean']>
   isFeatured?: InputMaybe<Scalars['Boolean']>
   isPublic?: InputMaybe<Scalars['Boolean']>
+  isReactionFeatureEnabled?: InputMaybe<Scalars['Boolean']>
   language?: InputMaybe<Scalars['ID']>
   license?: InputMaybe<Scalars['ID']>
   media?: InputMaybe<Scalars['ID']>
   mediaMetadata?: InputMaybe<Scalars['ID']>
   nft?: InputMaybe<Scalars['ID']>
+  pinnedComment?: InputMaybe<Scalars['ID']>
   publishedBeforeJoystream?: InputMaybe<Scalars['DateTime']>
+  reactionsCount?: InputMaybe<Scalars['Float']>
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
   title?: InputMaybe<Scalars['String']>
 }
@@ -28366,6 +30788,21 @@ export type VideoWhereInput = {
   buynowpriceupdatedeventvideo_some?: InputMaybe<BuyNowPriceUpdatedEventWhereInput>
   category?: InputMaybe<VideoCategoryWhereInput>
   channel?: InputMaybe<ChannelWhereInput>
+  commentreactionvideo_every?: InputMaybe<CommentReactionWhereInput>
+  commentreactionvideo_none?: InputMaybe<CommentReactionWhereInput>
+  commentreactionvideo_some?: InputMaybe<CommentReactionWhereInput>
+  commentsCount_eq?: InputMaybe<Scalars['Int']>
+  commentsCount_gt?: InputMaybe<Scalars['Int']>
+  commentsCount_gte?: InputMaybe<Scalars['Int']>
+  commentsCount_in?: InputMaybe<Array<Scalars['Int']>>
+  commentsCount_lt?: InputMaybe<Scalars['Int']>
+  commentsCount_lte?: InputMaybe<Scalars['Int']>
+  comments_every?: InputMaybe<CommentWhereInput>
+  comments_none?: InputMaybe<CommentWhereInput>
+  comments_some?: InputMaybe<CommentWhereInput>
+  commentsectionpreferenceeventvideo_every?: InputMaybe<CommentSectionPreferenceEventWhereInput>
+  commentsectionpreferenceeventvideo_none?: InputMaybe<CommentSectionPreferenceEventWhereInput>
+  commentsectionpreferenceeventvideo_some?: InputMaybe<CommentSectionPreferenceEventWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -28410,12 +30847,16 @@ export type VideoWhereInput = {
   id_in?: InputMaybe<Array<Scalars['ID']>>
   isCensored_eq?: InputMaybe<Scalars['Boolean']>
   isCensored_in?: InputMaybe<Array<Scalars['Boolean']>>
+  isCommentSectionEnabled_eq?: InputMaybe<Scalars['Boolean']>
+  isCommentSectionEnabled_in?: InputMaybe<Array<Scalars['Boolean']>>
   isExplicit_eq?: InputMaybe<Scalars['Boolean']>
   isExplicit_in?: InputMaybe<Array<Scalars['Boolean']>>
   isFeatured_eq?: InputMaybe<Scalars['Boolean']>
   isFeatured_in?: InputMaybe<Array<Scalars['Boolean']>>
   isPublic_eq?: InputMaybe<Scalars['Boolean']>
   isPublic_in?: InputMaybe<Array<Scalars['Boolean']>>
+  isReactionFeatureEnabled_eq?: InputMaybe<Scalars['Boolean']>
+  isReactionFeatureEnabled_in?: InputMaybe<Array<Scalars['Boolean']>>
   language?: InputMaybe<LanguageWhereInput>
   license?: InputMaybe<LicenseWhereInput>
   media?: InputMaybe<StorageDataObjectWhereInput>
@@ -28448,11 +30889,24 @@ export type VideoWhereInput = {
   openauctionstartedeventvideo_every?: InputMaybe<OpenAuctionStartedEventWhereInput>
   openauctionstartedeventvideo_none?: InputMaybe<OpenAuctionStartedEventWhereInput>
   openauctionstartedeventvideo_some?: InputMaybe<OpenAuctionStartedEventWhereInput>
+  pinnedComment?: InputMaybe<CommentWhereInput>
   publishedBeforeJoystream_eq?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_gt?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_gte?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_lt?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_lte?: InputMaybe<Scalars['DateTime']>
+  reactionsCountByReactionId_every?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
+  reactionsCountByReactionId_none?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
+  reactionsCountByReactionId_some?: InputMaybe<VideoReactionsCountByReactionTypeWhereInput>
+  reactionsCount_eq?: InputMaybe<Scalars['Int']>
+  reactionsCount_gt?: InputMaybe<Scalars['Int']>
+  reactionsCount_gte?: InputMaybe<Scalars['Int']>
+  reactionsCount_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionsCount_lt?: InputMaybe<Scalars['Int']>
+  reactionsCount_lte?: InputMaybe<Scalars['Int']>
+  reactions_every?: InputMaybe<VideoReactionWhereInput>
+  reactions_none?: InputMaybe<VideoReactionWhereInput>
+  reactions_some?: InputMaybe<VideoReactionWhereInput>
   thumbnailPhoto?: InputMaybe<StorageDataObjectWhereInput>
   title_contains?: InputMaybe<Scalars['String']>
   title_endsWith?: InputMaybe<Scalars['String']>
@@ -28466,6 +30920,12 @@ export type VideoWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videoreactedeventvideo_every?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventvideo_none?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventvideo_some?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactionspreferenceeventvideo_every?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
+  videoreactionspreferenceeventvideo_none?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
+  videoreactionspreferenceeventvideo_some?: InputMaybe<VideoReactionsPreferenceEventWhereInput>
 }
 
 export type VideoWhereUniqueInput = {

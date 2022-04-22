@@ -29,6 +29,7 @@ import {
 const ENVIRONMENT_NAMES: Record<string, string> = {
   production: 'Main Testnet',
   development: 'Atlas Dev Testnet',
+  reactions: 'Reactions Playground',
 }
 const environmentsItems = availableEnvs().map((item) => ({ name: ENVIRONMENT_NAMES[item] || item, value: item }))
 
