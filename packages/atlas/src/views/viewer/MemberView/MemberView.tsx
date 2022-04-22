@@ -91,13 +91,20 @@ export const MemberView: React.FC = () => {
   const tabContent = React.useMemo(() => {
     switch (currentTab) {
       case 'NFTs owned':
-        return <MemberNFTs nfts={nfts} loading={loading} owner={activeMembership?.handle === handle} />
+        return (
+          <MemberNFTs
+            isFiltersApplied={canClearAllFilters}
+            nfts={nfts}
+            loading={loading}
+            owner={activeMembership?.handle === handle}
+          />
+        )
       case 'Activity':
         return <MemberActivity memberId={member?.id} sort={sortBy as 'createdAt_ASC' | 'createdAt_DESC'} />
       case 'About':
         return <MemberAbout />
     }
-  }, [activeMembership?.handle, currentTab, handle, loading, member?.id, nfts, sortBy])
+  }, [activeMembership?.handle, canClearAllFilters, currentTab, handle, loading, member?.id, nfts, sortBy])
 
   // At mount set the tab from the search params
   const initialRender = useRef(true)

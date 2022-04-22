@@ -170,6 +170,7 @@ export const ChannelView: React.FC = () => {
       case 'NFTs':
         return (
           <ChannelNfts
+            isFiltersApplied={canClearAllFilters}
             tilesPerPage={tilesPerPage}
             orderBy={sortNftsBy}
             ownedNftWhereInput={ownedNftWhereInput}

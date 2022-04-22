@@ -10,11 +10,12 @@ type MemberNFTsProps = {
   nfts?: AllNftFieldsFragment[]
   loading?: boolean
   owner?: boolean
+  isFiltersApplied?: boolean
 }
 
 const INITIAL_TILES_PER_ROW = 4
 
-export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner }) => {
+export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner, isFiltersApplied }) => {
   const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const nftRows = useVideoGridRows('main')
   const tilesPerPage = nftRows * tilesPerRow
@@ -35,11 +36,21 @@ export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner }) 
       </Grid>
       {nfts && !nfts.length && (
         <EmptyFallback
-          title={owner ? 'Start your collection' : 'No NFTs collected'}
-          subtitle={
-            owner ? "This member hadn't started the collection yet." : "This member hasn't started the collection yet."
+          title={
+            isFiltersApplied
+              ? 'No NFTs found that match filter criteria'
+              : owner
+              ? 'Start your collection'
+              : 'No NFTs collected'
           }
-          variant="small"
+          subtitle={
+            isFiltersApplied
+              ? 'Try changing the filter criteria'
+              : owner
+              ? 'Buy NFTs across the platform or create your own.'
+              : "This member hasn't started the collection yet."
+          }
+          variant="large"
         />
       )}
     </section>
