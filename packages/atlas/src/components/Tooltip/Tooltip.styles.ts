@@ -27,12 +27,20 @@ type TooltipTextProps = {
   headerText?: boolean
 }
 
-const getOneLineStyles = ({ oneLine }: TooltipTextProps) => {
+const getOneLineStyles = ({ oneLine, footer }: TooltipTextProps) => {
+  if (footer) {
+    return
+  }
   if (oneLine) {
     return css`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 400px;
+    `
+  } else {
+    return css`
+      max-width: 200px;
     `
   }
 }
@@ -40,7 +48,6 @@ const getOneLineStyles = ({ oneLine }: TooltipTextProps) => {
 export const TooltipText = styled(Text)<TooltipTextProps>`
   ${getOneLineStyles};
 
-  max-width: ${({ footer }) => !footer && '200px'};
   ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
 `
 
