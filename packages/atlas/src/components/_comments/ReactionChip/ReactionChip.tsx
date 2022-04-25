@@ -12,7 +12,7 @@ export type ReactionChipProps = {
   state?: 'default' | 'disabled' | 'processing'
 }
 
-const REACTION_TYPE: Record<ReactionChipProps['reaction'], React.ReactNode> = {
+export const REACTION_TYPE: Record<ReactionChipProps['reaction'], string> = {
   amusment: '👍 ',
   love: '❤️',
   laugh: '😂',
