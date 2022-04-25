@@ -317,8 +317,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const videoEditFields = (
     <>
       <DescriptionTextArea
-        {...register('description', textFieldValidation({ name: 'Description', maxLength: 2160 }))}
-        maxLength={2160}
+        {...register('description', textFieldValidation({ name: 'Description', maxLength: 5000 }))}
+        maxLength={5000}
         placeholder="Description of the video to share with your audience"
         error={!!errors.description}
         helperText={errors.description?.message}
