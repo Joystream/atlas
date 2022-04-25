@@ -17,6 +17,8 @@ export default {
     className: { table: { disable: true } },
     reference: { table: { disable: true } },
     hideOnClick: { table: { disable: true } },
+    delay: { table: { disable: true } },
+    showOnCreate: { table: { disable: true } },
     customContent: { type: 'boolean' },
   },
   args: {
@@ -26,6 +28,7 @@ export default {
     placement: 'bottom-start',
     text: 'Lorem ipsum dolor amet! Lorem ipsum dolor amet!',
     headerText: 'Lorem ipsum',
+    oneLine: false,
   },
 } as Meta<TooltipProps>
 

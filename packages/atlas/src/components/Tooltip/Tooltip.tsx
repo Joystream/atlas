@@ -2,10 +2,9 @@ import Tippy from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgAlertsInformative24 } from '@/components/_icons'
 import { transitions } from '@/styles'
 
-import { IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
+import { IconWrapper, StyledSvgAlertsInformative24, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
@@ -20,6 +19,7 @@ export type TooltipProps = {
   reference?: Element | React.RefObject<Element> | null | undefined
   customContent?: React.ReactNode
   showOnCreate?: boolean
+  oneLine?: boolean
   className?: string
 }
 
@@ -36,6 +36,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   delay,
   customContent,
   showOnCreate,
+  oneLine,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -59,11 +60,16 @@ export const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs} headerText={!!headerText} footer={!!customContent}>
-            <TooltipHeader>
+          <StyledTooltip
+            {...attrs}
+            headerText={!!headerText && !!headerText.length}
+            footer={!!customContent}
+            oneLine={!!oneLine}
+          >
+            <TooltipHeader headerText={!!headerText && !!headerText.length}>
               {icon && (
                 <IconWrapper>
-                  <SvgAlertsInformative24 />
+                  <StyledSvgAlertsInformative24 />
                 </IconWrapper>
               )}
               {headerText && (
@@ -73,7 +79,13 @@ export const Tooltip: React.FC<TooltipProps> = ({
               )}
             </TooltipHeader>
 
-            <TooltipText withIcon={!!icon} footer={!!customContent} variant="t100">
+            <TooltipText
+              withIcon={!!icon}
+              footer={!!customContent}
+              oneLine={oneLine}
+              headerText={!!headerText && !!headerText.length}
+              variant="t100"
+            >
               {text}
             </TooltipText>
             {customContent}
