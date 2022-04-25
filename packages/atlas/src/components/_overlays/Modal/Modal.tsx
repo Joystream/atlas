@@ -18,7 +18,7 @@ export type ModalProps = {
 
 export const Modal: React.FC<ModalProps> = ({
   children,
-  size = 'medium',
+  size = 'small',
   show,
   onExitClick,
   className,
