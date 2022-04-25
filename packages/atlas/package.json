@@ -75,6 +75,7 @@
     "react-spring": "^9.4.2",
     "react-textarea-autosize": "^8.3.3",
     "react-transition-group": "^4.4.2",
+    "react-use-measure": "^2.1.1",
     "retry-axios": "^2.6.0",
     "scroll-lock": "^2.1.5",
     "subscriptions-transport-ws": "^0.11.0",
