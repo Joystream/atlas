@@ -18,7 +18,7 @@ export type TooltipProps = {
   delay?: number | [number | null, number | null] | undefined
   hideOnClick?: boolean | 'toggle'
   reference?: Element | React.RefObject<Element> | null | undefined
-  footer?: React.ReactNode
+  customContent?: React.ReactNode
   showOnCreate?: boolean
   className?: string
 }
@@ -34,7 +34,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   offsetX = 0,
   offsetY = 8,
   delay,
-  footer,
+  customContent,
   showOnCreate,
   className,
 }) => {
@@ -59,7 +59,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs} headerText={!!headerText} footer={!!footer}>
+          <StyledTooltip {...attrs} headerText={!!headerText} footer={!!customContent}>
             <TooltipHeader>
               {icon && (
                 <IconWrapper>
@@ -67,16 +67,16 @@ export const Tooltip: React.FC<TooltipProps> = ({
                 </IconWrapper>
               )}
               {headerText && (
-                <TooltipText variant="h100" footer={!!footer}>
+                <TooltipText variant="h100" footer={!!customContent}>
                   {headerText}
                 </TooltipText>
               )}
             </TooltipHeader>
 
-            <TooltipText withIcon={!!icon} footer={!!footer} variant="t100">
+            <TooltipText withIcon={!!icon} footer={!!customContent} variant="t100">
               {text}
             </TooltipText>
-            {footer}
+            {customContent}
           </StyledTooltip>
         </CSSTransition>
       )}

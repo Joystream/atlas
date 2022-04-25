@@ -17,10 +17,10 @@ export default {
     className: { table: { disable: true } },
     reference: { table: { disable: true } },
     hideOnClick: { table: { disable: true } },
-    footer: { type: 'boolean' },
+    customContent: { type: 'boolean' },
   },
   args: {
-    footer: false,
+    customContent: false,
     offsetX: 0,
     offsetY: 0,
     placement: 'bottom-start',
@@ -33,8 +33,8 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
-    footer={
-      args.footer && (
+    customContent={
+      args.customContent && (
         <div key={0} style={{ marginTop: '12px' }}>
           Footer content
         </div>
@@ -48,8 +48,8 @@ export const Default = DefaultTooltip.bind({})
 const TextTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
-    footer={
-      args.footer && (
+    customContent={
+      args.customContent && (
         <div key={0} style={{ marginTop: '12px' }}>
           Footer content
         </div>
@@ -65,8 +65,8 @@ export const WithText = TextTooltip.bind({})
 const HeadingTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
-    footer={
-      args.footer && (
+    customContent={
+      args.customContent && (
         <div key={0} style={{ marginTop: '12px' }}>
           Footer content
         </div>
@@ -83,8 +83,8 @@ const ButtonTooltip: Story<TooltipProps> = (args) => (
   <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
     <Tooltip
       {...args}
-      footer={
-        args.footer && (
+      customContent={
+        args.customContent && (
           <div key={0} style={{ marginTop: '12px' }}>
             Footer content
           </div>

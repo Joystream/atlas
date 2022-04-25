@@ -244,7 +244,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 <DaysSummaryInfo
                   text="It’s the time when your auction will become active and buyer will be able to make an offer"
                   placement="top"
-                  footer={
+                  customContent={
                     <AuctionDurationTooltipFooter>
                       <Text variant="t100">
                         {totalDaysAndHours} = {formatNumber(numberOfBlocks)}

@@ -106,7 +106,7 @@ export const Comment: React.FC<CommentProps> = ({
                     </Text>
                   </StyledLink>
                   <CommentHeaderDot />
-                  <Tooltip text={tooltipDate} placement="top" offsetY={4} arrowDisabled delay={[1000, null]}>
+                  <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
                     {/*  TODO timestamp should be a hyperlink to that comment. */}
                     <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
                       {formatDateAgo(createdAt || new Date())}
