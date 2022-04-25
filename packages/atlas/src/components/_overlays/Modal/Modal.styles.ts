@@ -3,6 +3,14 @@ import styled from '@emotion/styled'
 
 import { cVar, media, zIndex } from '@/styles'
 
+const sizeObj = {
+  small: 'small',
+  medium: 'medium',
+  large: 'large',
+}
+
+export type ModalSize = keyof typeof sizeObj
+
 export const ModalBackdrop = styled.div`
   position: fixed;
   top: 0;
@@ -16,6 +24,7 @@ export const ModalBackdrop = styled.div`
 
 type ModalContentProps = {
   noBoxShadow?: boolean
+  'data-size': ModalSize
 }
 
 export const ModalContent = styled.div<ModalContentProps>`
@@ -33,14 +42,26 @@ export const ModalContent = styled.div<ModalContentProps>`
     `};
 
   ${media.sm} {
+    --max-width: calc(100vw - var(--size-topbar-height) * 2);
+
     min-width: 480px;
     max-height: calc(100vh - var(--size-topbar-height) * 2);
-    max-width: calc(100vw - var(--size-topbar-height) * 2);
+    max-width: var(--max-width);
     bottom: initial;
     left: 50%;
     top: 50%;
 
     /* to be kept in sync with the transition styles */
     transform: translate(-50%, -50%);
+
+    &[data-size=${sizeObj.small}] {
+      min-width: min(480px, var(--max-width));
+    }
+    &[data-size=${sizeObj.medium}] {
+      min-width: min(768px, var(--max-width));
+    }
+    &[data-size=${sizeObj.large}] {
+      min-width: min(1120px, var(--max-width));
+    }
   }
 `

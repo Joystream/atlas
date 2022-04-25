@@ -8,7 +8,6 @@ import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, media, sizes } from '@/styles'
 
 export const StyledDialogModal = styled(DialogModal)`
-  width: 690px;
   ${Footer} {
     background: ${cVar('colorCoreNeutral800')};
   }

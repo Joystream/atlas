@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 
 import { PolkadotIdenticon } from '@/components/PolkadotIdenticon'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { SvgAccountCreationIllustration } from '@/components/_illustrations'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Spinner } from '@/components/_loaders/Spinner'
@@ -32,6 +31,7 @@ export const IconGroup = styled.div`
 `
 
 export const AccountStepImg = styled(SvgAccountCreationIllustration)`
+  width: 100%;
   height: 210px;
 `
 
@@ -56,7 +56,6 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   display: flex;
   justify-content: space-between;
   margin-bottom: ${sizes(4)};
-  margin-right: ${sizes(4)};
   padding: ${sizes(2)} ${sizes(6)} ${sizes(2)} ${sizes(2)};
   border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : cVar('colorBackgroundElevated'))};
   background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral800Lighten') : 'transparent')};
@@ -97,10 +96,6 @@ export const StyledRadioButton = styled(RadioButton)`
   display: flex;
   align-items: center;
   justify-content: center;
-`
-
-export const StyledButton = styled(Button)`
-  margin-left: auto;
 `
 
 export const OrderedSteps = styled.ol`

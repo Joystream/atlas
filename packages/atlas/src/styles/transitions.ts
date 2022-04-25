@@ -20,7 +20,7 @@ export const transitions = {
     fadeAndSlide: 'fade-slide',
     slide: 'slide',
     slideDown: 'slide-down',
-    modal: 'atlas-modal',
+    modal: 'modal',
   },
 }
 
@@ -110,23 +110,23 @@ export const transitionStyles = css`
 
   ${media.sm} {
     .${transitions.names.modal}-enter {
-      transform: translate(-50%, -50%) scale(0.8);
-      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8) !important;
+      opacity: 0 !important;
     }
 
     .${transitions.names.modal}-enter-active {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) !important;
+      opacity: 1 !important;
     }
 
     .${transitions.names.modal}-exit {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) !important;
+      opacity: 1 !important;
     }
 
     .${transitions.names.modal}-exit-active {
-      transform: translate(-50%, -50%) scale(0.8);
-      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8) !important;
+      opacity: 0 !important;
     }
   }
 `

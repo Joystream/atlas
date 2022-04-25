@@ -65,20 +65,15 @@ export const useConfirmationModal = (modalProps?: DialogModalProps) => {
     (args?: DialogModalProps) =>
       openModal(modalId, ({ in: inAnimation }) => {
         const _args = args || modalProps
-        return (
-          <DialogModal
-            {..._args}
-            onExitClick={
-              _args?.onExitClick
-                ? () => {
-                    _args?.onExitClick?.()
-                    _closeModal()
-                  }
-                : undefined
-            }
-            show={inAnimation}
-          />
-        )
+        const handleClick = () => {
+          if (!_args?.onExitClick) {
+            return undefined
+          }
+          _args?.onExitClick?.()
+          _closeModal()
+        }
+
+        return <DialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
       }),
     [openModal, modalId, modalProps, _closeModal]
   )

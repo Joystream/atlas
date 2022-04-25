@@ -3,19 +3,27 @@ import { CSSTransition } from 'react-transition-group'
 
 import { Portal } from '@/components/Portal'
 import { useOverlayManager } from '@/providers/overlayManager'
-import { transitions } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
-import { ModalBackdrop, ModalContent } from './Modal.styles'
+import { ModalBackdrop, ModalContent, ModalSize } from './Modal.styles'
 
 import { DialogProps } from '../Dialog'
 
 export type ModalProps = {
   show?: boolean
   noBoxShadow?: boolean
+  size?: ModalSize
   className?: string
 } & Pick<DialogProps, 'onExitClick'>
 
-export const Modal: React.FC<ModalProps> = ({ children, show, onExitClick, className, noBoxShadow }) => {
+export const Modal: React.FC<ModalProps> = ({
+  children,
+  size = 'medium',
+  show,
+  onExitClick,
+  className,
+  noBoxShadow,
+}) => {
   const { modalContainerRef, incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
   useEffect(() => {
@@ -26,12 +34,18 @@ export const Modal: React.FC<ModalProps> = ({ children, show, onExitClick, class
 
   return (
     <Portal containerRef={modalContainerRef}>
-      <CSSTransition in={show} timeout={250} classNames={transitions.names.fade} mountOnEnter unmountOnExit>
+      <CSSTransition
+        in={show}
+        timeout={parseInt(cVar('animationTimingMedium', true))}
+        classNames={transitions.names.fade}
+        mountOnEnter
+        unmountOnExit
+      >
         <ModalBackdrop onClick={onExitClick} />
       </CSSTransition>
       <CSSTransition
         in={show}
-        timeout={250}
+        timeout={parseInt(cVar('animationTimingMedium', true))}
         classNames={transitions.names.modal}
         mountOnEnter
         unmountOnExit
@@ -39,7 +53,7 @@ export const Modal: React.FC<ModalProps> = ({ children, show, onExitClick, class
         onEnter={incrementOverlaysOpenCount}
         onExited={decrementOverlaysOpenCount}
       >
-        <ModalContent noBoxShadow={noBoxShadow} className={className}>
+        <ModalContent data-size={size} noBoxShadow={noBoxShadow} className={className}>
           {children}
         </ModalContent>
       </CSSTransition>

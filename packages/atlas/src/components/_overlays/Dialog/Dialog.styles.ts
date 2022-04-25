@@ -7,11 +7,11 @@ import { cVar, media, sizes } from '@/styles'
 export type DialogSize = 'default' | 'compact'
 
 type DividersProps = {
-  dividers: boolean
+  dividers?: boolean
 }
 
 type SizeProps = {
-  size: 'default' | 'compact'
+  size: DialogSize
 }
 
 type ContentProps = {
@@ -60,6 +60,16 @@ export const Header = styled.div<DividersProps>`
   align-items: flex-start;
   padding: var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0;
 
+  button:last-of-type {
+    margin-left: ${sizes(6)};
+  }
+
+  ${media.sm} {
+    button:last-of-type {
+      margin-left: ${sizes(10)};
+    }
+  }
+
   ${({ dividers }) => dividers && headerDividersStyles};
 `
 
@@ -101,6 +111,7 @@ type FooterProps = {
 } & DividersProps
 
 export const Footer = styled.div<FooterProps>`
+  width: 100%;
   padding: 0 var(--local-size-dialog-padding) var(--local-size-dialog-padding);
   display: flex;
   justify-content: space-between;

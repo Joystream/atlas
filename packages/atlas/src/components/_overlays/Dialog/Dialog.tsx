@@ -2,7 +2,6 @@ import React, { FormEvent } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionClose, SvgAlertsError32, SvgAlertsSuccess32, SvgAlertsWarning32 } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -18,7 +17,7 @@ import {
   StyledPrimaryButton,
 } from './Dialog.styles'
 
-type DialogButtonProps = {
+export type DialogButtonProps = {
   text: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
@@ -87,9 +86,13 @@ export const Dialog: React.FC<DialogProps> = ({
             <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
-            <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-              <SvgActionClose />
-            </IconButton>
+            <Button
+              iconOnly
+              icon={<SvgActionClose />}
+              aria-label="close modal"
+              onClick={onExitClick}
+              variant="tertiary"
+            />
           )}
         </Header>
       )}

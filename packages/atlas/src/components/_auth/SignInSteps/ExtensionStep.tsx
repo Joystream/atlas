@@ -36,26 +36,28 @@ export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) =>
   }, [extensionConnected, navigate, nextStepPath, step])
 
   return (
-    <StepWrapper>
-      <StyledPolkadotLogo />
-      <StepTitle variant="h500">Add Polkadot extension</StepTitle>
-      <StepSubTitle secondary variant="t200">
-        To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
-        following link:
-      </StepSubTitle>
-      <StyledButton icon={<SvgActionNewTab />} to="https://polkadot.js.org/extension/">
-        Install extension
-      </StyledButton>
-      <Button variant="tertiary" size="small" onClick={() => openEnableExtensionDialog()}>
-        Polkadot extension already installed? Click here
-      </Button>
+    <>
+      <StepWrapper>
+        <StyledPolkadotLogo />
+        <StepTitle variant="h500">Add Polkadot extension</StepTitle>
+        <StepSubTitle secondary variant="t200">
+          To manage your blockchain account, you will need a Polkadot browser extension. Please install it using the
+          following link:
+        </StepSubTitle>
+        <StyledButton icon={<SvgActionNewTab />} to="https://polkadot.js.org/extension/">
+          Install extension
+        </StyledButton>
+        <Button variant="tertiary" size="small" onClick={() => openEnableExtensionDialog()}>
+          Polkadot extension already installed? Click here
+        </Button>
+      </StepWrapper>
       <StyledStepFooter>
         <BottomBarIcon />
         <Text variant="t200" secondary>
           Please reload the page and allow access after installing the extension
         </Text>
       </StyledStepFooter>
-    </StepWrapper>
+    </>
   )
 }
 

@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 
 import { Step, getStepVariant } from '@/components/Step'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
 
 import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.styles'
 
-import { ModalProps } from '../Modal'
+import { DialogModalProps } from '../DialogModal'
 
 type Step = {
   title: string
@@ -17,7 +17,7 @@ type StepperModalProps = {
   steps: Step[]
   currentStepIdx?: number
   onExitClick?: () => void
-} & ModalProps
+} & DialogModalProps
 
 export const StepperModal: React.FC<StepperModalProps> = ({
   steps,
@@ -29,7 +29,7 @@ export const StepperModal: React.FC<StepperModalProps> = ({
     return null
   }
   return (
-    <StyledModal {...modalProps}>
+    <StyledModal {...modalProps} noContentPadding size="medium">
       <StyledHeader>
         <StyledStepsInfoContainer>
           {steps.map((step, idx) => {
@@ -43,9 +43,13 @@ export const StepperModal: React.FC<StepperModalProps> = ({
               </Fragment>
             )
           })}
-          <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-            <SvgActionClose />
-          </IconButton>
+          <Button
+            iconOnly
+            icon={<SvgActionClose />}
+            onClick={onExitClick}
+            aria-label="close modal"
+            variant="tertiary"
+          />
         </StyledStepsInfoContainer>
       </StyledHeader>
       {steps[currentStepIdx].element}
