@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
-import useMeasure from 'react-use-measure'
+import useResizeObserver from 'use-resize-observer'
 
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
@@ -24,7 +24,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
   const [active, setActive] = useState(false)
   const [text, setText] = useState('')
 
-  const [measureRef, textAreaBounds] = useMeasure()
+  const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
+
   useEffect(() => {
     if (active) textAreaRef.current?.focus()
   }, [active])
@@ -57,7 +58,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
       <Container
         ref={containerRef}
         data-show={show}
-        height={textAreaBounds.height || 40}
+        height={textAreaHeight}
         onKeyDown={(e) => {
           if ((e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
             onComment?.()
