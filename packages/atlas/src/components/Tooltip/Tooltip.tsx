@@ -4,7 +4,14 @@ import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
 
-import { IconWrapper, StyledSvgAlertsInformative24, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
+import {
+  IconWrapper,
+  StyledSvgAlertsInformative24,
+  StyledTooltip,
+  TooltipContent,
+  TooltipHeader,
+  TooltipText,
+} from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
@@ -40,7 +47,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
-  if (!text) {
+  if (!text && !customContent) {
     return <>{children}</>
   }
   return (
@@ -66,28 +73,31 @@ export const Tooltip: React.FC<TooltipProps> = ({
             footer={!!customContent}
             oneLine={!!oneLine}
           >
-            <TooltipHeader headerText={!!headerText && !!headerText.length}>
-              {icon && (
-                <IconWrapper>
-                  <StyledSvgAlertsInformative24 />
-                </IconWrapper>
-              )}
-              {headerText && (
-                <TooltipText variant="h100" footer={!!customContent}>
-                  {headerText}
+            <TooltipContent headerText={!!headerText && !!headerText.length}>
+              <TooltipHeader headerText={!!headerText && !!headerText.length}>
+                {icon && (
+                  <IconWrapper>
+                    <StyledSvgAlertsInformative24 />
+                  </IconWrapper>
+                )}
+                {headerText && (
+                  <TooltipText variant="h100" footer={!!customContent}>
+                    {headerText}
+                  </TooltipText>
+                )}
+              </TooltipHeader>
+              {text && text.length && (
+                <TooltipText
+                  withIcon={!!icon}
+                  footer={!!customContent}
+                  oneLine={oneLine}
+                  headerText={!!headerText && !!headerText.length}
+                  variant="t100"
+                >
+                  {text}
                 </TooltipText>
               )}
-            </TooltipHeader>
-
-            <TooltipText
-              withIcon={!!icon}
-              footer={!!customContent}
-              oneLine={oneLine}
-              headerText={!!headerText && !!headerText.length}
-              variant="t100"
-            >
-              {text}
-            </TooltipText>
+            </TooltipContent>
             {customContent}
           </StyledTooltip>
         </CSSTransition>

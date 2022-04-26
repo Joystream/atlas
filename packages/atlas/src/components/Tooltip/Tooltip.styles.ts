@@ -72,3 +72,9 @@ export const StyledTooltip = styled.div<StyledTooltipProps>`
     align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};
   }
 `
+
+export const TooltipContent = styled.div<{ headerText: boolean }>`
+  display: ${({ headerText }) => (headerText ? 'block' : 'flex')};
+  align-items: center;
+  align-self: baseline;
+`
