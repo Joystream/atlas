@@ -37,12 +37,13 @@ export type DialogProps = {
   additionalActionsNode?: React.ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
   onExitClick?: () => void
-  className?: string
   children?: React.ReactNode
   as?: React.ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
+  className?: string
+  contentClassName?: string
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
@@ -63,12 +64,13 @@ export const Dialog: React.FC<DialogProps> = ({
   additionalActionsNode,
   onExitClick,
   children,
-  className,
   as,
   onSubmit,
   noContentPadding,
   actionDivider = false,
   additionalActionsNodeMobilePosition = 'top',
+  className,
+  contentClassName,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -96,7 +98,12 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content denseHeader={!!iconNode} data-scroll-lock-scrollable noContentPadding={noContentPadding}>
+      <Content
+        denseHeader={!!iconNode}
+        data-scroll-lock-scrollable
+        noContentPadding={noContentPadding}
+        className={contentClassName}
+      >
         {description ? (
           <Text variant="t200" secondary>
             {description}

@@ -42,10 +42,6 @@ export const DialogContainer = styled.div`
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
 
   ${getDialogPaddingVariableStyles}
-
-  ${media.sm} {
-    max-width: calc(100vw - var(--size-topbar-height) * 2);
-  }
 `
 
 const headerDividersStyles = css`
@@ -96,6 +92,7 @@ const getDenseHeaderContentStyles = ({ denseHeader, noContentPadding }: ContentP
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
+  display: grid;
   padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
   ${getDenseHeaderContentStyles};
 `

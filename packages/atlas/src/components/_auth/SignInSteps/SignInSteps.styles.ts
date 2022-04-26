@@ -3,9 +3,10 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
 import { SvgJoystreamLogoIcon, SvgPolkadotLogoIcon } from '@/components/_illustrations'
-import { sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const StepWrapper = styled.div`
+  overflow-y: auto;
   width: 100%;
   text-align: center;
   display: flex;
@@ -36,10 +37,10 @@ export const StepSubTitle = styled(Text)`
 export const StepFooter = styled.div`
   position: relative;
   padding: var(--local-size-dialog-padding);
-  padding-top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: ${cVar('effectDividersTop')};
 `
 
 export const BottomBarIcon = styled(SvgAlertsWarning24)`

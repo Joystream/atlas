@@ -96,7 +96,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
             </StepFooter>
           </>
         ) : (
-          <form onSubmit={handleSubmitSelectedAccount}>
+          <>
             <StepWrapper>
               <IconGroup>
                 <StyledPolkadotLogo />
@@ -119,14 +119,14 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 ))}
               </AccountsWrapper>
             </StepWrapper>
-            <Footer>
+            <Footer dividers>
               <FooterButtonsContainer>
-                <Button type="submit" disabled={!selectedAccountAddress}>
+                <Button type="submit" onClick={handleSubmitSelectedAccount} disabled={!selectedAccountAddress}>
                   Connect account
                 </Button>
               </FooterButtonsContainer>
             </Footer>
-          </form>
+          </>
         )}
       </CSSTransition>
     </SwitchTransition>

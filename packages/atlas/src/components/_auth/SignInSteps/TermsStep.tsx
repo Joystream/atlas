@@ -56,7 +56,7 @@ export const TermsStep: React.FC = () => {
           </TermsOverlay>
         </TermsBox>
       </StepWrapper>
-      <Footer>
+      <Footer dividers>
         <FooterButtonsContainer>
           <Button to={{ search: urlParams({ [QUERY_PARAMS.LOGIN]: 'member' }) }} disabled={!hasScrolledToBottom}>
             Accept terms

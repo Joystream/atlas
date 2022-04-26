@@ -145,6 +145,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
   return (
     <DialogModal
       title="Create a Joystream membership"
+      size="medium"
       show={show && accountSet && !isCreatingMembership}
       dividers
       as="form"
@@ -152,7 +153,6 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
       onExitClick={handleExitClick}
       primaryButton={{
         text: 'Create membership',
-        size: 'large',
         disabled: nodeConnectionStatus !== 'connected' || !isValid,
         type: 'submit',
       }}

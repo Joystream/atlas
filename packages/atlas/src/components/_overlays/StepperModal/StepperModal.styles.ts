@@ -1,18 +1,23 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, oldColors, sizes } from '@/styles'
 
 import { DialogModal } from '../DialogModal'
 
 export const StyledModal = styled(DialogModal)``
 
+export const dialogContentCss = css`
+  overflow-y: hidden;
+`
+
 export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid ${oldColors.gray[500]};
+  box-shadow: ${cVar('effectDividersBottom')};
   padding: var(--local-size-dialog-padding);
 
   hr {
