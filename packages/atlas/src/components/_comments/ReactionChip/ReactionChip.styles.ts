@@ -37,7 +37,7 @@ export const ReactionChipButton = styled.button<ReactionChipButtonProps>`
   border: none;
   background: ${getStaticBackground};
   box-shadow: ${({ active }) => (active ? `inset 0 0 0 1px ${cVar('colorBackgroundStrongAlpha')}` : 'none')};
-  cursor: pointer;
+  cursor: ${({ state }) => (state === 'disabled' ? 'not-allowed' : 'pointer')};
   height: 32px;
   padding: ${sizes(2)};
   border-radius: 999px;

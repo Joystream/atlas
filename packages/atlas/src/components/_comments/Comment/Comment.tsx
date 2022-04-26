@@ -12,16 +12,21 @@ import { formatDate, formatDateAgo } from '@/utils/time'
 
 import {
   CommentBody,
+  CommentFooter,
+  CommentFooterItems,
   CommentHeader,
   CommentHeaderDot,
   CommentWrapper,
   HighlightableText,
   KebabMenuIconButton,
+  StyledFooterSkeletonLoader,
   StyledLink,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
 import { CommentRow, CommentRowProps } from '../CommentRow'
+import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionType } from '../ReactionChip'
+import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
   memberHandle?: string
@@ -31,9 +36,11 @@ export type CommentProps = {
   isEdited?: boolean
   isAbleToEdit?: boolean
   type: 'default' | 'deleted' | 'options'
+  reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
   onEditLabelClick?: () => void
   onEditClick?: () => void
   onDeleteClick?: () => void
+  onReactionClick: (reaction: ReactionType) => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
@@ -52,6 +59,8 @@ export const Comment: React.FC<CommentProps> = ({
   onEditLabelClick,
   onEditClick,
   onDeleteClick,
+  onReactionClick,
+  reactions,
 }) => {
   const isDeleted = type === 'deleted'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
@@ -75,6 +84,8 @@ export const Comment: React.FC<CommentProps> = ({
       destructive: true,
     },
   ]
+
+  const allReactionsApplied = reactions && reactions?.length >= Object.values(REACTION_TYPE).length
 
   return (
     <CommentRow
@@ -145,7 +156,38 @@ export const Comment: React.FC<CommentProps> = ({
           }
         />
       </CommentWrapper>
-      {/* TODO add reactions footer here */}
+      <CommentFooter>
+        <SwitchTransition>
+          <CSSTransition
+            timeout={parseInt(cVar('animationTimingFast', true))}
+            key={loading?.toString()}
+            classNames={transitions.names.fade}
+          >
+            {loading ? (
+              <CommentFooterItems>
+                <StyledFooterSkeletonLoader width={48} height={32} rounded />
+                <StyledFooterSkeletonLoader width={48} height={32} rounded />
+              </CommentFooterItems>
+            ) : (
+              <CommentFooterItems>
+                {reactions &&
+                  reactions.length > 0 &&
+                  reactions.map(({ type, active, count, state }) => (
+                    <ReactionChip
+                      key={type}
+                      type={type}
+                      active={active}
+                      count={count}
+                      state={isDeleted ? 'disabled' : state}
+                      onReactionClick={onReactionClick}
+                    />
+                  ))}
+                {!allReactionsApplied && <ReactionPopover onReactionClick={onReactionClick} />}
+              </CommentFooterItems>
+            )}
+          </CSSTransition>
+        </SwitchTransition>
+      </CommentFooter>
     </CommentRow>
   )
 }

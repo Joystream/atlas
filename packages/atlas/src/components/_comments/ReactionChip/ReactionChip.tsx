@@ -5,14 +5,17 @@ import { Loader } from '@/components/_loaders/Loader'
 
 import { EmojiContainer, ReactionChipButton } from './ReactionChip.styles'
 
+export type ReactionType = 'amusment' | 'love' | 'laugh' | 'shock' | 'anger'
+
 export type ReactionChipProps = {
   active?: boolean
-  counter?: number
-  reaction: 'amusment' | 'love' | 'laugh' | 'shock' | 'anger'
+  count?: number
+  type: ReactionType
   state?: 'default' | 'disabled' | 'processing'
+  onReactionClick: (type: ReactionType) => void
 }
 
-export const REACTION_TYPE: Record<ReactionChipProps['reaction'], string> = {
+export const REACTION_TYPE: Record<ReactionType, string> = {
   amusment: '👍 ',
   love: '❤️',
   laugh: '😂',
@@ -23,18 +26,15 @@ export const REACTION_TYPE: Record<ReactionChipProps['reaction'], string> = {
 export const ReactionChip: React.FC<ReactionChipProps> = ({
   state = 'default',
   active = false,
-  reaction,
-  counter = 0,
+  type,
+  count = 0,
+  onReactionClick,
 }) => {
   return (
-    <ReactionChipButton state={state} active={active} title={`${counter} ${reaction}`}>
-      {state === 'processing' ? (
-        <Loader variant="xsmall" />
-      ) : (
-        <EmojiContainer>{REACTION_TYPE[reaction]} </EmojiContainer>
-      )}
+    <ReactionChipButton state={state} active={active} title={`${count} ${type}`} onClick={() => onReactionClick(type)}>
+      {state === 'processing' ? <Loader variant="xsmall" /> : <EmojiContainer>{REACTION_TYPE[type]} </EmojiContainer>}
       <Text variant="t100" margin={{ left: 2 }}>
-        {counter}
+        {count}
       </Text>
     </ReactionChipButton>
   )

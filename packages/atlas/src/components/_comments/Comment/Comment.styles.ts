@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionTrash } from '@/components/_icons'
+import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes, square } from '@/styles'
 
 export const KebabMenuIconButton = styled(IconButton)<{ isActive: boolean }>`
@@ -68,4 +69,18 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
 export const CommentBody = styled(Text)`
   display: flex;
   align-items: center;
+`
+
+export const CommentFooter = styled.div`
+  margin-top: ${sizes(2)};
+`
+
+export const CommentFooterItems = styled.div`
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 4px;
+`
+
+export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
+  border-radius: 999px;
 `

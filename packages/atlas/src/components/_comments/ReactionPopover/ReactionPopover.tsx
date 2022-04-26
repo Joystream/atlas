@@ -12,10 +12,10 @@ import {
   StyledEmojiButton,
 } from './ReactionPopover.styles'
 
-import { REACTION_TYPE, ReactionChipProps } from '../ReactionChip'
+import { REACTION_TYPE, ReactionType } from '../ReactionChip'
 
 export type ReactionPopoverProps = {
-  onReactionClick: (reaction: ReactionChipProps['reaction']) => void
+  onReactionClick: (reaction: ReactionType) => void
 }
 
 const getTranslateNumber = (idx: number) => {
@@ -40,11 +40,11 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
-    name: key as ReactionChipProps['reaction'],
+    name: key as ReactionType,
     value,
   }))
 
-  const handleReactionClick = (reaction: ReactionChipProps['reaction']) => {
+  const handleReactionClick = (reaction: ReactionType) => {
     onReactionClick(reaction)
     setIsOpen(false)
   }
