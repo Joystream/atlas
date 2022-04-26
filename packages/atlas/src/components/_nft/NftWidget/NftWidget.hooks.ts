@@ -43,6 +43,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
       },
     },
     {
+      fetchPolicy: 'cache-and-network',
       skip: !nft?.id || !activeMemberId,
       onError: (error) =>
         SentryLogger.error('Failed to fetch member bids', 'useNftState', error, {
