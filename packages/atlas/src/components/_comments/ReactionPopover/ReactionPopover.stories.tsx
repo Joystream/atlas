@@ -1,22 +1,46 @@
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 
-import { ReactionPopover } from './ReactionPopover'
+import { Text } from '@/components/Text'
+
+import { ReactionPopover, ReactionPopoverProps } from './ReactionPopover'
 
 export default {
   title: 'comments/ReactionPopover',
   component: ReactionPopover,
-  args: {
-    active: true,
-    reaction: 'love',
-    state: 'default',
+  argTypes: {
+    onReactionClick: { table: { disable: true } },
   },
-} as Meta
+} as Meta<ReactionPopoverProps>
 
-const Template: Story = (args) => (
-  <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+const Template: Story<ReactionPopoverProps> = (args) => (
+  <div
+    style={{
+      border: '1px solid silver',
+      maxWidth: '250px',
+      height: '250px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
     <ReactionPopover {...args} />
+  </div>
+)
+const EdgeOfTheScreenTemplate: Story<ReactionPopoverProps> = (args) => (
+  <div style={{ marginLeft: '-15px' }}>
+    <ReactionPopover {...args} />
+    <Text as="p" variant="t100" secondary>
+      Reaction popover should be displayed at the bottom and should never go beyond the boundaries of the viewport.
+    </Text>
+    <div style={{ marginTop: '80px' }}>
+      <ReactionPopover {...args} />
+      <Text as="p" variant="t100" secondary>
+        Reaction popover should be displayed at the top and should never go beyond the boundaries of the viewport.
+      </Text>
+    </div>
   </div>
 )
 
 export const Default = Template.bind({})
+export const EdgeOfTheScreen = EdgeOfTheScreenTemplate.bind({})

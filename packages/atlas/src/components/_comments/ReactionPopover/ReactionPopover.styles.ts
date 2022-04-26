@@ -37,18 +37,10 @@ export const EmojiContainer = styled.div`
   max-width: 16px;
   max-height: 16px;
 
+  /* TODO remove this media query once we implement tweemoji */
   @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
     transform: translateX(-2px);
   }
-`
-
-export const Emojiis = styled.div`
-  position: absolute;
-  top: 0;
-  display: grid;
-  gap: ${sizes(1)};
-  left: calc(-50% - 12px);
-  grid-auto-flow: column;
 `
 
 export const StyledEmojiButton = styled(Button)<{ isVisible: boolean; verticalTranslate: number }>`

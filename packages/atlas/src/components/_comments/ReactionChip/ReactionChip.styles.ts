@@ -52,6 +52,15 @@ export const EmojiContainer = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 16px;
-  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+
+  /* TODO remove this media query once we implement tweemoji */
+
+  /* this is added because chrome has some issue with rendering emojis */
+
+  /* https://stackoverflow.com/questions/42016125/emoji-rendered-in-chrome-have-different-widths-than-in-other-browsers/44145771#44145771 */
+  @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
+    transform: translateX(-2px);
+  }
 `

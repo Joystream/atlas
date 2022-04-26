@@ -14,19 +14,21 @@ import {
 
 import { REACTION_TYPE, ReactionChipProps } from '../ReactionChip'
 
-export type ReactionPopoverTypes = {
-  onReactionClick: () => void
-  onPopoverOpen: () => void
+export type ReactionPopoverProps = {
+  onReactionClick: (reaction: ReactionChipProps['reaction']) => void
 }
 
 const getTranslateNumber = (idx: number) => {
   switch (idx) {
+    // last and first button
     case 0:
     case 4:
       return 8
+    // second and fourth
     case 1:
     case 3:
       return 12
+    // middle button
     case 2:
       return 16
     default:
@@ -34,18 +36,23 @@ const getTranslateNumber = (idx: number) => {
   }
 }
 
-export const ReactionPopover: React.FC = () => {
+export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick }) => {
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
     name: key as ReactionChipProps['reaction'],
     value,
   }))
+
+  const handleReactionClick = (reaction: ReactionChipProps['reaction']) => {
+    onReactionClick(reaction)
+    setIsOpen(false)
+  }
   return (
     <Tippy
       onMount={() => setIsOpen(true)}
       onHide={() => setIsOpen(false)}
-      render={(attrs) => (
+      render={(attrs, _, instance) => (
         <ReactionPopoverWrapper {...attrs}>
           <ReactionPopoverInnerWrapper isVisible={isOpen}>
             {reactions.map(({ name, value }, idx) => {
@@ -53,6 +60,10 @@ export const ReactionPopover: React.FC = () => {
                 <StyledEmojiButton
                   verticalTranslate={getTranslateNumber(idx)}
                   isVisible={isOpen}
+                  onClick={() => {
+                    handleReactionClick(name)
+                    instance?.hide()
+                  }}
                   variant="tertiary"
                   size={smMatch ? 'small' : 'medium'}
                   iconOnly

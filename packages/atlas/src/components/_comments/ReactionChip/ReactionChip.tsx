@@ -28,9 +28,11 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
 }) => {
   return (
     <ReactionChipButton state={state} active={active} title={`${counter} ${reaction}`}>
-      <EmojiContainer>
-        {state === 'processing' ? <Loader variant="xsmall" /> : <Text variant="t100">{REACTION_TYPE[reaction]}</Text>}
-      </EmojiContainer>
+      {state === 'processing' ? (
+        <Loader variant="xsmall" />
+      ) : (
+        <EmojiContainer>{REACTION_TYPE[reaction]} </EmojiContainer>
+      )}
       <Text variant="t100" margin={{ left: 2 }}>
         {counter}
       </Text>
