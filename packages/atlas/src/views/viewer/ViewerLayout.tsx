@@ -32,6 +32,7 @@ import {
 
 import { DiscoverView } from './DiscoverView/DiscoverView'
 import { EditMembershipView } from './EditMembershipView/EditMembershipView'
+import { NotFoundView } from './NotFoundView'
 
 const viewerRoutes = [
   { path: relativeRoutes.viewer.search(), element: <SearchView /> },
@@ -103,6 +104,7 @@ export const ViewerLayout: React.FC = () => {
                     />
                   }
                 />
+                <Route path="*" element={<NotFoundView />} />
               </Routes>
             </CSSTransition>
           </SwitchTransition>
@@ -117,4 +119,5 @@ const MainContainer = styled.main`
   position: relative;
   padding: var(--size-topbar-height) var(--size-global-horizontal-padding) 0;
   margin-left: var(--size-sidenav-width-collapsed);
+  height: 100%;
 `

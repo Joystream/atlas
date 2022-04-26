@@ -25,6 +25,8 @@ import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } fr
 
 import { StudioWelcomeView } from './StudioWelcomeView'
 
+import { NotFoundView } from '../viewer/NotFoundView'
+
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
@@ -143,6 +145,7 @@ const StudioLayout = () => {
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
+              <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>
           {channelSet && <VideoWorkspace />}
