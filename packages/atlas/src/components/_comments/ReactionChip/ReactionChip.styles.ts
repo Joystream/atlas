@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
-export type ReactionChipState = 'default' | 'disabled' | 'processing'
+export type ReactionChipState = 'default' | 'disabled' | 'processing' | 'read-only'
 type ReactionChipButtonProps = {
   state: ReactionChipState
   active: boolean
@@ -37,7 +37,8 @@ export const ReactionChipButton = styled.button<ReactionChipButtonProps>`
   border: none;
   background: ${getStaticBackground};
   box-shadow: ${({ active }) => (active ? `inset 0 0 0 1px ${cVar('colorBackgroundStrongAlpha')}` : 'none')};
-  cursor: ${({ state }) => (state === 'disabled' ? 'not-allowed' : 'pointer')};
+  cursor: ${({ state }) => (state === 'disabled' || state === 'read-only' ? 'not-allowed' : 'pointer')};
+  opacity: ${({ state }) => (state === 'disabled' ? 0.5 : 1)};
   height: 32px;
   padding: ${sizes(2)};
   border-radius: 999px;

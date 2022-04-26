@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -26,6 +26,7 @@ import {
 
 import { CommentRow, CommentRowProps } from '../CommentRow'
 import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionType } from '../ReactionChip'
+import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
@@ -85,7 +86,24 @@ export const Comment: React.FC<CommentProps> = ({
     },
   ]
 
+  const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
   const allReactionsApplied = reactions && reactions?.length >= Object.values(REACTION_TYPE).length
+
+  const getReactionState = useCallback(
+    (state?: ReactionChipState): ReactionChipState | undefined => {
+      if (state === 'processing') {
+        return state
+      }
+      if (isDeleted) {
+        return 'read-only'
+      }
+      if (reactionIsProcessing) {
+        return 'disabled'
+      }
+      return state
+    },
+    [isDeleted, reactionIsProcessing]
+  )
 
   return (
     <CommentRow
@@ -178,11 +196,13 @@ export const Comment: React.FC<CommentProps> = ({
                       type={type}
                       active={active}
                       count={count}
-                      state={isDeleted ? 'disabled' : state}
+                      state={getReactionState(state)}
                       onReactionClick={onReactionClick}
                     />
                   ))}
-                {!allReactionsApplied && <ReactionPopover onReactionClick={onReactionClick} />}
+                {!allReactionsApplied && !isDeleted && (
+                  <ReactionPopover disabled={reactionIsProcessing} onReactionClick={onReactionClick} />
+                )}
               </CommentFooterItems>
             )}
           </CSSTransition>

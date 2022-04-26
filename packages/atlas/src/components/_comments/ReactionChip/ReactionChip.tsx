@@ -11,7 +11,7 @@ export type ReactionChipProps = {
   active?: boolean
   count?: number
   type: ReactionType
-  state?: 'default' | 'disabled' | 'processing'
+  state?: 'default' | 'disabled' | 'processing' | 'read-only'
   onReactionClick: (type: ReactionType) => void
 }
 

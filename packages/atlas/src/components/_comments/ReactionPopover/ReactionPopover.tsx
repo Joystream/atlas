@@ -16,6 +16,7 @@ import { REACTION_TYPE, ReactionType } from '../ReactionChip'
 
 export type ReactionPopoverProps = {
   onReactionClick: (reaction: ReactionType) => void
+  disabled?: boolean
 }
 
 const getTranslateNumber = (idx: number) => {
@@ -36,7 +37,7 @@ const getTranslateNumber = (idx: number) => {
   }
 }
 
-export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick }) => {
+export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick, disabled }) => {
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
@@ -50,6 +51,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
   }
   return (
     <Tippy
+      disabled={disabled}
       onMount={() => setIsOpen(true)}
       onHide={() => setIsOpen(false)}
       render={(attrs, _, instance) => (
@@ -79,7 +81,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
       trigger="click"
       hideOnClick
     >
-      <Button variant="tertiary" size="small" iconOnly icon={<SvgActionPlaceholder />} />
+      <Button variant="tertiary" size="small" iconOnly icon={<SvgActionPlaceholder />} disabled={disabled} />
     </Tippy>
   )
 }
