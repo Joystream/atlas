@@ -38,6 +38,7 @@ export const EmojiContainer = styled.div`
   max-height: 16px;
 
   /* TODO remove this media query once we implement tweemoji */
+  /* stylelint-disable-next-line  media-feature-name-no-unknown */
   @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
     transform: translateX(-2px);
   }

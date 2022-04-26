@@ -61,6 +61,7 @@ export const EmojiContainer = styled.span`
   /* this is added because chrome has some issue with rendering emojis */
 
   /* https://stackoverflow.com/questions/42016125/emoji-rendered-in-chrome-have-different-widths-than-in-other-browsers/44145771#44145771 */
+  /* stylelint-disable-next-line  media-feature-name-no-unknown */
   @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
     transform: translateX(-2px);
   }
