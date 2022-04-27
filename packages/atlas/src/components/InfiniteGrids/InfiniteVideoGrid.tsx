@@ -94,7 +94,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
         media: {
           isAccepted_eq: true,
         },
-        ...videoWhereInput,
+        ...(videoWhereInput ? videoWhereInput : {}),
       },
     }
 

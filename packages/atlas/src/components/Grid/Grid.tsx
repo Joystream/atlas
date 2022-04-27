@@ -1,10 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
-import useResizeObserver from 'use-resize-observer'
+// we use pollyfiled version because "border-box" option seems to be not working on iPhone
+import useResizeObserver from 'use-resize-observer/polyfilled'
 
 import { media, sizes } from '@/styles'
-import { isIphone } from '@/utils/browser'
 import { toPx } from '@/utils/styles'
 
 type GridProps = {
@@ -28,9 +28,7 @@ export const Grid: React.FC<GridProps> = ({
   const gridRef = useRef<HTMLImageElement>(null)
   useResizeObserver<HTMLDivElement>({
     ref: gridRef,
-    // border box seems to be not working on iPhone
-    // setting border-box is causing a bug on ios with videos loading infinetely See: https://github.com/Joystream/atlas/issues/2561
-    box: isIphone ? 'content-box' : 'border-box',
+    box: 'border-box',
     onResize: () => {
       if (onResize && gridRef.current) {
         const computedStyles = window.getComputedStyle(gridRef.current)
