@@ -21,7 +21,9 @@ export const NotFoundView = () => {
         <Text margin={{ top: 4, bottom: 16 }} align="center" variant="t300" secondary>
           This page does not exist, but you can find lots of other cool content on our platform!
         </Text>
-        <Button to="/">Go to homepage</Button>
+        <Button size="large" to="/">
+          Go to homepage
+        </Button>
       </Container>
     </>
   )
