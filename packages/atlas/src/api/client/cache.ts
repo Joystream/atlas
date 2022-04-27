@@ -29,8 +29,8 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const isFeatured = args?.where?.isFeatured_eq ?? ''
-  const durationGte = args?.where?.duration_gte || null
-  const durationLte = args?.where?.duration_gte || null
+  const durationGte = args?.where?.duration_gte || ''
+  const durationLte = args?.where?.duration_gte || ''
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
