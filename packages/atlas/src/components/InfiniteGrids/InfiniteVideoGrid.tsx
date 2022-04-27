@@ -78,6 +78,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
     const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
     const rowsToLoad = useVideoGridRows()
     const [_targetRowsCount, setTargetRowsCount] = useState(rowsToLoad)
+    const [initialGridResizeDone, setInitialGridResizeDone] = useState(false)
     const targetRowsCount = Math.max(_targetRowsCount, rowsToLoad)
 
     const queryVariables: GetVideosConnectionQueryVariables & GetMostViewedVideosConnectionQueryVariables = {
@@ -107,7 +108,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       GetVideosConnectionQueryVariables
     >({
       query: query || GetVideosConnectionDocument,
-      isReady: ready,
+      isReady: ready && initialGridResizeDone,
       skipCount,
       queryVariables,
       targetRowsCount,
@@ -133,7 +134,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
       return null
     }
 
-    const hasNoItems = ready && !loading && totalCount === 0
+    const hasNoItems = ready && initialGridResizeDone && !loading && totalCount === 0
     if (hasNoItems && !emptyFallback) {
       return null
     }
@@ -172,6 +173,9 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
             <Grid
               onResize={(sizes) => {
                 setVideosPerRow(sizes.length)
+                if (!initialGridResizeDone) {
+                  setInitialGridResizeDone(true)
+                }
               }}
             >
               {gridContent}
