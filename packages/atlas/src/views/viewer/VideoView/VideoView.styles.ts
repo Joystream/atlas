@@ -171,7 +171,7 @@ export const CommentsSectionWrapper = styled.div`
 export const CommentsSectionHeader = styled.div`
   display: grid;
   grid-template-rows: auto;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 220px;
   align-items: center;
   margin-bottom: ${sizes(12)};
   padding-bottom: ${sizes(4)};
