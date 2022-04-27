@@ -444,6 +444,36 @@ export type GetNftHistoryQuery = {
           | null
       }
     } | null
+    member: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
   }>
   nftBoughtEvents: Array<{
     __typename?: 'NftBoughtEvent'
@@ -2129,6 +2159,9 @@ export const GetNftHistoryDocument = gql`
       id
       createdAt
       ownerMember {
+        ...BasicMembershipFields
+      }
+      member {
         ...BasicMembershipFields
       }
       price

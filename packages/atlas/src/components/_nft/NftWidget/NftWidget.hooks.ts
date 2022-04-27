@@ -165,7 +165,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
         } else if (e.__typename === 'BidMadeCompletingAuctionEvent') {
           return {
             date: e.createdAt,
-            member: e.ownerMember, // TODO: This needs to be the buyer, not the owner, but it's not available in the event
+            member: e.member,
             text: 'Auction won',
             joyAmount: Number(e.price),
           }
