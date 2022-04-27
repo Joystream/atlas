@@ -28,3 +28,5 @@ export const isMobile = () => {
   }
   return false
 }
+
+export const isIphone = /iPhone/.test(window.navigator.userAgent)
