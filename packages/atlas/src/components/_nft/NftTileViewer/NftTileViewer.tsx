@@ -17,7 +17,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)
-  const { openNftPurchase, openNftChangePrice } = useNftActions()
+  const { openNftPurchase, openNftChangePrice, openNftSettlement } = useNftActions()
   const creatorAvatar = useAsset(nft?.video.channel.avatarPhoto)
   const {
     canPutOnSale,
@@ -31,6 +31,8 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
     englishTimerState,
     timerLoading,
     saleType,
+    isOwner,
+    isUserTopBidder,
   } = useNftState(nft)
 
   const { cancelNftSale, openNftPutOnSale } = useNftActions()
@@ -84,7 +86,6 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       }
       topBidAmount={nftStatus?.status === 'auction' ? nftStatus.topBidAmount : undefined}
       auctionPlannedEndDate={auctionPlannedEndDate}
-      needsSettling={needsSettling}
       startsAtDate={startsAtDate}
       englishTimerState={englishTimerState}
       canPutOnSale={canPutOnSale}
@@ -92,12 +93,16 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       canCancelSale={canCancelSale}
       canMakeBid={canMakeBid}
       canChangePrice={canChangePrice}
+      needsSettling={needsSettling}
+      isUserTopBidder={isUserTopBidder}
+      isOwner={isOwner}
       fullWidth
       onRemoveFromSale={handleRemoveOnSale}
       onNftPurchase={() => nftId && openNftPurchase(nftId)}
       onNftBuyNow={() => nftId && openNftPurchase(nftId, { fixedPrice: true })}
       onPutOnSale={handlePutOnSale}
       onChangePrice={() => nftId && openNftChangePrice(nftId)}
+      onSettleAuction={() => nftId && openNftSettlement(nftId)}
     />
   )
 }

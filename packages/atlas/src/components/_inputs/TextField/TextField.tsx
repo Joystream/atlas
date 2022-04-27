@@ -13,6 +13,7 @@ export type TextFieldProps = {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  onWheel?: (event: React.WheelEvent<HTMLInputElement>) => void
   required?: boolean
   className?: string
   placeholder?: string
@@ -31,6 +32,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
     onChange,
     onBlur,
     onFocus,
+    onWheel,
     error,
     disabled,
     required,
@@ -65,6 +67,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onWheel={onWheel}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           type={type}

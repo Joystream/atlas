@@ -113,6 +113,15 @@ export const SetUp: React.FC<SetUpProps> = ({
     })
   }
 
+  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement
+    target.blur()
+
+    setTimeout(() => {
+      target.focus()
+    }, 0)
+  }
+
   const headerText = {
     'Auction': {
       header: 'Auction',
@@ -272,6 +281,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
                 helperText={errors.startingPrice?.message}
+                onWheel={handleWheel}
               />
             </FormField>
             <FormField
@@ -295,6 +305,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 error={!!errors.buyNowPrice}
                 helperText={errors.buyNowPrice?.message}
                 onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
+                onWheel={handleWheel}
               />
             </FormField>
             <FormField
