@@ -174,6 +174,8 @@ export const CommentsSectionHeader = styled.div`
   grid-template-columns: 2fr 1fr;
   align-items: center;
   margin-bottom: ${sizes(12)};
+  padding-bottom: ${sizes(4)};
+  box-shadow: ${cVar('effectDividersBottom')};
 
   ${media.md} {
     padding-left: ${sizes(14)};
