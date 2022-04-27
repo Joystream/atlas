@@ -1430,12 +1430,14 @@ export type Bid = BaseGraphQlObject & {
   bidder: Membership
   bidderId: Scalars['String']
   bidmadecompletingauctioneventpreviousTopBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
+  bidmadecompletingauctioneventwinningBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
   /** Block in which the bid was placed */
   createdInBlock: Scalars['Int']
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['String']>
+  englishauctionsettledeventwinningBid?: Maybe<Array<EnglishAuctionSettledEvent>>
   id: Scalars['ID']
   /** Index of event in block where bid was made. */
   indexInBlock: Scalars['Int']
@@ -1507,6 +1509,8 @@ export type BidMadeCompletingAuctionEvent = BaseGraphQlObject &
     version: Scalars['Int']
     video: Video
     videoId: Scalars['String']
+    winningBid: Bid
+    winningBidId: Scalars['String']
   }
 
 export type BidMadeCompletingAuctionEventConnection = {
@@ -1528,6 +1532,7 @@ export type BidMadeCompletingAuctionEventCreateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price: Scalars['String']
   video: Scalars['ID']
+  winningBid: Scalars['ID']
 }
 
 export type BidMadeCompletingAuctionEventEdge = {
@@ -1565,6 +1570,8 @@ export enum BidMadeCompletingAuctionEventOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
   VideoAsc = 'video_ASC',
   VideoDesc = 'video_DESC',
+  WinningBidAsc = 'winningBid_ASC',
+  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type BidMadeCompletingAuctionEventUpdateInput = {
@@ -1579,6 +1586,7 @@ export type BidMadeCompletingAuctionEventUpdateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price?: InputMaybe<Scalars['String']>
   video?: InputMaybe<Scalars['ID']>
+  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type BidMadeCompletingAuctionEventWhereInput = {
@@ -1639,6 +1647,7 @@ export type BidMadeCompletingAuctionEventWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
+  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type BidMadeCompletingAuctionEventWhereUniqueInput = {
@@ -1696,6 +1705,9 @@ export type BidWhereInput = {
   bidmadecompletingauctioneventpreviousTopBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -1717,6 +1729,9 @@ export type BidWhereInput = {
   deletedAt_lte?: InputMaybe<Scalars['DateTime']>
   deletedById_eq?: InputMaybe<Scalars['ID']>
   deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  englishauctionsettledeventwinningBid_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  englishauctionsettledeventwinningBid_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  englishauctionsettledeventwinningBid_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
   id_eq?: InputMaybe<Scalars['ID']>
   id_in?: InputMaybe<Array<Scalars['ID']>>
   indexInBlock_eq?: InputMaybe<Scalars['Int']>
@@ -8393,6 +8408,7 @@ export type ElectionRoundWhereUniqueInput = {
 export type EnglishAuctionSettledEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'EnglishAuctionSettledEvent'
+    bidders: Array<Membership>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -8419,6 +8435,8 @@ export type EnglishAuctionSettledEvent = BaseGraphQlObject &
     videoId: Scalars['String']
     winner: Membership
     winnerId: Scalars['String']
+    winningBid: Bid
+    winningBidId: Scalars['String']
   }
 
 export type EnglishAuctionSettledEventConnection = {
@@ -8437,6 +8455,7 @@ export type EnglishAuctionSettledEventCreateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video: Scalars['ID']
   winner: Scalars['ID']
+  winningBid: Scalars['ID']
 }
 
 export type EnglishAuctionSettledEventEdge = {
@@ -8468,6 +8487,8 @@ export enum EnglishAuctionSettledEventOrderByInput {
   VideoDesc = 'video_DESC',
   WinnerAsc = 'winner_ASC',
   WinnerDesc = 'winner_DESC',
+  WinningBidAsc = 'winningBid_ASC',
+  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type EnglishAuctionSettledEventUpdateInput = {
@@ -8479,11 +8500,15 @@ export type EnglishAuctionSettledEventUpdateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video?: InputMaybe<Scalars['ID']>
   winner?: InputMaybe<Scalars['ID']>
+  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type EnglishAuctionSettledEventWhereInput = {
   AND?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
   OR?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -8531,6 +8556,7 @@ export type EnglishAuctionSettledEventWhereInput = {
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
   winner?: InputMaybe<MembershipWhereInput>
+  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type EnglishAuctionSettledEventWhereUniqueInput = {
@@ -11987,6 +12013,8 @@ export type Membership = BaseGraphQlObject & {
   isFoundingMember: Scalars['Boolean']
   /** Whether member has been verified by membership working group. */
   isVerified: Scalars['Boolean']
+  memberEnglishAuctionBids: Array<EnglishAuctionSettledEvent>
+  memberOpenAuctionBids: Array<OpenAuctionBidAcceptedEvent>
   memberaccountsupdatedeventmember?: Maybe<Array<MemberAccountsUpdatedEvent>>
   memberinvitedeventinvitingMember?: Maybe<Array<MemberInvitedEvent>>
   memberinvitedeventnewMember?: Maybe<Array<MemberInvitedEvent>>
@@ -12704,6 +12732,12 @@ export type MembershipWhereInput = {
   isFoundingMember_in?: InputMaybe<Array<Scalars['Boolean']>>
   isVerified_eq?: InputMaybe<Scalars['Boolean']>
   isVerified_in?: InputMaybe<Array<Scalars['Boolean']>>
+  memberEnglishAuctionBids_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionBids_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionBids_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberOpenAuctionBids_every?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionBids_none?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionBids_some?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
   memberaccountsupdatedeventmember_every?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_none?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_some?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
@@ -14751,6 +14785,7 @@ export type OfferStartedEventWhereUniqueInput = {
 export type OpenAuctionBidAcceptedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'OpenAuctionBidAcceptedEvent'
+    bidders: Array<Membership>
     /** Content actor that accepted the bid. */
     contentActor: ContentActor
     createdAt: Scalars['DateTime']
@@ -14852,6 +14887,9 @@ export type OpenAuctionBidAcceptedEventUpdateInput = {
 export type OpenAuctionBidAcceptedEventWhereInput = {
   AND?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
   OR?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   contentActor_json?: InputMaybe<Scalars['JSONObject']>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
