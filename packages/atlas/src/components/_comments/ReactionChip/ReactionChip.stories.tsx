@@ -7,7 +7,7 @@ export default {
   title: 'comments/ReactionChip',
   args: {
     active: true,
-    reaction: 'love',
+    type: 'love',
     state: 'default',
   },
   component: ReactionChip,
