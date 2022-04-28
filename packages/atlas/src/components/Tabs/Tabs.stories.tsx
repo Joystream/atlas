@@ -1,5 +1,6 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Tabs, TabsProps } from './Tabs'
 
@@ -10,6 +11,8 @@ const badgeTabs = [
   { name: 'four', badgeNumber: 4 },
   { name: 'five', badgeNumber: 5 },
   { name: 'six', badgeNumber: 6 },
+  { name: 'seven', badgeNumber: 7 },
+  { name: 'eight', badgeNumber: 8 },
 ]
 const pillTabs = [
   { name: 'one', pillText: 1 },
@@ -18,6 +21,8 @@ const pillTabs = [
   { name: 'four', pillText: 4 },
   { name: 'five', pillText: 5 },
   { name: 'six', pillText: 6 },
+  { name: 'seven', pillText: 7 },
+  { name: 'eight', pillText: 8 },
 ]
 
 export default {
@@ -25,14 +30,30 @@ export default {
   component: Tabs,
   args: {
     onSelectTab: () => null,
+    underline: true,
   },
 } as Meta
 
-const Template: Story<TabsProps> = (args) => (
-  <>
-    <Tabs {...args} tabs={badgeTabs} />
-    <Tabs {...args} tabs={pillTabs} />
-  </>
-)
+const Template: Story<TabsProps> = (args) => {
+  const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
+  return (
+    <Container>
+      <Tabs {...args} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} tabs={badgeTabs} />
+      <Tabs {...args} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} tabs={pillTabs} />
+      <Tabs
+        {...args}
+        onSelectTab={setSelectedTabIdx}
+        selected={selectedTabIdx}
+        tabs={pillTabs.map((tab) => ({ name: tab.name }))}
+      />
+    </Container>
+  )
+}
 export const Default = Template.bind({})
+
+export const Container = styled.div`
+  /* display: grid; */
+  width: 300px;
+  gap: 64px;
+`

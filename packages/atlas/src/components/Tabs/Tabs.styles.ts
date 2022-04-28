@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 import { Pill } from '../Pill'
+import { Button } from '../_buttons/Button'
 
 type TabProps = {
   selected: boolean
@@ -18,7 +19,7 @@ export const TabsWrapper = styled.div`
   width: 100%;
 `
 
-export const TabsGroup = styled.div`
+export const TabsGroup = styled.div<{ 'data-underline': boolean }>`
   display: flex;
   position: relative;
   scroll-behavior: smooth;
@@ -29,25 +30,28 @@ export const TabsGroup = styled.div`
   }
 
   scrollbar-width: none;
+
+  &[data-underline='true'] {
+    box-shadow: ${cVar('effectDividersBottom')};
+  }
 `
 
 export const Tab = styled.div<TabProps>`
-  transition: box-shadow 0.125s ease, color 0.125s ease;
-  padding: 0 ${sizes(8)};
-  height: 64px;
+  transition: box-shadow ${cVar('animationTransitionFast')}, color ${cVar('animationTransitionFast')};
+  padding: ${sizes(2.5)} ${sizes(4)} 0 ${sizes(4)};
+  height: 56px;
   display: flex;
-  align-items: center;
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  color: ${({ selected }) => (selected ? oldColors.white : oldColors.gray[300])};
+  color: ${({ selected }) => (selected ? cVar('colorTextStrong') : cVar('colorText'))};
   text-align: center;
-  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${oldColors.blue[500]};` : 'none')};
+  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorBackgroundPrimary')};` : 'none')};
   flex-shrink: 0;
 
   :hover,
   :focus {
-    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? oldColors.blue[500] : oldColors.gray[300])};
+    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? cVar('colorBackgroundPrimary') : cVar('colorBorderStrong'))};
     cursor: pointer;
   }
 
@@ -55,8 +59,7 @@ export const Tab = styled.div<TabProps>`
     ${smallBadgeStyles}
 
     &[data-badge]::after {
-      margin-left: ${sizes(2)};
-      margin-top: calc(-1 * ${sizes(2)});
+      margin-top: calc(-1 * ${sizes(2.5)});
     }
   }
 `
@@ -75,4 +78,13 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
 
 export const StyledPill = styled(Pill)`
   margin-left: ${sizes(2)};
+`
+
+export const StyledButton = styled(Button)<{ 'data-right'?: boolean }>`
+  pointer-events: all;
+  margin-top: ${sizes(1)};
+
+  &[data-right='true'] {
+    float: right;
+  }
 `

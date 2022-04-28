@@ -2797,6 +2797,7 @@ __metadata:
     storybook-builder-vite: ^0.1.15
     style-dictionary: ^3.1.1
     subscriptions-transport-ws: ^0.11.0
+    use-draggable-scroll: ^0.1.0
     use-resize-observer: ^8.0.0
     video.js: ^7.17.0
     vite: ^2.7.13
@@ -20762,6 +20763,15 @@ typescript@4.5.2:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: b438c1577eafb26dd8aff8d7ffbeae10b544172fc4c4f38733343f70c04da6f14a748a274cb76b70b829604e1382be56fb37a96f3c62b5aeec50657e23e61097
+  languageName: node
+  linkType: hard
+
+"use-draggable-scroll@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "use-draggable-scroll@npm:0.1.0"
+  peerDependencies:
+    react: ">=16"
+  checksum: fdd9a1d2f11289fb86931e73aad7a9c669b68cca4e3ac71e5da03c7dd5f6c33312656a7f884f6828c4fe65788aa11c5c4eb0f74171066faf338bdd5ecb71bcf7
   languageName: node
   linkType: hard
 
