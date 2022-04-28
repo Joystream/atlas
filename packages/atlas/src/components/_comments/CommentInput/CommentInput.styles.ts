@@ -70,7 +70,7 @@ export const Border = styled.div<{ 'data-show': boolean; 'data-processing': bool
   }
 `
 
-export const Container = styled.label<{ 'data-show': boolean; height: number }>`
+export const Container = styled.div<{ 'data-show': boolean; height: number }>`
   display: grid;
   justify-content: space-between;
   grid-template-columns: 1fr;

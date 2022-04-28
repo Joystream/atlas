@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
 import { Information } from '@/components/Information'
@@ -19,8 +18,7 @@ export type CommentInputProps = {
 
 export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel, onComment, ...rest }) => {
   const smMatch = useMediaMatch('sm')
-  const containerRef = useRef<HTMLLabelElement>(null)
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
   const [text, setText] = useState('')
 
@@ -66,7 +64,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
         }}
       >
         <StyledTextArea
-          ref={mergeRefs([textAreaRef, measureRef])}
+          ref={measureRef}
           rows={1}
           placeholder="Leave a comment as bedeho"
           value={text}
