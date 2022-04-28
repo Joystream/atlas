@@ -5,8 +5,6 @@ import { Text } from '@/components/Text'
 import { SvgActionDislikeSolid, SvgActionLikeSolid } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
-import { ReactionSteppperState } from './ReactionButton'
-
 export const LoadingWrapper = styled.div`
   display: grid;
   grid-template-columns: auto auto;
@@ -14,6 +12,9 @@ export const LoadingWrapper = styled.div`
   align-items: center;
   gap: ${sizes(2)};
 `
+
+// proccessing means that there is ongoing transaction
+export type ReactionSteppperState = 'liked' | 'disliked' | 'default' | 'loading' | 'processing'
 
 type ReactionsCounterProps = {
   type: 'like' | 'dislike'

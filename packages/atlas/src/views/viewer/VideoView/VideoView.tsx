@@ -12,7 +12,7 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import {  SvgActionLinkUrl } from '@/components/_icons'
+import { SvgActionLinkUrl } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
@@ -36,8 +36,8 @@ import { formatVideoViewsAndDate } from '@/utils/video'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
 import {
-  CopyLink,
   ChannelContainer,
+  CopyLink,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
