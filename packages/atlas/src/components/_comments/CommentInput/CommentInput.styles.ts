@@ -15,7 +15,7 @@ const reactionBarAnimation = keyframes`
   }
 `
 
-export const StyledTextArea = styled(TextareaAutosize)`
+export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': boolean }>`
   display: inline-block;
   background-color: ${cVar('colorBackgroundMuted')};
   width: 100%;
@@ -36,6 +36,10 @@ export const StyledTextArea = styled(TextareaAutosize)`
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
     transition: all ${cVar('animationTransitionFast')};
   }
+
+  &[data-processing='true'] {
+    color: ${cVar('colorText')};
+  }
 `
 export const Border = styled.div<{ 'data-show': boolean; 'data-processing': boolean }>`
   overflow-x: hidden;
@@ -43,15 +47,14 @@ export const Border = styled.div<{ 'data-show': boolean; 'data-processing': bool
   height: 1px;
   background-color: ${cVar('colorCoreNeutral800Lighten')};
   transition: ${cVar('animationTransitionFast')};
-  transition-delay: cVar('animationTimingFast');
 
   &[data-show='true'] {
     height: 2px;
-    background-color: ${cVar('colorBackgroundPrimary')} !important;
+    background-color: ${cVar('colorBackgroundPrimary')};
   }
 
   &[data-processing='true'] {
-    background-color: ${cVar('colorCoreNeutral700')} !important;
+    background-color: ${cVar('colorCoreNeutral700')};
 
     &::after {
       display: block;
@@ -67,11 +70,12 @@ export const Border = styled.div<{ 'data-show': boolean; 'data-processing': bool
   }
 `
 
-export const Container = styled.div<{ 'data-show': boolean; height: number }>`
+export const Container = styled.label<{ 'data-show': boolean; height: number }>`
   display: grid;
   justify-content: space-between;
   grid-template-columns: 1fr;
   min-height: 72px;
+  height: 72px;
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};
   cursor: text;
@@ -83,7 +87,6 @@ export const Container = styled.div<{ 'data-show': boolean; height: number }>`
     }
   }
 
-  height: 72px;
   overflow: hidden;
 
   &[data-show='true'] {
@@ -95,7 +98,9 @@ export const Container = styled.div<{ 'data-show': boolean; height: number }>`
 export const StyledCommentRow = styled(CommentRow)`
   &:hover {
     ${Border} {
-      background-color: ${cVar('colorBorderAlpha')};
+      &[data-show='false'][data-processing='false'] {
+        background-color: ${cVar('colorBorderAlpha')};
+      }
     }
   }
 `

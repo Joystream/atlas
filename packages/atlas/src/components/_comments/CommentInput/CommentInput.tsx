@@ -19,16 +19,12 @@ export type CommentInputProps = {
 
 export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel, onComment, ...rest }) => {
   const smMatch = useMediaMatch('sm')
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLLabelElement>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [active, setActive] = useState(false)
   const [text, setText] = useState('')
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
-
-  useEffect(() => {
-    if (active) textAreaRef.current?.focus()
-  }, [active])
 
   useEffect(() => {
     if (!active) {
@@ -51,7 +47,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.currentTarget.value)
 
-  const show = !!text || active
+  const show = !!text || active || processing
 
   return (
     <StyledCommentRow {...rest}>
@@ -59,14 +55,14 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
         ref={containerRef}
         data-show={show}
         height={textAreaHeight}
+        // handle submit by keyboard shortcut
         onKeyDown={(e) => {
-          if ((e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
+          if (!!text && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
             onComment?.()
           }
         }}
         onClick={() => {
           setActive(true)
-          textAreaRef.current?.focus()
         }}
       >
         <StyledTextArea
@@ -75,6 +71,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
           placeholder="Leave a comment as bedeho"
           value={text}
           onChange={onChange}
+          disabled={processing}
+          data-processing={processing}
         />
 
         <ButtonsContainer>
@@ -87,7 +85,11 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
               {smMatch && 'We store comments on blockchain'}
             </Text>
           </Flex>
-          {onCancel && <Button variant="secondary">Cancel</Button>}
+          {onCancel && (
+            <Button disabled={processing} variant="secondary">
+              Cancel
+            </Button>
+          )}
           <Button disabled={processing}>{processing ? 'Processing' : 'Comment'}</Button>
         </ButtonsContainer>
       </Container>

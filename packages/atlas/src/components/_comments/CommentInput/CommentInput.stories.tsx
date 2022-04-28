@@ -7,8 +7,15 @@ import { CommentInput, CommentInputProps } from './CommentInput'
 export default {
   title: 'comments/CommentInput',
   component: CommentInput,
+  argTypes: {
+    onComment: { table: { disable: true } },
+    onCancel: { table: { disable: true } },
+    className: { table: { disable: true } },
+  },
   args: {
     cancelButton: false,
+    processing: false,
+    memberAvatarUrl: 'https://placedog.net/100/100?random=2',
   },
   decorators: [
     (Story) => (
@@ -17,11 +24,9 @@ export default {
       </MemoryRouter>
     ),
   ],
-  argTypes: {},
 } as Meta<CommentInputProps>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Template: Story<CommentInputProps & any> = (args) => (
+const Template: Story<CommentInputProps & { cancelButton: boolean }> = (args) => (
   <CommentInput {...args} onCancel={args.cancelButton ? () => ({}) : undefined} />
 )
 
