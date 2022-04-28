@@ -48,6 +48,19 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
   const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
 
+  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+    if (onWheel) {
+      onWheel(event)
+      return
+    }
+    const target = event.target as HTMLInputElement
+    target.blur()
+
+    setTimeout(() => {
+      target.focus()
+    }, 0)
+  }
+
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <TextFieldContainer>
@@ -67,7 +80,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          onWheel={onWheel}
+          onWheel={handleWheel}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           type={type}
