@@ -165,6 +165,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
                 proxyCallback(updateStatus)
               ),
         onTxSync: refetchDataAndUploadAssets,
+        snackbarSuccessMessage: isNew ? undefined : { title: 'Changes published successfully' },
       })
 
       if (completed) {

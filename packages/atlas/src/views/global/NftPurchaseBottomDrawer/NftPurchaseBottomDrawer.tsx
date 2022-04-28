@@ -1,4 +1,4 @@
-import { differenceInSeconds, formatDuration } from 'date-fns'
+import { differenceInSeconds, formatDuration, intervalToDuration } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -27,7 +27,7 @@ import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
-import { formatNumberShort } from '@/utils/number'
+import { formatNumberShort, formatTokens } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
@@ -209,12 +209,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       if (completed) {
         if (Number(data.bid) === auctionBuyNowPrice) {
           displaySnackbar({
-            title: 'You have successfully bought NFT.',
+            title: 'You have bought this NFT successfully',
             iconType: 'success',
           })
         } else {
           displaySnackbar({
-            title: 'Your bid has been placed.',
+            title: 'Your bid has been placed',
             description: 'We will notify you about any changes.',
             iconType: 'success',
           })
@@ -296,7 +296,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
           <InnerContainer>
             <Header>
               <Text variant="h600">
-                {type !== 'buy_now' && !isBuyNowClicked ? (canChangeBid ? 'Change a bid' : 'Place a bid') : 'Buy NFT'}
+                {type !== 'buy_now' && !isBuyNowClicked ? (canChangeBid ? 'Change bid' : 'Place bid') : 'Buy NFT'}
               </Text>
               {type === 'english_auction' && (
                 <FlexWrapper>
@@ -327,8 +327,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   <FlexWrapper>
                     {endAtBlock && (
                       <Information
-                        text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
-                        footer={<Text variant="t100">Auctions closing block: {endAtBlock}</Text>}
+                        text={`On blockchain, duration is expressed in number of blocks. This auction ends at block ${endAtBlock}.`}
                         placement="top"
                       />
                     )}
@@ -380,7 +379,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                         <Text variant="h100" secondary margin={{ bottom: 2 }}>
                           Top bid
                         </Text>
-                        <Text variant="h400">Nobody has bid yet</Text>
+                        <Text variant="h400">No bids yet</Text>
                       </ActionBarCell>
                     </ActiveBidWrapper>
                   )}
@@ -389,13 +388,13 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   <MinimumBidWrapper>
                     <MinimumBid>
                       <Text variant="h300" secondary>
-                        {type === 'open_auction' ? 'Starting price' : 'Minimum bid'}
+                        Minimum bid
                       </Text>
                       <JoyTokenIcon variant="gray" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <Text variant="t100" secondary>
-                        Buy now: {auctionBuyNowPrice} tJOY
+                        Buy now: {formatTokens(auctionBuyNowPrice, true)}
                       </Text>
                     )}
                   </MinimumBidWrapper>
@@ -406,21 +405,23 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     validate: {
                       bidLocked: (value) => {
                         if (isOpenAuction && value < Number(userBid?.amount) && timeToUnlockSeconds > 0) {
-                          return `Your bid is locked from placing a bid lower than your previous one. You can bid for a higher amount or try again at ${
+                          return `You will be able to change your bid to a lower one after ${
                             userBidUnlockDate && formatDateTime(userBidUnlockDate)
                           }`
                         }
                         return true
                       },
                       bidTooLow: (value) =>
-                        Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
+                        Number(value) >= minimumBid ? true : 'Your bid must be higher than the minimum bid',
                       bidTooHigh: (value) => {
-                        return Number(value) + TRANSACTION_FEE > (accountBalance || 0) ? 'Insufficient funds.' : true
+                        return Number(value) + TRANSACTION_FEE > (accountBalance || 0)
+                          ? 'You do not have enough funds to place this bid'
+                          : true
                       },
                     },
                   })}
                   disabled={auctionEnded}
-                  placeholder={auctionEnded ? 'Auction ended' : `Min. ${minimumBid} tJOY`}
+                  placeholder={auctionEnded ? 'Auction ended' : 'Enter your bid'}
                   nodeStart={<JoyTokenIcon variant="gray" size={24} />}
                   nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
                   type="number"
@@ -447,10 +448,10 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             )}
             <Divider />
             <FlexWrapper>
-              <Text variant="h400">Payment split</Text>
+              <Text variant="h400">Revenue split</Text>
               <Information
                 placement="top"
-                text="Payment split shows royalties that will go to each party after next sale of this NFT"
+                text="Revenue split shows the proceedings from this sale based on royalties set up by the creator"
               />
             </FlexWrapper>
             <PaymentSplitWrapper>
@@ -498,7 +499,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               </Text>
               {accountBalance != null ? (
                 <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
-                  {accountBalance} tJOY
+                  {formatTokens(accountBalance, true)}
                 </Text>
               ) : (
                 <SkeletonLoader width={82} height={16} />
@@ -506,15 +507,11 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             </Row>
             <Row>
               <Text variant="t100" secondary>
-                {type === 'buy_now' || isBuyNowClicked
-                  ? 'Price'
-                  : bid
-                  ? 'Your bid'
-                  : 'You need to fill out the amount first'}
+                {type === 'buy_now' || isBuyNowClicked ? 'Price' : bid ? 'Your bid' : ''}
               </Text>
               {(bid > 0 || isBuyNowClicked || type === 'buy_now') && (
                 <Text variant="t100" secondary>
-                  {type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice} tJOY
+                  {formatTokens(type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice, true)}
                 </Text>
               )}
             </Row>
@@ -525,7 +522,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     Transaction fee
                   </Text>
                   <Text variant="t100" secondary>
-                    {TRANSACTION_FEE} tJOY
+                    {formatTokens(TRANSACTION_FEE, true)}
                   </Text>
                 </Row>
                 <Row>
@@ -533,7 +530,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     You will pay
                   </Text>
                   <Text variant="h500">
-                    {(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + TRANSACTION_FEE} tJOY
+                    {formatTokens((type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + TRANSACTION_FEE, true)}
                   </Text>
                 </Row>
               </>
@@ -542,10 +539,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Messages>
                 <SvgAlertsWarning24 />
                 <Text variant="t200" secondary margin={{ left: 2 }}>
-                  if your bid was not successful, it can be withdrawn in{' '}
-                  {formatDuration({
-                    seconds: bidLockingTime / 1000,
-                  })}
+                  Your bid can be withdrawn if it’s not accepted by the owner within{' '}
+                  {formatDuration(intervalToDuration({ start: 0, end: bidLockingTime }))} from placing it.
                 </Text>
               </Messages>
             )}
@@ -553,15 +548,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Messages>
                 <SvgAlertsWarning24 />
                 <Text variant="t200" secondary margin={{ left: 2 }}>
-                  After placing your bid, you will not be able to withdraw it
-                </Text>
-              </Messages>
-            )}
-            {type === 'english_auction' && !isBuyNowClicked && (
-              <Messages>
-                <SvgAlertsWarning24 />
-                <Text variant="t200" secondary margin={{ left: 2 }}>
-                  After winning the auction, you will need to pay a small transaction fee to settle the auction.
+                  After placing your bid, you will not be able to withdraw it.
                 </Text>
               </Messages>
             )}

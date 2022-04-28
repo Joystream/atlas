@@ -31,7 +31,7 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
   return (
     <DialogModal
       title="Change price"
-      description="Change price for your existing item. New price must be lower than the current one. If you want to rise the price up, you have to remove this item from sale and then start a new sale."
+      description="You can update the price of this NFT anytime."
       show={isOpen}
       primaryButton={{
         text: 'Change price',

@@ -10,7 +10,6 @@ import { Listing } from './NftForm.types'
 
 export const useNftForm = () => {
   const [activeInputs, setActiveInputs] = useState<string[]>([])
-  const [termsAccepted, setTermsAccepted] = useState(false)
   const [listingType, setListingType] = useState<Listing>('Auction')
   const [currentStep, setCurrentStep] = useState(0)
 
@@ -21,8 +20,6 @@ export const useNftForm = () => {
     state: {
       activeInputs,
       setActiveInputs,
-      termsAccepted,
-      setTermsAccepted,
       listingType,
       setListingType,
       currentStep,

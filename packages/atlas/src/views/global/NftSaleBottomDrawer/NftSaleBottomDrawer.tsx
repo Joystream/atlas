@@ -3,7 +3,6 @@ import React, { useCallback, useState } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { ActionBarProps } from '@/components/ActionBar'
-import { SvgActionNewTab } from '@/components/_icons'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
 import { absoluteRoutes } from '@/config/routes'
 import { useJoystream } from '@/providers/joystream'
@@ -58,11 +57,10 @@ export const NftSaleBottomDrawer: React.FC = () => {
       if (completed) {
         displaySnackbar({
           customId: currentNftId,
-          title: 'NFT successfully put on sale',
+          title: 'NFT put on sale successfully',
           iconType: 'success',
           timeout: SUCCESS_SNACKBAR_TIMEOUT,
           actionText: 'See details',
-          actionIcon: <SvgActionNewTab />,
           onActionClick: () => openInNewTab(absoluteRoutes.viewer.video(currentNftId), true),
         })
         closeNftAction()
@@ -79,7 +77,7 @@ export const NftSaleBottomDrawer: React.FC = () => {
   const actionBarProps: ActionBarProps = {
     variant: 'nft',
     primaryButton: {
-      text: !formStatus?.canGoForward ? 'Put on sale' : 'Next step',
+      text: !formStatus?.canGoForward ? 'Start sale' : 'Next step',
       disabled: formStatus?.isDisabled,
       onClick: !formStatus?.canGoForward ? formStatus?.triggerSubmit : formStatus?.triggerGoForward,
     },

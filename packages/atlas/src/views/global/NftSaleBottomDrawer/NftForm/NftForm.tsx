@@ -44,7 +44,7 @@ const issueNftSteps: StepProps[] = [
   },
   {
     variant: 'future',
-    title: 'Accept listing terms',
+    title: 'Review listing terms',
   },
 ]
 
@@ -58,17 +58,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { activeMembership } = useUser()
   const scrollableWrapperRef = useRef<HTMLDivElement>(null)
   const {
-    state: {
-      termsAccepted,
-      setTermsAccepted,
-      activeInputs,
-      setActiveInputs,
-      listingType,
-      setListingType,
-      currentStep,
-      previousStep,
-      nextStep,
-    },
+    state: { activeInputs, setActiveInputs, listingType, setListingType, currentStep, previousStep, nextStep },
   } = useNftForm()
   const { chainState } = useNftFormUtils()
   const { convertMsTimestampToBlock, convertBlocksToDuration } = useBlockTimeEstimation()
@@ -118,26 +108,27 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       trigger('startDate')
       // the start date is in the past, abort the submit and show a modal
       openModal({
-        title: 'Starting date you set has already past!',
+        title: 'Start sale now?',
         children: (
           <Text variant="t200" secondary>
-            You can’t list on <Text variant="t200">{formatDateTime(startDate)} </Text>
-            as this time has already past. Issue with current time or go back to change starting date.
+            The start date <Text variant="t200">{formatDateTime(startDate)} </Text> you selected has already passed. Do
+            you want to put your NFT on sale now?
           </Text>
         ),
         primaryButton: {
-          variant: 'warning',
+          variant: 'primary',
           size: 'large',
-          text: 'Issue with current time',
+          text: 'Start sale now',
           onClick: () => {
             setValue('startDate', null)
             closeModal()
+            handleSubmit()
           },
         },
         secondaryButton: {
           variant: 'secondary',
           size: 'large',
-          text: 'Change starting date',
+          text: 'Cancel',
           onClick: () => {
             previousStep()
             closeModal()
@@ -208,10 +199,6 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     trigger,
   ])
 
-  const toggleTermsAccept = () => {
-    setTermsAccepted((prevState) => !prevState)
-  }
-
   const handleGoForward = useCallback(() => {
     scrollableWrapperRef.current?.scrollIntoView()
     if (isOnLastStep) return
@@ -231,8 +218,8 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     if (currentStep === 1) {
       return !isValid
     }
-    return !termsAccepted
-  }, [currentStep, isValid, listingType, termsAccepted])
+    return false
+  }, [currentStep, isValid, listingType])
 
   const formStatus: NftFormStatus = useMemo(
     () => ({
@@ -297,13 +284,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
     />,
-    <AcceptTerms
-      key="step-content-3"
-      selectedType={listingType}
-      formData={getValues()}
-      termsAccepted={termsAccepted}
-      toggleTermsAccept={toggleTermsAccept}
-    />,
+    <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} />,
   ]
 
   return (

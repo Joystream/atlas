@@ -3,9 +3,8 @@ import React from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
-import { Checkbox } from '@/components/_inputs/Checkbox'
 import { useMemberAvatar } from '@/providers/assets'
-import { formatNumber } from '@/utils/number'
+import { formatNumber, formatTokens } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -16,36 +15,26 @@ import {
   Row,
   StyledInformation,
   StyledMemberBadge,
-  StyledSvgActionArrowRight,
-  TermsBox,
   Title,
   WhiteListRow,
 } from './AcceptTerms.styles'
 
-import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
-import { RoyaltiesTooltipFooter } from '../RoyaltiesTooltipFooter'
 
 type AcceptTermsProps = {
   selectedType: Listing
   formData: NftFormFields
-  termsAccepted: boolean
-  toggleTermsAccept: () => void
 }
 
-export const AcceptTerms: React.FC<AcceptTermsProps> = ({
-  selectedType,
-  formData,
-  termsAccepted,
-  toggleTermsAccept,
-}) => {
+export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData }) => {
   const { startDate, endDate, type } = formData
 
   const totalDaysAndHours = getTotalDaysAndHours(startDate, endDate)
 
   const isStartDateValid = startDate?.type === 'date'
   const isEndDateValid = endDate?.type === 'date'
+  const isAuction = selectedType === 'Auction'
 
   const durationBlocks = formData.auctionDurationBlocks || 0
   const convertedEndData = !isEndDateValid
@@ -54,61 +43,62 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
 
   return (
     <>
-      <Header variant="h500">Accept listing terms</Header>
+      <Header variant="h500">Review listing terms</Header>
       <Divider />
-      <Text variant="h400">Listing settings</Text>
+      <Text variant="h400">Listing terms</Text>
       <Row>
         <Title>
           <TitleText>Listing type</TitleText>
           <StyledInformation
-            text="Offers can be received. You can accept any bid at any time unless auction duration is set (then the highest offer wins)"
+            text={
+              isAuction
+                ? 'Put it on a timed or open auction. See the bids coming.'
+                : 'Sell it for a fixed price only. No bids.'
+            }
             placement="top"
           />
         </Title>
         <Description>
           <DescriptionText>
-            {selectedType === 'Auction' ? `${type === 'open' ? 'Open' : 'Timed'} auction` : selectedType}
+            {isAuction ? `${type === 'open' ? 'Open' : 'Timed'} auction` : selectedType}
           </DescriptionText>
         </Description>
       </Row>
-      {formData.startingPrice && selectedType === 'Auction' && (
+      {formData.startingPrice && isAuction && (
         <Row>
           <Title>
             <TitleText>Minimum bid</TitleText>
-            <StyledInformation
-              text="Its the starting price of your auction. No lower bids will be accepted"
-              placement="top"
-            />
+            <StyledInformation text="Only bids higher than this value will be accepted" placement="top" />
           </Title>
           <Description>
-            <DescriptionText>
-              {Number(formData.startingPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJOY
-            </DescriptionText>
+            <DescriptionText>{formatTokens(formData.startingPrice, true)}</DescriptionText>
           </Description>
         </Row>
       )}
       {formData?.buyNowPrice && (
         <Row>
           <Title>
-            <TitleText>Fixed price</TitleText>
+            <TitleText>{isAuction ? 'Buy now price' : 'Fixed price'}</TitleText>
             <StyledInformation
-              text="Sell your NFT for a predefined price. When this price is reached it automatically ends auction"
+              text={
+                isAuction
+                  ? 'Bids matching this value will automatically end your auction'
+                  : 'Price for your NFT as shown to your buyers'
+              }
               placement="top"
             />
           </Title>
           <Description>
-            <DescriptionText>
-              {Number(formData.buyNowPrice).toLocaleString('no', { maximumFractionDigits: 1 })} tJOY
-            </DescriptionText>
+            <DescriptionText>{formatTokens(formData.buyNowPrice, true)}</DescriptionText>
           </Description>
         </Row>
       )}
       {selectedType !== 'Fixed price' && (
         <Row>
           <Title>
-            <TitleText>Starting date</TitleText>
+            <TitleText>Start date</TitleText>
             <StyledInformation
-              text="It’s the time when your auction will become active and buyer will be able to make an offer"
+              text="The moment in time when your auction becomes active and bids will be accepted"
               placement="top"
             />
           </Title>
@@ -123,9 +113,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
         <>
           <Row>
             <Title>
-              <TitleText>Expiration date</TitleText>
+              <TitleText>End date</TitleText>
               <StyledInformation
-                text="It’s the time when your auction ends. You cannot finish it earlier. Highest bidder wins."
+                text="The moment in time when your auction ends. It cannot be finished earlier."
                 placement="top"
               />
             </Title>
@@ -139,22 +129,12 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
             <Row>
               <Title>
                 <TitleText>Total auction duration</TitleText>
-                <StyledInformation
-                  text="Auctions are run and settled on-chain and use tJOY’s blocks, rather than clock time."
-                  footer={
-                    <AuctionDurationTooltipFooter>
-                      <Text variant="t100">
-                        {totalDaysAndHours} = {formData.auctionDurationBlocks}
-                      </Text>
-                    </AuctionDurationTooltipFooter>
-                  }
-                  placement="top"
-                />
+                <StyledInformation text="On blockchain, duration is expressed in number of blocks" placement="top" />
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
                 <Text variant="h400" secondary>
-                  &nbsp;/ {formatNumber(durationBlocks)} Blocks
+                  &nbsp;/ {formatNumber(durationBlocks)} blocks
                 </Text>
               </Description>
             </Row>
@@ -164,9 +144,9 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       {(formData.whitelistedMembers || []).length > 0 && (
         <WhiteListRow>
           <Title>
-            <TitleText>WhiteList</TitleText>
+            <TitleText>Whitelist</TitleText>
             <StyledInformation
-              text="Only people on your whitelist will be able to bid/buy this particular NFT."
+              text="Only members included in the whitelist will be able to bid on this auction"
               placement="top"
             />
           </Title>
@@ -182,24 +162,12 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
       <Row>
         <Title>
           <TitleText>Fee</TitleText>
-          <StyledInformation
-            text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
-            footer={<RoyaltiesTooltipFooter />}
-            placement="top"
-          />
+          <StyledInformation text="Fee covers cost of blockchain computation of this transaction" placement="top" />
         </Title>
         <Description>
-          <DescriptionText>0 tJOY</DescriptionText>
+          <DescriptionText>{formatTokens(0)}</DescriptionText>
         </Description>
       </Row>
-      <TermsBox>
-        <StyledSvgActionArrowRight />
-        <Checkbox
-          label="I accept the terms and want to list my video as NFT"
-          value={termsAccepted}
-          onChange={toggleTermsAccept}
-        />
-      </TermsBox>
     </>
   )
 }
