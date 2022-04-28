@@ -103,8 +103,8 @@ export const footerDividersStyles = css`
 `
 
 type FooterProps = {
-  hasAdditionalActions?: boolean
-  additionalActionsNodeMobilePosition: 'bottom' | 'top'
+  'data-hasAdditionalActions'?: boolean
+  additionalActionsNodeMobilePosition?: 'bottom' | 'top'
 } & DividersProps
 
 export const Footer = styled.div<FooterProps>`
@@ -112,7 +112,7 @@ export const Footer = styled.div<FooterProps>`
   padding: 0 var(--local-size-dialog-padding) var(--local-size-dialog-padding);
   display: flex;
   justify-content: space-between;
-  flex-direction: ${({ additionalActionsNodeMobilePosition }) =>
+  flex-direction: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 'column-reverse' : 'column'};
 
   ${({ dividers }) => dividers && footerDividersStyles};
@@ -121,12 +121,17 @@ export const Footer = styled.div<FooterProps>`
     flex-direction: row;
     align-items: center;
   }
+
+  &[data-hasAdditionalActions='false'],
+  &:not([data-hasAdditionalActions]) {
+    justify-content: end;
+  }
 `
 
-export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePosition: 'bottom' | 'top' }>`
-  margin-top: ${({ additionalActionsNodeMobilePosition }) =>
+export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePosition?: 'bottom' | 'top' }>`
+  margin-top: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 0 : sizes(2)};
-  margin-bottom: ${({ additionalActionsNodeMobilePosition }) =>
+  margin-bottom: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'top' ? 0 : sizes(2)};
   display: flex;
   flex-direction: column-reverse;
@@ -142,6 +147,7 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
     grid-auto-columns: auto;
   }
 `
+
 export const StyledPrimaryButton = styled(Button)`
   margin-bottom: ${sizes(2)};
   ${media.sm} {

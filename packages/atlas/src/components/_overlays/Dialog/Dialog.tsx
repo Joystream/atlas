@@ -114,7 +114,7 @@ export const Dialog: React.FC<DialogProps> = ({
       {hasFooter && (
         <Footer
           dividers={dividers || actionDivider}
-          hasAdditionalActions={!!additionalActionsNode}
+          data-hasAdditionalActions={!!additionalActionsNode}
           additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         >
           {additionalActionsNode}

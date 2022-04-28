@@ -119,8 +119,8 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                 ))}
               </AccountsWrapper>
             </StepWrapper>
-            <Footer additionalActionsNodeMobilePosition="top" dividers>
-              <FooterButtonsContainer additionalActionsNodeMobilePosition="top">
+            <Footer dividers>
+              <FooterButtonsContainer>
                 <Button type="submit" onClick={handleSubmitSelectedAccount} disabled={!selectedAccountAddress}>
                   Connect account
                 </Button>
