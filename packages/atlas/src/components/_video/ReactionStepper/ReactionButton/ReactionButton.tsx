@@ -16,13 +16,11 @@ import {
   LoadingWrapper,
   PopoverContentWrapper,
   PopoverIllustrationWrapper,
+  ReactionSteppperState,
   ReactionsCounter,
   StyledSvgActionDislikeSolid,
   StyledSvgActionLikeSolid,
 } from './ReactionButton.styles'
-
-// proccessing means that there is ongoing transaction
-export type ReactionSteppperState = 'liked' | 'disliked' | 'default' | 'loading' | 'processing'
 
 type ReactionButtonProps = {
   reactionsNumber?: number
