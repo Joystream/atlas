@@ -105,7 +105,7 @@ export const Footer = styled.div<FooterProps>`
   ${({ dividers }) => dividers && footerDividersStyles};
 
   ${media.sm} {
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-items: center;
   }
 `
