@@ -499,7 +499,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
                 Your balance
               </Text>
-              {accountBalance ? (
+              {accountBalance != null ? (
                 <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
                   {accountBalance} tJOY
                 </Text>
