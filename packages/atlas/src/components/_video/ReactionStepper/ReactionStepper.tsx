@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
-import { ReactionButton, ReactionSteppperState } from './ReactionButton'
+import { ReactionButton } from './ReactionButton'
+import { ReactionSteppperState } from './ReactionButton/ReactionButton.styles'
 import { ReactionBar, ReactionBarProgress, ReactionStepperWrapper } from './ReactionStepper.styles'
 
 export type ReactionStepperProps = {
