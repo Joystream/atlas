@@ -36,10 +36,13 @@ export type NftTileProps = {
   startsAtDate?: Date
   auctionPlannedEndDate?: Date
   onRemoveFromSale?: () => void
+  isOwner?: boolean
+  isUserTopBidder?: boolean
   onPutOnSale?: () => void
   onChangePrice?: () => void
   onNftPurchase?: () => void
   onNftBuyNow?: () => void
+  onSettleAuction?: () => void
 }
 
 export const NftTile: React.FC<NftTileProps> = ({
@@ -67,10 +70,13 @@ export const NftTile: React.FC<NftTileProps> = ({
   startsAtDate,
   auctionPlannedEndDate,
   onRemoveFromSale,
+  isOwner,
+  isUserTopBidder,
   onPutOnSale,
   onChangePrice,
   onNftPurchase,
   onNftBuyNow,
+  onSettleAuction,
 }) => {
   const [hovered, setHovered] = useState(false)
   const leftBottomPills = useGetNftSlot({
@@ -124,11 +130,15 @@ export const NftTile: React.FC<NftTileProps> = ({
         canMakeBid={canMakeBid}
         canPutOnSale={canPutOnSale}
         canChangePrice={canChangePrice}
+        needsSettling={needsSettling}
+        isOwner={isOwner}
+        isUserTopBidder={isUserTopBidder}
         onPutOnSale={onPutOnSale}
         onChangePrice={onChangePrice}
         onRemoveFromSale={onRemoveFromSale}
         onBuyNow={onNftBuyNow}
         onMakeBid={onNftPurchase}
+        onSettleAuction={onSettleAuction}
       />
     </Container>
   )

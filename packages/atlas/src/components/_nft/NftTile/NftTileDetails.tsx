@@ -11,6 +11,7 @@ import {
   SvgActionMore,
   SvgActionNotForSale,
   SvgActionSell,
+  SvgActionShoppingCart,
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -56,10 +57,14 @@ export type NftTileDetailsProps = {
   canBuyNow?: boolean
   canMakeBid?: boolean
   canChangePrice?: boolean
+  needsSettling?: boolean
+  isOwner?: boolean
+  isUserTopBidder?: boolean
   onMakeBid?: () => void
   onBuyNow?: () => void
   onPutOnSale?: () => void
   onChangePrice?: () => void
+  onSettleAuction?: () => void
 }
 
 type TileSize = 'small' | 'medium'
@@ -84,10 +89,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   canBuyNow,
   canMakeBid,
   canChangePrice,
+  needsSettling,
+  isOwner,
+  isUserTopBidder,
   onMakeBid,
   onBuyNow,
   onPutOnSale,
   onChangePrice,
+  onSettleAuction,
 }) => {
   const { copyToClipboard } = useClipboard()
   const [contentHovered, setContentHovered] = useState(false)
@@ -120,6 +129,13 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
         onClick: handleCopyVideoURLClick,
       },
     ]
+    if (needsSettling && (isOwner || isUserTopBidder)) {
+      elements.unshift({
+        icon: <SvgActionShoppingCart />,
+        title: 'Settle auction',
+        onClick: () => onSettleAuction && onSettleAuction(),
+      })
+    }
     if (canPutOnSale) {
       elements.unshift({
         icon: <SvgActionSell />,
@@ -159,11 +175,15 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
     return elements
   }, [
     handleCopyVideoURLClick,
+    needsSettling,
+    isOwner,
+    isUserTopBidder,
     canPutOnSale,
     canCancelSale,
     canChangePrice,
     canBuyNow,
     canMakeBid,
+    onSettleAuction,
     onPutOnSale,
     onRemoveFromSale,
     onChangePrice,

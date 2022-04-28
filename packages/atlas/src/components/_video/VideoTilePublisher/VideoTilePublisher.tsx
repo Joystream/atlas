@@ -16,6 +16,7 @@ import {
   SvgActionPlay,
   SvgActionReupload,
   SvgActionSell,
+  SvgActionShoppingCart,
   SvgActionTrash,
   SvgActionWarning,
   SvgIllustrativePlay,
@@ -58,7 +59,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
 
     const hasNft = !!video?.nft
 
-    const { openNftPutOnSale, cancelNftSale } = useNftActions()
+    const { openNftPutOnSale, cancelNftSale, openNftSettlement } = useNftActions()
     const owner = video?.nft?.ownerMember?.id !== video?.channel.ownerMember?.id ? video?.nft?.ownerMember : undefined
 
     const ownerAvatar = useMemberAvatar(video?.nft?.ownerMember)
@@ -231,6 +232,15 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
         },
         ...(hasNft
           ? [
+              ...(needsSettling
+                ? [
+                    {
+                      icon: <SvgActionShoppingCart />,
+                      onClick: () => id && openNftSettlement(id),
+                      title: 'Settle auction',
+                    },
+                  ]
+                : []),
               ...(canPutOnSale
                 ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
                 : []),
@@ -238,7 +248,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
                 ? [
                     {
                       icon: <SvgActionTrash />,
-                      onClick: () => cancelNftSale(video.nft?.id || '', saleType),
+                      onClick: () => cancelNftSale(id || '', saleType),
                       title: 'Remove from sale',
                       destructive: true,
                     },
@@ -263,19 +273,20 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
       isUploading,
       hasAssetUploadFailed,
       onReuploadVideoClick,
+      hasNft,
       onDeleteVideoClick,
       onEditClick,
-      hasNft,
+      needsSettling,
       canPutOnSale,
       canCancelSale,
       saleType,
       onMintNftClick,
       videoHref,
       copyToClipboard,
-      openNftPutOnSale,
       id,
+      openNftSettlement,
+      openNftPutOnSale,
       cancelNftSale,
-      video?.nft?.id,
     ])
 
     const getVideoSubtitle = useCallback(() => {
