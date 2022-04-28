@@ -141,7 +141,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
                 <TitleText>Total auction duration</TitleText>
                 <StyledInformation
                   text="Auctions are run and settled on-chain and use tJOY’s blocks, rather than clock time."
-                  footer={
+                  customContent={
                     <AuctionDurationTooltipFooter>
                       <Text variant="t100">
                         {totalDaysAndHours} = {formData.auctionDurationBlocks}
@@ -184,7 +184,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({
           <TitleText>Fee</TitleText>
           <StyledInformation
             text="By setting royalties you will be entitled to a percentage share in revenue from any future secondary market sale. So if someone sells your work you will get paid."
-            footer={<RoyaltiesTooltipFooter />}
+            customContent={<RoyaltiesTooltipFooter />}
             placement="top"
           />
         </Title>

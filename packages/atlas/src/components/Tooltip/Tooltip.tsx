@@ -2,10 +2,16 @@ import Tippy from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
-import { SvgAlertsInformative24 } from '@/components/_icons'
 import { transitions } from '@/styles'
 
-import { Arrow, IconWrapper, StyledTooltip, TooltipHeader, TooltipText } from './Tooltip.styles'
+import {
+  IconWrapper,
+  StyledSvgAlertsInformative24,
+  StyledTooltip,
+  TooltipContent,
+  TooltipHeader,
+  TooltipText,
+} from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
 export type TooltipProps = {
@@ -17,9 +23,10 @@ export type TooltipProps = {
   offsetY?: number
   delay?: number | [number | null, number | null] | undefined
   hideOnClick?: boolean | 'toggle'
-  arrowDisabled?: boolean
   reference?: Element | React.RefObject<Element> | null | undefined
-  footer?: React.ReactNode
+  customContent?: React.ReactNode
+  showOnCreate?: boolean
+  oneLine?: boolean
   className?: string
 }
 
@@ -34,12 +41,13 @@ export const Tooltip: React.FC<TooltipProps> = ({
   offsetX = 0,
   offsetY = 8,
   delay,
-  arrowDisabled,
-  footer,
+  customContent,
+  showOnCreate,
+  oneLine,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
-  if (!text) {
+  if (!text && !customContent) {
     return <>{children}</>
   }
   return (
@@ -51,6 +59,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       placement={placement}
       reference={reference}
       offset={[offsetX, offsetY]}
+      showOnCreate={showOnCreate}
       render={(attrs) => (
         <CSSTransition
           in={isVisible}
@@ -58,25 +67,38 @@ export const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip {...attrs} headerText={!!headerText} footer={!!footer}>
-            <TooltipHeader>
-              {icon && (
-                <IconWrapper>
-                  <SvgAlertsInformative24 />
-                </IconWrapper>
-              )}
-              {headerText && (
-                <TooltipText variant="h100" footer={!!footer}>
-                  {headerText}
+          <StyledTooltip
+            {...attrs}
+            headerText={!!headerText && !!headerText.length}
+            footer={!!customContent}
+            oneLine={!!oneLine}
+          >
+            <TooltipContent headerText={!!headerText && !!headerText.length}>
+              <TooltipHeader headerText={!!headerText && !!headerText.length}>
+                {icon && (
+                  <IconWrapper>
+                    <StyledSvgAlertsInformative24 />
+                  </IconWrapper>
+                )}
+                {headerText && (
+                  <TooltipText variant="h100" footer={!!customContent}>
+                    {headerText}
+                  </TooltipText>
+                )}
+              </TooltipHeader>
+              {text && text.length && (
+                <TooltipText
+                  withIcon={!!icon}
+                  footer={!!customContent}
+                  oneLine={oneLine}
+                  headerText={!!headerText && !!headerText.length}
+                  variant="t100"
+                >
+                  {text}
                 </TooltipText>
               )}
-            </TooltipHeader>
-
-            <TooltipText withIcon={!!icon} footer={!!footer} variant="t100">
-              {text}
-            </TooltipText>
-            {footer}
-            {!arrowDisabled && <Arrow />}
+            </TooltipContent>
+            {customContent}
           </StyledTooltip>
         </CSSTransition>
       )}

@@ -328,7 +328,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     {endAtBlock && (
                       <Information
                         text="Auctions are run and settled on-chain and use blocks of operations rather than clock time."
-                        footer={<Text variant="t100">Auctions closing block: {endAtBlock}</Text>}
+                        customContent={<Text variant="t100">Auctions closing block: {endAtBlock}</Text>}
                         placement="top"
                       />
                     )}
