@@ -56,8 +56,8 @@ export const TermsStep: React.FC = () => {
           </TermsOverlay>
         </TermsBox>
       </StepWrapper>
-      <Footer dividers>
-        <FooterButtonsContainer>
+      <Footer additionalActionsNodeMobilePosition="top" dividers>
+        <FooterButtonsContainer additionalActionsNodeMobilePosition="top">
           <Button to={{ search: urlParams({ [QUERY_PARAMS.LOGIN]: 'member' }) }} disabled={!hasScrolledToBottom}>
             Accept terms
           </Button>

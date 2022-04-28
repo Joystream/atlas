@@ -103,7 +103,7 @@ export const footerDividersStyles = css`
 `
 
 type FooterProps = {
-  hasAdditionalActions: boolean
+  hasAdditionalActions?: boolean
   additionalActionsNodeMobilePosition: 'bottom' | 'top'
 } & DividersProps
 
