@@ -59,7 +59,7 @@ export const Tab = styled.div<TabProps>`
     ${smallBadgeStyles}
 
     &[data-badge]::after {
-      margin-top: calc(-1 * ${sizes(2.5)});
+      margin-top: -${sizes(2.5)};
     }
   }
 `

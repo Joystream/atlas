@@ -53,7 +53,6 @@ const Template: Story<TabsProps> = (args) => {
 export const Default = Template.bind({})
 
 export const Container = styled.div`
-  /* display: grid; */
   width: 300px;
   gap: 64px;
 `

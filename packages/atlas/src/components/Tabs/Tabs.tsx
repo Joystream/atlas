@@ -119,14 +119,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
         >
           <BackgroundGradient direction="next">
             <StyledButton
-              onClick={() => {
-                const tabsGroup = tabsGroupRef.current
-                const tab = tabRef.current
-                if (!tabsGroup || !isContentOverflown || !tab) {
-                  return
-                }
-                tabsGroup.scrollLeft = tabsGroup.scrollLeft + tabsGroup.clientWidth - tab.offsetWidth
-              }}
+              onClick={handleArrowScroll('right')}
               data-right
               size="small"
               variant="tertiary"
