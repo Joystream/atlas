@@ -488,7 +488,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
             <Information
               placement="top"
-              arrowDisabled
               text="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This will not impact your intellectual rights of the video."
             />
           </SwitchNftWrapper>

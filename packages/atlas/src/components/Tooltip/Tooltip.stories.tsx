@@ -10,21 +10,55 @@ export default {
   title: 'other/Tooltip',
   component: Tooltip,
   argTypes: {
-    text: { defaultValue: 'Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet! Lorem ipsum dolor sit amet!' },
-    headerText: { defaultValue: 'Lorem ipsum' },
-    arrowDisabled: { defaultValue: false },
     placement: {
       control: { type: 'select', options: ['top-start', 'top-end', 'bottom-start', 'bottom-end'] },
-      defaultValue: 'bottom-start',
     },
     icon: { defaultValue: false },
-    offsetX: { defaultValue: 0 },
-    offsetY: { defaultValue: 0 },
+    className: { table: { disable: true } },
+    reference: { table: { disable: true } },
+    hideOnClick: { table: { disable: true } },
+    delay: { table: { disable: true } },
+    showOnCreate: { table: { disable: true } },
+    customContent: { type: 'boolean' },
   },
-} as Meta
+  args: {
+    customContent: false,
+    offsetX: 0,
+    offsetY: 0,
+    placement: 'bottom-start',
+    text: 'Lorem ipsum dolor amet! Lorem ipsum dolor amet!',
+    headerText: 'Lorem ipsum',
+    oneLine: false,
+  },
+} as Meta<TooltipProps>
+
+const DefaultTooltip: Story<TooltipProps> = (args) => (
+  <Tooltip
+    {...args}
+    showOnCreate
+    customContent={
+      args.customContent && (
+        <div key={0} style={{ marginTop: '12px' }}>
+          Footer content
+        </div>
+      )
+    }
+  />
+)
+
+export const Default = DefaultTooltip.bind({})
 
 const TextTooltip: Story<TooltipProps> = (args) => (
-  <Tooltip {...args}>
+  <Tooltip
+    {...args}
+    customContent={
+      args.customContent && (
+        <div key={0} style={{ marginTop: '12px' }}>
+          Footer content
+        </div>
+      )
+    }
+  >
     <Text variant="t200">Hello there!</Text>
   </Tooltip>
 )
@@ -32,7 +66,16 @@ const TextTooltip: Story<TooltipProps> = (args) => (
 export const WithText = TextTooltip.bind({})
 
 const HeadingTooltip: Story<TooltipProps> = (args) => (
-  <Tooltip {...args}>
+  <Tooltip
+    {...args}
+    customContent={
+      args.customContent && (
+        <div key={0} style={{ marginTop: '12px' }}>
+          Footer content
+        </div>
+      )
+    }
+  >
     <Text variant="h800">Hello there!</Text>
   </Tooltip>
 )
@@ -41,7 +84,16 @@ export const WithHeading = HeadingTooltip.bind({})
 
 const ButtonTooltip: Story<TooltipProps> = (args) => (
   <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-    <Tooltip {...args}>
+    <Tooltip
+      {...args}
+      customContent={
+        args.customContent && (
+          <div key={0} style={{ marginTop: '12px' }}>
+            Footer content
+          </div>
+        )
+      }
+    >
       <Button>Hover me!</Button>
     </Tooltip>
   </div>

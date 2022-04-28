@@ -1,12 +1,9 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
-
-type StyledTooltipProps = {
-  headerText: boolean
-  footer: boolean
-}
 
 export const IconWrapper = styled.div`
   display: flex;
@@ -14,71 +11,70 @@ export const IconWrapper = styled.div`
   align-items: center;
   width: ${sizes(5)};
   height: ${sizes(5)};
-  margin-right: ${sizes(1)};
+  margin-right: ${sizes(2)};
 `
 
-export const Arrow = styled.div`
-  &,
-  &::before {
-    position: absolute;
-    width: ${sizes(3)};
-    height: ${sizes(3)};
-    background: inherit;
-  }
-
-  & {
-    visibility: hidden;
-  }
-
-  &::before {
-    visibility: visible;
-    content: '';
-    transform: rotate(45deg);
+export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
+  path {
+    fill: ${cVar('colorTextStrong')};
   }
 `
 
 type TooltipTextProps = {
   withIcon?: boolean
   footer: boolean
+  oneLine?: boolean
+  headerText?: boolean
+}
+
+const getOneLineStyles = ({ oneLine, footer }: TooltipTextProps) => {
+  if (footer) {
+    return
+  }
+  if (oneLine) {
+    return css`
+      max-width: 400px;
+    `
+  } else {
+    return css`
+      max-width: 200px;
+    `
+  }
 }
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  max-width: ${({ footer }) => (footer ? 250 : 200)}px;
+  ${getOneLineStyles};
 
-  ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
+  ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
 `
 
-export const TooltipHeader = styled.div`
+export const TooltipHeader = styled.div<{ headerText: boolean }>`
   display: flex;
-  margin-bottom: ${sizes(2)};
+  margin-bottom: ${({ headerText }) => headerText && sizes(2)};
 `
+
+type StyledTooltipProps = {
+  headerText: boolean
+  footer: boolean
+  oneLine: boolean
+}
 
 export const StyledTooltip = styled.div<StyledTooltipProps>`
   display: inline-flex;
   flex-direction: ${({ headerText, footer }) => (headerText || footer ? 'column' : 'row')};
-  padding: ${sizes(2)};
-  background-color: ${cVar('colorCoreNeutral500')};
+  padding: ${({ headerText, oneLine }) => sizes(!headerText && oneLine ? 2 : 3)};
+  background-color: ${cVar('colorBackgroundElevated')};
+  border-radius: ${cVar('radiusSmall')};
+  max-width: ${({ footer }) => footer && '264px'};
+  align-items: ${({ oneLine, headerText }) => (oneLine && !headerText ? 'center' : 'flex-start')};
 
   ${TooltipHeader} {
     align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};
   }
+`
 
-  &[data-placement^='top-start'] ${Arrow} {
-    bottom: -6px;
-    left: 12px;
-  }
-  &[data-placement^='top-end'] ${Arrow} {
-    bottom: -6px;
-    right: 16px;
-  }
-
-  &[data-placement^='bottom-end'] ${Arrow} {
-    top: -6px;
-    right: 16px;
-  }
-
-  &[data-placement^='bottom-start'] ${Arrow} {
-    top: -6px;
-    left: 12px;
-  }
+export const TooltipContent = styled.div<{ headerText: boolean }>`
+  display: ${({ headerText }) => (headerText ? 'block' : 'flex')};
+  align-items: center;
+  align-self: baseline;
 `
