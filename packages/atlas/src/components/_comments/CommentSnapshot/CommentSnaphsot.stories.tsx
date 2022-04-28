@@ -15,10 +15,8 @@ export default {
     createdAt: new Date(1649761429792),
   },
   argTypes: {
-    memberAvatarUrl: {
-      description: 'The URL to the member profile',
-      table: { disable: true },
-    },
+    createdAt: { control: 'date' },
+    memberUrl: { table: { disable: true } },
   },
   decorators: [
     (Story) => (
@@ -29,13 +27,19 @@ export default {
   ],
 } as Meta<CommentSnapshotProps>
 
-const Template: Story<CommentSnapshotProps> = (args) => {
+const SingleTemplate: Story<CommentSnapshotProps> = (args) => {
+  return <CommentSnapshot {...args} />
+}
+
+const ManyTemplate: Story<CommentSnapshotProps> = (args) => {
   return (
     <div style={{ display: 'grid', gap: 32 }}>
       <CommentSnapshot {...args} />
       <CommentSnapshot {...args} />
+      <CommentSnapshot {...args} />
+      <CommentSnapshot {...args} last={true} />
     </div>
   )
 }
-
-export const Default = Template.bind({})
+export const Single = SingleTemplate.bind({})
+export const Many = ManyTemplate.bind({})
