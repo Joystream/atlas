@@ -1434,6 +1434,48 @@ export type AllBidFieldsFragment = {
   }
 }
 
+export type CommentFieldsFragment = {
+  __typename?: 'Comment'
+  id: string
+  createdAt: Date
+  isEdited: boolean
+  parentCommentId?: string | null
+  repliesCount: number
+  text: string
+  status: Types.CommentStatus
+  author: {
+    __typename?: 'Membership'
+    id: string
+    handle: string
+    metadata: {
+      __typename?: 'MemberMetadata'
+      about?: string | null
+      avatar?:
+        | {
+            __typename?: 'AvatarObject'
+            avatarObject?: {
+              __typename?: 'StorageDataObject'
+              id: string
+              createdAt: Date
+              size: string
+              isAccepted: boolean
+              ipfsHash: string
+              storageBag: { __typename?: 'StorageBag'; id: string }
+              type:
+                | { __typename: 'DataObjectTypeChannelAvatar' }
+                | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypeUnknown' }
+                | { __typename: 'DataObjectTypeVideoMedia' }
+                | { __typename: 'DataObjectTypeVideoThumbnail' }
+            } | null
+          }
+        | { __typename?: 'AvatarUri'; avatarUri: string }
+        | null
+    }
+  }
+  reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+}
+
 export const VideoCategoryFieldsFragmentDoc = gql`
   fragment VideoCategoryFields on VideoCategory {
     id
@@ -1725,4 +1767,24 @@ export const AllBidFieldsFragmentDoc = gql`
     }
   }
   ${BasicBidFieldsFragmentDoc}
+`
+export const CommentFieldsFragmentDoc = gql`
+  fragment CommentFields on Comment {
+    id
+    author {
+      ...BasicMembershipFields
+    }
+    createdAt
+    isEdited
+    reactions {
+      id
+      createdAt
+      reactionId
+    }
+    parentCommentId
+    repliesCount
+    text
+    status
+  }
+  ${BasicMembershipFieldsFragmentDoc}
 `

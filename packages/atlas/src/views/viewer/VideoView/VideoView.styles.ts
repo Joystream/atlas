@@ -159,3 +159,30 @@ export const SeeMoreButton = styled(Button)`
 export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
   margin-top: ${sizes(16)};
 `
+
+export const DescriptionLink = styled(Button)`
+  word-break: break-all;
+`
+
+export const CommentsSectionWrapper = styled.div`
+  margin-top: ${sizes(16)};
+`
+
+export const CommentsSectionHeader = styled.div`
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 220px;
+  align-items: center;
+  margin-bottom: ${sizes(12)};
+  padding-bottom: ${sizes(4)};
+  box-shadow: ${cVar('effectDividersBottom')};
+
+  ${media.md} {
+    padding-left: ${sizes(14)};
+  }
+`
+
+export const CommentWrapper = styled.div`
+  display: grid;
+  gap: ${sizes(8)};
+`
