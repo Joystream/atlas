@@ -79,12 +79,9 @@ export class JoystreamLib {
   async getAccountBalance(accountId: AccountId): Promise<number> {
     await this.ensureApi()
 
-    const {
-      data: { free, miscFrozen, feeFrozen },
-    } = await this.api.query.system.account(accountId)
-    const freeBalance = free.sub(miscFrozen).sub(feeFrozen)
+    const { availableBalance } = await this.api.derive.balances.all(accountId)
 
-    return freeBalance.toNumber()
+    return availableBalance.toNumber()
   }
 
   async getCurrentBlock(): Promise<number> {
@@ -97,9 +94,8 @@ export class JoystreamLib {
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.query.system.account(accountId, ({ data: { free, miscFrozen, feeFrozen } }) => {
-      const freeBalance = free.sub(miscFrozen).sub(feeFrozen)
-      callback(freeBalance.toNumber())
+    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
+      callback(availableBalance.toNumber())
     })
 
     return proxy(unsubscribe)
