@@ -15,7 +15,7 @@ import {
 import { REACTION_TYPE, ReactionType } from '../ReactionChip'
 
 export type ReactionPopoverProps = {
-  onReactionClick: (reaction: ReactionType) => void
+  onReactionClick?: (reaction: ReactionType) => void
   disabled?: boolean
 }
 
@@ -46,7 +46,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
   }))
 
   const handleReactionClick = (reaction: ReactionType) => {
-    onReactionClick(reaction)
+    onReactionClick?.(reaction)
     setIsOpen(false)
   }
   return (

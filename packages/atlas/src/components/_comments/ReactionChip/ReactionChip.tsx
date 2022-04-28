@@ -12,7 +12,7 @@ export type ReactionChipProps = {
   count?: number
   type: ReactionType
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick: (type: ReactionType) => void
+  onReactionClick?: (type: ReactionType) => void
 }
 
 export const REACTION_TYPE: Record<ReactionType, string> = {
@@ -31,7 +31,12 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
   onReactionClick,
 }) => {
   return (
-    <ReactionChipButton state={state} active={active} title={`${count} ${type}`} onClick={() => onReactionClick(type)}>
+    <ReactionChipButton
+      state={state}
+      active={active}
+      title={`${count} ${type}`}
+      onClick={() => onReactionClick?.(type)}
+    >
       {state === 'processing' ? <Loader variant="xsmall" /> : <EmojiContainer>{REACTION_TYPE[type]} </EmojiContainer>}
       <Text variant="t100" margin={{ left: 2 }}>
         {count}
