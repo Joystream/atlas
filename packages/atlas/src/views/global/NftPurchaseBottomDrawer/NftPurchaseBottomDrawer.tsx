@@ -414,12 +414,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                       },
                       bidTooLow: (value) =>
                         Number(value) >= minimumBid ? true : 'Your bid must be higher than minimum bid',
-                      bidTooHigh: (value) =>
-                        accountBalance
-                          ? Number(value) + TRANSACTION_FEE > accountBalance
-                            ? 'Insufficient funds.'
-                            : true
-                          : true,
+                      bidTooHigh: (value) => {
+                        return Number(value) + TRANSACTION_FEE > (accountBalance || 0) ? 'Insufficient funds.' : true
+                      },
                     },
                   })}
                   disabled={auctionEnded}
