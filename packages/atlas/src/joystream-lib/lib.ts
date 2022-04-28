@@ -2,7 +2,6 @@ import { types } from '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import '@polkadot/api/augment'
 import { Signer } from '@polkadot/api/types'
-import BN from 'bn.js'
 import { proxy } from 'comlink'
 
 import { JoystreamLibError } from '@/joystream-lib/errors'
@@ -80,9 +79,12 @@ export class JoystreamLib {
   async getAccountBalance(accountId: AccountId): Promise<number> {
     await this.ensureApi()
 
-    const balance = await this.api.derive.balances.account(accountId)
+    const {
+      data: { free, miscFrozen, feeFrozen },
+    } = await this.api.query.system.account(accountId)
+    const freeBalance = free.sub(miscFrozen).sub(feeFrozen)
 
-    return new BN(balance.freeBalance).toNumber()
+    return freeBalance.toNumber()
   }
 
   async getCurrentBlock(): Promise<number> {
@@ -95,8 +97,9 @@ export class JoystreamLib {
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.query.system.account(accountId, ({ data: { free } }) => {
-      callback(new BN(free).toNumber())
+    const unsubscribe = await this.api.query.system.account(accountId, ({ data: { free, miscFrozen, feeFrozen } }) => {
+      const freeBalance = free.sub(miscFrozen).sub(feeFrozen)
+      callback(freeBalance.toNumber())
     })
 
     return proxy(unsubscribe)
@@ -120,7 +123,7 @@ export class JoystreamLib {
       auctionStartsAtMaxDelta,
       maxCreatorRoyalty,
       minCreatorRoyalty,
-      platfromFeePercentage,
+      platformFeePercentage,
     ] = await Promise.all([
       this.api.query.content.maxAuctionDuration(),
       this.api.query.content.minStartingPrice(),
@@ -136,7 +139,7 @@ export class JoystreamLib {
       auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
       maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
       minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
-      platfromFeePercentage: platfromFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
+      platformFeePercentage: platformFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
     }
   }
 }

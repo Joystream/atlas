@@ -192,7 +192,7 @@ const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => 
         nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
         nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
         nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,
-        nftPlatformFeePercentage: nftChainState.platfromFeePercentage,
+        nftPlatformFeePercentage: nftChainState.platformFeePercentage,
       })
     )
   }, [joystream])
