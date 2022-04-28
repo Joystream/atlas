@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, { useRef } from 'react'
-import useResizeObserver from 'use-resize-observer'
+// we use pollyfiled version because "border-box" option seems to be not working on iPhone
+import useResizeObserver from 'use-resize-observer/polyfilled'
 
 import { media, sizes } from '@/styles'
 import { toPx } from '@/utils/styles'

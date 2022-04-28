@@ -1,5 +1,7 @@
 import { VideoJsPlayer } from 'video.js'
 
+import { isIphone } from '@/utils/browser'
+
 export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
 
 export const VOLUME_STEP = 0.1
@@ -16,8 +18,6 @@ export enum CustomVideojsEvents {
   PlayControl = 'PLAY_CONTROL',
   PauseControl = 'PAUSE_CONTROL',
 }
-
-const isIphone = /iPhone/.test(window.navigator.userAgent)
 
 export const isFullScreenEnabled =
   document.fullscreenEnabled ||

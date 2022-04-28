@@ -49,7 +49,7 @@ type InfiniteVideoGridProps = {
   }
 }
 
-const INITIAL_VIDEOS_PER_ROW = 4
+const INITIAL_VIDEOS_PER_ROW = 1
 
 type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
 
@@ -94,7 +94,7 @@ export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGrid
         media: {
           isAccepted_eq: true,
         },
-        ...videoWhereInput,
+        ...(videoWhereInput ? videoWhereInput : {}),
       },
     }
 

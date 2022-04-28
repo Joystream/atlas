@@ -46,15 +46,9 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
 
   const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
 
-  const { videoCount } = useVideoCount({ where: videoWhereInput })
-
-  useEffect(() => {
-    setVideoWhereInput({
-      category: {
-        id_eq: categoryId,
-      },
-    })
-  }, [categoryId, setVideoWhereInput])
+  const { videoCount } = useVideoCount({
+    where: { ...videoWhereInput, category: { id_eq: categoryId } },
+  })
 
   useEffect(() => {
     if (scrollWhenFilterChange.current) {
@@ -155,7 +149,7 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
               />
             </FallbackWrapper>
           }
-          videoWhereInput={videoWhereInput}
+          videoWhereInput={{ ...videoWhereInput, category: { id_eq: categoryId } }}
           orderBy={sortVideosBy}
           onDemandInfinite
         />
