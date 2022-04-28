@@ -29,3 +29,11 @@ query GetCommentsConnection(
     totalCount
   }
 }
+
+query GetCommentEdits($commentId: ID!) {
+  commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    newText
+  }
+}

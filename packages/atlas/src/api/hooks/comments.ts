@@ -1,6 +1,13 @@
 import { QueryHookOptions } from '@apollo/client'
 
-import { GetCommentsQuery, GetCommentsQueryVariables, useGetCommentsQuery } from '@/api/queries'
+import {
+  GetCommentEditsQuery,
+  GetCommentEditsQueryVariables,
+  GetCommentsQuery,
+  GetCommentsQueryVariables,
+  useGetCommentEditsQuery,
+  useGetCommentsQuery,
+} from '@/api/queries'
 
 export const useComments = (
   variables?: GetCommentsQueryVariables,
@@ -10,6 +17,18 @@ export const useComments = (
 
   return {
     comments: data?.comments,
+    ...rest,
+  }
+}
+
+export const useCommentEdits = (
+  commentId?: string,
+  opts?: QueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
+) => {
+  const { data, ...rest } = useGetCommentEditsQuery({ ...opts, variables: { commentId: commentId || '' } })
+
+  return {
+    commentEdits: data?.commentTextUpdatedEvents,
     ...rest,
   }
 }
