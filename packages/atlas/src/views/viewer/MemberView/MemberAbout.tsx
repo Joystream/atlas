@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import { useMemberships } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { PIONEER_URL } from '@/config/urls'
+import { PIONEER_MEMBER_URL } from '@/config/urls'
 import { cVar } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
@@ -68,7 +68,7 @@ export const MemberAbout = () => {
         <Anchor
           as="a"
           variant="t300-strong"
-          href={`${PIONEER_URL}/#/members/${handle}`}
+          href={`${PIONEER_MEMBER_URL}/${member?.id}`}
           target="_blank"
           color={cVar('colorCoreBlue300')}
         >

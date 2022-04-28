@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -8,18 +8,15 @@ import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
-import knownLicenses from '@/data/knownLicenses.json'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -35,19 +32,9 @@ import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
 import { MoreVideos } from './MoreVideos'
+import { VideoDetails } from './VideoDetails'
 import {
-  Category,
-  CategoryWrapper,
   ChannelContainer,
-  DescriptionContainer,
-  DescriptionCopy,
-  DescriptionLink,
-  DescriptionSkeletonLoader,
-  DescriptionTitle,
-  DetailsWrapper,
-  ExpandButton,
-  LicenceCategoryWrapper,
-  LicenseCustomText,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
@@ -61,7 +48,6 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
-  const [detailsExpanded, setDetailsExpanded] = useState(false)
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
@@ -165,26 +151,6 @@ export const VideoView: React.FC = () => {
     }
   }, [thumbnailUrl, video])
 
-  const replaceUrls = (text: string) => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g
-    const parts = text.split(urlRegex)
-    return parts.reduce((acc, part, idx) => {
-      const node = urlRegex.test(part) ? (
-        <DescriptionLink size="large" textOnly key={`description-link-${idx}`} to={part}>
-          {part}
-        </DescriptionLink>
-      ) : (
-        part
-      )
-
-      return [...acc, node]
-    }, [] as React.ReactNode[])
-  }
-
-  const toggleDetailsExpand = () => {
-    setDetailsExpanded((prevState) => !prevState)
-  }
-
   if (error) {
     return <ViewErrorFallback />
   }
@@ -204,7 +170,6 @@ export const VideoView: React.FC = () => {
     )
   }
 
-  const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
   const isCinematic = cinematicView || !mdMatch
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
@@ -246,77 +211,10 @@ export const VideoView: React.FC = () => {
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
       </ChannelContainer>
-      <DetailsWrapper>
-        <DescriptionContainer>
-          {video ? (
-            video?.description && (
-              <>
-                <DescriptionTitle variant="h100">Description</DescriptionTitle>
-                {video.description?.split('\n').map((line, idx) => (
-                  <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
-                    {replaceUrls(line)}
-                  </DescriptionCopy>
-                ))}
-              </>
-            )
-          ) : (
-            <>
-              <DescriptionSkeletonLoader width="70%" />
-              <DescriptionSkeletonLoader width="40%" />
-              <DescriptionSkeletonLoader width="80%" />
-              <DescriptionSkeletonLoader width="30%" />
-            </>
-          )}
-          {!mdMatch && (
-            <ExpandButton
-              onClick={toggleDetailsExpand}
-              iconPlacement="right"
-              size="small"
-              variant="tertiary"
-              textOnly
-              icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
-            >
-              Show {!detailsExpanded ? 'more' : 'less'}
-            </ExpandButton>
-          )}
-        </DescriptionContainer>
-        <LicenceCategoryWrapper detailsExpanded={!mdMatch ? detailsExpanded : true}>
-          <GridItem>
-            {video ? (
-              <>
-                <DescriptionTitle variant="h100">License</DescriptionTitle>
-                {foundLicense && (
-                  <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                    {foundLicense.name}
-                  </Text>
-                )}
-                <LicenseCustomText as="p" variant="t100" secondary>
-                  {video.license?.customText}
-                </LicenseCustomText>
-              </>
-            ) : (
-              <SkeletonLoader height={12} width={200} />
-            )}
-          </GridItem>
-          <CategoryWrapper>
-            {video ? (
-              <>
-                <DescriptionTitle variant="h100">Category</DescriptionTitle>
-                <Category to={absoluteRoutes.viewer.category(category?.id)}>
-                  {category?.icon}
-                  <Text variant={mdMatch ? 't300' : 't200'} secondary>
-                    {category?.name}
-                  </Text>
-                </Category>
-              </>
-            ) : (
-              <SkeletonLoader height={12} width={200} />
-            )}
-          </CategoryWrapper>
-        </LicenceCategoryWrapper>
-      </DetailsWrapper>
+      <VideoDetails video={video} category={category} />
     </>
   )
+
   return (
     <>
       <PlayerGridWrapper cinematicView={isCinematic}>

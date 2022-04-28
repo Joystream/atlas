@@ -97,6 +97,8 @@ export const variables = css`
     --color-border-alpha: var(--color-core-neutral-600-lighten);
     --color-border-strong: var(--color-core-neutral-400);
     --color-border-strong-alpha: var(--color-core-neutral-400-lighten);
+    --color-border-primary: var(--color-core-blue-500);
+    --color-border-error: var(--color-core-red-200);
     --color-background-muted: var(--color-core-neutral-900);
     --color-background-muted-alpha: var(--color-core-neutral-900-lighten);
     --color-background: var(--color-core-neutral-800);
@@ -381,6 +383,8 @@ export const theme = {
   colorBorderAlpha: { variable: 'var(--color-border-alpha)', value: '#CBE0F145' },
   colorBorderStrong: { variable: 'var(--color-border-strong)', value: '#52616B' },
   colorBorderStrongAlpha: { variable: 'var(--color-border-strong-alpha)', value: '#DCE1E56B' },
+  colorBorderPrimary: { variable: 'var(--color-border-primary)', value: '#4038FF' },
+  colorBorderError: { variable: 'var(--color-border-error)', value: '#FF695F' },
   colorBackgroundMuted: { variable: 'var(--color-background-muted)', value: '#0F1114' },
   colorBackgroundMutedAlpha: { variable: 'var(--color-background-muted-alpha)', value: '#BCD5FA14' },
   colorBackground: { variable: 'var(--color-background)', value: '#181C20' },

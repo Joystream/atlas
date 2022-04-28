@@ -286,32 +286,42 @@
       }
     },
     "border": {
-      "muted": {
-        "default": {
-          "value": "{color.core.neutral.800.default}"
-        },
-        "alpha": {
-          "value": "{color.core.neutral.800.lighten}",
-          "description": "Dividers, separators, etc."
-        }
-      },
       "default": {
-        "default": {
-          "value": "{color.core.neutral.600.default}"
+        "muted": {
+          "default": {
+            "value": "{color.core.neutral.800.default}"
+          },
+          "alpha": {
+            "value": "{color.core.neutral.800.lighten}",
+            "description": "Dividers, separators, etc."
+          }
         },
-        "alpha": {
-          "value": "{color.core.neutral.600.lighten}",
-          "description": "Component borders on default states"
+        "default": {
+          "default": {
+            "value": "{color.core.neutral.600.default}"
+          },
+          "alpha": {
+            "value": "{color.core.neutral.600.lighten}",
+            "description": "Component borders on default states"
+          }
+        },
+        "strong": {
+          "default": {
+            "value": "{color.core.neutral.400.default}"
+          },
+          "alpha": {
+            "value": "{color.core.neutral.400.lighten}",
+            "description": "Component borders on hover states"
+          }
         }
       },
-      "strong": {
-        "default": {
-          "value": "{color.core.neutral.400.default}"
-        },
-        "alpha": {
-          "value": "{color.core.neutral.400.lighten}",
-          "description": "Component borders on hover states"
-        }
+      "primary": {
+        "value": "{color.core.blue.500}",
+        "description": "Accent, active states etc."
+      },
+      "error": {
+        "value": "{color.core.red.200}",
+        "description": "Errors, alerts etc."
       }
     },
     "background": {
