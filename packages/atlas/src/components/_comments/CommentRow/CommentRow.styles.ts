@@ -4,6 +4,7 @@ import { cVar, media, sizes } from '@/styles'
 
 export const OutlineBox = styled.div<{ highlighted: boolean }>`
   padding: ${sizes(2)};
+  margin: -${sizes(2)};
   width: 100%;
   background-color: ${({ highlighted }) => (highlighted ? cVar('colorBackgroundAlpha') : 'transparent')};
   border: 1px solid ${({ highlighted }) => (highlighted ? cVar('colorBackgroundAlpha') : 'transparent')};
@@ -12,6 +13,7 @@ export const OutlineBox = styled.div<{ highlighted: boolean }>`
 
   ${media.sm} {
     padding: ${sizes(4)};
+    margin: -${sizes(4)};
   }
 `
 

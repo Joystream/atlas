@@ -1,6 +1,7 @@
 export * from './__generated__/baseTypes.generated'
 export * from './__generated__/categories.generated'
 export * from './__generated__/channels.generated'
+export * from './__generated__/comments.generated'
 export * from './__generated__/featured.generated'
 export * from './__generated__/fragments.generated'
 export * from './__generated__/memberships.generated'
