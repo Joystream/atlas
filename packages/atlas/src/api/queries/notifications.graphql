@@ -1,0 +1,613 @@
+query GetNftNotifications($memberId: ID!, $limit: Int!) {
+  auctionBidMadeEvents(
+    limit: $limit
+    where: { OR: [{ ownerMember: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    video {
+      id
+      title
+    }
+    member {
+      ...BasicMembershipFields
+    }
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    previousTopBidder {
+      ...BasicMembershipFields
+    }
+    bidAmount
+  }
+
+  nftBoughtEvents(where: { ownerMember: { id_eq: $memberId } }, limit: $limit, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    inBlock
+    member {
+      ...BasicMembershipFields
+    }
+    video {
+      id
+      title
+    }
+    price
+  }
+
+  bidMadeCompletingAuctionEvents(
+    where: { ownerMember: { id_eq: $memberId } }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    member {
+      ...BasicMembershipFields
+    }
+    video {
+      id
+      title
+    }
+    price
+  }
+
+  openAuctionBidAcceptedEvents(
+    where: { winningBidder: { id_eq: $memberId } }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    video {
+      id
+      title
+    }
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    winningBid {
+      amount
+    }
+  }
+}
+
+query GetNftHistory($nftId: ID!) {
+  nftIssuedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+  }
+
+  openAuctionStartedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+  }
+
+  englishAuctionStartedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+  }
+
+  nftSellOrderMadeEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    price
+  }
+
+  auctionBidMadeEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    member {
+      ...BasicMembershipFields
+    }
+    bidAmount
+  }
+
+  bidMadeCompletingAuctionEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    member {
+      ...BasicMembershipFields
+    }
+    price
+  }
+
+  nftBoughtEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    member {
+      ...BasicMembershipFields
+    }
+    price
+  }
+
+  englishAuctionSettledEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    winner {
+      ...BasicMembershipFields
+    }
+  }
+
+  openAuctionBidAcceptedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    winningBid {
+      amount
+      bidder {
+        ...BasicMembershipFields
+      }
+    }
+  }
+
+  auctionBidCanceledEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    member {
+      ...BasicMembershipFields
+    }
+  }
+
+  auctionCanceledEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+  }
+
+  buyNowCanceledEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+  }
+
+  buyNowPriceUpdatedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {
+    id
+    createdAt
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    newPrice
+  }
+}
+
+query GetNftActivities($memberId: ID!, $limit: Int!) {
+  # bid
+  auctionBidMadeEventsConnection(
+    first: $limit
+    where: { OR: [{ member: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        member {
+          ...BasicMembershipFields
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        previousTopBidder {
+          ...BasicMembershipFields
+        }
+        bidAmount
+      }
+    }
+    totalCount
+  }
+
+  # purchase/sale
+  purchaseNftBoughtEventsConnection: nftBoughtEventsConnection(
+    where: { member: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        member {
+          ...BasicMembershipFields
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        price
+      }
+    }
+    totalCount
+  }
+
+  purchaseBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
+    where: { member: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        member {
+          ...BasicMembershipFields
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        price
+      }
+    }
+    totalCount
+  }
+
+  purchaseOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
+    where: { winningBidder: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        winningBid {
+          amount
+          bidder {
+            ...BasicMembershipFields
+          }
+        }
+      }
+    }
+    totalCount
+  }
+
+  saleNftBoughtEventsConnection: nftBoughtEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        member {
+          ...BasicMembershipFields
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        price
+      }
+    }
+    totalCount
+  }
+
+  saleBidMadeCompletingAuctionEventsConnection: bidMadeCompletingAuctionEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        member {
+          ...BasicMembershipFields
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        price
+      }
+    }
+    totalCount
+  }
+
+  saleOpenAuctionBidAcceptedEventsConnection: openAuctionBidAcceptedEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        winningBid {
+          amount
+          bidder {
+            ...BasicMembershipFields
+          }
+        }
+      }
+    }
+    totalCount
+  }
+
+  # listings
+  englishAuctionStartedEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+  openAuctionStartedEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+  # buy now started
+  nftSellOrderMadeEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        price
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+
+  # withdrawal
+  auctionBidCanceledEventsConnection(
+    where: { member: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        member {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+
+  # cancellings
+  buyNowCanceledEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+  auctionCanceledEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+  # update price event
+  buyNowPriceUpdatedEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        newPrice
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+  # minted
+  nftIssuedEventsConnection(where: { ownerMember: { id_eq: $memberId } }, first: $limit, orderBy: [createdAt_DESC]) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+        ownerMember {
+          ...BasicMembershipFields
+        }
+      }
+    }
+    totalCount
+  }
+}

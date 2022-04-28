@@ -78,7 +78,7 @@ export const EditMembershipView: React.FC = () => {
           proxyCallback(updateStatus)
         )
       },
-      successMessage: {
+      snackbarSuccessMessage: {
         title: 'Member successfully updated',
         description: 'Lorem ipsum',
       },

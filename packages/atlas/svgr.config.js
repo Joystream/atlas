@@ -14,6 +14,7 @@ module.exports = {
         params: {
           overrides: {
             removeViewBox: false,
+            cleanupIDs: false, // Figma already assigns unique ID for every SVG. With this option enabled, the IDs are no longer globally unique
           },
         },
       },

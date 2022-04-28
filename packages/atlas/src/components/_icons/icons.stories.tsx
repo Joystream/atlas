@@ -16,7 +16,7 @@ const Template: Story = () => (
     {Object.entries(icons).map(([iconName, Component]) => {
       return (
         <Item key={iconName}>
-          <Component width="48px" height="48px" />
+          <Component />
           <Text secondary variant="t100">
             {iconName}
           </Text>

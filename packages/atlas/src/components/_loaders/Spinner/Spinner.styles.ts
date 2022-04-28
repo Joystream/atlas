@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { oldColors, sizes } from '@/styles'
 
-import { SpinnerSize } from './Spinner'
+export type SpinnerSize = 'large' | 'medium' | 'small'
 
 type SpinnerWrapperProps = {
   size: SpinnerSize

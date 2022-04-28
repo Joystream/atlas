@@ -10,7 +10,6 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { SvgControlsCancel } from '@/components/_icons'
 import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -81,7 +80,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)
   const [coverHashPromise, setCoverHashPromise] = useState<Promise<string> | null>(null)
 
-  const { activeMemberId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
+  const { activeMemberId, activeAccountId, activeChannelId, setActiveUser, refetchActiveMembership } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { displaySnackbar } = useSnackbar()
@@ -223,7 +222,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
   }
 
   const submit = async (data: Inputs) => {
-    if (!joystream || !activeMemberId) {
+    if (!joystream || !activeMemberId || !activeAccountId) {
       return
     }
 
@@ -234,6 +233,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       ...(dirtyFields.description ? { description: data.description?.trim() ?? '' } : {}),
       ...(dirtyFields.language || newChannel ? { language: data.language } : {}),
       ...(dirtyFields.isPublic || newChannel ? { isPublic: data.isPublic } : {}),
+      ownerAccount: activeAccountId,
     }
 
     const assets: ChannelInputAssets = {}
@@ -330,12 +330,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               await joystream.extrinsics
             ).updateChannel(activeChannelId ?? '', activeMemberId, metadata, assets, proxyCallback(updateStatus)),
       onTxSync: refetchDataAndUploadAssets,
-      successMessage: {
-        title: newChannel ? 'Channel successfully created!' : 'Channel successfully updated!',
-        description: newChannel
-          ? 'Your channel was created and saved on the blockchain. Feel free to start using it!'
-          : 'Changes to your channel were saved on the blockchain.',
-      },
     })
 
     if (completed && newChannel) {
@@ -525,8 +519,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               ) : null}
               <ActionBar
                 primaryText="Fee: 0 Joy"
+                variant={newChannel ? 'new' : 'edit'}
                 secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
-                isEdit={!newChannel}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
@@ -551,7 +545,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
                   text: 'Cancel',
                   onClick: () => reset(),
-                  icon: <SvgControlsCancel width={16} height={16} />,
                 }}
               />
             </ActionBarTransactionWrapper>

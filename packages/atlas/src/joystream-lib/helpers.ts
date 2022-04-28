@@ -1,15 +1,24 @@
 import { DataObjectId } from '@joystream/types/augment-codec/all'
-import { Hash } from '@joystream/types/common'
-import { StorageAssets } from '@joystream/types/content'
+import { Balance, BlockNumber, Hash, MemberId as RuntimeMemberId } from '@joystream/types/common'
+import {
+  EnglishAuctionParams,
+  InitTransactionalStatus,
+  NftIssuanceParameters,
+  OpenAuctionParams,
+  Royalty,
+  StorageAssets,
+} from '@joystream/types/content'
 import { DataObjectCreationParameters } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { Bytes, GenericEvent, Vec, u128 } from '@polkadot/types'
+import { BTreeSet, Bytes, GenericEvent, Option, Vec, u128 } from '@polkadot/types'
 import { DispatchError, Event, EventRecord } from '@polkadot/types/interfaces/system'
 import { Registry } from '@polkadot/types/types'
 
 import { SentryLogger } from '@/utils/logs'
 
+import { NFT_DEFAULT_BID_LOCK_DURATION, NFT_DEFAULT_EXTENSION_PERIOD } from './config'
+import { JoystreamLibError } from './errors'
 import {
   ChannelAssets,
   ChannelAssetsIds,
@@ -19,11 +28,16 @@ import {
   ExtractVideoResultsAssetsIdsFn,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
+  NftAuctionInputMetadata,
+  NftEnglishAuctionInputMetadata,
+  NftIssuanceInputMetadata,
+  NftOpenAuctionInputMetadata,
   VideoAssets,
   VideoAssetsIds,
   VideoInputAssets,
-} from './'
-import { JoystreamLibError } from './errors'
+} from './types'
+
+export const NFT_PERBILL_PERCENT = 10_000_000
 
 export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMetadata: DataObjectMetadata[]) => {
   if (!dataObjectsMetadata.length) {
@@ -52,17 +66,11 @@ export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventReco
   for (const event of systemEvents) {
     if (event.method === 'ExtrinsicFailed') {
       const errorMsg = extractExtrinsicErrorMsg(registry, event)
-      if (errorMsg.includes('VoucherSizeLimitExceeded')) {
-        throw new JoystreamLibError({
-          name: 'VoucherLimitError',
-          message: errorMsg,
-        })
-      } else {
-        throw new JoystreamLibError({
-          name: 'FailedError',
-          message: errorMsg,
-        })
-      }
+
+      throw new JoystreamLibError({
+        name: 'FailedError',
+        message: errorMsg,
+      })
     } else if (event.method === 'ExtrinsicSuccess') {
       return events
     } else {
@@ -103,22 +111,36 @@ export const sendExtrinsicAndParseEvents = (
   tx: SubmittableExtrinsic<'promise'>,
   accountId: string,
   registry: Registry,
+  endpoint: string,
   cb?: ExtrinsicStatusCallbackFn
 ) =>
   new Promise<RawExtrinsicResult>((resolve, reject) => {
     let unsub: () => void
+    let transactionInfo: string
     tx.signAndSend(accountId, (result) => {
       const { status, isError, events: rawEvents } = result
 
       if (isError) {
         unsub()
 
+        SentryLogger.error(`Transaction error: ${transactionInfo}`, 'JoystreamJs', 'error')
         reject(new JoystreamLibError({ name: 'UnknownError', message: 'Unknown extrinsic error!' }))
         return
       }
 
+      if (status.isInBlock) {
+        const hash = status.asInBlock.toString()
+        transactionInfo = [
+          rawEvents.map((event) => event.event.method).join(', '),
+          `on network: ${endpoint}`,
+          `in block: ${hash}`,
+          `more details at: https://polkadot.js.org/apps/?rpc=${endpoint}#/explorer/query/${hash}`,
+        ].join('\n')
+      }
+
       if (status.isFinalized) {
         unsub()
+        SentryLogger.message(`Successful transaction: ${transactionInfo}`, 'JoystreamJs', 'info')
 
         try {
           const events = parseExtrinsicEvents(registry, rawEvents)
@@ -199,4 +221,80 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
     }
     throw error
   }
+}
+
+const createCommonAuctionParams = (registry: Registry, inputMetadata: NftAuctionInputMetadata) => {
+  return {
+    starting_price: new Balance(registry, inputMetadata.startingPrice),
+    buy_now_price: new Option(registry, Balance, inputMetadata.buyNowPrice),
+    starts_at: new Option(registry, BlockNumber, inputMetadata.startsAtBlock),
+    whitelist: new BTreeSet(registry, RuntimeMemberId, inputMetadata.whitelistedMembersIds || []),
+  }
+}
+
+export const createNftOpenAuctionParams = (
+  registry: Registry,
+  inputMetadata: NftOpenAuctionInputMetadata
+): OpenAuctionParams => {
+  return new OpenAuctionParams(registry, {
+    ...createCommonAuctionParams(registry, inputMetadata),
+    bid_lock_duration: new BlockNumber(registry, inputMetadata.bidLockDuration ?? NFT_DEFAULT_BID_LOCK_DURATION),
+  })
+}
+
+export const createNftEnglishAuctionParams = (
+  registry: Registry,
+  inputMetadata: NftEnglishAuctionInputMetadata
+): EnglishAuctionParams => {
+  return new EnglishAuctionParams(registry, {
+    ...createCommonAuctionParams(registry, inputMetadata),
+    duration: new BlockNumber(registry, inputMetadata.auctionDurationBlocks),
+    min_bid_step: new Balance(registry, inputMetadata.minimalBidStep),
+    extension_period: new BlockNumber(registry, inputMetadata.extensionPeriodBlocks ?? NFT_DEFAULT_EXTENSION_PERIOD),
+  })
+}
+
+const createNftIssuanceTransactionalStatus = (
+  registry: Registry,
+  inputMetadata: NftIssuanceInputMetadata
+): InitTransactionalStatus => {
+  if (!inputMetadata.sale) {
+    return new InitTransactionalStatus(registry, { idle: null })
+  }
+
+  if (inputMetadata.sale.type === 'buyNow') {
+    return new InitTransactionalStatus(registry, { buyNow: new Balance(registry, inputMetadata.sale.buyNowPrice) })
+  } else if (inputMetadata.sale.type === 'open') {
+    return new InitTransactionalStatus(registry, {
+      OpenAuction: createNftOpenAuctionParams(registry, inputMetadata.sale),
+    })
+  } else if (inputMetadata.sale.type === 'english') {
+    return new InitTransactionalStatus(registry, {
+      EnglishAuction: createNftEnglishAuctionParams(registry, inputMetadata.sale),
+    })
+  } else {
+    throw new JoystreamLibError({ name: 'UnknownError', message: `Unknown sale type`, details: { inputMetadata } })
+  }
+}
+
+export const createNftIssuanceParameters = (
+  registry: Registry,
+  inputMetadata?: NftIssuanceInputMetadata
+): NftIssuanceParameters | null => {
+  if (!inputMetadata) {
+    return null
+  }
+
+  const initTransactionalStatus = createNftIssuanceTransactionalStatus(registry, inputMetadata)
+
+  return new NftIssuanceParameters(registry, {
+    nft_metadata: new Bytes(registry, '0x0'),
+    royalty: new Option(
+      registry,
+      Royalty,
+      inputMetadata.royalty ? inputMetadata.royalty * NFT_PERBILL_PERCENT : undefined
+    ),
+    init_transactional_status: initTransactionalStatus,
+    non_channel_owner: new Option(registry, RuntimeMemberId),
+  })
 }

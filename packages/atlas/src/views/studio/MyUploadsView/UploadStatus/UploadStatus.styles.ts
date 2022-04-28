@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { media, oldColors, sizes } from '@/styles'
 
-import { UploadStatusGroupSize } from '../UploadStatusGroup'
+export type UploadStatusGroupSize = 'large' | 'compact'
 
 type FileLineContainerProps = {
   isLast?: boolean

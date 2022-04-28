@@ -1,4 +1,4 @@
-const importIcons = require('./icons')
+const importIcons = require('./files')
 const config = require('./figma-import.config')
 
 const configTest = () => {
@@ -6,6 +6,7 @@ const configTest = () => {
   if (!config.hasOwnProperty('FIGMA_TOKEN')) missingFields.push('figmaToken')
   if (!config.hasOwnProperty('FILE_KEY')) missingFields.push('FILE_KEY')
   if (!config.hasOwnProperty('FRAME_WITH_ICONS_ID')) missingFields.push('FRAME_WITH_ICONS_ID')
+  if (!config.hasOwnProperty('FRAME_WITH_ILLUSTRATIONS_ID')) missingFields.push('FRAME_WITH_ILLUSTRATIONS_ID')
 
   if (missingFields.length) {
     throw new Error(

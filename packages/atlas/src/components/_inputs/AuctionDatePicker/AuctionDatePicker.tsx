@@ -1,39 +1,59 @@
 import styled from '@emotion/styled'
-import { addMonths, format } from 'date-fns'
-import { isValid } from 'date-fns/esm'
-import React, { useRef, useState } from 'react'
+import { format } from 'date-fns'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { SvgControlsCalendar } from '@/components/_icons'
 import { Popover, PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar } from '@/styles'
 
-import { Select, SelectProps } from '../Select'
+import { Select, SelectItem, SelectProps } from '../Select'
+
+export type AuctionDatePickerValue =
+  | {
+      type: 'date'
+      date: Date
+    }
+  | {
+      type: 'duration'
+      durationDays: number
+    }
+  | null
+
+export type PickDateValue = {
+  type: 'pick-date'
+}
+
+export type DefaultValue = {
+  type: 'default'
+}
+
+type AuctionDatePickerValueWithPickDate = AuctionDatePickerValue | PickDateValue | DefaultValue
 
 export type AuctionDatePickerProps = {
   minDate?: Date | null
-  value: string | null
-  onChange: (value: string | null) => void
-} & Omit<SelectProps, 'onChange'>
-
-const PICK_DATE = 'pick-date'
+  maxDate?: Date | null
+  value: AuctionDatePickerValue
+  onChange: (value: AuctionDatePickerValue) => void
+} & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
 
 export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   items,
   value,
   onChange,
   label,
-  minDate = new Date(),
+  minDate,
+  maxDate,
   ...rest
 }) => {
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
-
-  const pickDateItem = React.useMemo(
+  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
     () => ({
-      value: PICK_DATE,
+      value: { type: 'pick-date' },
       name: 'Pick specific date',
       menuName: 'Pick specific date',
       onClick: () => popOverRef.current?.show(),
@@ -41,52 +61,96 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     []
   )
 
-  const isPickDate = (!!value && !items.find((item) => item.value === value)) || value === PICK_DATE
+  const msTimestamp = useMsTimestamp()
 
-  const mappedItems = React.useMemo(
-    () =>
-      isPickDate && isValid(new Date(value))
-        ? [
-            ...items,
-            // selected date
-            {
-              value,
-              name: format(new Date(value), 'd MMM yyyy, HH:mm'),
-              hideInMenu: true,
-            },
+  const convertedItems = items.map((item) => {
+    if (item.value === null) {
+      return { value: { type: 'default' as const }, name: item.name }
+    }
+    return item
+  })
+
+  const [pickedValue, setPickedValue] = useState<AuctionDatePickerValueWithPickDate>(value)
+
+  useEffect(() => {
+    if (value === null) {
+      setPickedValue({ type: 'default' })
+    }
+  }, [value])
+
+  const isPickDate = pickedValue?.type === 'pick-date' || pickedValue?.type === 'date'
+
+  const mappedItems: SelectItem<AuctionDatePickerValueWithPickDate>[] = useMemo(() => {
+    return isPickDate && pickedValue.type === 'date'
+      ? [
+          ...convertedItems,
+          {
+            value,
+            name: format(new Date(pickedValue.date), 'd MMM yyyy, HH:mm'),
+            hideInMenu: true,
             pickDateItem,
-          ]
-        : [...items, pickDateItem],
-    [isPickDate, items, pickDateItem, value]
-  )
+          },
+          pickDateItem,
+        ]
+      : [...convertedItems, pickDateItem]
+  }, [isPickDate, convertedItems, pickDateItem, pickedValue, value])
+
+  const handleSelect = (value?: AuctionDatePickerValueWithPickDate) => {
+    if (!value) {
+      return
+    }
+    if (value.type !== 'default' && value.type !== 'pick-date') {
+      onChange(value)
+    } else {
+      onChange(null)
+    }
+    setPickedValue(value)
+  }
+
+  const handlePickDate = (date: Date | null) => {
+    if (!date) {
+      return
+    }
+    setPickedValue({ type: 'date', date })
+    onChange({ type: 'date', date })
+    setStartDate(date)
+  }
 
   return (
     <Container>
-      <Select
+      <Select<AuctionDatePickerValueWithPickDate>
         size="small"
         label={label}
         labelTextProps={{ variant: 'h100', color: cVar('colorTextMuted'), secondary: true }}
         iconLeft={isPickDate ? <SvgControlsCalendar /> : undefined}
-        value={value}
+        value={pickedValue || { type: 'default' }}
         items={mappedItems}
-        onChange={(value) => onChange(value ?? null)}
+        onChange={handleSelect}
         ref={selectRef}
         {...rest}
       />
-      <Popover offset={[0, 8]} ref={popOverRef} triggerMode="manual" triggerTarget={selectRef.current} trigger={null}>
+      <Popover
+        offset={[0, 8]}
+        ref={popOverRef}
+        triggerMode="manual"
+        triggerTarget={selectRef.current}
+        trigger={null}
+        onHide={() => {
+          if (pickedValue?.type === 'pick-date') {
+            setPickedValue(null)
+            onChange(null)
+          }
+        }}
+      >
         <DatePicker
           open
           inline
           selected={startDate}
-          onChange={(date) => {
-            if (date) {
-              setStartDate(date)
-              onChange?.(date?.toString())
-            }
-          }}
+          timeFormat="HH:mm"
+          onChange={handlePickDate}
           openToDate={minDate ?? undefined}
-          minDate={minDate} // TODO: value to be discussed
-          maxDate={addMonths(new Date(), 5)} // TODO: value to be discussed
+          minDate={minDate || new Date(msTimestamp)}
+          maxDate={maxDate}
           showDisabledMonthNavigation
           showTimeSelect
         />

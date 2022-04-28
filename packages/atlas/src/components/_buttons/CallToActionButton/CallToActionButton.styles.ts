@@ -4,9 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, media, oldColors, sizes, transitions } from '@/styles'
 
-import { ColorVariants } from './CallToActionButton'
-
-import { CallToActionButtonProps } from '.'
+export type ColorVariants = 'red' | 'green' | 'yellow' | 'blue' | 'lightBlue' | 'white'
 
 const mappedColors = {
   blue: cVar('colorCoreBlue500'),
@@ -49,9 +47,8 @@ export const ContentWrapper = styled.div`
   background-color: ${cVar('colorCoreNeutral800')};
   transition: all ${transitions.timings.regular} ${transitions.easing};
 `
-type StyledContainerProps = Omit<CallToActionButtonProps, 'label'>
 
-export const StyledContainer = styled('button', { shouldForwardProp: isPropValid })<StyledContainerProps>`
+export const StyledContainer = styled('button', { shouldForwardProp: isPropValid })<{ colorVariant: ColorVariants }>`
   display: block;
   width: 100%;
   align-items: center;

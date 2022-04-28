@@ -7,10 +7,15 @@ import { cVar, sizes } from '@/styles'
 export type IconWrapperProps = {
   size?: 'small' | 'medium' | 'large'
   icon: React.ReactNode
+  className?: string
 }
 
-export const IconWrapper: React.FC<IconWrapperProps> = ({ size = 'medium', icon }) => {
-  return <IconContainer size={size}>{icon}</IconContainer>
+export const IconWrapper: React.FC<IconWrapperProps> = ({ size = 'medium', icon, className }) => {
+  return (
+    <IconContainer className={className} size={size}>
+      {icon}
+    </IconContainer>
+  )
 }
 
 const getIconContainerPaddingStyles = ({ size }: IconContainerProps) => {

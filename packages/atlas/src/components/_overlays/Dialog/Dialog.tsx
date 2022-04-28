@@ -41,6 +41,8 @@ export type DialogProps = {
   children?: React.ReactNode
   as?: React.ElementType
   onSubmit?: (e?: FormEvent) => void
+  noContentPadding?: boolean
+  actionDivider?: boolean
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
@@ -64,6 +66,8 @@ export const Dialog: React.FC<DialogProps> = ({
   className,
   as,
   onSubmit,
+  noContentPadding,
+  actionDivider = false,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
@@ -87,7 +91,7 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content denseHeader={!!iconNode} data-scroll-lock-scrollable>
+      <Content denseHeader={!!iconNode} data-scroll-lock-scrollable noContentPadding={noContentPadding}>
         {description ? (
           <Text variant="t200" secondary>
             {description}
@@ -96,7 +100,7 @@ export const Dialog: React.FC<DialogProps> = ({
         {children}
       </Content>
       {hasFooter && (
-        <Footer dividers={dividers} hasAdditionalActions={!!additionalActionsNode}>
+        <Footer dividers={dividers || actionDivider} hasAdditionalActions={!!additionalActionsNode}>
           {additionalActionsNode}
           <FooterButtonsContainer>
             {secondaryButton && (

@@ -16,7 +16,7 @@ import {
   SeekBar,
   StyledTooltipText,
 } from './CustomTimeline.styles'
-import { PlayerState } from './VideoPlayer'
+import { PlayerState } from './utils'
 
 type CustomTimelineProps = {
   player?: VideoJsPlayer | null

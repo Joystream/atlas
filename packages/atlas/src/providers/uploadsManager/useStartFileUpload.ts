@@ -96,7 +96,7 @@ export const useStartFileUpload = () => {
         }
 
         if (!opts?.isReUpload && !opts?.changeHost && file) {
-          addAssetToUploads({ ...asset, size: file.size })
+          addAssetToUploads({ ...asset, size: file.size.toString() })
         }
 
         setAssetStatus({ lastStatus: 'inProgress', progress: 0 })

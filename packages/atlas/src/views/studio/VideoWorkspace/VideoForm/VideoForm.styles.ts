@@ -1,12 +1,14 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
+import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleArea } from '@/components/_inputs/TitleArea'
-import { media, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const RadioCardButtonsContainer = styled.div`
   display: grid;
@@ -47,7 +49,8 @@ export const InputsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: ${sizes(20)};
-  padding-bottom: ${sizes(12)};
+  padding-bottom: ${sizes(40)};
+
   ${media.md} {
     margin-top: 0;
   }
@@ -89,4 +92,28 @@ export const DeleteVideoButton = styled(Button)`
 
 export const ExtendedMarginFormField = styled(FormField)`
   margin-top: ${sizes(10)};
+`
+
+export const SwitchFormField = styled(FormField)`
+  padding: ${sizes(10)} 0;
+  border-top: 1px solid ${cVar('colorCoreNeutral700')};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+`
+
+export const SwitchNftWrapper = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 4px;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: ${sizes(4)};
+`
+
+export const VideoLink = styled(Link)`
+  color: ${cVar('colorCoreBlue300')};
+  text-decoration: none;
+`
+
+export const DescriptionTextArea = styled(TextArea)`
+  margin-top: ${({ disabled }) => (disabled ? sizes(10) : '')};
 `

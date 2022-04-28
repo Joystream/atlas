@@ -14,7 +14,7 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   indeterminate?: boolean
   error?: boolean
   className?: string
-  onChange?: (value: boolean) => void
+  onChange?: (value: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
   helperText?: string
 }
@@ -41,9 +41,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
 
-    const handleChange = () => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
-        onChange(!value)
+        onChange(!value, e)
       }
     }
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -64,14 +64,21 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     }
 
     return (
-      <RadioAndCheckboxBase disabled={disabled} label={label} error={error} helperText={helperText}>
+      <RadioAndCheckboxBase
+        disabled={disabled}
+        label={label}
+        error={error}
+        helperText={helperText}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >
         <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
           <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
             <Input
               name={name}
               ref={ref}
               type="checkbox"
-              data-multiple="false"
               checked={isSelected}
               disabled={disabled}
               onChange={handleChange}

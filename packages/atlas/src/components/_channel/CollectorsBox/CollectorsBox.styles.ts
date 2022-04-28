@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { cVar, sizes } from '@/styles'
 
@@ -37,4 +38,8 @@ export const PlusIconWrapper = styled.div<{ isHovered?: boolean }>`
   align-items: center;
   border-radius: 100%;
   background: ${cVar('colorBackgroundAlpha')};
+`
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
 `

@@ -1,23 +1,21 @@
 import { generateChannelMetaTags } from '@joystream/atlas-meta-server/src/tags'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-import { useChannel, useVideosConnection } from '@/api/hooks'
-import { SearchQuery, VideoFieldsFragment, VideoOrderByInput, useSearchLazyQuery } from '@/api/queries'
+import { useChannel, useChannelNftCollectors } from '@/api/hooks'
+import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
-import { Grid } from '@/components/Grid'
+import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
-import { Pagination } from '@/components/Pagination'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
-import { Collector, CollectorsBox } from '@/components/_channel/CollectorsBox'
-import { SvgActionCheck, SvgActionPlus, SvgActionSearch } from '@/components/_icons'
-import { Select } from '@/components/_inputs/Select'
-import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
+import { CollectorsBox } from '@/components/_channel/CollectorsBox'
+import { SvgActionCheck, SvgActionFilters, SvgActionPlus } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
-import { SORT_OPTIONS } from '@/config/sorting'
+import { NFT_SORT_OPTIONS, VIDEO_SORT_OPTIONS } from '@/config/sorting'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -28,35 +26,39 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatNumberShort } from '@/utils/number'
 
-import { ChannelAbout } from './ChannelAbout'
+import { ChannelSearch } from './ChannelSearch'
+import { useSearchVideos } from './ChannelView.hooks'
 import {
   CollectorsBoxContainer,
+  FilterButton,
   NotFoundChannelContainer,
-  PaginationContainer,
-  SearchButton,
-  SearchContainer,
-  SortContainer,
   StyledButton,
   StyledButtonContainer,
   StyledChannelLink,
+  StyledSelect,
   StyledTabs,
-  StyledTextField,
   SubTitle,
   SubTitleSkeletonLoader,
   TabsContainer,
+  TabsWrapper,
   Title,
   TitleContainer,
   TitleSection,
   TitleSkeletonLoader,
-  VideoSection,
 } from './ChannelView.styles'
+import { ChannelAbout, ChannelNfts, ChannelVideos } from './ChannelViewTabs'
+import { TABS } from './utils'
 
-const TABS = ['Videos', 'Information'] as const
-const INITIAL_FIRST = 50
-const INITIAL_VIDEOS_PER_ROW = 4
+export const INITIAL_TILES_PER_ROW = 4
+
 export const ChannelView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [tilesPerRow, setTilesPerRow] = useState(INITIAL_TILES_PER_ROW)
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
+  const videoRows = useVideoGridRows('main')
+  const navigate = useNavigate()
+
+  const tilesPerPage = videoRows * tilesPerRow
 
   // At mount set the tab from the search params
   // This hook has to come before useRedirectMigratedContent so it doesn't messes it's navigate call
@@ -70,23 +72,27 @@ export const ChannelView: React.FC = () => {
   })
 
   useRedirectMigratedContent({ type: 'channel' })
-  const videoRows = useVideoGridRows('main')
   const smMatch = useMediaMatch('sm')
   const { id } = useParams()
-  const { channel, loading, error } = useChannel(id ?? '', {
+  const {
+    channel,
+    loading,
+    error: channelError,
+  } = useChannel(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelView', error, { channel: { id } }),
   })
   const {
-    searchVideos,
+    foundVideos,
     loadingSearch,
     isSearchInputOpen,
     setIsSearchingInputOpen,
     isSearching,
     setIsSearching,
-    searchInputRef,
-    search,
-    errorSearch,
+    submitSearch,
+    searchError,
     searchQuery,
+    setSearchQuery,
+    searchedText,
   } = useSearchVideos({
     id: id ?? '',
     onError: (error) =>
@@ -94,46 +100,38 @@ export const ChannelView: React.FC = () => {
         search: { channelId: id, query: searchQuery },
       }),
   })
+  const { channelNftCollectors } = useChannelNftCollectors({ where: { channel: { id_eq: id } } })
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(id, channel?.title)
-  const [currentTab, setCurrentTab] = useState<typeof TABS[number] | null>(null)
-  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
-  const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
+  const [currentTab, setCurrentTab] = useState<typeof TABS[number]>(TABS[0])
+
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
   const { url: coverPhotoUrl } = useAsset(channel?.coverPhoto)
-  const { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage } = usePagination(0)
-  const {
-    edges,
-    totalCount,
-    loading: loadingVideos,
-    error: videosError,
-    fetchMore,
-    refetch,
-    variables,
-    pageInfo,
-  } = useVideosConnection(
-    {
-      first: INITIAL_FIRST,
-      orderBy: sortVideosBy,
-      where: {
-        channel: {
-          id_eq: id,
-        },
-        isPublic_eq: true,
-        isCensored_eq: false,
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
-      },
-    },
-    {
-      notifyOnNetworkStatusChange: true,
-      onError: (error) => SentryLogger.error('Failed to fetch videos', 'ChannelView', error, { channel: { id } }),
+
+  const [sortNftsBy, setSortNftsBy] = useState<OwnedNftOrderByInput>(OwnedNftOrderByInput.CreatedAtDesc)
+  const [sortVideosBy, setSortVideosBy] = useState<VideoOrderByInput>(VideoOrderByInput.CreatedAtDesc)
+
+  const handleVideoSorting = (value?: unknown) => {
+    if (value) {
+      setSortVideosBy(value as VideoOrderByInput)
     }
-  )
+  }
+  const handleNftSorting = (value?: unknown) => {
+    if (value) {
+      setSortNftsBy(value as OwnedNftOrderByInput)
+    }
+  }
+
+  const filtersBarLogic = useFiltersBar()
+  const {
+    filters: { setIsFiltersOpen, isFiltersOpen },
+    ownedNftWhereInput,
+    canClearFilters: { canClearAllFilters, clearAllFilters },
+  } = filtersBarLogic
+
+  const toggleFilters = () => {
+    setIsFiltersOpen((value) => !value)
+  }
 
   const channelMetaTags = useMemo(() => {
     if (!channel || !avatarPhotoUrl) return {}
@@ -144,94 +142,62 @@ export const ChannelView: React.FC = () => {
   const handleSetCurrentTab = async (tab: number) => {
     if (TABS[tab] === 'Videos' && isSearching) {
       setIsSearchingInputOpen(false)
-      searchInputRef.current?.blur()
     }
     setIsSearching(false)
-    setSearchParams({ 'tab': TABS[tab] }, { replace: true })
-  }
-  const handleSorting = (value?: unknown) => {
-    if (value) {
-      setSortVideosBy(value as VideoOrderByInput)
-      setCurrentPage(0)
-      refetch({ ...variables, orderBy: value as VideoOrderByInput | undefined })
-    }
-  }
-  const handleOnResizeGrid = (sizes: number[]) => setVideosPerRow(sizes.length)
-  const handleChangePage = (page: number) => {
-    if (isSearching) {
-      setCurrentSearchPage(page)
-    } else {
-      setCurrentPage(page)
-      if (!!edges && page * videosPerPage + videosPerPage > edges?.length && edges?.length < (totalCount ?? 0)) {
-        fetchMore({
-          variables: {
-            ...variables,
-            first: page * videosPerPage + videosPerPage * 3 - edges.length,
-            after: pageInfo?.endCursor,
-          },
-        })
-      }
-    }
+    setSearchQuery('')
+    setSearchParams({ tab: TABS[tab] }, { replace: true })
   }
 
-  const videosPerPage = videoRows * videosPerRow
+  const handleOnResizeGrid = (sizes: number[]) => setTilesPerRow(sizes.length)
 
-  const videos = (isSearching ? searchVideos : edges?.map((edge) => edge.node)) ?? []
-  const paginatedVideos = isSearching
-    ? videos.slice(currentSearchPage * videosPerPage, currentSearchPage * videosPerPage + videosPerPage)
-    : videos.slice(currentPage * videosPerPage, currentPage * videosPerPage + videosPerPage)
-
-  const placeholderItems = Array.from(
-    { length: loadingVideos || loadingSearch ? videosPerPage - (paginatedVideos ? paginatedVideos.length : 0) : 0 },
-    () => ({
-      id: undefined,
-    })
-  )
-
-  const videosWithPlaceholders = [...(paginatedVideos || []), ...placeholderItems]
   const mappedTabs = TABS.map((tab) => ({ name: tab, badgeNumber: 0 }))
-  const tabContent =
-    currentTab === 'Videos' ? (
-      <>
-        <VideoSection className={transitions.names.slide}>
-          {!videosWithPlaceholders.length && isSearching && (
-            <EmptyFallback title={`No videos matching "${searchQuery}" query found`} variant="small" />
-          )}
-          {!videosWithPlaceholders.length && !isSearching && (
-            <EmptyFallback title="No videos on this channel" variant="small" />
-          )}
-          <Grid maxColumns={null} onResize={handleOnResizeGrid}>
-            {videosWithPlaceholders.map((video, idx) => (
-              <VideoTileViewer key={idx} id={video.id} detailsVariant="withoutChannel" />
-            ))}
-          </Grid>
-        </VideoSection>
-        <PaginationContainer>
-          <Pagination
-            onChangePage={handleChangePage}
-            page={isSearching ? currentSearchPage : currentPage}
-            itemsPerPage={videosPerPage}
-            totalCount={isSearching ? searchVideos?.length : totalCount}
-            maxPaginationLinks={7}
+
+  const getChannelContent = (tab: typeof TABS[number]) => {
+    switch (tab) {
+      case 'Videos':
+        return (
+          <ChannelVideos
+            tilesPerPage={tilesPerPage}
+            onResize={handleOnResizeGrid}
+            isSearching={isSearching}
+            searchedText={searchedText}
+            channelId={id || ''}
+            foundVideos={foundVideos}
+            loadingSearch={loadingSearch}
+            sortVideosBy={sortVideosBy}
           />
-        </PaginationContainer>
-      </>
-    ) : (
-      <ChannelAbout />
-    )
+        )
+      case 'NFTs':
+        return (
+          <ChannelNfts
+            isFiltersApplied={canClearAllFilters}
+            tilesPerPage={tilesPerPage}
+            orderBy={sortNftsBy}
+            ownedNftWhereInput={ownedNftWhereInput}
+            onResize={handleOnResizeGrid}
+            channelId={id || ''}
+          />
+        )
+      case 'Information':
+        return <ChannelAbout channel={channel} />
+    }
+  }
 
   useEffect(() => {
     if (currentTabName) {
       setCurrentTab(currentTabName)
+      setIsFiltersOpen(false)
+      clearAllFilters()
     }
-  }, [currentTabName])
-
-  // TODO: replace with real NFT collector data
-  const collectors: Collector[] = []
-
-  if (videosError || error || errorSearch) {
-    return <ViewErrorFallback />
-  }
+  }, [clearAllFilters, currentTabName, setIsFiltersOpen])
+  const mappedChannelNftCollectors =
+    channelNftCollectors?.map(({ amount, member }) => ({
+      nftsAmount: amount,
+      url: member?.metadata.avatar?.__typename === 'AvatarUri' ? member?.metadata.avatar?.avatarUri : '',
+      tooltipText: member?.handle,
+      onClick: () => navigate(absoluteRoutes.viewer.member(member?.handle)),
+      memberUrl: absoluteRoutes.viewer.member(member?.handle),
+    })) || []
 
   if (!loading && !channel) {
     return (
@@ -248,6 +214,10 @@ export const ChannelView: React.FC = () => {
     )
   }
 
+  if (channelError || searchError) {
+    return <ViewErrorFallback />
+  }
+
   return (
     <ViewWrapper>
       {headTags}
@@ -255,7 +225,7 @@ export const ChannelView: React.FC = () => {
       <LimitedWidthContainer>
         {smMatch ? (
           <CollectorsBoxContainer>
-            {collectors.length > 0 && <CollectorsBox collectors={collectors} />}
+            {mappedChannelNftCollectors.length > 0 && <CollectorsBox collectors={mappedChannelNftCollectors} />}
           </CollectorsBoxContainer>
         ) : null}
         <TitleSection className={transitions.names.slide}>
@@ -264,7 +234,9 @@ export const ChannelView: React.FC = () => {
             {channel ? (
               <>
                 <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
-                <SubTitle variant="t300">{channel.follows ? formatNumberShort(channel.follows) : 0} Followers</SubTitle>
+                <SubTitle variant="t300" secondary>
+                  {channel.follows ? formatNumberShort(channel.follows) : 0} Followers
+                </SubTitle>
               </>
             ) : (
               <>
@@ -273,8 +245,8 @@ export const ChannelView: React.FC = () => {
               </>
             )}
           </TitleContainer>
-          {smMatch || collectors.length === 0 ? null : (
-            <CollectorsBox collectors={collectors} maxShowedCollectors={4} />
+          {smMatch || mappedChannelNftCollectors.length === 0 ? null : (
+            <CollectorsBox collectors={mappedChannelNftCollectors} maxShowedCollectors={4} />
           )}
           <StyledButtonContainer>
             <StyledButton
@@ -287,198 +259,56 @@ export const ChannelView: React.FC = () => {
             </StyledButton>
           </StyledButtonContainer>
         </TitleSection>
-        <TabsContainer>
-          <StyledTabs
-            selected={isSearching ? -1 : TABS.findIndex((x) => x === currentTab)}
-            initialIndex={0}
-            tabs={mappedTabs}
-            onSelectTab={handleSetCurrentTab}
-          />
-          {currentTab === 'Videos' && (
-            <Search
-              searchInputRef={searchInputRef}
-              isSearchInputOpen={isSearchInputOpen}
-              setIsSearchingInputOpen={setIsSearchingInputOpen}
-              setIsSearching={setIsSearching}
-              search={search}
-              isSearching={isSearching}
-              setCurrentTab={setCurrentTab}
+        <TabsWrapper isFiltersOpen={isFiltersOpen}>
+          <TabsContainer tab={currentTab}>
+            <StyledTabs
+              selected={TABS.findIndex((x) => x === currentTab)}
+              initialIndex={0}
+              tabs={mappedTabs}
+              onSelectTab={handleSetCurrentTab}
             />
-          )}
-          {currentTab === 'Videos' && (
-            <SortContainer>
-              <Select
-                size="small"
-                labelPosition="left"
-                disabled={isSearching}
-                value={!isSearching ? sortVideosBy : 0}
-                placeholder={isSearching ? 'Best match' : undefined}
-                items={!isSearching ? SORT_OPTIONS : []}
-                onChange={!isSearching ? handleSorting : undefined}
-              />
-            </SortContainer>
-          )}
-        </TabsContainer>
-        {tabContent}
+            {currentTab !== 'Information' && (
+              <>
+                {currentTab === 'Videos' && (
+                  <ChannelSearch
+                    isSearchInputOpen={isSearchInputOpen}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    setIsSearchingInputOpen={setIsSearchingInputOpen}
+                    setIsSearching={setIsSearching}
+                    submitSearch={submitSearch}
+                    isSearching={isSearching}
+                    setCurrentTab={setCurrentTab}
+                  />
+                )}
+                <StyledSelect
+                  size="small"
+                  labelPosition="left"
+                  disabled={isSearching}
+                  value={!isSearching ? (currentTab === 'Videos' ? sortVideosBy : sortNftsBy) : 0}
+                  placeholder={isSearching ? 'Best match' : undefined}
+                  items={!isSearching ? (currentTab === 'Videos' ? VIDEO_SORT_OPTIONS : NFT_SORT_OPTIONS) : []}
+                  onChange={
+                    !isSearching ? (currentTab === 'Videos' ? handleVideoSorting : handleNftSorting) : undefined
+                  }
+                />
+                {currentTab === 'NFTs' && (
+                  <FilterButton
+                    badge={canClearAllFilters}
+                    variant="secondary"
+                    icon={<SvgActionFilters />}
+                    onClick={toggleFilters}
+                  >
+                    {smMatch && 'Filters'}
+                  </FilterButton>
+                )}
+              </>
+            )}
+          </TabsContainer>
+          {currentTab === 'NFTs' && <FiltersBar {...filtersBarLogic} activeFilters={['nftStatus']} />}
+        </TabsWrapper>
+        {getChannelContent(currentTab)}
       </LimitedWidthContainer>
     </ViewWrapper>
-  )
-}
-
-const usePagination = (currentTab: number) => {
-  const [currentPage, setCurrentPage] = useState(0)
-  const [currentSearchPage, setCurrentSearchPage] = useState(0)
-  // reset the pagination when changing tabs
-  useEffect(() => {
-    setCurrentPage(0)
-    setCurrentSearchPage(0)
-  }, [currentTab])
-  return { currentPage, setCurrentPage, currentSearchPage, setCurrentSearchPage }
-}
-
-const getVideosFromSearch = (loading: boolean, data: SearchQuery['search'] | undefined) => {
-  if (loading || !data) {
-    return { channels: [], videos: [] }
-  }
-  const searchVideos: Array<{ __typename?: 'Video' } & VideoFieldsFragment> = data.flatMap((result) =>
-    result.item.__typename === 'Video' ? [result.item] : []
-  )
-  return { searchVideos }
-}
-type UseSearchVideosParams = {
-  id: string
-  onError: (error: unknown) => void
-}
-const useSearchVideos = ({ id, onError }: UseSearchVideosParams) => {
-  const [isSearchInputOpen, setIsSearchingInputOpen] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchVideo, { loading: loadingSearch, data: searchData, error: errorSearch }] = useSearchLazyQuery({
-    onError,
-  })
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const search = useCallback(
-    (searchQuery: string) => {
-      setSearchQuery(searchQuery)
-      searchVideo({
-        variables: {
-          text: searchQuery,
-          whereVideo: {
-            channel: {
-              id_eq: id,
-            },
-            isPublic_eq: true,
-            isCensored_eq: false,
-            thumbnailPhoto: {
-              isAccepted_eq: true,
-            },
-            media: {
-              isAccepted_eq: true,
-            },
-          },
-          limit: 100,
-        },
-      })
-    },
-    [id, searchVideo]
-  )
-
-  const { searchVideos } = useMemo(
-    () => getVideosFromSearch(loadingSearch, searchData?.search),
-    [loadingSearch, searchData]
-  )
-
-  return {
-    searchVideos,
-    search,
-    loadingSearch,
-    isSearchInputOpen,
-    setIsSearchingInputOpen,
-    errorSearch,
-    isSearching,
-    setIsSearching,
-    searchInputRef,
-    searchQuery,
-  }
-}
-
-type SearchProps = {
-  searchInputRef: React.RefObject<HTMLInputElement>
-  isSearchInputOpen: boolean
-  setIsSearchingInputOpen: (isOpen: boolean) => void
-  setIsSearching: (isOpen: boolean) => void
-  isSearching?: boolean
-  search: (searchQuery: string) => void
-  setCurrentTab: (tab: typeof TABS[number] | null) => void
-}
-const Search: React.FC<SearchProps> = ({
-  searchInputRef,
-  isSearchInputOpen,
-  setIsSearching,
-  isSearching,
-  search,
-  setIsSearchingInputOpen,
-  setCurrentTab,
-}) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const handleSearchInputKeyPress = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' || event.key === 'NumpadEnter') {
-        if (searchQuery.trim() === '') {
-          setSearchQuery('')
-          setIsSearching(false)
-          setCurrentTab('Videos')
-        } else {
-          search(searchQuery)
-          setIsSearching(true)
-        }
-      }
-      if (event.key === 'Escape' || event.key === 'Esc') {
-        setIsSearchingInputOpen(false)
-        searchInputRef.current?.blur()
-        setSearchQuery('')
-      }
-    },
-    [search, searchInputRef, searchQuery, setCurrentTab, setIsSearching, setIsSearchingInputOpen]
-  )
-
-  const toggleSearchInput = useCallback(() => {
-    if (isSearchInputOpen) {
-      setIsSearchingInputOpen(false)
-      searchInputRef.current?.blur()
-    } else {
-      setIsSearchingInputOpen(true)
-      searchInputRef.current?.focus()
-    }
-  }, [isSearchInputOpen, searchInputRef, setIsSearchingInputOpen])
-
-  useEffect(() => {
-    const onClickOutsideSearch = (event: Event) => {
-      if (!isSearching && isSearchInputOpen && searchInputRef.current !== event.target) {
-        toggleSearchInput()
-      }
-    }
-    window.addEventListener('click', onClickOutsideSearch)
-    return () => {
-      window.removeEventListener('click', onClickOutsideSearch)
-    }
-  }, [isSearching, isSearchInputOpen, searchInputRef, searchQuery, setIsSearchingInputOpen, toggleSearchInput])
-
-  return (
-    <SearchContainer isOpen={isSearchInputOpen}>
-      <StyledTextField
-        ref={searchInputRef}
-        isOpen={isSearchInputOpen}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={handleSearchInputKeyPress}
-        placeholder="Search"
-        type="search"
-        isSearching={isSearching}
-      />
-      <SearchButton onClick={toggleSearchInput} variant="tertiary" isSearching={isSearching} isOpen={isSearchInputOpen}>
-        <SvgActionSearch />
-      </SearchButton>
-    </SearchContainer>
   )
 }

@@ -2,23 +2,42 @@ import styled from '@emotion/styled'
 import React, { useCallback } from 'react'
 
 import { Text } from '@/components/Text'
-import { SvgSignUpDialogIllustration } from '@/components/_illustrations'
+import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/components/_illustrations'
 import { useConfirmationModal } from '@/providers/confirmationModal'
-import { media, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 const SignInDialogcontent = () => {
   return (
     <>
-      <StyledSvgSignUpDialogIllustration />
+      <IllustrationWrapper>
+        <StyledSvgLargeWall />
+        <StyledSvgOtherSignInDialogPatterns />
+      </IllustrationWrapper>
       <SignInDialogTextWrapper>
-        <Text variant="h500">Sign up to Joystream</Text>
+        <Text variant="h500">Sign in to continue</Text>
         <Text variant="t200" secondary>
-          To proceed you have to Sign up with PolkaDot extension.
+          Sign in to Joystream using Polkadot extension in order proceed.
         </Text>
       </SignInDialogTextWrapper>
     </>
   )
 }
+
+const IllustrationWrapper = styled.div`
+  position: relative;
+  height: 180px;
+  background-color: ${cVar('colorBackground')};
+  margin: calc(var(--local-size-dialog-padding) * -1) calc(var(--local-size-dialog-padding) * -1) ${sizes(6)}
+    calc(var(--local-size-dialog-padding) * -1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${media.sm} {
+    height: 270px;
+  }
+`
+
 const SignInDialogTextWrapper = styled.div`
   margin: 0 auto;
   max-width: 300px;
@@ -27,16 +46,30 @@ const SignInDialogTextWrapper = styled.div`
   grid-auto-rows: auto;
   grid-gap: ${sizes(2)};
 `
-const StyledSvgSignUpDialogIllustration = styled(SvgSignUpDialogIllustration)`
+
+const StyledSvgLargeWall = styled(SvgLargeWall)`
   max-width: 256px;
-  max-height: 210px;
+  max-height: 256px;
   display: block;
   margin: 0 auto;
-  ${media.xs} {
-    max-width: 100%;
-    max-height: 100%;
+  position: relative;
+  z-index: 1;
+
+  ${media.sm} {
+    max-width: 320px;
+    max-height: 320px;
   }
 `
+
+const StyledSvgOtherSignInDialogPatterns = styled(SvgOtherSignInDialogPatterns)`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  max-width: 100%;
+`
+
 type OpenSignInDialogArgs = {
   onCancel?: () => void
   onConfirm?: () => void

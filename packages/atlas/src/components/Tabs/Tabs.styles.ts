@@ -3,6 +3,8 @@ import styled from '@emotion/styled'
 import { smallBadgeStyles } from '@/components/Badge'
 import { cVar, oldColors, sizes, zIndex } from '@/styles'
 
+import { Pill } from '../Pill'
+
 type TabProps = {
   selected: boolean
 }
@@ -69,4 +71,8 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
   z-index: ${zIndex.overlay};
   background-image: linear-gradient(${(props) => (props.direction === 'prev' ? 270 : 90)}deg, transparent, black);
   pointer-events: none;
+`
+
+export const StyledPill = styled(Pill)`
+  margin-left: ${sizes(2)};
 `

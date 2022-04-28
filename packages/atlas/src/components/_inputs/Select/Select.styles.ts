@@ -5,8 +5,9 @@ import { Pill } from '@/components/Pill'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
 
-import { SelectSizes } from '.'
 import { LabelText } from '../InputBase'
+
+export type SelectSizes = 'regular' | 'small'
 
 type SelectWrapperProps = {
   labelPosition?: 'top' | 'left'

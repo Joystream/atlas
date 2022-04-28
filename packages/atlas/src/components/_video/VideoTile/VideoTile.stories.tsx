@@ -9,12 +9,12 @@ import {
   SvgActionCopy,
   SvgActionDraft,
   SvgActionEdit,
-  SvgActionJoyToken,
   SvgActionPlay,
   SvgActionTrash,
   SvgIllustrativeEdit,
   SvgIllustrativePlay,
 } from '@/components/_icons'
+import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
@@ -60,7 +60,7 @@ export default {
                 variant: 'overlay',
               },
               {
-                icon: <SvgActionJoyToken />,
+                icon: <JoyTokenIcon size={16} variant="regular" />,
                 label: '24K tJOY',
                 variant: 'overlay',
               },
@@ -162,8 +162,11 @@ export const Publisher = Template.bind({})
 Publisher.args = {
   slots: {
     topLeft: {
-      element: <OwnerPill avatar="https://thispersondoesnotexist.com/image" handle="thishandledoesntexists" />,
+      element: (
+        <OwnerPill avatar={{ assetUrl: 'https://thispersondoesnotexist.com/image' }} handle="thishandledoesntexists" />
+      ),
       clickable: true,
+      halfWidth: true,
     },
     bottomRight: {
       element: <Pill variant="overlay" label="30:12" />,

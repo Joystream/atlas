@@ -124,3 +124,16 @@ query GetPopularChannels($where: ChannelWhereInput) {
     ...BasicChannelFields
   }
 }
+
+query GetChannelNftCollectors(
+  $where: ChannelNftCollectorsWhereInput
+  $orderBy: [ChannelNftCollectorsOrderByInput!] = [amount_DESC]
+) {
+  channelNftCollectors(where: $where, orderBy: $orderBy) {
+    id
+    member {
+      ...BasicMembershipFields
+    }
+    amount
+  }
+}
