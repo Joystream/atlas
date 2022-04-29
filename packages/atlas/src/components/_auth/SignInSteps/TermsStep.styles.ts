@@ -1,13 +1,11 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { oldColors, sizes } from '@/styles'
 
 export const TermsBox = styled.div`
   scroll-behavior: smooth;
   text-align: left;
-  margin-bottom: ${sizes(10)};
   position: relative;
   height: 300px;
   width: 100%;
@@ -15,7 +13,7 @@ export const TermsBox = styled.div`
   overflow: auto;
 `
 export const TextWrapper = styled.div`
-  margin: ${sizes(9)} ${sizes(36)} ${sizes(9)} ${sizes(8)};
+  margin: ${sizes(9)} ${sizes(9)} ${sizes(9)} ${sizes(8)};
 
   a {
     text-decoration: none;
@@ -31,12 +29,8 @@ export const TermsOverlay = styled.div`
   width: auto;
   background: linear-gradient(180deg, transparent 0%, ${oldColors.gray[800]} 100%);
 `
-export const ScrollButton = styled(IconButton)`
+export const ScrollButton = styled(Button)`
   position: absolute;
   right: ${sizes(6)};
   bottom: ${sizes(6)};
-`
-
-export const ContinueButton = styled(Button)`
-  margin-left: auto;
 `

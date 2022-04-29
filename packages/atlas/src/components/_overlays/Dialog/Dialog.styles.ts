@@ -2,16 +2,16 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
 
 type DividersProps = {
-  dividers: boolean
+  dividers?: boolean
 }
 
 type SizeProps = {
-  size: 'default' | 'compact'
+  size: DialogSize
 }
 
 type ContentProps = {
@@ -32,19 +32,20 @@ const getDialogPaddingVariableStyles = ({ size }: SizeProps) =>
         --local-size-dialog-padding: ${sizes(4)};
       `
 
-export const DialogContainer = styled.div<SizeProps>`
+export const DialogContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 480px;
-  max-width: 90vw;
-  max-height: 640px;
+  width: 100%;
   overflow: hidden;
-  background-color: ${oldColors.gray[700]};
-  ${getDialogPaddingVariableStyles};
+  background-color: ${cVar('colorBackgroundStrong')};
+  border-radius: ${cVar('radiusMedium')};
+  box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
+
+  ${getDialogPaddingVariableStyles}
 `
 
 const headerDividersStyles = css`
-  box-shadow: inset 0 -1px 0 0 ${oldColors.gray[600]};
+  box-shadow: ${cVar('effectDividersBottom')};
   padding-bottom: var(--local-size-dialog-padding);
 `
 
@@ -54,6 +55,16 @@ export const Header = styled.div<DividersProps>`
   justify-content: space-between;
   align-items: flex-start;
   padding: var(--local-size-dialog-padding) var(--local-size-dialog-padding) 0;
+
+  button:last-of-type {
+    margin-left: ${sizes(6)};
+  }
+
+  ${media.sm} {
+    button:last-of-type {
+      margin-left: ${sizes(10)};
+    }
+  }
 
   ${({ dividers }) => dividers && headerDividersStyles};
 `
@@ -81,25 +92,27 @@ const getDenseHeaderContentStyles = ({ denseHeader, noContentPadding }: ContentP
 export const Content = styled.div<ContentProps>`
   overflow-y: auto;
   overflow-x: hidden;
+  display: grid;
   padding: ${({ noContentPadding }) => !noContentPadding && 'var(--local-size-dialog-padding)'};
   ${getDenseHeaderContentStyles};
 `
 
 export const footerDividersStyles = css`
-  box-shadow: inset 0 1px 0 0 ${oldColors.gray[600]};
+  box-shadow: ${cVar('effectDividersTop')};
   padding-top: var(--local-size-dialog-padding);
 `
 
 type FooterProps = {
-  hasAdditionalActions: boolean
-  additionalActionsNodeMobilePosition: 'bottom' | 'top'
+  'data-has-additional-actions'?: boolean
+  additionalActionsNodeMobilePosition?: 'bottom' | 'top'
 } & DividersProps
 
 export const Footer = styled.div<FooterProps>`
+  width: 100%;
   padding: 0 var(--local-size-dialog-padding) var(--local-size-dialog-padding);
   display: flex;
   justify-content: space-between;
-  flex-direction: ${({ additionalActionsNodeMobilePosition }) =>
+  flex-direction: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 'column-reverse' : 'column'};
 
   ${({ dividers }) => dividers && footerDividersStyles};
@@ -108,12 +121,17 @@ export const Footer = styled.div<FooterProps>`
     flex-direction: row;
     align-items: center;
   }
+
+  &[data-has-additional-actions='false'],
+  &:not([data-has-additional-actions]) {
+    justify-content: end;
+  }
 `
 
-export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePosition: 'bottom' | 'top' }>`
-  margin-top: ${({ additionalActionsNodeMobilePosition }) =>
+export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePosition?: 'bottom' | 'top' }>`
+  margin-top: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'bottom' ? 0 : sizes(2)};
-  margin-bottom: ${({ additionalActionsNodeMobilePosition }) =>
+  margin-bottom: ${({ additionalActionsNodeMobilePosition = 'top' }) =>
     additionalActionsNodeMobilePosition === 'top' ? 0 : sizes(2)};
   display: flex;
   flex-direction: column-reverse;
@@ -129,6 +147,7 @@ export const FooterButtonsContainer = styled.div<{ additionalActionsNodeMobilePo
     grid-auto-columns: auto;
   }
 `
+
 export const StyledPrimaryButton = styled(Button)`
   margin-bottom: ${sizes(2)};
   ${media.sm} {

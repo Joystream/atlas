@@ -1,28 +1,24 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, oldColors, sizes } from '@/styles'
 
-import { Modal } from '../Modal'
+import { DialogModal } from '../DialogModal'
 
-export const StyledModal = styled(Modal)`
-  width: 690px;
-  background-color: ${oldColors.gray[700]};
-  display: flex;
-  flex-direction: column;
-  --local-size-stepper-padding: ${sizes(6)};
+export const StyledModal = styled(DialogModal)``
 
-  padding: var(--local-size-stepper-padding);
+export const dialogContentCss = css`
+  overflow-y: hidden;
 `
 
 export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid ${oldColors.gray[500]};
-  margin: 0 calc(-1 * var(--local-size-stepper-padding));
-  padding: 0 var(--local-size-stepper-padding) var(--local-size-stepper-padding);
+  box-shadow: ${cVar('effectDividersBottom')};
+  padding: var(--local-size-dialog-padding);
 
   hr {
     display: none;
@@ -33,7 +29,6 @@ export const StyledHeader = styled.div`
       height: 1px;
       border: none;
       background-color: ${oldColors.gray[400]};
-      margin: 0 ${sizes(4)};
       flex-shrink: 1;
     }
   }
@@ -41,14 +36,22 @@ export const StyledHeader = styled.div`
 
 export const StyledStepsInfoContainer = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
   justify-content: space-between;
   width: 100%;
 
+  button:last-of-type {
+    margin-left: ${sizes(6)};
+  }
+
   ${media.sm} {
     width: 100%;
-    grid-template-columns: repeat(6, auto);
     align-items: center;
+
+    button:last-of-type {
+      margin-left: ${sizes(10)};
+    }
   }
 `
 

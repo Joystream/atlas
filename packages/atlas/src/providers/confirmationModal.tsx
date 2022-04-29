@@ -57,15 +57,25 @@ export const useConfirmationModal = (modalProps?: DialogModalProps) => {
 
   const modalId = useRef(createId()).current
 
-  const _openModal = useCallback(
-    (args?: DialogModalProps) =>
-      openModal(modalId, ({ in: inAnimation }) => <DialogModal {...(args || modalProps)} show={inAnimation} />),
-    [modalProps, modalId, openModal]
-  )
-
   const _closeModal = useCallback(() => {
     closeModal(modalId)
   }, [closeModal, modalId])
+
+  const _openModal = useCallback(
+    (args?: DialogModalProps) =>
+      openModal(modalId, ({ in: inAnimation }) => {
+        const _args = args || modalProps
+        const handleClick = _args?.onExitClick
+          ? () => {
+              _args?.onExitClick?.()
+              _closeModal()
+            }
+          : undefined
+
+        return <DialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
+      }),
+    [openModal, modalId, modalProps, _closeModal]
+  )
 
   return [_openModal, _closeModal]
 }
