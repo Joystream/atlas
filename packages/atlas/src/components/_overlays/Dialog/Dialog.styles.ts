@@ -103,7 +103,7 @@ export const footerDividersStyles = css`
 `
 
 type FooterProps = {
-  'data-hasAdditionalActions'?: boolean
+  'data-hasadditionalactions'?: boolean
   additionalActionsNodeMobilePosition?: 'bottom' | 'top'
 } & DividersProps
 
@@ -122,8 +122,8 @@ export const Footer = styled.div<FooterProps>`
     align-items: center;
   }
 
-  &[data-hasAdditionalActions='false'],
-  &:not([data-hasAdditionalActions]) {
+  &[data-hasadditionalactions='false'],
+  &:not([data-hasadditionalactions]) {
     justify-content: end;
   }
 `
