@@ -1441,6 +1441,13 @@ export type AllBidFieldsFragment = {
   }
 }
 
+export type CommentReactionFieldsFragment = {
+  __typename?: 'CommentReaction'
+  id: string
+  createdAt: Date
+  reactionId: number
+}
+
 export type CommentFieldsFragment = {
   __typename?: 'Comment'
   id: string
@@ -1782,6 +1789,13 @@ export const AllBidFieldsFragmentDoc = gql`
   }
   ${BasicBidFieldsFragmentDoc}
 `
+export const CommentReactionFieldsFragmentDoc = gql`
+  fragment CommentReactionFields on CommentReaction {
+    id
+    createdAt
+    reactionId
+  }
+`
 export const CommentFieldsFragmentDoc = gql`
   fragment CommentFields on Comment {
     id
@@ -1791,9 +1805,7 @@ export const CommentFieldsFragmentDoc = gql`
     createdAt
     isEdited
     reactions {
-      id
-      createdAt
-      reactionId
+      ...CommentReactionFields
     }
     parentCommentId
     repliesCount
@@ -1804,4 +1816,5 @@ export const CommentFieldsFragmentDoc = gql`
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
+  ${CommentReactionFieldsFragmentDoc}
 `
