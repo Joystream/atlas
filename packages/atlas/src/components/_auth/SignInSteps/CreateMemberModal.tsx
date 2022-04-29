@@ -6,6 +6,7 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
@@ -16,7 +17,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { useUser } from '@/providers/user'
 import { SentryLogger } from '@/utils/logs'
 
-import { StyledAvatar, StyledButton, StyledDialogModal, Wrapper } from './CreateMemberModal.styles'
+import { StyledAvatar } from './CreateMemberModal.styles'
 
 import { CreateEditMemberInputs } from '../CreateEditMemberInputs'
 
@@ -142,20 +143,21 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
     return <ViewErrorFallback />
   }
   return (
-    <StyledDialogModal
+    <DialogModal
       title="Create a Joystream membership"
+      size="medium"
       show={show && accountSet && !isCreatingMembership}
       dividers
       as="form"
       onSubmit={handleCreateMember}
       onExitClick={handleExitClick}
-      additionalActionsNode={
-        <StyledButton disabled={nodeConnectionStatus !== 'connected' || !isValid} type="submit" size="large">
-          Create membership
-        </StyledButton>
-      }
+      primaryButton={{
+        text: 'Create membership',
+        disabled: nodeConnectionStatus !== 'connected' || !isValid,
+        type: 'submit',
+      }}
     >
-      <Wrapper>
+      <div>
         <Text variant="t200" secondary>
           Membership represents you as a member of the Joystream community - it's your on-chain identity. It lets you
           interact with the network - create a channel, publish content, issue and trade NFTs. It also lets you to
@@ -166,9 +168,9 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
           assetUrl={errors.avatar ? undefined : getValues('avatar')}
           hasAvatarUploadFailed={!!errors.avatar}
         />
-      </Wrapper>
+      </div>
       <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
-    </StyledDialogModal>
+    </DialogModal>
   )
 }
 

@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgControlsConnect } from '@/components/_icons'
+import { Footer, FooterButtonsContainer } from '@/components/_overlays/Dialog/Dialog.styles'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
@@ -16,7 +18,6 @@ import {
   IconGroup,
   OrderedStep,
   OrderedSteps,
-  StyledButton,
   StyledPolkadotIdenticon,
   StyledRadioButton,
   StyledSpinner,
@@ -68,32 +69,34 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
         timeout={parseInt(transitions.timings.routing)}
       >
         {!accountsWithNoMembership?.length ? (
-          <StyledStepWrapper>
-            <AccountStepImg />
-            <StepTitle variant="h500">Create blockchain account</StepTitle>
-            <SubTitle variant="t200" secondary>
-              Use the Polkadot extension to generate your personal keypair. Follow these instructions:
-            </SubTitle>
-            <OrderedSteps>
-              <OrderedStep secondary variant="t100" as="li">
-                Open the extension popup with the icon in your browser bar
-              </OrderedStep>
-              <OrderedStep secondary variant="t100" as="li">
-                Click the plus icon
-              </OrderedStep>
-              <OrderedStep secondary variant="t100" as="li">
-                Continue with instructions presented on the screen
-              </OrderedStep>
-            </OrderedSteps>
+          <>
+            <StyledStepWrapper>
+              <AccountStepImg />
+              <StepTitle variant="h500">Create blockchain account</StepTitle>
+              <SubTitle variant="t200" secondary>
+                Use the Polkadot extension to generate your personal keypair. Follow these instructions:
+              </SubTitle>
+              <OrderedSteps>
+                <OrderedStep secondary variant="t100" as="li">
+                  Open the extension popup with the icon in your browser bar
+                </OrderedStep>
+                <OrderedStep secondary variant="t100" as="li">
+                  Click the plus icon
+                </OrderedStep>
+                <OrderedStep secondary variant="t100" as="li">
+                  Continue with instructions presented on the screen
+                </OrderedStep>
+              </OrderedSteps>
+            </StyledStepWrapper>
             <StepFooter>
               <BottomBarIcon />
               <Text variant="t200" secondary>
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
-          </StyledStepWrapper>
+          </>
         ) : (
-          <form onSubmit={handleSubmitSelectedAccount}>
+          <>
             <StepWrapper>
               <IconGroup>
                 <StyledPolkadotLogo />
@@ -115,13 +118,15 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
                   />
                 ))}
               </AccountsWrapper>
-              <StepFooter>
-                <StyledButton type="submit" disabled={!selectedAccountAddress}>
-                  Connect account
-                </StyledButton>
-              </StepFooter>
             </StepWrapper>
-          </form>
+            <Footer dividers>
+              <FooterButtonsContainer>
+                <Button type="submit" onClick={handleSubmitSelectedAccount} disabled={!selectedAccountAddress}>
+                  Connect account
+                </Button>
+              </FooterButtonsContainer>
+            </Footer>
+          </>
         )}
       </CSSTransition>
     </SwitchTransition>

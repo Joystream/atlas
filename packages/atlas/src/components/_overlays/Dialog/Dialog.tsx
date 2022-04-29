@@ -2,7 +2,6 @@ import React, { FormEvent } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionClose, SvgAlertsError32, SvgAlertsSuccess32, SvgAlertsWarning32 } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
@@ -18,7 +17,7 @@ import {
   StyledPrimaryButton,
 } from './Dialog.styles'
 
-type DialogButtonProps = {
+export type DialogButtonProps = {
   text: string
   disabled?: boolean
   onClick?: (e: React.MouseEvent) => void
@@ -37,13 +36,14 @@ export type DialogProps = {
   secondaryButton?: DialogButtonProps
   additionalActionsNode?: React.ReactNode
   additionalActionsNodeMobilePosition?: 'top' | 'bottom'
-  onExitClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  className?: string
+  onExitClick?: () => void
   children?: React.ReactNode
   as?: React.ElementType
   onSubmit?: (e?: FormEvent) => void
   noContentPadding?: boolean
   actionDivider?: boolean
+  className?: string
+  contentClassName?: string
 }
 
 const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
@@ -64,17 +64,18 @@ export const Dialog: React.FC<DialogProps> = ({
   additionalActionsNode,
   onExitClick,
   children,
-  className,
   as,
   onSubmit,
   noContentPadding,
   actionDivider = false,
   additionalActionsNodeMobilePosition = 'top',
+  className,
+  contentClassName,
 }) => {
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
-  const buttonProps: ButtonProps = { size: isCompact ? 'small' : !smMatch ? 'medium' : 'large' }
+  const buttonProps: ButtonProps = { size: isCompact ? 'small' : 'medium' }
 
   const iconNode = headerIcon || (iconType && TYPE_TO_ICON[iconType]) || null
 
@@ -84,16 +85,25 @@ export const Dialog: React.FC<DialogProps> = ({
         <Header dividers={dividers}>
           <HeaderContent>
             {iconNode ? <HeaderIconContainer>{iconNode}</HeaderIconContainer> : null}
-            <Text variant={isCompact ? 'h300' : !smMatch ? 'h400' : 'h500'}>{title}</Text>
+            <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
-            <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-              <SvgActionClose />
-            </IconButton>
+            <Button
+              iconOnly
+              icon={<SvgActionClose />}
+              aria-label="close modal"
+              onClick={onExitClick}
+              variant="tertiary"
+            />
           )}
         </Header>
       )}
-      <Content denseHeader={!!iconNode} data-scroll-lock-scrollable noContentPadding={noContentPadding}>
+      <Content
+        denseHeader={!!iconNode}
+        data-scroll-lock-scrollable
+        noContentPadding={noContentPadding}
+        className={contentClassName}
+      >
         {description ? (
           <Text variant="t200" secondary>
             {description}
@@ -104,7 +114,7 @@ export const Dialog: React.FC<DialogProps> = ({
       {hasFooter && (
         <Footer
           dividers={dividers || actionDivider}
-          hasAdditionalActions={!!additionalActionsNode}
+          data-has-additional-actions={!!additionalActionsNode}
           additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         >
           {additionalActionsNode}
