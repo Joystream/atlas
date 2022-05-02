@@ -29,8 +29,24 @@ export default {
   title: 'other/Tabs',
   component: Tabs,
   args: {
-    onSelectTab: () => null,
     underline: true,
+  },
+  argTypes: {
+    onSelectTab: {
+      table: { disable: true },
+    },
+    tabs: {
+      table: { disable: true },
+    },
+    initialIndex: {
+      table: { disable: true },
+    },
+    selected: {
+      table: { disable: true },
+    },
+    className: {
+      table: { disable: true },
+    },
   },
 } as Meta
 

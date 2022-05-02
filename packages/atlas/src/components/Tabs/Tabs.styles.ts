@@ -41,11 +41,6 @@ export const Tab = styled.div<TabProps>`
   padding: ${sizes(2.5)} ${sizes(4)} 0 ${sizes(4)};
   height: 56px;
   display: flex;
-  font: ${cVar('typographyDesktopT200')};
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  color: ${({ selected }) => (selected ? cVar('colorTextStrong') : cVar('colorText'))};
-  text-align: center;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorBackgroundPrimary')};` : 'none')};
   flex-shrink: 0;
 
@@ -72,7 +67,11 @@ export const BackgroundGradient = styled.div<BackgroundGradientProps>`
   right: ${(props) => (props.direction === 'next' ? 0 : 'auto')};
   width: 20%;
   z-index: ${zIndex.overlay};
-  background-image: linear-gradient(${(props) => (props.direction === 'prev' ? 270 : 90)}deg, transparent, black);
+  background-image: linear-gradient(
+    ${(props) => (props.direction === 'prev' ? 270 : 90)}deg,
+    rgb(0 0 0 / 0) 0%,
+    rgb(0 0 0 / 1) 45%
+  );
   pointer-events: none;
 `
 

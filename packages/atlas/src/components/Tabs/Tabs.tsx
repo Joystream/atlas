@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import useDraggableScroll from 'use-draggable-scroll'
 
+import { Text } from '@/components/Text'
 import { transitions } from '@/styles'
 
 import { BackgroundGradient, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
@@ -136,10 +137,15 @@ export const Tabs: React.FC<TabsProps> = React.memo(
               selected={selected === idx}
               ref={selected === idx ? tabRef : null}
             >
-              <span data-badge={tab.badgeNumber}>
+              <Text
+                secondary={selected !== idx}
+                variant={selected === idx ? 't200-strong' : 't200'}
+                align="center"
+                data-badge={tab.badgeNumber}
+              >
                 {tab.name}
                 {tab.pillText && <StyledPill size="small" label={tab.pillText} />}
-              </span>
+              </Text>
             </Tab>
           ))}
         </TabsGroup>
