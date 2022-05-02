@@ -41,19 +41,21 @@ export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': bool
     color: ${cVar('colorText')};
   }
 `
-export const Border = styled.div<{ 'data-show': boolean; 'data-processing': boolean }>`
+
+export const Border = styled.div<{ 'data-focused': boolean; 'data-processing': boolean }>`
   overflow-x: hidden;
   width: 100%;
   height: 1px;
   background-color: ${cVar('colorCoreNeutral800Lighten')};
   transition: ${cVar('animationTransitionFast')};
 
-  &[data-show='true'] {
+  &[data-focused='true'] {
     height: 2px;
-    background-color: ${cVar('colorBackgroundPrimary')};
+    background-color: ${cVar('colorBackgroundPrimary')} !important;
   }
 
   &[data-processing='true'] {
+    height: 2px;
     background-color: ${cVar('colorCoreNeutral700')};
 
     &::after {
@@ -70,7 +72,7 @@ export const Border = styled.div<{ 'data-show': boolean; 'data-processing': bool
   }
 `
 
-export const Container = styled.div<{ 'data-show': boolean; height: number }>`
+export const Container = styled.label<{ 'data-show': boolean; height: number }>`
   display: grid;
   justify-content: space-between;
   grid-template-columns: 1fr;
@@ -80,14 +82,13 @@ export const Container = styled.div<{ 'data-show': boolean; height: number }>`
   background-color: ${cVar('colorBackgroundMuted')};
   cursor: text;
   transition: height ${cVar('animationTransitionMedium')};
+  overflow: hidden;
 
   &:hover {
     ${StyledTextArea}::placeholder {
       color: ${cVar('colorText')};
     }
   }
-
-  overflow: hidden;
 
   &[data-show='true'] {
     /* expanded component default height - textarea initial height + current textarea height */
