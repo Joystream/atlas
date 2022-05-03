@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
