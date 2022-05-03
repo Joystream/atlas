@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { BorderWrapper } from '@/components/_buttons/ButtonBase/ButtonBase.styles'
+import { BorderWrapper } from '@/components/_buttons/Button/Button.styles'
 import { cVar, sizes } from '@/styles'
 
 export const sizeObj = { small: 'small', medium: 'medium' } as const

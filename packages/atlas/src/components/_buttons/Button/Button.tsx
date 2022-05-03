@@ -1,10 +1,34 @@
+import { To } from 'history'
 import React from 'react'
 
-import { TextVariant } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
+import { getLinkPropsFromTo } from '@/utils/button'
 
-import { ButtonIconWrapper, IconPlacement, StyledButtonBase, StyledText } from './Button.styles'
+import {
+  BorderWrapper,
+  ButtonBase,
+  ButtonBaseStyleProps,
+  ButtonIconWrapper,
+  ButtonSize,
+  IconPlacement,
+} from './Button.styles'
 
-import { ButtonBaseProps, ButtonSize } from '../ButtonBase'
+export type ButtonBaseProps = {
+  disabled?: boolean
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseMove?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseOut?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onAnimationEnd?: (e: React.AnimationEvent<HTMLButtonElement>) => void
+  to?: To
+  newTab?: boolean
+  type?: 'button' | 'submit'
+  children?: React.ReactNode
+  className?: string
+  tabIndex?: number
+  iconOnly?: boolean
+  textOnly?: boolean
+  size?: ButtonSize
+} & Partial<Pick<ButtonBaseStyleProps, 'variant' | 'fullWidth'>>
 
 export type ButtonProps = {
   icon?: React.ReactNode
@@ -20,39 +44,61 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ icon, children, size = 'medium', iconPlacement = 'left', variant, textOnly, badge, ...baseButtonProps }, ref) => {
+  (
+    {
+      icon,
+      children,
+      onClick,
+      to,
+      disabled,
+      type = 'button',
+      newTab,
+      size = 'medium',
+      iconPlacement = 'left',
+      variant = 'primary',
+      textOnly,
+      tabIndex,
+      badge,
+      ...baseButtonProps
+    },
+    ref
+  ) => {
     const iconOnly = !children
+    const linkProps = getLinkPropsFromTo(to, newTab)
     return (
-      <StyledButtonBase
+      <ButtonBase
         ref={ref}
-        size={size}
-        {...baseButtonProps}
-        textOnly={textOnly}
+        tabIndex={tabIndex}
+        type={to ? undefined : type}
+        onClick={onClick}
+        disabled={disabled}
+        aria-disabled={disabled}
         variant={variant}
-        iconOnly={iconOnly}
+        data-size={size}
+        data-icon-only={!!iconOnly}
+        data-text-only={!!textOnly}
         data-badge={badge}
+        {...linkProps}
+        {...baseButtonProps}
       >
-        {icon && iconPlacement === 'left' && (
-          <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>
-            {icon}
-          </ButtonIconWrapper>
-        )}
-        {children && (
-          <StyledText
-            variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]}
-            textColorVariant={variant || 'primary'}
-            textOnly={textOnly}
-            size={size}
-          >
-            {children}
-          </StyledText>
-        )}
-        {icon && iconPlacement === 'right' && (
-          <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>
-            {icon}
-          </ButtonIconWrapper>
-        )}
-      </StyledButtonBase>
+        <BorderWrapper data-icon-only={!!iconOnly} data-text-only={!!textOnly}>
+          {icon && iconPlacement === 'left' && (
+            <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>
+              {icon}
+            </ButtonIconWrapper>
+          )}
+          {children && (
+            <Text variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
+              {children}
+            </Text>
+          )}
+          {icon && iconPlacement === 'right' && (
+            <ButtonIconWrapper size={size} iconOnly={iconOnly} iconPlacement={iconPlacement}>
+              {icon}
+            </ButtonIconWrapper>
+          )}
+        </BorderWrapper>
+      </ButtonBase>
     )
   }
 )

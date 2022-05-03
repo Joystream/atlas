@@ -1,21 +1,14 @@
 import React, { ReactNode } from 'react'
 
-import { StyledButtonBase } from './IconButton.styles'
+import { Button, ButtonProps } from '../Button'
 
-import { ButtonBaseProps } from '../ButtonBase'
-
-export type IconButtonProps = Omit<ButtonBaseProps, 'textOnly'> & {
+export type IconButtonProps = Omit<ButtonProps, 'textOnly' | 'iconOnly' | 'icon'> & {
   children: ReactNode
 }
 
-// DEP Use normal Button component with IconOnly instad if possible
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ variant = 'primary', children, ...buttonBaseProps }, ref) => {
-    return (
-      <StyledButtonBase ref={ref} variant={variant} {...buttonBaseProps}>
-        {children}
-      </StyledButtonBase>
-    )
+  ({ variant = 'primary', children, ...buttonProps }, ref) => {
+    return <Button iconOnly icon={children} ref={ref} variant={variant} {...buttonProps} />
   }
 )
 IconButton.displayName = 'IconButton'
