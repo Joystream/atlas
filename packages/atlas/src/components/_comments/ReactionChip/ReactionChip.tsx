@@ -21,7 +21,7 @@ export type ReactionChipProps = {
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
   onReactionClick?: (type: ReactionId, reactionPopoverDismissed: boolean) => void
   onPopoverHide?: () => void
-  reactionPopoverDismissed: boolean
+  reactionPopoverDismissed?: boolean
 }
 
 export const REACTION_TYPE: Record<ReactionId, string> = {
@@ -47,7 +47,7 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
   count = 0,
   onReactionClick,
   onPopoverHide,
-  reactionPopoverDismissed,
+  reactionPopoverDismissed = false,
 }) => {
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isProcessing = state === 'processing'

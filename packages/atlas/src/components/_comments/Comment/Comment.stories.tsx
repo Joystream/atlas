@@ -14,7 +14,7 @@ export default {
     type: 'default',
     createdAt: new Date(1649761429792),
     reactions: [
-      { count: 320, reactionId: 1 },
+      { count: 320, reactionId: 1, reactionPopoverDismissed: false },
       { count: 500, reactionId: 2, active: true },
       { count: 100, reactionId: 3 },
     ],
