@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
+import { formatNumberShort } from '@/utils/number'
 
 import { EmojiContainer, ReactionChipButton } from './ReactionChip.styles'
 
@@ -30,6 +31,7 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
   count = 0,
   onReactionClick,
 }) => {
+  const isProcessing = state === 'processing'
   return (
     <ReactionChipButton
       state={state}
@@ -37,10 +39,8 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
       title={`${count} ${type}`}
       onClick={() => onReactionClick?.(type)}
     >
-      {state === 'processing' ? <Loader variant="xsmall" /> : <EmojiContainer>{REACTION_TYPE[type]} </EmojiContainer>}
-      <Text variant="t100" margin={{ left: 2 }}>
-        {count}
-      </Text>
+      <EmojiContainer>{REACTION_TYPE[type]} </EmojiContainer>
+      {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
     </ReactionChipButton>
   )
 }

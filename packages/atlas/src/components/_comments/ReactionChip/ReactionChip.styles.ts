@@ -51,6 +51,7 @@ export const ReactionChipButton = styled.button<ReactionChipButtonProps>`
 
 export const EmojiContainer = styled.span`
   display: flex;
+  margin-right: ${sizes(2)};
   justify-content: center;
   align-items: center;
   max-width: 16px;
