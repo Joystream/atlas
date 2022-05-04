@@ -67,9 +67,6 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   }
 
   const handleReact = (reactionPopoverDismissed: boolean) => {
-    if (isReacted) {
-      return
-    }
     if (!reactionPopoverDismissed) {
       onPopoverShow?.()
       return
@@ -77,8 +74,6 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
     setShouldRunAnimation(true)
     onReact?.()
   }
-
-  const dialogPopoverDisabled = reactionPopoverDismissed || isReacted
 
   return (
     <SwitchTransition>
@@ -96,7 +91,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
             additionalActionsNodeMobilePosition="bottom"
             onHide={onPopoverHide}
             dividers
-            disabled={dialogPopoverDisabled}
+            disabled={reactionPopoverDismissed}
             // TODO add proper link here
             additionalActionsNode={
               <Button variant="tertiary" size="small">
