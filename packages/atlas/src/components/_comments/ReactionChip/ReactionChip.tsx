@@ -2,33 +2,45 @@ import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
+import { pluralizeNoun } from '@/utils/misc'
 import { formatNumberShort } from '@/utils/number'
 
 import { EmojiContainer, ReactionChipButton } from './ReactionChip.styles'
 
-export type ReactionType = 'amusment' | 'love' | 'laugh' | 'shock' | 'anger'
+export type ReactionId = 1 | 2 | 3 | 4 | 5
+
+export type ReactionType = 'like' | 'love' | 'laugh' | 'shock' | 'anger'
 
 export type ReactionChipProps = {
+  customId?: string
   active?: boolean
   count?: number
-  type: ReactionType
+  reactionId: ReactionId
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick?: (type: ReactionType) => void
+  onReactionClick?: (type: ReactionId) => void
 }
 
-export const REACTION_TYPE: Record<ReactionType, string> = {
-  amusment: '👍 ',
-  love: '❤️',
-  laugh: '😂',
-  shock: '🤯',
-  anger: '😠',
+export const REACTION_TYPE: Record<ReactionId, string> = {
+  1: '👍 ',
+  2: '❤️',
+  3: '😂',
+  4: '🤯',
+  5: '😠',
+}
+
+export const reactionAccessibleName: Record<ReactionId, ReactionType> = {
+  1: 'like',
+  2: 'love',
+  3: 'laugh',
+  4: 'shock',
+  5: 'anger',
 }
 
 export const ReactionChip: React.FC<ReactionChipProps> = ({
   state = 'default',
   active = false,
-  type,
-  count = 0,
+  reactionId,
+  count,
   onReactionClick,
 }) => {
   const isProcessing = state === 'processing'
@@ -36,11 +48,11 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
     <ReactionChipButton
       state={state}
       active={active}
-      title={`${count} ${type}`}
-      onClick={() => onReactionClick?.(type)}
+      title={`${pluralizeNoun(count || 0, 'user')} reacted with ${reactionAccessibleName[reactionId]}`}
+      onClick={() => state === 'default' && onReactionClick?.(reactionId)}
     >
-      <EmojiContainer>{REACTION_TYPE[type]} </EmojiContainer>
-      {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
+      <EmojiContainer>{REACTION_TYPE[reactionId]} </EmojiContainer>
+      {state === 'processing' ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
     </ReactionChipButton>
   )
 }

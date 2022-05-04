@@ -26,14 +26,14 @@ import {
 
 import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
-import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionType } from '../ReactionChip'
+import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionId } from '../ReactionChip'
 import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
   memberHandle?: string
   createdAt?: Date
-  comment?: string
+  text?: string
   loading?: boolean
   isEdited?: boolean
   isAbleToEdit?: boolean
@@ -42,14 +42,14 @@ export type CommentProps = {
   onEditLabelClick?: () => void
   onEditClick?: () => void
   onDeleteClick?: () => void
-  onReactionClick?: (reaction: ReactionType) => void
+  onReactionClick?: (reaction: ReactionId) => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
   indented,
   highlighted,
   memberHandle,
-  comment,
+  text,
   createdAt,
   type,
   loading,
@@ -88,7 +88,8 @@ export const Comment: React.FC<CommentProps> = ({
   ]
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
-  const allReactionsApplied = reactions && reactions?.length >= Object.values(REACTION_TYPE).length
+  const allReactionsApplied =
+    reactions && reactions.filter((r) => r.count)?.length >= Object.values(REACTION_TYPE).length
 
   const getReactionState = useCallback(
     (state?: ReactionChipState): ReactionChipState | undefined => {
@@ -156,7 +157,7 @@ export const Comment: React.FC<CommentProps> = ({
                     <StyledSvgActionTrash /> Comment deleted by Author
                   </DeletedComment>
                 ) : (
-                  <CommentBody>{comment}</CommentBody>
+                  <CommentBody>{text}</CommentBody>
                 )}
               </div>
             )}
@@ -188,11 +189,10 @@ export const Comment: React.FC<CommentProps> = ({
             ) : (
               <CommentFooterItems>
                 {reactions &&
-                  reactions.length > 0 &&
-                  reactions.map(({ type, active, count, state }) => (
+                  reactions?.map(({ reactionId, active, count, state }) => (
                     <ReactionChip
-                      key={type}
-                      type={type}
+                      key={reactionId}
+                      reactionId={reactionId}
                       active={active}
                       count={count}
                       state={getReactionState(state)}
