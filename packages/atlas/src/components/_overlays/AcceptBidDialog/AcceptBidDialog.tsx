@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { DialogModal } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
 
 import { Bid } from './AcceptBidDialog.types'
 import { AcceptBidList } from './AcceptBidList'
@@ -43,7 +43,7 @@ export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({
   }
 
   return (
-    <DialogModal
+    <ConfirmationDialogModal
       title="Accept bid"
       show={isOpen}
       dividers
@@ -59,6 +59,6 @@ export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({
       }}
     >
       <AcceptBidList items={bids} onSelect={(value) => setSelectedBidder(value)} selectedBidder={selectedBidder} />
-    </DialogModal>
+    </ConfirmationDialogModal>
   )
 }

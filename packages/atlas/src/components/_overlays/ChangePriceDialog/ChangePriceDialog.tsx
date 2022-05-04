@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Pill } from '@/components/Pill'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { TextField } from '@/components/_inputs/TextField'
-import { DialogModal } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
 import { useTokenPrice } from '@/providers/joystream'
 import { sizes } from '@/styles'
 
@@ -29,7 +29,7 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
   }
 
   return (
-    <DialogModal
+    <ConfirmationDialogModal
       title="Change price"
       description="Change price for your existing item. New price must be lower than the current one. If you want to rise the price up, you have to remove this item from sale and then start a new sale."
       show={isOpen}
@@ -49,7 +49,7 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
         nodeStart={<JoyTokenIcon size={24} variant="silver" />}
         nodeEnd={<Pill label={convertToUSD(price ?? 0)} />}
       />
-    </DialogModal>
+    </ConfirmationDialogModal>
   )
 }
 

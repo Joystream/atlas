@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState }
 
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
-import { DialogModalProps } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModalProps } from '@/components/_overlays/ConfirmationDialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 import { validateImage } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
@@ -28,7 +28,7 @@ export type ImageCropModalProps = {
     imageCropData: ImageCropData
   ) => void
   onError?: (error: Error) => void
-} & Pick<DialogModalProps, 'onExitClick'>
+} & Pick<ConfirmationDialogModalProps, 'onExitClick'>
 
 export type ImageCropModalImperativeHandle = {
   open: (file?: File | Blob, cropData?: ImageCropData) => void

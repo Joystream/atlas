@@ -45,7 +45,8 @@ const StudioLayout = () => {
     isLoading,
   } = useUser()
 
-  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
+  const { openConfirmationModal: openUnsupportedBrowserDialog, closeModal: closeUnsupportedBrowserDialog } =
+    useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 

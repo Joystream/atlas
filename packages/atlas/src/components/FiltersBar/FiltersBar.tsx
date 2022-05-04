@@ -9,7 +9,7 @@ import { SvgActionClose } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select } from '@/components/_inputs/Select'
-import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModal, ConfirmationDialogModalProps } from '@/components/_overlays/ConfirmationDialogModal'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { languages } from '@/config/languages'
@@ -568,14 +568,14 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   )
 }
 
-const MobileFilterDialog: React.FC<{ content: React.ReactNode } & DialogModalProps> = ({
+const MobileFilterDialog: React.FC<{ content: React.ReactNode } & ConfirmationDialogModalProps> = ({
   content,
   ...dialogModalProps
 }) => {
   return (
-    <DialogModal {...dialogModalProps} dividers>
+    <ConfirmationDialogModal {...dialogModalProps} dividers>
       {content}
-    </DialogModal>
+    </ConfirmationDialogModal>
   )
 }
 

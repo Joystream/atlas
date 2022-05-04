@@ -46,7 +46,7 @@ const EXTENSION_TIMEOUT = 1500
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
+  const { openConfirmationModal: openLongLoadingModal, closeModal: closeLongLoadingModal } = useConfirmationModal()
   const activeUserState = useActiveUserStore((state) => state)
   const navigate = useNavigate()
   const unsubscribeRef = React.useRef<(() => void) | null>()

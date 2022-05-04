@@ -95,7 +95,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     noKeyboard: true,
   })
 
-  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
+  const { openConfirmationModal: openErrorDialog, closeModal: closeErrorDialog } = useConfirmationModal()
 
   useEffect(() => {
     if (!error) {

@@ -14,7 +14,7 @@ import {
   dialogContentCss,
 } from './StepperModal.styles'
 
-import { DialogModalProps } from '../DialogModal'
+import { ConfirmationDialogModalProps } from '../ConfirmationDialogModal'
 
 type Step = {
   title: string
@@ -25,7 +25,7 @@ type StepperModalProps = {
   steps: Step[]
   currentStepIdx?: number
   onExitClick?: () => void
-} & DialogModalProps
+} & ConfirmationDialogModalProps
 
 export const StepperModal: React.FC<StepperModalProps> = ({
   steps,

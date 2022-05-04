@@ -96,7 +96,7 @@ export const MyVideosView = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
-  const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
+  const { openConfirmationModal: openDeleteDraftDialog, closeModal: closeDeleteDraftDialog } = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]

@@ -6,7 +6,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger } from '@/utils/logs'
 
 export const useHandleFollowChannel = (id?: string, name?: string | null) => {
-  const [openUnfollowDialog, closeUnfollowDialog] = useConfirmationModal()
+  const { openConfirmationModal: openUnfollowDialog, closeModal: closeUnfollowDialog } = useConfirmationModal()
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const isFollowing = usePersonalDataStore((state) => state.followedChannels.some((channel) => channel.id === id))

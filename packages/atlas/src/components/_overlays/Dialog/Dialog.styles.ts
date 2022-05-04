@@ -80,6 +80,10 @@ export const HeaderIconContainer = styled.div`
   max-height: 32px;
   max-width: 32px;
   margin-bottom: ${sizes(4)};
+
+  ${media.sm} {
+    margin-bottom: ${sizes(6)};
+  }
 `
 
 const getDenseHeaderContentStyles = ({ denseHeader, noContentPadding }: ContentProps) =>

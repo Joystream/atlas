@@ -3,11 +3,10 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { DialogModal } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
 import { oldColors, sizes } from '@/styles'
 
-export const StyledDialogModal = styled(DialogModal)`
+export const StyledDialogModal = styled(ConfirmationDialogModal)`
   width: 536px;
 `
 
@@ -40,10 +39,6 @@ export const HiddenInput = styled.input`
 const cropAreaSizeCss = css`
   width: 100%;
   height: 256px;
-`
-
-export const CropSkeletonLoader = styled(SkeletonLoader)`
-  ${cropAreaSizeCss};
 `
 
 export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean }>`

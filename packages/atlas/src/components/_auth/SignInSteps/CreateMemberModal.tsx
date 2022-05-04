@@ -6,7 +6,7 @@ import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Loader } from '@/components/_loaders/Loader'
-import { DialogModal } from '@/components/_overlays/DialogModal'
+import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { FAUCET_URL } from '@/config/urls'
 import { useCreateEditMemberForm } from '@/hooks/useCreateEditMember'
@@ -40,14 +40,15 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
-  const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
-    headerIcon: <Loader variant="medium" />,
-    title: 'Creating membership...',
-    description:
-      "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
-  })
+  const { openConfirmationModal: openCreatingMemberDialog, closeModal: closeCreatingMemberDialog } =
+    useConfirmationModal({
+      headerIcon: <Loader variant="medium" />,
+      title: 'Creating membership...',
+      description:
+        "Please wait while your membership is being created. Our faucet server will create it for you so you don't need to worry about any fees. This should take about 15 seconds.",
+    })
   const [isCreatingMembership, setIsCreatingMembership] = useState(false)
-  const [openErrorDialog, closeErrorDialog] = useConfirmationModal()
+  const { openConfirmationModal: openErrorDialog, closeModal: closeErrorDialog } = useConfirmationModal()
   const { displaySnackbar } = useSnackbar()
 
   const { queryNodeState, error: queryNodeStateError } = useQueryNodeStateSubscription({ skip: !membershipBlock })
@@ -143,7 +144,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
     return <ViewErrorFallback />
   }
   return (
-    <DialogModal
+    <ConfirmationDialogModal
       title="Create a Joystream membership"
       size="medium"
       show={show && accountSet && !isCreatingMembership}
@@ -170,7 +171,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
         />
       </div>
       <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
-    </DialogModal>
+    </ConfirmationDialogModal>
   )
 }
 
