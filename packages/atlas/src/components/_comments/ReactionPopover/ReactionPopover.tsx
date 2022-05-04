@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlaceholder } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 import {
   EmojiContainer,
@@ -15,7 +16,7 @@ import {
 import { REACTION_TYPE, ReactionId } from '../ReactionChip'
 
 export type ReactionPopoverProps = {
-  onReactionClick?: (reaction: ReactionId) => void
+  onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
   disabled?: boolean
 }
 
@@ -40,13 +41,14 @@ const getTranslateNumber = (idx: number) => {
 export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick, disabled }) => {
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
     name: Number(key) as ReactionId,
     value,
   }))
 
   const handleReactionClick = (reaction: ReactionId) => {
-    onReactionClick?.(reaction)
+    onReactionClick?.(reaction, reactionPopoverDismissed)
     setIsOpen(false)
   }
   return (

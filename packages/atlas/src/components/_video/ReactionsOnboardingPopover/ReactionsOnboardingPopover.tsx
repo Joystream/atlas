@@ -18,10 +18,8 @@ type ReactionsOnboardingPopoverProps = {
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(
   ({ onDecline, disabled, onConfirm, trigger }, ref) => {
-    const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
 
-    const dialogPopoverDisabled = reactionPopoverDismissed || disabled
     return (
       <DialogPopover
         ref={ref}
@@ -29,7 +27,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         additionalActionsNodeMobilePosition="bottom"
         dividers
         onHide={onDecline}
-        disabled={dialogPopoverDisabled}
+        disabled={disabled}
         // TODO add proper link here
         additionalActionsNode={
           <Button variant="tertiary" size="small">

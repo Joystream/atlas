@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
@@ -21,6 +21,7 @@ import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useJoystream } from '@/providers/joystream'
+import { usePersonalDataStore } from '@/providers/personalData'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
@@ -30,6 +31,14 @@ import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from '.
 type CommentsSectionProps = {
   disabled?: boolean
   videoAuthorId?: string
+}
+
+type GetCommentReactionsArgs = {
+  commentId: string
+  reactions: CommentReactionFieldsFragment[]
+  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
+  activeMemberId: string | null
+  processingCommentReactionId: string | null
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, videoAuthorId }) => {
@@ -44,6 +53,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentBody, setCommentBody] = useState('')
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
+  const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
 
   const { comments, loading, refetch } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
@@ -68,6 +79,32 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
     return () => clearTimeout(timeout)
   })
+  const getCommentReactions = useCallback(
+    ({ commentId, reactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
+      const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
+        reactionId: Number(reactionId) as ReactionId,
+        customId: `${commentId}-${reactionId}`,
+        state: 'processing' as const,
+        count: 0,
+        reactionPopoverDismissed: activeMemberId ? reactionPopoverDismissed : true,
+        onPopoverHide: () => {
+          if (!reactionPopoverDismissed) {
+            setProcessingCommentReactionId(null)
+          }
+        },
+      }))
+
+      return defaultReactions.map((reaction) => {
+        return {
+          ...reaction,
+          state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
+          count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
+          active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
+        }
+      })
+    },
+    [reactionPopoverDismissed, processingCommentReactionId, activeMemberId]
+  )
 
   if (disabled) {
     return (
@@ -81,6 +118,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     if (!joystream || !activeMemberId || !id) {
       ConsoleLogger.error('no joystream or active member')
       openSignInDialog({ onConfirm: signIn })
+      return
+    }
+
+    if (!reactionPopoverDismissed) {
       return
     }
 
@@ -166,8 +207,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   createdAt={new Date(comment.createdAt)}
                   text={comment.text}
                   isEdited={comment.isEdited}
-                  onReactionClick={(reactionId) => {
-                    handleReaction(comment.id, reactionId)
+                  onReactionClick={(reactionId, reactionPopoverDismissed) => {
+                    handleReaction(comment.id, reactionId, reactionPopoverDismissed)
                   }}
                   isAbleToEdit={comment.author.id === activeMemberId}
                   memberHandle={comment.author.handle}
@@ -199,36 +240,4 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </DialogModal>
     </CommentsSectionWrapper>
   )
-}
-
-type GetCommentReactionsArgs = {
-  commentId: string
-  reactions: CommentReactionFieldsFragment[]
-  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
-  activeMemberId: string | null
-  processingCommentReactionId: string | null
-}
-
-const getCommentReactions = ({
-  commentId,
-  reactions,
-  reactionsCount,
-  activeMemberId,
-  processingCommentReactionId,
-}: GetCommentReactionsArgs): ReactionChipProps[] => {
-  const defaultReactions = Object.keys(REACTION_TYPE).map((reactionId) => ({
-    reactionId: Number(reactionId) as ReactionId,
-    customId: `${commentId}-${reactionId}`,
-    state: 'processing' as const,
-    count: 0,
-  }))
-
-  return defaultReactions.map((reaction) => {
-    return {
-      ...reaction,
-      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
-      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-      active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
-    }
-  })
 }

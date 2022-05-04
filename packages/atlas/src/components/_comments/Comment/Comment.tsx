@@ -42,7 +42,7 @@ export type CommentProps = {
   onEditLabelClick?: () => void
   onEditClick?: () => void
   onDeleteClick?: () => void
-  onReactionClick?: (reaction: ReactionId) => void
+  onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
@@ -189,8 +189,10 @@ export const Comment: React.FC<CommentProps> = ({
             ) : (
               <CommentFooterItems>
                 {reactions &&
-                  reactions?.map(({ reactionId, active, count, state }) => (
+                  reactions?.map(({ reactionId, active, count, state, reactionPopoverDismissed, onPopoverHide }) => (
                     <ReactionChip
+                      reactionPopoverDismissed={reactionPopoverDismissed}
+                      onPopoverHide={onPopoverHide}
                       key={reactionId}
                       reactionId={reactionId}
                       active={active}
