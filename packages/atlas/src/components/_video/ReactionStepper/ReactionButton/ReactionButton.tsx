@@ -1,12 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
-import { SvgThumbsUpIllustration } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -16,13 +13,13 @@ import { formatNumberShort } from '@/utils/number'
 
 import {
   LoadingWrapper,
-  PopoverContentWrapper,
-  PopoverIllustrationWrapper,
   ReactionSteppperState,
   ReactionsCounter,
   StyledSvgActionDislikeSolid,
   StyledSvgActionLikeSolid,
 } from './ReactionButton.styles'
+
+import { ReactionsOnboardingPopover } from '../../ReactionsOnboardingPopover'
 
 type ReactionButtonProps = {
   reactionsNumber?: number
@@ -43,12 +40,11 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   onPopoverHide,
   onPopoverShow,
 }) => {
-  const popoverRef = useRef<PopoverImperativeHandle>(null)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
   const [shouldRunAnimation, setShouldRunAnimation] = useState(false)
   const { activeMemberId, activeAccountId, signIn } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
+  const popoverRef = useRef<PopoverImperativeHandle>(null)
 
   const isLoading = state === 'loading'
   const isProcessing = state === 'processing' || isPopoverOpen
@@ -96,30 +92,16 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         {isLoading ? (
           <ReactionButtonLoader />
         ) : (
-          <DialogPopover
+          <ReactionsOnboardingPopover
             ref={popoverRef}
-            noContentPadding
-            additionalActionsNodeMobilePosition="bottom"
-            onHide={onPopoverHide}
-            dividers
             disabled={reactionPopoverDismissed || !authorized}
-            // TODO add proper link here
-            additionalActionsNode={
-              <Button variant="tertiary" size="small">
-                Learn more
-              </Button>
-            }
-            popoverWidth="wide"
-            primaryButton={{
-              text: 'Got it',
-              onClick: () => {
-                setReactionPopoverDismission(true)
-                handleReact(true)
-              },
+            onConfirm={() => {
+              // setReactionPopoverDismission(true)
+              handleReact(true)
             }}
-            secondaryButton={{
-              text: 'Cancel',
-              onClick: () => popoverRef.current?.hide(),
+            onDecline={() => {
+              onPopoverHide?.()
+              popoverRef.current?.hide()
             }}
             trigger={
               <Button
@@ -134,18 +116,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 </ReactionsCounter>
               </Button>
             }
-          >
-            <PopoverIllustrationWrapper>
-              <SvgThumbsUpIllustration />
-            </PopoverIllustrationWrapper>
-            <PopoverContentWrapper>
-              <Text variant="h300">We save social interactions on blockchain</Text>
-              <Text variant="t200" secondary margin={{ top: 2 }} as="p">
-                Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
-                effect. Transaction fees apply.
-              </Text>
-            </PopoverContentWrapper>
-          </DialogPopover>
+          />
         )}
       </CSSTransition>
     </SwitchTransition>
