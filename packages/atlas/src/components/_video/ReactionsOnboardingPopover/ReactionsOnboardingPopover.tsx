@@ -28,6 +28,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         noContentPadding
         additionalActionsNodeMobilePosition="bottom"
         dividers
+        onHide={onDecline}
         disabled={dialogPopoverDisabled}
         // TODO add proper link here
         additionalActionsNode={

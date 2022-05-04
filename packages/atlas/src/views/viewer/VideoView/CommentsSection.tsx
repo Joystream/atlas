@@ -44,7 +44,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentBody, setCommentBody] = useState('')
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
-  const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
   const { comments, loading, refetch } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
@@ -81,6 +80,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const handleCreate = (parentCommentId?: string) => {
     if (!joystream || !activeMemberId || !id) {
       ConsoleLogger.error('no joystream or active member')
+      openSignInDialog({ onConfirm: signIn })
       return
     }
 
@@ -167,7 +167,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   text={comment.text}
                   isEdited={comment.isEdited}
                   onReactionClick={(reactionId) => {
-                    setProcessingCommentReactionId(comment.id + `-` + reactionId.toString())
                     handleReaction(comment.id, reactionId)
                   }}
                   isAbleToEdit={comment.author.id === activeMemberId}
