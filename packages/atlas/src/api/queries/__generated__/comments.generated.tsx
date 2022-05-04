@@ -53,7 +53,19 @@ export type GetCommentsQuery = {
           | null
       }
     }
-    reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+    reactions: Array<{
+      __typename?: 'CommentReaction'
+      id: string
+      createdAt: Date
+      reactionId: number
+      member: { __typename?: 'Membership'; id: string }
+    }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
   }>
 }
@@ -112,7 +124,19 @@ export type GetCommentsConnectionQuery = {
               | null
           }
         }
-        reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+        reactionsCountByReactionId: Array<{
+          __typename?: 'CommentReactionsCountByReactionId'
+          id: string
+          count: number
+          reactionId: number
+        }>
+        reactions: Array<{
+          __typename?: 'CommentReaction'
+          id: string
+          createdAt: Date
+          reactionId: number
+          member: { __typename?: 'Membership'; id: string }
+        }>
         commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
       }
     }>

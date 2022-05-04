@@ -265,6 +265,15 @@ fragment CommentReactionFields on CommentReaction {
   id
   createdAt
   reactionId
+  member {
+    id
+  }
+}
+
+fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReactionId {
+  id
+  count
+  reactionId
 }
 
 fragment CommentFields on Comment {
@@ -274,6 +283,9 @@ fragment CommentFields on Comment {
   }
   createdAt
   isEdited
+  reactionsCountByReactionId {
+    ...CommentReactionsCountByReactionIdFields
+  }
   reactions {
     ...CommentReactionFields
   }
