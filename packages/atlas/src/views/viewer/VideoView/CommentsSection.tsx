@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
-import { CommentFieldsFragment, CommentOrderByInput } from '@/api/queries'
+import {
+  CommentFieldsFragment,
+  CommentOrderByInput,
+  CommentReactionFieldsFragment,
+  CommentReactionsCountByReactionIdFieldsFragment,
+} from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { CommentInput } from '@/components/_comments/CommentInput'
+import { REACTION_TYPE, ReactionChipProps, ReactionId } from '@/components/_comments/ReactionChip'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
@@ -35,9 +41,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const { activeMemberId, signIn, activeMembership } = useUser()
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const handleTransaction = useTransaction()
-  const { joystream, proxyCallback } = useJoystream()
   const [commentBody, setCommentBody] = useState('')
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
+  const { joystream, proxyCallback } = useJoystream()
+  const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
+
   const { comments, loading, refetch } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
     { skip: disabled || !id }
@@ -138,35 +146,48 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       <CommentWrapper>
         {loading
           ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
-          : comments?.map((comment, idx) => (
-              <Comment
-                highlighted={comment.id === highlightedComment}
-                key={`${comment.id}-${idx}`}
-                loading={!comment.id}
-                createdAt={new Date(comment.createdAt)}
-                comment={comment.text}
-                isEdited={comment.isEdited}
-                onEditLabelClick={() => {
-                  setShowEditHistory(true)
-                  setOriginalComment(comment)
-                }}
-                isAbleToEdit={comment.author.id === activeMemberId}
-                memberHandle={comment.author.handle}
-                memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
-                memberAvatarUrl={
-                  comment.author.metadata.avatar?.__typename === 'AvatarUri'
-                    ? comment.author.metadata.avatar?.avatarUri
-                    : undefined
-                }
-                type={
-                  ['DELETED', 'MODERATED'].includes(comment.status)
-                    ? 'deleted'
-                    : videoAuthorId === activeMemberId
-                    ? 'options'
-                    : 'default'
-                }
-              />
-            ))}
+          : comments?.map((comment, idx) => {
+              return (
+                <Comment
+                  key={`${comment.id}-${idx}`}
+                  highlighted={comment.id === highlightedComment}
+                  reactions={getCommentReactions({
+                    commentId: comment.id,
+                    reactions: comment.reactions,
+                    reactionsCount: comment.reactionsCountByReactionId,
+                    activeMemberId,
+                    processingCommentReactionId,
+                  })}
+                  onEditLabelClick={() => {
+                    setShowEditHistory(true)
+                    setOriginalComment(comment)
+                  }}
+                  loading={!comment.id}
+                  createdAt={new Date(comment.createdAt)}
+                  text={comment.text}
+                  isEdited={comment.isEdited}
+                  onReactionClick={(reactionId) => {
+                    setProcessingCommentReactionId(comment.id + `-` + reactionId.toString())
+                    handleReaction(comment.id, reactionId)
+                  }}
+                  isAbleToEdit={comment.author.id === activeMemberId}
+                  memberHandle={comment.author.handle}
+                  memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
+                  memberAvatarUrl={
+                    comment.author.metadata.avatar?.__typename === 'AvatarUri'
+                      ? comment.author.metadata.avatar?.avatarUri
+                      : undefined
+                  }
+                  type={
+                    ['DELETED', 'MODERATED'].includes(comment.status)
+                      ? 'deleted'
+                      : videoAuthorId === activeMemberId
+                      ? 'options'
+                      : 'default'
+                  }
+                />
+              )
+            })}
       </CommentWrapper>
       <DialogModal
         size="medium"
@@ -179,4 +200,36 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </DialogModal>
     </CommentsSectionWrapper>
   )
+}
+
+type GetCommentReactionsArgs = {
+  commentId: string
+  reactions: CommentReactionFieldsFragment[]
+  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
+  activeMemberId: string | null
+  processingCommentReactionId: string | null
+}
+
+const getCommentReactions = ({
+  commentId,
+  reactions,
+  reactionsCount,
+  activeMemberId,
+  processingCommentReactionId,
+}: GetCommentReactionsArgs): ReactionChipProps[] => {
+  const defaultReactions = Object.keys(REACTION_TYPE).map((reactionId) => ({
+    reactionId: Number(reactionId) as ReactionId,
+    customId: `${commentId}-${reactionId}`,
+    state: 'processing' as const,
+    count: 0,
+  }))
+
+  return defaultReactions.map((reaction) => {
+    return {
+      ...reaction,
+      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
+      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
+      active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
+    }
+  })
 }
