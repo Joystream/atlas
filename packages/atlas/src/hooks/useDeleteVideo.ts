@@ -56,7 +56,7 @@ export const useDeleteVideo = () => {
             closeDeleteVideoDialog()
           },
         },
-        iconType: 'warning',
+        type: 'warning',
       })
     },
     [closeDeleteVideoDialog, confirmDeleteVideo, openDeleteVideoDialog]

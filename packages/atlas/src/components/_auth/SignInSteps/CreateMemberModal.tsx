@@ -120,7 +120,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
       closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       openErrorDialog({
-        iconType: 'error',
+        type: 'destructive',
         title: 'Something went wrong...',
         description: `Some unexpected error was encountered. If this persists, our Discord community may be a good place to find some help. Error code: ${errorMessage}`,
         secondaryButton: {

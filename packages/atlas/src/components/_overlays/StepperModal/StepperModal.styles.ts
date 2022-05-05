@@ -5,10 +5,6 @@ import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
 import { cVar, media, oldColors, sizes } from '@/styles'
 
-import { DialogModal } from '../DialogModal'
-
-export const StyledModal = styled(DialogModal)``
-
 export const dialogContentCss = css`
   overflow-y: hidden;
 `

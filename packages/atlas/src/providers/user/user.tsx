@@ -99,7 +99,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
     const timeout = setTimeout(() => {
       openLongLoadingModal({
-        iconType: 'warning',
+        type: 'warning',
         title: 'Failed to connect with extension',
         description:
           "Seems you didn't enable the Polkadot extension and we cannot access your accounts. You can do that by clicking the extension icon in your browser toolbar. If you cannot do that, please reload the page and try again.",
