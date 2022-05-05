@@ -97,7 +97,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               />
             ))}
       </CommentWrapper>
-      <DialogModal title="Edit history" show={!!originalComment} dividers onExitClick={() => setOriginalComment(null)}>
+      <DialogModal
+        size="medium"
+        title="Edit history"
+        show={!!originalComment}
+        dividers
+        onExitClick={() => setOriginalComment(null)}
+      >
         <CommentEditHistory originalComment={originalComment} />
       </DialogModal>
     </CommentsSectionWrapper>
