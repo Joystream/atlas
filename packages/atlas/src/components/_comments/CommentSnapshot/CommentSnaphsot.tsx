@@ -10,6 +10,7 @@ import { formatDateTime } from '@/utils/time'
 
 import {
   AvatarWrapper,
+  CommentBody,
   CommentHeader,
   CommentHeaderDot,
   ContentWrapper,
@@ -41,10 +42,10 @@ export const CommentSnapshot: React.FC<CommentSnapshotProps> = ({
   return (
     <ContentWrapper>
       <AvatarWrapper>
-        {!last && <Line />}
         <Link to={memberUrl}>
           <Avatar assetUrl={memberAvatarUrl} size="small" loading={isMemberAvatarLoading} clickable />
         </Link>
+        {!last && <Line />}
       </AvatarWrapper>
       <SwitchTransition>
         <CSSTransition
@@ -69,9 +70,9 @@ export const CommentSnapshot: React.FC<CommentSnapshotProps> = ({
                   {createdAt && formatDateTime(createdAt)}
                 </Text>
               </CommentHeader>
-              <Text variant="t200" as="p" margin={{ top: 2 }}>
+              <CommentBody variant="t200" as="p" margin={{ top: 2 }}>
                 {text}
-              </Text>
+              </CommentBody>
             </section>
           )}
         </CSSTransition>

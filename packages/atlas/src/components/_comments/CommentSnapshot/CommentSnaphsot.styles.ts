@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { Text } from '@/components/Text'
 import { cVar, sizes, square } from '@/styles'
 
 export const GAP_BETWEEN_COMMENT_SNAPSHOTS = sizes(8, true)
+const AVATAR_HEIGHT = sizes(10, true)
 
 export const AvatarWrapper = styled.div`
   position: relative;
@@ -13,11 +15,11 @@ export const AvatarWrapper = styled.div`
 `
 
 export const Line = styled.div`
-  top: ${GAP_BETWEEN_COMMENT_SNAPSHOTS}px;
-  background-color: ${cVar('colorBorderMutedAlpha')};
   position: absolute;
+  top: ${AVATAR_HEIGHT}px;
+  background-color: ${cVar('colorBorderMutedAlpha')};
   width: 1px;
-  height: 100%;
+  height: calc(100% - (${AVATAR_HEIGHT}px - ${GAP_BETWEEN_COMMENT_SNAPSHOTS}px));
 `
 
 export const ContentWrapper = styled.div`
@@ -33,6 +35,9 @@ export const CommentHeader = styled.header`
 
   /* author, dot, date */
   grid-template-columns: repeat(3, auto);
+`
+export const CommentBody = styled(Text)`
+  white-space: pre;
 `
 
 export const CommentHeaderDot = styled.div`
