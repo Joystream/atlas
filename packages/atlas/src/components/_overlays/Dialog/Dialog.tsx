@@ -24,7 +24,6 @@ export type DialogButtonProps = {
 
 export type DialogProps = {
   title?: React.ReactNode
-  description?: React.ReactNode
   dividers?: boolean
   size?: DialogSize
   primaryButton?: DialogButtonProps
@@ -43,7 +42,6 @@ export type DialogProps = {
 
 export const Dialog: React.FC<DialogProps> = ({
   title,
-  description,
   dividers = false,
   size = 'default',
   primaryButton,
@@ -83,11 +81,6 @@ export const Dialog: React.FC<DialogProps> = ({
         </Header>
       )}
       <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
-        {description ? (
-          <Text variant="t200" secondary>
-            {description}
-          </Text>
-        ) : null}
         {children}
       </Content>
       {hasFooter && (

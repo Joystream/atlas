@@ -2,7 +2,12 @@ import React, { FormEvent } from 'react'
 
 import { Text } from '@/components/Text'
 import { ButtonProps } from '@/components/_buttons/Button'
-import { SvgAlertsInformative24, SvgAlertsInformative32 } from '@/components/_icons'
+import {
+  SvgAlertsInformative24,
+  SvgAlertsInformative32,
+  SvgAlertsWarning24,
+  SvgAlertsWarning32,
+} from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
 import { Modal, ModalProps } from '@/components/_overlays/Modal'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -44,7 +49,8 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
   ...dialogProps
 }) => {
   const smMatch = useMediaMatch('sm')
-  const primaryButtonColor = type === 'informative' ? 'primary' : type
+  const isInformative = type === 'informative'
+  const primaryButtonColor = isInformative ? 'primary' : type
 
   return (
     <Modal show={show} onExitClick={onExitClick}>
@@ -57,7 +63,17 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
           {headerIcon || (
             <HeaderIconContainer>
               <InformativeIconWrapper variant={type}>
-                {smMatch ? <SvgAlertsInformative32 /> : <SvgAlertsInformative24 />}
+                {smMatch ? (
+                  isInformative ? (
+                    <SvgAlertsInformative32 />
+                  ) : (
+                    <SvgAlertsWarning32 />
+                  )
+                ) : isInformative ? (
+                  <SvgAlertsInformative24 />
+                ) : (
+                  <SvgAlertsWarning24 />
+                )}
               </InformativeIconWrapper>
             </HeaderIconContainer>
           )}

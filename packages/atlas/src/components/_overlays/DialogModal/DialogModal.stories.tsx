@@ -18,7 +18,6 @@ export default {
     className: { table: { disable: true } },
     show: { table: { disable: true } },
     headerIcon: { table: { disable: true } },
-    description: { type: 'string' },
   },
   args: {
     title: 'There is an information of the utmost importance!',
@@ -27,7 +26,6 @@ export default {
     dividers: false,
     actionDivider: false,
     noContentPadding: false,
-    description: '',
   },
   decorators: [
     (Story) => (
