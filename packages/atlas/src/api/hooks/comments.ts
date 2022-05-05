@@ -7,6 +7,7 @@ import {
   GetCommentsQueryVariables,
   useGetCommentEditsQuery,
   useGetCommentsQuery,
+  useGetOriginalCommentQuery,
 } from '@/api/queries'
 
 export const useComments = (
@@ -25,10 +26,24 @@ export const useCommentEdits = (
   commentId?: string,
   opts?: QueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetCommentEditsQuery({ ...opts, variables: { commentId: commentId || '' } })
+  const { data: editedCommentsData, ...rest } = useGetCommentEditsQuery({
+    ...opts,
+    variables: { commentId: commentId || '' },
+  })
+  // we need to fetch the original comment separately.
+  const { data: originalCommentData, loading: originalCommentLoading } = useGetOriginalCommentQuery({
+    variables: { commentId: commentId || '' },
+  })
+
+  const originalComment = originalCommentData?.commentCreatedEvents.map((comment) => ({
+    ...comment,
+    newText: comment.text,
+  }))[0]
 
   return {
-    commentEdits: data?.commentTextUpdatedEvents,
+    commentEdits: editedCommentsData?.commentTextUpdatedEvents &&
+      originalComment && [originalComment, ...editedCommentsData.commentTextUpdatedEvents],
     ...rest,
+    loading: rest.loading || originalCommentLoading,
   }
 }

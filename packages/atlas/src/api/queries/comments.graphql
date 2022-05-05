@@ -37,3 +37,11 @@ query GetCommentEdits($commentId: ID!) {
     newText
   }
 }
+
+query GetOriginalComment($commentId: ID!) {
+  commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    text
+  }
+}
