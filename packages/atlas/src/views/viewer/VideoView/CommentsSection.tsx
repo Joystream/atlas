@@ -24,6 +24,7 @@ type CommentsSectionProps = {
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, videoAuthorId }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
+  const [showEditHistory, setShowEditHistory] = useState(false)
   const { id } = useParams()
   const { activeMemberId } = useUser()
   const { comments, loading } = useComments(
@@ -77,6 +78,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                 comment={comment.text}
                 isEdited={comment.isEdited}
                 onEditLabelClick={() => {
+                  setShowEditHistory(true)
                   setOriginalComment(comment)
                 }}
                 isAbleToEdit={comment.author.id === activeMemberId}
@@ -100,9 +102,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       <DialogModal
         size="medium"
         title="Edit history"
-        show={!!originalComment}
+        show={showEditHistory}
+        onExitClick={() => setShowEditHistory(false)}
         dividers
-        onExitClick={() => setOriginalComment(null)}
       >
         <CommentEditHistory originalComment={originalComment} />
       </DialogModal>
