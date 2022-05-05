@@ -4,28 +4,23 @@ import React, { useState } from 'react'
 import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
-import { DialogModal, DialogModalProps } from './DialogModal'
+import { AlertDialogModal, AlertDialogModalProps } from './AlertDialogModal'
 
 export default {
-  title: 'overlays/DialogModal',
-  component: DialogModal,
+  title: 'overlays/AlertDialogModal',
+  component: AlertDialogModal,
   argTypes: {
     onSubmit: { table: { disable: true } },
-    onExitClick: { table: { disable: true } },
-    as: { table: { disable: true } },
-    contentClassName: { table: { disable: true } },
-    additionalActionsNode: { table: { disable: true } },
     className: { table: { disable: true } },
     show: { table: { disable: true } },
-    headerIcon: { table: { disable: true } },
+    onExitClick: { table: { disable: true } },
   },
   args: {
     title: 'There is an information of the utmost importance!',
-    primaryButton: { text: 'Confirm' },
+    description: 'This is description',
+    primaryButton: { text: 'Delete video' },
     secondaryButton: { text: 'Cancel' },
-    dividers: false,
-    actionDivider: false,
-    noContentPadding: false,
+    type: 'informative',
   },
   decorators: [
     (Story) => (
@@ -34,29 +29,22 @@ export default {
       </OverlayManagerProvider>
     ),
   ],
-} as Meta<DialogModalProps>
+} as Meta<AlertDialogModalProps>
 
-const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
-  return (
-    <DialogModal {...args} show={true} onExitClick={() => null}>
-      <p>Content spanning multiple lines</p>
-      <p>Content spanning multiple lines</p>
-      <p>Content spanning multiple lines</p>
-    </DialogModal>
-  )
+const OpenTemplate: Story<AlertDialogModalProps> = ({ ...args }) => {
+  return <AlertDialogModal {...args} show={true} />
 }
 export const Open = OpenTemplate.bind({})
 
-const ToggleableTemplate: Story<DialogModalProps> = ({ ...args }) => {
+const ToggleableTemplate: Story<AlertDialogModalProps> = ({ ...args }) => {
   const [open, setOpen] = useState(false)
 
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open</Button>
-      <DialogModal
+      <AlertDialogModal
         {...args}
         show={open}
-        onExitClick={() => setOpen(false)}
         primaryButton={{
           ...args.primaryButton,
           text: args.primaryButton?.text || 'Default',
@@ -67,11 +55,7 @@ const ToggleableTemplate: Story<DialogModalProps> = ({ ...args }) => {
           text: args.secondaryButton?.text || 'Default',
           onClick: () => setOpen(false),
         }}
-      >
-        <p>Content spanning multiple lines</p>
-        <p>Content spanning multiple lines</p>
-        <p>Content spanning multiple lines</p>
-      </DialogModal>
+      />
     </>
   )
 }

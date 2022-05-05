@@ -5,10 +5,12 @@ import { Modal, ModalProps } from '@/components/_overlays/Modal'
 
 export type DialogModalProps = Pick<ModalProps, 'show' | 'size'> & Omit<DialogProps, 'size'>
 
-export const DialogModal: React.FC<DialogModalProps> = ({ show, onExitClick, size, ...dialogProps }) => {
+export const DialogModal: React.FC<DialogModalProps> = ({ show, onExitClick, size, children, ...dialogProps }) => {
   return (
     <Modal show={show} onExitClick={onExitClick} size={size}>
-      <Dialog {...dialogProps} onExitClick={onExitClick} />
+      <Dialog {...dialogProps} onExitClick={onExitClick}>
+        {children}
+      </Dialog>
     </Modal>
   )
 }

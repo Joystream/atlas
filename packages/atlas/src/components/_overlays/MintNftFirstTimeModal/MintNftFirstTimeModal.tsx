@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Text } from '@/components/Text'
 import { SvgOtherVideoTile } from '@/components/_illustrations'
 import { Dialog } from '@/components/_overlays/Dialog'
 
@@ -22,13 +23,17 @@ export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ sh
       </IllustrationWrapper>
       <Dialog
         title="Put your NFT on sale"
-        description='Now that you&apos;ve minted your first NFT you can put it on sale by choosing "Start sale" from your video options'
         primaryButton={{
           text: 'OK, got it!',
           onClick: handleDissmis,
         }}
         actionDivider
-      />
+      >
+        <Text variant="t200" secondary>
+          Now that you&apos;ve minted your first NFT you can put it on sale by choosing "Start sale" from your video
+          options
+        </Text>
+      </Dialog>
     </StyledModal>
   )
 }

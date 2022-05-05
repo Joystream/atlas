@@ -2,7 +2,7 @@ import React, { FormEvent } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionClose, SvgAlertsError32, SvgAlertsSuccess32, SvgAlertsWarning32 } from '@/components/_icons'
+import { SvgActionClose } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import {
@@ -13,7 +13,6 @@ import {
   FooterButtonsContainer,
   Header,
   HeaderContent,
-  HeaderIconContainer,
   StyledPrimaryButton,
 } from './Dialog.styles'
 
@@ -23,13 +22,8 @@ export type DialogButtonProps = {
   onClick?: (e: React.MouseEvent) => void
 } & Omit<ButtonProps, 'children'>
 
-type DialogIconType = 'success' | 'warning' | 'error'
-
 export type DialogProps = {
   title?: React.ReactNode
-  description?: React.ReactNode
-  iconType?: DialogIconType
-  headerIcon?: React.ReactNode
   dividers?: boolean
   size?: DialogSize
   primaryButton?: DialogButtonProps
@@ -46,17 +40,8 @@ export type DialogProps = {
   contentClassName?: string
 }
 
-const TYPE_TO_ICON: Record<DialogIconType, React.ReactNode | null> = {
-  success: <SvgAlertsSuccess32 />,
-  warning: <SvgAlertsWarning32 />,
-  error: <SvgAlertsError32 />,
-}
-
 export const Dialog: React.FC<DialogProps> = ({
   title,
-  description,
-  iconType,
-  headerIcon,
   dividers = false,
   size = 'default',
   primaryButton,
@@ -77,14 +62,11 @@ export const Dialog: React.FC<DialogProps> = ({
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
   const buttonProps: ButtonProps = { size: isCompact ? 'small' : 'medium' }
 
-  const iconNode = headerIcon || (iconType && TYPE_TO_ICON[iconType]) || null
-
   return (
     <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
       {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
-            {iconNode ? <HeaderIconContainer>{iconNode}</HeaderIconContainer> : null}
             <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
@@ -98,17 +80,7 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content
-        denseHeader={!!iconNode}
-        data-scroll-lock-scrollable
-        noContentPadding={noContentPadding}
-        className={contentClassName}
-      >
-        {description ? (
-          <Text variant="t200" secondary>
-            {description}
-          </Text>
-        ) : null}
+      <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
         {children}
       </Content>
       {hasFooter && (

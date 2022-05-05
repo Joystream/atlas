@@ -177,7 +177,7 @@ export const MyVideosView = () => {
     openDeleteDraftDialog({
       title: 'Delete this draft?',
       description: 'You will not be able to undo this.',
-      iconType: 'warning',
+      type: 'warning',
       primaryButton: {
         text: 'Remove draft',
         variant: 'destructive',

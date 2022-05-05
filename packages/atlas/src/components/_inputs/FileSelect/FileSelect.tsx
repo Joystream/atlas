@@ -104,7 +104,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     openErrorDialog({
       title: 'Unsupported file type selected',
       description: error,
-      iconType: 'warning',
+      type: 'warning',
       primaryButton: {
         onClick: () => {
           closeErrorDialog()
