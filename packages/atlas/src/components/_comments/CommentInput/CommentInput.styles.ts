@@ -112,7 +112,7 @@ export const ButtonsContainer = styled.div`
   justify-content: end;
   padding: ${sizes(4)} 0 0 0;
 
-  button:nth-last-child(2) {
+  button:nth-last-of-type(2) {
     margin-right: ${sizes(2)};
   }
 `
