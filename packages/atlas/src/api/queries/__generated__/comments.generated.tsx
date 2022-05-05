@@ -118,6 +118,29 @@ export type GetCommentsConnectionQuery = {
   }
 }
 
+export type GetCommentEditsQueryVariables = Types.Exact<{
+  commentId: Types.Scalars['ID']
+}>
+
+export type GetCommentEditsQuery = {
+  __typename?: 'Query'
+  commentTextUpdatedEvents: Array<{
+    __typename?: 'CommentTextUpdatedEvent'
+    id: string
+    createdAt: Date
+    newText: string
+  }>
+}
+
+export type GetOriginalCommentQueryVariables = Types.Exact<{
+  commentId: Types.Scalars['ID']
+}>
+
+export type GetOriginalCommentQuery = {
+  __typename?: 'Query'
+  commentCreatedEvents: Array<{ __typename?: 'CommentCreatedEvent'; id: string; createdAt: Date; text: string }>
+}
+
 export const GetCommentsDocument = gql`
   query GetComments(
     $limit: Int
@@ -232,4 +255,92 @@ export type GetCommentsConnectionLazyQueryHookResult = ReturnType<typeof useGetC
 export type GetCommentsConnectionQueryResult = Apollo.QueryResult<
   GetCommentsConnectionQuery,
   GetCommentsConnectionQueryVariables
+>
+export const GetCommentEditsDocument = gql`
+  query GetCommentEdits($commentId: ID!) {
+    commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+      id
+      createdAt
+      newText
+    }
+  }
+`
+
+/**
+ * __useGetCommentEditsQuery__
+ *
+ * To run a query within a React component, call `useGetCommentEditsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentEditsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentEditsQuery({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useGetCommentEditsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCommentEditsQuery, GetCommentEditsQueryVariables>(GetCommentEditsDocument, options)
+}
+export function useGetCommentEditsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCommentEditsQuery, GetCommentEditsQueryVariables>(GetCommentEditsDocument, options)
+}
+export type GetCommentEditsQueryHookResult = ReturnType<typeof useGetCommentEditsQuery>
+export type GetCommentEditsLazyQueryHookResult = ReturnType<typeof useGetCommentEditsLazyQuery>
+export type GetCommentEditsQueryResult = Apollo.QueryResult<GetCommentEditsQuery, GetCommentEditsQueryVariables>
+export const GetOriginalCommentDocument = gql`
+  query GetOriginalComment($commentId: ID!) {
+    commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
+      id
+      createdAt
+      text
+    }
+  }
+`
+
+/**
+ * __useGetOriginalCommentQuery__
+ *
+ * To run a query within a React component, call `useGetOriginalCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOriginalCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOriginalCommentQuery({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useGetOriginalCommentQuery(
+  baseOptions: Apollo.QueryHookOptions<GetOriginalCommentQuery, GetOriginalCommentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetOriginalCommentQuery, GetOriginalCommentQueryVariables>(GetOriginalCommentDocument, options)
+}
+export function useGetOriginalCommentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetOriginalCommentQuery, GetOriginalCommentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetOriginalCommentQuery, GetOriginalCommentQueryVariables>(
+    GetOriginalCommentDocument,
+    options
+  )
+}
+export type GetOriginalCommentQueryHookResult = ReturnType<typeof useGetOriginalCommentQuery>
+export type GetOriginalCommentLazyQueryHookResult = ReturnType<typeof useGetOriginalCommentLazyQuery>
+export type GetOriginalCommentQueryResult = Apollo.QueryResult<
+  GetOriginalCommentQuery,
+  GetOriginalCommentQueryVariables
 >

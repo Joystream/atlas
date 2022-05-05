@@ -29,3 +29,19 @@ query GetCommentsConnection(
     totalCount
   }
 }
+
+query GetCommentEdits($commentId: ID!) {
+  commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    newText
+  }
+}
+
+query GetOriginalComment($commentId: ID!) {
+  commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    text
+  }
+}
