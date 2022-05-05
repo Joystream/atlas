@@ -8,7 +8,7 @@ type OpenWarningDialogArgs = {
 }
 
 export const useDisplayDataLostWarning = () => {
-  const [openConfirmationModal, closeModal] = useConfirmationModal()
+  const [openDialog, closeDialog] = useConfirmationModal()
 
   const cancelDialog = (onCancel?: () => void) => {
     onCancel?.()
@@ -16,7 +16,7 @@ export const useDisplayDataLostWarning = () => {
 
   const openWarningDialog = useCallback(
     ({ onCancel, onConfirm }: OpenWarningDialogArgs) => {
-      openConfirmationModal({
+      openDialog({
         title: "Drafts' video & image data will be lost",
         description:
           "Drafts' assets aren't stored permanently. If you proceed, you will need to reselect the files again.",
@@ -24,24 +24,24 @@ export const useDisplayDataLostWarning = () => {
           text: 'Proceed',
           onClick: () => {
             onConfirm?.()
-            closeModal()
+            closeDialog()
           },
         },
         secondaryButton: {
           text: 'Cancel',
           onClick: () => {
             cancelDialog(onCancel)
-            closeModal()
+            closeDialog()
           },
         },
         onExitClick: () => {
           cancelDialog(onCancel)
-          closeModal()
+          closeDialog()
         },
         type: 'warning',
       })
     },
-    [closeModal, openConfirmationModal]
+    [closeDialog, openDialog]
   )
 
   return {

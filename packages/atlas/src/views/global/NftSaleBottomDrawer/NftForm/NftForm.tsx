@@ -109,7 +109,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
-  const [openConfirmationModal, closeModal] = useConfirmationModal()
+  const [openModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
     const startDateValue = getValues('startDate')
@@ -117,7 +117,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     if (startDate && new Date() > startDate) {
       trigger('startDate')
       // the start date is in the past, abort the submit and show a modal
-      openConfirmationModal({
+      openModal({
         title: 'Starting date you set has already past!',
         children: (
           <Text variant="t200" secondary>
@@ -202,7 +202,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
     getValues,
     listingType,
     onSubmit,
-    openConfirmationModal,
+    openModal,
     previousStep,
     setValue,
     trigger,

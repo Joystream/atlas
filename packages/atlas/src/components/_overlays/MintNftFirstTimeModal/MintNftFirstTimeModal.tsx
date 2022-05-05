@@ -22,15 +22,14 @@ export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ sh
       </IllustrationWrapper>
       <Dialog
         title="Put your NFT on sale"
+        description='Now that you&apos;ve minted your first NFT you can put it on sale by choosing "Start sale" from your video
+        options'
         primaryButton={{
           text: 'OK, got it!',
           onClick: handleDissmis,
         }}
         actionDivider
-      >
-        Now that you&apos;ve minted your first NFT you can put it on sale by choosing "Start sale" from your video
-        options
-      </Dialog>
+      />
     </StyledModal>
   )
 }

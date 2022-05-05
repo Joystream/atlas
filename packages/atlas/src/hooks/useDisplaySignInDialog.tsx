@@ -76,30 +76,30 @@ type OpenSignInDialogArgs = {
 }
 
 export const useDisplaySignInDialog = () => {
-  const [openConfirmationModal, closeModal] = useConfirmationModal()
+  const [openDialog, closeDialog] = useConfirmationModal()
 
   const openSignInDialog = useCallback(
     ({ onCancel, onConfirm }: OpenSignInDialogArgs) => {
-      openConfirmationModal({
+      openDialog({
         dividers: true,
         description: <SignInDialogcontent />,
         primaryButton: {
           text: 'Sign in',
           onClick: () => {
             onConfirm?.()
-            closeModal()
+            closeDialog()
           },
         },
         secondaryButton: {
           text: 'Cancel',
           onClick: () => {
             onCancel?.()
-            closeModal()
+            closeDialog()
           },
         },
       })
     },
-    [closeModal, openConfirmationModal]
+    [closeDialog, openDialog]
   )
 
   return {

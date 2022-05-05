@@ -144,13 +144,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
           onClick: onClose,
           disabled: !canCancel,
         }}
-      >
-        <Text variant="t200" secondary>
-          {status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && activeChannelId
+        description={
+          status === ExtrinsicStatus.Error && errorCode === ErrorCode.VoucherSizeLimitExceeded && activeChannelId
             ? `${stepDetails?.description} Channel ID: ${activeChannelId}`
-            : stepDetails?.description}
-        </Text>
-      </Dialog>
+            : stepDetails?.description
+        }
+      />
     </StyledModal>
   )
 }

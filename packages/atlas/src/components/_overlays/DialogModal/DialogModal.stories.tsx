@@ -7,7 +7,7 @@ import { OverlayManagerProvider } from '@/providers/overlayManager'
 import { DialogModal, DialogModalProps } from './DialogModal'
 
 export default {
-  title: 'overlays/ConfirmationDialogModal',
+  title: 'overlays/DialogModal',
   component: DialogModal,
   argTypes: {
     onSubmit: { table: { disable: true } },

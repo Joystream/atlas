@@ -13,7 +13,7 @@ export const useNftTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const [openConfirmationModal, closeModal] = useConfirmationModal()
+  const [openModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
   const _refetchData = useCallback(
@@ -53,7 +53,7 @@ export const useNftTransactions = () => {
           onTxSync: async () => _refetchData(),
         })
 
-      openConfirmationModal({
+      openModal({
         title: 'Remove from sale',
         description: 'Do you really want to remove your item from sale? You can put it on sale anytime.',
         type: 'warning',
@@ -72,7 +72,7 @@ export const useNftTransactions = () => {
         },
       })
     },
-    [_refetchData, activeMemberId, closeModal, handleTransaction, joystream, openConfirmationModal, proxyCallback]
+    [_refetchData, activeMemberId, closeModal, handleTransaction, joystream, openModal, proxyCallback]
   )
 
   const changeNftPrice = useCallback(
