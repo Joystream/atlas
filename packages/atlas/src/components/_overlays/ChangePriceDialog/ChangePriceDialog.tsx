@@ -46,7 +46,7 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
       <StyledTextField
         type="text"
         onChange={(event) => setPrice(Number(event.target.value))}
-        nodeStart={<JoyTokenIcon size={24} variant="silver" />}
+        nodeStart={<JoyTokenIcon size={24} variant="gray" />}
         nodeEnd={<Pill label={convertToUSD(price ?? 0)} />}
       />
     </DialogModal>

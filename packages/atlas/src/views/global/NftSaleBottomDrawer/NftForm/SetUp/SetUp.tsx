@@ -192,7 +192,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                     items={[
                       {
                         value: null,
-                        name: 'Right after listing',
+                        name: 'Now',
                       },
                     ]}
                     onChange={onChange}

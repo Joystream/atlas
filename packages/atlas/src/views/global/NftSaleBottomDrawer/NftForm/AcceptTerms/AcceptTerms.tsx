@@ -103,9 +103,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             />
           </Title>
           <Description>
-            <DescriptionText>
-              {isStartDateValid ? formatDateTime(startDate.date) : 'Right after listing'}
-            </DescriptionText>
+            <DescriptionText>{isStartDateValid ? formatDateTime(startDate.date) : 'Now'}</DescriptionText>
           </Description>
         </Row>
       )}

@@ -548,7 +548,8 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Messages>
                 <SvgAlertsWarning24 />
                 <Text variant="t200" secondary margin={{ left: 2 }}>
-                  After placing your bid, you will not be able to withdraw it.
+                  After placing your bid, you will not be able to withdraw it. If someone places higher bid, your bid
+                  will be returned automatically.
                 </Text>
               </Messages>
             )}

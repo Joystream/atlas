@@ -77,58 +77,59 @@ export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: E
         case ErrorCode.NftAuctionIsAlreadyExpired:
           return {
             title: sharedTitle,
-            description: 'You cannot bid on this auction. The auction has expired.',
+            description: "This auction has already expired. Your bid wasn't accepted.",
             animation: sharedAnimation,
           }
         case ErrorCode.ActionHasBidsAlready:
           return {
             title: sharedTitle,
-            description: 'You cannot cancel this auction. The auction has bids already.',
+            description: 'You cannot cancel this auction because somebody has already placed a bid on it.',
             animation: sharedAnimation,
           }
         case ErrorCode.ActorNotAuthorized:
           return {
             title: sharedTitle,
-            description: `You are not authorized to perform this action.`,
+            description: `You are not authorized to perform this action. This could mean that somebody has already bought your NFT.`,
             animation: sharedAnimation,
           }
         case ErrorCode.BidStepConstraintViolated:
           return {
             title: sharedTitle,
-            description: 'Somebody placed a higher bid on this auction already. Choose a higher amount.',
+            description:
+              'Somebody placed a higher bid on this auction already. Provide a higher amount if you want to participate.',
             animation: sharedAnimation,
           }
         case ErrorCode.BidDoesNotExist:
           return {
             title: sharedTitle,
-            description:
-              'This bid does not exists anymore. This could means that it may have been withdrawn by the bidder.',
+            description: 'This bid does not exist anymore. This could mean that it has been withdrawn by the bidder.',
             animation: sharedAnimation,
           }
         case ErrorCode.InvalidBuyNowPriceProvided:
           return {
             title: sharedTitle,
-            description: `You can't buy the NFT with this price. Buy now price has changed after you wanted to buy it`,
+            description: `You can't buy this NFT for this amount. This could mean that the buy now price has been changed.`,
             animation: sharedAnimation,
           }
         case ErrorCode.IsNotEnglishAuctionType:
           return {
             title: sharedTitle,
             description:
-              'You cannot perform this action. This could means that somebody bought this NFT for fixed price or settled it already',
+              'You cannot perform this action. This could mean that somebody bought this NFT for fixed price or settled it already.',
             animation: sharedAnimation,
           }
         case ErrorCode.IsNotOpenAuctionType:
           return {
             title: sharedTitle,
             description:
-              'You cannot perform this action. This could means that open auction winner has been picked before your bid has been processed',
+              'You cannot perform this action. This could mean that somebody bought this NFT for fixed price or auction winner has been picked already.',
             animation: sharedAnimation,
           }
         case ErrorCode.NftNotInBuyNowState:
           return {
             title: sharedTitle,
-            description: 'Given video nft is not in buy now state. This could means that somebody bought it already.',
+            description:
+              'You cannot perform this action. This could mean that this NFT has been bought already or the sale was canceled.',
             animation: sharedAnimation,
           }
         case ErrorCode.VoucherSizeLimitExceeded:
