@@ -1,3 +1,4 @@
+import isPropValid from '@emotion/is-prop-valid'
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -51,7 +52,9 @@ const bounceKeyframes = (isLike: boolean) => keyframes`
   }
 `
 
-export const StyledSvgActionLikeSolid = styled(SvgActionLikeSolid)<{ shouldRunAnimation: boolean }>`
+export const StyledSvgActionLikeSolid = styled(SvgActionLikeSolid, { shouldForwardProp: isPropValid })<{
+  shouldRunAnimation: boolean
+}>`
   ${({ shouldRunAnimation }) =>
     shouldRunAnimation &&
     css`
@@ -64,7 +67,9 @@ export const StyledSvgActionLikeSolid = styled(SvgActionLikeSolid)<{ shouldRunAn
   }
 `
 
-export const StyledSvgActionDislikeSolid = styled(SvgActionDislikeSolid)<{ shouldRunAnimation: boolean }>`
+export const StyledSvgActionDislikeSolid = styled(SvgActionDislikeSolid, { shouldForwardProp: isPropValid })<{
+  shouldRunAnimation: boolean
+}>`
   ${({ shouldRunAnimation }) =>
     shouldRunAnimation &&
     css`
