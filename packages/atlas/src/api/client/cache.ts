@@ -231,6 +231,16 @@ const cache = new InMemoryCache({
         createdAt: createDateHandler(),
       },
     },
+    CommentTextUpdatedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    CommentCreatedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
     StorageDataObject: {
       fields: {
         size: {

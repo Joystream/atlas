@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
-import { CommentOrderByInput } from '@/api/queries'
+import { CommentFieldsFragment, CommentOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Comment } from '@/components/_comments/Comment'
+import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { Select } from '@/components/_inputs/Select'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -21,6 +23,7 @@ type CommentsSectionProps = {
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, videoAuthorId }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
+  const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const { id } = useParams()
   const { activeMemberId } = useUser()
   const { comments, loading } = useComments(
@@ -73,6 +76,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                 createdAt={new Date(comment.createdAt)}
                 comment={comment.text}
                 isEdited={comment.isEdited}
+                onEditLabelClick={() => {
+                  setOriginalComment(comment)
+                }}
                 isAbleToEdit={comment.author.id === activeMemberId}
                 memberHandle={comment.author.handle}
                 memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
@@ -91,6 +97,15 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               />
             ))}
       </CommentWrapper>
+      <DialogModal
+        size="medium"
+        title="Edit history"
+        show={!!originalComment}
+        dividers
+        onExitClick={() => setOriginalComment(null)}
+      >
+        <CommentEditHistory originalComment={originalComment} />
+      </DialogModal>
     </CommentsSectionWrapper>
   )
 }
