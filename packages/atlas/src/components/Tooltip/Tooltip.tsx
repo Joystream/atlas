@@ -27,7 +27,6 @@ export type TooltipProps = {
   customContent?: React.ReactNode
   showOnCreate?: boolean
   oneLine?: boolean
-  visible?: boolean
   className?: string
 }
 
@@ -45,7 +44,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
   customContent,
   showOnCreate,
   oneLine,
-  visible,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -62,7 +60,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
       reference={reference}
       offset={[offsetX, offsetY]}
       showOnCreate={showOnCreate}
-      visible={visible}
       render={(attrs) => (
         <CSSTransition
           in={isVisible}

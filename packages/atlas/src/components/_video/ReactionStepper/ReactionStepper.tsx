@@ -27,14 +27,14 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
 
   return (
     <>
-      <StyledTooltip
-        text="Your reaction is being processed"
-        placement="top"
-        oneLine
-        showOnCreate
-        visible={state === 'processing'}
-        reference={reactionStepperWrapperRef.current}
-      />
+      {state === 'processing' && (
+        <StyledTooltip
+          text="Your reaction is being processed"
+          placement="top"
+          oneLine
+          reference={reactionStepperWrapperRef.current}
+        />
+      )}
       <ReactionStepperWrapper className={className} ref={reactionStepperWrapperRef}>
         <ReactionButton
           state={state}
