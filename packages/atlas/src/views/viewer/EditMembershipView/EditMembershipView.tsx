@@ -79,8 +79,7 @@ export const EditMembershipView: React.FC = () => {
         )
       },
       snackbarSuccessMessage: {
-        title: 'Member successfully updated',
-        description: 'Lorem ipsum',
+        title: 'Profile updated successfully',
       },
     })
     const { data } = await refetchActiveMembership()

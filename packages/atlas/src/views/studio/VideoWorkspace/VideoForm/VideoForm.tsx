@@ -429,7 +429,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           )}
         />
         {!videoFieldsLocked && videoEditFields}
-        <SwitchFormField title="Mint an NFT" ref={mintNftFormFieldRef}>
+        <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
             <Controller
               name="mintNft"
@@ -437,7 +437,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               defaultValue={false}
               render={({ field: { value, onChange } }) => (
                 <Switch
-                  label="Toggle to mint an NFT for this video"
+                  label="Mint NFT for this video"
                   value={value}
                   onChange={(e) => {
                     if (!e?.currentTarget.checked) {
@@ -454,7 +454,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             <Information
               placement="top"
               arrowDisabled
-              text="By issuing your video as an NFT you will be able to sell it on auction or hold its ownership written on blockchain for yourself"
+              text="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This will not impact your intellectual rights of the video."
             />
           </SwitchNftWrapper>
           {watch('mintNft') && (
@@ -466,8 +466,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 description={
                   !videoFieldsLocked ? (
                     <Text variant="t200">
-                      After issuing this as an NFT
-                      <YellowText>&nbsp;editing options of this video will be disabled</YellowText>
+                      You <YellowText>won’t be able to edit this video</YellowText> once you mint an NFT for it.
                     </Text>
                   ) : (
                     <Text variant="t200">
@@ -494,6 +493,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   disabled: videoFieldsLocked,
                 }}
                 title="Set creator's royalties"
+                infoTooltip={{ text: 'Setting royalties lets you earn commission from every sale of this NFT.' }}
               >
                 <TextField
                   type="number"
@@ -510,11 +510,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   })}
                   error={!!errors.nftRoyaltiesPercent}
                   placeholder="—"
-                  helperText={
-                    errors.nftRoyaltiesPercent?.message
-                      ? errors.nftRoyaltiesPercent?.message
-                      : `Min ${nftMinCreatorRoyaltyPercentage}% - Max ${nftMaxCreatorRoyaltyPercentage}% (Suggested: 10%, 20%, 30%) `
-                  }
+                  helperText={errors.nftRoyaltiesPercent?.message}
                   nodeEnd={<Pill variant="default" label="%" />}
                   disabled={videoFieldsLocked || !royaltiesFieldEnabled}
                 />

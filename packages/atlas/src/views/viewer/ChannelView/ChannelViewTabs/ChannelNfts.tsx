@@ -73,12 +73,9 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
       <VideoSection className={transitions.names.slide}>
         {!nftsWithPlaceholders.length && (
           <EmptyFallback
-            title={
-              isFiltersApplied
-                ? 'No NFTs found that match filter criteria'
-                : 'This channel does not have any NFTs issued yet'
-            }
-            variant="small"
+            title={isFiltersApplied ? 'No NFTs found' : 'No NFTs minted'}
+            subtitle={isFiltersApplied ? 'Try changing the filters.' : `This channel hasn't minted any NFTs yet.`}
+            variant="large"
           />
         )}
         <Grid maxColumns={null} onResize={onResize}>

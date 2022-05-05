@@ -79,9 +79,3 @@ export const StepWrapper = styled.div<{ isLast?: boolean }>`
   gap: 16px;
   align-items: center;
 `
-
-export const AuctionDurationTooltipFooter = styled.div`
-  padding: ${sizes(2)};
-  margin-top: 10px;
-  background-color: ${cVar('colorBackgroundElevated')};
-`

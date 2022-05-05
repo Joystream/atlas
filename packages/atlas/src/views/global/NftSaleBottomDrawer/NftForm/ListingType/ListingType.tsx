@@ -17,7 +17,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
     <>
       <Header variant="h500">Choose listing type</Header>
       <Text variant="t300" secondary>
-        Pick the listing type for your NFT.
+        Choose the listing type for your NFT
       </Text>
       <OptionsWrapper>
         <StyledOptionCardRadio
@@ -26,7 +26,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
           value="Auction"
           label="Auction"
           icon={<SvgActionAuction />}
-          helperText="Sell it on auction or for fixed price. Optionally choose time, whitelist, royalties."
+          helperText="Put it on a timed or open auction. See the bids coming."
         />
         <StyledOptionCardRadio
           onChange={() => onSelectType('Fixed price')}
@@ -34,7 +34,7 @@ export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelect
           value="Fixed price"
           label="Fixed price"
           icon={<SvgActionBuyNow />}
-          helperText="Sell it for a fixed price only. No bids accepted."
+          helperText="Sell it for a fixed price only. No bids."
         />
       </OptionsWrapper>
     </>

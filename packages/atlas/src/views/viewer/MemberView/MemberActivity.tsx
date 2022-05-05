@@ -8,7 +8,7 @@ import { Text } from '@/components/Text'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
-import { formatNumberShort } from '@/utils/number'
+import { formatTokens } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
@@ -27,7 +27,7 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Bid':
       return (
         <>
-          {activity.from.handle} placed a bid for <PriceText>ツ {formatNumberShort(activity.bidAmount)} </PriceText>
+          {activity.from.handle} placed a bid for <PriceText>{formatTokens(activity.bidAmount)}</PriceText>
         </>
       )
     case 'Sale':
@@ -37,13 +37,13 @@ const getDescription = (activity: ActivitiesRecord) => {
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
-          NFT for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+          NFT for <PriceText>{formatTokens(activity.price)}</PriceText>
         </>
       )
     case 'Purchase':
       return (
         <>
-          {activity.from?.handle} purchased NFT for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText> from{' '}
+          {activity.from?.handle} purchased NFT for <PriceText>{formatTokens(activity.price)} </PriceText> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
           </StyledLink>
@@ -55,7 +55,7 @@ const getDescription = (activity: ActivitiesRecord) => {
           {activity.from?.handle} listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
             <>
-              for <PriceText>ツ {formatNumberShort(activity.price)} </PriceText>
+              for <PriceText>{formatTokens(activity.price)}</PriceText>
             </>
           )}
         </>
@@ -69,7 +69,7 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Price change':
       return (
         <>
-          {activity.from?.handle} changed price to <PriceText>ツ {formatNumberShort(activity.price)}</PriceText>
+          {activity.from?.handle} changed price to <PriceText>{formatTokens(activity.price)}</PriceText>
         </>
       )
   }

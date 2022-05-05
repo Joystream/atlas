@@ -199,19 +199,19 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
           return {
             date: e.createdAt,
             member: e.ownerMember || null,
-            text: 'Sale canceled',
+            text: 'Removed from sale',
           }
         } else if (e.__typename === 'BuyNowCanceledEvent') {
           return {
             date: e.createdAt,
             member: e.ownerMember,
-            text: 'Sale canceled',
+            text: 'Removed from sale',
           }
         } else if (e.__typename === 'BuyNowPriceUpdatedEvent') {
           return {
             date: e.createdAt,
             member: e.ownerMember,
-            text: 'Price updated',
+            text: 'Price changed',
             joyAmount: Number(e.newPrice),
           }
         } else {

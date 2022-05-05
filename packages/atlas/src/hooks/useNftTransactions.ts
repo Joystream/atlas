@@ -31,7 +31,7 @@ export const useNftTransactions = () => {
       }
       handleTransaction({
         snackbarSuccessMessage: {
-          title: 'Your bid was withdrawn successfully',
+          title: 'Bid withdrawn successfully',
         },
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).cancelNftBid(id, activeMemberId, proxyCallback(updateStatus)),
@@ -51,11 +51,15 @@ export const useNftTransactions = () => {
           txFactory: async (updateStatus) =>
             (await joystream.extrinsics).cancelNftSale(id, activeMemberId, saleType, proxyCallback(updateStatus)),
           onTxSync: async () => _refetchData(),
+          snackbarSuccessMessage: {
+            title: 'NFT removed from sale successfully',
+            description: 'You can put it back on sale anytime.',
+          },
         })
 
       openModal({
-        title: 'Remove from sale',
-        description: 'Do you really want to remove your item from sale? You can put it on sale anytime.',
+        title: 'Remove from sale?',
+        description: 'Are you sure you want to remove this NFT from sale? You can put it back on sale anytime.',
         primaryButton: {
           variant: 'destructive',
           text: 'Remove',
@@ -84,7 +88,8 @@ export const useNftTransactions = () => {
           (await joystream.extrinsics).changeNftPrice(activeMemberId, id, price, proxyCallback(updateStatus)),
         onTxSync: async () => _refetchData(),
         snackbarSuccessMessage: {
-          title: 'NFT price changed',
+          title: 'NFT price changed successfully',
+          description: 'You can update the price anytime.',
         },
       })
     },
@@ -100,6 +105,10 @@ export const useNftTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).acceptNftBid(ownerId, id, bidderId, price, proxyCallback(updateStatus)),
         onTxSync: async () => _refetchData(),
+        snackbarSuccessMessage: {
+          title: 'Bid accepted',
+          description: 'Your auction has ended. The ownership has been transferred.',
+        },
       })
     },
     [_refetchData, activeMemberId, handleTransaction, joystream, proxyCallback]

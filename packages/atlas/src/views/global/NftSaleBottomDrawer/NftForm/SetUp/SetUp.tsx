@@ -24,7 +24,6 @@ import {
 } from './SetUp.styles'
 
 import { useNftFormUtils } from '../NftForm.hooks'
-import { AuctionDurationTooltipFooter } from '../NftForm.styles'
 import { Listing, NftFormFields } from '../NftForm.types'
 import { getTotalDaysAndHours } from '../NftForm.utils'
 
@@ -116,15 +115,11 @@ export const SetUp: React.FC<SetUpProps> = ({
   const headerText = {
     'Auction': {
       header: 'Auction',
-      caption: 'All fields are optional. If minimum bid is not specified collectors can make any offer.',
+      caption: 'Pick a timed or open auction. Optionally set up a buy now price.',
     },
     'Fixed price': {
-      header: 'Buy now',
-      caption: 'No bids will be accepted, only a purchase for fixed price will complete the sale.',
-    },
-    'Not for sale': {
-      header: 'Not for sale',
-      caption: 'No bids will be accepted, only a purchase for fixed price will complete the sale.',
+      header: 'Fixed price',
+      caption: 'Set up the price for your NFT. It can be changed later. Cancel anytime.',
     },
   }
 
@@ -168,14 +163,14 @@ export const SetUp: React.FC<SetUpProps> = ({
                   <OptionCardRadio
                     value="open"
                     label="Open auction"
-                    helperText="Cancel anytime & pick the winning bid"
+                    helperText="Pick the winning bid or cancel anytime"
                     onChange={() => onChange('open')}
                     selectedValue={value}
                   />
                   <OptionCardRadio
                     value="english"
                     label="Timed auction"
-                    helperText="Cannot be canceled & highest bidder wins"
+                    helperText="Highest bidder wins, cannot be cancelled once started"
                     onChange={() => onChange('english')}
                     selectedValue={value}
                   />
@@ -189,7 +184,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                   <AuctionDatePicker
                     size="regular"
-                    label="Starting date"
+                    label="Starts"
                     error={!!error}
                     helperText={error?.message}
                     minDate={new Date()}
@@ -197,7 +192,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                     items={[
                       {
                         value: null,
-                        name: 'Right after listing',
+                        name: 'Now',
                       },
                     ]}
                     onChange={onChange}
@@ -212,7 +207,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <AuctionDatePicker
                       size="regular"
-                      label="expiration date"
+                      label="Ends"
                       error={!!error}
                       helperText={error?.message}
                       minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
@@ -239,19 +234,9 @@ export const SetUp: React.FC<SetUpProps> = ({
                 <Text variant="t200-strong">{totalDaysAndHours}</Text>
                 &nbsp;
                 <Text variant="t200-strong" secondary>
-                  / {formatNumber(numberOfBlocks)} Blocks
+                  / {formatNumber(numberOfBlocks)} blocks
                 </Text>
-                <DaysSummaryInfo
-                  text="It’s the time when your auction will become active and buyer will be able to make an offer"
-                  placement="top"
-                  footer={
-                    <AuctionDurationTooltipFooter>
-                      <Text variant="t100">
-                        {totalDaysAndHours} = {formatNumber(numberOfBlocks)}
-                      </Text>
-                    </AuctionDurationTooltipFooter>
-                  }
-                />
+                <DaysSummaryInfo text="On blockchain, duration is expressed in number of blocks" placement="top" />
               </DaysSummary>
             )}
             <FormField
@@ -261,7 +246,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              infoTooltip={{ text: 'Its the starting price of your auction. No lower bids will be accepted' }}
+              infoTooltip={{ text: 'Only bids higher than this value will be accepted' }}
             >
               <TextField
                 {...register('startingPrice', { valueAsNumber: true })}
@@ -275,14 +260,14 @@ export const SetUp: React.FC<SetUpProps> = ({
               />
             </FormField>
             <FormField
-              title="Fixed price"
+              title="Buy now price"
               switchProps={{
                 name: 'buyNowPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('buyNowPrice'),
               }}
               infoTooltip={{
-                text: 'Sell your Nft for a predefined price. When this price is reached it automaticly ends auction',
+                text: 'Bids matching this value will automatically end your auction',
               }}
             >
               <TextField
@@ -305,7 +290,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 value: activeInputs.includes('whitelistedMembers'),
               }}
               infoTooltip={{
-                text: 'Only people on your whitelist will be able to bid/buy this particular NFT.',
+                text: 'Only members included in the whitelist will be able to bid on this auction',
               }}
             >
               <Controller

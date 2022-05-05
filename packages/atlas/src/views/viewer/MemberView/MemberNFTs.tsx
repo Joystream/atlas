@@ -36,19 +36,13 @@ export const MemberNFTs: React.FC<MemberNFTsProps> = ({ nfts, loading, owner, is
       </Grid>
       {nfts && !nfts.length && (
         <EmptyFallback
-          title={
-            isFiltersApplied
-              ? 'No NFTs found that match filter criteria'
-              : owner
-              ? 'Start your collection'
-              : 'No NFTs collected'
-          }
+          title={isFiltersApplied ? 'No NFTs found' : owner ? 'Start your collection' : 'No NFTs collected'}
           subtitle={
             isFiltersApplied
-              ? 'Try changing the filter criteria'
+              ? 'Try changing the filters.'
               : owner
               ? 'Buy NFTs across the platform or create your own.'
-              : "This member hasn't started the collection yet."
+              : "This member hasn't collected any NFTs yet."
           }
           variant="large"
         />

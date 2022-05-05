@@ -34,7 +34,7 @@ const Template: Story<AuctionDatePickerProps> = (args) => {
         items={[
           {
             value: null,
-            name: 'Right after listing',
+            name: 'Now',
           },
         ]}
         onChange={setStartDate}

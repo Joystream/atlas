@@ -13,6 +13,8 @@ import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactionManager'
+import { useUser } from '@/providers/user'
+import { formatTokens } from '@/utils/number'
 
 import {
   Content,
@@ -24,6 +26,7 @@ import {
 
 export const NftSettlementBottomDrawer: React.FC = () => {
   const xsMatch = useMediaMatch('xs')
+  const { activeMemberId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()
   const { nft, loading, refetch } = useNft(currentNftId || '')
 
@@ -31,6 +34,8 @@ export const NftSettlementBottomDrawer: React.FC = () => {
   const { isLoadingAsset: thumbnailLoading, url: thumbnailUrl } = useAsset(nft?.video.thumbnailPhoto)
   const { url: avatarUrl } = useAsset(nft?.video.channel.avatarPhoto)
   const { url: memberAvatarUrl } = useMemberAvatar(nft?.ownerMember)
+
+  const isUserSeller = activeMemberId === nft?.ownerMember?.id
 
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
@@ -44,7 +49,9 @@ export const NftSettlementBottomDrawer: React.FC = () => {
       onTxSync: () => {
         displaySnackbar({
           title: 'Auction settled',
-          description: 'Your auction has been settled. You are now the owner of this NFT',
+          description: isUserSeller
+            ? 'Your auction has been settled. The ownership has been transferred.'
+            : 'The auction has been settled. You are now the owner of this NFT.',
           iconType: 'success',
         })
         closeNftAction()
@@ -78,15 +85,15 @@ export const NftSettlementBottomDrawer: React.FC = () => {
             colStart={{ sm: 8, md: 7, lg: 8 }}
           >
             <Content>
-              <Text variant="h600">You have won the auction! 🎉</Text>
+              <Text variant="h600">{isUserSeller ? 'NFT sold!' : 'You won the auction!'} 🎉</Text>
               <Text variant="t300" secondary margin={{ top: 4, bottom: 10 }}>
-                Congratulations! To update the ownership, you need to settle the auction.
+                Congratulations! To transfer the ownership, you need to settle the auction.
               </Text>
               <Button size="large" fullWidth={!xsMatch} onClick={handleSettleAuction}>
-                Settle the auction
+                Settle auction
               </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>
-                Transaction fee: <Text variant="t100">0 tJOY</Text>
+                Transaction fee: <Text variant="t100">{formatTokens(0)}</Text>
               </Text>
             </Content>
           </StyledGridItem>

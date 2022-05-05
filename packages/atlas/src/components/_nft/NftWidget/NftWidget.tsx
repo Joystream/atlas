@@ -254,21 +254,21 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             return {
               title: 'Withdraw your bid to participate',
               description:
-                'You placed a bid in a previous auction that you can now withdraw to claim back your money and to be able to participate in this auction.',
+                'You placed a bid in a previous auction that you can now withdraw to be able to participate in this auction.',
             }
           }
 
           if (nftStatus.englishTimerState === 'expired' && isOwner && !hasBids) {
             return {
               title: 'Auction ended',
-              description: 'This auction has ended, but no one made an offer. You can now remove this NFT from sale.',
+              description: 'This auction has ended and no one placed a bid. You can now remove this NFT from sale.',
             }
           }
           if (nftStatus.englishTimerState === 'expired' && !bidFromPreviousAuction && !hasBids && !isOwner) {
             return {
               title: 'Auction ended',
               description:
-                "This auction has ended, but no one made an offer. We're waiting for the NFT owner to cancel the auction.",
+                "This auction has ended and no one placed a bid. We're waiting for the NFT owner to remove this NFT from sale.",
             }
           }
           if (
@@ -287,7 +287,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           if (nftStatus.englishTimerState === 'expired' && bidFromPreviousAuction) {
             return {
               title: 'Withdraw your bid',
-              description: 'You placed a bid in a previous auction that you can now withdraw to claim back your money.',
+              description: 'You placed a bid in a previous auction that you can now withdraw.',
             }
           }
 
@@ -295,7 +295,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             return {
               title: 'Withdraw your bid to participate',
               description:
-                'You placed a bid in a previous auction that you can now withdraw to claim back your money and to be able to participate in this auction.',
+                'You placed a bid in a previous auction that you can now withdraw to be able to participate in this auction.',
             }
           }
 
@@ -303,7 +303,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             return {
               title: 'Withdraw your bid to participate',
               description:
-                'You placed a bid in a previous auction that you can now withdraw to claim back your money and to be able to participate in the upcoming auction.',
+                'You placed a bid in a previous auction that you can now withdraw to be able to participate in this upcoming auction.',
             }
           }
 
@@ -360,7 +360,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                         variant="secondary"
                         textOnly
                       >
-                        <Text variant="t100">{nftStatus.topBidderHandle}</Text>
+                        <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
                     </>
                   ) : null
@@ -471,7 +471,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     <GridItem colSpan={buttonColumnSpan}>
                       <ButtonGrid data-size={size} data-two-columns={size === 'medium'}>
                         <Button fullWidth variant="secondary" size={buttonSize} onClick={onNftPurchase}>
-                          {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
+                          {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
                         </Button>
                         <Button fullWidth size={buttonSize} onClick={onNftBuyNow}>
                           Buy now
@@ -480,7 +480,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
                             <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
-                              Withdraw a bid
+                              Withdraw bid
                             </Button>
                           </GridItem>
                         )}
@@ -493,13 +493,13 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                       <ButtonGrid data-size={size}>
                         <GridItem colSpan={buttonColumnSpan}>
                           <Button fullWidth size={buttonSize} onClick={onNftPurchase}>
-                            {nftStatus.canChangeBid ? 'Change a bid' : 'Place a bid'}
+                            {nftStatus.canChangeBid ? 'Change bid' : 'Place bid'}
                           </Button>
                         </GridItem>
                         {nftStatus.canWithdrawBid && (
                           <GridItem colSpan={buttonColumnSpan}>
                             <Button fullWidth size={buttonSize} variant="destructive-secondary" onClick={onWithdrawBid}>
-                              Withdraw a bid
+                              Withdraw bid
                             </Button>
                           </GridItem>
                         )}
