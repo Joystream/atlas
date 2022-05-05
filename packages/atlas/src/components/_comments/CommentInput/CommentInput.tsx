@@ -15,14 +15,22 @@ export type CommentInputProps = {
   processing: boolean
   onComment?: () => void
   onCancel?: () => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  value?: string
 } & CommentRowProps
 
-export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel, onComment, ...rest }) => {
+export const CommentInput: React.FC<CommentInputProps> = ({
+  processing,
+  onCancel,
+  onComment,
+  onChange,
+  value,
+  ...rest
+}) => {
   const smMatch = useMediaMatch('sm')
   const containerRef = useRef<HTMLLabelElement>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [active, setActive] = useState(false)
-  const [text, setText] = useState('')
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
 
@@ -45,9 +53,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
     }
   }, [active])
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.currentTarget.value)
-
-  const show = !!text || active || processing
+  const show = !!value || active || processing
 
   return (
     <StyledCommentRow {...rest} processing={processing} show={show}>
@@ -58,7 +64,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
         onFocus={() => setActive(true)}
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
-          if (!!text && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
+          if (!!value && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
             onComment?.()
           }
           if (e.nativeEvent.code === 'Escape') {
@@ -70,7 +76,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
           ref={mergeRefs([textAreaRef, measureRef])}
           rows={1}
           placeholder="Leave a comment as bedeho"
-          value={text}
+          value={value}
           onChange={onChange}
           onFocus={() => setActive(true)}
           disabled={processing}
@@ -93,7 +99,9 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
               Cancel
             </Button>
           )}
-          <Button disabled={processing}>{processing ? 'Processing' : 'Comment'}</Button>
+          <Button onClick={onComment} disabled={processing}>
+            {processing ? 'Processing' : 'Comment'}
+          </Button>
         </ButtonsContainer>
       </Container>
       <Border data-focused={active} data-processing={processing} />

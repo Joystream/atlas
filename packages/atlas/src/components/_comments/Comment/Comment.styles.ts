@@ -68,6 +68,7 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
 
 export const CommentBody = styled(Text)`
   display: flex;
+  white-space: pre-line;
   align-items: center;
 `
 
