@@ -8,7 +8,9 @@ import { SvgThumbsUpIllustration } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user'
 import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
@@ -45,11 +47,14 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
   const [shouldRunAnimation, setShouldRunAnimation] = useState(false)
+  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { openSignInDialog } = useDisplaySignInDialog()
 
   const isLoading = state === 'loading'
   const isProcessing = state === 'processing' || isPopoverOpen
 
   const isReacted = type === 'like' ? state === 'liked' : state === 'disliked'
+  const authorized = activeMemberId && activeAccountId
 
   const renderSolidIcon = () => {
     if (type === 'like') {
@@ -67,10 +72,16 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   }
 
   const handleReact = (reactionPopoverDismissed: boolean) => {
+    if (!authorized) {
+      openSignInDialog({ onConfirm: signIn })
+      return
+    }
+
     if (!reactionPopoverDismissed) {
       onPopoverShow?.()
       return
     }
+
     setShouldRunAnimation(true)
     onReact?.()
   }
@@ -91,7 +102,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
             additionalActionsNodeMobilePosition="bottom"
             onHide={onPopoverHide}
             dividers
-            disabled={reactionPopoverDismissed}
+            disabled={reactionPopoverDismissed || !authorized}
             // TODO add proper link here
             additionalActionsNode={
               <Button variant="tertiary" size="small">

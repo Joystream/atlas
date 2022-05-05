@@ -20,7 +20,6 @@ import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useClipboard } from '@/hooks/useClipboard'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
@@ -64,8 +63,7 @@ export const VideoView: React.FC = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { id } = useParams()
-  const { activeMemberId, activeAccountId, signIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const { activeMemberId } = useUser()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
   const { withdrawBid } = useNftTransactions()
@@ -135,12 +133,7 @@ export const VideoView: React.FC = () => {
   }, [activeMemberId, videoReactionProcessing, video])
 
   const handleLike = (reaction: VideoReaction) => {
-    if (!joystream || !video) {
-      return
-    }
-
-    if (!activeMemberId || !activeAccountId) {
-      openSignInDialog({ onConfirm: signIn })
+    if (!joystream || !video || !activeMemberId) {
       return
     }
 
