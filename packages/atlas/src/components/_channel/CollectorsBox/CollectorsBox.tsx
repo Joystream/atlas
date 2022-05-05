@@ -5,7 +5,7 @@ import { AvatarGroup, AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGro
 import { ListItem } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionPlus } from '@/components/_icons'
-import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar } from '@/styles'
 
 import { CollectorsBoxWrapper, PlusIconBackground, PlusIconWrapper, StyledLink } from './CollectorsBox.styles'
@@ -64,7 +64,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
           avatarStrokeColor={isHovered ? cVar('colorBackgroundStrong') : cVar('colorBackground')}
         />
       </CollectorsBoxWrapper>
-      <ConfirmationDialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
+      <DialogModal show={open} title="NFTs collected by" onExitClick={() => setOpen(false)} dividers>
         {mappedCollectors.map((collector, idx) => (
           <StyledLink key={idx} to={collector.memberUrl || ''}>
             <ListItem
@@ -78,7 +78,7 @@ export const CollectorsBox: React.FC<CollectorsBoxProps> = ({ collectors, maxSho
             />
           </StyledLink>
         ))}
-      </ConfirmationDialogModal>
+      </DialogModal>
     </>
   )
 }

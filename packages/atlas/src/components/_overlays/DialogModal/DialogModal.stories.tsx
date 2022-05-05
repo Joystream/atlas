@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
-import { ConfirmationDialogModal, ConfirmationDialogModalProps } from './ConfirmationDialogModal'
+import { DialogModal, DialogModalProps } from './DialogModal'
 
 export default {
   title: 'overlays/ConfirmationDialogModal',
-  component: ConfirmationDialogModal,
+  component: DialogModal,
   argTypes: {
     onSubmit: { table: { disable: true } },
     onExitClick: { table: { disable: true } },
@@ -36,26 +36,26 @@ export default {
       </OverlayManagerProvider>
     ),
   ],
-} as Meta<ConfirmationDialogModalProps>
+} as Meta<DialogModalProps>
 
-const OpenTemplate: Story<ConfirmationDialogModalProps> = ({ ...args }) => {
+const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
   return (
-    <ConfirmationDialogModal {...args} show={true} onExitClick={() => null}>
+    <DialogModal {...args} show={true} onExitClick={() => null}>
       <p>Content spanning multiple lines</p>
       <p>Content spanning multiple lines</p>
       <p>Content spanning multiple lines</p>
-    </ConfirmationDialogModal>
+    </DialogModal>
   )
 }
 export const Open = OpenTemplate.bind({})
 
-const ToggleableTemplate: Story<ConfirmationDialogModalProps> = ({ ...args }) => {
+const ToggleableTemplate: Story<DialogModalProps> = ({ ...args }) => {
   const [open, setOpen] = useState(false)
 
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open</Button>
-      <ConfirmationDialogModal
+      <DialogModal
         {...args}
         show={open}
         onExitClick={() => setOpen(false)}
@@ -73,7 +73,7 @@ const ToggleableTemplate: Story<ConfirmationDialogModalProps> = ({ ...args }) =>
         <p>Content spanning multiple lines</p>
         <p>Content spanning multiple lines</p>
         <p>Content spanning multiple lines</p>
-      </ConfirmationDialogModal>
+      </DialogModal>
     </>
   )
 }

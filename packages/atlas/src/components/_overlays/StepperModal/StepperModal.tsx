@@ -8,13 +8,12 @@ import { SvgActionClose } from '@/components/_icons'
 import {
   StyledChevron,
   StyledHeader,
-  StyledModal,
   StyledStepsInfoContainer,
   StyledStop,
   dialogContentCss,
 } from './StepperModal.styles'
 
-import { ConfirmationDialogModalProps } from '../ConfirmationDialogModal'
+import { DialogModal, DialogModalProps } from '../DialogModal'
 
 type Step = {
   title: string
@@ -25,7 +24,7 @@ type StepperModalProps = {
   steps: Step[]
   currentStepIdx?: number
   onExitClick?: () => void
-} & ConfirmationDialogModalProps
+} & DialogModalProps
 
 export const StepperModal: React.FC<StepperModalProps> = ({
   steps,
@@ -39,7 +38,7 @@ export const StepperModal: React.FC<StepperModalProps> = ({
   return (
     <ClassNames>
       {({ css }) => (
-        <StyledModal {...modalProps} contentClassName={css(dialogContentCss)} noContentPadding size="medium">
+        <DialogModal {...modalProps} contentClassName={css(dialogContentCss)} noContentPadding size="medium">
           <StyledHeader>
             <StyledStepsInfoContainer>
               {steps.map((step, idx) => {
@@ -63,7 +62,7 @@ export const StepperModal: React.FC<StepperModalProps> = ({
             </StyledStepsInfoContainer>
           </StyledHeader>
           {steps[currentStepIdx].element}
-        </StyledModal>
+        </DialogModal>
       )}
     </ClassNames>
   )

@@ -96,7 +96,7 @@ export const MyVideosView = () => {
       onError: (error) => SentryLogger.error('Failed to fetch videos', 'MyVideosView', error),
     }
   )
-  const { openConfirmationModal: openDeleteDraftDialog, closeModal: closeDeleteDraftDialog } = useConfirmationModal()
+  const [openDeleteDraftDialog, closeDeleteDraftDialog] = useConfirmationModal()
   const deleteVideo = useDeleteVideo()
 
   const videos = [...(edges?.length ? ['new-video-tile' as const, ...edges] : [])]
@@ -177,7 +177,7 @@ export const MyVideosView = () => {
     openDeleteDraftDialog({
       title: 'Delete this draft?',
       description: 'You will not be able to undo this.',
-      iconType: 'warning',
+      type: 'warning',
       primaryButton: {
         text: 'Remove draft',
         variant: 'destructive',

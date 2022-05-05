@@ -13,7 +13,7 @@ export const useNftTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-  const { openConfirmationModal, closeModal } = useConfirmationModal()
+  const [openConfirmationModal, closeModal] = useConfirmationModal()
   const client = useApolloClient()
 
   const _refetchData = useCallback(
@@ -56,6 +56,7 @@ export const useNftTransactions = () => {
       openConfirmationModal({
         title: 'Remove from sale',
         description: 'Do you really want to remove your item from sale? You can put it on sale anytime.',
+        type: 'warning',
         primaryButton: {
           variant: 'destructive',
           text: 'Remove',

@@ -45,8 +45,7 @@ const StudioLayout = () => {
     isLoading,
   } = useUser()
 
-  const { openConfirmationModal: openUnsupportedBrowserDialog, closeModal: closeUnsupportedBrowserDialog } =
-    useConfirmationModal()
+  const [openUnsupportedBrowserDialog, closeUnsupportedBrowserDialog] = useConfirmationModal()
   const [enterLocation] = useState(location.pathname)
   const hasMembership = !!memberships?.length
 
@@ -57,7 +56,7 @@ const StudioLayout = () => {
   useEffect(() => {
     if (!isAllowedBrowser()) {
       openUnsupportedBrowserDialog({
-        iconType: 'warning',
+        type: 'warning',
         title: 'Unsupported browser detected',
         description:
           'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',

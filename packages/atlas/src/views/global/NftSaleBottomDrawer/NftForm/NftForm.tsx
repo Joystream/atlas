@@ -109,7 +109,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
   const { url: thumbnailPhotoUrl } = useAsset(video?.thumbnailPhoto)
   const { url: memberAvatarUri } = useMemberAvatar(activeMembership)
 
-  const { openConfirmationModal, closeModal } = useConfirmationModal()
+  const [openConfirmationModal, closeModal] = useConfirmationModal()
 
   const handleSubmit = useCallback(() => {
     const startDateValue = getValues('startDate')

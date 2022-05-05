@@ -13,7 +13,7 @@ export const useDeleteVideo = () => {
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
   const removeAssetsWithParentFromUploads = useUploadsStore((state) => state.actions.removeAssetsWithParentFromUploads)
-  const { openConfirmationModal: openDeleteVideoDialog, closeModal: closeDeleteVideoDialog } = useConfirmationModal()
+  const [openDeleteVideoDialog, closeDeleteVideoDialog] = useConfirmationModal()
 
   const client = useApolloClient()
 
@@ -56,7 +56,7 @@ export const useDeleteVideo = () => {
             closeDeleteVideoDialog()
           },
         },
-        iconType: 'warning',
+        type: 'warning',
       })
     },
     [closeDeleteVideoDialog, confirmDeleteVideo, openDeleteVideoDialog]

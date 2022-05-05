@@ -6,7 +6,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { SentryLogger } from '@/utils/logs'
 
 export const useHandleFollowChannel = (id?: string, name?: string | null) => {
-  const { openConfirmationModal: openUnfollowDialog, closeModal: closeUnfollowDialog } = useConfirmationModal()
+  const [openUnfollowDialog, closeUnfollowDialog] = useConfirmationModal()
   const { followChannel } = useFollowChannel()
   const { unfollowChannel } = useUnfollowChannel()
   const isFollowing = usePersonalDataStore((state) => state.followedChannels.some((channel) => channel.id === id))
@@ -19,7 +19,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
     try {
       if (isFollowing) {
         openUnfollowDialog({
-          iconType: 'warning',
+          type: 'warning',
           title: 'Do you want to unfollow?',
           description: `Unfollowing ${name} will no longer show new content from this channel on your following page.`,
           primaryButton: {

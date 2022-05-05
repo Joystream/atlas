@@ -15,7 +15,6 @@ type SizeProps = {
 }
 
 type ContentProps = {
-  denseHeader: boolean
   noContentPadding?: boolean
 }
 
@@ -76,18 +75,7 @@ export const HeaderContent = styled.div`
   justify-content: center;
 `
 
-export const HeaderIconContainer = styled.div`
-  max-height: 32px;
-  max-width: 32px;
-  margin-bottom: ${sizes(4)};
-
-  ${media.sm} {
-    margin-bottom: ${sizes(6)};
-  }
-`
-
-const getDenseHeaderContentStyles = ({ denseHeader, noContentPadding }: ContentProps) =>
-  denseHeader &&
+const getDenseHeaderContentStyles = ({ noContentPadding }: ContentProps) =>
   !noContentPadding &&
   css`
     padding-top: ${sizes(3)};

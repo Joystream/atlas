@@ -46,7 +46,7 @@ const EXTENSION_TIMEOUT = 1500
 
 export const ActiveUserProvider: React.FC = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { openConfirmationModal: openLongLoadingModal, closeModal: closeLongLoadingModal } = useConfirmationModal()
+  const [openLongLoadingModal, closeLongLoadingModal] = useConfirmationModal()
   const activeUserState = useActiveUserStore((state) => state)
   const navigate = useNavigate()
   const unsubscribeRef = React.useRef<(() => void) | null>()
@@ -99,7 +99,7 @@ export const ActiveUserProvider: React.FC = ({ children }) => {
     }
     const timeout = setTimeout(() => {
       openLongLoadingModal({
-        iconType: 'warning',
+        type: 'warning',
         title: 'Failed to connect with extension',
         description:
           "Seems you didn't enable the Polkadot extension and we cannot access your accounts. You can do that by clicking the extension icon in your browser toolbar. If you cannot do that, please reload the page and try again.",

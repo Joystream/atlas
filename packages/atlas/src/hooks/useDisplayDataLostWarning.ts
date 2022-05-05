@@ -8,7 +8,7 @@ type OpenWarningDialogArgs = {
 }
 
 export const useDisplayDataLostWarning = () => {
-  const { openConfirmationModal, closeModal } = useConfirmationModal()
+  const [openConfirmationModal, closeModal] = useConfirmationModal()
 
   const cancelDialog = (onCancel?: () => void) => {
     onCancel?.()
@@ -38,7 +38,7 @@ export const useDisplayDataLostWarning = () => {
           cancelDialog(onCancel)
           closeModal()
         },
-        iconType: 'warning',
+        type: 'warning',
       })
     },
     [closeModal, openConfirmationModal]

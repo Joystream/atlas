@@ -25,11 +25,10 @@ export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) =>
   const navigate = useNavigate()
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const { extensionConnected } = useUser()
-  const { openConfirmationModal: openEnableExtensionDialog, closeModal: closeEnableExtensionDialog } =
-    useConfirmationModal({
-      children: <PolkadotExtensionRejected />,
-      onExitClick: () => closeEnableExtensionDialog(),
-    })
+  const [openEnableExtensionDialog, closeEnableExtensionDialog] = useConfirmationModal({
+    children: <PolkadotExtensionRejected />,
+    onExitClick: () => closeEnableExtensionDialog(),
+  })
   useEffect(() => {
     if (extensionConnected && step === '1') {
       navigate({ search: nextStepPath })

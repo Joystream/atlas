@@ -3,10 +3,10 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
-import { ConfirmationDialogModal } from '@/components/_overlays/ConfirmationDialogModal'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { oldColors, sizes } from '@/styles'
 
-export const StyledDialogModal = styled(ConfirmationDialogModal)`
+export const StyledDialogModal = styled(DialogModal)`
   width: 536px;
 `
 

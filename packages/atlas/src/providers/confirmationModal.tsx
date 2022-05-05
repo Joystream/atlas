@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useMemo, useRef, useState } from 'react
 import { TransitionGroup } from 'react-transition-group'
 
 import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
-import { ConfirmationDialogModal, ConfirmationDialogModalProps } from '@/components/_overlays/ConfirmationDialogModal'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {
@@ -48,7 +47,7 @@ export const ConfirmationModalProvider: React.FC = ({ children }) => {
   )
 }
 
-export const useConfirmationModal = (modalProps?: ConfirmationDialogModalProps & AlertDialogModalProps) => {
+export const useConfirmationModal = (modalProps?: AlertDialogModalProps) => {
   const ctx = useContext(ConfirmationModalContext)
   if (ctx === undefined) {
     throw new Error('useConfirmationModal must be used within a ConfirmationModalProvider')
@@ -62,8 +61,8 @@ export const useConfirmationModal = (modalProps?: ConfirmationDialogModalProps &
     closeModal(modalId)
   }, [closeModal, modalId])
 
-  const _openConfirmationModal = useCallback(
-    (args?: ConfirmationDialogModalProps) =>
+  const _openModal = useCallback(
+    (args?: AlertDialogModalProps) =>
       openModal(modalId, ({ in: inAnimation }) => {
         const _args = args || modalProps
         const handleClick = _args?.onExitClick
@@ -73,20 +72,10 @@ export const useConfirmationModal = (modalProps?: ConfirmationDialogModalProps &
             }
           : undefined
 
-        return <ConfirmationDialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
+        return <AlertDialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
       }),
     [openModal, modalId, modalProps, _closeModal]
   )
 
-  const _openAlertModal = useCallback(
-    (args?: AlertDialogModalProps) =>
-      openModal(modalId, ({ in: inAnimation }) => {
-        const _args = args || modalProps
-
-        return <AlertDialogModal {..._args} show={inAnimation} />
-      }),
-    [openModal, modalId, modalProps]
-  )
-
-  return { openConfirmationModal: _openConfirmationModal, openAlertModal: _openAlertModal, closeModal: _closeModal }
+  return [_openModal, _closeModal]
 }

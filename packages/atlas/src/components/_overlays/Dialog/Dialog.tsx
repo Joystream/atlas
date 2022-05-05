@@ -13,7 +13,6 @@ import {
   FooterButtonsContainer,
   Header,
   HeaderContent,
-  HeaderIconContainer,
   StyledPrimaryButton,
 } from './Dialog.styles'
 
@@ -25,7 +24,7 @@ export type DialogButtonProps = {
 
 export type DialogProps = {
   title?: React.ReactNode
-  icon?: React.ReactNode
+  description?: React.ReactNode
   dividers?: boolean
   size?: DialogSize
   primaryButton?: DialogButtonProps
@@ -44,7 +43,7 @@ export type DialogProps = {
 
 export const Dialog: React.FC<DialogProps> = ({
   title,
-  icon,
+  description,
   dividers = false,
   size = 'default',
   primaryButton,
@@ -67,10 +66,9 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return (
     <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
-      {(title || icon || onExitClick) && (
+      {(title || onExitClick) && (
         <Header dividers={dividers}>
           <HeaderContent>
-            {icon && <HeaderIconContainer>{icon}</HeaderIconContainer>}
             <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
@@ -84,12 +82,12 @@ export const Dialog: React.FC<DialogProps> = ({
           )}
         </Header>
       )}
-      <Content
-        denseHeader={!!icon}
-        data-scroll-lock-scrollable
-        noContentPadding={noContentPadding}
-        className={contentClassName}
-      >
+      <Content data-scroll-lock-scrollable noContentPadding={noContentPadding} className={contentClassName}>
+        {description ? (
+          <Text variant="t200" secondary>
+            {description}
+          </Text>
+        ) : null}
         {children}
       </Content>
       {hasFooter && (

@@ -55,47 +55,44 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
 
-  const { openConfirmationModal: openDifferentFileDialog, closeModal: closeDifferentFileDialog } = useConfirmationModal(
-    {
-      title: 'Different file was selected!',
-      description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
-        asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
-      } to use the new file.`,
-      iconType: 'warning',
-      primaryButton: {
-        text: 'Reselect file',
-        onClick: () => {
-          reselectFile()
-          closeDifferentFileDialog()
-        },
+  const [openDifferentFileDialog, closeDifferentFileDialog] = useConfirmationModal({
+    title: 'Different file was selected!',
+    description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
+      asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
+    } to use the new file.`,
+    type: 'warning',
+    primaryButton: {
+      text: 'Reselect file',
+      onClick: () => {
+        reselectFile()
+        closeDifferentFileDialog()
       },
-      secondaryButton: {
-        text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
-        onClick: () => {
-          if (asset.parentObject.type === 'video') {
-            navigate(absoluteRoutes.studio.videoWorkspace())
-          }
-          if (asset.parentObject.type === 'channel') {
-            navigate(absoluteRoutes.studio.editChannel())
-          }
-          closeDifferentFileDialog()
-        },
+    },
+    secondaryButton: {
+      text: `Edit ${asset.parentObject.type === 'channel' ? 'channel' : 'video'}`,
+      onClick: () => {
+        if (asset.parentObject.type === 'video') {
+          navigate(absoluteRoutes.studio.videoWorkspace())
+        }
+        if (asset.parentObject.type === 'channel') {
+          navigate(absoluteRoutes.studio.editChannel())
+        }
+        closeDifferentFileDialog()
       },
-    }
-  )
-  const { openConfirmationModal: openMissingCropDataDialog, closeModal: closeMissingCropDataDialog } =
-    useConfirmationModal({
-      title: 'Missing asset details',
-      description:
-        "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
-      iconType: 'warning',
-      secondaryButton: {
-        text: 'Close',
-        onClick: () => {
-          closeMissingCropDataDialog()
-        },
+    },
+  })
+  const [openMissingCropDataDialog, closeMissingCropDataDialog] = useConfirmationModal({
+    title: 'Missing asset details',
+    description:
+      "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
+    type: 'warning',
+    secondaryButton: {
+      text: 'Close',
+      onClick: () => {
+        closeMissingCropDataDialog()
       },
-    })
+    },
+  })
 
   const onDrop: DropzoneOptions['onDrop'] = useCallback(
     async (acceptedFiles) => {
