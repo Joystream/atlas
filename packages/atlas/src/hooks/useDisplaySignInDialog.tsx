@@ -83,6 +83,7 @@ export const useDisplaySignInDialog = () => {
       openDialog({
         dividers: true,
         description: <SignInDialogcontent />,
+        noIcon: true,
         primaryButton: {
           text: 'Sign in',
           onClick: () => {
