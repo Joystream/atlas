@@ -47,7 +47,7 @@ export const Border = styled.div<{ 'data-focused': boolean; 'data-processing': b
   width: 100%;
   height: 1px;
   background-color: ${cVar('colorBorderMutedAlpha')};
-  transition: ${cVar('animationTransitionMedium')};
+  transition: all ${cVar('animationTransitionMedium')};
   pointer-events: none;
 
   &[data-focused='true'] {
@@ -93,7 +93,7 @@ export const Container = styled.label<{ 'data-show': boolean; height: number }>`
 
 export const StyledCommentRow = styled(CommentRow)<{ 'show': boolean; 'processing': boolean }>`
   &:hover {
-    ${({ processing, show }) => show && processing && Border} {
+    ${({ processing, show }) => !show && !processing && Border} {
       background-color: ${cVar('colorBorderAlpha')};
     }
 
