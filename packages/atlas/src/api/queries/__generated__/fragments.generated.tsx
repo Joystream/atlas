@@ -440,6 +440,13 @@ export type VideoFieldsFragment = {
   hasMarketing?: boolean | null
   isCensored: boolean
   publishedBeforeJoystream?: Date | null
+  reactions: Array<{
+    __typename?: 'VideoReaction'
+    id: string
+    createdAt: Date
+    reaction: Types.VideoReactionOptions
+    memberId: string
+  }>
   category?: { __typename?: 'VideoCategory'; id: string } | null
   language?: { __typename?: 'Language'; iso: string } | null
   mediaMetadata?: {
@@ -1714,6 +1721,12 @@ export const VideoFieldsFragmentDoc = gql`
     id
     title
     description
+    reactions {
+      id
+      createdAt
+      reaction
+      memberId
+    }
     category {
       id
     }

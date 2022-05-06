@@ -29,6 +29,13 @@ export type GetVideoHeroQuery = {
       hasMarketing?: boolean | null
       isCensored: boolean
       publishedBeforeJoystream?: Date | null
+      reactions: Array<{
+        __typename?: 'VideoReaction'
+        id: string
+        createdAt: Date
+        reaction: Types.VideoReactionOptions
+        memberId: string
+      }>
       category?: { __typename?: 'VideoCategory'; id: string } | null
       language?: { __typename?: 'Language'; iso: string } | null
       mediaMetadata?: {
@@ -540,6 +547,13 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         hasMarketing?: boolean | null
         isCensored: boolean
         publishedBeforeJoystream?: Date | null
+        reactions: Array<{
+          __typename?: 'VideoReaction'
+          id: string
+          createdAt: Date
+          reaction: Types.VideoReactionOptions
+          memberId: string
+        }>
         category?: { __typename?: 'VideoCategory'; id: string } | null
         language?: { __typename?: 'Language'; iso: string } | null
         mediaMetadata?: {
@@ -1050,6 +1064,13 @@ export type GetCategoriesFeaturedVideosQuery = {
       hasMarketing?: boolean | null
       isCensored: boolean
       publishedBeforeJoystream?: Date | null
+      reactions: Array<{
+        __typename?: 'VideoReaction'
+        id: string
+        createdAt: Date
+        reaction: Types.VideoReactionOptions
+        memberId: string
+      }>
       category?: { __typename?: 'VideoCategory'; id: string } | null
       language?: { __typename?: 'Language'; iso: string } | null
       mediaMetadata?: {

@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { Tooltip } from '@/components/Tooltip'
 import { cVar, sizes } from '@/styles'
 
 export const ReactionStepperWrapper = styled.div`
@@ -44,4 +45,8 @@ export const ReactionBarProgress = styled.div<{ likesPercent: number; isProcessi
           ${reactionBarAnimation} 1000ms ease-in-out infinite
         `
       : 'none'};
+`
+
+export const StyledTooltip = styled(Tooltip)`
+  position: absolute;
 `
