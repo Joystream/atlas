@@ -2,14 +2,14 @@ import { useCombobox } from 'downshift'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
-import { SvgActionLoader } from '@/components/_icons'
 
-import { ComboBoxWrapper, ListWrapper } from './ComboBox.styles'
+import { ComboBoxWrapper, ListWrapper, StyledSpinner, StyledTextField, StyledThumbnail } from './ComboBox.styles'
 
-import { TextField, TextFieldProps } from '../TextField'
+import { TextFieldProps } from '../TextField'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
+  thumbnailUrl?: string
 }
 
 export type ComboBoxProps<T = unknown> = {
@@ -71,6 +71,8 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     },
   })
 
+  const noItemsFound = isOpen && !error && inputItems.length === 0 && !loading && notFoundNode
+
   // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
     if (!textFieldRef.current || !comboBoxWrapperRef.current || !textFieldProps.helperText) {
@@ -84,11 +86,11 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
       <div {...getComboboxProps()}>
-        <TextField
+        <StyledTextField
           {...textFieldProps}
-          error={error}
+          error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={loading && <SvgActionLoader />}
+          nodeEnd={loading && <StyledSpinner size="small" />}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>
@@ -103,11 +105,10 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
               })}
               size="large"
               highlight={highlightedIndex === index}
+              nodeStart={item.nodeStart || (item.thumbnailUrl && <StyledThumbnail src={item.thumbnailUrl} />)}
             />
           ))}
-        {isOpen && !error && inputItems.length === 0 && !loading && notFoundNode && (
-          <ListItem {...notFoundNode} size="large" onClick={() => reset()} />
-        )}
+        {noItemsFound && <ListItem {...notFoundNode} size="large" onClick={() => reset()} />}
       </ListWrapper>
     </ComboBoxWrapper>
   )
