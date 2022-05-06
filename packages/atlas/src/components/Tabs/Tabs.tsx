@@ -1,10 +1,14 @@
 import { throttle } from 'lodash-es'
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
+import useDraggableScroll from 'use-draggable-scroll'
 
+import { Text } from '@/components/Text'
 import { transitions } from '@/styles'
 
-import { BackgroundGradient, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+import { BackgroundGradient, StyledButton, StyledPill, Tab, TabsGroup, TabsWrapper } from './Tabs.styles'
+
+import { SvgActionChevronL, SvgActionChevronR } from '../_icons'
 
 export type TabItem = {
   name: string
@@ -16,13 +20,14 @@ export type TabsProps = {
   initialIndex?: number
   onSelectTab: (idx: number) => void
   selected?: number
+  underline?: boolean
   className?: string
 }
 
 const SCROLL_SHADOW_OFFSET = 10
 
 export const Tabs: React.FC<TabsProps> = React.memo(
-  ({ tabs, onSelectTab, initialIndex = -1, selected: paramsSelected, className }) => {
+  ({ tabs, onSelectTab, initialIndex = -1, selected: paramsSelected, underline, className }) => {
     const [_selected, setSelected] = useState(initialIndex)
     const selected = paramsSelected ?? _selected
     const [isContentOverflown, setIsContentOverflown] = useState(false)
@@ -32,6 +37,7 @@ export const Tabs: React.FC<TabsProps> = React.memo(
       left: false,
       right: true,
     })
+    const { onMouseDown } = useDraggableScroll(tabsGroupRef, { direction: 'horizontal' })
 
     useEffect(() => {
       const tabsGroup = tabsGroupRef.current
@@ -77,6 +83,17 @@ export const Tabs: React.FC<TabsProps> = React.memo(
       }
     }
 
+    const handleArrowScroll = (direction: 'left' | 'right') => () => {
+      const tabsGroup = tabsGroupRef.current
+      const tab = tabRef.current
+      if (!tabsGroup || !isContentOverflown || !tab) {
+        return
+      }
+
+      const addition = (direction === 'left' ? -1 : 1) * (tabsGroup.clientWidth - tab.offsetWidth)
+      tabsGroup.scrollLeft = tabsGroup.scrollLeft + addition
+    }
+
     return (
       <TabsWrapper className={className}>
         <CSSTransition
@@ -85,7 +102,15 @@ export const Tabs: React.FC<TabsProps> = React.memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="prev" />
+          <BackgroundGradient direction="prev">
+            <StyledButton
+              onClick={handleArrowScroll('left')}
+              size="small"
+              variant="tertiary"
+              iconOnly
+              icon={<SvgActionChevronL />}
+            />
+          </BackgroundGradient>
         </CSSTransition>
         <CSSTransition
           in={shadowsVisible.right && isContentOverflown}
@@ -93,9 +118,18 @@ export const Tabs: React.FC<TabsProps> = React.memo(
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <BackgroundGradient direction="next" />
+          <BackgroundGradient direction="next">
+            <StyledButton
+              onClick={handleArrowScroll('right')}
+              data-right
+              size="small"
+              variant="tertiary"
+              iconOnly
+              icon={<SvgActionChevronR />}
+            />
+          </BackgroundGradient>
         </CSSTransition>
-        <TabsGroup ref={tabsGroupRef}>
+        <TabsGroup data-underline={!!underline} ref={tabsGroupRef} onMouseDown={onMouseDown}>
           {tabs.map((tab, idx) => (
             <Tab
               onClick={createClickHandler(idx)}
@@ -103,10 +137,15 @@ export const Tabs: React.FC<TabsProps> = React.memo(
               selected={selected === idx}
               ref={selected === idx ? tabRef : null}
             >
-              <span data-badge={tab.badgeNumber}>
+              <Text
+                secondary={selected !== idx}
+                variant={selected === idx ? 't200-strong' : 't200'}
+                align="center"
+                data-badge={tab.badgeNumber}
+              >
                 {tab.name}
                 {tab.pillText && <StyledPill size="small" label={tab.pillText} />}
-              </span>
+              </Text>
             </Tab>
           ))}
         </TabsGroup>
