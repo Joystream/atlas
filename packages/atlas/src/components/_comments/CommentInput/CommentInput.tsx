@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
@@ -26,16 +26,36 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
 
+  useEffect(() => {
+    if (!active) {
+      return
+    }
+    const handleClickOutside = (event: Event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        // stop propagation so it doesn't get triggered again on button click
+        // prevent default so it doesn't trigger unwanted submits
+        event.preventDefault()
+        event.stopPropagation()
+        setActive(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside, true)
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
+    }
+  }, [active])
+
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.currentTarget.value)
 
   const show = !!text || active || processing
 
   return (
-    <StyledCommentRow {...rest}>
+    <StyledCommentRow {...rest} processing={processing} show={show}>
       <Container
         ref={containerRef}
         data-show={show}
         height={textAreaHeight}
+        onFocus={() => setActive(true)}
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
           if (!!text && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
@@ -53,7 +73,6 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
           value={text}
           onChange={onChange}
           onFocus={() => setActive(true)}
-          onBlur={() => setActive(false)}
           disabled={processing}
           data-processing={processing}
         />
@@ -61,6 +80,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
         <ButtonsContainer>
           <Flex>
             <Information
+              placement="top-end"
               headerText="Comments on blockchain"
               text="To publish a comment you need to sign a transaction. For now, no fees are involved."
             />

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
@@ -27,7 +28,13 @@ export default {
 } as Meta<CommentInputProps>
 
 const Template: Story<CommentInputProps & { cancelButton: boolean }> = (args) => (
-  <CommentInput {...args} onCancel={args.cancelButton ? () => ({}) : undefined} />
+  <Container>
+    <CommentInput {...args} onCancel={args.cancelButton ? () => ({}) : undefined} />
+  </Container>
 )
 
 export const Default = Template.bind({})
+
+const Container = styled.div`
+  max-width: 800px;
+`

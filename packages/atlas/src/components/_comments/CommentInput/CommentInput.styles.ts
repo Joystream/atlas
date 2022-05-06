@@ -34,7 +34,7 @@ export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': bool
     font: ${cVar('typographyDesktopT200')};
     letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT200TextTransform')};
-    transition: all ${cVar('animationTransitionFast')};
+    transition: all ${cVar('animationTransitionMedium')};
   }
 
   &[data-processing='true'] {
@@ -46,8 +46,9 @@ export const Border = styled.div<{ 'data-focused': boolean; 'data-processing': b
   overflow-x: hidden;
   width: 100%;
   height: 1px;
-  background-color: ${cVar('colorCoreNeutral800Lighten')};
-  transition: ${cVar('animationTransitionFast')};
+  background-color: ${cVar('colorBorderMutedAlpha')};
+  transition: ${cVar('animationTransitionMedium')};
+  pointer-events: none;
 
   &[data-focused='true'] {
     height: 2px;
@@ -66,7 +67,7 @@ export const Border = styled.div<{ 'data-focused': boolean; 'data-processing': b
       left: 0;
       background-color: ${cVar('colorTextStrong')};
       transform-origin: left;
-      transition: transform ${cVar('animationTransitionFast')};
+      transition: transform ${cVar('animationTransitionMedium')};
       animation: ${reactionBarAnimation} 1000ms ease-in-out infinite;
     }
   }
@@ -84,24 +85,20 @@ export const Container = styled.label<{ 'data-show': boolean; height: number }>`
   transition: height ${cVar('animationTransitionMedium')};
   overflow: hidden;
 
-  &:hover {
-    ${StyledTextArea}::placeholder {
-      color: ${cVar('colorText')};
-    }
-  }
-
   &[data-show='true'] {
     /* expanded component default height - textarea initial height + current textarea height */
     height: calc(128px - 40px + ${({ height }) => height}px);
   }
 `
 
-export const StyledCommentRow = styled(CommentRow)`
+export const StyledCommentRow = styled(CommentRow)<{ 'show': boolean; 'processing': boolean }>`
   &:hover {
-    ${Border} {
-      &[data-show='false'][data-processing='false'] {
-        background-color: ${cVar('colorBorderAlpha')};
-      }
+    ${({ processing, show }) => show && processing && Border} {
+      background-color: ${cVar('colorBorderAlpha')};
+    }
+
+    ${StyledTextArea}::placeholder {
+      color: ${cVar('colorText')};
     }
   }
 `
