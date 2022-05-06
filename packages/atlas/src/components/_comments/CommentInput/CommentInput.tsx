@@ -80,7 +80,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
         <ButtonsContainer>
           <Flex>
             <Information
-              placement="top-end"
+              placement="top-start"
               headerText="Comments on blockchain"
               text="To publish a comment you need to sign a transaction. For now, no fees are involved."
             />
