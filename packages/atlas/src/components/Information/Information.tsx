@@ -13,7 +13,15 @@ export const Information: React.FC<InformationProps> = ({ className, ...tooltipP
   return (
     <InformationWrapper>
       <Tooltip {...tooltipProps} offsetY={4} offsetX={4} hideOnClick={false}>
-        <TouchableWrapper isMobile={isMobile()}>
+        <TouchableWrapper
+          onClick={(event) => {
+            if (isMobile()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+          }}
+          isMobile={isMobile()}
+        >
           <IconWrapper className={className}>
             <StyledSvgActionInformative />
           </IconWrapper>

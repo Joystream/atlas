@@ -12,6 +12,7 @@ export type CommentRowProps = {
   isMemberAvatarLoading?: boolean
   memberAvatarUrl?: string
   memberUrl?: string
+  className?: string
 }
 
 export const CommentRow: React.FC<CommentRowProps> = ({
@@ -21,6 +22,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   memberAvatarUrl,
   isMemberAvatarLoading,
   memberUrl = '',
+  className,
 }) => {
   const smMatch = useMediaMatch('sm')
 
@@ -45,7 +47,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
         <Link to={memberUrl}>
           <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
         </Link>
-        <div>{children}</div>
+        <div className={className}>{children}</div>
       </ContentWrapper>
     </OutlineBox>
   )

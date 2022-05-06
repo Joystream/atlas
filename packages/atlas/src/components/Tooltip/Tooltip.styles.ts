@@ -45,6 +45,8 @@ const getOneLineStyles = ({ oneLine, footer }: TooltipTextProps) => {
 export const TooltipText = styled(Text)<TooltipTextProps>`
   ${getOneLineStyles};
 
+  display: inline-block;
+
   ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
 `
 
