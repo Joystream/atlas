@@ -13,17 +13,23 @@ import { CommentRowProps } from '../CommentRow'
 
 export type CommentInputProps = {
   processing: boolean
+  readOnly?: boolean
+  memberHandle?: string
   onComment?: () => void
   onCancel?: () => void
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onFocus?: () => void
   value?: string
 } & CommentRowProps
 
 export const CommentInput: React.FC<CommentInputProps> = ({
   processing,
+  readOnly = false,
+  memberHandle,
   onCancel,
   onComment,
   onChange,
+  onFocus,
   value,
   ...rest
 }) => {
@@ -59,9 +65,9 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     <StyledCommentRow {...rest} processing={processing} show={show}>
       <Container
         ref={containerRef}
+        onFocus={onFocus}
         data-show={show}
         height={textAreaHeight}
-        onFocus={() => setActive(true)}
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
           if (!!value && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
@@ -75,10 +81,11 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         <StyledTextArea
           ref={mergeRefs([textAreaRef, measureRef])}
           rows={1}
-          placeholder="Leave a comment as bedeho"
+          placeholder={`Leave a comment as ${memberHandle}`}
           value={value}
           onChange={onChange}
-          onFocus={() => setActive(true)}
+          onFocus={() => !readOnly && setActive(true)}
+          onBlur={() => !readOnly && setActive(false)}
           disabled={processing}
           data-processing={processing}
         />
@@ -99,7 +106,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
               Cancel
             </Button>
           )}
-          <Button onClick={onComment} disabled={processing}>
+          <Button onClick={onComment} disabled={processing || !value}>
             {processing ? 'Processing' : 'Comment'}
           </Button>
         </ButtonsContainer>

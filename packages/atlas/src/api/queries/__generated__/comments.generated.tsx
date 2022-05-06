@@ -54,6 +54,7 @@ export type GetCommentsQuery = {
       }
     }
     reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
   }>
 }
 
@@ -112,6 +113,7 @@ export type GetCommentsConnectionQuery = {
           }
         }
         reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+        commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
@@ -12,6 +12,7 @@ import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -29,8 +30,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
+  const { openSignInDialog } = useDisplaySignInDialog()
   const { id } = useParams()
-  const { activeMemberId } = useUser()
+  const { activeMemberId, signIn, activeMembership } = useUser()
+  const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const handleTransaction = useTransaction()
   const { joystream, proxyCallback } = useJoystream()
   const [commentBody, setCommentBody] = useState('')
@@ -47,6 +50,17 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       setSortCommentsBy(value)
     }
   }
+
+  useEffect(() => {
+    if (!highlightedComment) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setHighlightedComment(null)
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  })
 
   if (disabled) {
     return (
@@ -74,9 +88,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           parentCommentId || null,
           proxyCallback(updateStatus)
         ),
-      onTxSync: async () => {
-        refetch()
+      onTxSync: async ({ block }) => {
+        const newCommentsQueryResult = await refetch()
+        const newCommentId = newCommentsQueryResult?.data.comments.find(
+          (comment) => comment.commentcreatedeventcomment?.[0].inBlock === block
+        )?.id
+        setHighlightedComment(newCommentId || null)
         setCommentInputProcessing(false)
+        setCommentBody('')
       },
       onError: () => {
         setCommentInputProcessing(false)
@@ -109,6 +128,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       <CommentWrapper>
         <CommentInput
           processing={commentInputProcessing}
+          readOnly={!activeMemberId}
+          memberHandle={activeMembership?.handle}
+          onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
           onComment={() => handleCreate()}
           value={commentBody}
           onChange={(e) => setCommentBody(e.currentTarget.value)}
@@ -117,6 +139,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
           : comments?.map((comment, idx) => (
               <Comment
+                highlighted={comment.id === highlightedComment}
                 key={`${comment.id}-${idx}`}
                 loading={!comment.id}
                 createdAt={new Date(comment.createdAt)}

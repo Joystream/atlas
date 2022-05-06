@@ -1481,6 +1481,7 @@ export type CommentFieldsFragment = {
     }
   }
   reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+  commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1798,6 +1799,9 @@ export const CommentFieldsFragmentDoc = gql`
     repliesCount
     text
     status
+    commentcreatedeventcomment {
+      inBlock
+    }
   }
   ${BasicMembershipFieldsFragmentDoc}
 `
