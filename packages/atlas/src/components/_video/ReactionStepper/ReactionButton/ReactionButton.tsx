@@ -96,7 +96,6 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
             ref={popoverRef}
             disabled={reactionPopoverDismissed || !authorized}
             onConfirm={() => {
-              // setReactionPopoverDismission(true)
               handleReact(true)
             }}
             onDecline={() => {

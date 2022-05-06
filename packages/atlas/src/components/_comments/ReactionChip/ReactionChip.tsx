@@ -62,29 +62,31 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
     onReactionClick?.(reactionId, reactionPopoverDismissed)
   }
   return (
-    <ReactionsOnboardingPopover
-      ref={popoverRef}
-      disabled={reactionPopoverDismissed}
-      onConfirm={() => {
-        handleReact(true)
-      }}
-      onDecline={() => {
-        popoverRef.current?.hide()
-        onPopoverHide?.()
-      }}
-      trigger={
-        !count && state !== 'processing' ? null : (
-          <ReactionChipButton
-            state={isProcessing ? 'processing' : state}
-            active={active}
-            title={`${pluralizeNoun(count || 0, 'user')} reacted with ${reactionAccessibleName[reactionId]}`}
-            onClick={() => state === 'default' && handleReact(reactionPopoverDismissed)}
-          >
-            <EmojiContainer>{REACTION_TYPE[reactionId]} </EmojiContainer>
-            {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
-          </ReactionChipButton>
-        )
-      }
-    />
+    <div>
+      <ReactionsOnboardingPopover
+        ref={popoverRef}
+        disabled={reactionPopoverDismissed}
+        onConfirm={() => {
+          handleReact(true)
+        }}
+        onDecline={() => {
+          popoverRef.current?.hide()
+          onPopoverHide?.()
+        }}
+        trigger={
+          !count && state !== 'processing' ? null : (
+            <ReactionChipButton
+              state={isProcessing ? 'processing' : state}
+              active={active}
+              title={`${pluralizeNoun(count || 0, 'user')} reacted with ${reactionAccessibleName[reactionId]}`}
+              onClick={() => state === 'default' && handleReact(reactionPopoverDismissed)}
+            >
+              <EmojiContainer>{REACTION_TYPE[reactionId]} </EmojiContainer>
+              {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
+            </ReactionChipButton>
+          )
+        }
+      />
+    </div>
   )
 }
