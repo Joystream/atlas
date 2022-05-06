@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -25,10 +25,14 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
+import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
+import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useTransaction } from '@/providers/transactionManager'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
@@ -54,13 +58,17 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
+  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   useRedirectMigratedContent({ type: 'video' })
+  const { joystream, proxyCallback } = useJoystream()
+  const handleTransaction = useTransaction()
   const { id } = useParams()
+  const { activeMemberId } = useUser()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
   const { withdrawBid } = useNftTransactions()
   const { copyToClipboard } = useClipboard()
-  const { loading, video, error } = useVideo(id ?? '', {
+  const { loading, video, error, refetch } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const nftWidgetProps = useNftWidget(id)
@@ -102,6 +110,49 @@ export const VideoView: React.FC = () => {
   const channelName = video?.channel?.title
   const videoId = video?.id
   const categoryId = video?.category?.id
+  const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
+  const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
+
+  const reactionStepperState = useMemo(() => {
+    if (!video) {
+      return 'loading'
+    }
+    if (videoReactionProcessing) {
+      return 'processing'
+    }
+    const myReaction = video?.reactions.find(({ memberId }) => memberId === activeMemberId)
+    if (myReaction) {
+      if (myReaction.reaction === 'LIKE') {
+        return 'liked'
+      }
+      if (myReaction.reaction === 'UNLIKE') {
+        return 'disliked'
+      }
+    }
+    return 'default'
+  }, [activeMemberId, videoReactionProcessing, video])
+
+  const handleLike = (reaction: VideoReaction) => {
+    if (!joystream || !video || !activeMemberId) {
+      return
+    }
+
+    handleTransaction({
+      preProcess: () => setVideoReactionProcessing(true),
+      txFactory: async (updateStatus) =>
+        (await joystream.extrinsics).reactToVideo(activeMemberId, video.id, reaction, proxyCallback(updateStatus)),
+      minimized: {
+        signErrorMessage: 'Failed to react to video',
+      },
+      onTxSync: async () => {
+        await refetch()
+        setVideoReactionProcessing(false)
+      },
+      onError: async () => {
+        setVideoReactionProcessing(false)
+      },
+    })
+  }
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -219,7 +270,13 @@ export const VideoView: React.FC = () => {
               <SkeletonLoader height={24} width={200} />
             )}
           </Meta>
-          <StyledReactionStepper state="liked" likes={600} dislikes={300} />
+          <StyledReactionStepper
+            onLike={() => handleLike('like')}
+            onDislike={() => handleLike('dislike')}
+            state={reactionStepperState}
+            likes={numberOfLikes}
+            dislikes={numberOfDislikes}
+          />
           <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
             Copy link
           </CopyLink>

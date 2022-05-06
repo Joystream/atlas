@@ -124,6 +124,12 @@ fragment VideoFields on Video {
   id
   title
   description
+  reactions {
+    id
+    createdAt
+    reaction
+    memberId
+  }
   category {
     id
   }
