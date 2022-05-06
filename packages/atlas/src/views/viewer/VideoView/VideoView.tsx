@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -23,15 +23,13 @@ import { useClipboard } from '@/hooks/useClipboard'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
-import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -58,10 +56,7 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
-  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   useRedirectMigratedContent({ type: 'video' })
-  const { joystream, proxyCallback } = useJoystream()
-  const handleTransaction = useTransaction()
   const { id } = useParams()
   const { activeMemberId } = useUser()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
@@ -72,6 +67,8 @@ export const VideoView: React.FC = () => {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const nftWidgetProps = useNftWidget(id)
+
+  const { handleLikeAndDislike, videoReactionProcessing } = useReactionTransactions(refetch)
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -131,28 +128,6 @@ export const VideoView: React.FC = () => {
     }
     return 'default'
   }, [activeMemberId, videoReactionProcessing, video])
-
-  const handleLike = (reaction: VideoReaction) => {
-    if (!joystream || !video || !activeMemberId) {
-      return
-    }
-
-    handleTransaction({
-      preProcess: () => setVideoReactionProcessing(true),
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).reactToVideo(activeMemberId, video.id, reaction, proxyCallback(updateStatus)),
-      minimized: {
-        signErrorMessage: 'Failed to react to video',
-      },
-      onTxSync: async () => {
-        await refetch()
-        setVideoReactionProcessing(false)
-      },
-      onError: async () => {
-        setVideoReactionProcessing(false)
-      },
-    })
-  }
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -271,8 +246,8 @@ export const VideoView: React.FC = () => {
             )}
           </Meta>
           <StyledReactionStepper
-            onLike={() => handleLike('like')}
-            onDislike={() => handleLike('dislike')}
+            onLike={() => video?.id && handleLikeAndDislike(video?.id, 'like')}
+            onDislike={() => video?.id && handleLikeAndDislike(video?.id, 'dislike')}
             state={reactionStepperState}
             likes={numberOfLikes}
             dislikes={numberOfDislikes}

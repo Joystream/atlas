@@ -20,6 +20,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useJoystream } from '@/providers/joystream'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useTransaction } from '@/providers/transactionManager'
@@ -53,13 +54,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentBody, setCommentBody] = useState('')
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
-  const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
 
   const { comments, loading, refetch } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
     { skip: disabled || !id }
   )
+  const { processingCommentReactionId, handleReactToComment } = useReactionTransactions(refetch)
+
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
@@ -87,11 +89,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         state: 'processing' as const,
         count: 0,
         reactionPopoverDismissed: activeMemberId ? reactionPopoverDismissed : true,
-        onPopoverHide: () => {
-          if (!reactionPopoverDismissed) {
-            setProcessingCommentReactionId(null)
-          }
-        },
       }))
 
       return defaultReactions.map((reaction) => {
@@ -207,8 +204,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   createdAt={new Date(comment.createdAt)}
                   text={comment.text}
                   isEdited={comment.isEdited}
-                  onReactionClick={(reactionId, reactionPopoverDismissed) => {
-                    handleReaction(comment.id, reactionId, reactionPopoverDismissed)
+                  onReactionClick={(reactionId) => {
+                    handleReactToComment(comment.id, reactionId)
                   }}
                   isAbleToEdit={comment.author.id === activeMemberId}
                   memberHandle={comment.author.handle}

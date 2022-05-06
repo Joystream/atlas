@@ -19,7 +19,7 @@ export type ReactionChipProps = {
   count?: number
   reactionId: ReactionId
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick?: (type: ReactionId, reactionPopoverDismissed: boolean) => void
+  onReactionClick?: (type: ReactionId) => void
   onPopoverHide?: () => void
   reactionPopoverDismissed?: boolean
 }
@@ -59,7 +59,9 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
   }, [reactionPopoverDismissed, state])
 
   const handleReact = (reactionPopoverDismissed: boolean) => {
-    onReactionClick?.(reactionId, reactionPopoverDismissed)
+    if (reactionPopoverDismissed) {
+      onReactionClick?.(reactionId)
+    }
   }
   return (
     <div>
