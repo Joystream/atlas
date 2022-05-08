@@ -52,7 +52,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, r
     ...baseButtonProps
   } = props
 
-  // const variant = (textOnly ? props.textOnlyVariant : props?.variant) ?? 'primary'
   const iconOnly = !children && !!icon
   const linkProps = getLinkPropsFromTo(to, openLinkInNewTab)
   return (
@@ -93,9 +92,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, r
 })
 Button.displayName = 'Button'
 
-export type TextButton = {
-  variant: Subset<ButtonVariant, 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'warning'>
-} & Omit<ButtonProps, 'textOnly' | 'variant'>
+export type TextButtonProps = {
+  variant?: Subset<ButtonVariant, 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'warning'>
+} & Omit<ButtonProps, '_textOnly' | 'variant'>
 
-export const TextButton = React.forwardRef<HTMLButtonElement>((props, ref) => <Button {...props} _textOnly ref={ref} />)
+export const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>((props, ref) => (
+  <Button {...props} _textOnly ref={ref} />
+))
 TextButton.displayName = 'TextButton'

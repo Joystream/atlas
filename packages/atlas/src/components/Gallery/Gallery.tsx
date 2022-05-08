@@ -33,7 +33,6 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
             <SeeAllLink
               iconPlacement="left"
               icon={<SvgControlsPlay width={16} height={16} />}
-              textOnly
               to={seeAllUrl}
               size="large"
               variant="primary"

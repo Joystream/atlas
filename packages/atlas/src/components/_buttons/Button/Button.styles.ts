@@ -283,17 +283,20 @@ const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | 
   textOnly
     ? css`
         background-color: transparent;
-        box-shadow: none;
+
+        /* box-shadow: none; */
 
         &:hover,
         &:focus {
           background-color: transparent;
-          box-shadow: none;
+
+          /* box-shadow: none; */
         }
 
         &:active {
           background-color: transparent;
-          box-shadow: none;
+
+          /* box-shadow: none; */
         }
       `
     : null
@@ -311,7 +314,8 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
+
+  /* text-decoration: none; */
   border: 0;
   background-color: transparent;
   cursor: pointer;

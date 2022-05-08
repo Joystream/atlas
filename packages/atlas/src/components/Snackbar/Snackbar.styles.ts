@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
 
 import { IconButton } from '../_buttons/IconButton'
@@ -78,7 +78,7 @@ export const SnackbarCloseButton = styled(IconButton)`
   margin-left: ${sizes(4)};
 `
 
-export const SnackbarActionButton = styled(Button)`
+export const SnackbarActionButton = styled(TextButton)`
   margin-top: ${sizes(2)};
   margin-right: ${sizes(2)};
 `

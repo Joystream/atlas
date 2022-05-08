@@ -4,7 +4,7 @@ import React from 'react'
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { oldColors, sizes } from '@/styles'
 
 export const TextContainer = styled.div`
@@ -68,7 +68,7 @@ export const Anchor = styled(Text)<React.HTMLProps<HTMLAnchorElement>>`
   }
 `
 
-export const MemberLink = styled(Button)`
+export const MemberLink = styled(TextButton)`
   justify-content: start;
 
   &,

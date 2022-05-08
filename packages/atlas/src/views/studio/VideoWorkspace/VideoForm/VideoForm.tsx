@@ -9,7 +9,7 @@ import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
@@ -553,15 +553,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           )}
         </SwitchFormField>
         <MoreSettingsHeader>
-          <Button
+          <TextButton
             size="large"
             iconPlacement="right"
-            textOnly
             icon={moreSettingsVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
             onClick={() => setMoreSettingsVisible(!moreSettingsVisible)}
           >
             {getHiddenSectionLabel()}
-          </Button>
+          </TextButton>
           <MoreSettingsDescription as="p" variant="t200" secondary visible={!moreSettingsVisible}>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`

@@ -57,7 +57,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
             </SnackbarDescription>
           )}
           {actionText && (
-            <SnackbarActionButton textOnly onClick={onActionClick} icon={actionIcon}>
+            <SnackbarActionButton onClick={onActionClick} icon={actionIcon}>
               {actionText}
             </SnackbarActionButton>
           )}

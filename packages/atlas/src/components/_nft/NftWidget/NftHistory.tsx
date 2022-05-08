@@ -84,7 +84,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
           <Text variant={size === 'medium' ? 'h300' : 'h200'} secondary>
             {text}
             {' by '}
-            <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)} variant="secondary" textOnly>
+            <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)} variant="secondary">
               <Text variant={size === 'medium' ? 'h300' : 'h200'}>{member?.handle}</Text>
             </OwnerHandle>
           </Text>

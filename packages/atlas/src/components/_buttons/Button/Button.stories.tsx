@@ -3,7 +3,7 @@ import React from 'react'
 
 import { SvgActionAddVideo } from '@/components/_icons'
 
-import { Button, ButtonProps } from './Button'
+import { Button, ButtonProps, TextButton, TextButtonProps } from './Button'
 
 export default {
   title: 'button/Button',
@@ -20,7 +20,7 @@ export default {
       type: { name: 'boolean', required: false },
       defaultValue: false,
     },
-    textOnly: { table: { disable: true } },
+    _textOnly: { table: { disable: true } },
     iconPlacement: {
       control: { type: 'select', options: ['left', 'right'] },
       defaultValue: 'left',
@@ -71,89 +71,88 @@ export const WithIcon = Template.bind({})
 WithIcon.args = {
   icon: <SvgActionAddVideo />,
 }
-const TextOnlyTemplate: Story<ButtonProps> = (args) => (
+const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
   <div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large">
+      <TextButton {...args} size="large">
         Large
-      </Button>
-      <Button {...args} size="medium">
+      </TextButton>
+      <TextButton {...args} size="medium">
         Medium
-      </Button>
-      <Button {...args} size="small">
+      </TextButton>
+      <TextButton {...args} size="small">
         Small
-      </Button>
+      </TextButton>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="secondary">
+      <TextButton {...args} size="large" variant="secondary">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="destructive-secondary">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="secondary">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="secondary">
+      </TextButton>
+      <TextButton {...args} size="small" variant="secondary">
         Small
-      </Button>
+      </TextButton>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="destructive">
+      <TextButton {...args} size="large" variant="destructive">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="destructive">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="destructive">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="destructive">
+      </TextButton>
+      <TextButton {...args} size="small" variant="destructive">
         Small
-      </Button>
+      </TextButton>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="warning">
+      <TextButton {...args} size="large" variant="warning">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="warning">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="warning">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="warning">
+      </TextButton>
+      <TextButton {...args} size="small" variant="warning">
         Small
-      </Button>
+      </TextButton>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="tertiary">
+      <TextButton {...args} size="large" variant="tertiary">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="tertiary">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="tertiary">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="tertiary">
+      </TextButton>
+      <TextButton {...args} size="small" variant="tertiary">
         Small
-      </Button>
+      </TextButton>
     </div>
   </div>
 )
 
 const IconOnlyTemplate: Story<ButtonProps> = (args) => (
   <>
-    <Button {...args} textOnly={false} size="large" />
-    <Button {...args} textOnly={false} size="medium" />
-    <Button {...args} textOnly={false} size="small" />
-    <Button {...args} textOnly={false} size="large" variant="secondary" />
-    <Button {...args} textOnly={false} size="medium" variant="secondary" />
-    <Button {...args} textOnly={false} size="small" variant="secondary" />
-    <Button {...args} textOnly={false} size="large" variant="tertiary" />
-    <Button {...args} textOnly={false} size="medium" variant="tertiary" />
-    <Button {...args} textOnly={false} size="small" variant="tertiary" />
-    <Button {...args} textOnly={false} size="large" variant="destructive-secondary" />
-    <Button {...args} textOnly={false} size="medium" variant="destructive-secondary" />
-    <Button {...args} textOnly={false} size="small" variant="destructive-secondary" />
-    <Button {...args} textOnly={false} size="large" variant="warning-secondary" />
-    <Button {...args} textOnly={false} size="medium" variant="warning-secondary" />
-    <Button {...args} textOnly={false} size="small" variant="warning-secondary" />
+    <Button {...args} size="large" />
+    <Button {...args} size="medium" />
+    <Button {...args} size="small" />
+    <Button {...args} size="large" variant="secondary" />
+    <Button {...args} size="medium" variant="secondary" />
+    <Button {...args} size="small" variant="secondary" />
+    <Button {...args} size="large" variant="tertiary" />
+    <Button {...args} size="medium" variant="tertiary" />
+    <Button {...args} size="small" variant="tertiary" />
+    <Button {...args} size="large" variant="destructive-secondary" />
+    <Button {...args} size="medium" variant="destructive-secondary" />
+    <Button {...args} size="small" variant="destructive-secondary" />
+    <Button {...args} size="large" variant="warning-secondary" />
+    <Button {...args} size="medium" variant="warning-secondary" />
+    <Button {...args} size="small" variant="warning-secondary" />
   </>
 )
 
 export const TextOnly = TextOnlyTemplate.bind({})
 TextOnly.args = {
-  textOnly: true,
   icon: <SvgActionAddVideo />,
 }
 

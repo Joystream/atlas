@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { BorderWrapper } from '@/components/_buttons/Button/Button.styles'
 import { cVar, sizes } from '@/styles'
 
@@ -53,7 +53,7 @@ export const OwnerLabel = styled(Text)`
   grid-area: owner-label;
 `
 
-export const OwnerHandle = styled(Button)`
+export const OwnerHandle = styled(TextButton)`
   grid-area: owner;
   justify-content: start;
 
