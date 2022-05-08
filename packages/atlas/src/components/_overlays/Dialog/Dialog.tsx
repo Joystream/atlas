@@ -18,8 +18,6 @@ import {
 
 export type DialogButtonProps = {
   text: string
-  disabled?: boolean
-  onClick?: (e: React.MouseEvent) => void
 } & Omit<ButtonProps, 'children'>
 
 export type DialogProps = {
@@ -60,7 +58,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const isCompact = size === 'compact'
   const smMatch = useMediaMatch('sm')
   const hasFooter = !!additionalActionsNode || !!primaryButton || !!secondaryButton
-  const buttonProps: ButtonProps = { size: isCompact ? 'small' : 'medium' }
+  const buttonSize = isCompact ? 'small' : 'medium'
 
   return (
     <DialogContainer onSubmit={onSubmit} size={size} className={className} as={as}>
@@ -70,13 +68,7 @@ export const Dialog: React.FC<DialogProps> = ({
             <Text variant={isCompact ? 'h300' : smMatch ? 'h500' : 'h400'}>{title}</Text>
           </HeaderContent>
           {onExitClick && (
-            <Button
-              iconOnly
-              icon={<SvgActionClose />}
-              aria-label="close modal"
-              onClick={onExitClick}
-              variant="tertiary"
-            />
+            <Button icon={<SvgActionClose />} aria-label="close modal" onClick={onExitClick} variant="tertiary" />
           )}
         </Header>
       )}
@@ -92,12 +84,12 @@ export const Dialog: React.FC<DialogProps> = ({
           {additionalActionsNode}
           <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
-              <Button variant={secondaryButton.variant || 'secondary'} {...buttonProps} {...secondaryButton}>
+              <Button size={buttonSize} {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
             {primaryButton && (
-              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} {...buttonProps} {...primaryButton}>
+              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} {...primaryButton} size={buttonSize}>
                 {primaryButton.text}
               </StyledPrimaryButton>
             )}

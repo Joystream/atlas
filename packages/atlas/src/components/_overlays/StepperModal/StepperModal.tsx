@@ -52,13 +52,7 @@ export const StepperModal: React.FC<StepperModalProps> = ({
                   </Fragment>
                 )
               })}
-              <Button
-                iconOnly
-                icon={<SvgActionClose />}
-                onClick={onExitClick}
-                aria-label="close modal"
-                variant="tertiary"
-              />
+              <Button icon={<SvgActionClose />} onClick={onExitClick} aria-label="close modal" variant="tertiary" />
             </StyledStepsInfoContainer>
           </StyledHeader>
           {steps[currentStepIdx].element}

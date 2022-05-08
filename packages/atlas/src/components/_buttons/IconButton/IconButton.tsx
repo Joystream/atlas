@@ -8,7 +8,7 @@ export type IconButtonProps = Omit<ButtonProps, 'textOnly' | 'iconOnly' | 'icon'
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ variant = 'primary', children, ...buttonProps }, ref) => {
-    return <Button iconOnly icon={children} ref={ref} variant={variant} {...buttonProps} />
+    return <Button icon={children} ref={ref} variant={variant} {...buttonProps} />
   }
 )
 IconButton.displayName = 'IconButton'

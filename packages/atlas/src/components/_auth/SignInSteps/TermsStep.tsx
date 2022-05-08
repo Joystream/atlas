@@ -51,7 +51,7 @@ export const TermsStep: React.FC = () => {
               classNames={transitions.names.fade}
               unmountOnExit
             >
-              <ScrollButton iconOnly icon={<SvgActionChevronB />} variant="secondary" onClick={handleScrollToBottom} />
+              <ScrollButton icon={<SvgActionChevronB />} variant="secondary" onClick={handleScrollToBottom} />
             </CSSTransition>
           </TermsOverlay>
         </TermsBox>

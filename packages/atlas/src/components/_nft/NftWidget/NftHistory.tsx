@@ -38,7 +38,7 @@ export const NftHistory: React.FC<NftHistoryProps> = ({ size, width, historyItem
     <>
       <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
         <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
-        <StyledChevronButton data-open={isOpen} iconOnly variant="tertiary" icon={<SvgActionChevronB />} />
+        <StyledChevronButton data-open={isOpen} variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
       {isOpen && (
         <HistoryPanelContainer>

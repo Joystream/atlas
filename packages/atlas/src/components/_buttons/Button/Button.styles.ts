@@ -3,7 +3,7 @@ import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 const ButtonSizeObj = { large: 'large', medium: 'medium', small: 'small' }
 export type ButtonSize = keyof typeof ButtonSizeObj
@@ -47,11 +47,7 @@ export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: B
   margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `
 
-const variantStyles = ({
-  variant,
-  'data-text-only': textOnly,
-  'data-icon-only': iconOnly,
-}: ButtonBaseStyleProps): SerializedStyles => {
+const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
   switch (variant) {
     case 'primary':
       return css`
@@ -114,39 +110,39 @@ const variantStyles = ({
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.transparentPrimary[18]};
+          background-color: ${cVar('colorCoreNeutral700Lighten')};
         }
 
         &:active {
-          background-color: ${oldColors.transparentPrimary[10]};
+          background-color: ${cVar('colorCoreNeutral800Lighten')};
         }
       `
     case 'destructive':
       return css`
-        background-color: ${oldColors.secondary.alert[100]};
+        background-color: ${cVar('colorCoreRed400')};
         color: ${cVar('colorCoreNeutral50')};
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.secondary.alert[200]};
+          background-color: ${cVar('colorCoreRed600')};
         }
 
         &:active {
-          background-color: ${oldColors.secondary.alert[300]};
+          background-color: ${cVar('colorCoreRed700')};
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${oldColors.gray[600]}`};
+          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
         }
       `
     case 'destructive-secondary':
       return css`
         box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
-        color: ${oldColors.secondary.alert[50]};
+        color: ${cVar('colorCoreRed100')};
 
         path {
-          fill: ${oldColors.secondary.alert[50]};
+          fill: ${cVar('colorCoreRed100')};
         }
 
         &:hover,
@@ -156,10 +152,10 @@ const variantStyles = ({
 
         &:active {
           box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
-          color: ${textOnly && oldColors.secondary.alert[100]};
+          color: ${textOnly && cVar('colorCoreRed400')};
 
           path {
-            fill: ${textOnly && oldColors.secondary.alert[100]};
+            fill: ${textOnly && cVar('colorCoreRed400')};
           }
         }
 
@@ -170,34 +166,34 @@ const variantStyles = ({
       `
     case 'warning':
       return css`
-        background-color: ${oldColors.secondary.warning[100]};
-        color: ${oldColors.gray[900]};
+        background-color: ${cVar('colorCoreYellow200')};
+        color: ${cVar('colorCoreNeutral900')};
 
         path {
-          fill: ${oldColors.gray[900]};
+          fill: ${cVar('colorCoreNeutral900')};
         }
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.secondary.warning[200]};
+          background-color: ${cVar('colorCoreYellow300')};
         }
 
         &:active {
-          background-color: ${oldColors.secondary.warning[300]};
+          background-color: ${cVar('colorCoreYellow400')};
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${oldColors.gray[600]}`};
+          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
         }
       `
     case 'warning-secondary':
       return css`
-        color: ${oldColors.secondary.warning[100]};
+        color: ${cVar('colorCoreYellow200')};
         box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
 
         path {
-          fill: ${oldColors.secondary.warning[100]};
+          fill: ${cVar('colorCoreYellow200')};
         }
 
         &:hover,
@@ -206,11 +202,11 @@ const variantStyles = ({
         }
 
         &:active {
-          color: ${textOnly && oldColors.secondary.warning[300]};
+          color: ${textOnly && cVar('colorCoreYellow400')};
           box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
 
           path {
-            fill: ${textOnly && oldColors.secondary.warning[300]};
+            fill: ${textOnly && cVar('colorCoreYellow400')};
           }
         }
 
@@ -222,27 +218,7 @@ const variantStyles = ({
   }
 }
 
-const textOnlyStyles = ({ 'data-text-only': textOnly }: ButtonBaseStyleProps): SerializedStyles | null =>
-  textOnly
-    ? css`
-        background-color: ${oldColors.transparent};
-        box-shadow: none;
-        padding: 0;
-
-        &:hover,
-        &:focus {
-          background-color: ${oldColors.transparent};
-          box-shadow: none;
-        }
-
-        &:active {
-          background-color: ${oldColors.transparent};
-          box-shadow: none;
-        }
-      `
-    : null
-
-export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'data-text-only'>>`
+export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -265,12 +241,69 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'data-text-on
   }
 `
 
+const ButtonSizeStyles = ({ size, iconOnly, textOnly }: ButtonBaseStyleProps) => {
+  if (iconOnly) {
+    switch (size) {
+      case 'large':
+        return css`
+          padding: ${sizes(3)};
+        `
+      case 'medium':
+        return css`
+          padding: ${sizes(2.5)};
+        `
+      case 'small':
+        return css`
+          padding: ${sizes(2)};
+        `
+    }
+  } else if (textOnly) {
+    return css`
+      padding: 0;
+    `
+  } else {
+    switch (size) {
+      case 'large':
+        return css`
+          padding: ${sizes(3)} ${sizes(5)};
+        `
+      case 'medium':
+        return css`
+          padding: ${sizes(2.5)} ${sizes(4)};
+        `
+      case 'small':
+        return css`
+          padding: ${sizes(2)} ${sizes(3)};
+        `
+    }
+  }
+}
+
+const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | null =>
+  textOnly
+    ? css`
+        background-color: transparent;
+        box-shadow: none;
+
+        &:hover,
+        &:focus {
+          background-color: transparent;
+          box-shadow: none;
+        }
+
+        &:active {
+          background-color: transparent;
+          box-shadow: none;
+        }
+      `
+    : null
+
 export type ButtonBaseStyleProps = {
   variant: ButtonVariant
   fullWidth?: boolean
-  'data-size': ButtonSize
-  'data-text-only': boolean
-  'data-icon-only': boolean
+  size: ButtonSize
+  textOnly: boolean
+  iconOnly: boolean
   'data-badge'?: string | number | boolean
 }
 export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<ButtonBaseStyleProps>`
@@ -287,7 +320,8 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   transition-timing-function: ${cVar('animationTimingFast')};
   transition-property: background-color, box-shadow;
 
-  ${variantStyles};
+  ${ButtonVariantStyles};
+  ${ButtonSizeStyles};
   ${textOnlyStyles};
   ${smallBadgeStyles};
 
@@ -295,34 +329,6 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
     position: absolute;
     right: -6px;
     top: -6px;
-  }
-
-  /* paddings */
-  &[data-size=${ButtonSizeObj.small}] {
-    padding: ${sizes(2)} ${sizes(3)};
-  }
-  &[data-size=${ButtonSizeObj.medium}] {
-    padding: ${sizes(2.5)} ${sizes(4)};
-  }
-  &[data-size=${ButtonSizeObj.large}] {
-    padding: ${sizes(3)} ${sizes(5)};
-  }
-
-  &[data-icon-only='true'] {
-    &[data-size=${ButtonSizeObj.small}] {
-      padding: ${sizes(2)};
-    }
-    &[data-size=${ButtonSizeObj.medium}] {
-      padding: ${sizes(2.5)};
-    }
-    &[data-size=${ButtonSizeObj.large}] {
-      padding: ${sizes(3)};
-    }
-  }
-
-  &[data-text-only='true'] {
-    padding-left: 0;
-    padding-right: 0;
   }
 
   &:disabled,

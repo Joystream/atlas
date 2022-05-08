@@ -45,7 +45,6 @@ export const NotificationsView = () => {
       variant="tertiary"
       size={smMatch ? 'large' : 'medium'}
       onClick={unselectAllNotifications}
-      iconOnly
       icon={<SvgActionClose />}
     />
   )

@@ -25,8 +25,6 @@ import {
 
 export type ActionDialogButtonProps = {
   text?: string
-  disabled?: boolean
-  onClick?: (e: React.MouseEvent) => void
   tooltip?: TooltipProps
 } & Omit<ButtonProps, 'children'>
 

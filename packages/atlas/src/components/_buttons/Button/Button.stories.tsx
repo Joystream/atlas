@@ -88,7 +88,7 @@ const TextOnlyTemplate: Story<ButtonProps> = (args) => (
       <Button {...args} size="large" variant="secondary">
         Large
       </Button>
-      <Button {...args} size="medium" variant="secondary">
+      <Button {...args} size="medium" variant="destructive-secondary">
         Medium
       </Button>
       <Button {...args} size="small" variant="secondary">
@@ -96,24 +96,35 @@ const TextOnlyTemplate: Story<ButtonProps> = (args) => (
       </Button>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="destructive-secondary">
+      <Button {...args} size="large" variant="destructive">
         Large
       </Button>
-      <Button {...args} size="medium" variant="destructive-secondary">
+      <Button {...args} size="medium" variant="destructive">
         Medium
       </Button>
-      <Button {...args} size="small" variant="destructive-secondary">
+      <Button {...args} size="small" variant="destructive">
         Small
       </Button>
     </div>
     <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="warning-secondary">
+      <Button {...args} size="large" variant="warning">
         Large
       </Button>
-      <Button {...args} size="medium" variant="warning-secondary">
+      <Button {...args} size="medium" variant="warning">
         Medium
       </Button>
-      <Button {...args} size="small" variant="warning-secondary">
+      <Button {...args} size="small" variant="warning">
+        Small
+      </Button>
+    </div>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+      <Button {...args} size="large" variant="tertiary">
+        Large
+      </Button>
+      <Button {...args} size="medium" variant="tertiary">
+        Medium
+      </Button>
+      <Button {...args} size="small" variant="tertiary">
         Small
       </Button>
     </div>
@@ -122,21 +133,21 @@ const TextOnlyTemplate: Story<ButtonProps> = (args) => (
 
 const IconOnlyTemplate: Story<ButtonProps> = (args) => (
   <>
-    <Button {...args} size="large" />
-    <Button {...args} size="medium" />
-    <Button {...args} size="small" />
-    <Button {...args} size="large" variant="secondary" />
-    <Button {...args} size="medium" variant="secondary" />
-    <Button {...args} size="small" variant="secondary" />
-    <Button {...args} size="large" variant="tertiary" />
-    <Button {...args} size="medium" variant="tertiary" />
-    <Button {...args} size="small" variant="tertiary" />
-    <Button {...args} size="large" variant="destructive-secondary" />
-    <Button {...args} size="medium" variant="destructive-secondary" />
-    <Button {...args} size="small" variant="destructive-secondary" />
-    <Button {...args} size="large" variant="warning-secondary" />
-    <Button {...args} size="medium" variant="warning-secondary" />
-    <Button {...args} size="small" variant="warning-secondary" />
+    <Button {...args} textOnly={false} size="large" />
+    <Button {...args} textOnly={false} size="medium" />
+    <Button {...args} textOnly={false} size="small" />
+    <Button {...args} textOnly={false} size="large" variant="secondary" />
+    <Button {...args} textOnly={false} size="medium" variant="secondary" />
+    <Button {...args} textOnly={false} size="small" variant="secondary" />
+    <Button {...args} textOnly={false} size="large" variant="tertiary" />
+    <Button {...args} textOnly={false} size="medium" variant="tertiary" />
+    <Button {...args} textOnly={false} size="small" variant="tertiary" />
+    <Button {...args} textOnly={false} size="large" variant="destructive-secondary" />
+    <Button {...args} textOnly={false} size="medium" variant="destructive-secondary" />
+    <Button {...args} textOnly={false} size="small" variant="destructive-secondary" />
+    <Button {...args} textOnly={false} size="large" variant="warning-secondary" />
+    <Button {...args} textOnly={false} size="medium" variant="warning-secondary" />
+    <Button {...args} textOnly={false} size="small" variant="warning-secondary" />
   </>
 )
 

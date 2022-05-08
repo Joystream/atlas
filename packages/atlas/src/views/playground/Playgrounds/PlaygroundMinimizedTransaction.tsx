@@ -64,7 +64,7 @@ export const PlaygroundMinimizedTransaction = () => {
             {editMode === id ? (
               <>
                 <TextField defaultValue={title ?? ''} ref={inputRef} />
-                <Button onClick={() => updateVideoName(id)} iconOnly icon={<SvgActionChevronR />} />
+                <Button onClick={() => updateVideoName(id)} icon={<SvgActionChevronR />} />
               </>
             ) : (
               <Button fullWidth onClick={() => setEditMode(id)}>
