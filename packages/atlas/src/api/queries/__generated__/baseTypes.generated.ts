@@ -1477,6 +1477,7 @@ export type BidEdge = {
 export type BidMadeCompletingAuctionEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'BidMadeCompletingAuctionEvent'
+    bidders: Array<Membership>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -1592,6 +1593,9 @@ export type BidMadeCompletingAuctionEventUpdateInput = {
 export type BidMadeCompletingAuctionEventWhereInput = {
   AND?: InputMaybe<Array<BidMadeCompletingAuctionEventWhereInput>>
   OR?: InputMaybe<Array<BidMadeCompletingAuctionEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -1808,6 +1812,7 @@ export type Bounty = BaseGraphQlObject & {
   vetoedEvent?: Maybe<BountyVetoedEvent>
   /** Number of blocks from end of funding period until people can no longer submit bounty submissions */
   workPeriod: Scalars['Int']
+  worksubmittedeventbounty?: Maybe<Array<WorkSubmittedEvent>>
 }
 
 export type BountyCanceledEvent = BaseGraphQlObject &
@@ -2492,17 +2497,11 @@ export enum BountyEntryOrderByInput {
 }
 
 export type BountyEntryStatus =
-  | BountyEntryStatusCashedOut
   | BountyEntryStatusPassed
   | BountyEntryStatusRejected
   | BountyEntryStatusWinner
   | BountyEntryStatusWithdrawn
   | BountyEntryStatusWorking
-
-export type BountyEntryStatusCashedOut = {
-  __typename?: 'BountyEntryStatusCashedOut'
-  reward?: Maybe<Scalars['Float']>
-}
 
 export type BountyEntryStatusPassed = {
   __typename?: 'BountyEntryStatusPassed'
@@ -3395,6 +3394,9 @@ export type BountyWhereInput = {
   workPeriod_in?: InputMaybe<Array<Scalars['Int']>>
   workPeriod_lt?: InputMaybe<Scalars['Int']>
   workPeriod_lte?: InputMaybe<Scalars['Int']>
+  worksubmittedeventbounty_every?: InputMaybe<WorkSubmittedEventWhereInput>
+  worksubmittedeventbounty_none?: InputMaybe<WorkSubmittedEventWhereInput>
+  worksubmittedeventbounty_some?: InputMaybe<WorkSubmittedEventWhereInput>
 }
 
 export type BountyWhereUniqueInput = {
@@ -12013,8 +12015,9 @@ export type Membership = BaseGraphQlObject & {
   isFoundingMember: Scalars['Boolean']
   /** Whether member has been verified by membership working group. */
   isVerified: Scalars['Boolean']
-  memberEnglishAuctionBids: Array<EnglishAuctionSettledEvent>
-  memberOpenAuctionBids: Array<OpenAuctionBidAcceptedEvent>
+  memberBidMadeCompletingAuctionEvents: Array<BidMadeCompletingAuctionEvent>
+  memberEnglishAuctionSettledEvents: Array<EnglishAuctionSettledEvent>
+  memberOpenAuctionAcceptedBidEvents: Array<OpenAuctionBidAcceptedEvent>
   memberaccountsupdatedeventmember?: Maybe<Array<MemberAccountsUpdatedEvent>>
   memberinvitedeventinvitingMember?: Maybe<Array<MemberInvitedEvent>>
   memberinvitedeventnewMember?: Maybe<Array<MemberInvitedEvent>>
@@ -12732,12 +12735,15 @@ export type MembershipWhereInput = {
   isFoundingMember_in?: InputMaybe<Array<Scalars['Boolean']>>
   isVerified_eq?: InputMaybe<Scalars['Boolean']>
   isVerified_in?: InputMaybe<Array<Scalars['Boolean']>>
-  memberEnglishAuctionBids_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberEnglishAuctionBids_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberEnglishAuctionBids_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
-  memberOpenAuctionBids_every?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
-  memberOpenAuctionBids_none?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
-  memberOpenAuctionBids_some?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberBidMadeCompletingAuctionEvents_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberBidMadeCompletingAuctionEvents_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberBidMadeCompletingAuctionEvents_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberEnglishAuctionSettledEvents_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionSettledEvents_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionSettledEvents_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_every?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_none?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_some?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
   memberaccountsupdatedeventmember_every?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_none?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_some?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
@@ -29495,6 +29501,8 @@ export type WorkEntryWithdrawnEventWhereUniqueInput = {
 export type WorkSubmittedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'WorkSubmittedEvent'
+    bounty: Bounty
+    bountyId: Scalars['String']
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -29529,6 +29537,7 @@ export type WorkSubmittedEventConnection = {
 }
 
 export type WorkSubmittedEventCreateInput = {
+  bounty: Scalars['ID']
   description?: InputMaybe<Scalars['String']>
   entry: Scalars['ID']
   inBlock: Scalars['Float']
@@ -29545,6 +29554,8 @@ export type WorkSubmittedEventEdge = {
 }
 
 export enum WorkSubmittedEventOrderByInput {
+  BountyAsc = 'bounty_ASC',
+  BountyDesc = 'bounty_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   DeletedAtAsc = 'deletedAt_ASC',
@@ -29568,6 +29579,7 @@ export enum WorkSubmittedEventOrderByInput {
 }
 
 export type WorkSubmittedEventUpdateInput = {
+  bounty?: InputMaybe<Scalars['ID']>
   description?: InputMaybe<Scalars['String']>
   entry?: InputMaybe<Scalars['ID']>
   inBlock?: InputMaybe<Scalars['Float']>
@@ -29580,6 +29592,7 @@ export type WorkSubmittedEventUpdateInput = {
 export type WorkSubmittedEventWhereInput = {
   AND?: InputMaybe<Array<WorkSubmittedEventWhereInput>>
   OR?: InputMaybe<Array<WorkSubmittedEventWhereInput>>
+  bounty?: InputMaybe<BountyWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>

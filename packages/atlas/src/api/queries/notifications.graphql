@@ -38,7 +38,7 @@ query GetNftNotifications($memberId: ID!, $limit: Int!) {
   }
 
   bidMadeCompletingAuctionEvents(
-    where: { ownerMember: { id_eq: $memberId } }
+    where: { OR: [{ ownerMember: { id_eq: $memberId } }, { bidders_some: { id_eq: $memberId } }] }
     limit: $limit
     orderBy: [createdAt_DESC]
   ) {
@@ -46,6 +46,9 @@ query GetNftNotifications($memberId: ID!, $limit: Int!) {
     createdAt
     inBlock
     member {
+      ...BasicMembershipFields
+    }
+    ownerMember {
       ...BasicMembershipFields
     }
     video {
@@ -56,7 +59,7 @@ query GetNftNotifications($memberId: ID!, $limit: Int!) {
   }
 
   openAuctionBidAcceptedEvents(
-    where: { winningBidder: { id_eq: $memberId } }
+    where: { OR: [{ winningBidder: { id_eq: $memberId } }, { bidders_some: { id_eq: $memberId } }] }
     limit: $limit
     orderBy: [createdAt_DESC]
   ) {
@@ -72,6 +75,35 @@ query GetNftNotifications($memberId: ID!, $limit: Int!) {
     }
     winningBid {
       amount
+    }
+    winningBidder {
+      ...BasicMembershipFields
+    }
+  }
+
+  englishAuctionSettledEvents(
+    where: {
+      OR: [
+        { ownerMember: { id_eq: $memberId } }
+        { winner: { id_eq: $memberId } }
+        { bidders_some: { id_eq: $memberId } }
+      ]
+    }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    createdAt
+    inBlock
+    ownerMember {
+      ...BasicMembershipFields
+    }
+    winner {
+      ...BasicMembershipFields
+    }
+    video {
+      id
+      title
     }
   }
 }
