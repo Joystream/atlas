@@ -125,26 +125,32 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
   const commonOpts: QueryHookOptions = {
     onError: (error) => SentryLogger.error('Failed to fetch channels', 'ExpandableChannelsList', error),
   }
+  const commonWhere = {
+    where: {
+      activeVideosCounter_gt: 4,
+    },
+  }
+
+  const discover = useDiscoverChannels(commonWhere, { ...commonOpts, skip: queryType !== 'discover' })
+  const popular = usePopularChannels(commonWhere, { ...commonOpts, skip: queryType !== 'popular' })
+  const promising = usePromisingChannels(commonWhere, { ...commonOpts, skip: queryType !== 'promising' })
+  // regular channels query needs explicit limit and sorting as it's not defined by Orion
+  const regular = useChannels(
+    {
+      limit: 15,
+      orderBy: ChannelOrderByInput.CreatedAtAsc,
+      where: { ...commonWhere.where, language: { iso_contains: selectedLanguage } },
+    },
+    { ...commonOpts, skip: queryType !== 'regular' }
+  )
 
   if (queryType === 'discover') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useDiscoverChannels({}, commonOpts)
+    return discover
   } else if (queryType === 'popular') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return usePopularChannels({}, commonOpts)
+    return popular
   } else if (queryType === 'promising') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return usePromisingChannels({}, commonOpts)
+    return promising
   } else {
-    // regular channels query needs explicit limit and sorting as it's not defined by Orion
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useChannels(
-      {
-        limit: 15,
-        orderBy: ChannelOrderByInput.CreatedAtAsc,
-        where: { language: { iso_contains: selectedLanguage }, activeVideosCounter_gt: 0 },
-      },
-      commonOpts
-    )
+    return regular
   }
 }
