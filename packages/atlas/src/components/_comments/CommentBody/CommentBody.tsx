@@ -23,7 +23,8 @@ export const CommentBody = ({ children }: { children?: string }) => {
     setCommentExpanded((prevState) => !prevState)
   }
 
-  const trimmedComment = children?.trim()
+  // show only one empty line between paragraphs
+  const trimmedComment = children?.trim().replace(/\n\s*\n\s*\n/g, '\n\n')
 
   return (
     <>
