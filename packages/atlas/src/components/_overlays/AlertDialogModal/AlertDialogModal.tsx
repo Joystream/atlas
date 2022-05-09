@@ -28,6 +28,7 @@ export type AlertDialogProps = {
   className?: string
   onSubmit?: (e?: FormEvent) => void
   type?: 'destructive' | 'warning' | 'informative'
+  noIcon?: boolean
   headerIcon?: React.ReactNode
   onExitClick?: () => void
   dividers?: boolean
@@ -45,6 +46,7 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
   title,
   children,
   type = 'informative',
+  noIcon,
   headerIcon,
   ...dialogProps
 }) => {
@@ -60,23 +62,24 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
         secondaryButton={secondaryButton}
       >
         <>
-          {headerIcon || (
-            <HeaderIconContainer>
-              <InformativeIconWrapper variant={type}>
-                {smMatch ? (
-                  isInformative ? (
-                    <SvgAlertsInformative32 />
+          {!noIcon &&
+            (headerIcon || (
+              <HeaderIconContainer>
+                <InformativeIconWrapper variant={type}>
+                  {smMatch ? (
+                    isInformative ? (
+                      <SvgAlertsInformative32 />
+                    ) : (
+                      <SvgAlertsWarning32 />
+                    )
+                  ) : isInformative ? (
+                    <SvgAlertsInformative24 />
                   ) : (
-                    <SvgAlertsWarning32 />
-                  )
-                ) : isInformative ? (
-                  <SvgAlertsInformative24 />
-                ) : (
-                  <SvgAlertsWarning24 />
-                )}
-              </InformativeIconWrapper>
-            </HeaderIconContainer>
-          )}
+                    <SvgAlertsWarning24 />
+                  )}
+                </InformativeIconWrapper>
+              </HeaderIconContainer>
+            ))}
           <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
             {title}
           </Text>
