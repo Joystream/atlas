@@ -384,8 +384,7 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  /* text-decoration: none; */
+  text-decoration: none;
   border: 0;
   background-color: transparent;
   cursor: pointer;
