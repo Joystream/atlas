@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { format } from 'date-fns'
+import { format, roundToNearestMinutes } from 'date-fns'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -51,6 +51,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
+  const [open, setOpen] = useState(false)
   const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
     () => ({
       value: { type: 'pick-date' },
@@ -135,25 +136,30 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         triggerMode="manual"
         triggerTarget={selectRef.current}
         trigger={null}
+        onShow={() => {
+          setOpen(true)
+        }}
         onHide={() => {
+          setOpen(false)
           if (pickedValue?.type === 'pick-date') {
             setPickedValue(null)
             onChange(null)
           }
         }}
       >
-        <DatePicker
-          open
-          inline
-          selected={startDate}
-          timeFormat="HH:mm"
-          onChange={handlePickDate}
-          openToDate={minDate ?? undefined}
-          minDate={minDate || new Date(msTimestamp)}
-          maxDate={maxDate}
-          showDisabledMonthNavigation
-          showTimeSelect
-        />
+        {open && (
+          <DatePicker
+            inline
+            selected={startDate || roundToNearestMinutes(minDate || new Date(msTimestamp), { nearestTo: 30 })}
+            timeFormat="HH:mm"
+            onChange={handlePickDate}
+            openToDate={minDate ?? undefined}
+            minDate={minDate || new Date(msTimestamp)}
+            maxDate={maxDate}
+            showDisabledMonthNavigation
+            showTimeSelect
+          />
+        )}
       </Popover>
     </Container>
   )
