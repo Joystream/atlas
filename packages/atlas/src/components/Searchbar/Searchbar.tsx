@@ -220,15 +220,11 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
             {!!query && (
-              <CancelButton onClick={handleCancel} variant="tertiary" size="small">
-                <SvgActionClose />
-              </CancelButton>
+              <CancelButton icon={<SvgActionClose />} onClick={handleCancel} variant="tertiary" size="small" />
             )}
             {!query && !searchOpen && (
               <>
-                <SearchButton variant="tertiary" onClick={onClick}>
-                  <SvgActionSearch />
-                </SearchButton>
+                <SearchButton icon={<SvgActionSearch />} variant="tertiary" onClick={onClick} />
                 <SearchHelper variant="t100" secondary>
                   Press <ShortcutIndicator>/</ShortcutIndicator>
                 </SearchHelper>

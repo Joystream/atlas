@@ -84,7 +84,7 @@ export const Dialog: React.FC<DialogProps> = ({
           {additionalActionsNode}
           <FooterButtonsContainer additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}>
             {secondaryButton && (
-              <Button size={buttonSize} {...secondaryButton}>
+              <Button variant={secondaryButton.variant || 'secondary'} size={buttonSize} {...secondaryButton}>
                 {secondaryButton.text}
               </Button>
             )}
