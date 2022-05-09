@@ -58,7 +58,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, sele
     SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
   }, [queryNodeStateError])
 
-  const accountSet = !!activeAccountId && !!extensionConnected
+  const accountSet = !!selectedAccountAddress && !!extensionConnected
 
   const { reset, register, errors, handleSubmit, isValid, getValues, watch } = useCreateEditMemberForm({})
 
