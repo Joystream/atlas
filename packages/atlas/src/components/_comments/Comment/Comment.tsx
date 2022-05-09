@@ -11,12 +11,12 @@ import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
 import {
-  CommentBody,
   CommentFooter,
   CommentFooterItems,
   CommentHeader,
   CommentHeaderDot,
   CommentWrapper,
+  DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
   StyledFooterSkeletonLoader,
@@ -24,6 +24,7 @@ import {
   StyledSvgActionTrash,
 } from './Comment.styles'
 
+import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
 import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionType } from '../ReactionChip'
 import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
@@ -150,15 +151,13 @@ export const Comment: React.FC<CommentProps> = ({
                     </>
                   )}
                 </CommentHeader>
-                <CommentBody variant="t200" secondary color={isDeleted ? cVar('colorTextMuted') : undefined}>
-                  {isDeleted ? (
-                    <>
-                      <StyledSvgActionTrash /> Comment deleted by Author
-                    </>
-                  ) : (
-                    comment
-                  )}
-                </CommentBody>
+                {isDeleted ? (
+                  <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
+                    <StyledSvgActionTrash /> Comment deleted by Author
+                  </DeletedComment>
+                ) : (
+                  <CommentBody>{comment}</CommentBody>
+                )}
               </div>
             )}
           </CSSTransition>
