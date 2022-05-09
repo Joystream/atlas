@@ -7,7 +7,7 @@ import { getNftStatus, useVideo } from '@/api/hooks'
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionCopy,
   SvgActionEdit,
@@ -139,11 +139,7 @@ export const VideoTilePublisher: React.FC<VideoTilePublisherProps> = React.memo(
             }
           : undefined,
         topRight: {
-          element: (
-            <IconButton size="small" onClick={onEditClick}>
-              <SvgActionEdit />
-            </IconButton>
-          ),
+          element: <Button icon={<SvgActionEdit />} size="small" onClick={onEditClick} />,
           clickable: true,
           type: 'hover',
         },

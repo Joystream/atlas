@@ -16,7 +16,7 @@ import {
 } from './Step.styles'
 
 import { Text } from '../Text'
-import { IconButton } from '../_buttons/IconButton'
+import { Button } from '../_buttons/Button'
 
 export type StepProps = {
   title: string
@@ -88,9 +88,12 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
           </StepDetails>
         </StepStatus>
         {((onDelete && variant === 'completed' && !isLoading) || disabled) && (
-          <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
-            {disabled ? <SvgActionLock /> : <SvgActionTrash />}
-          </IconButton>
+          <Button
+            icon={disabled ? <SvgActionLock /> : <SvgActionTrash />}
+            variant="tertiary"
+            disabled={disabled}
+            onClick={() => !disabled && onDelete?.()}
+          />
         )}
       </StepWrapper>
     )

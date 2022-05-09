@@ -1,7 +1,7 @@
 import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronL } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
@@ -25,9 +25,7 @@ export const VideoHeroHeader: React.FC<VideoHeroHeaderProps> = ({ loading, icon,
       >
         <StyledVideoHeroHeader>
           {!loading ? (
-            <IconButton variant="tertiary" to={absoluteRoutes.viewer.discover()}>
-              <SvgActionChevronL />
-            </IconButton>
+            <Button icon={<SvgActionChevronL />} variant="tertiary" to={absoluteRoutes.viewer.discover()} />
           ) : (
             <SkeletonLoader rounded height={40} width={40} />
           )}

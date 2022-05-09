@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionCheck, SvgActionChevronR } from '@/components/_icons'
 import { transitions } from '@/styles'
 
@@ -19,6 +18,8 @@ import {
   StyledCircularProgress,
   StyledSvgGlyphChevronDown,
 } from './ProgressDrawer.styles'
+
+import { Button } from '../_buttons/Button'
 
 export type Step = { title: string; onClick: () => void; completed: boolean }
 export type ProgressDrawerProps = {
@@ -55,9 +56,12 @@ export const ProgressDrawer: React.FC<ProgressDrawerProps> = ({ steps, className
               {stepsCompletedNumber}/{steps.length}
             </StepsCompletedText>
           </CircularProgresaBarContainer>
-          <IconButton variant="secondary" onClick={() => setIsHidden(!isHidden)} size="small">
-            <StyledSvgGlyphChevronDown isHidden={isHidden} />
-          </IconButton>
+          <Button
+            icon={<StyledSvgGlyphChevronDown isHidden={isHidden} />}
+            variant="secondary"
+            onClick={() => setIsHidden(!isHidden)}
+            size="small"
+          />
         </StepsProgressContainer>
       </BottomRowContainer>
     </Container>

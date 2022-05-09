@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionChevronL, SvgActionClose, SvgActionSearch } from '@/components/_icons'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -22,6 +21,8 @@ import {
   StyledForm,
   StyledSvgOutlineSearch,
 } from './Searchbar.styles'
+
+import { Button } from '../_buttons/Button'
 
 type SearchbarProps = {
   onCancel?: () => void
@@ -181,7 +182,8 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             {(mdMatch || searchOpen || !!query) && (
               <>
                 {!mdMatch && searchOpen ? (
-                  <IconButton
+                  <Button
+                    icon={<SvgActionChevronL />}
                     onClick={() => {
                       onClose()
                       if (!routerQuery) {
@@ -189,9 +191,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                       }
                     }}
                     variant="tertiary"
-                  >
-                    <SvgActionChevronL />
-                  </IconButton>
+                  />
                 ) : (
                   <StyledSvgOutlineSearch highlighted={searchOpen} width={24} height={24} />
                 )}

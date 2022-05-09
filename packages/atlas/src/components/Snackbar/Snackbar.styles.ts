@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
-
-import { IconButton } from '../_buttons/IconButton'
 
 type SnackbarWrapperProps = {
   snackbarHeight?: number
@@ -74,7 +72,7 @@ export const StyledInnerWrapper = styled.div`
   padding: ${sizes(3)};
 `
 
-export const SnackbarCloseButton = styled(IconButton)`
+export const SnackbarCloseButton = styled(Button)`
   margin-left: ${sizes(4)};
 `
 

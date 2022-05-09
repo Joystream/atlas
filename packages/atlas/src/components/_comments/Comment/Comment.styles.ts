@@ -2,12 +2,12 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, sizes, square } from '@/styles'
 
-export const KebabMenuIconButton = styled(IconButton)<{ isActive: boolean }>`
+export const KebabMenuIconButton = styled(Button)<{ isActive: boolean }>`
   opacity: 0;
   pointer-events: ${({ isActive }) => (isActive ? 'auto' : 'none')};
 

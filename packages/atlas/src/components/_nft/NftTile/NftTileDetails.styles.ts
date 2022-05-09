@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes, square } from '@/styles'
 
 export const Header = styled.div`
@@ -16,7 +16,7 @@ type ActiveProps = {
   isActive?: boolean
 }
 
-export const KebabMenuButtonIcon = styled(IconButton)<ActiveProps>`
+export const KebabMenuButtonIcon = styled(Button)<ActiveProps>`
   ${square(32)};
 
   opacity: 0;

@@ -5,7 +5,6 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { VideoHeroData } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid'
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgActionPlayAlt, SvgActionSoundOff, SvgActionSoundOn } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { BackgroundVideoPlayer } from '@/components/_video/BackgroundVideoPlayer'
@@ -122,9 +121,12 @@ export const VideoHero: React.FC<VideoHeroProps> = ({
                   Play
                 </Button>
                 {withMuteButton && (
-                  <IconButton size={smMatch ? 'large' : 'medium'} variant="secondary" onClick={handleSoundToggleClick}>
-                    {!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
-                  </IconButton>
+                  <Button
+                    icon={!soundMuted ? <SvgActionSoundOn /> : <SvgActionSoundOff />}
+                    size={smMatch ? 'large' : 'medium'}
+                    variant="secondary"
+                    onClick={handleSoundToggleClick}
+                  />
                 )}
               </ButtonsContainer>
             ) : (

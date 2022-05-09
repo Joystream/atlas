@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar, media, sizes, transitions } from '@/styles'
 
@@ -43,7 +43,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   }
 `
 
-export const SearchButton = styled(IconButton)`
+export const SearchButton = styled(Button)`
   position: absolute;
 `
 

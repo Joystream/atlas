@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { OwnerPill } from '@/components/OwnerPill'
 import { Pill, PillGroup } from '@/components/Pill'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import {
   SvgActionCopy,
   SvgActionDraft,
@@ -172,11 +172,7 @@ Publisher.args = {
       element: <Pill variant="overlay" label="30:12" />,
     },
     topRight: {
-      element: (
-        <IconButton size="small">
-          <SvgActionEdit />
-        </IconButton>
-      ),
+      element: <Button size="small" icon={<SvgActionEdit />} />,
       clickable: true,
       type: 'hover',
     },

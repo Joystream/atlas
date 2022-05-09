@@ -47,16 +47,12 @@ export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: B
   margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `
 
-const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
+const ButtonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
   switch (variant) {
     case 'primary':
       return css`
         background-color: ${cVar('colorCoreBlue500')};
-        color: ${textOnly ? cVar('colorCoreBlue300') : cVar('colorTextStrong')};
-
-        path {
-          fill: ${textOnly && cVar('colorCoreBlue300')};
-        }
+        color: ${cVar('colorTextStrong')};
 
         &:hover,
         &:focus {
@@ -65,16 +61,11 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
 
         &:active {
           background-color: ${cVar('colorCoreBlue900')};
-          color: ${textOnly && cVar('colorCoreBlue400')};
-
-          path {
-            fill: ${textOnly && cVar('colorCoreBlue400')};
-          }
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
+          background-color: ${cVar('colorCoreNeutral600')};
         }
       `
     case 'secondary':
@@ -91,11 +82,6 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
 
         &:active {
           box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
-          color: ${textOnly && cVar('colorCoreNeutral300')};
-
-          path {
-            fill: ${textOnly && cVar('colorCoreNeutral300')};
-          }
         }
 
         &:disabled,
@@ -133,16 +119,16 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
+          background-color: ${cVar('colorCoreNeutral600')};
         }
       `
     case 'destructive-secondary':
       return css`
         box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
-        color: ${cVar('colorCoreRed100')};
+        color: ${cVar('colorCoreRed200')};
 
         path {
-          fill: ${cVar('colorCoreRed100')};
+          fill: ${cVar('colorCoreRed200')};
         }
 
         &:hover,
@@ -152,11 +138,6 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
 
         &:active {
           box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
-          color: ${textOnly && cVar('colorCoreRed400')};
-
-          path {
-            fill: ${textOnly && cVar('colorCoreRed400')};
-          }
         }
 
         &:disabled,
@@ -184,7 +165,7 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
+          background-color: ${cVar('colorCoreNeutral600')};
         }
       `
     case 'warning-secondary':
@@ -202,12 +183,7 @@ const ButtonVariantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStylePro
         }
 
         &:active {
-          color: ${textOnly && cVar('colorCoreYellow400')};
           box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
-
-          path {
-            fill: ${textOnly && cVar('colorCoreYellow400')};
-          }
         }
 
         &:disabled,
@@ -224,13 +200,10 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   box-sizing: border-box;
   height: 100%;
   visibility: hidden;
-
-  &[data-text-only='true'] {
-    margin-top: -0.5px;
-    margin-bottom: -0.5px;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-  }
+  margin-top: ${({ textOnly }) => textOnly && '-0.5px'};
+  margin-bottom: ${({ textOnly }) => textOnly && '-0.5px'};
+  border-bottom-width: ${({ textOnly }) => textOnly && '1px'};
+  border-bottom-style: ${({ textOnly }) => textOnly && 'solid'};
 
   &:hover {
     visibility: visible;
@@ -279,27 +252,124 @@ const ButtonSizeStyles = ({ size, iconOnly, textOnly }: ButtonBaseStyleProps) =>
   }
 }
 
-const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | null =>
-  textOnly
-    ? css`
-        background-color: transparent;
+const textOnlyStyles = ({ textOnly, variant }: ButtonBaseStyleProps) => {
+  if (!textOnly) return
 
-        /* box-shadow: none; */
+  let variantCss
+  switch (variant) {
+    case 'primary':
+      variantCss = css`
+        color: ${cVar('colorCoreBlue300')};
 
-        &:hover,
-        &:focus {
-          background-color: transparent;
-
-          /* box-shadow: none; */
+        path {
+          fill: ${cVar('colorCoreBlue300')};
         }
 
         &:active {
-          background-color: transparent;
+          color: ${cVar('colorCoreBlue400')};
 
-          /* box-shadow: none; */
+          path {
+            fill: ${cVar('colorCoreBlue400')};
+          }
         }
       `
-    : null
+      break
+    case 'secondary':
+      variantCss = css`
+        color: ${cVar('colorCoreNeutral50')};
+
+        &:active {
+          color: ${cVar('colorCoreNeutral300')};
+
+          path {
+            fill: ${cVar('colorCoreNeutral300')};
+          }
+        }
+      `
+      break
+    case 'tertiary':
+      variantCss = css`
+        color: ${cVar('colorCoreNeutral300')};
+
+        path {
+          fill: ${cVar('colorCoreNeutral300')};
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+          color: ${cVar('colorCoreNeutral50')};
+
+          path {
+            fill: ${cVar('colorCoreNeutral50')};
+          }
+        }
+
+        ${BorderWrapper} {
+          border: none;
+        }
+      `
+      break
+    case 'destructive':
+      variantCss = css`
+        color: ${cVar('colorCoreRed200')};
+
+        path {
+          fill: ${cVar('colorCoreRed200')};
+        }
+
+        &:active {
+          color: ${cVar('colorCoreRed400')};
+
+          path {
+            fill: ${cVar('colorCoreRed400')};
+          }
+        }
+      `
+      break
+    case 'warning':
+      variantCss = css`
+        color: ${cVar('colorCoreYellow200')};
+
+        path {
+          fill: ${cVar('colorCoreYellow200')};
+        }
+
+        &:active {
+          color: ${cVar('colorCoreYellow400')};
+
+          path {
+            fill: ${cVar('colorCoreYellow400')};
+          }
+        }
+      `
+      break
+  }
+
+  return [
+    css`
+      background-color: transparent;
+      box-shadow: none;
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      &:active {
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      &:disabled,
+      &[aria-disabled='true'] {
+        background-color: transparent;
+      }
+    `,
+    variantCss,
+  ]
+}
 
 export type ButtonBaseStyleProps = {
   variant: ButtonVariant
@@ -322,12 +392,16 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
   transition-duration: ${cVar('animationTimingFast')};
   transition-timing-function: ${cVar('animationTimingFast')};
-  transition-property: background-color, box-shadow;
+  transition-property: background-color, box-shadow, color, fill;
 
   ${ButtonVariantStyles};
   ${ButtonSizeStyles};
   ${textOnlyStyles};
   ${smallBadgeStyles};
+
+  path {
+    transition: fill ${cVar('animationTransitionFast')};
+  }
 
   &[data-badge]::after {
     position: absolute;
@@ -339,7 +413,7 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
-    color: ${cVar('colorCoreNeutral50')};
+    color: ${({ textOnly }) => !textOnly && cVar('colorCoreNeutral50')};
   }
 
   &:focus ${BorderWrapper} {

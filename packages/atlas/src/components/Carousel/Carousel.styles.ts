@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+
+import { Button } from '../_buttons/Button'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -9,7 +10,7 @@ export const Container = styled.div`
   position: relative;
 `
 
-export const Arrow = styled(IconButton)`
+export const Arrow = styled(Button)`
   display: none;
   z-index: ${zIndex.nearOverlay};
   cursor: pointer;
