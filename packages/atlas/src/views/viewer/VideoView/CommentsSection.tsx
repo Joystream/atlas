@@ -122,19 +122,20 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           disabled={loading}
         />
       </CommentsSectionHeader>
+      <CommentInput
+        processing={commentInputProcessing}
+        readOnly={!activeMemberId}
+        memberHandle={activeMembership?.handle}
+        onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
+        onComment={() => handleCreate()}
+        value={commentBody}
+        withoutOutlineBox
+        onChange={(e) => setCommentBody(e.currentTarget.value)}
+      />
       {comments && !comments.length && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
       <CommentWrapper>
-        <CommentInput
-          processing={commentInputProcessing}
-          readOnly={!activeMemberId}
-          memberHandle={activeMembership?.handle}
-          onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
-          onComment={() => handleCreate()}
-          value={commentBody}
-          onChange={(e) => setCommentBody(e.currentTarget.value)}
-        />
         {loading
           ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
           : comments?.map((comment, idx) => (

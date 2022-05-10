@@ -184,5 +184,6 @@ export const CommentsSectionHeader = styled.div`
 
 export const CommentWrapper = styled.div`
   display: grid;
+  margin-top: ${sizes(8)};
   gap: ${sizes(8)};
 `

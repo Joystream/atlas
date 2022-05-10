@@ -13,6 +13,7 @@ export type CommentRowProps = {
   memberAvatarUrl?: string
   memberUrl?: string
   className?: string
+  withoutOutlineBox?: boolean
 }
 
 export const CommentRow: React.FC<CommentRowProps> = ({
@@ -23,6 +24,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   isMemberAvatarLoading,
   memberUrl = '',
   className,
+  withoutOutlineBox = false,
 }) => {
   const smMatch = useMediaMatch('sm')
 
@@ -42,7 +44,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
 
   const avatarSize = getAvatarSize()
   return (
-    <OutlineBox highlighted={!!highlighted}>
+    <OutlineBox highlighted={!!highlighted} withoutOutlineBox={withoutOutlineBox}>
       <ContentWrapper indented={!!indented}>
         <Link to={memberUrl}>
           <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
