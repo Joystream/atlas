@@ -139,7 +139,7 @@ const useChannelsListData = (queryType: ChannelsQueryType, selectedLanguage: str
     {
       limit: 15,
       orderBy: ChannelOrderByInput.CreatedAtAsc,
-      where: { ...commonWhere.where, language: { iso_contains: selectedLanguage } },
+      where: { activeVideosCounter_gt: 1, language: { iso_contains: selectedLanguage } },
     },
     { ...commonOpts, skip: queryType !== 'regular' }
   )
