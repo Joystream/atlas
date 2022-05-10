@@ -13,7 +13,7 @@ export const useSubsribeAccountBalance = () => {
       return
     }
 
-    let unsubscribe
+    let unsubscribe: () => void
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
         activeMembership.controllerAccount,
@@ -22,7 +22,9 @@ export const useSubsribeAccountBalance = () => {
     }
     init()
 
-    return unsubscribe
+    return () => {
+      unsubscribe()
+    }
   }, [activeMembership, joystream, proxyCallback])
 
   return accountBalance
