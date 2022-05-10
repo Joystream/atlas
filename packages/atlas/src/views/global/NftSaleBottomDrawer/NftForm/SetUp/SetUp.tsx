@@ -33,6 +33,7 @@ type SetUpProps = {
   selectedType: Listing
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
+  handleGoForward: () => void
 }
 
 export const SetUp: React.FC<SetUpProps> = ({
@@ -41,6 +42,7 @@ export const SetUp: React.FC<SetUpProps> = ({
   setActiveInputs,
   maxEndDate,
   maxStartDate,
+  handleGoForward,
 }) => {
   const {
     register,
@@ -133,13 +135,18 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }))
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    handleGoForward()
+  }
+
   return (
     <>
       <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
       <Text variant="t300" secondary>
         {selectedType && headerText[selectedType].caption}
       </Text>
-      <form>
+      <form onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
             <TextField
