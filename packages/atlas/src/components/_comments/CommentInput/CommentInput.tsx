@@ -75,7 +75,10 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     <StyledCommentRow {...rest} processing={processing} show={show}>
       <Container
         ref={containerRef}
-        onFocus={onFocus}
+        onFocus={() => {
+          onFocus?.()
+          !readOnly && setActive(true)
+        }}
         data-show={show}
         height={textAreaHeight}
         onKeyDown={(e) => {
@@ -94,9 +97,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             rows={1}
             value={value}
             placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
-            onChange={onChange}
-            onFocus={() => !readOnly && setActive(true)}
-            onBlur={() => !readOnly && setActive(false)}
+            onChange={(e) => !readOnly && onChange?.(e)}
             disabled={processing}
             data-processing={processing}
           />
