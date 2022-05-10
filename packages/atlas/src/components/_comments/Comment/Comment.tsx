@@ -89,7 +89,7 @@ export const Comment: React.FC<CommentProps> = ({
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
   const allReactionsApplied =
-    reactions && reactions.filter((r) => r.count)?.length >= Object.values(REACTION_TYPE).length
+    reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
 
   const getReactionState = useCallback(
     (state?: ReactionChipState): ReactionChipState | undefined => {

@@ -44,7 +44,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
     name: Number(key) as ReactionId,
-    value,
+    value: value.emoji,
   }))
 
   const handleReactionClick = (reaction: ReactionId) => {
