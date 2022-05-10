@@ -2,6 +2,7 @@ import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import TextareaAutosize from 'react-textarea-autosize'
 
+import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 import { CommentRow } from '../CommentRow'
@@ -13,6 +14,23 @@ const reactionBarAnimation = keyframes`
   to {
     transform: translateX(100%) scaleX(50%);
   }
+`
+
+export const TextAreaWrapper = styled.div`
+  position: relative;
+`
+
+export const CustomPlaceholder = styled(Text)`
+  position: absolute;
+  padding: 2px;
+  opacity: 0;
+  top: 0;
+  color: ${cVar('colorTextMuted')};
+  user-select: none;
+  transition: all ${cVar('animationTransitionMedium')};
+`
+export const CustomPlaceholderHandle = styled(Text)`
+  color: inherit;
 `
 
 export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': boolean }>`
@@ -29,12 +47,12 @@ export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': bool
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
 
+  :placeholder-shown ~ ${CustomPlaceholder} {
+    opacity: 1;
+  }
+
   ::placeholder {
-    color: ${cVar('colorTextMuted')};
-    font: ${cVar('typographyDesktopT200')};
-    letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-    text-transform: ${cVar('typographyDesktopT200TextTransform')};
-    transition: all ${cVar('animationTransitionMedium')};
+    opacity: 0;
   }
 
   &[data-processing='true'] {
@@ -97,7 +115,7 @@ export const StyledCommentRow = styled(CommentRow)<{ 'show': boolean; 'processin
       background-color: ${cVar('colorBorderAlpha')};
     }
 
-    ${StyledTextArea}::placeholder {
+    ${StyledTextArea} ~ ${CustomPlaceholder} {
       color: ${cVar('colorText')};
     }
   }

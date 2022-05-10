@@ -7,7 +7,17 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { Border, ButtonsContainer, Container, Flex, StyledCommentRow, StyledTextArea } from './CommentInput.styles'
+import {
+  Border,
+  ButtonsContainer,
+  Container,
+  CustomPlaceholder,
+  CustomPlaceholderHandle,
+  Flex,
+  StyledCommentRow,
+  StyledTextArea,
+  TextAreaWrapper,
+} from './CommentInput.styles'
 
 import { CommentRowProps } from '../CommentRow'
 
@@ -78,17 +88,27 @@ export const CommentInput: React.FC<CommentInputProps> = ({
           }
         }}
       >
-        <StyledTextArea
-          ref={mergeRefs([textAreaRef, measureRef])}
-          rows={1}
-          placeholder={`Leave a comment as ${memberHandle}`}
-          value={value}
-          onChange={onChange}
-          onFocus={() => !readOnly && setActive(true)}
-          onBlur={() => !readOnly && setActive(false)}
-          disabled={processing}
-          data-processing={processing}
-        />
+        <TextAreaWrapper>
+          <StyledTextArea
+            ref={mergeRefs([textAreaRef, measureRef])}
+            rows={1}
+            value={value}
+            placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
+            onChange={onChange}
+            onFocus={() => !readOnly && setActive(true)}
+            onBlur={() => !readOnly && setActive(false)}
+            disabled={processing}
+            data-processing={processing}
+          />
+          <CustomPlaceholder as="p" variant="t200">
+            Leave a public comment as
+            {memberHandle ? (
+              <CustomPlaceholderHandle variant="t200-strong"> {memberHandle}</CustomPlaceholderHandle>
+            ) : (
+              '...'
+            )}
+          </CustomPlaceholder>
+        </TextAreaWrapper>
 
         <ButtonsContainer>
           <Flex>
