@@ -283,6 +283,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
       selectedType={listingType}
       activeInputs={activeInputs}
       setActiveInputs={setActiveInputs}
+      handleGoForward={handleGoForward}
     />,
     <AcceptTerms key="step-content-3" selectedType={listingType} formData={getValues()} />,
   ]
