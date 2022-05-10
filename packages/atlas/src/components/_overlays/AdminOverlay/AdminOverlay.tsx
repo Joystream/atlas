@@ -72,9 +72,7 @@ export const AdminOverlay: React.FC = () => {
 
   return (
     <Container>
-      <CloseButton variant="tertiary" onClick={handleCloseClick} size="small">
-        <SvgActionClose />
-      </CloseButton>
+      <CloseButton icon={<SvgActionClose />} variant="tertiary" onClick={handleCloseClick} size="small" />
       <HorizontalSpacedContainer>
         <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
           Home

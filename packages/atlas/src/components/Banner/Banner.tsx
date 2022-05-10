@@ -31,13 +31,12 @@ export const Banner: React.FC<BannerProps> = ({ title, description, className, i
           <BannerText variant="h400">{title}</BannerText>
           {dismissable && (
             <CloseButton
+              icon={<SvgActionClose />}
               aria-label="close dialog"
               onClick={() => updateDismissedMessages(id)}
               variant="tertiary"
               size="small"
-            >
-              <SvgActionClose />
-            </CloseButton>
+            />
           )}
         </BannerHeader>
       )}
@@ -49,13 +48,12 @@ export const Banner: React.FC<BannerProps> = ({ title, description, className, i
           </BannerText>
           {!title && dismissable && (
             <CloseButton
+              icon={<SvgActionClose />}
               aria-label="close dialog"
               onClick={() => updateDismissedMessages(id)}
               variant="tertiary"
               size="small"
-            >
-              <SvgActionClose />
-            </CloseButton>
+            />
           )}
         </BannerDescription>
       )}

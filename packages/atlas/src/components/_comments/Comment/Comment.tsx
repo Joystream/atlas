@@ -192,9 +192,12 @@ export const Comment: React.FC<CommentProps> = ({
           disabled={loading}
           items={contexMenuItems}
           trigger={
-            <KebabMenuIconButton variant="tertiary" size="small" isActive={shouldShowKebabButton}>
-              <SvgActionMore />
-            </KebabMenuIconButton>
+            <KebabMenuIconButton
+              icon={<SvgActionMore />}
+              variant="tertiary"
+              size="small"
+              isActive={shouldShowKebabButton}
+            />
           }
         />
       </CommentWrapper>

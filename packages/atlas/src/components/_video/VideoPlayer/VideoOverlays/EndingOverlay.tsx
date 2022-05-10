@@ -146,9 +146,11 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               variant="player"
               noTrail={isCountDownStarted}
             />
-            <CountDownButton variant="tertiary" onClick={handleCountDownButton}>
-              {isCountDownStarted ? <SvgControlsPause /> : <SvgControlsPlay />}
-            </CountDownButton>
+            <CountDownButton
+              icon={isCountDownStarted ? <SvgControlsPause /> : <SvgControlsPlay />}
+              variant="tertiary"
+              onClick={handleCountDownButton}
+            />
           </CountDownWrapper>
         </Container>
       ) : (

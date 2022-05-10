@@ -11,11 +11,7 @@ type ExpandButtonProps = {
 } & Omit<ButtonProps, 'icon' | 'variant' | 'children'>
 
 export const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
-  return (
-    <StyledButton {...iconButtonProps} expanded={expanded} variant="tertiary">
-      <SvgActionChevronB />
-    </StyledButton>
-  )
+  return <StyledButton {...iconButtonProps} icon={<SvgActionChevronB />} expanded={expanded} variant="tertiary" />
 }
 
 export const StyledButton = styled(Button)<ExpandButtonProps>`
