@@ -89,7 +89,7 @@ export const Dialog: React.FC<DialogProps> = ({
               </Button>
             )}
             {primaryButton && (
-              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} {...primaryButton} size={buttonSize}>
+              <StyledPrimaryButton variant={primaryButton.variant || 'primary'} size={buttonSize} {...primaryButton}>
                 {primaryButton.text}
               </StyledPrimaryButton>
             )}

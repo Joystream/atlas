@@ -2,10 +2,9 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgControlsSearchAlt } from '@/components/_icons'
 import { cVar, media, oldColors, sizes, square } from '@/styles'
-
-import { Button } from '../_buttons/Button'
 
 export const Input = styled.input`
   width: 100%;

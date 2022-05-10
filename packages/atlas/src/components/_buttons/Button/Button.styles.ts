@@ -5,8 +5,7 @@ import styled from '@emotion/styled'
 import { smallBadgeStyles } from '@/components/Badge'
 import { cVar, sizes } from '@/styles'
 
-const ButtonSizeObj = { large: 'large', medium: 'medium', small: 'small' }
-export type ButtonSize = keyof typeof ButtonSizeObj
+export type ButtonSize = 'small' | 'medium' | 'large'
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
@@ -47,7 +46,7 @@ export const ButtonIconWrapper = styled.span<ButtonIconWrapperProps & { size?: B
   margin-left: ${({ iconPlacement, iconOnly }) => (iconPlacement === 'right' && !iconOnly ? sizes(2) : 0)};
 `
 
-const ButtonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
+const buttonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): SerializedStyles => {
   switch (variant) {
     case 'primary':
       return css`
@@ -92,7 +91,7 @@ const ButtonVariantStyles = ({ variant, iconOnly }: ButtonBaseStyleProps): Seria
     case 'tertiary':
       return css`
         color: ${cVar('colorCoreNeutral50')};
-        ${iconOnly && `border-radius: 50%`};
+        border-radius: ${iconOnly && '50%'};
 
         &:hover,
         &:focus {
@@ -214,7 +213,7 @@ export const BorderWrapper = styled.div<Pick<ButtonBaseStyleProps, 'textOnly'>>`
   }
 `
 
-const ButtonSizeStyles = ({ size, iconOnly, textOnly }: ButtonBaseStyleProps) => {
+const buttonSizeStyles = ({ size, iconOnly, textOnly }: ButtonBaseStyleProps) => {
   if (iconOnly) {
     switch (size) {
       case 'large':
@@ -393,8 +392,8 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   transition-timing-function: ${cVar('animationTimingFast')};
   transition-property: background-color, box-shadow, color, fill;
 
-  ${ButtonVariantStyles};
-  ${ButtonSizeStyles};
+  ${buttonVariantStyles};
+  ${buttonSizeStyles};
   ${textOnlyStyles};
   ${smallBadgeStyles};
 

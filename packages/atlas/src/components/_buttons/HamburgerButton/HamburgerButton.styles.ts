@@ -1,9 +1,8 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_buttons/Button'
 import { oldColors, square } from '@/styles'
-
-import { Button } from '../Button'
 
 type HamburgerInnerProps = {
   active: boolean

@@ -1,6 +1,8 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 
 import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/components/_icons'
 
 import {
@@ -14,9 +16,6 @@ import {
   StepVariant,
   StepWrapper,
 } from './Step.styles'
-
-import { Text } from '../Text'
-import { Button } from '../_buttons/Button'
 
 export type StepProps = {
   title: string

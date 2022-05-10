@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
-
-import { Button } from '../_buttons/Button'
 
 export const BannerHeader = styled.div`
   width: 100%;

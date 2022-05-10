@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronL, SvgActionClose, SvgActionSearch } from '@/components/_icons'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -21,8 +22,6 @@ import {
   StyledForm,
   StyledSvgOutlineSearch,
 } from './Searchbar.styles'
-
-import { Button } from '../_buttons/Button'
 
 type SearchbarProps = {
   onCancel?: () => void

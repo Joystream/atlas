@@ -73,7 +73,7 @@ WithIcon.args = {
 }
 const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
   <div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large">
         Large
       </TextButton>
@@ -84,7 +84,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
         Small
       </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large" variant="secondary">
         Large
       </TextButton>
@@ -95,7 +95,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
         Small
       </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large" variant="destructive">
         Large
       </TextButton>
@@ -106,7 +106,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
         Small
       </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large" variant="warning">
         Large
       </TextButton>
@@ -117,7 +117,7 @@ const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
         Small
       </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
       <TextButton {...args} size="large" variant="tertiary">
         Large
       </TextButton>

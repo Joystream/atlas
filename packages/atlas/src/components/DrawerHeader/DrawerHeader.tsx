@@ -1,11 +1,10 @@
 import React from 'react'
 
 import { Pill } from '@/components/Pill'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
 
 import { Tab, TabContainer, TabTitle, Tabbar } from './DrawerHeader.styles'
-
-import { Button } from '../_buttons/Button'
 
 export type DrawerHeaderProps = {
   title?: string

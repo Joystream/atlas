@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
+import { Button } from '@/components/_buttons/Button'
 import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
-
-import { Button } from '../_buttons/Button'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 

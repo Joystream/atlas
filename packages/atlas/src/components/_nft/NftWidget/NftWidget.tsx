@@ -356,7 +356,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                     <>
                       {convertToUSD(nftStatus.topBidAmount)} from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)} variant="secondary">
-                        <Text variant="t100">{nftStatus.topBidderHandle}</Text>
+                        <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
                     </>
                   ) : null
