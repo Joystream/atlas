@@ -7,22 +7,46 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
-import { Border, ButtonsContainer, Container, Flex, StyledCommentRow, StyledTextArea } from './CommentInput.styles'
+import {
+  Border,
+  ButtonsContainer,
+  Container,
+  CustomPlaceholder,
+  CustomPlaceholderHandle,
+  Flex,
+  StyledCommentRow,
+  StyledTextArea,
+  TextAreaWrapper,
+} from './CommentInput.styles'
 
 import { CommentRowProps } from '../CommentRow'
 
 export type CommentInputProps = {
   processing: boolean
+  readOnly?: boolean
+  memberHandle?: string
   onComment?: () => void
   onCancel?: () => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onFocus?: () => void
+  value?: string
 } & CommentRowProps
 
-export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel, onComment, ...rest }) => {
+export const CommentInput: React.FC<CommentInputProps> = ({
+  processing,
+  readOnly = false,
+  memberHandle,
+  onCancel,
+  onComment,
+  onChange,
+  onFocus,
+  value,
+  ...rest
+}) => {
   const smMatch = useMediaMatch('sm')
   const containerRef = useRef<HTMLLabelElement>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [active, setActive] = useState(false)
-  const [text, setText] = useState('')
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
 
@@ -45,20 +69,21 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
     }
   }, [active])
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.currentTarget.value)
-
-  const show = !!text || active || processing
+  const show = !!value || active || processing
 
   return (
     <StyledCommentRow {...rest} processing={processing} show={show}>
       <Container
         ref={containerRef}
+        onFocus={() => {
+          onFocus?.()
+          !readOnly && setActive(true)
+        }}
         data-show={show}
         height={textAreaHeight}
-        onFocus={() => setActive(true)}
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
-          if (!!text && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
+          if (!!value && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
             onComment?.()
           }
           if (e.nativeEvent.code === 'Escape') {
@@ -66,16 +91,25 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
           }
         }}
       >
-        <StyledTextArea
-          ref={mergeRefs([textAreaRef, measureRef])}
-          rows={1}
-          placeholder="Leave a comment as bedeho"
-          value={text}
-          onChange={onChange}
-          onFocus={() => setActive(true)}
-          disabled={processing}
-          data-processing={processing}
-        />
+        <TextAreaWrapper>
+          <StyledTextArea
+            ref={mergeRefs([textAreaRef, measureRef])}
+            rows={1}
+            value={value}
+            placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
+            onChange={(e) => !readOnly && onChange?.(e)}
+            disabled={processing}
+            data-processing={processing}
+          />
+          <CustomPlaceholder as="p" variant="t200">
+            Leave a public comment as
+            {memberHandle ? (
+              <CustomPlaceholderHandle variant="t200-strong"> {memberHandle}</CustomPlaceholderHandle>
+            ) : (
+              '...'
+            )}
+          </CustomPlaceholder>
+        </TextAreaWrapper>
 
         <ButtonsContainer>
           <Flex>
@@ -93,7 +127,9 @@ export const CommentInput: React.FC<CommentInputProps> = ({ processing, onCancel
               Cancel
             </Button>
           )}
-          <Button disabled={processing}>{processing ? 'Processing' : 'Comment'}</Button>
+          <Button onClick={onComment} disabled={processing || !value}>
+            {processing ? 'Processing' : 'Comment'}
+          </Button>
         </ButtonsContainer>
       </Container>
       <Border data-focused={active} data-processing={processing} />

@@ -277,4 +277,7 @@ fragment CommentFields on Comment {
   repliesCount
   text
   status
+  commentcreatedeventcomment {
+    inBlock
+  }
 }
