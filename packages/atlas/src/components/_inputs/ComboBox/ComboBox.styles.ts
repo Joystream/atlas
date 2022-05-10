@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 
 import { TextField } from '@/components/_inputs/TextField'
-import { Spinner } from '@/components/_loaders/Spinner'
-import { cVar, sizes, zIndex } from '@/styles'
+import { cVar, zIndex } from '@/styles'
 
 export const ComboBoxWrapper = styled.div`
   position: relative;
@@ -22,18 +21,12 @@ export const ListWrapper = styled.ul<{ topPosition?: number }>`
   margin: 0;
 `
 
-export const StyledSpinner = styled(Spinner)`
-  position: absolute;
-  margin-top: 50%;
-  right: ${sizes(4)};
-`
-
 export const StyledTextField = styled(TextField)`
   input {
     :not(:placeholder-shown) {
       :not(button) {
         :focus {
-          border: 1px solid ${({ error }) => cVar(error ? 'colorCoreRed400' : 'colorCoreBlue500')};
+          box-shadow: 0 0 0 1px ${({ error }) => cVar(error ? 'colorCoreRed400' : 'colorCoreBlue500')};
         }
       }
     }

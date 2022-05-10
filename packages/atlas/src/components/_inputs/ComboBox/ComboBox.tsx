@@ -2,8 +2,9 @@ import { useCombobox } from 'downshift'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
+import { Loader } from '@/components/_loaders/Loader'
 
-import { ComboBoxWrapper, ListWrapper, StyledSpinner, StyledTextField, StyledThumbnail } from './ComboBox.styles'
+import { ComboBoxWrapper, ListWrapper, StyledTextField, StyledThumbnail } from './ComboBox.styles'
 
 import { TextFieldProps } from '../TextField'
 
@@ -90,7 +91,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           {...textFieldProps}
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={loading && <StyledSpinner size="small" />}
+          nodeEnd={loading && <Loader variant="small" />}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>
