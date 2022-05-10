@@ -29,6 +29,7 @@ export const useRawNotifications = (
           ...data.bidMadeCompletingAuctionEvents,
           ...data.nftBoughtEvents,
           ...data.auctionBidMadeEvents,
+          ...data.englishAuctionSettledEvents,
         ]
       : []
 

@@ -154,6 +154,7 @@ export const useNftHistoryEntries = (videoId: string | null, opts?: Parameters<t
             date: e.createdAt,
             member: e.ownerMember,
             text: 'Put on sale',
+            joyAmount: Number(e.price),
           }
         } else if (e.__typename === 'AuctionBidMadeEvent') {
           return {
