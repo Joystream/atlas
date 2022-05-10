@@ -265,6 +265,37 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
     totalCount
   }
 
+  purchaseEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
+    where: { winner: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        winner {
+          ...BasicMembershipFields
+        }
+        winningBid {
+          amount
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
+          }
+        }
+      }
+    }
+    totalCount
+  }
+
   # purchase/sale
   purchaseNftBoughtEventsConnection: nftBoughtEventsConnection(
     where: { member: { id_eq: $memberId } }
@@ -348,6 +379,37 @@ query GetNftActivities($memberId: ID!, $limit: Int!) {
           amount
           bidder {
             ...BasicMembershipFields
+          }
+        }
+      }
+    }
+    totalCount
+  }
+
+  saleEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
+    where: { ownerMember: { id_eq: $memberId } }
+    first: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    edges {
+      node {
+        id
+        createdAt
+        inBlock
+        ownerMember {
+          ...BasicMembershipFields
+        }
+        winner {
+          ...BasicMembershipFields
+        }
+        winningBid {
+          amount
+        }
+        video {
+          id
+          title
+          thumbnailPhoto {
+            ...StorageDataObjectFields
           }
         }
       }
