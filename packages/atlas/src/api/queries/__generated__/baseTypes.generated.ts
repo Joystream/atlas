@@ -1430,12 +1430,14 @@ export type Bid = BaseGraphQlObject & {
   bidder: Membership
   bidderId: Scalars['String']
   bidmadecompletingauctioneventpreviousTopBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
+  bidmadecompletingauctioneventwinningBid?: Maybe<Array<BidMadeCompletingAuctionEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
   /** Block in which the bid was placed */
   createdInBlock: Scalars['Int']
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['String']>
+  englishauctionsettledeventwinningBid?: Maybe<Array<EnglishAuctionSettledEvent>>
   id: Scalars['ID']
   /** Index of event in block where bid was made. */
   indexInBlock: Scalars['Int']
@@ -1475,6 +1477,7 @@ export type BidEdge = {
 export type BidMadeCompletingAuctionEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'BidMadeCompletingAuctionEvent'
+    bidders: Array<Membership>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -1507,6 +1510,8 @@ export type BidMadeCompletingAuctionEvent = BaseGraphQlObject &
     version: Scalars['Int']
     video: Video
     videoId: Scalars['String']
+    winningBid: Bid
+    winningBidId: Scalars['String']
   }
 
 export type BidMadeCompletingAuctionEventConnection = {
@@ -1528,6 +1533,7 @@ export type BidMadeCompletingAuctionEventCreateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price: Scalars['String']
   video: Scalars['ID']
+  winningBid: Scalars['ID']
 }
 
 export type BidMadeCompletingAuctionEventEdge = {
@@ -1565,6 +1571,8 @@ export enum BidMadeCompletingAuctionEventOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC',
   VideoAsc = 'video_ASC',
   VideoDesc = 'video_DESC',
+  WinningBidAsc = 'winningBid_ASC',
+  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type BidMadeCompletingAuctionEventUpdateInput = {
@@ -1579,11 +1587,15 @@ export type BidMadeCompletingAuctionEventUpdateInput = {
   previousTopBidder?: InputMaybe<Scalars['ID']>
   price?: InputMaybe<Scalars['String']>
   video?: InputMaybe<Scalars['ID']>
+  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type BidMadeCompletingAuctionEventWhereInput = {
   AND?: InputMaybe<Array<BidMadeCompletingAuctionEventWhereInput>>
   OR?: InputMaybe<Array<BidMadeCompletingAuctionEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -1639,6 +1651,7 @@ export type BidMadeCompletingAuctionEventWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
+  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type BidMadeCompletingAuctionEventWhereUniqueInput = {
@@ -1696,6 +1709,9 @@ export type BidWhereInput = {
   bidmadecompletingauctioneventpreviousTopBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   bidmadecompletingauctioneventpreviousTopBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  bidmadecompletingauctioneventwinningBid_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -1717,6 +1733,9 @@ export type BidWhereInput = {
   deletedAt_lte?: InputMaybe<Scalars['DateTime']>
   deletedById_eq?: InputMaybe<Scalars['ID']>
   deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  englishauctionsettledeventwinningBid_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  englishauctionsettledeventwinningBid_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  englishauctionsettledeventwinningBid_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
   id_eq?: InputMaybe<Scalars['ID']>
   id_in?: InputMaybe<Array<Scalars['ID']>>
   indexInBlock_eq?: InputMaybe<Scalars['Int']>
@@ -1793,6 +1812,7 @@ export type Bounty = BaseGraphQlObject & {
   vetoedEvent?: Maybe<BountyVetoedEvent>
   /** Number of blocks from end of funding period until people can no longer submit bounty submissions */
   workPeriod: Scalars['Int']
+  worksubmittedeventbounty?: Maybe<Array<WorkSubmittedEvent>>
 }
 
 export type BountyCanceledEvent = BaseGraphQlObject &
@@ -2477,17 +2497,11 @@ export enum BountyEntryOrderByInput {
 }
 
 export type BountyEntryStatus =
-  | BountyEntryStatusCashedOut
   | BountyEntryStatusPassed
   | BountyEntryStatusRejected
   | BountyEntryStatusWinner
   | BountyEntryStatusWithdrawn
   | BountyEntryStatusWorking
-
-export type BountyEntryStatusCashedOut = {
-  __typename?: 'BountyEntryStatusCashedOut'
-  reward?: Maybe<Scalars['Float']>
-}
 
 export type BountyEntryStatusPassed = {
   __typename?: 'BountyEntryStatusPassed'
@@ -3380,6 +3394,9 @@ export type BountyWhereInput = {
   workPeriod_in?: InputMaybe<Array<Scalars['Int']>>
   workPeriod_lt?: InputMaybe<Scalars['Int']>
   workPeriod_lte?: InputMaybe<Scalars['Int']>
+  worksubmittedeventbounty_every?: InputMaybe<WorkSubmittedEventWhereInput>
+  worksubmittedeventbounty_none?: InputMaybe<WorkSubmittedEventWhereInput>
+  worksubmittedeventbounty_some?: InputMaybe<WorkSubmittedEventWhereInput>
 }
 
 export type BountyWhereUniqueInput = {
@@ -6230,6 +6247,12 @@ export type Channel = BaseGraphQlObject & {
   categoryId?: Maybe<Scalars['String']>
   channelNftCollectors: Array<ChannelNftCollectors>
   collaborators: Array<Membership>
+  commentcreatedeventvideoChannel?: Maybe<Array<CommentCreatedEvent>>
+  commentdeletedeventvideoChannel?: Maybe<Array<CommentDeletedEvent>>
+  commentmoderatedeventvideoChannel?: Maybe<Array<CommentModeratedEvent>>
+  commentpinnedeventvideoChannel?: Maybe<Array<CommentPinnedEvent>>
+  commentreactedeventvideoChannel?: Maybe<Array<CommentReactedEvent>>
+  commenttextupdatedeventvideoChannel?: Maybe<Array<CommentTextUpdatedEvent>>
   coverPhoto?: Maybe<StorageDataObject>
   coverPhotoId?: Maybe<Scalars['String']>
   createdAt: Scalars['DateTime']
@@ -6261,6 +6284,7 @@ export type Channel = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['String']>
   version: Scalars['Int']
+  videoreactedeventvideoChannel?: Maybe<Array<VideoReactedEvent>>
   videos: Array<Video>
   views: Scalars['Int']
 }
@@ -6610,6 +6634,24 @@ export type ChannelWhereInput = {
   collaborators_every?: InputMaybe<MembershipWhereInput>
   collaborators_none?: InputMaybe<MembershipWhereInput>
   collaborators_some?: InputMaybe<MembershipWhereInput>
+  commentcreatedeventvideoChannel_every?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventvideoChannel_none?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventvideoChannel_some?: InputMaybe<CommentCreatedEventWhereInput>
+  commentdeletedeventvideoChannel_every?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventvideoChannel_none?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventvideoChannel_some?: InputMaybe<CommentDeletedEventWhereInput>
+  commentmoderatedeventvideoChannel_every?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventvideoChannel_none?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventvideoChannel_some?: InputMaybe<CommentModeratedEventWhereInput>
+  commentpinnedeventvideoChannel_every?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventvideoChannel_none?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventvideoChannel_some?: InputMaybe<CommentPinnedEventWhereInput>
+  commentreactedeventvideoChannel_every?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventvideoChannel_none?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventvideoChannel_some?: InputMaybe<CommentReactedEventWhereInput>
+  commenttextupdatedeventvideoChannel_every?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  commenttextupdatedeventvideoChannel_none?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  commenttextupdatedeventvideoChannel_some?: InputMaybe<CommentTextUpdatedEventWhereInput>
   coverPhoto?: InputMaybe<StorageDataObjectWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
@@ -6669,6 +6711,9 @@ export type ChannelWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videoreactedeventvideoChannel_every?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventvideoChannel_none?: InputMaybe<VideoReactedEventWhereInput>
+  videoreactedeventvideoChannel_some?: InputMaybe<VideoReactedEventWhereInput>
   videos_every?: InputMaybe<VideoWhereInput>
   videos_none?: InputMaybe<VideoWhereInput>
   videos_some?: InputMaybe<VideoWhereInput>
@@ -6765,6 +6810,10 @@ export type CommentCreatedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentCreatedEventConnection = {
@@ -6781,6 +6830,8 @@ export type CommentCreatedEventCreateInput = {
   indexInBlock: Scalars['Float']
   network: Network
   text: Scalars['String']
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentCreatedEventEdge = {
@@ -6808,6 +6859,10 @@ export enum CommentCreatedEventOrderByInput {
   TextDesc = 'text_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentCreatedEventUpdateInput = {
@@ -6817,6 +6872,8 @@ export type CommentCreatedEventUpdateInput = {
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
   text?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentCreatedEventWhereInput = {
@@ -6871,6 +6928,8 @@ export type CommentCreatedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentCreatedEventWhereUniqueInput = {
@@ -6901,6 +6960,10 @@ export type CommentDeletedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentDeletedEventConnection = {
@@ -6916,6 +6979,8 @@ export type CommentDeletedEventCreateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock: Scalars['Float']
   network: Network
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentDeletedEventEdge = {
@@ -6941,6 +7006,10 @@ export enum CommentDeletedEventOrderByInput {
   NetworkDesc = 'network_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentDeletedEventUpdateInput = {
@@ -6949,6 +7018,8 @@ export type CommentDeletedEventUpdateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentDeletedEventWhereInput = {
@@ -7001,6 +7072,8 @@ export type CommentDeletedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentDeletedEventWhereUniqueInput = {
@@ -7041,6 +7114,10 @@ export type CommentModeratedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentModeratedEventConnection = {
@@ -7058,6 +7135,8 @@ export type CommentModeratedEventCreateInput = {
   indexInBlock: Scalars['Float']
   network: Network
   rationale: Scalars['String']
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentModeratedEventEdge = {
@@ -7085,6 +7164,10 @@ export enum CommentModeratedEventOrderByInput {
   RationaleDesc = 'rationale_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentModeratedEventUpdateInput = {
@@ -7095,6 +7178,8 @@ export type CommentModeratedEventUpdateInput = {
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
   rationale?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentModeratedEventWhereInput = {
@@ -7153,6 +7238,8 @@ export type CommentModeratedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentModeratedEventWhereUniqueInput = {
@@ -7213,6 +7300,10 @@ export type CommentPinnedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentPinnedEventConnection = {
@@ -7229,6 +7320,8 @@ export type CommentPinnedEventCreateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock: Scalars['Float']
   network: Network
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentPinnedEventEdge = {
@@ -7256,6 +7349,10 @@ export enum CommentPinnedEventOrderByInput {
   NetworkDesc = 'network_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentPinnedEventUpdateInput = {
@@ -7265,6 +7362,8 @@ export type CommentPinnedEventUpdateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentPinnedEventWhereInput = {
@@ -7316,6 +7415,8 @@ export type CommentPinnedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentPinnedEventWhereUniqueInput = {
@@ -7349,6 +7450,10 @@ export type CommentReactedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentReactedEventConnection = {
@@ -7366,6 +7471,8 @@ export type CommentReactedEventCreateInput = {
   network: Network
   reactingMember: Scalars['ID']
   reactionResult: Scalars['Float']
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentReactedEventEdge = {
@@ -7395,6 +7502,10 @@ export enum CommentReactedEventOrderByInput {
   ReactionResultDesc = 'reactionResult_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentReactedEventUpdateInput = {
@@ -7405,6 +7516,8 @@ export type CommentReactedEventUpdateInput = {
   network?: InputMaybe<Network>
   reactingMember?: InputMaybe<Scalars['ID']>
   reactionResult?: InputMaybe<Scalars['Float']>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentReactedEventWhereInput = {
@@ -7461,6 +7574,8 @@ export type CommentReactedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentReactedEventWhereUniqueInput = {
@@ -7862,6 +7977,10 @@ export type CommentTextUpdatedEvent = BaseGraphQlObject &
     updatedAt?: Maybe<Scalars['DateTime']>
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
+    video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
+    videoId: Scalars['String']
   }
 
 export type CommentTextUpdatedEventConnection = {
@@ -7878,6 +7997,8 @@ export type CommentTextUpdatedEventCreateInput = {
   indexInBlock: Scalars['Float']
   network: Network
   newText: Scalars['String']
+  video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type CommentTextUpdatedEventEdge = {
@@ -7905,6 +8026,10 @@ export enum CommentTextUpdatedEventOrderByInput {
   NewTextDesc = 'newText_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentTextUpdatedEventUpdateInput = {
@@ -7914,6 +8039,8 @@ export type CommentTextUpdatedEventUpdateInput = {
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
   newText?: InputMaybe<Scalars['String']>
+  video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentTextUpdatedEventWhereInput = {
@@ -7968,6 +8095,8 @@ export type CommentTextUpdatedEventWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type CommentTextUpdatedEventWhereUniqueInput = {
@@ -9799,6 +9928,7 @@ export type ElectionRoundWhereUniqueInput = {
 export type EnglishAuctionSettledEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'EnglishAuctionSettledEvent'
+    bidders: Array<Membership>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -9825,6 +9955,8 @@ export type EnglishAuctionSettledEvent = BaseGraphQlObject &
     videoId: Scalars['String']
     winner: Membership
     winnerId: Scalars['String']
+    winningBid: Bid
+    winningBidId: Scalars['String']
   }
 
 export type EnglishAuctionSettledEventConnection = {
@@ -9843,6 +9975,7 @@ export type EnglishAuctionSettledEventCreateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video: Scalars['ID']
   winner: Scalars['ID']
+  winningBid: Scalars['ID']
 }
 
 export type EnglishAuctionSettledEventEdge = {
@@ -9874,6 +10007,8 @@ export enum EnglishAuctionSettledEventOrderByInput {
   VideoDesc = 'video_DESC',
   WinnerAsc = 'winner_ASC',
   WinnerDesc = 'winner_DESC',
+  WinningBidAsc = 'winningBid_ASC',
+  WinningBidDesc = 'winningBid_DESC',
 }
 
 export type EnglishAuctionSettledEventUpdateInput = {
@@ -9885,11 +10020,15 @@ export type EnglishAuctionSettledEventUpdateInput = {
   ownerMember?: InputMaybe<Scalars['ID']>
   video?: InputMaybe<Scalars['ID']>
   winner?: InputMaybe<Scalars['ID']>
+  winningBid?: InputMaybe<Scalars['ID']>
 }
 
 export type EnglishAuctionSettledEventWhereInput = {
   AND?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
   OR?: InputMaybe<Array<EnglishAuctionSettledEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -9937,6 +10076,7 @@ export type EnglishAuctionSettledEventWhereInput = {
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
   winner?: InputMaybe<MembershipWhereInput>
+  winningBid?: InputMaybe<BidWhereInput>
 }
 
 export type EnglishAuctionSettledEventWhereUniqueInput = {
@@ -10197,6 +10337,7 @@ export enum EventTypeOptions {
   MemberVerificationStatusUpdatedEvent = 'MemberVerificationStatusUpdatedEvent',
   MembershipBoughtEvent = 'MembershipBoughtEvent',
   MembershipPriceUpdatedEvent = 'MembershipPriceUpdatedEvent',
+  MetaprotocolTransactionStatusEvent = 'MetaprotocolTransactionStatusEvent',
   NewCandidateEvent = 'NewCandidateEvent',
   NewCouncilElectedEvent = 'NewCouncilElectedEvent',
   NewCouncilNotElectedEvent = 'NewCouncilNotElectedEvent',
@@ -13548,6 +13689,9 @@ export type Membership = BaseGraphQlObject & {
   /** Whether member has been verified by membership working group. */
   isVerified: Scalars['Boolean']
   memberBannedFromChannels: Array<Channel>
+  memberBidMadeCompletingAuctionEvents: Array<BidMadeCompletingAuctionEvent>
+  memberEnglishAuctionSettledEvents: Array<EnglishAuctionSettledEvent>
+  memberOpenAuctionAcceptedBidEvents: Array<OpenAuctionBidAcceptedEvent>
   memberaccountsupdatedeventmember?: Maybe<Array<MemberAccountsUpdatedEvent>>
   memberbannedfromchanneleventmember?: Maybe<Array<MemberBannedFromChannelEvent>>
   memberinvitedeventinvitingMember?: Maybe<Array<MemberInvitedEvent>>
@@ -14280,6 +14424,15 @@ export type MembershipWhereInput = {
   memberBannedFromChannels_every?: InputMaybe<ChannelWhereInput>
   memberBannedFromChannels_none?: InputMaybe<ChannelWhereInput>
   memberBannedFromChannels_some?: InputMaybe<ChannelWhereInput>
+  memberBidMadeCompletingAuctionEvents_every?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberBidMadeCompletingAuctionEvents_none?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberBidMadeCompletingAuctionEvents_some?: InputMaybe<BidMadeCompletingAuctionEventWhereInput>
+  memberEnglishAuctionSettledEvents_every?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionSettledEvents_none?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberEnglishAuctionSettledEvents_some?: InputMaybe<EnglishAuctionSettledEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_every?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_none?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
+  memberOpenAuctionAcceptedBidEvents_some?: InputMaybe<OpenAuctionBidAcceptedEventWhereInput>
   memberaccountsupdatedeventmember_every?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_none?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
   memberaccountsupdatedeventmember_some?: InputMaybe<MemberAccountsUpdatedEventWhereInput>
@@ -14422,6 +14575,152 @@ export type MembershipWhereInput = {
 export type MembershipWhereUniqueInput = {
   handle?: InputMaybe<Scalars['String']>
   id?: InputMaybe<Scalars['ID']>
+}
+
+export type MetaprotocolTransactionErrored = {
+  __typename?: 'MetaprotocolTransactionErrored'
+  message: Scalars['String']
+}
+
+export type MetaprotocolTransactionPending = {
+  __typename?: 'MetaprotocolTransactionPending'
+  /** Type needs to have at least one non-relation entity. This value is not used. */
+  dummy?: Maybe<Scalars['Int']>
+}
+
+export type MetaprotocolTransactionStatus =
+  | MetaprotocolTransactionErrored
+  | MetaprotocolTransactionPending
+  | MetaprotocolTransactionSuccessful
+
+export type MetaprotocolTransactionStatusEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'MetaprotocolTransactionStatusEvent'
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    /** The status of metaprotocol action */
+    status: MetaprotocolTransactionStatus
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type MetaprotocolTransactionStatusEventConnection = {
+  __typename?: 'MetaprotocolTransactionStatusEventConnection'
+  edges: Array<MetaprotocolTransactionStatusEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type MetaprotocolTransactionStatusEventCreateInput = {
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  status: Scalars['JSONObject']
+}
+
+export type MetaprotocolTransactionStatusEventEdge = {
+  __typename?: 'MetaprotocolTransactionStatusEventEdge'
+  cursor: Scalars['String']
+  node: MetaprotocolTransactionStatusEvent
+}
+
+export enum MetaprotocolTransactionStatusEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type MetaprotocolTransactionStatusEventUpdateInput = {
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  status?: InputMaybe<Scalars['JSONObject']>
+}
+
+export type MetaprotocolTransactionStatusEventWhereInput = {
+  AND?: InputMaybe<Array<MetaprotocolTransactionStatusEventWhereInput>>
+  OR?: InputMaybe<Array<MetaprotocolTransactionStatusEventWhereInput>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  status_json?: InputMaybe<Scalars['JSONObject']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type MetaprotocolTransactionStatusEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type MetaprotocolTransactionSuccessful = {
+  __typename?: 'MetaprotocolTransactionSuccessful'
+  /** Type needs to have at least one non-relation entity. This value is not used. */
+  dummy?: Maybe<Scalars['Int']>
 }
 
 export type Mutation = {
@@ -16336,6 +16635,7 @@ export type OfferStartedEventWhereUniqueInput = {
 export type OpenAuctionBidAcceptedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'OpenAuctionBidAcceptedEvent'
+    bidders: Array<Membership>
     /** Content actor that accepted the bid. */
     contentActor: ContentActor
     createdAt: Scalars['DateTime']
@@ -16437,6 +16737,9 @@ export type OpenAuctionBidAcceptedEventUpdateInput = {
 export type OpenAuctionBidAcceptedEventWhereInput = {
   AND?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
   OR?: InputMaybe<Array<OpenAuctionBidAcceptedEventWhereInput>>
+  bidders_every?: InputMaybe<MembershipWhereInput>
+  bidders_none?: InputMaybe<MembershipWhereInput>
+  bidders_some?: InputMaybe<MembershipWhereInput>
   contentActor_json?: InputMaybe<Scalars['JSONObject']>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
@@ -20563,6 +20866,9 @@ export type Query = {
   membershipSystemSnapshotsConnection: MembershipSystemSnapshotConnection
   memberships: Array<Membership>
   membershipsConnection: MembershipConnection
+  metaprotocolTransactionStatusEventByUniqueInput?: Maybe<MetaprotocolTransactionStatusEvent>
+  metaprotocolTransactionStatusEvents: Array<MetaprotocolTransactionStatusEvent>
+  metaprotocolTransactionStatusEventsConnection: MetaprotocolTransactionStatusEventConnection
   /** Get connection of most followed channels in a given period or of all time */
   mostFollowedChannelsConnection: ChannelConnection
   /** Get list of most viewed categories in a given time period */
@@ -22910,6 +23216,26 @@ export type QueryMembershipsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<MembershipOrderByInput>>
   where?: InputMaybe<MembershipWhereInput>
+}
+
+export type QueryMetaprotocolTransactionStatusEventByUniqueInputArgs = {
+  where: MetaprotocolTransactionStatusEventWhereUniqueInput
+}
+
+export type QueryMetaprotocolTransactionStatusEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<MetaprotocolTransactionStatusEventOrderByInput>>
+  where?: InputMaybe<MetaprotocolTransactionStatusEventWhereInput>
+}
+
+export type QueryMetaprotocolTransactionStatusEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<MetaprotocolTransactionStatusEventOrderByInput>>
+  where?: InputMaybe<MetaprotocolTransactionStatusEventWhereInput>
 }
 
 export type QueryMostFollowedChannelsConnectionArgs = {
@@ -29714,11 +30040,17 @@ export type Video = BaseGraphQlObject & {
   categoryId?: Maybe<Scalars['String']>
   channel: Channel
   channelId: Scalars['String']
+  commentcreatedeventvideo?: Maybe<Array<CommentCreatedEvent>>
+  commentdeletedeventvideo?: Maybe<Array<CommentDeletedEvent>>
+  commentmoderatedeventvideo?: Maybe<Array<CommentModeratedEvent>>
+  commentpinnedeventvideo?: Maybe<Array<CommentPinnedEvent>>
+  commentreactedeventvideo?: Maybe<Array<CommentReactedEvent>>
   commentreactionvideo?: Maybe<Array<CommentReaction>>
   comments: Array<Comment>
   /** Comments count */
   commentsCount: Scalars['Int']
   commentsectionpreferenceeventvideo?: Maybe<Array<CommentSectionPreferenceEvent>>
+  commenttextupdatedeventvideo?: Maybe<Array<CommentTextUpdatedEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
   createdInBlock: Scalars['Int']
@@ -30280,6 +30612,8 @@ export type VideoReactedEvent = BaseGraphQlObject &
     updatedById?: Maybe<Scalars['String']>
     version: Scalars['Int']
     video: Video
+    videoChannel: Channel
+    videoChannelId: Scalars['String']
     videoId: Scalars['String']
   }
 
@@ -30298,6 +30632,7 @@ export type VideoReactedEventCreateInput = {
   reactingMember: Scalars['ID']
   reactionResult: VideoReactionOptions
   video: Scalars['ID']
+  videoChannel: Scalars['ID']
 }
 
 export type VideoReactedEventEdge = {
@@ -30325,6 +30660,8 @@ export enum VideoReactedEventOrderByInput {
   ReactionResultDesc = 'reactionResult_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoChannelAsc = 'videoChannel_ASC',
+  VideoChannelDesc = 'videoChannel_DESC',
   VideoAsc = 'video_ASC',
   VideoDesc = 'video_DESC',
 }
@@ -30337,6 +30674,7 @@ export type VideoReactedEventUpdateInput = {
   reactingMember?: InputMaybe<Scalars['ID']>
   reactionResult?: InputMaybe<VideoReactionOptions>
   video?: InputMaybe<Scalars['ID']>
+  videoChannel?: InputMaybe<Scalars['ID']>
 }
 
 export type VideoReactedEventWhereInput = {
@@ -30389,6 +30727,7 @@ export type VideoReactedEventWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
+  videoChannel?: InputMaybe<ChannelWhereInput>
 }
 
 export type VideoReactedEventWhereUniqueInput = {
@@ -30788,6 +31127,21 @@ export type VideoWhereInput = {
   buynowpriceupdatedeventvideo_some?: InputMaybe<BuyNowPriceUpdatedEventWhereInput>
   category?: InputMaybe<VideoCategoryWhereInput>
   channel?: InputMaybe<ChannelWhereInput>
+  commentcreatedeventvideo_every?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventvideo_none?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventvideo_some?: InputMaybe<CommentCreatedEventWhereInput>
+  commentdeletedeventvideo_every?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventvideo_none?: InputMaybe<CommentDeletedEventWhereInput>
+  commentdeletedeventvideo_some?: InputMaybe<CommentDeletedEventWhereInput>
+  commentmoderatedeventvideo_every?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventvideo_none?: InputMaybe<CommentModeratedEventWhereInput>
+  commentmoderatedeventvideo_some?: InputMaybe<CommentModeratedEventWhereInput>
+  commentpinnedeventvideo_every?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventvideo_none?: InputMaybe<CommentPinnedEventWhereInput>
+  commentpinnedeventvideo_some?: InputMaybe<CommentPinnedEventWhereInput>
+  commentreactedeventvideo_every?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventvideo_none?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactedeventvideo_some?: InputMaybe<CommentReactedEventWhereInput>
   commentreactionvideo_every?: InputMaybe<CommentReactionWhereInput>
   commentreactionvideo_none?: InputMaybe<CommentReactionWhereInput>
   commentreactionvideo_some?: InputMaybe<CommentReactionWhereInput>
@@ -30803,6 +31157,9 @@ export type VideoWhereInput = {
   commentsectionpreferenceeventvideo_every?: InputMaybe<CommentSectionPreferenceEventWhereInput>
   commentsectionpreferenceeventvideo_none?: InputMaybe<CommentSectionPreferenceEventWhereInput>
   commentsectionpreferenceeventvideo_some?: InputMaybe<CommentSectionPreferenceEventWhereInput>
+  commenttextupdatedeventvideo_every?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  commenttextupdatedeventvideo_none?: InputMaybe<CommentTextUpdatedEventWhereInput>
+  commenttextupdatedeventvideo_some?: InputMaybe<CommentTextUpdatedEventWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -31955,6 +32312,8 @@ export type WorkEntryWithdrawnEventWhereUniqueInput = {
 export type WorkSubmittedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'WorkSubmittedEvent'
+    bounty: Bounty
+    bountyId: Scalars['String']
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -31989,6 +32348,7 @@ export type WorkSubmittedEventConnection = {
 }
 
 export type WorkSubmittedEventCreateInput = {
+  bounty: Scalars['ID']
   description?: InputMaybe<Scalars['String']>
   entry: Scalars['ID']
   inBlock: Scalars['Float']
@@ -32005,6 +32365,8 @@ export type WorkSubmittedEventEdge = {
 }
 
 export enum WorkSubmittedEventOrderByInput {
+  BountyAsc = 'bounty_ASC',
+  BountyDesc = 'bounty_DESC',
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
   DeletedAtAsc = 'deletedAt_ASC',
@@ -32028,6 +32390,7 @@ export enum WorkSubmittedEventOrderByInput {
 }
 
 export type WorkSubmittedEventUpdateInput = {
+  bounty?: InputMaybe<Scalars['ID']>
   description?: InputMaybe<Scalars['String']>
   entry?: InputMaybe<Scalars['ID']>
   inBlock?: InputMaybe<Scalars['Float']>
@@ -32040,6 +32403,7 @@ export type WorkSubmittedEventUpdateInput = {
 export type WorkSubmittedEventWhereInput = {
   AND?: InputMaybe<Array<WorkSubmittedEventWhereInput>>
   OR?: InputMaybe<Array<WorkSubmittedEventWhereInput>>
+  bounty?: InputMaybe<BountyWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
