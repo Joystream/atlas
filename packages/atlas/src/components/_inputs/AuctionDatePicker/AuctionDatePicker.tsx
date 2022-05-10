@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { format, roundToNearestMinutes } from 'date-fns'
+import { format, roundToNearestMinutes, setMinutes } from 'date-fns'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -117,6 +117,14 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     setStartDate(date)
   }
 
+  const fromDate = minDate || new Date(msTimestamp)
+
+  // set the initial date and round the time to the nearest 30 minutes
+  const selectedDate =
+    startDate || fromDate.getMinutes() > 30
+      ? roundToNearestMinutes(fromDate, { nearestTo: 30 })
+      : setMinutes(fromDate, 30)
+
   return (
     <Container>
       <Select<AuctionDatePickerValueWithPickDate>
@@ -150,11 +158,11 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         {open && (
           <DatePicker
             inline
-            selected={startDate || roundToNearestMinutes(minDate || new Date(msTimestamp), { nearestTo: 30 })}
+            selected={selectedDate}
             timeFormat="HH:mm"
             onChange={handlePickDate}
             openToDate={minDate ?? undefined}
-            minDate={minDate || new Date(msTimestamp)}
+            minDate={fromDate}
             maxDate={maxDate}
             showDisabledMonthNavigation
             showTimeSelect
