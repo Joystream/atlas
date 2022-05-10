@@ -204,8 +204,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   createdAt={new Date(comment.createdAt)}
                   text={comment.text}
                   isEdited={comment.isEdited}
-                  onReactionClick={(reactionId) => {
-                    handleReactToComment(comment.id, reactionId)
+                  onReactionClick={(reactionId, reactionPopovedDismissed) => {
+                    handleReactToComment(comment.id, reactionId, reactionPopovedDismissed)
                   }}
                   isAbleToEdit={comment.author.id === activeMemberId}
                   memberHandle={comment.author.handle}

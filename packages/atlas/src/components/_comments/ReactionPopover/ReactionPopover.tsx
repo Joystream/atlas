@@ -43,7 +43,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
   const smMatch = useMediaMatch('sm')
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
-    name: Number(key) as ReactionId,
+    reactionId: Number(key) as ReactionId,
     value: value.emoji,
   }))
 
@@ -59,20 +59,20 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
       render={(attrs, _, instance) => (
         <ReactionPopoverWrapper {...attrs}>
           <ReactionPopoverInnerWrapper isVisible={isOpen}>
-            {reactions.map(({ name, value }, idx) => {
+            {reactions.map(({ reactionId, value }, idx) => {
               return (
                 <StyledEmojiButton
                   verticalTranslate={getTranslateNumber(idx)}
                   isVisible={isOpen}
                   onClick={() => {
-                    handleReactionClick(name)
+                    handleReactionClick(reactionId)
                     instance?.hide()
                   }}
                   variant="tertiary"
                   size={smMatch ? 'small' : 'medium'}
                   iconOnly
                   icon={<EmojiContainer>{value}</EmojiContainer>}
-                  key={name}
+                  key={reactionId}
                 />
               )
             })}

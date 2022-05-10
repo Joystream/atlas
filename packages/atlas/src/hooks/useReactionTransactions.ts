@@ -11,19 +11,28 @@ import { ConsoleLogger } from '@/utils/logs'
 import { useDisplaySignInDialog } from './useDisplaySignInDialog'
 
 export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
-  const { activeMemberId, signIn } = useUser()
+  const { activeMemberId, activeAccountId, signIn } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { openSignInDialog } = useDisplaySignInDialog()
   const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
 
-  const handleReactToComment = (commentId: string, reactionId: ReactionId) => {
-    if (!joystream || !activeMemberId) {
-      ConsoleLogger.error('no joystream or active member')
+  const authorized = activeMemberId && activeAccountId
+
+  const handleReactToComment = (commentId: string, reactionId: ReactionId, reactionPopoverDismissed?: boolean) => {
+    if (!joystream) {
+      ConsoleLogger.error('No joystream instance')
+      return
+    }
+    if (!authorized) {
       openSignInDialog({ onConfirm: signIn })
       return
     }
+    if (!reactionPopoverDismissed) {
+      return
+    }
+
     setProcessingCommentReactionId(commentId + `-` + reactionId.toString())
 
     handleTransaction({

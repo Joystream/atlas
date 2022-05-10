@@ -17,7 +17,7 @@ export type ReactionChipProps = {
   count?: number
   reactionId: ReactionId
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick?: (type: ReactionId) => void
+  onReactionClick?: (type: ReactionId, reactionPopoverDismissed?: boolean) => void
   onPopoverHide?: () => void
   reactionPopoverDismissed?: boolean
 }
@@ -48,21 +48,17 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
     }
   }, [reactionPopoverDismissed, state])
 
-  const handleReact = (reactionPopoverDismissed: boolean) => {
-    if (reactionPopoverDismissed) {
-      onReactionClick?.(reactionId)
-    }
-  }
   if (!count && state !== 'processing') {
     return null
   }
+
   return (
     <div>
       <ReactionsOnboardingPopover
         ref={popoverRef}
         disabled={reactionPopoverDismissed}
         onConfirm={() => {
-          handleReact(true)
+          onReactionClick?.(reactionId, true)
         }}
         onDecline={() => {
           popoverRef.current?.hide()
@@ -73,7 +69,7 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
             state={isProcessing ? 'processing' : state}
             active={active}
             title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
-            onClick={() => state === 'default' && handleReact(reactionPopoverDismissed)}
+            onClick={() => state === 'default' && onReactionClick?.(reactionId, reactionPopoverDismissed)}
           >
             <EmojiContainer>{REACTION_TYPE[reactionId].emoji} </EmojiContainer>
             {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}

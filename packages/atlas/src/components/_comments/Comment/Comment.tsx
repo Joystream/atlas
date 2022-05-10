@@ -42,7 +42,7 @@ export type CommentProps = {
   onEditLabelClick?: () => void
   onEditClick?: () => void
   onDeleteClick?: () => void
-  onReactionClick?: (reaction: ReactionId) => void
+  onReactionClick?: (reaction: ReactionId, reactionPopovedDismissed?: boolean) => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
