@@ -18,9 +18,9 @@ import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
-import { useCommentTransactions } from '@/hooks/useCommentTransactions'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
@@ -56,7 +56,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     { skip: disabled || !id }
   )
   const { processingCommentReactionId, reactToComment, addComment, commentInputProcessing, highlightedComment } =
-    useCommentTransactions()
+    useReactionTransactions()
 
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []

@@ -1,24 +1,26 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useEffect, useState } from 'react'
 
-import { GetCommentsDocument, GetCommentsQueryHookResult } from '@/api/queries'
+import { GetCommentsDocument, GetCommentsQueryHookResult, GetVideoDocument } from '@/api/queries'
 import { ReactionId } from '@/components/_comments/ReactionChip'
+import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
 
-export const useCommentTransactions = () => {
+export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
+  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const handleTransaction = useTransaction()
   const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
   const client = useApolloClient()
 
-  const refetch = useCallback(
+  const refetchComments = useCallback(
     () =>
       client.refetchQueries({
         include: [GetCommentsDocument],
@@ -58,7 +60,7 @@ export const useCommentTransactions = () => {
           signErrorMessage: 'Failed to react to comment',
         },
         onTxSync: async () => {
-          await refetch()
+          await refetchComments()
           setProcessingCommentReactionId(null)
         },
         onError: () => {
@@ -66,7 +68,7 @@ export const useCommentTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetch]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
 
   const addComment = useCallback(
@@ -89,7 +91,7 @@ export const useCommentTransactions = () => {
             proxyCallback(updateStatus)
           ),
         onTxSync: async ({ block }) => {
-          const refetchResult = await refetch()
+          const refetchResult = await refetchComments()
           const newCommentsQueryResult = refetchResult[0] as GetCommentsQueryHookResult
           const newCommentId = newCommentsQueryResult.data?.comments.find(
             (comment) => comment.commentcreatedeventcomment?.[0].inBlock === block
@@ -105,12 +107,49 @@ export const useCommentTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetch]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+  )
+
+  const refetchVideo = useCallback(
+    () =>
+      client.refetchQueries({
+        include: [GetVideoDocument],
+      }),
+    [client]
+  )
+
+  const likeOrDislikeVideo = useCallback(
+    (videoId: string, reaction: VideoReaction) => {
+      if (!joystream || !activeMemberId) {
+        ConsoleLogger.error('No joystream instance')
+        return
+      }
+
+      setVideoReactionProcessing(true)
+
+      handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
+        minimized: {
+          signErrorMessage: 'Failed to react to video',
+        },
+        onTxSync: async () => {
+          await refetchVideo()
+          setVideoReactionProcessing(false)
+        },
+        onError: async () => {
+          setVideoReactionProcessing(false)
+        },
+      })
+    },
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
 
   return {
     reactToComment,
     addComment,
+    likeOrDislikeVideo,
+    videoReactionProcessing,
     commentInputProcessing,
     highlightedComment,
     processingCommentReactionId,

@@ -24,8 +24,8 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
-import { useVideoReactionTransaction } from '@/hooks/useVideoReactionTransaction'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
@@ -71,7 +71,7 @@ export const VideoView: React.FC = () => {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const nftWidgetProps = useNftWidget(id)
-  const { likeOrDislikeVideo, videoReactionProcessing } = useVideoReactionTransaction()
+  const { likeOrDislikeVideo, videoReactionProcessing } = useReactionTransactions()
 
   const authorized = activeMemberId && activeAccountId
 
