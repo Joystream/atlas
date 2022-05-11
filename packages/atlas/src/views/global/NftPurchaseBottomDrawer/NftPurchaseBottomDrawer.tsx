@@ -263,6 +263,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const { isLoadingAsset: userBidAvatarLoading, url: userBidAvatarUrl } = useMemberAvatar(userBid?.bidder)
   const { isLoadingAsset: topBidderAvatarLoading, url: topBidderAvatarUrl } = useMemberAvatar(topBidder)
   const timeToUnlockSeconds = userBidUnlockDate ? differenceInSeconds(userBidUnlockDate, new Date()) : 0
+
   return (
     <BottomDrawer
       isOpen={isOpen}
@@ -427,6 +428,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   type="number"
                   error={!!errors.bid}
                   helperText={errors.bid && errors.bid.message}
+                  onBlur={(event) => {
+                    const { target } = event
+                    if (Number(target.value) % 1 !== 0) {
+                      setValue('bid', Math.floor(Number(event.target.value)))
+                    }
+                  }}
                 />
                 {showBuyNowInfo && (
                   <BuyNowInfo variant="t100" margin={{ top: 2 }}>
