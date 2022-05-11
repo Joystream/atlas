@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { ReactionId } from '@/components/_comments/ReactionChip'
 import { VideoReaction } from '@/joystream-lib'
@@ -15,7 +15,7 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
   const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
 
-  const handleReactToComment = (commentId: string, reactionId: ReactionId) => {
+  const handleReactToComment = useCallback((commentId: string, reactionId: ReactionId) => {
     if (!joystream || !activeMemberId) {
       ConsoleLogger.error('No joystream instance')
       return
@@ -42,9 +42,9 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
         setProcessingCommentReactionId(null)
       },
     })
-  }
+  }, [])
 
-  const handleLikeAndDislike = (videoId: string, reaction: VideoReaction) => {
+  const handleLikeAndDislike = useCallback((videoId: string, reaction: VideoReaction) => {
     if (!joystream || !activeMemberId) {
       ConsoleLogger.error('No joystream instance')
       return
@@ -66,7 +66,7 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
         setVideoReactionProcessing(false)
       },
     })
-  }
+  }, [])
 
   return {
     handleLikeAndDislike,

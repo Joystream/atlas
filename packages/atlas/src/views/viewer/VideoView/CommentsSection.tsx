@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
@@ -83,6 +83,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
     return () => clearTimeout(timeout)
   })
+
   const getCommentReactions = useCallback(
     ({ commentId, reactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
       const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
@@ -103,6 +104,66 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     },
     [processingCommentReactionId, activeMemberId]
   )
+  const memoizedComments = useMemo(() => {
+    return comments?.map((comment, idx) => {
+      return (
+        <Comment
+          key={`${comment.id}-${idx}`}
+          highlighted={comment.id === highlightedComment}
+          reactions={getCommentReactions({
+            commentId: comment.id,
+            reactions: comment.reactions,
+            reactionsCount: comment.reactionsCountByReactionId,
+            activeMemberId,
+            processingCommentReactionId,
+          })}
+          onEditLabelClick={() => {
+            setShowEditHistory(true)
+            setOriginalComment(comment)
+          }}
+          loading={!comment.id}
+          createdAt={new Date(comment.createdAt)}
+          text={comment.text}
+          reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+          isEdited={comment.isEdited}
+          onReactionClick={(reactionId) => {
+            if (authorized) {
+              handleReactToComment(comment.id, reactionId)
+            } else {
+              openSignInDialog({ onConfirm: signIn })
+            }
+          }}
+          isAbleToEdit={comment.author.id === activeMemberId}
+          memberHandle={comment.author.handle}
+          memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
+          memberAvatarUrl={
+            comment.author.metadata.avatar?.__typename === 'AvatarUri'
+              ? comment.author.metadata.avatar?.avatarUri
+              : undefined
+          }
+          type={
+            ['DELETED', 'MODERATED'].includes(comment.status)
+              ? 'deleted'
+              : videoAuthorId === activeMemberId
+              ? 'options'
+              : 'default'
+          }
+        />
+      )
+    })
+  }, [
+    activeMemberId,
+    authorized,
+    comments,
+    getCommentReactions,
+    handleReactToComment,
+    highlightedComment,
+    openSignInDialog,
+    processingCommentReactionId,
+    reactionPopoverDismissed,
+    signIn,
+    videoAuthorId,
+  ])
 
   if (disabled) {
     return (
@@ -183,54 +244,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
       <CommentWrapper>
-        {loading
-          ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
-          : comments?.map((comment, idx) => {
-              return (
-                <Comment
-                  key={`${comment.id}-${idx}`}
-                  highlighted={comment.id === highlightedComment}
-                  reactions={getCommentReactions({
-                    commentId: comment.id,
-                    reactions: comment.reactions,
-                    reactionsCount: comment.reactionsCountByReactionId,
-                    activeMemberId,
-                    processingCommentReactionId,
-                  })}
-                  onEditLabelClick={() => {
-                    setShowEditHistory(true)
-                    setOriginalComment(comment)
-                  }}
-                  loading={!comment.id}
-                  createdAt={new Date(comment.createdAt)}
-                  text={comment.text}
-                  reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
-                  isEdited={comment.isEdited}
-                  onReactionClick={(reactionId) => {
-                    if (authorized) {
-                      handleReactToComment(comment.id, reactionId)
-                    } else {
-                      openSignInDialog({ onConfirm: signIn })
-                    }
-                  }}
-                  isAbleToEdit={comment.author.id === activeMemberId}
-                  memberHandle={comment.author.handle}
-                  memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
-                  memberAvatarUrl={
-                    comment.author.metadata.avatar?.__typename === 'AvatarUri'
-                      ? comment.author.metadata.avatar?.avatarUri
-                      : undefined
-                  }
-                  type={
-                    ['DELETED', 'MODERATED'].includes(comment.status)
-                      ? 'deleted'
-                      : videoAuthorId === activeMemberId
-                      ? 'options'
-                      : 'default'
-                  }
-                />
-              )
-            })}
+        {loading ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />) : memoizedComments}
       </CommentWrapper>
       <DialogModal
         size="medium"
