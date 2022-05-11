@@ -121,9 +121,8 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
 
   // set the initial date and round the time to the nearest 30 minutes
   const selectedDate =
-    startDate || fromDate.getMinutes() > 30
-      ? roundToNearestMinutes(fromDate, { nearestTo: 30 })
-      : setMinutes(fromDate, 30)
+    startDate ||
+    (fromDate.getMinutes() > 30 ? roundToNearestMinutes(fromDate, { nearestTo: 30 }) : setMinutes(fromDate, 30))
 
   return (
     <Container>
