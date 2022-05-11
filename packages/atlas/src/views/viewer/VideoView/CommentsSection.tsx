@@ -46,15 +46,17 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
-  const { openSignInDialog } = useDisplaySignInDialog()
   const { id } = useParams()
-  const { activeMemberId, signIn, activeMembership } = useUser()
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const handleTransaction = useTransaction()
   const [commentBody, setCommentBody] = useState('')
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
   const { joystream, proxyCallback } = useJoystream()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
+  const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
+  const { openSignInDialog } = useDisplaySignInDialog()
+
+  const authorized = activeMemberId && activeAccountId
 
   const { comments, loading, refetch } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
@@ -204,8 +206,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   createdAt={new Date(comment.createdAt)}
                   text={comment.text}
                   isEdited={comment.isEdited}
-                  onReactionClick={(reactionId, reactionPopovedDismissed) => {
-                    handleReactToComment(comment.id, reactionId, reactionPopovedDismissed)
+                  onReactionClick={(reactionId) => {
+                    if (authorized) {
+                      handleReactToComment(comment.id, reactionId)
+                    } else {
+                      openSignInDialog({ onConfirm: signIn })
+                    }
                   }}
                   isAbleToEdit={comment.author.id === activeMemberId}
                   memberHandle={comment.author.handle}
