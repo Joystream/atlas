@@ -23,6 +23,7 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
     return (
       <DialogPopover
         ref={ref}
+        triggerMode="manual"
         noContentPadding
         additionalActionsNodeMobilePosition="bottom"
         dividers

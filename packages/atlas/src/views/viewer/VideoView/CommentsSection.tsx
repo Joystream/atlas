@@ -90,7 +90,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         customId: `${commentId}-${reactionId}`,
         state: 'processing' as const,
         count: 0,
-        reactionPopoverDismissed: activeMemberId ? reactionPopoverDismissed : true,
       }))
 
       return defaultReactions.map((reaction) => {
@@ -102,7 +101,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         }
       })
     },
-    [reactionPopoverDismissed, processingCommentReactionId, activeMemberId]
+    [processingCommentReactionId, activeMemberId]
   )
 
   if (disabled) {
@@ -205,6 +204,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   loading={!comment.id}
                   createdAt={new Date(comment.createdAt)}
                   text={comment.text}
+                  reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
                   isEdited={comment.isEdited}
                   onReactionClick={(reactionId) => {
                     if (authorized) {

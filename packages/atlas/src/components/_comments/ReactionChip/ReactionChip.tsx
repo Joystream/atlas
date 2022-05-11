@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
-import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumberShort } from '@/utils/number'
 
@@ -17,9 +15,7 @@ export type ReactionChipProps = {
   count?: number
   reactionId: ReactionId
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
-  onReactionClick?: (type: ReactionId, reactionPopoverDismissed?: boolean) => void
-  onPopoverHide?: () => void
-  reactionPopoverDismissed?: boolean
+  onReactionClick?: (type: ReactionId) => void
 }
 
 export const REACTION_TYPE = {
@@ -36,17 +32,8 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
   reactionId,
   count = 0,
   onReactionClick,
-  onPopoverHide,
-  reactionPopoverDismissed = false,
 }) => {
-  const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isProcessing = state === 'processing'
-
-  useEffect(() => {
-    if (state === 'processing' && !reactionPopoverDismissed) {
-      popoverRef.current?.show()
-    }
-  }, [reactionPopoverDismissed, state])
 
   if (!count && state !== 'processing') {
     return null
@@ -54,28 +41,15 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
 
   return (
     <div>
-      <ReactionsOnboardingPopover
-        ref={popoverRef}
-        disabled={reactionPopoverDismissed}
-        onConfirm={() => {
-          onReactionClick?.(reactionId, true)
-        }}
-        onDecline={() => {
-          popoverRef.current?.hide()
-          onPopoverHide?.()
-        }}
-        trigger={
-          <ReactionChipButton
-            state={isProcessing ? 'processing' : state}
-            active={active}
-            title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
-            onClick={() => state === 'default' && onReactionClick?.(reactionId, reactionPopoverDismissed)}
-          >
-            <EmojiContainer>{REACTION_TYPE[reactionId].emoji} </EmojiContainer>
-            {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
-          </ReactionChipButton>
-        }
-      />
+      <ReactionChipButton
+        state={isProcessing ? 'processing' : state}
+        active={active}
+        title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
+        onClick={() => state === 'default' && onReactionClick?.(reactionId)}
+      >
+        <EmojiContainer>{REACTION_TYPE[reactionId].emoji} </EmojiContainer>
+        {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
+      </ReactionChipButton>
     </div>
   )
 }

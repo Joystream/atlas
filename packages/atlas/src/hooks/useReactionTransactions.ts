@@ -24,7 +24,6 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
     setProcessingCommentReactionId(commentId + `-` + reactionId.toString())
 
     handleTransaction({
-      preProcess: () => setProcessingCommentReactionId(commentId + `-` + reactionId.toString()),
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).reactToVideoComment(
           activeMemberId,
@@ -47,11 +46,13 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
 
   const handleLikeAndDislike = (videoId: string, reaction: VideoReaction) => {
     if (!joystream || !activeMemberId) {
+      ConsoleLogger.error('No joystream instance')
       return
     }
 
+    setVideoReactionProcessing(true)
+
     handleTransaction({
-      preProcess: () => setVideoReactionProcessing(true),
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
       minimized: {
@@ -70,6 +71,7 @@ export const useReactionTransactions = (refetch: QueryResult['refetch']) => {
   return {
     handleLikeAndDislike,
     handleReactToComment,
+    setProcessingCommentReactionId,
     processingCommentReactionId,
     videoReactionProcessing,
   }
