@@ -29,9 +29,10 @@ export type CommentInputProps = {
   memberHandle?: string
   onComment?: () => void
   onCancel?: () => void
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (value: string) => void
   onFocus?: () => void
   value?: string
+  initialValue?: string
 } & CommentRowProps
 
 const COMMENT_LIMIT = 50000
@@ -46,6 +47,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   onChange,
   onFocus,
   value,
+  initialValue,
   ...rest
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -57,15 +59,19 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
 
   useEffect(() => {
+    if (initialValue) {
+      onChange?.(initialValue)
+    }
+    // too difficult to make onChange stable but it kinda is already
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue])
+
+  useEffect(() => {
     if (!active) {
       return
     }
     const handleClickOutside = (event: Event) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        // stop propagation so it doesn't get triggered again on button click
-        // prevent default so it doesn't trigger unwanted submits
-        event.preventDefault()
-        event.stopPropagation()
         setActive(false)
       }
     }
@@ -75,10 +81,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     }
   }, [active])
 
-  const show = !!value || active || processing
-
   const validateLengthAndProcess = () => {
-    if (value && value.length > COMMENT_LIMIT) {
+    if (!!value && value.length > COMMENT_LIMIT) {
       displaySnackbar({
         title: 'Comment too long',
         description: `Your comment must be under 50 000 characters. Currently, it's ${formatNumber(value.length)}.`,
@@ -90,6 +94,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     onComment?.()
   }
 
+  const show = !!value || !!initialValue || active || processing
+  const canComment = !!value && initialValue !== value
   return (
     <StyledCommentRow {...rest} processing={processing} show={show} isMemberAvatarClickable={false}>
       <Container
@@ -102,7 +108,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         height={textAreaHeight}
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
-          if (!!value && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
+          if (canComment && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
             validateLengthAndProcess()
           }
           if (e.nativeEvent.code === 'Escape') {
@@ -116,7 +122,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             rows={1}
             value={value}
             placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
-            onChange={(e) => !readOnly && onChange?.(e)}
+            onChange={(e) => !readOnly && onChange?.(e.target.value)}
             disabled={processing}
             data-processing={processing}
           />
@@ -142,11 +148,11 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             </Text>
           </Flex>
           {onCancel && (
-            <Button disabled={processing} variant="secondary">
+            <Button onClick={onCancel} disabled={processing} variant="secondary">
               Cancel
             </Button>
           )}
-          <Button onClick={validateLengthAndProcess} disabled={processing || !value}>
+          <Button onClick={validateLengthAndProcess} disabled={processing || !canComment}>
             {processing ? 'Processing' : 'Comment'}
           </Button>
         </ButtonsContainer>

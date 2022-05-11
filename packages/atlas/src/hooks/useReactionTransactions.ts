@@ -16,7 +16,18 @@ import { ConsoleLogger } from '@/utils/logs'
 export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
-  const [commentInputProcessing, setCommentInputProcessing] = useState(false)
+  // stores the isProcessing state of comment inputs and is indexed by commentId's
+  const [commentInputIsProcessingRecord, setCommentInputIsProcessingRecord] = useState<Record<string, boolean>>({
+    // 'COMMENT_ID': isProcessingValue
+  })
+  const setCommentInputIsProcessing = ({ commentId, value }: { commentId: string; value: boolean }) => {
+    setCommentInputIsProcessingRecord((process) => {
+      const processing = { ...process }
+      processing[commentId] = value
+      return processing
+    })
+  }
+
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
 
   const handleTransaction = useTransaction()
@@ -65,12 +76,22 @@ export const useReactionTransactions = () => {
   )
 
   const addComment = useCallback(
-    async (videoId: string, commentBody: string, parentCommentId?: string) => {
+    async ({
+      commentId,
+      parentCommentId,
+      videoId,
+      commentBody,
+    }: {
+      commentId: string
+      parentCommentId?: string
+      videoId: string
+      commentBody: string
+    }) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
-      setCommentInputProcessing(true)
+      setCommentInputIsProcessing({ commentId, value: true })
 
       let newCommentId: string | undefined
 
@@ -87,7 +108,7 @@ export const useReactionTransactions = () => {
           ),
         onTxSync: async ({ block }) => {
           const refetchResult = await refetchComments()
-          setCommentInputProcessing(false)
+          setCommentInputIsProcessing({ commentId, value: false })
 
           const newCommentsQueryResult = refetchResult[0] as GetCommentsConnectionQueryHookResult
           // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
@@ -97,7 +118,7 @@ export const useReactionTransactions = () => {
           )?.node.id
         },
         onError: () => {
-          setCommentInputProcessing(false)
+          setCommentInputIsProcessing({ commentId, value: false })
         },
         minimized: {
           signErrorMessage: 'Failed to post video comment',
@@ -109,6 +130,33 @@ export const useReactionTransactions = () => {
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
 
+  const updateComment = useCallback(
+    async ({ commentId, videoId, commentBody }: { commentId: string; videoId: string; commentBody: string }) => {
+      if (!joystream || !activeMemberId || !videoId) {
+        ConsoleLogger.error('no joystream or active member')
+        return
+      }
+      setCommentInputIsProcessing({ commentId, value: true })
+
+      await handleTransaction({
+        txFactory: async (updateStatus) =>
+          (
+            await joystream.extrinsics
+          ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
+        onTxSync: async () => {
+          await refetchComments()
+          setCommentInputIsProcessing({ commentId, value: false })
+        },
+        onError: () => {
+          setCommentInputIsProcessing({ commentId, value: false })
+        },
+        minimized: {
+          signErrorMessage: 'Failed to udpate video comment',
+        },
+      })
+    },
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+  )
   const deleteComment = useCallback(
     async (commentId: string, videoTitle?: string) => {
       if (!joystream || !activeMemberId) {
@@ -204,9 +252,10 @@ export const useReactionTransactions = () => {
     addComment,
     deleteComment,
     moderateComment,
+    updateComment,
     likeOrDislikeVideo,
     videoReactionProcessing,
-    commentInputProcessing,
+    commentInputIsProcessingRecord,
     processingCommentReactionId,
   }
 }
