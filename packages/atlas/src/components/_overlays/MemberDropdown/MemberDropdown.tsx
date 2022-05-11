@@ -22,7 +22,7 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
-import { useSubsribeAccountBalance } from '@/hooks/useSubsribeAccountBalance'
+import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
@@ -61,7 +61,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
     const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { activeChannelId, activeMembership, setActiveUser, memberships, signIn } = useUser()
-    const accountBalance = useSubsribeAccountBalance()
+    const accountBalance = useSubscribeAccountBalance()
     const containerRef = useRef<HTMLDivElement>(null)
     const { ref: measureContainerRef, height: containerHeight = 0 } = useResizeObserver({ box: 'border-box' })
     const transRef = useSpringRef()
