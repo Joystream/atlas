@@ -5,12 +5,13 @@ import * as Types from './baseTypes.generated'
 import { BasicMembershipFieldsFragmentDoc, StorageDataObjectFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
-export type GetNftNotificationsQueryVariables = Types.Exact<{
+export type GetNotificationsQueryVariables = Types.Exact<{
+  channelId: Types.Scalars['ID']
   memberId: Types.Scalars['ID']
   limit: Types.Scalars['Int']
 }>
 
-export type GetNftNotificationsQuery = {
+export type GetNotificationsQuery = {
   __typename?: 'Query'
   auctionBidMadeEvents: Array<{
     __typename?: 'AuctionBidMadeEvent'
@@ -350,6 +351,48 @@ export type GetNftNotificationsQuery = {
       }
     }
     video: { __typename?: 'Video'; id: string; title?: string | null }
+  }>
+  commentCreatedEvents: Array<{
+    __typename?: 'CommentCreatedEvent'
+    id: string
+    inBlock: number
+    createdAt: Date
+    video: { __typename?: 'Video'; id: string; title?: string | null }
+    comment: {
+      __typename?: 'Comment'
+      id: string
+      parentComment?: { __typename?: 'Comment'; id: string } | null
+      author: {
+        __typename?: 'Membership'
+        id: string
+        handle: string
+        metadata: {
+          __typename?: 'MemberMetadata'
+          about?: string | null
+          avatar?:
+            | {
+                __typename?: 'AvatarObject'
+                avatarObject?: {
+                  __typename?: 'StorageDataObject'
+                  id: string
+                  createdAt: Date
+                  size: string
+                  isAccepted: boolean
+                  ipfsHash: string
+                  storageBag: { __typename?: 'StorageBag'; id: string }
+                  type:
+                    | { __typename: 'DataObjectTypeChannelAvatar' }
+                    | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypeUnknown' }
+                    | { __typename: 'DataObjectTypeVideoMedia' }
+                    | { __typename: 'DataObjectTypeVideoThumbnail' }
+                } | null
+              }
+            | { __typename?: 'AvatarUri'; avatarUri: string }
+            | null
+        }
+      }
+    }
   }>
 }
 
@@ -2312,8 +2355,8 @@ export type GetNftActivitiesQuery = {
   }
 }
 
-export const GetNftNotificationsDocument = gql`
-  query GetNftNotifications($memberId: ID!, $limit: Int!) {
+export const GetNotificationsDocument = gql`
+  query GetNotifications($channelId: ID!, $memberId: ID!, $limit: Int!) {
     auctionBidMadeEvents(
       limit: $limit
       where: { OR: [{ ownerMember: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
@@ -2417,51 +2460,65 @@ export const GetNftNotificationsDocument = gql`
         title
       }
     }
+    commentCreatedEvents(
+      where: { OR: [{ videoChannel: { id_eq: $channelId } }, { parentCommentAuthor: { id_eq: $memberId } }] }
+      limit: $limit
+      orderBy: [createdAt_DESC]
+    ) {
+      id
+      inBlock
+      createdAt
+      video {
+        id
+        title
+      }
+      comment {
+        id
+        parentComment {
+          id
+        }
+        author {
+          ...BasicMembershipFields
+        }
+      }
+    }
   }
   ${BasicMembershipFieldsFragmentDoc}
 `
 
 /**
- * __useGetNftNotificationsQuery__
+ * __useGetNotificationsQuery__
  *
- * To run a query within a React component, call `useGetNftNotificationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNftNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetNftNotificationsQuery({
+ * const { data, loading, error } = useGetNotificationsQuery({
  *   variables: {
+ *      channelId: // value for 'channelId'
  *      memberId: // value for 'memberId'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetNftNotificationsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>
+export function useGetNotificationsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>(
-    GetNftNotificationsDocument,
-    options
-  )
+  return Apollo.useQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options)
 }
-export function useGetNftNotificationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>
+export function useGetNotificationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>(
-    GetNftNotificationsDocument,
-    options
-  )
+  return Apollo.useLazyQuery<GetNotificationsQuery, GetNotificationsQueryVariables>(GetNotificationsDocument, options)
 }
-export type GetNftNotificationsQueryHookResult = ReturnType<typeof useGetNftNotificationsQuery>
-export type GetNftNotificationsLazyQueryHookResult = ReturnType<typeof useGetNftNotificationsLazyQuery>
-export type GetNftNotificationsQueryResult = Apollo.QueryResult<
-  GetNftNotificationsQuery,
-  GetNftNotificationsQueryVariables
->
+export type GetNotificationsQueryHookResult = ReturnType<typeof useGetNotificationsQuery>
+export type GetNotificationsLazyQueryHookResult = ReturnType<typeof useGetNotificationsLazyQuery>
+export type GetNotificationsQueryResult = Apollo.QueryResult<GetNotificationsQuery, GetNotificationsQueryVariables>
 export const GetNftHistoryDocument = gql`
   query GetNftHistory($nftId: ID!) {
     nftIssuedEvents(where: { video: { id_eq: $nftId } }, orderBy: [createdAt_DESC]) {

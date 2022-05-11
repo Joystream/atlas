@@ -6803,6 +6803,8 @@ export type CommentCreatedEvent = BaseGraphQlObject &
     indexInBlock: Scalars['Int']
     /** Network the block was produced in */
     network: Network
+    parentCommentAuthor?: Maybe<Membership>
+    parentCommentAuthorId?: Maybe<Scalars['String']>
     /** Comment's original text */
     text: Scalars['String']
     /** Filtering options for interface implementers */
@@ -6829,6 +6831,7 @@ export type CommentCreatedEventCreateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock: Scalars['Float']
   network: Network
+  parentCommentAuthor?: InputMaybe<Scalars['ID']>
   text: Scalars['String']
   video: Scalars['ID']
   videoChannel: Scalars['ID']
@@ -6855,6 +6858,8 @@ export enum CommentCreatedEventOrderByInput {
   IndexInBlockDesc = 'indexInBlock_DESC',
   NetworkAsc = 'network_ASC',
   NetworkDesc = 'network_DESC',
+  ParentCommentAuthorAsc = 'parentCommentAuthor_ASC',
+  ParentCommentAuthorDesc = 'parentCommentAuthor_DESC',
   TextAsc = 'text_ASC',
   TextDesc = 'text_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
@@ -6871,6 +6876,7 @@ export type CommentCreatedEventUpdateInput = {
   inExtrinsic?: InputMaybe<Scalars['String']>
   indexInBlock?: InputMaybe<Scalars['Float']>
   network?: InputMaybe<Network>
+  parentCommentAuthor?: InputMaybe<Scalars['ID']>
   text?: InputMaybe<Scalars['String']>
   video?: InputMaybe<Scalars['ID']>
   videoChannel?: InputMaybe<Scalars['ID']>
@@ -6916,6 +6922,7 @@ export type CommentCreatedEventWhereInput = {
   indexInBlock_lte?: InputMaybe<Scalars['Int']>
   network_eq?: InputMaybe<Network>
   network_in?: InputMaybe<Array<Network>>
+  parentCommentAuthor?: InputMaybe<MembershipWhereInput>
   text_contains?: InputMaybe<Scalars['String']>
   text_endsWith?: InputMaybe<Scalars['String']>
   text_eq?: InputMaybe<Scalars['String']>
@@ -13654,6 +13661,7 @@ export type Membership = BaseGraphQlObject & {
   channels: Array<Channel>
   collaboratorInChannels: Array<Channel>
   commentauthor?: Maybe<Array<Comment>>
+  commentcreatedeventparentCommentAuthor?: Maybe<Array<CommentCreatedEvent>>
   commentreactedeventreactingMember?: Maybe<Array<CommentReactedEvent>>
   commentreactionmember?: Maybe<Array<CommentReaction>>
   /** Member's controller account id */
@@ -14341,6 +14349,9 @@ export type MembershipWhereInput = {
   commentauthor_every?: InputMaybe<CommentWhereInput>
   commentauthor_none?: InputMaybe<CommentWhereInput>
   commentauthor_some?: InputMaybe<CommentWhereInput>
+  commentcreatedeventparentCommentAuthor_every?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventparentCommentAuthor_none?: InputMaybe<CommentCreatedEventWhereInput>
+  commentcreatedeventparentCommentAuthor_some?: InputMaybe<CommentCreatedEventWhereInput>
   commentreactedeventreactingMember_every?: InputMaybe<CommentReactedEventWhereInput>
   commentreactedeventreactingMember_none?: InputMaybe<CommentReactedEventWhereInput>
   commentreactedeventreactingMember_some?: InputMaybe<CommentReactedEventWhereInput>

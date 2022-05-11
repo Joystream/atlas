@@ -38,6 +38,10 @@ const getNotificationText = (notification: NotificationRecord): string => {
       return 'Auction you have won has been settled'
     case 'auction-ended':
       return 'Auction you participated in has ended'
+    case 'video-commented':
+      return `commented on your video`
+    case 'comment-reply':
+      return `replied to your comment`
   }
 }
 
