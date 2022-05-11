@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { format } from 'date-fns'
+import { format, roundToNearestMinutes, setMinutes } from 'date-fns'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -51,6 +51,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const selectRef = useRef(null)
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
+  const [open, setOpen] = useState(false)
   const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
     () => ({
       value: { type: 'pick-date' },
@@ -116,6 +117,14 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
     setStartDate(date)
   }
 
+  const fromDate = minDate || new Date(msTimestamp)
+
+  // set the initial date and round the time to the nearest 30 minutes
+  const selectedDate =
+    startDate || fromDate.getMinutes() > 30
+      ? roundToNearestMinutes(fromDate, { nearestTo: 30 })
+      : setMinutes(fromDate, 30)
+
   return (
     <Container>
       <Select<AuctionDatePickerValueWithPickDate>
@@ -135,25 +144,30 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
         triggerMode="manual"
         triggerTarget={selectRef.current}
         trigger={null}
+        onShow={() => {
+          setOpen(true)
+        }}
         onHide={() => {
+          setOpen(false)
           if (pickedValue?.type === 'pick-date') {
             setPickedValue(null)
             onChange(null)
           }
         }}
       >
-        <DatePicker
-          open
-          inline
-          selected={startDate}
-          timeFormat="HH:mm"
-          onChange={handlePickDate}
-          openToDate={minDate ?? undefined}
-          minDate={minDate || new Date(msTimestamp)}
-          maxDate={maxDate}
-          showDisabledMonthNavigation
-          showTimeSelect
-        />
+        {open && (
+          <DatePicker
+            inline
+            selected={selectedDate}
+            timeFormat="HH:mm"
+            onChange={handlePickDate}
+            openToDate={minDate ?? undefined}
+            minDate={fromDate}
+            maxDate={maxDate}
+            showDisabledMonthNavigation
+            showTimeSelect
+          />
+        )}
       </Popover>
     </Container>
   )
