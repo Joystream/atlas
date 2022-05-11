@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
@@ -18,14 +18,11 @@ import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
+import { useCommentTransactions } from '@/hooks/useCommentTransactions'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useReactionTransactions } from '@/hooks/useReactionTransactions'
-import { useJoystream } from '@/providers/joystream'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
-import { ConsoleLogger } from '@/utils/logs'
 
 import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from './VideoView.styles'
 
@@ -46,23 +43,20 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
-  const { id } = useParams()
-  const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
-  const handleTransaction = useTransaction()
   const [commentBody, setCommentBody] = useState('')
-  const [commentInputProcessing, setCommentInputProcessing] = useState(false)
-  const { joystream, proxyCallback } = useJoystream()
+  const { id } = useParams()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
 
   const authorized = activeMemberId && activeAccountId
 
-  const { comments, loading, refetch } = useComments(
+  const { comments, loading } = useComments(
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
     { skip: disabled || !id }
   )
-  const { processingCommentReactionId, handleReactToComment } = useReactionTransactions(refetch)
+  const { processingCommentReactionId, reactToComment, addComment, commentInputProcessing, highlightedComment } =
+    useCommentTransactions()
 
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -73,16 +67,27 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
   }
 
-  useEffect(() => {
-    if (!highlightedComment) {
-      return
-    }
-    const timeout = setTimeout(() => {
-      setHighlightedComment(null)
-    }, 3000)
+  const handleComment = useCallback(
+    async (videoId?: string, commentBody?: string, parentCommentId?: string) => {
+      if (!videoId || !commentBody) {
+        return
+      }
+      await addComment(videoId, commentBody, parentCommentId)
+      setCommentBody('')
+    },
+    [addComment]
+  )
 
-    return () => clearTimeout(timeout)
-  })
+  const handleCommentReaction = useCallback(
+    (commentId: string, reactionId: ReactionId) => {
+      if (authorized) {
+        reactToComment(commentId, reactionId)
+      } else {
+        openSignInDialog({ onConfirm: signIn })
+      }
+    },
+    [authorized, openSignInDialog, reactToComment, signIn]
+  )
 
   const getCommentReactions = useCallback(
     ({ commentId, reactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
@@ -126,13 +131,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           text={comment.text}
           reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
           isEdited={comment.isEdited}
-          onReactionClick={(reactionId) => {
-            if (authorized) {
-              handleReactToComment(comment.id, reactionId)
-            } else {
-              openSignInDialog({ onConfirm: signIn })
-            }
-          }}
+          onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           isAbleToEdit={comment.author.id === activeMemberId}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
@@ -152,17 +151,15 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       )
     })
   }, [
-    activeMemberId,
-    authorized,
     comments,
-    getCommentReactions,
-    handleReactToComment,
     highlightedComment,
-    openSignInDialog,
+    getCommentReactions,
+    activeMemberId,
     processingCommentReactionId,
     reactionPopoverDismissed,
-    signIn,
+    authorized,
     videoAuthorId,
+    handleCommentReaction,
   ])
 
   if (disabled) {
@@ -171,47 +168,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         <EmptyFallback title="Comments are disabled" subtitle="Author has disabled comments for this video" />
       </CommentsSectionWrapper>
     )
-  }
-
-  const handleCreate = (parentCommentId?: string) => {
-    if (!joystream || !activeMemberId || !id) {
-      ConsoleLogger.error('no joystream or active member')
-      openSignInDialog({ onConfirm: signIn })
-      return
-    }
-
-    if (!reactionPopoverDismissed) {
-      return
-    }
-
-    handleTransaction({
-      preProcess: () => {
-        setCommentInputProcessing(true)
-      },
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).createVideoComment(
-          activeMemberId,
-          id,
-          commentBody,
-          parentCommentId || null,
-          proxyCallback(updateStatus)
-        ),
-      onTxSync: async ({ block }) => {
-        const newCommentsQueryResult = await refetch()
-        const newCommentId = newCommentsQueryResult?.data.comments.find(
-          (comment) => comment.commentcreatedeventcomment?.[0].inBlock === block
-        )?.id
-        setHighlightedComment(newCommentId || null)
-        setCommentInputProcessing(false)
-        setCommentBody('')
-      },
-      onError: () => {
-        setCommentInputProcessing(false)
-      },
-      minimized: {
-        signErrorMessage: 'Failed to post video comment',
-      },
-    })
   }
 
   return (
@@ -235,7 +191,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         readOnly={!activeMemberId}
         memberHandle={activeMembership?.handle}
         onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
-        onComment={() => handleCreate()}
+        onComment={() => handleComment(id, commentBody)}
         value={commentBody}
         withoutOutlineBox
         onChange={(e) => setCommentBody(e.currentTarget.value)}

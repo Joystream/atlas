@@ -5,9 +5,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
-import { usePersonalDataStore } from '@/providers/personalData'
-import { useUser } from '@/providers/user'
+import { VideoReaction } from '@/joystream-lib'
 import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
@@ -23,12 +21,13 @@ import { ReactionsOnboardingPopover } from '../../ReactionsOnboardingPopover'
 
 type ReactionButtonProps = {
   reactionsNumber?: number
-  onReact?: () => void
+  onReact: (reaction: VideoReaction) => void
   state: ReactionSteppperState
-  type: 'like' | 'dislike'
+  type: VideoReaction
   onPopoverShow?: () => void
   onPopoverHide?: () => void
   isPopoverOpen?: boolean
+  reactionPopoverDismissed?: boolean
 }
 
 export const ReactionButton: React.FC<ReactionButtonProps> = ({
@@ -39,18 +38,15 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   onReact,
   onPopoverHide,
   onPopoverShow,
+  reactionPopoverDismissed = false,
 }) => {
-  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const [shouldRunAnimation, setShouldRunAnimation] = useState(false)
-  const { activeMemberId, activeAccountId, signIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
   const popoverRef = useRef<PopoverImperativeHandle>(null)
 
   const isLoading = state === 'loading'
   const isProcessing = state === 'processing' || isPopoverOpen
 
   const isReacted = type === 'like' ? state === 'liked' : state === 'disliked'
-  const authorized = activeMemberId && activeAccountId
 
   const renderSolidIcon = () => {
     if (type === 'like') {
@@ -68,18 +64,13 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   }
 
   const handleReact = (reactionPopoverDismissed: boolean) => {
-    if (!authorized) {
-      openSignInDialog({ onConfirm: signIn })
-      return
-    }
-
     if (!reactionPopoverDismissed) {
       onPopoverShow?.()
-      return
+      popoverRef.current?.show()
+    } else {
+      setShouldRunAnimation(true)
+      onReact?.(type)
     }
-
-    setShouldRunAnimation(true)
-    onReact?.()
   }
 
   return (
@@ -94,7 +85,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         ) : (
           <ReactionsOnboardingPopover
             ref={popoverRef}
-            disabled={reactionPopoverDismissed || !authorized}
+            disabled={reactionPopoverDismissed}
             onConfirm={() => {
               handleReact(true)
             }}

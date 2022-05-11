@@ -20,12 +20,14 @@ import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
-import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
+import { useVideoReactionTransaction } from '@/hooks/useVideoReactionTransaction'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
+import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
@@ -58,17 +60,20 @@ import {
 export const VideoView: React.FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
-  const { activeMemberId } = useUser()
+  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
   const { copyToClipboard } = useClipboard()
-  const { loading, video, error, refetch } = useVideo(id ?? '', {
+  const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const nftWidgetProps = useNftWidget(id)
+  const { likeOrDislikeVideo, videoReactionProcessing } = useVideoReactionTransaction()
 
-  const { handleLikeAndDislike, videoReactionProcessing } = useReactionTransactions(refetch)
+  const authorized = activeMemberId && activeAccountId
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -163,6 +168,17 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
+  const handleReact = useCallback(
+    (reaction: VideoReaction) => {
+      if (!authorized) {
+        openSignInDialog({ onConfirm: signIn })
+      } else {
+        video?.id && likeOrDislikeVideo(video?.id, reaction)
+      }
+    },
+    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]
+  )
+
   // use Media Session API to provide rich metadata to the browser
   useEffect(() => {
     const supported = 'mediaSession' in navigator
@@ -246,8 +262,8 @@ export const VideoView: React.FC = () => {
             )}
           </Meta>
           <StyledReactionStepper
-            onLike={() => video?.id && handleLikeAndDislike(video?.id, 'like')}
-            onDislike={() => video?.id && handleLikeAndDislike(video?.id, 'dislike')}
+            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            onReact={handleReact}
             state={reactionStepperState}
             likes={numberOfLikes}
             dislikes={numberOfDislikes}
