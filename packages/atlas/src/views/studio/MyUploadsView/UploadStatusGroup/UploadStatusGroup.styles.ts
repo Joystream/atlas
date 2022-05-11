@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { ExpandButton } from '@/components/_buttons/ExpandButton'
 import { oldColors, sizes, transitions } from '@/styles'
 
-import { UploadStatusGroupSize } from './UploadStatusGroup'
+export type UploadStatusGroupSize = 'large' | 'compact'
 
 type UploadStatusGroupProps = {
   isActive?: boolean

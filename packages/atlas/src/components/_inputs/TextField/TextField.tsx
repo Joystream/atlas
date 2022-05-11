@@ -7,12 +7,13 @@ import { NodeContainer, TextFieldContainer, TextInput } from './TextField.styles
 
 export type TextFieldProps = {
   name?: string
-  type?: 'text' | 'email' | 'password' | 'search'
-  value?: string
+  type?: 'text' | 'email' | 'password' | 'search' | 'number'
+  value?: string | number
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  onWheel?: (event: React.WheelEvent<HTMLInputElement>) => void
   required?: boolean
   className?: string
   placeholder?: string
@@ -31,6 +32,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
     onChange,
     onBlur,
     onFocus,
+    onWheel,
     error,
     disabled,
     required,
@@ -45,6 +47,19 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
 ) => {
   const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
   const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
+
+  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+    if (onWheel) {
+      onWheel(event)
+      return
+    }
+    const target = event.target as HTMLInputElement
+    target.blur()
+
+    setTimeout(() => {
+      target.focus()
+    }, 0)
+  }
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps}>
@@ -65,6 +80,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onWheel={handleWheel}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           type={type}

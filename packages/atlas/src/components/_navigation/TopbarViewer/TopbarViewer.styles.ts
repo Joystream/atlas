@@ -105,5 +105,5 @@ export const StyledIconButton = styled(Button)`
 `
 
 export const StyledButtonSkeletonLoader = styled(SkeletonLoader)`
-  margin-right: ${sizes(4)};
+  margin-left: ${sizes(2)};
 `

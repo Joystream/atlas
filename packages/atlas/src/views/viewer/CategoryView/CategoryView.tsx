@@ -2,12 +2,11 @@ import { sampleSize } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router'
 
-import { useCategories, useCategoriesFeaturedVideos, useVideoCount } from '@/api/hooks'
+import { useCategories, useCategoriesFeaturedVideos } from '@/api/hooks'
 import { GetCategoriesFeaturedVideosQuery, VideoCategoryFieldsFragment } from '@/api/queries'
 import { Grid } from '@/components/Grid'
 import { GridItem } from '@/components/LayoutGrid'
 import { Text } from '@/components/Text'
-import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -19,7 +18,6 @@ import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
-import { SentryLogger } from '@/utils/logs'
 
 import { CategoryVideos } from './CategoryVideos'
 import { CategoriesContainer, TitleContainer } from './CategoryView.styles'
@@ -28,7 +26,8 @@ export const CategoryView = () => {
   const mdBreakpointMatch = useMediaMatch('md')
   const { id = '' } = useParams()
 
-  const { categories } = useCategories()
+  const { categories, totalVideosCount, loading } = useCategories()
+
   const mappedVideoCategories = categories?.map((category) => ({
     ...videoCategories[category.id],
     ...category,
@@ -48,16 +47,6 @@ export const CategoryView = () => {
   const { categoriesFeaturedVideos } = useCategoriesFeaturedVideos(id)
   const videoHeroVideos = useVideoHeroVideos(categoriesFeaturedVideos)
 
-  const { videoCount, error } = useVideoCount(
-    {},
-    {
-      onError: (error) => SentryLogger.error('Failed to fetch videos count', 'DiscoverView', error),
-    }
-  )
-
-  if (error) {
-    return <ViewErrorFallback />
-  }
   return (
     <VideoContentTemplate cta={['popular', 'new', 'home']}>
       {headTags}
@@ -100,11 +89,12 @@ export const CategoryView = () => {
           <GridItem key={category.id} colSpan={{ base: 6, lg: 4 }}>
             <VideoCategoryCard
               title={category.name ?? ''}
+              isLoading={loading}
               coverImg={category.coverImg}
-              categoryId={category.id}
               color={category.color}
+              categoryVideosCount={category.activeVideosCounter}
               icon={category.icon}
-              videosTotalCount={videoCount}
+              videosTotalCount={totalVideosCount}
               variant={mdBreakpointMatch ? 'default' : 'compact'}
               id={category.id}
             />

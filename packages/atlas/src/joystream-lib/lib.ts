@@ -2,13 +2,13 @@ import { types } from '@joystream/types'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import '@polkadot/api/augment'
 import { Signer } from '@polkadot/api/types'
-import BN from 'bn.js'
 import { proxy } from 'comlink'
 
 import { JoystreamLibError } from '@/joystream-lib/errors'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { JoystreamLibExtrinsics } from './extrinsics'
+import { NFT_PERBILL_PERCENT } from './helpers'
 import { AccountId } from './types'
 
 export class JoystreamLib {
@@ -37,7 +37,7 @@ export class JoystreamLib {
     })
 
     this.api = new ApiPromise({ provider, types })
-    const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId)
+    const extrinsics = new JoystreamLibExtrinsics(this.api, () => this.selectedAccountId, endpoint)
     this.extrinsics = proxy(extrinsics)
   }
 
@@ -79,18 +79,63 @@ export class JoystreamLib {
   async getAccountBalance(accountId: AccountId): Promise<number> {
     await this.ensureApi()
 
-    const balance = await this.api.derive.balances.account(accountId)
+    const { availableBalance } = await this.api.derive.balances.all(accountId)
 
-    return new BN(balance.freeBalance).toNumber()
+    return availableBalance.toNumber()
+  }
+
+  async getCurrentBlock(): Promise<number> {
+    await this.ensureApi()
+    const header = await this.api.rpc.chain.getHeader()
+    const { number } = header
+    return number.toNumber()
   }
 
   async subscribeAccountBalance(accountId: AccountId, callback: (balance: number) => void) {
     await this.ensureApi()
 
-    const unsubscribe = await this.api.query.system.account(accountId, ({ data: { free } }) => {
-      callback(new BN(free).toNumber())
+    const unsubscribe = await this.api.derive.balances.all(accountId, ({ availableBalance }) => {
+      callback(availableBalance.toNumber())
     })
 
     return proxy(unsubscribe)
+  }
+
+  async subscribeCurrentBlock(callback: (currentBlock: number) => void) {
+    await this.ensureApi()
+    const unsubscribe = await this.api.rpc.chain.subscribeNewHeads((result) => {
+      const { number } = result
+      callback(number.toNumber())
+    })
+    return proxy(unsubscribe)
+  }
+
+  async getNftChainState() {
+    await this.ensureApi()
+
+    const [
+      maxAuctionDuration,
+      minStartingPrice,
+      auctionStartsAtMaxDelta,
+      maxCreatorRoyalty,
+      minCreatorRoyalty,
+      platformFeePercentage,
+    ] = await Promise.all([
+      this.api.query.content.maxAuctionDuration(),
+      this.api.query.content.minStartingPrice(),
+      this.api.query.content.auctionStartsAtMaxDelta(),
+      this.api.query.content.maxCreatorRoyalty(),
+      this.api.query.content.minCreatorRoyalty(),
+      this.api.query.content.platfromFeePercentage(),
+    ])
+
+    return {
+      maxAuctionDuration: maxAuctionDuration.toNumber(),
+      minStartingPrice: minStartingPrice.toNumber(),
+      auctionStartsAtMaxDelta: auctionStartsAtMaxDelta.toNumber(),
+      maxCreatorRoyalty: maxCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
+      minCreatorRoyalty: minCreatorRoyalty.toNumber() / NFT_PERBILL_PERCENT,
+      platformFeePercentage: platformFeePercentage.toNumber() / NFT_PERBILL_PERCENT,
+    }
   }
 }

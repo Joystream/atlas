@@ -21,19 +21,23 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   const onlyCount = args?.first === 0
   const channel = stringifyValue(args?.where?.channel)
   const category = stringifyValue(args?.where?.category)
+  const language = stringifyValue(args?.where?.language)
+  const nft = stringifyValue(args?.where?.nft)
   const idEq = args?.where?.id_eq || ''
   const idIn = args?.where?.id_in || []
   const isPublic = args?.where?.isPublic_eq ?? ''
   const createdAtGte = args?.where?.createdAt_gte ? JSON.stringify(args.where.createdAt_gte) : ''
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const isFeatured = args?.where?.isFeatured_eq ?? ''
+  const durationGte = args?.where?.duration_gte || ''
+  const durationLte = args?.where?.duration_gte || ''
 
   // only for counting videos in HomeView
   if (args?.where?.channel?.id_in && !args?.first) {
     return `${createdAtGte}:${channel}`
   }
 
-  return `${onlyCount}:${channel}:${category}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}`
+  return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}:${durationGte}:${durationLte}`
 }
 
 const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
@@ -124,6 +128,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       })
     )
   },
+  ownedNftByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'OwnedNft',
+        id: args?.where.id,
+      })
+    )
+  },
   // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
   search: offsetLimitPagination(getSearchKeyArgs),
 }
@@ -147,6 +160,76 @@ const cache = new InMemoryCache({
     },
     Channel: {
       fields: channelCacheFields,
+    },
+    OwnedNft: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    NftIssuedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    OpenAuctionStartedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    EnglishAuctionStartedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    NftSellOrderMadeEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionBidMadeEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BidMadeCompletingAuctionEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    NftBoughtEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    EnglishAuctionSettledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    OpenAuctionBidAcceptedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionBidCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    AuctionCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BuyNowCanceledEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    BuyNowPriceUpdatedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
     },
     StorageDataObject: {
       fields: {

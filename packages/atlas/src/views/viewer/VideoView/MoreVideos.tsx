@@ -33,10 +33,13 @@ export const MoreVideos: React.FC<MoreVideosProps> = ({
 }) => {
   const where = type === 'channel' ? { channel: { id_eq: channelId } } : { category: { id_eq: categoryId } }
   // we fetch +1 because we need to filter duplicated video
-  const { videos = [], loading } = useBasicVideos({
-    where,
-    limit: NUMBER_OF_VIDEOS + 1,
-  })
+  const { videos = [], loading } = useBasicVideos(
+    {
+      where,
+      limit: NUMBER_OF_VIDEOS + 1,
+    },
+    { skip: !where.category?.id_eq && !where.channel?.id_eq }
+  )
   const displayedItems = loading ? [] : videos.filter((video) => video.id !== videoId).slice(0, NUMBER_OF_VIDEOS)
   const placeholderItems =
     loading && !videos.length ? Array.from({ length: NUMBER_OF_VIDEOS }, () => ({ id: undefined })) : []

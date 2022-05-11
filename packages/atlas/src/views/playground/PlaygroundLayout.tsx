@@ -1,58 +1,81 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 
+import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
+import { SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { TopbarBase } from '@/components/_navigation/TopbarBase'
+import { MemberDropdown } from '@/components/_overlays/MemberDropdown'
+import { absoluteRoutes } from '@/config/routes'
+import { useMemberAvatar } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
-import { ActiveUserProvider } from '@/providers/user'
+import { ActiveUserProvider, useUser } from '@/providers/user'
 import { oldColors } from '@/styles'
 
 import {
-  Animations,
-  AutomaticCrop,
-  DesignTokens,
-  FileHashing,
-  GridTesting,
-  ImageDownsizing,
-  IndirectSignInDialog,
-  Modals,
-  OrionTesting,
-  PlaygroundBreakpoints,
-  PlaygroundCommonStore,
-  PlaygroundConnectionState,
-  PlaygroundDrafts,
-  PlaygroundMemberChannel,
-  PlaygroundMemberDropdown,
-  PlaygroundValidationForm,
-  UploadFiles,
-  VideoMetaData,
+  PlaygroundEstimatingBlockTime,
+  PlaygroundImageDownsizing,
+  PlaygroundIndirectSignInDialog,
+  PlaygroundNftExtrinsics,
+  PlaygroundNftPurchase,
+  PlaygroundNftSettleAuction,
+  PlaygroundNftWhitelistMembers,
+  PlaygroundTokenPrice,
 } from './Playgrounds'
 
 const playgroundRoutes = [
-  { path: 'animations', element: <Animations />, name: 'Animations' },
-  { path: 'validation-form', element: <PlaygroundValidationForm />, name: 'Validation Form' },
-  { path: 'drafts', element: <PlaygroundDrafts />, name: 'Drafts' },
-  { path: 'video-metadata', element: <VideoMetaData />, name: 'Video Metadata' },
-  { path: 'upload-files', element: <UploadFiles />, name: 'Upload Files' },
-  { path: 'member-active-channel', element: <PlaygroundMemberChannel />, name: 'Active user/member/channel' },
-  { path: 'file-hashing', element: <FileHashing />, name: 'File hashing' },
-  { path: 'connection-state', element: <PlaygroundConnectionState />, name: 'Connection state' },
-  { path: 'image-downsizing', element: <ImageDownsizing />, name: 'Image downsizing' },
-  { path: 'automatic-crop', element: <AutomaticCrop />, name: 'Automatic crop' },
-  { path: 'modals', element: <Modals />, name: 'Modals' },
-  { path: 'store', element: <PlaygroundCommonStore />, name: 'Store' },
-  { path: 'orion-testing', element: <OrionTesting />, name: 'Orion testing' },
-  { path: 'grid', element: <GridTesting />, name: 'Grid testing' },
-  { path: 'breakpoints', element: <PlaygroundBreakpoints />, name: 'Breakpoints' },
-  { path: 'variables', element: <DesignTokens />, name: 'Design tokens' },
-  { path: 'indirect-signin-dialog', element: <IndirectSignInDialog />, name: 'Indirect sign in dialog' },
-  { path: 'member-dropdown', element: <PlaygroundMemberDropdown />, name: 'Member dropdown' },
+  { path: 'nft-extrinsics', element: <PlaygroundNftExtrinsics />, name: 'NFT extrinsics' },
+  { path: 'nft-purchase', element: <PlaygroundNftPurchase />, name: 'NFT Purchase' },
+  { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
+  { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
+  { path: 'block-time', element: <PlaygroundEstimatingBlockTime />, name: 'Estimating block time' },
+  { path: 'tjoy-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
+  { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
+  { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
 ]
 
 const PlaygroundLayout = () => {
+  const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
+  const { activeMembership, activeAccountId, activeMemberId, extensionConnected, signIn } = useUser()
+  const isLoggedIn = activeAccountId && !!activeMemberId && !!extensionConnected
+  const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(activeMembership)
   return (
     <ActiveUserProvider>
+      <TopbarBase
+        fullLogoNode={
+          <LogoWrapper>
+            <SvgJoystreamLogoShort />
+            <Text variant="h500" margin={{ left: 2 }}>
+              Playground
+            </Text>
+          </LogoWrapper>
+        }
+        logoLinkUrl={absoluteRoutes.playground.index()}
+      >
+        <ButtonContainer>
+          <Button variant="secondary" to={absoluteRoutes.viewer.index()}>
+            Go to viewer
+          </Button>
+          <Button variant="secondary" to={absoluteRoutes.studio.index()}>
+            Go to studio
+          </Button>
+          {isLoggedIn ? (
+            <Avatar
+              size="small"
+              assetUrl={memberAvatarUrl}
+              loading={memberAvatarLoading}
+              onClick={() => setIsMemberDropdownActive(true)}
+            />
+          ) : (
+            <Button onClick={signIn}>Sign in</Button>
+          )}
+        </ButtonContainer>
+      </TopbarBase>
+      <MemberDropdown isActive={isMemberDropdownActive} closeDropdown={() => setIsMemberDropdownActive(false)} />
       <ConfirmationModalProvider>
         <Container>
           <NavContainer>
@@ -76,7 +99,20 @@ const PlaygroundLayout = () => {
   )
 }
 
+const LogoWrapper = styled.div`
+  display: flex;
+`
+
+const ButtonContainer = styled.div`
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(3, max-content);
+  justify-content: end;
+  grid-column: 3;
+`
+
 const Container = styled.div`
+  margin-top: 80px;
   padding: 40px;
   display: flex;
 `

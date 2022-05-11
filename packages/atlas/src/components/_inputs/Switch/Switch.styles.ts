@@ -44,6 +44,7 @@ export const SwitchCheckbox = styled.input`
   width: 40px;
   height: 24px;
   opacity: 0;
+  visibility: hidden;
   z-index: 1;
 
   :disabled {

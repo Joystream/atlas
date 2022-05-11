@@ -4,8 +4,9 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { ListItemSizes } from '.'
 import { SvgActionCheck } from '../_icons'
+
+export type ListItemSizes = 'small' | 'medium' | 'large'
 
 const getContainerPadding = (size: ListItemSizes) => {
   switch (size) {
@@ -37,7 +38,7 @@ const interactiveStyles = css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
   }
 `
-type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean }
+type ContainerProps = { size: ListItemSizes; hasNodeStart: boolean; disabled?: boolean; highlight?: boolean }
 export const Container = styled.div<ContainerProps>`
   display: grid;
   grid-gap: ${sizes(3)};
@@ -46,6 +47,7 @@ export const Container = styled.div<ContainerProps>`
   align-items: center;
   user-select: none;
   cursor: pointer;
+  background-color: ${({ highlight }) => (highlight ? cVar('colorBackgroundMutedAlpha') : 'unset')};
 
   ${({ disabled }) => disabled && disabledStyles};
   ${({ size }) => getContainerPadding(size)};
@@ -73,7 +75,7 @@ const captionRightStyles = ({ captionPosition }: CaptionPosition) =>
     text-align: right;
   `
 export const Caption = styled(Text)<CaptionPosition>`
-  ${captionRightStyles}
+  ${captionRightStyles};
 `
 
 export const LabelContainer = styled.div`
@@ -83,6 +85,7 @@ export const LabelContainer = styled.div`
 `
 
 export const LabelText = styled(Text)`
+  width: 100%;
   word-break: break-word;
 `
 
@@ -92,8 +95,8 @@ const iconStyles = ({ destructive, isHovering, isSelected }: NodeContainerProps)
       fill: ${destructive
         ? cVar('colorTextError')
         : isHovering || isSelected
-        ? cVar('colorCoreNeutral50')
-        : cVar('colorCoreNeutral300')};
+        ? cVar('colorTextStrong')
+        : cVar('colorText')};
     }
   `
 

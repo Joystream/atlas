@@ -8,19 +8,19 @@ import { BannerDescription, BannerHeader, BannerText, BannerWrapper, CloseButton
 export type BannerProps = {
   id: string
   title?: string
-  description?: string
+  description?: React.ReactNode
   className?: string
   dismissable?: boolean
   icon?: ReactNode
 }
 
-export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, id, dismissable = true }) => {
+export const Banner: React.FC<BannerProps> = ({ title, description, className, icon, id = '', dismissable = true }) => {
   const isDismissedMessage = usePersonalDataStore((state) =>
     state.dismissedMessages.some((message) => message.id === id)
   )
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
-  if (isDismissedMessage) {
+  if (isDismissedMessage && dismissable) {
     return null
   }
   return (

@@ -36,9 +36,8 @@ import {
   ProgressbarContainer,
   RetryButton,
   StatusText,
+  UploadStatusGroupSize,
 } from './UploadStatus.styles'
-
-import { UploadStatusGroupSize } from '../UploadStatusGroup'
 
 type UploadStatusProps = {
   isLast?: boolean
@@ -185,7 +184,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     asset.dimensions?.width && asset.dimensions.height
       ? `${Math.floor(asset.dimensions.width)}x${Math.floor(asset.dimensions.height)}`
       : ''
-  const assetSize = formatBytes(asset.size)
+  const assetSize = formatBytes(Number(asset.size))
 
   const assetsDialogs = {
     avatar: avatarDialogRef,

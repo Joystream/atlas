@@ -1,6 +1,8 @@
 import { format, formatDistanceToNowStrict } from 'date-fns'
 
 export const formatDate = (date: Date) => format(date, 'd MMM yyyy')
+export const formatTime = (date: Date) => format(date, 'HH:mm')
+export const formatDateTime = (date: Date) => format(date, 'd MMM yyyy, HH:mm')
 
 export const formatDateAgo = (date: Date): string => {
   return `${formatDistanceToNowStrict(date)} ago`
@@ -23,8 +25,14 @@ export const formatDurationShort = (duration: number, showHours?: boolean): stri
   const seconds = remaining
 
   if (hours || showHours) {
-    return `${hours || '00'}:${normalize(minutes)}:${normalize(seconds)}`
+    return `${normalize(hours)}:${normalize(minutes)}:${normalize(seconds)}`
   }
 
   return `${minutes}:${normalize(seconds)}`
 }
+
+export const daysToMilliseconds = (days: number) => {
+  return days * 24 * 60 * 60 * 1000
+}
+
+export const getTimeDiffInSeconds = (time: Date) => Math.max(0, Math.round((time.getTime() - Date.now()) / 1000))

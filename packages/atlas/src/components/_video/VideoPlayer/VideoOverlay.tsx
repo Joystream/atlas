@@ -8,7 +8,7 @@ import { oldColors, transitions } from '@/styles'
 import { getRandomIntInclusive } from '@/utils/number'
 
 import { EndingOverlay, ErrorOverlay, InactiveOverlay } from './VideoOverlays'
-import { PlayerState } from './VideoPlayer'
+import { PlayerState } from './utils'
 
 type VideoOverlayProps = {
   playerState: PlayerState
@@ -17,6 +17,7 @@ type VideoOverlayProps = {
   currentThumbnailUrl?: string | null
   videoId?: string
   isFullScreen?: boolean
+  isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
 }
 export const VideoOverlay: React.FC<VideoOverlayProps> = ({
@@ -26,6 +27,7 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
   currentThumbnailUrl,
   videoId,
   isFullScreen,
+  isPlayNextDisabled,
   playRandomVideoOnEnded = true,
 }) => {
   const [randomNextVideo, setRandomNextVideo] = useState<BasicVideoFieldsFragment | null>(null)
@@ -71,6 +73,7 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
             <EndingOverlay
               isFullScreen={isFullScreen}
               isEnded={true}
+              isPlayNextDisabled={isPlayNextDisabled}
               onPlayAgain={onPlay}
               channelId={channelId}
               currentThumbnailUrl={currentThumbnailUrl}

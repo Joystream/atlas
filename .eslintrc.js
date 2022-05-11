@@ -33,6 +33,24 @@ module.exports = {
       'warn',
       { 'args': 'after-used', 'argsIgnorePattern': '^_', 'ignoreRestSiblings': true, 'varsIgnorePattern': '^_+$' },
     ],
+    // taken care of by typescript
+    'react/prop-types': 'off',
+    'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
+    'react/self-closing-comp': [
+      'warn',
+      {
+        'component': true,
+        'html': true,
+      },
+    ],
+    // add exhaustive deps check to custom hooks
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        'additionalHooks': 'useDeepMemo',
+      },
+    ],
+    'react/no-unescaped-entities': 'off',
     '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/ban-ts-comment': [
@@ -49,18 +67,6 @@ module.exports = {
         },
       },
     ],
-
-    // taken care of by typescript
-    'react/prop-types': 'off',
-    'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
-    'react/self-closing-comp': [
-      'warn',
-      {
-        'component': true,
-        'html': true,
-      },
-    ],
-    'react/no-unescaped-entities': 'off',
 
     // make sure we use the proper Emotion imports
     '@emotion/pkg-renaming': 'error',

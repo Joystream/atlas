@@ -23,11 +23,10 @@ import {
   Thumbnail,
   UploadInfoContainer,
   UploadStatusGroupContainer,
+  UploadStatusGroupSize,
 } from './UploadStatusGroup.styles'
 
 import { UploadStatus } from '../UploadStatus'
-
-export type UploadStatusGroupSize = 'large' | 'compact'
 
 type UploadGroupState = 'error' | 'completed' | 'inProgress' | 'processing' | null
 
@@ -59,9 +58,9 @@ export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, s
   const errorsCount = uploadsStatuses.filter((file) => file?.lastStatus === 'error').length
   const missingAssetsCount = uploadsStatuses.filter((file) => !file || !file.lastStatus).length
 
-  const allAssetsSize = uploads.reduce((acc, file) => acc + file.size, 0)
+  const allAssetsSize = uploads.reduce((acc, file) => acc + Number(file.size), 0)
   const alreadyUploadedSize = uploads.reduce(
-    (acc, file, idx) => acc + ((uploadsStatuses[idx]?.progress ?? 0) / 100) * file.size,
+    (acc, file, idx) => acc + ((uploadsStatuses[idx]?.progress ?? 0) / 100) * Number(file.size),
     0
   )
   const masterProgress = Math.floor((alreadyUploadedSize / allAssetsSize) * 100)

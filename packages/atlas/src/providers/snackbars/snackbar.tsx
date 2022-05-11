@@ -10,7 +10,9 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
 } from '@/components/_icons'
-import { cVar, media, sizes, zIndex } from '@/styles'
+import { useBottomNavStore } from '@/providers/bottomNav'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
 
@@ -29,6 +31,10 @@ export const useSnackbar = () => useSnackbarStore((state) => state.actions)
 export const Snackbars: React.FC = () => {
   const { closeSnackbar, cancelSnackbarTimeout, restartSnackbarTimeout } = useSnackbar()
   const snackbars = useSnackbarStore((state) => state.snackbars)
+  const { cookiesAccepted } = usePersonalDataStore((state) => ({
+    cookiesAccepted: state.cookiesAccepted,
+  }))
+  const bottomNavOpen = useBottomNavStore((state) => state.open)
 
   useEffect(() => {
     if (snackbars.length > SNACKBARS_LIMIT) {
@@ -39,7 +45,7 @@ export const Snackbars: React.FC = () => {
   }, [snackbars, closeSnackbar])
 
   return (
-    <SnackbarsContainer>
+    <SnackbarsContainer cookiesBannerOpen={cookiesAccepted === undefined} bottomNavOpen={bottomNavOpen}>
       <TransitionGroup>
         {snackbars.map(({ id, iconType, onActionClick, onExit, ...snackbarProps }) => (
           <CSSTransition key={id} timeout={parseInt(cVar('animationTimingMedium', true)) * 2} classNames="snackbar">
@@ -68,14 +74,16 @@ export const Snackbars: React.FC = () => {
   )
 }
 
-export const SnackbarsContainer = styled.div`
+export const SnackbarsContainer = styled.div<{ cookiesBannerOpen: boolean; bottomNavOpen: boolean }>`
   position: fixed;
   left: var(--size-sidenav-width-collapsed);
-  bottom: ${sizes(18)};
+  bottom: ${({ cookiesBannerOpen, bottomNavOpen }) => sizes(cookiesBannerOpen ? (bottomNavOpen ? 89 : 73) : 18)};
   margin-left: ${sizes(4)};
   display: grid;
   z-index: ${zIndex.nearVideoWorkspaceOverlay};
   width: calc(100% - ${sizes(8)});
+  transition: bottom ${cVar('animationTransitionMedium')}
+    ${({ bottomNavOpen }) => (bottomNavOpen ? transitions.timings.routing : '0ms')};
 
   ${media.xs} {
     width: 100%;

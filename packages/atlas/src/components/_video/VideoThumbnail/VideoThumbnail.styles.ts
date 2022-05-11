@@ -51,12 +51,13 @@ const getSlotPosition = (slotPosition: SlotPosition) => {
 type SlotsContainerProps = {
   position: SlotPosition
   type?: 'default' | 'hover'
+  halfWidth?: boolean
 }
 
 export const SlotContainer = styled.div<SlotsContainerProps>`
   position: absolute;
   user-select: none;
-  max-width: 50%;
+  max-width: ${({ halfWidth }) => (halfWidth ? '50%' : 'unset')};
   ${({ position }) => getSlotPosition(position)};
 
   opacity: ${({ type = 'default' }) => (type === 'hover' ? 0 : 1)};

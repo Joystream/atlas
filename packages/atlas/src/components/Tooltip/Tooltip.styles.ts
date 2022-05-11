@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 type StyledTooltipProps = {
-  headerText?: boolean
+  headerText: boolean
+  footer: boolean
 }
 
 export const IconWrapper = styled.div`
@@ -38,10 +39,11 @@ export const Arrow = styled.div`
 
 type TooltipTextProps = {
   withIcon?: boolean
+  footer: boolean
 }
 
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  max-width: 200px;
+  max-width: ${({ footer }) => (footer ? 250 : 200)}px;
 
   ${({ withIcon }) => withIcon && `margin-left: ${sizes(6)}`};
 `
@@ -53,9 +55,9 @@ export const TooltipHeader = styled.div`
 
 export const StyledTooltip = styled.div<StyledTooltipProps>`
   display: inline-flex;
-  flex-direction: ${({ headerText }) => (headerText ? 'column' : 'row')};
+  flex-direction: ${({ headerText, footer }) => (headerText || footer ? 'column' : 'row')};
   padding: ${sizes(2)};
-  background-color: ${oldColors.gray[400]};
+  background-color: ${cVar('colorCoreNeutral500')};
 
   ${TooltipHeader} {
     align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};

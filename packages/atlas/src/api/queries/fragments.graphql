@@ -1,6 +1,7 @@
 fragment VideoCategoryFields on VideoCategory {
   id
   name
+  activeVideosCounter
 }
 fragment BasicChannelFields on Channel {
   id
@@ -12,10 +13,15 @@ fragment BasicChannelFields on Channel {
   avatarPhoto {
     ...StorageDataObjectFields
   }
+
+  ownerMember {
+    ...BasicMembershipFields
+  }
 }
 
 fragment AllChannelFields on Channel {
   ...BasicChannelFields
+  activeVideosCounter
   description
   isPublic
   isCensored
@@ -104,14 +110,13 @@ fragment BasicVideoFields on Video {
     ...StorageDataObjectFields
   }
   channel {
-    id
-    title
-    avatarPhoto {
-      ...StorageDataObjectFields
-    }
+    ...BasicChannelFields
   }
   thumbnailPhoto {
     ...StorageDataObjectFields
+  }
+  nft {
+    ...BasicNftFields
   }
 }
 
@@ -148,5 +153,104 @@ fragment VideoFields on Video {
   }
   license {
     ...LicenseFields
+  }
+  nft {
+    ...AllNftFields
+  }
+}
+
+fragment BasicNftFields on OwnedNft {
+  id
+  createdAt
+  creatorRoyalty
+  ownerMember {
+    ...BasicMembershipFields
+  }
+  transactionalStatus {
+    __typename
+  }
+}
+
+fragment AllNftFields on OwnedNft {
+  id
+  createdAt
+  creatorRoyalty
+  lastSaleDate
+  lastSalePrice
+  ownerMember {
+    ...BasicMembershipFields
+  }
+  creatorChannel {
+    ...BasicChannelFields
+  }
+  transactionalStatusAuction {
+    id
+    auctionType {
+      __typename
+      ... on AuctionTypeEnglish {
+        duration
+        extensionPeriod
+        minimalBidStep
+        plannedEndAtBlock
+      }
+      ... on AuctionTypeOpen {
+        bidLockDuration
+      }
+    }
+    isCompleted
+    initialOwner {
+      ...BasicMembershipFields
+    }
+    buyNowPrice
+    startingPrice
+
+    startsAtBlock
+    endedAtBlock
+
+    topBid {
+      ...BasicBidFields
+    }
+    bids {
+      ...BasicBidFields
+    }
+
+    whitelistedMembers {
+      ...BasicMembershipFields
+    }
+  }
+  transactionalStatus {
+    __typename
+    ... on TransactionalStatusIdle {
+      dummy
+    }
+    ... on TransactionalStatusBuyNow {
+      price
+    }
+  }
+  video {
+    ...BasicVideoFields
+  }
+}
+
+fragment BasicBidFields on Bid {
+  bidder {
+    ...BasicMembershipFields
+  }
+  amount
+  createdAt
+  isCanceled
+  createdInBlock
+  id
+}
+
+fragment AllBidFields on Bid {
+  ...BasicBidFields
+  auction {
+    auctionType {
+      __typename
+    }
+    isCompleted
+    winningMemberId
+    id
   }
 }

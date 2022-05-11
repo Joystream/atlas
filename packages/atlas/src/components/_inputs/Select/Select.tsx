@@ -1,4 +1,5 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
+import { isEqual } from 'lodash-es'
 import React, { Ref, forwardRef, useMemo } from 'react'
 
 import { TextProps } from '@/components/Text'
@@ -12,6 +13,7 @@ import {
   SelectMenu,
   SelectMenuWrapper,
   SelectOption,
+  SelectSizes,
   SelectWrapper,
   StyledLabelText,
   StyledPill,
@@ -20,8 +22,6 @@ import {
 } from './Select.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
-
-export type SelectSizes = 'regular' | 'small'
 
 export type SelectItem<T = string> = {
   value: T
@@ -90,7 +90,10 @@ export const _Select = <T extends unknown>(
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
-  const selectedItem = useMemo(() => items.find((item) => item.value === selectedItemValue), [items, selectedItemValue])
+  const selectedItem = useMemo(
+    () => items.find((item) => isEqual(item.value, selectedItemValue)),
+    [items, selectedItemValue]
+  )
 
   return (
     <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>

@@ -35,19 +35,19 @@ export type FiltersBarProps = {
 
 const nftStatuses = [
   {
-    id: '0',
+    id: 'AuctionTypeEnglish',
+    name: 'Timed auction',
+  },
+  {
+    id: 'AuctionTypeOpen',
     name: 'Open auction',
   },
   {
-    id: '1',
-    name: 'English auction',
-  },
-  {
-    id: '2',
+    id: 'TransactionalStatusBuyNow',
     name: 'Fixed price',
   },
   {
-    id: '3',
+    id: 'TransactionalStatusIdle',
     name: 'Not for sale',
   },
 ]
@@ -56,6 +56,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   setVideoWhereInput,
   videoWhereInput,
   activeFilters,
+  setOwnedNftWhereInput,
   filters: {
     setIsFiltersOpen,
     isFiltersOpen,
@@ -96,21 +97,17 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
   const lengthPopoverRef = useRef<PopoverImperativeHandle>(null)
   const othersPopoverRef = useRef<PopoverImperativeHandle>(null)
   const { categories } = useCategories()
-
   const nftStatusInputs = useMemo(
     () => (
       <FilterContentContainer>
         {nftStatuses.map((status) => (
-          <Checkbox
+          <RadioButton
             name="nft-status"
             label={status.name}
             key={`nft-status-${status.id}`}
-            value={!!nftStatusFilter?.includes(status.id)}
-            onChange={(value) => {
-              setNftStatusFilter((statuses) =>
-                value ? [...(statuses ?? []), status.id] : statuses?.filter((id) => id !== status.id)
-              )
-            }}
+            value={status.id}
+            selectedValue={nftStatusFilter}
+            onChange={(event) => setNftStatusFilter(event.target.value)}
           />
         ))}
       </FilterContentContainer>
@@ -334,6 +331,29 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                   : undefined,
               ...getDurationRules(),
             }))
+            setOwnedNftWhereInput((value) => {
+              if (nftStatusFilter === 'AuctionTypeEnglish' || nftStatusFilter === 'AuctionTypeOpen') {
+                return {
+                  ...value,
+                  transactionalStatus_json: undefined,
+                  transactionalStatusAuction: {
+                    auctionType_json: {
+                      isTypeOf_eq: nftStatusFilter,
+                    },
+                  },
+                }
+              } else {
+                return {
+                  ...value,
+                  transactionalStatusAuction: undefined,
+                  transactionalStatus_json: nftStatusFilter
+                    ? {
+                        isTypeOf_eq: nftStatusFilter,
+                      }
+                    : undefined,
+                }
+              }
+            })
             setIsFiltersOpen(false)
           },
         }}
@@ -362,16 +382,39 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
-                <Button variant="secondary" badge={canClearNftStatusFilter && nftStatusFilter?.length}>
+                <Button variant="secondary" badge={canClearNftStatusFilter}>
                   Status
                 </Button>
               }
               dividers
               primaryButton={{
                 text: 'Apply',
-                disabled: (!nftStatusFilter || !nftStatusFilter.length) && !canClearNftStatusFilter,
+                disabled: !nftStatusFilter && !canClearNftStatusFilter,
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
+                  setOwnedNftWhereInput((value) => {
+                    if (nftStatusFilter === 'AuctionTypeEnglish' || nftStatusFilter === 'AuctionTypeOpen') {
+                      return {
+                        ...value,
+                        transactionalStatus_json: undefined,
+                        transactionalStatusAuction: {
+                          auctionType_json: {
+                            isTypeOf_eq: nftStatusFilter,
+                          },
+                        },
+                      }
+                    } else {
+                      return {
+                        ...value,
+                        transactionalStatusAuction: undefined,
+                        transactionalStatus_json: nftStatusFilter
+                          ? {
+                              isTypeOf_eq: nftStatusFilter,
+                            }
+                          : undefined,
+                      }
+                    }
+                  })
                 },
               }}
               secondaryButton={{

@@ -64,6 +64,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
 }) => {
   const [hoveredAvatarIdx, setHoveredAvatarIdx] = useState<number | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
+
   return (
     <AvatarGroupContainer size={size} className={className} shouldHighlightEveryAvatar={shouldHighlightEveryAvatar}>
       {avatars.map((avatarProps, idx) => (
@@ -120,6 +121,8 @@ const SingleAvatar: React.FC<SingleAvatarProps> = ({ avatar, loading: loadingPro
       size={size}
       withoutOutline={avatar.withoutOutline}
       onClick={avatar.onClick}
-    />
+    >
+      {avatar.children}
+    </StyledAvatar>
   )
 }

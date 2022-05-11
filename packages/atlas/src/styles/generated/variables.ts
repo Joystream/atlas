@@ -41,9 +41,9 @@ export const variables = css`
     --color-core-neutral-800: #181c20;
     --color-core-neutral-800-lighten: #bbd9f621;
     --color-core-neutral-800-darken: #050505e8;
-    --color-core-neutral-900: #0b0c0f;
-    --color-core-neutral-900-lighten: #b7c8fa0f;
-    --color-core-neutral-900-darken: #010205f5;
+    --color-core-neutral-900: #0f1114;
+    --color-core-neutral-900-lighten: #bcd5fa14;
+    --color-core-neutral-900-darken: #020408f2;
     --color-core-blue-50: #becaff;
     --color-core-blue-100: #9facff;
     --color-core-blue-200: #8890ff;
@@ -84,19 +84,21 @@ export const variables = css`
     --color-core-yellow-700: #4a3d01;
     --color-core-yellow-800: #302800;
     --color-core-yellow-900: #0a0900;
-    --color-text-muted: var(--color-core-neutral-400);
-    --color-text: var(--color-core-neutral-300);
+    --color-text-muted: var(--color-core-neutral-300);
+    --color-text: var(--color-core-neutral-200);
     --color-text-strong: var(--color-core-neutral-50);
     --color-text-primary: var(--color-core-blue-300);
     --color-text-error: var(--color-core-red-200);
     --color-text-success: var(--color-core-green-300);
     --color-text-caution: var(--color-core-yellow-200);
-    --color-border-muted: var(--color-core-neutral-700);
-    --color-border-muted-alpha: var(--color-core-neutral-700-lighten);
-    --color-border: var(--color-core-neutral-500);
-    --color-border-alpha: var(--color-core-neutral-500-lighten);
-    --color-border-strong: var(--color-core-neutral-300);
-    --color-border-strong-alpha: var(--color-core-neutral-300-lighten);
+    --color-border-muted: var(--color-core-neutral-800);
+    --color-border-muted-alpha: var(--color-core-neutral-800-lighten);
+    --color-border: var(--color-core-neutral-600);
+    --color-border-alpha: var(--color-core-neutral-600-lighten);
+    --color-border-strong: var(--color-core-neutral-400);
+    --color-border-strong-alpha: var(--color-core-neutral-400-lighten);
+    --color-border-primary: var(--color-core-blue-500);
+    --color-border-error: var(--color-core-red-200);
     --color-background-muted: var(--color-core-neutral-900);
     --color-background-muted-alpha: var(--color-core-neutral-900-lighten);
     --color-background: var(--color-core-neutral-800);
@@ -130,6 +132,7 @@ export const variables = css`
     --effect-elevation-24-layer2: 0 8px 8px 0 #0000001f;
     --radius-small: 2px;
     --radius-medium: 4px;
+    --radius-large: 8px;
     --typography-fonts-primary: IBM Plex Sans, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
       Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
     --typography-fonts-secondary: Inter, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Segoe UI,
@@ -324,9 +327,9 @@ export const theme = {
   colorCoreNeutral800: { variable: 'var(--color-core-neutral-800)', value: '#181C20' },
   colorCoreNeutral800Lighten: { variable: 'var(--color-core-neutral-800-lighten)', value: '#BBD9F621' },
   colorCoreNeutral800Darken: { variable: 'var(--color-core-neutral-800-darken)', value: '#050505E8' },
-  colorCoreNeutral900: { variable: 'var(--color-core-neutral-900)', value: '#0B0C0F' },
-  colorCoreNeutral900Lighten: { variable: 'var(--color-core-neutral-900-lighten)', value: '#B7C8FA0F' },
-  colorCoreNeutral900Darken: { variable: 'var(--color-core-neutral-900-darken)', value: '#010205F5' },
+  colorCoreNeutral900: { variable: 'var(--color-core-neutral-900)', value: '#0F1114' },
+  colorCoreNeutral900Lighten: { variable: 'var(--color-core-neutral-900-lighten)', value: '#BCD5FA14' },
+  colorCoreNeutral900Darken: { variable: 'var(--color-core-neutral-900-darken)', value: '#020408F2' },
   colorCoreBlue50: { variable: 'var(--color-core-blue-50)', value: '#BECAFF' },
   colorCoreBlue100: { variable: 'var(--color-core-blue-100)', value: '#9FACFF' },
   colorCoreBlue200: { variable: 'var(--color-core-blue-200)', value: '#8890FF' },
@@ -367,21 +370,23 @@ export const theme = {
   colorCoreYellow700: { variable: 'var(--color-core-yellow-700)', value: '#4A3D01' },
   colorCoreYellow800: { variable: 'var(--color-core-yellow-800)', value: '#302800' },
   colorCoreYellow900: { variable: 'var(--color-core-yellow-900)', value: '#0A0900' },
-  colorTextMuted: { variable: 'var(--color-text-muted)', value: '#52616B' },
-  colorText: { variable: 'var(--color-text)', value: '#7B8A95' },
+  colorTextMuted: { variable: 'var(--color-text-muted)', value: '#7B8A95' },
+  colorText: { variable: 'var(--color-text)', value: '#B5C1C9' },
   colorTextStrong: { variable: 'var(--color-text-strong)', value: '#F4F6F8' },
   colorTextPrimary: { variable: 'var(--color-text-primary)', value: '#7174FF' },
   colorTextError: { variable: 'var(--color-text-error)', value: '#FF695F' },
   colorTextSuccess: { variable: 'var(--color-text-success)', value: '#0C9846' },
   colorTextCaution: { variable: 'var(--color-text-caution)', value: '#CAA802' },
-  colorBorderMuted: { variable: 'var(--color-border-muted)', value: '#272D33' },
-  colorBorderMutedAlpha: { variable: 'var(--color-border-muted-alpha)', value: '#C2E0FF33' },
-  colorBorder: { variable: 'var(--color-border)', value: '#424E57' },
-  colorBorderAlpha: { variable: 'var(--color-border-alpha)', value: '#D2DDE559' },
-  colorBorderStrong: { variable: 'var(--color-border-strong)', value: '#7B8A95' },
-  colorBorderStrongAlpha: { variable: 'var(--color-border-strong-alpha)', value: '#E4E6E796' },
-  colorBackgroundMuted: { variable: 'var(--color-background-muted)', value: '#0B0C0F' },
-  colorBackgroundMutedAlpha: { variable: 'var(--color-background-muted-alpha)', value: '#B7C8FA0F' },
+  colorBorderMuted: { variable: 'var(--color-border-muted)', value: '#181C20' },
+  colorBorderMutedAlpha: { variable: 'var(--color-border-muted-alpha)', value: '#BBD9F621' },
+  colorBorder: { variable: 'var(--color-border)', value: '#343D44' },
+  colorBorderAlpha: { variable: 'var(--color-border-alpha)', value: '#CBE0F145' },
+  colorBorderStrong: { variable: 'var(--color-border-strong)', value: '#52616B' },
+  colorBorderStrongAlpha: { variable: 'var(--color-border-strong-alpha)', value: '#DCE1E56B' },
+  colorBorderPrimary: { variable: 'var(--color-border-primary)', value: '#4038FF' },
+  colorBorderError: { variable: 'var(--color-border-error)', value: '#FF695F' },
+  colorBackgroundMuted: { variable: 'var(--color-background-muted)', value: '#0F1114' },
+  colorBackgroundMutedAlpha: { variable: 'var(--color-background-muted-alpha)', value: '#BCD5FA14' },
   colorBackground: { variable: 'var(--color-background)', value: '#181C20' },
   colorBackgroundAlpha: { variable: 'var(--color-background-alpha)', value: '#BBD9F621' },
   colorBackgroundStrong: { variable: 'var(--color-background-strong)', value: '#272D33' },
@@ -401,10 +406,10 @@ export const theme = {
   colorBackgroundCautionMuted: { variable: 'var(--color-background-caution-muted)', value: '#AC9002' },
   colorBackgroundCaution: { variable: 'var(--color-background-caution)', value: '#CAA802' },
   colorBackgroundCautionStrong: { variable: 'var(--color-background-caution-strong)', value: '#ECC502' },
-  effectDividersTop: { variable: 'var(--effect-dividers-top)', value: 'inset 0 1px 0 0 #C2E0FF33' },
-  effectDividersBottom: { variable: 'var(--effect-dividers-bottom)', value: 'inset 0 -1px 0 0 #C2E0FF33' },
-  effectDividersLeft: { variable: 'var(--effect-dividers-left)', value: 'inset 1px 0 0 0 #C2E0FF33' },
-  effectDividersRight: { variable: 'var(--effect-dividers-right)', value: 'inset -1px 0 0 0 #C2E0FF33' },
+  effectDividersTop: { variable: 'var(--effect-dividers-top)', value: 'inset 0 1px 0 0 #BBD9F621' },
+  effectDividersBottom: { variable: 'var(--effect-dividers-bottom)', value: 'inset 0 -1px 0 0 #BBD9F621' },
+  effectDividersLeft: { variable: 'var(--effect-dividers-left)', value: 'inset 1px 0 0 0 #BBD9F621' },
+  effectDividersRight: { variable: 'var(--effect-dividers-right)', value: 'inset -1px 0 0 0 #BBD9F621' },
   effectElevation8Layer1: { variable: 'var(--effect-elevation-8-layer1)', value: ' 0 8px 16px 0 #0000001F' },
   effectElevation8Layer2: { variable: 'var(--effect-elevation-8-layer2)', value: ' 0 4px 4px 0 #0000001A' },
   effectElevation16Layer1: { variable: 'var(--effect-elevation-16-layer1)', value: ' 0 16px 32px 0 #00000029' },
@@ -413,6 +418,7 @@ export const theme = {
   effectElevation24Layer2: { variable: 'var(--effect-elevation-24-layer2)', value: ' 0 8px 8px 0 #0000001F' },
   radiusSmall: { variable: 'var(--radius-small)', value: '2px' },
   radiusMedium: { variable: 'var(--radius-medium)', value: '4px' },
+  radiusLarge: { variable: 'var(--radius-large)', value: '8px' },
   typographyFontsPrimary: {
     variable: 'var(--typography-fonts-primary)',
     value:

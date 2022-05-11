@@ -1,5 +1,5 @@
-export const formatNumber = (num: number): string => {
-  return num.toLocaleString('en-US').split(',').join(' ')
+export const formatNumber = (num: number, opts?: Intl.NumberFormatOptions): string => {
+  return num.toLocaleString('no', opts)
 }
 
 export const formatNumberShort = (num: number): string => {
@@ -22,6 +22,10 @@ export const formatNumberShort = (num: number): string => {
   const formattedValue = value.toLocaleString('no', { maximumFractionDigits: 1 })
 
   return `${formattedValue}${suffix}`
+}
+
+export const formatTokens = (num: number, full?: boolean): string => {
+  return `${full ? formatNumber(num) : formatNumberShort(num)} tJOY`
 }
 
 export const getRandomIntInclusive = (min: number, max: number) => {

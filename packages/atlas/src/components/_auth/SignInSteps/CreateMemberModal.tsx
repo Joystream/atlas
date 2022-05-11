@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
@@ -28,15 +28,17 @@ type Inputs = {
 
 type CreateMemberModalProps = {
   show: boolean
+  selectedAccountAddress?: string
 }
 
-export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) => {
+export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
   const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isSignIn = useMatch(absoluteRoutes.studio.signIn())
   const isStudio = pathname.search(absoluteRoutes.studio.index()) !== -1
+  const accountIdRef = useRef(activeAccountId)
 
   const [membershipBlock, setMembershipBlock] = useState<number | null>(null)
   const [openCreatingMemberDialog, closeCreatingMemberDialog] = useConfirmationModal({
@@ -56,7 +58,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
     SentryLogger.error('Failed to subscribe to query node state', 'CreateMemberView', queryNodeStateError)
   }, [queryNodeStateError])
 
-  const accountSet = !!activeAccountId && !!extensionConnected
+  const accountSet = !!selectedAccountAddress && !!extensionConnected
 
   const { reset, register, errors, handleSubmit, isValid, getValues, watch } = useCreateEditMemberForm({})
 
@@ -106,16 +108,18 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show }) =>
   ])
 
   const handleCreateMember = handleSubmit(async (data) => {
-    if (!activeAccountId) {
+    if (!selectedAccountAddress) {
       return
     }
 
     try {
+      setActiveUser({ accountId: selectedAccountAddress })
       openCreatingMemberDialog()
       setIsCreatingMembership(true)
-      const { block } = await createNewMember(activeAccountId, data)
+      const { block } = await createNewMember(selectedAccountAddress, data)
       setMembershipBlock(block)
     } catch (error) {
+      setActiveUser({ accountId: accountIdRef.current })
       closeCreatingMemberDialog()
       const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
       openErrorDialog({

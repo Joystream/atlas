@@ -11,10 +11,16 @@ import JoystreamJsWorker from '@/utils/polkadot-worker?worker'
 import { useConnectionStatusStore } from '../connectionStatus'
 import { useUser } from '../user'
 
-type JoystreamContextValue = {
+const JOYSTREAM_STATUS_URL = 'https://status.joystream.org/status'
+
+type ProxyCallbackFn = <T extends object>(callback: T) => T & ProxyMarked
+
+export type JoystreamContextValue = {
   joystream: Remote<JoystreamLib> | undefined
-  proxyCallback: <T extends object>(callback: T) => T & ProxyMarked
-}
+  proxyCallback: ProxyCallbackFn
+  chainState: ReturnType<typeof useJoystreamChainState>
+} & ReturnType<typeof useJoystreamUtilFns>
+
 export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
@@ -35,6 +41,10 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
+  const utilFns = useJoystreamUtilFns(joystream.current, proxyCallback)
+  const chainState = useJoystreamChainState(joystream.current)
+
+  // initialize Joystream Lib
   useEffect(() => {
     const getJoystream = async () => {
       try {
@@ -53,6 +63,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
     }
   }, [handleNodeConnectionUpdate, nodeOverride, setNodeConnection])
 
+  // update Joystream Lib selected on change
   useEffect(() => {
     if (!initialized) {
       return
@@ -87,8 +98,104 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   }, [activeAccountId, accounts, initialized])
 
   return (
-    <JoystreamContext.Provider value={{ joystream: initialized ? joystream.current : undefined, proxyCallback }}>
+    <JoystreamContext.Provider
+      value={{ joystream: initialized ? joystream.current : undefined, proxyCallback, chainState, ...utilFns }}
+    >
       {children}
     </JoystreamContext.Provider>
   )
+}
+
+const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyCallback: ProxyCallbackFn) => {
+  const [tokenPrice, setTokenPrice] = useState(0)
+  const [currentBlock, setCurrentBlock] = useState(0)
+  const [currentBlockMsTimestamp, setCurrentBlockMsTimestamp] = useState(0)
+  const firstRender = useRef(true)
+
+  // fetch tJOY token price from the status server
+  useEffect(() => {
+    const getPrice = async () => {
+      try {
+        const data = await fetch(JOYSTREAM_STATUS_URL)
+        const json = await data.json()
+        setTokenPrice(parseFloat(json.price))
+      } catch (e) {
+        SentryLogger.error('Failed to fetch tJoy price', e)
+      }
+    }
+    getPrice()
+  }, [])
+
+  // fetch current block from the chain, but only just once
+  useEffect(() => {
+    if (!firstRender.current || !joystream) {
+      return
+    }
+    joystream.getCurrentBlock().then((block) => {
+      setCurrentBlock(block)
+      firstRender.current = false
+    })
+  }, [joystream])
+
+  // subscribe to block updates
+  useEffect(() => {
+    if (!joystream) {
+      return
+    }
+
+    let unsubscribe
+    const init = async () => {
+      unsubscribe = await joystream.subscribeCurrentBlock(
+        proxyCallback((number) => {
+          setCurrentBlock(number)
+          setCurrentBlockMsTimestamp(Date.now())
+        })
+      )
+    }
+    init()
+
+    return unsubscribe
+  }, [joystream, proxyCallback])
+
+  return {
+    tokenPrice,
+    currentBlock,
+    currentBlockMsTimestamp,
+  }
+}
+
+type JoystreamChainState = {
+  nftMinStartingPrice: number
+  nftMaxAuctionDuration: number
+  nftAuctionStartsAtMaxDelta: number
+  nftMaxCreatorRoyaltyPercentage: number
+  nftMinCreatorRoyaltyPercentage: number
+  nftPlatformFeePercentage: number
+}
+const useJoystreamChainState = (joystream: Remote<JoystreamLib> | undefined) => {
+  const [chainState, setChainState] = useState<JoystreamChainState>({
+    nftMinStartingPrice: 1,
+    nftMaxAuctionDuration: 1_296_000,
+    nftAuctionStartsAtMaxDelta: 432_000,
+    nftMaxCreatorRoyaltyPercentage: 50,
+    nftMinCreatorRoyaltyPercentage: 1,
+    nftPlatformFeePercentage: 1,
+  })
+
+  useEffect(() => {
+    if (!joystream) return
+
+    joystream.getNftChainState().then((nftChainState) =>
+      setChainState({
+        nftMaxAuctionDuration: nftChainState.maxAuctionDuration,
+        nftMinStartingPrice: nftChainState.minStartingPrice,
+        nftAuctionStartsAtMaxDelta: nftChainState.auctionStartsAtMaxDelta,
+        nftMaxCreatorRoyaltyPercentage: nftChainState.maxCreatorRoyalty,
+        nftMinCreatorRoyaltyPercentage: nftChainState.minCreatorRoyalty,
+        nftPlatformFeePercentage: nftChainState.platformFeePercentage,
+      })
+    )
+  }, [joystream])
+
+  return chainState
 }

@@ -17,7 +17,8 @@ export type PopoverProps = {
   offset?: [number, number]
   hideOnClick?: boolean
   className?: string
-  onHide?(): void
+  onHide?: () => void
+  onShow?: () => void
   children?: React.ReactNode
   disabled?: boolean
 }
@@ -32,10 +33,11 @@ const onTrigger = (instance: Instance<unknown>) => {
   })
 }
 
-const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverProps> = (
+const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
   {
     hideOnClick = true,
     onHide,
+    onShow,
     triggerTarget,
     triggerMode = 'click',
     placement = 'bottom-start',
@@ -56,6 +58,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverP
 
   return (
     <Tippy
+      maxWidth="100vw"
       disabled={disabled}
       trigger={triggerMode}
       hideOnClick={hideOnClick}
@@ -66,7 +69,10 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle, PopoverP
         tippyRef.current = instance
       }}
       onTrigger={onTrigger}
-      onShow={onTrigger}
+      onShow={(instance) => {
+        onTrigger(instance)
+        onShow?.()
+      }}
       onHide={(instance) => {
         const box = instance.popper?.firstElementChild
         requestAnimationFrame(() => {

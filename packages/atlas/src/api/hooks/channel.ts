@@ -4,6 +4,8 @@ import {
   FollowChannelMutation,
   GetBasicChannelQuery,
   GetBasicChannelQueryVariables,
+  GetChannelNftCollectorsQuery,
+  GetChannelNftCollectorsQueryVariables,
   GetChannelQuery,
   GetChannelQueryVariables,
   GetChannelsQuery,
@@ -16,18 +18,16 @@ import {
   GetPromisingChannelsQueryVariables,
   GetTop10ChannelsQuery,
   GetTop10ChannelsQueryVariables,
-  GetVideoCountQuery,
-  GetVideoCountQueryVariables,
   UnfollowChannelMutation,
   useFollowChannelMutation,
   useGetBasicChannelQuery,
+  useGetChannelNftCollectorsQuery,
   useGetChannelQuery,
   useGetChannelsQuery,
   useGetDiscoverChannelsQuery,
   useGetPopularChannelsQuery,
   useGetPromisingChannelsQuery,
   useGetTop10ChannelsQuery,
-  useGetVideoCountQuery,
   useUnfollowChannelMutation,
 } from '@/api/queries'
 
@@ -52,36 +52,6 @@ export const useChannel = (id: string, opts?: QueryHookOptions<GetChannelQuery, 
   })
   return {
     channel: data?.channelByUniqueInput,
-    ...rest,
-  }
-}
-
-export const useChannelVideoCount = (
-  channelId: string,
-  createdAt_gte?: Date,
-  opts?: QueryHookOptions<GetVideoCountQuery, GetVideoCountQueryVariables>
-) => {
-  const { data, ...rest } = useGetVideoCountQuery({
-    ...opts,
-    variables: {
-      where: {
-        channel: {
-          id_eq: channelId,
-        },
-        media: {
-          isAccepted_eq: true,
-        },
-        thumbnailPhoto: {
-          isAccepted_eq: true,
-        },
-        isPublic_eq: true,
-        isCensored_eq: false,
-        createdAt_gte: createdAt_gte,
-      },
-    },
-  })
-  return {
-    videoCount: data?.videosConnection.totalCount,
     ...rest,
   }
 }
@@ -168,6 +138,7 @@ export const useTop10Channels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -189,6 +160,7 @@ export const useDiscoverChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -210,6 +182,7 @@ export const usePromisingChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
@@ -231,12 +204,25 @@ export const usePopularChannels = (
       where: {
         isCensored_eq: false,
         isPublic_eq: true,
+        activeVideosCounter_gt: 0,
         ...variables?.where,
       },
     },
   })
   return {
     channels: data?.popularChannels,
+    ...rest,
+  }
+}
+
+export const useChannelNftCollectors = (
+  variables?: GetChannelNftCollectorsQueryVariables,
+  opts?: QueryHookOptions<GetChannelNftCollectorsQuery, GetChannelNftCollectorsQueryVariables>
+) => {
+  const { data, ...rest } = useGetChannelNftCollectorsQuery({ ...opts, variables })
+
+  return {
+    channelNftCollectors: data?.channelNftCollectors,
     ...rest,
   }
 }

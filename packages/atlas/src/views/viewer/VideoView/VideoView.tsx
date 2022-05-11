@@ -1,6 +1,7 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
 import React, { useCallback, useEffect, useMemo } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -12,22 +13,26 @@ import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useNftTransactions } from '@/hooks/useNftTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { useAsset } from '@/providers/assets'
+import { useNftActions } from '@/providers/nftActions'
+import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
-import { VideoDetails } from '@/views/viewer/VideoView/VideoDetails'
 
 import { MoreVideos } from './MoreVideos'
+import { VideoDetails } from './VideoDetails'
 import {
   ChannelContainer,
   Meta,
@@ -45,9 +50,14 @@ import {
 export const VideoView: React.FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
+  const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
+    useNftActions()
+  const { withdrawBid } = useNftTransactions()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
+  const nftWidgetProps = useNftWidget(id)
+
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
   const {
@@ -56,6 +66,10 @@ export const VideoView: React.FC = () => {
     actions: { updateWatchedVideos },
   } = usePersonalDataStore((state) => state)
   const category = useCategoryMatch(video?.category?.id)
+
+  const { anyOverlaysOpen } = useOverlayManager()
+  const { ref: playerRef, inView: isPlayerInView } = useInView()
+  const pausePlayNext = anyOverlaysOpen || !isPlayerInView
 
   const { url: mediaUrl, isLoadingAsset: isMediaLoading } = useAsset(video?.media)
   const { url: thumbnailUrl } = useAsset(video?.thumbnailPhoto)
@@ -157,9 +171,21 @@ export const VideoView: React.FC = () => {
   }
 
   const isCinematic = cinematicView || !mdMatch
-
   const sideItems = (
     <GridItem colSpan={{ xxs: 12, md: 4 }}>
+      {!!nftWidgetProps && (
+        <NftWidget
+          {...nftWidgetProps}
+          onNftPutOnSale={() => id && openNftPutOnSale(id)}
+          onNftCancelSale={() => id && nftWidgetProps.saleType && cancelNftSale(id, nftWidgetProps.saleType)}
+          onNftAcceptBid={() => id && openNftAcceptBid(id)}
+          onNftChangePrice={() => id && openNftChangePrice(id)}
+          onNftPurchase={() => id && openNftPurchase(id)}
+          onNftSettlement={() => id && openNftSettlement(id)}
+          onNftBuyNow={() => id && openNftPurchase(id, { fixedPrice: true })}
+          onWithdrawBid={() => id && withdrawBid(id)}
+        />
+      )}
       <MoreVideos channelId={channelId} channelName={channelName} videoId={id} type="channel" />
       <MoreVideos categoryId={category?.id} categoryName={category?.name} videoId={id} type="category" />
     </GridItem>
@@ -205,6 +231,8 @@ export const VideoView: React.FC = () => {
                   onEnd={handleVideoEnd}
                   onTimeUpdated={handleTimeUpdate}
                   startTime={startTimestamp}
+                  isPlayNextDisabled={pausePlayNext}
+                  ref={playerRef}
                 />
               ) : (
                 <PlayerSkeletonLoader />

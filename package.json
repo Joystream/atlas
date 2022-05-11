@@ -23,11 +23,13 @@
     "atlas:tokens": "yarn workspace @joystream/atlas tokens",
     "atlas:tokens:fetch": "yarn workspace @joystream/atlas tokens:fetch",
     "atlas:tokens:build": "yarn workspace @joystream/atlas tokens:build",
+    "atlas:graphql": "yarn workspace @joystream/atlas graphql",
     "meta-server:build": "yarn workspace @joystream/atlas-meta-server build",
     "docker:atlas": "ci/build-docker-atlas.sh",
     "docker:meta-server": "ci/build-docker-meta-server.sh",
     "lint-staged": "lint-staged",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "atlas:madge:circular": "yarn workspace @joystream/atlas madge:circular"
   },
   "lint-staged": {
     "*.{tsx,ts}": [
@@ -58,7 +60,7 @@
     "bn.js": "4.12.0",
     "vite": "2.7.13",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
-    "@joystream/types@0.18.3": "patch:@joystream/types@npm:0.18.3#.yarn/patches/@joystream-types-npm-0.18.3-7b8a515cb8"
+    "@joystream/types": "patch:@joystream/types@npm:0.19.3#.yarn/patches/@joystream-types-npm-0.19.3-e4e33d4bf2"
   },
   "engines": {
     "node": ">=14"

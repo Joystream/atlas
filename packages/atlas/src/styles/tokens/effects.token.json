@@ -34,7 +34,7 @@
           "y": "1px",
           "blur": "0",
           "spread": "0",
-          "color": "{color.border.muted.alpha}"
+          "color": "{color.border.default.muted.alpha}"
         }
       },
       "bottom": {
@@ -44,7 +44,7 @@
           "y": "-1px",
           "blur": "0",
           "spread": "0",
-          "color": "{color.border.muted.alpha}"
+          "color": "{color.border.default.muted.alpha}"
         }
       },
       "left": {
@@ -54,7 +54,7 @@
           "y": "0",
           "blur": "0",
           "spread": "0",
-          "color": "{color.border.muted.alpha}"
+          "color": "{color.border.default.muted.alpha}"
         }
       },
       "right": {
@@ -64,7 +64,7 @@
           "y": "0",
           "blur": "0",
           "spread": "0",
-          "color": "{color.border.muted.alpha}"
+          "color": "{color.border.default.muted.alpha}"
         }
       }
     },

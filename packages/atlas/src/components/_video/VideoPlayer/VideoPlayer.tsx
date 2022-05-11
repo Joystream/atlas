@@ -42,7 +42,7 @@ import {
   VolumeSlider,
   VolumeSliderContainer,
 } from './VideoPlayer.styles'
-import { CustomVideojsEvents, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
+import { CustomVideojsEvents, PlayerState, VOLUME_STEP, hotkeysHandler, isFullScreenEnabled } from './utils'
 import { VideoJsConfig, useVideoJsPlayer } from './videoJsPlayer'
 
 export type VideoPlayerProps = {
@@ -55,6 +55,7 @@ export type VideoPlayerProps = {
   channelId?: string
   videoId?: string
   isEmbedded?: boolean
+  isPlayNextDisabled?: boolean
 } & VideoJsConfig
 
 declare global {
@@ -69,8 +70,6 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-export type PlayerState = 'loading' | 'ended' | 'error' | 'playingOrPaused' | 'pending'
-
 const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
     isVideoPending,
@@ -82,6 +81,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     autoplay,
     videoStyle,
     isEmbedded,
+    isPlayNextDisabled,
     ...videoJsConfig
   },
   externalRef
@@ -591,6 +591,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         <VideoOverlay
           videoId={videoId}
           isFullScreen={isFullScreen}
+          isPlayNextDisabled={isPlayNextDisabled}
           playerState={playerState}
           onPlay={handlePlayPause}
           channelId={channelId}
