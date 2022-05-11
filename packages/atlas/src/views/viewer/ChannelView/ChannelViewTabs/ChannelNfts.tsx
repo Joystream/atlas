@@ -31,8 +31,10 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
   isFiltersApplied,
 }) => {
   const { currentPage, setCurrentPage } = usePagination(0)
-  const { activeChannelId } = useUser()
+  const { memberships } = useUser()
 
+  const userChannels = memberships?.map((membership) => membership.channels).flat()
+  const channelOwner = userChannels?.map((channel) => channel.id).includes(channelId)
   const { nfts, totalCount, loading, error, fetchMore, pageInfo } = useNftsConnection({
     orderBy,
     where: {
@@ -41,7 +43,7 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
         id_eq: channelId,
       },
       video: {
-        isPublic_eq: activeChannelId !== channelId ? true : undefined,
+        isPublic_eq: !channelOwner || undefined,
       },
     },
   })
