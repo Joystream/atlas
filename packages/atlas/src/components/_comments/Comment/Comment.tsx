@@ -129,7 +129,7 @@ export const Comment: React.FC<CommentProps> = ({
               </div>
             ) : (
               <div>
-                <CommentHeader>
+                <CommentHeader isDeleted={isDeleted}>
                   <StyledLink to={memberUrl || ''}>
                     <Text variant="h200" margin={{ right: 2 }}>
                       {memberHandle}
