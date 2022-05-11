@@ -10,7 +10,8 @@ export type CommentRowProps = {
   indented?: boolean
   highlighted?: boolean
   isMemberAvatarLoading?: boolean
-  memberAvatarUrl?: string
+  isMemberAvatarClickable?: boolean
+  memberAvatarUrl?: string | null
   memberUrl?: string
   className?: string
   withoutOutlineBox?: boolean
@@ -22,6 +23,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   children,
   memberAvatarUrl,
   isMemberAvatarLoading,
+  isMemberAvatarClickable = true,
   memberUrl = '',
   className,
   withoutOutlineBox = false,
@@ -47,7 +49,12 @@ export const CommentRow: React.FC<CommentRowProps> = ({
     <OutlineBox highlighted={!!highlighted} withoutOutlineBox={withoutOutlineBox}>
       <ContentWrapper indented={!!indented}>
         <Link to={memberUrl}>
-          <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+          <Avatar
+            assetUrl={memberAvatarUrl}
+            size={avatarSize}
+            loading={isMemberAvatarLoading}
+            clickable={isMemberAvatarClickable}
+          />
         </Link>
         <div className={className}>{children}</div>
       </ContentWrapper>

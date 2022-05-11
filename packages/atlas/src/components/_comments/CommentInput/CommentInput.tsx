@@ -72,7 +72,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const show = !!value || active || processing
 
   return (
-    <StyledCommentRow {...rest} processing={processing} show={show}>
+    <StyledCommentRow {...rest} processing={processing} show={show} isMemberAvatarClickable={false}>
       <Container
         ref={containerRef}
         onFocus={() => {
