@@ -21,8 +21,8 @@ export type ButtonProps = {
   children?: React.ReactNode
   className?: string
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onMouseMove?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onMouseOut?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void
   onAnimationEnd?: (e: React.AnimationEvent<HTMLButtonElement>) => void
   // internal
   _textOnly?: boolean

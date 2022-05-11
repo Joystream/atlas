@@ -297,6 +297,10 @@ const textOnlyStyles = ({ textOnly, variant }: ButtonBaseStyleProps) => {
         &:hover,
         &:focus,
         &:active {
+          ${BorderWrapper} {
+            visibility: hidden;
+          }
+
           color: ${cVar('colorCoreNeutral50')};
 
           path {
@@ -305,7 +309,7 @@ const textOnlyStyles = ({ textOnly, variant }: ButtonBaseStyleProps) => {
         }
 
         ${BorderWrapper} {
-          border: none;
+          visibility: hidden;
         }
       `
       break
@@ -392,6 +396,10 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
   transition-timing-function: ${cVar('animationTimingFast')};
   transition-property: background-color, box-shadow, color, fill;
 
+  &:focus ${BorderWrapper} {
+    visibility: visible;
+  }
+
   ${buttonVariantStyles};
   ${buttonSizeStyles};
   ${textOnlyStyles};
@@ -412,9 +420,5 @@ export const ButtonBase = styled('button', { shouldForwardProp: isPropValid })<B
     pointer-events: none;
     opacity: 0.5;
     color: ${({ textOnly }) => !textOnly && cVar('colorCoreNeutral50')};
-  }
-
-  &:focus ${BorderWrapper} {
-    visibility: visible;
   }
 `
