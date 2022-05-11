@@ -27,8 +27,7 @@ export const CookiePopover: React.FC = () => {
         size="compact"
         description={
           <>
-            We use cookies and other tracking technologies to store your preferences, persist local storage of Keys and
-            Membership, and to provide analytics.{' '}
+            We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
             <StyledAnchor href="https://www.joystream.org/privacy-policy/">
               You can read more about it here.
             </StyledAnchor>
