@@ -1,5 +1,3 @@
-export type ReactionId = 1 | 2 | 3 | 4 | 5
-
 export const REACTION_TYPE = {
   1: { emoji: '👍', name: 'like' },
   2: { emoji: '❤️', name: 'love' },
@@ -7,3 +5,5 @@ export const REACTION_TYPE = {
   4: { emoji: '🤯', name: 'shock' },
   5: { emoji: '😠', name: 'anger' },
 } as const
+
+export type ReactionId = keyof typeof REACTION_TYPE

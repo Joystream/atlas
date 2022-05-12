@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { GetCommentsDocument, GetCommentsQueryHookResult, GetVideoDocument } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
@@ -14,7 +14,7 @@ export const useReactionTransactions = () => {
   const { joystream, proxyCallback } = useJoystream()
   const [commentInputProcessing, setCommentInputProcessing] = useState(false)
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
-  const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
+
   const handleTransaction = useTransaction()
   const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
@@ -27,17 +27,6 @@ export const useReactionTransactions = () => {
       }),
     [client]
   )
-
-  useEffect(() => {
-    if (!highlightedComment) {
-      return
-    }
-    const timeout = setTimeout(() => {
-      setHighlightedComment(null)
-    }, 3000)
-
-    return () => clearTimeout(timeout)
-  })
 
   const reactToComment = useCallback(
     async (commentId: string, reactionId: ReactionId) => {
@@ -77,13 +66,15 @@ export const useReactionTransactions = () => {
         ConsoleLogger.error('no joystream or active member')
         return
       }
+      setCommentInputProcessing(true)
 
-      return handleTransaction({
-        preProcess: () => {
-          setCommentInputProcessing(true)
-        },
+      let newCommentId: string | undefined
+
+      await handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).createVideoComment(
+          (
+            await joystream.extrinsics
+          ).createVideoComment(
             activeMemberId,
             videoId,
             commentBody,
@@ -92,12 +83,14 @@ export const useReactionTransactions = () => {
           ),
         onTxSync: async ({ block }) => {
           const refetchResult = await refetchComments()
+          setCommentInputProcessing(false)
+
           const newCommentsQueryResult = refetchResult[0] as GetCommentsQueryHookResult
-          const newCommentId = newCommentsQueryResult.data?.comments.find(
+          // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
+          // Update once https://github.com/Joystream/atlas/issues/2629 is done.
+          newCommentId = newCommentsQueryResult.data?.comments.find(
             (comment) => comment.commentcreatedeventcomment?.[0].inBlock === block
           )?.id
-          setHighlightedComment(newCommentId || null)
-          setCommentInputProcessing(false)
         },
         onError: () => {
           setCommentInputProcessing(false)
@@ -106,6 +99,8 @@ export const useReactionTransactions = () => {
           signErrorMessage: 'Failed to post video comment',
         },
       })
+
+      return newCommentId
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
@@ -151,7 +146,6 @@ export const useReactionTransactions = () => {
     likeOrDislikeVideo,
     videoReactionProcessing,
     commentInputProcessing,
-    highlightedComment,
     processingCommentReactionId,
   }
 }

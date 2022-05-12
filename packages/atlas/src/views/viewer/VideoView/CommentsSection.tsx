@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComments } from '@/api/hooks'
@@ -49,6 +49,18 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
+  const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!highlightedComment) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setHighlightedComment(null)
+    }, 3000)
+
+    return () => clearTimeout(timeout)
+  })
 
   const authorized = activeMemberId && activeAccountId
 
@@ -56,8 +68,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
     { skip: disabled || !id }
   )
-  const { processingCommentReactionId, reactToComment, addComment, commentInputProcessing, highlightedComment } =
-    useReactionTransactions()
+  const { processingCommentReactionId, reactToComment, addComment, commentInputProcessing } = useReactionTransactions()
 
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -73,8 +84,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       if (!videoId || !commentBody) {
         return
       }
-      await addComment(videoId, commentBody, parentCommentId)
+      const commentId = await addComment(videoId, commentBody, parentCommentId)
       setCommentBody('')
+      setHighlightedComment(commentId || null)
     },
     [addComment]
   )
