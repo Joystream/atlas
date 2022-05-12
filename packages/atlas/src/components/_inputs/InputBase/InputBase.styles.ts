@@ -22,6 +22,7 @@ export const FormGroup = styled.label<FormGroupProps>`
   input,
   textarea {
     color: ${cVar('colorCoreNeutral50')};
+    border: 0;
   }
 
   input,
@@ -33,10 +34,6 @@ export const FormGroup = styled.label<FormGroupProps>`
     font: ${cVar('typographyDesktopT300')};
     letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT300TextTransform')};
-
-    :not(button) {
-      border: 0;
-    }
 
     :focus {
       box-shadow: 0 0 0 1px ${cVar('colorCoreBlue500')};
