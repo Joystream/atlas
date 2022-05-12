@@ -31,11 +31,11 @@ export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean }>`
   }
 `
 
-export const CommentHeader = styled.div`
+export const CommentHeader = styled.div<{ isDeleted: boolean }>`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: ${sizes(2)};
+  margin-bottom: ${({ isDeleted }) => (isDeleted ? sizes(3) : sizes(2))};
 `
 
 export const StyledLink = styled(Link)`
@@ -66,7 +66,7 @@ export const StyledSvgActionTrash = styled(SvgActionTrash)`
   }
 `
 
-export const CommentBody = styled(Text)`
+export const DeletedComment = styled(Text)`
   display: flex;
   white-space: pre-line;
   align-items: center;

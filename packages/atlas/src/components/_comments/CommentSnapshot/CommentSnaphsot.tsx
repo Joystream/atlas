@@ -10,13 +10,14 @@ import { formatDateTime } from '@/utils/time'
 
 import {
   AvatarWrapper,
-  CommentBody,
   CommentHeader,
   CommentHeaderDot,
   ContentWrapper,
   Line,
   StyledLink,
 } from './CommentSnaphsot.styles'
+
+import { CommentBody } from '../CommentBody'
 
 export type CommentSnapshotProps = {
   isMemberAvatarLoading?: boolean
@@ -70,9 +71,7 @@ export const CommentSnapshot: React.FC<CommentSnapshotProps> = ({
                   {createdAt && formatDateTime(createdAt)}
                 </Text>
               </CommentHeader>
-              <CommentBody variant="t200" as="p" margin={{ top: 2 }}>
-                {text}
-              </CommentBody>
+              <CommentBody>{text}</CommentBody>
             </section>
           )}
         </CSSTransition>

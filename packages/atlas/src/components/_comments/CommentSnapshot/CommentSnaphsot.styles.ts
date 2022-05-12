@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes, square } from '@/styles'
 
 export const GAP_BETWEEN_COMMENT_SNAPSHOTS = sizes(8, true)
@@ -32,14 +31,11 @@ export const CommentHeader = styled.header`
   display: inline-grid;
   gap: ${sizes(2)};
   align-items: center;
+  margin-bottom: ${sizes(2)};
 
   /* author, dot, date */
   grid-template-columns: repeat(3, auto);
 `
-export const CommentBody = styled(Text)`
-  white-space: pre;
-`
-
 export const CommentHeaderDot = styled.div`
   background-color: ${cVar('colorBackgroundAlpha')};
   border-radius: 100%;
