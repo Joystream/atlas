@@ -203,7 +203,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </CommentsSectionHeader>
       <CommentInput
         memberAvatarUrl={memberAvatarUrl}
-        isMemberAvatarLoading={isMemberAvatarLoading}
+        isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
         processing={commentInputProcessing}
         readOnly={!activeMemberId}
         memberHandle={activeMembership?.handle}
