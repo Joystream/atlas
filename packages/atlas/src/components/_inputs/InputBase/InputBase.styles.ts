@@ -22,18 +22,18 @@ export const FormGroup = styled.label<FormGroupProps>`
   input,
   textarea {
     color: ${cVar('colorCoreNeutral50')};
-    border: 0;
   }
 
   input,
   button,
   textarea {
-    transition: border ${transitions.timings.regular} ${transitions.easing};
+    transition: box-shadow ${transitions.timings.regular} ${transitions.easing};
     background: none;
     padding: ${sizes(3)} ${sizes(4)};
     font: ${cVar('typographyDesktopT300')};
     letter-spacing: ${cVar('typographyDesktopT300LetterSpacing')};
     text-transform: ${cVar('typographyDesktopT300TextTransform')};
+    border: 0;
 
     :focus {
       box-shadow: 0 0 0 1px ${cVar('colorCoreBlue500')};
