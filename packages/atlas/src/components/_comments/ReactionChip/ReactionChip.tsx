@@ -2,12 +2,11 @@ import React from 'react'
 
 import { Text } from '@/components/Text'
 import { Loader } from '@/components/_loaders/Loader'
+import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumberShort } from '@/utils/number'
 
 import { EmojiContainer, ReactionChipButton } from './ReactionChip.styles'
-
-export type ReactionId = 1 | 2 | 3 | 4 | 5
 
 export type ReactionChipProps = {
   customId?: string
@@ -17,14 +16,6 @@ export type ReactionChipProps = {
   state?: 'default' | 'disabled' | 'processing' | 'read-only'
   onReactionClick?: (type: ReactionId) => void
 }
-
-export const REACTION_TYPE = {
-  1: { emoji: '👍', name: 'like' },
-  2: { emoji: '❤️', name: 'love' },
-  3: { emoji: '😂', name: 'laugh' },
-  4: { emoji: '🤯', name: 'shock' },
-  5: { emoji: '😠', name: 'anger' },
-} as const
 
 export const ReactionChip: React.FC<ReactionChipProps> = ({
   state = 'default',

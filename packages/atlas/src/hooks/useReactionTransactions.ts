@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback, useEffect, useState } from 'react'
 
 import { GetCommentsDocument, GetCommentsQueryHookResult, GetVideoDocument } from '@/api/queries'
-import { ReactionId } from '@/components/_comments/ReactionChip'
+import { ReactionId } from '@/config/reactions'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -142,7 +142,7 @@ export const useReactionTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchVideo]
   )
 
   return {

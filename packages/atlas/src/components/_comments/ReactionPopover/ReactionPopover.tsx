@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlaceholder } from '@/components/_icons'
+import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 
@@ -12,8 +13,6 @@ import {
   ReactionPopoverWrapper,
   StyledEmojiButton,
 } from './ReactionPopover.styles'
-
-import { REACTION_TYPE, ReactionId } from '../ReactionChip'
 
 export type ReactionPopoverProps = {
   onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void

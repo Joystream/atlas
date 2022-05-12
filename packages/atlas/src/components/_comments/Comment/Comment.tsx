@@ -9,6 +9,7 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
+import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -28,7 +29,7 @@ import {
 
 import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
-import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionId } from '../ReactionChip'
+import { ReactionChip, ReactionChipProps } from '../ReactionChip'
 import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
