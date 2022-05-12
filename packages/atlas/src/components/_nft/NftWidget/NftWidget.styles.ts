@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { TextButton } from '@/components/_buttons/Button'
-import { BorderWrapper } from '@/components/_buttons/Button/Button.styles'
 import { cVar, sizes } from '@/styles'
 
 export const sizeObj = { small: 'small', medium: 'medium' } as const
@@ -53,16 +52,10 @@ export const OwnerLabel = styled(Text)`
   grid-area: owner-label;
 `
 
-export const OwnerHandle = styled(TextButton)`
+export const OwnerHandle = styled(Link)`
   grid-area: owner;
   justify-content: start;
-
-  /* hardcoding as we need this to be exactly 16px */
-  height: 16px;
-
-  ${BorderWrapper} {
-    border-bottom: none;
-  }
+  text-decoration: none;
 `
 
 export const ButtonGrid = styled.div<SizeProps & { 'data-two-columns'?: boolean }>`
