@@ -53,6 +53,9 @@ export const MemberView: React.FC = () => {
         ownerMember: { handle_eq: handle },
         transactionalStatus_json,
         transactionalStatusAuction,
+        video: {
+          isPublic_eq: handle !== activeMembership?.handle || undefined,
+        },
       },
       orderBy: sortBy as OwnedNftOrderByInput,
     },
