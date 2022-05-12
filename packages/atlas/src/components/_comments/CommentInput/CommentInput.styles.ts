@@ -26,7 +26,7 @@ export const CustomPlaceholder = styled(Text)`
   opacity: 0;
   top: 0;
   color: ${cVar('colorTextMuted')};
-  user-select: none;
+  pointer-events: none;
   transition: all ${cVar('animationTransitionMedium')};
 `
 export const CustomPlaceholderHandle = styled(Text)`
