@@ -15,8 +15,7 @@ export default {
     state: 'default',
   },
   argTypes: {
-    onDislike: { table: { disable: true } },
-    onLike: { table: { disable: true } },
+    onReact: { table: { disable: true } },
   },
 } as Meta<ReactionStepperProps>
 
@@ -55,18 +54,14 @@ const InteractableTemplate: Story<ReactionStepperProps> = () => {
     return () => clearTimeout(timeout)
   }, [reactionTriggered])
 
-  const handleLike = () => {
-    setReactionTriggered('like')
-    setState('processing')
-  }
-  const handleDislike = () => {
-    setReactionTriggered('dislike')
+  const handleReact = (reaction: 'like' | 'dislike') => {
+    setReactionTriggered(reaction)
     setState('processing')
   }
 
   return (
     <>
-      <ReactionStepper likes={likes} dislikes={dislikes} onLike={handleLike} onDislike={handleDislike} state={state} />
+      <ReactionStepper likes={likes} dislikes={dislikes} onReact={handleReact} state={state} />
       <div style={{ width: '100%', height: '1px', background: '#272D33' }} />
       <p>(Divider is not a part of the component, it's only for presentional purposes)</p>
       <Button disabled={!reactionPopoverDismissed} onClick={() => setReactionPopoverDismission(false)}>

@@ -14,12 +14,11 @@ export default {
     type: 'default',
     createdAt: new Date(1649761429792),
     reactions: [
-      { count: 320, type: 'amusment' },
-      { count: 500, type: 'love', active: true },
-      { count: 100, type: 'shock' },
+      { count: 320, reactionId: 1, reactionPopoverDismissed: false },
+      { count: 500, reactionId: 2, active: true },
+      { count: 100, reactionId: 3 },
     ],
-    comment:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, facere molestias, iusto unde harum ducimus reprehenderit iste, magnam delectus aperiam impedit eligendi iure autem repellendus dolorum culpa sed cupiditate illum.',
+    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, facere molestias, iusto unde harum ducimus reprehenderit iste, magnam delectus aperiam impedit eligendi iure autem repellendus dolorum culpa sed cupiditate illum.',
   },
   decorators: [
     (Story) => (
@@ -48,18 +47,18 @@ NoReactions.args = {
 export const ProcessingReaction = Template.bind({})
 ProcessingReaction.args = {
   reactions: [
-    { count: 320, type: 'amusment' },
-    { count: 500, type: 'love', active: true, state: 'processing' },
-    { count: 100, type: 'shock' },
+    { count: 320, reactionId: 1 },
+    { count: 500, reactionId: 2, active: true, state: 'processing' },
+    { count: 100, reactionId: 3 },
   ],
 }
 export const AllReactionsApplied = Template.bind({})
 AllReactionsApplied.args = {
   reactions: [
-    { count: 320, type: 'amusment' },
-    { count: 500, type: 'love' },
-    { count: 100, type: 'laugh' },
-    { count: 100, type: 'shock' },
-    { count: 100, type: 'anger', active: true },
+    { count: 320, reactionId: 1 },
+    { count: 500, reactionId: 2 },
+    { count: 100, reactionId: 3 },
+    { count: 100, reactionId: 4 },
+    { count: 100, reactionId: 5, active: true },
   ],
 }

@@ -121,9 +121,11 @@ const ReactToComment: React.FC<CommonProps> = () => {
   }
 
   const reactionItems: SelectItem<number>[] = [
-    { value: 1, name: '❤️' },
-    { value: 2, name: '👎' },
-    { value: 3, name: '🤯' },
+    { value: 1, name: '👍 ' },
+    { value: 2, name: '❤️' },
+    { value: 3, name: '😂' },
+    { value: 4, name: '🤯' },
+    { value: 5, name: '😠' },
   ]
 
   return (

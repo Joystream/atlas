@@ -97,10 +97,3 @@ export const getCounterColor = ({ state, type }: ReactionsCounterProps) => {
 export const ReactionsCounter = styled(Text)<ReactionsCounterProps>`
   color: ${getCounterColor}; ;
 `
-
-export const PopoverIllustrationWrapper = styled.div`
-  background-color: ${cVar('colorBackground')};
-`
-export const PopoverContentWrapper = styled.div`
-  padding: ${sizes(4)};
-`

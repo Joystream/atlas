@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -20,18 +20,18 @@ import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
 import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
-import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
@@ -58,20 +58,22 @@ import {
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
-  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   useRedirectMigratedContent({ type: 'video' })
-  const { joystream, proxyCallback } = useJoystream()
-  const handleTransaction = useTransaction()
   const { id } = useParams()
-  const { activeMemberId } = useUser()
+  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
   const { copyToClipboard } = useClipboard()
-  const { loading, video, error, refetch } = useVideo(id ?? '', {
+  const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
   const nftWidgetProps = useNftWidget(id)
+  const { likeOrDislikeVideo, videoReactionProcessing } = useReactionTransactions()
+
+  const authorized = activeMemberId && activeAccountId
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -132,28 +134,6 @@ export const VideoView: React.FC = () => {
     return 'default'
   }, [activeMemberId, videoReactionProcessing, video])
 
-  const handleLike = (reaction: VideoReaction) => {
-    if (!joystream || !video || !activeMemberId) {
-      return
-    }
-
-    handleTransaction({
-      preProcess: () => setVideoReactionProcessing(true),
-      txFactory: async (updateStatus) =>
-        (await joystream.extrinsics).reactToVideo(activeMemberId, video.id, reaction, proxyCallback(updateStatus)),
-      minimized: {
-        signErrorMessage: 'Failed to react to video',
-      },
-      onTxSync: async () => {
-        await refetch()
-        setVideoReactionProcessing(false)
-      },
-      onError: async () => {
-        setVideoReactionProcessing(false)
-      },
-    })
-  }
-
   useEffect(() => {
     if (!videoId || !channelId) {
       return
@@ -187,6 +167,17 @@ export const VideoView: React.FC = () => {
       updateWatchedVideos('COMPLETED', video?.id)
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
+
+  const handleReact = useCallback(
+    (reaction: VideoReaction) => {
+      if (!authorized) {
+        openSignInDialog({ onConfirm: signIn })
+      } else {
+        video?.id && likeOrDislikeVideo(video?.id, reaction)
+      }
+    },
+    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]
+  )
 
   // use Media Session API to provide rich metadata to the browser
   useEffect(() => {
@@ -271,8 +262,8 @@ export const VideoView: React.FC = () => {
             )}
           </Meta>
           <StyledReactionStepper
-            onLike={() => handleLike('like')}
-            onDislike={() => handleLike('dislike')}
+            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            onReact={handleReact}
             state={reactionStepperState}
             likes={numberOfLikes}
             dislikes={numberOfDislikes}

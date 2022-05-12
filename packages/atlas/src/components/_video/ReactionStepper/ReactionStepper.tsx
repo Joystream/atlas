@@ -1,24 +1,26 @@
 import React, { useRef, useState } from 'react'
 
+import { VideoReaction } from '@/joystream-lib'
+
 import { ReactionButton, ReactionSteppperState } from './ReactionButton'
 import { ReactionBar, ReactionBarProgress, ReactionStepperWrapper, StyledTooltip } from './ReactionStepper.styles'
 
 export type ReactionStepperProps = {
   likes?: number
   dislikes?: number
-  onLike?: () => void
-  onDislike?: () => void
   state: ReactionSteppperState
   className?: string
+  reactionPopoverDismissed?: boolean
+  onReact: (reaction: VideoReaction) => void
 }
 
 export const ReactionStepper: React.FC<ReactionStepperProps> = ({
   likes = 0,
   dislikes = 0,
-  onDislike,
-  onLike,
   state,
   className,
+  reactionPopoverDismissed,
+  onReact,
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const total = likes + dislikes
@@ -38,7 +40,8 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
       <ReactionStepperWrapper className={className} ref={reactionStepperWrapperRef}>
         <ReactionButton
           state={state}
-          onReact={onLike}
+          reactionPopoverDismissed={reactionPopoverDismissed}
+          onReact={onReact}
           type="like"
           reactionsNumber={likes}
           onPopoverShow={() => setIsPopoverOpen(true)}
@@ -47,7 +50,8 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
         />
         <ReactionButton
           state={state}
-          onReact={onDislike}
+          reactionPopoverDismissed={reactionPopoverDismissed}
+          onReact={onReact}
           type="dislike"
           reactionsNumber={dislikes}
           onPopoverShow={() => setIsPopoverOpen(true)}

@@ -1441,6 +1441,21 @@ export type AllBidFieldsFragment = {
   }
 }
 
+export type CommentReactionFieldsFragment = {
+  __typename?: 'CommentReaction'
+  id: string
+  createdAt: Date
+  reactionId: number
+  member: { __typename?: 'Membership'; id: string }
+}
+
+export type CommentReactionsCountByReactionIdFieldsFragment = {
+  __typename?: 'CommentReactionsCountByReactionId'
+  id: string
+  count: number
+  reactionId: number
+}
+
 export type CommentFieldsFragment = {
   __typename?: 'Comment'
   id: string
@@ -1480,7 +1495,19 @@ export type CommentFieldsFragment = {
         | null
     }
   }
-  reactions: Array<{ __typename?: 'CommentReaction'; id: string; createdAt: Date; reactionId: number }>
+  reactionsCountByReactionId: Array<{
+    __typename?: 'CommentReactionsCountByReactionId'
+    id: string
+    count: number
+    reactionId: number
+  }>
+  reactions: Array<{
+    __typename?: 'CommentReaction'
+    id: string
+    createdAt: Date
+    reactionId: number
+    member: { __typename?: 'Membership'; id: string }
+  }>
   commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
 }
 
@@ -1782,6 +1809,23 @@ export const AllBidFieldsFragmentDoc = gql`
   }
   ${BasicBidFieldsFragmentDoc}
 `
+export const CommentReactionsCountByReactionIdFieldsFragmentDoc = gql`
+  fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReactionId {
+    id
+    count
+    reactionId
+  }
+`
+export const CommentReactionFieldsFragmentDoc = gql`
+  fragment CommentReactionFields on CommentReaction {
+    id
+    createdAt
+    reactionId
+    member {
+      id
+    }
+  }
+`
 export const CommentFieldsFragmentDoc = gql`
   fragment CommentFields on Comment {
     id
@@ -1790,10 +1834,11 @@ export const CommentFieldsFragmentDoc = gql`
     }
     createdAt
     isEdited
+    reactionsCountByReactionId {
+      ...CommentReactionsCountByReactionIdFields
+    }
     reactions {
-      id
-      createdAt
-      reactionId
+      ...CommentReactionFields
     }
     parentCommentId
     repliesCount
@@ -1804,4 +1849,6 @@ export const CommentFieldsFragmentDoc = gql`
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
+  ${CommentReactionsCountByReactionIdFieldsFragmentDoc}
+  ${CommentReactionFieldsFragmentDoc}
 `

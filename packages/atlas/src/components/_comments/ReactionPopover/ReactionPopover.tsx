@@ -3,7 +3,9 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlaceholder } from '@/components/_icons'
+import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { usePersonalDataStore } from '@/providers/personalData'
 
 import {
   EmojiContainer,
@@ -12,10 +14,8 @@ import {
   StyledEmojiButton,
 } from './ReactionPopover.styles'
 
-import { REACTION_TYPE, ReactionType } from '../ReactionChip'
-
 export type ReactionPopoverProps = {
-  onReactionClick?: (reaction: ReactionType) => void
+  onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
   disabled?: boolean
 }
 
@@ -40,13 +40,14 @@ const getTranslateNumber = (idx: number) => {
 export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick, disabled }) => {
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const reactions = Object.entries(REACTION_TYPE).map(([key, value]) => ({
-    name: key as ReactionType,
-    value,
+    reactionId: Number(key) as ReactionId,
+    value: value.emoji,
   }))
 
-  const handleReactionClick = (reaction: ReactionType) => {
-    onReactionClick?.(reaction)
+  const handleReactionClick = (reaction: ReactionId) => {
+    onReactionClick?.(reaction, reactionPopoverDismissed)
     setIsOpen(false)
   }
   return (
@@ -57,20 +58,20 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
       render={(attrs, _, instance) => (
         <ReactionPopoverWrapper {...attrs}>
           <ReactionPopoverInnerWrapper isVisible={isOpen}>
-            {reactions.map(({ name, value }, idx) => {
+            {reactions.map(({ reactionId, value }, idx) => {
               return (
                 <StyledEmojiButton
                   verticalTranslate={getTranslateNumber(idx)}
                   isVisible={isOpen}
                   onClick={() => {
-                    handleReactionClick(name)
+                    handleReactionClick(reactionId)
                     instance?.hide()
                   }}
                   variant="tertiary"
                   size={smMatch ? 'small' : 'medium'}
                   iconOnly
                   icon={<EmojiContainer>{value}</EmojiContainer>}
-                  key={name}
+                  key={reactionId}
                 />
               )
             })}

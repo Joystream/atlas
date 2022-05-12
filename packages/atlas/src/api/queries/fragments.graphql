@@ -261,6 +261,21 @@ fragment AllBidFields on Bid {
   }
 }
 
+fragment CommentReactionFields on CommentReaction {
+  id
+  createdAt
+  reactionId
+  member {
+    id
+  }
+}
+
+fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReactionId {
+  id
+  count
+  reactionId
+}
+
 fragment CommentFields on Comment {
   id
   author {
@@ -268,10 +283,11 @@ fragment CommentFields on Comment {
   }
   createdAt
   isEdited
+  reactionsCountByReactionId {
+    ...CommentReactionsCountByReactionIdFields
+  }
   reactions {
-    id
-    createdAt
-    reactionId
+    ...CommentReactionFields
   }
   parentCommentId
   repliesCount

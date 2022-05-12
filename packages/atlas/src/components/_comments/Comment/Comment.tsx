@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -7,6 +7,9 @@ import { Tooltip } from '@/components/Tooltip'
 import { SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
+import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
+import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
+import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -26,30 +29,31 @@ import {
 
 import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
-import { REACTION_TYPE, ReactionChip, ReactionChipProps, ReactionType } from '../ReactionChip'
+import { ReactionChip, ReactionChipProps } from '../ReactionChip'
 import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
   memberHandle?: string
   createdAt?: Date
-  comment?: string
+  text?: string
   loading?: boolean
   isEdited?: boolean
   isAbleToEdit?: boolean
   type: 'default' | 'deleted' | 'options'
   reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
+  reactionPopoverDismissed?: boolean
   onEditLabelClick?: () => void
   onEditClick?: () => void
   onDeleteClick?: () => void
-  onReactionClick?: (reaction: ReactionType) => void
+  onReactionClick?: (reaction: ReactionId) => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
   indented,
   highlighted,
   memberHandle,
-  comment,
+  text,
   createdAt,
   type,
   loading,
@@ -58,6 +62,7 @@ export const Comment: React.FC<CommentProps> = ({
   memberAvatarUrl,
   isEdited,
   isAbleToEdit,
+  reactionPopoverDismissed,
   onEditLabelClick,
   onEditClick,
   onDeleteClick,
@@ -66,6 +71,8 @@ export const Comment: React.FC<CommentProps> = ({
 }) => {
   const isDeleted = type === 'deleted'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
+  const popoverRef = useRef<PopoverImperativeHandle>(null)
+  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -88,7 +95,8 @@ export const Comment: React.FC<CommentProps> = ({
   ]
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
-  const allReactionsApplied = reactions && reactions?.length >= Object.values(REACTION_TYPE).length
+  const allReactionsApplied =
+    reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
 
   const getReactionState = useCallback(
     (state?: ReactionChipState): ReactionChipState | undefined => {
@@ -104,6 +112,23 @@ export const Comment: React.FC<CommentProps> = ({
       return state
     },
     [isDeleted, reactionIsProcessing]
+  )
+
+  const handleOnboardingPopoverHide = useCallback(() => {
+    popoverRef.current?.hide()
+    setTempReactionId(null)
+  }, [])
+
+  const handleCommentReactionClick = useCallback(
+    (reactionId: ReactionId) => {
+      if (!reactionPopoverDismissed) {
+        setTempReactionId(reactionId)
+        popoverRef.current?.show()
+      } else {
+        onReactionClick?.(reactionId)
+      }
+    },
+    [onReactionClick, reactionPopoverDismissed]
   )
 
   return (
@@ -156,7 +181,7 @@ export const Comment: React.FC<CommentProps> = ({
                     <StyledSvgActionTrash /> Comment deleted by Author
                   </DeletedComment>
                 ) : (
-                  <CommentBody>{comment}</CommentBody>
+                  <CommentBody>{text}</CommentBody>
                 )}
               </div>
             )}
@@ -186,23 +211,32 @@ export const Comment: React.FC<CommentProps> = ({
                 <StyledFooterSkeletonLoader width={48} height={32} rounded />
               </CommentFooterItems>
             ) : (
-              <CommentFooterItems>
-                {reactions &&
-                  reactions.length > 0 &&
-                  reactions.map(({ type, active, count, state }) => (
-                    <ReactionChip
-                      key={type}
-                      type={type}
-                      active={active}
-                      count={count}
-                      state={getReactionState(state)}
-                      onReactionClick={onReactionClick}
-                    />
-                  ))}
-                {!allReactionsApplied && !isDeleted && (
-                  <ReactionPopover disabled={reactionIsProcessing} onReactionClick={onReactionClick} />
-                )}
-              </CommentFooterItems>
+              <ReactionsOnboardingPopover
+                ref={popoverRef}
+                onConfirm={() => {
+                  tempReactionId && onReactionClick?.(tempReactionId)
+                  handleOnboardingPopoverHide()
+                }}
+                onDecline={handleOnboardingPopoverHide}
+                trigger={
+                  <CommentFooterItems>
+                    {reactions &&
+                      reactions?.map(({ reactionId, active, count, state }) => (
+                        <ReactionChip
+                          key={reactionId}
+                          reactionId={reactionId}
+                          active={active}
+                          count={count}
+                          state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
+                          onReactionClick={handleCommentReactionClick}
+                        />
+                      ))}
+                    {!allReactionsApplied && !isDeleted && (
+                      <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
+                    )}
+                  </CommentFooterItems>
+                }
+              />
             )}
           </CSSTransition>
         </SwitchTransition>

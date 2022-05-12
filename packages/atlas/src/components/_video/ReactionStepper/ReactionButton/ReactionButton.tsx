@@ -1,37 +1,33 @@
 import React, { useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
-import { SvgThumbsUpIllustration } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
-import { usePersonalDataStore } from '@/providers/personalData'
-import { useUser } from '@/providers/user'
+import { VideoReaction } from '@/joystream-lib'
 import { cVar, transitions } from '@/styles'
 import { formatNumberShort } from '@/utils/number'
 
 import {
   LoadingWrapper,
-  PopoverContentWrapper,
-  PopoverIllustrationWrapper,
   ReactionSteppperState,
   ReactionsCounter,
   StyledSvgActionDislikeSolid,
   StyledSvgActionLikeSolid,
 } from './ReactionButton.styles'
 
+import { ReactionsOnboardingPopover } from '../../ReactionsOnboardingPopover'
+
 type ReactionButtonProps = {
   reactionsNumber?: number
-  onReact?: () => void
+  onReact: (reaction: VideoReaction) => void
   state: ReactionSteppperState
-  type: 'like' | 'dislike'
+  type: VideoReaction
   onPopoverShow?: () => void
   onPopoverHide?: () => void
   isPopoverOpen?: boolean
+  reactionPopoverDismissed?: boolean
 }
 
 export const ReactionButton: React.FC<ReactionButtonProps> = ({
@@ -42,19 +38,15 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   onReact,
   onPopoverHide,
   onPopoverShow,
+  reactionPopoverDismissed = false,
 }) => {
-  const popoverRef = useRef<PopoverImperativeHandle>(null)
-  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
-  const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
   const [shouldRunAnimation, setShouldRunAnimation] = useState(false)
-  const { activeMemberId, activeAccountId, signIn } = useUser()
-  const { openSignInDialog } = useDisplaySignInDialog()
+  const popoverRef = useRef<PopoverImperativeHandle>(null)
 
   const isLoading = state === 'loading'
   const isProcessing = state === 'processing' || isPopoverOpen
 
   const isReacted = type === 'like' ? state === 'liked' : state === 'disliked'
-  const authorized = activeMemberId && activeAccountId
 
   const renderSolidIcon = () => {
     if (type === 'like') {
@@ -72,18 +64,13 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
   }
 
   const handleReact = (reactionPopoverDismissed: boolean) => {
-    if (!authorized) {
-      openSignInDialog({ onConfirm: signIn })
-      return
-    }
-
     if (!reactionPopoverDismissed) {
       onPopoverShow?.()
-      return
+      popoverRef.current?.show()
+    } else {
+      setShouldRunAnimation(true)
+      onReact?.(type)
     }
-
-    setShouldRunAnimation(true)
-    onReact?.()
   }
 
   return (
@@ -96,30 +83,15 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
         {isLoading ? (
           <ReactionButtonLoader />
         ) : (
-          <DialogPopover
+          <ReactionsOnboardingPopover
             ref={popoverRef}
-            noContentPadding
-            additionalActionsNodeMobilePosition="bottom"
-            onHide={onPopoverHide}
-            dividers
-            disabled={reactionPopoverDismissed || !authorized}
-            // TODO add proper link here
-            additionalActionsNode={
-              <Button variant="tertiary" size="small">
-                Learn more
-              </Button>
-            }
-            popoverWidth="wide"
-            primaryButton={{
-              text: 'Got it',
-              onClick: () => {
-                setReactionPopoverDismission(true)
-                handleReact(true)
-              },
+            disabled={reactionPopoverDismissed}
+            onConfirm={() => {
+              handleReact(true)
             }}
-            secondaryButton={{
-              text: 'Cancel',
-              onClick: () => popoverRef.current?.hide(),
+            onDecline={() => {
+              onPopoverHide?.()
+              popoverRef.current?.hide()
             }}
             trigger={
               <Button
@@ -134,18 +106,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 </ReactionsCounter>
               </Button>
             }
-          >
-            <PopoverIllustrationWrapper>
-              <SvgThumbsUpIllustration />
-            </PopoverIllustrationWrapper>
-            <PopoverContentWrapper>
-              <Text variant="h300">We save social interactions on blockchain</Text>
-              <Text variant="t200" secondary margin={{ top: 2 }} as="p">
-                Comments and reactions are stored on blockchain, meaning every action needs a wallet signature to take
-                effect. Transaction fees apply.
-              </Text>
-            </PopoverContentWrapper>
-          </DialogPopover>
+          />
         )}
       </CSSTransition>
     </SwitchTransition>
