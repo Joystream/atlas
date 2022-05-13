@@ -33,6 +33,7 @@ export const relativeRoutes = {
     editMembership: () => 'member/edit',
     member: (handle = ':handle') => `member/${handle}`,
     notifications: () => 'notifications',
+    nfts: () => 'nfts',
   },
   legal: {
     index: () => '',

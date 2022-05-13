@@ -10,8 +10,13 @@ query GetNfts($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = crea
   }
 }
 
-query GetNftsConnection($where: OwnedNftWhereInput, $orderBy: OwnedNftOrderByInput! = createdAt_DESC) {
-  ownedNftsConnection(where: $where, orderBy: [$orderBy]) {
+query GetNftsConnection(
+  $where: OwnedNftWhereInput
+  $orderBy: OwnedNftOrderByInput! = createdAt_DESC
+  $first: Int
+  $after: String
+) {
+  ownedNftsConnection(where: $where, orderBy: [$orderBy], first: $first, after: $after) {
     edges {
       cursor
       node {

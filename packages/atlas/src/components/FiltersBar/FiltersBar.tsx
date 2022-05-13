@@ -27,7 +27,7 @@ import {
 } from './FiltersBar.styles'
 import { VideoLengthOptions, useFiltersBar } from './useFiltersBar'
 
-type Filters = 'date' | 'other' | 'categories' | 'length' | 'nftStatus' | 'language'
+type Filters = 'date' | 'date-minted' | 'other' | 'categories' | 'length' | 'nftStatus' | 'language'
 
 export type FiltersBarProps = {
   activeFilters: Filters[]
@@ -101,13 +101,16 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
     () => (
       <FilterContentContainer>
         {nftStatuses.map((status) => (
-          <RadioButton
+          <Checkbox
             name="nft-status"
             label={status.name}
             key={`nft-status-${status.id}`}
-            value={status.id}
-            selectedValue={nftStatusFilter}
-            onChange={(event) => setNftStatusFilter(event.target.value)}
+            value={!!nftStatusFilter?.includes(status.id)}
+            onChange={(value) => {
+              setNftStatusFilter((statuses) =>
+                value ? [...(statuses ?? []), status.id] : statuses?.filter((id) => id !== status.id)
+              )
+            }}
           />
         ))}
       </FilterContentContainer>
@@ -287,6 +290,14 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                 {dateUploadedInputs}
               </MobileFilterContainer>
             )}
+            {activeFilters.includes('date-minted') && (
+              <MobileFilterContainer>
+                <Text secondary variant="h100">
+                  Date minted
+                </Text>
+                {dateUploadedInputs}
+              </MobileFilterContainer>
+            )}
             {activeFilters.includes('length') && (
               <MobileFilterContainer>
                 <Text secondary variant="h100">
@@ -332,26 +343,34 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               ...getDurationRules(),
             }))
             setOwnedNftWhereInput((value) => {
-              if (nftStatusFilter === 'AuctionTypeEnglish' || nftStatusFilter === 'AuctionTypeOpen') {
-                return {
-                  ...value,
-                  transactionalStatus_json: undefined,
-                  transactionalStatusAuction: {
-                    auctionType_json: {
-                      isTypeOf_eq: nftStatusFilter,
-                    },
-                  },
-                }
-              } else {
-                return {
-                  ...value,
-                  transactionalStatusAuction: undefined,
-                  transactionalStatus_json: nftStatusFilter
+              return {
+                ...value,
+                OR: [
+                  nftStatusFilter?.includes('AuctionTypeEnglish')
                     ? {
-                        isTypeOf_eq: nftStatusFilter,
+                        transactionalStatusAuction: {
+                          auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+                        },
                       }
-                    : undefined,
-                }
+                    : {},
+                  nftStatusFilter?.includes('AuctionTypeOpen')
+                    ? {
+                        transactionalStatusAuction: {
+                          auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+                        },
+                      }
+                    : {},
+                  nftStatusFilter?.includes('TransactionalStatusBuyNow')
+                    ? {
+                        transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
+                      }
+                    : {},
+                  nftStatusFilter?.includes('TransactionalStatusIdle')
+                    ? {
+                        transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
+                      }
+                    : {},
+                ],
               }
             })
             setIsFiltersOpen(false)
@@ -382,7 +401,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
-                <Button variant="secondary" badge={canClearNftStatusFilter}>
+                <Button variant="secondary" badge={nftStatusFilter?.length}>
                   Status
                 </Button>
               }
@@ -393,26 +412,34 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
                 onClick: () => {
                   categoriesPopoverRef.current?.hide()
                   setOwnedNftWhereInput((value) => {
-                    if (nftStatusFilter === 'AuctionTypeEnglish' || nftStatusFilter === 'AuctionTypeOpen') {
-                      return {
-                        ...value,
-                        transactionalStatus_json: undefined,
-                        transactionalStatusAuction: {
-                          auctionType_json: {
-                            isTypeOf_eq: nftStatusFilter,
-                          },
-                        },
-                      }
-                    } else {
-                      return {
-                        ...value,
-                        transactionalStatusAuction: undefined,
-                        transactionalStatus_json: nftStatusFilter
+                    return {
+                      ...value,
+                      OR: [
+                        nftStatusFilter?.includes('AuctionTypeEnglish')
                           ? {
-                              isTypeOf_eq: nftStatusFilter,
+                              transactionalStatusAuction: {
+                                auctionType_json: { isTypeOf_eq: 'AuctionTypeEnglish' },
+                              },
                             }
-                          : undefined,
-                      }
+                          : {},
+                        nftStatusFilter?.includes('AuctionTypeOpen')
+                          ? {
+                              transactionalStatusAuction: {
+                                auctionType_json: { isTypeOf_eq: 'AuctionTypeOpen' },
+                              },
+                            }
+                          : {},
+                        nftStatusFilter?.includes('TransactionalStatusBuyNow')
+                          ? {
+                              transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusBuyNow' },
+                            }
+                          : {},
+                        nftStatusFilter?.includes('TransactionalStatusIdle')
+                          ? {
+                              transactionalStatus_json: { isTypeOf_eq: 'TransactionalStatusIdle' },
+                            }
+                          : {},
+                      ],
                     }
                   })
                 },
@@ -463,6 +490,38 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
               trigger={
                 <Button badge={canClearDateUploadedFilter} variant="secondary">
                   Date uploaded
+                </Button>
+              }
+              primaryButton={{
+                text: 'Apply',
+                disabled: !dateUploadedFilter && !canClearDateUploadedFilter,
+                onClick: () => {
+                  datePopoverRef.current?.hide()
+                  setVideoWhereInput((value) => ({
+                    ...value,
+                    createdAt_gte: dateUploadedFilter
+                      ? add(new Date(), {
+                          days: -dateUploadedFilter,
+                        })
+                      : undefined,
+                  }))
+                },
+              }}
+              secondaryButton={{
+                text: 'Clear',
+                onClick: clearDateUploadedFilter,
+                disabled: dateUploadedFilter === undefined,
+              }}
+            >
+              {dateUploadedInputs}
+            </DialogPopover>
+          )}
+          {activeFilters.includes('date-minted') && (
+            <DialogPopover
+              ref={datePopoverRef}
+              trigger={
+                <Button badge={canClearDateUploadedFilter} variant="secondary">
+                  Date minted
                 </Button>
               }
               primaryButton={{
