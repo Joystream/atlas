@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
@@ -61,7 +62,9 @@ const tileSizeVariants = ({ tileSize }: ContentProps) => `
 `
 
 const isContentPropValid = (prop: string) => prop !== 'loading' && prop !== 'tileSize' && prop !== 'shouldHover'
-export const Content = styled('div', { shouldForwardProp: isContentPropValid })<ContentProps>`
+export const Content = styled(Link, { shouldForwardProp: isContentPropValid })<ContentProps>`
+  display: block;
+  text-decoration: none;
   padding: ${sizes(4)};
   background-color: ${cVar('colorBackgroundMuted')};
   transition: ${cVar('animationTransitionFast')};

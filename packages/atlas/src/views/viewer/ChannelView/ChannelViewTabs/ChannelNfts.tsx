@@ -6,6 +6,7 @@ import { EmptyFallback } from '@/components/EmptyFallback'
 import { Grid } from '@/components/Grid'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 
 import { StyledPagination, VideoSection } from './ChannelViewTabs.styles'
@@ -30,13 +31,19 @@ export const ChannelNfts: React.FC<ChannelNftsProps> = ({
   isFiltersApplied,
 }) => {
   const { currentPage, setCurrentPage } = usePagination(0)
+  const { memberships } = useUser()
 
+  const userChannels = memberships?.map((membership) => membership.channels).flat()
+  const channelOwner = userChannels?.map((channel) => channel.id).includes(channelId)
   const { nfts, totalCount, loading, error, fetchMore, pageInfo } = useNftsConnection({
     orderBy,
     where: {
       ...ownedNftWhereInput,
       creatorChannel: {
         id_eq: channelId,
+      },
+      video: {
+        isPublic_eq: !channelOwner || undefined,
       },
     },
   })
