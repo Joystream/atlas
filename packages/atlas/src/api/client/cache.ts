@@ -44,13 +44,14 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
 const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
   const OR = stringifyValue(args?.where?.OR)
   const ownerMember = stringifyValue(args?.where?.ownerMember)
+  const creatorChannel = stringifyValue(args?.where?.creatorChannel)
   const status = stringifyValue(args?.where?.transactionalStatus_json)
   const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
   const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
   const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
   const video = stringifyValue(args?.where?.video)
 
-  return `${OR}:${ownerMember}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
+  return `${OR}:${ownerMember}:${creatorChannel}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
 const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
