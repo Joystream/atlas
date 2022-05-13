@@ -7,6 +7,7 @@ import { parseISO } from 'date-fns'
 import {
   AllChannelFieldsFragment,
   GetChannelsConnectionQueryVariables,
+  GetNftsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   Query,
   SearchQueryVariables,
@@ -38,6 +39,18 @@ const getVideoKeyArgs = (args: GetVideosConnectionQueryVariables | null) => {
   }
 
   return `${onlyCount}:${channel}:${category}:${nft}:${language}:${createdAtGte}:${isPublic}:${idEq}:${idIn}:${sorting}:${isFeatured}:${durationGte}:${durationLte}`
+}
+
+const getNftKeyArgs = (args: GetNftsConnectionQueryVariables | null) => {
+  const OR = stringifyValue(args?.where?.OR)
+  const ownerMember = stringifyValue(args?.where?.ownerMember)
+  const status = stringifyValue(args?.where?.transactionalStatus_json)
+  const auctionStatus = stringifyValue(args?.where?.transactionalStatusAuction)
+  const sorting = args?.orderBy?.[0] ? args.orderBy[0] : ''
+  const createdAt_gte = stringifyValue(args?.where?.createdAt_gte)
+  const video = stringifyValue(args?.where?.video)
+
+  return `${OR}:${ownerMember}:${status}:${auctionStatus}:${sorting}:${createdAt_gte}:${video}`
 }
 
 const getChannelKeyArgs = (args: GetChannelsConnectionQueryVariables | null) => {
@@ -101,6 +114,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       )
     },
   },
+  ownedNftsConnection: relayStylePagination(getNftKeyArgs),
   mostViewedVideosConnection: relayStylePagination(getVideoKeyArgs),
   videos: {
     ...offsetLimitPagination(getVideoKeyArgs),

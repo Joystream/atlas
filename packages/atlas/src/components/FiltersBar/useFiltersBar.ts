@@ -10,7 +10,7 @@ export const useFiltersBar = () => {
   const [videoLengthFilter, setVideoLengthFilter] = useState<VideoLengthOptions>()
   const [excludePaidPromotionalMaterialFilter, setExcludePaidPromotionalMaterialFilter] = useState<boolean>()
   const [excludeMatureContentRatingFilter, setExcludeMatureContentRatingFilter] = useState<boolean>()
-  const [nftStatusFilter, setNftStatusFilter] = useState<string>()
+  const [nftStatusFilter, setNftStatusFilter] = useState<string[]>()
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>()
   const [language, setLanguage] = useState<string | null | undefined>('undefined')
 
@@ -22,8 +22,7 @@ export const useFiltersBar = () => {
   const canClearVideoLengthFilter =
     videoWhereInput?.duration_lte !== undefined || videoWhereInput?.duration_gte !== undefined
   const canClearOtherFilters = videoWhereInput?.hasMarketing_eq === false || videoWhereInput?.isExplicit_eq === false
-  const canClearNftStatusFilter =
-    !!ownedNftWhereInput?.transactionalStatus_json || !!ownedNftWhereInput.transactionalStatusAuction?.auctionType_json
+  const canClearNftStatusFilter = nftStatusFilter && nftStatusFilter.length > 0
   const canClearCategoriesFilter =
     (videoWhereInput?.category && videoWhereInput.category.id_in && videoWhereInput.category.id_in.length !== 0) ||
     false
@@ -60,10 +59,9 @@ export const useFiltersBar = () => {
   }
 
   const clearNftStatusFilter = () => {
-    setNftStatusFilter(undefined)
+    setNftStatusFilter([])
     setOwnedNftWhereInput((value) => {
-      delete value.transactionalStatus_json
-      delete value.transactionalStatusAuction
+      delete value.OR
       return value
     })
   }

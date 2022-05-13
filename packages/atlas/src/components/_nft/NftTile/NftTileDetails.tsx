@@ -102,7 +102,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
   const [contentHovered, setContentHovered] = useState(false)
   const toggleContentHover = () => setContentHovered((prevState) => !prevState)
   const [tileSize, setTileSize] = useState<TileSize>()
-  const { ref: contentRef } = useResizeObserver<HTMLDivElement>({
+  const { ref: contentRef } = useResizeObserver<HTMLAnchorElement>({
     box: 'border-box',
     onResize: (size) => {
       const { width } = size
@@ -253,6 +253,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
 
   return (
     <Content
+      to={videoHref || ''}
       ref={contentRef}
       loading={loading}
       onMouseEnter={toggleContentHover}
@@ -287,16 +288,23 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               : []),
           ]}
         />
-        <ContextMenu
-          placement="bottom-end"
-          disabled={loading}
-          items={getContextMenuContent}
-          trigger={
-            <KebabMenuButtonIcon variant="tertiary" size="small" isActive={!loading}>
-              <SvgActionMore />
-            </KebabMenuButtonIcon>
-          }
-        />
+        <div
+          onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+          }}
+        >
+          <ContextMenu
+            placement="bottom-end"
+            disabled={loading}
+            items={getContextMenuContent}
+            trigger={
+              <KebabMenuButtonIcon variant="tertiary" size="small" isActive={!loading}>
+                <SvgActionMore />
+              </KebabMenuButtonIcon>
+            }
+          />
+        </div>
       </Header>
       {loading ? (
         <SkeletonLoader width="55.6%" height={24} />
