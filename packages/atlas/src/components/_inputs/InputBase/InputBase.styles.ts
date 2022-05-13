@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 type FormGroupProps = {
   error?: boolean
@@ -21,13 +21,13 @@ export const FormGroup = styled.label<FormGroupProps>`
 
   input,
   textarea {
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   input,
   button,
   textarea {
-    transition: border ${transitions.timings.regular} ${transitions.easing};
+    transition: box-shadow ${transitions.timings.regular} ${transitions.easing};
     background: none;
     padding: ${sizes(3)} ${sizes(4)};
     font: ${cVar('typographyDesktopT300')};
