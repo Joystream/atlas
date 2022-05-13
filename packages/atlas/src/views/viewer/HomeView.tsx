@@ -6,6 +6,7 @@ import { GetMostViewedVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { DiscoverChannels } from '@/components/_content/DiscoverChannels'
+import { NewNftSales } from '@/components/_content/NewNftSales'
 import { OfficialJoystreamUpdate } from '@/components/_content/OfficialJoystreamUpdate'
 import { TopTenVideos } from '@/components/_content/TopTenVideos'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -67,6 +68,7 @@ export const HomeView: React.FC = () => {
           onDemand
           titleLoader
         />
+        <NewNftSales />
         <TopTenVideos period="week" />
         <OfficialJoystreamUpdate />
         <DiscoverChannels withLink />

@@ -184,6 +184,36 @@ export type GetNftNotificationsQuery = {
           | null
       }
     }
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
     video: { __typename?: 'Video'; id: string; title?: string | null }
   }>
   openAuctionBidAcceptedEvents: Array<{
@@ -223,6 +253,103 @@ export type GetNftNotificationsQuery = {
       }
     } | null
     winningBid?: { __typename?: 'Bid'; amount: string } | null
+    winningBidder?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
+  }>
+  englishAuctionSettledEvents: Array<{
+    __typename?: 'EnglishAuctionSettledEvent'
+    id: string
+    createdAt: Date
+    inBlock: number
+    ownerMember?: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    } | null
+    winner: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    video: { __typename?: 'Video'; id: string; title?: string | null }
   }>
 }
 
@@ -919,6 +1046,100 @@ export type GetNftActivitiesQuery = {
       }
     }>
   }
+  purchaseEnglishAuctionSettledEventsConnection: {
+    __typename?: 'EnglishAuctionSettledEventConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'EnglishAuctionSettledEventEdge'
+      node: {
+        __typename?: 'EnglishAuctionSettledEvent'
+        id: string
+        createdAt: Date
+        inBlock: number
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        } | null
+        winner: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        }
+        winningBid: { __typename?: 'Bid'; amount: string }
+        video: {
+          __typename?: 'Video'
+          id: string
+          title?: string | null
+          thumbnailPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+        }
+      }
+    }>
+  }
   purchaseNftBoughtEventsConnection: {
     __typename?: 'NftBoughtEventConnection'
     totalCount: number
@@ -1201,6 +1422,100 @@ export type GetNftActivitiesQuery = {
             }
           }
         } | null
+      }
+    }>
+  }
+  saleEnglishAuctionSettledEventsConnection: {
+    __typename?: 'EnglishAuctionSettledEventConnection'
+    totalCount: number
+    edges: Array<{
+      __typename?: 'EnglishAuctionSettledEventEdge'
+      node: {
+        __typename?: 'EnglishAuctionSettledEvent'
+        id: string
+        createdAt: Date
+        inBlock: number
+        ownerMember?: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        } | null
+        winner: {
+          __typename?: 'Membership'
+          id: string
+          handle: string
+          metadata: {
+            __typename?: 'MemberMetadata'
+            about?: string | null
+            avatar?:
+              | {
+                  __typename?: 'AvatarObject'
+                  avatarObject?: {
+                    __typename?: 'StorageDataObject'
+                    id: string
+                    createdAt: Date
+                    size: string
+                    isAccepted: boolean
+                    ipfsHash: string
+                    storageBag: { __typename?: 'StorageBag'; id: string }
+                    type:
+                      | { __typename: 'DataObjectTypeChannelAvatar' }
+                      | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                      | { __typename: 'DataObjectTypeUnknown' }
+                      | { __typename: 'DataObjectTypeVideoMedia' }
+                      | { __typename: 'DataObjectTypeVideoThumbnail' }
+                  } | null
+                }
+              | { __typename?: 'AvatarUri'; avatarUri: string }
+              | null
+          }
+        }
+        winningBid: { __typename?: 'Bid'; amount: string }
+        video: {
+          __typename?: 'Video'
+          id: string
+          title?: string | null
+          thumbnailPhoto?: {
+            __typename?: 'StorageDataObject'
+            id: string
+            createdAt: Date
+            size: string
+            isAccepted: boolean
+            ipfsHash: string
+            storageBag: { __typename?: 'StorageBag'; id: string }
+            type:
+              | { __typename: 'DataObjectTypeChannelAvatar' }
+              | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypeUnknown' }
+              | { __typename: 'DataObjectTypeVideoMedia' }
+              | { __typename: 'DataObjectTypeVideoThumbnail' }
+          } | null
+        }
       }
     }>
   }
@@ -2036,7 +2351,7 @@ export const GetNftNotificationsDocument = gql`
       price
     }
     bidMadeCompletingAuctionEvents(
-      where: { ownerMember: { id_eq: $memberId } }
+      where: { OR: [{ ownerMember: { id_eq: $memberId } }, { bidders_some: { id_eq: $memberId } }] }
       limit: $limit
       orderBy: [createdAt_DESC]
     ) {
@@ -2046,6 +2361,9 @@ export const GetNftNotificationsDocument = gql`
       member {
         ...BasicMembershipFields
       }
+      ownerMember {
+        ...BasicMembershipFields
+      }
       video {
         id
         title
@@ -2053,7 +2371,7 @@ export const GetNftNotificationsDocument = gql`
       price
     }
     openAuctionBidAcceptedEvents(
-      where: { winningBidder: { id_eq: $memberId } }
+      where: { OR: [{ winningBidder: { id_eq: $memberId } }, { bidders_some: { id_eq: $memberId } }] }
       limit: $limit
       orderBy: [createdAt_DESC]
     ) {
@@ -2069,6 +2387,34 @@ export const GetNftNotificationsDocument = gql`
       }
       winningBid {
         amount
+      }
+      winningBidder {
+        ...BasicMembershipFields
+      }
+    }
+    englishAuctionSettledEvents(
+      where: {
+        OR: [
+          { ownerMember: { id_eq: $memberId } }
+          { winner: { id_eq: $memberId } }
+          { bidders_some: { id_eq: $memberId } }
+        ]
+      }
+      limit: $limit
+      orderBy: [createdAt_DESC]
+    ) {
+      id
+      createdAt
+      inBlock
+      ownerMember {
+        ...BasicMembershipFields
+      }
+      winner {
+        ...BasicMembershipFields
+      }
+      video {
+        id
+        title
       }
     }
   }
@@ -2294,6 +2640,36 @@ export const GetNftActivitiesDocument = gql`
       }
       totalCount
     }
+    purchaseEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
+      where: { winner: { id_eq: $memberId } }
+      first: $limit
+      orderBy: [createdAt_DESC]
+    ) {
+      edges {
+        node {
+          id
+          createdAt
+          inBlock
+          ownerMember {
+            ...BasicMembershipFields
+          }
+          winner {
+            ...BasicMembershipFields
+          }
+          winningBid {
+            amount
+          }
+          video {
+            id
+            title
+            thumbnailPhoto {
+              ...StorageDataObjectFields
+            }
+          }
+        }
+      }
+      totalCount
+    }
     purchaseNftBoughtEventsConnection: nftBoughtEventsConnection(
       where: { member: { id_eq: $memberId } }
       first: $limit
@@ -2374,6 +2750,36 @@ export const GetNftActivitiesDocument = gql`
             amount
             bidder {
               ...BasicMembershipFields
+            }
+          }
+        }
+      }
+      totalCount
+    }
+    saleEnglishAuctionSettledEventsConnection: englishAuctionSettledEventsConnection(
+      where: { ownerMember: { id_eq: $memberId } }
+      first: $limit
+      orderBy: [createdAt_DESC]
+    ) {
+      edges {
+        node {
+          id
+          createdAt
+          inBlock
+          ownerMember {
+            ...BasicMembershipFields
+          }
+          winner {
+            ...BasicMembershipFields
+          }
+          winningBid {
+            amount
+          }
+          video {
+            id
+            title
+            thumbnailPhoto {
+              ...StorageDataObjectFields
             }
           }
         }

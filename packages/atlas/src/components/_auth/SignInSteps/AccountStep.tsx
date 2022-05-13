@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -36,12 +36,17 @@ import {
 
 type AccountStepProps = {
   nextStepPath: string
+  setSelectedAccountAddress: React.Dispatch<string | undefined>
+  selectedAccountAddress?: string
 }
 
-export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
+export const AccountStep: React.FC<AccountStepProps> = ({
+  nextStepPath,
+  setSelectedAccountAddress,
+  selectedAccountAddress,
+}) => {
   const navigate = useNavigate()
-  const { accounts, setActiveUser, memberships, membershipsLoading } = useUser()
-  const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
+  const { accounts, memberships, membershipsLoading } = useUser()
 
   const membershipsControllerAccounts = memberships?.map((a) => a.controllerAccount)
   const accountsWithNoMembership = (accounts || []).filter((el) => !membershipsControllerAccounts?.includes(el.id))
@@ -51,7 +56,6 @@ export const AccountStep: React.FC<AccountStepProps> = ({ nextStepPath }) => {
     if (!selectedAccountAddress) {
       return
     }
-    setActiveUser({ accountId: selectedAccountAddress })
     navigate({ search: nextStepPath })
   }
 

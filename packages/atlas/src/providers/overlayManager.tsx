@@ -77,7 +77,11 @@ export const useOverlayManager = () => {
 
   const decrementOverlaysOpenCount = useCallback(() => {
     setOverlaysSet((prevSet) => {
-      prevSet.delete(overlayId)
+      if (prevSet.size === 1) {
+        prevSet.clear()
+      } else {
+        prevSet.delete(overlayId)
+      }
       return new Set(prevSet)
     })
   }, [overlayId, setOverlaysSet])

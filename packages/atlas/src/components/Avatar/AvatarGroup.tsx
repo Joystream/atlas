@@ -114,7 +114,11 @@ const SingleAvatar: React.FC<SingleAvatarProps> = ({ avatar, loading: loadingPro
       assetUrl={url}
       size={size}
       withoutOutline={avatar.withoutOutline}
-      onClick={avatar.onClick}
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        avatar.onClick?.(e)
+      }}
     >
       {avatar.children}
     </StyledAvatar>

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { GetVideosConnectionDocument } from '@/api/queries'
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { ExpandableChannelsList } from '@/components/_channel/ExpandableChannelsList'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
@@ -12,6 +13,7 @@ export const NewView: React.FC = () => {
   return (
     <VideoContentTemplate title="New & Noteworthy" cta={['home', 'channels', 'popular']}>
       {headTags}
+      <InfiniteVideoGrid title="Recently uploaded" query={GetVideosConnectionDocument} onDemand />
       <InfiniteVideoGrid title="Videos worth watching" videoWhereInput={{ isFeatured_eq: true }} onDemand titleLoader />
       <ExpandableChannelsList
         title="Promising new channels"

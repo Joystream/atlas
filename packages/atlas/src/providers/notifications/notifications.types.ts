@@ -8,6 +8,7 @@ export type NftNotificationRecord = {
     id: string
     title: string
   }
+  member?: BasicMembershipFieldsFragment | null
 }
 export type NotificationRecord = { read?: boolean } & (
   | ({
@@ -21,7 +22,7 @@ export type NotificationRecord = { read?: boolean } & (
       member: BasicMembershipFieldsFragment
     } & NftNotificationRecord)
   | ({
-      type: 'open-auction-ended'
+      type: 'bid-accepted'
       member: BasicMembershipFieldsFragment | null
       bidAmount: number
     } & NftNotificationRecord)
@@ -29,5 +30,14 @@ export type NotificationRecord = { read?: boolean } & (
       type: 'got-outbid'
       member: BasicMembershipFieldsFragment
       bidAmount: number
+    } & NftNotificationRecord)
+  | ({
+      type: 'auction-settled-owner'
+    } & NftNotificationRecord)
+  | ({
+      type: 'auction-settled-winner'
+    } & NftNotificationRecord)
+  | ({
+      type: 'auction-ended'
     } & NftNotificationRecord)
 )

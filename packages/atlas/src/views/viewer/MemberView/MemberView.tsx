@@ -43,7 +43,7 @@ export const MemberView: React.FC = () => {
   const filtersBarLogic = useFiltersBar()
   const {
     filters: { setIsFiltersOpen, isFiltersOpen },
-    ownedNftWhereInput: { transactionalStatus_json, transactionalStatusAuction },
+    ownedNftWhereInput,
     canClearFilters: { canClearAllFilters },
   } = filtersBarLogic
 
@@ -51,8 +51,10 @@ export const MemberView: React.FC = () => {
     {
       where: {
         ownerMember: { handle_eq: handle },
-        transactionalStatus_json,
-        transactionalStatusAuction,
+        ...ownedNftWhereInput,
+        video: {
+          isPublic_eq: handle !== activeMembership?.handle || undefined,
+        },
       },
       orderBy: sortBy as OwnedNftOrderByInput,
     },

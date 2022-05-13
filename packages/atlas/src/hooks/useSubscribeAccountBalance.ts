@@ -3,17 +3,17 @@ import { useEffect, useState } from 'react'
 import { useJoystream } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
-export const useSubsribeAccountBalance = () => {
+export const useSubscribeAccountBalance = () => {
   const [accountBalance, setAccountBalance] = useState<number | undefined>()
   const { activeMembership } = useUser()
   const { joystream, proxyCallback } = useJoystream()
 
   useEffect(() => {
-    if (!activeMembership || !joystream) {
+    if (!activeMembership?.controllerAccount || !joystream) {
       return
     }
 
-    let unsubscribe
+    let unsubscribe: (() => void) | undefined
     const init = async () => {
       unsubscribe = await joystream.subscribeAccountBalance(
         activeMembership.controllerAccount,
@@ -22,8 +22,10 @@ export const useSubsribeAccountBalance = () => {
     }
     init()
 
-    return unsubscribe
-  }, [activeMembership, joystream, proxyCallback])
+    return () => {
+      unsubscribe?.()
+    }
+  }, [activeMembership?.controllerAccount, joystream, proxyCallback])
 
   return accountBalance
 }

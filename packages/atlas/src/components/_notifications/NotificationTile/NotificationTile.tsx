@@ -5,14 +5,22 @@ import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { StyledLink } from '@/components/_video/VideoTileDetails/VideoTileDetails.styles'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
 import { NotificationRecord } from '@/providers/notifications'
 import { formatTokens } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
-import { AvatarWrapper, CheckboxSkeleton, Content, StyledListItem, Title, Wrapper } from './NotificationTile.styles'
+import { NoActorNotificationAvatar } from './NoActorNotificationAvatar'
+import {
+  AvatarWrapper,
+  CheckboxSkeleton,
+  Content,
+  StyledLink,
+  StyledListItem,
+  Title,
+  Wrapper,
+} from './NotificationTile.styles'
 
 const getNotificationText = (notification: NotificationRecord): string => {
   switch (notification.type) {
@@ -22,8 +30,14 @@ const getNotificationText = (notification: NotificationRecord): string => {
       return `outbid you for ${formatTokens(notification.bidAmount)}`
     case 'bought':
       return `purchased your NFT for ${formatTokens(notification.price)}`
-    case 'open-auction-ended':
+    case 'bid-accepted':
       return `has accepted your bid of ${formatTokens(notification.bidAmount)}`
+    case 'auction-settled-owner':
+      return 'Your auction has been settled'
+    case 'auction-settled-winner':
+      return 'Auction you have won has been settled'
+    case 'auction-ended':
+      return 'Auction you participated in has ended'
   }
 }
 
@@ -68,14 +82,22 @@ export const NotificationTile: React.FC<NotificationProps> = ({
           loading={loading}
           read={read}
           variant="compact"
-          nodeStart={<Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />}
+          nodeStart={
+            member ? (
+              <Avatar size="default" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
+            ) : (
+              <NoActorNotificationAvatar size="small" />
+            )
+          }
           caption={!loading ? `${formattedDate} • ${video.title}` : <SkeletonLoader width="50%" height={19} />}
           label={
             !loading ? (
               <>
-                <Text as="span" variant="t200-strong" secondary>
-                  {`${member?.handle} `}
-                </Text>
+                {member && (
+                  <Text as="span" variant="t200-strong" secondary>
+                    {`${member.handle} `}
+                  </Text>
+                )}
                 <Text as="span" variant="t200-strong">
                   {getNotificationText(notification)}
                 </Text>
@@ -105,14 +127,20 @@ export const NotificationTile: React.FC<NotificationProps> = ({
         <CheckboxSkeleton width={16} height={16} />
       )}
       <AvatarWrapper>
-        <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
+        {member ? (
+          <Avatar size="small" assetUrl={avatarUrl} loading={isLoadingAvatar || loading} />
+        ) : (
+          <NoActorNotificationAvatar size="regular" />
+        )}
       </AvatarWrapper>
       {!loading ? (
         <Content>
           <Title>
-            <Text as="span" variant="h300" secondary>
-              {`${member?.handle} `}
-            </Text>
+            {member && (
+              <Text as="span" variant="h300" secondary>
+                {`${member.handle} `}
+              </Text>
+            )}
             <Text as="span" variant="h300">
               {getNotificationText(notification)}
             </Text>

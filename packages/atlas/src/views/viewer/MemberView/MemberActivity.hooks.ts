@@ -74,6 +74,24 @@ const parseActivities = (
     },
   }
   switch (event.__typename) {
+    case 'EnglishAuctionSettledEvent':
+      if (memberId === event.ownerMember?.id) {
+        return {
+          type: 'Purchase',
+          ...commonFields,
+          price: Number(event.winningBid?.amount),
+          to: event.winner || null,
+          from: event.ownerMember || null,
+        }
+      } else {
+        return {
+          ...commonFields,
+          type: 'Sale',
+          price: Number(event.winningBid?.amount),
+          from: event.winner || null,
+          to: event.ownerMember || null,
+        }
+      }
     case 'AuctionBidMadeEvent':
       return {
         ...commonFields,
@@ -154,7 +172,6 @@ const parseActivities = (
           to: event.ownerMember || null,
         }
       }
-
     default:
       return null
   }
@@ -166,21 +183,32 @@ export const useActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'creat
   const activities = parsedActivities ? parsedActivities.filter((a): a is ActivitiesRecord => !!a) : undefined
 
   const totalCounts = useMemo(() => {
-    const purchaseNftBought = rawData?.purchaseNftBoughtEventsConnection.totalCount || 0
-    const auctionBidMade = rawData?.auctionBidMadeEventsConnection.totalCount || 0
-    const purchaseBidMadeCompletingAuction = rawData?.purchaseBidMadeCompletingAuctionEventsConnection.totalCount || 0
-    const purchaseOpenAuctionBidAccepted = rawData?.purchaseOpenAuctionBidAcceptedEventsConnection.totalCount || 0
-    const saleNftBought = rawData?.saleNftBoughtEventsConnection.totalCount || 0
-    const saleBidMadeCompletingAuction = rawData?.saleBidMadeCompletingAuctionEventsConnection.totalCount || 0
-    const saleOpenAuctionBidAccepted = rawData?.saleOpenAuctionBidAcceptedEventsConnection.totalCount || 0
-    const nftIssued = rawData?.nftIssuedEventsConnection.totalCount || 0
+    const purchaseNftBoughtCount = rawData?.purchaseNftBoughtEventsConnection.totalCount || 0
+    const auctionBidMadeCount = rawData?.auctionBidMadeEventsConnection.totalCount || 0
+    const purchaseBidMadeCompletingAuctionCount =
+      rawData?.purchaseBidMadeCompletingAuctionEventsConnection.totalCount || 0
+    const purchaseOpenAuctionBidAcceptedCount = rawData?.purchaseOpenAuctionBidAcceptedEventsConnection.totalCount || 0
+    const purchaseEnglishAuctionSettledCount = rawData?.purchaseEnglishAuctionSettledEventsConnection.totalCount || 0
+    const saleNftBoughtCount = rawData?.saleNftBoughtEventsConnection.totalCount || 0
+    const saleBidMadeCompletingAuctionCount = rawData?.saleBidMadeCompletingAuctionEventsConnection.totalCount || 0
+    const saleEnglishAuctionSettledCount = rawData?.saleEnglishAuctionSettledEventsConnection.totalCount || 0
+    const saleOpenAuctionBidAcceptedCount = rawData?.saleOpenAuctionBidAcceptedEventsConnection.totalCount || 0
+    const nftIssuedCount = rawData?.nftIssuedEventsConnection.totalCount || 0
 
     return rawData
       ? {
-          nftsBoughts: purchaseNftBought + purchaseBidMadeCompletingAuction + purchaseOpenAuctionBidAccepted,
-          nftsSold: saleNftBought + saleBidMadeCompletingAuction + saleOpenAuctionBidAccepted,
-          nftsIssued: nftIssued,
-          nftsBidded: auctionBidMade,
+          nftsBoughts:
+            purchaseNftBoughtCount +
+            purchaseBidMadeCompletingAuctionCount +
+            purchaseOpenAuctionBidAcceptedCount +
+            purchaseEnglishAuctionSettledCount,
+          nftsSold:
+            saleNftBoughtCount +
+            saleBidMadeCompletingAuctionCount +
+            saleOpenAuctionBidAcceptedCount +
+            saleEnglishAuctionSettledCount,
+          nftsIssued: nftIssuedCount,
+          nftsBidded: auctionBidMadeCount,
         }
       : undefined
   }, [rawData])

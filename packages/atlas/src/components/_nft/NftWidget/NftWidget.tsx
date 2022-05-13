@@ -465,7 +465,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                       </ButtonGrid>
                     </GridItem>
                   )
-                : nftStatus.englishTimerState !== 'expired' &&
+                : nftStatus.englishTimerState === 'running' &&
                   nftStatus.isUserWhitelisted !== false &&
                   (nftStatus.buyNowPrice ? (
                     <GridItem colSpan={buttonColumnSpan}>

@@ -29,6 +29,7 @@ export const useRawNotifications = (
           ...data.bidMadeCompletingAuctionEvents,
           ...data.nftBoughtEvents,
           ...data.auctionBidMadeEvents,
+          ...data.englishAuctionSettledEvents,
         ]
       : []
 
@@ -42,23 +43,13 @@ export const useRawNotifications = (
 }
 
 export const createAllNotificationArray = (data: GetNftActivitiesQuery) => {
-  return [
-    ...data.auctionBidMadeEventsConnection.edges.map((e) => e.node),
-    ...data.purchaseNftBoughtEventsConnection.edges.map((e) => e.node),
-    ...data.purchaseBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
-    ...data.purchaseOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
-    ...data.saleNftBoughtEventsConnection.edges.map((e) => e.node),
-    ...data.saleBidMadeCompletingAuctionEventsConnection.edges.map((e) => e.node),
-    ...data.saleOpenAuctionBidAcceptedEventsConnection.edges.map((e) => e.node),
-    ...data.englishAuctionStartedEventsConnection.edges.map((e) => e.node),
-    ...data.openAuctionStartedEventsConnection.edges.map((e) => e.node),
-    ...data.nftSellOrderMadeEventsConnection.edges.map((e) => e.node),
-    ...data.auctionBidCanceledEventsConnection.edges.map((e) => e.node),
-    ...data.buyNowCanceledEventsConnection.edges.map((e) => e.node),
-    ...data.auctionCanceledEventsConnection.edges.map((e) => e.node),
-    ...data.buyNowPriceUpdatedEventsConnection.edges.map((e) => e.node),
-    ...data.nftIssuedEventsConnection.edges.map((e) => e.node),
-  ]
+  return Object.values(data).flatMap((d) => {
+    if (d !== 'Query') {
+      return d.edges.map((e) => e.node)
+    } else {
+      return []
+    }
+  })
 }
 
 export const useRawActivities = (memberId?: string, sort?: 'createdAt_ASC' | 'createdAt_DESC') => {

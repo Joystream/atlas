@@ -33,6 +33,7 @@ type SetUpProps = {
   selectedType: Listing
   activeInputs: string[]
   setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
+  handleGoForward: () => void
 }
 
 export const SetUp: React.FC<SetUpProps> = ({
@@ -41,6 +42,7 @@ export const SetUp: React.FC<SetUpProps> = ({
   setActiveInputs,
   maxEndDate,
   maxStartDate,
+  handleGoForward,
 }) => {
   const {
     register,
@@ -133,13 +135,25 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }))
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    handleGoForward()
+  }
+
+  const handleNumberInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { target } = event
+    if (Number(target.value) % 1 !== 0) {
+      setValue(target.name as 'buyNowPrice' | 'startingPrice', Math.floor(Number(event.target.value)))
+    }
+  }
+
   return (
     <>
       <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
       <Text variant="t300" secondary>
         {selectedType && headerText[selectedType].caption}
       </Text>
-      <form>
+      <form onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
           <StyledFormField title="">
             <TextField
@@ -149,6 +163,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
               error={!!errors.buyNowPrice}
               helperText={errors.buyNowPrice?.message}
+              onBlur={handleNumberInputBlur}
             />
           </StyledFormField>
         )}
@@ -257,6 +272,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
                 helperText={errors.startingPrice?.message}
+                onBlur={handleNumberInputBlur}
               />
             </FormField>
             <FormField
@@ -279,7 +295,10 @@ export const SetUp: React.FC<SetUpProps> = ({
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 helperText={errors.buyNowPrice?.message}
-                onBlur={() => trigger()} // trigger form validation to make sure starting price is valid
+                onBlur={(event) => {
+                  trigger() // trigger form validation to make sure starting price is valid
+                  handleNumberInputBlur(event)
+                }}
               />
             </FormField>
             <FormField

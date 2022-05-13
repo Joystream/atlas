@@ -56,19 +56,67 @@ const parseNotification = (
       member: event.member,
       bidAmount: Number(event.bidAmount),
     }
-  } else if (event.__typename === 'NftBoughtEvent' || event.__typename === 'BidMadeCompletingAuctionEvent') {
+  } else if (event.__typename === 'NftBoughtEvent') {
     return {
       type: 'bought',
       ...commonFields,
       member: event.member,
       price: Number(event.price),
     }
+  } else if (event.__typename === 'BidMadeCompletingAuctionEvent') {
+    if (event.ownerMember?.id === memberId) {
+      // member is the owner, somebody bought their NFT
+      return {
+        type: 'bought',
+        ...commonFields,
+        member: event.member,
+        price: Number(event.price),
+      }
+    } else if (event.member.id === memberId) {
+      // member is the winner, skip the notification
+      return null
+    } else {
+      // member is not the owner and not the winner, they participated in the auction
+      return {
+        type: 'auction-ended',
+        ...commonFields,
+      }
+    }
   } else if (event.__typename === 'OpenAuctionBidAcceptedEvent') {
-    return {
-      type: 'open-auction-ended',
-      ...commonFields,
-      member: event.ownerMember || null,
-      bidAmount: Number(event.winningBid?.amount || 0),
+    if (event.winningBidder?.id === memberId) {
+      // member is the winner, their bid was accepted
+      return {
+        type: 'bid-accepted',
+        ...commonFields,
+        member: event.ownerMember || null,
+        bidAmount: Number(event.winningBid?.amount || 0),
+      }
+    } else {
+      // member is not the winner, the participated in the auction
+      return {
+        type: 'auction-ended',
+        ...commonFields,
+      }
+    }
+  } else if (event.__typename === 'EnglishAuctionSettledEvent') {
+    if (event.ownerMember?.id === memberId) {
+      // member is the owner, their auction got settled
+      return {
+        type: 'auction-settled-owner',
+        ...commonFields,
+      }
+    } else if (event.winner.id === memberId) {
+      // member is the winner, auction they won got settled
+      return {
+        type: 'auction-settled-winner',
+        ...commonFields,
+      }
+    } else {
+      // member is not the owner and not the winner, they participated in the auction
+      return {
+        type: 'auction-ended',
+        ...commonFields,
+      }
     }
   } else {
     ConsoleLogger.error('Unknown event type for notifications')
