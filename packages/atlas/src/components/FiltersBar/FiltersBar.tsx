@@ -401,7 +401,7 @@ export const FiltersBar: React.FC<ReturnType<typeof useFiltersBar> & FiltersBarP
             <DialogPopover
               ref={categoriesPopoverRef}
               trigger={
-                <Button variant="secondary" badge={canClearNftStatusFilter}>
+                <Button variant="secondary" badge={nftStatusFilter?.length}>
                   Status
                 </Button>
               }
