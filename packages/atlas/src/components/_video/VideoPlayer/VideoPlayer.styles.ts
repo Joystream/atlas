@@ -2,7 +2,20 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { SvgControlsSoundOff } from '@/components/_icons'
+import {
+  SvgControlsFullScreen,
+  SvgControlsPause,
+  SvgControlsPipOff,
+  SvgControlsPipOn,
+  SvgControlsPlay,
+  SvgControlsReplay,
+  SvgControlsSmallScreen,
+  SvgControlsSoundLowVolume,
+  SvgControlsSoundOff,
+  SvgControlsSoundOn,
+  SvgControlsVideoModeCinemaView,
+  SvgControlsVideoModeCompactView,
+} from '@/components/_icons'
 import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
@@ -15,6 +28,57 @@ type CustomControlsProps = {
   isFullScreen?: boolean
   isEnded?: boolean
 }
+
+const defaultIconColor = css`
+  path {
+    fill: ${cVar('colorTextStrong')};
+  }
+`
+
+export const StyledSvgControlsReplay = styled(SvgControlsReplay)`
+  ${defaultIconColor};
+`
+export const StyledSvgControlsPause = styled(SvgControlsPause)`
+  ${defaultIconColor};
+`
+export const StyledSvgControlsPlay = styled(SvgControlsPlay)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgPlayerSoundOff = styled(SvgControlsSoundOff)`
+  opacity: 0.5;
+  ${defaultIconColor};
+`
+export const StyledSvgPlayerSoundOn = styled(SvgControlsSoundOn)`
+  ${defaultIconColor};
+`
+export const StyledSvgControlsSoundLowVolume = styled(SvgControlsSoundLowVolume)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsVideoModeCompactView = styled(SvgControlsVideoModeCompactView)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsVideoModeCinemaView = styled(SvgControlsVideoModeCinemaView)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsPipOff = styled(SvgControlsPipOff)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsPipOn = styled(SvgControlsPipOn)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsSmallScreen = styled(SvgControlsSmallScreen)`
+  ${defaultIconColor};
+`
+
+export const StyledSvgControlsFullScreen = styled(SvgControlsFullScreen)`
+  ${defaultIconColor};
+`
 
 export const TRANSITION_DELAY = '50ms'
 
@@ -190,9 +254,6 @@ export const VolumeButton = styled(PlayerControlButton)`
   }
 `
 
-export const StyledSvgPlayerSoundOff = styled(SvgControlsSoundOff)`
-  opacity: 0.5;
-`
 export const CurrentTimeWrapper = styled.div`
   display: flex;
   align-items: center;

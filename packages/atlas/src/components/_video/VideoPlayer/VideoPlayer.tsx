@@ -3,19 +3,6 @@ import React, { CSSProperties, useCallback, useEffect, useRef, useState } from '
 import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
-import {
-  SvgControlsFullScreen,
-  SvgControlsPause,
-  SvgControlsPipOff,
-  SvgControlsPipOn,
-  SvgControlsPlay,
-  SvgControlsReplay,
-  SvgControlsSmallScreen,
-  SvgControlsSoundLowVolume,
-  SvgControlsSoundOn,
-  SvgControlsVideoModeCinemaView,
-  SvgControlsVideoModeCompactView,
-} from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
@@ -36,7 +23,18 @@ import {
   PlayButton,
   PlayControl,
   ScreenControls,
+  StyledSvgControlsFullScreen,
+  StyledSvgControlsPause,
+  StyledSvgControlsPipOff,
+  StyledSvgControlsPipOn,
+  StyledSvgControlsPlay,
+  StyledSvgControlsReplay,
+  StyledSvgControlsSmallScreen,
+  StyledSvgControlsSoundLowVolume,
+  StyledSvgControlsVideoModeCinemaView,
+  StyledSvgControlsVideoModeCompactView,
   StyledSvgPlayerSoundOff,
+  StyledSvgPlayerSoundOn,
   VolumeButton,
   VolumeControl,
   VolumeSlider,
@@ -488,7 +486,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     if (currentVolume === 0) {
       return <StyledSvgPlayerSoundOff />
     } else {
-      return currentVolume <= 0.5 ? <SvgControlsSoundLowVolume /> : <SvgControlsSoundOn />
+      return currentVolume <= 0.5 ? <StyledSvgControlsSoundLowVolume /> : <StyledSvgPlayerSoundOn />
     }
   }
 
@@ -506,7 +504,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
         {needsManualPlay && (
           <BigPlayButtonContainer onClick={handlePlayPause}>
             <BigPlayButton onClick={handlePlayPause}>
-              <SvgControlsPlay />
+              <StyledSvgControlsPlay />
             </BigPlayButton>
           </BigPlayButtonContainer>
         )}
@@ -532,11 +530,11 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                       tooltipPosition="left"
                     >
                       {playerState === 'ended' ? (
-                        <SvgControlsReplay />
+                        <StyledSvgControlsReplay />
                       ) : isPlaying ? (
-                        <SvgControlsPause />
+                        <StyledSvgControlsPause />
                       ) : (
-                        <SvgControlsPlay />
+                        <StyledSvgControlsPlay />
                       )}
                     </PlayButton>
                   )}
@@ -567,12 +565,16 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                       onClick={toggleCinematicView}
                       tooltipText={cinematicView ? 'Exit cinematic mode (c)' : 'Cinematic view (c)'}
                     >
-                      {cinematicView ? <SvgControlsVideoModeCompactView /> : <SvgControlsVideoModeCinemaView />}
+                      {cinematicView ? (
+                        <StyledSvgControlsVideoModeCompactView />
+                      ) : (
+                        <StyledSvgControlsVideoModeCinemaView />
+                      )}
                     </PlayerControlButton>
                   )}
                   {isPiPSupported && (
                     <PlayerControlButton onClick={handlePictureInPicture} tooltipText="Picture-in-picture">
-                      {isPiPEnabled ? <SvgControlsPipOff /> : <SvgControlsPipOn />}
+                      {isPiPEnabled ? <StyledSvgControlsPipOff /> : <StyledSvgControlsPipOn />}
                     </PlayerControlButton>
                   )}
                   <PlayerControlButton
@@ -581,7 +583,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
                     tooltipText={isFullScreen ? 'Exit full screen (f)' : 'Full screen (f)'}
                     onClick={handleFullScreen}
                   >
-                    {isFullScreen ? <SvgControlsSmallScreen /> : <SvgControlsFullScreen />}
+                    {isFullScreen ? <StyledSvgControlsSmallScreen /> : <StyledSvgControlsFullScreen />}
                   </PlayerControlButton>
                 </ScreenControls>
               </CustomControls>
