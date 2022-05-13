@@ -6,7 +6,7 @@ import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatNumberShort } from '@/utils/number'
 
-import { EmojiContainer, ReactionChipButton } from './ReactionChip.styles'
+import { ReactionChipButton, StyledEmojiWrapper } from './ReactionChip.styles'
 
 export type ReactionChipProps = {
   customId?: string
@@ -38,7 +38,7 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
         title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
         onClick={() => state === 'default' && onReactionClick?.(reactionId)}
       >
-        <EmojiContainer>{REACTION_TYPE[reactionId].emoji} </EmojiContainer>
+        <StyledEmojiWrapper block>{REACTION_TYPE[reactionId].emoji} </StyledEmojiWrapper>
         {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
       </ReactionChipButton>
     </div>

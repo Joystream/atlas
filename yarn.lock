@@ -2744,6 +2744,7 @@ __metadata:
     "@types/react-helmet": ^6.1.5
     "@types/react-transition-group": ^4.4.4
     "@types/scroll-lock": ^2.1.0
+    "@types/twemoji": ^13.1.2
     "@types/video.js": ^7.3.31
     "@vitejs/plugin-react": ^1.1.4
     awesome-debounce-promise: ^2.1.0
@@ -2797,6 +2798,7 @@ __metadata:
     storybook-builder-vite: ^0.1.15
     style-dictionary: ^3.1.1
     subscriptions-transport-ws: ^0.11.0
+    twemoji: ^14.0.2
     use-draggable-scroll: ^0.1.0
     use-resize-observer: ^8.0.0
     video.js: ^7.17.0
@@ -5906,6 +5908,15 @@ __metadata:
   dependencies:
     "@types/jest": "*"
   checksum: e08715a565cc189112a6611485d779a0f1ceb546a9d4601b21aacff7596d7acf8b7c702e4c5f825677431ff601df3e635887dc8a5735da1a263cc857eb7c3833
+  languageName: node
+  linkType: hard
+
+"@types/twemoji@npm:^13.1.2":
+  version: 13.1.2
+  resolution: "@types/twemoji@npm:13.1.2"
+  dependencies:
+    twemoji: "*"
+  checksum: 83775000ddd6da623aed985cc5334bec32c4ce841a100f0d746f82fb54d95fc84b88c518f08290d88775ff709f87332a5a361471f0cc6e6492d8749f8b38531d
   languageName: node
   linkType: hard
 
@@ -11481,7 +11492,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^8.1.0":
+"fs-extra@npm:^8.0.1, fs-extra@npm:^8.1.0":
   version: 8.1.0
   resolution: "fs-extra@npm:8.1.0"
   dependencies:
@@ -13891,6 +13902,19 @@ fsevents@^1.2.7:
     graceful-fs:
       optional: true
   checksum: 6447d6224f0d31623eef9b51185af03ac328a7553efcee30fa423d98a9e276ca08db87d71e17f2310b0263fd3ffa6c2a90a6308367f661dc21580f9469897c9e
+  languageName: node
+  linkType: hard
+
+"jsonfile@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "jsonfile@npm:5.0.0"
+  dependencies:
+    graceful-fs: ^4.1.6
+    universalify: ^0.1.2
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: e0ecff572dba34153a66e3a3bc5c6cb01a2c1d2cf4a2c19b6728dcfcab39d94be9cca4a0fc86a17ff2c815f2aeb43768ac75545780dbea4009433fdc32aa14d1
   languageName: node
   linkType: hard
 
@@ -20235,6 +20259,25 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"twemoji-parser@npm:14.0.0":
+  version: 14.0.0
+  resolution: "twemoji-parser@npm:14.0.0"
+  checksum: 8eede69cf71f94735de7b6fddf5dfbfe3cb2e01baefc3201360984ccc97cfc659f206c8f73bd1405a2282779af3b79a8c9bed3864c672e15e2dc6f8ce4810452
+  languageName: node
+  linkType: hard
+
+"twemoji@npm:*, twemoji@npm:^14.0.2":
+  version: 14.0.2
+  resolution: "twemoji@npm:14.0.2"
+  dependencies:
+    fs-extra: ^8.0.1
+    jsonfile: ^5.0.0
+    twemoji-parser: 14.0.0
+    universalify: ^0.1.2
+  checksum: 686a356a7af3cf15f7894568bfcdfafcea0cd45473b3f8c59d6ca95e549695f1222845d1a8c39ffa3bc4057e9d59e41ab83e4ce3cbcd68823ff50d57e3ff58da
+  languageName: node
+  linkType: hard
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -20631,7 +20674,7 @@ typescript@4.5.2:
   languageName: node
   linkType: hard
 
-"universalify@npm:^0.1.0":
+"universalify@npm:^0.1.0, universalify@npm:^0.1.2":
   version: 0.1.2
   resolution: "universalify@npm:0.1.2"
   checksum: 40cdc60f6e61070fe658ca36016a8f4ec216b29bf04a55dce14e3710cc84c7448538ef4dad3728d0bfe29975ccd7bfb5f414c45e7b78883567fb31b246f02dff

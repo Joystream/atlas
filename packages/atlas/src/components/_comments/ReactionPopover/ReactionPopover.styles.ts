@@ -30,20 +30,6 @@ export const ReactionPopoverInnerWrapper = styled.div<{ isVisible: boolean }>`
   }
 `
 
-export const EmojiContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 16px;
-  max-height: 16px;
-
-  /* TODO remove this media query once we implement tweemoji */
-  /* stylelint-disable-next-line  media-feature-name-no-unknown */
-  @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
-    transform: translateX(-2px);
-  }
-`
-
 export const StyledEmojiButton = styled(Button)<{ isVisible: boolean; verticalTranslate: number }>`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transform: ${({ isVisible, verticalTranslate }) =>

@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
+import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { cVar, sizes } from '@/styles'
 
 export type ReactionChipState = 'default' | 'disabled' | 'processing' | 'read-only'
@@ -49,21 +50,6 @@ export const ReactionChipButton = styled.button<ReactionChipButtonProps>`
   ${({ state }) => state === 'default' && getHoverStyles};
 `
 
-export const EmojiContainer = styled.span`
-  display: flex;
+export const StyledEmojiWrapper = styled(EmojiWrapper)`
   margin-right: ${sizes(2)};
-  justify-content: center;
-  align-items: center;
-  max-width: 16px;
-  max-height: 16px;
-
-  /* TODO remove this media query once we implement tweemoji */
-
-  /* this is added because chrome has some issue with rendering emojis */
-
-  /* https://stackoverflow.com/questions/42016125/emoji-rendered-in-chrome-have-different-widths-than-in-other-browsers/44145771#44145771 */
-  /* stylelint-disable-next-line  media-feature-name-no-unknown */
-  @media not screen and (min-device-pixel-ratio: 2), not screen and (min-resolution: 192dpi) {
-    transform: translateX(-2px);
-  }
 `

@@ -1,18 +1,14 @@
 import Tippy from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 
+import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPlaceholder } from '@/components/_icons'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import {
-  EmojiContainer,
-  ReactionPopoverInnerWrapper,
-  ReactionPopoverWrapper,
-  StyledEmojiButton,
-} from './ReactionPopover.styles'
+import { ReactionPopoverInnerWrapper, ReactionPopoverWrapper, StyledEmojiButton } from './ReactionPopover.styles'
 
 export type ReactionPopoverProps = {
   onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
@@ -69,7 +65,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
                   }}
                   variant="tertiary"
                   size={smMatch ? 'small' : 'medium'}
-                  icon={<EmojiContainer>{value}</EmojiContainer>}
+                  icon={<EmojiWrapper block>{value}</EmojiWrapper>}
                   key={reactionId}
                 />
               )

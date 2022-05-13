@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
@@ -32,7 +32,6 @@ type VideoDetailsProps = {
 export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) => {
   const mdMatch = useMediaMatch('md')
   const [detailsExpanded, setDetailsExpanded] = useState(false)
-  const descriptionBodyRef = useRef<HTMLDivElement>(null)
 
   const foundLicense = knownLicenses.find((license) => license.code === video?.license?.code)
 
@@ -47,7 +46,7 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
           video?.description && (
             <>
               <DescriptionTitle variant="h100">Description</DescriptionTitle>
-              <DescriptionBody ref={descriptionBodyRef} detailsExpanded={detailsExpanded}>
+              <DescriptionBody detailsExpanded={detailsExpanded}>
                 {video.description?.split('\n').map((line, idx) => (
                   <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
                     {replaceUrls(line)}
