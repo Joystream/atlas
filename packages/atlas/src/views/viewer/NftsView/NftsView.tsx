@@ -11,6 +11,7 @@ import { SvgActionFilters } from '@/components/_icons'
 import { Select } from '@/components/_inputs/Select'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { VideoContentTemplate } from '@/components/_templates/VideoContentTemplate'
+import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { SentryLogger } from '@/utils/logs'
@@ -24,6 +25,7 @@ const SORT_OPTIONS = [
 ]
 
 export const NftsView: React.FC = () => {
+  const headTags = useHeadTags('Video NFTs')
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
 
@@ -118,6 +120,7 @@ export const NftsView: React.FC = () => {
 
   return (
     <VideoContentTemplate title="Video NFTs">
+      {headTags}
       <HeaderWrapper>
         <HeaderContainer>
           <GridItem colSpan={{ base: 2, sm: 1 }}>
