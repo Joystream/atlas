@@ -6,6 +6,8 @@ import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useSnackbar } from '@/providers/snackbars'
+import { formatNumber } from '@/utils/number'
 
 import {
   Border,
@@ -32,6 +34,9 @@ export type CommentInputProps = {
   value?: string
 } & CommentRowProps
 
+const COMMENT_LIMIT = 50000
+const ERROR_SNACKBAR_TIMEOUT = 5000
+
 export const CommentInput: React.FC<CommentInputProps> = ({
   processing,
   readOnly = false,
@@ -47,6 +52,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const containerRef = useRef<HTMLLabelElement>(null)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [active, setActive] = useState(false)
+  const { displaySnackbar } = useSnackbar()
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
 
@@ -71,6 +77,19 @@ export const CommentInput: React.FC<CommentInputProps> = ({
 
   const show = !!value || active || processing
 
+  const validateLengthAndProcess = () => {
+    if (value && value.length > COMMENT_LIMIT) {
+      displaySnackbar({
+        title: 'Comment too long',
+        description: `Your comment must be under 50 000 characters. Currently, it's ${formatNumber(value.length)}.`,
+        iconType: 'error',
+        timeout: ERROR_SNACKBAR_TIMEOUT,
+      })
+      return
+    }
+    onComment?.()
+  }
+
   return (
     <StyledCommentRow {...rest} processing={processing} show={show}>
       <Container
@@ -84,7 +103,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
         onKeyDown={(e) => {
           // handle submit by keyboard shortcut
           if (!!value && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.code === 'Enter') {
-            onComment?.()
+            validateLengthAndProcess()
           }
           if (e.nativeEvent.code === 'Escape') {
             textAreaRef.current?.blur()
@@ -127,7 +146,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
               Cancel
             </Button>
           )}
-          <Button onClick={onComment} disabled={processing || !value}>
+          <Button onClick={validateLengthAndProcess} disabled={processing || !value}>
             {processing ? 'Processing' : 'Comment'}
           </Button>
         </ButtonsContainer>
