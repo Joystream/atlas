@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useState } from 'react'
 
-import { GetCommentsDocument, GetCommentsQueryHookResult, GetVideoDocument } from '@/api/queries'
+import { GetCommentsConnectionDocument, GetCommentsConnectionQueryHookResult, GetVideoDocument } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
@@ -23,7 +23,7 @@ export const useReactionTransactions = () => {
   const refetchComments = useCallback(
     () =>
       client.refetchQueries({
-        include: [GetCommentsDocument],
+        include: [GetCommentsConnectionDocument],
       }),
     [client]
   )
@@ -85,12 +85,12 @@ export const useReactionTransactions = () => {
           const refetchResult = await refetchComments()
           setCommentInputProcessing(false)
 
-          const newCommentsQueryResult = refetchResult[0] as GetCommentsQueryHookResult
+          const newCommentsQueryResult = refetchResult[0] as GetCommentsConnectionQueryHookResult
           // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
           // Update once https://github.com/Joystream/atlas/issues/2629 is done.
-          newCommentId = newCommentsQueryResult.data?.comments.find(
-            (comment) => comment.commentcreatedeventcomment?.[0].inBlock === block
-          )?.id
+          newCommentId = newCommentsQueryResult.data?.commentsConnection.edges.find(
+            (edge) => edge.node.commentcreatedeventcomment?.[0].inBlock === block
+          )?.node.id
         },
         onError: () => {
           setCommentInputProcessing(false)
