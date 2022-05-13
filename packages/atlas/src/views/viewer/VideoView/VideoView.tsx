@@ -306,7 +306,7 @@ export const VideoView: React.FC = () => {
             {!isCinematic && (
               <>
                 {detailsItems}
-                <CommentsSection videoAuthorId={video?.channel.ownerMember?.id || ''} />
+                <CommentsSection video={video} />
               </>
             )}
           </PlayerGridItem>
@@ -318,7 +318,7 @@ export const VideoView: React.FC = () => {
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
-              <CommentsSection videoAuthorId={video?.channel.ownerMember?.id || ''} />
+              <CommentsSection video={video} />
             </GridItem>
             {sideItems}
           </LayoutGrid>

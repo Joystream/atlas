@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useComments } from '@/api/hooks'
+import { useCommentsConnection } from '@/api/hooks'
 import {
   CommentFieldsFragment,
   CommentOrderByInput,
   CommentReactionFieldsFragment,
   CommentReactionsCountByReactionIdFieldsFragment,
+  CommentStatus,
+  VideoFieldsFragment,
 } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -23,6 +25,7 @@ import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useMemberAvatar } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
@@ -30,7 +33,7 @@ import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from '.
 
 type CommentsSectionProps = {
   disabled?: boolean
-  videoAuthorId?: string
+  video?: VideoFieldsFragment | null
 }
 
 type GetCommentReactionsArgs = {
@@ -41,10 +44,11 @@ type GetCommentReactionsArgs = {
   processingCommentReactionId: string | null
 }
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, videoAuthorId }) => {
+export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
+  const [openDeleteModal, closeDeleteModal] = useConfirmationModal()
   const [commentBody, setCommentBody] = useState('')
   const { id } = useParams()
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -66,11 +70,22 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const authorized = activeMemberId && activeAccountId
 
-  const { comments, loading } = useComments(
-    { where: { video: { id_eq: id } }, orderBy: sortCommentsBy },
+  const { comments, totalCount, loading } = useCommentsConnection(
+    {
+      where: { video: { id_eq: id }, OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }] },
+      orderBy: sortCommentsBy,
+    },
     { skip: disabled || !id }
   )
-  const { processingCommentReactionId, reactToComment, addComment, commentInputProcessing } = useReactionTransactions()
+
+  const {
+    processingCommentReactionId,
+    reactToComment,
+    addComment,
+    commentInputProcessing,
+    deleteComment,
+    moderateComment,
+  } = useReactionTransactions()
 
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -102,6 +117,31 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       }
     },
     [authorized, openSignInDialog, reactToComment, signIn]
+  )
+
+  const hadleDeleteComment = useCallback(
+    (comment: CommentFieldsFragment, video: VideoFieldsFragment) => {
+      const isChannelOwner = video?.channel.ownerMember?.id === activeMemberId && comment.author.id !== activeMemberId
+      openDeleteModal({
+        type: 'destructive',
+        title: 'Delete this comment?',
+        description: 'Are you sure you want to delete this comment? This cannot be undone.',
+        primaryButton: {
+          text: 'Delete comment',
+          onClick: () => {
+            isChannelOwner
+              ? moderateComment(comment.id, video?.channel.id, comment.author.handle, video.title || '')
+              : deleteComment(comment.id, video?.title || '')
+            closeDeleteModal()
+          },
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => closeDeleteModal(),
+        },
+      })
+    },
+    [activeMemberId, closeDeleteModal, deleteComment, moderateComment, openDeleteModal]
   )
 
   const getCommentReactions = useCallback(
@@ -137,6 +177,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             activeMemberId,
             processingCommentReactionId,
           })}
+          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
           onEditLabelClick={() => {
             setShowEditHistory(true)
             setOriginalComment(comment)
@@ -148,6 +189,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           isEdited={comment.isEdited}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           isAbleToEdit={comment.author.id === activeMemberId}
+          moderatedBy={comment.moderatedInEvent?.videoChannel.title}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
           memberAvatarUrl={
@@ -158,7 +200,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
               ? 'deleted'
-              : videoAuthorId === activeMemberId
+              : video?.channel.ownerMember?.id === activeMemberId || comment.author.id === activeMemberId
               ? 'options'
               : 'default'
           }
@@ -173,7 +215,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     processingCommentReactionId,
     reactionPopoverDismissed,
     authorized,
-    videoAuthorId,
+    video,
+    hadleDeleteComment,
     handleCommentReaction,
   ])
 
@@ -188,9 +231,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   return (
     <CommentsSectionWrapper>
       <CommentsSectionHeader>
-        <Text variant="h400">
-          {loading || (comments && !comments.length) ? 'Comments' : `${comments && comments.length} comments`}
-        </Text>
+        <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
         <Select
           size="small"
           labelPosition="left"

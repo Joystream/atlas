@@ -1,4 +1,10 @@
-import { IMemberRemarked, MemberRemarked, ReactVideo } from '@joystream/metadata-protobuf'
+import {
+  ChannelOwnerRemarked,
+  IChannelOwnerRemarked,
+  IMemberRemarked,
+  MemberRemarked,
+  ReactVideo,
+} from '@joystream/metadata-protobuf'
 import { MemberId as RuntimeMemberId } from '@joystream/types/common'
 import {
   ChannelCreationParameters,
@@ -456,7 +462,7 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  private async sendMetaprotocolExtrinsic(
+  private async sendMetaprotocolMemberExtrinsic(
     memberId: MemberId,
     msg: IMemberRemarked,
     cb?: ExtrinsicStatusCallbackFn
@@ -475,6 +481,26 @@ export class JoystreamLibExtrinsics {
     }
   }
 
+  private async sendMetaprotocolChannelExtrinsic(
+    memberId: MemberId,
+    channelId: ChannelId,
+    msg: IChannelOwnerRemarked,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
+    await this.ensureApi()
+
+    const serializedMetadata = ChannelOwnerRemarked.encode(msg).finish()
+    const metadataRaw = new Raw(this.api.registry, serializedMetadata)
+    const metadataBytes = new Bytes(this.api.registry, metadataRaw)
+
+    const tx = this.api.tx.content.channelOwnerRemark({ Member: memberId }, channelId, metadataBytes)
+    const { block } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+    }
+  }
+
   async reactToVideo(memberId: MemberId, videoId: VideoId, reaction: VideoReaction, cb?: ExtrinsicStatusCallbackFn) {
     await this.ensureApi()
 
@@ -484,7 +510,7 @@ export class JoystreamLibExtrinsics {
         reaction: reaction === 'like' ? ReactVideo.Reaction.LIKE : ReactVideo.Reaction.UNLIKE,
       },
     }
-    return this.sendMetaprotocolExtrinsic(memberId, msg, cb)
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
   }
 
   async createVideoComment(
@@ -503,7 +529,7 @@ export class JoystreamLibExtrinsics {
         parentCommentId,
       },
     }
-    return this.sendMetaprotocolExtrinsic(memberId, msg, cb)
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
   }
 
   async editVideoComment(memberId: MemberId, commentId: string, newBody: string, cb?: ExtrinsicStatusCallbackFn) {
@@ -516,7 +542,7 @@ export class JoystreamLibExtrinsics {
       },
     }
 
-    return this.sendMetaprotocolExtrinsic(memberId, msg, cb)
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
   }
 
   async deleteVideoComment(memberId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
@@ -527,7 +553,19 @@ export class JoystreamLibExtrinsics {
         commentId,
       },
     }
-    return this.sendMetaprotocolExtrinsic(memberId, msg, cb)
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+  }
+
+  async moderateComment(memberId: MemberId, channelId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const msg: IChannelOwnerRemarked = {
+      moderateComment: {
+        commentId,
+        rationale: 'I want to delete this comment',
+      },
+    }
+    return this.sendMetaprotocolChannelExtrinsic(memberId, channelId, msg, cb)
   }
 
   async reactToVideoComment(
@@ -544,6 +582,6 @@ export class JoystreamLibExtrinsics {
         reactionId,
       },
     }
-    return this.sendMetaprotocolExtrinsic(memberId, msg, cb)
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
   }
 }

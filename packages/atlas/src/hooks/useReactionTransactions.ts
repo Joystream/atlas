@@ -105,6 +105,61 @@ export const useReactionTransactions = () => {
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
 
+  const deleteComment = useCallback(
+    async (commentId: string, videoTitle?: string) => {
+      if (!joystream || !activeMemberId) {
+        ConsoleLogger.error('no joystream or active member')
+        return
+      }
+
+      return handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
+        onTxSync: async () => {
+          await refetchComments()
+        },
+        snackbarSuccessMessage: {
+          title: 'Comment deleted',
+          description: `Your comment to the video ${videoTitle} has been deleted`,
+        },
+        minimized: {
+          signErrorMessage: 'Failed to delete comment',
+        },
+      })
+    },
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+  )
+
+  const moderateComment = useCallback(
+    async (commentId: string, channelId: string, commentAuthorHandle?: string, videoTitle?: string) => {
+      if (!joystream || !activeMemberId) {
+        ConsoleLogger.error('no joystream or active member')
+        return
+      }
+
+      return handleTransaction({
+        txFactory: async (updateStatus) =>
+          (await joystream.extrinsics).moderateComment(
+            activeMemberId,
+            channelId,
+            commentId,
+            proxyCallback(updateStatus)
+          ),
+        onTxSync: async () => {
+          await refetchComments()
+        },
+        snackbarSuccessMessage: {
+          title: 'Comment deleted',
+          description: `${commentAuthorHandle}'s comment to your video ${videoTitle} has been deleted`,
+        },
+        minimized: {
+          signErrorMessage: 'Failed to delete comment',
+        },
+      })
+    },
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+  )
+
   const refetchVideo = useCallback(
     () =>
       client.refetchQueries({
@@ -143,6 +198,8 @@ export const useReactionTransactions = () => {
   return {
     reactToComment,
     addComment,
+    deleteComment,
+    moderateComment,
     likeOrDislikeVideo,
     videoReactionProcessing,
     commentInputProcessing,

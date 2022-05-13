@@ -67,6 +67,10 @@ export type GetCommentsQuery = {
       member: { __typename?: 'Membership'; id: string }
     }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+    moderatedInEvent?: {
+      __typename?: 'CommentModeratedEvent'
+      videoChannel: { __typename?: 'Channel'; title?: string | null }
+    } | null
   }>
 }
 
@@ -138,6 +142,10 @@ export type GetCommentsConnectionQuery = {
           member: { __typename?: 'Membership'; id: string }
         }>
         commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+        moderatedInEvent?: {
+          __typename?: 'CommentModeratedEvent'
+          videoChannel: { __typename?: 'Channel'; title?: string | null }
+        } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
