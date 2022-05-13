@@ -2,14 +2,16 @@ import { format } from 'date-fns'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
+import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -22,6 +24,9 @@ import {
   DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
+  RepliesWrapper,
+  ReplyButton,
+  StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
   StyledSvgActionTrash,
@@ -48,6 +53,10 @@ export type CommentProps = {
   onEditClick?: () => void
   onDeleteClick?: () => void
   onReactionClick?: (reaction: ReactionId) => void
+  onReplyClick?: () => void
+  replyAvatars?: AvatarGroupUrlAvatar[]
+  onToggleReplies?: () => void
+  repliesOpen?: boolean
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
@@ -70,11 +79,18 @@ export const Comment: React.FC<CommentProps> = ({
   onDeleteClick,
   onReactionClick,
   reactions,
+  onReplyClick,
+  replyAvatars,
+  onToggleReplies,
+  repliesOpen,
 }) => {
+  const [commentHover, setCommentHover] = useState(false)
+  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
   const isDeleted = type === 'deleted'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
-  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
+  const mdMatch = useMediaMatch('md')
+  const mappedAvatars = replyAvatars?.map((avatar) => avatar.url)
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -144,6 +160,8 @@ export const Comment: React.FC<CommentProps> = ({
     [onReactionClick, reactionPopoverDismissed]
   )
 
+  const repliesCount = replyAvatars ? replyAvatars.length : 0
+
   return (
     <CommentRow
       indented={indented}
@@ -151,6 +169,8 @@ export const Comment: React.FC<CommentProps> = ({
       isMemberAvatarLoading={loading || isMemberAvatarLoading}
       memberUrl={memberUrl}
       memberAvatarUrl={memberAvatarUrl}
+      onMouseEnter={() => setCommentHover(true)}
+      onMouseLeave={() => setCommentHover(false)}
     >
       <CommentWrapper ref={domRef} shouldShowKebabButton={shouldShowKebabButton}>
         <SwitchTransition>
@@ -250,6 +270,31 @@ export const Comment: React.FC<CommentProps> = ({
                     {!allReactionsApplied && !isDeleted && (
                       <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
                     )}
+                    <RepliesWrapper>
+                      {!!replyAvatars?.length && (
+                        <StyledAvatarGroup
+                          size="small"
+                          avatars={replyAvatars.filter((avatar, idx) => !mappedAvatars?.includes(avatar.url, idx + 1))}
+                          clickable={false}
+                        />
+                      )}
+                      {onToggleReplies && !!repliesCount && (
+                        <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
+                          {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                        </ReplyButton>
+                      )}
+                      {!isDeleted && (commentHover || !mdMatch) && (
+                        <ReplyButton
+                          onClick={onReplyClick}
+                          variant="tertiary"
+                          size="small"
+                          _textOnly
+                          icon={<SvgActionReply />}
+                        >
+                          Reply
+                        </ReplyButton>
+                      )}
+                    </RepliesWrapper>
                   </CommentFooterItems>
                 }
               />

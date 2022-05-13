@@ -410,7 +410,11 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     videoCommentsConnection: commentsConnection(
       first: $first
       after: $after
-      where: { video: { id_eq: $videoId }, OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+      where: {
+        video: { id_eq: $videoId }
+        parentComment: { id_eq: null }
+        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+      }
       orderBy: $orderBy
     ) {
       edges {

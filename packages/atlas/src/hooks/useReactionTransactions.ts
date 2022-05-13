@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback, useState } from 'react'
 
 import {
+  GetCommentsDocument,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQueryHookResult,
   GetVideoDocument,
@@ -39,7 +40,7 @@ export const useReactionTransactions = () => {
   const refetchComments = useCallback(
     (): Promise<GetUserCommentsAndVideoCommentsConnectionQueryHookResult[]> =>
       client.refetchQueries({
-        include: [GetUserCommentsAndVideoCommentsConnectionDocument],
+        include: [GetUserCommentsAndVideoCommentsConnectionDocument, GetCommentsDocument],
       }),
     [client]
   )

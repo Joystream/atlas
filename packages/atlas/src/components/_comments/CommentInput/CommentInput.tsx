@@ -33,6 +33,9 @@ export type CommentInputProps = {
   onCancel?: () => void
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
+  initialFocus?: boolean
+  reply?: boolean
+  className?: string
 } & CommentRowProps
 
 const COMMENT_LIMIT = 50000
@@ -48,6 +51,9 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   onFocus,
   value,
   hasInitialValueChanged,
+  initialFocus,
+  reply,
+  className,
   ...rest
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -57,6 +63,12 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const { displaySnackbar } = useSnackbar()
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
+
+  useEffect(() => {
+    if (initialFocus) {
+      textAreaRef.current?.focus()
+    }
+  }, [initialFocus])
 
   useEffect(() => {
     if (!active) {
@@ -74,6 +86,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   }, [active])
 
   const validateLengthAndProcess = () => {
+    setActive(false)
     if (!!value && value.length > COMMENT_LIMIT) {
       displaySnackbar({
         title: 'Comment too long',
@@ -89,7 +102,13 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const show = !!value || active || processing
   const canComment = !!value && hasInitialValueChanged
   return (
-    <StyledCommentRow {...rest} processing={processing} show={show} isMemberAvatarClickable={false}>
+    <StyledCommentRow
+      {...rest}
+      processing={processing}
+      show={show}
+      isMemberAvatarClickable={false}
+      className={className}
+    >
       <Container
         ref={containerRef}
         onFocus={() => {
@@ -113,13 +132,15 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             ref={mergeRefs([textAreaRef, measureRef])}
             rows={1}
             value={value}
-            placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
+            placeholder={`Leave a public ${reply ? 'reply' : 'comment'} as ${
+              memberHandle ? ` ${memberHandle}` : '...'
+            }`}
             onChange={(e) => !readOnly && onChange?.(e)}
             disabled={processing}
             data-processing={processing}
           />
           <CustomPlaceholder as="p" variant="t200">
-            Leave a public comment as
+            Leave a public {reply ? 'reply' : 'comment'} as
             {memberHandle ? (
               <CustomPlaceholderHandle variant="t200-strong"> {memberHandle}</CustomPlaceholderHandle>
             ) : (
@@ -140,7 +161,14 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             </Text>
           </Flex>
           {onCancel && (
-            <Button onClick={onCancel} disabled={processing} variant="secondary">
+            <Button
+              onClick={() => {
+                setActive(false)
+                onCancel()
+              }}
+              disabled={processing}
+              variant="secondary"
+            >
               Cancel
             </Button>
           )}
