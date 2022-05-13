@@ -57,7 +57,6 @@ export const oldColors = {
   },
   transparentBlack: {
     24: cVar('colorCoreNeutral200Darken'),
-    32: 'rgba(0, 0, 0, 0.32)',
     54: cVar('colorCoreNeutral500Darken'),
     86: cVar('colorCoreNeutral700Darken'),
   },

@@ -16,7 +16,7 @@ import {
   SvgControlsVideoModeCinemaView,
   SvgControlsVideoModeCompactView,
 } from '@/components/_icons'
-import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { PlayerControlButton } from './PlayerControlButton'
 import { ControlButton } from './PlayerControlButton.styles'
@@ -88,7 +88,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: ${oldColors.transparentBlack[54]};
+  background: ${cVar('colorCoreNeutral500Darken')};
   height: 100%;
   visibility: hidden;
   transition: opacity, visibility;
@@ -98,7 +98,7 @@ export const ControlsOverlay = styled.div<CustomControlsProps>`
 
   @media (hover: hover) {
     height: 8em;
-    background: linear-gradient(180deg, transparent 0%, ${oldColors.gray[900]} 100%);
+    background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral900')} 100%);
     font-size: ${({ isFullScreen }) => (isFullScreen ? sizes(8) : sizes(4))};
   }
 `
@@ -108,7 +108,7 @@ export const CustomControls = styled.div<CustomControlsProps>`
   transform: translateY(0.5em);
   padding: 0.5em 0.5em 0;
   bottom: ${({ isFullScreen }) => (isFullScreen ? '2.5em' : '1.25em')};
-  border-top: ${({ isEnded }) => (isEnded ? `1px solid ${oldColors.transparentPrimary[18]}` : 'unset')};
+  border-top: ${({ isEnded }) => (isEnded ? `1px solid ${cVar('colorCoreNeutral700Lighten')}` : 'unset')};
   left: 0;
   z-index: ${zIndex.nearOverlay - 1};
   display: flex;
@@ -178,7 +178,7 @@ export const VolumeSliderContainer = styled.div`
 export const thumbStyles = css`
   appearance: none;
   border: none;
-  background: ${oldColors.white};
+  background: ${cVar('colorCoreBaseWhite')};
   width: 0.75em;
   height: 0.75em;
   border-radius: 100%;
@@ -195,10 +195,10 @@ export const VolumeSlider = styled.input`
   height: 0.25em;
   background: linear-gradient(
     to right,
-    ${oldColors.white} 0%,
-    ${oldColors.white} ${({ value }) => (value ? Number(value) * 100 : 0)}%,
-    ${oldColors.transparentWhite[32]} 30%,
-    ${oldColors.transparentWhite[32]} 100%
+    ${cVar('colorCoreBaseWhite')} 0%,
+    ${cVar('colorCoreBaseWhite')} ${({ value }) => (value ? Number(value) * 100 : 0)}%,
+    ${cVar('colorCoreNeutral400Lighten')} 30%,
+    ${cVar('colorCoreNeutral400Lighten')} 100%
   );
   outline: none;
   opacity: 0;
@@ -230,7 +230,7 @@ export const VolumeControl = styled.div`
     display: flex;
 
     :hover {
-      background-color: ${oldColors.transparentPrimary[18]};
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
       backdrop-filter: blur(${sizes(8)});
       width: 7.5em;
       ${VolumeSlider} {
@@ -268,8 +268,7 @@ export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
   user-select: none;
-  color: ${oldColors.white};
-  text-shadow: 0 1px 2px ${oldColors.transparentBlack[32]};
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.32);
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
