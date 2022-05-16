@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useCommentsConnection } from '@/api/hooks'
+import { useCommentSectionComments } from '@/api/hooks'
 import {
   CommentFieldsFragment,
   CommentOrderByInput,
@@ -70,17 +70,25 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const authorized = activeMemberId && activeAccountId
 
-  const { comments, totalCount, loading } = useCommentsConnection(
-    {
-      where: {
-        video: { id_eq: id },
-        // if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
-        OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
-      },
-      orderBy: sortCommentsBy,
+  const { comments, totalCount, loading } = useCommentSectionComments({
+    videCommentsWhere: {
+      video: { id_eq: id },
+      // if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
+      OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
     },
-    { skip: disabled || !id }
-  )
+    orderBy: sortCommentsBy,
+    userCommentswhere: {
+      // get comments which are not a reply to a comment
+      parentComment: {
+        id_eq: null,
+      },
+      video: { id_eq: id },
+      author: {
+        id_eq: activeMemberId,
+      },
+      OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
+    },
+  })
 
   const {
     processingCommentReactionId,

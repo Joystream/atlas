@@ -1,7 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useState } from 'react'
 
-import { GetCommentsConnectionDocument, GetCommentsConnectionQueryHookResult, GetVideoDocument } from '@/api/queries'
+import {
+  GetCommentsConnectionQueryHookResult,
+  GetUserCommentsAndVideoCommentsConnectionDocument,
+  GetVideoDocument,
+} from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
@@ -23,7 +27,7 @@ export const useReactionTransactions = () => {
   const refetchComments = useCallback(
     () =>
       client.refetchQueries({
-        include: [GetCommentsConnectionDocument],
+        include: [GetUserCommentsAndVideoCommentsConnectionDocument],
       }),
     [client]
   )

@@ -7,11 +7,15 @@ import {
   GetCommentsConnectionQueryVariables,
   GetCommentsQuery,
   GetCommentsQueryVariables,
+  GetUserCommentsAndVideoCommentsConnectionQuery,
+  GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   useGetCommentEditsQuery,
   useGetCommentsConnectionQuery,
   useGetCommentsQuery,
   useGetOriginalCommentQuery,
+  useGetUserCommentsAndVideoCommentsConnectionQuery,
 } from '@/api/queries'
+import { createLookup } from '@/utils/data'
 
 export const useComments = (
   variables?: GetCommentsQueryVariables,
@@ -34,6 +38,32 @@ export const useCommentsConnection = (
   return {
     comments: data?.commentsConnection.edges.map((edge) => edge.node),
     totalCount: data?.commentsConnection.totalCount,
+    ...rest,
+  }
+}
+
+export const useCommentSectionComments = (
+  variables?: GetUserCommentsAndVideoCommentsConnectionQueryVariables,
+  opts?: QueryHookOptions<
+    GetUserCommentsAndVideoCommentsConnectionQuery,
+    GetUserCommentsAndVideoCommentsConnectionQueryVariables
+  >
+) => {
+  const { data, ...rest } = useGetUserCommentsAndVideoCommentsConnectionQuery({ ...opts, variables })
+
+  const userCommentLookup = data?.userComments && createLookup(data?.userComments)
+
+  return {
+    userComments: data?.userComments,
+    comments: data
+      ? [
+          ...data.userComments,
+          ...data.videoCommentsConnection.edges
+            .map((edge) => edge.node)
+            .filter((comment) => userCommentLookup && !userCommentLookup[comment.id]),
+        ]
+      : undefined,
+    totalCount: data?.videoCommentsConnection.totalCount,
     ...rest,
   }
 }
