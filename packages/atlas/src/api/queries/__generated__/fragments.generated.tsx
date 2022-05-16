@@ -1509,10 +1509,6 @@ export type CommentFieldsFragment = {
     member: { __typename?: 'Membership'; id: string }
   }>
   commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
-  moderatedInEvent?: {
-    __typename?: 'CommentModeratedEvent'
-    videoChannel: { __typename?: 'Channel'; title?: string | null }
-  } | null
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1850,11 +1846,6 @@ export const CommentFieldsFragmentDoc = gql`
     status
     commentcreatedeventcomment {
       inBlock
-    }
-    moderatedInEvent {
-      videoChannel {
-        title
-      }
     }
   }
   ${BasicMembershipFieldsFragmentDoc}

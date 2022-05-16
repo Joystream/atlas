@@ -296,9 +296,4 @@ fragment CommentFields on Comment {
   commentcreatedeventcomment {
     inBlock
   }
-  moderatedInEvent {
-    videoChannel {
-      title
-    }
-  }
 }
