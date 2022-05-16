@@ -2461,7 +2461,12 @@ export const GetNotificationsDocument = gql`
       }
     }
     commentCreatedEvents(
-      where: { OR: [{ videoChannel: { id_eq: $channelId } }, { parentCommentAuthor: { id_eq: $memberId } }] }
+      where: {
+        OR: [
+          { videoChannel: { id_eq: $channelId }, parentCommentAuthor: { id_eq: null } }
+          { parentCommentAuthor: { id_eq: $memberId } }
+        ]
+      }
       limit: $limit
       orderBy: [createdAt_DESC]
     ) {

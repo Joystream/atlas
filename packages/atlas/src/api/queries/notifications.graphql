@@ -108,7 +108,12 @@ query GetNotifications($channelId: ID!, $memberId: ID!, $limit: Int!) {
   }
 
   commentCreatedEvents(
-    where: { OR: [{ videoChannel: { id_eq: $channelId } }, { parentCommentAuthor: { id_eq: $memberId } }] }
+    where: {
+      OR: [
+        { videoChannel: { id_eq: $channelId }, parentCommentAuthor: { id_eq: null } }
+        { parentCommentAuthor: { id_eq: $memberId } }
+      ]
+    }
     limit: $limit
     orderBy: [createdAt_DESC]
   ) {
