@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
+import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 
 import { ExpandButton, StyledCommentText } from './CommentBody.styles'
@@ -28,9 +29,11 @@ export const CommentBody = ({ children }: { children?: string }) => {
 
   return (
     <>
-      <StyledCommentText ref={commentBodyRef} commentExpanded={commentExpanded} variant="t200" secondary>
-        {trimmedComment}
-      </StyledCommentText>
+      <EmojiWrapper>
+        <StyledCommentText ref={commentBodyRef} commentExpanded={commentExpanded} variant="t200" secondary>
+          {trimmedComment}
+        </StyledCommentText>
+      </EmojiWrapper>
       {isTruncated && (
         <ExpandButton
           onClick={toggleCommentExpanded}

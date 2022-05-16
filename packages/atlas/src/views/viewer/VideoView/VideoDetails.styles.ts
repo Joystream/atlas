@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -20,7 +21,7 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
-export const DescriptionBody = styled.div<{ detailsExpanded?: boolean }>`
+export const DescriptionBody = styled(EmojiWrapper)<{ detailsExpanded?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   /* stylelint-disable-next-line value-no-vendor-prefix */

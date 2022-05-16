@@ -18,7 +18,7 @@ export default {
       { count: 500, reactionId: 2, active: true },
       { count: 100, reactionId: 3 },
     ],
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, facere molestias, iusto unde harum ducimus reprehenderit iste, magnam delectus aperiam impedit eligendi iure autem repellendus dolorum culpa sed cupiditate illum.',
+    text: 'Next level 📈 video 🎬 I love it 🥰',
   },
   decorators: [
     (Story) => (
