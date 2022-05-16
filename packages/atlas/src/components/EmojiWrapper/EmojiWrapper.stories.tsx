@@ -29,13 +29,13 @@ const Template: Story<EmojiWrapperProps> = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
         <div>
           <Text variant="h500">Twemojis</Text>
-          <Text variant="h300">{text}</Text>
-        </div>
-        <div>
-          <Text variant="h500">Default emojis</Text>
           <EmojiWrapper>
             <Text variant="h300">{text}</Text>
           </EmojiWrapper>
+        </div>
+        <div>
+          <Text variant="h500">Default emojis</Text>
+          <Text variant="h300">{text}</Text>
         </div>
       </div>
     </div>
