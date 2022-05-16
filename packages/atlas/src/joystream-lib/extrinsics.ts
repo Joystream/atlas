@@ -562,7 +562,7 @@ export class JoystreamLibExtrinsics {
     const msg: IChannelOwnerRemarked = {
       moderateComment: {
         commentId,
-        rationale: 'I want to delete this comment',
+        rationale: '',
       },
     }
     return this.sendMetaprotocolChannelExtrinsic(memberId, channelId, msg, cb)
