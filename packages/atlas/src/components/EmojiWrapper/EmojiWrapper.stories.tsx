@@ -1,9 +1,9 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { Comment } from '@/components/_comments/Comment'
+import { TextField } from '@/components/_inputs/TextField'
 
 import { EmojiWrapper, EmojiWrapperProps } from './EmojiWrapper'
 
@@ -19,33 +19,25 @@ export default {
   ],
 } as Meta
 
-const Template: Story<EmojiWrapperProps> = (args) => {
-  const content = (
-    <>
-      <Text variant="h400">I 🤡 love 😍 emojis 🐥</Text>
-    </>
-  )
+const Template: Story<EmojiWrapperProps> = () => {
+  const [text, setText] = useState('I 🤡 love 😍 emojis 🐥')
+
   return (
     <div>
-      <Text variant="h700">Twemojis</Text>
-      <EmojiWrapper {...args}>{content}</EmojiWrapper>
-      <Comment
-        type="default"
-        text="Next level 📈 video 🎬 I love it 🥰"
-        memberAvatarUrl="https://placedog.net/100/100?random=2"
-        memberHandle="johndoe"
-        loading={false}
-        createdAt={new Date(1649761429792)}
-        reactions={[
-          { count: 320, reactionId: 1 },
-          { count: 500, reactionId: 2, active: true },
-          { count: 100, reactionId: 3 },
-        ]}
-      />
+      <TextField label="Input:" value={text} onChange={(e) => setText(e.target.value)} />
 
-      <hr style={{ marginTop: 48 }} />
-      <Text variant="h700">Default emojis</Text>
-      {content}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <div>
+          <Text variant="h500">Twemojis</Text>
+          <Text variant="h300">{text}</Text>
+        </div>
+        <div>
+          <Text variant="h500">Default emojis</Text>
+          <EmojiWrapper>
+            <Text variant="h300">{text}</Text>
+          </EmojiWrapper>
+        </div>
+      </div>
     </div>
   )
 }
