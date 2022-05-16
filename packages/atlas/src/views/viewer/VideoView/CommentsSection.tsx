@@ -72,7 +72,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const { comments, totalCount, loading } = useCommentsConnection(
     {
-      where: { video: { id_eq: id }, OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }] },
+      where: {
+        video: { id_eq: id },
+        // if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
+        OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
+      },
       orderBy: sortCommentsBy,
     },
     { skip: disabled || !id }
