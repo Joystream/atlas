@@ -193,7 +193,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           isEdited={comment.isEdited}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           isAbleToEdit={comment.author.id === activeMemberId}
-          moderatedBy={comment.status === CommentStatus.Moderated ? video?.channel.title : undefined}
+          isModerated={comment.status === CommentStatus.Moderated}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
           memberAvatarUrl={
