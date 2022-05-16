@@ -40,6 +40,7 @@ export type CommentProps = {
   loading?: boolean
   isEdited?: boolean
   isAbleToEdit?: boolean
+  isModerated?: boolean
   type: 'default' | 'deleted' | 'options'
   reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
   reactionPopoverDismissed?: boolean
@@ -61,6 +62,7 @@ export const Comment: React.FC<CommentProps> = ({
   memberUrl,
   memberAvatarUrl,
   isEdited,
+  isModerated,
   isAbleToEdit,
   reactionPopoverDismissed,
   onEditLabelClick,
@@ -178,7 +180,7 @@ export const Comment: React.FC<CommentProps> = ({
                 </CommentHeader>
                 {isDeleted ? (
                   <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
-                    <StyledSvgActionTrash /> Comment deleted by Author
+                    <StyledSvgActionTrash /> Comment deleted by the {isModerated ? 'channel owner' : 'author'}
                   </DeletedComment>
                 ) : (
                   <CommentBody>{text}</CommentBody>
@@ -189,7 +191,7 @@ export const Comment: React.FC<CommentProps> = ({
         </SwitchTransition>
         <ContextMenu
           placement="bottom-end"
-          disabled={loading}
+          disabled={loading || !shouldShowKebabButton}
           items={contexMenuItems}
           trigger={
             <KebabMenuIconButton

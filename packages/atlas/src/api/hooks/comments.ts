@@ -3,9 +3,12 @@ import { QueryHookOptions } from '@apollo/client'
 import {
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
+  GetCommentsConnectionQuery,
+  GetCommentsConnectionQueryVariables,
   GetCommentsQuery,
   GetCommentsQueryVariables,
   useGetCommentEditsQuery,
+  useGetCommentsConnectionQuery,
   useGetCommentsQuery,
   useGetOriginalCommentQuery,
 } from '@/api/queries'
@@ -18,6 +21,19 @@ export const useComments = (
 
   return {
     comments: data?.comments,
+    ...rest,
+  }
+}
+
+export const useCommentsConnection = (
+  variables?: GetCommentsConnectionQueryVariables,
+  opts?: QueryHookOptions<GetCommentsConnectionQuery, GetCommentsQueryVariables>
+) => {
+  const { data, ...rest } = useGetCommentsConnectionQuery({ ...opts, variables })
+
+  return {
+    comments: data?.commentsConnection.edges.map((edge) => edge.node),
+    totalCount: data?.commentsConnection.totalCount,
     ...rest,
   }
 }
