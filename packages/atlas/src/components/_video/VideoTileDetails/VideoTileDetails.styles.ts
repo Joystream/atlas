@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
 
-export const KebabMenuButtonIcon = styled(IconButton)<{ smallGap: boolean }>`
+export const KebabMenuButtonIcon = styled(Button)<{ smallGap: boolean }>`
   opacity: 0;
   margin-left: ${({ smallGap }) => (smallGap ? sizes(3) : sizes(4))};
   transition: opacity ${cVar('animationTransitionFast')};

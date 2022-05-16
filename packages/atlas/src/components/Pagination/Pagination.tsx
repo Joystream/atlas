@@ -59,13 +59,12 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <PaginationWrapper className={className} ref={paginationWrapperRef}>
       <ChevronButton
+        icon={<SvgActionChevronL />}
         variant="secondary"
         size="large"
         onClick={() => onChangePage(prevPage - 1)}
         disabled={internalPage <= 1}
-      >
-        <SvgActionChevronL />
-      </ChevronButton>
+      />
       {pages.map((pageItem, idx) =>
         typeof pageItem === 'number' ? (
           <PaginationButton
@@ -81,13 +80,12 @@ export const Pagination: React.FC<PaginationProps> = ({
         )
       )}
       <ChevronButton
+        icon={<SvgActionChevronR />}
         size="large"
         variant="secondary"
         onClick={() => (internalPage ? onChangePage(nextPage - 1) : onChangePage(2))}
         disabled={internalPage >= totalPages}
-      >
-        <SvgActionChevronR />
-      </ChevronButton>
+      />
     </PaginationWrapper>
   )
 }

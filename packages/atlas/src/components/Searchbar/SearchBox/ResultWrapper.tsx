@@ -67,6 +67,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
       </Shortcut>
       {onDelete && (
         <DeleteButton
+          icon={<SvgActionClose />}
           size="small"
           onClick={(event) => {
             event.preventDefault()
@@ -74,9 +75,7 @@ export const ResultWrapper: React.FC<SearchItemProps> = ({
             onDelete()
           }}
           variant="tertiary"
-        >
-          <SvgActionClose />
-        </DeleteButton>
+        />
       )}
     </SearchItemWrapper>
   )

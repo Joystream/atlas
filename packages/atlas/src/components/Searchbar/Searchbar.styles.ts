@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgControlsSearchAlt } from '@/components/_icons'
 import { cVar, media, oldColors, sizes, square } from '@/styles'
 
@@ -27,7 +27,7 @@ export const Input = styled.input`
   }
 `
 
-export const CancelButton = styled(IconButton)`
+export const CancelButton = styled(Button)`
   position: absolute;
   right: ${sizes(4)};
   border: none;
@@ -106,7 +106,7 @@ export const SearchHelper = styled(Text)`
   }
 `
 
-export const SearchButton = styled(IconButton)`
+export const SearchButton = styled(Button)`
   padding: 0;
   margin: 0 auto;
 

@@ -38,7 +38,7 @@ export const NftHistory: React.FC<NftHistoryProps> = ({ size, width, historyItem
     <>
       <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
         <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
-        <StyledChevronButton data-open={isOpen} iconOnly variant="tertiary" icon={<SvgActionChevronB />} />
+        <StyledChevronButton data-open={isOpen} variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
       {isOpen && (
         <HistoryPanelContainer>
@@ -84,8 +84,10 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
           <Text variant={size === 'medium' ? 'h300' : 'h200'} secondary>
             {text}
             {' by '}
-            <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)} variant="secondary" textOnly>
-              <Text variant={size === 'medium' ? 'h300' : 'h200'}>{member?.handle}</Text>
+            <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)}>
+              <Text as="span" variant={size === 'medium' ? 'h300' : 'h200'}>
+                {member?.handle}
+              </Text>
             </OwnerHandle>
           </Text>
         </CopyContainer>

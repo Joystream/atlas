@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { Pill, PillGroup } from '@/components/Pill'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionBid,
   SvgActionEdit,
@@ -45,11 +44,7 @@ export default {
         type: 'default',
       },
       topRight: {
-        element: (
-          <IconButton size="small">
-            <SvgActionBid />
-          </IconButton>
-        ),
+        element: <Button size="small" icon={<SvgActionBid />} />,
         type: 'default',
         clickable: true,
       },
@@ -109,11 +104,7 @@ Draft.args = {
   ...Draft.args,
   slots: {
     topRight: {
-      element: (
-        <IconButton size="small" variant="tertiary">
-          <SvgActionEdit />
-        </IconButton>
-      ),
+      element: <Button size="small" variant="tertiary" icon={<SvgActionEdit />} />,
       type: 'hover',
       clickable: true,
     },

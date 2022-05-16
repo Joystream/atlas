@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Tabs } from '@/components/Tabs'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { oldColors } from '@/styles'
 
 export const Container = styled.div`
@@ -21,7 +21,7 @@ export const Container = styled.div`
   }
 `
 
-export const CloseButton = styled(IconButton)`
+export const CloseButton = styled(Button)`
   position: absolute;
   top: 4px;
   right: 4px;

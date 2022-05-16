@@ -37,7 +37,6 @@ export const CommentBody = ({ children }: { children?: string }) => {
           iconPlacement="right"
           size="medium"
           variant="tertiary"
-          textOnly
           icon={commentExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
         >
           Show {!commentExpanded ? 'more' : 'less'}

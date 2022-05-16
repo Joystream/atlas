@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 export const Container = styled.section`
@@ -15,7 +15,7 @@ export const CarouselArrowsContainer = styled.div`
   margin-left: auto;
 `
 
-export const SeeAllLink = styled(Button)`
+export const SeeAllLink = styled(TextButton)`
   flex-shrink: 0;
   margin-left: ${sizes(8)};
 `

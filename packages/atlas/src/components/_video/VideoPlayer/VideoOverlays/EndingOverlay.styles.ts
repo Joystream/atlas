@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
 import { media, oldColors, sizes, zIndex } from '@/styles'
 
@@ -151,7 +150,7 @@ export const StyledCircularProgress = styled(CircularProgress)`
   height: ${sizes(14)};
 `
 
-export const CountDownButton = styled(IconButton)`
+export const CountDownButton = styled(Button)`
   display: block;
   position: absolute;
   width: ${sizes(10)};

@@ -57,14 +57,12 @@ export const Snackbar: React.FC<SnackbarProps> = ({
             </SnackbarDescription>
           )}
           {actionText && (
-            <SnackbarActionButton textOnly onClick={onActionClick} icon={actionIcon}>
+            <SnackbarActionButton onClick={onActionClick} icon={actionIcon}>
               {actionText}
             </SnackbarActionButton>
           )}
         </SnackbarContent>
-        <SnackbarCloseButton onClick={onClick} variant="tertiary" size="small">
-          <SvgActionClose />
-        </SnackbarCloseButton>
+        <SnackbarCloseButton icon={<SvgActionClose />} onClick={onClick} variant="tertiary" size="small" />
       </StyledInnerWrapper>
     </SnackbarWrapper>
   )

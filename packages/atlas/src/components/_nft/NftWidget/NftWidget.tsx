@@ -355,11 +355,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                   !isLoadingPrice && nftStatus.topBidAmount ? (
                     <>
                       {convertToUSD(nftStatus.topBidAmount)} from{' '}
-                      <OwnerHandle
-                        to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}
-                        variant="secondary"
-                        textOnly
-                      >
+                      <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
                     </>
@@ -540,7 +536,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
         <OwnerLabel variant="t100" secondary>
           This NFT is owned by
         </OwnerLabel>
-        <OwnerHandle to={ownerHandle && absoluteRoutes.viewer.member(ownerHandle)} variant="secondary" textOnly>
+        <OwnerHandle to={ownerHandle ? absoluteRoutes.viewer.member(ownerHandle) : ''}>
           <Text variant="h300">{ownerHandle}</Text>
         </OwnerHandle>
       </NftOwnerContainer>

@@ -105,7 +105,6 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
           iconPlacement="right"
           size="medium"
           variant="tertiary"
-          textOnly
           icon={detailsExpanded ? <SvgActionChevronT /> : <SvgActionChevronB />}
         >
           Show {!detailsExpanded ? 'more' : 'less'}
@@ -120,7 +119,7 @@ const replaceUrls = (text: string) => {
   const parts = text.split(urlRegex)
   return parts.reduce((acc, part, idx) => {
     const node = urlRegex.test(part) ? (
-      <DescriptionLink size="large" textOnly key={`description-link-${idx}`} to={part}>
+      <DescriptionLink size="large" key={`description-link-${idx}`} to={part}>
         {part}
       </DescriptionLink>
     ) : (

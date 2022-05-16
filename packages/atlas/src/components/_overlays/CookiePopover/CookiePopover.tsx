@@ -39,7 +39,7 @@ export const CookiePopover: React.FC = () => {
           text: 'Decline',
           onClick: () => setCookiesAccepted(false),
           variant: 'tertiary',
-          textOnly: true,
+          _textOnly: true,
         }}
       >
         <Text variant="t200" secondary>

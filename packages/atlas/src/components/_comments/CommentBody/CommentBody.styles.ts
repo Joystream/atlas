@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { sizes } from '@/styles'
 
 export const StyledCommentText = styled(Text)<{ commentExpanded?: boolean }>`
@@ -16,6 +16,6 @@ export const StyledCommentText = styled(Text)<{ commentExpanded?: boolean }>`
   -webkit-box-orient: vertical;
 `
 
-export const ExpandButton = styled(Button)`
+export const ExpandButton = styled(TextButton)`
   margin-top: ${sizes(2)};
 `

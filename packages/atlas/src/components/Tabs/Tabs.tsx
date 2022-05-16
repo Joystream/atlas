@@ -107,7 +107,6 @@ export const Tabs: React.FC<TabsProps> = React.memo(
               onClick={handleArrowScroll('left')}
               size="small"
               variant="tertiary"
-              iconOnly
               icon={<SvgActionChevronL />}
             />
           </BackgroundGradient>
@@ -124,7 +123,6 @@ export const Tabs: React.FC<TabsProps> = React.memo(
               data-right
               size="small"
               variant="tertiary"
-              iconOnly
               icon={<SvgActionChevronR />}
             />
           </BackgroundGradient>

@@ -69,7 +69,6 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
                   }}
                   variant="tertiary"
                   size={smMatch ? 'small' : 'medium'}
-                  iconOnly
                   icon={<EmojiContainer>{value}</EmojiContainer>}
                   key={reactionId}
                 />
@@ -82,7 +81,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
       trigger="click"
       hideOnClick
     >
-      <Button variant="tertiary" size="small" iconOnly icon={<SvgActionPlaceholder />} disabled={disabled} />
+      <Button variant="tertiary" size="small" icon={<SvgActionPlaceholder />} disabled={disabled} />
     </Tippy>
   )
 }

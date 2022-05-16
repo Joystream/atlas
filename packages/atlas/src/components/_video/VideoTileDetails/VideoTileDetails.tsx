@@ -117,9 +117,13 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
           placement="bottom-end"
           items={kebabMenuItems}
           trigger={
-            <KebabMenuButtonIcon onClick={() => null} variant="tertiary" size="small" smallGap={size === 'small'}>
-              <SvgActionMore />
-            </KebabMenuButtonIcon>
+            <KebabMenuButtonIcon
+              onClick={() => null}
+              icon={<SvgActionMore />}
+              variant="tertiary"
+              size="small"
+              smallGap={size === 'small'}
+            />
           }
         />
       )}
