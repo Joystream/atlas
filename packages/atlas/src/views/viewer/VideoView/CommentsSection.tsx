@@ -22,6 +22,7 @@ import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useMemberAvatar } from '@/providers/assets'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
@@ -49,6 +50,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
+  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
 
   useEffect(() => {
@@ -200,6 +202,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         />
       </CommentsSectionHeader>
       <CommentInput
+        memberAvatarUrl={memberAvatarUrl}
+        isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
         processing={commentInputProcessing}
         readOnly={!activeMemberId}
         memberHandle={activeMembership?.handle}
