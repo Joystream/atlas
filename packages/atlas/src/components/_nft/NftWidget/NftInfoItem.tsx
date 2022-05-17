@@ -126,12 +126,7 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
         </TimerSecondaryText>
       )}
       {moreThan72HLeft && (
-        <TimerSecondaryText
-          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-          as="p"
-          variant="t100"
-          data-size={size}
-        >
+        <TimerSecondaryText secondary as="p" variant="t100" data-size={size}>
           {formatDateTime(time)}
         </TimerSecondaryText>
       )}
