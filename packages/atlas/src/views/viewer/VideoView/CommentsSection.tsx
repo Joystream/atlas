@@ -45,7 +45,7 @@ type GetCommentReactionsArgs = {
 }
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video }) => {
-  const [sortCommentsBy, setSortCommentsBy] = useState(CommentOrderByInput.ReactionsCountDesc)
+  const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
   const [openDeleteModal, closeDeleteModal] = useConfirmationModal()
@@ -102,7 +102,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const mdMatch = useMediaMatch('md')
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
-  const handleSorting = (value?: CommentOrderByInput | null) => {
+  const handleSorting = (value?: CommentOrderByInput[] | null) => {
     if (value) {
       setSortCommentsBy(value)
     }
