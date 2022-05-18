@@ -268,7 +268,7 @@ export const CurrentTime = styled(Text)`
   /* 14px */
   font-size: 0.875em;
   user-select: none;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.32);
+  text-shadow: ${cVar('effectElevation1Layer1')};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 

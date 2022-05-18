@@ -121,7 +121,7 @@ export const StyledTooltipText = styled(Text)`
   /* 14px */
   font-size: 0.875em;
   pointer-events: none;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.32);
+  text-shadow: ${cVar('effectElevation1Layer1')};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
 
@@ -144,7 +144,7 @@ export const PlayProgressThumb = styled.button`
   content: '';
   padding: 0;
   position: absolute;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.32);
+  box-shadow: ${cVar('effectElevation1Layer1')};
   border-radius: 100%;
   background: ${cVar('colorCoreBaseWhite')};
   transition: opacity ${transitions.timings.player} ${TRANSITION_DELAY} ${transitions.easing};

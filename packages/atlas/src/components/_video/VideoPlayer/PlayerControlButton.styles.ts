@@ -27,7 +27,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     `}
 
   & > svg {
-    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.32));
+    filter: drop-shadow(${cVar('effectElevation1Layer1')});
     width: 1.5em;
     height: 1.5em;
   }
