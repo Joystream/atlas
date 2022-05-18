@@ -59,13 +59,6 @@ export type GetCommentsQuery = {
       count: number
       reactionId: number
     }>
-    reactions: Array<{
-      __typename?: 'CommentReaction'
-      id: string
-      createdAt: Date
-      reactionId: number
-      member: { __typename?: 'Membership'; id: string }
-    }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
   }>
 }
@@ -130,13 +123,6 @@ export type GetCommentsConnectionQuery = {
           count: number
           reactionId: number
         }>
-        reactions: Array<{
-          __typename?: 'CommentReaction'
-          id: string
-          createdAt: Date
-          reactionId: number
-          member: { __typename?: 'Membership'; id: string }
-        }>
         commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
       }
     }>
@@ -147,6 +133,8 @@ export type GetCommentsConnectionQuery = {
 export type GetUserCommentsAndVideoCommentsConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
+  memberId?: Types.InputMaybe<Types.Scalars['ID']>
+  videoId?: Types.InputMaybe<Types.Scalars['ID']>
   userCommentswhere?: Types.InputMaybe<Types.CommentWhereInput>
   videCommentsWhere?: Types.InputMaybe<Types.CommentWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
@@ -154,6 +142,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQueryVariables = Types.Exac
 
 export type GetUserCommentsAndVideoCommentsConnectionQuery = {
   __typename?: 'Query'
+  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
   userComments: Array<{
     __typename?: 'Comment'
     id: string
@@ -199,18 +188,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
       count: number
       reactionId: number
     }>
-    reactions: Array<{
-      __typename?: 'CommentReaction'
-      id: string
-      createdAt: Date
-      reactionId: number
-      member: { __typename?: 'Membership'; id: string }
-    }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
-    moderatedInEvent?: {
-      __typename?: 'CommentModeratedEvent'
-      videoChannel: { __typename?: 'Channel'; title?: string | null }
-    } | null
   }>
   videoCommentsConnection: {
     __typename?: 'CommentConnection'
@@ -263,18 +241,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
           count: number
           reactionId: number
         }>
-        reactions: Array<{
-          __typename?: 'CommentReaction'
-          id: string
-          createdAt: Date
-          reactionId: number
-          member: { __typename?: 'Membership'; id: string }
-        }>
         commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
-        moderatedInEvent?: {
-          __typename?: 'CommentModeratedEvent'
-          videoChannel: { __typename?: 'Channel'; title?: string | null }
-        } | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -423,10 +390,16 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
   query GetUserCommentsAndVideoCommentsConnection(
     $first: Int
     $after: String
+    $memberId: ID
+    $videoId: ID
     $userCommentswhere: CommentWhereInput
     $videCommentsWhere: CommentWhereInput
     $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
+    commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+      reactionId
+      commentId
+    }
     userComments: comments(where: $userCommentswhere, orderBy: [createdAt_DESC]) {
       ...CommentFields
     }
@@ -466,6 +439,8 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      memberId: // value for 'memberId'
+ *      videoId: // value for 'videoId'
  *      userCommentswhere: // value for 'userCommentswhere'
  *      videCommentsWhere: // value for 'videCommentsWhere'
  *      orderBy: // value for 'orderBy'

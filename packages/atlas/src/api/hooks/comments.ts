@@ -53,16 +53,31 @@ export const useCommentSectionComments = (
 
   const userCommentLookup = data?.userComments && createLookup(data?.userComments)
 
+  const userCommentReactionsLookup =
+    data?.commentReactions &&
+    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+      if (item) {
+        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+      }
+      return acc
+    }, {})
+
+  const userComments = data?.userComments.map((userComment) => ({
+    ...userComment,
+    userReactions: userCommentReactionsLookup?.[userComment.id],
+  }))
+
+  const videoComments = data?.videoCommentsConnection.edges
+    .map((edge) => edge.node)
+    .map((userComment) => ({
+      ...userComment,
+      userReactions: userCommentReactionsLookup?.[userComment.id],
+    }))
+    .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
+
   return {
-    userComments: data?.userComments,
-    comments: data
-      ? [
-          ...data.userComments,
-          ...data.videoCommentsConnection.edges
-            .map((edge) => edge.node)
-            .filter((comment) => userCommentLookup && !userCommentLookup[comment.id]),
-        ]
-      : undefined,
+    userComments: userComments,
+    comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
     totalCount: data?.videoCommentsConnection.totalCount,
     ...rest,
   }

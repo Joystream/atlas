@@ -5,7 +5,6 @@ import { useCommentSectionComments } from '@/api/hooks'
 import {
   CommentFieldsFragment,
   CommentOrderByInput,
-  CommentReactionFieldsFragment,
   CommentReactionsCountByReactionIdFieldsFragment,
   CommentStatus,
   VideoFieldsFragment,
@@ -38,7 +37,7 @@ type CommentsSectionProps = {
 
 type GetCommentReactionsArgs = {
   commentId: string
-  reactions: CommentReactionFieldsFragment[]
+  userReactions?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
   activeMemberId: string | null
   processingCommentReactionId: string | null
@@ -71,6 +70,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const authorized = activeMemberId && activeAccountId
 
   const { comments, totalCount, loading } = useCommentSectionComments({
+    memberId: activeMemberId,
+    videoId: id,
     videCommentsWhere: {
       video: { id_eq: id },
       // if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
@@ -157,7 +158,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   )
 
   const getCommentReactions = useCallback(
-    ({ commentId, reactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
+    ({ commentId, userReactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
       const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
         reactionId: Number(reactionId) as ReactionId,
         customId: `${commentId}-${reactionId}`,
@@ -170,11 +171,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           ...reaction,
           state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
           count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-          active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
+          active: !!userReactions?.find((r) => r === reaction.reactionId),
         }
       })
     },
-    [processingCommentReactionId, activeMemberId]
+    [processingCommentReactionId]
   )
   const memoizedComments = useMemo(() => {
     return comments?.map((comment, idx) => {
@@ -184,7 +185,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           highlighted={comment.id === highlightedComment}
           reactions={getCommentReactions({
             commentId: comment.id,
-            reactions: comment.reactions,
+            userReactions: comment.userReactions,
             reactionsCount: comment.reactionsCountByReactionId,
             activeMemberId,
             processingCommentReactionId,
