@@ -124,6 +124,7 @@ export const variables = css`
     --effect-dividers-bottom: inset 0 -1px 0 0 var(--color-border-muted-alpha);
     --effect-dividers-left: inset 1px 0 0 0 var(--color-border-muted-alpha);
     --effect-dividers-right: inset -1px 0 0 0 var(--color-border-muted-alpha);
+    --effect-elevation-1-layer1: 0 1px 2px 0 #00000052;
     --effect-elevation-8-layer1: 0 8px 16px 0 #0000001f;
     --effect-elevation-8-layer2: 0 4px 4px 0 #0000001a;
     --effect-elevation-16-layer1: 0 16px 32px 0 #00000029;
@@ -410,6 +411,7 @@ export const theme = {
   effectDividersBottom: { variable: 'var(--effect-dividers-bottom)', value: 'inset 0 -1px 0 0 #BBD9F621' },
   effectDividersLeft: { variable: 'var(--effect-dividers-left)', value: 'inset 1px 0 0 0 #BBD9F621' },
   effectDividersRight: { variable: 'var(--effect-dividers-right)', value: 'inset -1px 0 0 0 #BBD9F621' },
+  effectElevation1Layer1: { variable: 'var(--effect-elevation-1-layer1)', value: ' 0 1px 2px 0 #00000052' },
   effectElevation8Layer1: { variable: 'var(--effect-elevation-8-layer1)', value: ' 0 8px 16px 0 #0000001F' },
   effectElevation8Layer2: { variable: 'var(--effect-elevation-8-layer2)', value: ' 0 4px 4px 0 #0000001A' },
   effectElevation16Layer1: { variable: 'var(--effect-elevation-16-layer1)', value: ' 0 16px 32px 0 #00000029' },
