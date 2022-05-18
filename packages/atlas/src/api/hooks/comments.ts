@@ -5,6 +5,8 @@ import {
   CommentOrderByInput,
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
+  GetCommentQuery,
+  GetCommentQueryVariables,
   GetCommentsConnectionQuery,
   GetCommentsConnectionQueryVariables,
   GetCommentsQuery,
@@ -12,6 +14,7 @@ import {
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   useGetCommentEditsQuery,
+  useGetCommentQuery,
   useGetCommentsConnectionQuery,
   useGetCommentsQuery,
   useGetOriginalCommentQuery,
@@ -47,6 +50,21 @@ export const useComments = (
 
   return {
     comments: data ? [...(mappedComments || [])] : undefined,
+    ...rest,
+  }
+}
+
+export const useComment = (
+  variables?: GetCommentQueryVariables,
+  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
+) => {
+  const { data, ...rest } = useGetCommentQuery({
+    ...opts,
+    variables,
+  })
+
+  return {
+    comment: data?.commentByUniqueInput,
     ...rest,
   }
 }

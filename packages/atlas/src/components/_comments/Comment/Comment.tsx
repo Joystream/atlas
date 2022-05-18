@@ -12,6 +12,7 @@ import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
@@ -43,6 +44,7 @@ import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
   author?: BasicMembershipFieldsFragment
+  id?: string
   memberHandle?: string
   createdAt?: Date
   text?: string
@@ -54,6 +56,7 @@ export type CommentProps = {
   reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
   reactionPopoverDismissed?: boolean
   onEditLabelClick?: (comment?: CommentFieldsFragment) => void
+  videoId?: string
   onEditClick?: () => void
   onDeleteClick?: () => void
   onReactionClick?: (reaction: ReactionId) => void
@@ -67,6 +70,7 @@ export type CommentProps = {
 
 export const Comment: React.FC<CommentProps> = ({
   author,
+  id,
   indented,
   highlighted,
   memberHandle,
@@ -79,6 +83,7 @@ export const Comment: React.FC<CommentProps> = ({
   isModerated,
   isAbleToEdit,
   reactionPopoverDismissed,
+  videoId,
   onEditLabelClick,
   onEditClick,
   onDeleteClick,
@@ -206,9 +211,11 @@ export const Comment: React.FC<CommentProps> = ({
                   <CommentHeaderDot />
                   <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
                     {/*  TODO timestamp should be a hyperlink to that comment. */}
-                    <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
-                      {formatDateAgo(createdAt || new Date())}
-                    </HighlightableText>
+                    <StyledLink to={absoluteRoutes.viewer.video(videoId, { commentId: id })}>
+                      <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
+                        {formatDateAgo(createdAt || new Date())}
+                      </HighlightableText>
+                    </StyledLink>
                   </Tooltip>
                   {isEdited && !isDeleted && (
                     <>

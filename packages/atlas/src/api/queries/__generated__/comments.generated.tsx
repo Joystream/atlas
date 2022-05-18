@@ -66,6 +66,68 @@ export type GetCommentsQuery = {
   }>
 }
 
+export type GetCommentQueryVariables = Types.Exact<{
+  where: Types.CommentWhereUniqueInput
+}>
+
+export type GetCommentQuery = {
+  __typename?: 'Query'
+  commentByUniqueInput?: {
+    __typename?: 'Comment'
+    id: string
+    createdAt: Date
+    isEdited: boolean
+    parentCommentId?: string | null
+    repliesCount: number
+    text: string
+    status: Types.CommentStatus
+    author: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+    reactions: Array<{
+      __typename?: 'CommentReaction'
+      id: string
+      createdAt: Date
+      reactionId: number
+      member: { __typename?: 'Membership'; id: string }
+    }>
+    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+  } | null
+}
+
 export type GetCommentsConnectionQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>
   after?: Types.InputMaybe<Types.Scalars['String']>
@@ -328,6 +390,44 @@ export function useGetCommentsLazyQuery(
 export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
 export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>
 export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>
+export const GetCommentDocument = gql`
+  query GetComment($where: CommentWhereUniqueInput!) {
+    commentByUniqueInput(where: $where) {
+      ...CommentFields
+    }
+  }
+  ${CommentFieldsFragmentDoc}
+`
+
+/**
+ * __useGetCommentQuery__
+ *
+ * To run a query within a React component, call `useGetCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCommentQuery(baseOptions: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options)
+}
+export function useGetCommentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options)
+}
+export type GetCommentQueryHookResult = ReturnType<typeof useGetCommentQuery>
+export type GetCommentLazyQueryHookResult = ReturnType<typeof useGetCommentLazyQuery>
+export type GetCommentQueryResult = Apollo.QueryResult<GetCommentQuery, GetCommentQueryVariables>
 export const GetCommentsConnectionDocument = gql`
   query GetCommentsConnection(
     $first: Int

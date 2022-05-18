@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useCommentSectionComments } from '@/api/hooks'
+import { useComment, useCommentSectionComments } from '@/api/hooks'
 import { CommentFieldsFragment, CommentOrderByInput, CommentStatus, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -11,11 +11,12 @@ import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -30,6 +31,8 @@ type CommentsSectionProps = {
   video?: VideoFieldsFragment | null
   videoAuthorId?: string
 }
+
+const SCROLL_TO_COMMENT_TIMEOUT = 300
 const COMMENT_BOX_ID = 'comment-box'
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
@@ -37,6 +40,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [openModal, closeModal] = useConfirmationModal()
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
+  const [scrolledToComment, setScrolledToComment] = useState(false)
+  const { id } = useParams()
+  const commentLink = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
@@ -47,6 +53,23 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
+  const commentRef = useRef<HTMLTextAreaElement>(null)
+  const { comment: commentFromUrl } = useComment({ where: { id: commentLink || '' } }, { skip: !commentLink })
+
+  useEffect(() => {
+    if (!commentLink || !commentRef.current || scrolledToComment) {
+      return
+    }
+    const scrollTimeout = setTimeout(() => {
+      commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setHighlightedComment(commentLink)
+      setScrolledToComment(true)
+    }, SCROLL_TO_COMMENT_TIMEOUT)
+
+    return () => {
+      clearTimeout(scrollTimeout)
+    }
+  }, [scrolledToComment, commentLink])
 
   useEffect(() => {
     if (!highlightedComment) {
@@ -245,6 +268,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         />
       ) : (
         <CommentThread
+          videoId={id}
           key={`${comment.id}-${idx}`}
           author={comment.author}
           idx={idx}
@@ -278,7 +302,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ? 'options'
               : 'default'
           }
-          videoId={videoId}
           processingCommentReactionId={processingCommentReactionId}
           replies={comment.replies}
           repliesCount={comment.repliesCount}
@@ -308,9 +331,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     videoId,
     commentInputTextCollection,
     updateComment,
-    authorized,
-    openSignInDialog,
-    signIn,
     activeMemberId,
     openModal,
     moderateComment,
@@ -318,15 +338,19 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     closeModal,
     isEditingCommentCollection,
     commentInputIsProcessingCollection,
-    memberAvatarUrl,
     activeMembership?.handle,
+    memberAvatarUrl,
+    id,
     highlightedComment,
+    handleCommentReaction,
     processingCommentReactionId,
+    authorized,
     handleOpenSignInDialog,
     reactionPopoverDismissed,
     videoAuthorId,
     video,
-    handleCommentReaction,
+    openSignInDialog,
+    signIn,
   ])
 
   if (disabled) {
@@ -351,6 +375,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         />
       </CommentsSectionHeader>
       <CommentInput
+        ref={commentLink ? commentRef : undefined}
         memberAvatarUrl={memberAvatarUrl}
         isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
         processing={commentInputIsProcessingCollection.has(COMMENT_BOX_ID)}

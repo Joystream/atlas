@@ -42,8 +42,10 @@ export type NotificationRecord = { read?: boolean } & (
     } & NftNotificationRecord)
   | ({
       type: 'video-commented'
+      commentId: string
     } & NftNotificationRecord)
   | ({
       type: 'comment-reply'
+      commentId: string
     } & NftNotificationRecord)
 )
