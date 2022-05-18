@@ -135,8 +135,6 @@ export type GetUserCommentsAndVideoCommentsConnectionQueryVariables = Types.Exac
   after?: Types.InputMaybe<Types.Scalars['String']>
   memberId?: Types.InputMaybe<Types.Scalars['ID']>
   videoId?: Types.InputMaybe<Types.Scalars['ID']>
-  userCommentswhere?: Types.InputMaybe<Types.CommentWhereInput>
-  videCommentsWhere?: Types.InputMaybe<Types.CommentWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
@@ -392,21 +390,27 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     $after: String
     $memberId: ID
     $videoId: ID
-    $userCommentswhere: CommentWhereInput
-    $videCommentsWhere: CommentWhereInput
     $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
     commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
       reactionId
       commentId
     }
-    userComments: comments(where: $userCommentswhere, orderBy: [createdAt_DESC]) {
+    userComments: comments(
+      where: {
+        parentComment: { id_eq: null }
+        video: { id_eq: $videoId }
+        author: { id_eq: $memberId }
+        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+      }
+      orderBy: [createdAt_DESC]
+    ) {
       ...CommentFields
     }
     videoCommentsConnection: commentsConnection(
       first: $first
       after: $after
-      where: $videCommentsWhere
+      where: { video: { id_eq: $videoId }, OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
       orderBy: $orderBy
     ) {
       edges {
@@ -441,8 +445,6 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
  *      after: // value for 'after'
  *      memberId: // value for 'memberId'
  *      videoId: // value for 'videoId'
- *      userCommentswhere: // value for 'userCommentswhere'
- *      videCommentsWhere: // value for 'videCommentsWhere'
  *      orderBy: // value for 'orderBy'
  *   },
  * });
