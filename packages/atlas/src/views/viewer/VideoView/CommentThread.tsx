@@ -20,6 +20,7 @@ type CommentThreadProps = {
   videoAuthorId?: string
   handleCancelConfirmation: (cb: () => void) => void
   handleCommentReaction: (commentId: string, reactionId: ReactionId) => void
+  authorized: boolean
 } & CommentProps
 
 const COMMENT_BOX_ID = 'comment-box'
@@ -32,6 +33,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   videoAuthorId,
   handleCancelConfirmation,
   handleCommentReaction,
+  authorized,
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
@@ -80,17 +82,23 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     [addComment]
   )
 
+  const handleReplyClick = () => {
+    if (!authorized) {
+      onOpenSignInDialog()
+      return
+    }
+    if (replyInputOpen) {
+      commentInputRef.current?.focus()
+    }
+    setReplyInputOpen(true)
+    setRepliesOpen(true)
+  }
+
   return (
     <>
       <Comment
         {...commentProps}
-        onReplyClick={() => {
-          if (replyInputOpen) {
-            commentInputRef.current?.focus()
-          }
-          setReplyInputOpen(true)
-          setRepliesOpen(true)
-        }}
+        onReplyClick={handleReplyClick}
         replyAvatars={replyAvatars}
         onToggleReplies={toggleRepliesOpen}
         repliesOpen={repliesOpen}

@@ -278,6 +278,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             activeMemberId,
             processingCommentReactionId,
           })}
+          authorized={!!authorized}
+          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
           loading={!comment.id}
           commentId={comment.id}
           onOpenSignInDialog={handleOpenSignInDialog}
