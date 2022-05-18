@@ -291,6 +291,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           isModerated={comment.status === CommentStatus.Moderated}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
+          memberAvatarUrl={
+            comment.author.metadata.avatar?.__typename === 'AvatarUri'
+              ? comment.author.metadata.avatar?.avatarUri
+              : undefined
+          }
           videoAuthorId={videoAuthorId}
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
