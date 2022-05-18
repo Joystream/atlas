@@ -30,6 +30,36 @@ query GetCommentsConnection(
   }
 }
 
+query GetUserCommentsAndVideoCommentsConnection(
+  $first: Int
+  $after: String
+  $userCommentswhere: CommentWhereInput
+  $videCommentsWhere: CommentWhereInput
+  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+) {
+  userComments: comments(where: $userCommentswhere, orderBy: [createdAt_DESC]) {
+    ...CommentFields
+  }
+  videoCommentsConnection: commentsConnection(
+    first: $first
+    after: $after
+    where: $videCommentsWhere
+    orderBy: $orderBy
+  ) {
+    edges {
+      cursor
+      node {
+        ...CommentFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
 query GetCommentEdits($commentId: ID!) {
   commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
     id
