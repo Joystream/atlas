@@ -7,6 +7,7 @@ import { CommentInput } from '@/components/_comments/CommentInput'
 import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 
 import { getCommentReactions } from './utils'
@@ -38,6 +39,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const [commentBody, setCommentBody] = useState('')
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const { activeMemberId, activeMembership } = useUser()
+  const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
   const { processingCommentReactionId, addComment, commentInputIsProcessingCollection } = useReactionTransactions()
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
@@ -96,7 +98,9 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       <>
         {replyInputOpen && (
           <CommentInput
-              ref={commentInputRef}
+            ref={commentInputRef}
+            memberAvatarUrl={memberAvatarUrl}
+            isMemberAvatarLoading={isMemberAvatarLoading}
             processing={commentInputIsProcessingCollection.has(COMMENT_BOX_ID)}
             readOnly={!activeMemberId}
             memberHandle={activeMembership?.handle}
