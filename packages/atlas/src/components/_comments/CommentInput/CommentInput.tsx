@@ -27,12 +27,12 @@ export type CommentInputProps = {
   processing: boolean
   readOnly?: boolean
   memberHandle?: string
+  value: string
+  hasInitialValueChanged: boolean
   onComment?: () => void
   onCancel?: () => void
   onChange?: (value: string) => void
   onFocus?: () => void
-  value?: string
-  initialValue?: string
 } & CommentRowProps
 
 const COMMENT_LIMIT = 50000
@@ -47,7 +47,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   onChange,
   onFocus,
   value,
-  initialValue,
+  hasInitialValueChanged,
   ...rest
 }) => {
   const smMatch = useMediaMatch('sm')
@@ -57,14 +57,6 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   const { displaySnackbar } = useSnackbar()
 
   const { ref: measureRef, height: textAreaHeight = 40 } = useResizeObserver({ box: 'border-box' })
-
-  useEffect(() => {
-    if (initialValue) {
-      onChange?.(initialValue)
-    }
-    // too difficult to make onChange stable but it kinda is already
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValue])
 
   useEffect(() => {
     if (!active) {
@@ -94,8 +86,8 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     onComment?.()
   }
 
-  const show = !!value || !!initialValue || active || processing
-  const canComment = !!value && initialValue !== value
+  const show = !!value || active || processing
+  const canComment = !!value && hasInitialValueChanged
   return (
     <StyledCommentRow {...rest} processing={processing} show={show} isMemberAvatarClickable={false}>
       <Container

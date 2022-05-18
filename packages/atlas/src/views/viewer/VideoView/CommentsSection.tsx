@@ -55,10 +55,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const { id: videoId } = useParams()
-  // stores the commentBody state of comment inputs and is indexed by commentId's
-  const [commentInputTextRecord, setCommentInputTextRecord] = useState<Record<string, string>>({})
-  // stores the isEditing state of comments and is indexed by commentId's
-  const [isEditingCommentRecord, setIsEditingCommentRecord] = useState<Record<string, boolean>>({})
+  // indexed by commentId's
+  const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
+  // indexed by commentId's
+  const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
 
   useEffect(() => {
     if (!highlightedComment) {
@@ -85,7 +85,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     processingCommentReactionId,
     reactToComment,
     addComment,
-    commentInputIsProcessingRecord,
+    commentInputIsProcessingCollection,
     deleteComment,
     moderateComment,
     updateComment,
@@ -94,14 +94,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const mdMatch = useMediaMatch('md')
 
   const setCommentInputText = ({ commentId, comment }: { commentId: string; comment: string | undefined }) =>
-    setCommentInputTextRecord((value) => {
-      const commentInputTextRecord = { ...value }
+    setCommentInputTextCollection((commentInputTextCollection) => {
       if (comment !== undefined) {
-        commentInputTextRecord[commentId] = comment
+        commentInputTextCollection.set(commentId, comment)
       } else {
-        delete commentInputTextRecord[commentId]
+        commentInputTextCollection.delete(commentId)
       }
-      return commentInputTextRecord
+      return new Map(commentInputTextCollection)
     })
 
   const handleSorting = (value?: CommentOrderByInput[] | null) => {
@@ -117,12 +116,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     commentInputId: string
     parentCommentId?: string
   }) => {
-    if (!videoId || !commentInputTextRecord[commentInputId]) {
+    if (!videoId || !commentInputTextCollection.get(commentInputId)) {
       return
     }
     const commentId = await addComment({
       videoId,
-      commentBody: commentInputTextRecord[commentInputId],
+      commentBody: commentInputTextCollection.get(commentInputId) ?? '',
       parentCommentId,
       commentId: commentInputId,
     })
@@ -145,10 +144,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const memoizedComments = useMemo(() => {
     const setIsEditingComment = ({ commentId, value }: { commentId: string; value: boolean }) => {
-      setIsEditingCommentRecord((isEdit) => {
-        const isEditing = { ...isEdit }
-        isEditing[commentId] = value
-        return isEditing
+      setIsEditingCommentCollection((isEditing) => {
+        if (value) {
+          isEditing.add(commentId)
+        } else {
+          isEditing.delete(commentId)
+        }
+        return new Set(isEditing)
       })
     }
     const getCommentReactions = ({
@@ -173,12 +175,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       })
     }
     const handleUpdateComment = async ({ commentId }: { commentId: string }) => {
-      if (!videoId || !commentInputTextRecord[commentId]) {
+      if (!videoId || !commentInputTextCollection.get(commentId)) {
         return
       }
       await updateComment({
         videoId,
-        commentBody: commentInputTextRecord[commentId],
+        commentBody: commentInputTextCollection.get(commentId) ?? '',
         commentId: commentId,
       })
       setCommentInputText({ commentId, comment: undefined })
@@ -214,7 +216,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       })
     }
     const handleEditCommentCancel = (comment: CommentFieldsFragment) => {
-      if (comment.text !== commentInputTextRecord[comment.id]) {
+      if (comment.text !== commentInputTextCollection.get(comment.id)) {
         openModal({
           title: 'Discard changes?',
           description: 'Are you sure you want to discard your comment changes?',
@@ -244,19 +246,19 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
 
     return comments?.map((comment, idx) =>
-      isEditingCommentRecord[comment.id] ? (
+      isEditingCommentCollection.has(comment.id) ? (
         <CommentInput
           key={`${comment.id}-${idx}`}
-          processing={commentInputIsProcessingRecord[comment.id]}
+          processing={commentInputIsProcessingCollection.has(comment.id)}
           readOnly={!activeMemberId}
           memberHandle={activeMembership?.handle}
           onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
           onComment={() => handleUpdateComment({ commentId: comment.id })}
-          value={commentInputTextRecord[comment.id]}
-          initialValue={comment.text}
-          withoutOutlineBox
+          value={commentInputTextCollection.get(comment.id) ?? ''}
+          hasInitialValueChanged={comment.text !== commentInputTextCollection.get(comment.id)}
           onChange={(value) => setCommentInputText({ commentId: comment.id, comment: value })}
           onCancel={() => handleEditCommentCancel(comment)}
+          withoutOutlineBox
         />
       ) : (
         <Comment
@@ -269,18 +271,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             activeMemberId,
             processingCommentReactionId,
           })}
-          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
-          onEditLabelClick={() => {
-            setShowEditHistory(true)
-            setOriginalComment(comment)
-          }}
           loading={!comment.id}
           createdAt={new Date(comment.createdAt)}
           text={comment.text}
           reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
-          onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           isEdited={comment.isEdited}
-          onEditClick={() => setIsEditingComment({ commentId: comment.id, value: true })}
           isAbleToEdit={comment.author.id === activeMemberId}
           isModerated={comment.status === CommentStatus.Moderated}
           memberHandle={comment.author.handle}
@@ -297,13 +292,23 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ? 'options'
               : 'default'
           }
+          onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
+          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
+          onEditLabelClick={() => {
+            setShowEditHistory(true)
+            setOriginalComment(comment)
+          }}
+          onEditClick={() => {
+            setIsEditingComment({ commentId: comment.id, value: true })
+            setCommentInputText({ commentId: comment.id, comment: comment.text })
+          }}
         />
       )
     )
   }, [
     comments,
     videoId,
-    commentInputTextRecord,
+    commentInputTextCollection,
     updateComment,
     authorized,
     reactToComment,
@@ -314,8 +319,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     moderateComment,
     deleteComment,
     closeModal,
-    isEditingCommentRecord,
-    commentInputIsProcessingRecord,
+    isEditingCommentCollection,
+    commentInputIsProcessingCollection,
     activeMembership?.handle,
     highlightedComment,
     processingCommentReactionId,
@@ -347,12 +352,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       <CommentInput
         memberAvatarUrl={memberAvatarUrl}
         isMemberAvatarLoading={authorized ? isMemberAvatarLoading : false}
-        processing={commentInputIsProcessingRecord[COMMENT_BOX_ID]}
+        processing={commentInputIsProcessingCollection.has(COMMENT_BOX_ID)}
         readOnly={!activeMemberId}
         memberHandle={activeMembership?.handle}
         onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment({ commentInputId: COMMENT_BOX_ID })}
-        value={commentInputTextRecord[COMMENT_BOX_ID]}
+        value={commentInputTextCollection.get(COMMENT_BOX_ID) ?? ''}
+        hasInitialValueChanged={!!commentInputTextCollection.get(COMMENT_BOX_ID)}
         withoutOutlineBox
         onChange={(value) => setCommentInputText({ commentId: COMMENT_BOX_ID, comment: value })}
       />

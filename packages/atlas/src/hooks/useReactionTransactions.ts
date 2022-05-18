@@ -17,14 +17,15 @@ export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   // stores the isProcessing state of comment inputs and is indexed by commentId's
-  const [commentInputIsProcessingRecord, setCommentInputIsProcessingRecord] = useState<Record<string, boolean>>({
-    // 'COMMENT_ID': isProcessingValue
-  })
+  const [commentInputIsProcessingCollection, setCommentInputIsProcessingCollection] = useState(new Set<string>())
   const setCommentInputIsProcessing = ({ commentId, value }: { commentId: string; value: boolean }) => {
-    setCommentInputIsProcessingRecord((process) => {
-      const processing = { ...process }
-      processing[commentId] = value
-      return processing
+    setCommentInputIsProcessingCollection((processing) => {
+      if (value) {
+        processing.add(commentId)
+      } else {
+        processing.delete(commentId)
+      }
+      return new Set(processing)
     })
   }
 
@@ -255,7 +256,7 @@ export const useReactionTransactions = () => {
     updateComment,
     likeOrDislikeVideo,
     videoReactionProcessing,
-    commentInputIsProcessingRecord,
+    commentInputIsProcessingCollection,
     processingCommentReactionId,
   }
 }
