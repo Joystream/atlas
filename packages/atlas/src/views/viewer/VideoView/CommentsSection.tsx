@@ -125,8 +125,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       parentCommentId,
       commentId: commentInputId,
     })
-    setCommentInputText({ commentId: commentInputId, comment: '' })
-    setHighlightedComment(commentId || null)
+    if (commentId) {
+      setCommentInputText({ commentId: commentInputId, comment: '' })
+      setHighlightedComment(commentId || null)
+    }
   }
 
   // removes highlightedComment effect after timeout passes
