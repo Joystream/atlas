@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 import { useComments } from '@/api/hooks'
 import { CommentOrderByInput } from '@/api/queries'
@@ -40,6 +40,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const { activeMemberId, activeMembership } = useUser()
   const { processingCommentReactionId, addComment, commentInputIsProcessingCollection } = useReactionTransactions()
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
+  const commentInputRef = useRef<HTMLTextAreaElement>(null)
   const { comments, loading } = useComments(
     { where: { parentComment: { id_eq: commentId } }, orderBy: CommentOrderByInput.CreatedAtAsc },
     { skip: !commentId }
@@ -51,12 +52,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   }))
 
   const toggleRepliesOpen = () => {
-    setRepliesOpen((prevState) => {
-      if (prevState) {
-        setReplyInputOpen(false)
-      }
-      return !prevState
-    })
+    setRepliesOpen((prevState) => !prevState)
   }
 
   const handleCancel = () => {
@@ -87,10 +83,11 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       <Comment
         {...commentProps}
         onReplyClick={() => {
+          if (replyInputOpen) {
+            commentInputRef.current?.focus()
+          }
           setReplyInputOpen(true)
-          setTimeout(() => {
-            setRepliesOpen(true)
-          }, 250)
+          setRepliesOpen(true)
         }}
         replyAvatars={replyAvatars}
         onToggleReplies={toggleRepliesOpen}
@@ -99,6 +96,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       <>
         {replyInputOpen && (
           <CommentInput
+              ref={commentInputRef}
             processing={commentInputIsProcessingCollection.has(COMMENT_BOX_ID)}
             readOnly={!activeMemberId}
             memberHandle={activeMembership?.handle}
@@ -109,7 +107,9 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
             withoutOutlineBox
             onChange={(e) => setCommentBody(e.currentTarget.value)}
             indented
-            onCancel={() => handleCancelConfirmation(handleCancel)}
+            onCancel={() => {
+              commentBody.length ? handleCancelConfirmation(handleCancel) : handleCancel()
+            }}
             initialFocus
             reply
           />
