@@ -153,13 +153,6 @@ export const StyledCircularProgress = styled(CircularProgress)`
 export const CountDownButton = styled(Button)`
   display: block;
   position: absolute;
-  width: ${sizes(10)};
-  height: ${sizes(10)};
-
-  svg {
-    width: ${sizes(6)};
-    height: ${sizes(6)};
-  }
 `
 
 export const RestartButton = styled(Button)`
