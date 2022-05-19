@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -70,8 +70,9 @@ export const VideoView: React.FC = () => {
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
+  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(id)
-  const { likeOrDislikeVideo, videoReactionProcessing } = useReactionTransactions()
+  const { likeOrDislikeVideo } = useReactionTransactions()
 
   const authorized = activeMemberId && activeAccountId
 
@@ -169,11 +170,13 @@ export const VideoView: React.FC = () => {
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
   const handleReact = useCallback(
-    (reaction: VideoReaction) => {
+    async (reaction: VideoReaction) => {
       if (!authorized) {
         openSignInDialog({ onConfirm: signIn })
-      } else {
-        video?.id && likeOrDislikeVideo(video?.id, reaction)
+      } else if (video?.id) {
+        setVideoReactionProcessing(true)
+        await likeOrDislikeVideo(video.id, reaction)
+        setVideoReactionProcessing(false)
       }
     },
     [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]

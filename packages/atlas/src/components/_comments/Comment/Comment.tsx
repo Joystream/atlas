@@ -1,336 +1,223 @@
-import { format } from 'date-fns'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import React, { useState } from 'react'
 
-import { BasicMembershipFieldsFragment, CommentFieldsFragment } from '@/api/queries'
-import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
-import { Text } from '@/components/Text'
-import { Tooltip } from '@/components/Tooltip'
-import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { ContextMenu } from '@/components/_overlays/ContextMenu'
-import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
-import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
+import { useComment } from '@/api/hooks'
+import {
+  CommentFieldsFragment,
+  CommentReactionsCountByReactionIdFieldsFragment,
+  CommentStatus,
+  VideoFieldsFragment,
+} from '@/api/queries'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
-import { useMemberAvatar } from '@/providers/assets'
-import { cVar, transitions } from '@/styles'
-import { formatDate, formatDateAgo } from '@/utils/time'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useConfirmationModal } from '@/providers/confirmationModal'
+import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user'
 
-import {
-  CommentFooter,
-  CommentFooterItems,
-  CommentHeader,
-  CommentHeaderDot,
-  CommentWrapper,
-  DeletedComment,
-  HighlightableText,
-  KebabMenuIconButton,
-  RepliesWrapper,
-  ReplyButton,
-  StyledAvatarGroup,
-  StyledFooterSkeletonLoader,
-  StyledLink,
-  StyledRepliesSkeleton,
-  StyledSvgActionTrash,
-} from './Comment.styles'
+import { InternalComment } from './InternalComment'
 
-import { CommentBody } from '../CommentBody'
-import { CommentRow, CommentRowProps } from '../CommentRow'
-import { ReactionChip, ReactionChipProps } from '../ReactionChip'
-import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
-import { ReactionPopover } from '../ReactionPopover'
+import { CommentInput } from '../CommentInput'
+import { CommentRowProps } from '../CommentRow'
+import { ReactionChipProps } from '../ReactionChip'
 
 export type CommentProps = {
-  author?: BasicMembershipFieldsFragment
-  id?: string
-  memberHandle?: string
-  createdAt?: Date
-  text?: string
-  loading?: boolean
-  isEdited?: boolean
-  isAbleToEdit?: boolean
-  isModerated?: boolean
-  type: 'default' | 'deleted' | 'options'
-  reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
-  reactionPopoverDismissed?: boolean
-  onEditLabelClick?: (comment?: CommentFieldsFragment) => void
-  videoId?: string
-  commentFromUrl?: boolean
-  onEditClick?: () => void
-  onDeleteClick?: () => void
-  onReactionClick?: (reaction: ReactionId) => void
-  onReplyClick?: () => void
-  replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[]
-  onToggleReplies?: () => void
-  repliesOpen?: boolean
-  repliesLoading?: boolean
-  repliesCount?: number
+  commentId?: string
+  video?: VideoFieldsFragment | null
+  setOriginalComment?: React.Dispatch<React.SetStateAction<CommentFieldsFragment | null>>
+  setShowEditHistory?: React.Dispatch<React.SetStateAction<boolean>>
+  setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
 } & CommentRowProps
+export const Comment: React.FC<CommentProps> = React.memo(
+  ({ commentId, video, setOriginalComment, setShowEditHistory, setHighlightedCommentId, ...rest }) => {
+    const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
+    const [isEditingComment, setIsEditingComment] = useState(false)
+    const [commentInputText, setCommentInputText] = useState('')
+    const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
-export const Comment: React.FC<CommentProps> = ({
-  author,
-  id,
-  indented,
-  highlighted,
-  memberHandle,
-  text,
-  createdAt,
-  type,
-  loading,
-  memberUrl,
-  isEdited,
-  isModerated,
-  isAbleToEdit,
-  reactionPopoverDismissed,
-  videoId,
-  commentFromUrl,
-  onEditLabelClick,
-  onEditClick,
-  onDeleteClick,
-  onReactionClick,
-  reactions,
-  onReplyClick,
-  replyAvatars,
-  onToggleReplies,
-  repliesOpen,
-  repliesLoading,
-  repliesCount,
-}) => {
-  const [commentHover, setCommentHover] = useState(false)
-  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
-  const isDeleted = type === 'deleted'
-  const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
-  const popoverRef = useRef<PopoverImperativeHandle>(null)
-  const mdMatch = useMediaMatch('md')
-  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
-  const filteredDuplicatedAvatars = repliesCount
-    ? replyAvatars
-      ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
-      : Array.from({ length: repliesCount }, () => ({ url: undefined }))
-    : []
+    const { comment, loading } = useComment(commentId ?? '', { skip: !commentId })
+    const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
+    const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
+    const { openSignInDialog } = useDisplaySignInDialog()
+    const [openModal, closeModal] = useConfirmationModal()
+    const { reactToComment, deleteComment, moderateComment, updateComment } = useReactionTransactions()
 
-  const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
+    const authorized = activeMemberId && activeAccountId
 
-  const contexMenuItems = [
-    ...(isAbleToEdit
-      ? [
-          {
-            icon: <SvgActionEdit />,
-            onClick: onEditClick,
-            title: 'Edit',
+    const hadleDeleteComment = (comment: CommentFieldsFragment) => {
+      const isChannelOwner = video?.channel.ownerMember?.id === activeMemberId && comment.author.id !== activeMemberId
+      openModal({
+        type: 'destructive',
+        title: 'Delete this comment?',
+        description: 'Are you sure you want to delete this comment? This cannot be undone.',
+        primaryButton: {
+          text: 'Delete comment',
+          onClick: () => {
+            isChannelOwner
+              ? moderateComment(comment.id, video?.channel.id, comment.author.handle, video.title || '')
+              : deleteComment(comment.id, video?.title || '')
+            closeModal()
           },
-        ]
-      : []),
-    {
-      icon: <SvgActionTrash />,
-      onClick: onDeleteClick,
-      title: 'Remove',
-      destructive: true,
-    },
-  ]
-
-  const domRef = useRef<HTMLDivElement>(null)
-  const [highlightedPreviously, setHighlightedPreviously] = useState<boolean | undefined>(false)
-
-  // scroll comment into view once the comment gets highlighted
-  useEffect(() => {
-    if (highlighted === true && !highlightedPreviously && !commentFromUrl) {
-      domRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => closeModal(),
+        },
+      })
     }
-    setHighlightedPreviously(highlighted)
-  }, [highlightedPreviously, highlighted, commentFromUrl])
-
-  const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
-  const allReactionsApplied =
-    reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
-
-  const getReactionState = useCallback(
-    (state?: ReactionChipState): ReactionChipState | undefined => {
-      if (state === 'processing') {
-        return state
-      }
-      if (isDeleted) {
-        return 'read-only'
-      }
-      if (reactionIsProcessing) {
-        return 'disabled'
-      }
-      return state
-    },
-    [isDeleted, reactionIsProcessing]
-  )
-
-  const handleOnboardingPopoverHide = useCallback(() => {
-    popoverRef.current?.hide()
-    setTempReactionId(null)
-  }, [])
-
-  const handleCommentReactionClick = useCallback(
-    (reactionId: ReactionId) => {
-      if (!reactionPopoverDismissed) {
-        setTempReactionId(reactionId)
-        popoverRef.current?.show()
+    const handleEditCommentCancel = () => {
+      if (comment?.text !== commentInputText) {
+        openModal({
+          title: 'Discard changes?',
+          description: 'Are you sure you want to discard your comment changes?',
+          type: 'warning',
+          primaryButton: {
+            text: 'Confirm and discard',
+            onClick: () => {
+              closeModal()
+              setIsEditingComment(false)
+              setCommentInputText('')
+            },
+          },
+          secondaryButton: {
+            text: 'Cancel',
+            onClick: () => {
+              closeModal()
+            },
+          },
+          onExitClick: () => {
+            closeModal()
+          },
+        })
       } else {
-        onReactionClick?.(reactionId)
+        setIsEditingComment(false)
+        setCommentInputText('')
       }
-    },
-    [onReactionClick, reactionPopoverDismissed]
-  )
+    }
+    const handleUpdateComment = async () => {
+      if (!video?.id || !commentInputText || !comment) {
+        return
+      }
 
-  return (
-    <CommentRow
-      indented={indented}
-      highlighted={highlighted}
-      isMemberAvatarLoading={loading || isMemberAvatarLoading}
-      memberUrl={memberUrl}
-      memberAvatarUrl={memberAvatarUrl}
-      onMouseEnter={() => setCommentHover(true)}
-      onMouseLeave={() => setCommentHover(false)}
-    >
-      <CommentWrapper ref={domRef} shouldShowKebabButton={shouldShowKebabButton}>
-        <SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            key={loading?.toString()}
-            classNames={transitions.names.fade}
-          >
-            {loading ? (
-              <div>
-                <SkeletonLoader width={128} height={20} bottomSpace={8} />
-                <SkeletonLoader width="100%" height={16} bottomSpace={8} />
-                <SkeletonLoader width="70%" height={16} />
-              </div>
-            ) : (
-              <div>
-                <CommentHeader isDeleted={isDeleted}>
-                  <StyledLink to={memberUrl || ''}>
-                    <Text variant="h200" margin={{ right: 2 }}>
-                      {memberHandle}
-                    </Text>
-                  </StyledLink>
-                  <CommentHeaderDot />
-                  <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
-                    <StyledLink to={absoluteRoutes.viewer.video(videoId, { commentId: id })}>
-                      <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
-                        {formatDateAgo(createdAt || new Date())}
-                      </HighlightableText>
-                    </StyledLink>
-                  </Tooltip>
-                  {isEdited && !isDeleted && (
-                    <>
-                      <CommentHeaderDot />
-                      <HighlightableText
-                        variant="t200"
-                        secondary
-                        margin={{ left: 2 }}
-                        onClick={() => onEditLabelClick?.()}
-                      >
-                        edited
-                      </HighlightableText>
-                    </>
-                  )}
-                </CommentHeader>
-                {isDeleted ? (
-                  <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
-                    <StyledSvgActionTrash /> Comment deleted by the {isModerated ? 'channel owner' : 'author'}
-                  </DeletedComment>
-                ) : (
-                  <CommentBody>{text}</CommentBody>
-                )}
-              </div>
-            )}
-          </CSSTransition>
-        </SwitchTransition>
-        <ContextMenu
-          placement="bottom-end"
-          disabled={loading || !shouldShowKebabButton}
-          items={contexMenuItems}
-          trigger={
-            <KebabMenuIconButton
-              icon={<SvgActionMore />}
-              variant="tertiary"
-              size="small"
-              isActive={shouldShowKebabButton}
-            />
-          }
+      setCommentInputIsProcessing(true)
+      const success = await updateComment({
+        videoId: video.id,
+        commentBody: commentInputText ?? '',
+        commentId: comment.id,
+      })
+      setCommentInputIsProcessing(false)
+
+      if (success) {
+        setCommentInputText('')
+        setHighlightedCommentId?.(comment?.id ?? null)
+        setIsEditingComment(false)
+      }
+    }
+    const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
+      if (authorized) {
+        setProcessingCommentReactionId(commentId + `-` + reactionId.toString())
+        await reactToComment(commentId, reactionId)
+        setProcessingCommentReactionId(null)
+      } else {
+        openSignInDialog({ onConfirm: signIn })
+      }
+    }
+
+    if (isEditingComment) {
+      return (
+        <CommentInput
+          processing={commentInputIsProcessing}
+          readOnly={!activeMemberId}
+          memberHandle={activeMembership?.handle}
+          value={commentInputText}
+          hasInitialValueChanged={comment?.text !== commentInputText}
+          withoutOutlineBox
+          onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
+          onComment={() => handleUpdateComment()}
+          onChange={(e) => setCommentInputText(e.target.value)}
+          onCancel={() => handleEditCommentCancel()}
         />
-      </CommentWrapper>
-      <CommentFooter>
-        <SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            key={loading?.toString()}
-            classNames={transitions.names.fade}
-          >
-            {loading ? (
-              <CommentFooterItems>
-                <StyledFooterSkeletonLoader width={48} height={32} rounded />
-                <StyledFooterSkeletonLoader width={48} height={32} rounded />
-              </CommentFooterItems>
-            ) : (
-              <ReactionsOnboardingPopover
-                ref={popoverRef}
-                onConfirm={() => {
-                  tempReactionId && onReactionClick?.(tempReactionId)
-                  handleOnboardingPopoverHide()
-                }}
-                onDecline={handleOnboardingPopoverHide}
-                trigger={
-                  <CommentFooterItems>
-                    {reactions &&
-                      reactions?.map(({ reactionId, active, count, state }) => (
-                        <ReactionChip
-                          key={reactionId}
-                          reactionId={reactionId}
-                          active={active}
-                          count={count}
-                          state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
-                          onReactionClick={handleCommentReactionClick}
-                        />
-                      ))}
-                    {!allReactionsApplied && !isDeleted && (
-                      <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
-                    )}
-                    <RepliesWrapper>
-                      {!!repliesCount && (
-                        <StyledAvatarGroup
-                          avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
-                          size="small"
-                          avatars={filteredDuplicatedAvatars}
-                          clickable={false}
-                          loading={repliesLoading}
-                        />
-                      )}
-                      {onToggleReplies &&
-                        !!repliesCount &&
-                        (repliesLoading ? (
-                          <StyledRepliesSkeleton height={17} width={75} />
-                        ) : (
-                          <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
-                            {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                          </ReplyButton>
-                        ))}
-                      {onReplyClick && !isDeleted && (commentHover || !mdMatch) && (
-                        <ReplyButton
-                          onClick={onReplyClick}
-                          variant="tertiary"
-                          size="small"
-                          _textOnly
-                          icon={<SvgActionReply />}
-                        >
-                          Reply
-                        </ReplyButton>
-                      )}
-                    </RepliesWrapper>
-                  </CommentFooterItems>
-                }
-              />
-            )}
-          </CSSTransition>
-        </SwitchTransition>
-      </CommentFooter>
-    </CommentRow>
-  )
+      )
+    } else {
+      return (
+        <InternalComment
+          loading={loading}
+          createdAt={comment?.createdAt ? new Date(comment.createdAt ?? '') : undefined}
+          text={comment?.text}
+          reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+          isAbleToEdit={comment?.author.id === activeMemberId}
+          isModerated={comment?.status === CommentStatus.Moderated}
+          memberHandle={comment?.author.handle}
+          isEdited={comment?.isEdited}
+          reactions={
+            comment &&
+            getCommentReactions({
+              commentId: comment?.id,
+              userReactions: comment?.userReactions,
+              reactionsCount: comment?.reactionsCountByReactionId,
+              activeMemberId,
+              processingCommentReactionId,
+            })
+          }
+          memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
+          memberAvatarUrl={
+            comment?.author.metadata.avatar?.__typename === 'AvatarUri'
+              ? comment.author.metadata.avatar?.avatarUri
+              : undefined
+          }
+          type={
+            comment && ['DELETED', 'MODERATED'].includes(comment.status)
+              ? 'deleted'
+              : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
+              ? 'options'
+              : 'default'
+          }
+          onEditClick={() => {
+            if (comment) {
+              setIsEditingComment(true)
+              setCommentInputText?.(comment.text)
+            }
+          }}
+          onDeleteClick={() => video && comment && hadleDeleteComment(comment)}
+          onEditedLabelClick={() => {
+            setShowEditHistory?.(true)
+            comment && setOriginalComment?.(comment)
+          }}
+          onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
+          {...rest}
+        />
+      )
+    }
+  }
+)
+Comment.displayName = 'Comment'
+
+type GetCommentReactionsArgs = {
+  commentId: string
+  userReactions?: number[]
+  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
+  activeMemberId: string | null
+  processingCommentReactionId: string | null | undefined
+}
+const getCommentReactions = ({
+  commentId,
+  userReactions,
+  reactionsCount,
+  processingCommentReactionId,
+}: GetCommentReactionsArgs): ReactionChipProps[] => {
+  const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
+    reactionId: Number(reactionId) as ReactionId,
+    customId: `${commentId}-${reactionId}`,
+    state: 'processing' as const,
+    count: 0,
+  }))
+
+  return defaultReactions.map((reaction) => {
+    return {
+      ...reaction,
+      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
+      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
+      active: !!userReactions?.find((r) => r === reaction.reactionId),
+    }
+  })
 }

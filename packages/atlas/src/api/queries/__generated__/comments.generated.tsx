@@ -67,15 +67,13 @@ export type GetCommentsQuery = {
 }
 
 export type GetCommentQueryVariables = Types.Exact<{
-  where: Types.CommentWhereUniqueInput
-  memberId?: Types.InputMaybe<Types.Scalars['ID']>
-  videoId?: Types.InputMaybe<Types.Scalars['ID']>
+  commentId?: Types.InputMaybe<Types.Scalars['ID']>
 }>
 
 export type GetCommentQuery = {
   __typename?: 'Query'
   commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
-  commentByUniqueInput?: {
+  comments: Array<{
     __typename?: 'Comment'
     id: string
     createdAt: Date
@@ -121,7 +119,7 @@ export type GetCommentQuery = {
       reactionId: number
     }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
-  } | null
+  }>
 }
 
 export type GetCommentsConnectionQueryVariables = Types.Exact<{
@@ -387,12 +385,12 @@ export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
 export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>
 export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>
 export const GetCommentDocument = gql`
-  query GetComment($where: CommentWhereUniqueInput!, $memberId: ID, $videoId: ID) {
-    commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+  query GetComment($commentId: ID) {
+    commentReactions(where: { comment: { id_eq: $commentId } }, limit: 1000) {
       reactionId
       commentId
     }
-    commentByUniqueInput(where: $where) {
+    comments(limit: 1, offset: 0, where: { id_eq: $commentId }, orderBy: createdAt_DESC) {
       ...CommentFields
     }
   }
@@ -411,13 +409,11 @@ export const GetCommentDocument = gql`
  * @example
  * const { data, loading, error } = useGetCommentQuery({
  *   variables: {
- *      where: // value for 'where'
- *      memberId: // value for 'memberId'
- *      videoId: // value for 'videoId'
+ *      commentId: // value for 'commentId'
  *   },
  * });
  */
-export function useGetCommentQuery(baseOptions: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+export function useGetCommentQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options)
 }
