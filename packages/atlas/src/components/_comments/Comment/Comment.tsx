@@ -66,6 +66,7 @@ export type CommentProps = {
   repliesOpen?: boolean
   repliesLoading?: boolean
   repliesCount?: number
+  onTimeStampClick?: () => void
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
@@ -95,6 +96,7 @@ export const Comment: React.FC<CommentProps> = ({
   repliesOpen,
   repliesLoading,
   repliesCount,
+  onTimeStampClick,
 }) => {
   const [commentHover, setCommentHover] = useState(false)
   const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
@@ -210,8 +212,10 @@ export const Comment: React.FC<CommentProps> = ({
                   </StyledLink>
                   <CommentHeaderDot />
                   <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
-                    {/*  TODO timestamp should be a hyperlink to that comment. */}
-                    <StyledLink to={absoluteRoutes.viewer.video(videoId, { commentId: id })}>
+                    <StyledLink
+                      onClick={() => onTimeStampClick?.()}
+                      to={absoluteRoutes.viewer.video(videoId, { commentId: id })}
+                    >
                       <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
                         {formatDateAgo(createdAt || new Date())}
                       </HighlightableText>

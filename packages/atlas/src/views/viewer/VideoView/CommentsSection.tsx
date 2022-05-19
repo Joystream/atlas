@@ -33,6 +33,7 @@ type CommentsSectionProps = {
 }
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
+const HIGHLIGHTED_COMMENT_TIMEOUT = 3000
 const COMMENT_BOX_ID = 'comment-box'
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
@@ -40,7 +41,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [openModal, closeModal] = useConfirmationModal()
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
-  const [scrolledToComment, setScrolledToComment] = useState(false)
   const { id } = useParams()
   const commentLink = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
@@ -54,22 +54,25 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
   const commentRef = useRef<HTMLTextAreaElement>(null)
-  const { comment: commentFromUrl } = useComment({ where: { id: commentLink || '' } }, { skip: !commentLink })
+  const { comment: commentFromUrl } = useComment(commentLink || '', { skip: !commentLink })
+
+  const scrollToCommentInput = (smooth?: boolean) => {
+    commentRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+  }
 
   useEffect(() => {
-    if (!commentLink || !commentRef.current || scrolledToComment) {
+    if (!commentLink || !commentRef.current) {
       return
     }
     const scrollTimeout = setTimeout(() => {
-      commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      scrollToCommentInput(true)
       setHighlightedComment(commentLink)
-      setScrolledToComment(true)
     }, SCROLL_TO_COMMENT_TIMEOUT)
 
     return () => {
       clearTimeout(scrollTimeout)
     }
-  }, [scrolledToComment, commentLink])
+  }, [commentLink])
 
   useEffect(() => {
     if (!highlightedComment) {
@@ -77,7 +80,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
     const timeout = setTimeout(() => {
       setHighlightedComment(null)
-    }, 3000)
+    }, HIGHLIGHTED_COMMENT_TIMEOUT)
 
     return () => clearTimeout(timeout)
   })
@@ -250,7 +253,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       }
     }
 
-    return comments?.map((comment, idx) =>
+    const filteredComments = commentFromUrl
+      ? comments?.filter((comment) => ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id))
+      : comments
+
+    return filteredComments?.map((comment, idx) =>
       isEditingCommentCollection.has(comment.id) ? (
         <CommentInput
           key={`${comment.id}-${idx}`}
@@ -295,6 +302,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
           videoAuthorId={videoAuthorId}
+          memberAvatarUrl={
+            comment.author.metadata.avatar?.__typename === 'AvatarUri'
+              ? comment.author.metadata.avatar?.avatarUri
+              : undefined
+          }
+          onTimeStampClick={scrollToCommentInput}
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
               ? 'deleted'
@@ -327,6 +340,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       )
     )
   }, [
+    commentFromUrl,
     comments,
     videoId,
     commentInputTextCollection,

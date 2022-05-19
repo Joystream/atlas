@@ -54,13 +54,10 @@ export const useComments = (
   }
 }
 
-export const useComment = (
-  variables?: GetCommentQueryVariables,
-  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
-) => {
+export const useComment = (id: string, opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) => {
   const { data, ...rest } = useGetCommentQuery({
     ...opts,
-    variables,
+    variables: { where: { id } },
   })
 
   return {

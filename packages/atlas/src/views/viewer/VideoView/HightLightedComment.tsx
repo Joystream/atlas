@@ -8,7 +8,7 @@ import { absoluteRoutes } from '@/config/routes'
 
 import { getCommentReactions } from './utils'
 
-type HightLightedCommentProps = {
+type HighlightedCommentProps = {
   commentId: string | null
   highLighted: boolean
   onEditLabelClick: (comment: CommentFieldsFragment) => void
@@ -21,7 +21,7 @@ type HightLightedCommentProps = {
   video?: VideoFieldsFragment | null
 }
 
-export const HightLightedComment: React.FC<HightLightedCommentProps> = ({
+export const HighlightedComment: React.FC<HighlightedCommentProps> = ({
   commentId,
   highLighted,
   onEditLabelClick,
@@ -33,11 +33,10 @@ export const HightLightedComment: React.FC<HightLightedCommentProps> = ({
   processingCommentReactionId,
   video,
 }) => {
-  const { comment, loading: commentLoading } = useComment({ where: { id: commentId || '' } }, { skip: !commentId })
-  const { comment: parentComment, loading: parentCommentLoading } = useComment(
-    { where: { id: comment?.parentCommentId || '' } },
-    { skip: !comment || !comment.parentCommentId }
-  )
+  const { comment, loading: commentLoading } = useComment(commentId || '', { skip: !commentId })
+  const { comment: parentComment, loading: parentCommentLoading } = useComment(comment?.parentCommentId || '', {
+    skip: !comment || !comment.parentCommentId,
+  })
 
   const getComment = useCallback(
     (comment: CommentFieldsFragment, highlighted: boolean, indented?: boolean) => (
