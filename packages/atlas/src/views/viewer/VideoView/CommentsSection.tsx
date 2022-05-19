@@ -5,7 +5,6 @@ import { useCommentSectionComments } from '@/api/hooks'
 import {
   CommentFieldsFragment,
   CommentOrderByInput,
-  CommentReactionFieldsFragment,
   CommentReactionsCountByReactionIdFieldsFragment,
   CommentStatus,
   VideoFieldsFragment,
@@ -38,7 +37,7 @@ type CommentsSectionProps = {
 
 type GetCommentReactionsArgs = {
   commentId: string
-  reactions: CommentReactionFieldsFragment[]
+  userReactions?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
   activeMemberId: string | null
   processingCommentReactionId: string | null
@@ -70,25 +69,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const authorized = activeMemberId && activeAccountId
 
-  const { comments, totalCount, loading } = useCommentSectionComments({
-    videCommentsWhere: {
-      video: { id_eq: id },
-      // if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
-      OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
+  const { comments, totalCount, loading } = useCommentSectionComments(
+    {
+      memberId: activeMemberId,
+      videoId: id,
     },
-    orderBy: sortCommentsBy,
-    userCommentswhere: {
-      // get comments which are not a reply to a comment
-      parentComment: {
-        id_eq: null,
-      },
-      video: { id_eq: id },
-      author: {
-        id_eq: activeMemberId,
-      },
-      OR: [{ status_eq: CommentStatus.Visible }, { repliesCount_gt: 0 }],
-    },
-  })
+    { skip: disabled || !id }
+  )
 
   const {
     processingCommentReactionId,
@@ -156,26 +143,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     [activeMemberId, closeDeleteModal, deleteComment, moderateComment, openDeleteModal]
   )
 
-  const getCommentReactions = useCallback(
-    ({ commentId, reactions, reactionsCount }: GetCommentReactionsArgs): ReactionChipProps[] => {
-      const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
-        reactionId: Number(reactionId) as ReactionId,
-        customId: `${commentId}-${reactionId}`,
-        state: 'processing' as const,
-        count: 0,
-      }))
-
-      return defaultReactions.map((reaction) => {
-        return {
-          ...reaction,
-          state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
-          count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-          active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
-        }
-      })
-    },
-    [processingCommentReactionId, activeMemberId]
-  )
   const memoizedComments = useMemo(() => {
     return comments?.map((comment, idx) => {
       return (
@@ -184,7 +151,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           highlighted={comment.id === highlightedComment}
           reactions={getCommentReactions({
             commentId: comment.id,
-            reactions: comment.reactions,
+            userReactions: comment.userReactions,
             reactionsCount: comment.reactionsCountByReactionId,
             activeMemberId,
             processingCommentReactionId,
@@ -222,7 +189,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   }, [
     comments,
     highlightedComment,
-    getCommentReactions,
     activeMemberId,
     processingCommentReactionId,
     reactionPopoverDismissed,
@@ -283,4 +249,27 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </DialogModal>
     </CommentsSectionWrapper>
   )
+}
+
+const getCommentReactions = ({
+  commentId,
+  userReactions,
+  reactionsCount,
+  processingCommentReactionId,
+}: GetCommentReactionsArgs): ReactionChipProps[] => {
+  const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
+    reactionId: Number(reactionId) as ReactionId,
+    customId: `${commentId}-${reactionId}`,
+    state: 'processing' as const,
+    count: 0,
+  }))
+
+  return defaultReactions.map((reaction) => {
+    return {
+      ...reaction,
+      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
+      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
+      active: !!userReactions?.find((r) => r === reaction.reactionId),
+    }
+  })
 }

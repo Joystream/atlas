@@ -1441,14 +1441,6 @@ export type AllBidFieldsFragment = {
   }
 }
 
-export type CommentReactionFieldsFragment = {
-  __typename?: 'CommentReaction'
-  id: string
-  createdAt: Date
-  reactionId: number
-  member: { __typename?: 'Membership'; id: string }
-}
-
 export type CommentReactionsCountByReactionIdFieldsFragment = {
   __typename?: 'CommentReactionsCountByReactionId'
   id: string
@@ -1500,13 +1492,6 @@ export type CommentFieldsFragment = {
     id: string
     count: number
     reactionId: number
-  }>
-  reactions: Array<{
-    __typename?: 'CommentReaction'
-    id: string
-    createdAt: Date
-    reactionId: number
-    member: { __typename?: 'Membership'; id: string }
   }>
   commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
 }
@@ -1816,16 +1801,6 @@ export const CommentReactionsCountByReactionIdFieldsFragmentDoc = gql`
     reactionId
   }
 `
-export const CommentReactionFieldsFragmentDoc = gql`
-  fragment CommentReactionFields on CommentReaction {
-    id
-    createdAt
-    reactionId
-    member {
-      id
-    }
-  }
-`
 export const CommentFieldsFragmentDoc = gql`
   fragment CommentFields on Comment {
     id
@@ -1837,9 +1812,6 @@ export const CommentFieldsFragmentDoc = gql`
     reactionsCountByReactionId {
       ...CommentReactionsCountByReactionIdFields
     }
-    reactions {
-      ...CommentReactionFields
-    }
     parentCommentId
     repliesCount
     text
@@ -1850,5 +1822,4 @@ export const CommentFieldsFragmentDoc = gql`
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${CommentReactionsCountByReactionIdFieldsFragmentDoc}
-  ${CommentReactionFieldsFragmentDoc}
 `

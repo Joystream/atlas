@@ -33,17 +33,31 @@ query GetCommentsConnection(
 query GetUserCommentsAndVideoCommentsConnection(
   $first: Int
   $after: String
-  $userCommentswhere: CommentWhereInput
-  $videCommentsWhere: CommentWhereInput
+  $memberId: ID
+  $videoId: ID
   $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
 ) {
-  userComments: comments(where: $userCommentswhere, orderBy: [createdAt_DESC]) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    reactionId
+    commentId
+  }
+  userComments: comments(
+    where: {
+      # get comments which are not a reply to a comment
+      parentComment: { id_eq: null }
+      video: { id_eq: $videoId }
+      author: { id_eq: $memberId }
+      # if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
+      OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+    }
+    orderBy: [createdAt_DESC]
+  ) {
     ...CommentFields
   }
   videoCommentsConnection: commentsConnection(
     first: $first
     after: $after
-    where: $videCommentsWhere
+    where: { video: { id_eq: $videoId }, OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
     orderBy: $orderBy
   ) {
     edges {
