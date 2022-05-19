@@ -102,3 +102,7 @@ export const ReplyButton = styled(Button)`
   top: 1px;
   margin-left: ${sizes(3)};
 `
+
+export const StyledRepliesSkeleton = styled(SkeletonLoader)`
+  margin-left: ${sizes(3)};
+`

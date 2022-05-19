@@ -81,7 +81,7 @@ export const useCommentSectionComments = (
   const videoCommentThreadsIds = data?.videoCommentsConnection.edges
     .filter((comment) => !!comment.node.repliesCount)
     .map((comment) => comment.node.id)
-  const { comments: replies, loading: repliesLoading } = useComments(
+  const { comments: replies } = useComments(
     { where: { parentComment: { id_in: videoCommentThreadsIds } }, orderBy: CommentOrderByInput.CreatedAtAsc },
     { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
   )
@@ -106,9 +106,9 @@ export const useCommentSectionComments = (
 
   return {
     userComments: userComments,
-    comments: data && replies ? [...(userComments || []), ...(videoComments || [])] : undefined,
+    comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
     totalCount: data?.videoCommentsConnection.totalCount,
-    loading: loading || repliesLoading,
+    loading: loading,
     ...rest,
   }
 }

@@ -283,6 +283,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           videoId={videoId}
           processingCommentReactionId={processingCommentReactionId}
           replies={comment.replies}
+          repliesCount={comment.repliesCount}
+          repliesLoading={!!comment.repliesCount && !comment.replies}
           onDeleteClick={() => video && handleDeleteComment(comment, video)}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           onEditLabelClick={() => {

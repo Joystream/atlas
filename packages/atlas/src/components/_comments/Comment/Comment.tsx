@@ -29,6 +29,7 @@ import {
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
+  StyledRepliesSkeleton,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
@@ -57,6 +58,8 @@ export type CommentProps = {
   replyAvatars?: AvatarGroupUrlAvatar[]
   onToggleReplies?: () => void
   repliesOpen?: boolean
+  repliesLoading?: boolean
+  repliesCount?: number
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
@@ -83,6 +86,8 @@ export const Comment: React.FC<CommentProps> = ({
   replyAvatars,
   onToggleReplies,
   repliesOpen,
+  repliesLoading,
+  repliesCount,
 }) => {
   const [commentHover, setCommentHover] = useState(false)
   const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
@@ -159,8 +164,6 @@ export const Comment: React.FC<CommentProps> = ({
     },
     [onReactionClick, reactionPopoverDismissed]
   )
-
-  const repliesCount = replyAvatars ? replyAvatars.length : 0
 
   return (
     <CommentRow
@@ -271,18 +274,26 @@ export const Comment: React.FC<CommentProps> = ({
                       <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
                     )}
                     <RepliesWrapper>
-                      {!!replyAvatars?.length && (
+                      {!!repliesCount && (
                         <StyledAvatarGroup
                           size="small"
-                          avatars={replyAvatars.filter((avatar, idx) => !mappedAvatars?.includes(avatar.url, idx + 1))}
+                          avatars={
+                            replyAvatars?.filter((avatar, idx) => !mappedAvatars?.includes(avatar.url, idx + 1)) ||
+                            Array.from({ length: repliesCount }, () => ({ url: undefined }))
+                          }
                           clickable={false}
+                          loading={repliesLoading}
                         />
                       )}
-                      {onToggleReplies && !!repliesCount && (
-                        <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
-                          {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                        </ReplyButton>
-                      )}
+                      {onToggleReplies &&
+                        !!repliesCount &&
+                        (repliesLoading ? (
+                          <StyledRepliesSkeleton height={17} width={75} />
+                        ) : (
+                          <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
+                            {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                          </ReplyButton>
+                        ))}
                       {onReplyClick && !isDeleted && (commentHover || !mdMatch) && (
                         <ReplyButton
                           onClick={onReplyClick}
