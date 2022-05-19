@@ -119,15 +119,15 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     if (!videoId || !commentInputTextCollection.get(commentInputId)) {
       return
     }
-    const commentId = await addComment({
+    const newCommentId = await addComment({
       videoId,
       commentBody: commentInputTextCollection.get(commentInputId) ?? '',
       parentCommentId,
-      commentId: commentInputId,
+      commentInputId,
     })
-    if (commentId) {
-      setCommentInputText({ commentId: commentInputId, comment: '' })
-      setHighlightedComment(commentId || null)
+    if (newCommentId) {
+      setCommentInputText({ commentId: commentInputId, comment: undefined })
+      setHighlightedComment(newCommentId || null)
     }
   }
 
