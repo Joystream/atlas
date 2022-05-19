@@ -1,6 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
+  CommentOrderByInput,
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
   GetCommentsConnectionQuery,
@@ -63,7 +64,7 @@ export const useCommentSectionComments = (
     GetUserCommentsAndVideoCommentsConnectionQueryVariables
   >
 ) => {
-  const { data, ...rest } = useGetUserCommentsAndVideoCommentsConnectionQuery({ ...opts, variables })
+  const { data, loading, ...rest } = useGetUserCommentsAndVideoCommentsConnectionQuery({ ...opts, variables })
 
   const userCommentLookup = data?.userComments && createLookup(data?.userComments)
 
@@ -76,8 +77,17 @@ export const useCommentSectionComments = (
       return acc
     }, {})
 
+  const videoCommentThreadsIds = data?.videoCommentsConnection.edges
+    .filter((comment) => !!comment.node.repliesCount)
+    .map((comment) => comment.node.id)
+  const { comments: replies, loading: repliesLoading } = useComments(
+    { where: { parentComment: { id_in: videoCommentThreadsIds } }, orderBy: CommentOrderByInput.CreatedAtAsc },
+    { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
+  )
+
   const userComments = data?.userComments.map((userComment) => ({
     ...userComment,
+    replies: replies ? replies?.filter((comment) => comment.parentCommentId === userComment.id) : null,
     userReactions: userCommentReactionsLookup?.[userComment.id],
   }))
 
@@ -85,14 +95,16 @@ export const useCommentSectionComments = (
     .map((edge) => edge.node)
     .map((userComment) => ({
       ...userComment,
+      replies: replies ? replies?.filter((comment) => comment.parentCommentId === userComment.id) : null,
       userReactions: userCommentReactionsLookup?.[userComment.id],
     }))
     .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
 
   return {
     userComments: userComments,
-    comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
+    comments: data && replies ? [...(userComments || []), ...(videoComments || [])] : undefined,
     totalCount: data?.videoCommentsConnection.totalCount,
+    loading: loading || repliesLoading,
     ...rest,
   }
 }

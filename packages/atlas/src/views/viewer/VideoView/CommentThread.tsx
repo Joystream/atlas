@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react'
 
-import { useComments } from '@/api/hooks'
-import { CommentOrderByInput } from '@/api/queries'
+import { CommentFieldsFragment } from '@/api/queries'
 import { Comment, CommentProps } from '@/components/_comments/Comment'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { ReactionId } from '@/config/reactions'
@@ -22,6 +21,7 @@ type CommentThreadProps = {
   handleCommentReaction: (commentId: string, reactionId: ReactionId) => void
   authorized: boolean
   processingCommentReactionId: string | null
+  replies: (CommentFieldsFragment & { userReactions?: number[] })[] | null
 } & CommentProps
 
 const COMMENT_BOX_ID = 'comment-box'
@@ -36,6 +36,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   authorized,
   processingCommentReactionId,
   reactionPopoverDismissed,
+  replies,
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
@@ -48,17 +49,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
   const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
-  const { comments, loading } = useComments(
-    {
-      where: { parentComment: { id_eq: commentId } },
-      memberId: activeMemberId,
-      videoId: videoId,
-      orderBy: CommentOrderByInput.CreatedAtAsc,
-    },
-    { skip: !commentId }
-  )
-  const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
-  const replyAvatars = comments?.map((comment) => ({
+  const placeholderItems = !replies ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const replyAvatars = replies?.map((comment) => ({
     url: comment?.author.metadata.avatar?.__typename === 'AvatarUri' ? comment?.author.metadata.avatar?.avatarUri : '',
     handle: comment.author.handle,
   }))
@@ -160,9 +152,9 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           />
         )}
         {repliesOpen &&
-          (loading
+          (!replies
             ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
-            : comments?.map((comment, idx) => (
+            : replies?.map((comment, idx) => (
                 <Comment
                   highlighted={comment.id === highlightedComment}
                   reactions={getCommentReactions({
