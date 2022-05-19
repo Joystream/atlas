@@ -1,6 +1,7 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
+  CommentFieldsFragment,
   CommentOrderByInput,
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
@@ -85,9 +86,12 @@ export const useCommentSectionComments = (
     { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
   )
 
+  const matchReplies = (videoComment: CommentFieldsFragment) =>
+    replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
+
   const userComments = data?.userComments.map((userComment) => ({
     ...userComment,
-    replies: replies ? replies?.filter((comment) => comment.parentCommentId === userComment.id) : null,
+    replies: matchReplies(userComment),
     userReactions: userCommentReactionsLookup?.[userComment.id],
   }))
 
@@ -95,7 +99,7 @@ export const useCommentSectionComments = (
     .map((edge) => edge.node)
     .map((userComment) => ({
       ...userComment,
-      replies: replies ? replies?.filter((comment) => comment.parentCommentId === userComment.id) : null,
+      replies: matchReplies(userComment),
       userReactions: userCommentReactionsLookup?.[userComment.id],
     }))
     .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
