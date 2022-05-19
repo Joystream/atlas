@@ -31,7 +31,7 @@ export type CommentInputProps = {
   hasInitialValueChanged: boolean
   onComment?: () => void
   onCancel?: () => void
-  onChange?: (value: string) => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onFocus?: () => void
 } & CommentRowProps
 
@@ -114,7 +114,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
             rows={1}
             value={value}
             placeholder={`Leave a public comment as ${memberHandle ? ` ${memberHandle}` : '...'}`}
-            onChange={(e) => !readOnly && onChange?.(e.target.value)}
+            onChange={(e) => !readOnly && onChange?.(e)}
             disabled={processing}
             data-processing={processing}
           />

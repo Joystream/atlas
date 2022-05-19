@@ -155,27 +155,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         return new Set(isEditing)
       })
     }
-    const getCommentReactions = ({
-      commentId,
-      reactions,
-      reactionsCount,
-    }: GetCommentReactionsArgs): ReactionChipProps[] => {
-      const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
-        reactionId: Number(reactionId) as ReactionId,
-        customId: `${commentId}-${reactionId}`,
-        state: 'processing' as const,
-        count: 0,
-      }))
-
-      return defaultReactions.map((reaction) => {
-        return {
-          ...reaction,
-          state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
-          count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-          active: reactions.some((r) => r.reactionId === reaction.reactionId && r.member.id === activeMemberId),
-        }
-      })
-    }
     const handleUpdateComment = async ({ commentId }: { commentId: string }) => {
       if (!videoId || !commentInputTextCollection.get(commentId)) {
         return
@@ -258,7 +237,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           onComment={() => handleUpdateComment({ commentId: comment.id })}
           value={commentInputTextCollection.get(comment.id) ?? ''}
           hasInitialValueChanged={comment.text !== commentInputTextCollection.get(comment.id)}
-          onChange={(value) => setCommentInputText({ commentId: comment.id, comment: value })}
+          onChange={(e) => setCommentInputText({ commentId: comment.id, comment: e.target.value })}
           onCancel={() => handleEditCommentCancel(comment)}
           withoutOutlineBox
         />
@@ -362,7 +341,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         value={commentInputTextCollection.get(COMMENT_BOX_ID) ?? ''}
         hasInitialValueChanged={!!commentInputTextCollection.get(COMMENT_BOX_ID)}
         withoutOutlineBox
-        onChange={(value) => setCommentInputText({ commentId: COMMENT_BOX_ID, comment: value })}
+        onChange={(e) => setCommentInputText({ commentId: COMMENT_BOX_ID, comment: e.target.value })}
       />
       {comments && !comments.length && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
