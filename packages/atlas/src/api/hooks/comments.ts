@@ -23,8 +23,22 @@ export const useComments = (
 ) => {
   const { data, ...rest } = useGetCommentsQuery({ ...opts, variables })
 
+  const userCommentReactionsLookup =
+    data?.commentReactions &&
+    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+      if (item) {
+        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+      }
+      return acc
+    }, {})
+
+  const mappedComments = data?.comments.map((comment) => ({
+    ...comment,
+    userReactions: userCommentReactionsLookup?.[comment.id],
+  }))
+
   return {
-    comments: data?.comments,
+    comments: data ? [...(mappedComments || [])] : undefined,
     ...rest,
   }
 }

@@ -1,9 +1,15 @@
 query GetComments(
   $limit: Int
   $offset: Int
+  $memberId: ID
+  $videoId: ID
   $where: CommentWhereInput
   $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
 ) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    reactionId
+    commentId
+  }
   comments(limit: $limit, offset: $offset, where: $where, orderBy: $orderBy) {
     ...CommentFields
   }

@@ -21,6 +21,7 @@ type CommentThreadProps = {
   videoAuthorId?: string
   handleCommentReaction: (commentId: string, reactionId: ReactionId) => void
   authorized: boolean
+  processingCommentReactionId: string | null
 } & CommentProps
 
 const COMMENT_BOX_ID = 'comment-box'
@@ -33,6 +34,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   videoAuthorId,
   handleCommentReaction,
   authorized,
+  processingCommentReactionId,
+  reactionPopoverDismissed,
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
@@ -46,7 +49,12 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
   const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
   const { comments, loading } = useComments(
-    { where: { parentComment: { id_eq: commentId } }, orderBy: CommentOrderByInput.CreatedAtAsc },
+    {
+      where: { parentComment: { id_eq: commentId } },
+      memberId: activeMemberId,
+      videoId: videoId,
+      orderBy: CommentOrderByInput.CreatedAtAsc,
+    },
     { skip: !commentId }
   )
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -126,6 +134,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
         replyAvatars={replyAvatars}
         onToggleReplies={toggleRepliesOpen}
         repliesOpen={repliesOpen}
+        reactionPopoverDismissed={reactionPopoverDismissed}
       />
       <>
         {replyInputOpen && (
@@ -158,6 +167,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
                   highlighted={comment.id === highlightedComment}
                   reactions={getCommentReactions({
                     commentId: comment.id,
+                    userReactions: comment.userReactions,
                     reactionsCount: comment.reactionsCountByReactionId,
                     activeMemberId,
                     processingCommentReactionId,
@@ -173,6 +183,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
                   isAbleToEdit={comment.author.id === activeMemberId}
                   memberHandle={comment.author.handle}
                   memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
+                  reactionPopoverDismissed={reactionPopoverDismissed}
                   memberAvatarUrl={
                     comment.author.metadata.avatar?.__typename === 'AvatarUri'
                       ? comment.author.metadata.avatar?.avatarUri
