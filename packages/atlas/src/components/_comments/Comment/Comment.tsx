@@ -283,7 +283,7 @@ export const Comment: React.FC<CommentProps> = ({
                           {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
                         </ReplyButton>
                       )}
-                      {!isDeleted && (commentHover || !mdMatch) && (
+                      {onReplyClick && !isDeleted && (commentHover || !mdMatch) && (
                         <ReplyButton
                           onClick={onReplyClick}
                           variant="tertiary"

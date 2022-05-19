@@ -8,6 +8,7 @@ import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useMemberAvatar } from '@/providers/assets'
+import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useUser } from '@/providers/user'
 
 import { getCommentReactions } from './utils'
@@ -18,7 +19,6 @@ type CommentThreadProps = {
   videoId?: string
   onEditLabelClick: () => void
   videoAuthorId?: string
-  handleCancelConfirmation: (cb: () => void) => void
   handleCommentReaction: (commentId: string, reactionId: ReactionId) => void
   authorized: boolean
 } & CommentProps
@@ -31,7 +31,6 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   videoId,
   onEditLabelClick,
   videoAuthorId,
-  handleCancelConfirmation,
   handleCommentReaction,
   authorized,
   ...commentProps
@@ -45,6 +44,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const { processingCommentReactionId, addComment, commentInputIsProcessingCollection } = useReactionTransactions()
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
+  const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
   const { comments, loading } = useComments(
     { where: { parentComment: { id_eq: commentId } }, orderBy: CommentOrderByInput.CreatedAtAsc },
     { skip: !commentId }
@@ -93,6 +93,30 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     setReplyInputOpen(true)
     setRepliesOpen(true)
   }
+
+  const handleCancelConfirmation = useCallback(
+    (cb: () => void) => {
+      openCancelConfirmationModal({
+        type: 'warning',
+        title: 'Discard changes',
+        description: 'Are you sure you want to discard your comment changes?',
+        primaryButton: {
+          text: 'Confirm and discard',
+          onClick: () => {
+            closeCancelConfirmationModal()
+            cb()
+          },
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => {
+            closeCancelConfirmationModal()
+          },
+        },
+      })
+    },
+    [closeCancelConfirmationModal, openCancelConfirmationModal]
+  )
 
   return (
     <>

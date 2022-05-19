@@ -92,30 +92,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       return new Map(commentInputTextCollection)
     })
 
-  const handleCancelConfirmation = useCallback(
-    (cb: () => void) => {
-      openCancelConfirmationModal({
-        type: 'warning',
-        title: 'Discard changes',
-        description: 'Are you sure you want to discard your comment changes?',
-        primaryButton: {
-          text: 'Confirm and discard',
-          onClick: () => {
-            closeCancelConfirmationModal()
-            cb()
-          },
-        },
-        secondaryButton: {
-          text: 'Cancel',
-          onClick: () => {
-            closeCancelConfirmationModal()
-          },
-        },
-      })
-    },
-    [closeCancelConfirmationModal, openCancelConfirmationModal]
-  )
-
   const handleSorting = (value?: CommentOrderByInput[] | null) => {
     if (value) {
       setSortCommentsBy(value)
@@ -279,7 +255,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             processingCommentReactionId,
           })}
           authorized={!!authorized}
-          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
+          onDeleteClick={() => video && handleDeleteComment(comment, video)}
           loading={!comment.id}
           commentId={comment.id}
           onOpenSignInDialog={handleOpenSignInDialog}
@@ -305,7 +281,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               : 'default'
           }
           videoId={videoId}
-          handleCancelConfirmation={handleCancelConfirmation}
           onDeleteClick={() => video && handleDeleteComment(comment, video)}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           onEditLabelClick={() => {
@@ -341,7 +316,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     reactionPopoverDismissed,
     videoAuthorId,
     video,
-    handleCancelConfirmation,
     handleCommentReaction,
   ])
 
@@ -378,7 +352,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         hasInitialValueChanged={!!commentInputTextCollection.get(COMMENT_BOX_ID)}
         withoutOutlineBox
         onChange={(e) => setCommentInputText({ commentId: COMMENT_BOX_ID, comment: e.target.value })}
-        onCancel={() => handleCancelConfirmation(() => setCommentInputText({ commentId: COMMENT_BOX_ID, comment: '' }))}
       />
       {comments && !comments.length && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
