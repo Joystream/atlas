@@ -152,8 +152,9 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           />
         )}
         {repliesOpen &&
+          !!commentProps.repliesCount &&
           (!replies
-            ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
+            ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading indented />)
             : replies?.map((comment, idx) => (
                 <Comment
                   highlighted={comment.id === highlightedComment}
