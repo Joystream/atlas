@@ -33,13 +33,20 @@ export const HighlightedComment: React.FC<HighlightedCommentProps> = ({
   processingCommentReactionId,
   video,
 }) => {
-  const { comment, loading: commentLoading } = useComment(commentId || '', { skip: !commentId })
-  const { comment: parentComment, loading: parentCommentLoading } = useComment(comment?.parentCommentId || '', {
-    skip: !comment || !comment.parentCommentId,
+  const { comment, loading: commentLoading } = useComment(commentId || '', activeMemberId || '', video?.id || '', {
+    skip: !commentId,
   })
+  const { comment: parentComment, loading: parentCommentLoading } = useComment(
+    comment?.parentCommentId || '',
+    activeMemberId || '',
+    video?.id || '',
+    {
+      skip: !comment || !comment.parentCommentId,
+    }
+  )
 
   const getComment = useCallback(
-    (comment: CommentFieldsFragment, highlighted: boolean, indented?: boolean) => (
+    (comment: CommentFieldsFragment & { userReactions?: number[] }, highlighted: boolean, indented?: boolean) => (
       <Comment
         indented={indented}
         highlighted={highlighted}
@@ -47,7 +54,7 @@ export const HighlightedComment: React.FC<HighlightedCommentProps> = ({
         id={comment.id}
         reactions={getCommentReactions({
           commentId: comment.id,
-          reactions: comment.reactions,
+          userReactions: comment.userReactions,
           reactionsCount: comment.reactionsCountByReactionId,
           activeMemberId,
           processingCommentReactionId,

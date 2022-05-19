@@ -54,7 +54,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
   const commentRef = useRef<HTMLTextAreaElement>(null)
-  const { comment: commentFromUrl } = useComment(commentLink || '', { skip: !commentLink })
+  const { comment: commentFromUrl } = useComment(commentLink || '', activeMemberId || '', video?.id || '', {
+    skip: !commentLink,
+  })
 
   const scrollToCommentInput = (smooth?: boolean) => {
     commentRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })

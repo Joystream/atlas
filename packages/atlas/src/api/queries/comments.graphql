@@ -15,7 +15,11 @@ query GetComments(
   }
 }
 
-query GetComment($where: CommentWhereUniqueInput!) {
+query GetComment($where: CommentWhereUniqueInput!, $memberId: ID, $videoId: ID) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    reactionId
+    commentId
+  }
   commentByUniqueInput(where: $where) {
     ...CommentFields
   }

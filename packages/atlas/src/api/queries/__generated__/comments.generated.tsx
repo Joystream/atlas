@@ -68,10 +68,13 @@ export type GetCommentsQuery = {
 
 export type GetCommentQueryVariables = Types.Exact<{
   where: Types.CommentWhereUniqueInput
+  memberId?: Types.InputMaybe<Types.Scalars['ID']>
+  videoId?: Types.InputMaybe<Types.Scalars['ID']>
 }>
 
 export type GetCommentQuery = {
   __typename?: 'Query'
+  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
   commentByUniqueInput?: {
     __typename?: 'Comment'
     id: string
@@ -116,13 +119,6 @@ export type GetCommentQuery = {
       id: string
       count: number
       reactionId: number
-    }>
-    reactions: Array<{
-      __typename?: 'CommentReaction'
-      id: string
-      createdAt: Date
-      reactionId: number
-      member: { __typename?: 'Membership'; id: string }
     }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
   } | null
@@ -391,7 +387,11 @@ export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
 export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>
 export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>
 export const GetCommentDocument = gql`
-  query GetComment($where: CommentWhereUniqueInput!) {
+  query GetComment($where: CommentWhereUniqueInput!, $memberId: ID, $videoId: ID) {
+    commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+      reactionId
+      commentId
+    }
     commentByUniqueInput(where: $where) {
       ...CommentFields
     }
@@ -412,6 +412,8 @@ export const GetCommentDocument = gql`
  * const { data, loading, error } = useGetCommentQuery({
  *   variables: {
  *      where: // value for 'where'
+ *      memberId: // value for 'memberId'
+ *      videoId: // value for 'videoId'
  *   },
  * });
  */

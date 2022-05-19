@@ -54,14 +54,35 @@ export const useComments = (
   }
 }
 
-export const useComment = (id: string, opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) => {
+export const useComment = (
+  id: string,
+  memberId: string,
+  videoId: string,
+  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
+) => {
   const { data, ...rest } = useGetCommentQuery({
     ...opts,
-    variables: { where: { id } },
+    variables: { where: { id }, memberId, videoId },
   })
 
+  const userCommentReactionsLookup =
+    data?.commentReactions &&
+    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+      if (item) {
+        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+      }
+      return acc
+    }, {})
+
+  const comment = data?.commentByUniqueInput
+    ? {
+        ...data?.commentByUniqueInput,
+        userReactions: userCommentReactionsLookup?.[data?.commentByUniqueInput.id],
+      }
+    : null
+
   return {
-    comment: data?.commentByUniqueInput,
+    comment,
     ...rest,
   }
 }
