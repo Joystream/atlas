@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -96,6 +96,17 @@ export const Comment: React.FC<CommentProps> = ({
     },
   ]
 
+  const domRef = useRef<HTMLDivElement>(null)
+  const [highlightedPreviously, setHighlightedPreviously] = useState<boolean | undefined>(false)
+
+  // scroll comment into view once the comment gets highlighted
+  useEffect(() => {
+    if (highlighted === true && !highlightedPreviously) {
+      domRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    setHighlightedPreviously(highlighted)
+  }, [highlightedPreviously, highlighted])
+
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
   const allReactionsApplied =
     reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
@@ -141,7 +152,7 @@ export const Comment: React.FC<CommentProps> = ({
       memberUrl={memberUrl}
       memberAvatarUrl={memberAvatarUrl}
     >
-      <CommentWrapper shouldShowKebabButton={shouldShowKebabButton}>
+      <CommentWrapper ref={domRef} shouldShowKebabButton={shouldShowKebabButton}>
         <SwitchTransition>
           <CSSTransition
             timeout={parseInt(cVar('animationTimingFast', true))}

@@ -2,8 +2,8 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback, useState } from 'react'
 
 import {
-  GetCommentsConnectionQueryHookResult,
   GetUserCommentsAndVideoCommentsConnectionDocument,
+  GetUserCommentsAndVideoCommentsConnectionQueryHookResult,
   GetVideoDocument,
 } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
@@ -16,7 +16,19 @@ import { ConsoleLogger } from '@/utils/logs'
 export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
-  const [commentInputProcessing, setCommentInputProcessing] = useState(false)
+  // stores the isProcessing state of comment inputs and is indexed by commentId's
+  const [commentInputIsProcessingCollection, setCommentInputIsProcessingCollection] = useState(new Set<string>())
+  const setCommentInputIsProcessing = ({ commentInputId, value }: { commentInputId: string; value: boolean }) => {
+    setCommentInputIsProcessingCollection((processing) => {
+      if (value) {
+        processing.add(commentInputId)
+      } else {
+        processing.delete(commentInputId)
+      }
+      return new Set(processing)
+    })
+  }
+
   const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
 
   const handleTransaction = useTransaction()
@@ -25,7 +37,7 @@ export const useReactionTransactions = () => {
   const client = useApolloClient()
 
   const refetchComments = useCallback(
-    () =>
+    (): Promise<GetUserCommentsAndVideoCommentsConnectionQueryHookResult[]> =>
       client.refetchQueries({
         include: [GetUserCommentsAndVideoCommentsConnectionDocument],
       }),
@@ -65,12 +77,22 @@ export const useReactionTransactions = () => {
   )
 
   const addComment = useCallback(
-    async (videoId: string, commentBody: string, parentCommentId?: string) => {
+    async ({
+      commentInputId,
+      parentCommentId,
+      videoId,
+      commentBody,
+    }: {
+      commentInputId: string
+      parentCommentId?: string
+      videoId: string
+      commentBody: string
+    }) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
         return
       }
-      setCommentInputProcessing(true)
+      setCommentInputIsProcessing({ commentInputId, value: true })
 
       let newCommentId: string | undefined
 
@@ -87,28 +109,54 @@ export const useReactionTransactions = () => {
           ),
         onTxSync: async ({ block }) => {
           const refetchResult = await refetchComments()
-          setCommentInputProcessing(false)
+          setCommentInputIsProcessing({ commentInputId, value: false })
 
-          const newCommentsQueryResult = refetchResult[0] as GetCommentsConnectionQueryHookResult
+          const newCommentsQueryResult = refetchResult[0]
           // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
           // Update once https://github.com/Joystream/atlas/issues/2629 is done.
-          newCommentId = newCommentsQueryResult.data?.commentsConnection.edges.find(
+          newCommentId = newCommentsQueryResult.data?.videoCommentsConnection.edges.find(
             (edge) => edge.node.commentcreatedeventcomment?.[0].inBlock === block
           )?.node.id
         },
         onError: () => {
-          setCommentInputProcessing(false)
+          setCommentInputIsProcessing({ commentInputId, value: false })
         },
         minimized: {
           signErrorMessage: 'Failed to post video comment',
         },
       })
-
       return newCommentId
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
   )
 
+  const updateComment = useCallback(
+    async ({ commentId, videoId, commentBody }: { commentId: string; videoId: string; commentBody: string }) => {
+      if (!joystream || !activeMemberId || !videoId) {
+        ConsoleLogger.error('no joystream or active member')
+        return
+      }
+      setCommentInputIsProcessing({ commentInputId: commentId, value: true })
+
+      await handleTransaction({
+        txFactory: async (updateStatus) =>
+          (
+            await joystream.extrinsics
+          ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
+        onTxSync: async () => {
+          await refetchComments()
+          setCommentInputIsProcessing({ commentInputId: commentId, value: false })
+        },
+        onError: () => {
+          setCommentInputIsProcessing({ commentInputId: commentId, value: false })
+        },
+        minimized: {
+          signErrorMessage: 'Failed to udpate video comment',
+        },
+      })
+    },
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+  )
   const deleteComment = useCallback(
     async (commentId: string, videoTitle?: string) => {
       if (!joystream || !activeMemberId) {
@@ -204,9 +252,10 @@ export const useReactionTransactions = () => {
     addComment,
     deleteComment,
     moderateComment,
+    updateComment,
     likeOrDislikeVideo,
     videoReactionProcessing,
-    commentInputProcessing,
+    commentInputIsProcessingCollection,
     processingCommentReactionId,
   }
 }
