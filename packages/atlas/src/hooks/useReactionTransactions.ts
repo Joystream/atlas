@@ -112,10 +112,10 @@ export const useReactionTransactions = () => {
           setCommentInputIsProcessing({ commentInputId, value: false })
 
           const { data } = refetchResult[0]
-          // TODO update once we have replies ready(user comments query ignores replies)
-          newCommentId = data?.userComments.find(
-            (comment) => comment.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
-          )?.id
+
+          newCommentId = data?.videoCommentsConnection.edges.find(
+            (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
+          )?.node.id
         },
         onError: () => {
           setCommentInputIsProcessing({ commentInputId, value: false })
