@@ -1,3 +1,4 @@
+import { UPLOAD_PROCESSING_TIMEOUT } from '@/config/assets'
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { createStore } from '@/store'
 import { UploadStatus } from '@/types/storage'
@@ -36,8 +37,6 @@ type UploadStoreActions = {
   addProcessingAsset: (contentId: string) => void
   addNewChannelId: (channelId: string) => void
 }
-
-const THREE_MINUTES = 1000 * 60 * 3
 
 const UPLOADS_LOCAL_STORAGE_KEY = 'uploads'
 
@@ -78,7 +77,7 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       },
       addProcessingAsset: (contentId) => {
         set((state) => {
-          state.processingAssets.push({ id: contentId, expiresAt: Date.now() + THREE_MINUTES })
+          state.processingAssets.push({ id: contentId, expiresAt: Date.now() + UPLOAD_PROCESSING_TIMEOUT })
         })
       },
       removeProcessingAsset: (contentId) => {
