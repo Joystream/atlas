@@ -45,8 +45,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const { activeMemberId, activeMembership } = useUser()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
-  const { processingCommentReactionId, addComment, commentInputIsProcessingCollection } = useReactionTransactions()
-  const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
+  const { addComment, commentInputIsProcessingCollection } = useReactionTransactions()
+  const [commentInputTextCollection] = useState(new Map<string, string>())
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
   const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
   const placeholderItems = !replies ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -79,7 +79,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       setHighlightedComment(commentId || null)
       setReplyInputOpen(false)
     },
-    [addComment]
+    [addComment, commentInputTextCollection]
   )
 
   const handleReplyClick = () => {

@@ -47,7 +47,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
-  const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
 
   useEffect(() => {
     if (!highlightedComment) {
@@ -285,7 +284,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           replies={comment.replies}
           repliesCount={comment.repliesCount}
           repliesLoading={!!comment.repliesCount && !comment.replies}
-          onDeleteClick={() => video && handleDeleteComment(comment, video)}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           onEditLabelClick={() => {
             setShowEditHistory(true)

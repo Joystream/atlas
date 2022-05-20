@@ -95,7 +95,7 @@ export const Comment: React.FC<CommentProps> = ({
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const mdMatch = useMediaMatch('md')
-  const mappedAvatars = [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
+  const filteredDuplicatedAvatars = [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -277,7 +277,7 @@ export const Comment: React.FC<CommentProps> = ({
                       {!!repliesCount && (
                         <StyledAvatarGroup
                           size="small"
-                          avatars={mappedAvatars}
+                          avatars={filteredDuplicatedAvatars}
                           clickable={false}
                           loading={repliesLoading}
                         />
