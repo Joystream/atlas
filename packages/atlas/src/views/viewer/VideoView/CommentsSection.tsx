@@ -239,6 +239,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           hasInitialValueChanged={comment.text !== commentInputTextCollection.get(comment.id)}
           onChange={(e) => setCommentInputText({ commentId: comment.id, comment: e.target.value })}
           onCancel={() => handleEditCommentCancel(comment)}
+          memberAvatarUrl={memberAvatarUrl}
           withoutOutlineBox
         />
       ) : (
@@ -285,14 +286,23 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           repliesCount={comment.repliesCount}
           repliesLoading={!!comment.repliesCount && !comment.replies}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
-          onEditLabelClick={() => {
+          onEditLabelClick={(replyComment) => {
             setShowEditHistory(true)
-            setOriginalComment(comment)
+            setOriginalComment(replyComment || comment)
           }}
           onEditClick={() => {
             setIsEditingComment({ commentId: comment.id, value: true })
             setCommentInputText({ commentId: comment.id, comment: comment.text })
           }}
+          channelOwnerMember={video?.channel.ownerMember?.id}
+          onUpdateComment={handleUpdateComment}
+          onEditCommentCancel={handleEditCommentCancel}
+          onSetIsEditingComment={setIsEditingComment}
+          onSetCommentInputText={setCommentInputText}
+          isEditingCommentCollection={isEditingCommentCollection}
+          commentInputTextCollection={commentInputTextCollection}
+          commentInputIsProcessingCollection={commentInputIsProcessingCollection}
+          onReplyDeleteClick={(replyComment) => video && handleDeleteComment(replyComment, video)}
         />
       )
     )
@@ -311,6 +321,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     closeModal,
     isEditingCommentCollection,
     commentInputIsProcessingCollection,
+    memberAvatarUrl,
     activeMembership?.handle,
     highlightedComment,
     processingCommentReactionId,

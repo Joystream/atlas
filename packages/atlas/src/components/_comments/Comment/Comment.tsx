@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { CommentFieldsFragment } from '@/api/queries'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
@@ -50,7 +51,7 @@ export type CommentProps = {
   type: 'default' | 'deleted' | 'options'
   reactions?: Omit<ReactionChipProps, 'onReactionClick'>[]
   reactionPopoverDismissed?: boolean
-  onEditLabelClick?: () => void
+  onEditLabelClick?: (comment?: CommentFieldsFragment) => void
   onEditClick?: () => void
   onDeleteClick?: () => void
   onReactionClick?: (reaction: ReactionId) => void
@@ -95,7 +96,11 @@ export const Comment: React.FC<CommentProps> = ({
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const mdMatch = useMediaMatch('md')
-  const filteredDuplicatedAvatars = [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
+  const filteredDuplicatedAvatars = repliesCount
+    ? replyAvatars
+      ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
+      : Array.from({ length: repliesCount }, () => ({ url: undefined }))
+    : []
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -206,7 +211,12 @@ export const Comment: React.FC<CommentProps> = ({
                   {isEdited && !isDeleted && (
                     <>
                       <CommentHeaderDot />
-                      <HighlightableText variant="t200" secondary margin={{ left: 2 }} onClick={onEditLabelClick}>
+                      <HighlightableText
+                        variant="t200"
+                        secondary
+                        margin={{ left: 2 }}
+                        onClick={() => onEditLabelClick?.()}
+                      >
                         edited
                       </HighlightableText>
                     </>
