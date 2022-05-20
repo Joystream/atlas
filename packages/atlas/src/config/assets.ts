@@ -2,3 +2,5 @@ export const ASSET_RESPONSE_TIMEOUT = 20000
 export const ASSET_POLLING_INTERVAL = 2000
 export const ASSET_CHANNEL_BAG_PREFIX = 'dynamic:channel:'
 export const ASSET_MIN_DISTRIBUTOR_REFETCH_TIME = 1000
+
+export const UPLOAD_PROCESSING_TIMEOUT = 1000 * 60

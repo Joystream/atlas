@@ -1,3 +1,4 @@
+import { UPLOAD_PROCESSING_TIMEOUT } from '@/config/assets'
 import { ChannelId, VideoId } from '@/joystream-lib'
 import { createStore } from '@/store'
 import { UploadStatus } from '@/types/storage'
@@ -9,12 +10,18 @@ type AssetFile = {
   blob: File | Blob
 }
 
+type ProcessingAsset = {
+  // unix timestamp
+  expiresAt: number
+  id: string
+}
+
 type UploadStoreState = {
   uploads: AssetUpload[]
   uploadsStatus: UploadsStatusRecord
   assetsFiles: AssetFile[]
   isSyncing: boolean
-  processingAssetsIds: string[]
+  processingAssets: ProcessingAsset[]
   // store ids of channels that were created as part of the session to ignore them when checking missing assets
   newChannelsIds: string[]
 }
@@ -26,8 +33,8 @@ type UploadStoreActions = {
   setUploadStatus: (contentId: string, status: Partial<UploadStatus>) => void
   addAssetFile: (assetFile: AssetFile) => void
   setIsSyncing: (isSyncing: boolean) => void
-  removeProcessingAssetId: (contentId: string) => void
-  addProcessingAssetId: (contentId: string) => void
+  removeProcessingAsset: (contentId: string) => void
+  addProcessingAsset: (contentId: string) => void
   addNewChannelId: (channelId: string) => void
 }
 
@@ -68,14 +75,14 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
           state.isSyncing = isSyncing
         })
       },
-      addProcessingAssetId: (contentId) => {
+      addProcessingAsset: (contentId) => {
         set((state) => {
-          state.processingAssetsIds.push(contentId)
+          state.processingAssets.push({ id: contentId, expiresAt: Date.now() + UPLOAD_PROCESSING_TIMEOUT })
         })
       },
-      removeProcessingAssetId: (contentId) => {
+      removeProcessingAsset: (contentId) => {
         set((state) => {
-          state.processingAssetsIds = state.processingAssetsIds.filter((id) => id !== contentId)
+          state.processingAssets = state.processingAssets.filter((processingAsset) => processingAsset.id !== contentId)
         })
       },
       addNewChannelId: (channelId) => {
@@ -89,14 +96,14 @@ export const useUploadsStore = createStore<UploadStoreState, UploadStoreActions>
       uploadsStatus: {},
       assetsFiles: [],
       isSyncing: false,
-      processingAssetsIds: [],
+      processingAssets: [],
       newChannelsIds: [],
     },
   },
   {
     persist: {
       key: UPLOADS_LOCAL_STORAGE_KEY,
-      whitelist: ['uploads', 'processingAssetsIds'],
+      whitelist: ['uploads', 'processingAssets'],
       version: 0,
       migrate: (state) => {
         const uploads = window.localStorage.getItem(UPLOADS_LOCAL_STORAGE_KEY)
