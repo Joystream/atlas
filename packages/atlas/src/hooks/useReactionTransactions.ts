@@ -113,8 +113,9 @@ export const useReactionTransactions = () => {
 
           const { data } = refetchResult[0]
           // TODO update once we have replies ready(user comments query ignores replies)
-          data?.userComments.find((comment) => comment.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash)
-            ?.id
+          newCommentId = data?.userComments.find(
+            (comment) => comment.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
+          )?.id
         },
         onError: () => {
           setCommentInputIsProcessing({ commentInputId, value: false })
