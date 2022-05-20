@@ -65,19 +65,26 @@ export const useComment = (
     variables: { where: { id }, memberId, videoId },
   })
 
-  const userCommentReactionsLookup =
-    data?.commentReactions &&
-    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-      if (item) {
-        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-      }
-      return acc
-    }, {})
+  const videoCommentThreadsIds = data?.commentByUniqueInput?.repliesCount ? data?.commentByUniqueInput?.id : null
+  const { comments: replies } = useComments(
+    {
+      where: { parentComment: { id_eq: videoCommentThreadsIds } },
+      memberId: memberId,
+      orderBy: CommentOrderByInput.CreatedAtAsc,
+    },
+    { skip: !videoCommentThreadsIds }
+  )
+
+  const matchReplies = (videoComment: CommentFieldsFragment) =>
+    replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
+
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
   const comment = data?.commentByUniqueInput
     ? {
         ...data?.commentByUniqueInput,
         userReactions: userCommentReactionsLookup?.[data?.commentByUniqueInput.id],
+        replies: matchReplies(data?.commentByUniqueInput),
       }
     : null
 

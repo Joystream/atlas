@@ -155,6 +155,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
             />
           ) : (
             <Comment
+              id={comment.id}
               author={comment.author}
               highlighted={comment.id === highlightedComment}
               reactions={getCommentReactions({
@@ -181,6 +182,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
                 onSetCommentInputText({ commentId: comment.id, comment: comment.text })
               }}
               onDeleteClick={() => onReplyDeleteClick(comment)}
+              videoId={videoId}
               type={
                 ['DELETED', 'MODERATED'].includes(comment.status)
                   ? 'deleted'
@@ -194,25 +196,26 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       </>
     ),
     [
+      replies,
+      isEditingCommentCollection,
+      commentInputIsProcessingCollection,
       activeMemberId,
       activeMembership?.handle,
-      channelOwnerMember,
-      commentInputIsProcessingCollection,
       commentInputTextCollection,
-      onCommentReaction,
-      highlightedComment,
-      isEditingCommentCollection,
       memberAvatarUrl,
-      onEditCommentCancel,
-      onEditLabelClick,
-      onOpenSignInDialog,
-      onReplyDeleteClick,
-      onSetCommentInputText,
-      onSetIsEditingComment,
-      onUpdateComment,
+      highlightedComment,
       processingCommentReactionId,
       reactionPopoverDismissed,
-      replies,
+      videoId,
+      channelOwnerMember,
+      onOpenSignInDialog,
+      onUpdateComment,
+      onSetCommentInputText,
+      onEditCommentCancel,
+      onCommentReaction,
+      onEditLabelClick,
+      onSetIsEditingComment,
+      onReplyDeleteClick,
     ]
   )
 
@@ -220,12 +223,14 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     <>
       <Comment
         {...commentProps}
+        id={commentId}
         onReplyClick={handleReplyClick}
         onEditLabelClick={onEditLabelClick}
         replyAvatars={replyAvatars}
         onToggleReplies={toggleRepliesOpen}
         repliesOpen={repliesOpen}
         reactionPopoverDismissed={reactionPopoverDismissed}
+        videoId={videoId}
       />
       {replyInputOpen && (
         <CommentInput
