@@ -6245,6 +6245,7 @@ export type Channel = BaseGraphQlObject & {
   category?: Maybe<ChannelCategory>
   categoryId?: Maybe<Scalars['String']>
   channelNftCollectors: Array<ChannelNftCollectors>
+  channelPlaylists: Array<Playlist>
   collaborators: Array<Membership>
   coverPhoto?: Maybe<StorageDataObject>
   coverPhotoId?: Maybe<Scalars['String']>
@@ -6619,6 +6620,9 @@ export type ChannelWhereInput = {
   channelNftCollectors_every?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_none?: InputMaybe<ChannelNftCollectorsWhereInput>
   channelNftCollectors_some?: InputMaybe<ChannelNftCollectorsWhereInput>
+  channelPlaylists_every?: InputMaybe<PlaylistWhereInput>
+  channelPlaylists_none?: InputMaybe<PlaylistWhereInput>
+  channelPlaylists_some?: InputMaybe<PlaylistWhereInput>
   collaborators_every?: InputMaybe<MembershipWhereInput>
   collaborators_none?: InputMaybe<MembershipWhereInput>
   collaborators_some?: InputMaybe<MembershipWhereInput>
@@ -7421,6 +7425,7 @@ export type CuratorWhereUniqueInput = {
 export type DataObjectType =
   | DataObjectTypeChannelAvatar
   | DataObjectTypeChannelCoverPhoto
+  | DataObjectTypePlaylistThumbnail
   | DataObjectTypeUnknown
   | DataObjectTypeVideoMedia
   | DataObjectTypeVideoThumbnail
@@ -7435,6 +7440,12 @@ export type DataObjectTypeChannelCoverPhoto = {
   __typename?: 'DataObjectTypeChannelCoverPhoto'
   /** Related channel entity */
   channel?: Maybe<Channel>
+}
+
+export type DataObjectTypePlaylistThumbnail = {
+  __typename?: 'DataObjectTypePlaylistThumbnail'
+  /** Related playlist entity */
+  playlist?: Maybe<Playlist>
 }
 
 export type DataObjectTypeUnknown = {
@@ -8828,6 +8839,9 @@ export enum EventTypeOptions {
   OpeningCanceledEvent = 'OpeningCanceledEvent',
   OpeningFilledEvent = 'OpeningFilledEvent',
   OracleJudgmentSubmittedEvent = 'OracleJudgmentSubmittedEvent',
+  PlaylistCreatedEvent = 'PlaylistCreatedEvent',
+  PlaylistDeletedEvent = 'PlaylistDeletedEvent',
+  PlaylistUpdatedEvent = 'PlaylistUpdatedEvent',
   PostAddedEvent = 'PostAddedEvent',
   PostDeletedEvent = 'PostDeletedEvent',
   PostModeratedEvent = 'PostModeratedEvent',
@@ -15843,6 +15857,652 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>
 }
 
+export type Playlist = BaseGraphQlObject & {
+  __typename?: 'Playlist'
+  channel: Channel
+  channelId: Scalars['String']
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  /** Description of the playlist */
+  description: Scalars['String']
+  id: Scalars['ID']
+  /** Whether the Playlist is supposed to be publicly displayed */
+  isPublic?: Maybe<Scalars['Boolean']>
+  playlistcreatedeventplaylist?: Maybe<Array<PlaylistCreatedEvent>>
+  playlistdeletedeventplaylist?: Maybe<Array<PlaylistDeletedEvent>>
+  playlistupdatedeventplaylist?: Maybe<Array<PlaylistUpdatedEvent>>
+  /** Number of public uncensored videos in the playlist */
+  publicUncensoredVideosCount?: Maybe<Scalars['Int']>
+  /** Total duration of public uncensored videos in the playlist */
+  publicUncensoredVideosDuration?: Maybe<Scalars['Int']>
+  thumbnailPhoto?: Maybe<StorageDataObject>
+  thumbnailPhotoId?: Maybe<Scalars['String']>
+  /** Title of the playlist */
+  title: Scalars['String']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  videos: Array<PlaylistVideo>
+}
+
+export type PlaylistConnection = {
+  __typename?: 'PlaylistConnection'
+  edges: Array<PlaylistEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PlaylistCreateInput = {
+  channel: Scalars['ID']
+  description: Scalars['String']
+  isPublic?: InputMaybe<Scalars['Boolean']>
+  publicUncensoredVideosCount?: InputMaybe<Scalars['Float']>
+  publicUncensoredVideosDuration?: InputMaybe<Scalars['Float']>
+  thumbnailPhoto?: InputMaybe<Scalars['ID']>
+  title: Scalars['String']
+}
+
+export type PlaylistCreatedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'PlaylistCreatedEvent'
+    /** Content actor that created the playlist. */
+    contentActor: ContentActor
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    playlist: Playlist
+    playlistId: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type PlaylistCreatedEventConnection = {
+  __typename?: 'PlaylistCreatedEventConnection'
+  edges: Array<PlaylistCreatedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PlaylistCreatedEventCreateInput = {
+  contentActor: Scalars['JSONObject']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  playlist: Scalars['ID']
+}
+
+export type PlaylistCreatedEventEdge = {
+  __typename?: 'PlaylistCreatedEventEdge'
+  cursor: Scalars['String']
+  node: PlaylistCreatedEvent
+}
+
+export enum PlaylistCreatedEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  PlaylistAsc = 'playlist_ASC',
+  PlaylistDesc = 'playlist_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type PlaylistCreatedEventUpdateInput = {
+  contentActor?: InputMaybe<Scalars['JSONObject']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  playlist?: InputMaybe<Scalars['ID']>
+}
+
+export type PlaylistCreatedEventWhereInput = {
+  AND?: InputMaybe<Array<PlaylistCreatedEventWhereInput>>
+  OR?: InputMaybe<Array<PlaylistCreatedEventWhereInput>>
+  contentActor_json?: InputMaybe<Scalars['JSONObject']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  playlist?: InputMaybe<PlaylistWhereInput>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type PlaylistCreatedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type PlaylistDeletedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'PlaylistDeletedEvent'
+    /** Content actor that deleted the playlist. */
+    contentActor: ContentActor
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    playlist: Playlist
+    playlistId: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type PlaylistDeletedEventConnection = {
+  __typename?: 'PlaylistDeletedEventConnection'
+  edges: Array<PlaylistDeletedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PlaylistDeletedEventCreateInput = {
+  contentActor: Scalars['JSONObject']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  playlist: Scalars['ID']
+}
+
+export type PlaylistDeletedEventEdge = {
+  __typename?: 'PlaylistDeletedEventEdge'
+  cursor: Scalars['String']
+  node: PlaylistDeletedEvent
+}
+
+export enum PlaylistDeletedEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  PlaylistAsc = 'playlist_ASC',
+  PlaylistDesc = 'playlist_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type PlaylistDeletedEventUpdateInput = {
+  contentActor?: InputMaybe<Scalars['JSONObject']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  playlist?: InputMaybe<Scalars['ID']>
+}
+
+export type PlaylistDeletedEventWhereInput = {
+  AND?: InputMaybe<Array<PlaylistDeletedEventWhereInput>>
+  OR?: InputMaybe<Array<PlaylistDeletedEventWhereInput>>
+  contentActor_json?: InputMaybe<Scalars['JSONObject']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  playlist?: InputMaybe<PlaylistWhereInput>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type PlaylistDeletedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type PlaylistEdge = {
+  __typename?: 'PlaylistEdge'
+  cursor: Scalars['String']
+  node: Playlist
+}
+
+export enum PlaylistOrderByInput {
+  ChannelAsc = 'channel_ASC',
+  ChannelDesc = 'channel_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IsPublicAsc = 'isPublic_ASC',
+  IsPublicDesc = 'isPublic_DESC',
+  PublicUncensoredVideosCountAsc = 'publicUncensoredVideosCount_ASC',
+  PublicUncensoredVideosCountDesc = 'publicUncensoredVideosCount_DESC',
+  PublicUncensoredVideosDurationAsc = 'publicUncensoredVideosDuration_ASC',
+  PublicUncensoredVideosDurationDesc = 'publicUncensoredVideosDuration_DESC',
+  ThumbnailPhotoAsc = 'thumbnailPhoto_ASC',
+  ThumbnailPhotoDesc = 'thumbnailPhoto_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type PlaylistUpdateInput = {
+  channel?: InputMaybe<Scalars['ID']>
+  description?: InputMaybe<Scalars['String']>
+  isPublic?: InputMaybe<Scalars['Boolean']>
+  publicUncensoredVideosCount?: InputMaybe<Scalars['Float']>
+  publicUncensoredVideosDuration?: InputMaybe<Scalars['Float']>
+  thumbnailPhoto?: InputMaybe<Scalars['ID']>
+  title?: InputMaybe<Scalars['String']>
+}
+
+export type PlaylistUpdatedEvent = BaseGraphQlObject &
+  Event & {
+    __typename?: 'PlaylistUpdatedEvent'
+    /** Content actor that updated the playlist. */
+    contentActor: ContentActor
+    createdAt: Scalars['DateTime']
+    createdById: Scalars['String']
+    deletedAt?: Maybe<Scalars['DateTime']>
+    deletedById?: Maybe<Scalars['String']>
+    id: Scalars['ID']
+    /** Blocknumber of the block in which the event was emitted. */
+    inBlock: Scalars['Int']
+    /** Hash of the extrinsic which caused the event to be emitted */
+    inExtrinsic?: Maybe<Scalars['String']>
+    /** Index of event in block from which it was emitted. */
+    indexInBlock: Scalars['Int']
+    /** Network the block was produced in */
+    network: Network
+    playlist: Playlist
+    playlistId: Scalars['String']
+    /** Filtering options for interface implementers */
+    type?: Maybe<EventTypeOptions>
+    updatedAt?: Maybe<Scalars['DateTime']>
+    updatedById?: Maybe<Scalars['String']>
+    version: Scalars['Int']
+  }
+
+export type PlaylistUpdatedEventConnection = {
+  __typename?: 'PlaylistUpdatedEventConnection'
+  edges: Array<PlaylistUpdatedEventEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PlaylistUpdatedEventCreateInput = {
+  contentActor: Scalars['JSONObject']
+  inBlock: Scalars['Float']
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock: Scalars['Float']
+  network: Network
+  playlist: Scalars['ID']
+}
+
+export type PlaylistUpdatedEventEdge = {
+  __typename?: 'PlaylistUpdatedEventEdge'
+  cursor: Scalars['String']
+  node: PlaylistUpdatedEvent
+}
+
+export enum PlaylistUpdatedEventOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  PlaylistAsc = 'playlist_ASC',
+  PlaylistDesc = 'playlist_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+}
+
+export type PlaylistUpdatedEventUpdateInput = {
+  contentActor?: InputMaybe<Scalars['JSONObject']>
+  inBlock?: InputMaybe<Scalars['Float']>
+  inExtrinsic?: InputMaybe<Scalars['String']>
+  indexInBlock?: InputMaybe<Scalars['Float']>
+  network?: InputMaybe<Network>
+  playlist?: InputMaybe<Scalars['ID']>
+}
+
+export type PlaylistUpdatedEventWhereInput = {
+  AND?: InputMaybe<Array<PlaylistUpdatedEventWhereInput>>
+  OR?: InputMaybe<Array<PlaylistUpdatedEventWhereInput>>
+  contentActor_json?: InputMaybe<Scalars['JSONObject']>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  inBlock_eq?: InputMaybe<Scalars['Int']>
+  inBlock_gt?: InputMaybe<Scalars['Int']>
+  inBlock_gte?: InputMaybe<Scalars['Int']>
+  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  inBlock_lt?: InputMaybe<Scalars['Int']>
+  inBlock_lte?: InputMaybe<Scalars['Int']>
+  inExtrinsic_contains?: InputMaybe<Scalars['String']>
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
+  inExtrinsic_eq?: InputMaybe<Scalars['String']>
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
+  indexInBlock_eq?: InputMaybe<Scalars['Int']>
+  indexInBlock_gt?: InputMaybe<Scalars['Int']>
+  indexInBlock_gte?: InputMaybe<Scalars['Int']>
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
+  indexInBlock_lt?: InputMaybe<Scalars['Int']>
+  indexInBlock_lte?: InputMaybe<Scalars['Int']>
+  network_eq?: InputMaybe<Network>
+  network_in?: InputMaybe<Array<Network>>
+  playlist?: InputMaybe<PlaylistWhereInput>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+}
+
+export type PlaylistUpdatedEventWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type PlaylistVideo = BaseGraphQlObject & {
+  __typename?: 'PlaylistVideo'
+  createdAt: Scalars['DateTime']
+  createdById: Scalars['String']
+  deletedAt?: Maybe<Scalars['DateTime']>
+  deletedById?: Maybe<Scalars['String']>
+  id: Scalars['ID']
+  /** Position of video in playlist */
+  position: Scalars['Int']
+  updatedAt?: Maybe<Scalars['DateTime']>
+  updatedById?: Maybe<Scalars['String']>
+  version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
+  videoInPlaylists: Array<Playlist>
+}
+
+export type PlaylistVideoConnection = {
+  __typename?: 'PlaylistVideoConnection'
+  edges: Array<PlaylistVideoEdge>
+  pageInfo: PageInfo
+  totalCount: Scalars['Int']
+}
+
+export type PlaylistVideoCreateInput = {
+  position: Scalars['Float']
+  video: Scalars['ID']
+}
+
+export type PlaylistVideoEdge = {
+  __typename?: 'PlaylistVideoEdge'
+  cursor: Scalars['String']
+  node: PlaylistVideo
+}
+
+export enum PlaylistVideoOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  PositionAsc = 'position_ASC',
+  PositionDesc = 'position_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
+}
+
+export type PlaylistVideoUpdateInput = {
+  position?: InputMaybe<Scalars['Float']>
+  video?: InputMaybe<Scalars['ID']>
+}
+
+export type PlaylistVideoWhereInput = {
+  AND?: InputMaybe<Array<PlaylistVideoWhereInput>>
+  OR?: InputMaybe<Array<PlaylistVideoWhereInput>>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  position_eq?: InputMaybe<Scalars['Int']>
+  position_gt?: InputMaybe<Scalars['Int']>
+  position_gte?: InputMaybe<Scalars['Int']>
+  position_in?: InputMaybe<Array<Scalars['Int']>>
+  position_lt?: InputMaybe<Scalars['Int']>
+  position_lte?: InputMaybe<Scalars['Int']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
+  videoInPlaylists_every?: InputMaybe<PlaylistWhereInput>
+  videoInPlaylists_none?: InputMaybe<PlaylistWhereInput>
+  videoInPlaylists_some?: InputMaybe<PlaylistWhereInput>
+}
+
+export type PlaylistVideoWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
+export type PlaylistWhereInput = {
+  AND?: InputMaybe<Array<PlaylistWhereInput>>
+  OR?: InputMaybe<Array<PlaylistWhereInput>>
+  channel?: InputMaybe<ChannelWhereInput>
+  createdAt_eq?: InputMaybe<Scalars['DateTime']>
+  createdAt_gt?: InputMaybe<Scalars['DateTime']>
+  createdAt_gte?: InputMaybe<Scalars['DateTime']>
+  createdAt_lt?: InputMaybe<Scalars['DateTime']>
+  createdAt_lte?: InputMaybe<Scalars['DateTime']>
+  createdById_eq?: InputMaybe<Scalars['ID']>
+  createdById_in?: InputMaybe<Array<Scalars['ID']>>
+  deletedAt_all?: InputMaybe<Scalars['Boolean']>
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
+  deletedById_eq?: InputMaybe<Scalars['ID']>
+  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
+  description_contains?: InputMaybe<Scalars['String']>
+  description_endsWith?: InputMaybe<Scalars['String']>
+  description_eq?: InputMaybe<Scalars['String']>
+  description_in?: InputMaybe<Array<Scalars['String']>>
+  description_startsWith?: InputMaybe<Scalars['String']>
+  id_eq?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  isPublic_eq?: InputMaybe<Scalars['Boolean']>
+  isPublic_in?: InputMaybe<Array<Scalars['Boolean']>>
+  playlistcreatedeventplaylist_every?: InputMaybe<PlaylistCreatedEventWhereInput>
+  playlistcreatedeventplaylist_none?: InputMaybe<PlaylistCreatedEventWhereInput>
+  playlistcreatedeventplaylist_some?: InputMaybe<PlaylistCreatedEventWhereInput>
+  playlistdeletedeventplaylist_every?: InputMaybe<PlaylistDeletedEventWhereInput>
+  playlistdeletedeventplaylist_none?: InputMaybe<PlaylistDeletedEventWhereInput>
+  playlistdeletedeventplaylist_some?: InputMaybe<PlaylistDeletedEventWhereInput>
+  playlistupdatedeventplaylist_every?: InputMaybe<PlaylistUpdatedEventWhereInput>
+  playlistupdatedeventplaylist_none?: InputMaybe<PlaylistUpdatedEventWhereInput>
+  playlistupdatedeventplaylist_some?: InputMaybe<PlaylistUpdatedEventWhereInput>
+  publicUncensoredVideosCount_eq?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosCount_gt?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosCount_gte?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosCount_in?: InputMaybe<Array<Scalars['Int']>>
+  publicUncensoredVideosCount_lt?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosCount_lte?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosDuration_eq?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosDuration_gt?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosDuration_gte?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosDuration_in?: InputMaybe<Array<Scalars['Int']>>
+  publicUncensoredVideosDuration_lt?: InputMaybe<Scalars['Int']>
+  publicUncensoredVideosDuration_lte?: InputMaybe<Scalars['Int']>
+  thumbnailPhoto?: InputMaybe<StorageDataObjectWhereInput>
+  title_contains?: InputMaybe<Scalars['String']>
+  title_endsWith?: InputMaybe<Scalars['String']>
+  title_eq?: InputMaybe<Scalars['String']>
+  title_in?: InputMaybe<Array<Scalars['String']>>
+  title_startsWith?: InputMaybe<Scalars['String']>
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
+  updatedById_eq?: InputMaybe<Scalars['ID']>
+  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  videos_every?: InputMaybe<PlaylistVideoWhereInput>
+  videos_none?: InputMaybe<PlaylistVideoWhereInput>
+  videos_some?: InputMaybe<PlaylistVideoWhereInput>
+}
+
+export type PlaylistWhereUniqueInput = {
+  id: Scalars['ID']
+}
+
 export type PostAddedEvent = BaseGraphQlObject &
   Event & {
     __typename?: 'PostAddedEvent'
@@ -19058,6 +19718,21 @@ export type Query = {
   ownedNftByUniqueInput?: Maybe<OwnedNft>
   ownedNfts: Array<OwnedNft>
   ownedNftsConnection: OwnedNftConnection
+  playlistByUniqueInput?: Maybe<Playlist>
+  playlistCreatedEventByUniqueInput?: Maybe<PlaylistCreatedEvent>
+  playlistCreatedEvents: Array<PlaylistCreatedEvent>
+  playlistCreatedEventsConnection: PlaylistCreatedEventConnection
+  playlistDeletedEventByUniqueInput?: Maybe<PlaylistDeletedEvent>
+  playlistDeletedEvents: Array<PlaylistDeletedEvent>
+  playlistDeletedEventsConnection: PlaylistDeletedEventConnection
+  playlistUpdatedEventByUniqueInput?: Maybe<PlaylistUpdatedEvent>
+  playlistUpdatedEvents: Array<PlaylistUpdatedEvent>
+  playlistUpdatedEventsConnection: PlaylistUpdatedEventConnection
+  playlistVideoByUniqueInput?: Maybe<PlaylistVideo>
+  playlistVideos: Array<PlaylistVideo>
+  playlistVideosConnection: PlaylistVideoConnection
+  playlists: Array<Playlist>
+  playlistsConnection: PlaylistConnection
   /** Get list of 15 most watched channels in random order */
   popularChannels: Array<Channel>
   postAddedEventByUniqueInput?: Maybe<PostAddedEvent>
@@ -21538,6 +22213,106 @@ export type QueryOwnedNftsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<OwnedNftOrderByInput>>
   where?: InputMaybe<OwnedNftWhereInput>
+}
+
+export type QueryPlaylistByUniqueInputArgs = {
+  where: PlaylistWhereUniqueInput
+}
+
+export type QueryPlaylistCreatedEventByUniqueInputArgs = {
+  where: PlaylistCreatedEventWhereUniqueInput
+}
+
+export type QueryPlaylistCreatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistCreatedEventOrderByInput>>
+  where?: InputMaybe<PlaylistCreatedEventWhereInput>
+}
+
+export type QueryPlaylistCreatedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistCreatedEventOrderByInput>>
+  where?: InputMaybe<PlaylistCreatedEventWhereInput>
+}
+
+export type QueryPlaylistDeletedEventByUniqueInputArgs = {
+  where: PlaylistDeletedEventWhereUniqueInput
+}
+
+export type QueryPlaylistDeletedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistDeletedEventOrderByInput>>
+  where?: InputMaybe<PlaylistDeletedEventWhereInput>
+}
+
+export type QueryPlaylistDeletedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistDeletedEventOrderByInput>>
+  where?: InputMaybe<PlaylistDeletedEventWhereInput>
+}
+
+export type QueryPlaylistUpdatedEventByUniqueInputArgs = {
+  where: PlaylistUpdatedEventWhereUniqueInput
+}
+
+export type QueryPlaylistUpdatedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistUpdatedEventOrderByInput>>
+  where?: InputMaybe<PlaylistUpdatedEventWhereInput>
+}
+
+export type QueryPlaylistUpdatedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistUpdatedEventOrderByInput>>
+  where?: InputMaybe<PlaylistUpdatedEventWhereInput>
+}
+
+export type QueryPlaylistVideoByUniqueInputArgs = {
+  where: PlaylistVideoWhereUniqueInput
+}
+
+export type QueryPlaylistVideosArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistVideoOrderByInput>>
+  where?: InputMaybe<PlaylistVideoWhereInput>
+}
+
+export type QueryPlaylistVideosConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistVideoOrderByInput>>
+  where?: InputMaybe<PlaylistVideoWhereInput>
+}
+
+export type QueryPlaylistsArgs = {
+  limit?: InputMaybe<Scalars['Int']>
+  offset?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistOrderByInput>>
+  where?: InputMaybe<PlaylistWhereInput>
+}
+
+export type QueryPlaylistsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>
+  before?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  last?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<Array<PlaylistOrderByInput>>
+  where?: InputMaybe<PlaylistWhereInput>
 }
 
 export type QueryPopularChannelsArgs = {
@@ -26157,6 +26932,7 @@ export type StorageDataObject = BaseGraphQlObject & {
   ipfsHash: Scalars['String']
   /** Whether the data object was uploaded and accepted by the storage provider */
   isAccepted: Scalars['Boolean']
+  playlistThumbnail?: Maybe<Playlist>
   /** Data object size in bytes */
   size: Scalars['BigInt']
   storageBag: StorageBag
@@ -26265,6 +27041,7 @@ export type StorageDataObjectWhereInput = {
   ipfsHash_startsWith?: InputMaybe<Scalars['String']>
   isAccepted_eq?: InputMaybe<Scalars['Boolean']>
   isAccepted_in?: InputMaybe<Array<Scalars['Boolean']>>
+  playlistThumbnail?: InputMaybe<PlaylistWhereInput>
   size_eq?: InputMaybe<Scalars['BigInt']>
   size_gt?: InputMaybe<Scalars['BigInt']>
   size_gte?: InputMaybe<Scalars['BigInt']>
@@ -27861,6 +28638,7 @@ export type Video = BaseGraphQlObject & {
   offerstartedeventvideo?: Maybe<Array<OfferStartedEvent>>
   openauctionbidacceptedeventvideo?: Maybe<Array<OpenAuctionBidAcceptedEvent>>
   openauctionstartedeventvideo?: Maybe<Array<OpenAuctionStartedEvent>>
+  playlistvideovideo?: Maybe<Array<PlaylistVideo>>
   /** If the Video was published on other platform before beeing published on Joystream - the original publication date */
   publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
   thumbnailPhoto?: Maybe<StorageDataObject>
@@ -28454,6 +29232,9 @@ export type VideoWhereInput = {
   openauctionstartedeventvideo_every?: InputMaybe<OpenAuctionStartedEventWhereInput>
   openauctionstartedeventvideo_none?: InputMaybe<OpenAuctionStartedEventWhereInput>
   openauctionstartedeventvideo_some?: InputMaybe<OpenAuctionStartedEventWhereInput>
+  playlistvideovideo_every?: InputMaybe<PlaylistVideoWhereInput>
+  playlistvideovideo_none?: InputMaybe<PlaylistVideoWhereInput>
+  playlistvideovideo_some?: InputMaybe<PlaylistVideoWhereInput>
   publishedBeforeJoystream_eq?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_gt?: InputMaybe<Scalars['DateTime']>
   publishedBeforeJoystream_gte?: InputMaybe<Scalars['DateTime']>

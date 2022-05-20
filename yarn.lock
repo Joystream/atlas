@@ -2715,7 +2715,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.2.4
     "@graphql-codegen/typescript-react-apollo": ^3.2.5
     "@hookform/resolvers": ^2.8.8
-    "@joystream/metadata-protobuf": 2.1.0
+    "@joystream/metadata-protobuf": ../../../monorepo/metadata-protobuf
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.19.3
     "@livesession/sdk": ^1.1.4
@@ -2807,9 +2807,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.1.0":
+"@joystream/metadata-protobuf@file:../../../monorepo/metadata-protobuf::locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas":
   version: 2.1.0
-  resolution: "@joystream/metadata-protobuf@npm:2.1.0"
+  resolution: "@joystream/metadata-protobuf@file:../../../monorepo/metadata-protobuf#../../../monorepo/metadata-protobuf::hash=c4d4a5&locator=%40joystream%2Fatlas%40workspace%3Apackages%2Fatlas"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2819,7 +2819,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 4a03f16c911b79727974f092608d281a8dc18aa06323a8ec53c6e0ec037c3f055a5beb6f5f9be80c242cfd3fa2dbd31fe794f70f26d0e9789b595d8c2f9d61b3
+  checksum: 278edbba33c73dd99d17dfcb531fde06618585bb0db0b702e735eb67f346b19692acc8f96c46e942a51e7342d06b6e8e46bc200320a34f209bd09f771b3fdc3f
   languageName: node
   linkType: hard
 
@@ -5599,9 +5599,9 @@ __metadata:
   linkType: hard
 
 "@types/long@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@types/long@npm:4.0.1"
-  checksum: ff9653c33f5000d0f131fd98a950a0343e2e33107dd067a97ac4a3b9678e1a2e39ea44772ad920f54ef6e8f107f76bc92c2584ba905a0dc4253282a4101166d0
+  version: 4.0.2
+  resolution: "@types/long@npm:4.0.2"
+  checksum: d16cde7240d834cf44ba1eaec49e78ae3180e724cd667052b194a372f350d024cba8dd3f37b0864931683dab09ca935d52f0c4c1687178af5ada9fc85b0635f4
   languageName: node
   linkType: hard
 
@@ -5645,10 +5645,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*":
   version: 17.0.18
   resolution: "@types/node@npm:17.0.18"
   checksum: 6c4edfc2b3ba2342a9c3d56e934c5245948ab752f4dc04bd6790b9603e6ebc53bc4f5befc3662e207f7dba2ddd17ccf657f915e319ea7cdd4f77b851079d1611
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=13.7.0":
+  version: 17.0.34
+  resolution: "@types/node@npm:17.0.34"
+  checksum: eb9a640ab85b62e8f7b9db1f19b674cc4ff49b94d55085ab6c28c997dbe90356631c4df484fe686082c938bfc6fb02c9e85eb805d1415dfe6de7e31f47a09a70
   languageName: node
   linkType: hard
 
@@ -11936,9 +11943,9 @@ fsevents@^1.2.7:
   linkType: hard
 
 "google-protobuf@npm:^3.14.0":
-  version: 3.17.3
-  resolution: "google-protobuf@npm:3.17.3"
-  checksum: efe264f3cf854a78f7197c4d8c84eabd1ce8c4ef2806cb3e0bb7f2b5e18f559739ab31adfefbd99e81312c3683f482400fa370896a8b0cc66adfedb114256420
+  version: 3.20.1
+  resolution: "google-protobuf@npm:3.20.1"
+  checksum: a440fbc329bb441b253bc421b01540918f4b66921c47a3bc57d154d2677dc917cb1a29126ff35ddc4d8872d1b5843ef1ece60b6dff506ba64a9f5807962d3f61
   languageName: node
   linkType: hard
 

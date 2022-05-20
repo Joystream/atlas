@@ -1,0 +1,11 @@
+query GetPlaylists {
+  playlists {
+    ...BasicPlaylistFields
+  }
+}
+
+query GetPlaylist($where: PlaylistWhereUniqueInput!) {
+  playlistByUniqueInput(where: $where) {
+    ...BasicPlaylistFields
+  }
+}

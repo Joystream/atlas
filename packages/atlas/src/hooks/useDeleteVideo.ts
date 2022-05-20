@@ -1,12 +1,14 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
+import { GetBasicVideoDocument, GetBasicVideoQuery } from '@/api/queries'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { removeVideoFromCache } from '@/utils/cachingAssets'
+import { SentryLogger } from '@/utils/logs'
 
 export const useDeleteVideo = () => {
   const { joystream, proxyCallback } = useJoystream()
@@ -23,9 +25,21 @@ export const useDeleteVideo = () => {
         return
       }
 
+      const {
+        data: { videoByUniqueInput: video },
+        error,
+      } = await client.query<GetBasicVideoQuery>({ query: GetBasicVideoDocument, fetchPolicy: 'cache-only' })
+
+      if (!video) {
+        SentryLogger.error('Failed to get video for delete', 'useDeleteVideo', error)
+        return
+      }
+
+      const assetsIds = [video.thumbnailPhoto?.id, video.media?.id].filter((x): x is string => !!x)
+
       handleTransaction({
         txFactory: async (updateStatus) =>
-          (await joystream.extrinsics).deleteVideo(videoId, activeMemberId, proxyCallback(updateStatus)),
+          (await joystream.extrinsics).deleteVideo(videoId, activeMemberId, assetsIds, proxyCallback(updateStatus)),
         onTxSync: async () => {
           removeVideoFromCache(videoId, client)
           removeAssetsWithParentFromUploads('video', videoId)

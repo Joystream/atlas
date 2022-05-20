@@ -254,3 +254,21 @@ fragment AllBidFields on Bid {
     id
   }
 }
+
+fragment BasicPlaylistFields on Playlist {
+  id
+  title
+  description
+  isPublic
+  publicUncensoredVideosCount
+  publicUncensoredVideosDuration
+  thumbnailPhoto {
+    id
+  }
+  videos {
+    video {
+      id
+      title
+    }
+  }
+}

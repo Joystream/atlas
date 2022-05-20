@@ -50,6 +50,7 @@ export type SearchQuery = {
                       type:
                         | { __typename: 'DataObjectTypeChannelAvatar' }
                         | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                        | { __typename: 'DataObjectTypePlaylistThumbnail' }
                         | { __typename: 'DataObjectTypeUnknown' }
                         | { __typename: 'DataObjectTypeVideoMedia' }
                         | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -70,6 +71,7 @@ export type SearchQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypePlaylistThumbnail' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -85,6 +87,7 @@ export type SearchQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypePlaylistThumbnail' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -123,6 +126,7 @@ export type SearchQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypePlaylistThumbnail' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -138,6 +142,7 @@ export type SearchQuery = {
             type:
               | { __typename: 'DataObjectTypeChannelAvatar' }
               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+              | { __typename: 'DataObjectTypePlaylistThumbnail' }
               | { __typename: 'DataObjectTypeUnknown' }
               | { __typename: 'DataObjectTypeVideoMedia' }
               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -160,6 +165,7 @@ export type SearchQuery = {
               type:
                 | { __typename: 'DataObjectTypeChannelAvatar' }
                 | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                | { __typename: 'DataObjectTypePlaylistThumbnail' }
                 | { __typename: 'DataObjectTypeUnknown' }
                 | { __typename: 'DataObjectTypeVideoMedia' }
                 | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -185,6 +191,7 @@ export type SearchQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypePlaylistThumbnail' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -230,6 +237,7 @@ export type SearchQuery = {
                         type:
                           | { __typename: 'DataObjectTypeChannelAvatar' }
                           | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypePlaylistThumbnail' }
                           | { __typename: 'DataObjectTypeUnknown' }
                           | { __typename: 'DataObjectTypeVideoMedia' }
                           | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -257,6 +265,7 @@ export type SearchQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypePlaylistThumbnail' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -282,6 +291,7 @@ export type SearchQuery = {
                           type:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypePlaylistThumbnail' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -330,6 +340,7 @@ export type SearchQuery = {
                           type:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypePlaylistThumbnail' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -367,6 +378,7 @@ export type SearchQuery = {
                             type:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypePlaylistThumbnail' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -405,6 +417,7 @@ export type SearchQuery = {
                             type:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypePlaylistThumbnail' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -436,6 +449,7 @@ export type SearchQuery = {
                           type:
                             | { __typename: 'DataObjectTypeChannelAvatar' }
                             | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                            | { __typename: 'DataObjectTypePlaylistThumbnail' }
                             | { __typename: 'DataObjectTypeUnknown' }
                             | { __typename: 'DataObjectTypeVideoMedia' }
                             | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -470,6 +484,7 @@ export type SearchQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypePlaylistThumbnail' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -492,6 +507,7 @@ export type SearchQuery = {
                   type:
                     | { __typename: 'DataObjectTypeChannelAvatar' }
                     | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                    | { __typename: 'DataObjectTypePlaylistThumbnail' }
                     | { __typename: 'DataObjectTypeUnknown' }
                     | { __typename: 'DataObjectTypeVideoMedia' }
                     | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -517,6 +533,7 @@ export type SearchQuery = {
                             type:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypePlaylistThumbnail' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -538,6 +555,7 @@ export type SearchQuery = {
                 type:
                   | { __typename: 'DataObjectTypeChannelAvatar' }
                   | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypePlaylistThumbnail' }
                   | { __typename: 'DataObjectTypeUnknown' }
                   | { __typename: 'DataObjectTypeVideoMedia' }
                   | { __typename: 'DataObjectTypeVideoThumbnail' }
@@ -568,6 +586,7 @@ export type SearchQuery = {
                             type:
                               | { __typename: 'DataObjectTypeChannelAvatar' }
                               | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                              | { __typename: 'DataObjectTypePlaylistThumbnail' }
                               | { __typename: 'DataObjectTypeUnknown' }
                               | { __typename: 'DataObjectTypeVideoMedia' }
                               | { __typename: 'DataObjectTypeVideoThumbnail' }

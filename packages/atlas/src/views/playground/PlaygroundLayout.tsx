@@ -24,10 +24,12 @@ import {
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
+  PlaygroundPlaylistExtrinsics,
   PlaygroundTokenPrice,
 } from './Playgrounds'
 
 const playgroundRoutes = [
+  { path: 'playlist-extrinsics', element: <PlaygroundPlaylistExtrinsics />, name: 'Playlist extrinsics' },
   { path: 'nft-extrinsics', element: <PlaygroundNftExtrinsics />, name: 'NFT extrinsics' },
   { path: 'nft-purchase', element: <PlaygroundNftPurchase />, name: 'NFT Purchase' },
   { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
