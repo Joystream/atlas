@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 
-import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibErrorType } from '@/joystream-lib'
+import { useGetMetaprotocolTransactionStatusEventsLazyQuery } from '@/api/queries/__generated__/transactionEvents.generated'
+import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -37,6 +38,10 @@ export const useTransaction = (): HandleTransactionFn => {
   )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
+  const [getTransactionStatus] = useGetMetaprotocolTransactionStatusEventsLazyQuery({
+    onError: (error) =>
+      SentryLogger.error('Failed to fetch metaprotocol transaction status event', 'TransactionManager', error),
+  })
 
   return useCallback(
     async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, onError, minimized = null }) => {
@@ -100,6 +105,17 @@ export const useTransaction = (): HandleTransactionFn => {
           addBlockAction({ callback: syncCallback, targetBlock: result.block })
         })
 
+        const { data } = await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
+        const status = data?.metaprotocolTransactionStatusEvents[0]?.status
+
+        if (status?.__typename === 'MetaprotocolTransactionErrored' || !status) {
+          throw new JoystreamLibError({
+            name: 'MetaprotocolTransactionError',
+            message: status?.message || 'No transcation status event found',
+            details: result,
+          })
+        }
+
         return new Promise((resolve) => {
           queryNodeSyncPromise.then(() => {
             if (!minimized) {
@@ -120,6 +136,7 @@ export const useTransaction = (): HandleTransactionFn => {
           removePendingSign(transactionId)
         }
         const errorName = error.name as JoystreamLibErrorType
+
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           setDialogStep(null)
@@ -131,9 +148,24 @@ export const useTransaction = (): HandleTransactionFn => {
           return false
         }
 
+        if (errorName === 'MetaprotocolTransactionError') {
+          SentryLogger.error('Metaprotocol transaction error', 'TransactionManager', error)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.Error)
+          } else {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: minimized.signErrorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          }
+          return false
+        }
+
         if (errorName === 'FailedError') {
           // extract error code from error message
-          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key))
+          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key)) as ErrorCode | undefined
 
           SentryLogger.error(
             errorCode === ErrorCode.VoucherSizeLimitExceeded ? 'Voucher size limit exceeded' : 'Extrinsic failed',
@@ -142,7 +174,7 @@ export const useTransaction = (): HandleTransactionFn => {
           )
           if (!minimized) {
             setDialogStep(ExtrinsicStatus.Error)
-            errorCode && setErrorCode(errorCode as ErrorCode)
+            errorCode && setErrorCode(errorCode)
           }
         } else {
           if (minimized) {
@@ -164,6 +196,7 @@ export const useTransaction = (): HandleTransactionFn => {
       addBlockAction,
       addPendingSign,
       displaySnackbar,
+      getTransactionStatus,
       nodeConnectionStatus,
       removePendingSign,
       setDialogStep,

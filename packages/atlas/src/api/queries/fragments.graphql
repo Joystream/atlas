@@ -282,6 +282,23 @@ fragment CommentFields on Comment {
   text
   status
   commentcreatedeventcomment {
-    inBlock
+    inExtrinsic
+  }
+}
+
+fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStatusEvent {
+  inExtrinsic
+  inBlock
+  status {
+    __typename
+    ... on MetaprotocolTransactionErrored {
+      message
+    }
+    ... on MetaprotocolTransactionSuccessful {
+      dummy
+    }
+    ... on MetaprotocolTransactionPending {
+      dummy
+    }
   }
 }

@@ -39,8 +39,9 @@ export type ExtrinsicStatusCallbackFn = (status: ExtrinsicStatus.Unsigned | Extr
 export type ExtrinsicResult<T = undefined> = T extends undefined
   ? {
       block: number
+      transactionHash: string
     }
-  : { block: number } & T
+  : { block: number; transactionHash: string } & T
 
 export type VideoInputMetadata = Omit<
   IVideoMetadata,
@@ -103,7 +104,10 @@ export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,
   getEventData: GetEventDataFn
 ) => VideoAssetsIds
-export type SendExtrinsicResult = ExtrinsicResult<{ events: GenericEvent[]; getEventData: GetEventDataFn }>
+export type SendExtrinsicResult = ExtrinsicResult<{
+  events: GenericEvent[]
+  getEventData: GetEventDataFn
+}>
 export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetsIds }>
 export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>

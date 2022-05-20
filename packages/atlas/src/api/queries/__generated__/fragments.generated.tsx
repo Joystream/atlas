@@ -1493,7 +1493,17 @@ export type CommentFieldsFragment = {
     count: number
     reactionId: number
   }>
-  commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+  commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
+}
+
+export type MetaprotocolTransactionStatusEventFieldsFragment = {
+  __typename?: 'MetaprotocolTransactionStatusEvent'
+  inExtrinsic?: string | null
+  inBlock: number
+  status:
+    | { __typename: 'MetaprotocolTransactionErrored'; message: string }
+    | { __typename: 'MetaprotocolTransactionPending'; dummy?: number | null }
+    | { __typename: 'MetaprotocolTransactionSuccessful'; dummy?: number | null }
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1817,9 +1827,27 @@ export const CommentFieldsFragmentDoc = gql`
     text
     status
     commentcreatedeventcomment {
-      inBlock
+      inExtrinsic
     }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${CommentReactionsCountByReactionIdFieldsFragmentDoc}
+`
+export const MetaprotocolTransactionStatusEventFieldsFragmentDoc = gql`
+  fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStatusEvent {
+    inExtrinsic
+    inBlock
+    status {
+      __typename
+      ... on MetaprotocolTransactionErrored {
+        message
+      }
+      ... on MetaprotocolTransactionSuccessful {
+        dummy
+      }
+      ... on MetaprotocolTransactionPending {
+        dummy
+      }
+    }
+  }
 `
