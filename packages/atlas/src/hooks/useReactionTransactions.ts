@@ -114,9 +114,9 @@ export const useReactionTransactions = () => {
           const newCommentsQueryResult = refetchResult[0]
           // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
           // Update once https://github.com/Joystream/atlas/issues/2629 is done.
-          newCommentId = newCommentsQueryResult.data?.userComments.find(
-            (userComment) => userComment.commentcreatedeventcomment?.[0].inBlock === block
-          )?.id
+          newCommentId = newCommentsQueryResult.data?.videoCommentsConnection.edges.find(
+            (edge) => edge.node.commentcreatedeventcomment?.[0].inBlock === block
+          )?.node.id
         },
         onError: () => {
           setCommentInputIsProcessing({ commentInputId, value: false })
