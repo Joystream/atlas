@@ -55,7 +55,7 @@ export type CommentProps = {
   onDeleteClick?: () => void
   onReactionClick?: (reaction: ReactionId) => void
   onReplyClick?: () => void
-  replyAvatars?: AvatarGroupUrlAvatar[]
+  replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[]
   onToggleReplies?: () => void
   repliesOpen?: boolean
   repliesLoading?: boolean
@@ -95,7 +95,7 @@ export const Comment: React.FC<CommentProps> = ({
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const mdMatch = useMediaMatch('md')
-  const mappedAvatars = replyAvatars?.map((avatar) => avatar.url)
+  const mappedAvatars = [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -277,10 +277,7 @@ export const Comment: React.FC<CommentProps> = ({
                       {!!repliesCount && (
                         <StyledAvatarGroup
                           size="small"
-                          avatars={
-                            replyAvatars?.filter((avatar, idx) => !mappedAvatars?.includes(avatar.url, idx + 1)) ||
-                            Array.from({ length: repliesCount }, () => ({ url: undefined }))
-                          }
+                          avatars={mappedAvatars}
                           clickable={false}
                           loading={repliesLoading}
                         />
