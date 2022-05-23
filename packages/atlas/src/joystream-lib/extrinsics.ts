@@ -147,14 +147,13 @@ export class JoystreamLibExtrinsics {
       member: memberId,
     })
     const tx = this.api.tx.content.createChannel(contentActor, creationParameters)
-    const { block, getEventData, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     const channelId = getEventData('content', 'ChannelCreated')[1]
 
     return {
       channelId: channelId.toString(),
       block,
-      transactionHash,
       assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData),
     }
   }
@@ -181,12 +180,11 @@ export class JoystreamLibExtrinsics {
       member: memberId,
     })
     const tx = this.api.tx.content.updateChannel(contentActor, channelId, updateParameters)
-    const { block, transactionHash, getEventData } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     return {
       channelId,
       block,
-      transactionHash,
       assetsIds: extractChannelResultAssetsIds(inputAssets, getEventData),
     }
   }
@@ -216,14 +214,13 @@ export class JoystreamLibExtrinsics {
       member: memberId,
     })
     const tx = this.api.tx.content.createVideo(contentActor, channelId, creationParameters)
-    const { block, transactionHash, getEventData } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     const videoId = getEventData('content', 'VideoCreated')[2]
 
     return {
       videoId: videoId.toString(),
       block,
-      transactionHash,
       assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData),
     }
   }
@@ -255,12 +252,11 @@ export class JoystreamLibExtrinsics {
     })
     const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
 
-    const { block, transactionHash, getEventData } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 
     return {
       videoId,
       block,
-      transactionHash,
       assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData),
     }
   }
@@ -276,12 +272,11 @@ export class JoystreamLibExtrinsics {
       member: memberId,
     })
     const tx = this.api.tx.content.deleteVideo(contentActor, videoId, new BTreeSet(this.api.registry, DataObjectId))
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
     return {
       videoId,
       block,
-      transactionHash,
     }
   }
 
@@ -307,9 +302,9 @@ export class JoystreamLibExtrinsics {
     })
     const tx = this.api.tx.content.issueNft(contentActor, videoId, nftIssuanceParameters)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async putNftOnSale(
@@ -338,20 +333,25 @@ export class JoystreamLibExtrinsics {
             createNftEnglishAuctionParams(this.api.registry, inputMetadata)
           )
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
-  async changeNftPrice(memberId: MemberId, videoId: VideoId, price: number, cb?: ExtrinsicStatusCallbackFn) {
+  async changeNftPrice(
+    memberId: MemberId,
+    videoId: VideoId,
+    price: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
     const tx = this.api.tx.content.updateBuyNowPrice(contentActor, videoId, price)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async cancelNftSale(
@@ -372,9 +372,9 @@ export class JoystreamLibExtrinsics {
         ? this.api.tx.content.cancelOpenAuction(contentActor, videoId)
         : this.api.tx.content.cancelEnglishAuction(contentActor, videoId)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async buyNftNow(
@@ -387,9 +387,9 @@ export class JoystreamLibExtrinsics {
 
     const tx = this.api.tx.content.buyNft(videoId, new RuntimeMemberId(this.api.registry, memberId), priceCommitment)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async makeNftBid(
@@ -406,9 +406,9 @@ export class JoystreamLibExtrinsics {
         ? this.api.tx.content.makeOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
         : this.api.tx.content.makeEnglishAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId, bidPrice)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async cancelNftBid(
@@ -420,9 +420,9 @@ export class JoystreamLibExtrinsics {
 
     const tx = this.api.tx.content.cancelOpenAuctionBid(new RuntimeMemberId(this.api.registry, memberId), videoId)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async acceptNftBid(
@@ -431,16 +431,16 @@ export class JoystreamLibExtrinsics {
     bidderId: MemberId,
     price: string,
     cb?: ExtrinsicStatusCallbackFn
-  ) {
+  ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
     const contentActor = new ContentActor(this.api.registry, {
       member: ownerId,
     })
     const tx = this.api.tx.content.pickOpenAuctionWinner(contentActor, videoId, bidderId, price)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async settleEnglishAuction(videoId: VideoId, cb?: ExtrinsicStatusCallbackFn): Promise<NftExtrinsicResult> {
@@ -448,9 +448,9 @@ export class JoystreamLibExtrinsics {
 
     const tx = this.api.tx.content.settleEnglishAuction(videoId)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
-    return { block, transactionHash }
+    return { block }
   }
 
   async updateMember(
@@ -465,11 +465,11 @@ export class JoystreamLibExtrinsics {
 
     const tx = this.api.tx.members.updateProfile(memberId, handle, memberMetadata)
 
-    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.sendExtrinsic(tx, cb)
 
     return {
       block,
-      transactionHash,
+
       memberId,
     }
   }

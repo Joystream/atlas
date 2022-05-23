@@ -4,6 +4,7 @@ import { useGetMetaprotocolTransactionStatusEventsLazyQuery } from '@/api/querie
 import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { wait } from '@/utils/misc'
 
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
 
@@ -31,6 +32,8 @@ type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOp
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 const TX_COMPLETED_SNACKBAR_TIMEOUT = 5000
 const MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
+const RETRIES_TIMEOUT = 1000
+const RETRIES = 10
 
 export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, setDialogStep, setErrorCode, addPendingSign, removePendingSign } = useTransactionManagerStore(
@@ -38,7 +41,7 @@ export const useTransaction = (): HandleTransactionFn => {
   )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
-  const [getTransactionStatus] = useGetMetaprotocolTransactionStatusEventsLazyQuery({
+  const [getTransactionStatus, { refetch }] = useGetMetaprotocolTransactionStatusEventsLazyQuery({
     onError: (error) =>
       SentryLogger.error('Failed to fetch metaprotocol transaction status event', 'TransactionManager', error),
   })
@@ -105,31 +108,51 @@ export const useTransaction = (): HandleTransactionFn => {
           addBlockAction({ callback: syncCallback, targetBlock: result.block })
         })
 
-        const { data } = await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
-        const status = data?.metaprotocolTransactionStatusEvents[0]?.status
+        await queryNodeSyncPromise
 
-        if (status?.__typename === 'MetaprotocolTransactionErrored' || !status) {
-          throw new JoystreamLibError({
-            name: 'MetaprotocolTransactionError',
-            message: status?.message || 'No transcation status event found',
-            details: result,
-          })
+        if (result.transactionHash) {
+          const { data } = await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
+          const status = data?.metaprotocolTransactionStatusEvents[0]?.status
+
+          if (!status) {
+            for (let i = 0; i <= RETRIES; i++) {
+              ConsoleLogger.warn(`No transcation status event found - retries: ${i}/${RETRIES}`)
+              await wait(RETRIES_TIMEOUT)
+              const { data } = await refetch()
+              const status = data?.metaprotocolTransactionStatusEvents[0]?.status
+              if (status) {
+                break
+              }
+              if (i === 10 && !status) {
+                throw new JoystreamLibError({
+                  name: 'MetaprotocolTransactionError',
+                  message: 'No transcation status event found',
+                  details: result,
+                })
+              }
+            }
+          }
+
+          if (status?.__typename === 'MetaprotocolTransactionErrored') {
+            throw new JoystreamLibError({
+              name: 'MetaprotocolTransactionError',
+              message: status?.message,
+              details: result,
+            })
+          }
         }
 
-        return new Promise((resolve) => {
-          queryNodeSyncPromise.then(() => {
-            if (!minimized) {
-              setDialogStep(ExtrinsicStatus.Completed)
-            }
-            snackbarSuccessMessage &&
-              displaySnackbar({
-                ...snackbarSuccessMessage,
-                iconType: 'success',
-                timeout: TX_COMPLETED_SNACKBAR_TIMEOUT,
-              })
-            resolve(true)
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Completed)
+        }
+        snackbarSuccessMessage &&
+          displaySnackbar({
+            ...snackbarSuccessMessage,
+            iconType: 'success',
+            timeout: TX_COMPLETED_SNACKBAR_TIMEOUT,
           })
-        })
+
+        return true
       } catch (error) {
         onError?.()
         if (minimized) {
@@ -198,6 +221,7 @@ export const useTransaction = (): HandleTransactionFn => {
       displaySnackbar,
       getTransactionStatus,
       nodeConnectionStatus,
+      refetch,
       removePendingSign,
       setDialogStep,
       setErrorCode,
