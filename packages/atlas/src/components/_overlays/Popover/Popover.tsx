@@ -21,6 +21,7 @@ export type PopoverProps = {
   onShow?: () => void
   children?: React.ReactNode
   disabled?: boolean
+  flipEnabled?: boolean
 }
 
 const EXIT_ANIMATION_DURATION = 100
@@ -46,6 +47,7 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
     trigger,
     className,
     disabled,
+    flipEnabled = true,
   },
   ref
 ) => {
@@ -90,6 +92,9 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
           {children}
         </ContentContainer>
       )}
+      popperOptions={{
+        modifiers: [{ name: 'flip', enabled: flipEnabled }],
+      }}
       placement={placement}
       offset={offset}
     >

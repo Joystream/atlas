@@ -5,7 +5,7 @@ import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { cVar, transitions } from '@/styles'
-import { formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
+import { formatDateTime, formatDurationShort, getTimeDiffInSeconds } from '@/utils/time'
 
 import { InfoItemContainer, InfoItemContent, Label, SecondaryText, TimerSecondaryText } from './NftInfoItem.styles'
 import { Size } from './NftWidget.styles'
@@ -64,10 +64,11 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
 
   const timeInSeconds = getTimeDiffInSeconds(time)
   const lessThanAMinuteLeft: boolean = timeInSeconds < 60
+  const moreThan72HLeft: boolean = timeInSeconds > 72 * 60 * 60
 
   const formatedDuration = formatDurationShort(timeInSeconds, true)
 
-  // [hours,minutes,seconds]
+  // [hours, minutes, seconds]
   const hoursMinutesSecondsArray = formatedDuration.split(':')
 
   return (
@@ -122,6 +123,11 @@ export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time
           data-size={size}
         >
           Less than a minute
+        </TimerSecondaryText>
+      )}
+      {moreThan72HLeft && (
+        <TimerSecondaryText secondary as="p" variant="t100" data-size={size}>
+          {formatDateTime(time)}
         </TimerSecondaryText>
       )}
     </InfoItemContainer>

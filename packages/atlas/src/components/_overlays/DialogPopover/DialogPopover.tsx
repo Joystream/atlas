@@ -13,7 +13,7 @@ const _DialogPopover: React.ForwardRefRenderFunction<PopoverImperativeHandle, Di
   ref
 ) => {
   return (
-    <Popover {...popoverProps} ref={ref}>
+    <Popover {...popoverProps} ref={ref} flipEnabled={false}>
       <StyledDialog
         title={title}
         dividers={dividers}

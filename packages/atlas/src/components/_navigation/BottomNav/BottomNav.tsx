@@ -62,9 +62,7 @@ export const BottomNav = () => {
       mountOnEnter
     >
       <Container>
-        {viewerNavItems.map((item) => (
-          <Link {...item} key={`bottomLink-${item.to}`} />
-        ))}
+        {viewerNavItems.map((item) => item.bottomNav && <Link {...item} key={`bottomLink-${item.to}`} />)}
       </Container>
     </CSSTransition>
   )

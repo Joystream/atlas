@@ -50,7 +50,7 @@ export const useNftState = (nft?: AllNftFieldsFragment | null) => {
         : auction.whitelistedMembers.some((member) => member.id === activeMembership.id)
   }
 
-  const canBuyNow = !isOwner && (isBuyNow || !!Number(auction?.buyNowPrice)) && isRunning
+  const canBuyNow = !isOwner && ((!!Number(auction?.buyNowPrice) && isRunning) || isBuyNow)
   const canMakeBid = !isOwner && isAuction && isRunning && isUserWhitelisted
   const canPutOnSale = isOwner && isIdle
   const canCancelSale = isOwner && ((englishAuction && !auction.bids.length) || openAuction || isBuyNow)

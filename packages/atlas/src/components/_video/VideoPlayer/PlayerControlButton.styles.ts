@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 type ControlButtonProps = {
   showTooltipOnlyOnFocus?: boolean
@@ -27,7 +27,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     `}
 
   & > svg {
-    filter: drop-shadow(0 1px 2px ${oldColors.transparentBlack[32]});
+    filter: drop-shadow(${cVar('effectElevation1Layer1')});
     width: 1.5em;
     height: 1.5em;
   }
@@ -46,7 +46,7 @@ export const ControlButton = styled.button<ControlButtonProps>`
     :hover {
       ${media.xs} {
         cursor: ${({ isDisabled }) => (isDisabled ? 'not-allowed' : 'pointer')};
-        background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorCoreNeutral700Lighten'))};
+        background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorBackgroundStrongAlpha'))};
         backdrop-filter: ${({ isDisabled }) => (isDisabled ? 'none' : `blur(${sizes(8)}) `)};
 
         ${() => ControlButtonTooltip} {
@@ -56,21 +56,21 @@ export const ControlButton = styled.button<ControlButtonProps>`
     }
 
     :active {
-      background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorCoreNeutral800Lighten'))};
+      background-color: ${({ isDisabled }) => (isDisabled ? 'none' : cVar('colorBackgroundAlpha'))};
       backdrop-filter: ${({ isDisabled }) => (isDisabled ? 'none' : `blur(${sizes(8)}) `)};
     }
 
     :focus {
       /* Provide a fallback style for browsers
     that don't support :focus-visible e.g safari */
-      box-shadow: inset 0 0 0 3px ${oldColors.transparentPrimary[18]};
+      box-shadow: inset 0 0 0 3px ${cVar('colorBorderMutedAlpha')};
       ${() => ControlButtonTooltip} {
         opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
       }
     }
 
     :focus-visible {
-      box-shadow: inset 0 0 0 3px ${oldColors.transparentPrimary[18]};
+      box-shadow: inset 0 0 0 3px ${cVar('colorBorderMutedAlpha')};
       ${() => ControlButtonTooltip} {
         opacity: ${({ disableFocus }) => (disableFocus ? 0 : 1)};
       }
@@ -113,7 +113,7 @@ export const ControlButtonTooltip = styled.div<ControlButtonTooltipProps>`
   pointer-events: none;
   position: absolute;
   bottom: 3em;
-  background: ${oldColors.transparentBlack[54]};
+  background: ${cVar('colorBackgroundOverlay')};
   backdrop-filter: blur(${sizes(8)});
   align-items: center;
   padding: 0.5em;

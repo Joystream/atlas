@@ -26,7 +26,7 @@ export const useStartFileUpload = () => {
   const { displaySnackbar } = useSnackbar()
   const { getRandomStorageOperatorForBag, markStorageOperatorFailed } = useStorageOperators()
 
-  const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAssetId } = useUploadsStore(
+  const { addAssetFile, addAssetToUploads, setUploadStatus, addProcessingAsset } = useUploadsStore(
     (state) => state.actions
   )
   const assetsFiles = useUploadsStore((state) => state.assetsFiles)
@@ -105,7 +105,7 @@ export const useStartFileUpload = () => {
           setAssetStatus({ progress: (loaded / total) * 100 })
 
           if ((loaded / total) * 100 === 100) {
-            addProcessingAssetId(asset.id)
+            addProcessingAsset(asset.id)
             setAssetStatus({ lastStatus: 'processing', progress: (loaded / total) * 100 })
           }
         }
@@ -172,7 +172,7 @@ export const useStartFileUpload = () => {
       getRandomStorageOperatorForBag,
       setUploadStatus,
       addAssetFile,
-      addProcessingAssetId,
+      addProcessingAsset,
       addAssetToUploads,
       displaySnackbar,
       markStorageOperatorFailed,
