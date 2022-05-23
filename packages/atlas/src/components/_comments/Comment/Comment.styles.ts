@@ -98,8 +98,6 @@ export const StyledAvatarGroup = styled(AvatarGroup)`
 `
 
 export const ReplyButton = styled(Button)`
-  position: relative;
-  top: 1px;
   margin-left: ${sizes(3)};
 `
 
