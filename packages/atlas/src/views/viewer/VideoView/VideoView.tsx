@@ -306,7 +306,7 @@ export const VideoView: React.FC = () => {
             {!isCinematic && (
               <>
                 {detailsItems}
-                <CommentsSection video={video} />
+                <CommentsSection video={video} disabled={!video?.isCommentSectionEnabled} />
               </>
             )}
           </PlayerGridItem>
@@ -318,7 +318,7 @@ export const VideoView: React.FC = () => {
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
-              <CommentsSection video={video} />
+              <CommentsSection video={video} disabled={!video?.isCommentSectionEnabled} />
             </GridItem>
             {sideItems}
           </LayoutGrid>

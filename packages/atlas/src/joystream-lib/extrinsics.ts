@@ -1,5 +1,6 @@
 import {
   ChannelOwnerRemarked,
+  CommentSectionPreference,
   IChannelOwnerRemarked,
   IMemberRemarked,
   MemberRemarked,
@@ -222,14 +223,16 @@ export class JoystreamLibExtrinsics {
   async updateVideo(
     videoId: VideoId,
     memberId: MemberId,
+    channelId: ChannelId,
     inputMetadata: VideoInputMetadata,
     nftInputMetadata: NftIssuanceInputMetadata | undefined,
     inputAssets: VideoInputAssets,
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<VideoExtrinsicResult> {
     await this.ensureApi()
+    const { isCommentSectionEnabled, ...restInputMetadata } = inputMetadata
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, restInputMetadata, inputAssets)
 
     const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
 
@@ -244,7 +247,30 @@ export class JoystreamLibExtrinsics {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
-    const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
+
+    let tx: SubmittableExtrinsic<'promise'>
+
+    if (isCommentSectionEnabled !== undefined) {
+      const msg: IChannelOwnerRemarked = {
+        commentSectionPreference: {
+          videoId: Long.fromString(videoId),
+          option: isCommentSectionEnabled
+            ? CommentSectionPreference.Option.ENABLE
+            : CommentSectionPreference.Option.DISABLE,
+        },
+      }
+
+      const serializedMetadata = ChannelOwnerRemarked.encode(msg).finish()
+      const metadataRaw = new Raw(this.api.registry, serializedMetadata)
+      const metadataBytes = new Bytes(this.api.registry, metadataRaw)
+
+      const disableCommentsTx = this.api.tx.content.channelOwnerRemark({ Member: memberId }, channelId, metadataBytes)
+      const updateVideoTx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
+
+      tx = this.api.tx.utility.batch([updateVideoTx, disableCommentsTx])
+    } else {
+      tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
+    }
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
 

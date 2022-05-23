@@ -75,6 +75,7 @@ export const useVideoWorkspaceData = () => {
     isPublic: (editedVideoInfo.isDraft ? draft?.isPublic : video?.isPublic) ?? true,
     isExplicit: (editedVideoInfo.isDraft ? draft?.isExplicit : video?.isExplicit) ?? false,
     hasMarketing: (editedVideoInfo.isDraft ? draft?.hasMarketing : video?.hasMarketing) ?? false,
+    isCommentSectionEnabled: video?.isCommentSectionEnabled,
     publishedBeforeJoystream:
       (editedVideoInfo.isDraft
         ? draft?.publishedBeforeJoystream

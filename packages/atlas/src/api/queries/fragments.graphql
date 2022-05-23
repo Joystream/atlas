@@ -141,6 +141,7 @@ fragment VideoFields on Video {
   isFeatured
   hasMarketing
   isCensored
+  isCommentSectionEnabled
   language {
     iso
   }

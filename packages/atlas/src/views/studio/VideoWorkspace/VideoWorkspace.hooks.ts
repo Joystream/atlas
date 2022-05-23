@@ -159,6 +159,7 @@ export const useHandleVideoWorkspaceSubmit = () => {
               ).updateVideo(
                 editedVideoInfo.id,
                 activeMemberId,
+                activeChannelId,
                 data.metadata,
                 data.nftMetadata,
                 assets,

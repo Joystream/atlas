@@ -39,6 +39,7 @@ export type VideoWorkspaceVideoFormFields = {
   isExplicit: boolean
   mintNft: boolean
   nftRoyaltiesPercent?: number
+  isCommentSectionEnabled?: boolean
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceVideoAssets
 }
