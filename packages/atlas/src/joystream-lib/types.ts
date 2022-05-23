@@ -41,7 +41,9 @@ export type ExtrinsicResult<T = undefined> = T extends undefined
       block: number
       transactionHash?: string
     }
-  : { block: number; transactionHash?: string } & T
+  : T extends { transactionHash: string }
+  ? { block: number; transactionHash: string } & T
+  : { block: number } & T
 
 export type VideoInputMetadata = Omit<
   IVideoMetadata,
@@ -107,17 +109,16 @@ export type ExtractVideoResultsAssetsIdsFn = (
 export type SendExtrinsicResult = ExtrinsicResult<{
   events: GenericEvent[]
   getEventData: GetEventDataFn
+  transactionHash: string
 }>
 export type ChannelExtrinsicResult = ExtrinsicResult<{
   channelId: ChannelId
   assetsIds: ChannelAssetsIds
-  transactionHash?: never
 }>
 export type VideoExtrinsicResult = ExtrinsicResult<{
   videoId: ChannelId
   assetsIds: VideoAssetsIds
-  transactionHash?: never
 }>
-export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId; transactionHash?: never }>
+export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
-export type MetaprotcolExtrinsicResult = ExtrinsicResult
+export type MetaprotcolExtrinsicResult = ExtrinsicResult<{ transactionHash: string }>

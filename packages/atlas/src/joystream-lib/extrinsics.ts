@@ -469,7 +469,6 @@ export class JoystreamLibExtrinsics {
 
     return {
       block,
-
       memberId,
     }
   }
