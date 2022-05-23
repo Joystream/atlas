@@ -245,6 +245,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       ) : (
         <CommentThread
           key={`${comment.id}-${idx}`}
+          idx={idx}
           highlighted={comment.id === highlightedComment}
           handleCommentReaction={handleCommentReaction}
           reactions={getCommentReactions({
@@ -301,7 +302,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           onSetCommentInputText={setCommentInputText}
           isEditingCommentCollection={isEditingCommentCollection}
           commentInputTextCollection={commentInputTextCollection}
-          commentInputIsProcessingCollection={commentInputIsProcessingCollection}
           onReplyDeleteClick={(replyComment) => video && handleDeleteComment(replyComment, video)}
         />
       )

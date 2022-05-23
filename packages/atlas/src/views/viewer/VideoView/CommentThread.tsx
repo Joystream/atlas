@@ -24,7 +24,7 @@ type CommentThreadProps = {
   channelOwnerMember?: string
   isEditingCommentCollection: Set<string>
   commentInputTextCollection: Map<string, string>
-  commentInputIsProcessingCollection: Set<string>
+  idx: number
   onEditLabelClick: (replyComment?: CommentFieldsFragment) => void
   onUpdateComment: ({ commentId }: { commentId: string }) => void
   onEditCommentCancel: (comment: CommentFieldsFragment) => void
@@ -32,8 +32,6 @@ type CommentThreadProps = {
   onSetCommentInputText: ({ commentId, comment }: { commentId: string; comment: string | undefined }) => void
   onReplyDeleteClick: (replyComment: CommentFieldsFragment) => void
 } & CommentProps
-
-const COMMENT_BOX_ID = 'comment-box'
 
 export const CommentThread: React.FC<CommentThreadProps> = ({
   onOpenSignInDialog,
@@ -48,7 +46,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   channelOwnerMember,
   isEditingCommentCollection,
   commentInputTextCollection,
-  commentInputIsProcessingCollection,
+  idx,
   onEditLabelClick,
   onUpdateComment,
   onEditCommentCancel,
@@ -59,11 +57,10 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
   const [replyInputOpen, setReplyInputOpen] = useState(false)
-  const [commentBody, setCommentBody] = useState('')
   const [highlightedComment, setHighlightedComment] = useState<string | null>(null)
   const { activeMemberId, activeMembership } = useUser()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
-  const { addComment } = useReactionTransactions()
+  const { addComment, commentInputIsProcessingCollection } = useReactionTransactions()
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
   const [openCancelConfirmationModal, closeCancelConfirmationModal] = useConfirmationModal()
   const placeholderItems = !replies ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -71,6 +68,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     url: comment?.author.metadata.avatar?.__typename === 'AvatarUri' ? comment?.author.metadata.avatar?.avatarUri : '',
     handle: comment.author.handle,
   }))
+  const commentBoxId = `reply-comment-box-${idx}`
 
   const toggleRepliesOpen = () => {
     setRepliesOpen((prevState) => !prevState)
@@ -78,12 +76,12 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
 
   const handleCancel = () => {
     setReplyInputOpen(false)
-    setCommentBody('')
+    onSetCommentInputText({ commentId: commentBoxId, comment: undefined })
   }
 
   const handleComment = useCallback(
-    async (commentInputId: string, videoId?: string, commentBody?: string, parentCommentId?: string) => {
-      if (!videoId || !commentBody) {
+    async (commentInputId: string, videoId?: string, parentCommentId?: string) => {
+      if (!videoId || !commentInputTextCollection.get(commentInputId)) {
         return
       }
       const commentId = await addComment({
@@ -92,11 +90,11 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
         parentCommentId,
         commentInputId,
       })
-      setCommentBody('')
+      onSetCommentInputText({ commentId: commentBoxId, comment: undefined })
       setHighlightedComment(commentId || null)
       setReplyInputOpen(false)
     },
-    [addComment, commentInputTextCollection]
+    [addComment, commentBoxId, commentInputTextCollection, onSetCommentInputText]
   )
 
   const handleReplyClick = () => {
@@ -238,18 +236,18 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           ref={commentInputRef}
           memberAvatarUrl={memberAvatarUrl}
           isMemberAvatarLoading={isMemberAvatarLoading}
-          processing={commentInputIsProcessingCollection.has(COMMENT_BOX_ID)}
+          processing={commentInputIsProcessingCollection.has(commentBoxId)}
           readOnly={!activeMemberId}
           memberHandle={activeMembership?.handle}
           onFocus={onOpenSignInDialog}
-          onComment={() => handleComment(COMMENT_BOX_ID, videoId, commentBody, commentId)}
-          hasInitialValueChanged={!!commentInputTextCollection.get(COMMENT_BOX_ID)}
-          value={commentBody}
+          onComment={() => handleComment(commentBoxId, videoId, commentId)}
+          hasInitialValueChanged={!!commentInputTextCollection.get(commentBoxId)}
+          value={commentInputTextCollection.get(commentBoxId) ?? ''}
           withoutOutlineBox
-          onChange={(e) => setCommentBody(e.currentTarget.value)}
+          onChange={(event) => onSetCommentInputText({ commentId: commentBoxId, comment: event.target.value })}
           indented
           onCancel={() => {
-            commentBody.length ? handleCancelConfirmation(handleCancel) : handleCancel()
+            commentInputTextCollection.get(commentBoxId) ? handleCancelConfirmation(handleCancel) : handleCancel()
           }}
           initialFocus
           reply

@@ -82,7 +82,11 @@ export const useCommentSectionComments = (
     .filter((comment) => !!comment.node.repliesCount)
     .map((comment) => comment.node.id)
   const { comments: replies } = useComments(
-    { where: { parentComment: { id_in: videoCommentThreadsIds } }, orderBy: CommentOrderByInput.CreatedAtAsc },
+    {
+      where: { parentComment: { id_in: videoCommentThreadsIds } },
+      memberId: variables?.memberId,
+      orderBy: CommentOrderByInput.CreatedAtAsc,
+    },
     { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
   )
 
