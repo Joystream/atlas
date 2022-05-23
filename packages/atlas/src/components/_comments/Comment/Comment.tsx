@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { CommentFieldsFragment } from '@/api/queries'
+import { BasicMembershipFieldsFragment, CommentFieldsFragment } from '@/api/queries'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
@@ -13,6 +13,7 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -41,6 +42,7 @@ import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type CommentProps = {
+  author?: BasicMembershipFieldsFragment
   memberHandle?: string
   createdAt?: Date
   text?: string
@@ -64,6 +66,7 @@ export type CommentProps = {
 } & CommentRowProps
 
 export const Comment: React.FC<CommentProps> = ({
+  author,
   indented,
   highlighted,
   memberHandle,
@@ -71,9 +74,7 @@ export const Comment: React.FC<CommentProps> = ({
   createdAt,
   type,
   loading,
-  isMemberAvatarLoading,
   memberUrl,
-  memberAvatarUrl,
   isEdited,
   isModerated,
   isAbleToEdit,
@@ -96,6 +97,7 @@ export const Comment: React.FC<CommentProps> = ({
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const mdMatch = useMediaMatch('md')
+  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
   const filteredDuplicatedAvatars = repliesCount
     ? replyAvatars
       ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]

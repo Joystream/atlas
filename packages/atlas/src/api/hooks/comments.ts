@@ -19,20 +19,26 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
+type CommentReaction = {
+  commentId: string
+  reactionId: number
+}
+
+const getUserCommentReactionsLookup = (commentReactions: CommentReaction[]) =>
+  commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+    if (item) {
+      acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+    }
+    return acc
+  }, {})
+
 export const useComments = (
   variables?: GetCommentsQueryVariables,
   opts?: QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>
 ) => {
   const { data, ...rest } = useGetCommentsQuery({ ...opts, variables })
 
-  const userCommentReactionsLookup =
-    data?.commentReactions &&
-    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-      if (item) {
-        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-      }
-      return acc
-    }, {})
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
   const mappedComments = data?.comments.map((comment) => ({
     ...comment,
@@ -69,14 +75,7 @@ export const useCommentSectionComments = (
 
   const userCommentLookup = data?.userComments && createLookup(data?.userComments)
 
-  const userCommentReactionsLookup =
-    data?.commentReactions &&
-    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-      if (item) {
-        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-      }
-      return acc
-    }, {})
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
   const videoCommentThreadsIds = data?.videoCommentsConnection.edges
     .filter((comment) => !!comment.node.repliesCount)

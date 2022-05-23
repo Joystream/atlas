@@ -245,9 +245,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       ) : (
         <CommentThread
           key={`${comment.id}-${idx}`}
+          author={comment.author}
           idx={idx}
           highlighted={comment.id === highlightedComment}
-          handleCommentReaction={handleCommentReaction}
+          onCommentReaction={handleCommentReaction}
           reactions={getCommentReactions({
             commentId: comment.id,
             userReactions: comment.userReactions,
@@ -268,11 +269,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           isModerated={comment.status === CommentStatus.Moderated}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
-          memberAvatarUrl={
-            comment.author.metadata.avatar?.__typename === 'AvatarUri'
-              ? comment.author.metadata.avatar?.avatarUri
-              : undefined
-          }
           videoAuthorId={videoAuthorId}
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)

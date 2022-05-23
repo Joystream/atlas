@@ -17,7 +17,7 @@ type CommentThreadProps = {
   commentId: string
   videoId?: string
   videoAuthorId?: string
-  handleCommentReaction: (commentId: string, reactionId: ReactionId) => void
+  onCommentReaction: (commentId: string, reactionId: ReactionId) => void
   authorized: boolean
   processingCommentReactionId: string | null
   replies: (CommentFieldsFragment & { userReactions?: number[] })[] | null
@@ -38,7 +38,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   commentId,
   videoId,
   videoAuthorId,
-  handleCommentReaction,
+  onCommentReaction,
   authorized,
   processingCommentReactionId,
   reactionPopoverDismissed,
@@ -155,6 +155,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
             />
           ) : (
             <Comment
+              author={comment.author}
               highlighted={comment.id === highlightedComment}
               reactions={getCommentReactions({
                 commentId: comment.id,
@@ -168,18 +169,13 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
               createdAt={new Date(comment.createdAt)}
               text={comment.text}
               isEdited={comment.isEdited}
-              onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
+              onReactionClick={(reactionId) => onCommentReaction(comment.id, reactionId)}
               indented
               onEditLabelClick={() => onEditLabelClick(comment)}
               isAbleToEdit={comment.author.id === activeMemberId}
               memberHandle={comment.author.handle}
               memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
               reactionPopoverDismissed={reactionPopoverDismissed}
-              memberAvatarUrl={
-                comment.author.metadata.avatar?.__typename === 'AvatarUri'
-                  ? comment.author.metadata.avatar?.avatarUri
-                  : undefined
-              }
               onEditClick={() => {
                 onSetIsEditingComment({ commentId: comment.id, value: true })
                 onSetCommentInputText({ commentId: comment.id, comment: comment.text })
@@ -203,7 +199,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       channelOwnerMember,
       commentInputIsProcessingCollection,
       commentInputTextCollection,
-      handleCommentReaction,
+      onCommentReaction,
       highlightedComment,
       isEditingCommentCollection,
       memberAvatarUrl,
