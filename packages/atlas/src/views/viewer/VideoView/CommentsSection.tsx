@@ -32,9 +32,9 @@ type CommentsSectionProps = {
   videoAuthorId?: string
 }
 
+const COMMENT_BOX_ID = 'comment-box'
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const HIGHLIGHTED_COMMENT_TIMEOUT = 3000
-const COMMENT_BOX_ID = 'comment-box'
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
@@ -54,12 +54,20 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
   const commentRef = useRef<HTMLDivElement>(null)
+  const { comments, totalCount, loading } = useCommentSectionComments(
+    {
+      memberId: activeMemberId,
+      videoId: videoId,
+      orderBy: sortCommentsBy,
+    },
+    { skip: disabled || !videoId }
+  )
   const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
     commentIdQueryParam || '',
     activeMemberId || '',
     video?.id || '',
     {
-      skip: !commentIdQueryParam,
+      skip: !commentIdQueryParam || (comments && comments.length === 1),
     }
   )
   const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
@@ -69,14 +77,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     {
       skip: !commentFromUrl || !commentFromUrl.parentCommentId,
     }
-  )
-  const { comments, totalCount, loading } = useCommentSectionComments(
-    {
-      memberId: activeMemberId,
-      videoId: videoId,
-      orderBy: sortCommentsBy,
-    },
-    { skip: disabled || !videoId }
   )
   const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading
 
