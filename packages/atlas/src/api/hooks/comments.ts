@@ -1,6 +1,8 @@
 import { QueryHookOptions } from '@apollo/client'
 
 import {
+  CommentFieldsFragment,
+  CommentOrderByInput,
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
   GetCommentsConnectionQuery,
@@ -17,14 +19,34 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
+type CommentReaction = {
+  commentId: string
+  reactionId: number
+}
+
+const getUserCommentReactionsLookup = (commentReactions: CommentReaction[]) =>
+  commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+    if (item) {
+      acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+    }
+    return acc
+  }, {})
+
 export const useComments = (
   variables?: GetCommentsQueryVariables,
   opts?: QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>
 ) => {
   const { data, ...rest } = useGetCommentsQuery({ ...opts, variables })
 
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
+
+  const mappedComments = data?.comments.map((comment) => ({
+    ...comment,
+    userReactions: userCommentReactionsLookup?.[comment.id],
+  }))
+
   return {
-    comments: data?.comments,
+    comments: data ? [...(mappedComments || [])] : undefined,
     ...rest,
   }
 }
@@ -49,21 +71,30 @@ export const useCommentSectionComments = (
     GetUserCommentsAndVideoCommentsConnectionQueryVariables
   >
 ) => {
-  const { data, ...rest } = useGetUserCommentsAndVideoCommentsConnectionQuery({ ...opts, variables })
+  const { data, loading, ...rest } = useGetUserCommentsAndVideoCommentsConnectionQuery({ ...opts, variables })
 
   const userCommentLookup = data?.userComments && createLookup(data?.userComments)
 
-  const userCommentReactionsLookup =
-    data?.commentReactions &&
-    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-      if (item) {
-        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-      }
-      return acc
-    }, {})
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
+
+  const videoCommentThreadsIds = data?.videoCommentsConnection.edges
+    .filter((comment) => !!comment.node.repliesCount)
+    .map((comment) => comment.node.id)
+  const { comments: replies } = useComments(
+    {
+      where: { parentComment: { id_in: videoCommentThreadsIds } },
+      memberId: variables?.memberId,
+      orderBy: CommentOrderByInput.CreatedAtAsc,
+    },
+    { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
+  )
+
+  const matchReplies = (videoComment: CommentFieldsFragment) =>
+    replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
 
   const userComments = data?.userComments.map((userComment) => ({
     ...userComment,
+    replies: matchReplies(userComment),
     userReactions: userCommentReactionsLookup?.[userComment.id],
   }))
 
@@ -71,6 +102,7 @@ export const useCommentSectionComments = (
     .map((edge) => edge.node)
     .map((userComment) => ({
       ...userComment,
+      replies: matchReplies(userComment),
       userReactions: userCommentReactionsLookup?.[userComment.id],
     }))
     .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
@@ -79,6 +111,7 @@ export const useCommentSectionComments = (
     userComments: userComments,
     comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
     totalCount: data?.videoCommentsConnection.totalCount,
+    loading: loading,
     ...rest,
   }
 }

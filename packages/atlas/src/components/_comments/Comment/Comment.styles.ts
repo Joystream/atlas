@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionTrash } from '@/components/_icons'
@@ -84,4 +85,22 @@ export const CommentFooterItems = styled.div`
 
 export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
   border-radius: 999px;
+`
+
+export const RepliesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+export const StyledAvatarGroup = styled(AvatarGroup)`
+  margin-left: ${sizes(3)};
+`
+
+export const ReplyButton = styled(Button)`
+  margin-left: ${sizes(3)};
+`
+
+export const StyledRepliesSkeleton = styled(SkeletonLoader)`
+  margin-left: ${sizes(3)};
 `

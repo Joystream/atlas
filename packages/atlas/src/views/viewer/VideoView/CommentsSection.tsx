@@ -1,23 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useCommentSectionComments } from '@/api/hooks'
-import {
-  CommentFieldsFragment,
-  CommentOrderByInput,
-  CommentReactionsCountByReactionIdFieldsFragment,
-  CommentStatus,
-  VideoFieldsFragment,
-} from '@/api/queries'
+import { CommentFieldsFragment, CommentOrderByInput, CommentStatus, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { CommentInput } from '@/components/_comments/CommentInput'
-import { ReactionChipProps } from '@/components/_comments/ReactionChip'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
@@ -28,23 +21,18 @@ import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
+import { CommentThread } from './CommentThread'
 import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from './VideoView.styles'
+import { getCommentReactions } from './utils'
 
 type CommentsSectionProps = {
   disabled?: boolean
   video?: VideoFieldsFragment | null
-}
-
-type GetCommentReactionsArgs = {
-  commentId: string
-  userReactions?: number[]
-  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
-  activeMemberId: string | null
-  processingCommentReactionId: string | null
+  videoAuthorId?: string
 }
 const COMMENT_BOX_ID = 'comment-box'
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video }) => {
+export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [openModal, closeModal] = useConfirmationModal()
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
@@ -144,6 +132,24 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
+  const handleOpenSignInDialog = useCallback(() => {
+    if (activeMemberId) {
+      return
+    }
+    openSignInDialog({ onConfirm: signIn })
+  }, [activeMemberId, openSignInDialog, signIn])
+
+  const handleCommentReaction = useCallback(
+    (commentId: string, reactionId: ReactionId) => {
+      if (authorized) {
+        reactToComment(commentId, reactionId)
+      } else {
+        openSignInDialog({ onConfirm: signIn })
+      }
+    },
+    [authorized, openSignInDialog, reactToComment, signIn]
+  )
+
   const memoizedComments = useMemo(() => {
     const setIsEditingComment = ({ commentId, value }: { commentId: string; value: boolean }) => {
       setIsEditingCommentCollection((isEditing) => {
@@ -168,14 +174,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       setHighlightedComment(commentId || null)
       setIsEditingComment({ commentId, value: false })
     }
-    const handleCommentReaction = (commentId: string, reactionId: ReactionId) => {
-      if (authorized) {
-        reactToComment(commentId, reactionId)
-      } else {
-        openSignInDialog({ onConfirm: signIn })
-      }
-    }
-    const hadleDeleteComment = (comment: CommentFieldsFragment, video: VideoFieldsFragment) => {
+    const handleDeleteComment = (comment: CommentFieldsFragment, video: VideoFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === activeMemberId && comment.author.id !== activeMemberId
       openModal({
         type: 'destructive',
@@ -196,6 +195,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         },
       })
     }
+
     const handleEditCommentCancel = (comment: CommentFieldsFragment) => {
       if (comment.text !== commentInputTextCollection.get(comment.id)) {
         openModal({
@@ -239,12 +239,16 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           hasInitialValueChanged={comment.text !== commentInputTextCollection.get(comment.id)}
           onChange={(e) => setCommentInputText({ commentId: comment.id, comment: e.target.value })}
           onCancel={() => handleEditCommentCancel(comment)}
+          memberAvatarUrl={memberAvatarUrl}
           withoutOutlineBox
         />
       ) : (
-        <Comment
+        <CommentThread
           key={`${comment.id}-${idx}`}
+          author={comment.author}
+          idx={idx}
           highlighted={comment.id === highlightedComment}
+          onCommentReaction={handleCommentReaction}
           reactions={getCommentReactions({
             commentId: comment.id,
             userReactions: comment.userReactions,
@@ -252,7 +256,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             activeMemberId,
             processingCommentReactionId,
           })}
+          authorized={!!authorized}
+          onDeleteClick={() => video && handleDeleteComment(comment, video)}
           loading={!comment.id}
+          commentId={comment.id}
+          onOpenSignInDialog={handleOpenSignInDialog}
           createdAt={new Date(comment.createdAt)}
           text={comment.text}
           reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
@@ -261,11 +269,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           isModerated={comment.status === CommentStatus.Moderated}
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
-          memberAvatarUrl={
-            comment.author.metadata.avatar?.__typename === 'AvatarUri'
-              ? comment.author.metadata.avatar?.avatarUri
-              : undefined
-          }
+          videoAuthorId={videoAuthorId}
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
               ? 'deleted'
@@ -273,16 +277,28 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ? 'options'
               : 'default'
           }
+          videoId={videoId}
+          processingCommentReactionId={processingCommentReactionId}
+          replies={comment.replies}
+          repliesCount={comment.repliesCount}
+          repliesLoading={!!comment.repliesCount && !comment.replies}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
-          onDeleteClick={() => video && hadleDeleteComment(comment, video)}
-          onEditLabelClick={() => {
+          onEditLabelClick={(replyComment) => {
             setShowEditHistory(true)
-            setOriginalComment(comment)
+            setOriginalComment(replyComment || comment)
           }}
           onEditClick={() => {
             setIsEditingComment({ commentId: comment.id, value: true })
             setCommentInputText({ commentId: comment.id, comment: comment.text })
           }}
+          channelOwnerMember={video?.channel.ownerMember?.id}
+          onUpdateComment={handleUpdateComment}
+          onEditCommentCancel={handleEditCommentCancel}
+          onSetIsEditingComment={setIsEditingComment}
+          onSetCommentInputText={setCommentInputText}
+          isEditingCommentCollection={isEditingCommentCollection}
+          commentInputTextCollection={commentInputTextCollection}
+          onReplyDeleteClick={(replyComment) => video && handleDeleteComment(replyComment, video)}
         />
       )
     )
@@ -292,7 +308,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     commentInputTextCollection,
     updateComment,
     authorized,
-    reactToComment,
     openSignInDialog,
     signIn,
     activeMemberId,
@@ -302,11 +317,15 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     closeModal,
     isEditingCommentCollection,
     commentInputIsProcessingCollection,
+    memberAvatarUrl,
     activeMembership?.handle,
     highlightedComment,
     processingCommentReactionId,
+    handleOpenSignInDialog,
     reactionPopoverDismissed,
+    videoAuthorId,
     video,
+    handleCommentReaction,
   ])
 
   if (disabled) {
@@ -360,27 +379,4 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </DialogModal>
     </CommentsSectionWrapper>
   )
-}
-
-const getCommentReactions = ({
-  commentId,
-  userReactions,
-  reactionsCount,
-  processingCommentReactionId,
-}: GetCommentReactionsArgs): ReactionChipProps[] => {
-  const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
-    reactionId: Number(reactionId) as ReactionId,
-    customId: `${commentId}-${reactionId}`,
-    state: 'processing' as const,
-    count: 0,
-  }))
-
-  return defaultReactions.map((reaction) => {
-    return {
-      ...reaction,
-      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
-      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-      active: !!userReactions?.find((r) => r === reaction.reactionId),
-    }
-  })
 }

@@ -8,12 +8,15 @@ const defaultOptions = {} as const
 export type GetCommentsQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>
   offset?: Types.InputMaybe<Types.Scalars['Int']>
+  memberId?: Types.InputMaybe<Types.Scalars['ID']>
+  videoId?: Types.InputMaybe<Types.Scalars['ID']>
   where?: Types.InputMaybe<Types.CommentWhereInput>
   orderBy?: Types.InputMaybe<Array<Types.CommentOrderByInput> | Types.CommentOrderByInput>
 }>
 
 export type GetCommentsQuery = {
   __typename?: 'Query'
+  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
   comments: Array<{
     __typename?: 'Comment'
     id: string
@@ -273,9 +276,15 @@ export const GetCommentsDocument = gql`
   query GetComments(
     $limit: Int
     $offset: Int
+    $memberId: ID
+    $videoId: ID
     $where: CommentWhereInput
     $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
   ) {
+    commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+      reactionId
+      commentId
+    }
     comments(limit: $limit, offset: $offset, where: $where, orderBy: $orderBy) {
       ...CommentFields
     }
@@ -297,6 +306,8 @@ export const GetCommentsDocument = gql`
  *   variables: {
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
+ *      memberId: // value for 'memberId'
+ *      videoId: // value for 'videoId'
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
  *   },
@@ -410,7 +421,11 @@ export const GetUserCommentsAndVideoCommentsConnectionDocument = gql`
     videoCommentsConnection: commentsConnection(
       first: $first
       after: $after
-      where: { video: { id_eq: $videoId }, OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }] }
+      where: {
+        video: { id_eq: $videoId }
+        parentComment: { id_eq: null }
+        OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+      }
       orderBy: $orderBy
     ) {
       edges {
