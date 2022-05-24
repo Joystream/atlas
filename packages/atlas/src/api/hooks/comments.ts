@@ -24,19 +24,17 @@ import { createLookup } from '@/utils/data'
 
 export const useComment = (commentId: string, opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) => {
   const { data, ...rest } = useGetCommentQuery({ ...opts, variables: { commentId: commentId } })
+  const { comments: replies } = useComments({
+    where: { parentComment: { id_eq: commentId } },
+    orderBy: CommentOrderByInput.CreatedAtAsc,
+  })
 
-  const userCommentReactionsLookup =
-    data?.commentReactions &&
-    data.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-      if (item) {
-        acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-      }
-      return acc
-    }, {})
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
   const comment = data?.comments.map((comment) => ({
     ...comment,
     userReactions: userCommentReactionsLookup?.[comment.id],
+    replies,
   }))[0]
 
   return {

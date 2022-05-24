@@ -2,14 +2,18 @@ import { format } from 'date-fns'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
+import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
@@ -22,8 +26,12 @@ import {
   DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
+  RepliesWrapper,
+  ReplyButton,
+  StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
+  StyledRepliesSkeleton,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
@@ -34,6 +42,7 @@ import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type InternalCommentProps = {
+  author?: BasicMembershipFieldsFragment
   memberHandle: string | undefined
   createdAt: Date | undefined
   text: string | undefined
@@ -44,18 +53,23 @@ export type InternalCommentProps = {
   type: 'default' | 'deleted' | 'options'
   reactions: Omit<ReactionChipProps, 'onReactionClick'>[] | undefined
   reactionPopoverDismissed: boolean | undefined
+  replyAvatars: (AvatarGroupUrlAvatar & { handle: string })[] | undefined
+  repliesOpen: boolean | undefined
+  repliesLoading: boolean | undefined
+  repliesCount: number | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined
+  onReplyClick: (() => void) | undefined
+  onToggleReplies: (() => void) | undefined
   onReactionClick: ((reaction: ReactionId) => void) | undefined
 } & CommentRowProps
 
 export const InternalComment: React.FC<InternalCommentProps> = ({
   indented,
   highlighted,
-  isMemberAvatarLoading,
+  author,
   memberUrl,
-  memberAvatarUrl,
   memberHandle,
   text,
   createdAt,
@@ -70,11 +84,25 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   onDeleteClick,
   onReactionClick,
   reactions,
+  onReplyClick,
+  replyAvatars,
+  onToggleReplies,
+  repliesOpen,
+  repliesLoading,
+  repliesCount,
 }) => {
+  const [commentHover, setCommentHover] = useState(false)
+  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
   const isDeleted = type === 'deleted'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
-  const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
+  const mdMatch = useMediaMatch('md')
+  const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
+  const filteredDuplicatedAvatars = repliesCount
+    ? replyAvatars
+      ? [...new Map(replyAvatars?.map((item) => [item.handle, item])).values()]
+      : Array.from({ length: repliesCount }, () => ({ url: undefined }))
+    : []
 
   const tooltipDate = createdAt ? `${formatDate(createdAt || new Date())} at ${format(createdAt, 'HH:mm')}` : undefined
 
@@ -151,6 +179,8 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
       isMemberAvatarLoading={loading || isMemberAvatarLoading}
       memberUrl={memberUrl}
       memberAvatarUrl={memberAvatarUrl}
+      onMouseEnter={() => setCommentHover(true)}
+      onMouseLeave={() => setCommentHover(false)}
     >
       <CommentWrapper ref={domRef} shouldShowKebabButton={shouldShowKebabButton}>
         <SwitchTransition>
@@ -250,6 +280,36 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                     {!allReactionsApplied && !isDeleted && (
                       <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
                     )}
+                    <RepliesWrapper>
+                      {!!repliesCount && (
+                        <StyledAvatarGroup
+                          size="small"
+                          avatars={filteredDuplicatedAvatars}
+                          clickable={false}
+                          loading={repliesLoading}
+                        />
+                      )}
+                      {onToggleReplies &&
+                        !!repliesCount &&
+                        (repliesLoading ? (
+                          <StyledRepliesSkeleton height={17} width={75} />
+                        ) : (
+                          <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
+                            {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                          </ReplyButton>
+                        ))}
+                      {onReplyClick && !isDeleted && (commentHover || !mdMatch) && (
+                        <ReplyButton
+                          onClick={onReplyClick}
+                          variant="tertiary"
+                          size="small"
+                          _textOnly
+                          icon={<SvgActionReply />}
+                        >
+                          Reply
+                        </ReplyButton>
+                      )}
+                    </RepliesWrapper>
                   </CommentFooterItems>
                 }
               />

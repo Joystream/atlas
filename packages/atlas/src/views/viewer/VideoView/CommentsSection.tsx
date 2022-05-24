@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useComment, useCommentSectionComments } from '@/api/hooks'
-import { CommentFieldsFragment, CommentOrderByInput, CommentStatus, VideoFieldsFragment } from '@/api/queries'
+import { useCommentSectionComments } from '@/api/hooks'
+import { CommentFieldsFragment, CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Comment } from '@/components/_comments/Comment'
@@ -10,8 +10,7 @@ import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { ReactionId } from '@/config/reactions'
-import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -22,7 +21,6 @@ import { useUser } from '@/providers/user'
 
 import { CommentThread } from './CommentThread'
 import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from './VideoView.styles'
-import { getCommentReactions } from './utils'
 
 type CommentsSectionProps = {
   disabled?: boolean
@@ -200,72 +198,18 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         {commentsLoading
           ? placeholderItems.map((_, idx) => <Comment key={idx} />)
           : filteredComments?.map((comment, idx) => (
-              <Comment
+              <CommentThread
                 key={`${comment.id}-${idx}`}
                 commentId={comment.id}
+                memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
                 video={video}
+                replies={comment.replies}
+                repliesCount={comment.repliesCount}
+                highlightedCommentId={highlightedCommentId}
                 setOriginalComment={setOriginalComment}
                 setHighlightedCommentId={setHighlightedCommentId}
-                highlighted={highlightedCommentId === comment.id}
+                setShowEditHistory={setShowEditHistory}
               />
-              //   <CommentThread
-              //   key={`${comment.id}-${idx}`}
-              // indented={!!comment.parentCommentId && comment.id === commentIdQueryParam}
-              //   author={comment.author}
-              //   idx={idx}
-              //   highlighted={comment.id === highlightedComment}
-              //   onCommentReaction={handleCommentReaction}
-              //   reactions={getCommentReactions({
-              //     commentId: comment.id,
-              //     userReactions: comment.userReactions,
-              //     reactionsCount: comment.reactionsCountByReactionId,
-              //     activeMemberId,
-              //     processingCommentReactionId,
-              //   })}
-              //   authorized={!!authorized}
-              //   onDeleteClick={() => video && handleDeleteComment(comment, video)}
-              //   loading={!comment.id}
-              //   commentId={comment.id}
-              //   onOpenSignInDialog={handleOpenSignInDialog}
-              //   createdAt={new Date(comment.createdAt)}
-              //   text={comment.text}
-              //   reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
-              //   isEdited={comment.isEdited}
-              //   isAbleToEdit={comment.author.id === activeMemberId}
-              //   isModerated={comment.status === CommentStatus.Moderated}
-              //   memberHandle={comment.author.handle}
-              //   memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
-              //   videoAuthorId={videoAuthorId}
-              //   type={
-              //     ['DELETED', 'MODERATED'].includes(comment.status)
-              //       ? 'deleted'
-              //       : video?.channel.ownerMember?.id === activeMemberId || comment.author.id === activeMemberId
-              //       ? 'options'
-              //       : 'default'
-              //   }
-              //   videoId={videoId}
-              //   processingCommentReactionId={processingCommentReactionId}
-              //   replies={comment.replies}
-              //   repliesCount={comment.repliesCount}
-              //   repliesLoading={!!comment.repliesCount && !comment.replies}
-              //   onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
-              //   onEditLabelClick={(replyComment) => {
-              //     setShowEditHistory(true)
-              //     setOriginalComment(replyComment || comment)
-              //   }}
-              //   onEditClick={() => {
-              //     setIsEditingComment({ commentId: comment.id, value: true })
-              //     setCommentInputText({ commentId: comment.id, comment: comment.text })
-              //   }}
-              //   channelOwnerMember={video?.channel.ownerMember?.id}
-              //   onUpdateComment={handleUpdateComment}
-              //   onEditCommentCancel={handleEditCommentCancel}
-              //   onSetIsEditingComment={setIsEditingComment}
-              //   onSetCommentInputText={setCommentInputText}
-              //   isEditingCommentCollection={isEditingCommentCollection}
-              //   commentInputTextCollection={commentInputTextCollection}
-              //   onReplyDeleteClick={(replyComment) => video && handleDeleteComment(replyComment, video)}
-              // />
             ))}
       </CommentWrapper>
       <DialogModal

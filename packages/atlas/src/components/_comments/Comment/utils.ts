@@ -7,7 +7,7 @@ type GetCommentReactionsArgs = {
   userReactions?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
   activeMemberId: string | null
-  processingCommentReactionId: string | null
+  processingCommentReactionId: string | null | undefined
 }
 
 export const getCommentReactions = ({

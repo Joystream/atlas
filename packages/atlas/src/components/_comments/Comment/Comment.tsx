@@ -1,13 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
-import {
-  CommentFieldsFragment,
-  CommentReactionsCountByReactionIdFieldsFragment,
-  CommentStatus,
-  VideoFieldsFragment,
-} from '@/api/queries'
-import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
+import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
@@ -16,31 +11,52 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 
 import { InternalComment } from './InternalComment'
+import { getCommentReactions } from './utils'
 
 import { CommentInput } from '../CommentInput'
 import { CommentRowProps } from '../CommentRow'
-import { ReactionChipProps } from '../ReactionChip'
 
 export type CommentProps = {
   commentId?: string
   video?: VideoFieldsFragment | null
+  isReplyable?: boolean
   setOriginalComment?: React.Dispatch<React.SetStateAction<CommentFieldsFragment | null>>
   setShowEditHistory?: React.Dispatch<React.SetStateAction<boolean>>
   setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
-} & CommentRowProps
+  setRepliesOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  isRepliesOpen?: boolean
+} & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
+
+// TODO: comment replies don't return an ID on handleComment; investigate
 export const Comment: React.FC<CommentProps> = React.memo(
-  ({ commentId, video, setOriginalComment, setShowEditHistory, setHighlightedCommentId, ...rest }) => {
-    const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
+  ({
+    commentId,
+    video,
+    setOriginalComment,
+    setShowEditHistory,
+    setHighlightedCommentId,
+    setRepliesOpen,
+    isRepliesOpen,
+    isReplyable,
+    ...rest
+  }) => {
+    const replyCommentInputRef = useRef<HTMLTextAreaElement>(null)
+    const [replyInputOpen, setReplyInputOpen] = useState(false)
+    const [editCommentInputIsProcessing, setEditCommentInputIsProcessing] = useState(false)
+    const [replyCommentInputIsProcessing, setReplyCommentInputIsProcessing] = useState(false)
+    const [editCommentInputText, setEditCommentInputText] = useState('')
+    const [replyCommentInputText, setReplyCommentInputText] = useState('')
     const [isEditingComment, setIsEditingComment] = useState(false)
-    const [commentInputText, setCommentInputText] = useState('')
     const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
     const { comment, loading } = useComment(commentId ?? '', { skip: !commentId })
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
+    const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
-    const { reactToComment, deleteComment, moderateComment, updateComment } = useReactionTransactions()
+    const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
 
     const authorized = activeMemberId && activeAccountId
 
@@ -65,50 +81,56 @@ export const Comment: React.FC<CommentProps> = React.memo(
         },
       })
     }
-    const handleEditCommentCancel = () => {
-      if (comment?.text !== commentInputText) {
-        openModal({
-          title: 'Discard changes?',
-          description: 'Are you sure you want to discard your comment changes?',
-          type: 'warning',
-          primaryButton: {
-            text: 'Confirm and discard',
-            onClick: () => {
-              closeModal()
-              setIsEditingComment(false)
-              setCommentInputText('')
-            },
+
+    const handleCancelConfirmation = (cb: () => void) => {
+      openModal({
+        type: 'warning',
+        title: 'Discard changes',
+        description: 'Are you sure you want to discard your comment changes?',
+        primaryButton: {
+          text: 'Confirm and discard',
+          onClick: () => {
+            closeModal()
+            cb()
           },
-          secondaryButton: {
-            text: 'Cancel',
-            onClick: () => {
-              closeModal()
-            },
-          },
-          onExitClick: () => {
+        },
+        secondaryButton: {
+          text: 'Cancel',
+          onClick: () => {
             closeModal()
           },
-        })
-      } else {
-        setIsEditingComment(false)
-        setCommentInputText('')
-      }
+        },
+        onExitClick: () => {
+          closeModal()
+        },
+      })
     }
+
+    const handleCancelReply = () => {
+      setReplyInputOpen(false)
+      setReplyCommentInputText('')
+    }
+
+    const handleCancelEditComment = () => {
+      setIsEditingComment(false)
+      setEditCommentInputText('')
+    }
+
     const handleUpdateComment = async () => {
-      if (!video?.id || !commentInputText || !comment) {
+      if (!video?.id || !editCommentInputText || !comment) {
         return
       }
 
-      setCommentInputIsProcessing(true)
+      setEditCommentInputIsProcessing(true)
       const success = await updateComment({
         videoId: video.id,
-        commentBody: commentInputText ?? '',
+        commentBody: editCommentInputText ?? '',
         commentId: comment.id,
       })
-      setCommentInputIsProcessing(false)
+      setEditCommentInputIsProcessing(false)
 
       if (success) {
-        setCommentInputText('')
+        setEditCommentInputText('')
         setHighlightedCommentId?.(comment?.id ?? null)
         setIsEditingComment(false)
       }
@@ -122,102 +144,150 @@ export const Comment: React.FC<CommentProps> = React.memo(
         openSignInDialog({ onConfirm: signIn })
       }
     }
+    const handleComment = async (parentCommentId?: string) => {
+      if (!video || !replyCommentInputText) {
+        return
+      }
+
+      setReplyCommentInputIsProcessing(true)
+      const commentId = await addComment({
+        videoId: video.id,
+        commentBody: replyCommentInputText,
+        parentCommentId,
+      })
+      setReplyCommentInputIsProcessing(false)
+
+      if (commentId) {
+        setReplyCommentInputText('')
+        setHighlightedCommentId?.(commentId || null)
+        setReplyInputOpen(false)
+      }
+    }
+
+    const handleReplyClick = () => {
+      if (!authorized) {
+        handleOpenSignInDialog()
+        return
+      }
+      if (replyInputOpen) {
+        replyCommentInputRef.current?.focus()
+      }
+      setReplyInputOpen(true)
+      setRepliesOpen?.(true)
+    }
+
+    const handleOpenSignInDialog = () => !activeMemberId && openSignInDialog({ onConfirm: signIn })
+
+    const replyAvatars = comment?.replies?.map((comment) => ({
+      url:
+        comment?.author.metadata.avatar?.__typename === 'AvatarUri' ? comment?.author.metadata.avatar?.avatarUri : '',
+      handle: comment.author.handle,
+    }))
 
     if (isEditingComment) {
       return (
         <CommentInput
-          processing={commentInputIsProcessing}
+          processing={editCommentInputIsProcessing}
           readOnly={!activeMemberId}
           memberHandle={activeMembership?.handle}
-          value={commentInputText}
-          hasInitialValueChanged={comment?.text !== commentInputText}
+          memberAvatarUrl={memberAvatarUrl}
+          isMemberAvatarLoading={isMemberAvatarLoading}
+          value={editCommentInputText}
+          hasInitialValueChanged={comment?.text !== editCommentInputText}
           withoutOutlineBox
-          onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
+          onFocus={handleOpenSignInDialog}
           onComment={() => handleUpdateComment()}
-          onChange={(e) => setCommentInputText(e.target.value)}
-          onCancel={() => handleEditCommentCancel()}
+          onChange={(e) => setEditCommentInputText(e.target.value)}
+          onCancel={() =>
+            comment?.text !== editCommentInputText
+              ? handleCancelConfirmation(handleCancelEditComment)
+              : handleCancelEditComment()
+          }
+          initialFocus
         />
       )
     } else {
       return (
-        <InternalComment
-          loading={loading}
-          createdAt={comment?.createdAt ? new Date(comment.createdAt ?? '') : undefined}
-          text={comment?.text}
-          reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
-          isAbleToEdit={comment?.author.id === activeMemberId}
-          isModerated={comment?.status === CommentStatus.Moderated}
-          memberHandle={comment?.author.handle}
-          isEdited={comment?.isEdited}
-          reactions={
-            comment &&
-            getCommentReactions({
-              commentId: comment?.id,
-              userReactions: comment?.userReactions,
-              reactionsCount: comment?.reactionsCountByReactionId,
-              activeMemberId,
-              processingCommentReactionId,
-            })
-          }
-          memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
-          memberAvatarUrl={
-            comment?.author.metadata.avatar?.__typename === 'AvatarUri'
-              ? comment.author.metadata.avatar?.avatarUri
-              : undefined
-          }
-          type={
-            comment && ['DELETED', 'MODERATED'].includes(comment.status)
-              ? 'deleted'
-              : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
-              ? 'options'
-              : 'default'
-          }
-          onEditClick={() => {
-            if (comment) {
-              setIsEditingComment(true)
-              setCommentInputText?.(comment.text)
+        <>
+          <InternalComment
+            author={comment?.author}
+            onToggleReplies={() => isReplyable && setRepliesOpen?.((value) => !value)}
+            repliesOpen={isReplyable && isRepliesOpen}
+            onReplyClick={isReplyable ? handleReplyClick : undefined}
+            replyAvatars={replyAvatars}
+            repliesCount={comment?.repliesCount}
+            repliesLoading={!!comment?.repliesCount && !comment?.replies}
+            loading={loading}
+            createdAt={comment?.createdAt ? new Date(comment.createdAt ?? '') : undefined}
+            text={comment?.text}
+            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            isAbleToEdit={comment?.author.id === activeMemberId}
+            isModerated={comment?.status === CommentStatus.Moderated}
+            memberHandle={comment?.author.handle}
+            isEdited={comment?.isEdited}
+            reactions={
+              comment &&
+              getCommentReactions({
+                commentId: comment?.id,
+                userReactions: comment?.userReactions,
+                reactionsCount: comment?.reactionsCountByReactionId,
+                activeMemberId,
+                processingCommentReactionId,
+              })
             }
-          }}
-          onDeleteClick={() => video && comment && hadleDeleteComment(comment)}
-          onEditedLabelClick={() => {
-            setShowEditHistory?.(true)
-            comment && setOriginalComment?.(comment)
-          }}
-          onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
-          {...rest}
-        />
+            memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
+            memberAvatarUrl={
+              comment?.author.metadata.avatar?.__typename === 'AvatarUri'
+                ? comment.author.metadata.avatar?.avatarUri
+                : undefined
+            }
+            type={
+              comment && ['DELETED', 'MODERATED'].includes(comment.status)
+                ? 'deleted'
+                : comment &&
+                  (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
+                ? 'options'
+                : 'default'
+            }
+            onEditClick={() => {
+              if (comment) {
+                setIsEditingComment(true)
+                setEditCommentInputText?.(comment.text)
+              }
+            }}
+            onDeleteClick={() => video && comment && hadleDeleteComment(comment)}
+            onEditedLabelClick={() => {
+              setShowEditHistory?.(true)
+              comment && setOriginalComment?.(comment)
+            }}
+            onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
+            {...rest}
+          />
+          {isReplyable && replyInputOpen && (
+            <CommentInput
+              ref={replyCommentInputRef}
+              memberAvatarUrl={memberAvatarUrl}
+              isMemberAvatarLoading={isMemberAvatarLoading}
+              processing={replyCommentInputIsProcessing}
+              readOnly={!activeMemberId}
+              memberHandle={activeMembership?.handle}
+              onFocus={handleOpenSignInDialog}
+              onComment={() => handleComment(comment?.id)}
+              hasInitialValueChanged={!!replyCommentInputText}
+              value={replyCommentInputText}
+              withoutOutlineBox
+              onChange={(event) => setReplyCommentInputText(event.target.value)}
+              indented
+              onCancel={() => {
+                editCommentInputText ? handleCancelConfirmation(handleCancelReply) : handleCancelReply()
+              }}
+              initialFocus
+              reply
+            />
+          )}
+        </>
       )
     }
   }
 )
 Comment.displayName = 'Comment'
-
-type GetCommentReactionsArgs = {
-  commentId: string
-  userReactions?: number[]
-  reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
-  activeMemberId: string | null
-  processingCommentReactionId: string | null | undefined
-}
-const getCommentReactions = ({
-  commentId,
-  userReactions,
-  reactionsCount,
-  processingCommentReactionId,
-}: GetCommentReactionsArgs): ReactionChipProps[] => {
-  const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
-    reactionId: Number(reactionId) as ReactionId,
-    customId: `${commentId}-${reactionId}`,
-    state: 'processing' as const,
-    count: 0,
-  }))
-
-  return defaultReactions.map((reaction) => {
-    return {
-      ...reaction,
-      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
-      count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-      active: !!userReactions?.find((r) => r === reaction.reactionId),
-    }
-  })
-}
