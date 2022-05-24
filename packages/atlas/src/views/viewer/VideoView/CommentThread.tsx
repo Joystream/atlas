@@ -25,6 +25,7 @@ type CommentThreadProps = {
   isEditingCommentCollection: Set<string>
   commentInputTextCollection: Map<string, string>
   idx: number
+  parentCommentInputIsProcessingCollection: Set<string>
   onEditLabelClick: (replyComment?: CommentFieldsFragment) => void
   onUpdateComment: ({ commentId }: { commentId: string }) => void
   onEditCommentCancel: (comment: CommentFieldsFragment) => void
@@ -47,6 +48,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   isEditingCommentCollection,
   commentInputTextCollection,
   idx,
+  parentCommentInputIsProcessingCollection,
   onEditLabelClick,
   onUpdateComment,
   onEditCommentCancel,
@@ -140,7 +142,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           isEditingCommentCollection.has(comment.id) ? (
             <CommentInput
               key={`${comment.id}-${idx}`}
-              processing={commentInputIsProcessingCollection.has(comment.id)}
+              processing={parentCommentInputIsProcessingCollection.has(comment.id)}
               readOnly={!activeMemberId}
               memberHandle={activeMembership?.handle}
               onFocus={() => !activeMemberId && onOpenSignInDialog()}
@@ -198,7 +200,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     [
       replies,
       isEditingCommentCollection,
-      commentInputIsProcessingCollection,
+      parentCommentInputIsProcessingCollection,
       activeMemberId,
       activeMembership?.handle,
       commentInputTextCollection,

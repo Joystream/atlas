@@ -360,6 +360,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             setIsEditingComment({ commentId: comment.id, value: true })
             setCommentInputText({ commentId: comment.id, comment: comment.text })
           }}
+          parentCommentInputIsProcessingCollection={commentInputIsProcessingCollection}
           channelOwnerMember={video?.channel.ownerMember?.id}
           onUpdateComment={handleUpdateComment}
           onEditCommentCancel={handleEditCommentCancel}
