@@ -282,7 +282,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         (comment) => commentFromUrl && ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id)
       ) || []
 
-    // if comment from url is reply merge it with parent comment, if not render only parent
+    // if comment from url is reply, merge it with parent comment, if not render only parent
     const preparedHighlightedComment = commentFromUrl
       ? commentFromUrl?.parentCommentId
         ? filteredParentCommentReplies
@@ -291,14 +291,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         : [commentFromUrl]
       : []
 
-    const filteredComments = () => {
-      if (commentFromUrl) {
-        return [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
-      }
-      return comments
-    }
+    const filteredComments = commentFromUrl
+      ? [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
+      : comments
 
-    return filteredComments()?.map((comment, idx) =>
+    return filteredComments?.map((comment, idx) =>
       isEditingCommentCollection.has(comment.id) ? (
         <CommentInput
           key={`${comment.id}-${idx}`}
