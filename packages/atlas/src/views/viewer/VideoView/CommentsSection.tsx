@@ -81,7 +81,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading
 
   const scrollToCommentInput = (smooth?: boolean) => {
-    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest' })
+    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
   }
 
   useEffect(() => {
@@ -172,7 +172,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     return () => clearTimeout(timeout)
   })
 
-  const placeholderItems = loading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   const handleOpenSignInDialog = useCallback(() => {
     if (activeMemberId) {
@@ -191,13 +191,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     },
     [authorized, openSignInDialog, reactToComment, signIn]
   )
-
-  const highLightedCommentPlaceholders =
-    parentCommentFromUrlLoading || commentFromUrlLoading
-      ? Array.from({ length: commentFromUrl && commentFromUrl.parentCommentId ? 2 : 1 }).map((_, idx) => (
-          <Comment key={idx} type="default" loading indented={idx === 1} />
-        ))
-      : []
 
   const memoizedComments = useMemo(() => {
     const setIsEditingComment = ({ commentId, value }: { commentId: string; value: boolean }) => {
@@ -357,7 +350,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ? comment.author.metadata.avatar?.avatarUri
               : undefined
           }
-          onTimeStampClick={scrollToCommentInput}
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
               ? 'deleted'
@@ -429,7 +421,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   }
   return (
     <CommentsSectionWrapper>
-      <CommentsSectionHeader>
+      <CommentsSectionHeader ref={commentWrapperRef}>
         <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
         <Select
           size="small"
@@ -457,12 +449,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       {comments && !comments.length && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
-      <CommentWrapper ref={commentWrapperRef}>
-        {loading
+      <CommentWrapper>
+        {commentsLoading
           ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
-          : memoizedComments
-          ? [...highLightedCommentPlaceholders, ...memoizedComments]
-          : []}
+          : memoizedComments}
       </CommentWrapper>
       <DialogModal
         size="medium"
