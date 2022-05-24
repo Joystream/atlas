@@ -53,7 +53,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
-  const commentRef = useRef<HTMLDivElement>(null)
+  const commentWrapperRef = useRef<HTMLDivElement>(null)
   const { comments, totalCount, loading } = useCommentSectionComments(
     {
       memberId: activeMemberId,
@@ -81,11 +81,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading
 
   const scrollToCommentInput = (smooth?: boolean) => {
-    commentRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'nearest' })
   }
 
   useEffect(() => {
-    if (!commentIdQueryParam || !commentRef.current) {
+    if (!commentIdQueryParam || !commentWrapperRef.current) {
       return
     }
     const scrollTimeout = setTimeout(() => {
@@ -172,7 +172,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     return () => clearTimeout(timeout)
   })
 
-  const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const placeholderItems = loading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   const handleOpenSignInDialog = useCallback(() => {
     if (activeMemberId) {
@@ -191,6 +191,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     },
     [authorized, openSignInDialog, reactToComment, signIn]
   )
+
+  const highLightedCommentPlaceholders =
+    parentCommentFromUrlLoading || commentFromUrlLoading
+      ? Array.from({ length: commentFromUrl && commentFromUrl.parentCommentId ? 2 : 1 }).map((_, idx) => (
+          <Comment key={idx} type="default" loading indented={idx === 1} />
+        ))
+      : []
 
   const memoizedComments = useMemo(() => {
     const setIsEditingComment = ({ commentId, value }: { commentId: string; value: boolean }) => {
@@ -268,6 +275,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       }
     }
 
+    // remove highlighted reply taken from url
     const filteredParentCommentReplies = parentCommentFromUrl
       ? {
           ...parentCommentFromUrl,
@@ -275,20 +283,29 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         }
       : null
 
-    const filteredComments = commentFromUrl
-      ? [
-          ...(commentFromUrl.parentCommentId
-            ? filteredParentCommentReplies
-              ? [filteredParentCommentReplies, commentFromUrl]
-              : []
-            : [commentFromUrl]),
-          ...(comments?.filter(
-            (comment) => ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id)
-          ) || []),
-        ]
-      : comments
+    // remove comment taken from url from regular array of comments
+    const filteredCommentsFromCommentUrl =
+      comments?.filter(
+        (comment) => commentFromUrl && ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id)
+      ) || []
 
-    return filteredComments?.map((comment, idx) =>
+    // if comment from url is reply merge it with parent comment, if not render only parent
+    const preparedHighlightedComment = commentFromUrl
+      ? commentFromUrl?.parentCommentId
+        ? filteredParentCommentReplies
+          ? [filteredParentCommentReplies, commentFromUrl]
+          : []
+        : [commentFromUrl]
+      : []
+
+    const filteredComments = () => {
+      if (commentFromUrl) {
+        return [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
+      }
+      return comments
+    }
+
+    return filteredComments()?.map((comment, idx) =>
       isEditingCommentCollection.has(comment.id) ? (
         <CommentInput
           key={`${comment.id}-${idx}`}
@@ -312,6 +329,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           idx={idx}
           highlighted={comment.id === highlightedComment}
           indented={!!comment.parentCommentId && comment.id === commentIdQueryParam}
+          commentFromUrl={comment.id === commentIdQueryParam}
           onCommentReaction={handleCommentReaction}
           reactions={getCommentReactions({
             commentId: comment.id,
@@ -439,10 +457,12 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       {comments && !comments.length && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
-      <CommentWrapper ref={commentRef}>
-        {commentsLoading
+      <CommentWrapper ref={commentWrapperRef}>
+        {loading
           ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
-          : memoizedComments}
+          : memoizedComments
+          ? [...highLightedCommentPlaceholders, ...memoizedComments]
+          : []}
       </CommentWrapper>
       <DialogModal
         size="medium"

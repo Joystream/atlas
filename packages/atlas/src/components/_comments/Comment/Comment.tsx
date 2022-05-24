@@ -57,6 +57,7 @@ export type CommentProps = {
   reactionPopoverDismissed?: boolean
   onEditLabelClick?: (comment?: CommentFieldsFragment) => void
   videoId?: string
+  commentFromUrl?: boolean
   onEditClick?: () => void
   onDeleteClick?: () => void
   onReactionClick?: (reaction: ReactionId) => void
@@ -85,6 +86,7 @@ export const Comment: React.FC<CommentProps> = ({
   isAbleToEdit,
   reactionPopoverDismissed,
   videoId,
+  commentFromUrl,
   onEditLabelClick,
   onEditClick,
   onDeleteClick,
@@ -136,11 +138,11 @@ export const Comment: React.FC<CommentProps> = ({
 
   // scroll comment into view once the comment gets highlighted
   useEffect(() => {
-    if (highlighted === true && !highlightedPreviously) {
+    if (highlighted === true && !highlightedPreviously && !commentFromUrl) {
       domRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
     setHighlightedPreviously(highlighted)
-  }, [highlightedPreviously, highlighted])
+  }, [highlightedPreviously, highlighted, commentFromUrl])
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
   const allReactionsApplied =
