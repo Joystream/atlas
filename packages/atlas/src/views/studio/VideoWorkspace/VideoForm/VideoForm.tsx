@@ -202,8 +202,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
         ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
         ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
-        ...((isNew || dirtyFields.isCommentSectionEnabled) && data.isCommentSectionEnabled != null
-          ? { isCommentSectionEnabled: data.isCommentSectionEnabled }
+        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
+          ? { enableComments: data.enableComments }
           : {}),
         ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
           ? {
@@ -401,7 +401,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
       description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
     >
       <Controller
-        name="isCommentSectionEnabled"
+        name="enableComments"
         control={control}
         defaultValue={true}
         rules={{
@@ -464,8 +464,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
           )}
         />
-        {/* TODO for the time being disabling comments will be turned off for new videos. Technical constraints */}
-        {videoFieldsLocked && !isNew && alwaysEditableFormFields}
+        {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
@@ -620,8 +619,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               />
             </FormField>
           )}
-          {/* TODO for the time being disabling comments will be turned off for new videos. Technical constraints */}
-          {!videoFieldsLocked && !isNew && alwaysEditableFormFields}
+          {!videoFieldsLocked && alwaysEditableFormFields}
           <ExtendedMarginFormField
             title="Content rating"
             description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."

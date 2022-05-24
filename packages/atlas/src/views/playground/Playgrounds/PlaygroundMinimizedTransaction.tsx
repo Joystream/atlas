@@ -43,7 +43,6 @@ export const PlaygroundMinimizedTransaction = () => {
         ).updateVideo(
           id,
           activeMemberId,
-          activeChannelId,
           {
             title,
             nft: undefined,

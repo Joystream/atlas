@@ -47,7 +47,6 @@ export type VideoInputMetadata = Omit<
   'thumbnailPhoto' | 'video' | 'personsList' | 'mediaType' | 'publishedBeforeJoystream' | 'category'
 > & {
   publishedBeforeJoystream?: string
-  isCommentSectionEnabled?: boolean
   mimeMediaType?: string
   category?: number
   nft?: NftIssuanceInputMetadata
