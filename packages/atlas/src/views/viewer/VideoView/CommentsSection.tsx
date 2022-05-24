@@ -172,7 +172,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     return () => clearTimeout(timeout)
   })
 
-  const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   const handleOpenSignInDialog = useCallback(() => {
     if (activeMemberId) {
