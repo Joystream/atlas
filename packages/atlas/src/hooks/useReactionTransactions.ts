@@ -114,6 +114,8 @@ export const useReactionTransactions = () => {
           const { data } = refetchResult[0]
 
           newCommentId = data?.videoCommentsConnection.edges.find(
+            // TODO We shouldn't fetch additional data from the commentcreatedeventcomment
+            // update this once QN supports getting ID directly from the status query
             (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
           )?.node.id
         },

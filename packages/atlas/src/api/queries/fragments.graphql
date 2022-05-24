@@ -281,6 +281,7 @@ fragment CommentFields on Comment {
   repliesCount
   text
   status
+  # TODO update once QN supports getting ID directly from the status query
   commentcreatedeventcomment {
     inExtrinsic
   }
@@ -293,12 +294,6 @@ fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStat
     __typename
     ... on MetaprotocolTransactionErrored {
       message
-    }
-    ... on MetaprotocolTransactionSuccessful {
-      dummy
-    }
-    ... on MetaprotocolTransactionPending {
-      dummy
     }
   }
 }

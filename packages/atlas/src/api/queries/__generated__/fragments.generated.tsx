@@ -1502,8 +1502,8 @@ export type MetaprotocolTransactionStatusEventFieldsFragment = {
   inBlock: number
   status:
     | { __typename: 'MetaprotocolTransactionErrored'; message: string }
-    | { __typename: 'MetaprotocolTransactionPending'; dummy?: number | null }
-    | { __typename: 'MetaprotocolTransactionSuccessful'; dummy?: number | null }
+    | { __typename: 'MetaprotocolTransactionPending' }
+    | { __typename: 'MetaprotocolTransactionSuccessful' }
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1841,12 +1841,6 @@ export const MetaprotocolTransactionStatusEventFieldsFragmentDoc = gql`
       __typename
       ... on MetaprotocolTransactionErrored {
         message
-      }
-      ... on MetaprotocolTransactionSuccessful {
-        dummy
-      }
-      ... on MetaprotocolTransactionPending {
-        dummy
       }
     }
   }

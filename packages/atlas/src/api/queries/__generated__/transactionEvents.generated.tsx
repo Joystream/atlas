@@ -17,8 +17,8 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
     inBlock: number
     status:
       | { __typename: 'MetaprotocolTransactionErrored'; message: string }
-      | { __typename: 'MetaprotocolTransactionPending'; dummy?: number | null }
-      | { __typename: 'MetaprotocolTransactionSuccessful'; dummy?: number | null }
+      | { __typename: 'MetaprotocolTransactionPending' }
+      | { __typename: 'MetaprotocolTransactionSuccessful' }
   }>
 }
 
