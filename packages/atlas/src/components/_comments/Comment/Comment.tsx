@@ -3,9 +3,11 @@ import React, { useRef, useState } from 'react'
 import { useComment } from '@/api/hooks'
 import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
@@ -52,7 +54,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const { comment, loading } = useComment(commentId ?? '', { skip: !commentId })
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
-
+    const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
@@ -210,6 +212,9 @@ export const Comment: React.FC<CommentProps> = React.memo(
       return (
         <>
           <InternalComment
+            isCommentFromUrl={commentId === commentIdQueryParam}
+            videoId={video?.id}
+            commentId={commentId}
             author={comment?.author}
             onToggleReplies={() => isReplyable && setRepliesOpen?.((value) => !value)}
             repliesOpen={isReplyable && isRepliesOpen}

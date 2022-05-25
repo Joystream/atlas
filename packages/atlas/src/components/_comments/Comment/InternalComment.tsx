@@ -12,6 +12,7 @@ import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
+import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
@@ -42,7 +43,7 @@ import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type InternalCommentProps = {
-  author?: BasicMembershipFieldsFragment
+  author: BasicMembershipFieldsFragment | undefined
   memberHandle: string | undefined
   createdAt: Date | undefined
   text: string | undefined
@@ -57,6 +58,9 @@ export type InternalCommentProps = {
   repliesOpen: boolean | undefined
   repliesLoading: boolean | undefined
   repliesCount: number | undefined
+  isCommentFromUrl: boolean | undefined
+  videoId: string | undefined
+  commentId: string | undefined
   onEditedLabelClick: (() => void) | undefined
   onEditClick: (() => void) | undefined
   onDeleteClick: (() => void) | undefined
@@ -90,6 +94,9 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   repliesOpen,
   repliesLoading,
   repliesCount,
+  isCommentFromUrl,
+  videoId,
+  commentId,
 }) => {
   const [commentHover, setCommentHover] = useState(false)
   const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
@@ -129,11 +136,11 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
 
   // scroll comment into view once the comment gets highlighted
   useEffect(() => {
-    if (highlighted === true && !highlightedPreviously) {
+    if (highlighted === true && !highlightedPreviously && !isCommentFromUrl) {
       domRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
     setHighlightedPreviously(highlighted)
-  }, [highlightedPreviously, highlighted])
+  }, [highlightedPreviously, highlighted, isCommentFromUrl])
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
   const allReactionsApplied =
@@ -205,10 +212,11 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                   </StyledLink>
                   <CommentHeaderDot />
                   <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
-                    {/*  TODO timestamp should be a hyperlink to that comment. */}
-                    <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
-                      {formatDateAgo(createdAt || new Date())}
-                    </HighlightableText>
+                    <StyledLink to={absoluteRoutes.viewer.video(videoId, { commentId })}>
+                      <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
+                        {formatDateAgo(createdAt || new Date())}
+                      </HighlightableText>
+                    </StyledLink>
                   </Tooltip>
                   {isEdited && !isDeleted && (
                     <>
@@ -284,6 +292,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                       {!!repliesCount && (
                         <StyledAvatarGroup
                           size="small"
+                          avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
                           avatars={filteredDuplicatedAvatars}
                           clickable={false}
                           loading={repliesLoading}

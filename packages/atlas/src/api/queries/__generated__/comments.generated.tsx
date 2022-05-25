@@ -67,13 +67,13 @@ export type GetCommentsQuery = {
 }
 
 export type GetCommentQueryVariables = Types.Exact<{
-  commentId?: Types.InputMaybe<Types.Scalars['ID']>
+  commentId: Types.Scalars['ID']
 }>
 
 export type GetCommentQuery = {
   __typename?: 'Query'
   commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
-  comments: Array<{
+  commentByUniqueInput?: {
     __typename?: 'Comment'
     id: string
     createdAt: Date
@@ -119,7 +119,7 @@ export type GetCommentQuery = {
       reactionId: number
     }>
     commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
-  }>
+  } | null
 }
 
 export type GetCommentsConnectionQueryVariables = Types.Exact<{
@@ -385,12 +385,12 @@ export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
 export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>
 export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>
 export const GetCommentDocument = gql`
-  query GetComment($commentId: ID) {
+  query GetComment($commentId: ID!) {
     commentReactions(where: { comment: { id_eq: $commentId } }, limit: 1000) {
       reactionId
       commentId
     }
-    comments(limit: 1, offset: 0, where: { id_eq: $commentId }, orderBy: createdAt_DESC) {
+    commentByUniqueInput(where: { id: $commentId }) {
       ...CommentFields
     }
   }
@@ -413,7 +413,7 @@ export const GetCommentDocument = gql`
  *   },
  * });
  */
-export function useGetCommentQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+export function useGetCommentQuery(baseOptions: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options)
 }

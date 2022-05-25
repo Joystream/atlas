@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useCommentSectionComments } from '@/api/hooks'
+import { useComment, useCommentSectionComments } from '@/api/hooks'
 import { CommentFieldsFragment, CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -10,7 +10,7 @@ import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -31,7 +31,7 @@ type CommentsSectionProps = {
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId, videoLoading }) => {
+export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const { id: videoId } = useParams()
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
@@ -56,13 +56,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const { addComment } = useReactionTransactions()
 
-  const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
-    commentIdQueryParam || '',
-
-    {
-      skip: !commentIdQueryParam || (comments && comments.length === 1),
-    }
-  )
+  const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(commentIdQueryParam || '', {
+    skip: !commentIdQueryParam || (comments && comments.length === 1),
+  })
   const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
     commentFromUrl?.parentCommentId || '',
     {
@@ -206,6 +202,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                 replies={comment.replies}
                 repliesCount={comment.repliesCount}
                 highlightedCommentId={highlightedCommentId}
+                indented={!!comment.parentCommentId && comment.id === commentIdQueryParam}
                 setOriginalComment={setOriginalComment}
                 setHighlightedCommentId={setHighlightedCommentId}
                 setShowEditHistory={setShowEditHistory}

@@ -5,7 +5,7 @@ import { Comment, CommentProps } from '@/components/_comments/Comment'
 
 type CommentThreadProps = {
   repliesCount: number
-  replies: (CommentFieldsFragment & { userReactions?: number[] })[] | null
+  replies: (CommentFieldsFragment & { userReactions?: number[] })[] | null | undefined
   highlightedCommentId: string | null
 } & CommentProps
 
