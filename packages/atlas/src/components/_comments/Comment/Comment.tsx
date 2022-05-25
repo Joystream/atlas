@@ -29,7 +29,6 @@ export type CommentProps = {
   isRepliesOpen?: boolean
 } & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
 
-// TODO: comment replies don't return an ID on handleComment; investigate
 export const Comment: React.FC<CommentProps> = React.memo(
   ({
     commentId,
@@ -51,7 +50,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
-    const { comment, loading } = useComment(commentId ?? '', { skip: !commentId })
+    const { comment, loading: loadingQuery } = useComment(commentId ?? '', { skip: !commentId })
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
@@ -185,6 +184,8 @@ export const Comment: React.FC<CommentProps> = React.memo(
         comment?.author.metadata.avatar?.__typename === 'AvatarUri' ? comment?.author.metadata.avatar?.avatarUri : '',
       handle: comment.author.handle,
     }))
+
+    const loading = loadingQuery || !commentId
 
     if (isEditingComment) {
       return (
