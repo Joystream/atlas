@@ -22,7 +22,6 @@ export type CommentProps = {
   commentId?: string
   video?: VideoFieldsFragment | null
   isReplyable?: boolean
-  isAReply?: boolean
   setOriginalComment?: React.Dispatch<React.SetStateAction<CommentFieldsFragment | null>>
   setShowEditHistory?: React.Dispatch<React.SetStateAction<boolean>>
   setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
@@ -40,7 +39,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
     setRepliesOpen,
     isRepliesOpen,
     isReplyable,
-    isAReply,
     ...rest
   }) => {
     const replyCommentInputRef = useRef<HTMLTextAreaElement>(null)
@@ -220,7 +218,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
       return (
         <>
           <InternalComment
-            indented={isAReply}
+            indented={!isReplyable}
             isCommentFromUrl={commentId === commentIdQueryParam}
             videoId={video?.id}
             commentId={commentId}
