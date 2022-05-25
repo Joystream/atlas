@@ -145,24 +145,25 @@ export const Comment: React.FC<CommentProps> = React.memo(
         openSignInDialog({ onConfirm: signIn })
       }
     }
-    const handleComment = async (parentCommentId?: string) => {
-      if (!video || !replyCommentInputText) {
+    const handleComment = async () => {
+      if (!video || !replyCommentInputText || !comment) {
         return
       }
 
       setReplyCommentInputIsProcessing(true)
-      const commentId = await addComment({
+      const newCommentId = await addComment({
         videoId: video.id,
         commentBody: replyCommentInputText,
-        parentCommentId,
+        parentCommentId: comment.id,
       })
       setReplyCommentInputIsProcessing(false)
 
-      if (commentId) {
-        setReplyCommentInputText('')
-        setHighlightedCommentId?.(commentId || null)
-        setReplyInputOpen(false)
-      }
+      // TODO: uncomment code once posted replies return an Id
+      // if (newCommentId) {
+      setReplyCommentInputText('')
+      setHighlightedCommentId?.(newCommentId || null)
+      setReplyInputOpen(false)
+      // }
     }
 
     const handleReplyClick = () => {
@@ -282,7 +283,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
               readOnly={!activeMemberId}
               memberHandle={activeMembership?.handle}
               onFocus={handleOpenSignInDialog}
-              onComment={() => handleComment(comment?.id)}
+              onComment={handleComment}
               hasInitialValueChanged={!!replyCommentInputText}
               value={replyCommentInputText}
               withoutOutlineBox
