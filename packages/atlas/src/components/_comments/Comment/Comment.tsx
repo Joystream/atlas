@@ -296,6 +296,7 @@ export const Comment: React.FC<CommentProps> = ({
                     <RepliesWrapper>
                       {!!repliesCount && (
                         <StyledAvatarGroup
+                          avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
                           size="small"
                           avatars={filteredDuplicatedAvatars}
                           clickable={false}
