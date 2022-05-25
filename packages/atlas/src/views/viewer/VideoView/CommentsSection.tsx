@@ -50,6 +50,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     {
       memberId: activeMemberId,
       videoId: videoId,
+      orderBy: sortCommentsBy,
     },
     { skip: disabled || !videoId }
   )
