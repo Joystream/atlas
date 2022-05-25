@@ -187,6 +187,10 @@ export const Comment: React.FC<CommentProps> = React.memo(
 
     const loading = loadingQuery || !commentId
 
+    const userReactions = comment?.reactions
+      .filter((reaction) => reaction.memberId === activeMemberId)
+      .map((reaction) => reaction.reactionId)
+
     if (isEditingComment) {
       return (
         <CommentInput
@@ -235,7 +239,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
               comment &&
               getCommentReactions({
                 commentId: comment?.id,
-                userReactions: comment?.userReactions,
+                userReactions,
                 reactionsCount: comment?.reactionsCountByReactionId,
                 activeMemberId,
                 processingCommentReactionId,

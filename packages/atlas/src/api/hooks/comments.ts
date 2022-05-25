@@ -30,12 +30,10 @@ export const useComment = (commentId: string, opts?: QueryHookOptions<GetComment
     orderBy: CommentOrderByInput.CreatedAtAsc,
   })
 
-  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
-
   const comment = data?.commentByUniqueInput
     ? {
         ...data.commentByUniqueInput,
-        userReactions: userCommentReactionsLookup?.[commentId],
+        reactions: data.commentReactions,
         replies,
       }
     : undefined

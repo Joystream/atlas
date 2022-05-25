@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 
 import {
+  GetCommentDocument,
   GetCommentsDocument,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQueryHookResult,
@@ -24,7 +25,7 @@ export const useReactionTransactions = () => {
   const refetchComments = useCallback(
     (): Promise<GetUserCommentsAndVideoCommentsConnectionQueryHookResult[]> =>
       client.refetchQueries({
-        include: [GetUserCommentsAndVideoCommentsConnectionDocument, GetCommentsDocument],
+        include: [GetUserCommentsAndVideoCommentsConnectionDocument, GetCommentsDocument, GetCommentDocument],
       }),
     [client]
   )
@@ -66,6 +67,7 @@ export const useReactionTransactions = () => {
             // update this once QN supports getting ID directly from the status query
             (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
           )?.node.id
+          console.log({ newCommentId, data })
         },
         minimized: {
           signErrorMessage: 'Failed to post video comment',
