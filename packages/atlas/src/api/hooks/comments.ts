@@ -123,11 +123,13 @@ export const useCommentSectionComments = (
   const matchReplies = (videoComment: CommentFieldsFragment) =>
     replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
 
-  const userComments = data?.userComments.map((userComment) => ({
-    ...userComment,
-    replies: matchReplies(userComment),
-    userReactions: userCommentReactionsLookup?.[userComment.id],
-  }))
+  const userComments = data?.userComments
+    ? data?.userComments.map((userComment) => ({
+        ...userComment,
+        replies: matchReplies(userComment),
+        userReactions: userCommentReactionsLookup?.[userComment.id],
+      }))
+    : []
 
   const videoComments = data?.videoCommentsConnection.edges
     .map((edge) => edge.node)
@@ -139,10 +141,11 @@ export const useCommentSectionComments = (
     .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
 
   return {
-    userComments: userComments,
+    userComments,
     comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
     totalCount: data?.videoCommentsConnection.totalCount,
     loading: loading,
+    pageInfo: data?.videoCommentsConnection.pageInfo,
     ...rest,
   }
 }
