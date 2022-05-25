@@ -67,7 +67,6 @@ export const useReactionTransactions = () => {
             // update this once QN supports getting ID directly from the status query
             (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
           )?.node.id
-          console.log({ newCommentId, data })
         },
         minimized: {
           signErrorMessage: 'Failed to post video comment',
