@@ -122,12 +122,14 @@ const parseNotification = (
     return {
       type: 'video-commented',
       member: event.comment.author,
+      commentId: event.comment.id,
       ...commonFields,
     }
   } else if (event.__typename === 'CommentCreatedEvent' && event.comment.parentComment) {
     return {
       type: 'comment-reply',
       member: event.comment.author,
+      commentId: event.comment.id,
       ...commonFields,
     }
   } else {

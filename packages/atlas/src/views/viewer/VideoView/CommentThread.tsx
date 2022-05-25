@@ -25,6 +25,7 @@ type CommentThreadProps = {
   isEditingCommentCollection: Set<string>
   commentInputTextCollection: Map<string, string>
   idx: number
+  parentCommentInputIsProcessingCollection: Set<string>
   onEditLabelClick: (replyComment?: CommentFieldsFragment) => void
   onUpdateComment: ({ commentId }: { commentId: string }) => void
   onEditCommentCancel: (comment: CommentFieldsFragment) => void
@@ -47,6 +48,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   isEditingCommentCollection,
   commentInputTextCollection,
   idx,
+  parentCommentInputIsProcessingCollection,
   onEditLabelClick,
   onUpdateComment,
   onEditCommentCancel,
@@ -140,7 +142,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
           isEditingCommentCollection.has(comment.id) ? (
             <CommentInput
               key={`${comment.id}-${idx}`}
-              processing={commentInputIsProcessingCollection.has(comment.id)}
+              processing={parentCommentInputIsProcessingCollection.has(comment.id)}
               readOnly={!activeMemberId}
               memberHandle={activeMembership?.handle}
               onFocus={() => !activeMemberId && onOpenSignInDialog()}
@@ -155,6 +157,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
             />
           ) : (
             <Comment
+              id={comment.id}
               author={comment.author}
               highlighted={comment.id === highlightedComment}
               reactions={getCommentReactions({
@@ -181,6 +184,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
                 onSetCommentInputText({ commentId: comment.id, comment: comment.text })
               }}
               onDeleteClick={() => onReplyDeleteClick(comment)}
+              videoId={videoId}
               type={
                 ['DELETED', 'MODERATED'].includes(comment.status)
                   ? 'deleted'
@@ -194,25 +198,26 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       </>
     ),
     [
+      replies,
+      isEditingCommentCollection,
+      parentCommentInputIsProcessingCollection,
       activeMemberId,
       activeMembership?.handle,
-      channelOwnerMember,
-      commentInputIsProcessingCollection,
       commentInputTextCollection,
-      onCommentReaction,
-      highlightedComment,
-      isEditingCommentCollection,
       memberAvatarUrl,
-      onEditCommentCancel,
-      onEditLabelClick,
-      onOpenSignInDialog,
-      onReplyDeleteClick,
-      onSetCommentInputText,
-      onSetIsEditingComment,
-      onUpdateComment,
+      highlightedComment,
       processingCommentReactionId,
       reactionPopoverDismissed,
-      replies,
+      videoId,
+      channelOwnerMember,
+      onOpenSignInDialog,
+      onUpdateComment,
+      onSetCommentInputText,
+      onEditCommentCancel,
+      onCommentReaction,
+      onEditLabelClick,
+      onSetIsEditingComment,
+      onReplyDeleteClick,
     ]
   )
 
@@ -220,12 +225,14 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     <>
       <Comment
         {...commentProps}
+        id={commentId}
         onReplyClick={handleReplyClick}
         onEditLabelClick={onEditLabelClick}
         replyAvatars={replyAvatars}
         onToggleReplies={toggleRepliesOpen}
         repliesOpen={repliesOpen}
         reactionPopoverDismissed={reactionPopoverDismissed}
+        videoId={videoId}
       />
       {replyInputOpen && (
         <CommentInput

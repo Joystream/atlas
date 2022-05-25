@@ -81,7 +81,14 @@ export const NotificationTile: React.FC<NotificationProps> = ({
 
   if (variant === 'compact') {
     return (
-      <StyledLink to={absoluteRoutes.viewer.video(notification.video.id)} onClick={onClick}>
+      <StyledLink
+        to={absoluteRoutes.viewer.video(notification.video.id, {
+          ...(notification.type === 'video-commented' || notification.type === 'comment-reply'
+            ? { commentId: notification.commentId }
+            : {}),
+        })}
+        onClick={onClick}
+      >
         <StyledListItem
           loading={loading}
           read={read}

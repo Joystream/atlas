@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useCommentSectionComments } from '@/api/hooks'
+import { useComment, useCommentSectionComments } from '@/api/hooks'
 import { CommentFieldsFragment, CommentOrderByInput, CommentStatus, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -11,11 +11,12 @@ import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
-import { absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
+import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -30,13 +31,18 @@ type CommentsSectionProps = {
   video?: VideoFieldsFragment | null
   videoAuthorId?: string
 }
+
 const COMMENT_BOX_ID = 'comment-box'
+const SCROLL_TO_COMMENT_TIMEOUT = 300
+const HIGHLIGHTED_COMMENT_TIMEOUT = 3000
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [openModal, closeModal] = useConfirmationModal()
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
   const [showEditHistory, setShowEditHistory] = useState(false)
+  const { id } = useParams()
+  const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
@@ -47,20 +53,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const [commentInputTextCollection, setCommentInputTextCollection] = useState(new Map<string, string>())
   // indexed by commentId's
   const [isEditingCommentCollection, setIsEditingCommentCollection] = useState(new Set<string>())
-
-  useEffect(() => {
-    if (!highlightedComment) {
-      return
-    }
-    const timeout = setTimeout(() => {
-      setHighlightedComment(null)
-    }, 3000)
-
-    return () => clearTimeout(timeout)
-  })
-
-  const authorized = activeMemberId && activeAccountId
-
+  const commentWrapperRef = useRef<HTMLDivElement>(null)
   const { comments, totalCount, loading } = useCommentSectionComments(
     {
       memberId: activeMemberId,
@@ -69,6 +62,54 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     },
     { skip: disabled || !videoId }
   )
+  const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
+    commentIdQueryParam || '',
+    activeMemberId || '',
+    video?.id || '',
+    {
+      skip: !commentIdQueryParam || (comments && comments.length === 1),
+    }
+  )
+  const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
+    commentFromUrl?.parentCommentId || '',
+    activeMemberId || '',
+    video?.id || '',
+    {
+      skip: !commentFromUrl || !commentFromUrl.parentCommentId,
+    }
+  )
+  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading
+
+  const scrollToCommentInput = (smooth?: boolean) => {
+    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+  }
+
+  useEffect(() => {
+    if (!commentIdQueryParam || !commentWrapperRef.current) {
+      return
+    }
+    const scrollTimeout = setTimeout(() => {
+      scrollToCommentInput(true)
+      setHighlightedComment(commentIdQueryParam)
+    }, SCROLL_TO_COMMENT_TIMEOUT)
+
+    return () => {
+      clearTimeout(scrollTimeout)
+    }
+  }, [commentIdQueryParam])
+
+  useEffect(() => {
+    if (!highlightedComment || commentsLoading) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setHighlightedComment(null)
+    }, HIGHLIGHTED_COMMENT_TIMEOUT)
+
+    return () => clearTimeout(timeout)
+  })
+
+  const authorized = activeMemberId && activeAccountId
 
   const {
     processingCommentReactionId,
@@ -131,7 +172,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     return () => clearTimeout(timeout)
   })
 
-  const placeholderItems = loading && !comments ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
+  const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   const handleOpenSignInDialog = useCallback(() => {
     if (activeMemberId) {
@@ -227,7 +268,34 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       }
     }
 
-    return comments?.map((comment, idx) =>
+    // remove highlighted reply taken from url
+    const filteredParentCommentReplies = parentCommentFromUrl
+      ? {
+          ...parentCommentFromUrl,
+          replies: parentCommentFromUrl?.replies?.filter((comment) => comment.id !== commentIdQueryParam) || [],
+        }
+      : null
+
+    // remove comment taken from url from regular array of comments
+    const filteredCommentsFromCommentUrl =
+      comments?.filter(
+        (comment) => commentFromUrl && ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id)
+      ) || []
+
+    // if comment from url is reply, merge it with parent comment, if not render only parent
+    const preparedHighlightedComment = commentFromUrl
+      ? commentFromUrl?.parentCommentId
+        ? filteredParentCommentReplies
+          ? [filteredParentCommentReplies, commentFromUrl]
+          : []
+        : [commentFromUrl]
+      : []
+
+    const filteredComments = commentFromUrl
+      ? [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
+      : comments
+
+    return filteredComments?.map((comment, idx) =>
       isEditingCommentCollection.has(comment.id) ? (
         <CommentInput
           key={`${comment.id}-${idx}`}
@@ -245,10 +313,13 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         />
       ) : (
         <CommentThread
+          videoId={id}
           key={`${comment.id}-${idx}`}
           author={comment.author}
           idx={idx}
           highlighted={comment.id === highlightedComment}
+          indented={!!comment.parentCommentId && comment.id === commentIdQueryParam}
+          commentFromUrl={comment.id === commentIdQueryParam}
           onCommentReaction={handleCommentReaction}
           reactions={getCommentReactions({
             commentId: comment.id,
@@ -271,6 +342,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
           memberHandle={comment.author.handle}
           memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
           videoAuthorId={videoAuthorId}
+          memberAvatarUrl={
+            comment.author.metadata.avatar?.__typename === 'AvatarUri'
+              ? comment.author.metadata.avatar?.avatarUri
+              : undefined
+          }
           type={
             ['DELETED', 'MODERATED'].includes(comment.status)
               ? 'deleted'
@@ -278,10 +354,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ? 'options'
               : 'default'
           }
-          videoId={videoId}
           processingCommentReactionId={processingCommentReactionId}
           replies={comment.replies}
-          repliesCount={comment.repliesCount}
+          repliesCount={comment?.replies ? comment?.replies?.length : 0}
           repliesLoading={!!comment.repliesCount && !comment.replies}
           onReactionClick={(reactionId) => handleCommentReaction(comment.id, reactionId)}
           onEditLabelClick={(replyComment) => {
@@ -292,6 +367,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
             setIsEditingComment({ commentId: comment.id, value: true })
             setCommentInputText({ commentId: comment.id, comment: comment.text })
           }}
+          parentCommentInputIsProcessingCollection={commentInputIsProcessingCollection}
           channelOwnerMember={video?.channel.ownerMember?.id}
           onUpdateComment={handleUpdateComment}
           onEditCommentCancel={handleEditCommentCancel}
@@ -304,29 +380,33 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       )
     )
   }, [
+    parentCommentFromUrl,
+    commentFromUrl,
     comments,
     videoId,
     commentInputTextCollection,
     updateComment,
-    authorized,
-    openSignInDialog,
-    signIn,
     activeMemberId,
     openModal,
     moderateComment,
     deleteComment,
     closeModal,
+    commentIdQueryParam,
     isEditingCommentCollection,
     commentInputIsProcessingCollection,
-    memberAvatarUrl,
     activeMembership?.handle,
+    memberAvatarUrl,
+    id,
     highlightedComment,
+    handleCommentReaction,
     processingCommentReactionId,
+    authorized,
     handleOpenSignInDialog,
     reactionPopoverDismissed,
     videoAuthorId,
     video,
-    handleCommentReaction,
+    openSignInDialog,
+    signIn,
   ])
 
   if (disabled) {
@@ -338,7 +418,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   }
   return (
     <CommentsSectionWrapper>
-      <CommentsSectionHeader>
+      <CommentsSectionHeader ref={commentWrapperRef}>
         <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
         <Select
           size="small"
@@ -367,7 +447,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
       <CommentWrapper>
-        {loading ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />) : memoizedComments}
+        {commentsLoading
+          ? placeholderItems.map((_, idx) => <Comment key={idx} type="default" loading />)
+          : memoizedComments}
       </CommentWrapper>
       <DialogModal
         size="medium"

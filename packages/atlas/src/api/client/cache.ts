@@ -154,6 +154,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   },
   // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
   search: offsetLimitPagination(getSearchKeyArgs),
+  commentByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Comment',
+        id: args?.where.id,
+      })
+    )
+  },
 }
 
 const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
