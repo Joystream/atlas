@@ -244,6 +244,7 @@ export class JoystreamLibExtrinsics {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
+
     const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)

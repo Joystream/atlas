@@ -61,7 +61,7 @@
     "vite": "2.7.13",
     "blake3": "patch:blake3@npm:2.1.7#.yarn/patches/blake3-npm-2.1.7-7bf40c44b4",
     "@joystream/types": "patch:@joystream/types@npm:0.19.3#.yarn/patches/@joystream-types-npm-0.19.3-e4e33d4bf2",
-    "@joystream/metadata-protobuf": "patch:@joystream/metadata-protobuf@npm:2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e"
+    "@joystream/metadata-protobuf@2.1.0": "patch:@joystream/metadata-protobuf@npm:2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e"
   },
   "engines": {
     "node": ">=14"

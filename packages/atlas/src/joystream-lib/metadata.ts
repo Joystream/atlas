@@ -95,6 +95,9 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
 
     videoProperties.license = videoLicenseProperties
   }
+  if (inputMetadata.enableComments != null) {
+    videoProperties.enableComments = inputMetadata.enableComments
+  }
 
   if (inputMetadata.mimeMediaType != null) {
     const videoMediaTypeProperties: IMediaType = {}

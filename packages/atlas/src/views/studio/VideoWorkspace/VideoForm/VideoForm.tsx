@@ -202,6 +202,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
         ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
         ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
+        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
+          ? { enableComments: data.enableComments }
+          : {}),
         ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
           ? {
               publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
@@ -246,11 +249,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           : {}),
       }
 
-      const nftMetadata: NftIssuanceInputMetadata | undefined = data.mintNft
-        ? {
-            royalty: data.nftRoyaltiesPercent || undefined,
-          }
-        : undefined
+      const nftMetadata: NftIssuanceInputMetadata | undefined =
+        data.mintNft && !videoFieldsLocked
+          ? {
+              royalty: data.nftRoyaltiesPercent || undefined,
+            }
+          : undefined
 
       onSubmit({
         metadata,
@@ -264,6 +268,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     createSubmitHandler,
     dirtyFields,
     editedVideoInfo,
+    videoFieldsLocked,
     flushDraftSave,
     isNew,
     onSubmit,
@@ -272,7 +277,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     videoHashPromise,
   ])
 
-  const actionBarPrimaryText = watch('mintNft') ? 'Publish & mint' : !isEdit ? 'Publish & upload' : 'Publish changes'
+  const actionBarPrimaryText = watch('mintNft')
+    ? !isEdit
+      ? 'Publish & mint'
+      : 'Publish changes'
+    : !isEdit
+    ? 'Publish & upload'
+    : 'Publish changes'
 
   const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
   const formStatus: VideoWorkspaceFormStatus = useMemo(
@@ -398,8 +409,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
       description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
     >
       <Controller
-        /* @ts-ignore TODO: this needs to be implemented on Query Node */
-        name="commentsEnabled"
+        name="enableComments"
         control={control}
         defaultValue={true}
         rules={{

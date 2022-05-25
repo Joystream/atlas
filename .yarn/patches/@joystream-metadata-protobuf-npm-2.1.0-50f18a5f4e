@@ -1,8 +1,8 @@
 diff --git a/compiled/index.d.ts b/compiled/index.d.ts
-index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..3b1043c1a8d55d5b7f3ea5b8a750e70f87a6e879 100644
+index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..17c0792993e3a8e5c4ec355aed03e63d80fb2207 100644
 --- a/compiled/index.d.ts
 +++ b/compiled/index.d.ts
-@@ -924,6 +924,1344 @@ export class MembershipMetadata implements IMembershipMetadata {
+@@ -924,6 +924,1233 @@ export class MembershipMetadata implements IMembershipMetadata {
      public toJSON(): { [k: string]: any };
  }
  
@@ -807,111 +807,6 @@ index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..3b1043c1a8d55d5b7f3ea5b8a750e70f
 +    }
 +}
 +
-+/** Properties of a CommentSectionPreference. */
-+export interface ICommentSectionPreference {
-+
-+    /** CommentSectionPreference videoId */
-+    videoId: Long;
-+
-+    /** CommentSectionPreference option */
-+    option: CommentSectionPreference.Option;
-+}
-+
-+/** Represents a CommentSectionPreference. */
-+export class CommentSectionPreference implements ICommentSectionPreference {
-+
-+    /**
-+     * Constructs a new CommentSectionPreference.
-+     * @param [properties] Properties to set
-+     */
-+    constructor(properties?: ICommentSectionPreference);
-+
-+    /** CommentSectionPreference videoId. */
-+    public videoId: Long;
-+
-+    /** CommentSectionPreference option. */
-+    public option: CommentSectionPreference.Option;
-+
-+    /**
-+     * Creates a new CommentSectionPreference instance using the specified properties.
-+     * @param [properties] Properties to set
-+     * @returns CommentSectionPreference instance
-+     */
-+    public static create(properties?: ICommentSectionPreference): CommentSectionPreference;
-+
-+    /**
-+     * Encodes the specified CommentSectionPreference message. Does not implicitly {@link CommentSectionPreference.verify|verify} messages.
-+     * @param message CommentSectionPreference message or plain object to encode
-+     * @param [writer] Writer to encode to
-+     * @returns Writer
-+     */
-+    public static encode(message: ICommentSectionPreference, writer?: $protobuf.Writer): $protobuf.Writer;
-+
-+    /**
-+     * Encodes the specified CommentSectionPreference message, length delimited. Does not implicitly {@link CommentSectionPreference.verify|verify} messages.
-+     * @param message CommentSectionPreference message or plain object to encode
-+     * @param [writer] Writer to encode to
-+     * @returns Writer
-+     */
-+    public static encodeDelimited(message: ICommentSectionPreference, writer?: $protobuf.Writer): $protobuf.Writer;
-+
-+    /**
-+     * Decodes a CommentSectionPreference message from the specified reader or buffer.
-+     * @param reader Reader or buffer to decode from
-+     * @param [length] Message length if known beforehand
-+     * @returns CommentSectionPreference
-+     * @throws {Error} If the payload is not a reader or valid buffer
-+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-+     */
-+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): CommentSectionPreference;
-+
-+    /**
-+     * Decodes a CommentSectionPreference message from the specified reader or buffer, length delimited.
-+     * @param reader Reader or buffer to decode from
-+     * @returns CommentSectionPreference
-+     * @throws {Error} If the payload is not a reader or valid buffer
-+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-+     */
-+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): CommentSectionPreference;
-+
-+    /**
-+     * Verifies a CommentSectionPreference message.
-+     * @param message Plain object to verify
-+     * @returns `null` if valid, otherwise the reason why it is not
-+     */
-+    public static verify(message: { [k: string]: any }): (string|null);
-+
-+    /**
-+     * Creates a CommentSectionPreference message from a plain object. Also converts values to their respective internal types.
-+     * @param object Plain object
-+     * @returns CommentSectionPreference
-+     */
-+    public static fromObject(object: { [k: string]: any }): CommentSectionPreference;
-+
-+    /**
-+     * Creates a plain object from a CommentSectionPreference message. Also converts values to other types if specified.
-+     * @param message CommentSectionPreference
-+     * @param [options] Conversion options
-+     * @returns Plain object
-+     */
-+    public static toObject(message: CommentSectionPreference, options?: $protobuf.IConversionOptions): { [k: string]: any };
-+
-+    /**
-+     * Converts this CommentSectionPreference to JSON.
-+     * @returns JSON object
-+     */
-+    public toJSON(): { [k: string]: any };
-+}
-+
-+export namespace CommentSectionPreference {
-+
-+    /** Option enum. */
-+    enum Option {
-+        ENABLE = 0,
-+        DISABLE = 1
-+    }
-+}
-+
 +/** Properties of a VideoReactionsPreference. */
 +export interface IVideoReactionsPreference {
 +
@@ -1239,9 +1134,6 @@ index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..3b1043c1a8d55d5b7f3ea5b8a750e70f
 +    /** ChannelOwnerRemarked videoReactionsPreference */
 +    videoReactionsPreference?: (IVideoReactionsPreference|null);
 +
-+    /** ChannelOwnerRemarked commentSectionPreference */
-+    commentSectionPreference?: (ICommentSectionPreference|null);
-+
 +    /** ChannelOwnerRemarked moderateComment */
 +    moderateComment?: (IModerateComment|null);
 +}
@@ -1264,14 +1156,11 @@ index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..3b1043c1a8d55d5b7f3ea5b8a750e70f
 +    /** ChannelOwnerRemarked videoReactionsPreference. */
 +    public videoReactionsPreference?: (IVideoReactionsPreference|null);
 +
-+    /** ChannelOwnerRemarked commentSectionPreference. */
-+    public commentSectionPreference?: (ICommentSectionPreference|null);
-+
 +    /** ChannelOwnerRemarked moderateComment. */
 +    public moderateComment?: (IModerateComment|null);
 +
 +    /** ChannelOwnerRemarked channelOwnerRemarked. */
-+    public channelOwnerRemarked?: ("pinOrUnpinComment"|"banOrUnbanMemberFromChannel"|"videoReactionsPreference"|"commentSectionPreference"|"moderateComment");
++    public channelOwnerRemarked?: ("pinOrUnpinComment"|"banOrUnbanMemberFromChannel"|"videoReactionsPreference"|"moderateComment");
 +
 +    /**
 +     * Creates a new ChannelOwnerRemarked instance using the specified properties.
@@ -1347,11 +1236,31 @@ index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..3b1043c1a8d55d5b7f3ea5b8a750e70f
  /** Properties of a PersonMetadata. */
  export interface IPersonMetadata {
  
+@@ -2431,6 +3658,9 @@ export interface IVideoMetadata {
+ 
+     /** VideoMetadata category */
+     category?: (Long|null);
++
++    /** VideoMetadata enableComments */
++    enableComments?: (boolean|null);
+ }
+ 
+ /** Represents a VideoMetadata. */
+@@ -2490,6 +3720,9 @@ export class VideoMetadata implements IVideoMetadata {
+     /** VideoMetadata category. */
+     public category: Long;
+ 
++    /** VideoMetadata enableComments. */
++    public enableComments: boolean;
++
+     /**
+      * Creates a new VideoMetadata instance using the specified properties.
+      * @param [properties] Properties to set
 diff --git a/compiled/index.js b/compiled/index.js
-index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d5170599b0eb 100644
+index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..ed0dc6dc0a364e34996d5d9814f06ac893e7d007 100644
 --- a/compiled/index.js
 +++ b/compiled/index.js
-@@ -2168,6 +2168,3251 @@ $root.MembershipMetadata = (function() {
+@@ -2168,6 +2168,2966 @@ $root.MembershipMetadata = (function() {
      return MembershipMetadata;
  })();
  
@@ -2127,8 +2036,8 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +    EditComment.encode = function encode(message, writer) {
 +        if (!writer)
 +            writer = $Writer.create();
-+        writer.uint32(/* id 3, wireType 2 =*/26).string(message.commentId);
-+        writer.uint32(/* id 4, wireType 2 =*/34).string(message.newBody);
++        writer.uint32(/* id 1, wireType 2 =*/10).string(message.commentId);
++        writer.uint32(/* id 2, wireType 2 =*/18).string(message.newBody);
 +        return writer;
 +    };
 +
@@ -2163,10 +2072,10 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +        while (reader.pos < end) {
 +            var tag = reader.uint32();
 +            switch (tag >>> 3) {
-+            case 3:
++            case 1:
 +                message.commentId = reader.string();
 +                break;
-+            case 4:
++            case 2:
 +                message.newBody = reader.string();
 +                break;
 +            default:
@@ -2328,7 +2237,7 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +    DeleteComment.encode = function encode(message, writer) {
 +        if (!writer)
 +            writer = $Writer.create();
-+        writer.uint32(/* id 2, wireType 2 =*/18).string(message.commentId);
++        writer.uint32(/* id 1, wireType 2 =*/10).string(message.commentId);
 +        return writer;
 +    };
 +
@@ -2363,7 +2272,7 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +        while (reader.pos < end) {
 +            var tag = reader.uint32();
 +            switch (tag >>> 3) {
-+            case 2:
++            case 1:
 +                message.commentId = reader.string();
 +                break;
 +            default:
@@ -2797,8 +2706,8 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +    ModerateComment.encode = function encode(message, writer) {
 +        if (!writer)
 +            writer = $Writer.create();
-+        writer.uint32(/* id 2, wireType 2 =*/18).string(message.commentId);
-+        writer.uint32(/* id 3, wireType 2 =*/26).string(message.rationale);
++        writer.uint32(/* id 1, wireType 2 =*/10).string(message.commentId);
++        writer.uint32(/* id 2, wireType 2 =*/18).string(message.rationale);
 +        return writer;
 +    };
 +
@@ -2833,10 +2742,10 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +        while (reader.pos < end) {
 +            var tag = reader.uint32();
 +            switch (tag >>> 3) {
-+            case 2:
++            case 1:
 +                message.commentId = reader.string();
 +                break;
-+            case 3:
++            case 2:
 +                message.rationale = reader.string();
 +                break;
 +            default:
@@ -3191,257 +3100,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +    })();
 +
 +    return BanOrUnbanMemberFromChannel;
-+})();
-+
-+$root.CommentSectionPreference = (function() {
-+
-+    /**
-+     * Properties of a CommentSectionPreference.
-+     * @exports ICommentSectionPreference
-+     * @interface ICommentSectionPreference
-+     * @property {Long} videoId CommentSectionPreference videoId
-+     * @property {CommentSectionPreference.Option} option CommentSectionPreference option
-+     */
-+
-+    /**
-+     * Constructs a new CommentSectionPreference.
-+     * @exports CommentSectionPreference
-+     * @classdesc Represents a CommentSectionPreference.
-+     * @implements ICommentSectionPreference
-+     * @constructor
-+     * @param {ICommentSectionPreference=} [properties] Properties to set
-+     */
-+    function CommentSectionPreference(properties) {
-+        if (properties)
-+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-+                if (properties[keys[i]] != null)
-+                    this[keys[i]] = properties[keys[i]];
-+    }
-+
-+    /**
-+     * CommentSectionPreference videoId.
-+     * @member {Long} videoId
-+     * @memberof CommentSectionPreference
-+     * @instance
-+     */
-+    CommentSectionPreference.prototype.videoId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-+
-+    /**
-+     * CommentSectionPreference option.
-+     * @member {CommentSectionPreference.Option} option
-+     * @memberof CommentSectionPreference
-+     * @instance
-+     */
-+    CommentSectionPreference.prototype.option = 0;
-+
-+    /**
-+     * Creates a new CommentSectionPreference instance using the specified properties.
-+     * @function create
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {ICommentSectionPreference=} [properties] Properties to set
-+     * @returns {CommentSectionPreference} CommentSectionPreference instance
-+     */
-+    CommentSectionPreference.create = function create(properties) {
-+        return new CommentSectionPreference(properties);
-+    };
-+
-+    /**
-+     * Encodes the specified CommentSectionPreference message. Does not implicitly {@link CommentSectionPreference.verify|verify} messages.
-+     * @function encode
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {ICommentSectionPreference} message CommentSectionPreference message or plain object to encode
-+     * @param {$protobuf.Writer} [writer] Writer to encode to
-+     * @returns {$protobuf.Writer} Writer
-+     */
-+    CommentSectionPreference.encode = function encode(message, writer) {
-+        if (!writer)
-+            writer = $Writer.create();
-+        writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.videoId);
-+        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.option);
-+        return writer;
-+    };
-+
-+    /**
-+     * Encodes the specified CommentSectionPreference message, length delimited. Does not implicitly {@link CommentSectionPreference.verify|verify} messages.
-+     * @function encodeDelimited
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {ICommentSectionPreference} message CommentSectionPreference message or plain object to encode
-+     * @param {$protobuf.Writer} [writer] Writer to encode to
-+     * @returns {$protobuf.Writer} Writer
-+     */
-+    CommentSectionPreference.encodeDelimited = function encodeDelimited(message, writer) {
-+        return this.encode(message, writer).ldelim();
-+    };
-+
-+    /**
-+     * Decodes a CommentSectionPreference message from the specified reader or buffer.
-+     * @function decode
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-+     * @param {number} [length] Message length if known beforehand
-+     * @returns {CommentSectionPreference} CommentSectionPreference
-+     * @throws {Error} If the payload is not a reader or valid buffer
-+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-+     */
-+    CommentSectionPreference.decode = function decode(reader, length) {
-+        if (!(reader instanceof $Reader))
-+            reader = $Reader.create(reader);
-+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.CommentSectionPreference();
-+        while (reader.pos < end) {
-+            var tag = reader.uint32();
-+            switch (tag >>> 3) {
-+            case 1:
-+                message.videoId = reader.uint64();
-+                break;
-+            case 2:
-+                message.option = reader.int32();
-+                break;
-+            default:
-+                reader.skipType(tag & 7);
-+                break;
-+            }
-+        }
-+        if (!message.hasOwnProperty("videoId"))
-+            throw $util.ProtocolError("missing required 'videoId'", { instance: message });
-+        if (!message.hasOwnProperty("option"))
-+            throw $util.ProtocolError("missing required 'option'", { instance: message });
-+        return message;
-+    };
-+
-+    /**
-+     * Decodes a CommentSectionPreference message from the specified reader or buffer, length delimited.
-+     * @function decodeDelimited
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-+     * @returns {CommentSectionPreference} CommentSectionPreference
-+     * @throws {Error} If the payload is not a reader or valid buffer
-+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-+     */
-+    CommentSectionPreference.decodeDelimited = function decodeDelimited(reader) {
-+        if (!(reader instanceof $Reader))
-+            reader = new $Reader(reader);
-+        return this.decode(reader, reader.uint32());
-+    };
-+
-+    /**
-+     * Verifies a CommentSectionPreference message.
-+     * @function verify
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {Object.<string,*>} message Plain object to verify
-+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-+     */
-+    CommentSectionPreference.verify = function verify(message) {
-+        if (typeof message !== "object" || message === null)
-+            return "object expected";
-+        if (!$util.isInteger(message.videoId) && !(message.videoId && $util.isInteger(message.videoId.low) && $util.isInteger(message.videoId.high)))
-+            return "videoId: integer|Long expected";
-+        switch (message.option) {
-+        default:
-+            return "option: enum value expected";
-+        case 0:
-+        case 1:
-+            break;
-+        }
-+        return null;
-+    };
-+
-+    /**
-+     * Creates a CommentSectionPreference message from a plain object. Also converts values to their respective internal types.
-+     * @function fromObject
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {Object.<string,*>} object Plain object
-+     * @returns {CommentSectionPreference} CommentSectionPreference
-+     */
-+    CommentSectionPreference.fromObject = function fromObject(object) {
-+        if (object instanceof $root.CommentSectionPreference)
-+            return object;
-+        var message = new $root.CommentSectionPreference();
-+        if (object.videoId != null)
-+            if ($util.Long)
-+                (message.videoId = $util.Long.fromValue(object.videoId)).unsigned = true;
-+            else if (typeof object.videoId === "string")
-+                message.videoId = parseInt(object.videoId, 10);
-+            else if (typeof object.videoId === "number")
-+                message.videoId = object.videoId;
-+            else if (typeof object.videoId === "object")
-+                message.videoId = new $util.LongBits(object.videoId.low >>> 0, object.videoId.high >>> 0).toNumber(true);
-+        switch (object.option) {
-+        case "ENABLE":
-+        case 0:
-+            message.option = 0;
-+            break;
-+        case "DISABLE":
-+        case 1:
-+            message.option = 1;
-+            break;
-+        }
-+        return message;
-+    };
-+
-+    /**
-+     * Creates a plain object from a CommentSectionPreference message. Also converts values to other types if specified.
-+     * @function toObject
-+     * @memberof CommentSectionPreference
-+     * @static
-+     * @param {CommentSectionPreference} message CommentSectionPreference
-+     * @param {$protobuf.IConversionOptions} [options] Conversion options
-+     * @returns {Object.<string,*>} Plain object
-+     */
-+    CommentSectionPreference.toObject = function toObject(message, options) {
-+        if (!options)
-+            options = {};
-+        var object = {};
-+        if (options.defaults) {
-+            if ($util.Long) {
-+                var long = new $util.Long(0, 0, true);
-+                object.videoId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-+            } else
-+                object.videoId = options.longs === String ? "0" : 0;
-+            object.option = options.enums === String ? "ENABLE" : 0;
-+        }
-+        if (message.videoId != null && message.hasOwnProperty("videoId"))
-+            if (typeof message.videoId === "number")
-+                object.videoId = options.longs === String ? String(message.videoId) : message.videoId;
-+            else
-+                object.videoId = options.longs === String ? $util.Long.prototype.toString.call(message.videoId) : options.longs === Number ? new $util.LongBits(message.videoId.low >>> 0, message.videoId.high >>> 0).toNumber(true) : message.videoId;
-+        if (message.option != null && message.hasOwnProperty("option"))
-+            object.option = options.enums === String ? $root.CommentSectionPreference.Option[message.option] : message.option;
-+        return object;
-+    };
-+
-+    /**
-+     * Converts this CommentSectionPreference to JSON.
-+     * @function toJSON
-+     * @memberof CommentSectionPreference
-+     * @instance
-+     * @returns {Object.<string,*>} JSON object
-+     */
-+    CommentSectionPreference.prototype.toJSON = function toJSON() {
-+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-+    };
-+
-+    /**
-+     * Option enum.
-+     * @name CommentSectionPreference.Option
-+     * @enum {number}
-+     * @property {number} ENABLE=0 ENABLE value
-+     * @property {number} DISABLE=1 DISABLE value
-+     */
-+    CommentSectionPreference.Option = (function() {
-+        var valuesById = {}, values = Object.create(valuesById);
-+        values[valuesById[0] = "ENABLE"] = 0;
-+        values[valuesById[1] = "DISABLE"] = 1;
-+        return values;
-+    })();
-+
-+    return CommentSectionPreference;
 +})();
 +
 +$root.VideoReactionsPreference = (function() {
@@ -4262,7 +3920,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +     * @property {IPinOrUnpinComment|null} [pinOrUnpinComment] ChannelOwnerRemarked pinOrUnpinComment
 +     * @property {IBanOrUnbanMemberFromChannel|null} [banOrUnbanMemberFromChannel] ChannelOwnerRemarked banOrUnbanMemberFromChannel
 +     * @property {IVideoReactionsPreference|null} [videoReactionsPreference] ChannelOwnerRemarked videoReactionsPreference
-+     * @property {ICommentSectionPreference|null} [commentSectionPreference] ChannelOwnerRemarked commentSectionPreference
 +     * @property {IModerateComment|null} [moderateComment] ChannelOwnerRemarked moderateComment
 +     */
 +
@@ -4306,14 +3963,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +    ChannelOwnerRemarked.prototype.videoReactionsPreference = null;
 +
 +    /**
-+     * ChannelOwnerRemarked commentSectionPreference.
-+     * @member {ICommentSectionPreference|null|undefined} commentSectionPreference
-+     * @memberof ChannelOwnerRemarked
-+     * @instance
-+     */
-+    ChannelOwnerRemarked.prototype.commentSectionPreference = null;
-+
-+    /**
 +     * ChannelOwnerRemarked moderateComment.
 +     * @member {IModerateComment|null|undefined} moderateComment
 +     * @memberof ChannelOwnerRemarked
@@ -4326,12 +3975,12 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +
 +    /**
 +     * ChannelOwnerRemarked channelOwnerRemarked.
-+     * @member {"pinOrUnpinComment"|"banOrUnbanMemberFromChannel"|"videoReactionsPreference"|"commentSectionPreference"|"moderateComment"|undefined} channelOwnerRemarked
++     * @member {"pinOrUnpinComment"|"banOrUnbanMemberFromChannel"|"videoReactionsPreference"|"moderateComment"|undefined} channelOwnerRemarked
 +     * @memberof ChannelOwnerRemarked
 +     * @instance
 +     */
 +    Object.defineProperty(ChannelOwnerRemarked.prototype, "channelOwnerRemarked", {
-+        get: $util.oneOfGetter($oneOfFields = ["pinOrUnpinComment", "banOrUnbanMemberFromChannel", "videoReactionsPreference", "commentSectionPreference", "moderateComment"]),
++        get: $util.oneOfGetter($oneOfFields = ["pinOrUnpinComment", "banOrUnbanMemberFromChannel", "videoReactionsPreference", "moderateComment"]),
 +        set: $util.oneOfSetter($oneOfFields)
 +    });
 +
@@ -4365,8 +4014,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +            $root.BanOrUnbanMemberFromChannel.encode(message.banOrUnbanMemberFromChannel, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
 +        if (message.videoReactionsPreference != null && Object.hasOwnProperty.call(message, "videoReactionsPreference"))
 +            $root.VideoReactionsPreference.encode(message.videoReactionsPreference, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-+        if (message.commentSectionPreference != null && Object.hasOwnProperty.call(message, "commentSectionPreference"))
-+            $root.CommentSectionPreference.encode(message.commentSectionPreference, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
 +        if (message.moderateComment != null && Object.hasOwnProperty.call(message, "moderateComment"))
 +            $root.ModerateComment.encode(message.moderateComment, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
 +        return writer;
@@ -4411,9 +4058,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +                break;
 +            case 3:
 +                message.videoReactionsPreference = $root.VideoReactionsPreference.decode(reader, reader.uint32());
-+                break;
-+            case 4:
-+                message.commentSectionPreference = $root.CommentSectionPreference.decode(reader, reader.uint32());
 +                break;
 +            case 5:
 +                message.moderateComment = $root.ModerateComment.decode(reader, reader.uint32());
@@ -4482,16 +4126,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +                    return "videoReactionsPreference." + error;
 +            }
 +        }
-+        if (message.commentSectionPreference != null && message.hasOwnProperty("commentSectionPreference")) {
-+            if (properties.channelOwnerRemarked === 1)
-+                return "channelOwnerRemarked: multiple values";
-+            properties.channelOwnerRemarked = 1;
-+            {
-+                var error = $root.CommentSectionPreference.verify(message.commentSectionPreference);
-+                if (error)
-+                    return "commentSectionPreference." + error;
-+            }
-+        }
 +        if (message.moderateComment != null && message.hasOwnProperty("moderateComment")) {
 +            if (properties.channelOwnerRemarked === 1)
 +                return "channelOwnerRemarked: multiple values";
@@ -4532,11 +4166,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +                throw TypeError(".ChannelOwnerRemarked.videoReactionsPreference: object expected");
 +            message.videoReactionsPreference = $root.VideoReactionsPreference.fromObject(object.videoReactionsPreference);
 +        }
-+        if (object.commentSectionPreference != null) {
-+            if (typeof object.commentSectionPreference !== "object")
-+                throw TypeError(".ChannelOwnerRemarked.commentSectionPreference: object expected");
-+            message.commentSectionPreference = $root.CommentSectionPreference.fromObject(object.commentSectionPreference);
-+        }
 +        if (object.moderateComment != null) {
 +            if (typeof object.moderateComment !== "object")
 +                throw TypeError(".ChannelOwnerRemarked.moderateComment: object expected");
@@ -4573,11 +4202,6 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
 +            if (options.oneofs)
 +                object.channelOwnerRemarked = "videoReactionsPreference";
 +        }
-+        if (message.commentSectionPreference != null && message.hasOwnProperty("commentSectionPreference")) {
-+            object.commentSectionPreference = $root.CommentSectionPreference.toObject(message.commentSectionPreference, options);
-+            if (options.oneofs)
-+                object.channelOwnerRemarked = "commentSectionPreference";
-+        }
 +        if (message.moderateComment != null && message.hasOwnProperty("moderateComment")) {
 +            object.moderateComment = $root.ModerateComment.toObject(message.moderateComment, options);
 +            if (options.oneofs)
@@ -4603,6 +4227,84 @@ index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..5ac596e6fee9774f121a3315a103d517
  $root.PersonMetadata = (function() {
  
      /**
+@@ -5728,6 +8688,7 @@ $root.VideoMetadata = (function() {
+      * @property {boolean|null} [isExplicit] VideoMetadata isExplicit
+      * @property {Array.<Long>|null} [persons] VideoMetadata persons
+      * @property {Long|null} [category] VideoMetadata category
++     * @property {boolean|null} [enableComments] VideoMetadata enableComments
+      */
+ 
+     /**
+@@ -5874,6 +8835,14 @@ $root.VideoMetadata = (function() {
+      */
+     VideoMetadata.prototype.category = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+ 
++    /**
++     * VideoMetadata enableComments.
++     * @member {boolean} enableComments
++     * @memberof VideoMetadata
++     * @instance
++     */
++    VideoMetadata.prototype.enableComments = false;
++
+     /**
+      * Creates a new VideoMetadata instance using the specified properties.
+      * @function create
+@@ -5934,6 +8903,8 @@ $root.VideoMetadata = (function() {
+         }
+         if (message.category != null && Object.hasOwnProperty.call(message, "category"))
+             writer.uint32(/* id 16, wireType 0 =*/128).uint64(message.category);
++        if (message.enableComments != null && Object.hasOwnProperty.call(message, "enableComments"))
++            writer.uint32(/* id 18, wireType 0 =*/144).bool(message.enableComments);
+         return writer;
+     };
+ 
+@@ -6023,6 +8994,9 @@ $root.VideoMetadata = (function() {
+             case 16:
+                 message.category = reader.uint64();
+                 break;
++            case 18:
++                message.enableComments = reader.bool();
++                break;
+             default:
+                 reader.skipType(tag & 7);
+                 break;
+@@ -6116,6 +9090,9 @@ $root.VideoMetadata = (function() {
+         if (message.category != null && message.hasOwnProperty("category"))
+             if (!$util.isInteger(message.category) && !(message.category && $util.isInteger(message.category.low) && $util.isInteger(message.category.high)))
+                 return "category: integer|Long expected";
++        if (message.enableComments != null && message.hasOwnProperty("enableComments"))
++            if (typeof message.enableComments !== "boolean")
++                return "enableComments: boolean expected";
+         return null;
+     };
+ 
+@@ -6191,6 +9168,8 @@ $root.VideoMetadata = (function() {
+                 message.category = object.category;
+             else if (typeof object.category === "object")
+                 message.category = new $util.LongBits(object.category.low >>> 0, object.category.high >>> 0).toNumber(true);
++        if (object.enableComments != null)
++            message.enableComments = Boolean(object.enableComments);
+         return message;
+     };
+ 
+@@ -6229,6 +9208,7 @@ $root.VideoMetadata = (function() {
+                 object.category = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+             } else
+                 object.category = options.longs === String ? "0" : 0;
++            object.enableComments = false;
+         }
+         if (message.title != null && message.hasOwnProperty("title"))
+             object.title = message.title;
+@@ -6271,6 +9251,8 @@ $root.VideoMetadata = (function() {
+                 object.category = options.longs === String ? String(message.category) : message.category;
+             else
+                 object.category = options.longs === String ? $util.Long.prototype.toString.call(message.category) : options.longs === Number ? new $util.LongBits(message.category.low >>> 0, message.category.high >>> 0).toNumber(true) : message.category;
++        if (message.enableComments != null && message.hasOwnProperty("enableComments"))
++            object.enableComments = message.enableComments;
+         return object;
+     };
+ 
 diff --git a/doc/index.md b/doc/index.md
 index ebac00504dbb92d46a3276ccc82f37867f20fb08..bde98121842487253849af6575ebe08fdf4de3cd 100644
 --- a/doc/index.md
@@ -5069,10 +4771,10 @@ index ebac00504dbb92d46a3276ccc82f37867f20fb08..bde98121842487253849af6575ebe08f
  
 diff --git a/proto/Metaprotocol.proto b/proto/Metaprotocol.proto
 new file mode 100644
-index 0000000000000000000000000000000000000000..33c74cb8e7bef115c18f9e7819db725d5a47f2c9
+index 0000000000000000000000000000000000000000..61d13c875a316d896b16a4ca0dae74d9afa861a9
 --- /dev/null
 +++ b/proto/Metaprotocol.proto
-@@ -0,0 +1,155 @@
+@@ -0,0 +1,139 @@
 +syntax = "proto2";
 +
 +// reacting, unreacting, and changing reaction to video
@@ -5115,16 +4817,16 @@ index 0000000000000000000000000000000000000000..33c74cb8e7bef115c18f9e7819db725d
 +// edit comment by author
 +message EditComment {
 +    // ID of the comment whose text is being edited
-+    required string comment_id = 3;
++    required string comment_id = 1;
 +
 +    // New comment body
-+    required string new_body = 4;
++    required string new_body = 2;
 +}
 +
 +// delete comment by author 
 +message DeleteComment {
 +    // ID of the comment which will be deleted
-+    required string comment_id = 2;
++    required string comment_id = 1;
 +}
 +
 +// pin comment on a video by channel owner
@@ -5148,10 +4850,10 @@ index 0000000000000000000000000000000000000000..33c74cb8e7bef115c18f9e7819db725d
 +// delete comment by moderator or channel owner;
 +message ModerateComment {
 +    // ID of comment that will be deleted by moderator
-+    required string comment_id = 2;
++    required string comment_id = 1;
 +
 +    // why moderator wants to delete this comment
-+    required string rationale = 3;
++    required string rationale = 2;
 +}
 +
 +message BanOrUnbanMemberFromChannel { 
@@ -5164,21 +4866,6 @@ index 0000000000000000000000000000000000000000..33c74cb8e7bef115c18f9e7819db725d
 +    }
 +
 +    // Selected option to ban or unban member from the channel
-+    required Option option = 2;
-+}
-+
-+// Enable or disable comment section for a single video
-+message CommentSectionPreference {
-+    // ID of the video
-+    required uint64 video_id = 1;
-+
-+
-+    enum Option {
-+        ENABLE = 0; // Enable comment section (nothing happens if it is already enabled)
-+        DISABLE = 1; // Disable comment section (nothing happens if it is already disabled)
-+    }
-+
-+    // Selected option to enable or disable comment section
 +    required Option option = 2;
 +}
 +
@@ -5224,8 +4911,21 @@ index 0000000000000000000000000000000000000000..33c74cb8e7bef115c18f9e7819db725d
 +        PinOrUnpinComment pin_or_unpin_comment = 1;
 +        BanOrUnbanMemberFromChannel ban_or_unban_member_from_channel = 2;
 +        VideoReactionsPreference video_reactions_preference = 3;
-+        CommentSectionPreference comment_section_preference = 4;
 +        ModerateComment moderate_comment = 5;
 +    }
 +}
 \ No newline at end of file
+diff --git a/proto/Video.proto b/proto/Video.proto
+index 893854f01ec1018e92df8c26cadc26c7df3d7b39..bc49033a143f65e510f31791cc0091e13af5d8e9 100644
+--- a/proto/Video.proto
++++ b/proto/Video.proto
+@@ -80,6 +80,9 @@ message VideoMetadata {
+ 
+     // Video Category Id
+     optional uint64 category = 16;
++
++    // Enable/Disable the comment section
++    optional bool enable_comments = 18;
+ }
+ 
+ message VideoCategoryMetadata {
