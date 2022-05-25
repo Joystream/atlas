@@ -7,6 +7,7 @@ import { SvgControlsPause, SvgControlsPlay, SvgControlsReplay } from '@/componen
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
+import { sizes } from '@/styles'
 
 import {
   Container,
@@ -147,8 +148,15 @@ export const EndingOverlay: React.FC<EndingOverlayProps> = ({
               noTrail={isCountDownStarted}
             />
             <CountDownButton
-              icon={isCountDownStarted ? <SvgControlsPause /> : <SvgControlsPlay />}
+              icon={
+                isCountDownStarted ? (
+                  <SvgControlsPause width={sizes(4)} height={sizes(4)} />
+                ) : (
+                  <SvgControlsPlay width={sizes(4)} height={sizes(4)} />
+                )
+              }
               variant="tertiary"
+              size="medium"
               onClick={handleCountDownButton}
             />
           </CountDownWrapper>
