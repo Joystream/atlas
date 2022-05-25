@@ -41,10 +41,12 @@ export const useTransaction = (): HandleTransactionFn => {
   )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
-  const [getTransactionStatus, { refetch }] = useGetMetaprotocolTransactionStatusEventsLazyQuery({
-    onError: (error) =>
-      SentryLogger.error('Failed to fetch metaprotocol transaction status event', 'TransactionManager', error),
-  })
+  const [getTransactionStatus, { refetch: refetchTransactionStatus, data }] =
+    useGetMetaprotocolTransactionStatusEventsLazyQuery({
+      fetchPolicy: 'network-only',
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch metaprotocol transaction status event', 'TransactionManager', error),
+    })
 
   return useCallback(
     async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, onError, minimized = null }) => {
@@ -111,27 +113,8 @@ export const useTransaction = (): HandleTransactionFn => {
         await queryNodeSyncPromise
 
         if (result.transactionHash) {
-          const { data } = await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
+          await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
           const status = data?.metaprotocolTransactionStatusEvents[0]?.status
-
-          if (!status) {
-            for (let i = 0; i <= RETRIES; i++) {
-              ConsoleLogger.warn(`No transcation status event found - retries: ${i}/${RETRIES}`)
-              await wait(RETRIES_TIMEOUT)
-              const { data } = await refetch()
-              const status = data?.metaprotocolTransactionStatusEvents[0]?.status
-              if (status) {
-                break
-              }
-              if (i === 10 && !status) {
-                throw new JoystreamLibError({
-                  name: 'MetaprotocolTransactionError',
-                  message: 'No transcation status event found',
-                  details: result,
-                })
-              }
-            }
-          }
 
           if (status?.__typename === 'MetaprotocolTransactionErrored') {
             throw new JoystreamLibError({
@@ -139,6 +122,33 @@ export const useTransaction = (): HandleTransactionFn => {
               message: status?.message,
               details: result,
             })
+          }
+
+          if (!status) {
+            for (let i = 0; i <= RETRIES; i++) {
+              ConsoleLogger.warn(`No transaction status event found - retries: ${i}/${RETRIES}`)
+              await wait(RETRIES_TIMEOUT)
+              const { data: refetchedData } = await refetchTransactionStatus()
+              const statusAfterRefetch = refetchedData?.metaprotocolTransactionStatusEvents[0]?.status
+
+              if (statusAfterRefetch?.__typename === 'MetaprotocolTransactionErrored') {
+                throw new JoystreamLibError({
+                  name: 'MetaprotocolTransactionError',
+                  message: statusAfterRefetch?.message,
+                  details: result,
+                })
+              }
+              if (i === 10 && !statusAfterRefetch) {
+                throw new JoystreamLibError({
+                  name: 'MetaprotocolTransactionError',
+                  message: 'No transaction status event found',
+                  details: result,
+                })
+              }
+              if (statusAfterRefetch) {
+                break
+              }
+            }
           }
         }
 
@@ -218,10 +228,11 @@ export const useTransaction = (): HandleTransactionFn => {
     [
       addBlockAction,
       addPendingSign,
+      data?.metaprotocolTransactionStatusEvents,
       displaySnackbar,
       getTransactionStatus,
       nodeConnectionStatus,
-      refetch,
+      refetchTransactionStatus,
       removePendingSign,
       setDialogStep,
       setErrorCode,
