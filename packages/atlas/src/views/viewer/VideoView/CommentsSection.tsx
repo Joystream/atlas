@@ -29,6 +29,7 @@ import { getCommentReactions } from './utils'
 type CommentsSectionProps = {
   disabled?: boolean
   video?: VideoFieldsFragment | null
+  videoLoading: boolean
   videoAuthorId?: string
 }
 
@@ -36,7 +37,7 @@ const COMMENT_BOX_ID = 'comment-box'
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 const HIGHLIGHTED_COMMENT_TIMEOUT = 3000
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId }) => {
+export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoAuthorId, videoLoading }) => {
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const [openModal, closeModal] = useConfirmationModal()
   const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
@@ -78,7 +79,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       skip: !commentFromUrl || !commentFromUrl.parentCommentId,
     }
   )
-  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading
+  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading || videoLoading
 
   const scrollToCommentInput = (smooth?: boolean) => {
     commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
