@@ -249,11 +249,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           : {}),
       }
 
-      const nftMetadata: NftIssuanceInputMetadata | undefined = data.mintNft
-        ? {
-            royalty: data.nftRoyaltiesPercent || undefined,
-          }
-        : undefined
+      const nftMetadata: NftIssuanceInputMetadata | undefined =
+        data.mintNft && !videoFieldsLocked
+          ? {
+              royalty: data.nftRoyaltiesPercent || undefined,
+            }
+          : undefined
 
       onSubmit({
         metadata,
@@ -267,6 +268,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     createSubmitHandler,
     dirtyFields,
     editedVideoInfo,
+    videoFieldsLocked,
     flushDraftSave,
     isNew,
     onSubmit,
@@ -275,7 +277,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     videoHashPromise,
   ])
 
-  const actionBarPrimaryText = watch('mintNft') ? 'Publish & mint' : !isEdit ? 'Publish & upload' : 'Publish changes'
+  const actionBarPrimaryText = watch('mintNft')
+    ? !isEdit
+      ? 'Publish & mint'
+      : 'Publish changes'
+    : !isEdit
+    ? 'Publish & upload'
+    : 'Publish changes'
 
   const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
   const formStatus: VideoWorkspaceFormStatus = useMemo(
