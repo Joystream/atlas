@@ -79,7 +79,8 @@ const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
 
 const getCommentKeyArgs = (args: GetUserCommentsAndVideoCommentsConnectionQueryVariables | null) => {
   const onlyCount = args?.first === 0
-  return `${onlyCount}`
+  const orderBy = args?.orderBy || []
+  return `${onlyCount}:${orderBy}`
 }
 
 const createDateHandler = () => ({
