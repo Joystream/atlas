@@ -85,7 +85,13 @@ export class JoystreamLibExtrinsics {
     try {
       cb?.(ExtrinsicStatus.Unsigned)
 
-      const { events, blockHash } = await sendExtrinsicAndParseEvents(tx, account, this.api.registry, this.endpoint, cb)
+      const { events, blockHash, transactionHash } = await sendExtrinsicAndParseEvents(
+        tx,
+        account,
+        this.api.registry,
+        this.endpoint,
+        cb
+      )
 
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
 
@@ -102,7 +108,7 @@ export class JoystreamLibExtrinsics {
         return event.data as ReturnType<GetEventDataFn>
       }
 
-      return { events, block: blockHeader.number.toNumber(), getEventData }
+      return { events, block: blockHeader.number.toNumber(), getEventData, transactionHash }
     } catch (error) {
       if (error?.message === 'Cancelled') {
         throw new JoystreamLibError({ name: 'SignCancelledError' })
@@ -333,7 +339,12 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  async changeNftPrice(memberId: MemberId, videoId: VideoId, price: number, cb?: ExtrinsicStatusCallbackFn) {
+  async changeNftPrice(
+    memberId: MemberId,
+    videoId: VideoId,
+    price: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
@@ -421,7 +432,7 @@ export class JoystreamLibExtrinsics {
     bidderId: MemberId,
     price: string,
     cb?: ExtrinsicStatusCallbackFn
-  ) {
+  ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
     const contentActor = new ContentActor(this.api.registry, {
       member: ownerId,
@@ -475,10 +486,11 @@ export class JoystreamLibExtrinsics {
     const metadataBytes = new Bytes(this.api.registry, metadataRaw)
 
     const tx = this.api.tx.members.memberRemark(memberId, metadataBytes)
-    const { block } = await this.sendExtrinsic(tx, cb)
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
 
     return {
       block,
+      transactionHash,
     }
   }
 
@@ -495,10 +507,11 @@ export class JoystreamLibExtrinsics {
     const metadataBytes = new Bytes(this.api.registry, metadataRaw)
 
     const tx = this.api.tx.content.channelOwnerRemark({ Member: memberId }, channelId, metadataBytes)
-    const { block } = await this.sendExtrinsic(tx, cb)
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
 
     return {
       block,
+      transactionHash,
     }
   }
 

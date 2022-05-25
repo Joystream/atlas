@@ -62,7 +62,7 @@ export type GetCommentsQuery = {
       count: number
       reactionId: number
     }>
-    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
   }>
 }
 
@@ -184,7 +184,7 @@ export type GetCommentsConnectionQuery = {
           count: number
           reactionId: number
         }>
-        commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+        commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }
@@ -247,7 +247,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
       count: number
       reactionId: number
     }>
-    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+    commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
   }>
   videoCommentsConnection: {
     __typename?: 'CommentConnection'
@@ -300,7 +300,7 @@ export type GetUserCommentsAndVideoCommentsConnectionQuery = {
           count: number
           reactionId: number
         }>
-        commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inBlock: number }> | null
+        commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
       }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; endCursor?: string | null }

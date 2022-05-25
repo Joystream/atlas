@@ -1,0 +1,5 @@
+query GetMetaprotocolTransactionStatusEvents($transactionHash: String!) {
+  metaprotocolTransactionStatusEvents(where: { inExtrinsic_eq: $transactionHash }) {
+    ...MetaprotocolTransactionStatusEventFields
+  }
+}

@@ -108,15 +108,16 @@ export const useReactionTransactions = () => {
             parentCommentId || null,
             proxyCallback(updateStatus)
           ),
-        onTxSync: async ({ block }) => {
+        onTxSync: async ({ transactionHash }) => {
           const refetchResult = await refetchComments()
           setCommentInputIsProcessing({ commentInputId, value: false })
 
-          const newCommentsQueryResult = refetchResult[0]
-          // TODO - We probably shouldn't use inBlock here - it's possible that we could create multiple comments in one block
-          // Update once https://github.com/Joystream/atlas/issues/2629 is done.
-          newCommentId = newCommentsQueryResult.data?.videoCommentsConnection.edges.find(
-            (edge) => edge.node.commentcreatedeventcomment?.[0].inBlock === block
+          const { data } = refetchResult[0]
+
+          newCommentId = data?.videoCommentsConnection.edges.find(
+            // TODO We shouldn't fetch additional data from the commentcreatedeventcomment
+            // update this once QN supports getting ID directly from the status query
+            (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
           )?.node.id
         },
         onError: () => {

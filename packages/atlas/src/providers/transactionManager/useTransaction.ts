@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
 
-import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibErrorType } from '@/joystream-lib'
+import { useGetMetaprotocolTransactionStatusEventsLazyQuery } from '@/api/queries/__generated__/transactionEvents.generated'
+import { ErrorCode, ExtrinsicResult, ExtrinsicStatus, JoystreamLibError, JoystreamLibErrorType } from '@/joystream-lib'
 import { createId } from '@/utils/createId'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
+import { wait } from '@/utils/misc'
 
 import { TransactionDialogStep, useTransactionManagerStore } from './store'
 
@@ -30,6 +32,8 @@ type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOp
 const TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
 const TX_COMPLETED_SNACKBAR_TIMEOUT = 5000
 const MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT = 7000
+const RETRIES_TIMEOUT = 1000
+const RETRIES = 10
 
 export const useTransaction = (): HandleTransactionFn => {
   const { addBlockAction, setDialogStep, setErrorCode, addPendingSign, removePendingSign } = useTransactionManagerStore(
@@ -37,6 +41,12 @@ export const useTransaction = (): HandleTransactionFn => {
   )
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const { displaySnackbar } = useSnackbar()
+  const [getTransactionStatus, { refetch: refetchTransactionStatus, data }] =
+    useGetMetaprotocolTransactionStatusEventsLazyQuery({
+      fetchPolicy: 'network-only',
+      onError: (error) =>
+        SentryLogger.error('Failed to fetch metaprotocol transaction status event', 'TransactionManager', error),
+    })
 
   return useCallback(
     async ({ preProcess, txFactory, onTxFinalize, onTxSync, snackbarSuccessMessage, onError, minimized = null }) => {
@@ -100,26 +110,59 @@ export const useTransaction = (): HandleTransactionFn => {
           addBlockAction({ callback: syncCallback, targetBlock: result.block })
         })
 
-        return new Promise((resolve) => {
-          queryNodeSyncPromise.then(() => {
-            if (!minimized) {
-              setDialogStep(ExtrinsicStatus.Completed)
+        await queryNodeSyncPromise
+
+        if (result.transactionHash) {
+          await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
+          let status = data?.metaprotocolTransactionStatusEvents[0]?.status
+
+          if (!status) {
+            for (let i = 0; i <= RETRIES; i++) {
+              ConsoleLogger.warn(`No transaction status event found - retries: ${i}/${RETRIES}`)
+              await wait(RETRIES_TIMEOUT)
+              const { data: refetchedData } = await refetchTransactionStatus()
+              status = refetchedData?.metaprotocolTransactionStatusEvents[0]?.status
+
+              if (status) {
+                break
+              }
+
+              if (i === 10 && !status) {
+                throw new JoystreamLibError({
+                  name: 'MetaprotocolTransactionError',
+                  message: 'No transaction status event found',
+                  details: result,
+                })
+              }
             }
-            snackbarSuccessMessage &&
-              displaySnackbar({
-                ...snackbarSuccessMessage,
-                iconType: 'success',
-                timeout: TX_COMPLETED_SNACKBAR_TIMEOUT,
-              })
-            resolve(true)
+          }
+          if (status?.__typename === 'MetaprotocolTransactionErrored') {
+            throw new JoystreamLibError({
+              name: 'MetaprotocolTransactionError',
+              message: status?.message,
+              details: result,
+            })
+          }
+        }
+
+        if (!minimized) {
+          setDialogStep(ExtrinsicStatus.Completed)
+        }
+        snackbarSuccessMessage &&
+          displaySnackbar({
+            ...snackbarSuccessMessage,
+            iconType: 'success',
+            timeout: TX_COMPLETED_SNACKBAR_TIMEOUT,
           })
-        })
+
+        return true
       } catch (error) {
         onError?.()
         if (minimized) {
           removePendingSign(transactionId)
         }
         const errorName = error.name as JoystreamLibErrorType
+
         if (errorName === 'SignCancelledError') {
           ConsoleLogger.warn('Sign cancelled')
           setDialogStep(null)
@@ -131,9 +174,24 @@ export const useTransaction = (): HandleTransactionFn => {
           return false
         }
 
+        if (errorName === 'MetaprotocolTransactionError') {
+          SentryLogger.error('Metaprotocol transaction error', 'TransactionManager', error)
+          if (!minimized) {
+            setDialogStep(ExtrinsicStatus.Error)
+          } else {
+            displaySnackbar({
+              title: 'Something went wrong',
+              description: minimized.signErrorMessage,
+              iconType: 'error',
+              timeout: MINIMIZED_SIGN_CANCELLED_SNACKBAR_TIMEOUT,
+            })
+          }
+          return false
+        }
+
         if (errorName === 'FailedError') {
           // extract error code from error message
-          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key))
+          const errorCode = Object.keys(ErrorCode).find((key) => error.message.includes(key)) as ErrorCode | undefined
 
           SentryLogger.error(
             errorCode === ErrorCode.VoucherSizeLimitExceeded ? 'Voucher size limit exceeded' : 'Extrinsic failed',
@@ -142,7 +200,7 @@ export const useTransaction = (): HandleTransactionFn => {
           )
           if (!minimized) {
             setDialogStep(ExtrinsicStatus.Error)
-            errorCode && setErrorCode(errorCode as ErrorCode)
+            errorCode && setErrorCode(errorCode)
           }
         } else {
           if (minimized) {
@@ -163,8 +221,11 @@ export const useTransaction = (): HandleTransactionFn => {
     [
       addBlockAction,
       addPendingSign,
+      data?.metaprotocolTransactionStatusEvents,
       displaySnackbar,
+      getTransactionStatus,
       nodeConnectionStatus,
+      refetchTransactionStatus,
       removePendingSign,
       setDialogStep,
       setErrorCode,

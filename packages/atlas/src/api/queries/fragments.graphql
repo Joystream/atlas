@@ -282,7 +282,19 @@ fragment CommentFields on Comment {
   repliesCount
   text
   status
+  # TODO update once QN supports getting ID directly from the status query
   commentcreatedeventcomment {
-    inBlock
+    inExtrinsic
+  }
+}
+
+fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStatusEvent {
+  inExtrinsic
+  inBlock
+  status {
+    __typename
+    ... on MetaprotocolTransactionErrored {
+      message
+    }
   }
 }

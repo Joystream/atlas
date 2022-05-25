@@ -5,6 +5,7 @@ export type JoystreamLibErrorType =
   | 'SignCancelledError'
   | 'AccountNotSelectedError'
   | 'MissingRequiredEventError'
+  | 'MetaprotocolTransactionError'
 
 type JoystreamLibErrorArgs = {
   name: JoystreamLibErrorType
