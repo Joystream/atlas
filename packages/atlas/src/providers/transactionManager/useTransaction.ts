@@ -114,41 +114,34 @@ export const useTransaction = (): HandleTransactionFn => {
 
         if (result.transactionHash) {
           await getTransactionStatus({ variables: { transactionHash: result.transactionHash } })
-          const status = data?.metaprotocolTransactionStatusEvents[0]?.status
-
-          if (status?.__typename === 'MetaprotocolTransactionErrored') {
-            throw new JoystreamLibError({
-              name: 'MetaprotocolTransactionError',
-              message: status?.message,
-              details: result,
-            })
-          }
+          let status = data?.metaprotocolTransactionStatusEvents[0]?.status
 
           if (!status) {
             for (let i = 0; i <= RETRIES; i++) {
               ConsoleLogger.warn(`No transaction status event found - retries: ${i}/${RETRIES}`)
               await wait(RETRIES_TIMEOUT)
               const { data: refetchedData } = await refetchTransactionStatus()
-              const statusAfterRefetch = refetchedData?.metaprotocolTransactionStatusEvents[0]?.status
+              status = refetchedData?.metaprotocolTransactionStatusEvents[0]?.status
 
-              if (statusAfterRefetch?.__typename === 'MetaprotocolTransactionErrored') {
-                throw new JoystreamLibError({
-                  name: 'MetaprotocolTransactionError',
-                  message: statusAfterRefetch?.message,
-                  details: result,
-                })
+              if (status) {
+                break
               }
-              if (i === 10 && !statusAfterRefetch) {
+
+              if (i === 10 && !status) {
                 throw new JoystreamLibError({
                   name: 'MetaprotocolTransactionError',
                   message: 'No transaction status event found',
                   details: result,
                 })
               }
-              if (statusAfterRefetch) {
-                break
-              }
             }
+          }
+          if (status?.__typename === 'MetaprotocolTransactionErrored') {
+            throw new JoystreamLibError({
+              name: 'MetaprotocolTransactionError',
+              message: status?.message,
+              details: result,
+            })
           }
         }
 
