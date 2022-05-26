@@ -35,7 +35,6 @@ export const LabelText = styled(Text)<LabelText>`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  margin-bottom: ${sizes(2)};
   margin-bottom: ${({ labelPosition }) => (labelPosition === 'top' ? sizes(2) : 0)};
   margin-right: ${({ labelPosition }) => (labelPosition === 'left' ? sizes(2) : 0)};
 `
