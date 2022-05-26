@@ -30,6 +30,7 @@ type CommentsSectionProps = {
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
+  const mdMatch = useMediaMatch('md')
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const { id: videoId } = useParams()
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
@@ -65,13 +66,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       skip: !commentFromUrl || !commentFromUrl.parentCommentId,
     }
   )
-  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading || videoLoading
 
   const scrollToCommentInput = (smooth?: boolean) => {
     commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
   }
-
-  const mdMatch = useMediaMatch('md')
 
   const handleSorting = (value?: CommentOrderByInput[] | null) => {
     if (value) {
@@ -96,6 +94,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
   }
 
+  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading || videoLoading
   const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   useEffect(() => {
