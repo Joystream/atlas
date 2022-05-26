@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 
-import { Text } from '@/components/Text'
+import {
+  CharactersCounter,
+  Container,
+  CounterText,
+  MinMaxChars,
+  StyledTextArea,
+  TitleAreaInfo,
+} from './TitleInput.styles'
 
-import { CharactersCounter, Container, MinMaxChars, StyledTextArea, TitleAreaInfo } from './TitleArea.styles'
-
-export type TitleAreaProps = {
+export type TitleInputProps = {
   name?: string
   value?: string
   min?: number
@@ -14,9 +19,10 @@ export type TitleAreaProps = {
   onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
+  error?: boolean
 }
 
-export const TitleArea: React.FC<TitleAreaProps> = ({
+export const TitleInput: React.FC<TitleInputProps> = ({
   name,
   value,
   placeholder = 'Enter text here',
@@ -26,17 +32,18 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
   max = 60,
   min = 5,
   disabled,
+  error,
 }) => {
-  const [touched, setTouched] = useState(false)
-  const invalidInput = (value?.length || 0) < min || (value?.length || 0) > max
-
-  const handleFocus = () => {
-    setTouched(true)
-  }
-
+  const [footerVisible, setFooterVisible] = useState(false)
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault()
+    }
+  }
+
+  const handleFocus = () => {
+    if (!footerVisible) {
+      setFooterVisible(true)
     }
   }
 
@@ -48,24 +55,25 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
         maxLength={max}
         name={name}
         placeholder={placeholder}
-        onFocus={handleFocus}
         value={value}
         onChange={onChange}
         onKeyDown={handleKeyDown}
         onBlur={onBlur}
+        onFocus={handleFocus}
         disabled={disabled}
+        error={error}
       />
 
-      <TitleAreaInfo visible={(touched && !value?.length) || (!!value?.length && invalidInput)}>
-        <MinMaxChars secondary variant="t100">
-          Min {min} Chars | Max {max} Chars
+      <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
+        <MinMaxChars variant="t100">
+          Min {min} chars • Max {max} chars
         </MinMaxChars>
-        <Text secondary variant="t100">
-          <CharactersCounter error={invalidInput} variant="t100">
+        <CounterText variant="t100">
+          <CharactersCounter hasValue={!!value?.length} variant="t100">
             {value?.length || 0} &nbsp;
           </CharactersCounter>
           / {max}
-        </Text>
+        </CounterText>
       </TitleAreaInfo>
     </Container>
   )

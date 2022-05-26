@@ -84,8 +84,18 @@ export const useVideoFormAssets = (
         video: updatedVideo,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
+      if (!dirtyFields.title && video?.title) {
+        const removedUnnecessaryCharacters = video.title.replace(/\.[^.]+$/, '').replace(/_/g, ' ')
+        setValue(
+          'title',
+          removedUnnecessaryCharacters.charAt(0).toUpperCase() + removedUnnecessaryCharacters.slice(1),
+          {
+            shouldDirty: true,
+          }
+        )
+      }
     },
-    [addAsset, getValues, setValue]
+    [addAsset, dirtyFields.title, getValues, setValue]
   )
 
   const handleThumbnailFileChange = useCallback(

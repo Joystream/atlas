@@ -7,7 +7,7 @@ import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { TitleArea } from '@/components/_inputs/TitleArea'
+import { TitleInput } from '@/components/_inputs/TitleInput'
 import { cVar, media, sizes } from '@/styles'
 
 export const RadioCardButtonsContainer = styled.div`
@@ -62,7 +62,7 @@ type MoreSettingsSectionProps = {
 type MoreSettingsDescriptionProps = {
   visible: boolean
 }
-export const StyledTitleArea = styled(TitleArea)`
+export const StyledTitleArea = styled(TitleInput)`
   margin-bottom: ${sizes(8)};
   width: 100%;
 `

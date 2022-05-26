@@ -63,6 +63,8 @@ import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
 const MINT_NFT_TIMEOUT = 1200
+const MIN_TITLE_LENGTH = 5
+const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
@@ -111,7 +113,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
@@ -279,7 +281,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? isDirty || !!mintNft : isFormValid,
+      isDisabled: isEdit ? !!mintNft : false,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
@@ -416,15 +418,21 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         <Controller
           name="title"
           control={control}
-          rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 60, required: true })}
+          rules={textFieldValidation({
+            name: 'Enter video title',
+            minLength: MIN_TITLE_LENGTH,
+            maxLength: MAX_TITLE_LENGTH,
+            required: true,
+          })}
           render={({ field: { value, onChange } }) => (
             <StyledTitleArea
               onChange={onChange}
               value={value}
-              min={3}
-              max={60}
-              placeholder="Video title"
+              min={MIN_TITLE_LENGTH}
+              max={MAX_TITLE_LENGTH}
+              placeholder="Enter video title"
               disabled={videoFieldsLocked}
+              error={!!errors.title}
             />
           )}
         />
