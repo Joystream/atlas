@@ -250,6 +250,7 @@ export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
               ? `Maximum 10GB. Preferred format is WebM (VP9/VP8) or MP4 (H.264)`
               : `Preferred 16:9 image ratio`
           }
+          error={error}
           onDropRejected={handleFileRejections}
         />
         <StepsContainer>
