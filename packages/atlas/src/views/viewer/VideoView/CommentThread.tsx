@@ -14,10 +14,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   replies,
   commentId,
   video,
-  setOriginalComment,
   setHighlightedCommentId,
   highlightedCommentId,
-  setShowEditHistory,
   ...commentProps
 }) => {
   const [repliesOpen, setRepliesOpen] = useState(false)
@@ -32,9 +30,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
         video={video}
         setRepliesOpen={setRepliesOpen}
         isRepliesOpen={repliesOpen}
-        setOriginalComment={setOriginalComment}
         setHighlightedCommentId={setHighlightedCommentId}
-        setShowEditHistory={setShowEditHistory}
         {...commentProps}
         isReplyable={true}
       />
@@ -49,9 +45,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
                 commentId={comment.id}
                 video={video}
                 indented
-                setOriginalComment={setOriginalComment}
                 setHighlightedCommentId={setHighlightedCommentId}
-                setShowEditHistory={setShowEditHistory}
                 isReplyable={false}
               />
             )))}

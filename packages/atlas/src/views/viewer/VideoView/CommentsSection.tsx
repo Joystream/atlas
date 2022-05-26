@@ -2,15 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments } from '@/api/hooks'
-import { CommentFieldsFragment, CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
+import { CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
 import { Comment } from '@/components/_comments/Comment'
-import { CommentEditHistory } from '@/components/_comments/CommentEditHistory'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
-import { DialogModal } from '@/components/_overlays/DialogModal'
-import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { QUERY_PARAMS } from '@/config/routes'
 import { COMMENTS_SORT_OPTIONS } from '@/config/sorting'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -39,8 +37,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
   const [commentInputText, setCommentInputText] = useState('')
   const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
-  const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
-  const [showEditHistory, setShowEditHistory] = useState(false)
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
 
@@ -57,11 +53,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
 
   const { addComment } = useReactionTransactions()
 
-  const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(commentIdQueryParam || '', {
-    skip: !commentIdQueryParam || (comments && comments.length === 1),
-  })
+  const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
+    { commentId: commentIdQueryParam || '' },
+    {
+      skip: !commentIdQueryParam || (comments && comments.length === 1),
+    }
+  )
   const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
-    commentFromUrl?.parentCommentId || '',
+    { commentId: commentFromUrl?.parentCommentId || '' },
     {
       skip: !commentFromUrl || !commentFromUrl.parentCommentId,
     }
@@ -198,27 +197,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               <CommentThread
                 key={`${comment.id}-${idx}`}
                 commentId={comment.id}
-                memberUrl={absoluteRoutes.viewer.member(comment.author.handle)}
                 video={video}
                 replies={comment.replies}
                 repliesCount={comment.repliesCount}
                 highlightedCommentId={highlightedCommentId}
-                indented={!!comment.parentCommentId && comment.id === commentIdQueryParam}
-                setOriginalComment={setOriginalComment}
                 setHighlightedCommentId={setHighlightedCommentId}
-                setShowEditHistory={setShowEditHistory}
               />
             ))}
       </CommentWrapper>
-      <DialogModal
-        size="medium"
-        title="Edit history"
-        show={showEditHistory}
-        onExitClick={() => setShowEditHistory(false)}
-        dividers
-      >
-        <CommentEditHistory originalComment={originalComment} />
-      </DialogModal>
     </CommentsSectionWrapper>
   )
 }

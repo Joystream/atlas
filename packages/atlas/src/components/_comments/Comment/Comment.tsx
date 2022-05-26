@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
 import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
+import { DialogModal } from '@/components/_overlays/DialogModal'
 import { ReactionId } from '@/config/reactions'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
@@ -15,6 +16,7 @@ import { useUser } from '@/providers/user'
 import { InternalComment } from './InternalComment'
 import { getCommentReactions } from './utils'
 
+import { CommentEditHistory } from '../CommentEditHistory'
 import { CommentInput } from '../CommentInput'
 import { CommentRowProps } from '../CommentRow'
 
@@ -22,26 +24,16 @@ export type CommentProps = {
   commentId?: string
   video?: VideoFieldsFragment | null
   isReplyable?: boolean
-  setOriginalComment?: React.Dispatch<React.SetStateAction<CommentFieldsFragment | null>>
-  setShowEditHistory?: React.Dispatch<React.SetStateAction<boolean>>
   setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
   setRepliesOpen?: React.Dispatch<React.SetStateAction<boolean>>
   isRepliesOpen?: boolean
 } & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
 
 export const Comment: React.FC<CommentProps> = React.memo(
-  ({
-    commentId,
-    video,
-    setOriginalComment,
-    setShowEditHistory,
-    setHighlightedCommentId,
-    setRepliesOpen,
-    isRepliesOpen,
-    isReplyable,
-    ...rest
-  }) => {
+  ({ commentId, video, setHighlightedCommentId, setRepliesOpen, isRepliesOpen, isReplyable, ...rest }) => {
     const replyCommentInputRef = useRef<HTMLTextAreaElement>(null)
+    const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
+    const [showEditHistory, setShowEditHistory] = useState(false)
     const [replyInputOpen, setReplyInputOpen] = useState(false)
     const [editCommentInputIsProcessing, setEditCommentInputIsProcessing] = useState(false)
     const [replyCommentInputIsProcessing, setReplyCommentInputIsProcessing] = useState(false)
@@ -50,9 +42,15 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
-    const { comment, loading: loadingQuery } = useComment(commentId ?? '', { skip: !commentId })
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
+    const { comment, loading: loadingQuery } = useComment(
+      { commentId: commentId ?? '', memberId: activeMemberId ?? undefined },
+      { skip: !commentId }
+    )
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
+    const { isLoadingAsset: isCommentMemberAvatarLoading, url: commentMemberAvatarUrl } = useMemberAvatar(
+      comment?.author
+    )
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
@@ -178,7 +176,19 @@ export const Comment: React.FC<CommentProps> = React.memo(
       setRepliesOpen?.(true)
     }
 
+    const handleOnEditClick = () => {
+      if (comment) {
+        setIsEditingComment(true)
+        setEditCommentInputText?.(comment.text)
+      }
+    }
+
     const handleOpenSignInDialog = () => !activeMemberId && openSignInDialog({ onConfirm: signIn })
+
+    const handleOnEditLabelClick = () => {
+      setShowEditHistory?.(true)
+      comment && setOriginalComment?.(comment)
+    }
 
     const replyAvatars = comment?.replies?.map((comment) => ({
       url:
@@ -188,13 +198,29 @@ export const Comment: React.FC<CommentProps> = React.memo(
 
     const loading = loadingQuery || !commentId
 
-    const userReactions = comment?.reactions
-      .filter((reaction) => reaction.memberId === activeMemberId)
-      .map((reaction) => reaction.reactionId)
+    const userReactionsIds = comment?.userReactions.map((reaction) => reaction.reactionId)
+
+    const reactions =
+      comment &&
+      getCommentReactions({
+        commentId: comment?.id,
+        userReactionsIds,
+        reactionsCount: comment?.reactionsCountByReactionId,
+        activeMemberId,
+        processingCommentReactionId,
+      })
+
+    const commentType =
+      comment && ['DELETED', 'MODERATED'].includes(comment.status)
+        ? 'deleted'
+        : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
+        ? 'options'
+        : 'default'
 
     if (isEditingComment) {
       return (
         <CommentInput
+          indented={!isReplyable}
           processing={editCommentInputIsProcessing}
           readOnly={!activeMemberId}
           memberHandle={activeMembership?.handle}
@@ -218,7 +244,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
       return (
         <>
           <InternalComment
-            indented={!isReplyable}
+            indented={!!comment?.parentCommentId}
             isCommentFromUrl={commentId === commentIdQueryParam}
             videoId={video?.id}
             commentId={commentId}
@@ -237,41 +263,12 @@ export const Comment: React.FC<CommentProps> = React.memo(
             isModerated={comment?.status === CommentStatus.Moderated}
             memberHandle={comment?.author.handle}
             isEdited={comment?.isEdited}
-            reactions={
-              comment &&
-              getCommentReactions({
-                commentId: comment?.id,
-                userReactions,
-                reactionsCount: comment?.reactionsCountByReactionId,
-                activeMemberId,
-                processingCommentReactionId,
-              })
-            }
+            reactions={reactions}
             memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
-            memberAvatarUrl={
-              comment?.author.metadata.avatar?.__typename === 'AvatarUri'
-                ? comment.author.metadata.avatar?.avatarUri
-                : undefined
-            }
-            type={
-              comment && ['DELETED', 'MODERATED'].includes(comment.status)
-                ? 'deleted'
-                : comment &&
-                  (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
-                ? 'options'
-                : 'default'
-            }
-            onEditClick={() => {
-              if (comment) {
-                setIsEditingComment(true)
-                setEditCommentInputText?.(comment.text)
-              }
-            }}
+            type={commentType}
+            onEditClick={handleOnEditClick}
             onDeleteClick={() => video && comment && hadleDeleteComment(comment)}
-            onEditedLabelClick={() => {
-              setShowEditHistory?.(true)
-              comment && setOriginalComment?.(comment)
-            }}
+            onEditedLabelClick={handleOnEditLabelClick}
             onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
             {...rest}
           />
@@ -297,6 +294,15 @@ export const Comment: React.FC<CommentProps> = React.memo(
               reply
             />
           )}
+          <DialogModal
+            size="medium"
+            title="Edit history"
+            show={showEditHistory}
+            onExitClick={() => setShowEditHistory(false)}
+            dividers
+          >
+            <CommentEditHistory originalComment={originalComment} />
+          </DialogModal>
         </>
       )
     }

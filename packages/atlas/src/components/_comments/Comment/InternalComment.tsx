@@ -67,7 +67,7 @@ export type InternalCommentProps = {
   onReplyClick: (() => void) | undefined
   onToggleReplies: (() => void) | undefined
   onReactionClick: ((reaction: ReactionId) => void) | undefined
-} & CommentRowProps
+} & Pick<CommentRowProps, 'highlighted' | 'indented' | 'memberUrl'>
 
 export const InternalComment: React.FC<InternalCommentProps> = ({
   indented,

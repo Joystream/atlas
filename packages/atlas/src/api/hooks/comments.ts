@@ -22,18 +22,21 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
-export const useComment = (commentId: string, opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) => {
-  const { data, ...rest } = useGetCommentQuery({ ...opts, variables: { commentId } })
+export const useComment = (
+  variables: { commentId: string; memberId?: string },
+  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
+) => {
+  const { data, ...rest } = useGetCommentQuery({ ...opts, variables })
 
   const { comments: replies } = useComments({
-    where: { parentComment: { id_eq: commentId } },
+    where: { parentComment: { id_eq: variables.commentId } },
     orderBy: CommentOrderByInput.CreatedAtAsc,
   })
 
   const comment = data?.commentByUniqueInput
     ? {
         ...data.commentByUniqueInput,
-        reactions: data.commentReactions,
+        userReactions: data.commentReactions,
         replies,
       }
     : undefined

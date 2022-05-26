@@ -4,7 +4,7 @@ import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 
 type GetCommentReactionsArgs = {
   commentId: string
-  userReactions?: number[]
+  userReactionsIds?: number[]
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
   activeMemberId: string | null
   processingCommentReactionId: string | null | undefined
@@ -12,7 +12,7 @@ type GetCommentReactionsArgs = {
 
 export const getCommentReactions = ({
   commentId,
-  userReactions,
+  userReactionsIds,
   reactionsCount,
   processingCommentReactionId,
 }: GetCommentReactionsArgs): ReactionChipProps[] => {
@@ -28,7 +28,7 @@ export const getCommentReactions = ({
       ...reaction,
       state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
       count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
-      active: !!userReactions?.find((r) => r === reaction.reactionId),
+      active: !!userReactionsIds?.find((r) => r === reaction.reactionId),
     }
   })
 }
