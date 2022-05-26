@@ -2,10 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Pill } from '@/components/Pill'
+import { Text } from '@/components/Text'
 import { SvgAlertsInformative24 } from '@/components/_icons'
 import { cVar, sizes, transitions, zIndex } from '@/styles'
-
-import { LabelText } from '../InputBase'
 
 export type SelectSizes = 'regular' | 'small'
 
@@ -27,10 +26,16 @@ export const SelectWrapper = styled.div<SelectWrapperProps>`
 export const SelectLabel = styled.label`
   flex-shrink: 0;
 `
-type StyledLabelTextProps = {
+type LabelText = {
   labelPosition?: 'top' | 'left'
 }
-export const StyledLabelText = styled(LabelText)<StyledLabelTextProps>`
+
+export const LabelText = styled(Text)<LabelText>`
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  margin-bottom: ${sizes(2)};
   margin-bottom: ${({ labelPosition }) => (labelPosition === 'top' ? sizes(2) : 0)};
   margin-right: ${({ labelPosition }) => (labelPosition === 'left' ? sizes(2) : 0)};
 `

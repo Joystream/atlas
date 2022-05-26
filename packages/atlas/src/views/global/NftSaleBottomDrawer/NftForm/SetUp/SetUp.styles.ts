@@ -13,7 +13,6 @@ export const AuctionDatePickerWrapper = styled.div<{ columns: number }>`
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: ${sizes(6)};
-  margin-top: ${sizes(10)};
 
   ${media.md} {
     grid-template-rows: 1fr;

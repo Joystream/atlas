@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { PlaceHolder } from '@/components/../../.storybook/PlaceHolder'
 import { Select } from '@/components/_inputs/Select'
 
 import { FormField, FormFieldProps } from './FormField'
@@ -12,19 +13,24 @@ export default {
   title: 'inputs/FormField',
   component: FormField,
   args: {
+    children: <PlaceHolder />,
     description:
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo mollitia sequi earum rem nostrum eveniet vero in officiis ipsam dolorem.',
-    title: 'This is a title',
+    label: 'This is a title',
     optional: false,
   },
   argTypes: {
+    className: { table: { disable: true } },
+    switchable: { table: { disable: true } },
+    switchProps: { table: { disable: true } },
+    tooltip: { table: { disable: true } },
     children: {
       table: {
         disable: true,
       },
     },
   },
-} as Meta
+} as Meta<FormFieldProps>
 
 type WithChildren = FormFieldProps & { children?: React.ReactNode }
 
@@ -34,14 +40,13 @@ export const Default = Template.bind({})
 
 export const WithTextField = Template.bind({})
 WithTextField.args = {
-  children: <TextField label="This is textfield" />,
+  children: <TextField />,
 }
 
 export const WithSelect = Template.bind({})
 WithSelect.args = {
   children: (
     <Select
-      label="This is select"
       items={[
         { name: 'first option', value: 'firstOption' },
         { name: 'second option', value: 'secondOption' },
@@ -60,7 +65,7 @@ WithMultipleParagraphs.args = {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, enim.',
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates inventore accusamus illum eius dolorum alias.',
   ],
-  children: <TextField label="This is textfield" />,
+  children: <TextField />,
 }
 WithMultipleParagraphs.argTypes = {
   description: {
@@ -78,33 +83,36 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
     <>
       <FormField
         {...args}
+        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setFieldEnabled(!fieldEnabled),
           value: fieldEnabled,
         }}
       >
-        <TextField disabled={!fieldEnabled} placeholder="Text field" />
+        <TextField placeholder="Text field" />
       </FormField>
       <FormField
         {...args}
+        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setAnotherFieldEnabled(!anotherFieldEnabled),
           value: anotherFieldEnabled,
         }}
       >
-        <TextField disabled={!anotherFieldEnabled} placeholder="Another Text field" />
+        <TextField placeholder="Another Text field" />
       </FormField>
       <FormField
         {...args}
+        switchable
         switchProps={{
           ...args.switchProps,
           onChange: () => setTextAreaEnabled(!textAreaEnabled),
           value: textAreaEnabled,
         }}
       >
-        <TextArea disabled={!textAreaEnabled} placeholder="Text area" />
+        <TextArea placeholder="Text area" />
       </FormField>
     </>
   )
@@ -113,9 +121,10 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
 export const SwitchableFormField = SwitchableTemplate.bind({})
 
 SwitchableFormField.args = {
-  title: 'Switchable form field',
+  label: 'Switchable form field',
   description: '',
-  infoTooltip: {
+  switchable: true,
+  tooltip: {
     placement: 'top',
     headerText: 'Some important information',
     text: 'Long description',

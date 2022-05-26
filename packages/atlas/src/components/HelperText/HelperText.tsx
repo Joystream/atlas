@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.styles'
+import { HelperTextCount } from './HelperText.styles'
 
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -20,14 +20,7 @@ export type HelperTextProps = {
   className?: string
 }
 
-export const HelperText: React.FC<HelperTextProps> = ({
-  maxLength,
-  warning,
-  error,
-  helperText,
-  charactersCount,
-  className,
-}) => {
+export const HelperText: React.FC<HelperTextProps> = ({ maxLength, charactersCount }) => {
   const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
 
   useEffect(() => {
@@ -46,16 +39,9 @@ export const HelperText: React.FC<HelperTextProps> = ({
     }
   }, [charactersCount, maxLength])
 
-  return (
-    <HelperTextsWrapper className={className}>
-      <StyledHelperText variant="t100" helperTextVariant={getVariant(warning, error)} secondary>
-        {helperText}
-      </StyledHelperText>
-      {(charactersWarning === 'warning' || charactersWarning === 'error') && (
-        <HelperTextCount variant="t100" helperTextVariant={charactersWarning} secondary>
-          {charactersCount}/{maxLength}
-        </HelperTextCount>
-      )}
-    </HelperTextsWrapper>
-  )
+  return charactersWarning === 'warning' || charactersWarning === 'error' ? (
+    <HelperTextCount variant="t100" helperTextVariant={charactersWarning} secondary>
+      {charactersCount}/{maxLength}
+    </HelperTextCount>
+  ) : null
 }

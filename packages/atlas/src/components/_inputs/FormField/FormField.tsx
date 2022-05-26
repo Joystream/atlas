@@ -1,45 +1,78 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
+import { cVar } from '@/styles'
 
 import {
   ChildrenWrapper,
   FormFieldDescription,
+  FormFieldFooter,
   FormFieldHeader,
   FormFieldWrapper,
   OptionalText,
   StyledInformation,
-  SwitchLabel,
+  StyledSvgActionWarning,
   SwitchTitle,
+  SwitchWrapper,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
 
+type WithSwitchProps =
+  | {
+      switchable: true
+      switchProps: Omit<SwitchProps, 'label'>
+    }
+  | {
+      switchable?: false
+      switchProps?: never
+    }
+
 export type FormFieldProps = {
-  title: string
+  label?: string
   optional?: boolean
+  error?: string
+  disableErrorAnimation?: boolean
   description?: string | string[]
   dense?: boolean
   className?: string
-  switchProps?: Omit<SwitchProps, 'label'>
-  infoTooltip?: TooltipProps
-}
+  tooltip?: TooltipProps
+} & WithSwitchProps
 
 export const FormField = React.memo(
   React.forwardRef<HTMLDivElement, React.PropsWithChildren<FormFieldProps>>(
-    ({ children, title, description, className, optional, dense, switchProps, infoTooltip }, ref) => {
+    (
+      {
+        children,
+        label,
+        description,
+        className,
+        optional,
+        dense,
+        switchProps,
+        tooltip,
+        error,
+        disableErrorAnimation,
+        switchable,
+      },
+      ref
+    ) => {
+      const childrenWrapperRef = useRef<HTMLDivElement>(null)
+
+      const isInputOpen = switchable ? switchProps?.value : true
       return (
         <FormFieldWrapper className={className} dense={dense} ref={ref}>
           <FormFieldHeader>
-            {switchProps ? (
-              <SwitchLabel>
-                <Switch {...switchProps} /> <SwitchTitle variant="h300">{title}</SwitchTitle>
-              </SwitchLabel>
+            {switchable ? (
+              <SwitchWrapper>
+                <Switch {...switchProps} />
+                <SwitchTitle variant="h300">{label}</SwitchTitle>
+              </SwitchWrapper>
             ) : (
-              <Text variant="h300">{title}</Text>
+              <Text variant="h300">{label}</Text>
             )}
-            {infoTooltip && <StyledInformation {...infoTooltip} />}
+            {tooltip && <StyledInformation {...tooltip} />}
             {optional && (
               <OptionalText variant="t200" secondary>
                 (Optional)
@@ -58,7 +91,24 @@ export const FormField = React.memo(
                 {description}
               </FormFieldDescription>
             ))}
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+          {isInputOpen && (
+            <ChildrenWrapper
+              ref={childrenWrapperRef}
+              disableErrorAnimation={disableErrorAnimation}
+              noMargin={!label && !description}
+              isError={!!error}
+            >
+              {children}
+            </ChildrenWrapper>
+          )}
+          {error ? (
+            <FormFieldFooter>
+              <StyledSvgActionWarning />
+              <Text variant="t100" color={cVar('colorTextError')}>
+                {error}
+              </Text>
+            </FormFieldFooter>
+          ) : null}
         </FormFieldWrapper>
       )
     }

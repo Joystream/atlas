@@ -6,7 +6,6 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { MultiFileSelect } from '@/components/_inputs/MultiFileSelect'
-import { TextArea } from '@/components/_inputs/TextArea'
 import { TitleArea } from '@/components/_inputs/TitleArea'
 import { cVar, media, sizes } from '@/styles'
 
@@ -62,8 +61,8 @@ type MoreSettingsSectionProps = {
 type MoreSettingsDescriptionProps = {
   visible: boolean
 }
+
 export const StyledTitleArea = styled(TitleArea)`
-  margin-bottom: ${sizes(8)};
   width: 100%;
 `
 
@@ -112,8 +111,4 @@ export const SwitchNftWrapper = styled.div`
 export const VideoLink = styled(Link)`
   color: ${cVar('colorCoreBlue300')};
   text-decoration: none;
-`
-
-export const DescriptionTextArea = styled(TextArea)`
-  margin-top: ${({ disabled }) => (disabled ? sizes(10) : '')};
 `

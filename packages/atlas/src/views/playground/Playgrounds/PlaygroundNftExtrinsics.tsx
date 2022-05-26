@@ -75,7 +75,9 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
 
   return (
     <div>
-      <TextField label="Video ID" value={videoId} onChange={(e) => setVideoId(e.target.value)} />
+      <FormField label="Video ID">
+        <TextField value={videoId} onChange={(e) => setVideoId(e.target.value)} />
+      </FormField>
 
       {!!videoId && getDetailsContent()}
     </div>
@@ -119,12 +121,8 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   return (
     <div>
       <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Royalties" optional>
-          <TextField
-            {...register('royalties', { min: 0, max: 100 })}
-            error={!!errors.royalties}
-            helperText={errors.royalties?.message}
-          />
+        <FormField label="Royalties" optional error={errors.royalties?.message}>
+          <TextField {...register('royalties', { min: 0, max: 100 })} error={!!errors.royalties} />
         </FormField>
         <Button type="submit">Issue NFT</Button>
       </form>
@@ -164,12 +162,8 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   return (
     <div>
       <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Buy now price">
-          <TextField
-            {...register('buyNowPrice')}
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+        <FormField label="Buy now price" error={errors.buyNowPrice?.message}>
+          <TextField {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
         <Button type="submit">Start buy now</Button>
       </form>
@@ -230,54 +224,32 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   return (
     <div>
       <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Starting price">
-          <TextField
-            {...register('startingPrice', { required: true })}
-            type="number"
-            error={!!errors.startingPrice}
-            helperText={errors.startingPrice?.message}
-          />
+        <FormField label="Starting price" error={errors.startingPrice?.message}>
+          <TextField {...register('startingPrice', { required: true })} type="number" error={!!errors.startingPrice} />
         </FormField>
-        <FormField title="Minimal bid step">
+        <FormField label="Minimal bid step">
           <TextField
             {...register('minimalBidStep', { required: true })}
             type="number"
             error={!!errors.minimalBidStep}
-            helperText={errors.minimalBidStep?.message}
           />
         </FormField>
-        <FormField title="Buy now price" optional>
-          <TextField
-            {...register('buyNowPrice')}
-            type="number"
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+        <FormField label="Buy now price" error={errors.buyNowPrice?.message} optional>
+          <TextField {...register('buyNowPrice')} type="number" error={!!errors.buyNowPrice} />
         </FormField>
-        <FormField title="Starts at block" optional>
-          <TextField
-            {...register('startsAtBlock')}
-            type="number"
-            error={!!errors.startsAtBlock}
-            helperText={errors.startsAtBlock?.message}
-          />
+        <FormField label="Starts at block" error={errors.startsAtBlock?.message} optional>
+          <TextField {...register('startsAtBlock')} type="number" error={!!errors.startsAtBlock} />
         </FormField>
-        <FormField title="Duration in blocks" optional>
-          <TextField
-            {...register('auctionDurationBlocks')}
-            type="number"
-            error={!!errors.auctionDurationBlocks}
-            helperText={errors.auctionDurationBlocks?.message}
-          />
+        <FormField label="Duration in blocks" error={errors.auctionDurationBlocks?.message} optional>
+          <TextField {...register('auctionDurationBlocks')} type="number" error={!!errors.auctionDurationBlocks} />
         </FormField>
 
-        <FormField title="Whitelisted members (comma-separated IDs)" optional>
-          <TextField
-            {...register('whitelistedMembers')}
-            type="text"
-            error={!!errors.whitelistedMembers}
-            helperText={errors.whitelistedMembers?.message}
-          />
+        <FormField
+          error={errors.whitelistedMembers?.message}
+          label="Whitelisted members (comma-separated IDs)"
+          optional
+        >
+          <TextField {...register('whitelistedMembers')} type="text" error={!!errors.whitelistedMembers} />
         </FormField>
 
         <Button type="submit">Start auction</Button>
@@ -311,12 +283,8 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   return (
     <div>
       <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Price">
-          <TextField
-            {...register('buyNowPrice')}
-            error={!!errors.buyNowPrice}
-            helperText={errors.buyNowPrice?.message}
-          />
+        <FormField error={errors.buyNowPrice?.message} label="Price">
+          <TextField {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
         <Button type="submit">Buy now</Button>
       </form>
@@ -352,8 +320,8 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
   return (
     <div>
       <form onSubmit={createSubmitHandler(handleSubmit)}>
-        <FormField title="Bid">
-          <TextField {...register('bid')} error={!!errors.bid} helperText={errors.bid?.message} />
+        <FormField label="Bid" error={errors.bid?.message}>
+          <TextField {...register('bid')} error={!!errors.bid} />
         </FormField>
         <Button type="submit">Place bid</Button>
       </form>

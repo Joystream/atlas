@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { SvgActionChevronB } from '@/components/_icons'
 
 import {
+  LabelText,
   NodeContainer,
   SelectButton,
   SelectLabel,
@@ -15,7 +16,6 @@ import {
   SelectOption,
   SelectSizes,
   SelectWrapper,
-  StyledLabelText,
   StyledPill,
   StyledSvgGlyphInfo,
   ValueContainer,
@@ -38,6 +38,7 @@ export type SelectItem<T = string> = {
 
 export type SelectProps<T = string> = {
   onChange?: (value?: T | null) => void
+  label?: string
   value?: T | null
   valueLabel?: string
   labelPosition?: 'top' | 'left'
@@ -86,6 +87,8 @@ export const _Select = <T extends unknown>(
     highlightedIndex,
     getItemProps,
   } = useSelect({
+    id: 'hello',
+    getItemId: (idx) => idx.toString(),
     items: itemsValues,
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
@@ -94,15 +97,14 @@ export const _Select = <T extends unknown>(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
-
   return (
-    <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
+    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && (
-            <StyledLabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
+            <LabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
               {label}
-            </StyledLabelText>
+            </LabelText>
           )}
         </SelectLabel>
         <SelectMenuWrapper>

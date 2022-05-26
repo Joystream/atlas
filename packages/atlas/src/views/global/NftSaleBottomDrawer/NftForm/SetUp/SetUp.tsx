@@ -155,14 +155,13 @@ export const SetUp: React.FC<SetUpProps> = ({
       </Text>
       <form onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
-          <StyledFormField title="">
+          <StyledFormField label="" error={errors.buyNowPrice?.message}>
             <TextField
               {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
               nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
               error={!!errors.buyNowPrice}
-              helperText={errors.buyNowPrice?.message}
               onBlur={handleNumberInputBlur}
             />
           </StyledFormField>
@@ -197,22 +196,27 @@ export const SetUp: React.FC<SetUpProps> = ({
                 name="startDate"
                 control={control}
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <AuctionDatePicker
-                    size="regular"
-                    label="Starts"
-                    error={!!error}
-                    helperText={error?.message}
-                    minDate={new Date()}
-                    maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
-                    items={[
-                      {
-                        value: null,
-                        name: 'Now',
-                      },
-                    ]}
-                    onChange={onChange}
-                    value={value}
-                  />
+                  <FormField
+                    error={error?.message}
+                    // TODO shake animation on date picker is very glitchy, for now just disable it
+                    disableErrorAnimation
+                  >
+                    <AuctionDatePicker
+                      size="regular"
+                      label="Starts"
+                      error={!!error}
+                      minDate={new Date()}
+                      maxDate={endDate?.type === 'date' && endDate.date < maxStartDate ? endDate.date : maxStartDate}
+                      items={[
+                        {
+                          value: null,
+                          name: 'Now',
+                        },
+                      ]}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  </FormField>
                 )}
               />
               {isEnglishAuction && (
@@ -220,22 +224,27 @@ export const SetUp: React.FC<SetUpProps> = ({
                   name="endDate"
                   control={control}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <AuctionDatePicker
-                      size="regular"
-                      label="Ends"
-                      error={!!error}
-                      helperText={error?.message}
-                      minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
-                      maxDate={maxEndDate}
-                      onChange={onChange}
-                      items={expirationDateItems}
-                      value={
-                        value || {
-                          type: 'duration',
-                          durationDays: 1,
+                    <FormField
+                      error={error?.message}
+                      // TODO shake animation on date picker is very glitchy, for now just disable it
+                      disableErrorAnimation
+                    >
+                      <AuctionDatePicker
+                        size="regular"
+                        label="Ends"
+                        error={!!error}
+                        minDate={(startDate?.type === 'date' && startDate.date) || new Date()}
+                        maxDate={maxEndDate}
+                        onChange={onChange}
+                        items={expirationDateItems}
+                        value={
+                          value || {
+                            type: 'duration',
+                            durationDays: 1,
+                          }
                         }
-                      }
-                    />
+                      />
+                    </FormField>
                   )}
                 />
               )}
@@ -255,13 +264,15 @@ export const SetUp: React.FC<SetUpProps> = ({
               </DaysSummary>
             )}
             <FormField
-              title="Minimum bid"
+              label="Minimum bid"
+              error={errors.startingPrice?.message}
+              switchable
               switchProps={{
                 name: 'startingPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              infoTooltip={{ text: 'Only bids higher than this value will be accepted' }}
+              tooltip={{ text: 'Only bids higher than this value will be accepted' }}
             >
               <TextField
                 {...register('startingPrice', { valueAsNumber: true })}
@@ -271,18 +282,19 @@ export const SetUp: React.FC<SetUpProps> = ({
                 nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
-                helperText={errors.startingPrice?.message}
                 onBlur={handleNumberInputBlur}
               />
             </FormField>
             <FormField
-              title="Buy now price"
+              label="Buy now price"
+              error={errors.buyNowPrice?.message}
+              switchable
               switchProps={{
                 name: 'buyNowPrice',
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('buyNowPrice'),
               }}
-              infoTooltip={{
+              tooltip={{
                 text: 'Bids matching this value will automatically end your auction',
               }}
             >
@@ -294,43 +306,43 @@ export const SetUp: React.FC<SetUpProps> = ({
                 nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
-                helperText={errors.buyNowPrice?.message}
                 onBlur={(event) => {
                   trigger() // trigger form validation to make sure starting price is valid
                   handleNumberInputBlur(event)
                 }}
               />
             </FormField>
-            <FormField
-              title="Whitelist"
-              switchProps={{
-                name: 'whitelistedMembers',
-                onChange: toggleActiveInput,
-                value: activeInputs.includes('whitelistedMembers'),
-              }}
-              infoTooltip={{
-                text: 'Only members included in the whitelist will be able to bid on this auction',
-              }}
-            >
-              <Controller
-                name="whitelistedMembers"
-                control={control}
-                render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
-                  return (
+            <Controller
+              name="whitelistedMembers"
+              control={control}
+              render={({ field: { onChange, value: existingMembers }, fieldState: { error } }) => {
+                return (
+                  <FormField
+                    label="Whitelist"
+                    switchable
+                    switchProps={{
+                      name: 'whitelistedMembers',
+                      onChange: toggleActiveInput,
+                      value: activeInputs.includes('whitelistedMembers'),
+                    }}
+                    tooltip={{
+                      text: 'Only members included in the whitelist will be able to bid on this auction',
+                    }}
+                    error={error?.message}
+                  >
                     <MemberComboBox
                       disabled={!activeInputs.includes('whitelistedMembers')}
                       selectedMembers={existingMembers || []}
                       error={!!error}
-                      helperText={error?.message}
                       onSelectMember={(member) => onChange([member, ...(existingMembers ? existingMembers : [])])}
                       onRemoveMember={(memberId) =>
                         onChange(existingMembers?.filter((existingMember) => existingMember.id !== memberId))
                       }
                     />
-                  )
-                }}
-              />
-            </FormField>
+                  </FormField>
+                )
+              }}
+            />
           </>
         )}
       </form>

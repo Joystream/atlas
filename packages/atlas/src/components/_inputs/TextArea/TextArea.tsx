@@ -1,5 +1,7 @@
 import React, { forwardRef, useState } from 'react'
 
+import { HelperText } from '@/components/HelperText'
+
 import { StyledTextArea } from './TextArea.styles'
 
 import { InputBase, InputBaseProps } from '../InputBase'
@@ -11,12 +13,26 @@ export type TextAreaProps = {
   onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
+  warning?: boolean
   rows?: number
   spellcheck?: boolean
 } & InputBaseProps
 
 const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
-  { onChange, onBlur, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
+  {
+    onChange,
+    onBlur,
+    name,
+    placeholder,
+    value,
+    rows = 5,
+    disabled,
+    spellcheck = true,
+    maxLength,
+    warning,
+    error,
+    ...inputBaseProps
+  },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
@@ -39,6 +55,9 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
         spellCheck={spellcheck}
         onBlur={onBlur}
       />
+      {charactersCount ? (
+        <HelperText warning={warning} error={error} charactersCount={charactersCount} maxLength={maxLength} />
+      ) : null}
     </InputBase>
   )
 }

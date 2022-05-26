@@ -1,14 +1,16 @@
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
 import { Text } from '@/components/Text'
-import { sizes } from '@/styles'
+import { SvgActionWarning } from '@/components/_icons'
+import { cVar, sizes } from '@/styles'
 
 type DenseProps = {
   dense?: boolean
 }
 
-export const SwitchLabel = styled.label`
+export const SwitchWrapper = styled.label`
   display: inline-flex;
   cursor: pointer;
 `
@@ -18,7 +20,8 @@ export const SwitchTitle = styled(Text)`
 `
 
 export const FormFieldWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 4 : 10)};
+  margin-top: ${({ dense }) => sizes(dense ? 4 : 8)};
+  display: block;
   width: 100%;
 `
 
@@ -34,15 +37,46 @@ export const StyledInformation = styled(Information)`
 `
 
 export const OptionalText = styled(Text)`
-  margin-left: ${sizes(4)};
+  margin-left: ${sizes(2)};
 `
 
 export const FormFieldDescription = styled(Text)`
   width: 85%;
+  display: block;
   padding: ${sizes(2)} 0;
   word-wrap: break-word;
 `
 
-export const ChildrenWrapper = styled.div`
+const errorShake = keyframes`
+  from {
+    transform: translateX(-${sizes(8)});
+  }
+`
+const errorShakeAnimation = css`
+  animation: ${errorShake} ${cVar('animationTransitionCallout')};
+`
+
+type ChildrenWrapperProps = {
+  isError: boolean
+  noMargin: boolean
+  disableErrorAnimation?: boolean
+}
+
+export const ChildrenWrapper = styled.div<ChildrenWrapperProps>`
+  margin-top: ${({ noMargin }) => (noMargin ? 'unset' : sizes(4))};
+  ${({ isError, disableErrorAnimation }) => (isError && !disableErrorAnimation ? errorShakeAnimation : null)};
+`
+
+export const StyledSvgActionWarning = styled(SvgActionWarning)`
+  margin-right: ${sizes(2)};
+  flex-shrink: 0;
+
+  path {
+    fill: ${cVar('colorTextError')};
+  }
+`
+
+export const FormFieldFooter = styled.footer`
   margin-top: ${sizes(4)};
+  display: flex;
 `
