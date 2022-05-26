@@ -28,11 +28,11 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     border-radius: 0;
 
     ${media.sm} {
-      ${({ isOpen }) => isOpen === false && 'border: none !important'};
+      ${({ isOpen }) => isOpen === false && 'box-shadow: none !important'};
     }
 
     :focus {
-      border: 1px solid ${cVar('colorCoreNeutral50')};
+      box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral50')};
     }
 
     ::-webkit-search-cancel-button,
