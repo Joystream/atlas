@@ -48,9 +48,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
       { skip: !commentId }
     )
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
-    const { isLoadingAsset: isCommentMemberAvatarLoading, url: commentMemberAvatarUrl } = useMemberAvatar(
-      comment?.author
-    )
+
     const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
     const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
     const { openSignInDialog } = useDisplaySignInDialog()
