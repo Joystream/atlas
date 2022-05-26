@@ -87,12 +87,11 @@ export const _Select = <T extends unknown>(
     highlightedIndex,
     getItemProps,
   } = useSelect({
-    id: 'hello',
-    getItemId: (idx) => idx.toString(),
     items: itemsValues,
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
+
   const selectedItem = useMemo(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
@@ -114,9 +113,10 @@ export const _Select = <T extends unknown>(
             filled={selectedItemValue != null}
             isOpen={isOpen}
             type="button"
-            {...getToggleButtonProps()}
             tabIndex={disabled ? -1 : 0}
             size={size}
+            data-select
+            {...getToggleButtonProps()}
           >
             {iconLeft && <NodeContainer>{iconLeft}</NodeContainer>}
             <ValueContainer hasIconLeft={!!iconLeft}>

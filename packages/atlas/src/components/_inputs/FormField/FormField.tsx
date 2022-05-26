@@ -13,8 +13,8 @@ import {
   OptionalText,
   StyledInformation,
   StyledSvgActionWarning,
+  SwitchLabel,
   SwitchTitle,
-  SwitchWrapper,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
@@ -60,17 +60,34 @@ export const FormField = React.memo(
     ) => {
       const childrenWrapperRef = useRef<HTMLDivElement>(null)
 
+      const handleFocusOnClick = () => {
+        // This handler imitates the behavior of the native <label> without need of passing custom htmlFor attribute.
+        const input = childrenWrapperRef.current?.getElementsByTagName('input')[0]
+        if (input?.type === 'radio' || input?.type === 'checkbox') {
+          input.click()
+        } else {
+          input?.focus()
+        }
+        const button = childrenWrapperRef.current?.getElementsByTagName('button')[0]
+        // If Formfield is wrapping custom Select and you click on the label it will click select toggle button and open select menu
+        if (button && button.getAttribute('data-select')) {
+          button.click()
+        }
+      }
+
       const isInputOpen = switchable ? switchProps?.value : true
       return (
         <FormFieldWrapper className={className} dense={dense} ref={ref}>
           <FormFieldHeader>
             {switchable ? (
-              <SwitchWrapper>
+              <SwitchLabel>
                 <Switch {...switchProps} />
                 <SwitchTitle variant="h300">{label}</SwitchTitle>
-              </SwitchWrapper>
+              </SwitchLabel>
             ) : (
-              <Text variant="h300">{label}</Text>
+              <label onClick={handleFocusOnClick}>
+                <Text variant="h300">{label}</Text>
+              </label>
             )}
             {tooltip && <StyledInformation {...tooltip} />}
             {optional && (

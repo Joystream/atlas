@@ -10,7 +10,7 @@ type DenseProps = {
   dense?: boolean
 }
 
-export const SwitchWrapper = styled.label`
+export const SwitchLabel = styled.label`
   display: inline-flex;
   cursor: pointer;
 `
