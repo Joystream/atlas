@@ -1,7 +1,7 @@
 import { Global, SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { throttle } from 'lodash-es'
-import React, { useEffect, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useParams } from 'react-router'
 
 import { useAddVideoView, useVideo } from '@/api/hooks'
@@ -17,7 +17,7 @@ import { SentryLogger } from '@/utils/logs'
 
 import { NotFoundVideoContainer, PlayerSkeletonLoader } from '../VideoView/VideoView.styles'
 
-export const EmbeddedView: React.FC = () => {
+export const EmbeddedView: FC = () => {
   useRedirectMigratedContent({ type: 'embedded-video' })
   const { id } = useParams()
   const { loading, video, error } = useVideo(id ?? '', {
@@ -121,7 +121,7 @@ export const EmbeddedView: React.FC = () => {
 type GlobalStyleProps = {
   additionalStyles?: SerializedStyles[] | SerializedStyles
 }
-export const EmbeddedGlobalStyles: React.FC<GlobalStyleProps> = ({ additionalStyles }) => {
+export const EmbeddedGlobalStyles: FC<GlobalStyleProps> = ({ additionalStyles }) => {
   const additionalStylesArray = additionalStyles
     ? Array.isArray(additionalStyles)
       ? additionalStyles

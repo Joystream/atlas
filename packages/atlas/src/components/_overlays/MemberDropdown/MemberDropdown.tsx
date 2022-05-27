@@ -1,5 +1,5 @@
 import { easings, useSpringRef, useTransition } from '@react-spring/web'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, forwardRef, useEffect, useRef, useState } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { useLocation, useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
@@ -52,7 +52,7 @@ export type MemberDropdownProps = {
   onChannelChange?: (channelId: string) => void
 }
 
-export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownProps>(
+export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
   ({ publisher, isActive, closeDropdown, onChannelChange }, ref) => {
     const { pathname } = useLocation()
 
@@ -274,7 +274,7 @@ type ChannelListItemProps = {
   selected: boolean
   onClick: () => void
 }
-const ChannelListItem: React.FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
+const ChannelListItem: FC<ChannelListItemProps> = ({ channel, selected, onClick }) => {
   const { url, isLoadingAsset } = useAsset(channel?.avatarPhoto)
   return (
     <ListItem
@@ -292,7 +292,7 @@ type MemberListItemProps = {
   selected: boolean
   onClick: () => void
 }
-const MemberListItem: React.FC<MemberListItemProps> = ({ member, selected, onClick }) => {
+const MemberListItem: FC<MemberListItemProps> = ({ member, selected, onClick }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
     <ListItem

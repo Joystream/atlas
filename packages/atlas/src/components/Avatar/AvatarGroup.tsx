@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react'
+import { FC, Fragment, PropsWithChildren, useRef, useState } from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { useMemberAvatar } from '@/providers/assets'
@@ -15,10 +15,10 @@ import {
 
 import { Tooltip } from '../Tooltip'
 
-type SharedAvatarGroupAvatarProps = {
+type SharedAvatarGroupAvatarProps = PropsWithChildren<{
   tooltipText?: string
-  children?: React.ReactNode
-} & Pick<AvatarProps, 'onClick' | 'withoutOutline' | 'loading'>
+}> &
+  Pick<AvatarProps, 'onClick' | 'withoutOutline' | 'loading'>
 
 export type AvatarGroupUrlAvatar = {
   __typename?: 'AvatarGroupUrlAvatar'
@@ -52,7 +52,7 @@ const getSizeofAvatar = (size: AvatarGroupSize) => {
   }
 }
 
-export const AvatarGroup: React.FC<AvatarGroupProps> = ({
+export const AvatarGroup: FC<AvatarGroupProps> = ({
   avatars,
   size = 'medium',
   avatarStrokeColor,
@@ -94,7 +94,7 @@ type SingleAvatarProps = {
   loading?: boolean
   size: AvatarProps['size']
 }
-const SingleAvatar: React.FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, size }) => {
+const SingleAvatar: FC<SingleAvatarProps> = ({ avatar, loading: loadingProp, size }) => {
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(
     avatar.__typename === 'Membership' ? avatar : null
   )

@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -58,7 +58,7 @@ import {
   VideoUtils,
 } from './VideoView.styles'
 
-export const VideoView: React.FC = () => {
+export const VideoView: FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
   const { activeMemberId, activeAccountId, signIn } = useUser()

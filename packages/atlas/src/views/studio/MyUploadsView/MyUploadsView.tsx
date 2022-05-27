@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import shallow from 'zustand/shallow'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
@@ -19,7 +19,7 @@ type GroupByParentObjectIdAcc = {
   [key: string]: AssetUpload[]
 }
 
-export const MyUploadsView: React.FC = () => {
+export const MyUploadsView: FC = () => {
   const lgMatch = useMediaMatch('lg')
   const { activeChannelId } = useUser()
 

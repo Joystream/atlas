@@ -1,14 +1,13 @@
 import styled from '@emotion/styled'
-import React, { forwardRef, useEffect, useRef } from 'react'
+import { PropsWithChildren, forwardRef, useEffect, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 import twemoji from 'twemoji'
 
-export type EmojiWrapperProps = {
+export type EmojiWrapperProps = PropsWithChildren<{
   // block prop should be used if the emoji is used outside of text and should behave like block element
   block?: boolean
   className?: string
-  children?: React.ReactNode
-}
+}>
 
 export const EmojiWrapper = forwardRef<HTMLSpanElement, EmojiWrapperProps>(
   ({ block, className, children }, outsideRef) => {

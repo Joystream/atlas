@@ -1,6 +1,6 @@
 import { web3FromAddress } from '@polkadot/extension-dapp'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useEffect, useRef, useState } from 'react'
 
 import { NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
@@ -21,12 +21,12 @@ export type JoystreamContextValue = {
   chainState: ReturnType<typeof useJoystreamChainState>
 } & ReturnType<typeof useJoystreamUtilFns>
 
-export const JoystreamContext = React.createContext<JoystreamContextValue | undefined>(undefined)
+export const JoystreamContext = createContext<JoystreamContextValue | undefined>(undefined)
 JoystreamContext.displayName = 'JoystreamContext'
 const worker = new JoystreamJsWorker()
 const api = wrap<typeof JoystreamLib>(worker)
 
-export const JoystreamProvider: React.FC = ({ children }) => {
+export const JoystreamProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const { activeAccountId, accounts } = useUser()
   const { nodeOverride } = useEnvironmentStore((state) => state)
   const setNodeConnection = useConnectionStatusStore((state) => state.actions.setNodeConnection)

@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react'
+import { FC, MouseEvent, memo, useMemo, useState } from 'react'
 
 import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
@@ -20,7 +20,7 @@ type ChannelWithVideosProps = {
 
 const INITIAL_VIDEOS_PER_ROW = 4
 
-export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ channelId }) => {
+export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }) => {
   const videoRows = useVideoGridRows('compact')
   const [videosPerRow, setVideosPerRow] = useState(INITIAL_VIDEOS_PER_ROW)
   const {
@@ -57,7 +57,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
     [displayedVideos, placeholderItems]
   )
 
-  const handleFollowClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleFollowClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     toggleFollowing()
   }

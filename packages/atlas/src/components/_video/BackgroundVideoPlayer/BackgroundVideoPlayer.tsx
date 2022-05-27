@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, SyntheticEvent, VideoHTMLAttributes, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
@@ -8,9 +8,9 @@ import { ConsoleLogger } from '@/utils/logs'
 type BackgroundVideoPlayerProps = {
   className?: string
   playing?: boolean
-} & React.VideoHTMLAttributes<HTMLVideoElement>
+} & VideoHTMLAttributes<HTMLVideoElement>
 
-export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
+export const BackgroundVideoPlayer: FC<BackgroundVideoPlayerProps> = ({
   autoPlay,
   playing,
   poster,
@@ -46,12 +46,12 @@ export const BackgroundVideoPlayer: React.FC<BackgroundVideoPlayerProps> = ({
     }
   }, [playing, src])
 
-  const handlePlay = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+  const handlePlay = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPosterVisible(false)
     onPlay?.(e)
   }
 
-  const handleEnded = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+  const handleEnded = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     setIsPosterVisible(true)
     onEnded?.(e)
   }

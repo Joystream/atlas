@@ -1,4 +1,4 @@
-import React from 'react'
+import { ChangeEvent, forwardRef } from 'react'
 
 import { LabelText, SwitchCheckbox, SwitchLabel, SwitchSlider, SwitchWrapper } from './Switch.styles'
 
@@ -6,12 +6,12 @@ export type SwitchProps = {
   className?: string
   disabled?: boolean
   name?: string
-  onChange?: (e?: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e?: ChangeEvent<HTMLInputElement>) => void
   value?: boolean
   label?: string
 }
 
-export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
+export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   ({ className, disabled, name, onChange, value, label }, ref) => {
     return (
       <SwitchLabel disabled={disabled} className={className} as={label ? 'label' : 'div'}>

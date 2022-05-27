@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionCopy } from '@/components/_icons'

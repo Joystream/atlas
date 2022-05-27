@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { ChangeEvent, KeyboardEvent, forwardRef, useState } from 'react'
 
 import {
   CharactersCounter,
@@ -16,14 +16,14 @@ export type TitleInputProps = {
   min?: number
   max?: number
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onFocus?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onFocus?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
 }
 
-export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>(
+export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
   (
     {
       name,
@@ -41,13 +41,13 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
     ref
   ) => {
     const [footerVisible, setFooterVisible] = useState(false)
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault()
       }
     }
 
-    const handleFocus = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleFocus = (event: ChangeEvent<HTMLTextAreaElement>) => {
       onFocus?.(event)
       if (!footerVisible) {
         setFooterVisible(true)

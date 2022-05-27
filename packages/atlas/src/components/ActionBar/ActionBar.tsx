@@ -1,4 +1,4 @@
-import React from 'react'
+import { forwardRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -43,7 +43,7 @@ export type ActionBarProps = {
   draftBadge?: ActionDialogDraftBadge
 }
 
-export const ActionBar = React.forwardRef<HTMLDivElement, ActionBarProps>(
+export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
   ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, variant = 'new' }, ref) => {
     const smMatch = useMediaMatch('sm')
 

@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
@@ -32,7 +32,7 @@ type CreateMemberModalProps = {
   selectedAccountAddress?: string
 }
 
-export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
+export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAccountAddress }) => {
   const { activeAccountId, refetchMemberships, extensionConnected, setActiveUser } = useUser()
   const nodeConnectionStatus = useConnectionStatusStore((state) => state.nodeConnectionStatus)
   const navigate = useNavigate()

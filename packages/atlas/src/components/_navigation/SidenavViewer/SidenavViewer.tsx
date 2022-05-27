@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionMember, SvgActionNewTab } from '@/components/_icons'
@@ -13,7 +13,7 @@ import { FollowedChannels } from './FollowedChannels'
 
 import { SidenavBase } from '../SidenavBase'
 
-export const SidenavViewer: React.FC = () => {
+export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)
   const followedChannels = usePersonalDataStore((state) => state.followedChannels)
   const updateChannelFollowing = usePersonalDataStore((state) => state.actions.updateChannelFollowing)

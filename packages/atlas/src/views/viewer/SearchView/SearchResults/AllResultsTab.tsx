@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { BasicChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { Text } from '@/components/Text'
@@ -14,7 +14,7 @@ type AllResultsTabProps = {
   loading: boolean
 }
 
-export const AllResultsTab: React.FC<AllResultsTabProps> = ({ videos: allVideos, channels, loading }) => {
+export const AllResultsTab: FC<AllResultsTabProps> = ({ videos: allVideos, channels, loading }) => {
   return (
     <>
       {(allVideos.length > 0 || loading) && (

@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 
 import { useJoystream } from './joystream.hooks'
 import { useJoystreamStore } from './joystream.store'
 
-export const JoystreamManager: React.FC = () => {
+export const JoystreamManager: FC = () => {
   const { setCurrentBlock, setCurrentBlockMsTimestamp } = useJoystreamStore((state) => state.actions)
   const { joystream, proxyCallback } = useJoystream()
   const firstRender = useRef(true)

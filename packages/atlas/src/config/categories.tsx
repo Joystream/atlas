@@ -1,4 +1,4 @@
-import React from 'react'
+import { ReactNode } from 'react'
 
 import {
   SvgCategoriesAutosAndVehicles,
@@ -18,7 +18,7 @@ import {
   SvgCategoriesTravelAndEvents,
 } from '@/components/_icons'
 
-export type VideoCategoryData = { id: string; icon: React.ReactNode; color: string; coverImg: string }
+export type VideoCategoryData = { id: string; icon: ReactNode; color: string; coverImg: string }
 export const videoCategories: Record<string, VideoCategoryData> = {
   '14': {
     id: '14',

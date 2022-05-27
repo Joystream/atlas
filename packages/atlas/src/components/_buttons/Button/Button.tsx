@@ -1,13 +1,13 @@
 import { To } from 'history'
-import React from 'react'
+import { AnimationEvent, MouseEvent, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
 import { Text, TextVariant } from '@/components/Text'
 import { getLinkPropsFromTo } from '@/utils/button'
 
 import { BorderWrapper, ButtonBase, ButtonIconWrapper, ButtonSize, ButtonVariant, IconPlacement } from './Button.styles'
 
-export type ButtonProps = {
-  icon?: React.ReactNode
+export type ButtonProps = PropsWithChildren<{
+  icon?: ReactNode
   iconPlacement?: IconPlacement
   badge?: boolean | string | number
   fullWidth?: boolean
@@ -18,15 +18,14 @@ export type ButtonProps = {
   variant?: ButtonVariant
   disabled?: boolean
   tabIndex?: number
-  children?: React.ReactNode
   className?: string
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void
-  onAnimationEnd?: (e: React.AnimationEvent<HTMLButtonElement>) => void
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
+  onMouseEnter?: (e: MouseEvent<HTMLButtonElement>) => void
+  onMouseLeave?: (e: MouseEvent<HTMLButtonElement>) => void
+  onAnimationEnd?: (e: AnimationEvent<HTMLButtonElement>) => void
   // internal
   _textOnly?: boolean
-}
+}>
 
 const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
   large: 't300-strong',
@@ -34,7 +33,7 @@ const BUTTON_SIZE_TO_TEXT_VARIANT: Record<ButtonSize, TextVariant> = {
   small: 't100-strong',
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const {
     icon,
     children,
@@ -96,7 +95,7 @@ export type TextButtonProps = {
   variant?: Subset<ButtonVariant, 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'warning'>
 } & Omit<ButtonProps, '_textOnly' | 'variant'>
 
-export const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>((props, ref) => (
+export const TextButton = forwardRef<HTMLButtonElement, TextButtonProps>((props, ref) => (
   <Button {...props} _textOnly ref={ref} />
 ))
 TextButton.displayName = 'TextButton'

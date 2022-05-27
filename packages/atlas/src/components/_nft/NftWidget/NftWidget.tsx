@@ -1,5 +1,5 @@
 import { differenceInSeconds } from 'date-fns'
-import React from 'react'
+import { FC, memo } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { AllBidFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
@@ -91,7 +91,7 @@ export type NftWidgetProps = {
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
 
-export const NftWidget: React.FC<NftWidgetProps> = ({
+export const NftWidget: FC<NftWidgetProps> = ({
   ownerHandle,
   isOwner,
   nftStatus,
@@ -124,7 +124,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = React.memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
+    const BuyNow = memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
         <NftInfoItem
           size={size}

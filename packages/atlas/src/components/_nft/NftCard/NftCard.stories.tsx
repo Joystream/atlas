@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { NftCard, NftCardProps } from './NftCard'

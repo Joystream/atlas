@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -18,7 +18,7 @@ type NewVideoTileProps = {
   onClick?: () => void
 }
 
-export const NewVideoTile: React.FC<NewVideoTileProps> = ({ loading, onClick }) => {
+export const NewVideoTile: FC<NewVideoTileProps> = ({ loading, onClick }) => {
   return (
     <SwitchTransition>
       <CSSTransition

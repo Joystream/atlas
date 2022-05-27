@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useEffect, useState } from 'react'
 
 import { ControlButton, ControlButtonTooltip, ControlButtonTooltipText } from './PlayerControlButton.styles'
 
-type PlayerControlButtonProps = {
+type PlayerControlButtonProps = PropsWithChildren<{
   className?: string
   showTooltipOnlyOnFocus?: boolean
   tooltipPosition?: 'left' | 'right'
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
   tooltipText?: string
   isDisabled?: boolean
-}
+}>
 
-export const PlayerControlButton: React.FC<PlayerControlButtonProps> = ({
+export const PlayerControlButton: FC<PlayerControlButtonProps> = ({
   children,
   onClick,
   tooltipText,

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import { StudioLoading } from '@/components/_loaders/StudioLoading'
@@ -11,7 +11,7 @@ type StudioEntrypointProps = {
   enterLocation: string
 }
 
-export const StudioEntrypoint: React.FC<StudioEntrypointProps> = ({ enterLocation }) => {
+export const StudioEntrypoint: FC<StudioEntrypointProps> = ({ enterLocation }) => {
   const {
     activeAccountId,
     activeMemberId,

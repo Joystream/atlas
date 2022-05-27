@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
@@ -28,7 +28,7 @@ type ChannelNavItemProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
+export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
   id,
   to,
   expanded,
@@ -65,7 +65,7 @@ type FollowedChannelsProps = {
   onChannelNotFound?: (id: string) => void
 }
 
-export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
+export const FollowedChannels: FC<FollowedChannelsProps> = ({
   followedChannels,
   expanded,
   onClick,

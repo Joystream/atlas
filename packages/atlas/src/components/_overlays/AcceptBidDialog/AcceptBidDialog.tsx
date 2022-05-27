@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { DialogModal } from '@/components/_overlays/DialogModal'
 
@@ -19,7 +19,7 @@ type SelectedBidder = {
   amount: string
 }
 
-export const AcceptBidDialog: React.FC<AcceptBidDialogProps> = ({
+export const AcceptBidDialog: FC<AcceptBidDialogProps> = ({
   onModalClose,
   isOpen,
   bids,

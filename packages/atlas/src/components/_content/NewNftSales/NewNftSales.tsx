@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput } from '@/api/queries'
@@ -13,7 +13,7 @@ import { absoluteRoutes } from '@/config/routes'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { cVar, sizes } from '@/styles'
 
-export const NewNftSales: React.FC = () => {
+export const NewNftSales: FC = () => {
   const gridRows = useVideoGridRows('compact')
   const [tilesPerRow, setTilesPerRow] = useState(4)
   // fetch only NFTs currently on sale

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import { useVideosConnection } from '@/api/hooks'
 import { VideoFieldsFragment, VideoOrderByInput } from '@/api/queries'
@@ -24,7 +24,7 @@ type ChannelVideosProps = {
   onResize: (sizes: number[]) => void
 }
 
-export const ChannelVideos: React.FC<ChannelVideosProps> = ({
+export const ChannelVideos: FC<ChannelVideosProps> = ({
   isSearching,
   searchedText,
   channelId,

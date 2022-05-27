@@ -1,5 +1,5 @@
 import { DocumentNode } from 'graphql'
-import React, { useCallback, useState } from 'react'
+import { ReactNode, forwardRef, useCallback, useState } from 'react'
 
 import {
   GetMostViewedVideosConnectionQuery,
@@ -42,7 +42,7 @@ type InfiniteVideoGridProps = {
   onDemand?: boolean
   onDemandInfinite?: boolean
   orderBy?: VideoOrderByInput
-  emptyFallback?: React.ReactNode
+  emptyFallback?: ReactNode
   additionalLink?: {
     name: string
     url: string
@@ -53,7 +53,7 @@ const INITIAL_VIDEOS_PER_ROW = 1
 
 type VideoQuery = GetVideosConnectionQuery | GetMostViewedVideosConnectionQuery
 
-export const InfiniteVideoGrid = React.forwardRef<HTMLElement, InfiniteVideoGridProps>(
+export const InfiniteVideoGrid = forwardRef<HTMLElement, InfiniteVideoGridProps>(
   (
     {
       query = GetVideosConnectionDocument,

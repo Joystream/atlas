@@ -1,5 +1,15 @@
 import { debounce, round } from 'lodash-es'
-import React, { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  CSSProperties,
+  ChangeEvent,
+  ForwardRefRenderFunction,
+  MouseEvent,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { VideoJsPlayer } from 'video.js'
 
 import { VideoFieldsFragment } from '@/api/queries'
@@ -68,7 +78,7 @@ declare global {
 
 const isPiPSupported = 'pictureInPictureEnabled' in document
 
-const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
+const VideoPlayerComponent: ForwardRefRenderFunction<HTMLVideoElement, VideoPlayerProps> = (
   {
     isVideoPending,
     className,
@@ -436,7 +446,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }, [isPlaying, pauseVideo, playVideo, player, playerState])
 
-  const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeVolume = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentVolume(Number(event.target.value))
   }
 
@@ -448,7 +458,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handlePictureInPicture = (event: React.MouseEvent) => {
+  const handlePictureInPicture = (event: MouseEvent) => {
     event.stopPropagation()
     if (document.pictureInPictureElement) {
       // @ts-ignore @types/video.js is outdated and doesn't provide types for some newer video.js features
@@ -463,7 +473,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const handleFullScreen = (event: React.MouseEvent) => {
+  const handleFullScreen = (event: MouseEvent) => {
     event.stopPropagation()
     if (!isFullScreenEnabled) {
       return
@@ -491,7 +501,7 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     }
   }
 
-  const toggleCinematicView = (event: React.MouseEvent) => {
+  const toggleCinematicView = (event: MouseEvent) => {
     event.stopPropagation()
     setCinematicView(!cinematicView)
   }
@@ -607,4 +617,4 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
   )
 }
 
-export const VideoPlayer = React.forwardRef(VideoPlayerComponent)
+export const VideoPlayer = forwardRef(VideoPlayerComponent)

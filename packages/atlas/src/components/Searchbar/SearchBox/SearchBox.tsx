@@ -1,5 +1,5 @@
 import { debounce } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, MouseEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { SPECIAL_CHARACTERS } from '@/config/regex'
@@ -27,11 +27,11 @@ type SearchBoxProps = {
   onLastSelectedItem: () => void
   onSelectItem: (title?: string | null) => void
   handleSetNumberOfItems: (items: number) => void
-  onMouseMove: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseMove: (event: MouseEvent<HTMLDivElement>) => void
   hasFocus: boolean
 }
 
-export const SearchBox: React.FC<SearchBoxProps> = React.memo(
+export const SearchBox: FC<SearchBoxProps> = memo(
   ({
     searchQuery,
     onSelectRecentSearch,

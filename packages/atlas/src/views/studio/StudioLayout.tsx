@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { ErrorBoundary } from '@sentry/react'
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -188,7 +188,7 @@ const StyledSidenavStudio = styled(SidenavStudio)`
   }
 `
 
-const StudioLayoutWrapper: React.FC = () => {
+const StudioLayoutWrapper: FC = () => {
   const navigate = useNavigate()
   return (
     <ErrorBoundary

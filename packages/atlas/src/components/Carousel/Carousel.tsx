@@ -1,13 +1,5 @@
 import Glider from 'glider-js'
-import React, {
-  ComponentPropsWithoutRef,
-  ReactNode,
-  RefObject,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
+import { ComponentPropsWithoutRef, RefObject, forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 import { GliderProps, useGlider } from '@/components/Glider'
 
@@ -18,8 +10,14 @@ export type CarouselProps = {
   arrowPosition?: number
   dotsVisible?: boolean
 } & GliderProps
+
+export type CarouselRef = {
+  getPrevArrowProps: ReturnType<typeof useGlider>['getPrevArrowProps']
+  getNextArrowProps: ReturnType<typeof useGlider>['getNextArrowProps']
+}
+
 export const Carousel = forwardRef<
-  ReactNode,
+  CarouselRef,
   CarouselProps &
     ComponentPropsWithoutRef<'div'> & {
       prevArrowRef: RefObject<HTMLButtonElement>

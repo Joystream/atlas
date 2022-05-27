@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useState } from 'react'
 
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
@@ -9,7 +9,7 @@ import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } fr
 import { VideoForm } from './VideoForm'
 import { useHandleVideoWorkspaceSubmit } from './VideoWorkspace.hooks'
 
-export const VideoWorkspace: React.FC = React.memo(() => {
+export const VideoWorkspace: FC = memo(() => {
   const [formStatus, setFormStatus] = useState<VideoWorkspaceFormStatus | null>(null)
 
   const { isWorkspaceOpen, setIsWorkspaceOpen, editedVideoInfo } = useVideoWorkspace()

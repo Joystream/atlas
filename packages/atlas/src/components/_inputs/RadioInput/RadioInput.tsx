@@ -1,4 +1,4 @@
-import React from 'react'
+import { InputHTMLAttributes, forwardRef } from 'react'
 
 import { CustomRadioInputProps, Input, RadioInputWrapper, StyledRadioInput } from './RadioInput.styles'
 
@@ -7,9 +7,9 @@ export type RadioInputProps = Partial<{
   className?: string
 }> &
   CustomRadioInputProps &
-  React.InputHTMLAttributes<HTMLInputElement>
+  InputHTMLAttributes<HTMLInputElement>
 
-export const RadioInput = React.forwardRef<HTMLInputElement, RadioInputProps>(
+export const RadioInput = forwardRef<HTMLInputElement, RadioInputProps>(
   ({ error, disabled, value, selectedValue, onChange, className, ...props }, ref) => {
     const isSelected = value === selectedValue
     return (

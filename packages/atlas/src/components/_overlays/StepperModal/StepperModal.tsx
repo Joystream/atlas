@@ -1,5 +1,5 @@
 import { ClassNames } from '@emotion/react'
-import React, { Fragment } from 'react'
+import { FC, Fragment, ReactNode } from 'react'
 
 import { Step, getStepVariant } from '@/components/Step'
 import { Button } from '@/components/_buttons/Button'
@@ -17,7 +17,7 @@ import { DialogModal, DialogModalProps } from '../DialogModal'
 
 type Step = {
   title: string
-  element: React.ReactNode
+  element: ReactNode
 }
 
 type StepperModalProps = {
@@ -26,12 +26,7 @@ type StepperModalProps = {
   onExitClick?: () => void
 } & DialogModalProps
 
-export const StepperModal: React.FC<StepperModalProps> = ({
-  steps,
-  currentStepIdx = 0,
-  onExitClick,
-  ...modalProps
-}) => {
+export const StepperModal: FC<StepperModalProps> = ({ steps, currentStepIdx = 0, onExitClick, ...modalProps }) => {
   if (isNaN(currentStepIdx)) {
     return null
   }

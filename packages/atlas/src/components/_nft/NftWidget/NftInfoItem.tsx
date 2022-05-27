@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -13,11 +13,11 @@ import { Size } from './NftWidget.styles'
 type NftInfoItemProps = {
   size: Size
   label: string
-  content: React.ReactNode
-  secondaryText?: React.ReactNode | null
+  content: ReactNode
+  secondaryText?: ReactNode | null
   loading?: boolean
 }
-export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
+export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, secondaryText, loading }) => {
   if (loading) {
     return (
       <InfoItemContainer data-size={size}>
@@ -50,7 +50,7 @@ export const NftInfoItem: React.FC<NftInfoItemProps> = ({ size, label, content, 
   )
 }
 
-export const NftTimerItem: React.FC<{ size: Size; time?: Date }> = ({ size, time }) => {
+export const NftTimerItem: FC<{ size: Size; time?: Date }> = ({ size, time }) => {
   useMsTimestamp()
 
   if (!time) {

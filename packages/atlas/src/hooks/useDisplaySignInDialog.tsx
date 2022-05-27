@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgLargeWall, SvgOtherSignInDialogPatterns } from '@/components/_illustrations'

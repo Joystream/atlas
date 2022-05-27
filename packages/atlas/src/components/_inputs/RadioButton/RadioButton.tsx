@@ -1,4 +1,4 @@
-import React from 'react'
+import { InputHTMLAttributes, forwardRef } from 'react'
 
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 import { RadioInput } from '../RadioInput'
@@ -10,9 +10,9 @@ export type RadioButtonProps = Partial<{
   className?: string
   error?: boolean
 }> &
-  React.InputHTMLAttributes<HTMLInputElement>
+  InputHTMLAttributes<HTMLInputElement>
 
-export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
+export const RadioButton = forwardRef<HTMLInputElement, RadioButtonProps>(
   ({ value, selectedValue, label, caption, className, disabled, error, onChange, ...props }, ref) => {
     return (
       <RadioAndCheckboxBase disabled={disabled} className={className} label={label} error={error} caption={caption}>

@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useCallback, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import { GetNftDocument, GetNftQuery, GetNftQueryVariables } from '@/api/queries'
 import { ActionBarProps } from '@/components/ActionBar'
@@ -17,7 +17,7 @@ import { NftForm, NftFormData, NftFormStatus } from './NftForm'
 
 const SUCCESS_SNACKBAR_TIMEOUT = 6000
 
-export const NftSaleBottomDrawer: React.FC = () => {
+export const NftSaleBottomDrawer: FC = () => {
   const { currentAction, currentNftId, closeNftAction } = useNftActions()
   const [formStatus, setFormStatus] = useState<NftFormStatus | null>(null)
 

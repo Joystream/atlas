@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import debouncePromise from 'awesome-debounce-promise'
-import React, { useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import {
   BasicMembershipFieldsFragment,
@@ -27,7 +27,7 @@ type MemberComboBoxProps = {
   error?: boolean
 }
 
-export const MemberComboBox: React.FC<MemberComboBoxProps> = ({
+export const MemberComboBox: FC<MemberComboBoxProps> = ({
   selectedMembers,
   className,
   onSelectMember,
@@ -129,7 +129,7 @@ type AvatarWithResolvedAssetProps = {
   member: BasicMembershipFieldsFragment
 }
 
-const AvatarWithResolvedAsset: React.FC<AvatarWithResolvedAssetProps> = ({ member }) => {
+const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return <Avatar assetUrl={url} loading={isLoadingAsset} />
 }
@@ -139,7 +139,7 @@ type MemberBadgeWithResolvedAssetProps = {
   onDeleteClick: () => void
 }
 
-const MemberBadgeWithResolvedAsset: React.FC<MemberBadgeWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
+const MemberBadgeWithResolvedAsset: FC<MemberBadgeWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
     <StyledMemberBadge

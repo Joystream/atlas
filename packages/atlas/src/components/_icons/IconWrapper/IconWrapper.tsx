@@ -1,16 +1,16 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC, ReactNode } from 'react'
 
 import { cVar, sizes } from '@/styles'
 
 export type IconWrapperProps = {
   size?: 'small' | 'medium' | 'large'
-  icon: React.ReactNode
+  icon: ReactNode
   className?: string
 }
 
-export const IconWrapper: React.FC<IconWrapperProps> = ({ size = 'medium', icon, className }) => {
+export const IconWrapper: FC<IconWrapperProps> = ({ size = 'medium', icon, className }) => {
   return (
     <IconContainer className={className} size={size}>
       {icon}

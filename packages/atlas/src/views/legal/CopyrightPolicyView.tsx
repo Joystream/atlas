@@ -1,10 +1,10 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { LegalListItem, LegalParagraph } from '@/components/LegalText'
 import { Text } from '@/components/Text'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
-export const CopyrightPolicyView: React.FC = () => {
+export const CopyrightPolicyView: FC = () => {
   const headTags = useHeadTags('Copyright Policy')
   return (
     <div>

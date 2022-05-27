@@ -1,5 +1,5 @@
 import { clamp, round } from 'lodash-es'
-import React, { useEffect, useRef, useState } from 'react'
+import { Dispatch, FC, MouseEvent, SetStateAction, TouchEvent, useEffect, useRef, useState } from 'react'
 import { VideoJsPlayer } from 'video.js'
 
 import { formatDurationShort } from '@/utils/time'
@@ -22,14 +22,14 @@ type CustomTimelineProps = {
   player?: VideoJsPlayer | null
   isFullScreen?: boolean
   playerState: PlayerState
-  setPlayerState: React.Dispatch<React.SetStateAction<PlayerState>>
+  setPlayerState: Dispatch<SetStateAction<PlayerState>>
   playVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => Promise<void>
   pauseVideo: (player: VideoJsPlayer | null, withIndicator?: boolean, callback?: () => void) => void
 }
 
 const UPDATE_INTERVAL = 30
 
-export const CustomTimeline: React.FC<CustomTimelineProps> = ({
+export const CustomTimeline: FC<CustomTimelineProps> = ({
   player,
   isFullScreen,
   playerState,
@@ -125,7 +125,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
     }
   }, [isScrubbing, player, playerState, setPlayerState])
 
-  const handleMouseAndTouchMove = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMouseAndTouchMove = (e: MouseEvent | TouchEvent) => {
     const seekBar = seekBarRef.current
     const mouseDisplayTooltip = mouseDisplayTooltipRef.current
     if (!seekBar || !mouseDisplayTooltip || !player) {
@@ -152,7 +152,7 @@ export const CustomTimeline: React.FC<CustomTimelineProps> = ({
     }
   }
 
-  const handleJumpToTime = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleJumpToTime = (e: MouseEvent | TouchEvent) => {
     const seekBar = seekBarRef.current
     if (!seekBar || (e.type === 'mouseleave' && !isScrubbing) || !player) {
       return

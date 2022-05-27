@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { FC } from 'react'
 
 import { Background, SVG, StyledPath, Trail, TrailVariant } from './CircularProgress.styles'
 
@@ -22,7 +22,7 @@ export type CircularProgressProps = {
   noTrail?: boolean
 }
 
-export const CircularProgress: React.FC<CircularProgressProps> = ({
+export const CircularProgress: FC<CircularProgressProps> = ({
   value,
   background = false,
   backgroundPadding = 0,

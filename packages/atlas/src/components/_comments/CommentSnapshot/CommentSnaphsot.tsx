@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -30,7 +30,7 @@ export type CommentSnapshotProps = {
   last?: boolean
 }
 
-export const CommentSnapshot: React.FC<CommentSnapshotProps> = ({
+export const CommentSnapshot: FC<CommentSnapshotProps> = ({
   memberAvatarUrl,
   isMemberAvatarLoading,
   memberHandle,

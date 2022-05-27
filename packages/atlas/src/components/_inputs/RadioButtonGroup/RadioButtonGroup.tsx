@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { ChangeEvent, forwardRef } from 'react'
 
 import { RadioButton, RadioButtonProps } from '@/components/_inputs/RadioButton'
 import { sizes } from '@/styles'
 
 export type RadioButtonGroupProps = {
   options: RadioButtonProps[]
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
   value: string | number
   name?: string
   disabled?: boolean
@@ -15,7 +15,7 @@ export type RadioButtonGroupProps = {
   className?: string
 }
 
-export const RadioButtonGroup = React.forwardRef<HTMLDivElement, RadioButtonGroupProps>(
+export const RadioButtonGroup = forwardRef<HTMLDivElement, RadioButtonGroupProps>(
   ({ options, value, onChange, name, disabled, error, caption, className }) => {
     return (
       <Wrapper className={className}>

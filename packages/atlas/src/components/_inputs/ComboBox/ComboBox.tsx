@@ -1,5 +1,5 @@
 import { useCombobox } from 'downshift'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
@@ -22,7 +22,7 @@ export type ComboBoxProps<T = unknown> = {
   notFoundNode?: ModifiedListItemProps | null
 } & InputProps
 
-// don't use React.FC so we can use a generic type on a component
+// don't use FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {

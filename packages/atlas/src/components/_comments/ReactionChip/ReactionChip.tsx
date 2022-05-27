@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { NumberFormat } from '@/components/NumberFormat'
 import { Loader } from '@/components/_loaders/Loader'
@@ -16,7 +16,7 @@ export type ReactionChipProps = {
   onReactionClick?: (type: ReactionId) => void
 }
 
-export const ReactionChip: React.FC<ReactionChipProps> = ({
+export const ReactionChip: FC<ReactionChipProps> = ({
   state = 'default',
   active = false,
   reactionId,

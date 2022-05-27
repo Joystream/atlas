@@ -1,5 +1,5 @@
 import { QueryHookOptions } from '@apollo/client'
-import React, { FC, Fragment, useState } from 'react'
+import { FC, Fragment, useState } from 'react'
 
 import { useChannels, useDiscoverChannels, usePopularChannels, usePromisingChannels } from '@/api/hooks'
 import { ChannelOrderByInput } from '@/api/queries'

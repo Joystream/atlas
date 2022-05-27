@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, useMemo } from 'react'
 
 import { useAllCategoriesFeaturedVideos, useCategories } from '@/api/hooks'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
@@ -16,7 +16,7 @@ import {
   StyledLimitedWidthContainer,
 } from './DiscoverView.styles'
 
-export const DiscoverView: React.FC = () => {
+export const DiscoverView: FC = () => {
   const { categories, totalVideosCount, loading } = useCategories()
   const mappedVideoCategories = useCategoriesMatch()
 
@@ -26,7 +26,7 @@ export const DiscoverView: React.FC = () => {
     ? createLookup(allCategoriesFeaturedVideos.map((category) => ({ id: category.categoryId, ...category })))
     : null
 
-  const featuredVideoCategoryCardsData = React.useMemo(() => {
+  const featuredVideoCategoryCardsData = useMemo(() => {
     const _featuredVideoCategoryCardsData =
       categories
         ?.map((category) => {

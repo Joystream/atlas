@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
@@ -11,7 +11,7 @@ import { SentryLogger } from '@/utils/logs'
 import { METAPROTOCOL_SNACKBAR_ID } from './transactions.config'
 import { useTransactionManagerStore } from './transactions.store'
 
-export const TransactionsManager: React.FC = () => {
+export const TransactionsManager: FC = () => {
   const {
     blockActions,
     transactions,

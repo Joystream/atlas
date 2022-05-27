@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { PropsWithChildren, useState } from 'react'
 
 import { PlaceHolder } from '@/components/../../.storybook/PlaceHolder'
 import { Select } from '@/components/_inputs/Select'
@@ -34,7 +34,7 @@ export default {
   },
 } as Meta<FormFieldProps>
 
-type WithChildren = FormFieldProps & { children?: React.ReactNode }
+type WithChildren = PropsWithChildren<FormFieldProps>
 
 const Template: Story<WithChildren> = (args) => <FormField {...args} />
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, memo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { VideoTileContainer } from './VideoTile.styles'
@@ -18,7 +18,7 @@ export type VideoTileProps = {
 } & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt' | 'type'> &
   Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant' | 'size'>
 
-export const VideoTile: React.FC<VideoTileProps> = React.memo(
+export const VideoTile: FC<VideoTileProps> = memo(
   ({
     direction = 'vertical',
     detailsVariant,

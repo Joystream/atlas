@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useBasicVideos } from '@/api/hooks'
@@ -20,7 +20,7 @@ type VideoOverlayProps = {
   isPlayNextDisabled?: boolean
   playRandomVideoOnEnded?: boolean
 }
-export const VideoOverlay: React.FC<VideoOverlayProps> = ({
+export const VideoOverlay: FC<VideoOverlayProps> = ({
   playerState,
   onPlay,
   channelId,

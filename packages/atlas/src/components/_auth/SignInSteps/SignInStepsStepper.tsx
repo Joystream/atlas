@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { StepperModal } from '@/components/_overlays/StepperModal'
@@ -13,7 +13,7 @@ import { CreateMemberModal } from './CreateMemberModal'
 import { ExtensionStep } from './ExtensionStep'
 import { TermsStep } from './TermsStep'
 
-export const SignInStepsStepper: React.FC = () => {
+export const SignInStepsStepper: FC = () => {
   const headTags = useHeadTags('Sign in')
   const [selectedAccountAddress, setSelectedAccountAddress] = useState<undefined | string>()
   const navigate = useNavigate()

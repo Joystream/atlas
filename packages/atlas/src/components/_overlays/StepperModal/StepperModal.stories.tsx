@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
@@ -25,7 +25,7 @@ type ElementType = {
   handleStep: (idx: number) => void
   currentStepIdx: number
 }
-const Element: React.FC<ElementType> = ({ step, handleStep, currentStepIdx }) => {
+const Element: FC<ElementType> = ({ step, handleStep, currentStepIdx }) => {
   return (
     <>
       <h1>Hello! This is a {step} step!</h1>

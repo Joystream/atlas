@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
@@ -31,7 +31,7 @@ type AcceptBidListProps = {
   selectedBidder?: SelectedBidder
 }
 
-export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, selectedBidder }) => {
+export const AcceptBidList: FC<AcceptBidListProps> = ({ items, onSelect, selectedBidder }) => {
   return (
     <>
       {items.map((item) => (
@@ -48,7 +48,7 @@ export const AcceptBidList: React.FC<AcceptBidListProps> = ({ items, onSelect, s
   )
 }
 
-export const BidRow: React.FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedValue, onSelect }) => {
+export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, selectedValue, onSelect }) => {
   const xsMatch = useMediaMatch('xs')
   const selected = selectedValue?.id === bidder.id
   const { url, isLoadingAsset } = useMemberAvatar(bidder)

@@ -1,4 +1,4 @@
-import React, { createRef, useEffect } from 'react'
+import { FC, ReactNode, createRef, useEffect } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -22,16 +22,16 @@ import {
 
 export type SidenavProps = {
   items: NavItemType[]
-  additionalContent?: React.ReactNode
-  buttonsContent?: React.ReactNode
+  additionalContent?: ReactNode
+  buttonsContent?: ReactNode
   expanded: boolean
   toggleSideNav: (value: boolean) => void
-  logoNode: React.ReactNode
+  logoNode: ReactNode
   logoLinkUrl: string
   className?: string
 }
 
-const SidenavBase: React.FC<SidenavProps> = ({
+const SidenavBase: FC<SidenavProps> = ({
   expanded,
   items,
   logoNode,

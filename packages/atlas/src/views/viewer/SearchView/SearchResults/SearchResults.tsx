@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, memo, useEffect, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
@@ -23,7 +23,7 @@ type SearchResultsProps = {
 }
 const tabs = ['Videos', 'Channels']
 
-export const SearchResults: React.FC<SearchResultsProps> = React.memo(({ query }) => {
+export const SearchResults: FC<SearchResultsProps> = memo(({ query }) => {
   const smMatch = useMediaMatch('sm')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
   const filtersBarLogic = useFiltersBar()

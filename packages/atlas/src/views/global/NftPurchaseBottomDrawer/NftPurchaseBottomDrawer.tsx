@@ -1,5 +1,5 @@
 import { differenceInSeconds, formatDuration, intervalToDuration } from 'date-fns'
-import React, { useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useNft } from '@/api/hooks'
@@ -56,7 +56,7 @@ import {
 
 const TRANSACTION_FEE = 0
 
-export const NftPurchaseBottomDrawer: React.FC = () => {
+export const NftPurchaseBottomDrawer: FC = () => {
   const { displaySnackbar } = useSnackbar()
   const [type, setType] = useState<'english_auction' | 'open_auction' | 'buy_now'>('english_auction')
   const [showBuyNowInfo, setBuyNowInfo] = useState(false)

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 
 import { cVar } from '@/styles'
 

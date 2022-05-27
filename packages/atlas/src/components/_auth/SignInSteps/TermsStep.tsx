@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Button } from '@/components/_buttons/Button'
@@ -13,7 +13,7 @@ import { ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.s
 
 import { TermsOfService } from '../../TermsOfService'
 
-export const TermsStep: React.FC = () => {
+export const TermsStep: FC = () => {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
   const termsBoxRef = useRef<HTMLDivElement | null>(null)

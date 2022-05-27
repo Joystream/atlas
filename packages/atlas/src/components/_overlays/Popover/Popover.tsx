@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Placement } from '@popperjs/core'
 import Tippy from '@tippyjs/react/headless'
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { ForwardRefRenderFunction, PropsWithChildren, ReactNode, forwardRef, useImperativeHandle, useRef } from 'react'
 import { Instance } from 'tippy.js'
 
 export type PopoverImperativeHandle = {
@@ -9,8 +9,8 @@ export type PopoverImperativeHandle = {
   show: () => void
 }
 
-export type PopoverProps = {
-  trigger: React.ReactNode
+export type PopoverProps = PropsWithChildren<{
+  trigger: ReactNode
   triggerMode?: string
   triggerTarget?: Element | Element[] | null | undefined
   placement?: Placement
@@ -19,10 +19,9 @@ export type PopoverProps = {
   className?: string
   onHide?: () => void
   onShow?: () => void
-  children?: React.ReactNode
   disabled?: boolean
   flipEnabled?: boolean
-}
+}>
 
 const EXIT_ANIMATION_DURATION = 100
 
@@ -34,7 +33,7 @@ const onTrigger = (instance: Instance<unknown>) => {
   })
 }
 
-const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
+const _Popover: ForwardRefRenderFunction<PopoverImperativeHandle | undefined, PopoverProps> = (
   {
     hideOnClick = true,
     onHide,

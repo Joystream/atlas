@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { Snackbars } from '@/providers/snackbars'

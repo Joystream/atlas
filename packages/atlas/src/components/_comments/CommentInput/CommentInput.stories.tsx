@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { CommentInput, CommentInputProps } from './CommentInput'

@@ -1,6 +1,18 @@
 import { Global, css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  PropsWithChildren,
+  RefObject,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 
 import { createId } from '@/utils/createId'
@@ -8,14 +20,14 @@ import { createId } from '@/utils/createId'
 type OverlayManagerContextValue = {
   scrollLocked: boolean
   anyOverlaysOpen: boolean
-  setOverlaysSet: React.Dispatch<React.SetStateAction<Set<string>>>
-  modalContainerRef: React.RefObject<HTMLDivElement>
+  setOverlaysSet: Dispatch<SetStateAction<Set<string>>>
+  modalContainerRef: RefObject<HTMLDivElement>
 }
 
-const OverlayManagerContext = React.createContext<OverlayManagerContextValue | undefined>(undefined)
+const OverlayManagerContext = createContext<OverlayManagerContextValue | undefined>(undefined)
 OverlayManagerContext.displayName = 'OverlayManagerContext'
 
-export const OverlayManagerProvider: React.FC = ({ children }) => {
+export const OverlayManagerProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const [scrollLocked, setScrollLocked] = useState(false)
   const [scrollbarGap, setScrollbarGap] = useState(0)
   const [overlaysSet, setOverlaysSet] = useState(new Set<string>())

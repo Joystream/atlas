@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import { useNotifications } from './notifications.hooks'
 
-export const NotificationsManager: React.FC = () => {
+export const NotificationsManager: FC = () => {
   const { startPolling, stopPolling } = useNotifications()
 
   useEffect(() => {

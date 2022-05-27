@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid'
@@ -29,7 +29,7 @@ type VideoDetailsProps = {
   video?: VideoFieldsFragment | null
   category?: ReturnType<typeof useCategoryMatch>
 }
-export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) => {
+export const VideoDetails: FC<VideoDetailsProps> = ({ video, category }) => {
   const mdMatch = useMediaMatch('md')
   const [detailsExpanded, setDetailsExpanded] = useState(false)
 
@@ -134,5 +134,5 @@ const replaceUrls = (text: string) => {
     )
 
     return [...acc, node]
-  }, [] as React.ReactNode[])
+  }, [] as ReactNode[])
 }

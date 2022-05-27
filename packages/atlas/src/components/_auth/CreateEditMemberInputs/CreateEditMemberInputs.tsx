@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { UseFormRegister, UseFormStateReturn, UseFormWatch } from 'react-hook-form'
 
 import { FormField } from '@/components/_inputs/FormField'
@@ -20,7 +20,7 @@ type CreateEditMemberFormProps = {
   isModal?: boolean
 }
 
-export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ register, errors, watch, isModal }) => {
+export const CreateEditMemberInputs: FC<CreateEditMemberFormProps> = ({ register, errors, watch, isModal }) => {
   return (
     <Wrapper isModal={isModal}>
       <FormField label="Avatar URL" error={errors?.avatar?.message}>

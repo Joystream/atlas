@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgOtherVideoTile } from '@/components/_illustrations'
@@ -11,7 +11,7 @@ type MintNftFirstTimeModalProps = {
   onClose: () => void
 }
 
-export const MintNftFirstTimeModal: React.FC<MintNftFirstTimeModalProps> = ({ show, onClose }) => {
+export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({ show, onClose }) => {
   const handleDismiss = () => {
     onClose()
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import shallow from 'zustand/shallow'
@@ -35,7 +35,7 @@ export type UploadStatusGroupProps = {
   size?: UploadStatusGroupSize
 }
 
-export const UploadStatusGroup: React.FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
+export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 'compact' }) => {
   const [isAssetsDrawerActive, setAssetsDrawerActive] = useState(false)
   const [runCompletedAnimation, setRunCompletedAnimation] = useState(false)
   const [uploadGroupState, setUploadGroupState] = useState<UploadGroupState>(null)

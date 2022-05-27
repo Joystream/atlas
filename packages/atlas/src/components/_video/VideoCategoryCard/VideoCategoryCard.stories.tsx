@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { SvgCategoriesAutosAndVehicles } from '@/components/_icons'

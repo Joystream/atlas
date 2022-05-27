@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
@@ -25,13 +25,13 @@ export type ActivityItemProps = {
   type?: ActivitiesRecord['type']
   date?: Date
   title?: string
-  description?: React.ReactNode
+  description?: ReactNode
   thumnailUri: string
   thumbnailLoading?: boolean
   loading?: boolean
   onItemClick?: () => void
 }
-export const ActivityItem: React.FC<ActivityItemProps> = ({
+export const ActivityItem: FC<ActivityItemProps> = ({
   date,
   type,
   title,

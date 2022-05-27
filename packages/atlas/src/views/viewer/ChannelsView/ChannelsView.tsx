@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { useTop10Channels } from '@/api/hooks'
 import { ChannelGallery } from '@/components/_channel/ChannelGallery'
@@ -8,7 +8,7 @@ import { VideoContentTemplate } from '@/components/_templates/VideoContentTempla
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { SentryLogger } from '@/utils/logs'
 
-export const ChannelsView: React.FC = () => {
+export const ChannelsView: FC = () => {
   const { channels, loading, error } = useTop10Channels(
     {},
     { onError: (error) => SentryLogger.error('Failed to fetch channels', 'ChannelsView', error) }

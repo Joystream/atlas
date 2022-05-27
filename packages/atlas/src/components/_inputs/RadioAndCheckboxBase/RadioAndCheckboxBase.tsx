@@ -1,20 +1,20 @@
-import React from 'react'
+import { FC, MouseEvent, PropsWithChildren } from 'react'
 
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 
 import { CaptionText, RadioAndCheckboxLabel } from './RadioAndCheckboxBase.styles'
 
-type RadioAndCheckboxBaseProps = {
+type RadioAndCheckboxBaseProps = PropsWithChildren<{
   disabled?: boolean
   className?: string
   label?: string
   caption?: string
   error?: boolean
-  onClick?: (e: React.MouseEvent) => void
-}
+  onClick?: (e: MouseEvent) => void
+}>
 
-export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
+export const RadioAndCheckboxBase: FC<RadioAndCheckboxBaseProps> = ({
   disabled,
   children,
   label,

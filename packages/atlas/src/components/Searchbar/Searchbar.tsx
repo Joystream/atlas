@@ -1,4 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  ChangeEvent,
+  DetailedHTMLProps,
+  HTMLAttributes,
+  KeyboardEvent as ReactKeyboardEvent,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
@@ -29,9 +39,9 @@ type SearchbarProps = {
   controlled?: boolean
   onClick?: () => void
   onClose: () => void
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
+} & DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
-export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
+export const Searchbar = forwardRef<HTMLDivElement, SearchbarProps>(
   ({ placeholder, onChange, onFocus, onCancel, onBlur, onSubmit, onClick, onClose, onKeyDown, ...htmlProps }, ref) => {
     const mdMatch = useMediaMatch('md')
     const [recentSearch, setRecentSearch] = useState<string | null | undefined>(null)
@@ -101,7 +111,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       }
     }, [onClick, onClose, query])
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
       if ((event.key === 'Enter' || event.key === 'NumpadEnter') && query?.trim() && typeof selectedItem !== 'number') {
         event.preventDefault()
         addRecentSearch(query)
@@ -143,7 +153,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
       setSelectedItem(null)
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setRecentSearch(null)
       handleSelectedItemReset()
       if (onChange) {

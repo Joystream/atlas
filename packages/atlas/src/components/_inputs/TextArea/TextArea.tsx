@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import { ChangeEvent, FC, ForwardRefRenderFunction, forwardRef, useEffect, useState } from 'react'
 
 import { HelperTextCount, StyledTextArea } from './TextArea.styles'
 
@@ -7,8 +7,8 @@ import { InputBase, InputBaseProps } from '../InputBase'
 export type TextAreaProps = {
   name?: string
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
   warning?: boolean
@@ -16,7 +16,7 @@ export type TextAreaProps = {
   spellcheck?: boolean
 } & InputBaseProps
 
-const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
+const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   {
     onChange,
     onBlur,
@@ -35,7 +35,7 @@ const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, Tex
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCharactersCount(e.target.value.length)
     onChange?.(e)
   }
@@ -67,7 +67,7 @@ export type CharacterCounterProps = {
   charactersCount?: number
 }
 
-export const CharacterCounter: React.FC<CharacterCounterProps> = ({ maxLength, charactersCount }) => {
+export const CharacterCounter: FC<CharacterCounterProps> = ({ maxLength, charactersCount }) => {
   const [charactersWarning, setCharactersWarning] = useState<'warning' | 'error' | null>(null)
 
   useEffect(() => {

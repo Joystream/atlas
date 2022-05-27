@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
@@ -17,7 +17,7 @@ export type UploadProgressBarProps = {
   className?: string
 }
 
-export const UploadProgressBar: React.FC<UploadProgressBarProps> = ({
+export const UploadProgressBar: FC<UploadProgressBarProps> = ({
   progress = 0,
   lastStatus,
   className,
