@@ -43,14 +43,14 @@ export const createStore = <TState extends object, TActions extends object>(
   initialStore: CommonStoreInit<TState, TActions>,
   opts: CommonStoreOpts<TState> = {}
 ) => {
-  let storeConfig = immer<CommonStore<TState, TActions>>((set, get, api) => ({
+  const imerStoreConfig = immer<CommonStore<TState, TActions>>((set, get, api) => ({
     ...initialStore.state,
     actions: initialStore.actionsFactory(set, get, api),
   }))
 
   if (opts.persist) {
     const config = opts.persist
-    storeConfig = persist(storeConfig, {
+    const persistedStoreConfig = persist(imerStoreConfig, {
       name: config.key,
       whitelist: config.whitelist,
       version: config.version,
@@ -68,7 +68,8 @@ export const createStore = <TState extends object, TActions extends object>(
         return config.onRehydrateStorage?.(state)
       },
     })
+    return create(persistedStoreConfig)
   }
 
-  return create(storeConfig)
+  return create(imerStoreConfig)
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DeepMap, FieldError, UseFormRegister, UseFormWatch } from 'react-hook-form'
+import { UseFormRegister, UseFormStateReturn, UseFormWatch } from 'react-hook-form'
 
 import { TextArea } from '@/components/_inputs/TextArea'
 
@@ -13,7 +13,7 @@ type Inputs = {
 
 type CreateEditMemberFormProps = {
   register: UseFormRegister<Inputs>
-  errors: DeepMap<Inputs, FieldError>
+  errors: UseFormStateReturn<Inputs>['errors']
   watch: UseFormWatch<Inputs>
 }
 
@@ -26,8 +26,8 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
         placeholder="https://example.com/avatar.jpeg"
         {...register('avatar')}
         value={watch('avatar') || ''}
-        error={!!errors.avatar}
-        helperText={errors.avatar?.message}
+        error={!!errors?.avatar}
+        helperText={errors?.avatar?.message}
       />
       <StyledTextField
         autoComplete="off"
@@ -35,9 +35,9 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
         label="Member handle"
         {...register('handle')}
         value={watch('handle') || ''}
-        error={!!errors.handle}
+        error={!!errors?.handle}
         helperText={
-          errors.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
+          errors?.handle?.message || 'Member handle may contain only lowercase letters, numbers and underscores'
         }
       />
       <TextArea
@@ -46,8 +46,8 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
         maxLength={1000}
         {...register('about')}
         value={watch('about') || ''}
-        error={!!errors.about}
-        helperText={errors.about?.message}
+        error={!!errors?.about}
+        helperText={errors?.about?.message}
       />
     </>
   )

@@ -24,7 +24,13 @@ export const Slider: React.FC<SliderProps> = ({
   return (
     <StyledRcSlider
       value={value}
-      onChange={onChange}
+      onChange={(value) => {
+        if (Array.isArray(value)) {
+          onChange(value[0])
+        } else {
+          onChange(value)
+        }
+      }}
       min={min}
       max={max}
       step={step}

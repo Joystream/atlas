@@ -1,7 +1,7 @@
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FieldNamesMarkedBoolean, UseFormGetValues, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { DeepPartial, FieldNamesMarkedBoolean, UseFormGetValues, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 
 import { ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
 import { useAssetStore, useRawAsset } from '@/providers/assets'
@@ -157,7 +157,7 @@ export const useVideoFormDraft = (
       (
         channelId: string,
         tab: VideoWorkspace,
-        data: VideoWorkspaceVideoFormFields,
+        data: DeepPartial<VideoWorkspaceVideoFormFields>,
         addDraftFn: typeof addDraft,
         updateDraftFn: typeof updateDraft,
         updateSelectedTabFn: typeof setEditedVideo

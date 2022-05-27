@@ -101,7 +101,7 @@ export class JoystreamLibExtrinsics {
         if (!event) {
           throw new JoystreamLibError({
             name: 'MissingRequiredEventError',
-            message: `Required event ${section}.${method} not found in extrinsic`,
+            message: `Required event ${section}.${String(method)} not found in extrinsic`,
           })
         }
 

@@ -73,7 +73,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, sta
   const transactionSteps = Array.from({ length: nonUploadTransaction ? 3 : 4 })
 
   return (
-    <StyledModal show={!!stepDetails} {...className}>
+    <StyledModal show={!!stepDetails} className={className}>
       <StepsBar>
         {transactionSteps.map((_, idx) => (
           <Step

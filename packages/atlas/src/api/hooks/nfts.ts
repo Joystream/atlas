@@ -1,4 +1,4 @@
-import { QueryHookOptions, QueryResult } from '@apollo/client'
+import { QueryHookOptions } from '@apollo/client'
 import { useMemo } from 'react'
 
 import {
@@ -48,8 +48,6 @@ export type NftStatus = (
     }
 ) &
   CommonNftProperties
-
-export type UseNftData = Omit<QueryResult, 'data'> & { nft?: AllNftFieldsFragment | null; nftStatus?: NftStatus }
 
 export const getNftStatus = (nft?: AllNftFieldsFragment | null): NftStatus | undefined => {
   if (!nft) return undefined
@@ -102,7 +100,7 @@ export const getNftStatus = (nft?: AllNftFieldsFragment | null): NftStatus | und
   }
 }
 
-export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>): UseNftData => {
+export const useNft = (id: string, opts?: QueryHookOptions<GetNftQuery, GetNftQueryVariables>) => {
   const { data, ...rest } = useGetNftQuery({ variables: { id }, skip: !id, ...opts })
   const nft = data?.ownedNftByUniqueInput
 
