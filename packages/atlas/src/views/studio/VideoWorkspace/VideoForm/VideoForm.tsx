@@ -11,7 +11,7 @@ import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -45,6 +45,8 @@ import {
   DeleteVideoButton,
   DescriptionTextArea,
   ExtendedMarginFormField,
+  FileValidationBanner,
+  FileValidationText,
   FormWrapper,
   InputsContainer,
   MoreSettingsDescription,
@@ -402,10 +404,31 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
       <Controller
         name="assets"
         control={control}
+        rules={{
+          validate: (value) => {
+            if (value.video.id && value.thumbnail.originalId && isNew) {
+              return true
+            }
+            if (!value.video.id) {
+              return 'Select video file'
+            }
+            if (!value.thumbnail.originalId) {
+              return 'Select image file'
+            }
+          },
+        }}
         render={() => (
           // don't remove this div
           // without this element position sticky won't work
           <div>
+            {errors.assets && (
+              <FileValidationBanner
+                id="assets-banner"
+                dismissable={false}
+                icon={<SvgAlertsWarning24 width={24} height={24} />}
+                description={<FileValidationText variant="t200">{errors.assets.message}</FileValidationText>}
+              />
+            )}
             <StyledMultiFileSelect
               files={files}
               onVideoChange={handleVideoFileChange}
@@ -422,7 +445,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           name="title"
           control={control}
           rules={textFieldValidation({
-            name: 'Enter video title',
+            name: 'Video title',
             minLength: MIN_TITLE_LENGTH,
             maxLength: MAX_TITLE_LENGTH,
             required: true,
@@ -439,6 +462,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               error={!!errors.title}
               onFocus={() => setTitleTooltipVisible(false)}
               onBlur={() => setTitleTooltipVisible(true)}
+              helperText={errors.title && errors.title.message}
             />
           )}
         />

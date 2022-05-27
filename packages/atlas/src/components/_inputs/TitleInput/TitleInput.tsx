@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { HelperText } from '@/components/HelperText'
+
 import {
   CharactersCounter,
   Container,
@@ -10,6 +12,8 @@ import {
 } from './TitleInput.styles'
 
 export type TitleInputProps = {
+  error?: boolean
+  helperText?: string
   name?: string
   value?: string
   min?: number
@@ -20,7 +24,6 @@ export type TitleInputProps = {
   onFocus?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
-  error?: boolean
 }
 
 export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>(
@@ -37,6 +40,7 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
       min = 5,
       disabled,
       error,
+      helperText,
     },
     ref
   ) => {
@@ -71,7 +75,6 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
           error={error}
           ref={ref}
         />
-
         <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
           <MinMaxChars variant="t100">
             Min {min} chars • Max {max} chars
@@ -83,6 +86,7 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
             / {max}
           </CounterText>
         </TitleAreaInfo>
+        {helperText && <HelperText error={error} helperText={helperText} />}
       </Container>
     )
   }

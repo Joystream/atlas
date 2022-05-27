@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { Banner } from '@/components/Banner'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -116,4 +117,16 @@ export const VideoLink = styled(Link)`
 
 export const DescriptionTextArea = styled(TextArea)`
   margin-top: ${({ disabled }) => (disabled ? sizes(10) : '')};
+`
+
+export const FileValidationBanner = styled(Banner)`
+  margin-bottom: ${sizes(4)};
+
+  path {
+    fill: ${cVar('colorTextError')};
+  }
+`
+
+export const FileValidationText = styled(Text)`
+  color: ${cVar('colorTextError')};
 `

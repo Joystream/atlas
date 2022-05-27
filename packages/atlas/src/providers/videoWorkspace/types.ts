@@ -3,6 +3,7 @@ import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joy
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 export type VideoWorkspaceVideoAssets = {
+  message?: string
   video: {
     id: string | null
   } & MediaInputMetadata
