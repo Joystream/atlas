@@ -44,7 +44,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
 
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { comment } = useComment(
-      { commentId: commentId ?? '', memberId: activeMemberId ?? undefined },
+      { commentId: commentId ?? '', memberId: activeMemberId ?? undefined, videoId: video?.id },
       {
         skip: !commentId,
         fetchPolicy: 'cache-only',
