@@ -42,7 +42,7 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/node": "^14",
+    "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "eslint": "^8.16.0",
@@ -62,7 +62,7 @@
     "@joystream/types": "patch:@joystream/types@npm:0.19.3#.yarn/patches/@joystream-types-npm-0.19.3-e4e33d4bf2"
   },
   "engines": {
-    "node": ">=14"
+    "node": "^16"
   },
   "packageManager": "yarn@3.2.1"
 }
