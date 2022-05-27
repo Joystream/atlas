@@ -1,13 +1,14 @@
 import {
   ChannelMetadata,
+  ContentMetadata,
   IChannelMetadata,
   ILicense,
   IMediaType,
   IMembershipMetadata,
+  IPlaylistMetadata,
   IPublishedBeforeJoystream,
   IVideoMetadata,
   MembershipMetadata,
-  VideoMetadata,
 } from '@joystream/metadata-protobuf'
 import { StorageAssets } from '@joystream/types/content'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
@@ -20,6 +21,7 @@ import {
   ChannelInputMetadata,
   DataObjectMetadata,
   MemberInputMetadata,
+  PlaylistInputMetadata,
   VideoInputAssets,
   VideoInputMetadata,
 } from './types'
@@ -30,55 +32,62 @@ type ParseExtrinsicInputFn<TMetadata, TAssets> = (
   inputAssets: TAssets
 ) => Promise<[Option<Bytes>, TAssets extends undefined ? undefined : Option<StorageAssets>]>
 
+const wrapMetadata = (api: PolkadotApi, metadata: Uint8Array): Option<Bytes> => {
+  const metadataRaw = new Raw(api.registry, metadata)
+  const metadataBytes = new Bytes(api.registry, metadataRaw)
+  return new Option(api.registry, Bytes, metadataBytes)
+}
+
 export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata, VideoInputAssets> = async (
   api,
   inputMetadata,
   inputAssets
 ) => {
-  const videoProperties: IVideoMetadata = {}
+  const properties: IVideoMetadata = {}
 
   // prepare data objects and assign proper indexes in metadata
-  const videoDataObjectsMetadata: DataObjectMetadata[] = [
+  const dataObjectsMetadata: DataObjectMetadata[] = [
     ...(inputAssets.media ? [inputAssets.media] : []),
     ...(inputAssets.thumbnailPhoto ? [inputAssets.thumbnailPhoto] : []),
   ]
-  const videoStorageAssets = await prepareAssetsForExtrinsic(api, videoDataObjectsMetadata)
+  const storageAssets = await prepareAssetsForExtrinsic(api, dataObjectsMetadata)
+
   if (inputAssets.media) {
-    videoProperties.video = 0
+    properties.video = 0
   }
   if (inputAssets.thumbnailPhoto) {
-    videoProperties.thumbnailPhoto = inputAssets.media ? 1 : 0
+    properties.thumbnailPhoto = inputAssets.media ? 1 : 0
   }
 
   if (inputMetadata.title != null) {
-    videoProperties.title = inputMetadata.title
+    properties.title = inputMetadata.title
   }
   if (inputMetadata.description != null) {
-    videoProperties.description = inputMetadata.description
+    properties.description = inputMetadata.description
   }
   if (inputMetadata.isPublic != null) {
-    videoProperties.isPublic = inputMetadata.isPublic
+    properties.isPublic = inputMetadata.isPublic
   }
   if (inputMetadata.language != null) {
-    videoProperties.language = inputMetadata.language
+    properties.language = inputMetadata.language
   }
   if (inputMetadata.isExplicit != null) {
-    videoProperties.isExplicit = inputMetadata.isExplicit
+    properties.isExplicit = inputMetadata.isExplicit
   }
   if (inputMetadata.category != null) {
-    videoProperties.category = Long.fromInt(inputMetadata.category)
+    properties.category = Long.fromInt(inputMetadata.category)
   }
   if (inputMetadata.duration != null) {
-    videoProperties.duration = inputMetadata.duration
+    properties.duration = inputMetadata.duration
   }
   if (inputMetadata.mediaPixelHeight != null) {
-    videoProperties.mediaPixelHeight = inputMetadata.mediaPixelHeight
+    properties.mediaPixelHeight = inputMetadata.mediaPixelHeight
   }
   if (inputMetadata.mediaPixelWidth != null) {
-    videoProperties.mediaPixelWidth = inputMetadata.mediaPixelWidth
+    properties.mediaPixelWidth = inputMetadata.mediaPixelWidth
   }
   if (inputMetadata.hasMarketing != null) {
-    videoProperties.hasMarketing = inputMetadata.hasMarketing
+    properties.hasMarketing = inputMetadata.hasMarketing
   }
 
   if (inputMetadata.license) {
@@ -93,30 +102,71 @@ export const parseVideoExtrinsicInput: ParseExtrinsicInputFn<VideoInputMetadata,
       videoLicenseProperties.customText = inputMetadata.license.customText
     }
 
-    videoProperties.license = videoLicenseProperties
+    properties.license = videoLicenseProperties
   }
 
   if (inputMetadata.mimeMediaType != null) {
     const videoMediaTypeProperties: IMediaType = {}
     videoMediaTypeProperties.mimeMediaType = inputMetadata.mimeMediaType
-    videoProperties.mediaType = videoMediaTypeProperties
+    properties.mediaType = videoMediaTypeProperties
   }
 
   if (inputMetadata.publishedBeforeJoystream != null) {
     const videoPublishedBeforeProperties: IPublishedBeforeJoystream = {}
     videoPublishedBeforeProperties.isPublished = true
     videoPublishedBeforeProperties.date = inputMetadata.publishedBeforeJoystream
-    videoProperties.publishedBeforeJoystream = videoPublishedBeforeProperties
+    properties.publishedBeforeJoystream = videoPublishedBeforeProperties
   }
 
-  const serializedVideoMetadata = VideoMetadata.encode(videoProperties).finish()
-  const videoMetadataRaw = new Raw(api.registry, serializedVideoMetadata)
-  const videoMetadataBytes = new Bytes(api.registry, videoMetadataRaw)
-  const optionalVideoMetadataBytes = new Option(api.registry, Bytes, videoMetadataBytes)
+  const metadata = wrapMetadata(
+    api,
+    ContentMetadata.encode({
+      videoMetadata: properties,
+    }).finish()
+  )
 
-  const optionalVideoStorageAssets = new Option(api.registry, StorageAssets, videoStorageAssets)
+  return [metadata, storageAssets]
+}
 
-  return [optionalVideoMetadataBytes, optionalVideoStorageAssets]
+export const parsePlaylistExtrinsicInput: ParseExtrinsicInputFn<PlaylistInputMetadata, VideoInputAssets> = async (
+  api,
+  inputMetadata,
+  inputAssets
+) => {
+  const properties: IPlaylistMetadata = {
+    title: '',
+    description: '',
+  }
+
+  const dataObjectsMetadata: DataObjectMetadata[] = [
+    ...(inputAssets.thumbnailPhoto ? [inputAssets.thumbnailPhoto] : []),
+  ]
+  const storageAssets = await prepareAssetsForExtrinsic(api, dataObjectsMetadata)
+
+  if (inputAssets.thumbnailPhoto) {
+    properties.thumbnailPhoto = 0
+  }
+
+  if (inputMetadata.title != null) {
+    properties.title = inputMetadata.title
+  }
+  if (inputMetadata.description != null) {
+    properties.description = inputMetadata.description
+  }
+  if (inputMetadata.videoIds != null) {
+    properties.videoIds = inputMetadata.videoIds
+  }
+  if (inputMetadata.isPublic != null) {
+    properties.isPublic = inputMetadata.isPublic
+  }
+
+  const metadata = wrapMetadata(
+    api,
+    ContentMetadata.encode({
+      playlistMetadata: properties,
+    }).finish()
+  )
+  return [metadata, storageAssets]
 }
 
 export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetadata, ChannelInputAssets> = async (
@@ -124,63 +174,54 @@ export const parseChannelExtrinsicInput: ParseExtrinsicInputFn<ChannelInputMetad
   inputMetadata,
   inputAssets
 ) => {
-  const channelProperties: IChannelMetadata = {}
+  const properties: IChannelMetadata = {}
 
   // prepare data objects and assign proper indexes in metadata
-  const channelDataObjectsMetadata: DataObjectMetadata[] = [
+  const dataObjectsMetadata: DataObjectMetadata[] = [
     ...(inputAssets.avatarPhoto ? [inputAssets.avatarPhoto] : []),
     ...(inputAssets.coverPhoto ? [inputAssets.coverPhoto] : []),
   ]
-  const channelStorageAssets = await prepareAssetsForExtrinsic(api, channelDataObjectsMetadata)
+  const storageAssets = await prepareAssetsForExtrinsic(api, dataObjectsMetadata)
+
   if (inputAssets.avatarPhoto) {
-    channelProperties.avatarPhoto = 0
+    properties.avatarPhoto = 0
   }
   if (inputAssets.coverPhoto) {
-    channelProperties.coverPhoto = inputAssets.avatarPhoto ? 1 : 0
+    properties.coverPhoto = inputAssets.avatarPhoto ? 1 : 0
   }
 
   if (inputMetadata.title != null) {
-    channelProperties.title = inputMetadata.title
+    properties.title = inputMetadata.title
   }
   if (inputMetadata.description != null) {
-    channelProperties.description = inputMetadata.description
+    properties.description = inputMetadata.description
   }
   if (inputMetadata.isPublic != null) {
-    channelProperties.isPublic = inputMetadata.isPublic
+    properties.isPublic = inputMetadata.isPublic
   }
   if (inputMetadata.language != null) {
-    channelProperties.language = inputMetadata.language
+    properties.language = inputMetadata.language
   }
 
-  const serializedChannelMetadata = ChannelMetadata.encode(channelProperties).finish()
-  const channelMetadataRaw = new Raw(api.registry, serializedChannelMetadata)
-  const channelMetadataBytes = new Bytes(api.registry, channelMetadataRaw)
-  const optionalChannelMetadataBytes = new Option(api.registry, Bytes, channelMetadataBytes)
-
-  const optionalChannelStorageAssets = new Option(api.registry, StorageAssets, channelStorageAssets)
-
-  return [optionalChannelMetadataBytes, optionalChannelStorageAssets]
+  const metadata = wrapMetadata(api, ChannelMetadata.encode(properties).finish())
+  return [metadata, storageAssets]
 }
 
 export const parseMemberExtrinsicInput: ParseExtrinsicInputFn<MemberInputMetadata, undefined> = async (
   api,
   inputMetadata
 ) => {
-  const memberProperties: IMembershipMetadata = {}
+  const properties: IMembershipMetadata = {}
   if (inputMetadata.name != null) {
-    memberProperties.name = inputMetadata.name
+    properties.name = inputMetadata.name
   }
   if (inputMetadata.about != null) {
-    memberProperties.about = inputMetadata.about
+    properties.about = inputMetadata.about
   }
   if (inputMetadata.avatarUri != null) {
-    memberProperties.avatarUri = inputMetadata.avatarUri
+    properties.avatarUri = inputMetadata.avatarUri
   }
 
-  const serializedMemberMetadata = MembershipMetadata.encode(memberProperties).finish()
-  const memberMetadataRaw = new Raw(api.registry, serializedMemberMetadata)
-  const memberMetadataBytes = new Bytes(api.registry, memberMetadataRaw)
-  const optionalMemberMetadataBytes = new Option(api.registry, Bytes, memberMetadataBytes)
-
-  return [optionalMemberMetadataBytes, undefined]
+  const metadata = wrapMetadata(api, MembershipMetadata.encode(properties).finish())
+  return [metadata, undefined]
 }

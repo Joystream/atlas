@@ -25,6 +25,7 @@ import {
   ChannelInputAssets,
   DataObjectMetadata,
   ExtractChannelResultsAssetsIdsFn,
+  ExtractPlaylistResultsAssetsIdsFn,
   ExtractVideoResultsAssetsIdsFn,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
@@ -32,6 +33,8 @@ import {
   NftEnglishAuctionInputMetadata,
   NftIssuanceInputMetadata,
   NftOpenAuctionInputMetadata,
+  PlaylistAssets,
+  PlaylistInputAssets,
   VideoAssets,
   VideoAssetsIds,
   VideoInputAssets,
@@ -39,9 +42,12 @@ import {
 
 export const NFT_PERBILL_PERCENT = 10_000_000
 
-export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMetadata: DataObjectMetadata[]) => {
+export const prepareAssetsForExtrinsic = async (
+  api: PolkadotApi,
+  dataObjectsMetadata: DataObjectMetadata[]
+): Promise<Option<StorageAssets>> => {
   if (!dataObjectsMetadata.length) {
-    return null
+    return new Option<StorageAssets>(api.registry, StorageAssets)
   }
 
   const feePerMB = await api.query.storage.dataObjectPerMegabyteFee()
@@ -53,10 +59,11 @@ export const prepareAssetsForExtrinsic = async (api: PolkadotApi, dataObjectsMet
   }))
   const dataObjectsVec = new Vec(api.registry, DataObjectCreationParameters, mappedDataObjectMetadata)
 
-  return new StorageAssets(api.registry, {
+  const storageAssets = new StorageAssets(api.registry, {
     expected_data_size_fee: feePerMBUint,
     object_creation_list: dataObjectsVec,
   })
+  return new Option<StorageAssets>(api.registry, StorageAssets, storageAssets)
 }
 
 export const parseExtrinsicEvents = (registry: Registry, eventRecords: EventRecord[]): Event[] => {
@@ -160,7 +167,9 @@ export const sendExtrinsicAndParseEvents = (
       })
   })
 
-export const getInputDataObjectsIds = (assets: VideoInputAssets | ChannelInputAssets): string[] =>
+export const getReplacedDataObjectsIds = (
+  assets: VideoInputAssets | PlaylistInputAssets | ChannelInputAssets
+): string[] =>
   Object.values(assets)
     .filter((asset): asset is Required<DataObjectMetadata> => !!asset.replacedDataObjectId)
     .map((asset) => asset.replacedDataObjectId)
@@ -177,6 +186,19 @@ const getResultVideoDataObjectsIds = (
   return {
     ...(hasMedia ? { media: ids[0] } : {}),
     ...(hasThumbnail ? { thumbnailPhoto: ids[hasMedia ? 1 : 0] } : {}),
+  }
+}
+
+const getResultPlaylistDataObjectsIds = (
+  assets: PlaylistAssets<unknown>,
+  dataObjectsIds: Vec<DataObjectId>
+): VideoAssetsIds => {
+  const ids = dataObjectsIds.map((dataObjectsId) => dataObjectsId.toString())
+
+  const hasThumbnail = !!assets.thumbnailPhoto
+
+  return {
+    ...(hasThumbnail ? { thumbnailPhoto: ids[0] } : {}),
   }
 }
 
@@ -214,6 +236,20 @@ export const extractVideoResultAssetsIds: ExtractVideoResultsAssetsIdsFn = (inpu
   try {
     const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
     return getResultVideoDataObjectsIds(inputAssets, dataObjectsIds)
+  } catch (error) {
+    // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
+    if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {
+      return {}
+    }
+    throw error
+  }
+}
+
+export const extractPlaylistResultAssetsIds: ExtractPlaylistResultsAssetsIdsFn = (inputAssets, getEventData) => {
+  const anyAssetsChanged = !!Object.values(inputAssets).find((asset) => !!asset)
+  try {
+    const [dataObjectsIds] = getEventData('storage', 'DataObjectsUploaded')
+    return getResultPlaylistDataObjectsIds(inputAssets, dataObjectsIds)
   } catch (error) {
     // If no assets were changed as part of this extrinsic, let's catch the missing error and ignore it. In any other case, we re-throw
     if ((error as JoystreamLibError).name === 'MissingRequiredEventError' && !anyAssetsChanged) {

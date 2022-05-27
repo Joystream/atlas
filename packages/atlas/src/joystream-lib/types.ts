@@ -1,4 +1,4 @@
-import { IChannelMetadata, IMembershipMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
+import { IChannelMetadata, IMembershipMetadata, IPlaylistMetadata, IVideoMetadata } from '@joystream/metadata-protobuf'
 import { AugmentedEvent, AugmentedEvents } from '@polkadot/api/types/events'
 import { GenericEvent } from '@polkadot/types'
 
@@ -6,6 +6,8 @@ export type AccountId = string
 export type MemberId = string
 export type ChannelId = string
 export type VideoId = string
+export type PlaylistId = string
+export type ContentId = VideoId | PlaylistId
 
 export type DataObjectMetadata = {
   size: number
@@ -19,6 +21,13 @@ export type VideoAssets<T> = {
 }
 export type VideoInputAssets = VideoAssets<DataObjectMetadata>
 export type VideoAssetsIds = VideoAssets<string>
+
+type PlaylistAssetsKey = 'thumbnailPhoto'
+export type PlaylistAssets<T> = {
+  [key in PlaylistAssetsKey]?: T
+}
+export type PlaylistInputAssets = PlaylistAssets<DataObjectMetadata>
+export type PlaylistAssetsIds = PlaylistAssets<string>
 
 type ChannelAssetsKey = 'coverPhoto' | 'avatarPhoto'
 export type ChannelAssets<T> = {
@@ -51,6 +60,7 @@ export type VideoInputMetadata = Omit<
   category?: number
   nft?: NftIssuanceInputMetadata
 }
+export type PlaylistInputMetadata = Omit<IPlaylistMetadata, 'thumbnailPhoto'>
 export type ChannelInputMetadata = Omit<IChannelMetadata, 'coverPhoto' | 'avatarPhoto' | 'category'> & {
   ownerAccount: AccountId
 }
@@ -96,12 +106,18 @@ export type ExtractChannelResultsAssetsIdsFn = (
   inputAssets: ChannelInputAssets,
   getEventData: GetEventDataFn
 ) => ChannelAssetsIds
+export type ExtractPlaylistResultsAssetsIdsFn = (
+  inputAssets: PlaylistInputAssets,
+  getEventData: GetEventDataFn
+) => PlaylistAssetsIds
 export type ExtractVideoResultsAssetsIdsFn = (
   inputAssets: VideoInputAssets,
   getEventData: GetEventDataFn
 ) => VideoAssetsIds
 export type SendExtrinsicResult = ExtrinsicResult<{ events: GenericEvent[]; getEventData: GetEventDataFn }>
 export type ChannelExtrinsicResult = ExtrinsicResult<{ channelId: ChannelId; assetsIds: ChannelAssetsIds }>
-export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: ChannelId; assetsIds: VideoAssetsIds }>
+export type ContentExtrinsicResult = ExtrinsicResult<{ contentId: ContentId; getEventData: GetEventDataFn }>
+export type VideoExtrinsicResult = ExtrinsicResult<{ videoId: VideoId; assetsIds: VideoAssetsIds }>
+export type PlaylistExtrinsicResult = ExtrinsicResult<{ playlistId: PlaylistId; assetsIds: PlaylistAssetsIds }>
 export type MemberExtrinsicResult = ExtrinsicResult<{ memberId: MemberId }>
 export type NftExtrinsicResult = ExtrinsicResult
