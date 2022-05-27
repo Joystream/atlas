@@ -45,7 +45,9 @@ export const PlaygroundPlaylistExtrinsics: React.FC = () => {
 
   return (
     <div>
-      <TextField label="Playlist ID" value={playlistId} onChange={(e) => setPlaylistId(e.target.value)} />
+      <FormField label="Playlist ID">
+        <TextField value={playlistId} onChange={(e) => setPlaylistId(e.target.value)} />
+      </FormField>
 
       <div>
         <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
