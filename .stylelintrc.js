@@ -9,6 +9,7 @@ module.exports = {
     'unit-no-unknown': null,
     'value-keyword-case': null,
     'font-family-name-quotes': null,
+    'function-no-unknown': null,
     'declaration-block-no-duplicate-properties': true,
     'alpha-value-notation': 'number',
     'rule-empty-line-before': [

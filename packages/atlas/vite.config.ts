@@ -13,7 +13,6 @@ export default defineConfig({
     target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
   },
   test: {
-    global: true,
     environment: 'happy-dom',
     setupFiles: ['vitest-setup.ts'],
   },
@@ -23,7 +22,7 @@ export default defineConfig({
     }),
     checker({
       typescript: true,
-      eslint: { files: ['./src'], extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+      eslint: { lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"' },
       overlay: false,
     }),
     babel({
@@ -55,6 +54,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['buffer', 'blake3/browser-async', 'multihashes'],
+    include: ['buffer', 'blake3/browser-async', 'multihashes', '@emotion/styled/base'],
   },
 })

@@ -122,7 +122,9 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, sele
     } catch (error) {
       setActiveUser({ accountId: accountIdRef.current })
       closeCreatingMemberDialog()
-      const errorMessage = (error.isAxiosError && (error as AxiosError).response?.data.error) || 'Unknown error'
+      const errorMessage =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error.isAxiosError && ((error as AxiosError).response?.data as any)?.error) || 'Unknown error'
       openErrorDialog({
         type: 'destructive',
         title: 'Something went wrong...',

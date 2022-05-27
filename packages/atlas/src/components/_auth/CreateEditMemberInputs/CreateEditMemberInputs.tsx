@@ -1,5 +1,5 @@
 import React from 'react'
-import { DeepMap, FieldError, UseFormRegister, UseFormWatch } from 'react-hook-form'
+import { UseFormRegister, UseFormStateReturn, UseFormWatch } from 'react-hook-form'
 
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
@@ -15,7 +15,7 @@ type Inputs = {
 
 type CreateEditMemberFormProps = {
   register: UseFormRegister<Inputs>
-  errors: DeepMap<Inputs, FieldError>
+  errors: UseFormStateReturn<Inputs>['errors']
   watch: UseFormWatch<Inputs>
   isModal?: boolean
 }
@@ -23,10 +23,10 @@ type CreateEditMemberFormProps = {
 export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ register, errors, watch, isModal }) => {
   return (
     <Wrapper isModal={isModal}>
-      <FormField label="Avatar URL" error={errors.avatar?.message}>
+      <FormField label="Avatar URL" error={errors?.avatar?.message}>
         <Input
           autoComplete="off"
-          error={!!errors.avatar}
+          error={!!errors?.avatar}
           placeholder="https://example.com/avatar.jpeg"
           {...register('avatar')}
           value={watch('avatar') || ''}
@@ -35,23 +35,23 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
       <FormField
         label="Member handle"
         description="Member handle may contain only lowercase letters, numbers and underscores"
-        error={errors.handle?.message}
+        error={errors?.handle?.message}
       >
         <Input
           autoComplete="off"
           placeholder="johnnysmith"
           {...register('handle')}
           value={watch('handle') || ''}
-          error={!!errors.handle}
+          error={!!errors?.handle}
         />
       </FormField>
-      <FormField label="About" error={errors.about?.message}>
+      <FormField label="About" error={errors?.about?.message}>
         <TextArea
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
           {...register('about')}
           value={watch('about') || ''}
-          error={!!errors.about}
+          error={!!errors?.about}
         />
       </FormField>
     </Wrapper>

@@ -76,7 +76,7 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     },
   })
 
-  const onDropAccepted: DropzoneOptions['onDropAccepted'] = useCallback(
+  const onDropAccepted = useCallback<NonNullable<DropzoneOptions['onDropAccepted']>>(
     (acceptedFiles) => {
       const [file] = acceptedFiles
       onUploadFile(file)
@@ -89,7 +89,9 @@ export const FileSelect: React.FC<FileSelectProps> = ({
     onDropRejected,
     maxFiles: 1,
     multiple: false,
-    accept: fileType + '/*',
+    accept: {
+      [fileType + '/*']: [],
+    },
     maxSize,
     noClick: true,
     noKeyboard: true,

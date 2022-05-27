@@ -59,7 +59,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         appear
         mountOnEnter
         unmountOnExit
-        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
+        timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer-overlay"
       >
         <DrawerOverlay />
@@ -69,7 +69,7 @@ export const BottomDrawer: React.FC<BottomDrawerProps> = ({
         appear
         mountOnEnter
         unmountOnExit
-        timeout={{ enter: 0, exit: parseInt(cVar('animationTimingSlow', true)) }}
+        timeout={parseInt(cVar('animationTimingSlow', true))}
         classNames="bottom-drawer"
       >
         <Container role="dialog">

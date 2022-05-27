@@ -11,26 +11,33 @@ export const DrawerOverlay = styled.div`
   bottom: 0;
   left: 0;
   background-color: ${cVar('colorBackgroundOverlay')};
-  transition: opacity ${cVar('animationTransitionSlow')};
+  pointer-events: none;
 
   &.bottom-drawer-overlay {
-    &-enter-active,
-    &-exit {
-      opacity: 1;
-      pointer-events: initial;
+    &-enter,
+    &-appear {
+      opacity: 0;
     }
 
-    &-enter,
+    &-exit,
+    &-enter-done {
+      opacity: 1;
+    }
+
+    &-enter-active,
+    &-appear-active {
+      opacity: 1;
+      transition: opacity ${cVar('animationTransitionSlow')};
+    }
+
     &-exit-active {
       opacity: 0;
-      pointer-events: none;
+      transition: opacity ${cVar('animationTransitionSlow')};
     }
   }
 `
 
 export const Container = styled.div`
-  transform: translateY(100%);
-  opacity: 0;
   position: fixed;
   z-index: ${zIndex.videoWorkspaceOverlay};
   top: var(--size-topbar-height);
@@ -41,21 +48,29 @@ export const Container = styled.div`
   flex-direction: column;
   background-color: ${cVar('colorBackground')};
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
-  transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
-  will-change: transform, opacity;
 
   &.bottom-drawer {
+    &-enter {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    &-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
+    }
+
     &-exit,
-    &-enter-active,
     &-enter-done {
       opacity: 1;
       transform: translateY(0);
     }
 
-    &-enter,
     &-exit-active {
-      transform: translateY(100%);
       opacity: 0;
+      transform: translateY(100%);
+      transition: transform ${cVar('animationTransitionSlow')}, opacity ${cVar('animationTransitionSlow')};
     }
   }
 `

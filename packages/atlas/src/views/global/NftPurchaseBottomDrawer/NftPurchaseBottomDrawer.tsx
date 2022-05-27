@@ -132,12 +132,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
       return
     }
     const subscription = watch(({ bid }) => {
-      if (bid >= auctionBuyNowPrice) {
+      if (bid && bid >= auctionBuyNowPrice) {
         setBuyNowInfo(true)
       } else {
         setBuyNowInfo(false)
       }
-      if (bid > auctionBuyNowPrice) {
+      if (bid && bid > auctionBuyNowPrice) {
         setValue('bid', auctionBuyNowPrice)
       }
     })
