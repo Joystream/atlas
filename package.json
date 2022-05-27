@@ -42,7 +42,7 @@
     "@emotion/eslint-plugin": "^11.7.0",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
-    "@types/node": "^14",
+    "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "eslint": "^8.16.0",
@@ -63,7 +63,7 @@
     "@joystream/metadata-protobuf@2.1.0": "patch:@joystream/metadata-protobuf@npm:2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e"
   },
   "engines": {
-    "node": ">=14"
+    "node": "^16"
   },
   "packageManager": "yarn@3.2.1"
 }
