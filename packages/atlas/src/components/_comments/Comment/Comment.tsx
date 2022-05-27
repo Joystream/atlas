@@ -43,9 +43,11 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
-    const { comment } = useComment(
+    const { comment, loading: loadingQuery } = useComment(
       { commentId: commentId ?? '', memberId: activeMemberId ?? undefined },
-      { skip: !commentId, fetchPolicy: 'cache-only' }
+      {
+        skip: !commentId,
+      }
     )
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
@@ -194,7 +196,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
       handle: comment.author.handle,
     }))
 
-    const loading = !commentId
+    const loading = !commentId || loadingQuery
 
     const userReactionsIds = comment?.userReactions?.map((reaction) => reaction.reactionId)
 
