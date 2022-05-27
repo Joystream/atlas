@@ -45,6 +45,18 @@ export const SwitchCheckbox = styled.input`
   visibility: hidden;
   z-index: 1;
 
+  :checked {
+    + ${SwitchSlider} {
+      box-shadow: unset;
+      background-color: ${cVar('colorBackgroundPrimary')};
+
+      ::before {
+        transform: translateX(16px);
+        background-color: ${cVar('colorTextStrong')};
+      }
+    }
+  }
+
   :disabled {
     cursor: not-allowed;
 
@@ -56,16 +68,14 @@ export const SwitchCheckbox = styled.input`
         background-color: ${cVar('colorBackgroundMutedAlpha')};
       }
     }
-  }
 
-  :checked {
-    + ${SwitchSlider} {
-      box-shadow: unset;
-      background-color: ${cVar('colorBackgroundPrimary')};
+    :checked {
+      + ${SwitchSlider} {
+        background-color: ${cVar('colorBackgroundStrongAlpha')};
 
-      ::before {
-        transform: translateX(16px);
-        background-color: ${cVar('colorTextStrong')};
+        ::before {
+          background-color: ${cVar('colorTextMuted')};
+        }
       }
     }
   }
@@ -100,7 +110,7 @@ export const SwitchWrapper = styled.div`
   height: 24px;
 
   :hover {
-    ${SwitchCheckbox}:not(:checked) {
+    ${SwitchCheckbox}:not(:disabled):not(:checked) {
       + ${SwitchSlider} {
         box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
 
