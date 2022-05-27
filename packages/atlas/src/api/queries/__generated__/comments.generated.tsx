@@ -73,7 +73,7 @@ export type GetCommentQueryVariables = Types.Exact<{
 
 export type GetCommentQuery = {
   __typename?: 'Query'
-  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string; memberId: string }>
+  commentReactions: Array<{ __typename?: 'CommentReaction'; reactionId: number; commentId: string }>
   commentByUniqueInput?: {
     __typename?: 'Comment'
     id: string
@@ -390,7 +390,6 @@ export const GetCommentDocument = gql`
     commentReactions(where: { member: { id_eq: $memberId }, comment: { id_eq: $commentId } }, limit: 1000) {
       reactionId
       commentId
-      memberId
     }
     commentByUniqueInput(where: { id: $commentId }) {
       ...CommentFields

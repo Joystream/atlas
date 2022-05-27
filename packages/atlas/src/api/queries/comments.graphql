@@ -19,7 +19,6 @@ query GetComment($commentId: ID!, $memberId: ID) {
   commentReactions(where: { member: { id_eq: $memberId }, comment: { id_eq: $commentId } }, limit: 1000) {
     reactionId
     commentId
-    memberId
   }
   commentByUniqueInput(where: { id: $commentId }) {
     ...CommentFields
