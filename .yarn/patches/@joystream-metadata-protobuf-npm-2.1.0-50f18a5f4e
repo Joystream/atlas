@@ -1,0 +1,861 @@
+diff --git a/compiled/index.d.ts b/compiled/index.d.ts
+index 2a0afa724ed1dc315a7da94bef95462ddddab0b7..983dd0d1a5e6d079875d1fa90a75a33ff81637ae 100644
+--- a/compiled/index.d.ts
++++ b/compiled/index.d.ts
+@@ -1050,8 +1050,17 @@ export interface IPlaylistMetadata {
+     /** PlaylistMetadata title */
+     title?: (string|null);
+ 
+-    /** PlaylistMetadata videos */
+-    videos?: (Long[]|null);
++    /** PlaylistMetadata description */
++    description?: (string|null);
++
++    /** PlaylistMetadata videoIds */
++    videoIds?: (Long[]|null);
++
++    /** PlaylistMetadata thumbnailPhoto */
++    thumbnailPhoto?: (number|null);
++
++    /** PlaylistMetadata isPublic */
++    isPublic?: (boolean|null);
+ }
+ 
+ /** Represents a PlaylistMetadata. */
+@@ -1066,8 +1075,17 @@ export class PlaylistMetadata implements IPlaylistMetadata {
+     /** PlaylistMetadata title. */
+     public title: string;
+ 
+-    /** PlaylistMetadata videos. */
+-    public videos: Long[];
++    /** PlaylistMetadata description. */
++    public description: string;
++
++    /** PlaylistMetadata videoIds. */
++    public videoIds: Long[];
++
++    /** PlaylistMetadata thumbnailPhoto. */
++    public thumbnailPhoto: number;
++
++    /** PlaylistMetadata isPublic. */
++    public isPublic: boolean;
+ 
+     /**
+      * Creates a new PlaylistMetadata instance using the specified properties.
+@@ -2651,6 +2669,105 @@ export class VideoCategoryMetadata implements IVideoCategoryMetadata {
+     public toJSON(): { [k: string]: any };
+ }
+ 
++/** Properties of a ContentMetadata. */
++export interface IContentMetadata {
++
++    /** ContentMetadata videoMetadata */
++    videoMetadata?: (IVideoMetadata|null);
++
++    /** ContentMetadata playlistMetadata */
++    playlistMetadata?: (IPlaylistMetadata|null);
++}
++
++/** Represents a ContentMetadata. */
++export class ContentMetadata implements IContentMetadata {
++
++    /**
++     * Constructs a new ContentMetadata.
++     * @param [properties] Properties to set
++     */
++    constructor(properties?: IContentMetadata);
++
++    /** ContentMetadata videoMetadata. */
++    public videoMetadata?: (IVideoMetadata|null);
++
++    /** ContentMetadata playlistMetadata. */
++    public playlistMetadata?: (IPlaylistMetadata|null);
++
++    /** ContentMetadata contentMetadata. */
++    public contentMetadata?: ("videoMetadata"|"playlistMetadata");
++
++    /**
++     * Creates a new ContentMetadata instance using the specified properties.
++     * @param [properties] Properties to set
++     * @returns ContentMetadata instance
++     */
++    public static create(properties?: IContentMetadata): ContentMetadata;
++
++    /**
++     * Encodes the specified ContentMetadata message. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @param message ContentMetadata message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encode(message: IContentMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Encodes the specified ContentMetadata message, length delimited. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @param message ContentMetadata message or plain object to encode
++     * @param [writer] Writer to encode to
++     * @returns Writer
++     */
++    public static encodeDelimited(message: IContentMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
++
++    /**
++     * Decodes a ContentMetadata message from the specified reader or buffer.
++     * @param reader Reader or buffer to decode from
++     * @param [length] Message length if known beforehand
++     * @returns ContentMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): ContentMetadata;
++
++    /**
++     * Decodes a ContentMetadata message from the specified reader or buffer, length delimited.
++     * @param reader Reader or buffer to decode from
++     * @returns ContentMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): ContentMetadata;
++
++    /**
++     * Verifies a ContentMetadata message.
++     * @param message Plain object to verify
++     * @returns `null` if valid, otherwise the reason why it is not
++     */
++    public static verify(message: { [k: string]: any }): (string|null);
++
++    /**
++     * Creates a ContentMetadata message from a plain object. Also converts values to their respective internal types.
++     * @param object Plain object
++     * @returns ContentMetadata
++     */
++    public static fromObject(object: { [k: string]: any }): ContentMetadata;
++
++    /**
++     * Creates a plain object from a ContentMetadata message. Also converts values to other types if specified.
++     * @param message ContentMetadata
++     * @param [options] Conversion options
++     * @returns Plain object
++     */
++    public static toObject(message: ContentMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
++
++    /**
++     * Converts this ContentMetadata to JSON.
++     * @returns JSON object
++     */
++    public toJSON(): { [k: string]: any };
++}
++
+ /** Properties of an OpeningMetadata. */
+ export interface IOpeningMetadata {
+ 
+diff --git a/compiled/index.js b/compiled/index.js
+index f290bcbd1cbfba3e93885a29c7c30a6dce761e5f..01af0e6ff72a6ec05330c510c15dd9e263235fbb 100644
+--- a/compiled/index.js
++++ b/compiled/index.js
+@@ -2473,7 +2473,10 @@ $root.PlaylistMetadata = (function() {
+      * @exports IPlaylistMetadata
+      * @interface IPlaylistMetadata
+      * @property {string|null} [title] PlaylistMetadata title
+-     * @property {Array.<Long>|null} [videos] PlaylistMetadata videos
++     * @property {string|null} [description] PlaylistMetadata description
++     * @property {Array.<Long>|null} [videoIds] PlaylistMetadata videoIds
++     * @property {number|null} [thumbnailPhoto] PlaylistMetadata thumbnailPhoto
++     * @property {boolean|null} [isPublic] PlaylistMetadata isPublic
+      */
+ 
+     /**
+@@ -2485,7 +2488,7 @@ $root.PlaylistMetadata = (function() {
+      * @param {IPlaylistMetadata=} [properties] Properties to set
+      */
+     function PlaylistMetadata(properties) {
+-        this.videos = [];
++        this.videoIds = [];
+         if (properties)
+             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                 if (properties[keys[i]] != null)
+@@ -2501,12 +2504,36 @@ $root.PlaylistMetadata = (function() {
+     PlaylistMetadata.prototype.title = "";
+ 
+     /**
+-     * PlaylistMetadata videos.
+-     * @member {Array.<Long>} videos
++     * PlaylistMetadata description.
++     * @member {string} description
++     * @memberof PlaylistMetadata
++     * @instance
++     */
++    PlaylistMetadata.prototype.description = "";
++
++    /**
++     * PlaylistMetadata videoIds.
++     * @member {Array.<Long>} videoIds
++     * @memberof PlaylistMetadata
++     * @instance
++     */
++    PlaylistMetadata.prototype.videoIds = $util.emptyArray;
++
++    /**
++     * PlaylistMetadata thumbnailPhoto.
++     * @member {number} thumbnailPhoto
+      * @memberof PlaylistMetadata
+      * @instance
+      */
+-    PlaylistMetadata.prototype.videos = $util.emptyArray;
++    PlaylistMetadata.prototype.thumbnailPhoto = 0;
++
++    /**
++     * PlaylistMetadata isPublic.
++     * @member {boolean} isPublic
++     * @memberof PlaylistMetadata
++     * @instance
++     */
++    PlaylistMetadata.prototype.isPublic = false;
+ 
+     /**
+      * Creates a new PlaylistMetadata instance using the specified properties.
+@@ -2533,10 +2560,16 @@ $root.PlaylistMetadata = (function() {
+         if (!writer)
+             writer = $Writer.create();
+         if (message.title != null && Object.hasOwnProperty.call(message, "title"))
+-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.title);
+-        if (message.videos != null && message.videos.length)
+-            for (var i = 0; i < message.videos.length; ++i)
+-                writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.videos[i]);
++            writer.uint32(/* id 2, wireType 2 =*/18).string(message.title);
++        if (message.description != null && Object.hasOwnProperty.call(message, "description"))
++            writer.uint32(/* id 3, wireType 2 =*/26).string(message.description);
++        if (message.videoIds != null && message.videoIds.length)
++            for (var i = 0; i < message.videoIds.length; ++i)
++                writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.videoIds[i]);
++        if (message.thumbnailPhoto != null && Object.hasOwnProperty.call(message, "thumbnailPhoto"))
++            writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.thumbnailPhoto);
++        if (message.isPublic != null && Object.hasOwnProperty.call(message, "isPublic"))
++            writer.uint32(/* id 6, wireType 0 =*/48).bool(message.isPublic);
+         return writer;
+     };
+ 
+@@ -2571,18 +2604,27 @@ $root.PlaylistMetadata = (function() {
+         while (reader.pos < end) {
+             var tag = reader.uint32();
+             switch (tag >>> 3) {
+-            case 1:
++            case 2:
+                 message.title = reader.string();
+                 break;
+-            case 2:
+-                if (!(message.videos && message.videos.length))
+-                    message.videos = [];
++            case 3:
++                message.description = reader.string();
++                break;
++            case 4:
++                if (!(message.videoIds && message.videoIds.length))
++                    message.videoIds = [];
+                 if ((tag & 7) === 2) {
+                     var end2 = reader.uint32() + reader.pos;
+                     while (reader.pos < end2)
+-                        message.videos.push(reader.uint64());
++                        message.videoIds.push(reader.uint64());
+                 } else
+-                    message.videos.push(reader.uint64());
++                    message.videoIds.push(reader.uint64());
++                break;
++            case 5:
++                message.thumbnailPhoto = reader.uint32();
++                break;
++            case 6:
++                message.isPublic = reader.bool();
+                 break;
+             default:
+                 reader.skipType(tag & 7);
+@@ -2622,13 +2664,22 @@ $root.PlaylistMetadata = (function() {
+         if (message.title != null && message.hasOwnProperty("title"))
+             if (!$util.isString(message.title))
+                 return "title: string expected";
+-        if (message.videos != null && message.hasOwnProperty("videos")) {
+-            if (!Array.isArray(message.videos))
+-                return "videos: array expected";
+-            for (var i = 0; i < message.videos.length; ++i)
+-                if (!$util.isInteger(message.videos[i]) && !(message.videos[i] && $util.isInteger(message.videos[i].low) && $util.isInteger(message.videos[i].high)))
+-                    return "videos: integer|Long[] expected";
++        if (message.description != null && message.hasOwnProperty("description"))
++            if (!$util.isString(message.description))
++                return "description: string expected";
++        if (message.videoIds != null && message.hasOwnProperty("videoIds")) {
++            if (!Array.isArray(message.videoIds))
++                return "videoIds: array expected";
++            for (var i = 0; i < message.videoIds.length; ++i)
++                if (!$util.isInteger(message.videoIds[i]) && !(message.videoIds[i] && $util.isInteger(message.videoIds[i].low) && $util.isInteger(message.videoIds[i].high)))
++                    return "videoIds: integer|Long[] expected";
+         }
++        if (message.thumbnailPhoto != null && message.hasOwnProperty("thumbnailPhoto"))
++            if (!$util.isInteger(message.thumbnailPhoto))
++                return "thumbnailPhoto: integer expected";
++        if (message.isPublic != null && message.hasOwnProperty("isPublic"))
++            if (typeof message.isPublic !== "boolean")
++                return "isPublic: boolean expected";
+         return null;
+     };
+ 
+@@ -2646,20 +2697,26 @@ $root.PlaylistMetadata = (function() {
+         var message = new $root.PlaylistMetadata();
+         if (object.title != null)
+             message.title = String(object.title);
+-        if (object.videos) {
+-            if (!Array.isArray(object.videos))
+-                throw TypeError(".PlaylistMetadata.videos: array expected");
+-            message.videos = [];
+-            for (var i = 0; i < object.videos.length; ++i)
++        if (object.description != null)
++            message.description = String(object.description);
++        if (object.videoIds) {
++            if (!Array.isArray(object.videoIds))
++                throw TypeError(".PlaylistMetadata.videoIds: array expected");
++            message.videoIds = [];
++            for (var i = 0; i < object.videoIds.length; ++i)
+                 if ($util.Long)
+-                    (message.videos[i] = $util.Long.fromValue(object.videos[i])).unsigned = true;
+-                else if (typeof object.videos[i] === "string")
+-                    message.videos[i] = parseInt(object.videos[i], 10);
+-                else if (typeof object.videos[i] === "number")
+-                    message.videos[i] = object.videos[i];
+-                else if (typeof object.videos[i] === "object")
+-                    message.videos[i] = new $util.LongBits(object.videos[i].low >>> 0, object.videos[i].high >>> 0).toNumber(true);
++                    (message.videoIds[i] = $util.Long.fromValue(object.videoIds[i])).unsigned = true;
++                else if (typeof object.videoIds[i] === "string")
++                    message.videoIds[i] = parseInt(object.videoIds[i], 10);
++                else if (typeof object.videoIds[i] === "number")
++                    message.videoIds[i] = object.videoIds[i];
++                else if (typeof object.videoIds[i] === "object")
++                    message.videoIds[i] = new $util.LongBits(object.videoIds[i].low >>> 0, object.videoIds[i].high >>> 0).toNumber(true);
+         }
++        if (object.thumbnailPhoto != null)
++            message.thumbnailPhoto = object.thumbnailPhoto >>> 0;
++        if (object.isPublic != null)
++            message.isPublic = Boolean(object.isPublic);
+         return message;
+     };
+ 
+@@ -2677,19 +2734,29 @@ $root.PlaylistMetadata = (function() {
+             options = {};
+         var object = {};
+         if (options.arrays || options.defaults)
+-            object.videos = [];
+-        if (options.defaults)
++            object.videoIds = [];
++        if (options.defaults) {
+             object.title = "";
++            object.description = "";
++            object.thumbnailPhoto = 0;
++            object.isPublic = false;
++        }
+         if (message.title != null && message.hasOwnProperty("title"))
+             object.title = message.title;
+-        if (message.videos && message.videos.length) {
+-            object.videos = [];
+-            for (var j = 0; j < message.videos.length; ++j)
+-                if (typeof message.videos[j] === "number")
+-                    object.videos[j] = options.longs === String ? String(message.videos[j]) : message.videos[j];
++        if (message.description != null && message.hasOwnProperty("description"))
++            object.description = message.description;
++        if (message.videoIds && message.videoIds.length) {
++            object.videoIds = [];
++            for (var j = 0; j < message.videoIds.length; ++j)
++                if (typeof message.videoIds[j] === "number")
++                    object.videoIds[j] = options.longs === String ? String(message.videoIds[j]) : message.videoIds[j];
+                 else
+-                    object.videos[j] = options.longs === String ? $util.Long.prototype.toString.call(message.videos[j]) : options.longs === Number ? new $util.LongBits(message.videos[j].low >>> 0, message.videos[j].high >>> 0).toNumber(true) : message.videos[j];
++                    object.videoIds[j] = options.longs === String ? $util.Long.prototype.toString.call(message.videoIds[j]) : options.longs === Number ? new $util.LongBits(message.videoIds[j].low >>> 0, message.videoIds[j].high >>> 0).toNumber(true) : message.videoIds[j];
+         }
++        if (message.thumbnailPhoto != null && message.hasOwnProperty("thumbnailPhoto"))
++            object.thumbnailPhoto = message.thumbnailPhoto;
++        if (message.isPublic != null && message.hasOwnProperty("isPublic"))
++            object.isPublic = message.isPublic;
+         return object;
+     };
+ 
+@@ -6475,6 +6542,251 @@ $root.VideoCategoryMetadata = (function() {
+     return VideoCategoryMetadata;
+ })();
+ 
++$root.ContentMetadata = (function() {
++
++    /**
++     * Properties of a ContentMetadata.
++     * @exports IContentMetadata
++     * @interface IContentMetadata
++     * @property {IVideoMetadata|null} [videoMetadata] ContentMetadata videoMetadata
++     * @property {IPlaylistMetadata|null} [playlistMetadata] ContentMetadata playlistMetadata
++     */
++
++    /**
++     * Constructs a new ContentMetadata.
++     * @exports ContentMetadata
++     * @classdesc Represents a ContentMetadata.
++     * @implements IContentMetadata
++     * @constructor
++     * @param {IContentMetadata=} [properties] Properties to set
++     */
++    function ContentMetadata(properties) {
++        if (properties)
++            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
++                if (properties[keys[i]] != null)
++                    this[keys[i]] = properties[keys[i]];
++    }
++
++    /**
++     * ContentMetadata videoMetadata.
++     * @member {IVideoMetadata|null|undefined} videoMetadata
++     * @memberof ContentMetadata
++     * @instance
++     */
++    ContentMetadata.prototype.videoMetadata = null;
++
++    /**
++     * ContentMetadata playlistMetadata.
++     * @member {IPlaylistMetadata|null|undefined} playlistMetadata
++     * @memberof ContentMetadata
++     * @instance
++     */
++    ContentMetadata.prototype.playlistMetadata = null;
++
++    // OneOf field names bound to virtual getters and setters
++    var $oneOfFields;
++
++    /**
++     * ContentMetadata contentMetadata.
++     * @member {"videoMetadata"|"playlistMetadata"|undefined} contentMetadata
++     * @memberof ContentMetadata
++     * @instance
++     */
++    Object.defineProperty(ContentMetadata.prototype, "contentMetadata", {
++        get: $util.oneOfGetter($oneOfFields = ["videoMetadata", "playlistMetadata"]),
++        set: $util.oneOfSetter($oneOfFields)
++    });
++
++    /**
++     * Creates a new ContentMetadata instance using the specified properties.
++     * @function create
++     * @memberof ContentMetadata
++     * @static
++     * @param {IContentMetadata=} [properties] Properties to set
++     * @returns {ContentMetadata} ContentMetadata instance
++     */
++    ContentMetadata.create = function create(properties) {
++        return new ContentMetadata(properties);
++    };
++
++    /**
++     * Encodes the specified ContentMetadata message. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @function encode
++     * @memberof ContentMetadata
++     * @static
++     * @param {IContentMetadata} message ContentMetadata message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    ContentMetadata.encode = function encode(message, writer) {
++        if (!writer)
++            writer = $Writer.create();
++        if (message.videoMetadata != null && Object.hasOwnProperty.call(message, "videoMetadata"))
++            $root.VideoMetadata.encode(message.videoMetadata, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
++        if (message.playlistMetadata != null && Object.hasOwnProperty.call(message, "playlistMetadata"))
++            $root.PlaylistMetadata.encode(message.playlistMetadata, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
++        return writer;
++    };
++
++    /**
++     * Encodes the specified ContentMetadata message, length delimited. Does not implicitly {@link ContentMetadata.verify|verify} messages.
++     * @function encodeDelimited
++     * @memberof ContentMetadata
++     * @static
++     * @param {IContentMetadata} message ContentMetadata message or plain object to encode
++     * @param {$protobuf.Writer} [writer] Writer to encode to
++     * @returns {$protobuf.Writer} Writer
++     */
++    ContentMetadata.encodeDelimited = function encodeDelimited(message, writer) {
++        return this.encode(message, writer).ldelim();
++    };
++
++    /**
++     * Decodes a ContentMetadata message from the specified reader or buffer.
++     * @function decode
++     * @memberof ContentMetadata
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @param {number} [length] Message length if known beforehand
++     * @returns {ContentMetadata} ContentMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    ContentMetadata.decode = function decode(reader, length) {
++        if (!(reader instanceof $Reader))
++            reader = $Reader.create(reader);
++        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.ContentMetadata();
++        while (reader.pos < end) {
++            var tag = reader.uint32();
++            switch (tag >>> 3) {
++            case 1:
++                message.videoMetadata = $root.VideoMetadata.decode(reader, reader.uint32());
++                break;
++            case 2:
++                message.playlistMetadata = $root.PlaylistMetadata.decode(reader, reader.uint32());
++                break;
++            default:
++                reader.skipType(tag & 7);
++                break;
++            }
++        }
++        return message;
++    };
++
++    /**
++     * Decodes a ContentMetadata message from the specified reader or buffer, length delimited.
++     * @function decodeDelimited
++     * @memberof ContentMetadata
++     * @static
++     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
++     * @returns {ContentMetadata} ContentMetadata
++     * @throws {Error} If the payload is not a reader or valid buffer
++     * @throws {$protobuf.util.ProtocolError} If required fields are missing
++     */
++    ContentMetadata.decodeDelimited = function decodeDelimited(reader) {
++        if (!(reader instanceof $Reader))
++            reader = new $Reader(reader);
++        return this.decode(reader, reader.uint32());
++    };
++
++    /**
++     * Verifies a ContentMetadata message.
++     * @function verify
++     * @memberof ContentMetadata
++     * @static
++     * @param {Object.<string,*>} message Plain object to verify
++     * @returns {string|null} `null` if valid, otherwise the reason why it is not
++     */
++    ContentMetadata.verify = function verify(message) {
++        if (typeof message !== "object" || message === null)
++            return "object expected";
++        var properties = {};
++        if (message.videoMetadata != null && message.hasOwnProperty("videoMetadata")) {
++            properties.contentMetadata = 1;
++            {
++                var error = $root.VideoMetadata.verify(message.videoMetadata);
++                if (error)
++                    return "videoMetadata." + error;
++            }
++        }
++        if (message.playlistMetadata != null && message.hasOwnProperty("playlistMetadata")) {
++            if (properties.contentMetadata === 1)
++                return "contentMetadata: multiple values";
++            properties.contentMetadata = 1;
++            {
++                var error = $root.PlaylistMetadata.verify(message.playlistMetadata);
++                if (error)
++                    return "playlistMetadata." + error;
++            }
++        }
++        return null;
++    };
++
++    /**
++     * Creates a ContentMetadata message from a plain object. Also converts values to their respective internal types.
++     * @function fromObject
++     * @memberof ContentMetadata
++     * @static
++     * @param {Object.<string,*>} object Plain object
++     * @returns {ContentMetadata} ContentMetadata
++     */
++    ContentMetadata.fromObject = function fromObject(object) {
++        if (object instanceof $root.ContentMetadata)
++            return object;
++        var message = new $root.ContentMetadata();
++        if (object.videoMetadata != null) {
++            if (typeof object.videoMetadata !== "object")
++                throw TypeError(".ContentMetadata.videoMetadata: object expected");
++            message.videoMetadata = $root.VideoMetadata.fromObject(object.videoMetadata);
++        }
++        if (object.playlistMetadata != null) {
++            if (typeof object.playlistMetadata !== "object")
++                throw TypeError(".ContentMetadata.playlistMetadata: object expected");
++            message.playlistMetadata = $root.PlaylistMetadata.fromObject(object.playlistMetadata);
++        }
++        return message;
++    };
++
++    /**
++     * Creates a plain object from a ContentMetadata message. Also converts values to other types if specified.
++     * @function toObject
++     * @memberof ContentMetadata
++     * @static
++     * @param {ContentMetadata} message ContentMetadata
++     * @param {$protobuf.IConversionOptions} [options] Conversion options
++     * @returns {Object.<string,*>} Plain object
++     */
++    ContentMetadata.toObject = function toObject(message, options) {
++        if (!options)
++            options = {};
++        var object = {};
++        if (message.videoMetadata != null && message.hasOwnProperty("videoMetadata")) {
++            object.videoMetadata = $root.VideoMetadata.toObject(message.videoMetadata, options);
++            if (options.oneofs)
++                object.contentMetadata = "videoMetadata";
++        }
++        if (message.playlistMetadata != null && message.hasOwnProperty("playlistMetadata")) {
++            object.playlistMetadata = $root.PlaylistMetadata.toObject(message.playlistMetadata, options);
++            if (options.oneofs)
++                object.contentMetadata = "playlistMetadata";
++        }
++        return object;
++    };
++
++    /**
++     * Converts this ContentMetadata to JSON.
++     * @function toJSON
++     * @memberof ContentMetadata
++     * @instance
++     * @returns {Object.<string,*>} JSON object
++     */
++    ContentMetadata.prototype.toJSON = function toJSON() {
++        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
++    };
++
++    return ContentMetadata;
++})();
++
+ $root.OpeningMetadata = (function() {
+ 
+     /**
+diff --git a/doc/index.md b/doc/index.md
+index ebac00504dbb92d46a3276ccc82f37867f20fb08..cd0c4f20736a8983fc5af3036682ba81cb8732c5 100644
+--- a/doc/index.md
++++ b/doc/index.md
+@@ -3,6 +3,10 @@
+ 
+ ## Table of Contents
+ 
++- [proto/Bounty.proto](#proto/Bounty.proto)
++    - [BountyMetadata](#.BountyMetadata)
++    - [BountyWorkData](#.BountyWorkData)
++  
+ - [proto/Channel.proto](#proto/Channel.proto)
+     - [ChannelCategoryMetadata](#.ChannelCategoryMetadata)
+     - [ChannelMetadata](#.ChannelMetadata)
+@@ -26,6 +30,9 @@
+ - [proto/Playlist.proto](#proto/Playlist.proto)
+     - [PlaylistMetadata](#.PlaylistMetadata)
+   
++- [proto/ProposalsDiscussion.proto](#proto/ProposalsDiscussion.proto)
++    - [ProposalsDiscussionPostMetadata](#.ProposalsDiscussionPostMetadata)
++  
+ - [proto/Series.proto](#proto/Series.proto)
+     - [SeasonMetadata](#.SeasonMetadata)
+     - [SeriesMetadata](#.SeriesMetadata)
+@@ -41,6 +48,7 @@
+     - [GeographicalArea.Continent](#.GeographicalArea.Continent)
+   
+ - [proto/Video.proto](#proto/Video.proto)
++    - [ContentMetadata](#.ContentMetadata)
+     - [License](#.License)
+     - [MediaType](#.MediaType)
+     - [PublishedBeforeJoystream](#.PublishedBeforeJoystream)
+@@ -64,6 +72,56 @@
+ 
+ 
+ 
++<a name="proto/Bounty.proto"></a>
++<p align="right"><a href="#top">Top</a></p>
++
++## proto/Bounty.proto
++
++
++
++<a name=".BountyMetadata"></a>
++
++### BountyMetadata
++
++
++
++| Field | Type | Label | Description |
++| ----- | ---- | ----- | ----------- |
++| title | [string](#string) | optional | Bounty title |
++| description | [string](#string) | optional | Bounty description |
++| discussionThread | [uint64](#uint64) | optional | Id of the forum thread used to discuss the bounty |
++| banner_image_uri | [string](#string) | optional | Image uri of the bounty&#39;s banner |
++
++
++
++
++
++
++<a name=".BountyWorkData"></a>
++
++### BountyWorkData
++
++
++
++| Field | Type | Label | Description |
++| ----- | ---- | ----- | ----------- |
++| title | [string](#string) | optional | Title of the work |
++| description | [string](#string) | optional | Description which contains the work itself as a URL, a BLOB, or just text |
++
++
++
++
++
++ 
++
++ 
++
++ 
++
++ 
++
++
++
+ <a name="proto/Channel.proto"></a>
+ <p align="right"><a href="#top">Top</a></p>
+ 
+@@ -236,7 +294,8 @@ The enum must be wrapped inside &#34;message&#34;, otherwide it breaks protobufj
+ | Field | Type | Label | Description |
+ | ----- | ---- | ----- | ----------- |
+ | name | [string](#string) | optional | Member&#39;s real name |
+-| avatar | [uint32](#uint32) | optional | Member&#39;s avatar - index into external [assets array](#.Assets) |
++| avatar_object | [uint32](#uint32) | optional | Member&#39;s avatar - index into external [assets array](#.Assets) |
++| avatar_uri | [string](#string) | optional | Url to member&#39;s avatar |
+ | about | [string](#string) | optional | Member&#39;s md-formatted about text |
+ 
+ 
+@@ -304,8 +363,43 @@ The enum must be wrapped inside &#34;message&#34;, otherwide it breaks protobufj
+ 
+ | Field | Type | Label | Description |
+ | ----- | ---- | ----- | ----------- |
+-| title | [string](#string) | optional |  |
+-| videos | [uint64](#uint64) | repeated | Videos in the playlist |
++| title | [string](#string) | optional | Title of the playlist |
++| description | [string](#string) | optional | Description of the playlist |
++| video_ids | [uint64](#uint64) | repeated | IDs of the videos to include in playlist (in given order) |
++| thumbnail_photo | [uint32](#uint32) | optional | index into external [assets array](#.Assets) |
++| is_public | [bool](#bool) | optional | Playlist status, whether it is public or private. If the field is omitted the default playlist status would be public??? |
++
++
++
++
++
++ 
++
++ 
++
++ 
++
++ 
++
++
++
++<a name="proto/ProposalsDiscussion.proto"></a>
++<p align="right"><a href="#top">Top</a></p>
++
++## proto/ProposalsDiscussion.proto
++
++
++
++<a name=".ProposalsDiscussionPostMetadata"></a>
++
++### ProposalsDiscussionPostMetadata
++
++
++
++| Field | Type | Label | Description |
++| ----- | ---- | ----- | ----------- |
++| text | [string](#string) | optional | Post text content (md-formatted) |
++| repliesTo | [uint32](#uint32) | optional | Id of the post that given post replies to (if any) |
+ 
+ 
+ 
+@@ -515,6 +609,22 @@ The enum must be wrapped inside &#34;message&#34;, otherwide it breaks protobufj
+ 
+ 
+ 
++<a name=".ContentMetadata"></a>
++
++### ContentMetadata
++
++
++
++| Field | Type | Label | Description |
++| ----- | ---- | ----- | ----------- |
++| video_metadata | [VideoMetadata](#VideoMetadata) | optional | For backward compatibility reasons, apps that deserialize metadata (e.g. Query Node) need to handle the deserialization of `VideoMetadata` message both as independent message and as a variant of `ContentMetadata`. Though, apps that serialize protobuf messages (mostly frontend apps) are advised to use `ContentMetadata` message for all new videos &amp; playlists |
++| playlist_metadata | [PlaylistMetadata](#PlaylistMetadata) | optional |  |
++
++
++
++
++
++
+ <a name=".License"></a>
+ 
+ ### License
+@@ -670,6 +780,7 @@ Publication status before joystream
+ | expected_ending_timestamp | [uint32](#uint32) | optional | Expected time when the opening will close (Unix timestamp) |
+ | application_details | [string](#string) | optional | Md-formatted text explaining the application process |
+ | application_form_questions | [OpeningMetadata.ApplicationFormQuestion](#OpeningMetadata.ApplicationFormQuestion) | repeated | List of questions that should be answered during application |
++| title | [string](#string) | optional |  |
+ 
+ 
+ 
+diff --git a/proto/Playlist.proto b/proto/Playlist.proto
+index 19cb321f3edb264d2487b3e264dc2f60974e8fe5..cccddb5f78108dc0798f341317a5fd7465813934 100644
+--- a/proto/Playlist.proto
++++ b/proto/Playlist.proto
+@@ -1,7 +1,19 @@
+ syntax = "proto2";
+ 
+ message PlaylistMetadata {
+-    optional string title = 1;
+-    // Videos in the playlist
+-    repeated uint64 videos = 2;
++    // Title of the playlist
++    optional string title = 2;
++
++    // Description of the playlist
++    optional string description = 3;
++
++    // IDs of the videos to include in playlist (in given order)
++    repeated uint64 video_ids = 4;
++    
++    // index into external [assets array](#.Assets)
++    optional uint32 thumbnail_photo = 5;
++
++    // Playlist status, whether it is public or private. If the 
++    // field is omitted the default playlist status would be public???
++    optional bool is_public = 6;
+ }
+diff --git a/proto/Video.proto b/proto/Video.proto
+index 893854f01ec1018e92df8c26cadc26c7df3d7b39..ccf4974d520663f9d481459ce8522f1611a510d6 100644
+--- a/proto/Video.proto
++++ b/proto/Video.proto
+@@ -1,5 +1,7 @@
+ syntax = "proto2";
+ 
++import "proto/Playlist.proto";
++
+ // Publication status before joystream
+ message PublishedBeforeJoystream {
+     // Was video published before joystream platform
+@@ -86,3 +88,15 @@ message VideoCategoryMetadata {
+     // Category name
+     optional string name = 1;
+ }
++
++message ContentMetadata {
++    oneof content_metadata {
++        // For backward compatibility reasons, apps that deserialize metadata (e.g. Query Node) 
++        // need to handle the deserialization of `VideoMetadata` message both as independent
++        // message and as a variant of  `ContentMetadata`. Though, apps that serialize protobuf
++        // messages (mostly frontend apps) are advised to use `ContentMetadata` message for all 
++        // new videos & playlists
++        VideoMetadata video_metadata = 1;
++        PlaylistMetadata playlist_metadata = 2;
++    }
++}
+\ No newline at end of file

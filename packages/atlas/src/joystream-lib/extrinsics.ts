@@ -1,8 +1,9 @@
 import {
-  ChannelOwnerRemarked,
-  IChannelOwnerRemarked,
-  IMemberRemarked,
-  MemberRemarked,
+  // @ts-ignore TODO: update once merged metadata-protobuf is ready
+  ChannelOwnerRemarked, // @ts-ignore TODO: update once merged metadata-protobuf is ready
+  IChannelOwnerRemarked, // @ts-ignore TODO: update once merged metadata-protobuf is ready
+  IMemberRemarked, // @ts-ignore TODO: update once merged metadata-protobuf is ready
+  MemberRemarked, // @ts-ignore TODO: update once merged metadata-protobuf is ready
   ReactVideo,
 } from '@joystream/metadata-protobuf'
 import { MemberId as RuntimeMemberId } from '@joystream/types/common'
@@ -11,6 +12,7 @@ import {
   ChannelUpdateParameters,
   ContentActor,
   NftIssuanceParameters,
+  StorageAssets,
   VideoCreationParameters,
   VideoUpdateParameters,
 } from '@joystream/types/content'
@@ -28,11 +30,17 @@ import {
   createNftIssuanceParameters,
   createNftOpenAuctionParams,
   extractChannelResultAssetsIds,
+  extractPlaylistResultAssetsIds,
   extractVideoResultAssetsIds,
-  getInputDataObjectsIds,
+  getReplacedDataObjectsIds,
   sendExtrinsicAndParseEvents,
 } from './helpers'
-import { parseChannelExtrinsicInput, parseMemberExtrinsicInput, parseVideoExtrinsicInput } from './metadata'
+import {
+  parseChannelExtrinsicInput,
+  parseMemberExtrinsicInput,
+  parsePlaylistExtrinsicInput,
+  parseVideoExtrinsicInput,
+} from './metadata'
 import {
   AccountId,
   ChannelExtrinsicResult,
@@ -40,6 +48,8 @@ import {
   ChannelInputAssets,
   ChannelInputMetadata,
   CommentReaction,
+  ContentExtrinsicResult,
+  ContentId,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
@@ -52,6 +62,10 @@ import {
   NftIssuanceInputMetadata,
   NftSaleInputMetadata,
   NftSaleType,
+  PlaylistExtrinsicResult,
+  PlaylistId,
+  PlaylistInputAssets,
+  PlaylistInputMetadata,
   SendExtrinsicResult,
   VideoExtrinsicResult,
   VideoId,
@@ -71,6 +85,19 @@ export class JoystreamLibExtrinsics {
     this.api = api
     this.getAccount = getAccount
     this.endpoint = endpoint
+  }
+
+  /*
+    ===== Private methods =====
+  */
+
+  private async ensureApi() {
+    try {
+      await this.api.isReady
+    } catch (e) {
+      SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamLib', e)
+      throw new JoystreamLibError({ name: 'ApiNotConnectedError' })
+    }
   }
 
   private async sendExtrinsic(
@@ -117,14 +144,106 @@ export class JoystreamLibExtrinsics {
     }
   }
 
-  private async ensureApi() {
-    try {
-      await this.api.isReady
-    } catch (e) {
-      SentryLogger.error('Failed to initialize Polkadot API', 'JoystreamLib', e)
-      throw new JoystreamLibError({ name: 'ApiNotConnectedError' })
+  /*
+    ===== Content methods =====
+    Both videos and playlists are saved on-chain as a single entity (currently called "Video", will be renamed to "Content" later).
+    They are differentiated at the Query Node level using respective protobuf messages.
+    Below are private helper methods that contain common logic for all types of "content".
+  */
+
+  private async createContent(
+    memberId: MemberId,
+    channelId: ChannelId,
+    metaBytes: Option<Bytes>,
+    assets: Option<StorageAssets>,
+    nftIssuanceParams: NftIssuanceParameters | undefined | null,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ContentExtrinsicResult> {
+    await this.ensureApi()
+
+    const creationParameters = new VideoCreationParameters(this.api.registry, {
+      meta: metaBytes,
+      assets: assets,
+      enable_comments: new bool(this.api.registry, false),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParams),
+    })
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.createVideo(contentActor, channelId, creationParameters)
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+
+    const videoId = getEventData('content', 'VideoCreated')[2]
+
+    return {
+      contentId: videoId.toString(),
+      block,
+      getEventData,
     }
   }
+
+  private async updateContent(
+    contentId: ContentId,
+    memberId: MemberId,
+    metaBytes: Option<Bytes>,
+    assets: Option<StorageAssets>,
+    inputAssets: VideoInputAssets | PlaylistInputAssets,
+    nftIssuanceParams: NftIssuanceParameters | undefined | null,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ContentExtrinsicResult> {
+    await this.ensureApi()
+
+    const updateParameters = new VideoUpdateParameters(this.api.registry, {
+      new_meta: metaBytes,
+      assets_to_upload: assets,
+      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getReplacedDataObjectsIds(inputAssets)),
+      enable_comments: new Option(this.api.registry, bool),
+      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParams),
+    })
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.updateVideo(contentActor, contentId, updateParameters)
+
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      contentId,
+      block,
+      getEventData,
+    }
+  }
+
+  private async deleteContent(
+    contentId: ContentId,
+    memberId: MemberId,
+    assetIdsToRemove: string[],
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<ContentExtrinsicResult> {
+    await this.ensureApi()
+
+    const contentActor = new ContentActor(this.api.registry, {
+      member: memberId,
+    })
+    const tx = this.api.tx.content.deleteVideo(
+      contentActor,
+      contentId,
+      new BTreeSet(this.api.registry, DataObjectId, assetIdsToRemove)
+    )
+    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      contentId,
+      block,
+      getEventData,
+    }
+  }
+
+  /*
+    ===== Public methods =====
+  */
 
   async createChannel(
     memberId: MemberId,
@@ -171,7 +290,7 @@ export class JoystreamLibExtrinsics {
     const updateParameters = new ChannelUpdateParameters(this.api.registry, {
       new_meta: channelMetadata,
       assets_to_upload: channelAssets,
-      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
+      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getReplacedDataObjectsIds(inputAssets)),
       collaborators: new Option<BTreeSet<RuntimeMemberId>>(this.api.registry, BTreeSet),
       reward_account: new Option<Option<RuntimeAccountId>>(this.api.registry, Option),
     })
@@ -199,27 +318,21 @@ export class JoystreamLibExtrinsics {
   ): Promise<VideoExtrinsicResult> {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
+    const [metadata, assets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
 
     const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
 
-    const creationParameters = new VideoCreationParameters(this.api.registry, {
-      meta: videoMetadata,
-      assets: videoAssets,
-      enable_comments: new bool(this.api.registry, false),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
-    })
-
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.createVideo(contentActor, channelId, creationParameters)
-    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
-
-    const videoId = getEventData('content', 'VideoCreated')[2]
+    const { block, contentId, getEventData } = await this.createContent(
+      memberId,
+      channelId,
+      metadata,
+      assets,
+      nftIssuanceParameters,
+      cb
+    )
 
     return {
-      videoId: videoId.toString(),
+      videoId: contentId,
       block,
       assetsIds: extractVideoResultAssetsIds(inputAssets, getEventData),
     }
@@ -235,25 +348,18 @@ export class JoystreamLibExtrinsics {
   ): Promise<VideoExtrinsicResult> {
     await this.ensureApi()
 
-    const [videoMetadata, videoAssets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
-
+    const [metadata, assets] = await parseVideoExtrinsicInput(this.api, inputMetadata, inputAssets)
     const nftIssuanceParameters = createNftIssuanceParameters(this.api.registry, nftInputMetadata)
 
-    const updateParameters = new VideoUpdateParameters(this.api.registry, {
-      new_meta: videoMetadata,
-      assets_to_upload: videoAssets,
-      assets_to_remove: new BTreeSet(this.api.registry, DataObjectId, getInputDataObjectsIds(inputAssets)),
-      enable_comments: new Option(this.api.registry, bool),
-      auto_issue_nft: new Option(this.api.registry, NftIssuanceParameters, nftIssuanceParameters),
-    })
-
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-
-    const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
-
-    const { block, getEventData } = await this.sendExtrinsic(tx, cb)
+    const { block, getEventData } = await this.updateContent(
+      videoId,
+      memberId,
+      metadata,
+      assets,
+      inputAssets,
+      nftIssuanceParameters,
+      cb
+    )
 
     return {
       videoId,
@@ -265,18 +371,79 @@ export class JoystreamLibExtrinsics {
   async deleteVideo(
     videoId: VideoId,
     memberId: MemberId,
+    assetIdsToRemove: string[],
     cb?: ExtrinsicStatusCallbackFn
   ): Promise<Omit<VideoExtrinsicResult, 'assetsIds'>> {
     await this.ensureApi()
 
-    const contentActor = new ContentActor(this.api.registry, {
-      member: memberId,
-    })
-    const tx = this.api.tx.content.deleteVideo(contentActor, videoId, new BTreeSet(this.api.registry, DataObjectId))
-    const { block } = await this.sendExtrinsic(tx, cb)
+    const { block } = await this.deleteContent(videoId, memberId, assetIdsToRemove, cb)
 
     return {
       videoId,
+      block,
+    }
+  }
+
+  async createPlaylist(
+    memberId: MemberId,
+    channelId: ChannelId,
+    inputMetadata: PlaylistInputMetadata,
+    inputAssets: PlaylistInputAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<PlaylistExtrinsicResult> {
+    await this.ensureApi()
+
+    const [metadata, assets] = await parsePlaylistExtrinsicInput(this.api, inputMetadata, inputAssets)
+
+    const { block, contentId, getEventData } = await this.createContent(memberId, channelId, metadata, assets, null, cb)
+
+    return {
+      playlistId: contentId,
+      block,
+      assetsIds: extractPlaylistResultAssetsIds(inputAssets, getEventData),
+    }
+  }
+
+  async updatePlaylist(
+    playlistId: PlaylistId,
+    memberId: MemberId,
+    inputMetadata: PlaylistInputMetadata,
+    inputAssets: PlaylistInputAssets,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<PlaylistExtrinsicResult> {
+    await this.ensureApi()
+
+    const [metadata, assets] = await parsePlaylistExtrinsicInput(this.api, inputMetadata, inputAssets)
+
+    const { block, getEventData } = await this.updateContent(
+      playlistId,
+      memberId,
+      metadata,
+      assets,
+      inputAssets,
+      null,
+      cb
+    )
+
+    return {
+      playlistId,
+      block,
+      assetsIds: extractPlaylistResultAssetsIds(inputAssets, getEventData),
+    }
+  }
+
+  async deletePlaylist(
+    playlistId: PlaylistId,
+    memberId: MemberId,
+    assetIdsToRemove: string[],
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<Omit<PlaylistExtrinsicResult, 'assetsIds'>> {
+    await this.ensureApi()
+
+    const { block } = await this.deleteContent(playlistId, memberId, assetIdsToRemove, cb)
+
+    return {
+      playlistId,
       block,
     }
   }
