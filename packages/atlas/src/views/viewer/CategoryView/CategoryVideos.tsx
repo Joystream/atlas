@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react'
 import { isEqual } from 'lodash-es'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useVideoCount } from '@/api/hooks'
 import { VideoOrderByInput } from '@/api/queries'
@@ -30,7 +30,7 @@ const ADAPTED_SORT_OPTIONS = [
   { name: 'oldest', value: VideoOrderByInput.CreatedAtAsc },
 ]
 
-export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId }) => {
+export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')
   const containerRef = useRef<HTMLDivElement>(null)

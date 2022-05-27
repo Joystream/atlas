@@ -1,4 +1,12 @@
-import React, { forwardRef } from 'react'
+import {
+  ChangeEvent,
+  FocusEvent,
+  ForwardRefRenderFunction,
+  KeyboardEvent,
+  ReactNode,
+  WheelEvent,
+  forwardRef,
+} from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { InputBase, InputBaseProps } from '@/components/_inputs/InputBase'
@@ -9,21 +17,21 @@ export type TextFieldProps = {
   name?: string
   type?: 'text' | 'email' | 'password' | 'search' | 'number'
   value?: string | number
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-  onWheel?: (event: React.WheelEvent<HTMLInputElement>) => void
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void
+  onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void
+  onWheel?: (event: WheelEvent<HTMLInputElement>) => void
   required?: boolean
   className?: string
   placeholder?: string
   defaultValue?: string
-  nodeStart?: React.ReactNode
-  nodeEnd?: React.ReactNode
+  nodeStart?: ReactNode
+  nodeEnd?: ReactNode
   autoComplete?: 'off'
 } & InputBaseProps
 
-const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
+const TextFieldComponent: ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
   {
     name,
     type = 'text',
@@ -48,7 +56,7 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
   const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
 
-  const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+  const handleWheel = (event: WheelEvent<HTMLInputElement>) => {
     if (onWheel) {
       onWheel(event)
       return

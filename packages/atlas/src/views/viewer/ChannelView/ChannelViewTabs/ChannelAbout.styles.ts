@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import React from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'

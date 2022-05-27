@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { SvgActionNotifications } from '@/components/_icons'
 import { useNotifications } from '@/providers/notifications'
 

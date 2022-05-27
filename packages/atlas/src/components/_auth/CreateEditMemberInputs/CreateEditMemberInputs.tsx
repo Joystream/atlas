@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { UseFormRegister, UseFormStateReturn, UseFormWatch } from 'react-hook-form'
 
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -17,7 +17,7 @@ type CreateEditMemberFormProps = {
   watch: UseFormWatch<Inputs>
 }
 
-export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ register, errors, watch }) => {
+export const CreateEditMemberInputs: FC<CreateEditMemberFormProps> = ({ register, errors, watch }) => {
   return (
     <>
       <StyledTextField

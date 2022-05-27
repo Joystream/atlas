@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -25,7 +25,7 @@ export type ProgressDrawerProps = {
   steps: Step[]
   className?: string
 }
-export const ProgressDrawer: React.FC<ProgressDrawerProps> = ({ steps, className }) => {
+export const ProgressDrawer: FC<ProgressDrawerProps> = ({ steps, className }) => {
   const stepsCompletedNumber = steps.filter(({ completed }) => completed).length
   const [isHidden, setIsHidden] = useState(false)
   return (

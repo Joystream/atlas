@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { CommentFieldsFragment } from '@/api/queries'
 import { Comment, CommentProps } from '@/components/_comments/Comment'
@@ -9,7 +9,7 @@ type CommentThreadProps = {
   highlightedCommentId: string | null
 } & CommentProps
 
-export const CommentThread: React.FC<CommentThreadProps> = ({
+export const CommentThread: FC<CommentThreadProps> = ({
   repliesCount,
   replies,
   commentId,

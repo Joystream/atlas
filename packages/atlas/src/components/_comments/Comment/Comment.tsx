@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { FC, memo, useRef, useState } from 'react'
 
 import { useComment } from '@/api/hooks'
 import { CommentFieldsFragment, CommentStatus, VideoFieldsFragment } from '@/api/queries'
@@ -29,7 +29,7 @@ export type CommentProps = {
   isRepliesOpen?: boolean
 } & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
 
-export const Comment: React.FC<CommentProps> = React.memo(
+export const Comment: FC<CommentProps> = memo(
   ({ commentId, video, setHighlightedCommentId, setRepliesOpen, isRepliesOpen, isReplyable, ...rest }) => {
     const replyCommentInputRef = useRef<HTMLTextAreaElement>(null)
     const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)

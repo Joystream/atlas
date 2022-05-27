@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react/headless'
-import React, { useState } from 'react'
+import { FC, PropsWithChildren, ReactNode, RefObject, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { transitions } from '@/styles'
@@ -14,7 +14,7 @@ import {
 } from './Tooltip.styles'
 
 type Placement = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'top'
-export type TooltipProps = {
+export type TooltipProps = PropsWithChildren<{
   text?: string
   headerText?: string
   icon?: boolean
@@ -23,14 +23,14 @@ export type TooltipProps = {
   offsetY?: number
   delay?: number | [number | null, number | null] | undefined
   hideOnClick?: boolean | 'toggle'
-  reference?: Element | React.RefObject<Element> | null | undefined
-  customContent?: React.ReactNode
+  reference?: Element | RefObject<Element> | null | undefined
+  customContent?: ReactNode
   showOnCreate?: boolean
   oneLine?: boolean
   className?: string
-}
+}>
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: FC<TooltipProps> = ({
   text,
   headerText,
   icon,

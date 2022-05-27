@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput } from '@/api/queries'
@@ -24,7 +24,7 @@ const SORT_OPTIONS = [
   { name: 'oldest', value: OwnedNftOrderByInput.CreatedAtAsc },
 ]
 
-export const NftsView: React.FC = () => {
+export const NftsView: FC = () => {
   const headTags = useHeadTags('Video NFTs')
   const smMatch = useMediaMatch('sm')
   const mdMatch = useMediaMatch('md')

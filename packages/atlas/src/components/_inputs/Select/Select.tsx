@@ -1,6 +1,6 @@
 import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
-import React, { Ref, forwardRef, useMemo } from 'react'
+import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
 import { TextProps } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
@@ -46,10 +46,10 @@ export type SelectProps<T = string> = {
   placeholder?: string
   containerRef?: Ref<HTMLDivElement>
   size?: SelectSizes
-  iconLeft?: React.ReactNode
+  iconLeft?: ReactNode
 } & InputBaseProps
 
-// don't use React.FC so we can use a generic type on a component
+// don't use FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const _Select = <T extends unknown>(
@@ -69,7 +69,7 @@ export const _Select = <T extends unknown>(
     iconLeft,
     ...inputBaseProps
   }: SelectProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
+  ref: ForwardedRef<HTMLDivElement>
 ) => {
   const itemsValues = items.map((item) => item.value)
 
@@ -162,5 +162,5 @@ export const _Select = <T extends unknown>(
 
 // https://fettblog.eu/typescript-react-generic-forward-refs/#option-1%3A-type-assertion
 export const Select = forwardRef(_Select) as <T>(
-  props: SelectProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+  props: SelectProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
 ) => ReturnType<typeof _Select>

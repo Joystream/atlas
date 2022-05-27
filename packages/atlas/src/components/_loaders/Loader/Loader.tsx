@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 import Lottie from 'react-lottie-player'
 
 import loaderLargeAnimation from '@/assets/animations/loader-L.json'
@@ -28,7 +28,7 @@ const VARIANT_TO_CONFIG: Record<LoaderVariant, LoaderConfig> = {
   player: { data: loaderPlayerAnimation, size: 72 },
 }
 
-export const Loader: React.FC<LoaderProps> = ({ variant = 'medium', className }) => {
+export const Loader: FC<LoaderProps> = ({ variant = 'medium', className }) => {
   const config = VARIANT_TO_CONFIG[variant]
   return <StyledLottie play animationData={config.data} size={config.size} className={className} />
 }

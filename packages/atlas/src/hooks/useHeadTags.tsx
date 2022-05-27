@@ -1,5 +1,5 @@
 import { MetaTags } from '@joystream/atlas-meta-server/src/tags'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 
 export const useHeadTags = (title?: string | null, metaTagsMapping: MetaTags = {}) => {

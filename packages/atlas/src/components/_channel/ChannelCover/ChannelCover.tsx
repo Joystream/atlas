@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -24,10 +24,10 @@ export type ChannelCoverProps = {
   hasCoverUploadFailed?: boolean
   editable?: boolean
   disabled?: boolean
-  onCoverEditClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>) => void
+  onCoverEditClick?: (e: MouseEvent<HTMLButtonElement | HTMLDivElement>) => void
 }
 
-export const ChannelCover: React.FC<ChannelCoverProps> = ({
+export const ChannelCover: FC<ChannelCoverProps> = ({
   assetUrl,
   hasCoverUploadFailed,
   editable,

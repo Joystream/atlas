@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { ForwardRefRenderFunction, forwardRef } from 'react'
 
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
@@ -20,7 +20,7 @@ type DialogPopoverProps = Omit<PopoverProps, 'content'> &
     popoverWidth?: PopoverWidth
   }
 
-const _DialogPopover: React.ForwardRefRenderFunction<PopoverImperativeHandle, DialogPopoverProps> = (
+const _DialogPopover: ForwardRefRenderFunction<PopoverImperativeHandle, DialogPopoverProps> = (
   {
     title,
     dividers,

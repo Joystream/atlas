@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react'
+import { FC, ReactNode, useRef } from 'react'
 
 import { ListItem } from '@/components/ListItem'
 
@@ -19,7 +19,7 @@ export type ContextMenuProps = { items: MenuItemProps[]; scrollable?: boolean; s
   'content' | 'instanceRef'
 >
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({
+export const ContextMenu: FC<ContextMenuProps> = ({
   children,
   items,
   scrollable = false,

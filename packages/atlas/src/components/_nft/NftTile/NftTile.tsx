@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Pill } from '@/components/Pill'
 import { SvgActionShow } from '@/components/_icons'
@@ -45,7 +45,7 @@ export type NftTileProps = {
   onSettleAuction?: () => void
 }
 
-export const NftTile: React.FC<NftTileProps> = ({
+export const NftTile: FC<NftTileProps> = ({
   status,
   thumbnail,
   loading,

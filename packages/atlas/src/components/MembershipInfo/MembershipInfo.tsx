@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { absoluteRoutes } from '@/config/routes'
@@ -27,7 +27,7 @@ export type MembershipInfoProps = {
   avatarUrl?: string | null
   avatarLoading?: boolean
   hasAvatarUploadFailed?: boolean
-  onAvatarEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onAvatarEditClick?: (event: MouseEvent<HTMLElement>) => void
   handle?: string | null
   address?: string | null
   loading?: boolean
@@ -36,7 +36,7 @@ export type MembershipInfoProps = {
   className?: string
 }
 
-export const MembershipInfo: React.FC<MembershipInfoProps> = ({
+export const MembershipInfo: FC<MembershipInfoProps> = ({
   address,
   avatarUrl,
   avatarLoading,

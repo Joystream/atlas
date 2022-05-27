@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Button } from '@/components/_buttons/Button'
@@ -11,11 +11,11 @@ import { Divider, StyledVideoHeroHeader, VideoHeroHeaderTitle } from './VideoHer
 
 type VideoHeroHeaderProps = {
   loading?: boolean
-  icon: React.ReactNode
+  icon: ReactNode
   title: string
 }
 
-export const VideoHeroHeader: React.FC<VideoHeroHeaderProps> = ({ loading, icon, title }) => {
+export const VideoHeroHeader: FC<VideoHeroHeaderProps> = ({ loading, icon, title }) => {
   return (
     <SwitchTransition>
       <CSSTransition

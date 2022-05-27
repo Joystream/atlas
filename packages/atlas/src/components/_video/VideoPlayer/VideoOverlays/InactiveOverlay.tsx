@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { Loader } from '@/components/_loaders/Loader'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { InnerContainer, OverlayBackground, OverlayContent, OverlayHeading } from './VideoOverlays.styles'
 
-export const InactiveOverlay: React.FC = () => {
+export const InactiveOverlay: FC = () => {
   const smMatch = useMediaMatch('sm')
   const xsMatch = useMediaMatch('xs')
   const loaderVariant = xsMatch ? (smMatch ? 'xlarge' : 'large') : 'compact'

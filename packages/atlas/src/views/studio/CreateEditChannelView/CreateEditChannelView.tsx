@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
@@ -74,7 +74,7 @@ type CreateEditChannelViewProps = {
   newChannel?: boolean
 }
 
-export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ newChannel }) => {
+export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChannel }) => {
   const avatarDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const coverDialogRef = useRef<ImageCropModalImperativeHandle>(null)
   const [avatarHashPromise, setAvatarHashPromise] = useState<Promise<string> | null>(null)

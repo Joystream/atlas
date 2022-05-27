@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { SvgJoystreamLogoFull } from '@/components/_illustrations'
@@ -15,7 +15,7 @@ const legalRoutes = [
   { path: relativeRoutes.legal.copyright(), element: <CopyrightPolicyView /> },
 ]
 
-export const LegalLayout: React.FC = () => {
+export const LegalLayout: FC = () => {
   return (
     <div>
       <StyledTopbarBase fullLogoNode={<SvgJoystreamLogoFull />} logoLinkUrl={absoluteRoutes.viewer.index()} />

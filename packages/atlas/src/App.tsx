@@ -1,5 +1,4 @@
 import { ApolloProvider } from '@apollo/client'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { AnalyticsManager } from '@/AnalyticsManager'

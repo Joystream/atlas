@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useCommentEdits } from '@/api/hooks'
@@ -15,7 +15,7 @@ type CommentEditHistoryProps = {
   originalComment?: CommentFieldsFragment | null
 }
 
-export const CommentEditHistory: React.FC<CommentEditHistoryProps> = ({ originalComment }) => {
+export const CommentEditHistory: FC<CommentEditHistoryProps> = ({ originalComment }) => {
   const { commentEdits, loading } = useCommentEdits(originalComment?.id)
   const { url: memberAvatarUrl, isLoadingAsset } = useMemberAvatar(originalComment?.author)
 

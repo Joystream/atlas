@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { useNft } from '@/api/hooks'
 import confetti from '@/assets/animations/confetti.json'
@@ -24,7 +24,7 @@ import {
   StyledLottie,
 } from './NftSettlementBottomDrawer.styles'
 
-export const NftSettlementBottomDrawer: React.FC = () => {
+export const NftSettlementBottomDrawer: FC = () => {
   const xsMatch = useMediaMatch('xs')
   const { activeMemberId } = useUser()
   const { currentNftId, closeNftAction, currentAction } = useNftActions()

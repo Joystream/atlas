@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -8,7 +8,7 @@ import { transitions } from '@/styles'
 
 import { CookieEmoticon, StyledAnchor, StyledDialog } from './CookiePopover.styles'
 
-export const CookiePopover: React.FC = () => {
+export const CookiePopover: FC = () => {
   const { cookiesAccepted, setCookiesAccepted } = usePersonalDataStore((state) => ({
     cookiesAccepted: state.cookiesAccepted,
     setCookiesAccepted: state.actions.setCookiesAccepted,

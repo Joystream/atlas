@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
@@ -27,7 +27,7 @@ type MembersProps =
     }
   | { caption: 'Supporters'; members: Member[]; loading?: boolean }
 
-export const Members: React.FC<MembersProps> = ({ caption, members, loading }) => {
+export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
   const avatars =
     members && Array.isArray(members)
       ? members.map((member) => ({ assetUrl: member.assetUrl, ...(member.name ? { tooltipText: member.name } : {}) }))

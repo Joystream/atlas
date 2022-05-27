@@ -1,22 +1,22 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useRef } from 'react'
+import { FC, PropsWithChildren, useRef } from 'react'
 // we use pollyfiled version because "border-box" option seems to be not working on iPhone
 import useResizeObserver from 'use-resize-observer/polyfilled'
 
 import { media, sizes } from '@/styles'
 import { toPx } from '@/utils/styles'
 
-type GridProps = {
+type GridProps = PropsWithChildren<{
   gap?: number | string
   className?: string
   maxColumns?: number | null
   minWidth?: number | string
   repeat?: 'fit' | 'fill'
   onResize?: (sizes: number[]) => void
-}
+}>
 
-export const Grid: React.FC<GridProps> = ({
+export const Grid: FC<GridProps> = ({
   className,
   gap = sizes(6),
   onResize,

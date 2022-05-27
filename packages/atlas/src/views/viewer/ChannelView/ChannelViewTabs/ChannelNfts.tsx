@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { useNftsConnection } from '@/api/hooks'
 import { OwnedNftOrderByInput, OwnedNftWhereInput } from '@/api/queries'
@@ -22,7 +22,7 @@ type ChannelNftsProps = {
   isFiltersApplied?: boolean
 }
 
-export const ChannelNfts: React.FC<ChannelNftsProps> = ({
+export const ChannelNfts: FC<ChannelNftsProps> = ({
   channelId,
   tilesPerPage,
   onResize,

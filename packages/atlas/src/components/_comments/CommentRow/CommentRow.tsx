@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { FC, MouseEvent, PropsWithChildren, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarSize } from '@/components/Avatar'
@@ -6,7 +6,7 @@ import { useMediaMatch } from '@/hooks/useMediaMatch'
 
 import { ContentWrapper, OutlineBox } from './CommentRow.styles'
 
-export type CommentRowProps = {
+export type CommentRowProps = PropsWithChildren<{
   indented?: boolean
   highlighted?: boolean
   isMemberAvatarLoading?: boolean
@@ -15,11 +15,11 @@ export type CommentRowProps = {
   memberUrl?: string
   className?: string
   withoutOutlineBox?: boolean
-  onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void
-  onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void
-}
+  onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void
+  onMouseLeave?: (event: MouseEvent<HTMLDivElement>) => void
+}>
 
-export const CommentRow: React.FC<CommentRowProps> = ({
+export const CommentRow: FC<CommentRowProps> = ({
   indented,
   highlighted,
   children,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Text } from '@/components/Text'
@@ -21,7 +21,7 @@ type ExtensionStepProps = {
   nextStepPath: string
 }
 
-export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) => {
+export const ExtensionStep: FC<ExtensionStepProps> = ({ nextStepPath }) => {
   const navigate = useNavigate()
   const step = useRouterQuery(QUERY_PARAMS.LOGIN)
   const { extensionConnected } = useUser()
@@ -61,7 +61,7 @@ export const ExtensionStep: React.FC<ExtensionStepProps> = ({ nextStepPath }) =>
   )
 }
 
-export const PolkadotExtensionRejected: React.FC = () => (
+export const PolkadotExtensionRejected: FC = () => (
   <PolkadotExtensionRejectedWrapper>
     <StyledPolkadotLogo />
     <StepTitle variant="h500">Allow Polkadot extension access</StepTitle>

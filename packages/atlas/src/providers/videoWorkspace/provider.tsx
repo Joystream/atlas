@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, PropsWithChildren, createContext, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { createId } from '@/utils/createId'
 
@@ -6,7 +6,7 @@ import { ContextValue, VideoWorkspace } from './types'
 
 import { useOverlayManager } from '../overlayManager'
 
-export const VideoWorkspaceContext = React.createContext<ContextValue | undefined>(undefined)
+export const VideoWorkspaceContext = createContext<ContextValue | undefined>(undefined)
 VideoWorkspaceContext.displayName = 'VideoWorkspaceContext'
 
 const generateVideo = () => ({
@@ -16,7 +16,7 @@ const generateVideo = () => ({
   mintNft: false,
 })
 
-export const VideoWorkspaceProvider: React.FC = ({ children }) => {
+export const VideoWorkspaceProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const [editedVideoInfo, setEditedVideoInfo] = useState<VideoWorkspace>(generateVideo())
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false)
   const [cachedIsWorkspaceOpen, setCachedIsWorkspaceOpen] = useState(false)

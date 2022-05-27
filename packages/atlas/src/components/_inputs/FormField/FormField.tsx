@@ -1,4 +1,4 @@
-import React from 'react'
+import { PropsWithChildren, forwardRef, memo } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
@@ -16,7 +16,7 @@ import {
 
 import { Switch, SwitchProps } from '../Switch'
 
-export type FormFieldProps = {
+export type FormFieldProps = PropsWithChildren<{
   title: string
   optional?: boolean
   description?: string | string[]
@@ -24,10 +24,10 @@ export type FormFieldProps = {
   className?: string
   switchProps?: Omit<SwitchProps, 'label'>
   infoTooltip?: TooltipProps
-}
+}>
 
-export const FormField = React.memo(
-  React.forwardRef<HTMLDivElement, React.PropsWithChildren<FormFieldProps>>(
+export const FormField = memo(
+  forwardRef<HTMLDivElement, FormFieldProps>(
     ({ children, title, description, className, optional, dense, switchProps, infoTooltip }, ref) => {
       return (
         <FormFieldWrapper className={className} dense={dense} ref={ref}>

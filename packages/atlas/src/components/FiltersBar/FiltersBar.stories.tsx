@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { createApolloClient } from '@/api'
 import { Button } from '@/components/_buttons/Button'

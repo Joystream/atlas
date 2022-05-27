@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 
 import { AllChannelFieldsFragment, VideoFieldsFragment } from '@/api/queries'
 import { ResultTitle } from '@/components/Searchbar/SearchBox/ResultTitle'
@@ -24,14 +24,7 @@ type ResultProps = {
   selectedItem: null | number
 }
 
-export const Result: React.FC<ResultProps> = ({
-  video,
-  channel,
-  query,
-  selected,
-  handleSelectedItem,
-  selectedItem,
-}) => {
+export const Result: FC<ResultProps> = ({ video, channel, query, selected, handleSelectedItem, selectedItem }) => {
   const title = video ? video.title : channel?.title
   const { url: channelAvatar, isLoadingAsset: channelAvatarLoading } = useAsset(channel?.avatarPhoto)
   const { url: videoThumbnail, isLoadingAsset: videoThumbnailLoading } = useAsset(video?.thumbnailPhoto)

@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import shallow from 'zustand/shallow'
 
@@ -21,7 +21,7 @@ type VideoAssets = AssetUpload & { uploadStatus?: AssetUploadStatus }
 
 const UPLOADED_SNACKBAR_TIMEOUT = 13000
 
-export const UploadsManager: React.FC = () => {
+export const UploadsManager: FC = () => {
   const navigate = useNavigate()
   const { activeChannelId } = useUser()
   const [cachedActiveChannelId, setCachedActiveChannelId] = useState<string | null>(null)

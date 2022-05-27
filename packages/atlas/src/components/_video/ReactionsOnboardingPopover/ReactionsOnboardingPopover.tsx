@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { ReactNode, forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
@@ -13,7 +13,7 @@ type ReactionsOnboardingPopoverProps = {
   onDecline?: () => void
   onConfirm?: () => void
   disabled?: boolean
-  trigger: React.ReactNode
+  trigger: ReactNode
 }
 
 export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, ReactionsOnboardingPopoverProps>(

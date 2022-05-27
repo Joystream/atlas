@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import useResizeObserver from 'use-resize-observer'
 
@@ -15,7 +15,7 @@ import { useUser } from '@/providers/user'
 
 import { StyledActionBar, TextFieldsWrapper, Wrapper } from './EditMembershipView.styles'
 
-export const EditMembershipView: React.FC = () => {
+export const EditMembershipView: FC = () => {
   const navigate = useNavigate()
   const { activeAccountId, activeMembership, activeMembershipLoading, refetchActiveMembership } = useUser()
   const { ref: actionBarRef, height: actionBarBoundsHeight = 0 } = useResizeObserver({ box: 'border-box' })

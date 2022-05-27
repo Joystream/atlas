@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import { ForwardRefRenderFunction, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
@@ -34,7 +34,7 @@ export type ImageCropModalImperativeHandle = {
   open: (file?: File | Blob, cropData?: ImageCropData) => void
 }
 
-const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImperativeHandle, ImageCropModalProps> = (
+const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperativeHandle, ImageCropModalProps> = (
   { imageType, onConfirm, onError },
   ref
 ) => {

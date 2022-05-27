@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
@@ -19,7 +19,7 @@ const TABS: TabItem[] = [
   { name: 'Delete comment' },
 ]
 
-export const PlaygroundReactionsComments: React.FC = () => {
+export const PlaygroundReactionsComments: FC = () => {
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const [videoId, setVideoId] = useState('')
 
@@ -54,7 +54,7 @@ type CommonProps = {
   videoId: string
 }
 
-const ReactToVideo: React.FC<CommonProps> = ({ videoId }) => {
+const ReactToVideo: FC<CommonProps> = ({ videoId }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
@@ -92,7 +92,7 @@ const ReactToVideo: React.FC<CommonProps> = ({ videoId }) => {
     </div>
   )
 }
-const ReactToComment: React.FC<CommonProps> = () => {
+const ReactToComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
@@ -141,7 +141,7 @@ const ReactToComment: React.FC<CommonProps> = () => {
     </div>
   )
 }
-const CreateComment: React.FC<CommonProps> = ({ videoId }) => {
+const CreateComment: FC<CommonProps> = ({ videoId }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
@@ -182,7 +182,7 @@ const CreateComment: React.FC<CommonProps> = ({ videoId }) => {
   )
 }
 
-const EditComment: React.FC<CommonProps> = () => {
+const EditComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
@@ -218,7 +218,7 @@ const EditComment: React.FC<CommonProps> = () => {
   )
 }
 
-const DeleteComment: React.FC<CommonProps> = () => {
+const DeleteComment: FC<CommonProps> = () => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useNft } from '@/api/hooks'
@@ -13,7 +13,7 @@ type NftTileViewerProps = {
   nftId?: string
 }
 
-export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
+export const NftTileViewer: FC<NftTileViewerProps> = ({ nftId }) => {
   const { nftStatus, nft, loading } = useNft(nftId || '')
   const navigate = useNavigate()
   const thumbnail = useAsset(nft?.video.thumbnailPhoto)

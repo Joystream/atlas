@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChannel, SvgActionInformative } from '@/components/_icons'
@@ -23,7 +23,7 @@ export type Membership = {
   avatarUri?: string
 }
 
-export const StudioWelcomeView: React.FC = () => {
+export const StudioWelcomeView: FC = () => {
   const { signIn, activeMemberId, activeAccountId, extensionConnected, activeChannelId } = useUser()
   const headTags = useHeadTags('Studio')
 

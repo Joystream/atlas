@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
@@ -28,7 +28,7 @@ export type ChannelCardProps = {
   channel?: BasicChannelFieldsFragment
 }
 
-export const ChannelCard: React.FC<ChannelCardProps> = ({
+export const ChannelCard: FC<ChannelCardProps> = ({
   className,
   onClick,
   withFollowButton = true,
@@ -42,7 +42,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
 
   const { toggleFollowing, isFollowing } = useHandleFollowChannel(channel?.id, channel?.title)
 
-  const handleFollowButtonClick = (e: React.MouseEvent) => {
+  const handleFollowButtonClick = (e: MouseEvent) => {
     e.preventDefault()
     toggleFollowing()
   }

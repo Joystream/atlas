@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { SvgActionChevronB } from '@/components/_icons'
 import { transitions } from '@/styles'
@@ -10,7 +10,7 @@ type ExpandButtonProps = {
   expanded?: boolean
 } & Omit<ButtonProps, 'icon' | 'variant' | 'children'>
 
-export const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
+export const ExpandButton: FC<ExpandButtonProps> = ({ expanded, ...iconButtonProps }) => {
   return <StyledButton {...iconButtonProps} icon={<SvgActionChevronB />} expanded={expanded} variant="tertiary" />
 }
 

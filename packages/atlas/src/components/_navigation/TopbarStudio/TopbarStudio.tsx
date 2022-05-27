@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
@@ -21,7 +21,7 @@ type StudioTopbarProps = {
   hideChannelInfo?: boolean
 }
 
-export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
+export const TopbarStudio: FC<StudioTopbarProps> = ({ hideChannelInfo }) => {
   const { activeChannelId, activeMembership, setActiveUser } = useUser()
   const mdMatch = useMediaMatch('md')
 
@@ -34,7 +34,7 @@ export const TopbarStudio: React.FC<StudioTopbarProps> = ({ hideChannelInfo }) =
 
   const [isMemberDropdownActive, setIsMemberDropdownActive] = useState(false)
 
-  const handleDrawerToggle: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+  const handleDrawerToggle: (e: MouseEvent<HTMLElement>) => void = (e) => {
     e.stopPropagation()
     setIsMemberDropdownActive(!isMemberDropdownActive)
   }

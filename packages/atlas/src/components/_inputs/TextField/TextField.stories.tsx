@@ -1,6 +1,5 @@
 import { useRef, useState } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionCancel } from '@/components/_icons'

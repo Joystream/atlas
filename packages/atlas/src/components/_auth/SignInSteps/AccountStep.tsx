@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import { Dispatch, FC, FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -36,11 +36,11 @@ import {
 
 type AccountStepProps = {
   nextStepPath: string
-  setSelectedAccountAddress: React.Dispatch<string | undefined>
+  setSelectedAccountAddress: Dispatch<string | undefined>
   selectedAccountAddress?: string
 }
 
-export const AccountStep: React.FC<AccountStepProps> = ({
+export const AccountStep: FC<AccountStepProps> = ({
   nextStepPath,
   setSelectedAccountAddress,
   selectedAccountAddress,
@@ -143,7 +143,7 @@ export type AccountBarProps = {
   selectedValue?: string
 }
 
-export const AccountBar: React.FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
+export const AccountBar: FC<AccountBarProps> = ({ name, id, onSelect, selectedValue }) => {
   return (
     <AccountWrapper isSelected={selectedValue === id}>
       <AccountInfo>

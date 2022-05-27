@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { usePersonalDataStore } from '@/providers/personalData'
@@ -31,7 +31,7 @@ const Template: Story<ReactionStepperProps> = (args) => {
 const InteractableTemplate: Story<ReactionStepperProps> = () => {
   const [likes, setLikes] = useState(6)
   const [dislikes, setDislikes] = useState(9)
-  const [state, setState] = React.useState<ReactionStepperProps['state']>('default')
+  const [state, setState] = useState<ReactionStepperProps['state']>('default')
   const [reactionTriggered, setReactionTriggered] = useState<'like' | 'dislike' | null>(null)
   const setReactionPopoverDismission = usePersonalDataStore((state) => state.actions.setReactionPopoverDismission)
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)

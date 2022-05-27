@@ -1,5 +1,5 @@
 import { formatISO } from 'date-fns'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
@@ -76,7 +76,7 @@ type VideoFormProps = {
   setFormStatus: (data: VideoWorkspaceFormStatus | null) => void
 }
 
-export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFormStatus }) => {
+export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) => {
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { FC, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionClose } from '@/components/_icons'
@@ -18,14 +18,14 @@ export type SnackbarProps = {
   title: string
   description?: string
   actionText?: string
-  actionIcon?: React.ReactNode
-  onActionClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  onMouseEnter?: (e: React.MouseEvent) => void
-  onMouseLeave?: (e: React.MouseEvent) => void
+  actionIcon?: ReactNode
+  onActionClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  onMouseEnter?: (e: MouseEvent) => void
+  onMouseLeave?: (e: MouseEvent) => void
 }
 
-export const Snackbar: React.FC<SnackbarProps> = ({
+export const Snackbar: FC<SnackbarProps> = ({
   icon,
   title,
   description,

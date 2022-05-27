@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
 
 import { Text } from '@/components/Text'
 
@@ -10,13 +10,13 @@ export type TitleAreaProps = {
   min?: number
   max?: number
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   className?: string
   disabled?: boolean
 }
 
-export const TitleArea: React.FC<TitleAreaProps> = ({
+export const TitleArea: FC<TitleAreaProps> = ({
   name,
   value,
   placeholder = 'Enter text here',
@@ -34,7 +34,7 @@ export const TitleArea: React.FC<TitleAreaProps> = ({
     setTouched(true)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault()
     }

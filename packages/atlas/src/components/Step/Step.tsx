@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 
 import { CircularProgress } from '@/components/CircularProgress'
 import { Text } from '@/components/Text'

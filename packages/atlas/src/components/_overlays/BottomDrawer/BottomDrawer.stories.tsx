@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'

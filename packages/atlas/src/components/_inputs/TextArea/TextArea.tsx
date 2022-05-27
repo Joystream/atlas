@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
 
 import { StyledTextArea } from './TextArea.styles'
 
@@ -7,21 +7,21 @@ import { InputBase, InputBaseProps } from '../InputBase'
 export type TextAreaProps = {
   name?: string
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
-  onBlur?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (event: ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   className?: string
   rows?: number
   spellcheck?: boolean
 } & InputBaseProps
 
-const TextAreaComponent: React.ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
+const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaProps> = (
   { onChange, onBlur, name, placeholder, value, rows = 5, disabled, spellcheck = true, ...inputBaseProps },
   ref
 ) => {
   const [charactersCount, setCharactersCount] = useState(0)
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCharactersCount(e.target.value.length)
     onChange?.(e)
   }

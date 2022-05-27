@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { Text } from '@/components/Text'
 import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
@@ -12,7 +12,7 @@ type ListingTypeProps = {
   onSelectType: (type: Listing) => void
 }
 
-export const ListingType: React.FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
+export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
   return (
     <>
       <Header variant="h500">Choose listing type</Header>

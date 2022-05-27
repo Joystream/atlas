@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import React, { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { ASSET_RESPONSE_TIMEOUT } from '@/config/assets'
@@ -14,7 +14,7 @@ import { useDistributionOperators, useOperatorsContext } from './operatorsProvid
 import { useAssetStore } from './store'
 import { OperatorInfo } from './types'
 
-export const AssetsManager: React.FC = () => {
+export const AssetsManager: FC = () => {
   const { tryRefetchDistributionOperators } = useOperatorsContext()
   const { getAllDistributionOperatorsForBag } = useDistributionOperators()
   const pendingAssets = useAssetStore((state) => state.pendingAssets)

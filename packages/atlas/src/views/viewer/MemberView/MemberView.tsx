@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useSearchParams } from 'react-router-dom'
 
@@ -33,7 +33,7 @@ import {
 
 const TABS = ['NFTs owned', 'Activity', 'About'] as const
 
-export const MemberView: React.FC = () => {
+export const MemberView: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentTabName = searchParams.get('tab') as typeof TABS[number] | null
   const [sortBy, setSortBy] = useState<'createdAt_ASC' | 'createdAt_DESC'>('createdAt_DESC')
@@ -90,7 +90,7 @@ export const MemberView: React.FC = () => {
     name: tab,
     pillText: tab === 'NFTs owned' && nfts && nfts.length ? nfts.length : undefined,
   }))
-  const tabContent = React.useMemo(() => {
+  const tabContent = useMemo(() => {
     switch (currentTab) {
       case 'NFTs owned':
         return (

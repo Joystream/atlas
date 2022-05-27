@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -20,7 +20,7 @@ export type NoConnectionIndicatorProps = {
   hasSidebar: boolean
 }
 
-export const NoConnectionIndicator: React.FC<NoConnectionIndicatorProps> = ({
+export const NoConnectionIndicator: FC<NoConnectionIndicatorProps> = ({
   nodeConnectionStatus,
   isConnectedToInternet,
   hasSidebar,

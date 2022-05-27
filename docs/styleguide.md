@@ -114,7 +114,7 @@ type ComponentProps = {
 }
 
 // all components should use named exports
-export const Component: React.FC<ComponentProps> = ({ hidden, otherProp, ...rest }) => {
+export const Component: FC<ComponentProps> = ({ hidden, otherProp, ...rest }) => {
   // hooks first
   const [pressed, setPressed] = useState(false)
   const [count, setCount] = useState(0)

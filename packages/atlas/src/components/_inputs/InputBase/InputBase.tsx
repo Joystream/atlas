@@ -1,10 +1,10 @@
-import React from 'react'
+import { FC, PropsWithChildren } from 'react'
 
-import { HelperText } from '@/components/HelperText/HelperText'
+import { HelperText } from '@/components/HelperText'
 
 import { FormGroup, LabelText } from './InputBase.styles'
 
-export type InputBaseProps = {
+export type InputBaseProps = PropsWithChildren<{
   error?: boolean
   warning?: boolean
   helperText?: string | null
@@ -14,9 +14,9 @@ export type InputBaseProps = {
   isSelect?: boolean
   charactersCount?: number
   maxLength?: number
-}
+}>
 
-export const InputBase: React.FC<InputBaseProps> = ({
+export const InputBase: FC<InputBaseProps> = ({
   children,
   helperText,
   warning,

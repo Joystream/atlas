@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { Text } from '@/components/Text'
 import { oldColors } from '@/styles'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
@@ -11,7 +11,7 @@ import { useTransactionManagerStore } from './store'
 
 const SNACKBAR_ID = 'transaction-snackbar'
 
-export const TransactionManager: React.FC = () => {
+export const TransactionManager: FC = () => {
   const {
     blockActions,
     dialogStep,

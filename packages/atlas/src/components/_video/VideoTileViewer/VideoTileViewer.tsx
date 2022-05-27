@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { FC, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useBasicVideo } from '@/api/hooks'
@@ -20,7 +20,7 @@ type VideoTileViewerProps = {
   direction?: 'vertical' | 'horizontal'
 }
 
-export const VideoTileViewer: React.FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
+export const VideoTileViewer: FC<VideoTileViewerProps> = ({ id, onClick, detailsVariant, direction }) => {
   const { copyToClipboard } = useClipboard()
   const navigate = useNavigate()
   const { video, loading } = useBasicVideo(id ?? '', {

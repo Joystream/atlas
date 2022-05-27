@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Button } from '@/components/_buttons/Button'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 

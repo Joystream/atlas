@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
@@ -82,7 +82,7 @@ type MemberActivityProps = {
 
 const PLACEHOLDERS_COUNT = 8
 
-export const MemberActivity: React.FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
+export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'createdAt_DESC' }) => {
   const { activities, loading, activitiesTotalCounts } = useActivities(memberId, sort)
   const navigate = useNavigate()
   const placeholderItems = Array.from({ length: PLACEHOLDERS_COUNT }, () => ({ id: undefined }))
@@ -165,7 +165,7 @@ type ActivityItemWithResolvedAssetProps = {
   thumbnailPhoto?: StorageDataObjectFieldsFragment | null
 } & Omit<ActivityItemProps, 'thumnailUri'>
 
-export const ActivityItemWithResolvedAsset: React.FC<ActivityItemWithResolvedAssetProps> = ({
+export const ActivityItemWithResolvedAsset: FC<ActivityItemWithResolvedAssetProps> = ({
   thumbnailPhoto,
   ...restProps
 }) => {

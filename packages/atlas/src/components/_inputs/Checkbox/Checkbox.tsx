@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { ChangeEvent, DetailedHTMLProps, FocusEvent, InputHTMLAttributes, forwardRef, useState } from 'react'
 
 import { SvgActionMinus } from '@/components/_icons'
 
@@ -6,7 +6,7 @@ import { Checkmark, Container, InnerContainer, Input, StyledGlyphCheck } from '.
 
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 
-type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+type HTMLCheckboxProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
   name?: string
   value: boolean
@@ -14,12 +14,12 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   indeterminate?: boolean
   error?: boolean
   className?: string
-  onChange?: (value: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (value: boolean, event: ChangeEvent<HTMLInputElement>) => void
   label?: string
   helperText?: string
 }
 
-export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       name,
@@ -41,12 +41,12 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const isSelected = !!value
     const [isFocused, setIsFocused] = useState(false)
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
         onChange(!value, e)
       }
     }
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
       if (!disabled) {
         setIsFocused(true)
         if (onFocus) {
@@ -54,7 +54,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         }
       }
     }
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
       if (!disabled) {
         setIsFocused(false)
         if (onBlur) {

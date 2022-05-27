@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import { VideoReaction } from '@/joystream-lib'
 
@@ -14,7 +14,7 @@ export type ReactionStepperProps = {
   onReact: (reaction: VideoReaction) => void
 }
 
-export const ReactionStepper: React.FC<ReactionStepperProps> = ({
+export const ReactionStepper: FC<ReactionStepperProps> = ({
   likes = 0,
   dislikes = 0,
   state,

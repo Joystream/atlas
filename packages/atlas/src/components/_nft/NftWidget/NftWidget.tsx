@@ -1,5 +1,5 @@
 import { differenceInSeconds } from 'date-fns'
-import React from 'react'
+import { FC } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import { AllBidFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
@@ -91,7 +91,7 @@ export type NftWidgetProps = {
 
 const SMALL_VARIANT_MAXIMUM_SIZE = 416
 
-export const NftWidget: React.FC<NftWidgetProps> = ({
+export const NftWidget: FC<NftWidgetProps> = ({
   ownerHandle,
   isOwner,
   nftStatus,

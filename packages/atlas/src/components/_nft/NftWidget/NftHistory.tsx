@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
@@ -31,7 +31,7 @@ import {
 import { OwnerHandle, Size } from './NftWidget.styles'
 
 type NftHistoryProps = { size: Size; width: number; historyItems: NftHistoryEntry[] }
-export const NftHistory: React.FC<NftHistoryProps> = ({ size, width, historyItems }) => {
+export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) => {
   const [isOpen, toggleIsOpen] = useToggle()
 
   return (
@@ -64,7 +64,7 @@ export type NftHistoryEntry = {
 type HistoryItemProps = {
   size: Size
 } & NftHistoryEntry
-export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
+export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmount, text }) => {
   const navigate = useNavigate()
   const { url, isLoadingAsset } = useMemberAvatar(member)
   const { convertToUSD } = useTokenPrice()

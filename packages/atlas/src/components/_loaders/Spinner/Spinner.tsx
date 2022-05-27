@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { SpinnerSize, SpinnerWrapper } from './Spinner.styles'
 
@@ -7,6 +7,6 @@ export type SpinnerProps = {
   className?: string
 }
 
-export const Spinner: React.FC<SpinnerProps> = ({ className, size = 'medium' }) => {
+export const Spinner: FC<SpinnerProps> = ({ className, size = 'medium' }) => {
   return <SpinnerWrapper className={className} size={size} />
 }

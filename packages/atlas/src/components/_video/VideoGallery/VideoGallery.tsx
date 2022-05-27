@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 import { VideoFieldsFragment } from '@/api/queries'
 import { Gallery } from '@/components/Gallery'
@@ -32,7 +32,7 @@ type VideoGalleryProps = {
 
 const PLACEHOLDERS_COUNT = 12
 
-export const VideoGallery: React.FC<VideoGalleryProps> = ({
+export const VideoGallery: FC<VideoGalleryProps> = ({
   title,
   videos = [],
   loading,

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'

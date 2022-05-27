@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent, SetStateAction, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { Pill } from '@/components/Pill'
@@ -32,11 +32,11 @@ type SetUpProps = {
   maxEndDate: Date
   selectedType: Listing
   activeInputs: string[]
-  setActiveInputs: React.Dispatch<React.SetStateAction<string[]>>
+  setActiveInputs: Dispatch<SetStateAction<string[]>>
   handleGoForward: () => void
 }
 
-export const SetUp: React.FC<SetUpProps> = ({
+export const SetUp: FC<SetUpProps> = ({
   selectedType,
   activeInputs,
   setActiveInputs,
@@ -86,7 +86,7 @@ export const SetUp: React.FC<SetUpProps> = ({
     setValue('auctionDurationBlocks', numberOfBlocks || undefined)
   }, [numberOfBlocks, setValue])
 
-  const toggleActiveInput = (event?: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleActiveInput = (event?: ChangeEvent<HTMLInputElement>) => {
     if (!event) {
       return
     }
@@ -135,12 +135,12 @@ export const SetUp: React.FC<SetUpProps> = ({
     },
   }))
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     handleGoForward()
   }
 
-  const handleNumberInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleNumberInputBlur = (event: FocusEvent<HTMLInputElement>) => {
     const { target } = event
     if (Number(target.value) % 1 !== 0) {
       setValue(target.name as 'buyNowPrice' | 'startingPrice', Math.floor(Number(event.target.value)))

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import {
@@ -41,7 +41,7 @@ type SidenavStudioProps = {
   className?: string
 }
 
-export const SidenavStudio: React.FC<SidenavStudioProps> = ({ className }) => {
+export const SidenavStudio: FC<SidenavStudioProps> = ({ className }) => {
   const [expanded, setExpanded] = useState(false)
   const { activeChannelId } = useUser()
   const unseenDrafts = useDraftStore(chanelUnseenDraftsSelector(activeChannelId || ''))

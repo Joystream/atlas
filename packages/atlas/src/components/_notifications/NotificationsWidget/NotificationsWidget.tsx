@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -14,7 +14,7 @@ import { NotificationTile } from '../NotificationTile'
 
 type NotificationsWidgetProps = Omit<PopoverProps, 'content' | 'instanceRef'>
 
-export const NotificationsWidget: React.FC<NotificationsWidgetProps> = ({ ...rest }) => {
+export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) => {
   const popoverRef = useRef<PopoverImperativeHandle>()
   const { notifications, markNotificationsAsRead, setLastSeenNotificationBlock } = useNotifications()
   const firstNotification = notifications[0]

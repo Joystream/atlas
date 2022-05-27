@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.styles'
 
@@ -20,7 +20,7 @@ export type HelperTextProps = {
   className?: string
 }
 
-export const HelperText: React.FC<HelperTextProps> = ({
+export const HelperText: FC<HelperTextProps> = ({
   maxLength,
   warning,
   error,

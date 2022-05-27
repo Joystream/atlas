@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { format, roundToNearestMinutes, setMinutes } from 'date-fns'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -39,7 +39,7 @@ export type AuctionDatePickerProps = {
   onChange: (value: AuctionDatePickerValue) => void
 } & Omit<SelectProps<AuctionDatePickerValue>, 'onChange'>
 
-export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
+export const AuctionDatePicker: FC<AuctionDatePickerProps> = ({
   items,
   value,
   onChange,
@@ -52,7 +52,7 @@ export const AuctionDatePicker: React.FC<AuctionDatePickerProps> = ({
   const popOverRef = useRef<PopoverImperativeHandle>(null)
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [open, setOpen] = useState(false)
-  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = React.useMemo(
+  const pickDateItem: SelectItem<AuctionDatePickerValueWithPickDate> = useMemo(
     () => ({
       value: { type: 'pick-date' },
       name: 'Pick specific date',

@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import { FC } from 'react'
 
 type NoActorNotificationAvatarProps = {
   size: 'regular' | 'small'
 }
 
-export const NoActorNotificationAvatar: React.FC<NoActorNotificationAvatarProps> = ({ size }) => {
+export const NoActorNotificationAvatar: FC<NoActorNotificationAvatarProps> = ({ size }) => {
   return (
     <div>
       {/* this wrapper div is used so that the ListItem doesn't override the SVG's fill */}

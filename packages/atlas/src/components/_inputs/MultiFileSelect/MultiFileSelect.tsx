@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FileRejection } from 'react-dropzone'
 import { CSSTransition } from 'react-transition-group'
 import useResizeObserver from 'use-resize-observer'
@@ -62,7 +62,7 @@ export type MultiFileSelectProps = {
 const THUMBNAIL_SELECT_TITLE = 'Select thumbnail image'
 const VIDEO_SELECT_TITLE = 'Select video file'
 
-export const MultiFileSelect: React.FC<MultiFileSelectProps> = React.memo(
+export const MultiFileSelect: FC<MultiFileSelectProps> = memo(
   ({ onVideoChange, onThumbnailChange, files, maxImageSize, maxVideoSize, editMode = false, disabled, className }) => {
     const dialogRef = useRef<ImageCropModalImperativeHandle>(null)
     const [step, setStep] = useState<FileType>('video')

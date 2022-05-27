@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -30,7 +30,7 @@ export type TransactionModalProps = {
   errorCode?: ErrorCode | null
 }
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
+export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, className, errorCode }) => {
   const [polkadotLogoVisible, setPolkadotLogoVisible] = useState(false)
   const [initialStatus, setInitialStatus] = useState<number | null>(null)
   const nonUploadTransaction = initialStatus === ExtrinsicStatus.Unsigned

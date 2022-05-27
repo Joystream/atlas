@@ -1,5 +1,5 @@
 import { round } from 'lodash-es'
-import React, { ReactNode, useState } from 'react'
+import { FC, ReactNode, SyntheticEvent, useState } from 'react'
 
 import { VideoHeroHeader } from './VideoHereoHeader'
 import { VideoHeroSlider } from './VideoHeroSlider'
@@ -15,7 +15,7 @@ export type VideoCategoryHeroProps = {
   videos?: (VideoHeroFeaturedVideo | null)[]
 }
 
-export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, videos }) => {
+export const VideoCategoryHero: FC<VideoCategoryHeroProps> = ({ header, videos }) => {
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [videoProgress, setVideoProgress] = useState(0)
 
@@ -32,7 +32,7 @@ export const VideoCategoryHero: React.FC<VideoCategoryHeroProps> = ({ header, vi
     setActiveVideoIdx(idx)
   }
 
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+  const handleTimeUpdate = (e: SyntheticEvent<HTMLVideoElement, Event>) => {
     const currentTime = e.currentTarget.currentTime
     const duration = e.currentTarget.duration
     if (duration && currentTime) {

@@ -1,5 +1,5 @@
 import Tippy from '@tippyjs/react/headless'
-import React, { useState } from 'react'
+import { FC, useState } from 'react'
 
 import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Button } from '@/components/_buttons/Button'
@@ -33,7 +33,7 @@ const getTranslateNumber = (idx: number) => {
   }
 }
 
-export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClick, disabled }) => {
+export const ReactionPopover: FC<ReactionPopoverProps> = ({ onReactionClick, disabled }) => {
   const [isOpen, setIsOpen] = useState(false)
   const smMatch = useMediaMatch('sm')
   const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import { FC, useCallback, useRef } from 'react'
 import { DropzoneOptions, useDropzone } from 'react-dropzone'
 import { useNavigate } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -45,7 +45,7 @@ type UploadStatusProps = {
   size?: UploadStatusGroupSize
 }
 
-export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
+export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, size }) => {
   const navigate = useNavigate()
   const startFileUpload = useStartFileUpload()
   const uploadStatus = useUploadsStore((state) => state.uploadsStatus[asset.id])

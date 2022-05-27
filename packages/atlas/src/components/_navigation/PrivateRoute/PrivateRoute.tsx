@@ -1,13 +1,13 @@
-import React from 'react'
+import { FC, ReactElement } from 'react'
 import { Navigate } from 'react-router-dom'
 
 type PrivateRouteProps = {
-  element: React.ReactElement
+  element: ReactElement
   redirectTo?: string
   isAuth?: boolean
 }
 
-export const PrivateRoute: React.FC<PrivateRouteProps> = ({ redirectTo, isAuth, element }) => {
+export const PrivateRoute: FC<PrivateRouteProps> = ({ redirectTo, isAuth, element }) => {
   if (!isAuth && redirectTo) {
     return <Navigate to={redirectTo} replace />
   }

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { AllChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
@@ -24,7 +24,7 @@ type ChannelAboutProps = {
   channel?: AllChannelFieldsFragment | null
 }
 
-export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
+export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
   const videoCount = channel?.activeVideosCounter
   const { url: memberAvatarUrl, isLoadingAsset: memberAvatarLoading } = useMemberAvatar(channel?.ownerMember)
   return (

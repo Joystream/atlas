@@ -1,5 +1,5 @@
 import { formatDistanceToNowStrict } from 'date-fns'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'

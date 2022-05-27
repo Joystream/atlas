@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react'
+import { FC, FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useNft } from '@/api/hooks'
@@ -23,7 +23,7 @@ const TABS: TabItem[] = [
   { name: 'Settle english auction' },
 ]
 
-export const PlaygroundNftExtrinsics: React.FC = () => {
+export const PlaygroundNftExtrinsics: FC = () => {
   const [videoId, setVideoId] = useState('')
   const [selectedTabIdx, setSelectedTabIdx] = useState(0)
   const { nft, nftStatus, refetch } = useNft(videoId)
@@ -92,7 +92,7 @@ type FormProps = {
 type IssueInputs = {
   royalties?: string
 }
-const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const Issue: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -135,7 +135,7 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 type BuyNowInputs = {
   buyNowPrice: number
 }
-const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const StartBuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -185,7 +185,7 @@ type AuctionInputs = {
   auctionDurationBlocks?: string
   whitelistedMembers?: string
 }
-const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const StartAuction: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -286,7 +286,7 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   )
 }
 
-const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const BuyNow: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -327,7 +327,7 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 type MakeBidInputs = {
   bid: number
 }
-const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
+const MakeBid: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const {
     register,
     handleSubmit: createSubmitHandler,
@@ -361,7 +361,7 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
   )
 }
 
-const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
+const CancelSale: FC<FormProps> = ({ videoId, onSuccess, onError, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
@@ -387,7 +387,7 @@ const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) 
   )
 }
 
-const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
+const CancelBid: FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useAuthorizedUser()
@@ -413,7 +413,7 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
   )
 }
 
-const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
+const SettleAuction: FC<FormProps> = ({ videoId, onSuccess, type }) => {
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
 

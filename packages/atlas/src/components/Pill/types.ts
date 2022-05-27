@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 export type Sizes = 'small' | 'medium' | 'large'
 export type Variants = 'default' | 'overlay' | 'danger'

@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC, MouseEvent } from 'react'
 
 import { DesaturedText, MembershipHandle, OwnerPillWrapper } from './OwnerPill.styles'
 
@@ -11,10 +11,10 @@ export type OwnerPillProps = {
     loading?: boolean
   }
   title?: string
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: MouseEvent) => void
 }
 
-export const OwnerPill: React.FC<OwnerPillProps> = ({ handle, avatar, onClick, title }) => {
+export const OwnerPill: FC<OwnerPillProps> = ({ handle, avatar, onClick, title }) => {
   return (
     <OwnerPillWrapper onClick={onClick} title={title}>
       <Avatar size="bid" {...avatar} />

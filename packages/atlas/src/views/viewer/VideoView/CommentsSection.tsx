@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments } from '@/api/hooks'
@@ -29,7 +29,7 @@ type CommentsSectionProps = {
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
 
-export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
+export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
   const mdMatch = useMediaMatch('md')
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
   const { id: videoId } = useParams()

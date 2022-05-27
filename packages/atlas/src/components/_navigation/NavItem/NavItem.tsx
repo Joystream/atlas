@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { FC, MouseEvent, PropsWithChildren, ReactNode } from 'react'
 import { useMatch } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 
@@ -16,17 +16,17 @@ export type NavItemType = {
   badgeNumber?: number
 } & NavSubitem
 
-export type NavItemProps = {
+export type NavItemProps = PropsWithChildren<{
   subitems?: NavSubitem[]
   expanded: boolean
   to: string
   itemName?: string
   badgeNumber?: number
-  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  onClick: (e: MouseEvent<HTMLAnchorElement>) => void
   isSecondary: boolean
-}
+}>
 
-export const NavItem: React.FC<NavItemProps> = ({
+export const NavItem: FC<NavItemProps> = ({
   expanded = false,
   subitems,
   children,

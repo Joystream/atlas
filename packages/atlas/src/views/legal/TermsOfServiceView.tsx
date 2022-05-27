@@ -1,9 +1,9 @@
-import React from 'react'
+import { FC } from 'react'
 
 import { TermsOfService } from '@/components/TermsOfService'
 import { useHeadTags } from '@/hooks/useHeadTags'
 
-export const TermsOfServiceView: React.FC = () => {
+export const TermsOfServiceView: FC = () => {
   const headTags = useHeadTags('Terms of Service')
   return (
     <>

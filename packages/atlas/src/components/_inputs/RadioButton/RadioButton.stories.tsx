@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/react'
-import React, { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 
 import { RadioButton } from './RadioButton'
 
@@ -16,7 +16,7 @@ export default {
 
 const Template: Story = (args) => {
   const [selected, setSelected] = useState<string | number>('1')
-  const handleClick: (e: React.MouseEvent<HTMLElement>) => void = (e) => {
+  const handleClick: (e: MouseEvent<HTMLElement>) => void = (e) => {
     const element = e.currentTarget as HTMLInputElement
     setSelected(element.value)
   }

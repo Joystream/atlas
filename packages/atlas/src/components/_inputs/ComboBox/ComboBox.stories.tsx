@@ -1,5 +1,4 @@
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
 
 import { SvgActionCancel } from '@/components/_icons'
 
