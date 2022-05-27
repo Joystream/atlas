@@ -54,6 +54,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }),
     [activeMemberId, sortCommentsBy, videoId]
   )
+  const commentsSectionHeaderRef = useRef<HTMLDivElement>(null)
+  const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
   const { comments, loading, fetchMore, pageInfo, networkStatus, totalCount } = useCommentSectionComments(
     { ...queryVariables, first: INITIAL_COMMENTS },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
@@ -78,7 +80,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const isFetchingMore = networkStatus === NetworkStatus.fetchMore
 
   const scrollToCommentInput = (smooth?: boolean) => {
-    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+    commentsSectionHeaderRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
   }
 
   const handleSorting = (value?: CommentOrderByInput[] | null) => {
@@ -90,9 +92,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   // increase number of comments when user scrolls to the end of page
   useEffect(() => {
     const scrollHandler = debounce(() => {
-      const scrolledToBottom =
-        document.documentElement.offsetHeight + document.documentElement.scrollTop >=
-        document.documentElement.scrollHeight
+      if (!commentSectionWrapperRef.current) return
+      const scrolledToBottom = document.documentElement.scrollTop >= commentSectionWrapperRef.current.scrollHeight
       if (scrolledToBottom && pageInfo?.hasNextPage && !commentsLoading) {
         setNumberOfComments((prevState) => prevState + INITIAL_COMMENTS)
       }
@@ -197,8 +198,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     )
   }
   return (
-    <CommentsSectionWrapper>
-      <CommentsSectionHeader ref={commentWrapperRef}>
+    <CommentsSectionWrapper ref={commentSectionWrapperRef}>
+      <CommentsSectionHeader ref={commentsSectionHeaderRef}>
         <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
         <Select
           size="small"
