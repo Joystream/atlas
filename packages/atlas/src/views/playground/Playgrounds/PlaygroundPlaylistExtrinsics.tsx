@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { usePlaylist } from '@/api/hooks/playlists'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
+import { FormField } from '@/components/_inputs/FormField'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextField } from '@/components/_inputs/TextField'
 import { PlaylistExtrinsicResult, PlaylistInputMetadata } from '@/joystream-lib'
@@ -102,15 +103,21 @@ const CreatePlaylist: React.FC<CommonProps> = ({ onSuccess }) => {
 
   return (
     <form onSubmit={createSubmitHandler(handleSubmit)}>
-      <TextField {...register('title')} label="Title" />
-      <TextField {...register('description')} label="Description" />
+      <FormField label="Title">
+        <TextField {...register('title')} />
+      </FormField>
+      <FormField label="Description">
+        <TextField {...register('description')} />
+      </FormField>
       <Controller
         name="isPublic"
         control={control}
         defaultValue={true}
         render={({ field: { value, onChange } }) => <Switch label="Public" value={value} onChange={onChange} />}
       />
-      <TextField {...register('videosIds')} label="Videos IDs (comma separated)" />
+      <FormField label="Videos IDs (comma separated)">
+        <TextField {...register('videosIds')} />
+      </FormField>
       <Button type="submit">Create</Button>
     </form>
   )
@@ -171,15 +178,21 @@ const EditPlaylist: React.FC<CommonProps> = ({ playlistId, onSuccess }) => {
 
   return (
     <form onSubmit={createSubmitHandler(handleSubmit)}>
-      <TextField {...register('title')} label="Title" />
-      <TextField {...register('description')} label="Description" />
+      <FormField label="Title">
+        <TextField {...register('title')} />
+      </FormField>
+      <FormField label="Description">
+        <TextField {...register('description')} />
+      </FormField>
       <Controller
         name="isPublic"
         control={control}
         defaultValue={true}
         render={({ field: { value, onChange } }) => <Switch label="Public" value={value} onChange={onChange} />}
       />
-      <TextField {...register('videosIds')} label="Videos IDs (comma separated)" />
+      <FormField label="Videos IDs (comma separated)">
+        <TextField {...register('videosIds')} />
+      </FormField>
       <Button type="submit">Edit</Button>
     </form>
   )
