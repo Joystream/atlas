@@ -15,8 +15,8 @@ query GetComments(
   }
 }
 
-query GetComment($commentId: ID!, $memberId: ID) {
-  commentReactions(where: { member: { id_eq: $memberId }, comment: { id_eq: $commentId } }, limit: 1000) {
+query GetComment($commentId: ID!, $memberId: ID, $videoId: ID) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
     reactionId
     commentId
   }

@@ -69,6 +69,7 @@ export type GetCommentsQuery = {
 export type GetCommentQueryVariables = Types.Exact<{
   commentId: Types.Scalars['ID']
   memberId?: Types.InputMaybe<Types.Scalars['ID']>
+  videoId?: Types.InputMaybe<Types.Scalars['ID']>
 }>
 
 export type GetCommentQuery = {
@@ -386,8 +387,8 @@ export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>
 export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>
 export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>
 export const GetCommentDocument = gql`
-  query GetComment($commentId: ID!, $memberId: ID) {
-    commentReactions(where: { member: { id_eq: $memberId }, comment: { id_eq: $commentId } }, limit: 1000) {
+  query GetComment($commentId: ID!, $memberId: ID, $videoId: ID) {
+    commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
       reactionId
       commentId
     }
@@ -412,6 +413,7 @@ export const GetCommentDocument = gql`
  *   variables: {
  *      commentId: // value for 'commentId'
  *      memberId: // value for 'memberId'
+ *      videoId: // value for 'videoId'
  *   },
  * });
  */

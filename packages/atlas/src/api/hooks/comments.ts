@@ -23,7 +23,7 @@ import {
 import { createLookup } from '@/utils/data'
 
 export const useComment = (
-  variables: { commentId: string; memberId?: string },
+  variables: GetCommentQueryVariables,
   opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
 ) => {
   const { data, ...rest } = useGetCommentQuery({ ...opts, variables })
@@ -31,12 +31,15 @@ export const useComment = (
   const { comments: replies } = useComments({
     where: { parentComment: { id_eq: variables.commentId } },
     orderBy: CommentOrderByInput.CreatedAtAsc,
+    ...opts,
   })
+
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
   const comment = data?.commentByUniqueInput
     ? {
         ...data.commentByUniqueInput,
-        userReactions: data.commentReactions,
+        userReactions: userCommentReactionsLookup?.[variables.commentId],
         replies,
       }
     : undefined
