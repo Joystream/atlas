@@ -32,6 +32,8 @@ export const StyledTextArea = styled(TextareaAutosize, { shouldForwardProp: isPr
   letter-spacing: ${cVar('typographyDesktopH500LetterSpacing')};
   text-transform: ${cVar('typographyDesktopH500TextTransform')};
   transition: opacity ${cVar('animationTransitionFast')};
+  padding: 0;
+
   ${media.sm} {
     font: ${cVar('typographyDesktopH700')};
     letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};

@@ -8,6 +8,7 @@ import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
@@ -82,7 +83,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
+  const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const titleInputRef = useRef<HTMLTextAreaElement>(null)
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -426,6 +429,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           })}
           render={({ field: { value, onChange } }) => (
             <StyledTitleArea
+              ref={titleInputRef}
               onChange={onChange}
               value={value}
               min={MIN_TITLE_LENGTH}
@@ -433,9 +437,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               placeholder="Enter video title"
               disabled={videoFieldsLocked}
               error={!!errors.title}
+              onFocus={() => setTitleTooltipVisible(false)}
+              onBlur={() => setTitleTooltipVisible(true)}
             />
           )}
         />
+        {titleTooltipVisible && (
+          <Tooltip text="Click to edit" arrowDisabled placement="top-start" reference={titleInputRef} />
+        )}
         {!videoFieldsLocked && videoEditFields}
         <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
