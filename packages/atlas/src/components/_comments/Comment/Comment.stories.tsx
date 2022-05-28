@@ -2,11 +2,11 @@ import { Meta, Story } from '@storybook/react'
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
-import { Comment, CommentProps } from './Comment'
+import { InternalComment, InternalCommentProps } from './InternalComment'
 
 export default {
   title: 'comments/Comment',
-  component: Comment,
+  component: InternalComment,
   args: {
     memberAvatarUrl: 'https://placedog.net/100/100?random=2',
     memberHandle: 'johndoe',
@@ -35,9 +35,9 @@ export default {
     onReactionClick: { table: { disable: true } },
     reactions: { table: { disable: true } },
   },
-} as Meta<CommentProps>
+} as Meta<InternalCommentProps>
 
-const Template: Story<CommentProps> = (args) => <Comment {...args} />
+const Template: Story<InternalCommentProps> = (args) => <InternalComment {...args} />
 
 export const Default = Template.bind({})
 export const NoReactions = Template.bind({})

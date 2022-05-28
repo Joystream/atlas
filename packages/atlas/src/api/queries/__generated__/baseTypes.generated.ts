@@ -7809,140 +7809,6 @@ export type CommentReactionsCountByReactionIdWhereUniqueInput = {
   id: Scalars['ID']
 }
 
-export type CommentSectionPreferenceEvent = BaseGraphQlObject &
-  Event & {
-    __typename?: 'CommentSectionPreferenceEvent'
-    /** Is comment section enabled (true if enabled) */
-    commentSectionStatus: Scalars['Boolean']
-    createdAt: Scalars['DateTime']
-    createdById: Scalars['String']
-    deletedAt?: Maybe<Scalars['DateTime']>
-    deletedById?: Maybe<Scalars['String']>
-    id: Scalars['ID']
-    /** Blocknumber of the block in which the event was emitted. */
-    inBlock: Scalars['Int']
-    /** Hash of the extrinsic which caused the event to be emitted */
-    inExtrinsic?: Maybe<Scalars['String']>
-    /** Index of event in block from which it was emitted. */
-    indexInBlock: Scalars['Int']
-    /** Network the block was produced in */
-    network: Network
-    /** Filtering options for interface implementers */
-    type?: Maybe<EventTypeOptions>
-    updatedAt?: Maybe<Scalars['DateTime']>
-    updatedById?: Maybe<Scalars['String']>
-    version: Scalars['Int']
-    video: Video
-    videoId: Scalars['String']
-  }
-
-export type CommentSectionPreferenceEventConnection = {
-  __typename?: 'CommentSectionPreferenceEventConnection'
-  edges: Array<CommentSectionPreferenceEventEdge>
-  pageInfo: PageInfo
-  totalCount: Scalars['Int']
-}
-
-export type CommentSectionPreferenceEventCreateInput = {
-  commentSectionStatus: Scalars['Boolean']
-  inBlock: Scalars['Float']
-  inExtrinsic?: InputMaybe<Scalars['String']>
-  indexInBlock: Scalars['Float']
-  network: Network
-  video: Scalars['ID']
-}
-
-export type CommentSectionPreferenceEventEdge = {
-  __typename?: 'CommentSectionPreferenceEventEdge'
-  cursor: Scalars['String']
-  node: CommentSectionPreferenceEvent
-}
-
-export enum CommentSectionPreferenceEventOrderByInput {
-  CommentSectionStatusAsc = 'commentSectionStatus_ASC',
-  CommentSectionStatusDesc = 'commentSectionStatus_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  DeletedAtAsc = 'deletedAt_ASC',
-  DeletedAtDesc = 'deletedAt_DESC',
-  InBlockAsc = 'inBlock_ASC',
-  InBlockDesc = 'inBlock_DESC',
-  InExtrinsicAsc = 'inExtrinsic_ASC',
-  InExtrinsicDesc = 'inExtrinsic_DESC',
-  IndexInBlockAsc = 'indexInBlock_ASC',
-  IndexInBlockDesc = 'indexInBlock_DESC',
-  NetworkAsc = 'network_ASC',
-  NetworkDesc = 'network_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-  VideoAsc = 'video_ASC',
-  VideoDesc = 'video_DESC',
-}
-
-export type CommentSectionPreferenceEventUpdateInput = {
-  commentSectionStatus?: InputMaybe<Scalars['Boolean']>
-  inBlock?: InputMaybe<Scalars['Float']>
-  inExtrinsic?: InputMaybe<Scalars['String']>
-  indexInBlock?: InputMaybe<Scalars['Float']>
-  network?: InputMaybe<Network>
-  video?: InputMaybe<Scalars['ID']>
-}
-
-export type CommentSectionPreferenceEventWhereInput = {
-  AND?: InputMaybe<Array<CommentSectionPreferenceEventWhereInput>>
-  OR?: InputMaybe<Array<CommentSectionPreferenceEventWhereInput>>
-  commentSectionStatus_eq?: InputMaybe<Scalars['Boolean']>
-  commentSectionStatus_in?: InputMaybe<Array<Scalars['Boolean']>>
-  createdAt_eq?: InputMaybe<Scalars['DateTime']>
-  createdAt_gt?: InputMaybe<Scalars['DateTime']>
-  createdAt_gte?: InputMaybe<Scalars['DateTime']>
-  createdAt_lt?: InputMaybe<Scalars['DateTime']>
-  createdAt_lte?: InputMaybe<Scalars['DateTime']>
-  createdById_eq?: InputMaybe<Scalars['ID']>
-  createdById_in?: InputMaybe<Array<Scalars['ID']>>
-  deletedAt_all?: InputMaybe<Scalars['Boolean']>
-  deletedAt_eq?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_gte?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lt?: InputMaybe<Scalars['DateTime']>
-  deletedAt_lte?: InputMaybe<Scalars['DateTime']>
-  deletedById_eq?: InputMaybe<Scalars['ID']>
-  deletedById_in?: InputMaybe<Array<Scalars['ID']>>
-  id_eq?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  inBlock_eq?: InputMaybe<Scalars['Int']>
-  inBlock_gt?: InputMaybe<Scalars['Int']>
-  inBlock_gte?: InputMaybe<Scalars['Int']>
-  inBlock_in?: InputMaybe<Array<Scalars['Int']>>
-  inBlock_lt?: InputMaybe<Scalars['Int']>
-  inBlock_lte?: InputMaybe<Scalars['Int']>
-  inExtrinsic_contains?: InputMaybe<Scalars['String']>
-  inExtrinsic_endsWith?: InputMaybe<Scalars['String']>
-  inExtrinsic_eq?: InputMaybe<Scalars['String']>
-  inExtrinsic_in?: InputMaybe<Array<Scalars['String']>>
-  inExtrinsic_startsWith?: InputMaybe<Scalars['String']>
-  indexInBlock_eq?: InputMaybe<Scalars['Int']>
-  indexInBlock_gt?: InputMaybe<Scalars['Int']>
-  indexInBlock_gte?: InputMaybe<Scalars['Int']>
-  indexInBlock_in?: InputMaybe<Array<Scalars['Int']>>
-  indexInBlock_lt?: InputMaybe<Scalars['Int']>
-  indexInBlock_lte?: InputMaybe<Scalars['Int']>
-  network_eq?: InputMaybe<Network>
-  network_in?: InputMaybe<Array<Network>>
-  updatedAt_eq?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_gte?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lt?: InputMaybe<Scalars['DateTime']>
-  updatedAt_lte?: InputMaybe<Scalars['DateTime']>
-  updatedById_eq?: InputMaybe<Scalars['ID']>
-  updatedById_in?: InputMaybe<Array<Scalars['ID']>>
-  video?: InputMaybe<VideoWhereInput>
-}
-
-export type CommentSectionPreferenceEventWhereUniqueInput = {
-  id: Scalars['ID']
-}
-
 export enum CommentStatus {
   Deleted = 'DELETED',
   Moderated = 'MODERATED',
@@ -10326,7 +10192,6 @@ export enum EventTypeOptions {
   CommentModeratedEvent = 'CommentModeratedEvent',
   CommentPinnedEvent = 'CommentPinnedEvent',
   CommentReactedEvent = 'CommentReactedEvent',
-  CommentSectionPreferenceEvent = 'CommentSectionPreferenceEvent',
   CommentTextUpdatedEvent = 'CommentTextUpdatedEvent',
   CouncilorRewardUpdatedEvent = 'CouncilorRewardUpdatedEvent',
   EnglishAuctionSettledEvent = 'EnglishAuctionSettledEvent',
@@ -20735,9 +20600,6 @@ export type Query = {
   commentReactionsCountByReactionIdByUniqueInput?: Maybe<CommentReactionsCountByReactionId>
   commentReactionsCountByReactionIds: Array<CommentReactionsCountByReactionId>
   commentReactionsCountByReactionIdsConnection: CommentReactionsCountByReactionIdConnection
-  commentSectionPreferenceEventByUniqueInput?: Maybe<CommentSectionPreferenceEvent>
-  commentSectionPreferenceEvents: Array<CommentSectionPreferenceEvent>
-  commentSectionPreferenceEventsConnection: CommentSectionPreferenceEventConnection
   commentText: Array<CommentTextFtsOutput>
   commentTextUpdatedEventByUniqueInput?: Maybe<CommentTextUpdatedEvent>
   commentTextUpdatedEvents: Array<CommentTextUpdatedEvent>
@@ -22286,26 +22148,6 @@ export type QueryCommentReactionsCountByReactionIdsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>
   orderBy?: InputMaybe<Array<CommentReactionsCountByReactionIdOrderByInput>>
   where?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
-}
-
-export type QueryCommentSectionPreferenceEventByUniqueInputArgs = {
-  where: CommentSectionPreferenceEventWhereUniqueInput
-}
-
-export type QueryCommentSectionPreferenceEventsArgs = {
-  limit?: InputMaybe<Scalars['Int']>
-  offset?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentSectionPreferenceEventOrderByInput>>
-  where?: InputMaybe<CommentSectionPreferenceEventWhereInput>
-}
-
-export type QueryCommentSectionPreferenceEventsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>
-  before?: InputMaybe<Scalars['String']>
-  first?: InputMaybe<Scalars['Int']>
-  last?: InputMaybe<Scalars['Int']>
-  orderBy?: InputMaybe<Array<CommentSectionPreferenceEventOrderByInput>>
-  where?: InputMaybe<CommentSectionPreferenceEventWhereInput>
 }
 
 export type QueryCommentTextArgs = {
@@ -30060,7 +29902,6 @@ export type Video = BaseGraphQlObject & {
   comments: Array<Comment>
   /** Comments count */
   commentsCount: Scalars['Int']
-  commentsectionpreferenceeventvideo?: Maybe<Array<CommentSectionPreferenceEvent>>
   commenttextupdatedeventvideo?: Maybe<Array<CommentTextUpdatedEvent>>
   createdAt: Scalars['DateTime']
   createdById: Scalars['String']
@@ -31165,9 +31006,6 @@ export type VideoWhereInput = {
   comments_every?: InputMaybe<CommentWhereInput>
   comments_none?: InputMaybe<CommentWhereInput>
   comments_some?: InputMaybe<CommentWhereInput>
-  commentsectionpreferenceeventvideo_every?: InputMaybe<CommentSectionPreferenceEventWhereInput>
-  commentsectionpreferenceeventvideo_none?: InputMaybe<CommentSectionPreferenceEventWhereInput>
-  commentsectionpreferenceeventvideo_some?: InputMaybe<CommentSectionPreferenceEventWhereInput>
   commenttextupdatedeventvideo_every?: InputMaybe<CommentTextUpdatedEventWhereInput>
   commenttextupdatedeventvideo_none?: InputMaybe<CommentTextUpdatedEventWhereInput>
   commenttextupdatedeventvideo_some?: InputMaybe<CommentTextUpdatedEventWhereInput>

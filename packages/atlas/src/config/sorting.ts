@@ -11,7 +11,14 @@ export const NFT_SORT_OPTIONS = [
 ]
 
 export const COMMENTS_SORT_OPTIONS = [
-  { name: 'Most popular', value: [CommentOrderByInput.ReactionsCountDesc, CommentOrderByInput.CreatedAtDesc] },
+  {
+    name: 'Most popular',
+    value: [
+      CommentOrderByInput.ReactionsCountDesc,
+      CommentOrderByInput.RepliesCountDesc,
+      CommentOrderByInput.CreatedAtDesc,
+    ],
+  },
   { name: 'Newest', value: [CommentOrderByInput.CreatedAtDesc] },
   { name: 'Oldest', value: [CommentOrderByInput.CreatedAtAsc] },
 ]

@@ -22,6 +22,34 @@ import {
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
+export const useComment = (
+  variables: GetCommentQueryVariables,
+  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
+) => {
+  const { data, ...rest } = useGetCommentQuery({ ...opts, variables })
+
+  const { comments: replies } = useComments({
+    where: { parentComment: { id_eq: variables.commentId } },
+    orderBy: CommentOrderByInput.CreatedAtAsc,
+    ...opts,
+  })
+
+  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
+
+  const comment = data?.commentByUniqueInput
+    ? {
+        ...data.commentByUniqueInput,
+        userReactions: userCommentReactionsLookup?.[variables.commentId],
+        replies,
+      }
+    : undefined
+
+  return {
+    comment,
+    ...rest,
+  }
+}
+
 type CommentReaction = {
   commentId: string
   reactionId: number
@@ -50,46 +78,6 @@ export const useComments = (
 
   return {
     comments: data ? [...(mappedComments || [])] : undefined,
-    ...rest,
-  }
-}
-
-export const useComment = (
-  id: string,
-  memberId: string,
-  videoId: string,
-  opts?: QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>
-) => {
-  const { data, ...rest } = useGetCommentQuery({
-    ...opts,
-    variables: { where: { id }, memberId, videoId },
-  })
-
-  const videoCommentThreadsIds = data?.commentByUniqueInput?.repliesCount ? data?.commentByUniqueInput?.id : null
-  const { comments: replies } = useComments(
-    {
-      where: { parentComment: { id_eq: videoCommentThreadsIds } },
-      memberId: memberId,
-      orderBy: CommentOrderByInput.CreatedAtAsc,
-    },
-    { skip: !videoCommentThreadsIds }
-  )
-
-  const matchReplies = (videoComment: CommentFieldsFragment) =>
-    replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
-
-  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
-
-  const comment = data?.commentByUniqueInput
-    ? {
-        ...data?.commentByUniqueInput,
-        userReactions: userCommentReactionsLookup?.[data?.commentByUniqueInput.id],
-        replies: matchReplies(data?.commentByUniqueInput),
-      }
-    : null
-
-  return {
-    comment,
     ...rest,
   }
 }
