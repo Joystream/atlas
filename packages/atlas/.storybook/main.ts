@@ -13,7 +13,7 @@ const config: CustomizedStorybookConfig = {
   'stories': ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   'addons': ['@storybook/addon-links', '@storybook/addon-essentials'],
   'core': {
-    'builder': 'storybook-builder-vite',
+    'builder': '@storybook/builder-vite',
   },
   viteFinal(storybookConfig, { configType }) {
     if (configType === 'DEVELOPMENT') {
