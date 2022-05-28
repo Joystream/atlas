@@ -103,7 +103,7 @@ Here is an example of a nicely written component:
 
 ```tsx
 // Component.tsx
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { someSideEffect } from '@/utils'
