@@ -6,8 +6,8 @@ import { usePlaylist } from '@/api/hooks/playlists'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { Switch } from '@/components/_inputs/Switch'
-import { TextField } from '@/components/_inputs/TextField'
 import { PlaylistExtrinsicResult, PlaylistInputMetadata } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -47,7 +47,7 @@ export const PlaygroundPlaylistExtrinsics: React.FC = () => {
   return (
     <div>
       <FormField label="Playlist ID">
-        <TextField value={playlistId} onChange={(e) => setPlaylistId(e.target.value)} />
+        <Input value={playlistId} onChange={(e) => setPlaylistId(e.target.value)} />
       </FormField>
 
       <div>
@@ -107,10 +107,10 @@ const CreatePlaylist: React.FC<CommonProps> = ({ onSuccess }) => {
   return (
     <form onSubmit={createSubmitHandler(handleSubmit)} style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}>
       <FormField label="Title">
-        <TextField {...register('title')} />
+        <Input {...register('title')} />
       </FormField>
       <FormField label="Description">
-        <TextField {...register('description')} />
+        <Input {...register('description')} />
       </FormField>
       <Controller
         name="isPublic"
@@ -119,7 +119,7 @@ const CreatePlaylist: React.FC<CommonProps> = ({ onSuccess }) => {
         render={({ field: { value, onChange } }) => <Switch label="Public" value={value} onChange={onChange} />}
       />
       <FormField label="Videos IDs (comma separated)">
-        <TextField {...register('videosIds')} />
+        <Input {...register('videosIds')} />
       </FormField>
       <Button type="submit">Create</Button>
     </form>
@@ -182,10 +182,10 @@ const EditPlaylist: React.FC<CommonProps> = ({ playlistId, onSuccess }) => {
   return (
     <form onSubmit={createSubmitHandler(handleSubmit)}>
       <FormField label="Title">
-        <TextField {...register('title')} />
+        <Input {...register('title')} />
       </FormField>
       <FormField label="Description">
-        <TextField {...register('description')} />
+        <Input {...register('description')} />
       </FormField>
       <Controller
         name="isPublic"
@@ -194,7 +194,7 @@ const EditPlaylist: React.FC<CommonProps> = ({ playlistId, onSuccess }) => {
         render={({ field: { value, onChange } }) => <Switch label="Public" value={value} onChange={onChange} />}
       />
       <FormField label="Videos IDs (comma separated)">
-        <TextField {...register('videosIds')} />
+        <Input {...register('videosIds')} />
       </FormField>
       <Button type="submit">Edit</Button>
     </form>

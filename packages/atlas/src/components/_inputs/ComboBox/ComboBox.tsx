@@ -6,7 +6,7 @@ import { SvgActionLoader } from '@/components/_icons'
 
 import { ComboBoxWrapper, ListWrapper } from './ComboBox.styles'
 
-import { TextField, TextFieldProps } from '../TextField'
+import { Input, TextFieldProps } from '../Input'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
@@ -84,7 +84,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
       <div {...getComboboxProps()}>
-        <TextField
+        <Input
           {...textFieldProps}
           error={error}
           {...getInputProps({ ref: textFieldRef })}

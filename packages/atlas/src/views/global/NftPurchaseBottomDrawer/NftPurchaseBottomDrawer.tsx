@@ -11,7 +11,7 @@ import { SvgAlertsWarning24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
@@ -402,7 +402,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   </MinimumBidWrapper>
                 )}
                 <FormField error={errors.bid?.message}>
-                  <TextField
+                  <Input
                     {...register('bid', {
                       valueAsNumber: true,
                       validate: {

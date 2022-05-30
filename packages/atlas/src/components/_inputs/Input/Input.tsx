@@ -3,7 +3,7 @@ import useResizeObserver from 'use-resize-observer'
 
 import { InputBase, InputBaseProps } from '@/components/_inputs/InputBase'
 
-import { NodeContainer, TextFieldContainer, TextInput } from './TextField.styles'
+import { NodeContainer, TextFieldContainer, TextInput } from './Input.styles'
 
 export type TextFieldProps = {
   name?: string
@@ -23,7 +23,7 @@ export type TextFieldProps = {
   autoComplete?: 'off'
 } & InputBaseProps
 
-const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
+const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
   {
     name,
     type = 'text',
@@ -94,6 +94,6 @@ const TextFieldComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextF
   )
 }
 
-export const TextField = forwardRef(TextFieldComponent)
+export const Input = forwardRef(InputComponent)
 
-TextField.displayName = 'TextField'
+Input.displayName = 'Input'

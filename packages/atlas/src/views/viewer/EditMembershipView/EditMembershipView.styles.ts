@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { ActionBar } from '@/components/ActionBar'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { cVar, sizes, zIndex } from '@/styles'
 
 export const Wrapper = styled.div<{ actionBarHeight: number }>`
@@ -13,7 +13,7 @@ export const TextFieldsWrapper = styled.div`
   margin: ${sizes(8)} auto 0;
 `
 
-export const StyledTextField = styled(TextField)`
+export const StyledInput = styled(Input)`
   margin-bottom: ${sizes(5)};
 `
 
