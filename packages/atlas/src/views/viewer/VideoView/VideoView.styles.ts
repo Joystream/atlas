@@ -187,3 +187,10 @@ export const CommentWrapper = styled.div`
   margin-top: ${sizes(8)};
   gap: ${sizes(8)};
 `
+
+export const LoadMoreCommentsWrapper = styled.div`
+  margin-top: ${sizes(6)};
+  margin-bottom: ${sizes(8)};
+  padding-bottom: ${sizes(8)};
+  box-shadow: ${cVar('effectDividersBottom')};
+`
