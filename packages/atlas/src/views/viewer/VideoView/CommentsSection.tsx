@@ -97,6 +97,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
   }
 
+  const setMoreComments = () => setNumberOfComments((prevState) => prevState + INITIAL_COMMENTS)
+
   // increase number of comments when user scrolls to the end of page
   useEffect(() => {
     if (!mobileCommentsOpen) {
@@ -106,7 +108,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       if (!commentSectionWrapperRef.current) return
       const scrolledToBottom = document.documentElement.scrollTop >= commentSectionWrapperRef.current.scrollHeight
       if (scrolledToBottom && pageInfo?.hasNextPage && !commentsLoading) {
-        setNumberOfComments((prevState) => prevState + INITIAL_COMMENTS)
+        setMoreComments()
       }
     }, 100)
     window.addEventListener('scroll', scrollHandler)
@@ -147,7 +149,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       return
     }
     setCommentsOpen(true)
-    setNumberOfComments((prevState) => prevState + (INITIAL_COMMENTS - comments?.length))
+    setMoreComments()
   }
 
   const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
@@ -264,7 +266,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
               ...(isFetchingMore && commentsLoading ? mappedPlaceholders : []),
             ]}
       </CommentWrapper>
-      {!mobileCommentsOpen && !commentsLoading && comments && comments.length && (
+      {!mobileCommentsOpen && !commentsLoading && comments && comments.length && pageInfo?.hasNextPage && (
         <LoadMoreCommentsWrapper>
           <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
         </LoadMoreCommentsWrapper>
