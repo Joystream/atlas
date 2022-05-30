@@ -266,7 +266,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       </CommentWrapper>
       {!mobileCommentsOpen && !commentsLoading && comments && comments.length && (
         <LoadMoreCommentsWrapper>
-          <LoadMoreButton onClick={handleLoadMoreClick} />
+          <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
         </LoadMoreCommentsWrapper>
       )}
     </CommentsSectionWrapper>
