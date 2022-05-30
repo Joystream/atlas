@@ -6,7 +6,7 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgAccountCreationIllustration } from '@/components/_illustrations'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Spinner } from '@/components/_loaders/Spinner'
-import { cVar, media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 import { StepWrapper } from './SignInSteps.styles'
 
@@ -58,13 +58,13 @@ export const AccountWrapper = styled.label<AccountWrapperProps>`
   margin-bottom: ${sizes(4)};
   margin-right: ${sizes(4)};
   padding: ${sizes(2)} ${sizes(6)} ${sizes(2)} ${sizes(2)};
-  border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : cVar('colorBackgroundElevated'))};
+  border: 1px solid ${({ isSelected }) => (isSelected ? cVar('colorCoreBlue500') : cVar('colorBackgroundElevated'))};
   background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral800Lighten') : 'transparent')};
   transition: border ${transitions.timings.sharp} ${transitions.easing},
     background-color ${transitions.timings.sharp} ${transitions.easing};
 
   :hover {
-    border: 1px solid ${({ isSelected }) => (isSelected ? oldColors.blue[500] : oldColors.gray[50])};
+    border: 1px solid ${({ isSelected }) => (isSelected ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral50'))};
     background-color: ${cVar('colorCoreNeutral700Lighten')};
   }
 `
@@ -131,11 +131,11 @@ export const OrderedStep = styled(Text)`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
     padding-bottom: 2px;
     font: ${cVar('typographyDesktopH300')};
     letter-spacing: ${cVar('typographyDesktopH300LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH300TextTransform')};
-    background-color: ${oldColors.gray[600]};
+    background-color: ${cVar('colorCoreNeutral600')};
   }
 `

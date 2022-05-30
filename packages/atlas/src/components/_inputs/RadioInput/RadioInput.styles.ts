@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { oldColors, transitions } from '@/styles'
+import { cVar, transitions } from '@/styles'
 
 export type RadioButtonStyleProps = Partial<{
   disabled: boolean
@@ -27,16 +27,16 @@ export type CustomRadioInputProps = {
 
 export const hoverState = (checked?: boolean) => {
   return css`
-    border: ${checked ? `4px solid ${oldColors.blue[500]}` : `1px solid ${oldColors.gray[200]}`};
+    border: ${checked ? `4px solid ${cVar('colorCoreBlue500')}` : `1px solid ${cVar('colorCoreNeutral200')}`};
 
     &::before {
-      background-color: ${oldColors.transparentPrimary[18]};
+      background-color: ${cVar('colorCoreNeutral700Lighten')};
     }
   `
 }
 export const activeState = (checked?: boolean) => {
   return css`
-    border: ${checked ? `border: 4px solid ${oldColors.gray[50]}` : `1px solid ${oldColors.gray[50]}`};
+    border: ${checked ? `border: 4px solid ${cVar('colorCoreNeutral50')}` : `1px solid ${cVar('colorCoreNeutral50')}`};
 
     &::after {
       content: '';
@@ -47,11 +47,11 @@ export const activeState = (checked?: boolean) => {
       right: -4px;
       display: ${checked ? 'block' : 'none'};
       border-radius: 50%;
-      border: 1px solid ${oldColors.gray[50]};
+      border: 1px solid ${cVar('colorCoreNeutral50')};
     }
 
     &::before {
-      background-color: ${oldColors.transparentPrimary[10]};
+      background-color: ${cVar('colorCoreNeutral800Lighten')};
     }
   `
 }
@@ -60,8 +60,8 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
   if (disabled) {
     return css`
       opacity: 0.5;
-      background-color: ${checked ? oldColors.gray[50] : oldColors.gray[400]};
-      border: ${checked ? `4px solid ${oldColors.gray[400]}` : `1px solid ${oldColors.gray[300]}`};
+      background-color: ${checked ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral400')};
+      border: ${checked ? `4px solid ${cVar('colorCoreNeutral400')}` : `1px solid ${cVar('colorCoreNeutral300')}`};
       background-clip: ${checked ? 'content-box' : 'unset'};
 
       &::before {
@@ -69,21 +69,19 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: ${checked ? oldColors.gray[50] : oldColors.transparent};
+        background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
       }
     `
   } else if (error) {
     return css`
-      background-color: ${checked ? oldColors.gray[50] : oldColors.transparent};
-      border: ${checked
-        ? `4px solid ${oldColors.secondary.alert[100]}`
-        : `1px solid ${oldColors.secondary.alert[100]}`};
+      background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
+      border: ${checked ? `4px solid ${cVar('colorCoreRed400')}` : `1px solid ${cVar('colorCoreRed400')}`};
       padding: 0;
     `
   } else {
     return css`
-      border: ${checked ? `4px solid ${oldColors.blue[500]}` : `1px solid ${oldColors.gray[300]}`};
-      background-color: ${checked ? oldColors.gray[50] : oldColors.transparent};
+      border: ${checked ? `4px solid ${cVar('colorCoreBlue500')}` : `1px solid ${cVar('colorCoreNeutral300')}`};
+      background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
       padding: ${checked ? 0 : '3px'};
 
       &::before {
@@ -95,10 +93,10 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
       }
 
       &:focus {
-        border-color: ${checked ? oldColors.blue[500] : oldColors.gray[700]};
+        border-color: ${checked ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral700')};
 
         &::before {
-          background-color: ${checked ? oldColors.blue[200] : oldColors.gray[50]};
+          background-color: ${checked ? cVar('colorCoreBlue200') : cVar('colorCoreNeutral50')};
         }
       }
 
@@ -134,7 +132,7 @@ export const CustomRadioInput = styled.div<CustomRadioInputProps>`
   ${colorFromProps};
 
   & + span {
-    color: ${(props) => (props.checked ? oldColors.white : '')};
+    color: ${(props) => (props.checked ? 'white' : '')};
   }
 
   transition: background-color 0.25s ease, border-color 0.25s ease;

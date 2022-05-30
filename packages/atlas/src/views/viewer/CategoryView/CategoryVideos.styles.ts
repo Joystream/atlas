@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { InfiniteVideoGrid } from '@/components/InfiniteGrids'
 import { Select } from '@/components/_inputs/Select'
-import { media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 export const categoryGlobalStyles = css`
   body,
@@ -32,8 +32,8 @@ export const ControlsContainer = styled.div`
 
   /* re-add global horizontal padding to the component */
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
-  border-bottom: 1px solid ${oldColors.gray[700]};
-  background-color: ${oldColors.black};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  background-color: black;
 
   ${media.sm} {
     grid-template-columns: auto 160px 1fr 160px;

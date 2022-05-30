@@ -1,6 +1,6 @@
 import { cVar } from '../generated/variables'
 
-export const oldColors = {
+export const oldColorsg = {
   white: '#FFFFFF',
   black: '#000000',
   transparent: 'transparent',

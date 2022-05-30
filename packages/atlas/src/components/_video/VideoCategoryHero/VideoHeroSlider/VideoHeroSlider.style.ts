@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { media, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 type VideoHeroSliderWrapperProps = {
   columnsNumber?: number
@@ -66,7 +66,7 @@ type VideoSliderProgressBarProps = {
 }
 
 export const VideoSliderProgressBar = styled.div<VideoSliderProgressBarProps>`
-  background-color: ${oldColors.transparentWhite[32]};
+  background-color: ${cVar('colorCoreNeutral400Lighten')};
   position: absolute;
   height: 4px;
   width: 100%;
@@ -83,7 +83,7 @@ export const VideoSliderProgress = styled.div`
   top: 0;
   left: 0;
   height: 100%;
-  background-color: ${oldColors.gray[200]};
+  background-color: ${cVar('colorCoreNeutral200')};
   width: 100%;
   transform-origin: 0 0;
   transition: transform 125ms ease-in;

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 type FormGroupProps = {
   error?: boolean
@@ -21,7 +21,7 @@ export const FormGroup = styled.label<FormGroupProps>`
 
   input,
   textarea {
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   input,
@@ -35,7 +35,7 @@ export const FormGroup = styled.label<FormGroupProps>`
     text-transform: ${cVar('typographyDesktopT300TextTransform')};
 
     :focus {
-      border: 1px solid ${oldColors.blue[500]};
+      border: 1px solid ${cVar('colorCoreBlue500')};
     }
 
     :disabled {
@@ -43,20 +43,20 @@ export const FormGroup = styled.label<FormGroupProps>`
     }
 
     ::placeholder {
-      color: ${oldColors.gray[300]};
+      color: ${cVar('colorCoreNeutral300')};
     }
 
     :not(:placeholder-shown):not(button) {
-      border: 1px solid ${oldColors.gray[200]};
+      border: 1px solid ${cVar('colorCoreNeutral200')};
     }
 
     &:focus {
-      border: 1px solid ${oldColors.blue[500]};
+      border: 1px solid ${cVar('colorCoreBlue500')};
     }
 
     :not(:focus):not(button) {
       border: 1px solid
-        ${({ error, disabled }) => (error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200])};
+        ${({ error, disabled }) => (error && !disabled ? cVar('colorCoreRed400') : cVar('colorCoreNeutral200'))};
     }
   }
 `

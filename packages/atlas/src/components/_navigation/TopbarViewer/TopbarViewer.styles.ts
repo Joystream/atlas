@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, sizes, square, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, square, transitions, zIndex } from '@/styles'
 
 import { TopbarBase } from '../TopbarBase'
 
@@ -17,7 +17,7 @@ const topbarFocusStyles = ({ hasFocus }: FocusProps) =>
     ? css`
         left: var(--size-sidenav-width-collapsed);
         z-index: ${zIndex.globalOverlay};
-        background-color: ${oldColors.gray[900]};
+        background-color: ${cVar('colorCoreNeutral900')};
 
         ${media.md} {
           /*
@@ -30,7 +30,7 @@ const topbarFocusStyles = ({ hasFocus }: FocusProps) =>
         }
       `
     : css`
-        background-color: ${oldColors.black};
+        background-color: black;
       `
 
 export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`
@@ -81,7 +81,7 @@ export const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: ${oldColors.transparentBlack[54]};
+  background-color: ${cVar('colorCoreNeutral500Darken')};
   display: none;
   transition: opacity ${cVar('animationTransitionMedium')};
 

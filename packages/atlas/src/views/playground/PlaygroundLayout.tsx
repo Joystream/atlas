@@ -14,7 +14,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
 import { ConnectionStatusManager } from '@/providers/connectionStatus'
 import { ActiveUserProvider, useUser } from '@/providers/user'
-import { oldColors } from '@/styles'
+import { cVar } from '@/styles'
 
 import {
   PlaygroundEstimatingBlockTime,
@@ -126,7 +126,7 @@ const NavContainer = styled.div`
   font-size: 20px;
 
   a {
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
     margin-bottom: 20px;
   }
 `

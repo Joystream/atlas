@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const CAROUSEL_ARROW_HEIGHT = 48
 
@@ -81,20 +81,20 @@ export const Dots = styled.div`
       width: 100%;
       height: ${sizes(1)};
       display: block;
-      background-color: ${oldColors.gray[700]};
+      background-color: ${cVar('colorCoreNeutral700')};
       transition: all ${transitions.timings.regular} ${transitions.easing};
     }
 
     &:hover:not(.active) {
       &::after {
-        background-color: ${oldColors.gray[50]};
+        background-color: ${cVar('colorCoreNeutral50')};
         transform: translateY(-2px);
       }
     }
 
     &.active {
       &::after {
-        background-color: ${oldColors.gray[300]};
+        background-color: ${cVar('colorCoreNeutral300')};
       }
     }
   }
