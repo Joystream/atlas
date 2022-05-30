@@ -7,7 +7,7 @@ import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { cVar, transitions } from '@/styles'
-import { formatVideoDate, formatVideoViews } from '@/utils/video'
+import { formatVideoDate } from '@/utils/video'
 
 import {
   ChannelTitle,
@@ -110,7 +110,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                         ? videoSubTitle
                         : createdAt && (
                             <>
-                              {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
+                              {formatVideoDate(createdAt)} • <Views value={views ?? 0} format="short" secondary /> views
                             </>
                           )}
                     </Text>

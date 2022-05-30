@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SvgActionChevronB } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -12,12 +13,10 @@ import { useToggle } from '@/hooks/useToggle'
 import { useMemberAvatar } from '@/providers/assets'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
   CopyContainer,
-  DollarValue,
   FadingBlock,
   HistoryItemContainer,
   HistoryPanel,
@@ -99,7 +98,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
         <ValueContainer>
           <JoyPlusIcon>
             <JoyTokenIcon size={16} variant="silver" />
-            <Text variant={size === 'medium' ? 'h300' : 'h200'}>{formatNumberShort(joyAmount)}</Text>
+            <NumberFormat format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
           </JoyPlusIcon>
           <SwitchTransition>
             <CSSTransition
@@ -107,9 +106,11 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({ size, member, date, jo
               timeout={parseInt(cVar('animationTransitionFast', true))}
               classNames={transitions.names.fade}
             >
-              <DollarValue variant="t100" secondary>
-                {dollarValue ?? '‌'}
-              </DollarValue>
+              {dollarValue ? (
+                <NumberFormat format="dollar" variant="t100" secondary value={dollarValue} align="end" />
+              ) : (
+                '‌'
+              )}
             </CSSTransition>
           </SwitchTransition>
         </ValueContainer>

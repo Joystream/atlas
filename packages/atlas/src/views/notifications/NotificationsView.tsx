@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 
 import { GridItem } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionRead, SvgActionUnread } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { useNotifications } from '@/providers/notifications'
-import { formatNumberShort } from '@/utils/number'
 
 import { useSelectedNotifications } from './Notifications.hooks'
 import {
@@ -93,7 +93,7 @@ export const NotificationsView = () => {
       {selectedNotifications.length > 0 && (
         <FloatingActionBar data-bottom-nav-open={open}>
           <Text variant="t300" secondary margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}>
-            {formatNumberShort(selectedNotifications.length)} item(s) selected
+            <NumberFormat value={selectedNotifications.length} format="short" variant="t300" /> item(s) selected
           </Text>
           {!smMatch && closeButtonNode}
           <Button size="large" variant="tertiary" onClick={() => selectAllNotifications(notifications)}>

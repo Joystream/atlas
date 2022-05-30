@@ -2,6 +2,7 @@ import React from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { Avatar } from '@/components/Avatar'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { RadioInput } from '@/components/_inputs/RadioInput'
@@ -76,9 +77,7 @@ export const BidRow: React.FC<BidRowProps> = ({ bidder, createdAt, amount, amoun
             timeout={parseInt(cVar('animationTransitionFast', true))}
             classNames={transitions.names.fade}
           >
-            <Text as="p" variant="t100" secondary>
-              {amountUSD ?? '‌'}
-            </Text>
+            {amountUSD ? <NumberFormat value={amountUSD} format="dollar" as="p" variant="t100" secondary /> : '‌'}
           </CSSTransition>
         </SwitchTransition>
       </Price>

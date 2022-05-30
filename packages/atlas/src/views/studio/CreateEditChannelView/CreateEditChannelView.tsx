@@ -7,6 +7,7 @@ import useResizeObserver from 'use-resize-observer'
 import { useChannel } from '@/api/hooks'
 import { ActionBar } from '@/components/ActionBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ChannelCover } from '@/components/_channel/ChannelCover'
@@ -37,7 +38,6 @@ import { createId } from '@/utils/createId'
 import { requiredValidation, textFieldValidation } from '@/utils/formValidationOptions'
 import { computeFileHash } from '@/utils/hashing'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
 import { SubTitleSkeletonLoader, TitleSkeletonLoader } from '@/views/viewer/ChannelView/ChannelView.styles'
 
 import {
@@ -441,7 +441,8 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
               />
               {!newChannel && (
                 <StyledSubTitle variant="t200">
-                  {channel?.follows ? formatNumberShort(channel.follows) : 0} Followers
+                  {channel?.follows ? <NumberFormat value={channel.follows} format="short" variant="t200" /> : 0}{' '}
+                  Followers
                 </StyledSubTitle>
               )}
             </>

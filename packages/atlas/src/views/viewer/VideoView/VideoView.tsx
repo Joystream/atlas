@@ -8,6 +8,7 @@ import { useAddVideoView, useVideo } from '@/api/hooks'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
@@ -35,7 +36,7 @@ import { usePersonalDataStore } from '@/providers/personalData'
 import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { formatVideoViewsAndDate } from '@/utils/video'
+import { formatVideoDate } from '@/utils/video'
 
 import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
@@ -262,7 +263,9 @@ export const VideoView: React.FC = () => {
         <VideoUtils>
           <Meta variant={mdMatch ? 't300' : 't100'} secondary>
             {video ? (
-              formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+              <>
+                {formatVideoDate(video.createdAt)} • <NumberFormat format="full" value={video.views} secondary /> views
+              </>
             ) : (
               <SkeletonLoader height={24} width={200} />
             )}

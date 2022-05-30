@@ -7,7 +7,7 @@ import useResizeObserver from 'use-resize-observer'
 import { BasicChannelFieldsFragment, BasicMembershipFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { ListItem } from '@/components/ListItem'
-import { Text } from '@/components/Text'
+import { NumberFormat } from '@/components/NumberFormat'
 import {
   SvgActionAddVideo,
   SvgActionChevronL,
@@ -26,7 +26,6 @@ import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   AnimatedContainer,
@@ -188,7 +187,7 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                             <>
                               <BalanceContainer>
                                 <JoyTokenIcon size={16} variant="regular" />
-                                <Text variant="t200-strong">{formatNumberShort(accountBalance)}</Text>
+                                <NumberFormat variant="t200-strong" value={accountBalance} format="short" />
                               </BalanceContainer>
                             </>
                           ) : (

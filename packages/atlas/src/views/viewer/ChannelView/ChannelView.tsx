@@ -8,6 +8,7 @@ import { OwnedNftOrderByInput, VideoOrderByInput } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { FiltersBar, useFiltersBar } from '@/components/FiltersBar'
 import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
+import { NumberFormat } from '@/components/NumberFormat'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { ViewWrapper } from '@/components/ViewWrapper'
 import { Button } from '@/components/_buttons/Button'
@@ -24,7 +25,6 @@ import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
 
 import { ChannelSearch } from './ChannelSearch'
 import { useSearchVideos } from './ChannelView.hooks'
@@ -235,7 +235,8 @@ export const ChannelView: React.FC = () => {
               <>
                 <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
                 <SubTitle variant="t300" secondary>
-                  {channel.follows ? formatNumberShort(channel.follows) : 0} Followers
+                  {channel.follows ? <NumberFormat value={channel.follows} format="short" variant="t300" /> : 0}{' '}
+                  Followers
                 </SubTitle>
               </>
             ) : (

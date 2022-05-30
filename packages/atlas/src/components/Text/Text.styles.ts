@@ -20,7 +20,7 @@ type MarginProps =
     }
   | number
 
-type AlignProps = 'left' | 'center' | 'right' | 'justify'
+type AlignProps = 'left' | 'center' | 'right' | 'justify' | 'end'
 
 const alignStyles = ({ align }: TextBaseProps) =>
   !!align &&
@@ -159,5 +159,8 @@ export const styledVariants = {
     font: ${cVar('typographyDesktopT100Strong')};
     letter-spacing: ${cVar('typographyDesktopT100StrongLetterSpacing')};
     text-transform: ${cVar('typographyDesktopT100StrongTextTransform')};
+  `,
+  'no-variant': styled.span<TextBaseProps>`
+    ${baseStyles};
   `,
 }

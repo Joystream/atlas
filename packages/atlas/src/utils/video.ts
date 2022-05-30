@@ -1,23 +1,7 @@
 import { ConsoleLogger } from '@/utils/logs'
-import { formatNumber, formatNumberShort } from '@/utils/number'
 import { formatDateAgo } from '@/utils/time'
 
-export const formatVideoViews = (views: number | null, { fullViews } = { fullViews: false }): string | null => {
-  const formattedViews = views !== null && (fullViews ? formatNumber(views) : formatNumberShort(views))
-  return formattedViews ? `${formattedViews} views` : null
-}
-
 export const formatVideoDate = (date: Date) => formatDateAgo(date)
-
-export const formatVideoViewsAndDate = (
-  views: number | null,
-  date: Date,
-  { fullViews }: { fullViews: boolean }
-): string => {
-  const formattedDate = formatVideoDate(date)
-  const formattedViews = formatVideoViews(views, { fullViews })
-  return formattedViews ? `${formattedDate} • ${formattedViews}` : formattedDate
-}
 
 export type VideoMetadata = {
   mimeType: string

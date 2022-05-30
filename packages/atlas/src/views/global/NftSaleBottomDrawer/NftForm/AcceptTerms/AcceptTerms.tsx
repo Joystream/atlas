@@ -2,9 +2,9 @@ import { addHours } from 'date-fns'
 import React from 'react'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { useMemberAvatar } from '@/providers/assets'
-import { formatNumber, formatTokens } from '@/utils/number'
 import { formatDateTime } from '@/utils/time'
 
 import {
@@ -72,7 +72,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
-            <DescriptionText>{formatTokens(formData.startingPrice, true)}</DescriptionText>
+            <NumberFormat value={formData.startingPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -91,7 +91,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             />
           </Title>
           <Description>
-            <DescriptionText>{formatTokens(formData.buyNowPrice, true)}</DescriptionText>
+            <NumberFormat value={formData.buyNowPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -140,7 +140,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
                 <Text variant="h400" secondary>
-                  &nbsp;/ {formatNumber(durationBlocks)} blocks
+                  &nbsp;/ <NumberFormat value={durationBlocks} variant="h400" /> blocks
                 </Text>
               </Description>
             </Row>
@@ -176,7 +176,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
           />
         </Title>
         <Description>
-          <DescriptionText>{formatTokens(0)}</DescriptionText>
+          <NumberFormat value={0} format="short" withToken variant="h400" />
         </Description>
       </Row>
     </>

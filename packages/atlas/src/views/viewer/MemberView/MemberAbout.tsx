@@ -3,10 +3,10 @@ import { useParams } from 'react-router'
 
 import { useMemberships } from '@/api/hooks'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { PIONEER_MEMBER_URL } from '@/config/urls'
 import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -62,7 +62,7 @@ export const MemberAbout = () => {
           <Text variant="t100" secondary>
             Num. of channels
           </Text>
-          <Text variant="t300">{member?.channels.length ? formatNumberShort(member?.channels.length) : '0'}</Text>
+          <NumberFormat format="short" value={member?.channels.length ? member?.channels.length : 0} variant="t300" />
         </Details>
 
         <Anchor
