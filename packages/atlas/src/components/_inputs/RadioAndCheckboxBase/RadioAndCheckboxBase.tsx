@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Text } from '@/components/Text'
+import { cVar } from '@/styles'
 
 import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.styles'
 
@@ -30,7 +31,11 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
           {label}
         </Text>
       )}
-      {helperText && <StyledHelperText helperText={helperText} error={error} />}
+      {helperText && (
+        <StyledHelperText variant="t100" color={error ? cVar('colorTextError') : undefined} secondary>
+          {helperText}
+        </StyledHelperText>
+      )}
     </RadioAndCheckboxLabel>
   )
 }
