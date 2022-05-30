@@ -50,6 +50,12 @@ export const ReactionChipButton = styled.button<ReactionChipButtonProps>`
   ${({ state }) => state === 'default' && getHoverStyles};
 `
 
-export const StyledEmojiWrapper = styled(EmojiWrapper)`
+const readOnlyStyles = css`
+  filter: grayscale(100%);
+  opacity: 0.85;
+`
+
+export const StyledEmojiWrapper = styled(EmojiWrapper)<{ readOnly: boolean }>`
   margin-right: ${sizes(2)};
+  ${({ readOnly }) => readOnly && readOnlyStyles};
 `

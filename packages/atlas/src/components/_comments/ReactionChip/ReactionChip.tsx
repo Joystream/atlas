@@ -38,7 +38,9 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
         title={`${pluralizeNoun(count || 0, 'user')} reacted with ${REACTION_TYPE[reactionId].name}`}
         onClick={() => state === 'default' && onReactionClick?.(reactionId)}
       >
-        <StyledEmojiWrapper block>{REACTION_TYPE[reactionId].emoji} </StyledEmojiWrapper>
+        <StyledEmojiWrapper readOnly={state === 'read-only'} block>
+          {REACTION_TYPE[reactionId].emoji}{' '}
+        </StyledEmojiWrapper>
         {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
       </ReactionChipButton>
     </div>
