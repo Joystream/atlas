@@ -108,11 +108,9 @@ export const useCommentSectionComments = (
 
   const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
 
-  const videoCommentThreadsIds = data?.videoCommentsConnection
-    ? data.videoCommentsConnection.edges
-        .filter((comment) => !!comment.node.repliesCount)
-        .map((comment) => comment.node.id)
-    : undefined
+  const videoCommentThreadsIds = data?.videoCommentsConnection.edges
+    .filter((comment) => !!comment.node.repliesCount)
+    .map((comment) => comment.node.id)
   const { comments: replies } = useComments(
     {
       where: { parentComment: { id_in: videoCommentThreadsIds } },
@@ -125,24 +123,20 @@ export const useCommentSectionComments = (
   const matchReplies = (videoComment: CommentFieldsFragment) =>
     replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
 
-  const userComments = data?.userComments
-    ? data?.userComments.map((userComment) => ({
-        ...userComment,
-        replies: matchReplies(userComment),
-        userReactions: userCommentReactionsLookup?.[userComment.id],
-      }))
-    : undefined
+  const userComments = data?.userComments.map((userComment) => ({
+    ...userComment,
+    replies: matchReplies(userComment),
+    userReactions: userCommentReactionsLookup?.[userComment.id],
+  }))
 
-  const videoComments = data?.videoCommentsConnection
-    ? data.videoCommentsConnection.edges
-        .map((edge) => edge.node)
-        .map((userComment) => ({
-          ...userComment,
-          replies: matchReplies(userComment),
-          userReactions: userCommentReactionsLookup?.[userComment.id],
-        }))
-        .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
-    : undefined
+  const videoComments = data?.videoCommentsConnection.edges
+    .map((edge) => edge.node)
+    .map((userComment) => ({
+      ...userComment,
+      replies: matchReplies(userComment),
+      userReactions: userCommentReactionsLookup?.[userComment.id],
+    }))
+    .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
 
   return {
     userComments,
