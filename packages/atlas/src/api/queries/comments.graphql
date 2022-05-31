@@ -1,37 +1,21 @@
-query GetComments(
-  $limit: Int
-  $offset: Int
-  $memberId: ID
-  $videoId: ID
-  $where: CommentWhereInput
-  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
-) {
-  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
-    reactionId
-    commentId
-  }
-  comments(limit: $limit, offset: $offset, where: $where, orderBy: $orderBy) {
-    ...CommentFields
-  }
-}
-
-query GetComment($commentId: ID!, $memberId: ID, $videoId: ID) {
-  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
-    reactionId
-    commentId
-  }
+query GetComment($commentId: ID!) {
   commentByUniqueInput(where: { id: $commentId }) {
     ...CommentFields
   }
 }
 
-query GetCommentsConnection(
+query GetCommentRepliesConnection(
   $first: Int
   $after: String
-  $where: CommentWhereInput
-  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+  $parentCommentId: ID!
+  $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
 ) {
-  commentsConnection(first: $first, after: $after, where: $where, orderBy: $orderBy) {
+  commentsConnection(
+    first: $first
+    after: $after
+    where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE }
+    orderBy: $orderBy
+  ) {
     edges {
       cursor
       node {
@@ -53,10 +37,6 @@ query GetUserCommentsAndVideoCommentsConnection(
   $videoId: ID
   $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
 ) {
-  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
-    reactionId
-    commentId
-  }
   userComments: comments(
     where: {
       # get comments which are not a reply to a comment
@@ -70,6 +50,7 @@ query GetUserCommentsAndVideoCommentsConnection(
   ) {
     ...CommentFields
   }
+
   videoCommentsConnection: commentsConnection(
     first: $first
     after: $after
@@ -94,15 +75,20 @@ query GetUserCommentsAndVideoCommentsConnection(
   }
 }
 
+query GetUserCommentsReactions($memberId: ID!, $videoId: ID!) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    reactionId
+    commentId
+  }
+}
+
 query GetCommentEdits($commentId: ID!) {
   commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
     id
     createdAt
     newText
   }
-}
 
-query GetOriginalComment($commentId: ID!) {
   commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
     id
     createdAt

@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 import * as Types from './baseTypes.generated'
-import { MetaprotocolTransactionStatusEventFieldsFragmentDoc } from './fragments.generated'
+import { MetaprotocolTransactionSuccessFieldsFragmentDoc } from './fragments.generated'
 
 const defaultOptions = {} as const
 export type GetMetaprotocolTransactionStatusEventsQueryVariables = Types.Exact<{
@@ -18,17 +18,33 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
     status:
       | { __typename: 'MetaprotocolTransactionErrored'; message: string }
       | { __typename: 'MetaprotocolTransactionPending' }
-      | { __typename: 'MetaprotocolTransactionSuccessful' }
+      | {
+          __typename: 'MetaprotocolTransactionSuccessful'
+          commentCreated?: { __typename?: 'Comment'; id: string } | null
+          commentEdited?: { __typename?: 'Comment'; id: string } | null
+          commentDeleted?: { __typename?: 'Comment'; id: string } | null
+          commentModerated?: { __typename?: 'Comment'; id: string } | null
+        }
   }>
 }
 
 export const GetMetaprotocolTransactionStatusEventsDocument = gql`
   query GetMetaprotocolTransactionStatusEvents($transactionHash: String!) {
     metaprotocolTransactionStatusEvents(where: { inExtrinsic_eq: $transactionHash }) {
-      ...MetaprotocolTransactionStatusEventFields
+      inExtrinsic
+      inBlock
+      status {
+        __typename
+        ... on MetaprotocolTransactionErrored {
+          message
+        }
+        ... on MetaprotocolTransactionSuccessful {
+          ...MetaprotocolTransactionSuccessFields
+        }
+      }
     }
   }
-  ${MetaprotocolTransactionStatusEventFieldsFragmentDoc}
+  ${MetaprotocolTransactionSuccessFieldsFragmentDoc}
 `
 
 /**

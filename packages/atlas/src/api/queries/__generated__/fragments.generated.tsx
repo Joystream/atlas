@@ -1494,17 +1494,14 @@ export type CommentFieldsFragment = {
     count: number
     reactionId: number
   }>
-  commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
 }
 
-export type MetaprotocolTransactionStatusEventFieldsFragment = {
-  __typename?: 'MetaprotocolTransactionStatusEvent'
-  inExtrinsic?: string | null
-  inBlock: number
-  status:
-    | { __typename: 'MetaprotocolTransactionErrored'; message: string }
-    | { __typename: 'MetaprotocolTransactionPending' }
-    | { __typename: 'MetaprotocolTransactionSuccessful' }
+export type MetaprotocolTransactionSuccessFieldsFragment = {
+  __typename?: 'MetaprotocolTransactionSuccessful'
+  commentCreated?: { __typename?: 'Comment'; id: string } | null
+  commentEdited?: { __typename?: 'Comment'; id: string } | null
+  commentDeleted?: { __typename?: 'Comment'; id: string } | null
+  commentModerated?: { __typename?: 'Comment'; id: string } | null
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1828,22 +1825,23 @@ export const CommentFieldsFragmentDoc = gql`
     repliesCount
     text
     status
-    commentcreatedeventcomment {
-      inExtrinsic
-    }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${CommentReactionsCountByReactionIdFieldsFragmentDoc}
 `
-export const MetaprotocolTransactionStatusEventFieldsFragmentDoc = gql`
-  fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStatusEvent {
-    inExtrinsic
-    inBlock
-    status {
-      __typename
-      ... on MetaprotocolTransactionErrored {
-        message
-      }
+export const MetaprotocolTransactionSuccessFieldsFragmentDoc = gql`
+  fragment MetaprotocolTransactionSuccessFields on MetaprotocolTransactionSuccessful {
+    commentCreated {
+      id
+    }
+    commentEdited {
+      id
+    }
+    commentDeleted {
+      id
+    }
+    commentModerated {
+      id
     }
   }
 `

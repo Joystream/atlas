@@ -1,24 +1,20 @@
 import { QueryHookOptions } from '@apollo/client'
+import { useMemo } from 'react'
 
 import {
-  CommentFieldsFragment,
-  CommentOrderByInput,
   GetCommentEditsQuery,
   GetCommentEditsQueryVariables,
   GetCommentQuery,
   GetCommentQueryVariables,
-  GetCommentsConnectionQuery,
-  GetCommentsConnectionQueryVariables,
-  GetCommentsQuery,
-  GetCommentsQueryVariables,
+  GetCommentRepliesConnectionQuery,
+  GetCommentRepliesConnectionQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   useGetCommentEditsQuery,
   useGetCommentQuery,
-  useGetCommentsConnectionQuery,
-  useGetCommentsQuery,
-  useGetOriginalCommentQuery,
+  useGetCommentRepliesConnectionQuery,
   useGetUserCommentsAndVideoCommentsConnectionQuery,
+  useGetUserCommentsReactionsQuery,
 } from '@/api/queries'
 import { createLookup } from '@/utils/data'
 
@@ -28,69 +24,46 @@ export const useComment = (
 ) => {
   const { data, ...rest } = useGetCommentQuery({ ...opts, variables })
 
-  const { comments: replies } = useComments({
-    where: { parentComment: { id_eq: variables.commentId } },
-    orderBy: CommentOrderByInput.CreatedAtAsc,
-    ...opts,
+  return {
+    comment: data?.commentByUniqueInput,
+    ...rest,
+  }
+}
+
+export type UserCommentReactions = Record<string, number[]>
+export const useUserCommentsReactions = (videoId?: string | null, memberId?: string | null) => {
+  const { data } = useGetUserCommentsReactionsQuery({
+    variables: {
+      videoId: videoId || '',
+      memberId: memberId || '',
+    },
+    skip: !videoId || !memberId,
   })
 
-  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
-
-  const comment = data?.commentByUniqueInput
-    ? {
-        ...data.commentByUniqueInput,
-        userReactions: userCommentReactionsLookup?.[variables.commentId],
-        replies,
-      }
-    : undefined
-
-  return {
-    comment,
-    ...rest,
-  }
+  return useMemo(
+    () => ({
+      userReactions: data?.commentReactions.reduce<Record<string, number[]>>((acc, item) => {
+        if (item) {
+          acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
+        }
+        return acc
+      }, {}),
+    }),
+    [data?.commentReactions]
+  )
 }
 
-type CommentReaction = {
-  commentId: string
-  reactionId: number
-}
-
-const getUserCommentReactionsLookup = (commentReactions: CommentReaction[]) =>
-  commentReactions.reduce<Record<string, number[]>>((acc, item) => {
-    if (item) {
-      acc[item.commentId] = [...(acc[item.commentId] ? acc[item.commentId] : []), item.reactionId]
-    }
-    return acc
-  }, {})
-
-export const useComments = (
-  variables?: GetCommentsQueryVariables,
-  opts?: QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>
+export const useCommentRepliesConnection = (
+  opts?: QueryHookOptions<GetCommentRepliesConnectionQuery, GetCommentRepliesConnectionQueryVariables>
 ) => {
-  const { data, ...rest } = useGetCommentsQuery({ ...opts, variables })
+  const { data, ...rest } = useGetCommentRepliesConnectionQuery({ ...opts })
 
-  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
-
-  const mappedComments = data?.comments.map((comment) => ({
-    ...comment,
-    userReactions: userCommentReactionsLookup?.[comment.id],
-  }))
+  const mappedComments = data?.commentsConnection.edges.map((edge) => edge.node)
 
   return {
-    comments: data ? [...(mappedComments || [])] : undefined,
-    ...rest,
-  }
-}
-
-export const useCommentsConnection = (
-  variables?: GetCommentsConnectionQueryVariables,
-  opts?: QueryHookOptions<GetCommentsConnectionQuery, GetCommentsQueryVariables>
-) => {
-  const { data, ...rest } = useGetCommentsConnectionQuery({ ...opts, variables })
-
-  return {
-    comments: data?.commentsConnection.edges.map((edge) => edge.node),
-    totalCount: data?.commentsConnection.totalCount,
+    replies: mappedComments || [],
+    totalCount: data?.commentsConnection.totalCount || 0,
+    pageInfo: data?.commentsConnection.pageInfo,
     ...rest,
   }
 }
@@ -106,50 +79,18 @@ export const useCommentSectionComments = (
 
   const userCommentLookup = data?.userComments && createLookup(data?.userComments)
 
-  const userCommentReactionsLookup = data?.commentReactions && getUserCommentReactionsLookup(data.commentReactions)
-
-  const videoCommentThreadsIds = data?.videoCommentsConnection
-    ? data.videoCommentsConnection.edges
-        .filter((comment) => !!comment.node.repliesCount)
-        .map((comment) => comment.node.id)
-    : undefined
-  const { comments: replies } = useComments(
-    {
-      where: { parentComment: { id_in: videoCommentThreadsIds } },
-      memberId: variables?.memberId,
-      orderBy: CommentOrderByInput.CreatedAtAsc,
-    },
-    { skip: !videoCommentThreadsIds || !videoCommentThreadsIds.length }
-  )
-
-  const matchReplies = (videoComment: CommentFieldsFragment) =>
-    replies ? replies?.filter((comment) => comment.parentCommentId === videoComment.id) : null
-
   const userComments = data?.userComments
-    ? data?.userComments.map((userComment) => ({
-        ...userComment,
-        replies: matchReplies(userComment),
-        userReactions: userCommentReactionsLookup?.[userComment.id],
-      }))
-    : undefined
 
-  const videoComments = data?.videoCommentsConnection
-    ? data.videoCommentsConnection.edges
-        .map((edge) => edge.node)
-        .map((userComment) => ({
-          ...userComment,
-          replies: matchReplies(userComment),
-          userReactions: userCommentReactionsLookup?.[userComment.id],
-        }))
-        .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
-    : undefined
+  const videoComments = data?.videoCommentsConnection.edges
+    .map((edge) => edge.node)
+    .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
 
   return {
     userComments,
     comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
-    totalCount: data?.videoCommentsConnection && data.videoCommentsConnection.totalCount,
+    totalCount: data?.videoCommentsConnection.totalCount,
     loading: loading,
-    pageInfo: data?.videoCommentsConnection && data.videoCommentsConnection.pageInfo,
+    pageInfo: data?.videoCommentsConnection?.pageInfo,
     ...rest,
   }
 }
@@ -158,24 +99,19 @@ export const useCommentEdits = (
   commentId?: string,
   opts?: QueryHookOptions<GetCommentEditsQuery, GetCommentEditsQueryVariables>
 ) => {
-  const { data: editedCommentsData, ...rest } = useGetCommentEditsQuery({
+  const { data, ...rest } = useGetCommentEditsQuery({
     ...opts,
     variables: { commentId: commentId || '' },
   })
-  // we need to fetch the original comment separately.
-  const { data: originalCommentData, loading: originalCommentLoading } = useGetOriginalCommentQuery({
-    variables: { commentId: commentId || '' },
-  })
 
-  const originalComment = originalCommentData?.commentCreatedEvents.map((comment) => ({
+  const originalComment = data?.commentCreatedEvents.map((comment) => ({
     ...comment,
     newText: comment.text,
   }))[0]
 
   return {
-    commentEdits: editedCommentsData?.commentTextUpdatedEvents &&
-      originalComment && [originalComment, ...editedCommentsData.commentTextUpdatedEvents],
+    commentEdits: data?.commentTextUpdatedEvents &&
+      originalComment && [originalComment, ...data.commentTextUpdatedEvents],
     ...rest,
-    loading: rest.loading || originalCommentLoading,
   }
 }
