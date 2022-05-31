@@ -112,7 +112,7 @@ export const useCommentSectionComments = (
     ? data.videoCommentsConnection.edges
         .filter((comment) => !!comment.node.repliesCount)
         .map((comment) => comment.node.id)
-    : []
+    : undefined
   const { comments: replies } = useComments(
     {
       where: { parentComment: { id_in: videoCommentThreadsIds } },
@@ -131,7 +131,7 @@ export const useCommentSectionComments = (
         replies: matchReplies(userComment),
         userReactions: userCommentReactionsLookup?.[userComment.id],
       }))
-    : []
+    : undefined
 
   const videoComments = data?.videoCommentsConnection
     ? data.videoCommentsConnection.edges
@@ -142,7 +142,7 @@ export const useCommentSectionComments = (
           userReactions: userCommentReactionsLookup?.[userComment.id],
         }))
         .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
-    : []
+    : undefined
 
   return {
     userComments,
