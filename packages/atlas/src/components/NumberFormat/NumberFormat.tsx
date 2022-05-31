@@ -1,4 +1,6 @@
-import React from 'react'
+import styled from '@emotion/styled'
+import React, { useRef } from 'react'
+import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
 
@@ -14,52 +16,74 @@ export type NumberFormatProps = {
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatProps>(
-  ({ value, format = 'full', withToken, withTooltip = true, variant = 'no-variant', ...textProps }, ref) => {
+  (
+    {
+      value,
+      format = 'full',
+      withToken,
+      withTooltip = format === 'short' || format === 'dollar',
+      variant = 'no-variant',
+      ...textProps
+    },
+    ref
+  ) => {
+    const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
+    let tooltipText
     switch (format) {
       case 'short':
         formattedValue = formatNumberShort(value)
+        tooltipText = formatNumber(value)
         break
       case 'full':
-        formattedValue = formatNumber(value)
+        formattedValue = tooltipText = formatNumber(value)
         break
       case 'dollar':
         formattedValue = formatDollars(value)
+        tooltipText = new Intl.NumberFormat('en-US', { maximumSignificantDigits, ...currencyFormatOptions })
+          .format(value)
+          .replaceAll(',', ' ')
         break
     }
 
-    const text = (
-      <Text {...textProps} variant={variant} ref={ref}>
-        {formattedValue}
-        {withToken && ` tJOY`}
-      </Text>
-    )
-
-    return withTooltip ? (
-      <Tooltip placement="top" delay={[1000, null]} text={formatNumber(value)}>
-        {text}
-      </Tooltip>
-    ) : (
-      text
+    return (
+      <>
+        <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
+          {formattedValue}
+          {withToken && ` tJOY`}
+        </Text>
+        {withTooltip && (
+          <StyledTooltip
+            // visible
+            reference={textRef}
+            placement="top"
+            delay={[1000, null]}
+            text={tooltipText}
+          />
+        )}
+      </>
     )
   }
 )
 NumberFormat.displayName = 'Number'
 
-const numberCompactFormatter = new Intl.NumberFormat('en-US', {
+const shortFormatOptions = {
   notation: 'compact',
   compactDisplay: 'short',
-})
+} as const
 
-const numberFormatter = new Intl.NumberFormat('en-US', {
-  maximumSignificantDigits: 21,
-})
+const maximumSignificantDigits = 21
 
-const dollarFormatter = new Intl.NumberFormat('en-US', {
+const currencyFormatOptions = {
   style: 'currency',
   currency: 'USD',
-  maximumSignificantDigits: 3,
-})
+}
+
+const numberCompactFormatter = new Intl.NumberFormat('en-US', shortFormatOptions)
+
+const numberFormatter = new Intl.NumberFormat('en-US', { maximumSignificantDigits })
+
+const dollarFormatter = new Intl.NumberFormat('en-US', currencyFormatOptions)
 
 const formatNumber = (num: number): string => {
   return numberFormatter.format(num).replaceAll(',', ' ')
@@ -70,3 +94,7 @@ const formatNumberShort = (num: number): string => {
 }
 
 const formatDollars = (num: number) => dollarFormatter.format(num).replaceAll(',', ' ')
+
+const StyledTooltip = styled(Tooltip)`
+  position: absolute;
+`

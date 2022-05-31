@@ -124,7 +124,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
+    const BuyNow = React.memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
         <NftInfoItem
           size={size}
@@ -137,11 +137,13 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           }
           secondaryText={
             convertToUSD(buyNowPrice) ? (
-              <NumberFormat format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
+              <NumberFormat secondary format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
             ) : undefined
           }
         />
       ) : null
+    )
+    BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
         <Banner id="" dismissable={false} icon={<SvgAlertsInformative24 />} {...{ title, description }} />
@@ -362,7 +364,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 secondaryText={
                   !isLoadingPrice && nftStatus.topBidAmount ? (
                     <>
-                      <NumberFormat format="dollar" value={convertToUSD(nftStatus.topBidAmount) ?? 0} /> from{' '}
+                      <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.topBidAmount) ?? 0} /> from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
@@ -382,7 +384,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 }
                 secondaryText={
                   convertToUSD(nftStatus.startingPrice) ? (
-                    <NumberFormat format="dollar" value={convertToUSD(nftStatus.startingPrice) ?? 0} />
+                    <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.startingPrice) ?? 0} />
                   ) : undefined
                 }
               />

@@ -13,7 +13,7 @@ export default {
     withTooltip: true,
     variant: 't100-strong',
   },
-} as Meta
+} as Meta<NumberFormatProps>
 
 const Template: Story<Omit<NumberFormatProps, 'ref'>> = ({ variant = 't100-strong', ...args }) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '200px' }}>
