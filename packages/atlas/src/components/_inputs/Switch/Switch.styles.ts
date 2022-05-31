@@ -61,21 +61,11 @@ export const SwitchCheckbox = styled.input`
     cursor: not-allowed;
 
     + ${SwitchSlider} {
-      background-color: ${cVar('colorBackgroundMutedAlpha')};
-      box-shadow: inset 0 0 0 1px ${cVar('colorBorderMutedAlpha')};
+      background-color: ${cVar('colorBackgroundAlpha')};
+      box-shadow: unset;
 
       ::before {
-        background-color: ${cVar('colorBackgroundMutedAlpha')};
-      }
-    }
-
-    :checked {
-      + ${SwitchSlider} {
         background-color: ${cVar('colorBackgroundStrongAlpha')};
-
-        ::before {
-          background-color: ${cVar('colorTextMuted')};
-        }
       }
     }
   }
