@@ -6,7 +6,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, sizes, square } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
 export const KebabMenuIconButton = styled(Button)<{ isActive: boolean }>`
   opacity: 0;
@@ -78,9 +78,23 @@ export const CommentFooter = styled.div`
 `
 
 export const CommentFooterItems = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-rows: auto;
+  gap: ${sizes(2)};
+
+  ${media.sm} {
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    gap: ${sizes(1)};
+  }
+`
+
+export const ReactionsWrapper = styled.div`
   display: inline-grid;
   grid-auto-flow: column;
   gap: 4px;
+  justify-content: flex-start;
 `
 
 export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
@@ -90,15 +104,18 @@ export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
 export const RepliesWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
 `
 
 export const StyledAvatarGroup = styled(AvatarGroup)`
-  margin-left: ${sizes(3)};
+  ${media.sm} {
+    margin-left: ${sizes(3)};
+  }
 `
 
 export const ReplyButton = styled(Button)`
-  margin-left: ${sizes(3)};
+  :not(:only-child) {
+    margin-left: ${sizes(3)};
+  }
 `
 
 export const StyledRepliesSkeleton = styled(SkeletonLoader)`

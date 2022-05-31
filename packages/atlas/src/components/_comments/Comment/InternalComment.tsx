@@ -13,7 +13,7 @@ import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { ReactionsOnboardingPopover } from '@/components/_video/ReactionsOnboardingPopover'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
-import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { useTouchDevice } from '@/hooks/useTouchDevice'
 import { useMemberAvatar } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
@@ -27,6 +27,7 @@ import {
   DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
+  ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
   StyledAvatarGroup,
@@ -103,7 +104,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   const isDeleted = type === 'deleted'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
-  const mdMatch = useMediaMatch('md')
+  const isTouchDevice = useTouchDevice()
   const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
   const filteredDuplicatedAvatars = repliesCount
     ? replyAvatars
@@ -274,20 +275,22 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                 onDecline={handleOnboardingPopoverHide}
                 trigger={
                   <CommentFooterItems>
-                    {reactions &&
-                      reactions?.map(({ reactionId, active, count, state }) => (
-                        <ReactionChip
-                          key={reactionId}
-                          reactionId={reactionId}
-                          active={active}
-                          count={count}
-                          state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
-                          onReactionClick={handleCommentReactionClick}
-                        />
-                      ))}
-                    {!allReactionsApplied && !isDeleted && (
-                      <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
-                    )}
+                    <ReactionsWrapper>
+                      {reactions &&
+                        reactions?.map(({ reactionId, active, count, state }) => (
+                          <ReactionChip
+                            key={reactionId}
+                            reactionId={reactionId}
+                            active={active}
+                            count={count}
+                            state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
+                            onReactionClick={handleCommentReactionClick}
+                          />
+                        ))}
+                      {!allReactionsApplied && !isDeleted && (
+                        <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
+                      )}
+                    </ReactionsWrapper>
                     <RepliesWrapper>
                       {!!repliesCount && (
                         <StyledAvatarGroup
@@ -307,7 +310,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                             {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
                           </ReplyButton>
                         ))}
-                      {onReplyClick && !isDeleted && (commentHover || !mdMatch) && (
+                      {onReplyClick && !isDeleted && (commentHover || isTouchDevice) && (
                         <ReplyButton
                           onClick={onReplyClick}
                           variant="tertiary"
