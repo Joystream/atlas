@@ -8,9 +8,9 @@ import {
   AllChannelFieldsFragment,
   GetChannelsConnectionQueryVariables,
   GetNftsConnectionQueryVariables,
-  GetUserCommentsAndVideoCommentsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   Query,
+  QueryCommentsConnectionArgs,
   SearchQueryVariables,
   VideoConnection,
   VideoFieldsFragment,
@@ -77,10 +77,11 @@ const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
   return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
 }
 
-const getCommentKeyArgs = (args: GetUserCommentsAndVideoCommentsConnectionQueryVariables | null) => {
-  const onlyCount = args?.first === 0
+const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
+  const parentCommentId = args?.where?.parentComment?.id_eq
   const orderBy = args?.orderBy || []
-  return `${onlyCount}:${orderBy}`
+  const videoId = args?.where?.video?.id_eq
+  return `${orderBy}:${videoId}:${parentCommentId}`
 }
 
 const createDateHandler = () => ({

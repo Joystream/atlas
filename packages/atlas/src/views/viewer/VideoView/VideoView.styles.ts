@@ -186,10 +186,14 @@ export const CommentWrapper = styled.div`
   display: grid;
   margin-top: ${sizes(8)};
   gap: ${sizes(8)};
+  margin-bottom: ${sizes(6)};
+
+  ${media.md} {
+    margin-bottom: 0;
+  }
 `
 
 export const LoadMoreCommentsWrapper = styled.div`
-  margin-top: ${sizes(6)};
   margin-bottom: ${sizes(8)};
   padding-bottom: ${sizes(8)};
   box-shadow: ${cVar('effectDividersBottom')};
