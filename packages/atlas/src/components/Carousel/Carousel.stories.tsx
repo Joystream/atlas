@@ -40,7 +40,7 @@ const CarouselItem = styled.div`
   width: 300px;
   min-height: 200px;
   text-align: center;
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   background-color: ${cVar('colorCoreNeutral300')};
   display: flex;
   align-items: center;

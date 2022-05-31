@@ -20,7 +20,7 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
 
 export const StyledTextArea = styled(TextareaAutosize)`
   caret-color: ${cVar('colorCoreBlue500')};
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   background-color: transparent;
   border: none;
   width: 100%;

@@ -46,7 +46,7 @@ const globalStyles = css`
 
   body {
     font-family: ${cVar('typographyFontsSecondary')};
-    background: black;
+    background: ${cVar('colorCoreBaseBlack')};
     color: ${cVar('colorCoreNeutral50')};
   }
 
@@ -57,7 +57,7 @@ const globalStyles = css`
   h5,
   h6 {
     font-family: ${cVar('typographyFontsPrimary')};
-    color: white;
+    color: ${cVar('colorCoreBaseWhite')};
   }
 
   svg {

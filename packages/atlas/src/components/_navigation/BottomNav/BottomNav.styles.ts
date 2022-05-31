@@ -28,7 +28,7 @@ export const Container = styled.div`
 `
 
 export const NavLink = styled(Link, { shouldForwardProp: isPropValid })<{ active: PathMatch | null }>`
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   text-align: center;
   text-decoration: none;
   height: 100%;

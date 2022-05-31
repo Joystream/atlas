@@ -33,7 +33,7 @@ export const ControlsContainer = styled.div`
   /* re-add global horizontal padding to the component */
   padding: ${sizes(4)} var(--size-global-horizontal-padding);
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
-  background-color: black;
+  background-color: ${cVar('colorCoreBaseBlack')};
 
   ${media.sm} {
     grid-template-columns: auto 160px 1fr 160px;

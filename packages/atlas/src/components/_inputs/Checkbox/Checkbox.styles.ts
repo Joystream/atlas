@@ -64,7 +64,7 @@ export type CheckboxStateProps = {
 }
 export const InnerContainer = styled.div<CheckboxStateProps>`
   transition: all 0.125s ease;
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   border: 1px solid ${cVar('colorCoreNeutral300')};
   border-radius: 2px;
   ${selectedStyles};

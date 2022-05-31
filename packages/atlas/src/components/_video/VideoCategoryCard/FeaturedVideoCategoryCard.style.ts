@@ -41,7 +41,7 @@ export const FeaturedIconCircle = styled(IconCircle)`
   margin-bottom: ${sizes(4)};
 
   path {
-    fill: black;
+    fill: ${cVar('colorCoreBaseBlack')};
   }
 `
 

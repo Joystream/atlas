@@ -54,7 +54,7 @@ export const StyledContainer = styled('button', { shouldForwardProp: isPropValid
   align-items: center;
   cursor: pointer;
   border: 0;
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   text-decoration: none;
   background-color: transparent;
 

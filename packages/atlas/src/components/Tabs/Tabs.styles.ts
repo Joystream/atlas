@@ -40,7 +40,7 @@ export const Tab = styled.div<TabProps>`
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  color: ${({ selected }) => (selected ? 'white' : cVar('colorCoreNeutral300'))};
+  color: ${({ selected }) => (selected ? cVar('colorCoreBaseWhite') : cVar('colorCoreNeutral300'))};
   text-align: center;
   box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorCoreBlue500')};` : 'none')};
   flex-shrink: 0;

@@ -7,6 +7,7 @@ import { FeaturedVideoCategoryCard, VideoCategoryCard } from '@/components/_vide
 import { useCategoriesMatch } from '@/hooks/useCategoriesMatch'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
+import { cVar } from '@/styles'
 import { createLookup } from '@/utils/data'
 
 import {
@@ -72,7 +73,7 @@ export const DiscoverView: React.FC = () => {
                 title={category?.name ?? ''}
                 videoTitle={category?.videoTitle ?? ''}
                 videoUrl={category?.videoUrl ?? ''}
-                color={category?.color ?? 'white'}
+                color={category?.color ?? cVar('colorCoreBaseWhite')}
                 icon={category?.icon}
                 id={category?.id}
               />
@@ -91,7 +92,7 @@ export const DiscoverView: React.FC = () => {
               title={category?.name ?? ''}
               categoryVideosCount={category?.activeVideosCounter}
               coverImg={category?.coverImg ?? ''}
-              color={category?.color ?? 'white'}
+              color={category?.color ?? cVar('colorCoreBaseWhite')}
               icon={category?.icon}
               videosTotalCount={totalVideosCount}
               variant={isMdBreakpoint ? 'default' : 'compact'}

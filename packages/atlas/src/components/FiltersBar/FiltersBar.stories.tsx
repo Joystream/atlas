@@ -80,7 +80,7 @@ const ControlsContainer = styled.div`
   border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
   z-index: 100;
   position: relative;
-  background-color: black;
+  background-color: ${cVar('colorCoreBaseBlack')};
   min-height: 72px;
 
   ${media.md} {

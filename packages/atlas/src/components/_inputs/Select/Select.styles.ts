@@ -99,7 +99,7 @@ export const SelectMenu = styled.ul<SelectMenuProps>`
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
   background-color: ${cVar('colorCoreNeutral700')};
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
   list-style: none;
 `
 type SelectOptionProps = {

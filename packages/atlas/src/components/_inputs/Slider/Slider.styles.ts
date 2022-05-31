@@ -24,7 +24,7 @@ export const StyledRcSlider = styled(RcSlider)`
     width: ${THUMB_SIZE}px;
     height: ${THUMB_SIZE}px;
     margin-top: ${THUMB_SIZE / -2 + TRACK_HEIGHT / 2}px;
-    background-color: white;
+    background-color: ${cVar('colorCoreBaseWhite')};
     border-radius: 0;
     border: none;
 

@@ -132,7 +132,7 @@ export const CustomRadioInput = styled.div<CustomRadioInputProps>`
   ${colorFromProps};
 
   & + span {
-    color: ${(props) => (props.checked ? 'white' : '')};
+    color: ${(props) => (props.checked ? cVar('colorCoreBaseWhite') : '')};
   }
 
   transition: background-color 0.25s ease, border-color 0.25s ease;

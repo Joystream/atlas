@@ -30,7 +30,7 @@ const topbarFocusStyles = ({ hasFocus }: FocusProps) =>
         }
       `
     : css`
-        background-color: black;
+        background-color: ${cVar('colorCoreBaseBlack')};
       `
 
 export const StyledTopbarBase = styled(TopbarBase)<FocusProps>`

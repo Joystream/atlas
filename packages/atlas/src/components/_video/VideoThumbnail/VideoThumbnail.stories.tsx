@@ -143,7 +143,7 @@ CustomContent.args = {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
-        color: 'white',
+        color: cVar('colorCoreBaseWhite'),
       }}
     >
       Hello world!
