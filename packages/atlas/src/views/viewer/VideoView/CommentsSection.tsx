@@ -245,7 +245,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
       />
-      {comments && !comments.length && (
+      {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
       <CommentWrapper ref={commentSectionWrapperRef}>
