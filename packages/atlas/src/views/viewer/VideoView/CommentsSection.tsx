@@ -251,8 +251,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       <CommentWrapper ref={commentSectionWrapperRef}>
         {commentsLoading && !isFetchingMore
           ? mappedPlaceholders
-          : [
-              filteredComments?.map((comment, idx) => (
+          : filteredComments
+              ?.map((comment, idx) => (
                 <CommentThread
                   key={`${comment.id}-${idx}`}
                   commentId={comment.id}
@@ -262,9 +262,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   highlightedCommentId={highlightedCommentId}
                   setHighlightedCommentId={setHighlightedCommentId}
                 />
-              )),
-              ...(isFetchingMore && commentsLoading ? mappedPlaceholders : []),
-            ]}
+              ))
+              .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
       </CommentWrapper>
       {!mobileCommentsOpen && !commentsLoading && comments && comments.length && pageInfo?.hasNextPage && (
         <LoadMoreCommentsWrapper>
