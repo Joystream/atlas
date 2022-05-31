@@ -89,12 +89,12 @@ export const FormField = React.memo(
                 <Text variant="h300">{label}</Text>
               </label>
             )}
-            {tooltip && <StyledInformation {...tooltip} />}
             {optional && (
               <OptionalText variant="t200" secondary>
                 (Optional)
               </OptionalText>
             )}
+            {tooltip && <StyledInformation {...tooltip} />}
           </FormFieldHeader>
           {description &&
             (description instanceof Array ? (

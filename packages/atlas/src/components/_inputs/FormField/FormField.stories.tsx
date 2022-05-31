@@ -75,6 +75,16 @@ WithMultipleParagraphs.argTypes = {
   },
 }
 
+export const WithTooltip = Template.bind({})
+
+WithTooltip.args = {
+  tooltip: {
+    placement: 'top',
+    headerText: 'Some important information',
+    text: 'Long description',
+  },
+}
+
 const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
   const [fieldEnabled, setFieldEnabled] = useState(false)
   const [anotherFieldEnabled, setAnotherFieldEnabled] = useState(false)

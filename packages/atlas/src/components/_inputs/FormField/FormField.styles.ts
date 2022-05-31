@@ -28,6 +28,7 @@ export const FormFieldWrapper = styled.div<DenseProps>`
 export const FormFieldHeader = styled.header`
   display: flex;
   align-items: center;
+  max-height: 24px;
   width: 85%;
   word-wrap: break-word;
 `
@@ -37,14 +38,14 @@ export const StyledInformation = styled(Information)`
 `
 
 export const OptionalText = styled(Text)`
-  margin-left: ${sizes(2)};
+  margin-left: ${sizes(1)};
 `
 
 export const FormFieldDescription = styled(Text)`
   width: 85%;
   display: block;
-  padding: ${sizes(2)} 0;
   word-wrap: break-word;
+  margin-top: ${sizes(1)};
 `
 
 const errorShake = keyframes`
