@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar, sizes } from '@/styles'
 
@@ -63,4 +64,10 @@ export const VideoMetaContainer = styled.div`
 
 export const Views = styled.span`
   white-space: nowrap;
+`
+
+export const PlaylistButton = styled(Button)`
+  :not(:only-child) {
+    margin-top: ${sizes(1)};
+  }
 `

@@ -12,6 +12,7 @@ import { formatVideoDate, formatVideoViews } from '@/utils/video'
 import {
   ChannelTitle,
   KebabMenuButtonIcon,
+  PlaylistButton,
   StyledAvatar,
   StyledLink,
   VideoDetailsContainer,
@@ -34,11 +35,13 @@ export type VideoTileDetailsProps = {
   channelAvatarUrl?: string | null
   channelHref?: string
   onChannelAvatarClick?: () => void
+  onPlaylistDetailsClick?: () => void
   loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
   kebabMenuItems?: MenuItemProps[]
   variant?: VideoDetailsVariant
+  type?: 'video' | 'playlist'
 }
 
 export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
@@ -51,12 +54,14 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   channelTitle,
   channelHref,
   onChannelAvatarClick,
+  onPlaylistDetailsClick,
   size = 'medium',
   channelAvatarUrl,
   loadingAvatar,
   loading,
   kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
+  type = 'playlist',
 }) => {
   return (
     <VideoDetailsContainer>
@@ -98,15 +103,23 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               {loading ? (
                 <SkeletonLoader height={variant === 'withoutChannel' ? 20 : 16} width="100%" />
               ) : (
-                <Text variant="t200" secondary as="p">
-                  {videoSubTitle
-                    ? videoSubTitle
-                    : createdAt && (
-                        <>
-                          {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
-                        </>
-                      )}
-                </Text>
+                <>
+                  {type === 'video' ? (
+                    <Text variant="t200" secondary as="p">
+                      {videoSubTitle
+                        ? videoSubTitle
+                        : createdAt && (
+                            <>
+                              {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
+                            </>
+                          )}
+                    </Text>
+                  ) : (
+                    <PlaylistButton onClick={onPlaylistDetailsClick} variant="tertiary" size="small" textOnly>
+                      View playlist details
+                    </PlaylistButton>
+                  )}
+                </>
               )}
             </VideoMetaContainer>
           </VideoInfoContainer>

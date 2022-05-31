@@ -29,6 +29,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     channelTitle,
     channelHref,
     onChannelAvatarClick,
+    onPlaylistDetailsClick,
     kebabMenuItems,
     onClick,
     slots,
@@ -41,6 +42,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     views,
     loadingThumbnail,
     loadingAvatar,
+    type,
   }) => {
     const [tileSize, setTileSize] = useState<'small' | 'medium'>()
     const { ref: thumbnailRef } = useResizeObserver<HTMLAnchorElement>({
@@ -77,6 +79,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           videoHref={videoHref}
           channelHref={channelHref}
           onChannelAvatarClick={onChannelAvatarClick}
+          onPlaylistDetailsClick={onPlaylistDetailsClick}
           variant={detailsVariant}
           channelAvatarUrl={channelAvatarUrl}
           videoTitle={videoTitle}
@@ -87,6 +90,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           loading={loadingDetails}
           loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}
+          type={type}
         />
       </VideoTileContainer>
     )
