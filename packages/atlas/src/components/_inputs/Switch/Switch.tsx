@@ -15,7 +15,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   ({ className, disabled, name, onChange, value, label }, ref) => {
     return (
       <SwitchLabel disabled={disabled} className={className} as={label ? 'label' : 'div'}>
-        <SwitchWrapper disabled={disabled}>
+        <SwitchWrapper>
           <SwitchCheckbox
             type="checkbox"
             name={name}
@@ -26,11 +26,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           />
           <SwitchSlider />
         </SwitchWrapper>
-        {label && (
-          <LabelText variant="t200" secondary={disabled}>
-            {label}
-          </LabelText>
-        )}
+        {label && <LabelText variant="t200">{label}</LabelText>}
       </SwitchLabel>
     )
   }
