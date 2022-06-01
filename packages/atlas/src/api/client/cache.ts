@@ -79,9 +79,9 @@ const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
 
 const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
   const parentCommentId = args?.where?.parentComment?.id_eq
-  const orderBy = args?.orderBy || []
   const videoId = args?.where?.video?.id_eq
-  return `${orderBy}:${videoId}:${parentCommentId}`
+  const orderBy = args?.orderBy || []
+  return `${parentCommentId}:${videoId}:${orderBy}`
 }
 
 const createDateHandler = () => ({
@@ -96,7 +96,6 @@ const createDateHandler = () => ({
 type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
-  commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelsConnection: relayStylePagination(getChannelKeyArgs),
   mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
@@ -134,6 +133,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       return existing?.slice(offset, offset + limit)
     },
   },
+  commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||

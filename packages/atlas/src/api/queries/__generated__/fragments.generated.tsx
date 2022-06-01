@@ -1494,17 +1494,194 @@ export type CommentFieldsFragment = {
     count: number
     reactionId: number
   }>
-  commentcreatedeventcomment?: Array<{ __typename?: 'CommentCreatedEvent'; inExtrinsic?: string | null }> | null
 }
 
-export type MetaprotocolTransactionStatusEventFieldsFragment = {
-  __typename?: 'MetaprotocolTransactionStatusEvent'
-  inExtrinsic?: string | null
-  inBlock: number
-  status:
-    | { __typename: 'MetaprotocolTransactionErrored'; message: string }
-    | { __typename: 'MetaprotocolTransactionPending' }
-    | { __typename: 'MetaprotocolTransactionSuccessful' }
+export type MetaprotocolTransactionSuccessFieldsFragment = {
+  __typename?: 'MetaprotocolTransactionSuccessful'
+  commentCreated?: {
+    __typename?: 'Comment'
+    id: string
+    createdAt: Date
+    isEdited: boolean
+    parentCommentId?: string | null
+    repliesCount: number
+    text: string
+    status: Types.CommentStatus
+    author: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+  } | null
+  commentEdited?: {
+    __typename?: 'Comment'
+    id: string
+    createdAt: Date
+    isEdited: boolean
+    parentCommentId?: string | null
+    repliesCount: number
+    text: string
+    status: Types.CommentStatus
+    author: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+  } | null
+  commentDeleted?: {
+    __typename?: 'Comment'
+    id: string
+    createdAt: Date
+    isEdited: boolean
+    parentCommentId?: string | null
+    repliesCount: number
+    text: string
+    status: Types.CommentStatus
+    author: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+  } | null
+  commentModerated?: {
+    __typename?: 'Comment'
+    id: string
+    createdAt: Date
+    isEdited: boolean
+    parentCommentId?: string | null
+    repliesCount: number
+    text: string
+    status: Types.CommentStatus
+    author: {
+      __typename?: 'Membership'
+      id: string
+      handle: string
+      metadata: {
+        __typename?: 'MemberMetadata'
+        about?: string | null
+        avatar?:
+          | {
+              __typename?: 'AvatarObject'
+              avatarObject?: {
+                __typename?: 'StorageDataObject'
+                id: string
+                createdAt: Date
+                size: string
+                isAccepted: boolean
+                ipfsHash: string
+                storageBag: { __typename?: 'StorageBag'; id: string }
+                type:
+                  | { __typename: 'DataObjectTypeChannelAvatar' }
+                  | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                  | { __typename: 'DataObjectTypeUnknown' }
+                  | { __typename: 'DataObjectTypeVideoMedia' }
+                  | { __typename: 'DataObjectTypeVideoThumbnail' }
+              } | null
+            }
+          | { __typename?: 'AvatarUri'; avatarUri: string }
+          | null
+      }
+    }
+    reactionsCountByReactionId: Array<{
+      __typename?: 'CommentReactionsCountByReactionId'
+      id: string
+      count: number
+      reactionId: number
+    }>
+  } | null
 }
 
 export const VideoCategoryFieldsFragmentDoc = gql`
@@ -1828,22 +2005,24 @@ export const CommentFieldsFragmentDoc = gql`
     repliesCount
     text
     status
-    commentcreatedeventcomment {
-      inExtrinsic
-    }
   }
   ${BasicMembershipFieldsFragmentDoc}
   ${CommentReactionsCountByReactionIdFieldsFragmentDoc}
 `
-export const MetaprotocolTransactionStatusEventFieldsFragmentDoc = gql`
-  fragment MetaprotocolTransactionStatusEventFields on MetaprotocolTransactionStatusEvent {
-    inExtrinsic
-    inBlock
-    status {
-      __typename
-      ... on MetaprotocolTransactionErrored {
-        message
-      }
+export const MetaprotocolTransactionSuccessFieldsFragmentDoc = gql`
+  fragment MetaprotocolTransactionSuccessFields on MetaprotocolTransactionSuccessful {
+    commentCreated {
+      ...CommentFields
+    }
+    commentEdited {
+      ...CommentFields
+    }
+    commentDeleted {
+      ...CommentFields
+    }
+    commentModerated {
+      ...CommentFields
     }
   }
+  ${CommentFieldsFragmentDoc}
 `

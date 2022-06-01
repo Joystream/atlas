@@ -30,10 +30,10 @@ import {
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
+  ShowRepliesTextButton,
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
-  StyledRepliesSkeleton,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
@@ -55,9 +55,8 @@ export type InternalCommentProps = {
   type: 'default' | 'deleted' | 'options'
   reactions: Omit<ReactionChipProps, 'onReactionClick'>[] | undefined
   reactionPopoverDismissed: boolean | undefined
-  replyAvatars: (AvatarGroupUrlAvatar & { handle: string })[] | undefined
+  replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[]
   repliesOpen: boolean | undefined
-  repliesLoading: boolean | undefined
   repliesCount: number | undefined
   isCommentFromUrl: boolean | undefined
   videoId: string | undefined
@@ -93,7 +92,6 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   replyAvatars,
   onToggleReplies,
   repliesOpen,
-  repliesLoading,
   repliesCount,
   isCommentFromUrl,
   videoId,
@@ -292,24 +290,19 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                       )}
                     </ReactionsWrapper>
                     <RepliesWrapper>
-                      {!!repliesCount && (
+                      {!!repliesCount && filteredDuplicatedAvatars.length ? (
                         <StyledAvatarGroup
                           size="small"
                           avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
                           avatars={filteredDuplicatedAvatars}
                           clickable={false}
-                          loading={repliesLoading}
                         />
+                      ) : null}
+                      {onToggleReplies && !!repliesCount && (
+                        <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
+                          {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                        </ShowRepliesTextButton>
                       )}
-                      {onToggleReplies &&
-                        !!repliesCount &&
-                        (repliesLoading ? (
-                          <StyledRepliesSkeleton height={17} width={75} />
-                        ) : (
-                          <ReplyButton onClick={onToggleReplies} variant="tertiary" size="small" _textOnly>
-                            {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                          </ReplyButton>
-                        ))}
                       {onReplyClick && !isDeleted && (commentHover || isTouchDevice) && (
                         <ReplyButton
                           onClick={onReplyClick}

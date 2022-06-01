@@ -14595,6 +14595,14 @@ export type MetaprotocolTransactionStatusEventWhereUniqueInput = {
 
 export type MetaprotocolTransactionSuccessful = {
   __typename?: 'MetaprotocolTransactionSuccessful'
+  /** ID of the created comment (if any) */
+  commentCreated?: Maybe<Comment>
+  /** ID of the deleted comment (if any) */
+  commentDeleted?: Maybe<Comment>
+  /** ID of the edited comment (if any) */
+  commentEdited?: Maybe<Comment>
+  /** ID of the moderated comment (if any) */
+  commentModerated?: Maybe<Comment>
   /** Type needs to have at least one non-relation entity. This value is not used. */
   dummy?: Maybe<Scalars['Int']>
 }

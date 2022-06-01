@@ -1,4 +1,5 @@
 import { differenceInCalendarDays, differenceInSeconds } from 'date-fns'
+import { useEffect } from 'react'
 
 import { useNft, useNftHistory } from '@/api/hooks'
 import { useBids } from '@/api/hooks/bids'
@@ -15,7 +16,7 @@ const POLL_INTERVAL = 10000
 type UseNftWidgetReturn = NftWidgetProps | null
 export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { activeMemberId } = useUser()
-  const { nft, nftStatus } = useNft(videoId ?? '', { pollInterval: POLL_INTERVAL })
+  const { nft, nftStatus, called, startPolling, stopPolling } = useNft(videoId ?? '')
   const {
     isOwner,
     englishTimerState,
@@ -33,6 +34,17 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
     plannedEndAtBlock,
     hasTimersLoaded,
   } = useNftState(nft)
+
+  // poll for NFT changes only if the NFT exists
+  const hasNft = !!nft
+  useEffect(() => {
+    if (!called || !hasNft) return
+    startPolling(POLL_INTERVAL)
+
+    return () => {
+      stopPolling()
+    }
+  }, [called, hasNft, startPolling, stopPolling])
 
   const { bids: userBids } = useBids(
     {
@@ -68,7 +80,7 @@ export const useNftWidget = (videoId?: string): UseNftWidgetReturn => {
   const { url: ownerAvatarUri } = useMemberAvatar(owner)
   const { url: topBidderAvatarUri } = useMemberAvatar(nftStatus?.status === 'auction' ? nftStatus.topBidder : undefined)
 
-  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, { pollInterval: POLL_INTERVAL })
+  const { entries: nftHistory } = useNftHistoryEntries(videoId || null, { skip: !nft, pollInterval: POLL_INTERVAL })
 
   switch (nftStatus?.status) {
     case 'auction': {

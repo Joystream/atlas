@@ -23,14 +23,26 @@ import { CommentRowProps } from '../CommentRow'
 export type CommentProps = {
   commentId?: string
   video?: VideoFieldsFragment | null
+  userReactions?: number[]
   isReplyable?: boolean
   setHighlightedCommentId?: React.Dispatch<React.SetStateAction<string | null>>
   setRepliesOpen?: React.Dispatch<React.SetStateAction<boolean>>
   isRepliesOpen?: boolean
+  onReplyPosted?: (replyId: string) => void
 } & Exclude<CommentRowProps, 'memberAvatarUrl' | 'isMemberAvatarLoading'>
 
 export const Comment: React.FC<CommentProps> = React.memo(
-  ({ commentId, video, setHighlightedCommentId, setRepliesOpen, isRepliesOpen, isReplyable, ...rest }) => {
+  ({
+    commentId,
+    video,
+    userReactions,
+    setHighlightedCommentId,
+    setRepliesOpen,
+    isRepliesOpen,
+    isReplyable,
+    onReplyPosted,
+    ...rest
+  }) => {
     const replyCommentInputRef = useRef<HTMLTextAreaElement>(null)
     const [originalComment, setOriginalComment] = useState<CommentFieldsFragment | null>(null)
     const [showEditHistory, setShowEditHistory] = useState(false)
@@ -44,10 +56,9 @@ export const Comment: React.FC<CommentProps> = React.memo(
 
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { comment } = useComment(
-      { commentId: commentId ?? '', memberId: activeMemberId ?? undefined, videoId: video?.id },
+      { commentId: commentId ?? '' },
       {
         skip: !commentId,
-        fetchPolicy: 'cache-only',
       }
     )
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
@@ -138,7 +149,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
       if (authorized) {
         setProcessingCommentReactionId(commentId + `-` + reactionId.toString())
-        await reactToComment(commentId, reactionId)
+        await reactToComment(commentId, video?.id || '', reactionId)
         setProcessingCommentReactionId(null)
       } else {
         openSignInDialog({ onConfirm: signIn })
@@ -156,13 +167,10 @@ export const Comment: React.FC<CommentProps> = React.memo(
         parentCommentId: comment.id,
       })
       setReplyCommentInputIsProcessing(false)
-
-      // TODO: uncomment code once posted replies return an Id
-      // if (newCommentId) {
       setReplyCommentInputText('')
       setHighlightedCommentId?.(newCommentId || null)
+      onReplyPosted?.(newCommentId || '')
       setReplyInputOpen(false)
-      // }
     }
 
     const handleReplyClick = () => {
@@ -191,23 +199,18 @@ export const Comment: React.FC<CommentProps> = React.memo(
       comment && setOriginalComment?.(comment)
     }
 
-    const replyAvatars = comment?.replies?.map((comment) => ({
-      url:
-        comment?.author.metadata.avatar?.__typename === 'AvatarUri' ? comment?.author.metadata.avatar?.avatarUri : '',
-      handle: comment.author.handle,
-    }))
-
     const loading = !commentId
 
     const reactions =
-      comment &&
-      getCommentReactions({
-        commentId: comment?.id,
-        userReactionsIds: comment?.userReactions,
-        reactionsCount: comment?.reactionsCountByReactionId,
-        activeMemberId,
-        processingCommentReactionId,
-      })
+      (comment &&
+        getCommentReactions({
+          commentId: comment?.id,
+          userReactionsIds: userReactions,
+          reactionsCount: comment?.reactionsCountByReactionId,
+          activeMemberId,
+          processingCommentReactionId,
+        })) ||
+      undefined
 
     const commentType =
       comment && ['DELETED', 'MODERATED'].includes(comment.status)
@@ -251,9 +254,8 @@ export const Comment: React.FC<CommentProps> = React.memo(
             onToggleReplies={() => isReplyable && setRepliesOpen?.((value) => !value)}
             repliesOpen={isReplyable && isRepliesOpen}
             onReplyClick={isReplyable ? handleReplyClick : undefined}
-            replyAvatars={replyAvatars}
             repliesCount={comment?.repliesCount}
-            repliesLoading={!!comment?.repliesCount && !comment?.replies}
+            replyAvatars={[]} // for now there is no way to know who left a reply without actually opening replies, in the future QN may add support for this
             loading={loading}
             createdAt={comment?.createdAt ? new Date(comment.createdAt ?? '') : undefined}
             text={comment?.text}

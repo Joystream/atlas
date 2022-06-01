@@ -3,7 +3,7 @@ import { debounce } from 'lodash-es'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useComment, useCommentSectionComments } from '@/api/hooks'
+import { useComment, useCommentSectionComments, useUserCommentsReactions } from '@/api/hooks'
 import { CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
@@ -68,6 +68,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
   )
+  const { userReactions } = useUserCommentsReactions(videoId, activeMemberId)
 
   const { addComment } = useReactionTransactions()
 
@@ -182,32 +183,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     [commentsLoading, highlightedCommentId, setHighlightedCommentId]
   )
 
-  // remove highlighted reply taken from url
-  const filteredParentCommentReplies = parentCommentFromUrl
-    ? {
-        ...parentCommentFromUrl,
-        replies: parentCommentFromUrl?.replies?.filter((comment) => comment.id !== commentIdQueryParam) || [],
-      }
-    : null
+  const displayedCommentFromUrl = commentFromUrl?.parentCommentId ? parentCommentFromUrl : commentFromUrl
 
   // remove comment taken from url from regular array of comments
-  const filteredCommentsFromCommentUrl =
-    comments?.filter(
-      (comment) => commentFromUrl && ![commentFromUrl.id, commentFromUrl.parentCommentId].includes(comment.id)
-    ) || []
-
-  // if comment from url is reply, merge it with parent comment, if not render only parent
-  const preparedHighlightedComment = commentFromUrl
-    ? commentFromUrl?.parentCommentId
-      ? filteredParentCommentReplies
-        ? [filteredParentCommentReplies, commentFromUrl]
-        : []
-      : [commentFromUrl]
-    : []
-
-  const filteredComments = commentFromUrl
-    ? [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
-    : comments
+  const filteredComments = comments?.filter((comment) => comment.id !== displayedCommentFromUrl?.id) || []
 
   const mappedPlaceholders = placeholderItems.map((_, idx) => <Comment key={idx} />)
 
@@ -249,6 +228,17 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
       <CommentWrapper ref={commentSectionWrapperRef}>
+        {displayedCommentFromUrl && (
+          <CommentThread
+            commentId={displayedCommentFromUrl.id}
+            video={video}
+            hasAnyReplies={displayedCommentFromUrl.repliesCount > 0}
+            userReactionsLookup={userReactions}
+            highlightedCommentId={highlightedCommentId}
+            setHighlightedCommentId={setHighlightedCommentId}
+            linkedReplyId={parentCommentFromUrl ? commentFromUrl?.id : null}
+          />
+        )}
         {commentsLoading && !isFetchingMore
           ? mappedPlaceholders
           : filteredComments
@@ -257,8 +247,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
                   key={`${comment.id}-${idx}`}
                   commentId={comment.id}
                   video={video}
-                  replies={comment.replies}
-                  repliesCount={comment.repliesCount}
+                  hasAnyReplies={comment.repliesCount > 0}
+                  userReactionsLookup={userReactions}
                   highlightedCommentId={highlightedCommentId}
                   setHighlightedCommentId={setHighlightedCommentId}
                 />

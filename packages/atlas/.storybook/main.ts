@@ -21,6 +21,7 @@ const config: CustomizedStorybookConfig = {
     }
     storybookConfig.build.target = ''
     const viteConfig = _viteConfig as UserConfig
+    // @ts-ignore complains about flat
     const vitePlugins = Array.isArray(viteConfig.plugins) ? viteConfig.plugins.flat() : []
     const filteredVitePlugins = vitePlugins.filter(
       (plugin) =>

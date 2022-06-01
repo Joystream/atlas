@@ -3,31 +3,105 @@ import { useCallback } from 'react'
 
 import {
   GetCommentDocument,
-  GetCommentsDocument,
+  GetCommentEditsDocument,
+  GetCommentEditsQuery,
+  GetCommentEditsQueryVariables,
+  GetCommentQuery,
+  GetCommentQueryVariables,
+  GetCommentRepliesConnectionDocument,
+  GetCommentRepliesConnectionQuery,
+  GetCommentRepliesConnectionQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionDocument,
-  GetUserCommentsAndVideoCommentsConnectionQueryHookResult,
+  GetUserCommentsAndVideoCommentsConnectionQuery,
+  GetUserCommentsAndVideoCommentsConnectionQueryVariables,
+  GetUserCommentsReactionsDocument,
+  GetUserCommentsReactionsQuery,
+  GetUserCommentsReactionsQueryVariables,
   GetVideoDocument,
+  GetVideoQuery,
+  GetVideoQueryVariables,
 } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
-import { ConsoleLogger } from '@/utils/logs'
+import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
-
   const client = useApolloClient()
 
-  const refetchComments = useCallback(
-    (): Promise<GetUserCommentsAndVideoCommentsConnectionQueryHookResult[]> =>
-      client.refetchQueries({
-        include: [GetUserCommentsAndVideoCommentsConnectionDocument, GetCommentsDocument, GetCommentDocument],
-      }),
+  const refetchComment = useCallback(
+    (id: string) => {
+      return client.query<GetCommentQuery, GetCommentQueryVariables>({
+        query: GetCommentDocument,
+        variables: {
+          commentId: id,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
     [client]
+  )
+
+  const refetchEdits = useCallback(
+    (id: string) => {
+      return client.query<GetCommentEditsQuery, GetCommentEditsQueryVariables>({
+        query: GetCommentEditsDocument,
+        variables: {
+          commentId: id,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [client]
+  )
+
+  const refetchReactions = useCallback(
+    (videoId: string) => {
+      return client.query<GetUserCommentsReactionsQuery, GetUserCommentsReactionsQueryVariables>({
+        query: GetUserCommentsReactionsDocument,
+        variables: {
+          memberId: activeMemberId || '',
+          videoId: videoId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [activeMemberId, client]
+  )
+
+  const refetchReplies = useCallback(
+    (parentCommentId: string) => {
+      return client.query<GetCommentRepliesConnectionQuery, GetCommentRepliesConnectionQueryVariables>({
+        query: GetCommentRepliesConnectionDocument,
+        variables: {
+          parentCommentId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [client]
+  )
+
+  const refetchCommentsSection = useCallback(
+    (videoId: string) => {
+      return client.query<
+        GetUserCommentsAndVideoCommentsConnectionQuery,
+        GetUserCommentsAndVideoCommentsConnectionQueryVariables
+      >({
+        query: GetUserCommentsAndVideoCommentsConnectionDocument,
+        variables: {
+          memberId: activeMemberId,
+          videoId: videoId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [activeMemberId, client]
   )
 
   const addComment = useCallback(
@@ -45,7 +119,7 @@ export const useReactionTransactions = () => {
         return
       }
 
-      let newCommentId: string | undefined
+      let newCommentId = '' // this should be always populated in onTxSync
 
       await handleTransaction({
         txFactory: async (updateStatus) =>
@@ -58,27 +132,42 @@ export const useReactionTransactions = () => {
             parentCommentId || null,
             proxyCallback(updateStatus)
           ),
-        onTxSync: async ({ transactionHash }) => {
-          const refetchResult = await refetchComments()
-          const { data } = refetchResult[0]
-
-          newCommentId = data?.videoCommentsConnection.edges.find(
-            // TODO We shouldn't fetch additional data from the commentcreatedeventcomment
-            // update this once QN supports getting ID directly from the status query
-            (edge) => edge.node.commentcreatedeventcomment?.[0].inExtrinsic === transactionHash
-          )?.node.id
+        onTxSync: async (_, metaStatus) => {
+          if (!metaStatus?.commentCreated) {
+            SentryLogger.error('No comment created found in metaprotocol status event', 'useReactionTransactions')
+            return
+          }
+          newCommentId = metaStatus.commentCreated.id
+          if (parentCommentId) {
+            await Promise.all([
+              refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
+              refetchReplies(parentCommentId),
+            ])
+          } else {
+            // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
+            await refetchCommentsSection(videoId)
+          }
         },
         minimized: {
           signErrorMessage: 'Failed to post video comment',
         },
       })
+
       return newCommentId
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [
+      activeMemberId,
+      handleTransaction,
+      joystream,
+      proxyCallback,
+      refetchComment,
+      refetchCommentsSection,
+      refetchReplies,
+    ]
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, reactionId: ReactionId) => {
+    async (commentId: string, videoId: string, reactionId: ReactionId) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('No joystream instance')
         return
@@ -95,12 +184,10 @@ export const useReactionTransactions = () => {
         minimized: {
           signErrorMessage: 'Failed to react to comment',
         },
-        onTxSync: async () => {
-          await refetchComments()
-        },
+        onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
   )
 
   const updateComment = useCallback(
@@ -115,15 +202,13 @@ export const useReactionTransactions = () => {
           (
             await joystream.extrinsics
           ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
-        onTxSync: async () => {
-          await refetchComments()
-        },
+        onTxSync: async () => refetchEdits(commentId),
         minimized: {
           signErrorMessage: 'Failed to udpate video comment',
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchEdits]
   )
   const deleteComment = useCallback(
     async (commentId: string, videoTitle?: string) => {
@@ -135,9 +220,6 @@ export const useReactionTransactions = () => {
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
-        onTxSync: async () => {
-          await refetchComments()
-        },
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Your comment to the video ${videoTitle} has been deleted`,
@@ -147,7 +229,7 @@ export const useReactionTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [activeMemberId, handleTransaction, joystream, proxyCallback]
   )
 
   const moderateComment = useCallback(
@@ -165,9 +247,6 @@ export const useReactionTransactions = () => {
             commentId,
             proxyCallback(updateStatus)
           ),
-        onTxSync: async () => {
-          await refetchComments()
-        },
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `${commentAuthorHandle}'s comment to your video ${videoTitle} has been deleted`,
@@ -177,13 +256,18 @@ export const useReactionTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComments]
+    [activeMemberId, handleTransaction, joystream, proxyCallback]
   )
 
   const refetchVideo = useCallback(
-    () =>
-      client.refetchQueries({
-        include: [GetVideoDocument],
+    (id: string) =>
+      client.query<GetVideoQuery, GetVideoQueryVariables>({
+        query: GetVideoDocument,
+        variables: {
+          where: {
+            id,
+          },
+        },
       }),
     [client]
   )
@@ -202,7 +286,7 @@ export const useReactionTransactions = () => {
           signErrorMessage: 'Failed to react to video',
         },
         onTxSync: async () => {
-          await refetchVideo()
+          await refetchVideo(videoId)
         },
       })
     },
