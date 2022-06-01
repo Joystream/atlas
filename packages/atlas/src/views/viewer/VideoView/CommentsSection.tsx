@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { NetworkStatus } from '@apollo/client'
+import { debounce } from 'lodash-es'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useComment, useCommentSectionComments } from '@/api/hooks'
 import { CommentOrderByInput, VideoFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { Text } from '@/components/Text'
+import { LoadMoreButton } from '@/components/_buttons/LoadMoreButton'
 import { Comment } from '@/components/_comments/Comment'
 import { CommentInput } from '@/components/_comments/CommentInput'
 import { Select } from '@/components/_inputs/Select'
@@ -18,7 +21,12 @@ import { useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
 
 import { CommentThread } from './CommentThread'
-import { CommentWrapper, CommentsSectionHeader, CommentsSectionWrapper } from './VideoView.styles'
+import {
+  CommentWrapper,
+  CommentsSectionHeader,
+  CommentsSectionWrapper,
+  LoadMoreCommentsWrapper,
+} from './VideoView.styles'
 
 type CommentsSectionProps = {
   disabled?: boolean
@@ -28,28 +36,37 @@ type CommentsSectionProps = {
 }
 
 const SCROLL_TO_COMMENT_TIMEOUT = 300
+const INITIAL_COMMENTS = 10
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, video, videoLoading }) => {
-  const mdMatch = useMediaMatch('md')
+  const [commentInputText, setCommentInputText] = useState('')
+  const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
+  const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const [sortCommentsBy, setSortCommentsBy] = useState(COMMENTS_SORT_OPTIONS[0].value)
+  const [commentsOpen, setCommentsOpen] = useState(false)
+  const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
+  const mdMatch = useMediaMatch('md')
   const { id: videoId } = useParams()
   const { activeMemberId, activeAccountId, signIn, activeMembership } = useUser()
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
-  const [commentInputText, setCommentInputText] = useState('')
-  const [commentInputIsProcessing, setCommentInputIsProcessing] = useState(false)
-  const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
-  const commentIdQueryParam = useRouterQuery(QUERY_PARAMS.COMMENT_ID)
 
-  const authorized = activeMemberId && activeAccountId
   const commentWrapperRef = useRef<HTMLDivElement>(null)
-  const { comments, totalCount, loading } = useCommentSectionComments(
-    {
+  const queryVariables = useMemo(
+    () => ({
       memberId: activeMemberId,
-      videoId: videoId,
+      videoId,
       orderBy: sortCommentsBy,
-    },
-    { skip: disabled || !videoId }
+    }),
+    [activeMemberId, sortCommentsBy, videoId]
+  )
+  const commentsSectionHeaderRef = useRef<HTMLDivElement>(null)
+  const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
+  const mobileCommentsOpen = commentsOpen || mdMatch
+  const [numberOfComments, setNumberOfComments] = useState(mobileCommentsOpen ? INITIAL_COMMENTS : 1)
+  const { comments, loading, fetchMore, pageInfo, networkStatus, totalCount } = useCommentSectionComments(
+    { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
+    { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
   )
 
   const { addComment } = useReactionTransactions()
@@ -67,8 +84,11 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
   )
 
+  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading || videoLoading
+  const isFetchingMore = networkStatus === NetworkStatus.fetchMore
+
   const scrollToCommentInput = (smooth?: boolean) => {
-    commentWrapperRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+    commentsSectionHeaderRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
   }
 
   const handleSorting = (value?: CommentOrderByInput[] | null) => {
@@ -76,6 +96,36 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       setSortCommentsBy(value)
     }
   }
+
+  const setMoreComments = () => setNumberOfComments((prevState) => prevState + INITIAL_COMMENTS)
+
+  // increase number of comments when user scrolls to the end of page
+  useEffect(() => {
+    if (!mobileCommentsOpen) {
+      return
+    }
+    const scrollHandler = debounce(() => {
+      if (!commentSectionWrapperRef.current) return
+      const scrolledToBottom = document.documentElement.scrollTop >= commentSectionWrapperRef.current.scrollHeight
+      if (scrolledToBottom && pageInfo?.hasNextPage && !commentsLoading) {
+        setMoreComments()
+      }
+    }, 100)
+    window.addEventListener('scroll', scrollHandler)
+
+    return () => {
+      window.removeEventListener('scroll', scrollHandler)
+    }
+  }, [commentsLoading, mobileCommentsOpen, pageInfo?.hasNextPage])
+
+  const authorized = activeMemberId && activeAccountId
+
+  // fetch more results when user scrolls to end of page
+  useEffect(() => {
+    if (pageInfo && numberOfComments !== INITIAL_COMMENTS && comments?.length !== numberOfComments) {
+      fetchMore({ variables: { ...queryVariables, first: numberOfComments } })
+    }
+  }, [fetchMore, numberOfComments, pageInfo, queryVariables, comments?.length])
 
   const handleComment = async (parentCommentId?: string) => {
     if (!videoId || !commentInputText) {
@@ -94,7 +144,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     }
   }
 
-  const commentsLoading = loading || commentFromUrlLoading || parentCommentFromUrlLoading || videoLoading
+  const handleLoadMoreClick = () => {
+    if (!comments || !comments.length) {
+      return
+    }
+    setCommentsOpen(true)
+    setMoreComments()
+  }
+
   const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   useEffect(() => {
@@ -152,6 +209,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
     ? [...preparedHighlightedComment, ...filteredCommentsFromCommentUrl]
     : comments
 
+  const mappedPlaceholders = placeholderItems.map((_, idx) => <Comment key={idx} />)
+
   if (disabled) {
     return (
       <CommentsSectionWrapper>
@@ -161,7 +220,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   }
   return (
     <CommentsSectionWrapper>
-      <CommentsSectionHeader ref={commentWrapperRef}>
+      <CommentsSectionHeader ref={commentsSectionHeaderRef}>
         <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
         <Select
           size="small"
@@ -186,24 +245,31 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}
       />
-      {comments && !comments.length && (
+      {comments && !comments.length && !commentsLoading && (
         <EmptyFallback title="Be the first to comment" subtitle="Nobody has left a comment under this video yet." />
       )}
-      <CommentWrapper>
-        {commentsLoading
-          ? placeholderItems.map((_, idx) => <Comment key={idx} />)
-          : filteredComments?.map((comment, idx) => (
-              <CommentThread
-                key={`${comment.id}-${idx}`}
-                commentId={comment.id}
-                video={video}
-                replies={comment.replies}
-                repliesCount={comment.repliesCount}
-                highlightedCommentId={highlightedCommentId}
-                setHighlightedCommentId={setHighlightedCommentId}
-              />
-            ))}
+      <CommentWrapper ref={commentSectionWrapperRef}>
+        {commentsLoading && !isFetchingMore
+          ? mappedPlaceholders
+          : filteredComments
+              ?.map((comment, idx) => (
+                <CommentThread
+                  key={`${comment.id}-${idx}`}
+                  commentId={comment.id}
+                  video={video}
+                  replies={comment.replies}
+                  repliesCount={comment.repliesCount}
+                  highlightedCommentId={highlightedCommentId}
+                  setHighlightedCommentId={setHighlightedCommentId}
+                />
+              ))
+              .concat(isFetchingMore && commentsLoading ? mappedPlaceholders : [])}
       </CommentWrapper>
+      {!mobileCommentsOpen && !commentsLoading && comments && comments.length && pageInfo?.hasNextPage && (
+        <LoadMoreCommentsWrapper>
+          <LoadMoreButton label="Show more comments" onClick={handleLoadMoreClick} />
+        </LoadMoreCommentsWrapper>
+      )}
     </CommentsSectionWrapper>
   )
 }

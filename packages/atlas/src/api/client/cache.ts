@@ -10,6 +10,7 @@ import {
   GetNftsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   Query,
+  QueryCommentsConnectionArgs,
   SearchQueryVariables,
   VideoConnection,
   VideoFieldsFragment,
@@ -76,6 +77,13 @@ const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
   return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
 }
 
+const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
+  const parentCommentId = args?.where?.parentComment?.id_eq
+  const orderBy = args?.orderBy || []
+  const videoId = args?.where?.video?.id_eq
+  return `${orderBy}:${videoId}:${parentCommentId}`
+}
+
 const createDateHandler = () => ({
   merge: (_: unknown, existingData: string | Date): Date => {
     if (typeof existingData !== 'string') {
@@ -88,6 +96,7 @@ const createDateHandler = () => ({
 type CachePolicyFields<T extends string> = Partial<Record<T, FieldPolicy | FieldReadFunction>>
 
 const queryCacheFields: CachePolicyFields<keyof Query> = {
+  commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelsConnection: relayStylePagination(getChannelKeyArgs),
   mostFollowedChannelsConnection: relayStylePagination(getChannelKeyArgs),
   mostViewedChannelsConnection: relayStylePagination(getChannelKeyArgs),
