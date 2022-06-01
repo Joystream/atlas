@@ -7,7 +7,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { cVar, media, oldColors, sizes, square } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
 const CONTAINER_DESKTOP_HEIGHT = `calc(90vh - var(--size-topbar-height) + ${sizes(4)})`
 
@@ -28,8 +28,8 @@ export const Container = styled.div<ContainerProps>`
   width: 100%;
   height: ${getContainerMobileHeight};
   overflow-y: scroll;
-  background-color: ${oldColors.gray[800]};
-  box-shadow: inset 0 1px 0 ${oldColors.gray[700]};
+  background-color: ${cVar('colorCoreNeutral800')};
+  box-shadow: inset 0 1px 0 ${cVar('colorCoreNeutral700')};
   transition: all ${cVar('animationTransitionMedium')};
 
   /* 160px padding is used to cover the entire screen regardless of device */
@@ -91,7 +91,7 @@ export const Section = styled.section`
   padding: ${sizes(2)} 0;
 
   :not(:last-child) {
-    box-shadow: inset 0 -1px 0 ${oldColors.gray[700]};
+    box-shadow: inset 0 -1px 0 ${cVar('colorCoreNeutral700')};
   }
 `
 
@@ -99,7 +99,7 @@ export const ShortcutsWrapper = styled.section`
   display: none;
   align-items: center;
   justify-content: center;
-  color: ${oldColors.gray[300]};
+  color: ${cVar('colorCoreNeutral300')};
   padding: ${sizes(6)} 0;
   font: ${cVar('typographyDesktopT100')};
   letter-spacing: ${cVar('typographyDesktopT100LetterSpacing')};
@@ -132,7 +132,7 @@ export const Caption = styled(Text)`
 `
 
 const selectedStyles = (hover?: boolean) => `
-  background-color: ${oldColors.transparentPrimary[10]};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
   
       ${Title} {
         fill: ${cVar('colorCoreNeutral50')};
@@ -187,7 +187,7 @@ export const ClockWrapper = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: ${oldColors.transparentPrimary[10]};
+  background-color: ${cVar('colorCoreNeutral800Lighten')};
   margin-right: ${sizes(4)};
 
   path {
@@ -241,7 +241,7 @@ export const PlaceholderWrapper = styled.div`
 `
 
 export const HighlightedWord = styled.mark`
-  color: ${oldColors.gray[50]};
+  color: ${cVar('colorCoreNeutral50')};
   background-color: transparent;
 `
 

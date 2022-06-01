@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
-import { media, oldColors, sizes, transitions } from '@/styles'
+import { cVar, media, sizes, transitions } from '@/styles'
 
 type DragAndDropAreaProps = {
   isDragAccept?: boolean
@@ -39,7 +39,7 @@ export const DragAndDropArea = styled.div<DragAndDropAreaProps>`
     width: 100%;
     border: 1px dashed
       ${({ isDragAccept, isFileDialogActive }) =>
-        isDragAccept || isFileDialogActive ? oldColors.blue[500] : oldColors.gray[500]};
+        isDragAccept || isFileDialogActive ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral500')};
   }
 
   ${media.sm} {
@@ -66,7 +66,7 @@ export const SelectedFileInfoInnerContainer = styled(animated.div)`
 `
 
 export const SelectedFileInfoHeading = styled(Text)`
-  color: ${oldColors.blue[200]};
+  color: ${cVar('colorCoreBlue200')};
   display: block;
   margin: ${sizes(4)} 0 ${sizes(1)} 0;
 `
@@ -76,7 +76,7 @@ export const SelectedFileInfoBackground = styled.div`
   position: absolute;
   z-index: -1;
   opacity: 0.2;
-  background-color: ${oldColors.blue[500]};
+  background-color: ${cVar('colorCoreBlue500')};
   height: 100%;
 `
 
