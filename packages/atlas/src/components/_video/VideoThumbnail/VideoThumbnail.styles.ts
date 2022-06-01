@@ -68,7 +68,7 @@ export const ContentOverlay = styled.div`
   ${sharedOverlayStyles};
 
   position: relative;
-  background: black;
+  background: ${cVar('colorCoreBaseBlack')};
   transition: transform ${cVar('animationTransitionFast')};
   display: flex;
   justify-content: center;
@@ -125,7 +125,7 @@ export const VideoThumbnailContainer = styled(Link, {
   min-width: 166px;
   display: block;
   position: relative;
-  background-color: black;
+  background-color: ${cVar('colorCoreBaseBlack')};
   transition: background-color ${cVar('animationTransitionFast')};
 
   ${({ clickable }) =>

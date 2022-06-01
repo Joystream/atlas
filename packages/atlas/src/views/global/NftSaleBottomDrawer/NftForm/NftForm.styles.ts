@@ -18,7 +18,7 @@ export const NftWorkspaceFormWrapper = styled.div`
 `
 
 export const NftPreview = styled.div`
-  background: black;
+  background: ${cVar('colorCoreBaseBlack')};
   display: flex;
   justify-content: center;
   align-items: center;

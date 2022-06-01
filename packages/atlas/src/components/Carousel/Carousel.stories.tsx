@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef } from 'react'
 
-import { oldColors } from '@/styles'
+import { cVar } from '@/styles'
 
 import { Carousel, CarouselProps } from './Carousel'
 
@@ -40,8 +40,8 @@ const CarouselItem = styled.div`
   width: 300px;
   min-height: 200px;
   text-align: center;
-  color: ${oldColors.white};
-  background-color: ${oldColors.gray['300']};
+  color: ${cVar('colorCoreBaseWhite')};
+  background-color: ${cVar('colorCoreNeutral300')};
   display: flex;
   align-items: center;
   justify-content: center;

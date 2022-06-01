@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const TermsBox = styled.div`
   scroll-behavior: smooth;
@@ -9,7 +9,7 @@ export const TermsBox = styled.div`
   position: relative;
   height: 300px;
   width: 100%;
-  background-color: ${oldColors.gray[800]};
+  background-color: ${cVar('colorCoreNeutral800')};
   overflow: auto;
 `
 export const TextWrapper = styled.div`
@@ -17,7 +17,7 @@ export const TextWrapper = styled.div`
 
   a {
     text-decoration: none;
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
   }
 `
 
@@ -27,7 +27,7 @@ export const TermsOverlay = styled.div`
   bottom: 0;
   height: 35%;
   width: auto;
-  background: linear-gradient(180deg, transparent 0%, ${oldColors.gray[800]} 100%);
+  background: linear-gradient(180deg, transparent 0%, ${cVar('colorCoreNeutral800')} 100%);
 `
 export const ScrollButton = styled(Button)`
   position: absolute;

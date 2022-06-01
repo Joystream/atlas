@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { oldColors } from '@/styles'
+import { cVar } from '@/styles'
 
 export type TrailVariant = 'default' | 'player'
 
@@ -11,11 +11,11 @@ type TrailProps = {
 const getStrokeColor = (variant?: TrailVariant) => {
   switch (variant) {
     case 'default':
-      return oldColors.gray[500]
+      return cVar('colorCoreNeutral500')
     case 'player':
-      return oldColors.transparentWhite[32]
+      return cVar('colorCoreNeutral400Lighten')
     default:
-      return oldColors.gray[500]
+      return cVar('colorCoreNeutral500')
   }
 }
 
@@ -29,9 +29,9 @@ export const Trail = styled.path<TrailProps>`
   stroke: ${({ variant }) => getStrokeColor(variant)};
 `
 export const StyledPath = styled.path`
-  stroke: ${oldColors.blue[500]};
+  stroke: ${cVar('colorCoreBlue500')};
   transition: stroke-dashoffset 0.5s ease 0s;
 `
 export const Background = styled.circle`
-  fill: ${oldColors.gray[800]};
+  fill: ${cVar('colorCoreNeutral800')};
 `

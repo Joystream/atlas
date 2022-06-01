@@ -40,7 +40,7 @@ export const DialogContainer = styled.div`
   border-radius: ${cVar('radiusMedium')};
   box-shadow: ${cVar('effectElevation24Layer1')}, ${cVar('effectElevation24Layer2')};
 
-  ${getDialogPaddingVariableStyles}
+  ${getDialogPaddingVariableStyles};
 `
 
 const headerDividersStyles = css`

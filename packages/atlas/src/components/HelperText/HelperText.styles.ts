@@ -2,15 +2,15 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { SvgActionWarning } from '@/components/_icons'
-import { cVar, oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export type HelperTextProps = {
   helperTextVariant?: 'error' | 'warning'
 }
 
 const helperVariants = {
-  error: oldColors.secondary.alert[100],
-  warning: oldColors.secondary.warning[100],
+  error: cVar('colorCoreRed400'),
+  warning: cVar('colorCoreYellow200'),
 }
 
 export const StyledHelperText = styled(Text)<HelperTextProps>`

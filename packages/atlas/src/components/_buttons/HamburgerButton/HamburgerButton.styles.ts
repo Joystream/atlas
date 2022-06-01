@@ -2,7 +2,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { oldColors, square } from '@/styles'
+import { cVar, square } from '@/styles'
 
 type HamburgerInnerProps = {
   active: boolean
@@ -34,7 +34,7 @@ export const HamburgerInner = styled.span<HamburgerInnerProps>`
   &::after {
     width: 18px;
     height: 2px;
-    background-color: ${oldColors.gray[50]};
+    background-color: ${cVar('colorCoreNeutral50')};
     position: absolute;
   }
 

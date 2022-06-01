@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { ImageCropModal, ImageCropModalImperativeHandle } from '@/components/_overlays/ImageCropModal'
+import { cVar } from '@/styles'
 import { AssetDimensions } from '@/types/cropper'
 import { formatBytes } from '@/utils/size'
 
@@ -39,7 +40,7 @@ const LARGE_WIDTH_HEIGHT_IMAGES = [
 
 const StyledLink = styled.a`
   text-decoration: none;
-  color: white;
+  color: ${cVar('colorCoreBaseWhite')};
 
   :hover {
     opacity: 0.8;

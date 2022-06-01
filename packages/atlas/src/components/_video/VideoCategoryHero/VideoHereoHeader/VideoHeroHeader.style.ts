@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const StyledVideoHeroHeader = styled.header`
   position: relative;
@@ -12,7 +12,7 @@ export const StyledVideoHeroHeader = styled.header`
 export const Divider = styled.div`
   width: 1px;
   align-self: stretch;
-  background-color: ${oldColors.gray[600]};
+  background-color: ${cVar('colorCoreNeutral600')};
   margin: 0 ${sizes(2)};
 
   ${media.md} {

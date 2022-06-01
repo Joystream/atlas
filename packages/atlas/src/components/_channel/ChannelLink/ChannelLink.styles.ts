@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Avatar, AvatarSize } from '@/components/Avatar'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
@@ -27,7 +27,7 @@ type HandleProps = {
 }
 
 const secondaryTextCss = `
-  color: ${oldColors.gray[200]};
+  color: ${cVar('colorCoreNeutral200')};
 `
 
 export const StyledText = styled(Text)<HandleProps>`

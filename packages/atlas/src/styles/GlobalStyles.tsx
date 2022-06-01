@@ -2,14 +2,13 @@ import { Global, SerializedStyles, css } from '@emotion/react'
 import emotionNormalize from 'emotion-normalize'
 import React from 'react'
 
-import { oldColors } from './deprecated/colors'
 import { cVar, variables } from './generated/variables'
 import { media } from './media'
 import { sizes } from './sizes'
 import { transitionStyles } from './transitions'
 
-const scrollbarBackgroundColor = oldColors.transparentPrimary[10]
-const scrollbarThumbColor = oldColors.transparentPrimary[18]
+const scrollbarBackgroundColor = cVar('colorCoreNeutral800Lighten')
+const scrollbarThumbColor = cVar('colorCoreNeutral700Lighten')
 
 const globalStyles = css`
   ${emotionNormalize};
@@ -47,8 +46,8 @@ const globalStyles = css`
 
   body {
     font-family: ${cVar('typographyFontsSecondary')};
-    background: ${oldColors.black};
-    color: ${oldColors.gray[50]};
+    background: ${cVar('colorCoreBaseBlack')};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   h1,
@@ -58,7 +57,7 @@ const globalStyles = css`
   h5,
   h6 {
     font-family: ${cVar('typographyFontsPrimary')};
-    color: ${oldColors.white};
+    color: ${cVar('colorCoreBaseWhite')};
   }
 
   svg {

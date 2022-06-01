@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
-import { cVar, media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const dialogContentCss = css`
   overflow-y: hidden;
@@ -24,7 +24,7 @@ export const StyledHeader = styled.div`
       width: 16px;
       height: 1px;
       border: none;
-      background-color: ${oldColors.gray[400]};
+      background-color: ${cVar('colorCoreNeutral400')};
       flex-shrink: 1;
     }
   }
@@ -65,6 +65,6 @@ export const StyledChevron = styled(SvgActionChevronR)`
   }
 
   > path {
-    stroke: ${oldColors.gray[500]};
+    stroke: ${cVar('colorCoreNeutral500')};
   }
 `

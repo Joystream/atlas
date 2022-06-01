@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { cVar, media, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, media, sizes, zIndex } from '@/styles'
 
 export const CONNECTION_INDICATOR_CLASSNAME = 'connection-indicator'
 export const ENTER_TRANSITION_DELAY = 2500
@@ -31,7 +31,7 @@ export const IndicatorWrapper = styled.div<{ hasSidebar: boolean }>`
   max-width: 500px;
   align-items: center;
   z-index: ${zIndex.globalOverlay};
-  background-color: ${oldColors.gray[600]};
+  background-color: ${cVar('colorCoreNeutral600')};
   padding: ${sizes(3)} ${sizes(5)};
 
   ${media.md} {

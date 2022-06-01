@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { HelperText } from '@/components/HelperText'
-import { oldColors, sizes } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean; hasLabel?: boolean }>`
   display: inline-grid;
@@ -17,6 +17,6 @@ export const StyledHelperText = styled(HelperText)<{ error?: boolean }>`
   grid-column-start: 2;
 
   span {
-    ${({ error }) => !error && `color: ${oldColors.gray[300]}`}
+    ${({ error }) => !error && `color: ${cVar('colorCoreNeutral300')}`}
   }
 `
