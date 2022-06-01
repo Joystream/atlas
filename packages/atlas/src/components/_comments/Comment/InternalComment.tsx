@@ -142,6 +142,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   }, [highlightedPreviously, highlighted, isCommentFromUrl])
 
   const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
+  const reactionIsDisabled = reactions?.some(({ state }) => state === 'disabled')
   const allReactionsApplied =
     reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
 
@@ -286,7 +287,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                           />
                         ))}
                       {!allReactionsApplied && !isDeleted && (
-                        <ReactionPopover disabled={reactionIsProcessing} onReactionClick={handleCommentReactionClick} />
+                        <ReactionPopover
+                          disabled={reactionIsProcessing || reactionIsDisabled}
+                          onReactionClick={handleCommentReactionClick}
+                        />
                       )}
                     </ReactionsWrapper>
                     <RepliesWrapper>

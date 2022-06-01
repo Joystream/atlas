@@ -11,10 +11,11 @@ import { useRouterQuery } from '@/hooks/useRouterQuery'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useTransactionManagerStore } from '@/providers/transactionManager'
 import { useUser } from '@/providers/user'
 
+import { getCommentReactions } from './Comment.utils'
 import { InternalComment } from './InternalComment'
-import { getCommentReactions } from './utils'
 
 import { CommentEditHistory } from '../CommentEditHistory'
 import { CommentInput } from '../CommentInput'
@@ -68,6 +69,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
+    const isTransactionOngoing = useTransactionManagerStore((state) => !!state.extrinsicStatus)
 
     const authorized = activeMemberId && activeAccountId
 
@@ -209,6 +211,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
           reactionsCount: comment?.reactionsCountByReactionId,
           activeMemberId,
           processingCommentReactionId,
+          disabled: isTransactionOngoing,
         })) ||
       undefined
 

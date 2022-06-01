@@ -8,6 +8,7 @@ type GetCommentReactionsArgs = {
   reactionsCount: CommentReactionsCountByReactionIdFieldsFragment[]
   activeMemberId: string | null
   processingCommentReactionId: string | null | undefined
+  disabled?: boolean
 }
 
 export const getCommentReactions = ({
@@ -15,6 +16,7 @@ export const getCommentReactions = ({
   userReactionsIds,
   reactionsCount,
   processingCommentReactionId,
+  disabled,
 }: GetCommentReactionsArgs): ReactionChipProps[] => {
   const defaultReactions: ReactionChipProps[] = Object.keys(REACTION_TYPE).map((reactionId) => ({
     reactionId: Number(reactionId) as ReactionId,
@@ -26,7 +28,7 @@ export const getCommentReactions = ({
   return defaultReactions.map((reaction) => {
     return {
       ...reaction,
-      state: processingCommentReactionId === reaction.customId ? 'processing' : 'default',
+      state: processingCommentReactionId === reaction.customId ? 'processing' : disabled ? 'disabled' : 'default',
       count: reactionsCount.find((r) => r.reactionId === reaction.reactionId)?.count || 0,
       active: !!userReactionsIds?.find((r) => r === reaction.reactionId),
     }
