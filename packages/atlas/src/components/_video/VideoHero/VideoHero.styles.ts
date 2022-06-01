@@ -41,7 +41,12 @@ export const GradientOverlay = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(180deg, transparent 50%, ${cVar('colorCoreBaseBlack')} 93.23%, ${cVar('colorCoreBaseBlack')} 100%),
+  background: linear-gradient(
+      180deg,
+      transparent 50%,
+      ${cVar('colorCoreBaseBlack')} 93.23%,
+      ${cVar('colorCoreBaseBlack')} 100%
+    ),
     radial-gradient(50.66% 101.32% at 50% 50%, transparent 0%, ${cVar('colorCoreNeutral500Darken')} 100%),
     ${cVar('colorCoreNeutral500Darken')};
 `
