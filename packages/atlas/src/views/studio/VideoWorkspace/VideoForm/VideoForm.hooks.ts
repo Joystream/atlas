@@ -101,9 +101,8 @@ export const useVideoFormAssets = (
           }
         )
       }
-      trigger()
     },
-    [addAsset, dirtyFields.title, getValues, setValue, trigger]
+    [addAsset, dirtyFields.title, getValues, setValue]
   )
 
   const handleThumbnailFileChange = useCallback(
