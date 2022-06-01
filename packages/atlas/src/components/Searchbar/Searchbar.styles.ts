@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgControlsSearchAlt } from '@/components/_icons'
-import { cVar, media, oldColors, sizes, square } from '@/styles'
+import { cVar, media, sizes, square } from '@/styles'
 
 export const Input = styled.input`
   width: 100%;
@@ -12,14 +12,14 @@ export const Input = styled.input`
   border: unset;
   padding: 14px ${sizes(3)};
   background: none;
-  color: ${oldColors.gray[50]};
+  color: ${cVar('colorCoreNeutral50')};
 
   /* override mobile Safari user agent styling */
   border-radius: 0;
   appearance: none;
 
   ::placeholder {
-    color: ${oldColors.gray[300]};
+    color: ${cVar('colorCoreNeutral300')};
   }
 
   &::-webkit-search-cancel-button {
@@ -52,7 +52,7 @@ export const Container = styled.div<{ hasFocus: boolean; hasQuery: boolean }>`
   ${({ hasFocus, hasQuery }) => `
     height: ${hasFocus ? '64px' : '39px'};
     width: ${hasQuery || hasFocus ? '100%' : '39px'};
-    background-color: ${hasFocus ? oldColors.gray[800] : 'transparent'};
+    background-color: ${hasFocus ? cVar('colorCoreNeutral800') : 'transparent'};
     margin-left: ${!hasFocus ? 'auto' : 'unset'};
   `};
 
@@ -75,8 +75,8 @@ export const InnerContainer = styled.div<{ hasFocus: boolean; hasQuery: boolean 
   top: 0;
   left: 0;
   position: ${({ hasFocus }) => (hasFocus ? 'absolute' : 'unset')};
-  background-color: ${({ hasFocus }) => (hasFocus ? oldColors.gray[800] : oldColors.gray[900])};
-  box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${oldColors.gray[700]}` : 'unset')};
+  background-color: ${({ hasFocus }) => (hasFocus ? cVar('colorCoreNeutral800') : cVar('colorCoreNeutral900'))};
+  box-shadow: ${({ hasFocus }) => (!hasFocus ? `inset 0 0 0 1px ${cVar('colorCoreNeutral700')}` : 'unset')};
   padding-left: ${({ hasFocus, hasQuery }) => (hasFocus || hasQuery ? sizes(2) : 0)};
 
   ${media.md} {
@@ -92,7 +92,7 @@ export const StyledSvgOutlineSearch = styled(SvgControlsSearchAlt, { shouldForwa
 
   circle,
   path {
-    fill: ${({ highlighted }) => (highlighted ? oldColors.gray[50] : oldColors.gray[300])};
+    fill: ${({ highlighted }) => (highlighted ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral300'))};
   }
 `
 

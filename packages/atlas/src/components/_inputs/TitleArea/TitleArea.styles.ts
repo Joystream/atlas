@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
@@ -19,9 +19,9 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
 `
 
 export const StyledTextArea = styled(TextareaAutosize)`
-  caret-color: ${oldColors.blue[500]};
-  color: white;
-  background-color: ${oldColors.transparent};
+  caret-color: ${cVar('colorCoreBlue500')};
+  color: ${cVar('colorCoreBaseWhite')};
+  background-color: transparent;
   border: none;
   width: 100%;
   resize: none;
@@ -40,7 +40,7 @@ export const StyledTextArea = styled(TextareaAutosize)`
   }
 
   ::placeholder {
-    color: ${oldColors.gray[500]};
+    color: ${cVar('colorCoreNeutral500')};
   }
 
   :focus,
@@ -62,7 +62,7 @@ export const MinMaxChars = styled(Text)`
 `
 
 export const CharactersCounter = styled(Text)<CharactersCounterProps>`
-  ${({ error }) => error && `color: ${oldColors.secondary.alert[100]}`};
+  ${({ error }) => error && `color: ${cVar('colorCoreRed400')}`};
 
   font-feature-settings: 'tnum' on, 'lnum' on;
 `

@@ -2,7 +2,7 @@ import isPropValid from '@emotion/is-prop-valid'
 import { SerializedStyles, css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 export type ButtonVariant =
   | 'primary'
@@ -25,50 +25,50 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
   switch (variant) {
     case 'primary':
       return css`
-        background-color: ${oldColors.blue[500]};
-        color: ${textOnly ? oldColors.blue[300] : oldColors.gray[50]};
+        background-color: ${cVar('colorCoreBlue500')};
+        color: ${textOnly ? cVar('colorCoreBlue300') : cVar('colorCoreNeutral50')};
 
         path {
-          fill: ${textOnly && oldColors.blue[300]};
+          fill: ${textOnly && cVar('colorCoreBlue300')};
         }
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.blue[700]};
+          background-color: ${cVar('colorCoreBlue700')};
         }
 
         &:active {
-          background-color: ${oldColors.blue[900]};
-          color: ${textOnly && oldColors.blue[400]};
+          background-color: ${cVar('colorCoreBlue900')};
+          color: ${textOnly && cVar('colorCoreBlue400')};
 
           path {
-            fill: ${textOnly && oldColors.blue[400]};
+            fill: ${textOnly && cVar('colorCoreBlue400')};
           }
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${oldColors.gray[600]}`};
+          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
         }
       `
     case 'secondary':
       return css`
         /* 1px inset border */
-        box-shadow: inset 0 0 0 1px ${oldColors.gray[400]};
-        color: ${oldColors.gray[50]};
+        box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
+        color: ${cVar('colorCoreNeutral50')};
 
         &:hover,
         &:focus {
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[300]};
-          border-color: ${oldColors.gray[300]};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral300')};
+          border-color: ${cVar('colorCoreNeutral300')};
         }
 
         &:active {
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[50]};
-          color: ${textOnly && oldColors.gray[300]};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
+          color: ${textOnly && cVar('colorCoreNeutral300')};
 
           path {
-            fill: ${textOnly && oldColors.gray[300]};
+            fill: ${textOnly && cVar('colorCoreNeutral300')};
           }
         }
 
@@ -79,57 +79,57 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
       `
     case 'tertiary':
       return css`
-        color: ${oldColors.gray[50]};
+        color: ${cVar('colorCoreNeutral50')};
         ${iconOnly && `border-radius: 50%`};
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.transparentPrimary[18]};
+          background-color: ${cVar('colorCoreNeutral700Lighten')};
         }
 
         &:active {
-          background-color: ${oldColors.transparentPrimary[10]};
+          background-color: ${cVar('colorCoreNeutral800Lighten')};
         }
       `
     case 'destructive':
       return css`
-        background-color: ${oldColors.secondary.alert[100]};
-        color: ${oldColors.gray[50]};
+        background-color: ${cVar('colorCoreRed400')};
+        color: ${cVar('colorCoreNeutral50')};
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.secondary.alert[200]};
+          background-color: ${cVar('colorCoreRed600')};
         }
 
         &:active {
-          background-color: ${oldColors.secondary.alert[300]};
+          background-color: ${cVar('colorCoreRed700')};
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${oldColors.gray[600]}`};
+          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
         }
       `
     case 'destructive-secondary':
       return css`
-        box-shadow: inset 0 0 0 1px ${oldColors.gray[400]};
-        color: ${oldColors.secondary.alert[50]};
+        box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
+        color: ${cVar('colorCoreRed200')};
 
         path {
-          fill: ${oldColors.secondary.alert[50]};
+          fill: ${cVar('colorCoreRed200')};
         }
 
         &:hover,
         &:focus {
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[300]};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral300')};
         }
 
         &:active {
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[50]};
-          color: ${textOnly && oldColors.secondary.alert[100]};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
+          color: ${textOnly && cVar('colorCoreRed400')};
 
           path {
-            fill: ${textOnly && oldColors.secondary.alert[100]};
+            fill: ${textOnly && cVar('colorCoreRed400')};
           }
         }
 
@@ -140,47 +140,47 @@ const variantStyles = ({ variant, textOnly, iconOnly }: ButtonBaseStyleProps): S
       `
     case 'warning':
       return css`
-        background-color: ${oldColors.secondary.warning[100]};
-        color: ${oldColors.gray[900]};
+        background-color: ${cVar('colorCoreYellow200')};
+        color: ${cVar('colorCoreNeutral900')};
 
         path {
-          fill: ${oldColors.gray[900]};
+          fill: ${cVar('colorCoreNeutral900')};
         }
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.secondary.warning[200]};
+          background-color: ${cVar('colorCoreYellow300')};
         }
 
         &:active {
-          background-color: ${oldColors.secondary.warning[300]};
+          background-color: ${cVar('colorCoreYellow400')};
         }
 
         &:disabled,
         &[aria-disabled='true'] {
-          ${!textOnly && `background-color: ${oldColors.gray[600]}`};
+          ${!textOnly && `background-color: ${cVar('colorCoreNeutral600')}`};
         }
       `
     case 'warning-secondary':
       return css`
-        color: ${oldColors.secondary.warning[100]};
-        box-shadow: inset 0 0 0 1px ${oldColors.gray[400]};
+        color: ${cVar('colorCoreYellow200')};
+        box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
 
         path {
-          fill: ${oldColors.secondary.warning[100]};
+          fill: ${cVar('colorCoreYellow200')};
         }
 
         &:hover,
         &:focus {
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[300]};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral300')};
         }
 
         &:active {
-          color: ${textOnly && oldColors.secondary.warning[300]};
-          box-shadow: inset 0 0 0 2px ${oldColors.gray[50]};
+          color: ${textOnly && cVar('colorCoreYellow400')};
+          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral50')};
 
           path {
-            fill: ${textOnly && oldColors.secondary.warning[300]};
+            fill: ${textOnly && cVar('colorCoreYellow400')};
           }
         }
 
@@ -212,18 +212,18 @@ const sizeStyles = ({ size }: ButtonBaseStyleProps): SerializedStyles => {
 const textOnlyStyles = ({ textOnly }: ButtonBaseStyleProps): SerializedStyles | null =>
   textOnly
     ? css`
-        background-color: ${oldColors.transparent};
+        background-color: transparent;
         box-shadow: none;
         padding: 0;
 
         &:hover,
         &:focus {
-          background-color: ${oldColors.transparent};
+          background-color: transparent;
           box-shadow: none;
         }
 
         &:active {
-          background-color: ${oldColors.transparent};
+          background-color: transparent;
           box-shadow: none;
         }
       `
@@ -263,7 +263,7 @@ export const StyledButtonBase = styled('button', { shouldForwardProp: isPropVali
   &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.5;
-    color: ${oldColors.gray[50]};
+    color: ${cVar('colorCoreNeutral50')};
   }
 
   transition-duration: ${transitions.timings.sharp};

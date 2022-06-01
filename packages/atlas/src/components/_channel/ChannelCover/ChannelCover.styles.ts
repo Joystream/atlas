@@ -4,7 +4,7 @@ import { Text } from '@/components/Text'
 import { IconButton } from '@/components/_buttons/IconButton'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgBgPattern } from '@/components/_illustrations'
-import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 export const MediaWrapper = styled.div`
   margin: 0 calc(-1 * var(--size-global-horizontal-padding));
@@ -18,7 +18,7 @@ export const Media = styled.div`
   padding-top: 25%;
   position: relative;
   z-index: ${zIndex.background};
-  background-color: ${oldColors.gray[900]};
+  background-color: ${cVar('colorCoreNeutral900')};
   overflow: hidden;
 `
 
@@ -44,7 +44,7 @@ export const EditableControls = styled.div`
   transition: opacity ${transitions.timings.loading} ${transitions.easing};
 
   ${media.md} {
-    background-color: ${oldColors.transparentBlack[54]};
+    background-color: ${cVar('colorCoreNeutral500Darken')};
     opacity: 0;
 
     :hover {
@@ -59,7 +59,7 @@ export const EditCoverDesktopOverlay = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  color: ${oldColors.gray[200]};
+  color: ${cVar('colorCoreNeutral200')};
   display: none;
 
   ${media.md} {
@@ -72,10 +72,10 @@ export const EditCoverMobileButton = styled(IconButton)`
   position: absolute;
   left: var(--size-global-horizontal-padding);
   top: ${sizes(1)};
-  background-color: ${oldColors.gray[800]};
+  background-color: ${cVar('colorCoreNeutral800')};
 
   &:hover {
-    background-color: ${oldColors.transparentBlack[54]};
+    background-color: ${cVar('colorCoreNeutral500Darken')};
   }
   ${media.md} {
     display: none;
@@ -83,7 +83,7 @@ export const EditCoverMobileButton = styled(IconButton)`
 `
 
 export const EditButtonMessage = styled(Text)`
-  color: ${oldColors.gray[100]};
+  color: ${cVar('colorCoreNeutral100')};
   margin-top: ${sizes(1)};
 `
 

@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
-import { cVar, oldColors, sizes, transitions } from '@/styles'
+import { cVar, sizes, transitions } from '@/styles'
 
 type ColorProps = { color?: string }
 type LoadingProps = { isLoading?: boolean }
@@ -27,7 +27,7 @@ export const CoverImgOverlay = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-color: ${oldColors.gray[800]};
+  background-color: ${cVar('colorCoreNeutral800')};
   mix-blend-mode: color;
 `
 
@@ -48,7 +48,7 @@ export const Container = styled(Link, { shouldForwardProp: isPropValid })<ColorP
   display: grid;
   cursor: ${({ isLoading }) => (isLoading ? 'initial' : 'pointer')};
   box-shadow: inset 4px 0 ${({ color, isLoading }) => (color && !isLoading ? color : 'transparent')};
-  background-color: ${({ isLoading }) => (isLoading ? oldColors.gray[900] : oldColors.gray[800])};
+  background-color: ${({ isLoading }) => (isLoading ? cVar('colorCoreNeutral900') : cVar('colorCoreNeutral800'))};
   position: relative;
 
   ::after {
@@ -151,7 +151,7 @@ export const PieSegment = styled.div<{ value: number }>`
 
   &::after,
   &::before {
-    background: ${oldColors.gray[300]};
+    background: ${cVar('colorCoreNeutral300')};
     content: '';
     position: absolute;
     height: 100%;

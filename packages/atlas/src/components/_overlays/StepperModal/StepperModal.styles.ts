@@ -2,13 +2,13 @@ import styled from '@emotion/styled'
 
 import { Step } from '@/components/Step'
 import { SvgActionChevronR } from '@/components/_icons'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 import { Modal } from '../Modal'
 
 export const StyledModal = styled(Modal)`
   width: 690px;
-  background-color: ${oldColors.gray[700]};
+  background-color: ${cVar('colorCoreNeutral700')};
   display: flex;
   flex-direction: column;
   --local-size-stepper-padding: ${sizes(6)};
@@ -20,7 +20,7 @@ export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 1px solid ${oldColors.gray[500]};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral500')};
   margin: 0 calc(-1 * var(--local-size-stepper-padding));
   padding: 0 var(--local-size-stepper-padding) var(--local-size-stepper-padding);
 
@@ -32,7 +32,7 @@ export const StyledHeader = styled.div`
       width: 16px;
       height: 1px;
       border: none;
-      background-color: ${oldColors.gray[400]};
+      background-color: ${cVar('colorCoreNeutral400')};
       margin: 0 ${sizes(4)};
       flex-shrink: 1;
     }
@@ -66,6 +66,6 @@ export const StyledChevron = styled(SvgActionChevronR)`
   }
 
   > path {
-    stroke: ${oldColors.gray[500]};
+    stroke: ${cVar('colorCoreNeutral500')};
   }
 `

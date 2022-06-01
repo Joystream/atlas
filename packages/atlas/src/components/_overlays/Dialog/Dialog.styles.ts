@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export type DialogSize = 'default' | 'compact'
 
@@ -43,12 +43,12 @@ export const DialogContainer = styled.div<SizeProps>`
   max-width: 90vw;
   max-height: 640px;
   overflow: hidden;
-  background-color: ${oldColors.gray[700]};
+  background-color: ${cVar('colorCoreNeutral700')};
   ${getDialogPaddingVariableStyles};
 `
 
 const headerDividersStyles = css`
-  box-shadow: inset 0 -1px 0 0 ${oldColors.gray[600]};
+  box-shadow: inset 0 -1px 0 0 ${cVar('colorCoreNeutral600')};
   padding-bottom: var(--local-size-dialog-padding);
 `
 
@@ -90,7 +90,7 @@ export const Content = styled.div<ContentProps>`
 `
 
 export const footerDividersStyles = css`
-  box-shadow: inset 0 1px 0 0 ${oldColors.gray[600]};
+  box-shadow: inset 0 1px 0 0 ${cVar('colorCoreNeutral600')};
   padding-top: var(--local-size-dialog-padding);
 `
 

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { LayoutGrid } from '@/components/LayoutGrid'
-import { media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const TitleContainer = styled.div`
   z-index: 1;
@@ -11,7 +11,7 @@ export const TitleContainer = styled.div`
   justify-content: space-between;
   margin: ${sizes(21)} 0 ${sizes(12)} 0;
   padding-bottom: ${sizes(6)};
-  border-bottom: 1px solid ${oldColors.gray[700]};
+  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
 `
 
 export const CategoriesContainer = styled(LayoutGrid)`

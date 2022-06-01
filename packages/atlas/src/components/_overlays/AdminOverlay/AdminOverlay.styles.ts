@@ -2,14 +2,14 @@ import styled from '@emotion/styled'
 
 import { Tabs } from '@/components/Tabs'
 import { IconButton } from '@/components/_buttons/IconButton'
-import { oldColors } from '@/styles'
+import { cVar } from '@/styles'
 
 export const Container = styled.div`
   position: fixed;
   top: 80px;
   right: 32px;
   width: 400px;
-  background-color: ${oldColors.gray[600]};
+  background-color: ${cVar('colorCoreNeutral600')};
   z-index: 1000;
   border-radius: 8px;
   padding: 32px 16px;

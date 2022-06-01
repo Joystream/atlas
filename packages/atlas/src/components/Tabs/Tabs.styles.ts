@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { smallBadgeStyles } from '@/components/Badge'
-import { cVar, oldColors, sizes, zIndex } from '@/styles'
+import { cVar, sizes, zIndex } from '@/styles'
 
 import { Pill } from '../Pill'
 
@@ -40,14 +40,14 @@ export const Tab = styled.div<TabProps>`
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  color: ${({ selected }) => (selected ? oldColors.white : oldColors.gray[300])};
+  color: ${({ selected }) => (selected ? cVar('colorCoreBaseWhite') : cVar('colorCoreNeutral300'))};
   text-align: center;
-  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${oldColors.blue[500]};` : 'none')};
+  box-shadow: ${({ selected }) => (selected ? `inset 0 -4px 0 ${cVar('colorCoreBlue500')};` : 'none')};
   flex-shrink: 0;
 
   :hover,
   :focus {
-    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? oldColors.blue[500] : oldColors.gray[300])};
+    box-shadow: inset 0 -4px 0 ${({ selected }) => (selected ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral300'))};
     cursor: pointer;
   }
 

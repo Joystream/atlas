@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 
 import { Pill } from '@/components/Pill'
 import { SvgAlertsInformative24 } from '@/components/_icons'
-import { cVar, oldColors, sizes, transitions, zIndex } from '@/styles'
+import { cVar, sizes, transitions, zIndex } from '@/styles'
 
 import { LabelText } from '../InputBase'
 
@@ -52,14 +52,14 @@ export const SelectButton = styled.button<SelectButtonProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   background: none;
-  color: ${({ filled }) => (filled ? oldColors.gray[50] : oldColors.gray[300])};
+  color: ${({ filled }) => (filled ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral300'))};
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: ${({ isOpen, error, disabled }) =>
     `1px solid ${
-      isOpen ? oldColors.blue[500] : error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200]
+      isOpen ? cVar('colorCoreBlue500') : error && !disabled ? cVar('colorCoreRed400') : cVar('colorCoreNeutral200')
     }`};
   font: ${cVar('typographyDesktopT200')} !important;
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')} !important;
@@ -81,7 +81,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   .chevron-bottom {
     transition: all ${transitions.timings.regular} ${transitions.easing};
     transform: rotate(${({ isOpen }) => (isOpen ? 180 : 0)}deg);
-    color: ${({ isOpen }) => (isOpen ? oldColors.blue[400] : 'inherit')};
+    color: ${({ isOpen }) => (isOpen ? cVar('colorCoreBlue400') : 'inherit')};
     margin-left: auto;
   }
 `
@@ -98,8 +98,8 @@ export const SelectMenu = styled.ul<SelectMenuProps>`
   z-index: ${zIndex.globalOverlay};
   padding: 0;
   margin-top: ${({ isOpen }) => (isOpen ? sizes(1) : 0)};
-  background-color: ${oldColors.gray[700]};
-  color: ${oldColors.white};
+  background-color: ${cVar('colorCoreNeutral700')};
+  color: ${cVar('colorCoreBaseWhite')};
   list-style: none;
 `
 type SelectOptionProps = {
@@ -115,10 +115,10 @@ export const SelectOption = styled.li<SelectOptionProps>`
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  background-color: ${({ isSelected }) => (isSelected ? oldColors.gray[600] : 'none')};
+  background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral600') : 'none')};
 
   :hover {
-    background-color: ${oldColors.gray[600]};
+    background-color: ${cVar('colorCoreNeutral600')};
   }
 
   *:first-of-type {
