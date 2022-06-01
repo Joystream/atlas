@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -7,12 +6,11 @@ import { cVar, sizes } from '@/styles'
 export const SwitchLabel = styled.label<{ disabled?: boolean }>`
   display: inline-flex;
   align-items: center;
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `
 
 export const SwitchSlider = styled.div`
-  box-shadow: inset 0 0 0 1px ${cVar('colorCoreNeutral400')};
+  box-shadow: inset 0 0 0 1px ${cVar('colorBorderAlpha')};
   position: absolute;
   top: 0;
   left: 0;
@@ -32,7 +30,7 @@ export const SwitchSlider = styled.div`
     width: 16px;
     left: 4px;
     bottom: 4px;
-    background-color: ${cVar('colorCoreNeutral400')};
+    background-color: ${cVar('colorBorderAlpha')};
     transition: transform ${cVar('animationTransitionFast')}, width ${cVar('animationTransitionFast')},
       background-color ${cVar('animationTransitionFast')};
   }
@@ -47,18 +45,27 @@ export const SwitchCheckbox = styled.input`
   visibility: hidden;
   z-index: 1;
 
-  :disabled {
-    cursor: not-allowed;
-  }
-
   :checked {
     + ${SwitchSlider} {
       box-shadow: unset;
-      background-color: ${cVar('colorCoreBlue500')};
+      background-color: ${cVar('colorBackgroundPrimary')};
 
       ::before {
         transform: translateX(16px);
-        background-color: ${cVar('colorCoreNeutral50')};
+        background-color: ${cVar('colorTextStrong')};
+      }
+    }
+  }
+
+  :disabled {
+    cursor: not-allowed;
+
+    + ${SwitchSlider} {
+      background-color: ${cVar('colorBackgroundAlpha')};
+      box-shadow: unset;
+
+      ::before {
+        background-color: ${cVar('colorBackgroundStrongAlpha')};
       }
     }
   }
@@ -73,6 +80,8 @@ export const SwitchCheckbox = styled.input`
 
   :checked:active:not(:disabled) {
     + ${SwitchSlider} {
+      background-color: ${cVar('colorBackgroundPrimaryMuted')};
+
       ::before {
         transform: translateX(12px);
         width: 20px;
@@ -84,23 +93,26 @@ export const LabelText = styled(Text)`
   margin-left: ${sizes(2)};
 `
 
-export const SwitchWrapper = styled.div<{ disabled?: boolean }>`
+export const SwitchWrapper = styled.div`
   position: relative;
   display: inline-block;
   width: 40px;
   height: 24px;
 
   :hover {
-    ${SwitchSlider} {
-      ${({ disabled }) =>
-        !disabled &&
-        css`
-          box-shadow: inset 0 0 0 2px ${cVar('colorCoreNeutral400')};
-        `};
-    }
-    ${SwitchCheckbox}:checked:not(:disabled) {
+    ${SwitchCheckbox}:not(:disabled):not(:checked) {
       + ${SwitchSlider} {
-        background-color: ${cVar('colorCoreBlue700')};
+        box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
+
+        ::before {
+          background-color: ${cVar('colorBorderStrongAlpha')};
+        }
+      }
+    }
+
+    ${SwitchCheckbox}:checked:not(:disabled):not(:active) {
+      + ${SwitchSlider} {
+        background-color: ${cVar('colorBackgroundPrimaryStrong')};
       }
     }
   }
