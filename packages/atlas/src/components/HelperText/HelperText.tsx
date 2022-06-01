@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-import { HelperTextCount, HelperTextsWrapper, StyledHelperText } from './HelperText.styles'
+import {
+  HelperTextCount,
+  HelperTextsWrapper,
+  StyledHelperText,
+  StyledSvgActionWarning,
+  TextWrapper,
+} from './HelperText.styles'
 
 export const getVariant = (warning?: boolean, error?: boolean) => {
   if (error) {
@@ -48,9 +54,12 @@ export const HelperText: React.FC<HelperTextProps> = ({
 
   return (
     <HelperTextsWrapper className={className}>
-      <StyledHelperText variant="t100" helperTextVariant={getVariant(warning, error)} secondary>
-        {helperText}
-      </StyledHelperText>
+      <TextWrapper>
+        {error && <StyledSvgActionWarning />}
+        <StyledHelperText variant="t100" helperTextVariant={getVariant(warning, error)} secondary>
+          {helperText}
+        </StyledHelperText>
+      </TextWrapper>
       {(charactersWarning === 'warning' || charactersWarning === 'error') && (
         <HelperTextCount variant="t100" helperTextVariant={charactersWarning} secondary>
           {charactersCount}/{maxLength}

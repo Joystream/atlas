@@ -1,8 +1,9 @@
+import isPropValid from '@emotion/is-prop-valid'
 import styled from '@emotion/styled'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import { Text } from '@/components/Text'
-import { cVar, media, oldColors, sizes } from '@/styles'
+import { cVar, media, sizes } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
@@ -16,12 +17,13 @@ export const TitleAreaInfo = styled.div<TitleAreaInfoProps>`
   display: ${({ visible }) => (visible ? 'flex' : 'none')};
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-top: ${sizes(1)};
 `
 
-export const StyledTextArea = styled(TextareaAutosize)`
-  caret-color: ${oldColors.blue[500]};
-  color: white;
-  background-color: ${oldColors.transparent};
+export const StyledTextArea = styled(TextareaAutosize, { shouldForwardProp: isPropValid })<{ error?: boolean }>`
+  caret-color: ${cVar('colorCoreBlue500')};
+  color: ${({ error }) => cVar(error ? 'colorTextError' : 'colorTextStrong')};
+  background-color: transparent;
   border: none;
   width: 100%;
   resize: none;
@@ -29,18 +31,21 @@ export const StyledTextArea = styled(TextareaAutosize)`
   font: ${cVar('typographyDesktopH500')};
   letter-spacing: ${cVar('typographyDesktopH500LetterSpacing')};
   text-transform: ${cVar('typographyDesktopH500TextTransform')};
+  transition: opacity ${cVar('animationTransitionFast')};
+  padding: 0;
+
   ${media.sm} {
     font: ${cVar('typographyDesktopH700')};
     letter-spacing: ${cVar('typographyDesktopH700LetterSpacing')};
     text-transform: ${cVar('typographyDesktopH700TextTransform')};
   }
 
-  &:hover {
-    opacity: 0.75;
+  &:hover:not(:focus) {
+    opacity: 0.5;
   }
 
   ::placeholder {
-    color: ${oldColors.gray[500]};
+    color: ${({ error }) => cVar(error ? 'colorTextError' : 'colorTextMuted')};
   }
 
   :focus,
@@ -52,17 +57,21 @@ export const StyledTextArea = styled(TextareaAutosize)`
 `
 
 type CharactersCounterProps = {
-  error?: boolean
+  hasValue: boolean
 }
 
 export const MinMaxChars = styled(Text)`
   white-space: nowrap;
   margin-right: ${sizes(2)};
   margin-bottom: ${sizes(1)};
+  color: ${cVar('colorTextMuted')};
+`
+
+export const CounterText = styled(Text)`
+  color: ${cVar('colorTextMuted')};
 `
 
 export const CharactersCounter = styled(Text)<CharactersCounterProps>`
-  ${({ error }) => error && `color: ${oldColors.secondary.alert[100]}`};
-
+  color: ${({ hasValue }) => cVar(hasValue ? 'colorTextStrong' : 'colorTextMuted')};
   font-feature-settings: 'tnum' on, 'lnum' on;
 `
