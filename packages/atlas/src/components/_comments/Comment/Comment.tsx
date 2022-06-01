@@ -59,7 +59,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
       { commentId: commentId ?? '' },
       {
         skip: !commentId,
-        fetchPolicy: 'cache-only',
       }
     )
     const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)

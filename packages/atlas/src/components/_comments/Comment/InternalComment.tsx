@@ -6,7 +6,6 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { TextButton } from '@/components/_buttons/Button'
 import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
@@ -31,10 +30,10 @@ import {
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
+  ShowRepliesTextButton,
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
-  StyledRepliesSkeleton,
   StyledSvgActionTrash,
 } from './Comment.styles'
 
@@ -56,9 +55,8 @@ export type InternalCommentProps = {
   type: 'default' | 'deleted' | 'options'
   reactions: Omit<ReactionChipProps, 'onReactionClick'>[] | undefined
   reactionPopoverDismissed: boolean | undefined
-  replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[] | undefined
+  replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[]
   repliesOpen: boolean | undefined
-  repliesLoading?: boolean | undefined
   repliesCount: number | undefined
   isCommentFromUrl: boolean | undefined
   videoId: string | undefined
@@ -94,7 +92,6 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   replyAvatars,
   onToggleReplies,
   repliesOpen,
-  repliesLoading,
   repliesCount,
   isCommentFromUrl,
   videoId,
@@ -299,18 +296,13 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                           avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
                           avatars={filteredDuplicatedAvatars}
                           clickable={false}
-                          loading={repliesLoading}
                         />
                       ) : null}
-                      {onToggleReplies &&
-                        !!repliesCount &&
-                        (repliesLoading ? (
-                          <StyledRepliesSkeleton height={17} width={75} />
-                        ) : (
-                          <TextButton onClick={onToggleReplies} variant="tertiary" size="small">
-                            {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                          </TextButton>
-                        ))}
+                      {onToggleReplies && !!repliesCount && (
+                        <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
+                          {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                        </ShowRepliesTextButton>
+                      )}
                       {onReplyClick && !isDeleted && (commentHover || isTouchDevice) && (
                         <ReplyButton
                           onClick={onReplyClick}

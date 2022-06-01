@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes, square } from '@/styles'
@@ -112,12 +112,12 @@ export const StyledAvatarGroup = styled(AvatarGroup)`
   }
 `
 
+export const ShowRepliesTextButton = styled(TextButton)`
+  margin-left: ${sizes(2)};
+`
+
 export const ReplyButton = styled(Button)`
   :not(:only-child) {
     margin-left: ${sizes(3)};
   }
-`
-
-export const StyledRepliesSkeleton = styled(SkeletonLoader)`
-  margin-left: ${sizes(3)};
 `

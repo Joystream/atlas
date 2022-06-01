@@ -122,7 +122,7 @@ const _CommentThread: React.FC<CommentThreadProps> = ({
                 isReplyable={false}
               />
             ) : (
-              <Comment indented />
+              <Comment indented /> // new reply is loading, display an empty skeleton Comment
             )
           ) : null}
         </>
