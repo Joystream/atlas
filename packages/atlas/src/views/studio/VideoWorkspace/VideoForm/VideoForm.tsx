@@ -133,7 +133,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     mediaAsset,
     thumbnailAsset,
     hasUnsavedAssets,
-  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields)
+  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger)
 
   // manage draft saving
   const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
@@ -321,6 +321,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     return <ViewErrorFallback />
   }
 
+  // console.log(errors)
+
   const videoEditFields = (
     <>
       <DescriptionTextArea
@@ -406,7 +408,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         control={control}
         rules={{
           validate: (value) => {
-            if (value.video.id && value.thumbnail.originalId && isNew) {
+            if (!!value.video.id && !!value.thumbnail.originalId && isNew) {
               return true
             }
             if (!value.video.id) {
