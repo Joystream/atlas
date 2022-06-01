@@ -20,10 +20,190 @@ export type GetMetaprotocolTransactionStatusEventsQuery = {
       | { __typename: 'MetaprotocolTransactionPending' }
       | {
           __typename: 'MetaprotocolTransactionSuccessful'
-          commentCreated?: { __typename?: 'Comment'; id: string } | null
-          commentEdited?: { __typename?: 'Comment'; id: string } | null
-          commentDeleted?: { __typename?: 'Comment'; id: string } | null
-          commentModerated?: { __typename?: 'Comment'; id: string } | null
+          commentCreated?: {
+            __typename?: 'Comment'
+            id: string
+            createdAt: Date
+            isEdited: boolean
+            parentCommentId?: string | null
+            repliesCount: number
+            text: string
+            status: Types.CommentStatus
+            author: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+            reactionsCountByReactionId: Array<{
+              __typename?: 'CommentReactionsCountByReactionId'
+              id: string
+              count: number
+              reactionId: number
+            }>
+          } | null
+          commentEdited?: {
+            __typename?: 'Comment'
+            id: string
+            createdAt: Date
+            isEdited: boolean
+            parentCommentId?: string | null
+            repliesCount: number
+            text: string
+            status: Types.CommentStatus
+            author: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+            reactionsCountByReactionId: Array<{
+              __typename?: 'CommentReactionsCountByReactionId'
+              id: string
+              count: number
+              reactionId: number
+            }>
+          } | null
+          commentDeleted?: {
+            __typename?: 'Comment'
+            id: string
+            createdAt: Date
+            isEdited: boolean
+            parentCommentId?: string | null
+            repliesCount: number
+            text: string
+            status: Types.CommentStatus
+            author: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+            reactionsCountByReactionId: Array<{
+              __typename?: 'CommentReactionsCountByReactionId'
+              id: string
+              count: number
+              reactionId: number
+            }>
+          } | null
+          commentModerated?: {
+            __typename?: 'Comment'
+            id: string
+            createdAt: Date
+            isEdited: boolean
+            parentCommentId?: string | null
+            repliesCount: number
+            text: string
+            status: Types.CommentStatus
+            author: {
+              __typename?: 'Membership'
+              id: string
+              handle: string
+              metadata: {
+                __typename?: 'MemberMetadata'
+                about?: string | null
+                avatar?:
+                  | {
+                      __typename?: 'AvatarObject'
+                      avatarObject?: {
+                        __typename?: 'StorageDataObject'
+                        id: string
+                        createdAt: Date
+                        size: string
+                        isAccepted: boolean
+                        ipfsHash: string
+                        storageBag: { __typename?: 'StorageBag'; id: string }
+                        type:
+                          | { __typename: 'DataObjectTypeChannelAvatar' }
+                          | { __typename: 'DataObjectTypeChannelCoverPhoto' }
+                          | { __typename: 'DataObjectTypeUnknown' }
+                          | { __typename: 'DataObjectTypeVideoMedia' }
+                          | { __typename: 'DataObjectTypeVideoThumbnail' }
+                      } | null
+                    }
+                  | { __typename?: 'AvatarUri'; avatarUri: string }
+                  | null
+              }
+            }
+            reactionsCountByReactionId: Array<{
+              __typename?: 'CommentReactionsCountByReactionId'
+              id: string
+              count: number
+              reactionId: number
+            }>
+          } | null
         }
   }>
 }

@@ -8,6 +8,9 @@ import {
   GetCommentEditsQueryVariables,
   GetCommentQuery,
   GetCommentQueryVariables,
+  GetCommentRepliesConnectionDocument,
+  GetCommentRepliesConnectionQuery,
+  GetCommentRepliesConnectionQueryVariables,
   GetUserCommentsAndVideoCommentsConnectionDocument,
   GetUserCommentsAndVideoCommentsConnectionQuery,
   GetUserCommentsAndVideoCommentsConnectionQueryVariables,
@@ -71,6 +74,19 @@ export const useReactionTransactions = () => {
     [activeMemberId, client]
   )
 
+  const refetchReplies = useCallback(
+    (parentCommentId: string) => {
+      return client.query<GetCommentRepliesConnectionQuery, GetCommentRepliesConnectionQueryVariables>({
+        query: GetCommentRepliesConnectionDocument,
+        variables: {
+          parentCommentId,
+        },
+        fetchPolicy: 'network-only',
+      })
+    },
+    [client]
+  )
+
   const refetchCommentsSection = useCallback(
     (videoId: string) => {
       return client.query<
@@ -123,10 +139,9 @@ export const useReactionTransactions = () => {
           }
           newCommentId = metaStatus.commentCreated.id
           if (parentCommentId) {
-            // if the comment was a reply, just fetch it and it will be injected into view by CommentThread component
             await Promise.all([
               refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
-              refetchComment(newCommentId),
+              refetchReplies(parentCommentId),
             ])
           } else {
             // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
@@ -140,7 +155,15 @@ export const useReactionTransactions = () => {
 
       return newCommentId
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchCommentsSection]
+    [
+      activeMemberId,
+      handleTransaction,
+      joystream,
+      proxyCallback,
+      refetchComment,
+      refetchCommentsSection,
+      refetchReplies,
+    ]
   )
 
   const reactToComment = useCallback(
@@ -179,13 +202,13 @@ export const useReactionTransactions = () => {
           (
             await joystream.extrinsics
           ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
-        onTxSync: async () => Promise.all([refetchComment(commentId), refetchEdits(commentId)]),
+        onTxSync: async () => refetchEdits(commentId),
         minimized: {
           signErrorMessage: 'Failed to udpate video comment',
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchEdits]
+    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchEdits]
   )
   const deleteComment = useCallback(
     async (commentId: string, videoTitle?: string) => {
@@ -197,9 +220,6 @@ export const useReactionTransactions = () => {
       return handleTransaction({
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
-        onTxSync: async () => {
-          await refetchComment(commentId)
-        },
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Your comment to the video ${videoTitle} has been deleted`,
@@ -209,7 +229,7 @@ export const useReactionTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment]
+    [activeMemberId, handleTransaction, joystream, proxyCallback]
   )
 
   const moderateComment = useCallback(
@@ -227,9 +247,6 @@ export const useReactionTransactions = () => {
             commentId,
             proxyCallback(updateStatus)
           ),
-        onTxSync: async () => {
-          await refetchComment(commentId)
-        },
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `${commentAuthorHandle}'s comment to your video ${videoTitle} has been deleted`,
@@ -239,7 +256,7 @@ export const useReactionTransactions = () => {
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment]
+    [activeMemberId, handleTransaction, joystream, proxyCallback]
   )
 
   const refetchVideo = useCallback(

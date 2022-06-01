@@ -286,15 +286,15 @@ fragment CommentFields on Comment {
 
 fragment MetaprotocolTransactionSuccessFields on MetaprotocolTransactionSuccessful {
   commentCreated {
-    id
+    ...CommentFields
   }
   commentEdited {
-    id
+    ...CommentFields
   }
   commentDeleted {
-    id
+    ...CommentFields
   }
   commentModerated {
-    id
+    ...CommentFields
   }
 }
