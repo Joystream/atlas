@@ -3,7 +3,7 @@ import React from 'react'
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 import { RadioInput } from '../RadioInput'
 
-type RadioButtonProps = Partial<{
+export type RadioButtonProps = Partial<{
   selectedValue: string | number
   label: string
   helperText?: string

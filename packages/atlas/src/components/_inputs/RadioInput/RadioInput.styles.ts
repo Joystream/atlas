@@ -27,31 +27,27 @@ export type CustomRadioInputProps = {
 
 export const hoverState = (checked?: boolean) => {
   return css`
-    border: ${checked ? `4px solid ${cVar('colorCoreBlue500')}` : `1px solid ${cVar('colorCoreNeutral200')}`};
+    border: ${checked
+      ? `4px solid ${cVar('colorBackgroundPrimaryStrong')}`
+      : `1px solid ${cVar('colorBorderStrongAlpha')}`};
 
-    &::before {
-      background-color: ${cVar('colorCoreNeutral700Lighten')};
+    :active {
+      ${activeState(checked)}
+    }
+
+    ::before {
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
     }
   `
 }
 export const activeState = (checked?: boolean) => {
   return css`
-    border: ${checked ? `border: 4px solid ${cVar('colorCoreNeutral50')}` : `1px solid ${cVar('colorCoreNeutral50')}`};
+    border: ${checked
+      ? `4px solid ${cVar('colorBackgroundPrimaryStrong')}`
+      : `1px solid ${cVar('colorBorderStrongAlpha')}`};
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: -4px;
-      bottom: -4px;
-      left: -4px;
-      right: -4px;
-      display: ${checked ? 'block' : 'none'};
-      border-radius: 50%;
-      border: 1px solid ${cVar('colorCoreNeutral50')};
-    }
-
-    &::before {
-      background-color: ${cVar('colorCoreNeutral800Lighten')};
+    ::before {
+      background-color: ${cVar('colorBackgroundAlpha')};
     }
   `
 }
@@ -59,49 +55,62 @@ export const activeState = (checked?: boolean) => {
 const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => {
   if (disabled) {
     return css`
-      opacity: 0.5;
-      background-color: ${checked ? cVar('colorCoreNeutral50') : cVar('colorCoreNeutral400')};
-      border: ${checked ? `4px solid ${cVar('colorCoreNeutral400')}` : `1px solid ${cVar('colorCoreNeutral300')}`};
+      background-color: ${checked ? cVar('colorTextMuted') : cVar('colorBackgroundAlpha')};
+      border: ${checked
+        ? `4px solid ${cVar('colorBackgroundStrongAlpha')}`
+        : `1px solid ${cVar('colorBorderMutedAlpha')}`};
       background-clip: ${checked ? 'content-box' : 'unset'};
 
-      &::before {
+      &::after {
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        z-index: -1;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
+        background-color: ${checked ? cVar('colorTextMuted') : 'transparent'};
       }
     `
   } else if (error) {
     return css`
       background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
-      border: ${checked ? `4px solid ${cVar('colorCoreRed400')}` : `1px solid ${cVar('colorCoreRed400')}`};
+      border: ${checked ? `4px solid ${cVar('colorBackgroundError')}` : `1px solid ${cVar('colorBorderError')}`};
       padding: 0;
+
+      :hover {
+        border-color: ${cVar(checked ? 'colorBackgroundErrorStrong' : 'colorBorderError')};
+
+        ::before {
+          background-color: ${cVar('colorBackgroundStrongAlpha')};
+        }
+      }
+
+      :active {
+        border-color: ${cVar(checked ? 'colorBackgroundErrorMuted' : 'colorBorderError')};
+      }
     `
   } else {
     return css`
-      border: ${checked ? `4px solid ${cVar('colorCoreBlue500')}` : `1px solid ${cVar('colorCoreNeutral300')}`};
-      background-color: ${checked ? cVar('colorCoreNeutral50') : 'transparent'};
+      border: ${checked ? `4px solid ${cVar('colorBackgroundPrimary')}` : `1px solid ${cVar('colorBorderAlpha')}`};
+      background-color: ${checked ? cVar('colorTextStrong') : 'transparent'};
       padding: ${checked ? 0 : '3px'};
 
-      &::before {
+      ::before {
         transition: background-color 200ms ${transitions.easing};
       }
 
-      &:hover {
+      :hover {
         ${hoverState(checked)};
       }
 
-      &:focus {
+      :focus {
         border-color: ${checked ? cVar('colorCoreBlue500') : cVar('colorCoreNeutral700')};
 
         &::before {
           background-color: ${checked ? cVar('colorCoreBlue200') : cVar('colorCoreNeutral50')};
         }
-      }
-
-      &:active {
-        ${activeState(checked)};
       }
     `
   }
@@ -129,6 +138,7 @@ export const CustomRadioInput = styled.div<CustomRadioInputProps>`
     position: absolute;
     z-index: -1;
   }
+
   ${colorFromProps};
 
   & + span {
