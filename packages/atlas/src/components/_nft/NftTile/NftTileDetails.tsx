@@ -272,7 +272,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           avatars={[
             {
               url: creator?.assetUrl,
-              tooltipText: creator?.name,
+              tooltipText: `Creator: ${creator?.name}`,
               onClick: creator?.onClick,
               loading: creator?.loading,
             },
@@ -280,7 +280,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               ? [
                   {
                     url: owner?.assetUrl,
-                    tooltipText: owner?.name,
+                    tooltipText: `Owner: ${owner?.name}`,
                     onClick: owner?.onClick,
                     loading: owner.loading,
                   },
