@@ -52,15 +52,7 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
           {formattedValue}
           {withToken && ` tJOY`}
         </Text>
-        {withTooltip && (
-          <StyledTooltip
-            // visible
-            reference={textRef}
-            placement="top"
-            delay={[1000, null]}
-            text={tooltipText}
-          />
-        )}
+        {withTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}
       </>
     )
   }
