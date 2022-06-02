@@ -14,6 +14,7 @@ export type NavItemType = {
   icon: ReactNode
   to: string
   badgeNumber?: number
+  bottomNav?: boolean
 } & NavSubitem
 
 export type NavItemProps = {

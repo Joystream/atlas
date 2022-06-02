@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { SvgActionWarning } from '@/components/_icons'
 import { cVar, oldColors, sizes } from '@/styles'
 
 export type HelperTextProps = {
@@ -20,8 +21,7 @@ export const StyledHelperText = styled(Text)<HelperTextProps>`
 
 export const HelperTextsWrapper = styled.div`
   min-height: ${sizes(3.5)};
-  margin-left: 4px;
-  margin-top: 8px;
+  margin-top: ${sizes(4)};
   font: ${cVar('typographyDesktopT200')};
   letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
   text-transform: ${cVar('typographyDesktopT200TextTransform')};
@@ -32,4 +32,17 @@ export const HelperTextsWrapper = styled.div`
 
 export const HelperTextCount = styled(Text)<HelperTextProps>`
   ${({ helperTextVariant }) => helperTextVariant && `color: ${helperVariants[helperTextVariant]}`};
+`
+
+export const StyledSvgActionWarning = styled(SvgActionWarning)`
+  margin-right: ${sizes(2)};
+
+  path {
+    fill: ${cVar('colorTextError')};
+  }
+`
+
+export const TextWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `

@@ -28,21 +28,20 @@ export const UploadsManager: React.FC = () => {
   const videoAssetsRef = useRef<VideoAssets[]>([])
 
   const { displaySnackbar } = useSnackbar()
-  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssetsIds, newChannelsIds } =
-    useUploadsStore(
-      (state) => ({
-        channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
-        isSyncing: state.isSyncing,
-        assetsFiles: state.assetsFiles,
-        processingAssetsIds: state.processingAssetsIds,
-        uploadStatuses: state.uploadsStatus,
-        newChannelsIds: state.newChannelsIds,
-      }),
-      shallow
-    )
-  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAssetId, setUploadStatus } =
+  const { assetsFiles, channelUploads, uploadStatuses, isSyncing, processingAssets, newChannelsIds } = useUploadsStore(
+    (state) => ({
+      channelUploads: state.uploads.filter((asset) => asset.owner === activeChannelId),
+      isSyncing: state.isSyncing,
+      assetsFiles: state.assetsFiles,
+      processingAssets: state.processingAssets,
+      uploadStatuses: state.uploadsStatus,
+      newChannelsIds: state.newChannelsIds,
+    }),
+    shallow
+  )
+  const { addAssetToUploads, removeAssetFromUploads, setIsSyncing, removeProcessingAsset, setUploadStatus } =
     useUploadsStore((state) => state.actions)
-  const processingAssetsLookup = createLookup(processingAssetsIds.map((id) => ({ id })))
+  const processingAssetsLookup = createLookup(processingAssets.map((asset) => ({ id: asset.id })))
 
   const videoAssets = channelUploads
     .filter((asset) => asset.type === 'video')
@@ -83,30 +82,47 @@ export const UploadsManager: React.FC = () => {
     if (!initialRender.current) {
       return
     }
-    processingAssetsIds.map((assetId) => {
-      setUploadStatus(assetId, { progress: 100, lastStatus: 'processing' })
+    processingAssets.map((processingAsset) => {
+      setUploadStatus(processingAsset.id, { progress: 100, lastStatus: 'processing' })
     })
     initialRender.current = false
-  }, [processingAssetsIds, setUploadStatus])
+  }, [processingAssets, setUploadStatus])
 
   useEffect(() => {
-    if (!processingAssetsIds.length) {
+    if (!processingAssets.length) {
       return
     }
-    getDataObjectsAvailability(processingAssetsIds)
-  }, [getDataObjectsAvailability, processingAssetsIds])
+    getDataObjectsAvailability(processingAssets.map((asset) => asset.id))
+  }, [getDataObjectsAvailability, processingAssets])
 
   useEffect(() => {
     dataObjects?.forEach((asset) => {
       if (asset.isAccepted) {
         setUploadStatus(asset.id, { lastStatus: 'completed' })
-        removeProcessingAssetId(asset.id)
+        removeProcessingAsset(asset.id)
       }
     })
     if (dataObjects?.every((entry) => entry.isAccepted)) {
       stopPolling?.()
     }
-  }, [dataObjects, removeProcessingAssetId, setUploadStatus, stopPolling])
+  }, [dataObjects, removeProcessingAsset, setUploadStatus, stopPolling])
+
+  useEffect(() => {
+    if (!processingAssets.length) {
+      return
+    }
+    const interval = setInterval(
+      () =>
+        processingAssets.forEach((processingAsset) => {
+          if (processingAsset.expiresAt < Date.now()) {
+            removeProcessingAsset(processingAsset.id)
+            setUploadStatus(processingAsset.id, { lastStatus: 'error' })
+          }
+        }),
+      5000
+    )
+    return () => clearInterval(interval)
+  }, [processingAssets, processingAssets.length, removeProcessingAsset, setUploadStatus])
 
   const client = useApolloClient()
 
@@ -239,7 +255,7 @@ export const UploadsManager: React.FC = () => {
     cachedActiveChannelId,
     isSyncing,
     setIsSyncing,
-    processingAssetsIds,
+    processingAssets,
     processingAssetsLookup,
     newChannelsIds,
   ])

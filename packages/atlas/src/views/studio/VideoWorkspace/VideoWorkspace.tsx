@@ -51,7 +51,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
     secondaryText:
       'For the time being no fees are required for blockchain transactions. This will change in the future.',
     primaryButton: {
-      disabled: !formStatus?.isDisabled,
+      disabled: formStatus?.isDisabled,
       onClick: formStatus?.triggerFormSubmit,
       tooltip: formStatus?.isDisabled
         ? undefined

@@ -8,9 +8,10 @@ import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { TextButton } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -44,6 +45,8 @@ import {
   DeleteVideoButton,
   DescriptionTextArea,
   ExtendedMarginFormField,
+  FileValidationBanner,
+  FileValidationText,
   FormWrapper,
   InputsContainer,
   MoreSettingsDescription,
@@ -63,6 +66,8 @@ import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
 const MINT_NFT_TIMEOUT = 1200
+const MIN_TITLE_LENGTH = 3
+const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
@@ -80,7 +85,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
+  const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const titleInputRef = useRef<HTMLTextAreaElement>(null)
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -111,7 +118,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
@@ -126,7 +133,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     mediaAsset,
     thumbnailAsset,
     hasUnsavedAssets,
-  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields)
+  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger)
 
   // manage draft saving
   const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
@@ -290,7 +297,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? isDirty || !!mintNft : isFormValid,
+      isDisabled: isEdit ? !!mintNft : false,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
@@ -324,6 +331,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
+
+  // console.log(errors)
 
   const videoEditFields = (
     <>
@@ -441,10 +450,31 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
       <Controller
         name="assets"
         control={control}
+        rules={{
+          validate: (value) => {
+            if (!!value.video.id && !!value.thumbnail.originalId && isNew) {
+              return true
+            }
+            if (!value.video.id) {
+              return 'Select video file'
+            }
+            if (!value.thumbnail.originalId) {
+              return 'Select image file'
+            }
+          },
+        }}
         render={() => (
           // don't remove this div
           // without this element position sticky won't work
           <div>
+            {errors.assets && (
+              <FileValidationBanner
+                id="assets-banner"
+                dismissable={false}
+                icon={<SvgAlertsWarning24 width={24} height={24} />}
+                description={<FileValidationText variant="t200">{errors.assets.message}</FileValidationText>}
+              />
+            )}
             <StyledMultiFileSelect
               files={files}
               onVideoChange={handleVideoFileChange}
@@ -460,18 +490,29 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         <Controller
           name="title"
           control={control}
-          rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 60, required: true })}
+          rules={textFieldValidation({
+            name: 'Video title',
+            minLength: MIN_TITLE_LENGTH,
+            maxLength: MAX_TITLE_LENGTH,
+            required: true,
+          })}
           render={({ field: { value, onChange } }) => (
             <StyledTitleArea
+              ref={titleInputRef}
               onChange={onChange}
               value={value}
-              min={3}
-              max={60}
-              placeholder="Video title"
+              min={MIN_TITLE_LENGTH}
+              max={MAX_TITLE_LENGTH}
+              placeholder="Enter video title"
               disabled={videoFieldsLocked}
+              error={!!errors.title}
+              onFocus={() => setTitleTooltipVisible(false)}
+              onBlur={() => setTitleTooltipVisible(true)}
+              helperText={errors.title && errors.title.message}
             />
           )}
         />
+        {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
