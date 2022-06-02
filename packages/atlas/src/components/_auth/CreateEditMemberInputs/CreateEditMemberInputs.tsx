@@ -5,6 +5,8 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TextField } from '@/components/_inputs/TextField'
 
+import { Wrapper } from './CreateEditMemberInputs.styles'
+
 type Inputs = {
   handle: string | null
   avatar: string | null
@@ -20,8 +22,8 @@ type CreateEditMemberFormProps = {
 
 export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ register, errors, watch, isModal }) => {
   return (
-    <>
-      <FormField dense={isModal} label="Avatar URL" error={errors.avatar?.message}>
+    <Wrapper isModal={isModal}>
+      <FormField label="Avatar URL" error={errors.avatar?.message}>
         <TextField
           autoComplete="off"
           error={!!errors.avatar}
@@ -31,7 +33,6 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
         />
       </FormField>
       <FormField
-        dense={isModal}
         label="Member handle"
         description="Member handle may contain only lowercase letters, numbers and underscores"
         error={errors.handle?.message}
@@ -44,7 +45,7 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
           error={!!errors.handle}
         />
       </FormField>
-      <FormField dense={isModal} label="About" error={errors.about?.message}>
+      <FormField label="About" error={errors.about?.message}>
         <TextArea
           placeholder="Anything you'd like to share about yourself with the Joystream community"
           maxLength={1000}
@@ -53,6 +54,6 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
           error={!!errors.about}
         />
       </FormField>
-    </>
+    </Wrapper>
   )
 }

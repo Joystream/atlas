@@ -401,7 +401,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     )}
                   </MinimumBidWrapper>
                 )}
-                <FormField error={errors.bid?.message} dense>
+                <FormField error={errors.bid?.message}>
                   <TextField
                     {...register('bid', {
                       valueAsNumber: true,

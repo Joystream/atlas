@@ -11,6 +11,7 @@ import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useAuthorizedUser } from '@/providers/user'
+import { sizes } from '@/styles'
 
 const TABS: TabItem[] = [
   { name: 'Issue NFT' },
@@ -65,7 +66,7 @@ export const PlaygroundNftExtrinsics: React.FC = () => {
       <div>
         <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} selected={selectedTabIdx} />
         {getTabContents()}
-        <div style={{ maxWidth: 320 }}>
+        <div style={{ maxWidth: 320, marginTop: sizes(8) }}>
           <NftTileViewer nftId={videoId} />
         </div>
         <pre>{JSON.stringify(nft, null, 2)}</pre>
@@ -120,7 +121,10 @@ const Issue: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
         <FormField label="Royalties" optional error={errors.royalties?.message}>
           <TextField {...register('royalties', { min: 0, max: 100 })} error={!!errors.royalties} />
         </FormField>
@@ -161,7 +165,10 @@ const StartBuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
         <FormField label="Buy now price" error={errors.buyNowPrice?.message}>
           <TextField {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
@@ -223,7 +230,10 @@ const StartAuction: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
         <FormField label="Starting price" error={errors.startingPrice?.message}>
           <TextField {...register('startingPrice', { required: true })} type="number" error={!!errors.startingPrice} />
         </FormField>
@@ -282,7 +292,10 @@ const BuyNow: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
         <FormField error={errors.buyNowPrice?.message} label="Price">
           <TextField {...register('buyNowPrice')} error={!!errors.buyNowPrice} />
         </FormField>
@@ -319,7 +332,10 @@ const MakeBid: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) => 
 
   return (
     <div>
-      <form onSubmit={createSubmitHandler(handleSubmit)}>
+      <form
+        onSubmit={createSubmitHandler(handleSubmit)}
+        style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}
+      >
         <FormField label="Bid" error={errors.bid?.message}>
           <TextField {...register('bid')} error={!!errors.bid} />
         </FormField>
@@ -347,8 +363,8 @@ const CancelSale: React.FC<FormProps> = ({ videoId, onSuccess, onError, type }) 
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div style={{ marginTop: sizes(8) }}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Cancel sale</Button>
       </form>
     </div>
@@ -374,7 +390,7 @@ const CancelBid: React.FC<FormProps> = ({ videoId, onSuccess, onError }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Cancel bid</Button>
       </form>
     </div>
@@ -398,7 +414,7 @@ const SettleAuction: React.FC<FormProps> = ({ videoId, onSuccess, type }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ marginTop: sizes(8) }}>
         <Button type="submit">Settle auction</Button>
       </form>
     </div>

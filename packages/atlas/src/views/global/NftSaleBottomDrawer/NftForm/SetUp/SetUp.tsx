@@ -20,6 +20,7 @@ import {
   DaysSummaryInfo,
   Header,
   OptionCardRadioWrapper,
+  StyledForm,
   StyledFormField,
 } from './SetUp.styles'
 
@@ -153,7 +154,7 @@ export const SetUp: React.FC<SetUpProps> = ({
       <Text variant="t300" secondary>
         {selectedType && headerText[selectedType].caption}
       </Text>
-      <form onSubmit={handleSubmit}>
+      <StyledForm onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
           <StyledFormField label="" error={errors.buyNowPrice?.message}>
             <TextField
@@ -345,7 +346,7 @@ export const SetUp: React.FC<SetUpProps> = ({
             />
           </>
         )}
-      </form>
+      </StyledForm>
     </>
   )
 }

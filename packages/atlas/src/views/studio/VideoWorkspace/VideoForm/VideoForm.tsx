@@ -4,7 +4,6 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
-import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
@@ -41,15 +40,13 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
-  DeleteVideoButton,
-  ExtendedMarginFormField,
   FormWrapper,
   InputsContainer,
   MoreSettingsDescription,
-  MoreSettingsHeader,
   MoreSettingsSection,
   RadioButtonsContainer,
   RadioCardButtonsContainer,
+  StyledBanner,
   StyledMultiFileSelect,
   StyledTitleArea,
   SwitchFormField,
@@ -357,7 +354,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           )}
         />
       </FormField>
-      <ExtendedMarginFormField label="Video visibility">
+      <FormField label="Video visibility">
         <Controller
           name="isPublic"
           control={control}
@@ -386,7 +383,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             </RadioCardButtonsContainer>
           )}
         />
-      </ExtendedMarginFormField>
+      </FormField>
     </>
   )
 
@@ -457,7 +454,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           </SwitchNftWrapper>
           {watch('mintNft') && (
             <>
-              <Banner
+              <StyledBanner
                 id="issuing-nft"
                 dismissable={false}
                 icon={<StyledSvgWarning width={24} height={24} />}
@@ -517,7 +514,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             </>
           )}
         </SwitchFormField>
-        <MoreSettingsHeader>
+        <div>
           <Button
             size="large"
             iconPlacement="right"
@@ -527,12 +524,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           >
             {getHiddenSectionLabel()}
           </Button>
-          <MoreSettingsDescription as="p" variant="t200" secondary visible={!moreSettingsVisible}>
+          <MoreSettingsDescription as="p" variant="t200" secondary>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
               : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
           </MoreSettingsDescription>
-        </MoreSettingsHeader>
+        </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
           {videoFieldsLocked && videoEditFields}
           <Controller
@@ -581,7 +578,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             </FormField>
           )}
 
-          <ExtendedMarginFormField
+          <FormField
             label="Content rating"
             description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."
           >
@@ -616,8 +613,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 </RadioButtonsContainer>
               )}
             />
-          </ExtendedMarginFormField>
-          <ExtendedMarginFormField
+          </FormField>
+          <FormField
             label="Prior publication"
             error={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
             optional
@@ -638,7 +635,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 />
               )}
             />
-          </ExtendedMarginFormField>
+          </FormField>
           <FormField label="Marketing" optional>
             <Controller
               name="hasMarketing"
@@ -654,9 +651,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
           </FormField>
           {isEdit && !videoFieldsLocked && (
-            <DeleteVideoButton fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
+            <Button fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
               Delete video
-            </DeleteVideoButton>
+            </Button>
           )}
         </MoreSettingsSection>
       </InputsContainer>

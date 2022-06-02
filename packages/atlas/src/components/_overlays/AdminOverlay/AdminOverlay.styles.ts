@@ -38,10 +38,10 @@ export const HorizontalSpacedContainer = styled.div`
   }
 `
 
-export const VerticalSpacedContainer = styled.div<{ topMargin?: boolean }>`
+export const VerticalSpacedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: ${({ topMargin }) => (topMargin ? '16px' : 0)};
+  margin-top: 16px;
 
   > * + * {
     margin-top: 16px;

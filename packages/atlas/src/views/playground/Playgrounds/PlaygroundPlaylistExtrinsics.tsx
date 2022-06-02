@@ -12,6 +12,7 @@ import { PlaylistExtrinsicResult, PlaylistInputMetadata } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
 import { useAuthorizedUser } from '@/providers/user'
+import { sizes } from '@/styles'
 
 const TABS: TabItem[] = [{ name: 'Create playlist' }, { name: 'Edit playlist' }, { name: 'Delete playlist' }]
 
@@ -104,7 +105,7 @@ const CreatePlaylist: React.FC<CommonProps> = ({ onSuccess }) => {
   }
 
   return (
-    <form onSubmit={createSubmitHandler(handleSubmit)}>
+    <form onSubmit={createSubmitHandler(handleSubmit)} style={{ display: 'grid', gap: sizes(8), marginTop: sizes(8) }}>
       <FormField label="Title">
         <TextField {...register('title')} />
       </FormField>

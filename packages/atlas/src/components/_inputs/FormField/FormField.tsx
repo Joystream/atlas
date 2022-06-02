@@ -36,7 +36,6 @@ export type FormFieldProps = {
   error?: string
   disableErrorAnimation?: boolean
   description?: string | string[]
-  dense?: boolean
   className?: string
   tooltip?: TooltipProps
 } & WithSwitchProps
@@ -50,7 +49,6 @@ export const FormField = React.memo(
         description,
         className,
         optional,
-        dense,
         switchProps,
         tooltip,
         error,
@@ -84,7 +82,7 @@ export const FormField = React.memo(
 
       const isInputOpen = switchable ? switchProps?.value : true
       return (
-        <FormFieldWrapper className={className} dense={dense} ref={ref}>
+        <FormFieldWrapper className={className} ref={ref}>
           {(label || description) && (
             <FormFieldHeader>
               {label && (

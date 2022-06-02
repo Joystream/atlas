@@ -6,10 +6,6 @@ import { Text } from '@/components/Text'
 import { SvgActionWarning } from '@/components/_icons'
 import { cVar, sizes } from '@/styles'
 
-type DenseProps = {
-  dense?: boolean
-}
-
 export const SwitchLabel = styled.label`
   display: inline-flex;
   cursor: pointer;
@@ -19,13 +15,12 @@ export const SwitchTitle = styled(Text)`
   margin-left: ${sizes(3)};
 `
 
-export const FormFieldWrapper = styled.div<DenseProps>`
-  margin-top: ${({ dense }) => sizes(dense ? 4 : 8)};
+export const FormFieldWrapper = styled.div`
   gap: ${sizes(4)};
   display: grid;
   width: 100%;
 `
-export const FormFieldHeader = styled.header<DenseProps>`
+export const FormFieldHeader = styled.header`
   display: grid;
   gap: ${sizes(1)};
   width: 100%;
