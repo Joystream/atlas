@@ -107,7 +107,6 @@ Playlist.args = {
       ),
       type: 'default',
     },
-
     center: {
       element: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
