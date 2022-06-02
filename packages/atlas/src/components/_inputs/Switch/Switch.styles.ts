@@ -88,6 +88,7 @@ export const SwitchCheckbox = styled.input`
     }
   }
 
+  :focus-visible:not(:disabled):not(:checked),
   :focus:not(:disabled):not(:checked) {
     + ${SwitchSlider} {
       box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
@@ -98,6 +99,7 @@ export const SwitchCheckbox = styled.input`
     }
   }
 
+  :focus-visible:checked:not(:disabled):not(:active),
   :focus:checked:not(:disabled):not(:active) {
     + ${SwitchSlider} {
       background-color: ${cVar('colorBackgroundPrimaryStrong')};
