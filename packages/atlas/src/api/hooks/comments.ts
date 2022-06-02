@@ -58,7 +58,7 @@ export const useCommentRepliesConnection = (
 ) => {
   const { data, ...rest } = useGetCommentRepliesConnectionQuery({ ...opts })
 
-  const mappedComments = data?.commentsConnection.edges.map((edge) => edge.node)
+  const mappedComments = data?.commentsConnection?.edges.map((edge) => edge.node)
 
   return {
     replies: mappedComments || [],
@@ -81,14 +81,14 @@ export const useCommentSectionComments = (
 
   const userComments = data?.userComments
 
-  const videoComments = data?.videoCommentsConnection.edges
+  const videoComments = data?.videoCommentsConnection?.edges
     .map((edge) => edge.node)
     .filter((comment) => userCommentLookup && !userCommentLookup[comment.id])
 
   return {
     userComments,
     comments: data ? [...(userComments || []), ...(videoComments || [])] : undefined,
-    totalCount: data?.videoCommentsConnection.totalCount,
+    totalCount: data?.videoCommentsConnection?.totalCount,
     loading: loading,
     pageInfo: data?.videoCommentsConnection?.pageInfo,
     ...rest,
