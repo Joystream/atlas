@@ -42,7 +42,6 @@ export const SwitchCheckbox = styled.input`
   width: 40px;
   height: 24px;
   opacity: 0;
-  visibility: hidden;
   z-index: 1;
 
   :checked {
@@ -86,6 +85,22 @@ export const SwitchCheckbox = styled.input`
         transform: translateX(12px);
         width: 20px;
       }
+    }
+  }
+
+  :focus:not(:disabled):not(:checked) {
+    + ${SwitchSlider} {
+      box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
+
+      ::before {
+        background-color: ${cVar('colorBorderStrongAlpha')};
+      }
+    }
+  }
+
+  :focus:checked:not(:disabled):not(:active) {
+    + ${SwitchSlider} {
+      background-color: ${cVar('colorBackgroundPrimaryStrong')};
     }
   }
 `

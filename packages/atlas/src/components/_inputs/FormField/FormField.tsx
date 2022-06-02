@@ -82,7 +82,9 @@ export const FormField = React.memo(
             {switchable ? (
               <SwitchLabel>
                 <Switch {...switchProps} />
-                <SwitchTitle variant="h300">{label}</SwitchTitle>
+                <SwitchTitle as="span" variant="h300">
+                  {label}
+                </SwitchTitle>
               </SwitchLabel>
             ) : (
               <label onClick={handleFocusOnClick}>
@@ -91,7 +93,7 @@ export const FormField = React.memo(
             )}
             {optional && (
               <OptionalText variant="t200" secondary>
-                (Optional)
+                (optional)
               </OptionalText>
             )}
             {tooltip && <StyledInformation {...tooltip} />}
