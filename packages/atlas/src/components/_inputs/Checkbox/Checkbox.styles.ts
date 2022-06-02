@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled/'
 
 import { SvgActionCheck } from '@/components/_icons'
-import { cVar, sizes, transitions } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const Container = styled.div<CheckboxStateProps>`
   position: relative;
@@ -12,47 +12,74 @@ export const Container = styled.div<CheckboxStateProps>`
   cursor: pointer;
   border-radius: 100%;
   color: ${cVar('colorCoreNeutral300')};
-  transition: background ${transitions.timings.loading} ${transitions.easing};
+  transition: background ${cVar('animationTransitionFast')};
 
   :hover {
-    background: ${({ disabled }) => !disabled && cVar('colorCoreNeutral700Lighten')};
-    box-shadow: ${({ disabled }) => !disabled && cVar('colorCoreNeutral700Lighten')};
+    background: ${({ selected, disabled }) => !(disabled && selected) && cVar('colorBackgroundStrongAlpha')};
+  }
+
+  :active {
+    background: ${({ selected, disabled }) => !(disabled && selected) && cVar('colorBackgroundAlpha')};
   }
 `
 
-const selectedStyles = (props: CheckboxStateProps) =>
-  props.selected
+const selectedStyles = ({ selected, disabled }: CheckboxStateProps) =>
+  selected && !disabled
     ? css`
-        background-color: ${props.selected ? cVar('colorCoreBlue500') : 'transparent'};
-        border: 1px solid ${cVar('colorCoreBlue500')};
+        background-color: ${selected ? cVar('colorBackgroundPrimary') : 'transparent'};
+        border: 1px solid ${cVar('colorBackgroundPrimary')};
+
+        :hover {
+          background-color: ${cVar('colorBackgroundPrimaryStrong')};
+          border: 1px solid ${cVar('colorBackgroundPrimaryStrong')};
+        }
+
+        :active {
+          background-color: ${cVar('colorBackgroundPrimaryMuted')};
+          border: 1px solid ${cVar('colorBackgroundPrimaryMuted')};
+        }
       `
     : null
-const disabledStyles = (props: CheckboxStateProps) =>
-  props.disabled
+const disabledStyles = ({ disabled, selected }: CheckboxStateProps) =>
+  disabled
     ? [
         css`
           cursor: not-allowed;
-          opacity: 0.5;
-          border: 1px solid ${cVar('colorCoreNeutral300')};
-          background-color: ${cVar('colorCoreNeutral400')};
+          border: 1px solid ${cVar('colorBorderMutedAlpha')};
+          background-color: ${cVar('colorBackgroundAlpha')};
         `,
-        props.selected &&
+        selected &&
           css`
             background-color: ${cVar('colorCoreNeutral700')};
             border: 1px solid ${cVar('colorCoreNeutral700')};
             color: ${cVar('colorCoreNeutral400')};
+
+            path {
+              fill: ${cVar('colorTextMuted')};
+            }
           `,
       ]
     : null
-const errorStyles = (props: CheckboxStateProps) =>
-  props.error
+const errorStyles = ({ error, selected }: CheckboxStateProps) =>
+  error
     ? [
         css`
-          border: 1px solid ${cVar('colorCoreRed400')};
+          border: 1px solid ${cVar('colorBorderError')};
         `,
-        props.selected &&
+        selected &&
           css`
-            background-color: ${cVar('colorCoreRed400')};
+            background-color: ${cVar('colorBackgroundError')};
+            border: 1px solid ${cVar('colorBackgroundError')};
+
+            :hover {
+              background-color: ${cVar('colorBackgroundErrorStrong')};
+              border: 1px solid ${cVar('colorBackgroundErrorStrong')};
+            }
+
+            :active {
+              background-color: ${cVar('colorBackgroundErrorMuted')};
+              border: 1px solid ${cVar('colorBackgroundErrorMuted')};
+            }
           `,
       ]
     : null
@@ -63,17 +90,12 @@ export type CheckboxStateProps = {
   isFocused: boolean
 }
 export const InnerContainer = styled.div<CheckboxStateProps>`
-  transition: all 0.125s ease;
-  color: ${cVar('colorCoreBaseWhite')};
-  border: 1px solid ${cVar('colorCoreNeutral300')};
-  border-radius: 2px;
+  transition: all ${cVar('animationTransitionFast')};
+  border: 1px solid ${cVar('colorBorderAlpha')};
+  border-radius: ${cVar('radiusSmall')};
   ${selectedStyles};
   ${errorStyles};
   ${disabledStyles};
-
-  &:active {
-    border: 1px solid ${cVar('colorCoreNeutral100')};
-  }
 `
 
 export const Input = styled.input`

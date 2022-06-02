@@ -9,7 +9,7 @@ import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 type HTMLCheckboxProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChange' | 'checked' | 'multiple' | 'ref'> {
   name?: string
-  value: boolean
+  value?: boolean
   disabled?: boolean
   indeterminate?: boolean
   error?: boolean
@@ -38,7 +38,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     ref
   ) => {
     const isIndeterminate = indeterminate || false
-    const isSelected = !!value
+    const isSelected = value
     const [isFocused, setIsFocused] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
