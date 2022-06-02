@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -33,6 +34,22 @@ export const SwitchSlider = styled.div`
     background-color: ${cVar('colorBorderAlpha')};
     transition: transform ${cVar('animationTransitionFast')}, width ${cVar('animationTransitionFast')},
       background-color ${cVar('animationTransitionFast')};
+  }
+`
+
+const hoverUncheckedStyles = css`
+  + ${SwitchSlider} {
+    box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
+
+    ::before {
+      background-color: ${cVar('colorBorderStrongAlpha')};
+    }
+  }
+`
+
+const hoverCheckedStyles = css`
+  + ${SwitchSlider} {
+    background-color: ${cVar('colorBackgroundPrimaryStrong')};
   }
 `
 
@@ -88,21 +105,23 @@ export const SwitchCheckbox = styled.input`
     }
   }
 
-  :focus-visible:not(:disabled):not(:checked),
-  :focus:not(:disabled):not(:checked) {
-    + ${SwitchSlider} {
-      box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
+  @supports selector(:focus-visible) {
+    :focus-visible:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
 
-      ::before {
-        background-color: ${cVar('colorBorderStrongAlpha')};
-      }
+    :focus-visible:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
     }
   }
 
-  :focus-visible:checked:not(:disabled):not(:active),
-  :focus:checked:not(:disabled):not(:active) {
-    + ${SwitchSlider} {
-      background-color: ${cVar('colorBackgroundPrimaryStrong')};
+  @supports selector(not(:focus-visible)) {
+    :focus:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
+
+    :focus:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
     }
   }
 `
@@ -118,19 +137,11 @@ export const SwitchWrapper = styled.div`
 
   :hover {
     ${SwitchCheckbox}:not(:disabled):not(:checked) {
-      + ${SwitchSlider} {
-        box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
-
-        ::before {
-          background-color: ${cVar('colorBorderStrongAlpha')};
-        }
-      }
+      ${hoverUncheckedStyles};
     }
 
     ${SwitchCheckbox}:checked:not(:disabled):not(:active) {
-      + ${SwitchSlider} {
-        background-color: ${cVar('colorBackgroundPrimaryStrong')};
-      }
+      ${hoverCheckedStyles};
     }
   }
 `
