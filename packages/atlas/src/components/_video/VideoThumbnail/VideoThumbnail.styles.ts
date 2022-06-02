@@ -117,6 +117,7 @@ export const HoverOverlay = styled('div', { shouldForwardProp: (prop) => prop !=
 type VideoThumbnailContainerProps = {
   clickable: boolean
   activeDisabled: boolean
+  isPlaylist: boolean
 }
 
 export const VideoThumbnailContainer = styled(Link, {
@@ -128,31 +129,89 @@ export const VideoThumbnailContainer = styled(Link, {
   background-color: ${cVar('colorCoreBaseBlack')};
   transition: background-color ${cVar('animationTransitionFast')};
 
-  ${({ clickable }) =>
+  ${({ clickable, isPlaylist, activeDisabled }) => [
     clickable &&
-    css`
-      :hover {
-        cursor: pointer;
-        background-color: ${cVar('colorBackgroundPrimary')};
+      css`
+        :hover {
+          cursor: pointer;
 
-        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
-          transform: translate(-8px, -8px);
+          ${HoverOverlay}, ${SlotContainer} {
+            opacity: 1;
+          }
         }
-        ${HoverOverlay}, ${SlotContainer} {
-          opacity: 1;
+      `,
+    isPlaylist &&
+      clickable &&
+      css`
+        &::before {
+          width: 100%;
+          height: 100%;
+          content: ' ';
+          display: block;
+          position: absolute;
+          transition: all ${cVar('animationTransitionFast')};
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          background-color: ${cVar('colorCoreBaseBlack')};
         }
-      }
-    `}
-  ${({ clickable, activeDisabled }) =>
+
+        &::after {
+          width: 100%;
+          height: 100%;
+          content: ' ';
+          display: block;
+          position: absolute;
+          top: 0;
+          z-index: -1;
+          transition: all ${cVar('animationTransitionFast')};
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          background-color: ${cVar('colorCoreBaseBlack')};
+        }
+
+        &:hover {
+          &::before {
+            background-color: ${cVar('colorBackgroundPrimary')};
+            width: calc(100% - 16px * 2);
+          }
+
+          &::after {
+            background-color: ${cVar('colorBackgroundPrimaryMuted')};
+            transform: translate(0, 8px);
+            width: calc(100% - 24px * 2);
+          }
+
+          ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay}, {
+            transform: translate(0, -8px);
+          }
+          ${PlaylistOverlay} {
+            opacity: 0;
+          }
+        }
+      `,
+    isPlaylist === false &&
+      clickable &&
+      css`
+        &:hover {
+          background-color: ${cVar('colorBackgroundPrimary')};
+
+          ${ContentOverlay}, ${HoverOverlay},${PlaylistOverlay}, ${SlotsOverlay}, {
+            transform: translate(-8px, -8px);
+          }
+        }
+      `,
     clickable &&
-    !activeDisabled &&
-    css`
-      :active {
-        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
-          transform: translate(0, 0);
+      !activeDisabled &&
+      css`
+        :active {
+          ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+            transform: translate(0, 0);
+          }
         }
-      }
-    `};
+      `,
+  ]}
 `
 
 export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
@@ -161,4 +220,18 @@ export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
   position: absolute;
   top: 0;
   left: 0;
+`
+
+export const PlaylistOverlay = styled('div', { shouldForwardProp: (prop) => prop !== 'loading' })<HoverOverlayProps>`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  transition: ${cVar('animationTransitionFast')};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: ${({ loading }) => (loading ? 'none ' : cVar('colorBackgroundOverlay'))};
+  width: 50%;
 `

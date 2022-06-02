@@ -287,6 +287,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
             thumbnail={{
               loading: thumbnailLoading || loading || !nft,
               thumbnailUrl: thumbnailUrl,
+              type: 'video',
             }}
             creator={{ name: nft?.video.channel.title, assetUrl: creatorAvatarUrl }}
             owner={{ name: nft?.ownerMember?.handle, assetUrl: ownerMemberAvatarUrl }}

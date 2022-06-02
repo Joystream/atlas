@@ -15,7 +15,7 @@ export type VideoTileProps = {
   loadingDetails?: boolean
   loadingThumbnail?: boolean
   playlistUrl?: string
-} & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt'> &
+} & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt' | 'type'> &
   Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant' | 'size'>
 
 export const VideoTile: React.FC<VideoTileProps> = React.memo(
@@ -63,6 +63,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     return (
       <VideoTileContainer direction={direction} className={className}>
         <VideoThumbnail
+          type="video"
           ref={thumbnailRef}
           videoHref={videoHref}
           linkState={linkState}

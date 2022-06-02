@@ -60,6 +60,7 @@ export const NftTileViewer: React.FC<NftTileViewerProps> = ({ nftId }) => {
       thumbnailUrl: thumbnail.url,
       loading: thumbnail.isLoadingAsset,
       thumbnailAlt: `${nft?.video?.title} video thumbnail`,
+      type: 'video',
     },
     owner: nft?.ownerMember?.id
       ? {

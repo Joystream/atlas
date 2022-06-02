@@ -3,12 +3,14 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Pill, PillGroup } from '@/components/Pill'
+import { Text } from '@/components/Text'
 import { UploadProgressBar } from '@/components/UploadProgressBar'
 import { Button } from '@/components/_buttons/Button'
 import { IconButton } from '@/components/_buttons/IconButton'
 import {
   SvgActionBid,
   SvgActionEdit,
+  SvgActionPlay,
   SvgAlertsWarning24,
   SvgIllustrativePlay,
   SvgIllustrativeReupload,
@@ -26,6 +28,7 @@ export default {
     loading: false,
     thumbnailUrl: 'https://picsum.photos/320/180',
     thumbnailAlt: 'This person does not exist',
+    type: 'video',
     slots: {
       bottomLeft: {
         element: (
@@ -82,6 +85,43 @@ const Template: Story<VideoThumbnailProps> = (args) => (
 )
 export const Default = Template.bind({})
 
+export const Playlist = Template.bind({})
+Playlist.args = {
+  ...Playlist.args,
+  type: 'playlist',
+  slots: {
+    bottomLeft: {
+      element: (
+        <PillGroup
+          size="small"
+          items={[
+            {
+              label: 'NFT',
+            },
+            {
+              icon: <JoyTokenIcon size={16} variant="regular" />,
+              label: '24K tJOY',
+            },
+          ]}
+        />
+      ),
+      type: 'default',
+    },
+
+    center: {
+      element: (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <SvgActionPlay />
+          <Text margin={{ left: 2 }} variant="t200-strong">
+            Play all videos
+          </Text>
+        </div>
+      ),
+      type: 'hover',
+    },
+  },
+}
+
 export const UploadProgress = Template.bind({})
 UploadProgress.args = {
   ...UploadProgress.args,
@@ -93,6 +133,7 @@ UploadProgress.args = {
 export const FailedUpload = Template.bind({})
 FailedUpload.args = {
   ...FailedUpload.args,
+  type: 'video',
   slots: {
     bottomRight: {
       element: <Pill label="Failed upload" variant="danger" icon={<SvgAlertsWarning24 />} size="medium" />,
@@ -107,6 +148,8 @@ FailedUpload.args = {
 export const Draft = Template.bind({})
 Draft.args = {
   ...Draft.args,
+  type: 'video',
+
   slots: {
     topRight: {
       element: (
@@ -135,6 +178,7 @@ Draft.args = {
 export const CustomContent = Template.bind({})
 CustomContent.args = {
   ...CustomContent.args,
+  type: 'video',
   contentSlot: (
     <div
       style={{

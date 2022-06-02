@@ -263,7 +263,7 @@ export const NftForm: React.FC<NftFormProps> = ({ setFormStatus, onSubmit, video
 
   const nftTileProps: NftTileProps = {
     status: getNftStatus(),
-    thumbnail: { thumbnailUrl: thumbnailPhotoUrl },
+    thumbnail: { thumbnailUrl: thumbnailPhotoUrl, type: 'video' },
     title: video?.title,
     owner: { assetUrl: memberAvatarUri, name: activeMembership?.handle },
     creator: { assetUrl: channelAvatarUrl, name: video?.channel.title ?? '' },
