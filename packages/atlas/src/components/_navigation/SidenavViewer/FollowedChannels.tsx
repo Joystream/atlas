@@ -37,9 +37,9 @@ export const ChannelNavItem: React.FC<NavItemProps & ChannelNavItemProps> = ({
   onChannelNotFound,
   onClick,
 }) => {
-  const { channel } = useBasicChannel(id || '', {
+  const { channel } = useBasicChannel(id ?? '', {
     skip: !id,
-    onCompleted: (data) => !data && onChannelNotFound?.(id),
+    onCompleted: (data) => !data.channelByUniqueInput && onChannelNotFound?.(id),
     onError: (error) => SentryLogger.error('Failed to fetch channel', 'ChannelLink', error, { channel: { id } }),
   })
   const { url: avatarPhotoUrl } = useAsset(channel?.avatarPhoto)
@@ -93,9 +93,7 @@ export const FollowedChannels: React.FC<FollowedChannelsProps> = ({
                 isSecondary={true}
                 onChannelNotFound={onChannelNotFound}
                 key={id}
-              >
-                {id}
-              </ChannelNavItem>
+              />
             ))}
           </ChannelsList>
         </ChannelsWrapper>
