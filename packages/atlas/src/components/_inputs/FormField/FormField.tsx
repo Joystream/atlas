@@ -69,6 +69,12 @@ export const FormField = React.memo(
         } else {
           input?.focus()
         }
+
+        const textArea = childrenWrapperRef.current?.getElementsByTagName('textarea')[0]
+        if (textArea) {
+          textArea?.focus()
+        }
+
         const button = childrenWrapperRef.current?.getElementsByTagName('button')[0]
         // If Formfield is wrapping custom Select and you click on the label it will click select toggle button and open select menu
         if (button && button.getAttribute('data-select')) {
@@ -79,28 +85,32 @@ export const FormField = React.memo(
       const isInputOpen = switchable ? switchProps?.value : true
       return (
         <FormFieldWrapper className={className} dense={dense} ref={ref}>
-          {(description || label) && (
+          {(label || description) && (
             <FormFieldHeader>
-              <FormFieldTitleWrapper>
-                {switchable ? (
-                  <SwitchLabel>
-                    <Switch {...switchProps} />
-                    <SwitchTitle as="span" variant="h300">
-                      {label}
-                    </SwitchTitle>
-                  </SwitchLabel>
-                ) : (
-                  <label onClick={handleFocusOnClick}>
-                    <Text variant="h300">{label}</Text>
-                  </label>
-                )}
-                {optional && (
-                  <OptionalText variant="t200" secondary>
-                    (optional)
-                  </OptionalText>
-                )}
-                {tooltip && <StyledInformation {...tooltip} />}
-              </FormFieldTitleWrapper>
+              {label && (
+                <FormFieldTitleWrapper>
+                  {switchable ? (
+                    <SwitchLabel>
+                      <Switch {...switchProps} />
+                      <SwitchTitle as="span" variant="h300">
+                        {label}
+                      </SwitchTitle>
+                    </SwitchLabel>
+                  ) : (
+                    <label onClick={handleFocusOnClick}>
+                      <Text variant="h300" as="span">
+                        {label}
+                      </Text>
+                    </label>
+                  )}
+                  {optional && (
+                    <OptionalText variant="t200" secondary>
+                      (optional)
+                    </OptionalText>
+                  )}
+                  {tooltip && <StyledInformation {...tooltip} />}
+                </FormFieldTitleWrapper>
+              )}
               {description &&
                 (description instanceof Array ? (
                   description.map((p, idx) => (
