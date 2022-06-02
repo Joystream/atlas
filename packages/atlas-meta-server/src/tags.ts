@@ -160,6 +160,11 @@ export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thu
     },
     {
       type: 'regular',
+      prop: 'uploadDate',
+      value: video.createdAt,
+    },
+    {
+      type: 'regular',
       prop: 'genre',
       value: video.category?.name || '',
     },

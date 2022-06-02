@@ -1,5 +1,5 @@
 const CRAWLER_USER_AGENT_REGEX =
-  /baiduspider|twitterbot|facebookexternalhit|discordbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|Rocket.Chat/i
+  /googlebot|baiduspider|twitterbot|facebookexternalhit|discordbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|Rocket.Chat|Minds|Taringa/i
 
 declare global {
   const ATLAS_URL: string
