@@ -1,6 +1,8 @@
+import styled from '@emotion/styled'
 import React from 'react'
 
 import { RadioButton, RadioButtonProps } from '@/components/_inputs/RadioButton'
+import { sizes } from '@/styles'
 
 export type RadioButtonGroupProps = {
   options: RadioButtonProps[]
@@ -20,7 +22,7 @@ export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   error,
 }) => {
   return (
-    <>
+    <Wrapper>
       {options.map((option) => (
         <RadioButton
           disabled={disabled}
@@ -33,6 +35,12 @@ export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
           {...option}
         />
       ))}
-    </>
+    </Wrapper>
   )
 }
+
+export const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${sizes(2)};
+`
