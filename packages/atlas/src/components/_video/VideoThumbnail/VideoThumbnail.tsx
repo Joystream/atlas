@@ -139,8 +139,8 @@ export const VideoThumbnail = forwardRef<HTMLAnchorElement, VideoThumbnailProps>
               )
           )}
         </SlotsOverlay>
-        {type === 'playlist' && (
-          <PlaylistOverlay loading={loading}>
+        {type === 'playlist' && !loading && (
+          <PlaylistOverlay>
             <SvgControlsPlaylist />
             <Text margin={{ top: 2 }} variant="t100">
               {videosInPlaylist ?? 0} videos
