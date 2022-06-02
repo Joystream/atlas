@@ -21,14 +21,19 @@ export const SwitchTitle = styled(Text)`
 
 export const FormFieldWrapper = styled.div<DenseProps>`
   margin-top: ${({ dense }) => sizes(dense ? 4 : 8)};
-  display: block;
+  gap: ${sizes(4)};
+  display: grid;
+  width: 100%;
+`
+export const FormFieldHeader = styled.header<DenseProps>`
+  display: grid;
+  gap: ${sizes(1)};
   width: 100%;
 `
 
-export const FormFieldHeader = styled.header`
+export const FormFieldTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  max-height: 24px;
   width: 85%;
   word-wrap: break-word;
 `
@@ -45,7 +50,6 @@ export const FormFieldDescription = styled(Text)`
   width: 85%;
   display: block;
   word-wrap: break-word;
-  margin-top: ${sizes(1)};
 `
 
 const errorShake = keyframes`
@@ -59,12 +63,10 @@ const errorShakeAnimation = css`
 
 type ChildrenWrapperProps = {
   isError: boolean
-  noMargin: boolean
   disableErrorAnimation?: boolean
 }
 
 export const ChildrenWrapper = styled.div<ChildrenWrapperProps>`
-  margin-top: ${({ noMargin }) => (noMargin ? 'unset' : sizes(4))};
   ${({ isError, disableErrorAnimation }) => (isError && !disableErrorAnimation ? errorShakeAnimation : null)};
 `
 
@@ -78,6 +80,5 @@ export const StyledSvgActionWarning = styled(SvgActionWarning)`
 `
 
 export const FormFieldFooter = styled.footer`
-  margin-top: ${sizes(4)};
   display: flex;
 `

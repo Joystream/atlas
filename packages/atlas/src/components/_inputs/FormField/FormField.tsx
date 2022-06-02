@@ -9,6 +9,7 @@ import {
   FormFieldDescription,
   FormFieldFooter,
   FormFieldHeader,
+  FormFieldTitleWrapper,
   FormFieldWrapper,
   OptionalText,
   StyledInformation,
@@ -78,45 +79,44 @@ export const FormField = React.memo(
       const isInputOpen = switchable ? switchProps?.value : true
       return (
         <FormFieldWrapper className={className} dense={dense} ref={ref}>
-          <FormFieldHeader>
-            {switchable ? (
-              <SwitchLabel>
-                <Switch {...switchProps} />
-                <SwitchTitle as="span" variant="h300">
-                  {label}
-                </SwitchTitle>
-              </SwitchLabel>
-            ) : (
-              <label onClick={handleFocusOnClick}>
-                <Text variant="h300">{label}</Text>
-              </label>
-            )}
-            {optional && (
-              <OptionalText variant="t200" secondary>
-                (optional)
-              </OptionalText>
-            )}
-            {tooltip && <StyledInformation {...tooltip} />}
-          </FormFieldHeader>
-          {description &&
-            (description instanceof Array ? (
-              description.map((p, idx) => (
-                <FormFieldDescription secondary key={idx} variant="t200">
-                  {p}
-                </FormFieldDescription>
-              ))
-            ) : (
-              <FormFieldDescription secondary variant="t200">
-                {description}
-              </FormFieldDescription>
-            ))}
+          {(description || label) && (
+            <FormFieldHeader>
+              <FormFieldTitleWrapper>
+                {switchable ? (
+                  <SwitchLabel>
+                    <Switch {...switchProps} />
+                    <SwitchTitle as="span" variant="h300">
+                      {label}
+                    </SwitchTitle>
+                  </SwitchLabel>
+                ) : (
+                  <label onClick={handleFocusOnClick}>
+                    <Text variant="h300">{label}</Text>
+                  </label>
+                )}
+                {optional && (
+                  <OptionalText variant="t200" secondary>
+                    (optional)
+                  </OptionalText>
+                )}
+                {tooltip && <StyledInformation {...tooltip} />}
+              </FormFieldTitleWrapper>
+              {description &&
+                (description instanceof Array ? (
+                  description.map((p, idx) => (
+                    <FormFieldDescription secondary key={idx} variant="t200">
+                      {p}
+                    </FormFieldDescription>
+                  ))
+                ) : (
+                  <FormFieldDescription secondary variant="t200">
+                    {description}
+                  </FormFieldDescription>
+                ))}
+            </FormFieldHeader>
+          )}
           {isInputOpen && (
-            <ChildrenWrapper
-              ref={childrenWrapperRef}
-              disableErrorAnimation={disableErrorAnimation}
-              noMargin={!label && !description}
-              isError={!!error}
-            >
+            <ChildrenWrapper ref={childrenWrapperRef} disableErrorAnimation={disableErrorAnimation} isError={!!error}>
               {children}
             </ChildrenWrapper>
           )}
