@@ -54,9 +54,10 @@ const InteractableTemplate: Story<ReactionStepperProps> = () => {
     return () => clearTimeout(timeout)
   }, [reactionTriggered])
 
-  const handleReact = (reaction: 'like' | 'dislike') => {
+  const handleReact = async (reaction: 'like' | 'dislike') => {
     setReactionTriggered(reaction)
     setState('processing')
+    return true
   }
 
   return (
