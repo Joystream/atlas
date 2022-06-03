@@ -9,6 +9,10 @@ export default {
   argTypes: {
     className: { table: { disable: true } },
     selectedValue: { table: { disable: true } },
+    options: { table: { disable: true } },
+    onChange: { table: { disable: true } },
+    value: { table: { disable: true } },
+    name: { table: { disable: true } },
   },
   args: {
     label: 'Hello there',
