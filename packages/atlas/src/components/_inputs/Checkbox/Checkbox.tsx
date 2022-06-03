@@ -73,8 +73,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           e.stopPropagation()
         }}
       >
-        <Container selected={value} disabled={disabled} isFocused={isFocused} error={error}>
-          <InnerContainer selected={value} disabled={disabled} error={error} isFocused={isFocused}>
+        <Container selected={!!value} disabled={disabled} isFocused={isFocused} error={error}>
+          <InnerContainer selected={!!value} disabled={disabled} error={error} isFocused={isFocused}>
             <Input
               name={name}
               ref={ref}
