@@ -2715,7 +2715,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.2.4
     "@graphql-codegen/typescript-react-apollo": ^3.2.5
     "@hookform/resolvers": ^2.8.8
-    "@joystream/metadata-protobuf": 2.1.0
+    "@joystream/metadata-protobuf": 2.2.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.19.3
     "@livesession/sdk": ^1.1.4
@@ -2810,9 +2810,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@joystream/metadata-protobuf@npm:2.1.0"
+"@joystream/metadata-protobuf@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@joystream/metadata-protobuf@npm:2.2.0"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2822,23 +2822,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 4a03f16c911b79727974f092608d281a8dc18aa06323a8ec53c6e0ec037c3f055a5beb6f5f9be80c242cfd3fa2dbd31fe794f70f26d0e9789b595d8c2f9d61b3
-  languageName: node
-  linkType: hard
-
-"@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm:2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 2.1.0
-  resolution: "@joystream/metadata-protobuf@patch:@joystream/metadata-protobuf@npm%3A2.1.0#.yarn/patches/@joystream-metadata-protobuf-npm-2.1.0-50f18a5f4e::version=2.1.0&hash=c74587&locator=root-workspace-0b6124%40workspace%3A."
-  dependencies:
-    "@types/iso-3166-2": ^1.0.0
-    "@types/long": ^4.0.1
-    google-protobuf: ^3.14.0
-    i18n-iso-countries: ^6.8.0
-    iso-3166-2: ^1.0.0
-    iso-639-1: ^2.1.9
-    long: ^4.0.0
-    protobufjs: ^6.11.2
-  checksum: 9edba6e4a3a2947bf4eba8beaf0adaf0f1688f684adc76004aefbfb643e45b2b824a1da50d467d28069d5c7aa1252c041b21ca14899dda9c4b2c0773c4915efe
+  checksum: 521d6e3119e4512b2f68d47f9262ac76d386958382e37e3c6f0274a2afce5ca1df0f9e674b542093f76c082d66ade0c890e9a2d5d9cf79034fef7715a18d4c6d
   languageName: node
   linkType: hard
 
