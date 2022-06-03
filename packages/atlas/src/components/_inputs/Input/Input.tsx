@@ -3,7 +3,9 @@ import useResizeObserver from 'use-resize-observer'
 
 import { Loader } from '@/components/_loaders/Loader'
 
-import { InputContainer, InputSize, NodeContainer, TextInput } from './Input.styles'
+import { InputContainer, NodeContainer, TextInput } from './Input.styles'
+
+import { InputSize } from '../inputs.utils'
 
 export type InputProps = {
   name?: string
@@ -14,7 +16,6 @@ export type InputProps = {
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
   onWheel?: (event: React.WheelEvent<HTMLInputElement>) => void
-  required?: boolean
   className?: string
   placeholder?: string
   defaultValue?: string
@@ -40,7 +41,6 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     onWheel,
     error,
     disabled,
-    required,
     placeholder,
     defaultValue,
     nodeStart,
@@ -91,7 +91,6 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         type={type}
-        required={required}
         tabIndex={disabled ? -1 : 0}
         defaultValue={defaultValue}
       />

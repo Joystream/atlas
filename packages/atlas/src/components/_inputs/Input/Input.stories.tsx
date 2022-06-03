@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionCancel } from '@/components/_icons'
+import { SvgActionCancel, SvgActionClose } from '@/components/_icons'
 
 import { Input, InputProps } from '.'
 
@@ -17,6 +17,16 @@ export default {
   },
   argTypes: {
     value: { table: { disable: true } },
+    onChange: { table: { disable: true } },
+    onBlur: { table: { disable: true } },
+    onFocus: { table: { disable: true } },
+    onKeyDown: { table: { disable: true } },
+    onWheel: { table: { disable: true } },
+    autoComplete: { table: { disable: true } },
+    nodeEnd: { table: { disable: true } },
+    nodeStart: { table: { disable: true } },
+    className: { table: { disable: true } },
+    defaultValue: { table: { disable: true } },
   },
 } as Meta<InputProps>
 
@@ -32,7 +42,9 @@ const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
   return (
     <>
       <Input {...args} ref={ref} />
-      <Button onClick={() => alert(ref.current?.value)}>Show input value</Button>
+      <div style={{ marginTop: 16 }}>
+        <Button onClick={() => alert(ref.current?.value)}>Show input value</Button>
+      </div>
     </>
   )
 }
@@ -49,5 +61,5 @@ export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
 export const WithIcons = Template.bind({})
 WithIcons.args = {
   nodeStart: <SvgActionCancel />,
-  nodeEnd: <Button variant="tertiary">button</Button>,
+  nodeEnd: <Button variant="tertiary" size="small" icon={<SvgActionClose />} />,
 }
