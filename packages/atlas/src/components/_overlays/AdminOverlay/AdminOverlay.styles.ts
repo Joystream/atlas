@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
-import { cVar } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 export const Container = styled.div`
   position: fixed;
@@ -12,7 +12,7 @@ export const Container = styled.div`
   background-color: ${cVar('colorCoreNeutral600')};
   z-index: 1000;
   border-radius: 8px;
-  padding: 32px 16px;
+  padding: ${sizes(8)} ${sizes(4)};
   opacity: 0.5;
   transition: opacity 200ms ease-in-out;
 
@@ -34,17 +34,17 @@ export const HorizontalSpacedContainer = styled.div`
   justify-content: center;
 
   > * + * {
-    margin-left: 16px;
+    margin-left: ${sizes(4)};
   }
 `
 
-export const VerticalSpacedContainer = styled.div<{ topMargin?: boolean }>`
+export const VerticalSpacedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: ${({ topMargin }) => (topMargin ? '16px' : 0)};
+  margin-top: ${sizes(4)};
 
   > * + * {
-    margin-top: 16px;
+    margin-top: ${sizes(4)};
   }
 `
 
@@ -58,6 +58,6 @@ export const CustomNodeUrlWrapper = styled.div`
   align-items: center;
 
   > * + * {
-    margin-left: 16px;
+    margin-left: ${sizes(4)};
   }
 `

@@ -12,13 +12,12 @@ export type DatepickerProps = {
   required?: boolean
   error?: boolean
   disabled?: boolean
-  helperText?: string
   onChange: (date: Date | null) => void
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, DatepickerProps> = (
-  { name, value, required, error, disabled, helperText, onChange, onBlur },
+  { name, value, required, error, disabled, onChange, onBlur },
   ref
 ) => {
   const [rawValue, setRawValue] = useState<string>()
@@ -48,7 +47,6 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
       format="##/##/####"
       placeholder="DD / MM / YYYY"
       mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
-      helperText={helperText}
       error={error}
       required={required}
       disabled={disabled}

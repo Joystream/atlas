@@ -141,8 +141,8 @@ const EnvTab: React.FC = () => {
   }
 
   return (
-    <>
-      <FormField title="Chain" dense>
+    <VerticalSpacedContainer>
+      <FormField label="Chain">
         <Select
           items={environmentsItems}
           onChange={handleEnvironmentChange}
@@ -151,7 +151,7 @@ const EnvTab: React.FC = () => {
         />
       </FormField>
 
-      <FormField title="Node" dense>
+      <FormField label="Node">
         <Checkbox label="Custom node URL" value={usingCustomNodeUrl} onChange={handleCustomNodeCheckboxChange} />
         {!usingCustomNodeUrl ? (
           <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
@@ -164,7 +164,7 @@ const EnvTab: React.FC = () => {
           </CustomNodeUrlWrapper>
         )}
       </FormField>
-    </>
+    </VerticalSpacedContainer>
   )
 }
 
@@ -224,7 +224,7 @@ const StateTab: React.FC = () => {
   }
 
   return (
-    <VerticalSpacedContainer topMargin>
+    <VerticalSpacedContainer>
       <Button onClick={handleExportClick} variant="secondary" size="large">
         Export local state
       </Button>
@@ -283,13 +283,13 @@ const UserTab: React.FC = () => {
   return (
     <VerticalSpacedContainer>
       <HorizontalSpacedContainer>
-        <FormField dense title="Account ID">
+        <FormField label="Account ID">
           <TextField value={accountIdValue || ''} onChange={handleAccountIdChange} />
         </FormField>
-        <FormField dense title="Member ID">
+        <FormField label="Member ID">
           <TextField value={memberIdValue || ''} onChange={handleMemberIdChange} />
         </FormField>
-        <FormField dense title="Channel ID">
+        <FormField label="Channel ID">
           <TextField value={channelIdValue || ''} onChange={handleChannelIdChange} />
         </FormField>
       </HorizontalSpacedContainer>

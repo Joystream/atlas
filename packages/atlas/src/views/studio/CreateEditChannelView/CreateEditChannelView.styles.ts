@@ -35,6 +35,8 @@ export const TitleContainer = styled.div`
 export const InnerFormContainer = styled.div<{ actionBarHeight: number }>`
   width: 100%;
   margin-top: 50px;
+  display: grid;
+  gap: ${sizes(3)};
   padding-bottom: ${({ actionBarHeight = 0 }) => actionBarHeight}px;
 `
 

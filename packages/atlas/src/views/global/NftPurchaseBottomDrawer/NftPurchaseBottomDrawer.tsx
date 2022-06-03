@@ -10,6 +10,7 @@ import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SvgJoystreamLogoShort } from '@/components/_illustrations'
+import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftCard } from '@/components/_nft/NftCard'
@@ -401,41 +402,42 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     )}
                   </MinimumBidWrapper>
                 )}
-                <TextField
-                  {...register('bid', {
-                    valueAsNumber: true,
-                    validate: {
-                      bidLocked: (value) => {
-                        if (isOpenAuction && value < Number(userBid?.amount) && timeToUnlockSeconds > 0) {
-                          return `You will be able to change your bid to a lower one after ${
-                            userBidUnlockDate && formatDateTime(userBidUnlockDate)
-                          }`
-                        }
-                        return true
+                <FormField error={errors.bid?.message}>
+                  <TextField
+                    {...register('bid', {
+                      valueAsNumber: true,
+                      validate: {
+                        bidLocked: (value) => {
+                          if (isOpenAuction && value < Number(userBid?.amount) && timeToUnlockSeconds > 0) {
+                            return `You will be able to change your bid to a lower one after ${
+                              userBidUnlockDate && formatDateTime(userBidUnlockDate)
+                            }`
+                          }
+                          return true
+                        },
+                        bidTooLow: (value) =>
+                          Number(value) >= minimumBid ? true : 'Your bid must be higher than the minimum bid',
+                        bidTooHigh: (value) => {
+                          return Number(value) + TRANSACTION_FEE > (accountBalance || 0)
+                            ? 'You do not have enough funds to place this bid'
+                            : true
+                        },
                       },
-                      bidTooLow: (value) =>
-                        Number(value) >= minimumBid ? true : 'Your bid must be higher than the minimum bid',
-                      bidTooHigh: (value) => {
-                        return Number(value) + TRANSACTION_FEE > (accountBalance || 0)
-                          ? 'You do not have enough funds to place this bid'
-                          : true
-                      },
-                    },
-                  })}
-                  disabled={auctionEnded}
-                  placeholder={auctionEnded ? 'Auction ended' : 'Enter your bid'}
-                  nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                  nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
-                  type="number"
-                  error={!!errors.bid}
-                  helperText={errors.bid && errors.bid.message}
-                  onBlur={(event) => {
-                    const { target } = event
-                    if (Number(target.value) % 1 !== 0) {
-                      setValue('bid', Math.floor(Number(event.target.value)))
-                    }
-                  }}
-                />
+                    })}
+                    disabled={auctionEnded}
+                    placeholder={auctionEnded ? 'Auction ended' : 'Enter your bid'}
+                    nodeStart={<JoyTokenIcon variant="gray" size={24} />}
+                    nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
+                    type="number"
+                    error={!!errors.bid}
+                    onBlur={(event) => {
+                      const { target } = event
+                      if (Number(target.value) % 1 !== 0) {
+                        setValue('bid', Math.floor(Number(event.target.value)))
+                      }
+                    }}
+                  />
+                </FormField>
                 {showBuyNowInfo && (
                   <BuyNowInfo variant="t100" margin={{ top: 2 }}>
                     Max bid cannot be more than buy now price. Bidding for amount higher than Buy now will automatically

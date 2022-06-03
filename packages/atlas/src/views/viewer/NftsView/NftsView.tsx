@@ -108,14 +108,7 @@ export const NftsView: React.FC = () => {
   }
 
   const sortingNode = (
-    <Select
-      size="small"
-      helperText={null}
-      value={sortBy}
-      valueLabel="Sort by: "
-      items={SORT_OPTIONS}
-      onChange={handleSortingChange}
-    />
+    <Select size="small" value={sortBy} valueLabel="Sort by: " items={SORT_OPTIONS} onChange={handleSortingChange} />
   )
 
   return (

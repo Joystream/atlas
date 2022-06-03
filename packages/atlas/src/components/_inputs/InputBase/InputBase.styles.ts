@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes, transitions } from '@/styles'
 
 type FormGroupProps = {
@@ -8,7 +7,7 @@ type FormGroupProps = {
   disabled?: boolean
 }
 
-export const FormGroup = styled.label<FormGroupProps>`
+export const FormGroup = styled.div<FormGroupProps>`
   display: inline-block;
   width: 100%;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'auto')};
@@ -60,12 +59,4 @@ export const FormGroup = styled.label<FormGroupProps>`
         ${({ error, disabled }) => cVar(error && !disabled ? 'colorCoreRed400' : 'colorCoreNeutral200')};
     }
   }
-`
-
-export const LabelText = styled(Text)`
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  margin-bottom: ${sizes(2)};
 `

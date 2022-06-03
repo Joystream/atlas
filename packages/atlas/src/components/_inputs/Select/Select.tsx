@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/Tooltip'
 import { SvgActionChevronB } from '@/components/_icons'
 
 import {
+  LabelText,
   NodeContainer,
   SelectButton,
   SelectLabel,
@@ -15,7 +16,6 @@ import {
   SelectOption,
   SelectSizes,
   SelectWrapper,
-  StyledLabelText,
   StyledPill,
   StyledSvgGlyphInfo,
   ValueContainer,
@@ -39,6 +39,7 @@ export type SelectItem<T = string> = {
 
 export type SelectProps<T = string> = {
   onChange?: (value?: T | null) => void
+  label?: string
   value?: T | null
   valueLabel?: string
   labelPosition?: 'top' | 'left'
@@ -91,19 +92,19 @@ export const _Select = <T extends unknown>(
     selectedItem: value !== undefined ? value : null,
     onSelectedItemChange: handleItemSelect,
   })
+
   const selectedItem = useMemo(
     () => items.find((item) => isEqual(item.value, selectedItemValue)),
     [items, selectedItemValue]
   )
-
   return (
-    <InputBase error={error} disabled={disabled} {...inputBaseProps} isSelect={true}>
+    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
       <SelectWrapper labelPosition={labelPosition}>
         <SelectLabel {...getLabelProps()} ref={ref} tabIndex={disabled ? -1 : 0}>
           {label && (
-            <StyledLabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
+            <LabelText variant="t200" {...labelTextProps} labelPosition={labelPosition}>
               {label}
-            </StyledLabelText>
+            </LabelText>
           )}
         </SelectLabel>
         <SelectMenuWrapper>
@@ -113,9 +114,10 @@ export const _Select = <T extends unknown>(
             filled={selectedItemValue != null}
             isOpen={isOpen}
             type="button"
-            {...getToggleButtonProps()}
             tabIndex={disabled ? -1 : 0}
             size={size}
+            data-select
+            {...getToggleButtonProps()}
           >
             {iconLeft && <NodeContainer>{iconLeft}</NodeContainer>}
             <ValueContainer hasIconLeft={!!iconLeft}>

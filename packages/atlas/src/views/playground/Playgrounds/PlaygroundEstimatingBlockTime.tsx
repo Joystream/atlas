@@ -28,7 +28,7 @@ export const PlaygroundEstimatingBlockTime = () => {
       <br />
       <div>
         <Text variant="h700">Convert block to time</Text>
-        <FormField title="Change number of block">
+        <FormField label="Change number of block">
           <TextField
             type="number"
             value={String(blockNumber)}
@@ -50,7 +50,7 @@ export const PlaygroundEstimatingBlockTime = () => {
       <br />
       <div>
         <Text variant="h700">Convert time to block</Text>
-        <FormField title="Change date">
+        <FormField label="Change date">
           <input
             type="datetime-local"
             step={1}
