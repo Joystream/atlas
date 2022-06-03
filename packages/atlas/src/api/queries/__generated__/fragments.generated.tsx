@@ -440,6 +440,7 @@ export type VideoFieldsFragment = {
   hasMarketing?: boolean | null
   isCensored: boolean
   isCommentSectionEnabled: boolean
+  commentsCount: number
   publishedBeforeJoystream?: Date | null
   reactions: Array<{
     __typename?: 'VideoReaction'
@@ -1940,6 +1941,7 @@ export const VideoFieldsFragmentDoc = gql`
     hasMarketing
     isCensored
     isCommentSectionEnabled
+    commentsCount
     language {
       iso
     }
