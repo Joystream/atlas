@@ -79,7 +79,8 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
       border: ${checked ? `4px solid ${cVar('colorBackgroundError')}` : `1px solid ${cVar('colorBorderError')}`};
       padding: 0;
 
-      :hover {
+      :hover,
+      :focus-within {
         border-color: ${cVar(checked ? 'colorBackgroundErrorStrong' : 'colorBorderError')};
 
         ::before {
@@ -101,7 +102,8 @@ const colorFromProps = ({ error, checked, disabled }: RadioButtonStyleProps) => 
         transition: background-color 200ms ${transitions.easing};
       }
 
-      :hover {
+      :hover,
+      :focus-within {
         ${hoverState(checked)};
       }
 
