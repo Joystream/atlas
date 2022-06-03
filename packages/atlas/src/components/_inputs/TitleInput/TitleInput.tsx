@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 
-import { HelperText } from '@/components/HelperText'
-
 import {
   CharactersCounter,
   Container,
@@ -13,7 +11,6 @@ import {
 
 export type TitleInputProps = {
   error?: boolean
-  helperText?: string
   name?: string
   value?: string
   min?: number
@@ -40,7 +37,6 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
       min = 5,
       disabled,
       error,
-      helperText,
     },
     ref
   ) => {
@@ -86,7 +82,6 @@ export const TitleInput = React.forwardRef<HTMLTextAreaElement, TitleInputProps>
             / {max}
           </CounterText>
         </TitleAreaInfo>
-        {helperText && <HelperText error={error} helperText={helperText} />}
       </Container>
     )
   }

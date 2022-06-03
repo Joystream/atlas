@@ -4,13 +4,12 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
-import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { TextButton } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
@@ -42,18 +41,15 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
-  DeleteVideoButton,
-  DescriptionTextArea,
-  ExtendedMarginFormField,
   FileValidationBanner,
   FileValidationText,
   FormWrapper,
   InputsContainer,
   MoreSettingsDescription,
-  MoreSettingsHeader,
   MoreSettingsSection,
   RadioButtonsContainer,
   RadioCardButtonsContainer,
+  StyledBanner,
   StyledMultiFileSelect,
   StyledTitleArea,
   SwitchFormField,
@@ -335,15 +331,16 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
 
   const videoEditFields = (
     <>
-      <DescriptionTextArea
-        {...register('description', textFieldValidation({ name: 'Description', maxLength: 5000 }))}
-        maxLength={5000}
-        placeholder="Description of the video to share with your audience"
-        error={!!errors.description}
-        helperText={errors.description?.message}
-        disabled={videoFieldsLocked}
-      />
-      <FormField title="Video category">
+      <FormField error={errors.description?.message}>
+        <TextArea
+          {...register('description', textFieldValidation({ name: 'Description', maxLength: 5000 }))}
+          maxLength={5000}
+          placeholder="Description of the video to share with your audience"
+          error={!!errors.description}
+          disabled={videoFieldsLocked}
+        />
+      </FormField>
+      <FormField label="Video category" error={errors.category?.message}>
         <Controller
           name="category"
           control={control}
@@ -355,13 +352,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               items={categoriesSelectItems}
               onChange={onChange}
               error={!!errors.category && !value}
-              helperText={errors.category?.message}
               disabled={videoFieldsLocked}
             />
           )}
         />
       </FormField>
-      <FormField title="Video language">
+      <FormField label="Video language">
         <Controller
           name="language"
           control={control}
@@ -372,13 +368,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               items={languages}
               onChange={onChange}
               error={!!errors.language && !value}
-              helperText={errors.language?.message}
               disabled={videoFieldsLocked}
             />
           )}
         />
       </FormField>
-      <ExtendedMarginFormField title="Video visibility">
+      <FormField label="Video visibility">
         <Controller
           name="isPublic"
           control={control}
@@ -407,13 +402,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             </RadioCardButtonsContainer>
           )}
         />
-      </ExtendedMarginFormField>
+      </FormField>
     </>
   )
 
   const alwaysEditableFormFields = (
-    <ExtendedMarginFormField
-      title="Comments"
+    <FormField
+      label="Comments"
       description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
     >
       <Controller
@@ -441,7 +436,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           </RadioButtonsContainer>
         )}
       />
-    </ExtendedMarginFormField>
+    </FormField>
   )
 
   return (
@@ -507,14 +502,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               error={!!errors.title}
               onFocus={() => setTitleTooltipVisible(false)}
               onBlur={() => setTitleTooltipVisible(true)}
-              helperText={errors.title && errors.title.message}
             />
           )}
         />
         {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
         {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
-        <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
+        <SwitchFormField label="Mint NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
             <Controller
               name="mintNft"
@@ -544,7 +538,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           </SwitchNftWrapper>
           {watch('mintNft') && (
             <>
-              <Banner
+              <StyledBanner
                 id="issuing-nft"
                 dismissable={false}
                 icon={<StyledSvgWarning width={24} height={24} />}
@@ -564,6 +558,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 }
               />
               <FormField
+                switchable
+                error={errors.nftRoyaltiesPercent?.message}
                 switchProps={{
                   value: videoFieldsLocked ? !!watch('nftRoyaltiesPercent') : royaltiesFieldEnabled,
                   onChange: (e) => {
@@ -577,8 +573,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   },
                   disabled: videoFieldsLocked,
                 }}
-                title="Set creator's royalties"
-                infoTooltip={{
+                label="Set creator's royalties"
+                tooltip={{
                   text: 'Setting royalties lets you earn commission from every sale of this NFT.',
                   multiline: true,
                 }}
@@ -598,15 +594,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   })}
                   error={!!errors.nftRoyaltiesPercent}
                   placeholder="—"
-                  helperText={errors.nftRoyaltiesPercent?.message}
                   nodeEnd={<Pill variant="default" label="%" />}
-                  disabled={videoFieldsLocked || !royaltiesFieldEnabled}
+                  disabled={videoFieldsLocked}
                 />
               </FormField>
             </>
           )}
         </SwitchFormField>
-        <MoreSettingsHeader>
+        <div>
           <TextButton
             size="large"
             iconPlacement="right"
@@ -615,20 +610,20 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           >
             {getHiddenSectionLabel()}
           </TextButton>
-          <MoreSettingsDescription as="p" variant="t200" secondary visible={!moreSettingsVisible}>
+          <MoreSettingsDescription as="p" variant="t200" secondary>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
               : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
           </MoreSettingsDescription>
-        </MoreSettingsHeader>
+        </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
           {videoFieldsLocked && videoEditFields}
-          <FormField title="License">
-            <Controller
-              name="licenseCode"
-              control={control}
-              rules={requiredValidation('License')}
-              render={({ field: { value, onChange, ref } }) => (
+          <Controller
+            name="licenseCode"
+            control={control}
+            rules={requiredValidation('License')}
+            render={({ field: { value, onChange, ref } }) => (
+              <FormField label="License" error={errors.licenseCode?.message}>
                 <Select
                   containerRef={ref}
                   value={value}
@@ -636,14 +631,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   placeholder="Choose license type"
                   onChange={onChange}
                   error={!!errors.licenseCode && !value}
-                  helperText={errors.licenseCode?.message}
                   disabled={videoFieldsLocked}
                 />
-              )}
-            />
-          </FormField>
+              </FormField>
+            )}
+          />
           {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
-            <FormField title="License attribution" optional>
+            <FormField label="License attribution" error={errors.licenseAttribution?.message} optional>
               <TextField
                 {...register(
                   'licenseAttribution',
@@ -651,14 +645,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 )}
                 placeholder="Type your attribution here"
                 error={!!errors.licenseAttribution}
-                helperText={errors.licenseAttribution?.message}
                 disabled={videoFieldsLocked}
               />
             </FormField>
           )}
 
           {watch('licenseCode') === CUSTOM_LICENSE_CODE && (
-            <FormField title="Custom license">
+            <FormField label="Custom license" error={errors.licenseCustomText?.message}>
               <TextArea
                 {...register(
                   'licenseCustomText',
@@ -667,13 +660,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 maxLength={5000}
                 placeholder="Type your license content here"
                 error={!!errors.licenseCustomText}
-                helperText={errors.licenseCustomText?.message}
               />
             </FormField>
           )}
           {!videoFieldsLocked && alwaysEditableFormFields}
-          <ExtendedMarginFormField
-            title="Content rating"
+          <FormField
+            label="Content rating"
             description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."
           >
             <Controller
@@ -707,9 +699,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 </RadioButtonsContainer>
               )}
             />
-          </ExtendedMarginFormField>
-          <ExtendedMarginFormField
-            title="Prior publication"
+          </FormField>
+          <FormField
+            label="Prior publication"
+            error={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
             optional
             description="If the content you are publishing was originally published outside of Joystream, please provide the original publication date."
           >
@@ -724,13 +717,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   value={value}
                   onChange={onChange}
                   error={!!errors.publishedBeforeJoystream}
-                  helperText={errors.publishedBeforeJoystream ? 'Please provide a valid date.' : ''}
                   disabled={videoFieldsLocked}
                 />
               )}
             />
-          </ExtendedMarginFormField>
-          <FormField title="Marketing" optional>
+          </FormField>
+          <FormField label="Marketing" optional>
             <Controller
               name="hasMarketing"
               control={control}
@@ -745,9 +737,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
           </FormField>
           {isEdit && !videoFieldsLocked && (
-            <DeleteVideoButton fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
+            <Button fullWidth size="large" variant="destructive-secondary" onClick={handleDeleteVideo}>
               Delete video
-            </DeleteVideoButton>
+            </Button>
           )}
         </MoreSettingsSection>
       </InputsContainer>

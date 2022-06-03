@@ -55,19 +55,19 @@ const Template: Story<BottomDrawerProps> = (args) => {
       >
         <Content>
           <Button onClick={() => setActionBarOpen((prev) => !prev)}>Toggle action bar</Button>
-          <FormField title="Test field">
+          <FormField label="Test field">
             <TextField />
           </FormField>
-          <FormField title="Test field">
+          <FormField label="Test field">
             <TextField />
           </FormField>
-          <FormField title="Test field">
+          <FormField label="Test field">
             <TextField />
           </FormField>
-          <FormField title="Test field">
+          <FormField label="Test field">
             <TextField />
           </FormField>
-          <FormField title="Test field">
+          <FormField label="Test field">
             <TextField />
           </FormField>
         </Content>

@@ -173,7 +173,7 @@ export const CreateMemberModal: React.FC<CreateMemberModalProps> = ({ show, sele
           hasAvatarUploadFailed={!!errors.avatar}
         />
       </div>
-      <CreateEditMemberInputs register={register} errors={errors} watch={watch} />
+      <CreateEditMemberInputs register={register} errors={errors} watch={watch} isModal />
     </DialogModal>
   )
 }

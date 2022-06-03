@@ -12,7 +12,7 @@ export type InformationProps = TooltipProps & {
 export const Information: React.FC<InformationProps> = ({ className, ...tooltipProps }) => {
   return (
     <InformationWrapper>
-      <Tooltip {...tooltipProps} offsetY={4} offsetX={4} hideOnClick={false}>
+      <Tooltip {...tooltipProps} offsetY={8} offsetX={8} hideOnClick={false}>
         <TouchableWrapper
           onClick={(event) => {
             if (isMobile()) {

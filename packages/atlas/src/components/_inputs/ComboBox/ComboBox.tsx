@@ -76,7 +76,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
 
   // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
-    if (!textFieldRef.current || !comboBoxWrapperRef.current || !textFieldProps.helperText) {
+    if (!textFieldRef.current || !comboBoxWrapperRef.current) {
       return
     }
     const { y: wrapperY } = comboBoxWrapperRef.current.getBoundingClientRect()

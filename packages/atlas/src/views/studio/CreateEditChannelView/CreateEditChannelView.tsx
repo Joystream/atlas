@@ -117,7 +117,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
     setValue,
     reset,
   } = useForm<Inputs>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       avatar: { contentId: null, assetDimensions: null, imageCropData: null },
       cover: { contentId: null, assetDimensions: null, imageCropData: null },
@@ -455,7 +455,7 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
       </StyledTitleSection>
       <LimitedWidthContainer>
         <InnerFormContainer actionBarHeight={actionBarBoundsHeight}>
-          <FormField title="Description">
+          <FormField label="Description" error={errors.description?.message}>
             <Tooltip text="Click to edit channel description">
               <TextArea
                 placeholder="Description of your channel to share with your audience"
@@ -466,11 +466,14 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                 )}
                 maxLength={1000}
                 error={!!errors.description}
-                helperText={errors.description?.message}
               />
             </Tooltip>
           </FormField>
-          <FormField title="Language" description="Main language of the content you publish on your channel">
+          <FormField
+            label="Language"
+            description="Main language of the content you publish on your channel"
+            error={(errors.language as FieldError)?.message}
+          >
             <Controller
               name="language"
               control={control}
@@ -482,15 +485,15 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   value={value}
                   onChange={onChange}
                   error={!!errors.language && !value}
-                  helperText={(errors.language as FieldError)?.message}
                 />
               )}
             />
           </FormField>
 
           <FormField
-            title="Privacy"
+            label="Privacy"
             description="Privacy of your channel. Please note that because of nature of the blockchain, even unlisted channels can be publicly visible by querying the blockchain data."
+            error={(errors.isPublic as FieldError)?.message}
           >
             <Controller
               name="isPublic"
@@ -502,7 +505,6 @@ export const CreateEditChannelView: React.FC<CreateEditChannelViewProps> = ({ ne
                   value={value}
                   onChange={onChange}
                   error={!!errors.isPublic && !value}
-                  helperText={(errors.isPublic as FieldError)?.message}
                 />
               )}
             />

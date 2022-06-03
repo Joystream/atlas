@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
+import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 
 import { EmojiWrapper, EmojiWrapperProps } from './EmojiWrapper'
@@ -24,7 +25,9 @@ const Template: Story<EmojiWrapperProps> = () => {
 
   return (
     <div>
-      <TextField label="Input:" value={text} onChange={(e) => setText(e.target.value)} />
+      <FormField label="Input">
+        <TextField value={text} onChange={(e) => setText(e.target.value)} />
+      </FormField>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
         <div>

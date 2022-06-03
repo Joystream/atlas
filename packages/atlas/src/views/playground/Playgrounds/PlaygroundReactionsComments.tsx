@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { TabItem, Tabs } from '@/components/Tabs'
 import { Button } from '@/components/_buttons/Button'
+import { FormField } from '@/components/_inputs/FormField'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { TextArea } from '@/components/_inputs/TextArea'
 import { TextField } from '@/components/_inputs/TextField'
@@ -43,7 +44,9 @@ export const PlaygroundReactionsComments: React.FC = () => {
 
   return (
     <div>
-      <TextField value={videoId} onChange={(e) => setVideoId(e.target.value)} label="Video ID" />
+      <FormField label="Video ID">
+        <TextField value={videoId} onChange={(e) => setVideoId(e.target.value)} />
+      </FormField>
       <Tabs tabs={TABS} onSelectTab={setSelectedTabIdx} />
       {getTabContents()}
     </div>
@@ -130,7 +133,9 @@ const ReactToComment: React.FC<CommonProps> = () => {
 
   return (
     <div>
-      <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} label="Comment ID" />
+      <FormField label="Comment ID">
+        <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} />
+      </FormField>
       <Select
         value={commentReaction}
         onChange={(value) => value && setCommentReaction(value)}
@@ -171,12 +176,12 @@ const CreateComment: React.FC<CommonProps> = ({ videoId }) => {
 
   return (
     <div>
-      <TextArea value={commentBody} onChange={(e) => setCommentBody(e.target.value)} label="Comment body" />
-      <TextField
-        value={parentCommentId}
-        onChange={(e) => setParentCommentId(e.target.value)}
-        label="Optional parent comment ID"
-      />
+      <FormField label="Comment body">
+        <TextArea value={commentBody} onChange={(e) => setCommentBody(e.target.value)} />
+      </FormField>
+      <FormField label="Optional parent comment ID">
+        <TextField value={parentCommentId} onChange={(e) => setParentCommentId(e.target.value)} />
+      </FormField>
       <Button onClick={handleCreate}>Comment</Button>
     </div>
   )
@@ -211,8 +216,12 @@ const EditComment: React.FC<CommonProps> = () => {
 
   return (
     <div>
-      <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} label="Comment ID" />
-      <TextArea value={commentBody} onChange={(e) => setCommentBody(e.target.value)} label="Updated comment body" />
+      <FormField label="Comment ID">
+        <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} />
+      </FormField>
+      <FormField label="Updated comment body">
+        <TextArea value={commentBody} onChange={(e) => setCommentBody(e.target.value)} />
+      </FormField>
       <Button onClick={handleCreate}>Edit</Button>
     </div>
   )
@@ -241,7 +250,9 @@ const DeleteComment: React.FC<CommonProps> = () => {
 
   return (
     <div>
-      <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} label="Comment ID" />
+      <FormField label="Comment ID">
+        <TextField value={commentId} onChange={(e) => setCommentId(e.target.value)} />
+      </FormField>
       <Button onClick={handleDelete}>Delete</Button>
     </div>
   )

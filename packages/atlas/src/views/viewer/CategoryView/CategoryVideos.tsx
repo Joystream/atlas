@@ -91,7 +91,6 @@ export const CategoryVideos: React.FC<{ categoryId: string }> = ({ categoryId })
   const sortingNode = (
     <StyledSelect
       size="small"
-      helperText={null}
       value={sortVideosBy}
       valueLabel="Sort by: "
       items={ADAPTED_SORT_OPTIONS}
