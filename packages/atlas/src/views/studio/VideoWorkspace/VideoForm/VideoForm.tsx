@@ -406,13 +406,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         control={control}
         rules={{
           validate: (value) => {
-            if (!!value.video.id && !!value.thumbnail.originalId) {
+            if (!!value.video.id && !!value.thumbnail.cropId) {
               return true
             }
             if (!value.video.id) {
               return 'Select video file'
             }
-            if (!value.thumbnail.originalId) {
+            if (!value.thumbnail.cropId) {
               return 'Select image file'
             }
           },
