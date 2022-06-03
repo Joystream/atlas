@@ -21,7 +21,7 @@ import { ReactionsOnboardingPopover } from '../../ReactionsOnboardingPopover'
 
 type ReactionButtonProps = {
   reactionsNumber?: number
-  onReact: (reaction: VideoReaction) => void
+  onReact: (reaction: VideoReaction) => Promise<boolean>
   state: ReactionSteppperState
   type: VideoReaction
   onPopoverShow?: () => void
@@ -63,13 +63,17 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
     }
   }
 
-  const handleReact = (reactionPopoverDismissed: boolean) => {
+  const handleReact = async (reactionPopoverDismissed: boolean) => {
     if (!reactionPopoverDismissed) {
       onPopoverShow?.()
       popoverRef.current?.show()
     } else {
-      setShouldRunAnimation(true)
-      onReact?.(type)
+      if (onReact) {
+        const reacted = await onReact(type)
+        if (reacted) {
+          setShouldRunAnimation(true)
+        }
+      }
     }
   }
 
@@ -99,9 +103,9 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 onClick={() => handleReact(reactionPopoverDismissed)}
                 onAnimationEnd={() => setShouldRunAnimation(false)}
                 variant="tertiary"
-                icon={isReacted ? renderSolidIcon() : renderOutlineIcon()}
+                icon={isReacted && !isProcessing ? renderSolidIcon() : renderOutlineIcon()}
               >
-                <ReactionsCounter type={type} state={state} variant="t200-strong">
+                <ReactionsCounter type={type} state={state} disabled={isProcessing} variant="t200-strong">
                   {formatNumberShort(reactionsNumber || 0)}
                 </ReactionsCounter>
               </Button>

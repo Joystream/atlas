@@ -19,6 +19,7 @@ export type ReactionSteppperState = 'liked' | 'disliked' | 'default' | 'loading'
 
 type ReactionsCounterProps = {
   type: 'like' | 'dislike'
+  disabled?: boolean
   state: ReactionSteppperState
 }
 
@@ -82,18 +83,20 @@ export const StyledSvgActionDislikeSolid = styled(SvgActionDislikeSolid, { shoul
   }
 `
 
-export const getCounterColor = ({ state, type }: ReactionsCounterProps) => {
+export const getCounterColor = ({ state, type, disabled }: ReactionsCounterProps) => {
+  if (disabled) {
+    return cVar('colorTextStrong')
+  }
   switch (state) {
     case 'liked':
       return cVar(`colorText${type === 'like' ? 'Primary' : 'Strong'}`)
     case 'disliked':
       return cVar(`colorText${type === 'dislike' ? 'Error' : 'Strong'}`)
-    case 'default':
     default:
       return cVar('colorTextStrong')
   }
 }
 
 export const ReactionsCounter = styled(Text)<ReactionsCounterProps>`
-  color: ${getCounterColor}; ;
+  color: ${getCounterColor};
 `
