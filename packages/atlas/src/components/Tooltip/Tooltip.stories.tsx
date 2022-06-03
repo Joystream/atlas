@@ -35,7 +35,7 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
-    customContent={args.customContent && <div style={{ border: '1px solid red' }}>Cusom content</div>}
+    customContent={args.customContent && <div style={{ border: '1px solid red' }}>Custom content</div>}
   />
 )
 
