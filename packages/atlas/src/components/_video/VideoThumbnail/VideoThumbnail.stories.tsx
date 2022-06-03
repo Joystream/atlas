@@ -64,6 +64,7 @@ export default {
   },
   argTypes: {
     slots: { table: { disable: true } },
+    type: { table: { disable: true } },
     contentSlot: { table: { disable: true } },
     onClick: { action: 'clicked' },
   },
