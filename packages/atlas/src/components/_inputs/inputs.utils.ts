@@ -65,15 +65,16 @@ export const getPadding = (size: InputSize, nodeWidthProps?: NodeWidthProps) => 
     : horizontalPadding[size]
 
   return css`
-    padding-top: ${verticalPadding[size]};
-    padding-bottom: ${verticalPadding[size]};
-    padding-left: ${paddingLeft};
-    padding-right: ${paddingRight};
+    padding: ${verticalPadding[size]} ${paddingLeft} ${verticalPadding[size]} ${paddingRight};
   `
 }
 
 export const getInputPseudoSelectorStyles = ({ error }: { error?: boolean }) => css`
   ${sharedInputStyles.default};
+
+  :disabled {
+    ${sharedInputStyles.disabled};
+  }
 
   :hover:not(:disabled) {
     ${sharedInputStyles.hover};
@@ -81,10 +82,6 @@ export const getInputPseudoSelectorStyles = ({ error }: { error?: boolean }) => 
 
   :focus:not(:disabled) {
     ${sharedInputStyles.focus};
-  }
-
-  :disabled {
-    ${sharedInputStyles.disabled};
   }
 
   ${error && sharedInputStyles.error};
