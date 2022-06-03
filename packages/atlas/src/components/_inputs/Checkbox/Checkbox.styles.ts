@@ -14,7 +14,8 @@ export const Container = styled.div<CheckboxStateProps>`
   color: ${cVar('colorCoreNeutral300')};
   transition: background ${cVar('animationTransitionFast')};
 
-  :hover {
+  :hover,
+  :focus-within {
     background: ${({ selected, disabled }) => !(disabled && selected) && cVar('colorBackgroundStrongAlpha')};
   }
 
@@ -29,7 +30,8 @@ const selectedStyles = ({ selected, disabled }: CheckboxStateProps) =>
         background-color: ${selected ? cVar('colorBackgroundPrimary') : 'transparent'};
         border: 1px solid ${cVar('colorBackgroundPrimary')};
 
-        :hover {
+        :hover,
+        :focus-within {
           background-color: ${cVar('colorBackgroundPrimaryStrong')};
           border: 1px solid ${cVar('colorBackgroundPrimaryStrong')};
         }
@@ -71,7 +73,8 @@ const errorStyles = ({ error, selected }: CheckboxStateProps) =>
             background-color: ${cVar('colorBackgroundError')};
             border: 1px solid ${cVar('colorBackgroundError')};
 
-            :hover {
+            :hover,
+            :focus-within {
               background-color: ${cVar('colorBackgroundErrorStrong')};
               border: 1px solid ${cVar('colorBackgroundErrorStrong')};
             }
