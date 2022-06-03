@@ -1,32 +1,33 @@
-import { useRef, useState } from '@storybook/addons'
+import { useRef } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionCancel } from '@/components/_icons'
 
-import { Input, TextFieldProps } from '.'
+import { Input, InputProps } from '.'
 
 export default {
   title: 'inputs/Input',
   component: Input,
   args: {
-    label: 'label text',
+    size: 'large',
+    type: 'text',
     placeholder: 'placeholder text',
   },
   argTypes: {
     value: { table: { disable: true } },
   },
-} as Meta
+} as Meta<InputProps>
 
-const Template: Story<TextFieldProps> = (args) => <Input {...args} />
+const Template: Story<InputProps> = (args) => <Input {...args} />
 
-const TemplateWithControlledInput: Story<TextFieldProps> = (args) => {
+const TemplateWithControlledInput: Story<InputProps> = (args) => {
   const [value, setValue] = useState('')
-  return <Input {...args} onChange={(e) => setValue(e.target.value)} value={value} />
+  return <Input {...args} onChange={(e) => setValue(e.currentTarget.value)} value={value} />
 }
 
-const TemplateWithUncontrolledInput: Story<TextFieldProps> = (args) => {
+const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
   return (
     <>

@@ -1,11 +1,11 @@
 import React, { forwardRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
-import { InputBase, InputBaseProps } from '@/components/_inputs/InputBase'
+import { Loader } from '@/components/_loaders/Loader'
 
-import { NodeContainer, TextFieldContainer, TextInput } from './Input.styles'
+import { InputContainer, InputSize, NodeContainer, TextInput } from './Input.styles'
 
-export type TextFieldProps = {
+export type InputProps = {
   name?: string
   type?: 'text' | 'email' | 'password' | 'search' | 'number'
   value?: string | number
@@ -21,11 +21,16 @@ export type TextFieldProps = {
   nodeStart?: React.ReactNode
   nodeEnd?: React.ReactNode
   autoComplete?: 'off'
-} & InputBaseProps
+  error?: boolean
+  disabled?: boolean
+  size?: InputSize
+  processing?: boolean
+}
 
-const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextFieldProps> = (
+const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   {
     name,
+    size = 'large',
     type = 'text',
     onKeyDown,
     value,
@@ -40,8 +45,9 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextField
     defaultValue,
     nodeStart,
     nodeEnd,
+    processing,
     autoComplete,
-    ...inputBaseProps
+    className,
   },
   ref
 ) => {
@@ -62,35 +68,40 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, TextField
   }
 
   return (
-    <InputBase error={error} disabled={disabled} {...inputBaseProps}>
-      <TextFieldContainer>
-        {nodeStart && (
-          <NodeContainer ref={nodeLeftRef} left>
-            {nodeStart}
-          </NodeContainer>
-        )}
-        <TextInput
-          leftNodeWidth={nodeLeftBoundsWidth}
-          rightNodeWidth={nodeRightBoundsWidth}
-          autoComplete={autoComplete}
-          ref={ref}
-          name={name}
-          value={value}
-          disabled={disabled}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onWheel={handleWheel}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          type={type}
-          required={required}
-          tabIndex={disabled ? -1 : 0}
-          defaultValue={defaultValue}
-        />
-        {nodeEnd && <NodeContainer ref={nodeRightRef}>{nodeEnd}</NodeContainer>}
-      </TextFieldContainer>
-    </InputBase>
+    <InputContainer as="div" variant={size === 'large' ? 't300' : 't200'} className={className}>
+      {nodeStart && (
+        <NodeContainer size={size} ref={nodeLeftRef} left>
+          {nodeStart}
+        </NodeContainer>
+      )}
+      <TextInput
+        inputSize={size}
+        error={error}
+        leftNodeWidth={nodeLeftBoundsWidth}
+        rightNodeWidth={nodeRightBoundsWidth}
+        autoComplete={autoComplete}
+        ref={ref}
+        name={name}
+        value={value}
+        disabled={disabled}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onWheel={handleWheel}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+        type={type}
+        required={required}
+        tabIndex={disabled ? -1 : 0}
+        defaultValue={defaultValue}
+      />
+      {(nodeEnd || processing) && (
+        <NodeContainer size={size} ref={nodeRightRef}>
+          {processing && <Loader variant="xsmall" />}
+          {nodeEnd}
+        </NodeContainer>
+      )}
+    </InputContainer>
   )
 }
 

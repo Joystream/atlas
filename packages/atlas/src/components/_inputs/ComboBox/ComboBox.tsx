@@ -6,7 +6,7 @@ import { SvgActionLoader } from '@/components/_icons'
 
 import { ComboBoxWrapper, ListWrapper } from './ComboBox.styles'
 
-import { Input, TextFieldProps } from '../Input'
+import { Input, InputProps } from '../Input'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
@@ -19,7 +19,7 @@ export type ComboBoxProps<T = unknown> = {
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
   notFoundNode?: ModifiedListItemProps | null
-} & Omit<TextFieldProps, 'charactersCount'>
+} & InputProps
 
 // don't use React.FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
