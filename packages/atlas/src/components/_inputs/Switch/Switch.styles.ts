@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -36,13 +37,28 @@ export const SwitchSlider = styled.div`
   }
 `
 
+const hoverUncheckedStyles = css`
+  + ${SwitchSlider} {
+    box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
+
+    ::before {
+      background-color: ${cVar('colorBorderStrongAlpha')};
+    }
+  }
+`
+
+const hoverCheckedStyles = css`
+  + ${SwitchSlider} {
+    background-color: ${cVar('colorBackgroundPrimaryStrong')};
+  }
+`
+
 export const SwitchCheckbox = styled.input`
   position: absolute;
   cursor: pointer;
   width: 40px;
   height: 24px;
   opacity: 0;
-  visibility: hidden;
   z-index: 1;
 
   :checked {
@@ -88,6 +104,26 @@ export const SwitchCheckbox = styled.input`
       }
     }
   }
+
+  @supports selector(:focus-visible) {
+    :focus-visible:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
+
+    :focus-visible:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
+    }
+  }
+
+  @supports selector(not(:focus-visible)) {
+    :focus:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
+
+    :focus:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
+    }
+  }
 `
 export const LabelText = styled(Text)`
   margin-left: ${sizes(2)};
@@ -101,19 +137,11 @@ export const SwitchWrapper = styled.div`
 
   :hover {
     ${SwitchCheckbox}:not(:disabled):not(:checked) {
-      + ${SwitchSlider} {
-        box-shadow: inset 0 0 0 2px ${cVar('colorBorderStrongAlpha')};
-
-        ::before {
-          background-color: ${cVar('colorBorderStrongAlpha')};
-        }
-      }
+      ${hoverUncheckedStyles};
     }
 
     ${SwitchCheckbox}:checked:not(:disabled):not(:active) {
-      + ${SwitchSlider} {
-        background-color: ${cVar('colorBackgroundPrimaryStrong')};
-      }
+      ${hoverCheckedStyles};
     }
   }
 `

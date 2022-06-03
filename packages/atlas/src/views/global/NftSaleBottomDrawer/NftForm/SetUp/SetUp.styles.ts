@@ -9,11 +9,15 @@ export const Header = styled(Text)`
   margin-bottom: ${sizes(4)};
 `
 
+export const StyledForm = styled.form`
+  display: grid;
+  gap: ${sizes(8)};
+`
+
 export const AuctionDatePickerWrapper = styled.div<{ columns: number }>`
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: ${sizes(6)};
-  margin-top: ${sizes(10)};
 
   ${media.md} {
     grid-template-rows: 1fr;
