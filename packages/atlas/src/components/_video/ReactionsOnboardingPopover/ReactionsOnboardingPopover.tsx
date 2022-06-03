@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
 import { SvgThumbsUpIllustration } from '@/components/_illustrations'
 import { DialogPopover } from '@/components/_overlays/DialogPopover'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
@@ -29,12 +28,6 @@ export const ReactionsOnboardingPopover = forwardRef<PopoverImperativeHandle, Re
         dividers
         onHide={onDecline}
         disabled={disabled}
-        // TODO add proper link here
-        additionalActionsNode={
-          <Button variant="tertiary" size="small">
-            Learn more
-          </Button>
-        }
         popoverWidth="wide"
         primaryButton={{
           text: 'Got it',
