@@ -33,7 +33,6 @@ export const ReactionStepper: React.FC<ReactionStepperProps> = ({
         <StyledTooltip
           text="Your reaction is being processed"
           placement="top"
-          oneLine
           reference={reactionStepperWrapperRef.current}
         />
       )}

@@ -74,6 +74,7 @@ const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((l
   badgeText: license.code === DEFAULT_LICENSE_ID ? 'Default' : undefined,
   tooltipText: license.description,
   tooltipHeaderText: license.longName,
+  tooltipMultiline: true,
 }))
 
 type VideoFormProps = {
@@ -540,6 +541,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             <Information
               placement="top"
               text="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This will not impact your intellectual rights of the video."
+              multiline
             />
           </SwitchNftWrapper>
           {watch('mintNft') && (
@@ -578,7 +580,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   disabled: videoFieldsLocked,
                 }}
                 title="Set creator's royalties"
-                infoTooltip={{ text: 'Setting royalties lets you earn commission from every sale of this NFT.' }}
+                infoTooltip={{
+                  text: 'Setting royalties lets you earn commission from every sale of this NFT.',
+                  multiline: true,
+                }}
               >
                 <TextField
                   type="number"

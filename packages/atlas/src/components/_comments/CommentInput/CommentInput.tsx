@@ -160,6 +160,7 @@ export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputPr
                 placement="top-start"
                 headerText="Comments on blockchain"
                 text="To publish a comment you need to sign a transaction. For now, no fees are involved."
+                multiline
               />
               <Text variant="t100" secondary margin={{ left: 1, right: 4 }}>
                 {smMatch && 'We store comments on blockchain'}

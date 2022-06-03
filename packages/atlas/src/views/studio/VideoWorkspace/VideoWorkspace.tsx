@@ -58,6 +58,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
         : {
             headerText: 'Fill all required fields to proceed',
             text: 'Required: video file, thumbnail image, title, category, language',
+            multiline: true,
           },
       text: formStatus?.actionBarPrimaryText,
     },
@@ -73,6 +74,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
           text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
           tooltip: {
             text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
+            multiline: true,
           },
         }
       : undefined,

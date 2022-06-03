@@ -32,6 +32,7 @@ export type SelectItem<T = string> = {
   hideInMenu?: boolean
   tooltipHeaderText?: string
   tooltipText?: string
+  tooltipMultiline?: boolean
   badgeText?: string
   onClick?: () => void
 }
@@ -142,6 +143,7 @@ export const _Select = <T extends unknown>(
                       <Tooltip
                         headerText={item.tooltipHeaderText}
                         text={item.tooltipText}
+                        multiline={item.tooltipMultiline}
                         placement="top-end"
                         offsetX={6}
                         offsetY={12}

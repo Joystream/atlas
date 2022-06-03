@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
@@ -22,29 +21,10 @@ export const StyledSvgAlertsInformative24 = styled(SvgAlertsInformative24)`
 
 type TooltipTextProps = {
   withIcon?: boolean
-  footer: boolean
-  oneLine?: boolean
   headerText?: boolean
 }
 
-const getOneLineStyles = ({ oneLine, footer }: TooltipTextProps) => {
-  if (footer) {
-    return
-  }
-  if (oneLine) {
-    return css`
-      max-width: 400px;
-    `
-  } else {
-    return css`
-      max-width: 200px;
-    `
-  }
-}
-
 export const TooltipText = styled(Text)<TooltipTextProps>`
-  ${getOneLineStyles};
-
   display: inline-block;
 
   ${({ withIcon, headerText }) => withIcon && headerText && `margin-left: ${sizes(7)}`};
@@ -55,23 +35,23 @@ export const TooltipHeader = styled.div<{ headerText: boolean }>`
   margin-bottom: ${({ headerText }) => headerText && sizes(2)};
 `
 
-type StyledTooltipProps = {
-  headerText: boolean
-  footer: boolean
-  oneLine: boolean
+type TooltipContainerProps = {
+  hasHeader: boolean
+  hasCustomContent: boolean
+  multiline: boolean
 }
 
-export const StyledTooltip = styled.div<StyledTooltipProps>`
+export const TooltipContainer = styled.div<TooltipContainerProps>`
   display: inline-flex;
-  flex-direction: ${({ headerText, footer }) => (headerText || footer ? 'column' : 'row')};
-  padding: ${({ headerText, oneLine }) => sizes(!headerText && oneLine ? 2 : 3)};
+  flex-direction: ${({ hasHeader, hasCustomContent }) => (hasHeader || hasCustomContent ? 'column' : 'row')};
+  padding: ${({ hasHeader, multiline }) => sizes(hasHeader || multiline ? 3 : 2)};
   background-color: ${cVar('colorBackgroundElevated')};
   border-radius: ${cVar('radiusSmall')};
-  max-width: ${({ footer }) => footer && '264px'};
-  align-items: ${({ oneLine, headerText }) => (oneLine && !headerText ? 'center' : 'flex-start')};
+  max-width: ${({ hasCustomContent }) => (hasCustomContent ? '264px' : '224px')};
+  align-items: ${({ multiline, hasHeader }) => (!multiline && !hasHeader ? 'center' : 'flex-start')};
 
   ${TooltipHeader} {
-    align-items: ${({ headerText }) => (headerText ? 'center' : 'flex-start')};
+    align-items: ${({ hasHeader }) => (hasHeader ? 'center' : 'flex-start')};
   }
 `
 
