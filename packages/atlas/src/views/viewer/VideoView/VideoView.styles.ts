@@ -81,8 +81,14 @@ export const PlayerSkeletonLoader = styled(SkeletonLoader)`
 const titleContainerPadding = sizes(6)
 
 export const TitleContainer = styled.div`
-  padding-bottom: ${titleContainerPadding};
-  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  border-bottom: 1px solid ${cVar('colorBorderMuted')};
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: 0 var(--size-global-horizontal-padding) ${titleContainerPadding} var(--size-global-horizontal-padding);
+
+  ${media.md} {
+    margin: 0;
+    padding: 0 0 ${titleContainerPadding} 0;
+  }
 `
 
 export const VideoUtils = styled.div`

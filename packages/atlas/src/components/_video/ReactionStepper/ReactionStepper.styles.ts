@@ -9,7 +9,6 @@ export const ReactionStepperWrapper = styled.div`
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
   row-gap: ${sizes(5.5)};
-  min-width: 155px;
 `
 
 export const ReactionBar = styled.div<{ loaded: boolean }>`
@@ -17,7 +16,7 @@ export const ReactionBar = styled.div<{ loaded: boolean }>`
   grid-column: span 2;
   height: 2px;
   opacity: ${({ loaded }) => (loaded ? 1 : 0)};
-  background-color: ${cVar('colorCoreNeutral700')};
+  background-color: ${cVar('colorBorderMuted')};
   transition: ${cVar('animationTransitionFast')};
   overflow-x: hidden;
   transition-delay: ${({ loaded }) => (loaded ? cVar('animationTimingFast') : '0')};
