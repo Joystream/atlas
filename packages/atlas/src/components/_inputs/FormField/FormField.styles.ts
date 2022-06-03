@@ -12,7 +12,7 @@ export const SwitchLabel = styled.label`
 `
 
 export const SwitchTitle = styled(Text)`
-  margin-left: ${sizes(3)};
+  margin-left: ${sizes(2)};
 `
 
 export const FormFieldWrapper = styled.div`
@@ -20,9 +20,9 @@ export const FormFieldWrapper = styled.div`
   display: grid;
   width: 100%;
 `
-export const FormFieldHeader = styled.header`
+export const FormFieldHeader = styled.header<{ switchable?: boolean }>`
   display: grid;
-  gap: ${sizes(1)};
+  gap: ${({ switchable }) => (switchable ? sizes(2) : sizes(1))};
   width: 100%;
 `
 

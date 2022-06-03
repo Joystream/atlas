@@ -84,7 +84,7 @@ export const FormField = React.memo(
       return (
         <FormFieldWrapper className={className} ref={ref}>
           {(label || description) && (
-            <FormFieldHeader>
+            <FormFieldHeader switchable={switchable}>
               {label && (
                 <FormFieldTitleWrapper>
                   {switchable ? (
