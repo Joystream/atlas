@@ -40,8 +40,8 @@ const Template: Story<WithChildren> = (args) => <FormField {...args} />
 
 export const Default = Template.bind({})
 
-export const WithTextField = Template.bind({})
-WithTextField.args = {
+export const WithInput = Template.bind({})
+WithInput.args = {
   children: <TextField />,
 }
 
@@ -92,7 +92,7 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
   const [anotherFieldEnabled, setAnotherFieldEnabled] = useState(false)
   const [textAreaEnabled, setTextAreaEnabled] = useState(false)
   return (
-    <>
+    <div style={{ display: 'grid', gap: 32 }}>
       <FormField
         {...args}
         switchable
@@ -126,7 +126,7 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
       >
         <TextArea placeholder="Text area" />
       </FormField>
-    </>
+    </div>
   )
 }
 
