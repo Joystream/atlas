@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
-import { RadioButtonGroup, RadioButtonGroupProps } from '@/components/_inputs/RadioButtonGroup'
+import { RadioButtonGroup, RadioButtonGroupProps } from './RadioButtonGroup'
 
 export default {
   title: 'inputs/RadioButtonGroup',
