@@ -406,7 +406,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         control={control}
         rules={{
           validate: (value) => {
-            if ((!!value.video.id && !!value.thumbnail.originalId) || isEdit) {
+            if (!!value.video.id && !!value.thumbnail.originalId) {
               return true
             }
             if (!value.video.id) {
