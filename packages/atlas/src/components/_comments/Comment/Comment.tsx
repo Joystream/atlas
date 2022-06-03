@@ -95,11 +95,13 @@ export const Comment: React.FC<CommentProps> = React.memo(
       })
     }
 
-    const handleCancelConfirmation = (cb: () => void) => {
+    const handleCancelConfirmation = (cb: () => void, isEdit = true) => {
       openModal({
         type: 'warning',
-        title: 'Discard changes',
-        description: 'Are you sure you want to discard your comment changes?',
+        title: isEdit ? 'Discard changes?' : 'Discard comment?',
+        description: isEdit
+          ? 'Are you sure you want to discard your comment changes?'
+          : 'Are you sure you want to discard your comment?',
         primaryButton: {
           text: 'Confirm and discard',
           onClick: () => {
@@ -292,7 +294,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
               onChange={(event) => setReplyCommentInputText(event.target.value)}
               indented
               onCancel={() => {
-                editCommentInputText ? handleCancelConfirmation(handleCancelReply) : handleCancelReply()
+                replyCommentInputText ? handleCancelConfirmation(handleCancelReply, false) : handleCancelReply()
               }}
               initialFocus
               reply
