@@ -11,7 +11,7 @@ export type ReactionStepperProps = {
   state: ReactionSteppperState
   className?: string
   reactionPopoverDismissed?: boolean
-  onReact: (reaction: VideoReaction) => void
+  onReact: (reaction: VideoReaction) => Promise<boolean>
 }
 
 export const ReactionStepper: React.FC<ReactionStepperProps> = ({

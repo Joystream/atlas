@@ -173,11 +173,14 @@ export const VideoView: React.FC = () => {
     async (reaction: VideoReaction) => {
       if (!authorized) {
         openSignInDialog({ onConfirm: signIn })
+        return false
       } else if (video?.id) {
         setVideoReactionProcessing(true)
-        await likeOrDislikeVideo(video.id, reaction)
+        const reacted = await likeOrDislikeVideo(video.id, reaction)
         setVideoReactionProcessing(false)
+        return reacted
       }
+      return false
     },
     [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]
   )

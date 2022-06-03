@@ -185,6 +185,7 @@ export const useReactionTransactions = () => {
           signErrorMessage: 'Failed to react to comment',
         },
         onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
+        onError: async () => refetchReactions(videoId),
       })
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
@@ -268,6 +269,7 @@ export const useReactionTransactions = () => {
             id,
           },
         },
+        fetchPolicy: 'network-only',
       }),
     [client]
   )
