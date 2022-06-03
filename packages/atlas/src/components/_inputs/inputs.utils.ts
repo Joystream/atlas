@@ -65,7 +65,7 @@ export const getPadding = (size: InputSize, nodeWidthProps?: NodeWidthProps) => 
     : horizontalPadding[size]
 
   return css`
-    padding: ${verticalPadding[size]} ${paddingLeft} ${verticalPadding[size]} ${paddingRight};
+    padding: ${verticalPadding[size]} ${paddingRight} ${verticalPadding[size]} ${paddingLeft};
   `
 }
 
