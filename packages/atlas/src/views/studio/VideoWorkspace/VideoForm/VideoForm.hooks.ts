@@ -2,6 +2,7 @@ import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  FieldErrors,
   FieldNamesMarkedBoolean,
   UseFormGetValues,
   UseFormSetValue,
@@ -27,7 +28,8 @@ export const useVideoFormAssets = (
   getValues: UseFormGetValues<VideoWorkspaceVideoFormFields>,
   setValue: UseFormSetValue<VideoWorkspaceVideoFormFields>,
   dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceVideoFormFields>,
-  trigger: UseFormTrigger<VideoWorkspaceVideoFormFields>
+  trigger: UseFormTrigger<VideoWorkspaceVideoFormFields>,
+  errors: FieldErrors<VideoWorkspaceVideoFormFields>
 ) => {
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
@@ -101,8 +103,12 @@ export const useVideoFormAssets = (
           }
         )
       }
+
+      if (errors.assets) {
+        trigger('assets')
+      }
     },
-    [addAsset, dirtyFields.title, getValues, setValue]
+    [errors, trigger, addAsset, dirtyFields.title, getValues, setValue]
   )
 
   const handleThumbnailFileChange = useCallback(
@@ -133,7 +139,7 @@ export const useVideoFormAssets = (
         thumbnail: updatedThumbnail,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
-      trigger()
+      trigger('assets')
     },
     [addAsset, getValues, setValue, trigger]
   )

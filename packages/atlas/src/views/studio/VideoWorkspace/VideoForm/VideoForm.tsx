@@ -133,7 +133,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     mediaAsset,
     thumbnailAsset,
     hasUnsavedAssets,
-  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger)
+  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
 
   // manage draft saving
   const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
@@ -286,13 +286,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? !!mintNft : false,
+      isDisabled: isEdit ? !isDirty : false,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
       triggerReset: reset,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, mintNft, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -320,8 +320,6 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   if (tabDataError || categoriesError) {
     return <ViewErrorFallback />
   }
-
-  // console.log(errors)
 
   const videoEditFields = (
     <>
@@ -408,13 +406,13 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         control={control}
         rules={{
           validate: (value) => {
-            if (!!value.video.id && !!value.thumbnail.originalId && isNew) {
+            if (!!value.video.id && !!value.thumbnail.cropId) {
               return true
             }
             if (!value.video.id) {
               return 'Select video file'
             }
-            if (!value.thumbnail.originalId) {
+            if (!value.thumbnail.cropId) {
               return 'Select image file'
             }
           },
