@@ -55,6 +55,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
                 ? 'Put it on a timed or open auction. See the bids coming.'
                 : 'Sell it for a fixed price only. No bids.'
             }
+            multiline
             placement="top"
           />
         </Title>
@@ -68,7 +69,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
         <Row>
           <Title>
             <TitleText>Minimum bid</TitleText>
-            <StyledInformation text="Only bids higher than this value will be accepted" placement="top" />
+            <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
             <DescriptionText>{formatTokens(formData.startingPrice, true)}</DescriptionText>
@@ -85,6 +86,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
                   ? 'Bids matching this value will automatically end your auction'
                   : 'Price for your NFT as shown to your buyers'
               }
+              multiline
               placement="top"
             />
           </Title>
@@ -100,6 +102,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             <StyledInformation
               text="The moment in time when your auction becomes active and bids will be accepted"
               placement="top"
+              multiline
             />
           </Title>
           <Description>
@@ -115,6 +118,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
               <StyledInformation
                 text="The moment in time when your auction ends. It cannot be finished earlier."
                 placement="top"
+                multiline
               />
             </Title>
             <Description>
@@ -127,7 +131,11 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             <Row>
               <Title>
                 <TitleText>Total auction duration</TitleText>
-                <StyledInformation text="On blockchain, duration is expressed in number of blocks" placement="top" />
+                <StyledInformation
+                  text="On blockchain, duration is expressed in number of blocks"
+                  placement="top"
+                  multiline
+                />
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
@@ -146,6 +154,7 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
             <StyledInformation
               text="Only members included in the whitelist will be able to bid on this auction"
               placement="top"
+              multiline
             />
           </Title>
           <MembersList>
@@ -160,7 +169,11 @@ export const AcceptTerms: React.FC<AcceptTermsProps> = ({ selectedType, formData
       <Row>
         <Title>
           <TitleText>Fee</TitleText>
-          <StyledInformation text="Fee covers cost of blockchain computation of this transaction" placement="top" />
+          <StyledInformation
+            text="Fee covers cost of blockchain computation of this transaction"
+            placement="top"
+            multiline
+          />
         </Title>
         <Description>
           <DescriptionText>{formatTokens(0)}</DescriptionText>

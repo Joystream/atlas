@@ -212,7 +212,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                   </StyledLink>
                   <CommentHeaderDot />
                   <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
-                    <StyledLink to={absoluteRoutes.viewer.video(videoId, { commentId })}>
+                    <StyledLink
+                      to={absoluteRoutes.viewer.video(videoId, { commentId })}
+                      onClick={(e) => e.preventDefault()}
+                    >
                       <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
                         {formatDateAgo(createdAt || new Date())}
                       </HighlightableText>

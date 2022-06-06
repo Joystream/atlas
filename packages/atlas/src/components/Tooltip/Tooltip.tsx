@@ -7,7 +7,7 @@ import { transitions } from '@/styles'
 import {
   IconWrapper,
   StyledSvgAlertsInformative24,
-  StyledTooltip,
+  TooltipContainer,
   TooltipContent,
   TooltipHeader,
   TooltipText,
@@ -26,7 +26,7 @@ export type TooltipProps = {
   reference?: Element | React.RefObject<Element> | null | undefined
   customContent?: React.ReactNode
   showOnCreate?: boolean
-  oneLine?: boolean
+  multiline?: boolean
   className?: string
 }
 
@@ -43,13 +43,35 @@ export const Tooltip: React.FC<TooltipProps> = ({
   delay,
   customContent,
   showOnCreate,
-  oneLine,
+  multiline,
   className,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
+
+  const content = customContent ? (
+    customContent
+  ) : (
+    <TooltipContent headerText={!!headerText}>
+      <TooltipHeader headerText={!!headerText}>
+        {icon && (
+          <IconWrapper>
+            <StyledSvgAlertsInformative24 />
+          </IconWrapper>
+        )}
+        {headerText && <TooltipText variant="h100">{headerText}</TooltipText>}
+      </TooltipHeader>
+      {text && text.length && (
+        <TooltipText withIcon={!!icon} headerText={!!headerText} variant="t100">
+          {text}
+        </TooltipText>
+      )}
+    </TooltipContent>
+  )
+
   if (!text && !customContent) {
     return <>{children}</>
   }
+
   return (
     <Tippy
       delay={delay}
@@ -67,39 +89,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
           classNames={transitions.names.fade}
           unmountOnExit
         >
-          <StyledTooltip
+          <TooltipContainer
             {...attrs}
-            headerText={!!headerText && !!headerText.length}
-            footer={!!customContent}
-            oneLine={!!oneLine}
+            hasHeader={!!headerText && !!headerText.length}
+            hasCustomContent={!!customContent}
+            multiline={!!multiline}
           >
-            <TooltipContent headerText={!!headerText && !!headerText.length}>
-              <TooltipHeader headerText={!!headerText && !!headerText.length}>
-                {icon && (
-                  <IconWrapper>
-                    <StyledSvgAlertsInformative24 />
-                  </IconWrapper>
-                )}
-                {headerText && (
-                  <TooltipText variant="h100" footer={!!customContent}>
-                    {headerText}
-                  </TooltipText>
-                )}
-              </TooltipHeader>
-              {text && text.length && (
-                <TooltipText
-                  withIcon={!!icon}
-                  footer={!!customContent}
-                  oneLine={oneLine}
-                  headerText={!!headerText && !!headerText.length}
-                  variant="t100"
-                >
-                  {text}
-                </TooltipText>
-              )}
-            </TooltipContent>
-            {customContent}
-          </StyledTooltip>
+            {content}
+          </TooltipContainer>
         </CSSTransition>
       )}
     >

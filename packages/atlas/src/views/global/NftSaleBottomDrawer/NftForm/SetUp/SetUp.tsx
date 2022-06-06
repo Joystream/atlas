@@ -251,7 +251,11 @@ export const SetUp: React.FC<SetUpProps> = ({
                 <Text variant="t200-strong" secondary>
                   / {formatNumber(numberOfBlocks)} blocks
                 </Text>
-                <DaysSummaryInfo text="On blockchain, duration is expressed in number of blocks" placement="top" />
+                <DaysSummaryInfo
+                  text="On blockchain, duration is expressed in number of blocks"
+                  placement="top"
+                  multiline
+                />
               </DaysSummary>
             )}
             <FormField
@@ -261,7 +265,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 onChange: toggleActiveInput,
                 value: activeInputs.includes('startingPrice'),
               }}
-              infoTooltip={{ text: 'Only bids higher than this value will be accepted' }}
+              infoTooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
             >
               <TextField
                 {...register('startingPrice', { valueAsNumber: true })}
@@ -284,6 +288,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
               infoTooltip={{
                 text: 'Bids matching this value will automatically end your auction',
+                multiline: true,
               }}
             >
               <TextField
@@ -310,6 +315,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
               infoTooltip={{
                 text: 'Only members included in the whitelist will be able to bid on this auction',
+                multiline: true,
               }}
             >
               <Controller

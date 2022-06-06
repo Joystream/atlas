@@ -28,7 +28,6 @@ export default {
     placement: 'bottom-start',
     text: 'Lorem ipsum dolor amet! Lorem ipsum dolor amet!',
     headerText: 'Lorem ipsum',
-    oneLine: false,
   },
 } as Meta<TooltipProps>
 
@@ -36,13 +35,7 @@ const DefaultTooltip: Story<TooltipProps> = (args) => (
   <Tooltip
     {...args}
     showOnCreate
-    customContent={
-      args.customContent && (
-        <div key={0} style={{ marginTop: '12px' }}>
-          Footer content
-        </div>
-      )
-    }
+    customContent={args.customContent && <div style={{ border: '1px solid red' }}>Custom content</div>}
   />
 )
 
