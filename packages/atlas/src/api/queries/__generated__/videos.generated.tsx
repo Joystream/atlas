@@ -25,6 +25,7 @@ export type GetVideoQuery = {
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
     reactions: Array<{
       __typename?: 'VideoReaction'
@@ -546,6 +547,7 @@ export type GetVideosConnectionQuery = {
         hasMarketing?: boolean | null
         isCensored: boolean
         isCommentSectionEnabled: boolean
+        commentsCount: number
         publishedBeforeJoystream?: Date | null
         reactions: Array<{
           __typename?: 'VideoReaction'
@@ -1064,6 +1066,7 @@ export type GetVideosQuery = {
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
     reactions: Array<{
       __typename?: 'VideoReaction'
@@ -1871,6 +1874,7 @@ export type GetMostViewedVideosConnectionQuery = {
         hasMarketing?: boolean | null
         isCensored: boolean
         isCommentSectionEnabled: boolean
+        commentsCount: number
         publishedBeforeJoystream?: Date | null
         reactions: Array<{
           __typename?: 'VideoReaction'
@@ -2386,6 +2390,7 @@ export type GetTop10VideosThisWeekQuery = {
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
     reactions: Array<{
       __typename?: 'VideoReaction'
@@ -2898,6 +2903,7 @@ export type GetTop10VideosThisMonthQuery = {
     hasMarketing?: boolean | null
     isCensored: boolean
     isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
     reactions: Array<{
       __typename?: 'VideoReaction'

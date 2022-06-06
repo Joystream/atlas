@@ -104,6 +104,20 @@ export const useReactionTransactions = () => {
     [activeMemberId, client]
   )
 
+  const refetchVideo = useCallback(
+    (id: string) =>
+      client.query<GetVideoQuery, GetVideoQueryVariables>({
+        query: GetVideoDocument,
+        variables: {
+          where: {
+            id,
+          },
+        },
+        fetchPolicy: 'network-only',
+      }),
+    [client]
+  )
+
   const addComment = useCallback(
     async ({
       parentCommentId,
@@ -142,10 +156,11 @@ export const useReactionTransactions = () => {
             await Promise.all([
               refetchComment(parentCommentId), // need to refetch parent as its replyCount will change
               refetchReplies(parentCommentId),
+              refetchVideo(videoId),
             ])
           } else {
             // if the comment was top-level, refetch the comments section query (will take care of separating user comments)
-            await refetchCommentsSection(videoId)
+            await Promise.all([refetchCommentsSection(videoId), refetchVideo(videoId)])
           }
         },
         minimized: {
@@ -163,6 +178,7 @@ export const useReactionTransactions = () => {
       refetchComment,
       refetchCommentsSection,
       refetchReplies,
+      refetchVideo,
     ]
   )
 
@@ -258,20 +274,6 @@ export const useReactionTransactions = () => {
       })
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback]
-  )
-
-  const refetchVideo = useCallback(
-    (id: string) =>
-      client.query<GetVideoQuery, GetVideoQueryVariables>({
-        query: GetVideoDocument,
-        variables: {
-          where: {
-            id,
-          },
-        },
-        fetchPolicy: 'network-only',
-      }),
-    [client]
   )
 
   const likeOrDislikeVideo = useCallback(

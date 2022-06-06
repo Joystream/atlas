@@ -29,6 +29,7 @@ export type GetVideoHeroQuery = {
       hasMarketing?: boolean | null
       isCensored: boolean
       isCommentSectionEnabled: boolean
+      commentsCount: number
       publishedBeforeJoystream?: Date | null
       reactions: Array<{
         __typename?: 'VideoReaction'
@@ -548,6 +549,7 @@ export type GetAllCategoriesFeaturedVideosQuery = {
         hasMarketing?: boolean | null
         isCensored: boolean
         isCommentSectionEnabled: boolean
+        commentsCount: number
         publishedBeforeJoystream?: Date | null
         reactions: Array<{
           __typename?: 'VideoReaction'
@@ -1066,6 +1068,7 @@ export type GetCategoriesFeaturedVideosQuery = {
       hasMarketing?: boolean | null
       isCensored: boolean
       isCommentSectionEnabled: boolean
+      commentsCount: number
       publishedBeforeJoystream?: Date | null
       reactions: Array<{
         __typename?: 'VideoReaction'

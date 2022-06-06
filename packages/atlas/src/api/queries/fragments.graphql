@@ -142,6 +142,7 @@ fragment VideoFields on Video {
   hasMarketing
   isCensored
   isCommentSectionEnabled
+  commentsCount
   language {
     iso
   }

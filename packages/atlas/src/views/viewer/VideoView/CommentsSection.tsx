@@ -64,7 +64,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const commentSectionWrapperRef = useRef<HTMLDivElement>(null)
   const mobileCommentsOpen = commentsOpen || mdMatch
   const [numberOfComments, setNumberOfComments] = useState(mobileCommentsOpen ? INITIAL_COMMENTS : 1)
-  const { comments, loading, fetchMore, pageInfo, networkStatus, totalCount } = useCommentSectionComments(
+  const { comments, loading, fetchMore, pageInfo, networkStatus } = useCommentSectionComments(
     { ...queryVariables, first: mobileCommentsOpen ? INITIAL_COMMENTS : 1 },
     { skip: disabled || !videoId, notifyOnNetworkStatusChange: true }
   )
@@ -200,7 +200,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   return (
     <CommentsSectionWrapper>
       <CommentsSectionHeader ref={commentsSectionHeaderRef}>
-        <Text variant="h400">{loading || !totalCount ? 'Comments' : `${totalCount} comments`}</Text>
+        <Text variant="h400">{loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}</Text>
         <Select
           size="small"
           labelPosition="left"

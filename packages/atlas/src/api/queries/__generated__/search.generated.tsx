@@ -104,6 +104,7 @@ export type SearchQuery = {
           hasMarketing?: boolean | null
           isCensored: boolean
           isCommentSectionEnabled: boolean
+          commentsCount: number
           publishedBeforeJoystream?: Date | null
           reactions: Array<{
             __typename?: 'VideoReaction'
