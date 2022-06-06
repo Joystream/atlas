@@ -19,6 +19,7 @@ import { cVar, transitions } from '@/styles'
 import { formatDate, formatDateAgo } from '@/utils/time'
 
 import {
+  CommentArticle,
   CommentFooter,
   CommentFooterItems,
   CommentHeader,
@@ -100,6 +101,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   const [commentHover, setCommentHover] = useState(false)
   const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
   const isDeleted = type === 'deleted'
+  const isProcessing = type === 'processing'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isTouchDevice = useTouchDevice()
@@ -190,56 +192,125 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
       onMouseEnter={() => setCommentHover(true)}
       onMouseLeave={() => setCommentHover(false)}
     >
-      <CommentWrapper ref={domRef} shouldShowKebabButton={shouldShowKebabButton}>
+      <CommentWrapper shouldShowKebabButton={shouldShowKebabButton} ref={domRef}>
         <SwitchTransition>
           <CSSTransition
             timeout={parseInt(cVar('animationTimingFast', true))}
             key={loading?.toString()}
             classNames={transitions.names.fade}
           >
-            {loading ? (
-              <div>
-                <SkeletonLoader width={128} height={20} bottomSpace={8} />
-                <SkeletonLoader width="100%" height={16} bottomSpace={8} />
-                <SkeletonLoader width="70%" height={16} />
-              </div>
-            ) : (
-              <div>
-                <CommentHeader isDeleted={isDeleted}>
-                  <StyledLink to={memberUrl || ''} isProcessing={type === 'processing'}>
-                    <Text variant="h200" margin={{ right: 2 }}>
-                      {memberHandle}
-                    </Text>
-                  </StyledLink>
-                  <CommentHeaderDot />
-                  <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
-                    <StyledLink
-                      to={absoluteRoutes.viewer.video(videoId, { commentId })}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
-                        {formatDateAgo(createdAt || new Date())}
-                      </HighlightableText>
+            <CommentArticle isDeleted={isDeleted}>
+              {loading ? (
+                <>
+                  <SkeletonLoader width={128} height={20} />
+                  <SkeletonLoader width="100%" height={16} />
+                  <SkeletonLoader width="70%" height={16} />
+                </>
+              ) : (
+                <>
+                  <CommentHeader>
+                    <StyledLink to={memberUrl || ''} isProcessing={isProcessing}>
+                      <Text variant="h200" margin={{ right: 2 }}>
+                        {memberHandle}
+                      </Text>
                     </StyledLink>
-                  </Tooltip>
-                  {isEdited && !isDeleted && (
-                    <>
-                      <CommentHeaderDot />
-                      <HighlightableText variant="t200" secondary margin={{ left: 2 }} onClick={onEditedLabelClick}>
-                        edited
-                      </HighlightableText>
-                    </>
+                    <CommentHeaderDot />
+                    <Tooltip text={tooltipDate} placement="top" offsetY={4} delay={[1000, null]}>
+                      <StyledLink
+                        to={absoluteRoutes.viewer.video(videoId, { commentId })}
+                        isProcessing={isProcessing}
+                        onClick={(e) => e.preventDefault()}
+                      >
+                        <HighlightableText variant="t200" secondary margin={{ left: 2, right: 2 }}>
+                          {formatDateAgo(createdAt || new Date())}
+                        </HighlightableText>
+                      </StyledLink>
+                    </Tooltip>
+                    {isEdited && !isDeleted && (
+                      <>
+                        <CommentHeaderDot />
+                        <HighlightableText variant="t200" secondary margin={{ left: 2 }} onClick={onEditedLabelClick}>
+                          edited
+                        </HighlightableText>
+                      </>
+                    )}
+                  </CommentHeader>
+                  {isDeleted ? (
+                    <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
+                      <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
+                    </DeletedComment>
+                  ) : (
+                    <CommentBody>{text}</CommentBody>
                   )}
-                </CommentHeader>
-                {isDeleted ? (
-                  <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
-                    <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
-                  </DeletedComment>
+                </>
+              )}
+              <CommentFooter isProcessing={isProcessing}>
+                {loading ? (
+                  <CommentFooterItems>
+                    <StyledFooterSkeletonLoader width={48} height={32} rounded />
+                    <StyledFooterSkeletonLoader width={48} height={32} rounded />
+                  </CommentFooterItems>
                 ) : (
-                  <CommentBody>{text}</CommentBody>
+                  <ReactionsOnboardingPopover
+                    ref={popoverRef}
+                    onConfirm={() => {
+                      tempReactionId && onReactionClick?.(tempReactionId)
+                      handleOnboardingPopoverHide()
+                    }}
+                    onDecline={handleOnboardingPopoverHide}
+                    trigger={
+                      <CommentFooterItems>
+                        <ReactionsWrapper>
+                          {reactions &&
+                            reactions?.map(({ reactionId, active, count, state }) => (
+                              <ReactionChip
+                                key={reactionId}
+                                reactionId={reactionId}
+                                active={active}
+                                count={count}
+                                state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
+                                onReactionClick={handleCommentReactionClick}
+                              />
+                            ))}
+                          {!allReactionsApplied && !isDeleted && (
+                            <ReactionPopover
+                              disabled={reactionIsProcessing || reactionIsDisabled}
+                              onReactionClick={handleCommentReactionClick}
+                            />
+                          )}
+                        </ReactionsWrapper>
+                        <RepliesWrapper>
+                          {!!repliesCount && filteredDuplicatedAvatars.length ? (
+                            <StyledAvatarGroup
+                              size="small"
+                              avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
+                              avatars={filteredDuplicatedAvatars}
+                              clickable={false}
+                            />
+                          ) : null}
+                          {onToggleReplies && !!repliesCount && (
+                            <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
+                              {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                            </ShowRepliesTextButton>
+                          )}
+                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
+                            <ReplyButton
+                              onClick={onReplyClick}
+                              variant="tertiary"
+                              size="small"
+                              _textOnly
+                              icon={<SvgActionReply />}
+                            >
+                              Reply
+                            </ReplyButton>
+                          )}
+                        </RepliesWrapper>
+                      </CommentFooterItems>
+                    }
+                  />
                 )}
-              </div>
-            )}
+              </CommentFooter>
+            </CommentArticle>
           </CSSTransition>
         </SwitchTransition>
         <ContextMenu
@@ -256,80 +327,6 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
           }
         />
       </CommentWrapper>
-      <CommentFooter>
-        <SwitchTransition>
-          <CSSTransition
-            timeout={parseInt(cVar('animationTimingFast', true))}
-            key={loading?.toString()}
-            classNames={transitions.names.fade}
-          >
-            {loading ? (
-              <CommentFooterItems>
-                <StyledFooterSkeletonLoader width={48} height={32} rounded />
-                <StyledFooterSkeletonLoader width={48} height={32} rounded />
-              </CommentFooterItems>
-            ) : (
-              <ReactionsOnboardingPopover
-                ref={popoverRef}
-                onConfirm={() => {
-                  tempReactionId && onReactionClick?.(tempReactionId)
-                  handleOnboardingPopoverHide()
-                }}
-                onDecline={handleOnboardingPopoverHide}
-                trigger={
-                  <CommentFooterItems>
-                    <ReactionsWrapper>
-                      {reactions &&
-                        reactions?.map(({ reactionId, active, count, state }) => (
-                          <ReactionChip
-                            key={reactionId}
-                            reactionId={reactionId}
-                            active={active}
-                            count={count}
-                            state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
-                            onReactionClick={handleCommentReactionClick}
-                          />
-                        ))}
-                      {!allReactionsApplied && !isDeleted && (
-                        <ReactionPopover
-                          disabled={reactionIsProcessing || reactionIsDisabled}
-                          onReactionClick={handleCommentReactionClick}
-                        />
-                      )}
-                    </ReactionsWrapper>
-                    <RepliesWrapper>
-                      {!!repliesCount && filteredDuplicatedAvatars.length ? (
-                        <StyledAvatarGroup
-                          size="small"
-                          avatarStrokeColor={highlighted ? cVar('colorBackground', true) : undefined}
-                          avatars={filteredDuplicatedAvatars}
-                          clickable={false}
-                        />
-                      ) : null}
-                      {onToggleReplies && !!repliesCount && (
-                        <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
-                          {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                        </ShowRepliesTextButton>
-                      )}
-                      {onReplyClick && !isDeleted && (commentHover || isTouchDevice) && (
-                        <ReplyButton
-                          onClick={onReplyClick}
-                          variant="tertiary"
-                          size="small"
-                          _textOnly
-                          icon={<SvgActionReply />}
-                        >
-                          Reply
-                        </ReplyButton>
-                      )}
-                    </RepliesWrapper>
-                  </CommentFooterItems>
-                }
-              />
-            )}
-          </CSSTransition>
-        </SwitchTransition>
-      </CommentFooter>
     </CommentRow>
   )
 }

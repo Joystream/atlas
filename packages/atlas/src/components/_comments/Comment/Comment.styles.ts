@@ -27,19 +27,27 @@ export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean }>`
 
   :hover {
     ${KebabMenuIconButton} {
-      opacity: ${({ shouldShowKebabButton: isActive }) => (isActive ? 1 : 0)};
+      opacity: ${({ shouldShowKebabButton }) => (shouldShowKebabButton ? 1 : 0)};
     }
   }
 `
 
-export const CommentHeader = styled.div<{ isDeleted: boolean }>`
+export const CommentArticle = styled.article<{ isDeleted?: boolean }>`
+  display: grid;
+  grid-auto-flow: row;
+  gap: ${({ isDeleted }) => (isDeleted ? sizes(3) : sizes(2))};
+  align-items: start;
+`
+
+export const CommentHeader = styled.header`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: ${({ isDeleted }) => (isDeleted ? sizes(3) : sizes(2))};
 `
 
-export const StyledLink = styled(Link)<{ isProcessing?: boolean }>`
+const isPropValid = (prop: PropertyKey) => prop !== 'isProcessing'
+
+export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ isProcessing?: boolean }>`
   text-decoration: none;
   pointer-events: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
   touch-action: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
@@ -75,8 +83,9 @@ export const DeletedComment = styled(Text)`
   align-items: center;
 `
 
-export const CommentFooter = styled.div`
-  margin-top: ${sizes(2)};
+export const CommentFooter = styled.footer<{ isProcessing?: boolean }>`
+  pointer-events: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
+  touch-action: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
 `
 
 export const CommentFooterItems = styled.div`
