@@ -8,6 +8,7 @@ import { ContentWrapper, OutlineBox } from './CommentRow.styles'
 
 export type CommentRowProps = {
   indented?: boolean
+  processing?: boolean
   highlighted?: boolean
   isMemberAvatarLoading?: boolean
   isMemberAvatarClickable?: boolean
@@ -21,6 +22,7 @@ export type CommentRowProps = {
 
 export const CommentRow: React.FC<CommentRowProps> = ({
   indented,
+  processing,
   highlighted,
   children,
   memberAvatarUrl,
@@ -51,6 +53,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   const avatarSize = getAvatarSize()
   return (
     <OutlineBox
+      processing={processing}
       highlighted={!!highlighted}
       withoutOutlineBox={withoutOutlineBox}
       onMouseEnter={onMouseEnter}

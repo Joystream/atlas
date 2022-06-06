@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
+import { useNavigate } from 'react-router'
 
 import {
   GetCommentDocument,
@@ -22,6 +23,7 @@ import {
   GetVideoQueryVariables,
 } from '@/api/queries'
 import { ReactionId } from '@/config/reactions'
+import { absoluteRoutes } from '@/config/routes'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactionManager'
@@ -32,6 +34,7 @@ export const useReactionTransactions = () => {
   const { activeMemberId } = useUser()
   const { joystream, proxyCallback } = useJoystream()
   const handleTransaction = useTransaction()
+  const navigate = useNavigate()
   const client = useApolloClient()
 
   const refetchComment = useCallback(
@@ -228,7 +231,7 @@ export const useReactionTransactions = () => {
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchEdits]
   )
   const deleteComment = useCallback(
-    async (commentId: string, videoTitle?: string) => {
+    async (commentId: string, videoTitle?: string, videoId?: string) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
         return
@@ -240,17 +243,25 @@ export const useReactionTransactions = () => {
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `Your comment to the video ${videoTitle} has been deleted`,
+          actionText: 'Go to video',
+          onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
           signErrorMessage: 'Failed to delete comment',
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback]
+    [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const moderateComment = useCallback(
-    async (commentId: string, channelId: string, commentAuthorHandle?: string, videoTitle?: string) => {
+    async (
+      commentId: string,
+      channelId: string,
+      commentAuthorHandle?: string,
+      videoTitle?: string,
+      videoId?: string
+    ) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
         return
@@ -267,13 +278,15 @@ export const useReactionTransactions = () => {
         snackbarSuccessMessage: {
           title: 'Comment deleted',
           description: `${commentAuthorHandle}'s comment to your video ${videoTitle} has been deleted`,
+          actionText: 'Go to video',
+          onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
           signErrorMessage: 'Failed to delete comment',
         },
       })
     },
-    [activeMemberId, handleTransaction, joystream, proxyCallback]
+    [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const likeOrDislikeVideo = useCallback(
