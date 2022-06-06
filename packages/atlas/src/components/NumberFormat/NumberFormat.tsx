@@ -16,17 +16,7 @@ export type NumberFormatProps = {
 } & Omit<TextProps, 'children' | 'variant'>
 
 export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatProps>(
-  (
-    {
-      value,
-      format = 'full',
-      withToken,
-      withTooltip = format === 'short' || format === 'dollar',
-      variant = 'no-variant',
-      ...textProps
-    },
-    ref
-  ) => {
+  ({ value, format = 'full', withToken, withTooltip, variant = 'no-variant', ...textProps }, ref) => {
     const textRef = useRef<HTMLHeadingElement>(null)
     let formattedValue
     let tooltipText
@@ -46,13 +36,16 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
         break
     }
 
+    const hasDecimals = value - Math.floor(value) !== 0
+    const hasTooltip = withTooltip || (format === 'short' && value > 999) || (format === 'dollar' && hasDecimals)
+
     return (
       <>
         <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
           {formattedValue}
           {withToken && ` tJOY`}
         </Text>
-        {withTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}
+        {hasTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}
       </>
     )
   }

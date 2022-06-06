@@ -7,17 +7,24 @@ export default {
   title: 'other/NumberFormat',
   component: NumberFormat,
   args: {
-    value: 100000.123456789,
+    value: 102930,
     format: 'dollar',
-    withToken: false,
-    withTooltip: true,
     variant: 't100-strong',
+    withToken: false,
+  },
+  argTypes: {
+    format: {
+      control: { type: 'radio', options: ['dollar', 'full', 'short'] },
+    },
+    withToken: {
+      control: { type: 'boolean' },
+    },
   },
 } as Meta<NumberFormatProps>
 
-const Template: Story<Omit<NumberFormatProps, 'ref'>> = ({ variant = 't100-strong', ...args }) => (
+const Template: Story<Omit<NumberFormatProps, 'ref'>> = (args) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px', padding: '200px' }}>
-    <NumberFormat {...args} variant={variant} />
+    <NumberFormat {...args} />
   </div>
 )
 
