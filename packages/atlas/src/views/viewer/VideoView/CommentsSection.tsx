@@ -51,7 +51,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const { openSignInDialog } = useDisplaySignInDialog()
   const { isLoadingAsset: isMemberAvatarLoading, url: memberAvatarUrl } = useMemberAvatar(activeMembership)
 
-  const commentWrapperRef = useRef<HTMLDivElement>(null)
   const queryVariables = useMemo(
     () => ({
       memberId: activeMemberId,
@@ -156,7 +155,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const placeholderItems = commentsLoading ? Array.from({ length: 4 }, () => ({ id: undefined })) : []
 
   useEffect(() => {
-    if (!commentIdQueryParam || !commentWrapperRef.current) {
+    if (!commentIdQueryParam || !commentSectionWrapperRef.current) {
       return
     }
     const scrollTimeout = setTimeout(() => {
