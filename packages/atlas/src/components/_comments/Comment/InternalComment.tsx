@@ -52,7 +52,7 @@ export type InternalCommentProps = {
   isEdited: boolean | undefined
   isAbleToEdit: boolean | undefined
   isModerated: boolean | undefined
-  type: 'default' | 'deleted' | 'options'
+  type: 'default' | 'deleted' | 'options' | 'processing'
   reactions: Omit<ReactionChipProps, 'onReactionClick'>[] | undefined
   reactionPopoverDismissed: boolean | undefined
   replyAvatars?: (AvatarGroupUrlAvatar & { handle: string })[]
@@ -125,7 +125,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
     {
       icon: <SvgActionTrash />,
       onClick: onDeleteClick,
-      title: 'Remove',
+      title: 'Delete',
       destructive: true,
     },
   ]
@@ -181,6 +181,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
 
   return (
     <CommentRow
+      processing={type === 'processing'}
       indented={indented}
       highlighted={highlighted}
       isMemberAvatarLoading={loading || isMemberAvatarLoading}
@@ -205,7 +206,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
             ) : (
               <div>
                 <CommentHeader isDeleted={isDeleted}>
-                  <StyledLink to={memberUrl || ''}>
+                  <StyledLink to={memberUrl || ''} isProcessing={type === 'processing'}>
                     <Text variant="h200" margin={{ right: 2 }}>
                       {memberHandle}
                     </Text>
@@ -232,7 +233,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                 </CommentHeader>
                 {isDeleted ? (
                   <DeletedComment variant="t200" color={cVar('colorTextMuted')}>
-                    <StyledSvgActionTrash /> Comment deleted by the {isModerated ? 'channel owner' : 'author'}
+                    <StyledSvgActionTrash /> Comment deleted by {isModerated ? 'channel owner' : 'author'}
                   </DeletedComment>
                 ) : (
                   <CommentBody>{text}</CommentBody>

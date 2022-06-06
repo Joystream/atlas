@@ -52,6 +52,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [replyCommentInputIsProcessing, setReplyCommentInputIsProcessing] = useState(false)
     const [editCommentInputText, setEditCommentInputText] = useState('')
     const [replyCommentInputText, setReplyCommentInputText] = useState('')
+    const [isCommentProcessing, setIsCommentProcessing] = useState(false)
     const [isEditingComment, setIsEditingComment] = useState(false)
     const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
 
@@ -81,11 +82,19 @@ export const Comment: React.FC<CommentProps> = React.memo(
         description: 'Are you sure you want to delete this comment? This cannot be undone.',
         primaryButton: {
           text: 'Delete comment',
-          onClick: () => {
-            isChannelOwner
-              ? moderateComment(comment.id, video?.channel.id, comment.author.handle, video.title || '')
-              : deleteComment(comment.id, video?.title || '')
+          onClick: async () => {
+            setIsCommentProcessing(true)
             closeModal()
+            isChannelOwner
+              ? await moderateComment(
+                  comment.id,
+                  video?.channel.id,
+                  comment.author.handle,
+                  video.title || '',
+                  video?.id
+                )
+              : await deleteComment(comment.id, video?.title || '', video?.id)
+            setIsCommentProcessing(false)
           },
         },
         secondaryButton: {
@@ -217,12 +226,13 @@ export const Comment: React.FC<CommentProps> = React.memo(
         })) ||
       undefined
 
-    const commentType =
-      comment && ['DELETED', 'MODERATED'].includes(comment.status)
-        ? 'deleted'
-        : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
-        ? 'options'
-        : 'default'
+    const commentType = isCommentProcessing
+      ? 'processing'
+      : comment && ['DELETED', 'MODERATED'].includes(comment.status)
+      ? 'deleted'
+      : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
+      ? 'options'
+      : 'default'
 
     if (isEditingComment) {
       return (

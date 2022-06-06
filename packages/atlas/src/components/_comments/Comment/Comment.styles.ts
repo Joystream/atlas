@@ -39,8 +39,10 @@ export const CommentHeader = styled.div<{ isDeleted: boolean }>`
   margin-bottom: ${({ isDeleted }) => (isDeleted ? sizes(3) : sizes(2))};
 `
 
-export const StyledLink = styled(Link)`
+export const StyledLink = styled(Link)<{ isProcessing?: boolean }>`
   text-decoration: none;
+  pointer-events: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
+  touch-action: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
 `
 
 export const CommentHeaderDot = styled.div`

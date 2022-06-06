@@ -15,20 +15,17 @@ import { useTransactionManagerStore } from './store'
 
 import { useConfirmationModal } from '../confirmationModal'
 import { useConnectionStatusStore } from '../connectionStatus'
-import { useSnackbar } from '../snackbars'
+import { DisplaySnackbarArgs, useSnackbar } from '../snackbars'
 
 type UpdateStatusFn = (status: ExtrinsicStatus | null) => void
-type SnackbarSuccessMessage = {
-  title: string
-  description?: string
-}
+
 type HandleTransactionOpts<T extends ExtrinsicResult> = {
   txFactory: (updateStatus: UpdateStatusFn) => Promise<T>
   preProcess?: () => void | Promise<void>
   onTxFinalize?: (data: T) => Promise<unknown>
   onTxSync?: (data: T, metaStatus?: MetaprotocolTransactionSuccessFieldsFragment) => Promise<unknown>
   onError?: () => void
-  snackbarSuccessMessage?: SnackbarSuccessMessage
+  snackbarSuccessMessage?: DisplaySnackbarArgs
   minimized?: {
     signErrorMessage: string
   }
