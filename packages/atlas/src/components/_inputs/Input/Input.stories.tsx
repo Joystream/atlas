@@ -2,8 +2,13 @@ import { useRef } from '@storybook/addons'
 import { Meta, Story } from '@storybook/react'
 import React, { useState } from 'react'
 
+import { Avatar } from '@/components/Avatar'
+import { Pill } from '@/components/Pill'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionCancel, SvgActionClose } from '@/components/_icons'
+import { SvgActionBid, SvgActionClose, SvgActionSearch, SvgJoyTokenMonochrome16 } from '@/components/_icons'
+import { cVar } from '@/styles'
+import { formatNumber } from '@/utils/number'
 
 import { Input, InputProps } from '.'
 
@@ -27,8 +32,9 @@ export default {
     nodeStart: { table: { disable: true } },
     className: { table: { disable: true } },
     defaultValue: { table: { disable: true } },
+    actionButton: { table: { disable: true } },
   },
-} as Meta<InputProps>
+} as Meta
 
 const Template: Story<InputProps> = (args) => <Input {...args} />
 
@@ -49,6 +55,49 @@ const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
   )
 }
 
+const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
+  const [dollars, setDollars] = useState<number>()
+  return (
+    <div style={{ display: 'grid', gap: 24 }}>
+      <Input
+        {...args}
+        nodeStart={<Pill label="label" />}
+        nodeEnd={
+          <Text secondary color={cVar('colorTextMuted')} variant="t300">
+            $
+          </Text>
+        }
+      />
+      <Input
+        {...args}
+        nodeStart={<Avatar size="bid" assetUrl="https://placedog.net/360/203" />}
+        nodeEnd={<Pill label="500$" />}
+      />
+      <Input
+        {...args}
+        type="number"
+        value={dollars}
+        onChange={(e) => setDollars(Number(e.currentTarget.value))}
+        nodeStart={<SvgJoyTokenMonochrome16 />}
+        nodeEnd={
+          <Text secondary color={cVar('colorTextMuted')} variant="t300">
+            $ {formatNumber((dollars || 0) * 4)}
+          </Text>
+        }
+      />
+      <Input
+        {...args}
+        nodeStart={<SvgActionBid />}
+        nodeEnd={
+          <Text secondary color={cVar('colorTextMuted')} variant="t300">
+            some random text
+          </Text>
+        }
+      />
+    </div>
+  )
+}
+
 export const Default = Template.bind({})
 Default.argTypes = {
   value: { table: { disable: false } },
@@ -58,8 +107,18 @@ export const WithControlledInput = TemplateWithControlledInput.bind({})
 
 export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
 
-export const WithIcons = Template.bind({})
-WithIcons.args = {
-  nodeStart: <SvgActionCancel />,
-  nodeEnd: <Button variant="tertiary" size="small" icon={<SvgActionClose />} />,
+export const WithButton = Template.bind({})
+
+WithButton.args = {
+  placeholder: 'placeholder text',
+  actionButton: {
+    icon: <SvgActionClose />,
+  },
+  nodeStart: <SvgActionSearch />,
+}
+
+export const WithPreffixAndSuffix = TemplateWithPreffixAndSuffix.bind({})
+
+WithPreffixAndSuffix.argTypes = {
+  type: { table: { disable: true } },
 }

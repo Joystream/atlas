@@ -1,7 +1,10 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useRef } from 'react'
+import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
+import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
+import { ConsoleLogger } from '@/utils/logs'
 
 import { InputContainer, NodeContainer, TextInput } from './Input.styles'
 
@@ -19,13 +22,14 @@ export type InputProps = {
   className?: string
   placeholder?: string
   defaultValue?: string
-  nodeStart?: React.ReactNode
-  nodeEnd?: React.ReactNode
   autoComplete?: 'off'
   error?: boolean
   disabled?: boolean
   size?: InputSize
   processing?: boolean
+  nodeStart?: React.ReactNode
+  actionButton?: ButtonProps
+  nodeEnd?: React.ReactNode
 }
 
 const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
@@ -44,15 +48,18 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     placeholder,
     defaultValue,
     nodeStart,
-    nodeEnd,
     processing,
     autoComplete,
     className,
+    nodeEnd,
+    actionButton,
   },
   ref
 ) => {
   const { ref: nodeLeftRef, width: nodeLeftBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
   const { ref: nodeRightRef, width: nodeRightBoundsWidth = 0 } = useResizeObserver({ box: 'border-box' })
+
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
     if (onWheel) {
@@ -67,20 +74,19 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     }, 0)
   }
 
+  if (actionButton && nodeEnd) {
+    ConsoleLogger.warn('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
+  }
+
   return (
-    <InputContainer as="div" variant={size === 'large' ? 't300' : 't200'} className={className}>
-      {nodeStart && (
-        <NodeContainer size={size} ref={nodeLeftRef} left>
-          {nodeStart}
-        </NodeContainer>
-      )}
+    <InputContainer as="label" variant={size === 'large' ? 't300' : 't200'} className={className}>
       <TextInput
         inputSize={size}
         error={error}
         leftNodeWidth={nodeLeftBoundsWidth}
         rightNodeWidth={nodeRightBoundsWidth}
         autoComplete={autoComplete}
-        ref={ref}
+        ref={mergeRefs([inputRef, ref])}
         name={name}
         value={value}
         disabled={disabled}
@@ -94,10 +100,21 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
         tabIndex={disabled ? -1 : 0}
         defaultValue={defaultValue}
       />
-      {(nodeEnd || processing) && (
-        <NodeContainer size={size} ref={nodeRightRef}>
+      {nodeStart && (
+        <NodeContainer onClick={() => inputRef.current?.focus()} size={size} ref={nodeLeftRef} left disabled={disabled}>
+          {nodeStart}
+        </NodeContainer>
+      )}
+      {(nodeEnd || actionButton || processing) && (
+        <NodeContainer
+          onClick={() => inputRef.current?.focus()}
+          size={size}
+          ref={nodeRightRef}
+          disabled={disabled}
+          isButton={!!actionButton}
+        >
           {processing && <Loader variant="xsmall" />}
-          {nodeEnd}
+          {actionButton ? <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" /> : nodeEnd}
         </NodeContainer>
       )}
     </InputContainer>
