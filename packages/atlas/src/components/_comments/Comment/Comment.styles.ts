@@ -90,7 +90,14 @@ export const CommentFooter = styled.footer<{ isProcessing?: boolean }>`
   left: -8px;
 `
 
-export const CommentFooterItems = styled.div`
+export const ReactionsAndPopover = styled.div`
+  display: grid;
+  grid-auto-flow: column;
+  gap: ${sizes(1)};
+  justify-content: start;
+`
+
+export const ReactionsWrapper = styled.div`
   display: grid;
   grid-template-columns: auto;
   grid-auto-rows: auto;
@@ -101,13 +108,6 @@ export const CommentFooterItems = styled.div`
     grid-template-columns: auto 1fr;
     gap: ${sizes(1)};
   }
-`
-
-export const ReactionsWrapper = styled.div`
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 4px;
-  justify-content: flex-start;
 `
 
 export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
