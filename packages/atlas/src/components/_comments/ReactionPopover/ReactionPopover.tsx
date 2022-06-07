@@ -3,12 +3,16 @@ import React, { useState } from 'react'
 
 import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Button } from '@/components/_buttons/Button'
-import { SvgActionPlaceholder } from '@/components/_icons'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { usePersonalDataStore } from '@/providers/personalData'
 
-import { ReactionPopoverInnerWrapper, ReactionPopoverWrapper, StyledEmojiButton } from './ReactionPopover.styles'
+import {
+  ReactionPopoverInnerWrapper,
+  ReactionPopoverWrapper,
+  StyledEmojiButton,
+  StyledSvgActionPlaceholder,
+} from './ReactionPopover.styles'
 
 export type ReactionPopoverProps = {
   onReactionClick?: (reaction: ReactionId, reactionPopoverDismissed: boolean) => void
@@ -77,7 +81,7 @@ export const ReactionPopover: React.FC<ReactionPopoverProps> = ({ onReactionClic
       trigger="click"
       hideOnClick
     >
-      <Button variant="tertiary" size="small" icon={<SvgActionPlaceholder />} disabled={disabled} />
+      <Button variant="tertiary" size="small" icon={<StyledSvgActionPlaceholder />} disabled={disabled} />
     </Tippy>
   )
 }

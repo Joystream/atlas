@@ -76,7 +76,7 @@ export const HeaderContent = styled.div`
 `
 
 const getDenseHeaderContentStyles = ({ noContentPadding }: ContentProps) =>
-  !noContentPadding &&
+  noContentPadding &&
   css`
     padding-top: ${sizes(3)};
   `

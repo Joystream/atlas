@@ -181,6 +181,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
     [onReactionClick, reactionPopoverDismissed]
   )
 
+  const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
   return (
     <CommentRow
       processing={type === 'processing'}
@@ -261,8 +262,8 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                     trigger={
                       <CommentFooterItems>
                         <ReactionsWrapper>
-                          {reactions &&
-                            reactions?.map(({ reactionId, active, count, state }) => (
+                          {sortedReactions &&
+                            sortedReactions?.map(({ reactionId, active, count, state }) => (
                               <ReactionChip
                                 key={reactionId}
                                 reactionId={reactionId}
