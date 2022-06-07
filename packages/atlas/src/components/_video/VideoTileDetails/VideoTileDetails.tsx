@@ -110,7 +110,8 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                         ? videoSubTitle
                         : createdAt && (
                             <>
-                              {formatVideoDate(createdAt)} • <Views value={views ?? 0} format="short" secondary /> views
+                              {formatVideoDate(createdAt)} • <Views value={views ?? 0} format="short" secondary />
+                              &nbsp;views
                             </>
                           )}
                     </Text>
