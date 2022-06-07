@@ -36,7 +36,6 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
         break
     }
 
-    const hasDecimals = value - Math.floor(value) !== 0
     const hasTooltip = withTooltip || (format === 'short' && value > 999)
 
     return (
@@ -51,11 +50,6 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
   }
 )
 NumberFormat.displayName = 'Number'
-
-const shortFormatOptions = {
-  notation: 'compact',
-  compactDisplay: 'short',
-} as const
 
 const maximumSignificantDigits = 21
 
@@ -76,7 +70,6 @@ const dollarFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   minimumSignificantDigits: 3,
-  // maximumSignificantDigits: 3,
 })
 
 const formatNumber = (num: number): string => {
