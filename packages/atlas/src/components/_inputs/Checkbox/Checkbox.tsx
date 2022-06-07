@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import { SvgActionMinus } from '@/components/_icons'
 
-import { Checkmark, Container, InnerContainer, Input, StyledGlyphCheck } from './Checkbox.styles'
+import { Checkmark, Container, Input, StyledGlyphCheck } from './Checkbox.styles'
 
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 
@@ -39,27 +39,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ) => {
     const isIndeterminate = indeterminate || false
     const isSelected = value
-    const [isFocused, setIsFocused] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!disabled && onChange) {
         onChange(!value, e)
-      }
-    }
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-      if (!disabled) {
-        setIsFocused(true)
-        if (onFocus) {
-          onFocus(e)
-        }
-      }
-    }
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      if (!disabled) {
-        setIsFocused(false)
-        if (onBlur) {
-          onBlur(e)
-        }
       }
     }
 
@@ -73,21 +56,22 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           e.stopPropagation()
         }}
       >
-        <Container selected={!!value} disabled={disabled} isFocused={isFocused} error={error}>
-          <InnerContainer selected={!!value} disabled={disabled} error={error} isFocused={isFocused}>
-            <Input
-              name={name}
-              ref={ref}
-              type="checkbox"
-              checked={isSelected}
-              disabled={disabled}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              {...props}
-            />
-            <Checkmark>{!isSelected ? null : isIndeterminate ? <SvgActionMinus /> : <StyledGlyphCheck />}</Checkmark>
-          </InnerContainer>
+        <Container>
+          <Input
+            name={name}
+            ref={ref}
+            type="checkbox"
+            checked={isSelected}
+            disabled={disabled}
+            onChange={handleChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            error={error}
+            {...props}
+          />
+          <Checkmark error={error}>
+            {!isSelected ? null : isIndeterminate ? <SvgActionMinus /> : <StyledGlyphCheck />}
+          </Checkmark>
         </Container>
       </RadioAndCheckboxBase>
     )
