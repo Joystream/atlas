@@ -21,13 +21,13 @@ import { formatDate, formatDateAgo } from '@/utils/time'
 import {
   CommentArticle,
   CommentFooter,
-  CommentFooterItems,
   CommentHeader,
   CommentHeaderDot,
   CommentWrapper,
   DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
+  ReactionsAndPopover,
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
@@ -247,10 +247,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
               )}
               <CommentFooter isProcessing={isProcessing}>
                 {loading ? (
-                  <CommentFooterItems>
+                  <ReactionsAndPopover>
                     <StyledFooterSkeletonLoader width={48} height={32} rounded />
                     <StyledFooterSkeletonLoader width={48} height={32} rounded />
-                  </CommentFooterItems>
+                  </ReactionsAndPopover>
                 ) : (
                   <ReactionsOnboardingPopover
                     ref={popoverRef}
@@ -260,8 +260,8 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                     }}
                     onDecline={handleOnboardingPopoverHide}
                     trigger={
-                      <CommentFooterItems>
-                        <ReactionsWrapper>
+                      <ReactionsWrapper>
+                        <ReactionsAndPopover>
                           {sortedReactions &&
                             sortedReactions?.map(({ reactionId, active, count, state }) => (
                               <ReactionChip
@@ -279,7 +279,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                               onReactionClick={handleCommentReactionClick}
                             />
                           )}
-                        </ReactionsWrapper>
+                        </ReactionsAndPopover>
                         <RepliesWrapper>
                           {!!repliesCount && filteredDuplicatedAvatars.length ? (
                             <StyledAvatarGroup
@@ -306,7 +306,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                             </ReplyButton>
                           )}
                         </RepliesWrapper>
-                      </CommentFooterItems>
+                      </ReactionsWrapper>
                     }
                   />
                 )}
