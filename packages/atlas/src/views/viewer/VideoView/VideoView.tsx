@@ -1,6 +1,6 @@
 import { generateVideoMetaTags } from '@joystream/atlas-meta-server/src/tags'
 import { throttle } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useParams } from 'react-router-dom'
 
@@ -12,29 +12,37 @@ import { ViewErrorFallback } from '@/components/ViewErrorFallback'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionButton } from '@/components/_buttons/CallToActionButton'
 import { ChannelLink } from '@/components/_channel/ChannelLink'
+import { SvgActionLinkUrl } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { NftWidget, useNftWidget } from '@/components/_nft/NftWidget'
 import { VideoPlayer } from '@/components/_video/VideoPlayer'
 import { CTA_MAP } from '@/config/cta'
 import { absoluteRoutes } from '@/config/routes'
 import { useCategoryMatch } from '@/hooks/useCategoriesMatch'
+import { useClipboard } from '@/hooks/useClipboard'
+import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useNftTransactions } from '@/hooks/useNftTransactions'
+import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRedirectMigratedContent } from '@/hooks/useRedirectMigratedContent'
 import { useVideoStartTimestamp } from '@/hooks/useVideoStartTimestamp'
+import { VideoReaction } from '@/joystream-lib'
 import { useAsset } from '@/providers/assets'
 import { useNftActions } from '@/providers/nftActions'
 import { useOverlayManager } from '@/providers/overlayManager'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useUser } from '@/providers/user'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 import { formatVideoViewsAndDate } from '@/utils/video'
 
+import { CommentsSection } from './CommentsSection'
 import { MoreVideos } from './MoreVideos'
 import { VideoDetails } from './VideoDetails'
 import {
   ChannelContainer,
+  CopyLink,
   Meta,
   NotFoundVideoContainer,
   PlayerContainer,
@@ -43,20 +51,30 @@ import {
   PlayerSkeletonLoader,
   PlayerWrapper,
   StyledCallToActionWrapper,
+  StyledReactionStepper,
   TitleContainer,
   TitleText,
+  VideoUtils,
 } from './VideoView.styles'
 
 export const VideoView: React.FC = () => {
   useRedirectMigratedContent({ type: 'video' })
   const { id } = useParams()
+  const { activeMemberId, activeAccountId, signIn } = useUser()
+  const { openSignInDialog } = useDisplaySignInDialog()
   const { openNftPutOnSale, cancelNftSale, openNftAcceptBid, openNftChangePrice, openNftPurchase, openNftSettlement } =
     useNftActions()
+  const reactionPopoverDismissed = usePersonalDataStore((state) => state.reactionPopoverDismissed)
   const { withdrawBid } = useNftTransactions()
+  const { copyToClipboard } = useClipboard()
   const { loading, video, error } = useVideo(id ?? '', {
     onError: (error) => SentryLogger.error('Failed to load video data', 'VideoView', error),
   })
+  const [videoReactionProcessing, setVideoReactionProcessing] = useState(false)
   const nftWidgetProps = useNftWidget(id)
+  const { likeOrDislikeVideo } = useReactionTransactions()
+
+  const authorized = activeMemberId && activeAccountId
 
   const mdMatch = useMediaMatch('md')
   const { addVideoView } = useAddVideoView()
@@ -95,6 +113,27 @@ export const VideoView: React.FC = () => {
   const channelName = video?.channel?.title
   const videoId = video?.id
   const categoryId = video?.category?.id
+  const numberOfLikes = video?.reactions.filter(({ reaction }) => reaction === 'LIKE').length
+  const numberOfDislikes = video?.reactions.filter(({ reaction }) => reaction === 'UNLIKE').length
+
+  const reactionStepperState = useMemo(() => {
+    if (!video) {
+      return 'loading'
+    }
+    if (videoReactionProcessing) {
+      return 'processing'
+    }
+    const myReaction = video?.reactions.find(({ memberId }) => memberId === activeMemberId)
+    if (myReaction) {
+      if (myReaction.reaction === 'LIKE') {
+        return 'liked'
+      }
+      if (myReaction.reaction === 'UNLIKE') {
+        return 'disliked'
+      }
+    }
+    return 'default'
+  }, [activeMemberId, videoReactionProcessing, video])
 
   useEffect(() => {
     if (!videoId || !channelId) {
@@ -130,6 +169,22 @@ export const VideoView: React.FC = () => {
     }
   }, [video?.id, handleTimeUpdate, updateWatchedVideos])
 
+  const handleReact = useCallback(
+    async (reaction: VideoReaction) => {
+      if (!authorized) {
+        openSignInDialog({ onConfirm: signIn })
+        return false
+      } else if (video?.id) {
+        setVideoReactionProcessing(true)
+        const reacted = await likeOrDislikeVideo(video.id, reaction)
+        setVideoReactionProcessing(false)
+        return reacted
+      }
+      return false
+    },
+    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]
+  )
+
   // use Media Session API to provide rich metadata to the browser
   useEffect(() => {
     const supported = 'mediaSession' in navigator
@@ -150,6 +205,10 @@ export const VideoView: React.FC = () => {
       navigator.mediaSession.metadata = null
     }
   }, [thumbnailUrl, video])
+
+  const handleCopyLink = () => {
+    copyToClipboard(window.location.href, 'Video URL copied to clipboard')
+  }
 
   if (error) {
     return <ViewErrorFallback />
@@ -200,13 +259,25 @@ export const VideoView: React.FC = () => {
         ) : (
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
-        <Meta variant={mdMatch ? 't300' : 't100'} secondary>
-          {video ? (
-            formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
-          ) : (
-            <SkeletonLoader height={24} width={200} />
-          )}
-        </Meta>
+        <VideoUtils>
+          <Meta variant={mdMatch ? 't300' : 't100'} secondary>
+            {video ? (
+              formatVideoViewsAndDate(video.views || null, video.createdAt, { fullViews: true })
+            ) : (
+              <SkeletonLoader height={24} width={200} />
+            )}
+          </Meta>
+          <StyledReactionStepper
+            reactionPopoverDismissed={reactionPopoverDismissed || !authorized}
+            onReact={handleReact}
+            state={reactionStepperState}
+            likes={numberOfLikes}
+            dislikes={numberOfDislikes}
+          />
+          <CopyLink variant="tertiary" icon={<SvgActionLinkUrl />} onClick={handleCopyLink}>
+            Copy link
+          </CopyLink>
+        </VideoUtils>
       </TitleContainer>
       <ChannelContainer>
         <ChannelLink followButton id={channelId} textVariant="h300" avatarSize="small" />
@@ -238,7 +309,16 @@ export const VideoView: React.FC = () => {
                 <PlayerSkeletonLoader />
               )}
             </PlayerContainer>
-            {!isCinematic && detailsItems}
+            {!isCinematic && (
+              <>
+                {detailsItems}
+                <CommentsSection
+                  video={video}
+                  videoLoading={loading}
+                  disabled={video ? !video?.isCommentSectionEnabled : undefined}
+                />
+              </>
+            )}
           </PlayerGridItem>
           {!isCinematic && sideItems}
         </PlayerWrapper>
@@ -248,6 +328,11 @@ export const VideoView: React.FC = () => {
           <LayoutGrid>
             <GridItem className={transitions.names.slide} colSpan={{ xxs: 12, md: cinematicView ? 8 : 12 }}>
               {detailsItems}
+              <CommentsSection
+                video={video}
+                videoLoading={loading}
+                disabled={video ? !video?.isCommentSectionEnabled : undefined}
+              />
             </GridItem>
             {sideItems}
           </LayoutGrid>

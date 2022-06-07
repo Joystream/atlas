@@ -1,3 +1,10 @@
+import {
+  ChannelOwnerRemarked,
+  IChannelOwnerRemarked,
+  IMemberRemarked,
+  MemberRemarked,
+  ReactVideo,
+} from '@joystream/metadata-protobuf'
 import { MemberId as RuntimeMemberId } from '@joystream/types/common'
 import {
   ChannelCreationParameters,
@@ -10,7 +17,8 @@ import {
 import { DataObjectId } from '@joystream/types/storage'
 import { ApiPromise as PolkadotApi } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { BTreeSet, Option, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
+import { BTreeSet, Bytes, Option, Raw, GenericAccountId as RuntimeAccountId, bool } from '@polkadot/types'
+import Long from 'long'
 
 import { SentryLogger } from '@/utils/logs'
 
@@ -31,12 +39,14 @@ import {
   ChannelId,
   ChannelInputAssets,
   ChannelInputMetadata,
+  CommentReaction,
   ExtrinsicStatus,
   ExtrinsicStatusCallbackFn,
   GetEventDataFn,
   MemberExtrinsicResult,
   MemberId,
   MemberInputMetadata,
+  MetaprotcolExtrinsicResult,
   NftAuctionType,
   NftExtrinsicResult,
   NftIssuanceInputMetadata,
@@ -47,6 +57,7 @@ import {
   VideoId,
   VideoInputAssets,
   VideoInputMetadata,
+  VideoReaction,
 } from './types'
 
 type AccountIdAccessor = () => AccountId | null
@@ -74,7 +85,13 @@ export class JoystreamLibExtrinsics {
     try {
       cb?.(ExtrinsicStatus.Unsigned)
 
-      const { events, blockHash } = await sendExtrinsicAndParseEvents(tx, account, this.api.registry, this.endpoint, cb)
+      const { events, blockHash, transactionHash } = await sendExtrinsicAndParseEvents(
+        tx,
+        account,
+        this.api.registry,
+        this.endpoint,
+        cb
+      )
 
       const blockHeader = await this.api.rpc.chain.getHeader(blockHash)
 
@@ -91,7 +108,7 @@ export class JoystreamLibExtrinsics {
         return event.data as ReturnType<GetEventDataFn>
       }
 
-      return { events, block: blockHeader.number.toNumber(), getEventData }
+      return { events, block: blockHeader.number.toNumber(), getEventData, transactionHash }
     } catch (error) {
       if (error?.message === 'Cancelled') {
         throw new JoystreamLibError({ name: 'SignCancelledError' })
@@ -233,6 +250,7 @@ export class JoystreamLibExtrinsics {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
+
     const tx = this.api.tx.content.updateVideo(contentActor, videoId, updateParameters)
 
     const { block, getEventData } = await this.sendExtrinsic(tx, cb)
@@ -321,7 +339,12 @@ export class JoystreamLibExtrinsics {
     return { block }
   }
 
-  async changeNftPrice(memberId: MemberId, videoId: VideoId, price: number, cb?: ExtrinsicStatusCallbackFn) {
+  async changeNftPrice(
+    memberId: MemberId,
+    videoId: VideoId,
+    price: number,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<NftExtrinsicResult> {
     const contentActor = new ContentActor(this.api.registry, {
       member: memberId,
     })
@@ -409,7 +432,7 @@ export class JoystreamLibExtrinsics {
     bidderId: MemberId,
     price: string,
     cb?: ExtrinsicStatusCallbackFn
-  ) {
+  ): Promise<NftExtrinsicResult> {
     await this.ensureApi()
     const contentActor = new ContentActor(this.api.registry, {
       member: ownerId,
@@ -449,5 +472,130 @@ export class JoystreamLibExtrinsics {
       block,
       memberId,
     }
+  }
+
+  private async sendMetaprotocolMemberExtrinsic(
+    memberId: MemberId,
+    msg: IMemberRemarked,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
+    await this.ensureApi()
+
+    const serializedMetadata = MemberRemarked.encode(msg).finish()
+    const metadataRaw = new Raw(this.api.registry, serializedMetadata)
+    const metadataBytes = new Bytes(this.api.registry, metadataRaw)
+
+    const tx = this.api.tx.members.memberRemark(memberId, metadataBytes)
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+      transactionHash,
+    }
+  }
+
+  private async sendMetaprotocolChannelExtrinsic(
+    memberId: MemberId,
+    channelId: ChannelId,
+    msg: IChannelOwnerRemarked,
+    cb?: ExtrinsicStatusCallbackFn
+  ): Promise<MetaprotcolExtrinsicResult> {
+    await this.ensureApi()
+
+    const serializedMetadata = ChannelOwnerRemarked.encode(msg).finish()
+    const metadataRaw = new Raw(this.api.registry, serializedMetadata)
+    const metadataBytes = new Bytes(this.api.registry, metadataRaw)
+
+    const tx = this.api.tx.content.channelOwnerRemark({ Member: memberId }, channelId, metadataBytes)
+    const { block, transactionHash } = await this.sendExtrinsic(tx, cb)
+
+    return {
+      block,
+      transactionHash,
+    }
+  }
+
+  async reactToVideo(memberId: MemberId, videoId: VideoId, reaction: VideoReaction, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const msg: IMemberRemarked = {
+      reactVideo: {
+        videoId: Long.fromString(videoId),
+        reaction: reaction === 'like' ? ReactVideo.Reaction.LIKE : ReactVideo.Reaction.UNLIKE,
+      },
+    }
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+  }
+
+  async createVideoComment(
+    memberId: MemberId,
+    videoId: VideoId,
+    commentBody: string,
+    parentCommentId: string | null,
+    cb?: ExtrinsicStatusCallbackFn
+  ) {
+    await this.ensureApi()
+
+    const msg: IMemberRemarked = {
+      createComment: {
+        videoId: Long.fromString(videoId),
+        body: commentBody,
+        parentCommentId,
+      },
+    }
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+  }
+
+  async editVideoComment(memberId: MemberId, commentId: string, newBody: string, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const msg: IMemberRemarked = {
+      editComment: {
+        commentId,
+        newBody,
+      },
+    }
+
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+  }
+
+  async deleteVideoComment(memberId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const msg: IMemberRemarked = {
+      deleteComment: {
+        commentId,
+      },
+    }
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
+  }
+
+  async moderateComment(memberId: MemberId, channelId: MemberId, commentId: string, cb?: ExtrinsicStatusCallbackFn) {
+    await this.ensureApi()
+
+    const msg: IChannelOwnerRemarked = {
+      moderateComment: {
+        commentId,
+        rationale: '',
+      },
+    }
+    return this.sendMetaprotocolChannelExtrinsic(memberId, channelId, msg, cb)
+  }
+
+  async reactToVideoComment(
+    memberId: MemberId,
+    commentId: string,
+    reactionId: CommentReaction,
+    cb?: ExtrinsicStatusCallbackFn
+  ) {
+    await this.ensureApi()
+
+    const msg: IMemberRemarked = {
+      reactComment: {
+        commentId,
+        reactionId,
+      },
+    }
+    return this.sendMetaprotocolMemberExtrinsic(memberId, msg, cb)
   }
 }

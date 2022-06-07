@@ -10,6 +10,7 @@ import {
   GetNftsConnectionQueryVariables,
   GetVideosConnectionQueryVariables,
   Query,
+  QueryCommentsConnectionArgs,
   SearchQueryVariables,
   VideoConnection,
   VideoFieldsFragment,
@@ -76,6 +77,13 @@ const getSearchKeyArgs = (args: SearchQueryVariables | null) => {
   return `${text}:${language}:${createdAtGte}:${category}:${isExplicitEq}:${hasMarketingEq}:${durationLte}:${durationGte}`
 }
 
+const getCommentKeyArgs = (args: QueryCommentsConnectionArgs | null) => {
+  const parentCommentId = args?.where?.parentComment?.id_eq
+  const videoId = args?.where?.video?.id_eq
+  const orderBy = args?.orderBy || []
+  return `${parentCommentId}:${videoId}:${orderBy}`
+}
+
 const createDateHandler = () => ({
   merge: (_: unknown, existingData: string | Date): Date => {
     if (typeof existingData !== 'string') {
@@ -125,6 +133,7 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
       return existing?.slice(offset, offset + limit)
     },
   },
+  commentsConnection: relayStylePagination(getCommentKeyArgs),
   channelByUniqueInput: (existing, { toReference, args }) => {
     return (
       existing ||
@@ -154,6 +163,15 @@ const queryCacheFields: CachePolicyFields<keyof Query> = {
   },
   // @ts-ignore Apollo doesn't contain info on args type so Typescript will complain
   search: offsetLimitPagination(getSearchKeyArgs),
+  commentByUniqueInput: (existing, { toReference, args }) => {
+    return (
+      existing ||
+      toReference({
+        __typename: 'Comment',
+        id: args?.where.id,
+      })
+    )
+  },
 }
 
 const videoCacheFields: CachePolicyFields<keyof VideoFieldsFragment> = {
@@ -242,6 +260,16 @@ const cache = new InMemoryCache({
       },
     },
     BuyNowPriceUpdatedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    CommentTextUpdatedEvent: {
+      fields: {
+        createdAt: createDateHandler(),
+      },
+    },
+    CommentCreatedEvent: {
       fields: {
         createdAt: createDateHandler(),
       },

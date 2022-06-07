@@ -1,12 +1,19 @@
+import { ClassNames } from '@emotion/react'
 import React, { Fragment } from 'react'
 
 import { Step, getStepVariant } from '@/components/Step'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
 
-import { StyledChevron, StyledHeader, StyledModal, StyledStepsInfoContainer, StyledStop } from './StepperModal.styles'
+import {
+  StyledChevron,
+  StyledHeader,
+  StyledStepsInfoContainer,
+  StyledStop,
+  dialogContentCss,
+} from './StepperModal.styles'
 
-import { ModalProps } from '../Modal'
+import { DialogModal, DialogModalProps } from '../DialogModal'
 
 type Step = {
   title: string
@@ -17,7 +24,7 @@ type StepperModalProps = {
   steps: Step[]
   currentStepIdx?: number
   onExitClick?: () => void
-} & ModalProps
+} & DialogModalProps
 
 export const StepperModal: React.FC<StepperModalProps> = ({
   steps,
@@ -29,26 +36,28 @@ export const StepperModal: React.FC<StepperModalProps> = ({
     return null
   }
   return (
-    <StyledModal {...modalProps}>
-      <StyledHeader>
-        <StyledStepsInfoContainer>
-          {steps.map((step, idx) => {
-            const stepVariant = getStepVariant(currentStepIdx, idx)
-            const isLast = idx === steps.length - 1
+    <ClassNames>
+      {({ css }) => (
+        <DialogModal {...modalProps} contentClassName={css(dialogContentCss)} noContentPadding size="medium">
+          <StyledHeader>
+            <StyledStepsInfoContainer>
+              {steps.map((step, idx) => {
+                const stepVariant = getStepVariant(currentStepIdx, idx)
+                const isLast = idx === steps.length - 1
 
-            return (
-              <Fragment key={idx}>
-                <StyledStop title={step.title} number={idx + 1} variant={stepVariant} />
-                {!isLast && <StyledChevron />}
-              </Fragment>
-            )
-          })}
-          <IconButton aria-label="close modal" onClick={onExitClick} variant="tertiary">
-            <SvgActionClose />
-          </IconButton>
-        </StyledStepsInfoContainer>
-      </StyledHeader>
-      {steps[currentStepIdx].element}
-    </StyledModal>
+                return (
+                  <Fragment key={idx}>
+                    <StyledStop title={step.title} number={idx + 1} variant={stepVariant} />
+                    {!isLast && <StyledChevron />}
+                  </Fragment>
+                )
+              })}
+              <Button icon={<SvgActionClose />} onClick={onExitClick} aria-label="close modal" variant="tertiary" />
+            </StyledStepsInfoContainer>
+          </StyledHeader>
+          {steps[currentStepIdx].element}
+        </DialogModal>
+      )}
+    </ClassNames>
   )
 }

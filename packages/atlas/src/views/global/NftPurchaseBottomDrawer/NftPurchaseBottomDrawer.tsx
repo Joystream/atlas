@@ -329,6 +329,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     {endAtBlock && (
                       <Information
                         text={`On blockchain, duration is expressed in number of blocks. This auction ends at block ${endAtBlock}.`}
+                        multiline
                         placement="top"
                       />
                     )}
@@ -459,6 +460,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Information
                 placement="top"
                 text="Revenue split shows the proceedings from this sale based on royalties set up by the creator"
+                multiline
               />
             </FlexWrapper>
             <PaymentSplitWrapper>

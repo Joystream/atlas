@@ -3,22 +3,28 @@ import React, { useEffect, useState } from 'react'
 import { useQueryNodeStateSubscription } from '@/api/hooks'
 import { MintNftFirstTimeModal } from '@/components/_overlays/MintNftFirstTimeModal'
 import { TransactionModal } from '@/components/_overlays/TransactionModal'
+import { ExtrinsicStatus } from '@/joystream-lib'
 import { usePersonalDataStore } from '@/providers/personalData'
+import { useSnackbar } from '@/providers/snackbars'
 import { SentryLogger } from '@/utils/logs'
 
 import { useTransactionManagerStore } from './store'
 
+const SNACKBAR_ID = 'transaction-snackbar'
+
 export const TransactionManager: React.FC = () => {
   const {
     blockActions,
-    dialogStep,
+    extrinsicStatus,
     showFirstMintDialog,
     errorCode,
-    actions: { removeOldBlockActions, setDialogStep, setShowFistMintDialog, setErrorCode },
+    isMinimized,
+    actions: { removeOldBlockActions, setShowFistMintDialog, setErrorCode, setExtrinsicStatus },
   } = useTransactionManagerStore((state) => state)
   const updateDismissedMessages = usePersonalDataStore((state) => state.actions.updateDismissedMessages)
 
   const [lastIndexedBlock, setLastIndexedBlock] = useState(0)
+  const { displaySnackbar, updateSnackbar, closeSnackbar } = useSnackbar()
 
   const handleFirstMintDialogClose = () => {
     updateDismissedMessages('first-mint')
@@ -56,17 +62,34 @@ export const TransactionManager: React.FC = () => {
     removeOldBlockActions(lastIndexedBlock)
   }, [blockActions, lastIndexedBlock, removeOldBlockActions])
 
+  useEffect(() => {
+    if (extrinsicStatus === ExtrinsicStatus.Unsigned && isMinimized) {
+      displaySnackbar({
+        customId: SNACKBAR_ID,
+        title: 'Continue in Polkadot',
+        description: 'To leave your comment or reaction you need to sign the transaction in Polkadot extension.',
+        iconType: 'loading',
+        sticked: true,
+      })
+    }
+    if (extrinsicStatus !== ExtrinsicStatus.Unsigned && isMinimized) {
+      closeSnackbar(SNACKBAR_ID)
+    }
+  }, [closeSnackbar, displaySnackbar, extrinsicStatus, isMinimized, updateSnackbar])
+
   return (
     <>
       <MintNftFirstTimeModal show={showFirstMintDialog} onClose={handleFirstMintDialogClose} />
-      <TransactionModal
-        status={dialogStep}
-        onClose={() => {
-          setErrorCode(null)
-          setDialogStep(null)
-        }}
-        errorCode={errorCode}
-      />
+      {!isMinimized && (
+        <TransactionModal
+          status={extrinsicStatus}
+          onClose={() => {
+            setErrorCode(null)
+            setExtrinsicStatus(null)
+          }}
+          errorCode={errorCode}
+        />
+      )}
     </>
   )
 }

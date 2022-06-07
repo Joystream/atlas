@@ -124,6 +124,12 @@ fragment VideoFields on Video {
   id
   title
   description
+  reactions {
+    id
+    createdAt
+    reaction
+    memberId
+  }
   category {
     id
   }
@@ -135,6 +141,8 @@ fragment VideoFields on Video {
   isFeatured
   hasMarketing
   isCensored
+  isCommentSectionEnabled
+  commentsCount
   language {
     iso
   }
@@ -252,5 +260,42 @@ fragment AllBidFields on Bid {
     isCompleted
     winningMemberId
     id
+  }
+}
+
+fragment CommentReactionsCountByReactionIdFields on CommentReactionsCountByReactionId {
+  id
+  count
+  reactionId
+}
+
+fragment CommentFields on Comment {
+  id
+  author {
+    ...BasicMembershipFields
+  }
+  createdAt
+  isEdited
+  reactionsCountByReactionId {
+    ...CommentReactionsCountByReactionIdFields
+  }
+  parentCommentId
+  repliesCount
+  text
+  status
+}
+
+fragment MetaprotocolTransactionSuccessFields on MetaprotocolTransactionSuccessful {
+  commentCreated {
+    ...CommentFields
+  }
+  commentEdited {
+    ...CommentFields
+  }
+  commentDeleted {
+    ...CommentFields
+  }
+  commentModerated {
+    ...CommentFields
   }
 }

@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 
-import { transitions } from '@/styles'
 import { createId } from '@/utils/createId'
 
 type OverlayManagerContextValue = {
@@ -40,7 +39,7 @@ export const OverlayManagerProvider: React.FC = ({ children }) => {
 
   return (
     <>
-      <Global styles={[overlayManagerStyles(scrollbarGap), modalTransitions]} />
+      <Global styles={[overlayManagerStyles(scrollbarGap)]} />
       <OverlayManagerContext.Provider
         value={{
           scrollLocked,
@@ -102,29 +101,5 @@ const overlayManagerStyles = (scrollbarGap = 0) => css`
 
   body {
     overflow-y: scroll;
-  }
-`
-
-const modalTransitions = css`
-  &.${transitions.names.modal}-enter {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-
-  &.${transitions.names.modal}-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: 150ms cubic-bezier(0.25, 0.01, 0.25, 1);
-  }
-
-  &.${transitions.names.modal}-exit {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  &.${transitions.names.modal}-exit-active {
-    opacity: 0;
-    transform: scale(0.88);
-    transition: 100ms cubic-bezier(0.25, 0.01, 0.25, 1);
   }
 `

@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
@@ -108,13 +108,12 @@ const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImpe
 
   const zoomControlNode = (
     <ZoomControl>
-      <IconButton
+      <Button
+        icon={<SvgActionZoomOut />}
         variant="tertiary"
         onClick={() => handleZoomChange(currentZoom - zoomStep)}
         disabled={cropEditDisabled}
-      >
-        <SvgActionZoomOut />
-      </IconButton>
+      />
       <StyledSlider
         value={currentZoom}
         onChange={handleZoomChange}
@@ -123,13 +122,12 @@ const ImageCropModalComponent: React.ForwardRefRenderFunction<ImageCropModalImpe
         step={zoomStep}
         disabled={cropEditDisabled}
       />
-      <IconButton
+      <Button
+        icon={<SvgActionZoomIn />}
         variant="tertiary"
         onClick={() => handleZoomChange(currentZoom + zoomStep)}
         disabled={cropEditDisabled}
-      >
-        <SvgActionZoomIn />
-      </IconButton>
+      />
     </ZoomControl>
   )
 

@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { Slider } from '@/components/_inputs/Slider'
-import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { oldColors, sizes } from '@/styles'
 
@@ -42,10 +41,6 @@ const cropAreaSizeCss = css`
   height: 256px;
 `
 
-export const CropSkeletonLoader = styled(SkeletonLoader)`
-  ${cropAreaSizeCss};
-`
-
 export const CropContainer = styled.div<{ rounded?: boolean; disabled?: boolean }>`
   ${cropAreaSizeCss};
 
@@ -81,6 +76,7 @@ export const StyledImage = styled.img`
 export const ZoomControl = styled.div`
   display: flex;
   align-items: center;
+  flex-grow: 2;
 `
 
 export const StyledSlider = styled(Slider)`

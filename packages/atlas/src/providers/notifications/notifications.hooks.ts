@@ -6,8 +6,8 @@ import { useNotificationStore } from './notifications.store'
 import { NftNotificationRecord, NotificationRecord } from './notifications.types'
 
 export const useNotifications = () => {
-  const { activeMemberId } = useUser()
-  const { notifications: rawNotifications, ...rest } = useRawNotifications(activeMemberId, {
+  const { activeMemberId, activeChannelId } = useUser()
+  const { notifications: rawNotifications, ...rest } = useRawNotifications(activeChannelId, activeMemberId, {
     fetchPolicy: 'cache-and-network', // this will make sure we will refetch every time member is changed
   })
   const {
@@ -117,6 +117,20 @@ const parseNotification = (
         type: 'auction-ended',
         ...commonFields,
       }
+    }
+  } else if (event.__typename === 'CommentCreatedEvent' && !event.comment.parentComment) {
+    return {
+      type: 'video-commented',
+      member: event.comment.author,
+      commentId: event.comment.id,
+      ...commonFields,
+    }
+  } else if (event.__typename === 'CommentCreatedEvent' && event.comment.parentComment) {
+    return {
+      type: 'comment-reply',
+      member: event.comment.author,
+      commentId: event.comment.id,
+      ...commonFields,
     }
   } else {
     ConsoleLogger.error('Unknown event type for notifications')

@@ -33,7 +33,6 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
             <SeeAllLink
               iconPlacement="left"
               icon={<SvgControlsPlay width={16} height={16} />}
-              textOnly
               to={seeAllUrl}
               size="large"
               variant="primary"
@@ -42,12 +41,20 @@ export const Gallery: React.FC<GalleryProps> = ({ title, className, seeAllUrl, .
             </SeeAllLink>
           )}
           <CarouselArrowsContainer>
-            <Arrow {...carouselRef.current?.getPrevArrowProps()} ref={prevArrowRef} size="large" variant="secondary">
-              <SvgActionChevronL />
-            </Arrow>
-            <Arrow {...carouselRef.current?.getNextArrowProps()} ref={nextArrowRef} size="large" variant="secondary">
-              <SvgActionChevronR />
-            </Arrow>
+            <Arrow
+              {...carouselRef.current?.getPrevArrowProps()}
+              ref={prevArrowRef}
+              icon={<SvgActionChevronL />}
+              size="large"
+              variant="secondary"
+            />
+            <Arrow
+              {...carouselRef.current?.getNextArrowProps()}
+              ref={nextArrowRef}
+              icon={<SvgActionChevronR />}
+              size="large"
+              variant="secondary"
+            />
           </CarouselArrowsContainer>
         </TitleContainer>
       </GridHeadingContainer>

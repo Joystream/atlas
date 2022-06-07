@@ -19,7 +19,7 @@ export const useHandleFollowChannel = (id?: string, name?: string | null) => {
     try {
       if (isFollowing) {
         openUnfollowDialog({
-          iconType: 'warning',
+          type: 'warning',
           title: 'Do you want to unfollow?',
           description: `Unfollowing ${name} will no longer show new content from this channel on your following page.`,
           primaryButton: {

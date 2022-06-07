@@ -48,7 +48,7 @@ export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
             <Text variant="t100" secondary>
               Owned by member
             </Text>
-            <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary" textOnly>
+            <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary">
               {channel?.ownerMember?.handle}
             </MemberLink>
           </MemberContainer>

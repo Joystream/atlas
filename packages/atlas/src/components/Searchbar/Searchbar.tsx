@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronL, SvgActionClose, SvgActionSearch } from '@/components/_icons'
 import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -181,7 +181,8 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
             {(mdMatch || searchOpen || !!query) && (
               <>
                 {!mdMatch && searchOpen ? (
-                  <IconButton
+                  <Button
+                    icon={<SvgActionChevronL />}
                     onClick={() => {
                       onClose()
                       if (!routerQuery) {
@@ -189,9 +190,7 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
                       }
                     }}
                     variant="tertiary"
-                  >
-                    <SvgActionChevronL />
-                  </IconButton>
+                  />
                 ) : (
                   <StyledSvgOutlineSearch highlighted={searchOpen} width={24} height={24} />
                 )}
@@ -220,15 +219,11 @@ export const Searchbar = React.forwardRef<HTMLDivElement, SearchbarProps>(
               </>
             )}
             {!!query && (
-              <CancelButton onClick={handleCancel} variant="tertiary" size="small">
-                <SvgActionClose />
-              </CancelButton>
+              <CancelButton icon={<SvgActionClose />} onClick={handleCancel} variant="tertiary" size="small" />
             )}
             {!query && !searchOpen && (
               <>
-                <SearchButton variant="tertiary" onClick={onClick}>
-                  <SvgActionSearch />
-                </SearchButton>
+                <SearchButton icon={<SvgActionSearch />} variant="tertiary" onClick={onClick} />
                 <SearchHelper variant="t100" secondary>
                   Press <ShortcutIndicator>/</ShortcutIndicator>
                 </SearchHelper>

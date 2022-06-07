@@ -1,4 +1,4 @@
-query GetNftNotifications($memberId: ID!, $limit: Int!) {
+query GetNotifications($channelId: ID!, $memberId: ID!, $limit: Int!) {
   auctionBidMadeEvents(
     limit: $limit
     where: { OR: [{ ownerMember: { id_eq: $memberId } }, { previousTopBidder: { id_eq: $memberId } }] }
@@ -104,6 +104,34 @@ query GetNftNotifications($memberId: ID!, $limit: Int!) {
     video {
       id
       title
+    }
+  }
+
+  commentCreatedEvents(
+    where: {
+      OR: [
+        { videoChannel: { id_eq: $channelId }, parentCommentAuthor: { id_eq: null } }
+        { parentCommentAuthor: { id_eq: $memberId } }
+      ]
+    }
+    limit: $limit
+    orderBy: [createdAt_DESC]
+  ) {
+    id
+    inBlock
+    createdAt
+    video {
+      id
+      title
+    }
+    comment {
+      id
+      parentComment {
+        id
+      }
+      author {
+        ...BasicMembershipFields
+      }
     }
   }
 }

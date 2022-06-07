@@ -38,6 +38,10 @@ const getNotificationText = (notification: NotificationRecord): string => {
       return 'Auction you have won has been settled'
     case 'auction-ended':
       return 'Auction you participated in has ended'
+    case 'video-commented':
+      return `commented on your video`
+    case 'comment-reply':
+      return `replied to your comment`
   }
 }
 
@@ -77,7 +81,14 @@ export const NotificationTile: React.FC<NotificationProps> = ({
 
   if (variant === 'compact') {
     return (
-      <StyledLink to={absoluteRoutes.viewer.video(notification.video.id)} onClick={onClick}>
+      <StyledLink
+        to={absoluteRoutes.viewer.video(notification.video.id, {
+          ...(notification.type === 'video-commented' || notification.type === 'comment-reply'
+            ? { commentId: notification.commentId }
+            : {}),
+        })}
+        onClick={onClick}
+      >
         <StyledListItem
           loading={loading}
           read={read}

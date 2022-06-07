@@ -20,10 +20,11 @@ export const HamburgerButton: React.FC<HamburgerButtonProps> = ({ active, onClic
       aria-label="Main menu"
       aria-expanded={active}
       className={className}
-    >
-      <HamburgerBox>
-        <HamburgerInner active={active} />
-      </HamburgerBox>
-    </Hamburger>
+      icon={
+        <HamburgerBox>
+          <HamburgerInner active={active} />
+        </HamburgerBox>
+      }
+    />
   )
 }

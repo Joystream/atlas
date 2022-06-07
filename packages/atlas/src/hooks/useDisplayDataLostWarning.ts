@@ -38,7 +38,7 @@ export const useDisplayDataLostWarning = () => {
           cancelDialog(onCancel)
           closeDialog()
         },
-        iconType: 'warning',
+        type: 'warning',
       })
     },
     [closeDialog, openDialog]

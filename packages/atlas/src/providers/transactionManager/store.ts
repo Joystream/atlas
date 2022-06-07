@@ -6,37 +6,48 @@ type ProcessedBlockAction = {
   callback: () => void
 }
 
-export type TransactionDialogStep = ExtrinsicStatus | null
-
 type TransactionManagerStoreState = {
   blockActions: ProcessedBlockAction[]
-  dialogStep: TransactionDialogStep
+  extrinsicStatus: ExtrinsicStatus | null
   showFirstMintDialog: boolean
+  isMinimized: boolean
   errorCode: ErrorCode | null
 }
 
 type TransactionManagerStoreActions = {
   addBlockAction: (action: ProcessedBlockAction) => void
   removeOldBlockActions: (currentBlock: number) => void
-  setDialogStep: (step: TransactionDialogStep) => void
+  setExtrinsicStatus: (step: ExtrinsicStatus | null) => void
+  setIsMinimized: (isMinimized: boolean) => void
   setShowFistMintDialog: (show: boolean) => void
   setErrorCode: (errorCode: ErrorCode | null) => void
 }
 
 export const useTransactionManagerStore = createStore<TransactionManagerStoreState, TransactionManagerStoreActions>({
-  state: { blockActions: [], dialogStep: null, showFirstMintDialog: false, errorCode: null },
+  state: {
+    blockActions: [],
+    extrinsicStatus: null,
+    showFirstMintDialog: false,
+    isMinimized: false,
+    errorCode: null,
+  },
   actionsFactory: (set) => ({
-    addBlockAction: (action) =>
-      set((state) => {
+    addBlockAction: (action) => {
+      return set((state) => {
         state.blockActions.push(action)
-      }),
+      })
+    },
     removeOldBlockActions: (currentBlock) =>
       set((state) => {
         state.blockActions = state.blockActions.filter((action) => action.targetBlock > currentBlock)
       }),
-    setDialogStep: (step) =>
+    setExtrinsicStatus: (step) =>
       set((state) => {
-        state.dialogStep = step
+        state.extrinsicStatus = step
+      }),
+    setIsMinimized: (isMinimized) =>
+      set((state) => {
+        state.isMinimized = isMinimized
       }),
     setShowFistMintDialog: (show) =>
       set((state) => {

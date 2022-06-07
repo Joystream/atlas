@@ -158,7 +158,8 @@ const VideoPlayerComponent: React.ForwardRefRenderFunction<HTMLVideoElement, Vid
     const handler = (event: KeyboardEvent) => {
       if (
         (document.activeElement?.tagName === 'BUTTON' && event.key === ' ') ||
-        document.activeElement?.tagName === 'INPUT'
+        document.activeElement?.tagName === 'INPUT' ||
+        document.activeElement?.tagName === 'TEXTAREA'
       ) {
         return
       }

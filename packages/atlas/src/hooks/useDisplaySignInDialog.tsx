@@ -82,7 +82,8 @@ export const useDisplaySignInDialog = () => {
     ({ onCancel, onConfirm }: OpenSignInDialogArgs) => {
       openDialog({
         dividers: true,
-        children: <SignInDialogcontent />,
+        description: <SignInDialogcontent />,
+        noIcon: true,
         primaryButton: {
           text: 'Sign in',
           onClick: () => {

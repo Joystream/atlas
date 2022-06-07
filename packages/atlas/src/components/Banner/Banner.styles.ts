@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
-
-import { IconButton } from '../_buttons/IconButton'
 
 export const BannerHeader = styled.div`
   width: 100%;
@@ -21,7 +20,7 @@ export const BannerText = styled(Text)`
   flex: 1;
 `
 
-export const CloseButton = styled(IconButton)`
+export const CloseButton = styled(Button)`
   margin-left: ${sizes(2)};
 `
 

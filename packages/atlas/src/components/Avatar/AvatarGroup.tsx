@@ -82,13 +82,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
             <SingleAvatar avatar={avatarProps} loading={loading} size={getSizeofAvatar(size)} />
             <AvatarOverlay dimmed={hoveredAvatarIdx !== idx && hoveredAvatarIdx !== null} />
           </AvatarWrapper>
-          <Tooltip
-            text={avatarProps.tooltipText}
-            arrowDisabled
-            placement="top"
-            offsetY={clickable ? 16 : 8}
-            reference={ref}
-          />
+          <Tooltip text={avatarProps.tooltipText} placement="top" offsetY={clickable ? 16 : 8} reference={ref} />
         </Fragment>
       ))}
     </AvatarGroupContainer>

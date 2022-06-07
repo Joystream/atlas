@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { ShortcutIndicator } from '@/components/ShortcutIndicator'
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgAvatarSilhouette } from '@/components/_illustrations'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, oldColors, sizes, square } from '@/styles'
@@ -172,7 +172,7 @@ export const SearchItemWrapper = styled(Link, { shouldForwardProp: isPropValid }
   ${({ selected }) => selected && selectedStyles(!selected)}
 `
 
-export const DeleteButton = styled(IconButton)`
+export const DeleteButton = styled(Button)`
   margin-left: ${sizes(2)};
 
   path {

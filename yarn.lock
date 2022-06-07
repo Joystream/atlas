@@ -2715,7 +2715,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.2.4
     "@graphql-codegen/typescript-react-apollo": ^3.2.5
     "@hookform/resolvers": ^2.8.8
-    "@joystream/metadata-protobuf": 2.1.0
+    "@joystream/metadata-protobuf": 2.2.0
     "@joystream/prettier-config": ^1.0.0
     "@joystream/types": 0.19.3
     "@livesession/sdk": ^1.1.4
@@ -2744,6 +2744,7 @@ __metadata:
     "@types/react-helmet": ^6.1.5
     "@types/react-transition-group": ^4.4.4
     "@types/scroll-lock": ^2.1.0
+    "@types/twemoji": ^13.1.2
     "@types/video.js": ^7.3.31
     "@vitejs/plugin-react": ^1.1.4
     awesome-debounce-promise: ^2.1.0
@@ -2797,6 +2798,8 @@ __metadata:
     storybook-builder-vite: ^0.1.15
     style-dictionary: ^3.1.1
     subscriptions-transport-ws: ^0.11.0
+    twemoji: ^14.0.2
+    use-draggable-scroll: ^0.1.0
     use-resize-observer: ^8.0.0
     video.js: ^7.17.0
     vite: ^2.7.13
@@ -2807,9 +2810,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@joystream/metadata-protobuf@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@joystream/metadata-protobuf@npm:2.1.0"
+"@joystream/metadata-protobuf@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@joystream/metadata-protobuf@npm:2.2.0"
   dependencies:
     "@types/iso-3166-2": ^1.0.0
     "@types/long": ^4.0.1
@@ -2819,7 +2822,7 @@ __metadata:
     iso-639-1: ^2.1.9
     long: ^4.0.0
     protobufjs: ^6.11.2
-  checksum: 4a03f16c911b79727974f092608d281a8dc18aa06323a8ec53c6e0ec037c3f055a5beb6f5f9be80c242cfd3fa2dbd31fe794f70f26d0e9789b595d8c2f9d61b3
+  checksum: 521d6e3119e4512b2f68d47f9262ac76d386958382e37e3c6f0274a2afce5ca1df0f9e674b542093f76c082d66ade0c890e9a2d5d9cf79034fef7715a18d4c6d
   languageName: node
   linkType: hard
 
@@ -5645,10 +5648,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*":
   version: 17.0.18
   resolution: "@types/node@npm:17.0.18"
   checksum: 6c4edfc2b3ba2342a9c3d56e934c5245948ab752f4dc04bd6790b9603e6ebc53bc4f5befc3662e207f7dba2ddd17ccf657f915e319ea7cdd4f77b851079d1611
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=13.7.0":
+  version: 17.0.23
+  resolution: "@types/node@npm:17.0.23"
+  checksum: a3517554737cbb042e76c30d0e5482192ac4d9bea0eeb086e2622d9cabf460a0eb52a696b99fcd18e7fcc93c96db6cc7ae507f6608f256ef0b5c1d8c87a5a470
   languageName: node
   linkType: hard
 
@@ -5882,6 +5892,15 @@ __metadata:
   dependencies:
     "@types/jest": "*"
   checksum: e08715a565cc189112a6611485d779a0f1ceb546a9d4601b21aacff7596d7acf8b7c702e4c5f825677431ff601df3e635887dc8a5735da1a263cc857eb7c3833
+  languageName: node
+  linkType: hard
+
+"@types/twemoji@npm:^13.1.2":
+  version: 13.1.2
+  resolution: "@types/twemoji@npm:13.1.2"
+  dependencies:
+    twemoji: "*"
+  checksum: 83775000ddd6da623aed985cc5334bec32c4ce841a100f0d746f82fb54d95fc84b88c518f08290d88775ff709f87332a5a361471f0cc6e6492d8749f8b38531d
   languageName: node
   linkType: hard
 
@@ -11457,7 +11476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^8.1.0":
+"fs-extra@npm:^8.0.1, fs-extra@npm:^8.1.0":
   version: 8.1.0
   resolution: "fs-extra@npm:8.1.0"
   dependencies:
@@ -11936,9 +11955,9 @@ fsevents@^1.2.7:
   linkType: hard
 
 "google-protobuf@npm:^3.14.0":
-  version: 3.17.3
-  resolution: "google-protobuf@npm:3.17.3"
-  checksum: efe264f3cf854a78f7197c4d8c84eabd1ce8c4ef2806cb3e0bb7f2b5e18f559739ab31adfefbd99e81312c3683f482400fa370896a8b0cc66adfedb114256420
+  version: 3.20.0
+  resolution: "google-protobuf@npm:3.20.0"
+  checksum: 2d243504362875f24a6e61fa3412cbdf04530166204f568734c2aa1b417336787555c0086c75b065c6972cbcf5cd47c3f1af4cadfe0655f0a75da3e1f962c656
   languageName: node
   linkType: hard
 
@@ -13867,6 +13886,19 @@ fsevents@^1.2.7:
     graceful-fs:
       optional: true
   checksum: 6447d6224f0d31623eef9b51185af03ac328a7553efcee30fa423d98a9e276ca08db87d71e17f2310b0263fd3ffa6c2a90a6308367f661dc21580f9469897c9e
+  languageName: node
+  linkType: hard
+
+"jsonfile@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "jsonfile@npm:5.0.0"
+  dependencies:
+    graceful-fs: ^4.1.6
+    universalify: ^0.1.2
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: e0ecff572dba34153a66e3a3bc5c6cb01a2c1d2cf4a2c19b6728dcfcab39d94be9cca4a0fc86a17ff2c815f2aeb43768ac75545780dbea4009433fdc32aa14d1
   languageName: node
   linkType: hard
 
@@ -20211,6 +20243,25 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"twemoji-parser@npm:14.0.0":
+  version: 14.0.0
+  resolution: "twemoji-parser@npm:14.0.0"
+  checksum: 8eede69cf71f94735de7b6fddf5dfbfe3cb2e01baefc3201360984ccc97cfc659f206c8f73bd1405a2282779af3b79a8c9bed3864c672e15e2dc6f8ce4810452
+  languageName: node
+  linkType: hard
+
+"twemoji@npm:*, twemoji@npm:^14.0.2":
+  version: 14.0.2
+  resolution: "twemoji@npm:14.0.2"
+  dependencies:
+    fs-extra: ^8.0.1
+    jsonfile: ^5.0.0
+    twemoji-parser: 14.0.0
+    universalify: ^0.1.2
+  checksum: 686a356a7af3cf15f7894568bfcdfafcea0cd45473b3f8c59d6ca95e549695f1222845d1a8c39ffa3bc4057e9d59e41ab83e4ce3cbcd68823ff50d57e3ff58da
+  languageName: node
+  linkType: hard
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -20607,7 +20658,7 @@ typescript@4.5.2:
   languageName: node
   linkType: hard
 
-"universalify@npm:^0.1.0":
+"universalify@npm:^0.1.0, universalify@npm:^0.1.2":
   version: 0.1.2
   resolution: "universalify@npm:0.1.2"
   checksum: 40cdc60f6e61070fe658ca36016a8f4ec216b29bf04a55dce14e3710cc84c7448538ef4dad3728d0bfe29975ccd7bfb5f414c45e7b78883567fb31b246f02dff
@@ -20739,6 +20790,15 @@ typescript@4.5.2:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: b438c1577eafb26dd8aff8d7ffbeae10b544172fc4c4f38733343f70c04da6f14a748a274cb76b70b829604e1382be56fb37a96f3c62b5aeec50657e23e61097
+  languageName: node
+  linkType: hard
+
+"use-draggable-scroll@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "use-draggable-scroll@npm:0.1.0"
+  peerDependencies:
+    react: ">=16"
+  checksum: fdd9a1d2f11289fb86931e73aad7a9c669b68cca4e3ac71e5da03c7dd5f6c33312656a7f884f6828c4fe65788aa11c5c4eb0f74171066faf338bdd5ecb71bcf7
   languageName: node
   linkType: hard
 

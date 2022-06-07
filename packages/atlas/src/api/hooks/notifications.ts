@@ -3,19 +3,21 @@ import { useMemo } from 'react'
 
 import {
   GetNftActivitiesQuery,
-  GetNftNotificationsQuery,
-  GetNftNotificationsQueryVariables,
+  GetNotificationsQuery,
+  GetNotificationsQueryVariables,
   useGetNftActivitiesQuery,
-  useGetNftNotificationsQuery,
+  useGetNotificationsQuery,
 } from '@/api/queries'
 
 export const useRawNotifications = (
+  channelId: string | null,
   memberId: string | null,
-  opts?: QueryHookOptions<GetNftNotificationsQuery, GetNftNotificationsQueryVariables>
+  opts?: QueryHookOptions<GetNotificationsQuery, GetNotificationsQueryVariables>
 ) => {
-  const { data, ...rest } = useGetNftNotificationsQuery({
+  const { data, ...rest } = useGetNotificationsQuery({
     variables: {
       limit: 1000,
+      channelId: channelId || '',
       memberId: memberId || '',
     },
     skip: !memberId,
@@ -30,11 +32,12 @@ export const useRawNotifications = (
           ...data.nftBoughtEvents,
           ...data.auctionBidMadeEvents,
           ...data.englishAuctionSettledEvents,
+          ...data.commentCreatedEvents.filter(({ comment }) => comment.author.id !== memberId),
         ]
       : []
 
     return allNotifications.sort((n1, n2) => n2.createdAt.getTime() - n1.createdAt.getTime())
-  }, [data])
+  }, [data, memberId])
 
   return {
     notifications: sortedNotifications,

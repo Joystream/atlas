@@ -3,7 +3,7 @@ import React from 'react'
 
 import { SvgActionAddVideo } from '@/components/_icons'
 
-import { Button, ButtonProps } from './Button'
+import { Button, ButtonProps, TextButton, TextButtonProps } from './Button'
 
 export default {
   title: 'button/Button',
@@ -20,7 +20,7 @@ export default {
       type: { name: 'boolean', required: false },
       defaultValue: false,
     },
-    textOnly: { table: { disable: true } },
+    _textOnly: { table: { disable: true } },
     iconPlacement: {
       control: { type: 'select', options: ['left', 'right'] },
       defaultValue: 'left',
@@ -71,51 +71,62 @@ export const WithIcon = Template.bind({})
 WithIcon.args = {
   icon: <SvgActionAddVideo />,
 }
-const TextOnlyTemplate: Story<ButtonProps> = (args) => (
+const TextOnlyTemplate: Story<TextButtonProps> = (args) => (
   <div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large">
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
+      <TextButton {...args} size="large">
         Large
-      </Button>
-      <Button {...args} size="medium">
+      </TextButton>
+      <TextButton {...args} size="medium">
         Medium
-      </Button>
-      <Button {...args} size="small">
+      </TextButton>
+      <TextButton {...args} size="small">
         Small
-      </Button>
+      </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="secondary">
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
+      <TextButton {...args} size="large" variant="secondary">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="secondary">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="secondary">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="secondary">
+      </TextButton>
+      <TextButton {...args} size="small" variant="secondary">
         Small
-      </Button>
+      </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="destructive-secondary">
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
+      <TextButton {...args} size="large" variant="destructive">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="destructive-secondary">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="destructive">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="destructive-secondary">
+      </TextButton>
+      <TextButton {...args} size="small" variant="destructive">
         Small
-      </Button>
+      </TextButton>
     </div>
-    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-      <Button {...args} size="large" variant="warning-secondary">
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
+      <TextButton {...args} size="large" variant="warning">
         Large
-      </Button>
-      <Button {...args} size="medium" variant="warning-secondary">
+      </TextButton>
+      <TextButton {...args} size="medium" variant="warning">
         Medium
-      </Button>
-      <Button {...args} size="small" variant="warning-secondary">
+      </TextButton>
+      <TextButton {...args} size="small" variant="warning">
         Small
-      </Button>
+      </TextButton>
+    </div>
+    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'end' }}>
+      <TextButton {...args} size="large" variant="tertiary">
+        Large
+      </TextButton>
+      <TextButton {...args} size="medium" variant="tertiary">
+        Medium
+      </TextButton>
+      <TextButton {...args} size="small" variant="tertiary">
+        Small
+      </TextButton>
     </div>
   </div>
 )
@@ -142,7 +153,6 @@ const IconOnlyTemplate: Story<ButtonProps> = (args) => (
 
 export const TextOnly = TextOnlyTemplate.bind({})
 TextOnly.args = {
-  textOnly: true,
   icon: <SvgActionAddVideo />,
 }
 

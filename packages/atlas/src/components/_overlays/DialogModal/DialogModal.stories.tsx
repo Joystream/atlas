@@ -13,13 +13,19 @@ export default {
     onSubmit: { table: { disable: true } },
     onExitClick: { table: { disable: true } },
     as: { table: { disable: true } },
+    contentClassName: { table: { disable: true } },
+    additionalActionsNode: { table: { disable: true } },
+    className: { table: { disable: true } },
+    show: { table: { disable: true } },
+    headerIcon: { table: { disable: true } },
   },
   args: {
     title: 'There is an information of the utmost importance!',
     primaryButton: { text: 'Confirm' },
     secondaryButton: { text: 'Cancel' },
-    iconType: '',
     dividers: false,
+    actionDivider: false,
+    noContentPadding: false,
   },
   decorators: [
     (Story) => (
@@ -28,7 +34,7 @@ export default {
       </OverlayManagerProvider>
     ),
   ],
-} as Meta
+} as Meta<DialogModalProps>
 
 const OpenTemplate: Story<DialogModalProps> = ({ ...args }) => {
   return (

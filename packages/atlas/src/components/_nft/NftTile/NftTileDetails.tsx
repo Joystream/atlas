@@ -299,9 +299,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
             disabled={loading}
             items={getContextMenuContent}
             trigger={
-              <KebabMenuButtonIcon variant="tertiary" size="small" isActive={!loading}>
-                <SvgActionMore />
-              </KebabMenuButtonIcon>
+              <KebabMenuButtonIcon icon={<SvgActionMore />} variant="tertiary" size="small" isActive={!loading} />
             }
           />
         </div>
