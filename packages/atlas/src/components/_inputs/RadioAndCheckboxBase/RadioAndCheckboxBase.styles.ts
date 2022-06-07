@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
-export const RadioAndCheckboxLabel = styled.div<{ disabled?: boolean; hasLabel?: boolean }>`
+export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean; hasLabel?: boolean }>`
   display: inline-grid;
   ${({ hasLabel }) => hasLabel && `grid-template-columns: auto 1fr;`}
 
