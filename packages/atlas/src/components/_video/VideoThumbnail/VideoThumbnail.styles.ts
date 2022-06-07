@@ -173,7 +173,8 @@ export const VideoThumbnailContainer = styled(Link, {
     background-color: ${cVar('colorBackgroundOverlay')};
   }
 
-  :hover {
+  :hover,
+  :focus-visible {
     ${({ clickable }) =>
       clickable &&
       css`
