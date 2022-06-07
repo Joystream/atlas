@@ -64,3 +64,9 @@ export const VideoMetaContainer = styled.div`
 export const Views = styled.span`
   white-space: nowrap;
 `
+
+export const PlaylistButton = styled(Button)`
+  :not(:only-child) {
+    margin-top: ${sizes(1)};
+  }
+`

@@ -14,6 +14,7 @@ export type VideoTileProps = {
   className?: string
   loadingDetails?: boolean
   loadingThumbnail?: boolean
+  playlistUrl?: string
 } & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt'> &
   Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant' | 'size'>
 
@@ -41,6 +42,8 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     views,
     loadingThumbnail,
     loadingAvatar,
+    type,
+    playlistUrl,
   }) => {
     const [tileSize, setTileSize] = useState<'small' | 'medium'>()
     const { ref: thumbnailRef } = useResizeObserver<HTMLAnchorElement>({
@@ -87,6 +90,8 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           loading={loadingDetails}
           loadingAvatar={loadingAvatar}
           kebabMenuItems={kebabMenuItems}
+          type={type}
+          playlistUrl={playlistUrl}
         />
       </VideoTileContainer>
     )
