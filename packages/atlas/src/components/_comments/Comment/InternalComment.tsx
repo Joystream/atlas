@@ -6,7 +6,15 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
+import { TextButton } from '@/components/_buttons/Button'
+import {
+  SvgActionChevronB,
+  SvgActionChevronT,
+  SvgActionEdit,
+  SvgActionMore,
+  SvgActionReply,
+  SvgActionTrash,
+} from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
@@ -31,7 +39,6 @@ import {
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
-  ShowRepliesTextButton,
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
@@ -103,6 +110,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   const isDeleted = type === 'deleted'
   const isProcessing = type === 'processing'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
+
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isTouchDevice = useTouchDevice()
   const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
@@ -182,6 +190,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   )
 
   const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
+  const hasReactionsAndCommentIsNotDeleted = !!sortedReactions?.find((r) => r.count) && !isDeleted
   return (
     <CommentRow
       processing={type === 'processing'}
@@ -261,9 +270,9 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                     onDecline={handleOnboardingPopoverHide}
                     trigger={
                       <ReactionsWrapper>
-                        <ReactionsAndPopover>
-                          {sortedReactions &&
-                            sortedReactions?.map(({ reactionId, active, count, state }) => (
+                        {hasReactionsAndCommentIsNotDeleted && (
+                          <ReactionsAndPopover>
+                            {sortedReactions?.map(({ reactionId, active, count, state }) => (
                               <ReactionChip
                                 key={reactionId}
                                 reactionId={reactionId}
@@ -273,13 +282,14 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                                 onReactionClick={handleCommentReactionClick}
                               />
                             ))}
-                          {!allReactionsApplied && !isDeleted && (
-                            <ReactionPopover
-                              disabled={reactionIsProcessing || reactionIsDisabled}
-                              onReactionClick={handleCommentReactionClick}
-                            />
-                          )}
-                        </ReactionsAndPopover>
+                            {!allReactionsApplied && !isDeleted && (
+                              <ReactionPopover
+                                disabled={reactionIsProcessing || reactionIsDisabled}
+                                onReactionClick={handleCommentReactionClick}
+                              />
+                            )}
+                          </ReactionsAndPopover>
+                        )}
                         <RepliesWrapper>
                           {!!repliesCount && filteredDuplicatedAvatars.length ? (
                             <StyledAvatarGroup
@@ -290,9 +300,15 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                             />
                           ) : null}
                           {onToggleReplies && !!repliesCount && (
-                            <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
+                            <TextButton
+                              onClick={onToggleReplies}
+                              variant="tertiary"
+                              size="small"
+                              iconPlacement="right"
+                              icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
+                            >
                               {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                            </ShowRepliesTextButton>
+                            </TextButton>
                           )}
                           {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
                             <ReplyButton
