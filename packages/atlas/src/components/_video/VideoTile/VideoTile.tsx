@@ -14,7 +14,7 @@ export type VideoTileProps = {
   className?: string
   loadingDetails?: boolean
   loadingThumbnail?: boolean
-  playlistUrl: string
+  playlistUrl?: string
 } & Omit<VideoThumbnailProps, 'loading' | 'thumbnailAlt'> &
   Omit<VideoTileDetailsProps, 'loading' | 'onVideoTitleClick' | 'variant' | 'size'>
 
