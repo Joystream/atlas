@@ -54,7 +54,7 @@ export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ isP
 `
 
 export const CommentHeaderDot = styled.div`
-  background-color: ${cVar('colorBackgroundAlpha')};
+  background-color: ${cVar('colorBackgroundStrongAlpha')};
   border-radius: 100%;
 
   ${square(4)};
@@ -86,6 +86,8 @@ export const DeletedComment = styled(Text)`
 export const CommentFooter = styled.footer<{ isProcessing?: boolean }>`
   pointer-events: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
   touch-action: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
+  position: relative;
+  left: -8px;
 `
 
 export const CommentFooterItems = styled.div`
