@@ -143,9 +143,11 @@ export const VideoThumbnailContainer = styled(Link, {
   background-color: ${cVar('colorCoreBaseBlack')};
   transition: all ${cVar('animationTransitionFast')};
 
+  /* stylelint-disable no-duplicate-selectors */
+
   ::before {
-    width: 100%;
     height: 100%;
+    width: calc(100% - 16px * 2);
     content: ' ';
     display: block;
     position: absolute;
@@ -153,13 +155,12 @@ export const VideoThumbnailContainer = styled(Link, {
     left: 0;
     right: 0;
     margin: 0 auto;
-    width: calc(100% - 16px * 2);
     background-color: ${({ isPlaylist }) => (isPlaylist ? cVar('colorBackgroundOverlay') : 'transparent')};
   }
 
   ::after {
-    width: 100%;
     height: 100%;
+    width: calc(100% - 24px * 2);
     content: ' ';
     display: block;
     position: absolute;
@@ -169,7 +170,6 @@ export const VideoThumbnailContainer = styled(Link, {
     left: 0;
     right: 0;
     margin: 0 auto;
-    width: calc(100% - 24px * 2);
     background-color: ${cVar('colorBackgroundOverlay')};
   }
 
@@ -215,12 +215,13 @@ export const VideoThumbnailContainer = styled(Link, {
         }
       `}
   }
-  ${({ clickable, isPlaylist, activeDisabled }) =>
-    clickable &&
-    !activeDisabled &&
-    isPlaylist &&
-    css`
-      :active {
+
+  :active {
+    ${({ clickable, isPlaylist, activeDisabled }) =>
+      clickable &&
+      !activeDisabled &&
+      isPlaylist &&
+      css`
         &::before {
           transform: translate(0, 4px);
         }
@@ -232,20 +233,18 @@ export const VideoThumbnailContainer = styled(Link, {
         ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(0, 4px);
         }
-      }
-    `}
-
-  ${({ clickable, activeDisabled, isPlaylist }) =>
-    clickable &&
-    !activeDisabled &&
-    !isPlaylist &&
-    css`
-      :active {
+      `}
+    ${({ clickable, activeDisabled, isPlaylist }) =>
+      clickable &&
+      !activeDisabled &&
+      !isPlaylist &&
+      css`
         ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
           transform: translate(0, 0);
         }
-      }
-    `}
+      `}
+  }
+  /* stylelint-enable no-duplicate-selectors */
 `
 
 export const ThumbnailSkeletonLoader = styled(SkeletonLoader)`
