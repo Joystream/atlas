@@ -42,6 +42,7 @@ export type VideoTileDetailsProps = {
   kebabMenuItems?: MenuItemProps[]
   variant?: VideoDetailsVariant
   type?: 'video' | 'playlist'
+  playlistUrl?: string
 }
 
 export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
@@ -62,6 +63,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
   type = 'playlist',
+  playlistUrl,
 }) => {
   return (
     <VideoDetailsContainer>
@@ -115,7 +117,13 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                           )}
                     </Text>
                   ) : (
-                    <PlaylistButton onClick={onPlaylistDetailsClick} variant="tertiary" size="small" textOnly>
+                    <PlaylistButton
+                      onClick={onPlaylistDetailsClick}
+                      variant="tertiary"
+                      size="small"
+                      textOnly
+                      to={playlistUrl}
+                    >
                       View playlist details
                     </PlaylistButton>
                   )}
