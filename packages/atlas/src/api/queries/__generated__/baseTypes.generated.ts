@@ -6728,8 +6728,6 @@ export type Comment = BaseGraphQlObject & {
   author: Membership
   authorId: Scalars['String']
   commentcreatedeventcomment?: Maybe<Array<CommentCreatedEvent>>
-  commentdeletedeventcomment?: Maybe<Array<CommentDeletedEvent>>
-  commentmoderatedeventcomment?: Maybe<Array<CommentModeratedEvent>>
   commentparentComment?: Maybe<Array<Comment>>
   commentpinnedeventcomment?: Maybe<Array<CommentPinnedEvent>>
   commentreactedeventcomment?: Maybe<Array<CommentReactedEvent>>
@@ -6738,16 +6736,16 @@ export type Comment = BaseGraphQlObject & {
   deletedAt?: Maybe<Scalars['DateTime']>
   deletedById?: Maybe<Scalars['String']>
   deletedInEvent?: Maybe<CommentDeletedEvent>
-  deletedInEventId?: Maybe<Scalars['String']>
   edits: Array<CommentTextUpdatedEvent>
   id: Scalars['ID']
   /** Whether comment has been edited or not */
   isEdited: Scalars['Boolean']
   moderatedInEvent?: Maybe<CommentModeratedEvent>
-  moderatedInEventId?: Maybe<Scalars['String']>
   parentComment?: Maybe<Comment>
   parentCommentId?: Maybe<Scalars['String']>
   reactions: Array<CommentReaction>
+  /** Sum of replies and reactions */
+  reactionsAndRepliesCount: Scalars['Int']
   /** Total number of reactions to this comment */
   reactionsCount: Scalars['Int']
   reactionsCountByReactionId: Array<CommentReactionsCountByReactionId>
@@ -6762,7 +6760,6 @@ export type Comment = BaseGraphQlObject & {
   version: Scalars['Int']
   video: Video
   videoId: Scalars['String']
-  videopinnedComment?: Maybe<Array<Video>>
 }
 
 export type CommentConnection = {
@@ -6774,10 +6771,9 @@ export type CommentConnection = {
 
 export type CommentCreateInput = {
   author: Scalars['ID']
-  deletedInEvent?: InputMaybe<Scalars['ID']>
   isEdited: Scalars['Boolean']
-  moderatedInEvent?: InputMaybe<Scalars['ID']>
   parentComment?: InputMaybe<Scalars['ID']>
+  reactionsAndRepliesCount: Scalars['Float']
   reactionsCount: Scalars['Float']
   repliesCount: Scalars['Float']
   status: CommentStatus
@@ -6948,7 +6944,6 @@ export type CommentDeletedEvent = BaseGraphQlObject &
     __typename?: 'CommentDeletedEvent'
     comment: Comment
     commentId: Scalars['String']
-    commentdeletedInEvent?: Maybe<Array<Comment>>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -7033,9 +7028,6 @@ export type CommentDeletedEventWhereInput = {
   AND?: InputMaybe<Array<CommentDeletedEventWhereInput>>
   OR?: InputMaybe<Array<CommentDeletedEventWhereInput>>
   comment?: InputMaybe<CommentWhereInput>
-  commentdeletedInEvent_every?: InputMaybe<CommentWhereInput>
-  commentdeletedInEvent_none?: InputMaybe<CommentWhereInput>
-  commentdeletedInEvent_some?: InputMaybe<CommentWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -7100,7 +7092,6 @@ export type CommentModeratedEvent = BaseGraphQlObject &
     actor: ContentActor
     comment: Comment
     commentId: Scalars['String']
-    commentmoderatedInEvent?: Maybe<Array<Comment>>
     createdAt: Scalars['DateTime']
     createdById: Scalars['String']
     deletedAt?: Maybe<Scalars['DateTime']>
@@ -7194,9 +7185,6 @@ export type CommentModeratedEventWhereInput = {
   OR?: InputMaybe<Array<CommentModeratedEventWhereInput>>
   actor_json?: InputMaybe<Scalars['JSONObject']>
   comment?: InputMaybe<CommentWhereInput>
-  commentmoderatedInEvent_every?: InputMaybe<CommentWhereInput>
-  commentmoderatedInEvent_none?: InputMaybe<CommentWhereInput>
-  commentmoderatedInEvent_some?: InputMaybe<CommentWhereInput>
   createdAt_eq?: InputMaybe<Scalars['DateTime']>
   createdAt_gt?: InputMaybe<Scalars['DateTime']>
   createdAt_gte?: InputMaybe<Scalars['DateTime']>
@@ -7260,14 +7248,12 @@ export enum CommentOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   DeletedAtAsc = 'deletedAt_ASC',
   DeletedAtDesc = 'deletedAt_DESC',
-  DeletedInEventAsc = 'deletedInEvent_ASC',
-  DeletedInEventDesc = 'deletedInEvent_DESC',
   IsEditedAsc = 'isEdited_ASC',
   IsEditedDesc = 'isEdited_DESC',
-  ModeratedInEventAsc = 'moderatedInEvent_ASC',
-  ModeratedInEventDesc = 'moderatedInEvent_DESC',
   ParentCommentAsc = 'parentComment_ASC',
   ParentCommentDesc = 'parentComment_DESC',
+  ReactionsAndRepliesCountAsc = 'reactionsAndRepliesCount_ASC',
+  ReactionsAndRepliesCountDesc = 'reactionsAndRepliesCount_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',
   ReactionsCountDesc = 'reactionsCount_DESC',
   RepliesCountAsc = 'repliesCount_ASC',
@@ -7721,6 +7707,8 @@ export type CommentReactionsCountByReactionId = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']>
   updatedById?: Maybe<Scalars['String']>
   version: Scalars['Int']
+  video: Video
+  videoId: Scalars['String']
 }
 
 export type CommentReactionsCountByReactionIdConnection = {
@@ -7734,6 +7722,7 @@ export type CommentReactionsCountByReactionIdCreateInput = {
   comment: Scalars['ID']
   count: Scalars['Float']
   reactionId: Scalars['Float']
+  video: Scalars['ID']
 }
 
 export type CommentReactionsCountByReactionIdEdge = {
@@ -7755,12 +7744,15 @@ export enum CommentReactionsCountByReactionIdOrderByInput {
   ReactionIdDesc = 'reactionId_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC',
+  VideoAsc = 'video_ASC',
+  VideoDesc = 'video_DESC',
 }
 
 export type CommentReactionsCountByReactionIdUpdateInput = {
   comment?: InputMaybe<Scalars['ID']>
   count?: InputMaybe<Scalars['Float']>
   reactionId?: InputMaybe<Scalars['Float']>
+  video?: InputMaybe<Scalars['ID']>
 }
 
 export type CommentReactionsCountByReactionIdWhereInput = {
@@ -7803,6 +7795,7 @@ export type CommentReactionsCountByReactionIdWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']>
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
+  video?: InputMaybe<VideoWhereInput>
 }
 
 export type CommentReactionsCountByReactionIdWhereUniqueInput = {
@@ -7978,10 +7971,9 @@ export type CommentTextUpdatedEventWhereUniqueInput = {
 
 export type CommentUpdateInput = {
   author?: InputMaybe<Scalars['ID']>
-  deletedInEvent?: InputMaybe<Scalars['ID']>
   isEdited?: InputMaybe<Scalars['Boolean']>
-  moderatedInEvent?: InputMaybe<Scalars['ID']>
   parentComment?: InputMaybe<Scalars['ID']>
+  reactionsAndRepliesCount?: InputMaybe<Scalars['Float']>
   reactionsCount?: InputMaybe<Scalars['Float']>
   repliesCount?: InputMaybe<Scalars['Float']>
   status?: InputMaybe<CommentStatus>
@@ -7996,12 +7988,6 @@ export type CommentWhereInput = {
   commentcreatedeventcomment_every?: InputMaybe<CommentCreatedEventWhereInput>
   commentcreatedeventcomment_none?: InputMaybe<CommentCreatedEventWhereInput>
   commentcreatedeventcomment_some?: InputMaybe<CommentCreatedEventWhereInput>
-  commentdeletedeventcomment_every?: InputMaybe<CommentDeletedEventWhereInput>
-  commentdeletedeventcomment_none?: InputMaybe<CommentDeletedEventWhereInput>
-  commentdeletedeventcomment_some?: InputMaybe<CommentDeletedEventWhereInput>
-  commentmoderatedeventcomment_every?: InputMaybe<CommentModeratedEventWhereInput>
-  commentmoderatedeventcomment_none?: InputMaybe<CommentModeratedEventWhereInput>
-  commentmoderatedeventcomment_some?: InputMaybe<CommentModeratedEventWhereInput>
   commentparentComment_every?: InputMaybe<CommentWhereInput>
   commentparentComment_none?: InputMaybe<CommentWhereInput>
   commentparentComment_some?: InputMaybe<CommentWhereInput>
@@ -8036,6 +8022,12 @@ export type CommentWhereInput = {
   isEdited_in?: InputMaybe<Array<Scalars['Boolean']>>
   moderatedInEvent?: InputMaybe<CommentModeratedEventWhereInput>
   parentComment?: InputMaybe<CommentWhereInput>
+  reactionsAndRepliesCount_eq?: InputMaybe<Scalars['Int']>
+  reactionsAndRepliesCount_gt?: InputMaybe<Scalars['Int']>
+  reactionsAndRepliesCount_gte?: InputMaybe<Scalars['Int']>
+  reactionsAndRepliesCount_in?: InputMaybe<Array<Scalars['Int']>>
+  reactionsAndRepliesCount_lt?: InputMaybe<Scalars['Int']>
+  reactionsAndRepliesCount_lte?: InputMaybe<Scalars['Int']>
   reactionsCountByReactionId_every?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
   reactionsCountByReactionId_none?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
   reactionsCountByReactionId_some?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
@@ -8069,9 +8061,6 @@ export type CommentWhereInput = {
   updatedById_eq?: InputMaybe<Scalars['ID']>
   updatedById_in?: InputMaybe<Array<Scalars['ID']>>
   video?: InputMaybe<VideoWhereInput>
-  videopinnedComment_every?: InputMaybe<VideoWhereInput>
-  videopinnedComment_none?: InputMaybe<VideoWhereInput>
-  videopinnedComment_some?: InputMaybe<VideoWhereInput>
 }
 
 export type CommentWhereUniqueInput = {
@@ -29906,6 +29895,7 @@ export type Video = BaseGraphQlObject & {
   commentmoderatedeventvideo?: Maybe<Array<CommentModeratedEvent>>
   commentpinnedeventvideo?: Maybe<Array<CommentPinnedEvent>>
   commentreactedeventvideo?: Maybe<Array<CommentReactedEvent>>
+  commentreactionscountbyreactionidvideo?: Maybe<Array<CommentReactionsCountByReactionId>>
   commentreactionvideo?: Maybe<Array<CommentReaction>>
   comments: Array<Comment>
   /** Comments count */
@@ -29957,7 +29947,6 @@ export type Video = BaseGraphQlObject & {
   openauctionbidacceptedeventvideo?: Maybe<Array<OpenAuctionBidAcceptedEvent>>
   openauctionstartedeventvideo?: Maybe<Array<OpenAuctionStartedEvent>>
   pinnedComment?: Maybe<Comment>
-  pinnedCommentId?: Maybe<Scalars['String']>
   /** If the Video was published on other platform before beeing published on Joystream - the original publication date */
   publishedBeforeJoystream?: Maybe<Scalars['DateTime']>
   reactions: Array<VideoReaction>
@@ -30123,7 +30112,6 @@ export type VideoCreateInput = {
   media?: InputMaybe<Scalars['ID']>
   mediaMetadata?: InputMaybe<Scalars['ID']>
   nft?: InputMaybe<Scalars['ID']>
-  pinnedComment?: InputMaybe<Scalars['ID']>
   publishedBeforeJoystream?: InputMaybe<Scalars['DateTime']>
   reactionsCount: Scalars['Float']
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
@@ -30432,8 +30420,6 @@ export enum VideoOrderByInput {
   MediaDesc = 'media_DESC',
   NftAsc = 'nft_ASC',
   NftDesc = 'nft_DESC',
-  PinnedCommentAsc = 'pinnedComment_ASC',
-  PinnedCommentDesc = 'pinnedComment_DESC',
   PublishedBeforeJoystreamAsc = 'publishedBeforeJoystream_ASC',
   PublishedBeforeJoystreamDesc = 'publishedBeforeJoystream_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',
@@ -30957,7 +30943,6 @@ export type VideoUpdateInput = {
   media?: InputMaybe<Scalars['ID']>
   mediaMetadata?: InputMaybe<Scalars['ID']>
   nft?: InputMaybe<Scalars['ID']>
-  pinnedComment?: InputMaybe<Scalars['ID']>
   publishedBeforeJoystream?: InputMaybe<Scalars['DateTime']>
   reactionsCount?: InputMaybe<Scalars['Float']>
   thumbnailPhoto?: InputMaybe<Scalars['ID']>
@@ -31002,6 +30987,9 @@ export type VideoWhereInput = {
   commentreactedeventvideo_every?: InputMaybe<CommentReactedEventWhereInput>
   commentreactedeventvideo_none?: InputMaybe<CommentReactedEventWhereInput>
   commentreactedeventvideo_some?: InputMaybe<CommentReactedEventWhereInput>
+  commentreactionscountbyreactionidvideo_every?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+  commentreactionscountbyreactionidvideo_none?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
+  commentreactionscountbyreactionidvideo_some?: InputMaybe<CommentReactionsCountByReactionIdWhereInput>
   commentreactionvideo_every?: InputMaybe<CommentReactionWhereInput>
   commentreactionvideo_none?: InputMaybe<CommentReactionWhereInput>
   commentreactionvideo_some?: InputMaybe<CommentReactionWhereInput>
