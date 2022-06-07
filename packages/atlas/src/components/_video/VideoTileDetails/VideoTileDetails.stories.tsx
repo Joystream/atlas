@@ -29,12 +29,14 @@ export default {
         title: 'Reupload file',
       },
     ],
+    type: 'video',
   },
   argTypes: {
     onVideoTitleClick: { table: { disable: true } },
     onChannelAvatarClick: { table: { disable: true } },
     kebabMenuItems: { table: { disable: true } },
     video: { table: { disable: true } },
+    onPlaylistDetailsClick: { table: { disable: true } },
     variant: {
       options: ['withChannelNameAndAvatar', 'withChannelName', 'withoutChannel'] as VideoDetailsVariant[],
       control: {
@@ -50,7 +52,7 @@ export default {
       },
     },
   },
-} as Meta
+} as Meta<VideoTileDetailsProps>
 
 const Template: Story<VideoTileDetailsProps> = (args) => (
   <div style={{ maxWidth: '320px' }}>

@@ -12,6 +12,7 @@ import { formatVideoDate, formatVideoViews } from '@/utils/video'
 import {
   ChannelTitle,
   KebabMenuButtonIcon,
+  PlaylistButton,
   StyledAvatar,
   StyledLink,
   VideoDetailsContainer,
@@ -39,6 +40,8 @@ export type VideoTileDetailsProps = {
   size?: 'small' | 'medium'
   kebabMenuItems?: MenuItemProps[]
   variant?: VideoDetailsVariant
+  type?: 'video' | 'playlist'
+  playlistUrl?: string
 }
 
 export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
@@ -57,6 +60,8 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   loading,
   kebabMenuItems = [],
   variant = 'withChannelNameAndAvatar',
+  type = 'playlist',
+  playlistUrl,
 }) => {
   return (
     <VideoDetailsContainer>
@@ -98,15 +103,23 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
               {loading ? (
                 <SkeletonLoader height={variant === 'withoutChannel' ? 20 : 16} width="100%" />
               ) : (
-                <Text variant="t200" secondary as="p">
-                  {videoSubTitle
-                    ? videoSubTitle
-                    : createdAt && (
-                        <>
-                          {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
-                        </>
-                      )}
-                </Text>
+                <>
+                  {type === 'video' ? (
+                    <Text variant="t200" secondary as="p">
+                      {videoSubTitle
+                        ? videoSubTitle
+                        : createdAt && (
+                            <>
+                              {formatVideoDate(createdAt)} • <Views>{formatVideoViews(views || 0)}</Views>
+                            </>
+                          )}
+                    </Text>
+                  ) : (
+                    <PlaylistButton variant="tertiary" size="small" textOnly to={playlistUrl}>
+                      View playlist details
+                    </PlaylistButton>
+                  )}
+                </>
               )}
             </VideoMetaContainer>
           </VideoInfoContainer>
