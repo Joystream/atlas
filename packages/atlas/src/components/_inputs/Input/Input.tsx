@@ -79,7 +79,7 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
   }
 
   return (
-    <InputContainer as="label" variant={size === 'large' ? 't300' : 't200'} className={className}>
+    <InputContainer size={size} className={className}>
       <TextInput
         inputSize={size}
         error={error}

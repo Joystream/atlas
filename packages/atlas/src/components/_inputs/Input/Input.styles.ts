@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
 import {
@@ -78,8 +77,9 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   ${nodePlacementStyles};
 `
 
-export const InputContainer = styled(Text)`
+export const InputContainer = styled.div<{ size: InputSize }>`
   position: relative;
+  font: ${({ size }) => (size === 'large' ? cVar('typographyDesktopT300') : cVar('typographyDesktopT200'))};
 
   :focus-within {
     ${TextInput} {
