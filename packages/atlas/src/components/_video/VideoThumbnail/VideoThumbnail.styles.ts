@@ -12,7 +12,7 @@ const sharedOverlayStyles = css`
   width: 100%;
   height: 100%;
   padding-top: 56.25%;
-  transition: ${cVar('animationTransitionFast')};
+  transition: all ${cVar('animationTransitionFast')};
 `
 
 export type SlotPosition = 'topLeft' | 'topRight' | 'center' | 'bottomLeft' | 'bottomRight'
@@ -125,7 +125,7 @@ export const PlaylistOverlay = styled.div`
   top: 0;
   right: 0;
   height: 100%;
-  transition: ${cVar('animationTransitionFast')};
+  transition: transform ${cVar('animationTransitionFast')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -141,7 +141,7 @@ export const VideoThumbnailContainer = styled(Link, {
   display: block;
   position: relative;
   background-color: ${cVar('colorCoreBaseBlack')};
-  transition: background-color ${cVar('animationTransitionFast')};
+  transition: all ${cVar('animationTransitionFast')};
 
   ::before {
     width: 100%;
@@ -149,10 +149,12 @@ export const VideoThumbnailContainer = styled(Link, {
     content: ' ';
     display: block;
     position: absolute;
-    transition: all ${cVar('animationTransitionFast')};
+    transition: transform ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
     left: 0;
     right: 0;
     margin: 0 auto;
+    width: calc(100% - 16px * 2);
+    background-color: ${({ isPlaylist }) => (isPlaylist ? cVar('colorBackgroundOverlay') : 'transparent')};
   }
 
   ::after {
@@ -163,10 +165,12 @@ export const VideoThumbnailContainer = styled(Link, {
     position: absolute;
     top: 0;
     z-index: -1;
-    transition: all ${cVar('animationTransitionFast')};
+    transition: transform ${cVar('animationTransitionFast')}, background-color ${cVar('animationTransitionFast')};
     left: 0;
     right: 0;
     margin: 0 auto;
+    width: calc(100% - 24px * 2);
+    background-color: ${cVar('colorBackgroundOverlay')};
   }
 
   :hover {
@@ -195,27 +199,46 @@ export const VideoThumbnailContainer = styled(Link, {
       css`
         &::before {
           background-color: ${cVar('colorBackgroundPrimary')};
-          width: calc(100% - 16px * 2);
+          transform: translate(0, 4px);
         }
 
         &::after {
           background-color: ${cVar('colorBackgroundPrimaryMuted')};
-          transform: translate(0, 8px);
-          width: calc(100% - 24px * 2);
+          transform: translate(0, 12px);
         }
 
         ${ContentOverlay}, ${HoverOverlay}, ${PlaylistOverlay}, ${SlotsOverlay}, {
-          transform: translate(0, -8px);
+          transform: translate(0, -4px);
         }
         ${PlaylistOverlay} {
           opacity: 0;
         }
       `}
   }
-
-  ${({ clickable, activeDisabled }) =>
+  ${({ clickable, isPlaylist, activeDisabled }) =>
     clickable &&
     !activeDisabled &&
+    isPlaylist &&
+    css`
+      :active {
+        &::before {
+          transform: translate(0, 4px);
+        }
+
+        &::after {
+          transform: translate(0, 4px);
+        }
+
+        ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {
+          transform: translate(0, 4px);
+        }
+      }
+    `}
+
+  ${({ clickable, activeDisabled, isPlaylist }) =>
+    clickable &&
+    !activeDisabled &&
+    !isPlaylist &&
     css`
       :active {
         ${ContentOverlay}, ${HoverOverlay}, ${SlotsOverlay} {

@@ -33,14 +33,16 @@ export default {
       bottomLeft: {
         element: (
           <PillGroup
-            size="small"
+            size="medium"
             items={[
               {
                 label: 'NFT',
+                variant: 'overlay',
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
                 label: '24K tJOY',
+                variant: 'overlay',
               },
             ]}
           />
@@ -94,14 +96,16 @@ Playlist.args = {
     bottomLeft: {
       element: (
         <PillGroup
-          size="small"
+          size="medium"
           items={[
             {
               label: 'NFT',
+              variant: 'overlay',
             },
             {
               icon: <JoyTokenIcon size={16} variant="regular" />,
               label: '24K tJOY',
+              variant: 'overlay',
             },
           ]}
         />
@@ -161,11 +165,11 @@ Draft.args = {
       clickable: true,
     },
     bottomRight: {
-      element: <Pill label="8:24" />,
+      element: <Pill variant="overlay" label="8:24" />,
       type: 'default',
     },
     bottomLeft: {
-      element: <Pill label="Draft" />,
+      element: <Pill variant="overlay" label="Draft" />,
       type: 'default',
     },
     center: {
@@ -195,7 +199,7 @@ CustomContent.args = {
   ),
   slots: {
     bottomRight: {
-      element: <Pill label="8:24" />,
+      element: <Pill variant="overlay" label="8:24" />,
       type: 'default',
     },
     bottomLeft: {
