@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CustomRadioInput, CustomRadioInputProps, Input } from './RadioInput.styles'
+import { CustomRadioInputProps, Input, RadioInputWrapper, StyledRadioInput } from './RadioInput.styles'
 
 export type RadioInputProps = Partial<{
   selectedValue: string | number
@@ -13,7 +13,7 @@ export const RadioInput = React.forwardRef<HTMLInputElement, RadioInputProps>(
   ({ error, disabled, value, selectedValue, onChange, className, ...props }, ref) => {
     const isSelected = value === selectedValue
     return (
-      <CustomRadioInput className={className} checked={isSelected} error={error} disabled={disabled}>
+      <RadioInputWrapper className={className} checked={isSelected} error={error} disabled={disabled}>
         <Input
           {...props}
           ref={ref}
@@ -22,8 +22,10 @@ export const RadioInput = React.forwardRef<HTMLInputElement, RadioInputProps>(
           disabled={disabled}
           checked={isSelected}
           onChange={onChange}
+          error={error}
         />
-      </CustomRadioInput>
+        <StyledRadioInput error={error} disabled={disabled} />
+      </RadioInputWrapper>
     )
   }
 )
