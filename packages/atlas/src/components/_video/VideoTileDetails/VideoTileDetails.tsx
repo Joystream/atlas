@@ -35,7 +35,6 @@ export type VideoTileDetailsProps = {
   channelAvatarUrl?: string | null
   channelHref?: string
   onChannelAvatarClick?: () => void
-  onPlaylistDetailsClick?: () => void
   loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
@@ -55,7 +54,6 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
   channelTitle,
   channelHref,
   onChannelAvatarClick,
-  onPlaylistDetailsClick,
   size = 'medium',
   channelAvatarUrl,
   loadingAvatar,
@@ -117,13 +115,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                           )}
                     </Text>
                   ) : (
-                    <PlaylistButton
-                      onClick={onPlaylistDetailsClick}
-                      variant="tertiary"
-                      size="small"
-                      textOnly
-                      to={playlistUrl}
-                    >
+                    <PlaylistButton variant="tertiary" size="small" textOnly to={playlistUrl}>
                       View playlist details
                     </PlaylistButton>
                   )}

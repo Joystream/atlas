@@ -30,7 +30,6 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     channelTitle,
     channelHref,
     onChannelAvatarClick,
-    onPlaylistDetailsClick,
     kebabMenuItems,
     onClick,
     slots,
@@ -81,7 +80,6 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
           videoHref={videoHref}
           channelHref={channelHref}
           onChannelAvatarClick={onChannelAvatarClick}
-          onPlaylistDetailsClick={onPlaylistDetailsClick}
           variant={detailsVariant}
           channelAvatarUrl={channelAvatarUrl}
           videoTitle={videoTitle}
