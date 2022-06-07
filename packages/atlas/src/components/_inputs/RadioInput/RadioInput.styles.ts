@@ -121,8 +121,7 @@ export const Input = styled.input<{ error?: boolean }>`
 
     &:checked {
       + ${StyledRadioInput} {
-        box-shadow: inset 0 0 0 4px
-          ${({ error }) => cVar(error ? 'colorBackgroundErrorMuted' : 'colorBackgroundPrimaryStrong')};
+        background-color: ${({ error }) => cVar(error ? 'colorBackgroundErrorMuted' : 'colorBackgroundPrimaryStrong')};
       }
     }
     + ${StyledRadioInput} {
