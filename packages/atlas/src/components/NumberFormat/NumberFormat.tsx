@@ -36,7 +36,9 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
         break
     }
 
-    const hasTooltip = withTooltip || (format === 'short' && value > 999)
+    const hasDecimals = value - Math.floor(value) !== 0
+    const hasTooltip =
+      withTooltip || (format === 'short' && (value > 999 || hasDecimals)) || (format === 'dollar' && hasDecimals)
 
     return (
       <>
@@ -69,7 +71,13 @@ const numberFormatter = new Intl.NumberFormat('en-US', { maximumSignificantDigit
 const dollarFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
-  minimumSignificantDigits: 3,
+})
+
+const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumSignificantDigits: 2,
+  maximumSignificantDigits: 3,
 })
 
 const formatNumber = (num: number): string => {
@@ -80,7 +88,8 @@ const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')
 }
 
-const formatDollars = (num: number) => dollarFormatter.format(num).replaceAll(',', ' ')
+const formatDollars = (num: number) =>
+  (num >= 1 ? dollarFormatter.format(num) : dollarSmallNumberFormatter.format(num)).replaceAll(',', ' ')
 
 const StyledTooltip = styled(Tooltip)`
   position: absolute;
