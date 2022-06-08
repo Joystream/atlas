@@ -5,7 +5,7 @@ import { cVar, media, sizes } from '@/styles'
 export const OutlineBox = styled.div<{ highlighted: boolean; withoutOutlineBox: boolean; processing?: boolean }>`
   padding: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? 0 : sizes(2))};
   margin: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? 0 : `-${sizes(2)}`)};
-  width: 100%;
+  width: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? '100%' : `calc(100% + ${sizes(4)}) `)};
   background-color: ${({ highlighted }) => (highlighted ? cVar('colorBackgroundAlpha') : 'transparent')};
   border: 1px solid ${({ highlighted }) => (highlighted ? cVar('colorBackgroundAlpha') : 'transparent')};
   border-radius: ${cVar('radiusLarge')};
@@ -15,6 +15,7 @@ export const OutlineBox = styled.div<{ highlighted: boolean; withoutOutlineBox: 
   ${media.sm} {
     padding: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? 0 : sizes(4))};
     margin: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? 0 : `-${sizes(4)}`)};
+    width: ${({ withoutOutlineBox: withoutOutline }) => (withoutOutline ? '100%' : `calc(100% + ${sizes(8)}) `)};
   }
 
   opacity: ${({ processing }) => (processing ? 0.5 : 1)};

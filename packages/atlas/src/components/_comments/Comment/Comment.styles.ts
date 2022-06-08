@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { AvatarGroup } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
-import { Button, TextButton } from '@/components/_buttons/Button'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes, square } from '@/styles'
@@ -54,7 +54,7 @@ export const StyledLink = styled(Link, { shouldForwardProp: isPropValid })<{ isP
 `
 
 export const CommentHeaderDot = styled.div`
-  background-color: ${cVar('colorBackgroundAlpha')};
+  background-color: ${cVar('colorBackgroundStrongAlpha')};
   border-radius: 100%;
 
   ${square(4)};
@@ -88,24 +88,18 @@ export const CommentFooter = styled.footer<{ isProcessing?: boolean }>`
   touch-action: ${({ isProcessing }) => (isProcessing ? 'none' : 'unset')};
 `
 
-export const CommentFooterItems = styled.div`
+export const ReactionsAndPopover = styled.div`
   display: grid;
-  grid-template-columns: auto;
-  grid-auto-rows: auto;
-  gap: ${sizes(2)};
-
-  ${media.sm} {
-    align-items: center;
-    grid-template-columns: auto 1fr;
-    gap: ${sizes(1)};
-  }
+  grid-auto-flow: column;
+  gap: ${sizes(1)};
+  justify-content: start;
+  margin-left: -${sizes(2)};
 `
 
 export const ReactionsWrapper = styled.div`
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 4px;
-  justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${sizes(3)};
 `
 
 export const StyledFooterSkeletonLoader = styled(SkeletonLoader)`
@@ -121,10 +115,6 @@ export const StyledAvatarGroup = styled(AvatarGroup)`
   ${media.sm} {
     margin-left: ${sizes(3)};
   }
-`
-
-export const ShowRepliesTextButton = styled(TextButton)`
-  margin-left: ${sizes(2)};
 `
 
 export const ReplyButton = styled(Button)`

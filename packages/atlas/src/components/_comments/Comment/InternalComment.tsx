@@ -6,7 +6,8 @@ import { BasicMembershipFieldsFragment } from '@/api/queries'
 import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
-import { SvgActionEdit, SvgActionMore, SvgActionReply, SvgActionTrash } from '@/components/_icons'
+import { TextButton } from '@/components/_buttons/Button'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
@@ -21,17 +22,16 @@ import { formatDate, formatDateAgo } from '@/utils/time'
 import {
   CommentArticle,
   CommentFooter,
-  CommentFooterItems,
   CommentHeader,
   CommentHeaderDot,
   CommentWrapper,
   DeletedComment,
   HighlightableText,
   KebabMenuIconButton,
+  ReactionsAndPopover,
   ReactionsWrapper,
   RepliesWrapper,
   ReplyButton,
-  ShowRepliesTextButton,
   StyledAvatarGroup,
   StyledFooterSkeletonLoader,
   StyledLink,
@@ -103,6 +103,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   const isDeleted = type === 'deleted'
   const isProcessing = type === 'processing'
   const shouldShowKebabButton = type === 'options' && !loading && !isDeleted
+
   const popoverRef = useRef<PopoverImperativeHandle>(null)
   const isTouchDevice = useTouchDevice()
   const { url: memberAvatarUrl, isLoadingAsset: isMemberAvatarLoading } = useMemberAvatar(author)
@@ -181,6 +182,8 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
     [onReactionClick, reactionPopoverDismissed]
   )
 
+  const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
+  const hasReactionsAndCommentIsNotDeleted = isDeleted ? !!sortedReactions?.find((r) => r.count) : true
   return (
     <CommentRow
       processing={type === 'processing'}
@@ -246,10 +249,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
               )}
               <CommentFooter isProcessing={isProcessing}>
                 {loading ? (
-                  <CommentFooterItems>
+                  <ReactionsAndPopover>
                     <StyledFooterSkeletonLoader width={48} height={32} rounded />
                     <StyledFooterSkeletonLoader width={48} height={32} rounded />
-                  </CommentFooterItems>
+                  </ReactionsAndPopover>
                 ) : (
                   <ReactionsOnboardingPopover
                     ref={popoverRef}
@@ -259,10 +262,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                     }}
                     onDecline={handleOnboardingPopoverHide}
                     trigger={
-                      <CommentFooterItems>
-                        <ReactionsWrapper>
-                          {reactions &&
-                            reactions?.map(({ reactionId, active, count, state }) => (
+                      <ReactionsWrapper>
+                        {hasReactionsAndCommentIsNotDeleted && (
+                          <ReactionsAndPopover>
+                            {sortedReactions?.map(({ reactionId, active, count, state }) => (
                               <ReactionChip
                                 key={reactionId}
                                 reactionId={reactionId}
@@ -272,13 +275,14 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                                 onReactionClick={handleCommentReactionClick}
                               />
                             ))}
-                          {!allReactionsApplied && !isDeleted && (
-                            <ReactionPopover
-                              disabled={reactionIsProcessing || reactionIsDisabled}
-                              onReactionClick={handleCommentReactionClick}
-                            />
-                          )}
-                        </ReactionsWrapper>
+                            {!allReactionsApplied && !isDeleted && (
+                              <ReactionPopover
+                                disabled={reactionIsProcessing || reactionIsDisabled}
+                                onReactionClick={handleCommentReactionClick}
+                              />
+                            )}
+                          </ReactionsAndPopover>
+                        )}
                         <RepliesWrapper>
                           {!!repliesCount && filteredDuplicatedAvatars.length ? (
                             <StyledAvatarGroup
@@ -289,23 +293,23 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                             />
                           ) : null}
                           {onToggleReplies && !!repliesCount && (
-                            <ShowRepliesTextButton onClick={onToggleReplies} variant="tertiary" size="small">
-                              {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
-                            </ShowRepliesTextButton>
-                          )}
-                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
-                            <ReplyButton
-                              onClick={onReplyClick}
+                            <TextButton
+                              onClick={onToggleReplies}
                               variant="tertiary"
                               size="small"
-                              _textOnly
-                              icon={<SvgActionReply />}
+                              iconPlacement="right"
+                              icon={repliesOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}
                             >
+                              {repliesOpen ? 'Hide' : 'Show'} {repliesCount} {repliesCount === 1 ? 'reply' : 'replies'}
+                            </TextButton>
+                          )}
+                          {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
+                            <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
                               Reply
                             </ReplyButton>
                           )}
                         </RepliesWrapper>
-                      </CommentFooterItems>
+                      </ReactionsWrapper>
                     }
                   />
                 )}

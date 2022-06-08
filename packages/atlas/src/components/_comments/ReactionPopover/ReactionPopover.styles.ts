@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
+import { SvgActionPlaceholder } from '@/components/_icons'
 import { cVar, media, sizes } from '@/styles'
 
 export const ReactionPopoverWrapper = styled.div`
@@ -37,4 +38,10 @@ export const StyledEmojiButton = styled(Button)<{ isVisible: boolean; verticalTr
   transform-origin: right;
   position: relative;
   transition: all ${cVar('animationTransitionMedium')};
+`
+
+export const StyledSvgActionPlaceholder = styled(SvgActionPlaceholder)`
+  path {
+    fill: ${cVar('colorText')};
+  }
 `

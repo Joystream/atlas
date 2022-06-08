@@ -41,7 +41,13 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
         <StyledEmojiWrapper readOnly={state === 'read-only'} block>
           {REACTION_TYPE[reactionId].emoji}{' '}
         </StyledEmojiWrapper>
-        {isProcessing ? <Loader variant="xsmall" /> : <Text variant="t100">{formatNumberShort(count)}</Text>}
+        {isProcessing ? (
+          <Loader variant="xsmall" />
+        ) : (
+          <Text variant="t100" secondary={!active}>
+            {formatNumberShort(count)}
+          </Text>
+        )}
       </ReactionChipButton>
     </div>
   )
