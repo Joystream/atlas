@@ -1,16 +1,16 @@
 import { createStore } from '@/store'
 
-type CurrentBlockStoreState = {
+type JoystreamStoreState = {
   currentBlock: number
   currentBlockMsTimestamp: number
 }
 
-type CurrentBlockStoreActions = {
+type JoystreamStoreActions = {
   setCurrentBlock: (block: number) => void
   setCurrentBlockMsTimestamp: (timestamp: number) => void
 }
 
-export const useCurrentBlockStore = createStore<CurrentBlockStoreState, CurrentBlockStoreActions>({
+export const useJoystreamStore = createStore<JoystreamStoreState, JoystreamStoreActions>({
   state: {
     currentBlock: 0,
     currentBlockMsTimestamp: 0,

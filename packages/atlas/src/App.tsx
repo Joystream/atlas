@@ -6,7 +6,6 @@ import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
-import { CurrentBlockManager } from '@/providers/currentBlock'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { NotificationsManager } from '@/providers/notifications'
 import { GlobalStyles } from '@/styles'
@@ -17,7 +16,7 @@ import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDra
 import { MainLayout } from './MainLayout'
 import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
-import { JoystreamProvider } from './providers/joystream'
+import { JoystreamManager, JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { TransactionsManager } from './providers/transactions'
@@ -43,7 +42,7 @@ export const App = () => {
                       <Snackbars />
                       <AssetsManager />
                       <TransactionsManager />
-                      <CurrentBlockManager />
+                      <JoystreamManager />
                       <NotificationsManager />
                       <SignInStepsStepper />
                       <NftSettlementBottomDrawer />

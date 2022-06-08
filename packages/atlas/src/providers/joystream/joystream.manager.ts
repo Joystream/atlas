@@ -1,11 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 
-import { useJoystream } from '@/providers/joystream'
+import { useJoystream, useJoystreamStore } from '.'
 
-import { useCurrentBlockStore } from './currentBlock.store'
-
-export const CurrentBlockManager: React.FC = () => {
-  const { setCurrentBlock, setCurrentBlockMsTimestamp } = useCurrentBlockStore((state) => state.actions)
+export const JoystreamManager: React.FC = () => {
+  const { setCurrentBlock, setCurrentBlockMsTimestamp } = useJoystreamStore((state) => state.actions)
   const { joystream, proxyCallback } = useJoystream()
   const firstRender = useRef(true)
 
@@ -16,9 +14,10 @@ export const CurrentBlockManager: React.FC = () => {
     }
     joystream.getCurrentBlock().then((block) => {
       setCurrentBlock(block)
+      setCurrentBlockMsTimestamp(Date.now())
       firstRender.current = false
     })
-  }, [joystream, setCurrentBlock])
+  }, [joystream, setCurrentBlock, setCurrentBlockMsTimestamp])
 
   // subscribe to block updates
   useEffect(() => {
