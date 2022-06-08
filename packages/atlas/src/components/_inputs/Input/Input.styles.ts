@@ -65,8 +65,8 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   z-index: 1;
   top: 0;
   bottom: 0;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'text')};
 
   > svg > path {
     fill: ${cVar('colorText')};
@@ -76,7 +76,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   ${nodePlacementStyles};
 `
 
-export const InputContainer = styled.div<{ size: InputSize }>`
+export const InputLabel = styled.label<{ size: InputSize }>`
   position: relative;
   font: ${({ size }) => (size === 'large' ? cVar('typographyDesktopT300') : cVar('typographyDesktopT200'))};
 

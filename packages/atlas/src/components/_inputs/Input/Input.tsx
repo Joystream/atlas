@@ -8,7 +8,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { InputContainer, NodeContainer, TextInput } from './Input.styles'
+import { InputLabel, NodeContainer, TextInput } from './Input.styles'
 
 import { InputSize } from '../inputs.utils'
 
@@ -30,7 +30,7 @@ export type InputProps = {
   size?: InputSize
   processing?: boolean
   nodeStart?: React.ReactNode
-  actionButton?: ButtonProps
+  actionButton?: Omit<ButtonProps, 'variant' | 'size'>
   nodeEnd?: React.ReactNode
 }
 
@@ -66,14 +66,15 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
   const isNodeStartText = nodeStart && typeof nodeStart === 'string'
   const isNodeEndText = nodeEnd && typeof nodeEnd === 'string'
 
-  const renderNodeStart = isNodeStartText ? (
+  const renderedNodeStart = isNodeStartText ? (
     <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
       {nodeStart}
     </Text>
   ) : (
     nodeStart
   )
-  const renderNodeEnd = isNodeEndText ? (
+
+  const renderedNodeEnd = isNodeEndText ? (
     <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
       {nodeEnd}
     </Text>
@@ -94,12 +95,18 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     }, 0)
   }
 
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    inputRef.current?.focus()
+    e.currentTarget.blur()
+    actionButton?.onClick?.(e)
+  }
+
   if (actionButton && nodeEnd) {
     ConsoleLogger.warn('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
   }
 
   return (
-    <InputContainer size={size} className={className}>
+    <InputLabel size={size} className={className}>
       <TextInput
         inputSize={size}
         error={error}
@@ -121,27 +128,21 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
         defaultValue={defaultValue}
       />
       {nodeStart && (
-        <NodeContainer onClick={() => inputRef.current?.focus()} size={size} ref={nodeLeftRef} left disabled={disabled}>
-          {renderNodeStart}
+        <NodeContainer size={size} ref={nodeLeftRef} left disabled={disabled}>
+          {renderedNodeStart}
         </NodeContainer>
       )}
       {(nodeEnd || actionButton || processing) && (
-        <NodeContainer
-          onClick={() => inputRef.current?.focus()}
-          size={size}
-          ref={nodeRightRef}
-          disabled={disabled}
-          isButton={!!actionButton}
-        >
+        <NodeContainer size={size} ref={nodeRightRef} disabled={disabled} isButton={!!actionButton}>
           {processing && <Loader variant="xsmall" />}
           {actionButton ? (
-            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" />
+            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" onClick={handleButtonClick} />
           ) : (
-            renderNodeEnd
+            renderedNodeEnd
           )}
         </NodeContainer>
       )}
-    </InputContainer>
+    </InputLabel>
   )
 }
 
