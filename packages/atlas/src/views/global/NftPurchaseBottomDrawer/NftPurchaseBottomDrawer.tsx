@@ -20,6 +20,7 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
+import { useCurrentBlockStore } from '@/providers/currentBlock'
 import { useJoystream, useTokenPrice } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
@@ -74,9 +75,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const {
     joystream,
     proxyCallback,
-    currentBlock,
     chainState: { nftPlatformFeePercentage },
   } = useJoystream()
+  const { currentBlock } = useCurrentBlockStore()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
 

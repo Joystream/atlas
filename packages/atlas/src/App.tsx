@@ -6,6 +6,7 @@ import { AnalyticsManager } from '@/AnalyticsManager'
 import { createApolloClient } from '@/api'
 import { OperatorsContextProvider } from '@/providers/assets'
 import { ConfirmationModalProvider } from '@/providers/confirmationModal'
+import { CurrentBlockManager } from '@/providers/currentBlock'
 import { NftActionsProvider } from '@/providers/nftActions'
 import { NotificationsManager } from '@/providers/notifications'
 import { GlobalStyles } from '@/styles'
@@ -42,6 +43,7 @@ export const App = () => {
                       <Snackbars />
                       <AssetsManager />
                       <TransactionsManager />
+                      <CurrentBlockManager />
                       <NotificationsManager />
                       <SignInStepsStepper />
                       <NftSettlementBottomDrawer />

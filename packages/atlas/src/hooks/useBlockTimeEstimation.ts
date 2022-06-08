@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { useJoystream } from '@/providers/joystream'
+import { useCurrentBlockStore } from '@/providers/currentBlock'
 
 const ESTIMATED_BLOCK_TIME_MS = 6000
 
 export const useBlockTimeEstimation = () => {
-  const { currentBlock, currentBlockMsTimestamp } = useJoystream()
+  const { currentBlock, currentBlockMsTimestamp } = useCurrentBlockStore()
 
   const convertBlockToMsTimestamp = useCallback(
     (targetBlock: number) => {

@@ -41,7 +41,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 
   const proxyCallback = useCallback(<T extends object>(callback: T) => proxy(callback), [])
 
-  const utilFns = useJoystreamUtilFns(joystream.current, proxyCallback)
+  const utilFns = useJoystreamUtilFns()
   const chainState = useJoystreamChainState(joystream.current)
 
   // initialize Joystream Lib
@@ -106,11 +106,8 @@ export const JoystreamProvider: React.FC = ({ children }) => {
   )
 }
 
-const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyCallback: ProxyCallbackFn) => {
+const useJoystreamUtilFns = () => {
   const [tokenPrice, setTokenPrice] = useState(0)
-  const [currentBlock, setCurrentBlock] = useState(0)
-  const [currentBlockMsTimestamp, setCurrentBlockMsTimestamp] = useState(0)
-  const firstRender = useRef(true)
 
   // fetch tJOY token price from the status server
   useEffect(() => {
@@ -126,41 +123,8 @@ const useJoystreamUtilFns = (joystream: Remote<JoystreamLib> | undefined, proxyC
     getPrice()
   }, [])
 
-  // fetch current block from the chain, but only just once
-  useEffect(() => {
-    if (!firstRender.current || !joystream) {
-      return
-    }
-    joystream.getCurrentBlock().then((block) => {
-      setCurrentBlock(block)
-      firstRender.current = false
-    })
-  }, [joystream])
-
-  // subscribe to block updates
-  useEffect(() => {
-    if (!joystream) {
-      return
-    }
-
-    let unsubscribe
-    const init = async () => {
-      unsubscribe = await joystream.subscribeCurrentBlock(
-        proxyCallback((number) => {
-          setCurrentBlock(number)
-          setCurrentBlockMsTimestamp(Date.now())
-        })
-      )
-    }
-    init()
-
-    return unsubscribe
-  }, [joystream, proxyCallback])
-
   return {
     tokenPrice,
-    currentBlock,
-    currentBlockMsTimestamp,
   }
 }
 
