@@ -115,7 +115,7 @@ export const VideoTileDetails: React.FC<VideoTileDetailsProps> = ({
                           )}
                     </Text>
                   ) : (
-                    <PlaylistButton variant="tertiary" size="small" textOnly to={playlistUrl}>
+                    <PlaylistButton variant="tertiary" size="small" to={playlistUrl}>
                       View playlist details
                     </PlaylistButton>
                   )}

@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 
 import { EmojiWrapper, EmojiWrapperProps } from './EmojiWrapper'
 
@@ -26,7 +26,7 @@ const Template: Story<EmojiWrapperProps> = () => {
   return (
     <div>
       <FormField label="Input">
-        <TextField value={text} onChange={(e) => setText(e.target.value)} />
+        <Input value={text} onChange={(e) => setText(e.target.value)} />
       </FormField>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>

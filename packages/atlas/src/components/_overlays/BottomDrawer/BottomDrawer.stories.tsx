@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { OverlayManagerProvider } from '@/providers/overlayManager'
 
 import { BottomDrawer, BottomDrawerProps } from './BottomDrawer'
@@ -56,19 +56,19 @@ const Template: Story<BottomDrawerProps> = (args) => {
         <Content>
           <Button onClick={() => setActionBarOpen((prev) => !prev)}>Toggle action bar</Button>
           <FormField label="Test field">
-            <TextField />
+            <Input />
           </FormField>
           <FormField label="Test field">
-            <TextField />
+            <Input />
           </FormField>
           <FormField label="Test field">
-            <TextField />
+            <Input />
           </FormField>
           <FormField label="Test field">
-            <TextField />
+            <Input />
           </FormField>
           <FormField label="Test field">
-            <TextField />
+            <Input />
           </FormField>
         </Content>
       </BottomDrawer>

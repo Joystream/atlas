@@ -6,9 +6,9 @@ import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { AuctionDatePicker } from '@/components/_inputs/AuctionDatePicker'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
-import { TextField } from '@/components/_inputs/TextField'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
@@ -157,7 +157,7 @@ export const SetUp: React.FC<SetUpProps> = ({
       <StyledForm onSubmit={handleSubmit}>
         {selectedType === 'Fixed price' && (
           <StyledFormField label="" error={errors.buyNowPrice?.message}>
-            <TextField
+            <Input
               {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
@@ -279,7 +279,7 @@ export const SetUp: React.FC<SetUpProps> = ({
               }}
               tooltip={{ text: 'Only bids higher than this value will be accepted', multiline: true }}
             >
-              <TextField
+              <Input
                 {...register('startingPrice', { valueAsNumber: true })}
                 type="number"
                 defaultValue={chainState.nftMinStartingPrice?.toString()}
@@ -304,7 +304,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 multiline: true,
               }}
             >
-              <TextField
+              <Input
                 {...register('buyNowPrice', { valueAsNumber: true })}
                 placeholder="—"
                 type="number"

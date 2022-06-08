@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ListItem, ListItemProps } from '@/components/ListItem'
 import { Loader } from '@/components/_loaders/Loader'
 
-import { ComboBoxWrapper, ListWrapper, StyledTextField, StyledThumbnail } from './ComboBox.styles'
+import { ComboBoxWrapper, ListWrapper, StyledThumbnail } from './ComboBox.styles'
 
-import { TextFieldProps } from '../TextField'
+import { Input, InputProps } from '../Input'
 
 type ModifiedListItemProps = ListItemProps & {
   label: string
@@ -20,7 +20,7 @@ export type ComboBoxProps<T = unknown> = {
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
   notFoundNode?: ModifiedListItemProps | null
-} & Omit<TextFieldProps, 'charactersCount'>
+} & InputProps
 
 // don't use React.FC so we can use a generic type on a component
 // `T extends unknown` is a workaround, ESBuild seems to have hard time parsing <T,> generic declaration
@@ -87,7 +87,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   return (
     <ComboBoxWrapper ref={comboBoxWrapperRef}>
       <div {...getComboboxProps()}>
-        <StyledTextField
+        <Input
           {...textFieldProps}
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
