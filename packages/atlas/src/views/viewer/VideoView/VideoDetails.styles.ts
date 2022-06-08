@@ -29,6 +29,13 @@ export const DescriptionBody = styled(EmojiWrapper)<{ detailsExpanded?: boolean 
   -webkit-line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   -webkit-box-orient: vertical;
+
+  /* t200 line height * 3 lines */
+  height: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'calc(1.25rem * 3)')};
+  ${media.md} {
+    /* t300 line height * 3 lines */
+    height: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 'calc(1.5rem * 3)')};
+  }
 `
 
 export const DescriptionCopy = styled(Text)`

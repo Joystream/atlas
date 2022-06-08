@@ -255,7 +255,7 @@ export const VideoView: React.FC = () => {
       {headTags}
       <TitleContainer>
         {video ? (
-          <TitleText variant={mdMatch ? 'h600' : 'h400'}>{video.title}</TitleText>
+          <TitleText variant={mdMatch ? 'h500' : 'h400'}>{video.title}</TitleText>
         ) : (
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
