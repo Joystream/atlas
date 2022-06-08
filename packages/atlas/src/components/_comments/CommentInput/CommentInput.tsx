@@ -107,13 +107,7 @@ export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputPr
     const show = !!value || active || processing
     const canComment = !!value && hasInitialValueChanged
     return (
-      <StyledCommentRow
-        {...rest}
-        processing={processing}
-        show={show}
-        isMemberAvatarClickable={false}
-        className={className}
-      >
+      <StyledCommentRow {...rest} processing={processing} show={show} className={className}>
         <Container
           ref={containerRef}
           onFocus={() => {

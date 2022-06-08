@@ -11,7 +11,6 @@ export type CommentRowProps = {
   processing?: boolean
   highlighted?: boolean
   isMemberAvatarLoading?: boolean
-  isMemberAvatarClickable?: boolean
   memberAvatarUrl?: string | null
   memberUrl?: string
   className?: string
@@ -27,7 +26,6 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   children,
   memberAvatarUrl,
   isMemberAvatarLoading,
-  isMemberAvatarClickable = true,
   memberUrl = '',
   className,
   withoutOutlineBox = false,
@@ -60,14 +58,15 @@ export const CommentRow: React.FC<CommentRowProps> = ({
       onMouseLeave={onMouseLeave}
     >
       <ContentWrapper indented={!!indented}>
-        <Link to={memberUrl}>
-          <Avatar
-            assetUrl={memberAvatarUrl}
-            size={avatarSize}
-            loading={isMemberAvatarLoading}
-            clickable={isMemberAvatarClickable}
-          />
-        </Link>
+        <div>
+          {memberUrl ? (
+            <Link to={memberUrl}>
+              <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} clickable />
+            </Link>
+          ) : (
+            <Avatar assetUrl={memberAvatarUrl} size={avatarSize} loading={isMemberAvatarLoading} />
+          )}
+        </div>
         <div className={className}>{children}</div>
       </ContentWrapper>
     </OutlineBox>
