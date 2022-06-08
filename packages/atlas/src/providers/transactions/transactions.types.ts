@@ -5,4 +5,5 @@ export type Transaction = {
   status: ExtrinsicStatus
   errorCode: ErrorCode | null
   isMinimized: boolean
+  unsignedMessage?: string
 }

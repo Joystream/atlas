@@ -45,6 +45,7 @@ type HandleTransactionOpts<T extends ExtrinsicResult> = {
     errorMessage: string
   }
   allowMultiple?: boolean // whether to allow sending a transaction when one is still processing
+  unsignedMessage?: string
 }
 type HandleTransactionFn = <T extends ExtrinsicResult>(opts: HandleTransactionOpts<T>) => Promise<boolean>
 
@@ -69,6 +70,7 @@ export const useTransaction = (): HandleTransactionFn => {
       onError,
       minimized = null,
       allowMultiple,
+      unsignedMessage,
     }) => {
       /* === check whether new transaction can be started === */
       if (nodeConnectionStatus !== 'connected') {
@@ -108,6 +110,7 @@ export const useTransaction = (): HandleTransactionFn => {
         isMinimized: !!minimized,
         status: ExtrinsicStatus.ProcessingAssets, // use that as base status, if not applicable it will be overwritten right away
         errorCode: null,
+        unsignedMessage,
       }
       addTransaction(transaction)
 
