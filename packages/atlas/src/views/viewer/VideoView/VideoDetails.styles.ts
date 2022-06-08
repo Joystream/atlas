@@ -21,7 +21,11 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
-export const DescriptionBody = styled(EmojiWrapper)<{ detailsExpanded?: boolean }>`
+type DetailsExpandedProps = {
+  detailsExpanded?: boolean
+}
+
+export const DescriptionBody = styled(EmojiWrapper)<DetailsExpandedProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   /* stylelint-disable-next-line value-no-vendor-prefix */
@@ -31,8 +35,10 @@ export const DescriptionBody = styled(EmojiWrapper)<{ detailsExpanded?: boolean 
   -webkit-box-orient: vertical;
 `
 
-export const DescriptionCopy = styled(Text)`
-  display: block;
+export const DescriptionCopy = styled(Text)<DetailsExpandedProps>`
+  /* this fixes Safari issue with line-clamp - it works only for inline elements
+  once the description is expanded we don't need clamp anymore */
+  display: ${({ detailsExpanded }) => (detailsExpanded ? 'block' : 'inline')};
   word-break: break-word;
 `
 

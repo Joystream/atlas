@@ -50,7 +50,12 @@ export const VideoDetails: React.FC<VideoDetailsProps> = ({ video, category }) =
                 {/* div below allows line-clamp to work properly for nested paragraphs */}
                 <div>
                   {video.description?.split('\n').map((line, idx) => (
-                    <DescriptionCopy variant={mdMatch ? 't300' : 't200'} secondary key={idx}>
+                    <DescriptionCopy
+                      variant={mdMatch ? 't300' : 't200'}
+                      secondary
+                      key={idx}
+                      detailsExpanded={detailsExpanded}
+                    >
                       {replaceUrls(line)}
                     </DescriptionCopy>
                   ))}
