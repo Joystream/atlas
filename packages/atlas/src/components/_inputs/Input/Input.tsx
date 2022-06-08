@@ -8,7 +8,7 @@ import { Loader } from '@/components/_loaders/Loader'
 import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
-import { InputLabel, NodeContainer, TextInput } from './Input.styles'
+import { InputContainer, NodeContainer, TextInput } from './Input.styles'
 
 import { InputSize } from '../inputs.utils'
 
@@ -95,18 +95,12 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     }, 0)
   }
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    inputRef.current?.focus()
-    e.currentTarget.blur()
-    actionButton?.onClick?.(e)
-  }
-
   if (actionButton && nodeEnd) {
     ConsoleLogger.warn('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
   }
 
   return (
-    <InputLabel size={size} className={className}>
+    <InputContainer size={size} className={className}>
       <TextInput
         inputSize={size}
         error={error}
@@ -128,21 +122,27 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
         defaultValue={defaultValue}
       />
       {nodeStart && (
-        <NodeContainer size={size} ref={nodeLeftRef} left disabled={disabled}>
+        <NodeContainer size={size} onClick={() => inputRef.current?.focus()} ref={nodeLeftRef} left disabled={disabled}>
           {renderedNodeStart}
         </NodeContainer>
       )}
       {(nodeEnd || actionButton || processing) && (
-        <NodeContainer size={size} ref={nodeRightRef} disabled={disabled} isButton={!!actionButton}>
+        <NodeContainer
+          onClick={() => inputRef.current?.focus()}
+          size={size}
+          ref={nodeRightRef}
+          disabled={disabled}
+          isButton={!!actionButton}
+        >
           {processing && <Loader variant="xsmall" />}
           {actionButton ? (
-            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" onClick={handleButtonClick} />
+            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" />
           ) : (
             renderedNodeEnd
           )}
         </NodeContainer>
       )}
-    </InputLabel>
+    </InputContainer>
   )
 }
 

@@ -76,7 +76,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   ${nodePlacementStyles};
 `
 
-export const InputLabel = styled.label<{ size: InputSize }>`
+export const InputContainer = styled.div<{ size: InputSize }>`
   position: relative;
   font: ${({ size }) => (size === 'large' ? cVar('typographyDesktopT300') : cVar('typographyDesktopT200'))};
 
