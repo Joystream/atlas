@@ -241,9 +241,9 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         {commentsLoading && !isFetchingMore
           ? mappedPlaceholders
           : filteredComments
-              ?.map((comment, idx) => (
+              ?.map((comment) => (
                 <CommentThread
-                  key={`${comment.id}-${idx}`}
+                  key={comment.id}
                   commentId={comment.id}
                   video={video}
                   hasAnyReplies={comment.repliesCount > 0}
