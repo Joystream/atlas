@@ -41,7 +41,6 @@ import {
 import { CommentBody } from '../CommentBody'
 import { CommentRow, CommentRowProps } from '../CommentRow'
 import { ReactionChip, ReactionChipProps } from '../ReactionChip'
-import { ReactionChipState } from '../ReactionChip/ReactionChip.styles'
 import { ReactionPopover } from '../ReactionPopover'
 
 export type InternalCommentProps = {
@@ -99,6 +98,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   commentId,
 }) => {
   const [commentHover, setCommentHover] = useState(false)
+  // tempReactionId is used to show processing state on the reaction when the onboarding popover is opened for it
   const [tempReactionId, setTempReactionId] = useState<ReactionId | null>(null)
   const isDeleted = type === 'deleted'
   const isProcessing = type === 'processing'
@@ -144,26 +144,10 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
     setHighlightedPreviously(highlighted)
   }, [highlightedPreviously, highlighted, isCommentFromUrl])
 
-  const reactionIsProcessing = reactions?.some(({ state }) => state === 'processing')
-  const reactionIsDisabled = reactions?.some(({ state }) => state === 'disabled')
+  const isSomeReactionDisabled = reactions?.some(({ state }) => state === 'disabled')
+
   const allReactionsApplied =
     reactions && reactions.filter((r) => r.count).length >= Object.values(REACTION_TYPE).length
-
-  const getReactionState = useCallback(
-    (state?: ReactionChipState): ReactionChipState | undefined => {
-      if (state === 'processing') {
-        return state
-      }
-      if (isDeleted) {
-        return 'read-only'
-      }
-      if (reactionIsProcessing) {
-        return 'disabled'
-      }
-      return state
-    },
-    [isDeleted, reactionIsProcessing]
-  )
 
   const handleOnboardingPopoverHide = useCallback(() => {
     popoverRef.current?.hide()
@@ -271,13 +255,13 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                                 reactionId={reactionId}
                                 active={active}
                                 count={count}
-                                state={tempReactionId === reactionId ? 'processing' : getReactionState(state)}
+                                state={tempReactionId === reactionId ? 'processing' : state}
                                 onReactionClick={handleCommentReactionClick}
                               />
                             ))}
                             {!allReactionsApplied && !isDeleted && (
                               <ReactionPopover
-                                disabled={reactionIsProcessing || reactionIsDisabled}
+                                disabled={isSomeReactionDisabled}
                                 onReactionClick={handleCommentReactionClick}
                               />
                             )}

@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useAuthorizedUser } from '@/providers/user'
 import { removeVideoFromCache } from '@/utils/cachingAssets'

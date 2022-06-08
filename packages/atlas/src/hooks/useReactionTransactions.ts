@@ -26,7 +26,7 @@ import { ReactionId } from '@/config/reactions'
 import { absoluteRoutes } from '@/config/routes'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 
@@ -167,7 +167,7 @@ export const useReactionTransactions = () => {
           }
         },
         minimized: {
-          signErrorMessage: 'Failed to post video comment',
+          errorMessage: 'Failed to post video comment',
         },
       })
 
@@ -201,8 +201,9 @@ export const useReactionTransactions = () => {
             proxyCallback(updateStatus)
           ),
         minimized: {
-          signErrorMessage: 'Failed to react to comment',
+          errorMessage: 'Failed to react to comment',
         },
+        allowMultiple: true,
         onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
         onError: async () => refetchReactions(videoId),
       })
@@ -224,7 +225,7 @@ export const useReactionTransactions = () => {
           ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
-          signErrorMessage: 'Failed to udpate video comment',
+          errorMessage: 'Failed to udpate video comment',
         },
       })
     },
@@ -247,7 +248,7 @@ export const useReactionTransactions = () => {
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          signErrorMessage: 'Failed to delete comment',
+          errorMessage: 'Failed to delete comment',
         },
       })
     },
@@ -282,7 +283,7 @@ export const useReactionTransactions = () => {
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          signErrorMessage: 'Failed to delete comment',
+          errorMessage: 'Failed to delete comment',
         },
       })
     },
@@ -300,7 +301,7 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
         minimized: {
-          signErrorMessage: 'Failed to react to video',
+          errorMessage: 'Failed to react to video',
         },
         onTxSync: async () => {
           await refetchVideo(videoId)

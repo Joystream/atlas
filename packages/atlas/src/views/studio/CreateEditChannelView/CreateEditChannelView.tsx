@@ -26,7 +26,7 @@ import { useAsset, useAssetStore, useOperatorsContext, useRawAsset } from '@/pro
 import { useConnectionStatusStore } from '@/providers/connectionStatus'
 import { useJoystream } from '@/providers/joystream'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUploadsStore } from '@/providers/uploadsManager'
 import { useStartFileUpload } from '@/providers/uploadsManager/useStartFileUpload'
 import { useUser } from '@/providers/user'

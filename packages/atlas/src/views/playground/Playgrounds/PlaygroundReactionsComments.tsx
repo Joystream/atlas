@@ -7,7 +7,7 @@ import { TextArea } from '@/components/_inputs/TextArea'
 import { TextField } from '@/components/_inputs/TextField'
 import { VideoReaction } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { ConsoleLogger } from '@/utils/logs'
 
@@ -70,7 +70,7 @@ const ReactToVideo: React.FC<CommonProps> = ({ videoId }) => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, videoReaction, proxyCallback(updateStatus)),
       minimized: {
-        signErrorMessage: 'Failed to react to video',
+        errorMessage: 'Failed to react to video',
       },
     })
   }
@@ -115,7 +115,7 @@ const ReactToComment: React.FC<CommonProps> = () => {
           proxyCallback(updateStatus)
         ),
       minimized: {
-        signErrorMessage: 'Failed to react to comment',
+        errorMessage: 'Failed to react to comment',
       },
     })
   }
@@ -164,7 +164,7 @@ const CreateComment: React.FC<CommonProps> = ({ videoId }) => {
           proxyCallback(updateStatus)
         ),
       minimized: {
-        signErrorMessage: 'Failed to post video comment',
+        errorMessage: 'Failed to post video comment',
       },
     })
   }
@@ -204,7 +204,7 @@ const EditComment: React.FC<CommonProps> = () => {
           proxyCallback(updateStatus)
         ),
       minimized: {
-        signErrorMessage: 'Failed to edit video comment',
+        errorMessage: 'Failed to edit video comment',
       },
     })
   }
@@ -234,7 +234,7 @@ const DeleteComment: React.FC<CommonProps> = () => {
       txFactory: async (updateStatus) =>
         (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
       minimized: {
-        signErrorMessage: 'Failed to delete comment',
+        errorMessage: 'Failed to delete comment',
       },
     })
   }

@@ -7,7 +7,7 @@ import { SvgActionChevronR } from '@/components/_icons'
 import { TextField } from '@/components/_inputs/TextField'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useAuthorizedUser } from '@/providers/user'
 
 export const PlaygroundMinimizedTransaction = () => {
@@ -35,7 +35,7 @@ export const PlaygroundMinimizedTransaction = () => {
     const title = inputRef?.current?.value
     await handleTransaction({
       minimized: {
-        signErrorMessage: `Your comment to the video ${title} has not been posted.`,
+        errorMessage: `Your comment to the video ${title} has not been posted.`,
       },
       txFactory: async (updateStatus) =>
         (
