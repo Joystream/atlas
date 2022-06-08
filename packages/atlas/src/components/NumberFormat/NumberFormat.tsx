@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
+import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
 
@@ -66,8 +67,6 @@ const numberCompactFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
-const numberFormatter = new Intl.NumberFormat('en-US', { maximumSignificantDigits })
-
 const dollarFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -79,10 +78,6 @@ const dollarSmallNumberFormatter = new Intl.NumberFormat('en-US', {
   minimumSignificantDigits: 2,
   maximumSignificantDigits: 3,
 })
-
-const formatNumber = (num: number): string => {
-  return numberFormatter.format(num).replaceAll(',', ' ')
-}
 
 const formatNumberShort = (num: number): string => {
   return numberCompactFormatter.format(num).replaceAll(',', ' ')

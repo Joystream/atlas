@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionDislikeOutline, SvgActionLikeOutline } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
 import { VideoReaction } from '@/joystream-lib'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   LoadingWrapper,
@@ -106,7 +106,7 @@ export const ReactionButton: React.FC<ReactionButtonProps> = ({
                 icon={isReacted && !isProcessing ? renderSolidIcon() : renderOutlineIcon()}
               >
                 <ReactionsCounter type={type} state={state} disabled={isProcessing} variant="t200-strong">
-                  {formatNumberShort(reactionsNumber || 0)}
+                  <NumberFormat format="short" value={reactionsNumber ?? 0} />
                 </ReactionsCounter>
               </Button>
             }
