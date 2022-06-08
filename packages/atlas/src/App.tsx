@@ -16,7 +16,7 @@ import { NftSettlementBottomDrawer } from '@/views/global/NftSettlementBottomDra
 import { MainLayout } from './MainLayout'
 import { SignInStepsStepper } from './components/_auth/SignInSteps'
 import { AssetsManager } from './providers/assets'
-import { JoystreamProvider } from './providers/joystream'
+import { JoystreamManager, JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
 import { TransactionsManager } from './providers/transactions'
@@ -42,6 +42,7 @@ export const App = () => {
                       <Snackbars />
                       <AssetsManager />
                       <TransactionsManager />
+                      <JoystreamManager />
                       <NotificationsManager />
                       <SignInStepsStepper />
                       <NftSettlementBottomDrawer />

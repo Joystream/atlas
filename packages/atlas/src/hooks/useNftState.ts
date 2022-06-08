@@ -1,14 +1,14 @@
 import { AllNftFieldsFragment } from '@/api/queries'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { NftSaleType } from '@/joystream-lib'
-import { useJoystream } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream'
 import { useUser } from '@/providers/user'
 
 export type EnglishTimerState = 'expired' | 'running' | 'upcoming' | null
 
 export const useNftState = (nft?: AllNftFieldsFragment | null) => {
   const { activeMembership } = useUser()
-  const { currentBlock, currentBlockMsTimestamp } = useJoystream()
+  const { currentBlock, currentBlockMsTimestamp } = useJoystreamStore()
   const { convertBlockToMsTimestamp } = useBlockTimeEstimation()
 
   const auction = nft?.transactionalStatusAuction || null

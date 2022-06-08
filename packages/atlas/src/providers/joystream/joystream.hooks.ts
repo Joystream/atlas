@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react'
 
-import { JoystreamContext, JoystreamContextValue } from './provider'
+import { JoystreamContext, JoystreamContextValue } from './joystream.provider'
 
 export const useJoystream = (): JoystreamContextValue => {
   const ctx = useContext(JoystreamContext)
