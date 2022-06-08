@@ -22,9 +22,9 @@ const commonMetaTags = {
   'og:site_name': 'Joystream',
 }
 
-const sanitizeDescription = (fullDescription: string, title: string) => {
+const sanitizeDescription = (fullDescription?: string | null, title?: string | null) => {
   if (!fullDescription) {
-    return `${title} on Joystream`
+    return `${title || ''} on Joystream`
   }
 
   const oneLineDescription = fullDescription
@@ -39,7 +39,7 @@ const sanitizeDescription = (fullDescription: string, title: string) => {
 export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnailUrl: string): MetaTags => {
   const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
   const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description || '', video.title || '')
+  const sanitizedDescription = sanitizeDescription(video.description, video.title)
 
   return {
     ...commonMetaTags,
@@ -66,7 +66,7 @@ export const generateVideoMetaTags = (video: BasicVideoFieldsFragment, thumbnail
 
 export const generateChannelMetaTags = (channel: BasicChannelFieldsFragment, avatarUrl: string): MetaTags => {
   const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', channel.id)
-  const sanitizedDescription = sanitizeDescription(channel.description || '', channel.title || '')
+  const sanitizedDescription = sanitizeDescription(channel.description, channel.title)
 
   return {
     ...commonMetaTags,
@@ -87,7 +87,7 @@ export const generateVideoSchemaTagsHtml = (video: BasicVideoFieldsFragment, thu
   const videoUrl = joinUrlFragments(BASE_ATLAS_URL, 'video', video.id)
   const channelUrl = joinUrlFragments(BASE_ATLAS_URL, 'channel', video.channel.id)
   const videoEmbedUrl = joinUrlFragments(BASE_ATLAS_URL, 'embedded', 'video', video.id)
-  const sanitizedDescription = sanitizeDescription(video.description || '', video.title || '')
+  const sanitizedDescription = sanitizeDescription(video.description, video.title)
 
   const schemaOrgTags: SchemaOrgTag[] = [
     {
