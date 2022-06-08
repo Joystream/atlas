@@ -8,11 +8,9 @@ import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
-import { ExtrinsicStatus } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransactionManagerStore } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 
 import { getCommentReactions } from './Comment.utils'
@@ -55,7 +53,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [replyCommentInputText, setReplyCommentInputText] = useState('')
     const [isCommentProcessing, setIsCommentProcessing] = useState(false)
     const [isEditingComment, setIsEditingComment] = useState(false)
-    const [processingReactionId, setProcessingReactionId] = useState<string | null>(null)
+    const [processingReactionsIds, setProcessingReactionsIds] = useState<ReactionId[]>([])
 
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { comment } = useComment(
@@ -71,9 +69,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
-    const isTransactionPendingSignature = useTransactionManagerStore((state) =>
-      Object.values(state.transactions).some((tx) => tx.status === ExtrinsicStatus.Unsigned)
-    )
 
     const authorized = activeMemberId && activeAccountId
 
@@ -164,9 +159,9 @@ export const Comment: React.FC<CommentProps> = React.memo(
     }
     const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
       if (authorized) {
-        setProcessingReactionId(reactionId.toString())
+        setProcessingReactionsIds((previous) => [...previous, reactionId])
         await reactToComment(commentId, video?.id || '', reactionId)
-        setProcessingReactionId(null)
+        setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
       } else {
         openSignInDialog({ onConfirm: signIn })
       }
@@ -231,8 +226,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
           userReactionsIds: userReactions,
           reactionsCount: comment?.reactionsCountByReactionId,
           activeMemberId,
-          processingReactionId,
-          disabled: isTransactionPendingSignature,
+          processingReactionsIds,
           deleted: commentType === 'deleted',
         })) ||
       undefined

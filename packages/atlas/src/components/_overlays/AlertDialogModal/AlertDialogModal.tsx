@@ -80,9 +80,11 @@ export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
                 </InformativeIconWrapper>
               </HeaderIconContainer>
             ))}
-          <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
-            {title}
-          </Text>
+          {title && (
+            <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
+              {title}
+            </Text>
+          )}
           <Text variant="t200" secondary>
             {description}
           </Text>
