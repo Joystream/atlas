@@ -9,7 +9,7 @@ import { TextField } from '@/components/_inputs/TextField'
 import { NftTileViewer } from '@/components/_nft/NftTileViewer'
 import { NftAuctionInputMetadata, NftIssuanceInputMetadata, NftSaleInputMetadata, NftSaleType } from '@/joystream-lib'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useAuthorizedUser } from '@/providers/user'
 
 const TABS: TabItem[] = [

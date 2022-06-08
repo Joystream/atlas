@@ -19,7 +19,7 @@ import { AssetsManager } from './providers/assets'
 import { JoystreamProvider } from './providers/joystream'
 import { OverlayManagerProvider } from './providers/overlayManager'
 import { Snackbars } from './providers/snackbars'
-import { TransactionManager } from './providers/transactionManager'
+import { TransactionsManager } from './providers/transactions'
 import { ActiveUserProvider } from './providers/user'
 
 export const App = () => {
@@ -41,7 +41,7 @@ export const App = () => {
                       <MainLayout />
                       <Snackbars />
                       <AssetsManager />
-                      <TransactionManager />
+                      <TransactionsManager />
                       <NotificationsManager />
                       <SignInStepsStepper />
                       <NftSettlementBottomDrawer />

@@ -8,10 +8,11 @@ import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useDisplaySignInDialog } from '@/hooks/useDisplaySignInDialog'
 import { useReactionTransactions } from '@/hooks/useReactionTransactions'
 import { useRouterQuery } from '@/hooks/useRouterQuery'
+import { ExtrinsicStatus } from '@/joystream-lib'
 import { useMemberAvatar } from '@/providers/assets'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { usePersonalDataStore } from '@/providers/personalData'
-import { useTransactionManagerStore } from '@/providers/transactionManager'
+import { useTransactionManagerStore } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 
 import { getCommentReactions } from './Comment.utils'
@@ -54,7 +55,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const [replyCommentInputText, setReplyCommentInputText] = useState('')
     const [isCommentProcessing, setIsCommentProcessing] = useState(false)
     const [isEditingComment, setIsEditingComment] = useState(false)
-    const [processingCommentReactionId, setProcessingCommentReactionId] = useState<string | null>(null)
+    const [processingReactionId, setProcessingReactionId] = useState<string | null>(null)
 
     const { activeMemberId, activeMembership, activeAccountId, signIn } = useUser()
     const { comment } = useComment(
@@ -70,11 +71,13 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const { openSignInDialog } = useDisplaySignInDialog()
     const [openModal, closeModal] = useConfirmationModal()
     const { reactToComment, deleteComment, moderateComment, updateComment, addComment } = useReactionTransactions()
-    const isTransactionOngoing = useTransactionManagerStore((state) => !!state.extrinsicStatus)
+    const isTransactionPendingSignature = useTransactionManagerStore((state) =>
+      Object.values(state.transactions).some((tx) => tx.status === ExtrinsicStatus.Unsigned)
+    )
 
     const authorized = activeMemberId && activeAccountId
 
-    const hadleDeleteComment = (comment: CommentFieldsFragment) => {
+    const handleDeleteComment = (comment: CommentFieldsFragment) => {
       const isChannelOwner = video?.channel.ownerMember?.id === activeMemberId && comment.author.id !== activeMemberId
       openModal({
         type: 'destructive',
@@ -161,9 +164,9 @@ export const Comment: React.FC<CommentProps> = React.memo(
     }
     const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
       if (authorized) {
-        setProcessingCommentReactionId(commentId + `-` + reactionId.toString())
+        setProcessingReactionId(reactionId.toString())
         await reactToComment(commentId, video?.id || '', reactionId)
-        setProcessingCommentReactionId(null)
+        setProcessingReactionId(null)
       } else {
         openSignInDialog({ onConfirm: signIn })
       }
@@ -214,18 +217,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
 
     const loading = !commentId
 
-    const reactions =
-      (comment &&
-        getCommentReactions({
-          commentId: comment?.id,
-          userReactionsIds: userReactions,
-          reactionsCount: comment?.reactionsCountByReactionId,
-          activeMemberId,
-          processingCommentReactionId,
-          disabled: isTransactionOngoing,
-        })) ||
-      undefined
-
     const commentType = isCommentProcessing
       ? 'processing'
       : comment && ['DELETED', 'MODERATED'].includes(comment.status)
@@ -233,6 +224,18 @@ export const Comment: React.FC<CommentProps> = React.memo(
       : comment && (video?.channel.ownerMember?.id === activeMemberId || comment?.author.id === activeMemberId)
       ? 'options'
       : 'default'
+
+    const reactions =
+      (comment &&
+        getCommentReactions({
+          userReactionsIds: userReactions,
+          reactionsCount: comment?.reactionsCountByReactionId,
+          activeMemberId,
+          processingReactionId,
+          disabled: isTransactionPendingSignature,
+          deleted: commentType === 'deleted',
+        })) ||
+      undefined
 
     if (isEditingComment) {
       return (
@@ -283,7 +286,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
             memberUrl={comment ? absoluteRoutes.viewer.member(comment.author.handle) : undefined}
             type={commentType}
             onEditClick={handleOnEditClick}
-            onDeleteClick={() => video && comment && hadleDeleteComment(comment)}
+            onDeleteClick={() => video && comment && handleDeleteComment(comment)}
             onEditedLabelClick={handleOnEditLabelClick}
             onReactionClick={(reactionId) => comment && handleCommentReaction(comment.id, reactionId)}
             {...rest}

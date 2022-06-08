@@ -119,7 +119,9 @@ export const sendExtrinsicAndParseEvents = (
     let unsub: () => void
     let transactionInfo: string
 
-    tx.signAndSend(accountId, (result) => {
+    // { nonce: -1 } takes txs pending in the pool into account when sending a tx
+    // see more here: https://polkadot.js.org/docs/api/cookbook/tx/#how-do-i-take-the-pending-tx-pool-into-account-in-my-nonce
+    tx.signAndSend(accountId, { nonce: -1 }, (result) => {
       const extrinsicsHash = tx.hash.toHex()
       const { status, isError, events: rawEvents } = result
 
