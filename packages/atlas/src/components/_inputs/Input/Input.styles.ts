@@ -6,8 +6,8 @@ import { cVar, sizes } from '@/styles'
 import {
   InputSize,
   NodeWidthProps,
-  getInputPseudoSelectorStyles,
-  getPadding,
+  getBaseInputStyles,
+  getInputPadding,
   horizontalPadding,
   sharedInputStyles,
 } from '../inputs.utils'
@@ -19,7 +19,6 @@ type TextInputProps = {
 
 export const TextInput = styled.input<TextInputProps>`
   width: 100%;
-  padding: ${sizes(3)} ${sizes(5)};
 
   ::-webkit-outer-spin-button,
   ::-webkit-search-cancel-button,
@@ -33,9 +32,9 @@ export const TextInput = styled.input<TextInputProps>`
     appearance: textfield;
   }
 
-  ${({ inputSize, leftNodeWidth, rightNodeWidth }) => getPadding(inputSize, { leftNodeWidth, rightNodeWidth })};
+  ${getInputPadding};
 
-  ${({ error }) => getInputPseudoSelectorStyles({ error })};
+  ${getBaseInputStyles};
 `
 
 type NodeContainerProps = {
@@ -49,11 +48,11 @@ const nodePlacementStyles = ({ left, size, isButton }: NodeContainerProps) =>
   left
     ? css`
         left: 0;
-        padding-left: calc(${horizontalPadding[size]});
+        padding-left: ${horizontalPadding[size]}px;
       `
     : css`
         right: 0;
-        padding-right: calc(${horizontalPadding[size]} - ${isButton ? sizes(1) : '0px'});
+        padding-right: ${horizontalPadding[size] - (isButton ? sizes(1, true) : 0)}px;
       `
 
 export const NodeContainer = styled.div<NodeContainerProps>`
@@ -64,7 +63,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   align-content: center;
   align-items: center;
   gap: ${sizes(2)};
-  z-index: 2;
+  z-index: 1;
   top: 0;
   bottom: 0;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};

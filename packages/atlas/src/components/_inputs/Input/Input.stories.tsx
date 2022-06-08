@@ -36,13 +36,6 @@ export default {
   },
 } as Meta
 
-const Template: Story<InputProps> = (args) => <Input {...args} />
-
-const TemplateWithControlledInput: Story<InputProps> = (args) => {
-  const [value, setValue] = useState('')
-  return <Input {...args} onChange={(e) => setValue(e.currentTarget.value)} value={value} />
-}
-
 const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
   const ref = useRef<HTMLInputElement | null>(null)
   return (
@@ -53,6 +46,13 @@ const TemplateWithUncontrolledInput: Story<InputProps> = (args) => {
       </div>
     </>
   )
+}
+
+const Template: Story<InputProps> = (args) => <Input {...args} />
+
+const TemplateWithControlledInput: Story<InputProps> = (args) => {
+  const [value, setValue] = useState('')
+  return <Input {...args} onChange={(e) => setValue(e.currentTarget.value)} value={value} />
 }
 
 const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
@@ -98,14 +98,9 @@ const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
   )
 }
 
-export const Default = Template.bind({})
-Default.argTypes = {
-  value: { table: { disable: false } },
-}
-
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 
-export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
+export const Default = TemplateWithUncontrolledInput.bind({})
 
 export const WithButton = Template.bind({})
 

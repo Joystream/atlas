@@ -46,30 +46,30 @@ export const sharedInputStyles = {
 }
 
 export const horizontalPadding = {
-  medium: sizes(4),
-  large: sizes(5),
+  medium: sizes(4, true),
+  large: sizes(5, true),
 } as const
 
 export const verticalPadding = {
-  medium: sizes(2),
-  large: sizes(3),
+  medium: sizes(2, true),
+  large: sizes(3, true),
 } as const
 
-export const getPadding = (size: InputSize, nodeWidthProps?: NodeWidthProps) => {
-  const paddingLeft = nodeWidthProps?.leftNodeWidth
-    ? `${nodeWidthProps?.leftNodeWidth + sizes(2, true)}px`
-    : horizontalPadding[size]
+type GetInputPaddingParams = {
+  inputSize: InputSize
+} & NodeWidthProps
 
-  const paddingRight = nodeWidthProps?.rightNodeWidth
-    ? `${nodeWidthProps?.rightNodeWidth + sizes(2, true)}px`
-    : horizontalPadding[size]
+export const getInputPadding = ({ inputSize, leftNodeWidth, rightNodeWidth }: GetInputPaddingParams) => {
+  const paddingLeft = leftNodeWidth ? leftNodeWidth + sizes(2, true) : horizontalPadding[inputSize]
+
+  const paddingRight = rightNodeWidth ? rightNodeWidth + sizes(2, true) : horizontalPadding[inputSize]
 
   return css`
-    padding: ${verticalPadding[size]} ${paddingRight} ${verticalPadding[size]} ${paddingLeft};
+    padding: ${verticalPadding[inputSize]}px ${paddingRight}px ${verticalPadding[inputSize]}px ${paddingLeft}px;
   `
 }
 
-export const getInputPseudoSelectorStyles = ({ error }: { error?: boolean }) => css`
+export const getBaseInputStyles = ({ error }: { error?: boolean }) => css`
   ${sharedInputStyles.default};
 
   :disabled {
