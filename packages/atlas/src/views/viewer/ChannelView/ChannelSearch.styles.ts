@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
 
 import { IconButton } from '@/components/_buttons/IconButton'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { cVar, media, sizes, transitions } from '@/styles'
 
 type TextFieldProps = {
   isOpen?: boolean
   isSearching?: boolean
 }
-export const StyledTextField = styled(TextField)<TextFieldProps>`
+export const StyledInput = styled(Input)<TextFieldProps>`
   transition: all ${transitions.timings.regular} ${transitions.easing};
   will-change: max-width;
   align-items: center;

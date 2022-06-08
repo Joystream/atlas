@@ -2,8 +2,8 @@ import React from 'react'
 import { DeepMap, FieldError, UseFormRegister, UseFormWatch } from 'react-hook-form'
 
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { TextField } from '@/components/_inputs/TextField'
 
 import { Wrapper } from './CreateEditMemberInputs.styles'
 
@@ -24,7 +24,7 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
   return (
     <Wrapper isModal={isModal}>
       <FormField label="Avatar URL" error={errors.avatar?.message}>
-        <TextField
+        <Input
           autoComplete="off"
           error={!!errors.avatar}
           placeholder="https://example.com/avatar.jpeg"
@@ -37,7 +37,7 @@ export const CreateEditMemberInputs: React.FC<CreateEditMemberFormProps> = ({ re
         description="Member handle may contain only lowercase letters, numbers and underscores"
         error={errors.handle?.message}
       >
-        <TextField
+        <Input
           autoComplete="off"
           placeholder="johnnysmith"
           {...register('handle')}

@@ -2,7 +2,7 @@ import React, { FormEvent, useCallback, useEffect, useRef } from 'react'
 
 import { SvgActionSearch } from '@/components/_icons'
 
-import { SearchButton, SearchContainerForm, StyledTextField } from './ChannelSearch.styles'
+import { SearchButton, SearchContainerForm, StyledInput } from './ChannelSearch.styles'
 import { TABS } from './utils'
 
 type SearchProps = {
@@ -72,7 +72,7 @@ export const ChannelSearch: React.FC<SearchProps> = ({
 
   return (
     <SearchContainerForm onSubmit={handleSubmit}>
-      <StyledTextField
+      <StyledInput
         ref={searchInputRef}
         isOpen={isSearchInputOpen}
         isSearching={isSearching}

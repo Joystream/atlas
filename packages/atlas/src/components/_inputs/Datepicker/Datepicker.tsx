@@ -2,7 +2,7 @@ import { format, isValid, parse } from 'date-fns'
 import React, { forwardRef, useEffect, useState } from 'react'
 import NumberFormat from 'react-number-format'
 
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 
 const DATE_FORMAT = 'dd/MM/yyyy'
 
@@ -42,7 +42,7 @@ const DatepickerComponent: React.ForwardRefRenderFunction<HTMLInputElement, Date
     <NumberFormat
       value={rawValue}
       getInputRef={ref}
-      customInput={TextField}
+      customInput={Input}
       name={name}
       format="##/##/####"
       placeholder="DD / MM / YYYY"

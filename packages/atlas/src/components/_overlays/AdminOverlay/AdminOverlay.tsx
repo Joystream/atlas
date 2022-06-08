@@ -5,8 +5,8 @@ import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionNewTab, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { Select } from '@/components/_inputs/Select'
-import { TextField } from '@/components/_inputs/TextField'
 import { availableNodes } from '@/config/availableNodes'
 import { BUILD_ENV, availableEnvs } from '@/config/envs'
 import { absoluteRoutes } from '@/config/routes'
@@ -158,7 +158,7 @@ const EnvTab: React.FC = () => {
           <Select items={availableNodes} onChange={handleNodeChange} value={determinedNode} />
         ) : (
           <CustomNodeUrlWrapper>
-            <TextField value={customNodeUrl} onChange={handleCustomNodeUrlChange} />
+            <Input value={customNodeUrl} onChange={handleCustomNodeUrlChange} />
             <Button onClick={handleSaveCustomNodeUrlClick} size="large">
               Save
             </Button>
@@ -285,13 +285,13 @@ const UserTab: React.FC = () => {
     <VerticalSpacedContainer>
       <HorizontalSpacedContainer>
         <FormField label="Account ID">
-          <TextField value={accountIdValue || ''} onChange={handleAccountIdChange} />
+          <Input value={accountIdValue || ''} onChange={handleAccountIdChange} />
         </FormField>
         <FormField label="Member ID">
-          <TextField value={memberIdValue || ''} onChange={handleMemberIdChange} />
+          <Input value={memberIdValue || ''} onChange={handleMemberIdChange} />
         </FormField>
         <FormField label="Channel ID">
-          <TextField value={channelIdValue || ''} onChange={handleChannelIdChange} />
+          <Input value={channelIdValue || ''} onChange={handleChannelIdChange} />
         </FormField>
       </HorizontalSpacedContainer>
       <Button onClick={handleSaveClick} size="large" variant="secondary">

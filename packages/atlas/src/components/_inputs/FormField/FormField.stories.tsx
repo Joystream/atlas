@@ -6,8 +6,8 @@ import { Select } from '@/components/_inputs/Select'
 
 import { FormField, FormFieldProps } from './FormField'
 
+import { Input } from '../Input'
 import { TextArea } from '../TextArea'
-import { TextField } from '../TextField'
 
 export default {
   title: 'inputs/FormField',
@@ -42,7 +42,7 @@ export const Default = Template.bind({})
 
 export const WithInput = Template.bind({})
 WithInput.args = {
-  children: <TextField />,
+  children: <Input />,
 }
 
 export const WithSelect = Template.bind({})
@@ -67,7 +67,7 @@ WithMultipleParagraphs.args = {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, enim.',
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates inventore accusamus illum eius dolorum alias.',
   ],
-  children: <TextField />,
+  children: <Input />,
 }
 WithMultipleParagraphs.argTypes = {
   description: {
@@ -102,7 +102,7 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
           value: fieldEnabled,
         }}
       >
-        <TextField placeholder="Text field" />
+        <Input placeholder="Text field" />
       </FormField>
       <FormField
         {...args}
@@ -113,7 +113,7 @@ const SwitchableTemplate: Story<FormFieldProps> = ({ ...args }) => {
           value: anotherFieldEnabled,
         }}
       >
-        <TextField placeholder="Another Text field" />
+        <Input placeholder="Another Text field" />
       </FormField>
       <FormField
         {...args}

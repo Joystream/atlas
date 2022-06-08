@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 import { Avatar } from '@/components/Avatar'
 import { Button } from '@/components/_buttons/Button'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { Footer } from '@/components/_overlays/Dialog/Dialog.styles'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { cVar, media, sizes } from '@/styles'
@@ -17,7 +17,7 @@ export const StyledDialogModal = styled(DialogModal)`
 export const Wrapper = styled.div`
   margin-top: ${sizes(4)};
 `
-export const StyledTextField = styled(TextField)`
+export const StyledInput = styled(Input)`
   margin-bottom: ${sizes(5)};
 `
 

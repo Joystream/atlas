@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { sizes } from '@/styles'
 
-export const StyledTextField = styled(TextField)`
+export const StyledInput = styled(Input)`
   margin-bottom: ${sizes(5)};
 `
 export const Wrapper = styled.div<{ isModal?: boolean }>`
