@@ -94,7 +94,7 @@ export const ReactionsAndPopover = styled.div`
   gap: ${sizes(1)};
   justify-content: start;
   position: relative;
-  left: -8px;
+  left: -${sizes(2)};
 `
 
 export const ReactionsWrapper = styled.div`

@@ -190,7 +190,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
   )
 
   const sortedReactions = reactions && [...reactions].sort((a, b) => (b.count || 0) - (a.count || 0))
-  const hasReactionsAndCommentIsNotDeleted = !!sortedReactions?.find((r) => r.count) && !isDeleted
+  const hasReactionsAndCommentIsNotDeleted = isDeleted ? !!sortedReactions?.find((r) => r.count) : true
   return (
     <CommentRow
       processing={type === 'processing'}
