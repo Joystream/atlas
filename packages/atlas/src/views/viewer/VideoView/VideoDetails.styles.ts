@@ -33,6 +33,7 @@ export const DescriptionBody = styled(EmojiWrapper)<DetailsExpandedProps>`
   -webkit-line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   -webkit-box-orient: vertical;
+  color: ${cVar('colorText')}; /* needed for proper ellipsis color */
 `
 
 export const DescriptionCopy = styled(Text)<DetailsExpandedProps>`
