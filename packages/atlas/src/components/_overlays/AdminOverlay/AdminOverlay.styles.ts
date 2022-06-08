@@ -50,12 +50,6 @@ export const VerticalSpacedContainer = styled.div<{ topMargin?: boolean }>`
 
 export const StyledTabs = styled(Tabs)`
   margin-top: 12px;
-
-  > div > div {
-    padding: 8px 0;
-    width: 80px;
-    min-width: 80px;
-  }
 `
 
 export const CustomNodeUrlWrapper = styled.div`
