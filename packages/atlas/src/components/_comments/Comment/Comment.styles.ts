@@ -93,8 +93,7 @@ export const ReactionsAndPopover = styled.div`
   grid-auto-flow: column;
   gap: ${sizes(1)};
   justify-content: start;
-  position: relative;
-  left: -${sizes(2)};
+  margin-left: -${sizes(2)};
 `
 
 export const ReactionsWrapper = styled.div`

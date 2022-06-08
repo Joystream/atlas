@@ -7,14 +7,7 @@ import { AvatarGroupUrlAvatar } from '@/components/Avatar/AvatarGroup'
 import { Text } from '@/components/Text'
 import { Tooltip } from '@/components/Tooltip'
 import { TextButton } from '@/components/_buttons/Button'
-import {
-  SvgActionChevronB,
-  SvgActionChevronT,
-  SvgActionEdit,
-  SvgActionMore,
-  SvgActionReply,
-  SvgActionTrash,
-} from '@/components/_icons'
+import { SvgActionChevronB, SvgActionChevronT, SvgActionEdit, SvgActionMore, SvgActionTrash } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { PopoverImperativeHandle } from '@/components/_overlays/Popover'
@@ -311,13 +304,7 @@ export const InternalComment: React.FC<InternalCommentProps> = ({
                             </TextButton>
                           )}
                           {onReplyClick && !isDeleted && !isProcessing && (commentHover || isTouchDevice) && (
-                            <ReplyButton
-                              onClick={onReplyClick}
-                              variant="tertiary"
-                              size="small"
-                              _textOnly
-                              icon={<SvgActionReply />}
-                            >
+                            <ReplyButton onClick={onReplyClick} variant="tertiary" size="small" _textOnly>
                               Reply
                             </ReplyButton>
                           )}
