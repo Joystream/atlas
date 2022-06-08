@@ -4,10 +4,8 @@ import React, { useState } from 'react'
 
 import { Avatar } from '@/components/Avatar'
 import { Pill } from '@/components/Pill'
-import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionBid, SvgActionClose, SvgActionSearch, SvgJoyTokenMonochrome16 } from '@/components/_icons'
-import { cVar } from '@/styles'
 import { formatNumber } from '@/utils/number'
 
 import { Input, InputProps } from '.'
@@ -59,15 +57,7 @@ const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
   const [dollars, setDollars] = useState<number>()
   return (
     <div style={{ display: 'grid', gap: 24 }}>
-      <Input
-        {...args}
-        nodeStart={<Pill label="label" />}
-        nodeEnd={
-          <Text secondary color={cVar('colorTextMuted')} variant="t300">
-            $
-          </Text>
-        }
-      />
+      <Input {...args} nodeStart={<Pill label="label" />} nodeEnd="$" />
       <Input
         {...args}
         nodeStart={<Avatar size="bid" assetUrl="https://placedog.net/360/203" />}
@@ -79,21 +69,10 @@ const TemplateWithPreffixAndSuffix: Story<InputProps> = (args) => {
         value={dollars}
         onChange={(e) => setDollars(Number(e.currentTarget.value))}
         nodeStart={<SvgJoyTokenMonochrome16 />}
-        nodeEnd={
-          <Text secondary color={cVar('colorTextMuted')} variant="t300">
-            $ {formatNumber((dollars || 0) * 4)}
-          </Text>
-        }
+        nodeEnd={`$ ${formatNumber((dollars || 0) * 4)}`}
       />
-      <Input
-        {...args}
-        nodeStart={<SvgActionBid />}
-        nodeEnd={
-          <Text secondary color={cVar('colorTextMuted')} variant="t300">
-            some random text
-          </Text>
-        }
-      />
+      <Input {...args} nodeStart={<SvgActionBid />} nodeEnd="Random text here" />
+      <Input {...args} nodeStart="$" nodeEnd={<SvgActionBid />} />
     </div>
   )
 }

@@ -58,7 +58,6 @@ const nodePlacementStyles = ({ left, size, isButton }: NodeContainerProps) =>
 export const NodeContainer = styled.div<NodeContainerProps>`
   position: absolute;
   display: grid;
-  cursor: pointer;
   grid-auto-flow: column;
   align-content: center;
   align-items: center;
@@ -66,6 +65,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   z-index: 1;
   top: 0;
   bottom: 0;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   > svg > path {

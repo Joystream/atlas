@@ -2,8 +2,10 @@ import React, { forwardRef, useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 
+import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
+import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { InputContainer, NodeContainer, TextInput } from './Input.styles'
@@ -61,6 +63,24 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
 
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const isNodeStartText = nodeStart && typeof nodeStart === 'string'
+  const isNodeEndText = nodeEnd && typeof nodeEnd === 'string'
+
+  const renderNodeStart = isNodeStartText ? (
+    <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
+      {nodeStart}
+    </Text>
+  ) : (
+    nodeStart
+  )
+  const renderNodeEnd = isNodeEndText ? (
+    <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
+      {nodeEnd}
+    </Text>
+  ) : (
+    nodeEnd
+  )
+
   const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
     if (onWheel) {
       onWheel(event)
@@ -102,7 +122,7 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
       />
       {nodeStart && (
         <NodeContainer onClick={() => inputRef.current?.focus()} size={size} ref={nodeLeftRef} left disabled={disabled}>
-          {nodeStart}
+          {renderNodeStart}
         </NodeContainer>
       )}
       {(nodeEnd || actionButton || processing) && (
@@ -114,7 +134,11 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
           isButton={!!actionButton}
         >
           {processing && <Loader variant="xsmall" />}
-          {actionButton ? <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" /> : nodeEnd}
+          {actionButton ? (
+            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" />
+          ) : (
+            renderNodeEnd
+          )}
         </NodeContainer>
       )}
     </InputContainer>

@@ -27,6 +27,9 @@ export const sharedInputStyles = {
     ::placeholder {
       font: inherit;
       color: ${cVar('colorTextMuted')};
+
+      /* Firefox sets opacity of placeholders to less than 1, that's why we need to set this */
+      opacity: 1;
     }
   `,
   hover: css`
@@ -38,6 +41,7 @@ export const sharedInputStyles = {
   disabled: css`
     opacity: 0.5;
     background-color: ${cVar('colorBackgroundMutedAlpha')};
+    cursor: not-allowed;
   `,
   focus: css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
