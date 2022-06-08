@@ -95,6 +95,12 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
     }, 0)
   }
 
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    inputRef.current?.focus()
+    e.currentTarget.blur()
+    actionButton?.onClick?.(e)
+  }
+
   if (actionButton && nodeEnd) {
     ConsoleLogger.warn('Input: actionButton and nodeEnd are mutually exclusive. nodeEnd will be ignored.')
   }
@@ -127,16 +133,10 @@ const InputComponent: React.ForwardRefRenderFunction<HTMLInputElement, InputProp
         </NodeContainer>
       )}
       {(nodeEnd || actionButton || processing) && (
-        <NodeContainer
-          onClick={() => inputRef.current?.focus()}
-          size={size}
-          ref={nodeRightRef}
-          disabled={disabled}
-          isButton={!!actionButton}
-        >
+        <NodeContainer size={size} ref={nodeRightRef} disabled={disabled} isButton={!!actionButton}>
           {processing && <Loader variant="xsmall" />}
           {actionButton ? (
-            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" />
+            <Button {...actionButton} variant="tertiary" disabled={disabled} size="small" onClick={handleButtonClick} />
           ) : (
             renderedNodeEnd
           )}
