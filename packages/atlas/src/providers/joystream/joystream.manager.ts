@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 
-import { useJoystream, useJoystreamStore } from '.'
+import { useJoystream } from './joystream.hooks'
+import { useJoystreamStore } from './joystream.store'
 
 export const JoystreamManager: React.FC = () => {
   const { setCurrentBlock, setCurrentBlockMsTimestamp } = useJoystreamStore((state) => state.actions)
