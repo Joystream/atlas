@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { DialogModal } from '@/components/_overlays/DialogModal'
 import { useTokenPrice } from '@/providers/joystream'
 import { sizes } from '@/styles'
@@ -58,6 +58,6 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
   )
 }
 
-export const StyledTextField = styled(TextField)`
+export const StyledTextField = styled(Input)`
   margin-top: ${sizes(6)};
 `

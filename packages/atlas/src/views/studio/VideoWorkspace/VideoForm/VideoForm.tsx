@@ -14,12 +14,12 @@ import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/comp
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
+import { Input } from '@/components/_inputs/Input'
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { RadioButton } from '@/components/_inputs/RadioButton'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
-import { TextField } from '@/components/_inputs/TextField'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import knownLicenses from '@/data/knownLicenses.json'
@@ -579,7 +579,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   multiline: true,
                 }}
               >
-                <TextField
+                <Input
                   type="number"
                   {...register('nftRoyaltiesPercent', {
                     valueAsNumber: true,
@@ -638,7 +638,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           />
           {knownLicenses.find((license) => license.code === watch('licenseCode'))?.attributionRequired && (
             <FormField label="License attribution" error={errors.licenseAttribution?.message} optional>
-              <TextField
+              <Input
                 {...register(
                   'licenseAttribution',
                   textFieldValidation({ name: 'License attribution', maxLength: 5000 })

@@ -4,7 +4,7 @@ import { useVideosConnection } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronR } from '@/components/_icons'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
 import { useJoystream } from '@/providers/joystream'
 import { useTransaction } from '@/providers/transactions'
@@ -63,7 +63,7 @@ export const PlaygroundMinimizedTransaction = () => {
           <div style={{ display: 'flex', marginTop: '16px' }}>
             {editMode === id ? (
               <>
-                <TextField defaultValue={title ?? ''} ref={inputRef} />
+                <Input defaultValue={title ?? ''} ref={inputRef} />
                 <Button onClick={() => updateVideoName(id)} icon={<SvgActionChevronR />} />
               </>
             ) : (

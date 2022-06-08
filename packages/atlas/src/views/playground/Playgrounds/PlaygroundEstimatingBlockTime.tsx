@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useJoystreamStore } from '@/providers/joystream'
@@ -29,7 +29,7 @@ export const PlaygroundEstimatingBlockTime = () => {
       <div>
         <Text variant="h700">Convert block to time</Text>
         <FormField label="Change number of block">
-          <TextField
+          <Input
             type="number"
             value={String(blockNumber)}
             onChange={(e) => setBlockNumber(Number(e.currentTarget.value))}

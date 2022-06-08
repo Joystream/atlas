@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
-import { TextField } from '@/components/_inputs/TextField'
+import { Input } from '@/components/_inputs/Input'
 import { useNftActions } from '@/providers/nftActions'
 
 export const PlaygroundNftPurchase: React.FC = () => {
@@ -13,7 +13,7 @@ export const PlaygroundNftPurchase: React.FC = () => {
   return (
     <>
       <FormField label="Video ID">
-        <TextField value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} />
+        <Input value={nftId} onChange={(e) => setNftId(e.currentTarget.value)} />
       </FormField>
       {nftId && <Button onClick={() => openNftPurchase(nftId)}>Open drawer</Button>}
     </>
