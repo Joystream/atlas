@@ -219,7 +219,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
         memberHandle={activeMembership?.handle}
         value={commentInputText}
         hasInitialValueChanged={!!commentInputText}
-        withoutOutlineBox
         onFocus={() => !activeMemberId && openSignInDialog({ onConfirm: signIn })}
         onComment={() => handleComment()}
         onChange={(e) => setCommentInputText(e.target.value)}

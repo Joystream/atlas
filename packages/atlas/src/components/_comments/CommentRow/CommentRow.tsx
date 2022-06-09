@@ -14,7 +14,7 @@ export type CommentRowProps = {
   memberAvatarUrl?: string | null
   memberUrl?: string
   className?: string
-  withoutOutlineBox?: boolean
+  isInput?: boolean
   onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void
   onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void
 }
@@ -28,7 +28,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
   isMemberAvatarLoading,
   memberUrl = '',
   className,
-  withoutOutlineBox = false,
+  isInput = false,
   onMouseEnter,
   onMouseLeave,
 }) => {
@@ -53,7 +53,7 @@ export const CommentRow: React.FC<CommentRowProps> = ({
     <OutlineBox
       processing={processing}
       highlighted={!!highlighted}
-      withoutOutlineBox={withoutOutlineBox}
+      isInput={isInput}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >

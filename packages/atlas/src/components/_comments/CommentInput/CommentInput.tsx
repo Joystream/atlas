@@ -24,7 +24,6 @@ import {
 import { CommentRowProps } from '../CommentRow'
 
 export type CommentInputProps = {
-  processing: boolean
   readOnly?: boolean
   memberHandle?: string
   value: string
@@ -36,7 +35,7 @@ export type CommentInputProps = {
   initialFocus?: boolean
   reply?: boolean
   className?: string
-} & CommentRowProps
+} & Omit<CommentRowProps, 'isInput'>
 
 const COMMENT_LIMIT = 50000
 const ERROR_SNACKBAR_TIMEOUT = 5000
@@ -104,10 +103,10 @@ export const CommentInput = React.forwardRef<HTMLTextAreaElement, CommentInputPr
       onComment?.()
     }
 
-    const show = !!value || active || processing
+    const show = !!value || active || !!processing
     const canComment = !!value && hasInitialValueChanged
     return (
-      <StyledCommentRow {...rest} processing={processing} show={show} className={className}>
+      <StyledCommentRow {...rest} processing={processing} isInput show={show} className={className}>
         <Container
           ref={containerRef}
           onFocus={() => {
