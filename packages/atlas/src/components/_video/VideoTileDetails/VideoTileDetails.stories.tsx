@@ -20,12 +20,12 @@ export default {
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Provident distinctio omnis, voluptates molestias temporibus, incidunt tenetur totam impedit sed sunt atque veritatis ratione quisquam cum sapiente molestiae in voluptatibus iusto',
     kebabMenuItems: [
       {
-        icon: <SvgActionTrash />,
-        title: 'Delete video',
+        nodeStart: <SvgActionTrash />,
+        label: 'Delete video',
       },
       {
-        icon: <SvgActionReupload />,
-        title: 'Reupload file',
+        nodeStart: <SvgActionReupload />,
+        label: 'Reupload file',
       },
     ],
     type: 'video',

@@ -2,10 +2,11 @@ import { FC, PropsWithChildren } from 'react'
 import { To } from 'react-router'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { ListItemProps } from '@/components/ListItem'
 import { Text } from '@/components/Text'
 import { SvgActionMore } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { cVar, transitions } from '@/styles'
 import { formatVideoDate } from '@/utils/video'
 
@@ -38,7 +39,7 @@ export type VideoTileDetailsProps = {
   loadingAvatar?: boolean
   loading?: boolean
   size?: 'small' | 'medium'
-  kebabMenuItems?: MenuItemProps[]
+  kebabMenuItems?: ListItemProps[]
   variant?: VideoDetailsVariant
   type?: 'video' | 'playlist'
   playlistUrl?: string

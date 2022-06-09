@@ -20,14 +20,14 @@ export const VideoTileDraft: FC<VideoTilePublisherProps> = memo(({ id, onDeleteV
 
   const kebabMenuItems = [
     {
-      icon: <SvgActionEdit />,
+      nodeStart: <SvgActionEdit />,
       onClick: onClick,
-      title: 'Edit draft',
+      label: 'Edit draft',
     },
     {
-      icon: <SvgActionTrash />,
+      nodeStart: <SvgActionTrash />,
       onClick: onDeleteVideoClick,
-      title: 'Delete draft',
+      label: 'Delete draft',
       destructive: true,
     },
   ]

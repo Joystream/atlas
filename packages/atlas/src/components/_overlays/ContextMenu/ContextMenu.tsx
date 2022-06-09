@@ -1,20 +1,13 @@
-import { FC, ReactNode, useRef } from 'react'
+import { FC, useRef } from 'react'
 
-import { ListItem } from '@/components/ListItem'
+import { List } from '@/components/List'
+import { ListItemProps } from '@/components/ListItem'
 
 import { ContextMenuSizes, StyledContainer } from './ContextMenu.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-export type MenuItemProps = {
-  icon: ReactNode
-  title: string
-  onClick?: () => void
-  disabled?: boolean
-  destructive?: boolean
-}
-
-export type ContextMenuProps = { items: MenuItemProps[]; scrollable?: boolean; size?: ContextMenuSizes } & Omit<
+export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ContextMenuSizes } & Omit<
   PopoverProps,
   'content' | 'instanceRef'
 >
@@ -30,19 +23,16 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
       <StyledContainer scrollable={scrollable} size={size}>
-        {items.map((item, index) => (
-          <ListItem
-            size={size}
-            key={index}
-            onClick={() => {
-              item.onClick?.()
+        <List
+          size={size}
+          items={items.map((item) => ({
+            ...item,
+            onClick: (e) => {
+              item.onClick?.(e)
               contextMenuInstanceRef.current?.hide()
-            }}
-            label={item.title}
-            nodeStart={item.icon}
-            destructive={item.destructive}
-          />
-        ))}
+            },
+          }))}
+        />
       </StyledContainer>
     </Popover>
   )

@@ -1,6 +1,7 @@
 import { FC, ReactNode, memo, useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { ListItemProps } from '@/components/ListItem'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import {
@@ -16,7 +17,7 @@ import {
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
-import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
+import { ContextMenu } from '@/components/_overlays/ContextMenu'
 import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
 
@@ -122,53 +123,53 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
   }, [copyToClipboard, videoHref])
 
   const getContextMenuContent = useMemo(() => {
-    const elements: MenuItemProps[] = [
+    const elements: ListItemProps[] = [
       {
-        icon: <SvgActionCopy />,
-        title: 'Copy video URL',
+        nodeStart: <SvgActionCopy />,
+        label: 'Copy video URL',
         onClick: handleCopyVideoURLClick,
       },
     ]
     if (needsSettling && (isOwner || isUserTopBidder)) {
       elements.unshift({
-        icon: <SvgActionShoppingCart />,
-        title: 'Settle auction',
+        nodeStart: <SvgActionShoppingCart />,
+        label: 'Settle auction',
         onClick: () => onSettleAuction && onSettleAuction(),
       })
     }
     if (canPutOnSale) {
       elements.unshift({
-        icon: <SvgActionSell />,
-        title: 'Start sale',
+        nodeStart: <SvgActionSell />,
+        label: 'Start sale',
         onClick: () => onPutOnSale && onPutOnSale(),
       })
     }
     if (canCancelSale) {
       elements.unshift({
-        icon: <SvgActionCancel />,
-        title: 'Remove from sale',
+        nodeStart: <SvgActionCancel />,
+        label: 'Remove from sale',
         destructive: true,
         onClick: onRemoveFromSale,
       })
     }
     if (canChangePrice) {
       elements.unshift({
-        icon: <SvgActionChangePrice />,
-        title: 'Change price',
+        nodeStart: <SvgActionChangePrice />,
+        label: 'Change price',
         onClick: onChangePrice,
       })
     }
     if (canBuyNow) {
       elements.unshift({
-        icon: <SvgActionBuyNow />,
-        title: 'Buy now',
+        nodeStart: <SvgActionBuyNow />,
+        label: 'Buy now',
         onClick: onBuyNow,
       })
     }
     if (canMakeBid) {
       elements.unshift({
-        icon: <SvgActionBid />,
-        title: 'Place bid',
+        nodeStart: <SvgActionBid />,
+        label: 'Place bid',
         onClick: onMakeBid,
       })
     }

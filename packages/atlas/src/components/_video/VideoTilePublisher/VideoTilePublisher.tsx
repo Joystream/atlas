@@ -39,8 +39,8 @@ import { VideoTile } from '../VideoTile'
 
 type VideoTilePublisherProps = {
   id?: string
-  onEditClick?: (e?: MouseEvent<HTMLElement>) => void
-  onMintNftClick?: (e?: MouseEvent<HTMLElement>) => void
+  onEditClick?: (e?: MouseEvent<Element>) => void
+  onMintNftClick?: (e?: MouseEvent<Element>) => void
   onDeleteVideoClick?: () => void
   onReuploadVideoClick?: () => void
 }
@@ -186,16 +186,16 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
       }
       const assetFailedKebabItems = [
         {
-          icon: <SvgActionReupload />,
+          nodeStart: <SvgActionReupload />,
           onClick: onReuploadVideoClick,
-          title: 'Reupload file',
+          label: 'Reupload file',
         },
         ...(!hasNft
           ? [
               {
-                icon: <SvgActionTrash />,
+                nodeStart: <SvgActionTrash />,
                 onClick: onDeleteVideoClick,
-                title: 'Delete video',
+                label: 'Delete video',
                 destructive: true,
               },
             ]
@@ -210,54 +210,54 @@ export const VideoTilePublisher: FC<VideoTilePublisherProps> = memo(
 
       const publisherBasicKebabItems = [
         {
-          icon: <SvgActionPlay />,
+          nodeStart: <SvgActionPlay />,
           onClick: onOpenInTabClick,
-          title: 'Play in Joystream',
+          label: 'Play in Joystream',
         },
         {
-          icon: <SvgActionCopy />,
+          nodeStart: <SvgActionCopy />,
           onClick: () => {
             copyToClipboard(videoHref ? location.origin + videoHref : '', 'Video URL copied to clipboard')
           },
-          title: 'Copy video URL',
+          label: 'Copy video URL',
         },
         {
-          icon: <SvgActionEdit />,
+          nodeStart: <SvgActionEdit />,
           onClick: onEditClick,
-          title: 'Edit video',
+          label: 'Edit video',
         },
         ...(hasNft
           ? [
               ...(needsSettling
                 ? [
                     {
-                      icon: <SvgActionShoppingCart />,
+                      nodeStart: <SvgActionShoppingCart />,
                       onClick: () => id && openNftSettlement(id),
-                      title: 'Settle auction',
+                      label: 'Settle auction',
                     },
                   ]
                 : []),
               ...(canPutOnSale
-                ? [{ icon: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), title: 'Start sale' }]
+                ? [{ nodeStart: <SvgActionSell />, onClick: () => openNftPutOnSale(id || ''), label: 'Start sale' }]
                 : []),
               ...(canCancelSale && saleType
                 ? [
                     {
-                      icon: <SvgActionTrash />,
+                      nodeStart: <SvgActionTrash />,
                       onClick: () => cancelNftSale(id || '', saleType),
-                      title: 'Remove from sale',
+                      label: 'Remove from sale',
                       destructive: true,
                     },
                   ]
                 : []),
             ]
-          : [{ icon: <SvgActionMint />, onClick: onMintNftClick, title: 'Mint NFT' }]),
+          : [{ nodeStart: <SvgActionMint />, onClick: onMintNftClick, label: 'Mint NFT' }]),
         ...(!hasNft && !canCancelSale
           ? [
               {
-                icon: <SvgActionTrash />,
+                nodeStart: <SvgActionTrash />,
                 onClick: onDeleteVideoClick,
-                title: 'Delete video',
+                label: 'Delete video',
                 destructive: true,
               },
             ]

@@ -126,12 +126,12 @@ Draft.args = {
   videoTitle: 'Draft',
   kebabMenuItems: [
     {
-      icon: <SvgActionEdit />,
-      title: 'Edit draft',
+      nodeStart: <SvgActionEdit />,
+      label: 'Edit draft',
     },
     {
-      icon: <SvgActionTrash />,
-      title: 'Delete draft',
+      nodeStart: <SvgActionTrash />,
+      label: 'Delete draft',
       destructive: true,
     },
   ],
@@ -183,20 +183,20 @@ Publisher.args = {
   },
   kebabMenuItems: [
     {
-      icon: <SvgActionPlay />,
-      title: 'Play in Joystream',
+      nodeStart: <SvgActionPlay />,
+      label: 'Play in Joystream',
     },
     {
-      icon: <SvgActionCopy />,
-      title: 'Copy video URL',
+      nodeStart: <SvgActionCopy />,
+      label: 'Copy video URL',
     },
     {
-      icon: <SvgActionEdit />,
-      title: 'Edit video',
+      nodeStart: <SvgActionEdit />,
+      label: 'Edit video',
     },
     {
-      icon: <SvgActionTrash />,
-      title: 'Delete video',
+      nodeStart: <SvgActionTrash />,
+      label: 'Delete video',
     },
   ],
   detailsVariant: 'withoutChannel',

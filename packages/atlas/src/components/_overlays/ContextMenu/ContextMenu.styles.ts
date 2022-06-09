@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, sizes } from '@/styles'
+import { sizes } from '@/styles'
 
 export type ContextMenuSizes = 'small' | 'medium' | 'large'
 
@@ -33,10 +33,8 @@ const getHeightStyles = ({ scrollable, size }: StyledContainerProps) => {
 export const StyledContainer = styled.div<StyledContainerProps>`
   ${getHeightStyles};
 
-  background-color: ${cVar('colorBackgroundStrong')};
   width: 192px;
   word-break: break-all;
-  border-radius: ${cVar('radiusSmall')};
   overflow: auto;
   padding: ${sizes(1)} 0;
   box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};

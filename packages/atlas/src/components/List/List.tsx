@@ -33,5 +33,6 @@ const ListWrapper = styled.div`
   padding: 0;
   box-shadow: ${cVar('effectElevation16Layer1')};
   background-color: ${cVar('colorBackgroundStrong')};
+  border-radius: ${cVar('radiusSmall')};
   list-style: none;
 `
