@@ -172,8 +172,8 @@ export const useReactionTransactions = () => {
         },
         minimized: {
           errorMessage: parentCommentId
-            ? `Your reply to the comment from “${commentAuthorHandle}” was not posted.`
-            : `Your comment to the video ${videoTitle} has not been posted.`,
+            ? `Your reply to the comment from "${commentAuthorHandle}" was not posted.`
+            : `Your comment to the video "${videoTitle}" has not been posted.`,
         },
         unsignedMessage: parentCommentId ? 'To leave your reply' : 'To leave your comment',
       })
@@ -208,7 +208,7 @@ export const useReactionTransactions = () => {
             proxyCallback(updateStatus)
           ),
         minimized: {
-          errorMessage: `Your reaction to the comment from ${commentAuthorHandle} has not been posted.`,
+          errorMessage: `Your reaction to the comment from "${commentAuthorHandle}" has not been posted.`,
         },
         allowMultiple: true,
         onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
@@ -243,7 +243,7 @@ export const useReactionTransactions = () => {
           ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
-          errorMessage: `Your comment to the video ${videoTitle} has not been edited.`,
+          errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
         },
         unsignedMessage: 'To edit your comment',
       })
@@ -267,7 +267,7 @@ export const useReactionTransactions = () => {
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          errorMessage: `Your comment to the video ${videoTitle} has not been deleted.`,
+          errorMessage: `Your comment to the video "${videoTitle}" has not been deleted.`,
         },
         unsignedMessage: 'To delete your comment',
       })
@@ -292,14 +292,14 @@ export const useReactionTransactions = () => {
           ),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
-          description: `Comment from “${commentAuthorHandle}” to your video has been deleted.`,
+          description: `Comment from "${commentAuthorHandle}" to your video has been deleted.`,
           actionText: 'Go to video',
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          errorMessage: `Comment from “${commentAuthorHandle}” to your video has not been deleted.`,
+          errorMessage: `Comment from "${commentAuthorHandle}" to your video has not been deleted.`,
         },
-        unsignedMessage: `To delete comment from “${commentAuthorHandle}”`,
+        unsignedMessage: `To delete comment from "${commentAuthorHandle}"`,
       })
     },
     [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
@@ -316,7 +316,7 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
         minimized: {
-          errorMessage: `Reaction to the video ${videoTitle || ''} was not posted.`,
+          errorMessage: `Reaction to the video "${videoTitle || ''}" was not posted.`,
         },
         onTxSync: async () => {
           await refetchVideo(videoId)
