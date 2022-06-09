@@ -33,7 +33,7 @@ export const CustomPlaceholderHandle = styled(Text)`
   color: inherit;
 `
 
-export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': boolean }>`
+export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing'?: boolean }>`
   display: inline-block;
   background-color: ${cVar('colorBackgroundMuted')};
   width: 100%;
@@ -60,7 +60,7 @@ export const StyledTextArea = styled(TextareaAutosize)<{ 'data-processing': bool
   }
 `
 
-export const Border = styled.div<{ 'data-focused': boolean; 'data-processing': boolean }>`
+export const Border = styled.div<{ 'data-focused': boolean; 'data-processing'?: boolean }>`
   overflow-x: hidden;
   width: 100%;
   height: 1px;
@@ -109,7 +109,7 @@ export const Container = styled.label<{ 'data-show': boolean; height: number }>`
   }
 `
 
-export const StyledCommentRow = styled(CommentRow)<{ 'show': boolean; 'processing': boolean }>`
+export const StyledCommentRow = styled(CommentRow)<{ show: boolean; processing?: boolean }>`
   &:hover {
     ${({ processing, show }) => !show && !processing && Border} {
       background-color: ${cVar('colorBorderAlpha')};

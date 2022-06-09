@@ -302,7 +302,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
               onComment={handleComment}
               hasInitialValueChanged={!!replyCommentInputText}
               value={replyCommentInputText}
-              isInput
               onChange={(event) => setReplyCommentInputText(event.target.value)}
               indented
               onCancel={() => {
