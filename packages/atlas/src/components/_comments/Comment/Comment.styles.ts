@@ -35,6 +35,7 @@ export const CommentWrapper = styled.div<{ shouldShowKebabButton: boolean }>`
 export const CommentArticle = styled.article<{ isDeleted?: boolean }>`
   display: grid;
   grid-auto-flow: row;
+  justify-items: start;
   gap: ${({ isDeleted }) => (isDeleted ? sizes(3) : sizes(2))};
   align-items: start;
 `
