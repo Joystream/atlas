@@ -82,30 +82,7 @@ export const SelectMenu = styled.ul<SelectMenuProps>`
   margin-top: 0;
   z-index: ${zIndex.globalOverlay};
   padding: 0;
-  background-color: ${cVar('colorCoreNeutral700')};
-  color: ${cVar('colorCoreBaseWhite')};
+  box-shadow: ${cVar('effectElevation16Layer1')};
+  background-color: ${cVar('colorBackgroundStrong')};
   list-style: none;
-`
-type SelectOptionProps = {
-  isSelected?: boolean
-}
-
-export const SelectOption = styled.li<SelectOptionProps>`
-  display: flex;
-  align-items: center;
-  margin: 0;
-  cursor: pointer;
-  padding: ${sizes(2.5)};
-  font: ${cVar('typographyDesktopT200')};
-  letter-spacing: ${cVar('typographyDesktopT200LetterSpacing')};
-  text-transform: ${cVar('typographyDesktopT200TextTransform')};
-  background-color: ${({ isSelected }) => (isSelected ? cVar('colorCoreNeutral600') : 'none')};
-
-  :hover {
-    background-color: ${cVar('colorCoreNeutral600')};
-  }
-
-  *:first-of-type {
-    margin-right: ${sizes(2)};
-  }
 `
