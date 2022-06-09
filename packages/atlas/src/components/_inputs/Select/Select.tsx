@@ -2,7 +2,8 @@ import { UseSelectStateChange, useSelect } from 'downshift'
 import { isEqual } from 'lodash-es'
 import { ForwardedRef, ReactNode, Ref, forwardRef, useMemo } from 'react'
 
-import { ListItem, ListItemProps } from '@/components/ListItem'
+import { List } from '@/components/List'
+import { ListItemProps } from '@/components/ListItem'
 import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
 import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
@@ -118,23 +119,23 @@ export const _Select = <T extends unknown>(
           </ValueAndPlaceholderText>
           <SelectChevronWrapper>{isOpen ? <SvgActionChevronT /> : <SvgActionChevronB />}</SelectChevronWrapper>
         </SelectButton>
-        <SelectMenu isOpen={isOpen} {...getMenuProps()}>
-          {isOpen &&
-            items.map(({ name, value, hideInMenu, onClick, ...rest }, index) => {
-              const itemProps = { ...getItemProps({ item: value, index, onClick }) }
-              if (hideInMenu) return null
-              return (
-                <ListItem
-                  key={`${name}-${index}`}
-                  selected={value === selectedItemValue}
-                  highlight={highlightedIndex === index}
-                  size={size}
-                  label={name}
-                  {...rest}
-                  {...itemProps}
-                />
-              )
-            })}
+        <SelectMenu {...getMenuProps()}>
+          {isOpen && (
+            <List
+              items={items.map((item, index) => {
+                return item.hideInMenu
+                  ? null
+                  : {
+                      selected: item.value === selectedItemValue,
+                      highlight: highlightedIndex === index,
+                      label: item.name,
+                      ...item,
+                      ...getItemProps({ item: item.value, index, onClick: item.onClick }),
+                    }
+              })}
+              size={size}
+            />
+          )}
         </SelectMenu>
       </SelectMenuWrapper>
     </SelectWrapper>

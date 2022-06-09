@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { cVar, sizes, zIndex } from '@/styles'
+import { cVar, sizes } from '@/styles'
 
 import { InputSize, getBaseInputStyles, getInputPadding, sharedInputStyles } from '../inputs.utils'
 
@@ -70,19 +70,7 @@ export const SelectChevronWrapper = styled.div`
   margin-left: auto;
 `
 
-type SelectMenuProps = {
-  isOpen?: boolean
-}
-
-export const SelectMenu = styled.ul<SelectMenuProps>`
+export const SelectMenu = styled.div`
   width: 100%;
-  max-height: 300px;
-  position: absolute;
-  overflow-y: auto;
-  margin-top: 0;
-  z-index: ${zIndex.globalOverlay};
-  padding: 0;
-  box-shadow: ${cVar('effectElevation16Layer1')};
-  background-color: ${cVar('colorBackgroundStrong')};
-  list-style: none;
+  position: relative;
 `
