@@ -283,8 +283,7 @@ export const ChannelView: FC = () => {
                   />
                 )}
                 <StyledSelect
-                  size="small"
-                  labelPosition="left"
+                  size="medium"
                   disabled={isSearching}
                   value={!isSearching ? (currentTab === 'Videos' ? sortVideosBy : sortNftsBy) : 0}
                   placeholder={isSearching ? 'Best match' : undefined}

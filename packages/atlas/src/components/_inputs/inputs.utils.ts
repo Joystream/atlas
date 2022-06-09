@@ -22,7 +22,7 @@ export const sharedInputStyles = {
     background-color: ${cVar('colorBackgroundMutedAlpha')};
     transition: ${cVar('animationTransitionFast')};
     transition-property: background-color, color, box-shadow;
-    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorder')};
+    box-shadow: inset 0 -2px 0 0 ${cVar('colorBorder')};
 
     ::placeholder {
       font: inherit;

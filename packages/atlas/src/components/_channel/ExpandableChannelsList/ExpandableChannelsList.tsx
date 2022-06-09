@@ -77,7 +77,7 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
             {loading ? <SkeletonLoader height={23} width={250} /> : <Text variant="h500">{title}</Text>}
             {languageSelector && (
               <LanguageSelectWrapper>
-                <Select items={languages} value={selectedLanguage} size="small" onChange={handleLanguageSelect} />
+                <Select items={languages} value={selectedLanguage} size="medium" onChange={handleLanguageSelect} />
               </LanguageSelectWrapper>
             )}
             {additionalLink && (

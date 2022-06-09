@@ -28,7 +28,6 @@ import { NftIssuanceInputMetadata, VideoInputMetadata } from '@/joystream-lib'
 import { useRawAssetResolver } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
 import {
-  DEFAULT_LICENSE_ID,
   VideoFormAssets,
   VideoFormData,
   VideoWorkspaceFormStatus,
@@ -66,10 +65,16 @@ const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
-  badgeText: license.code === DEFAULT_LICENSE_ID ? 'Default' : undefined,
-  tooltipText: license.description,
-  tooltipHeaderText: license.longName,
-  tooltipMultiline: true,
+  nodeStart: (
+    <Information
+      multiline
+      headerText={license.longName}
+      text={license.description}
+      placement="top-end"
+      offsetX={6}
+      offsetY={12}
+    />
+  ),
 }))
 
 type VideoFormProps = {

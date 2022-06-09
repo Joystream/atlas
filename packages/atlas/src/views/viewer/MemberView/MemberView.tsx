@@ -164,13 +164,7 @@ export const MemberView: FC = () => {
             />
             {currentTab && ['NFTs owned', 'Activity'].includes(currentTab) && (
               <SortContainer>
-                <Select
-                  size="small"
-                  labelPosition="left"
-                  value={sortBy}
-                  items={NFT_SORT_OPTIONS}
-                  onChange={handleSorting}
-                />
+                <Select size="medium" value={sortBy} items={NFT_SORT_OPTIONS} onChange={handleSorting} />
               </SortContainer>
             )}
             {currentTab === 'NFTs owned' && (

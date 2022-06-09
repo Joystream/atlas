@@ -260,7 +260,7 @@ export const FiltersBar: FC<ReturnType<typeof useFiltersBar> & FiltersBarProps> 
                 <Select
                   items={[{ name: 'All languages', value: 'undefined' }, ...languages]}
                   placeholder="Any language"
-                  size="small"
+                  size="medium"
                   value={language}
                   onChange={setLanguage}
                 />

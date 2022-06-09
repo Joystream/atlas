@@ -266,9 +266,8 @@ export const MyVideosView = () => {
 
   const sortSelectNode = (
     <Select
-      size="small"
-      labelPosition="left"
-      label="Sort by"
+      size="medium"
+      inlineLabel="Sort by"
       value={sortVideosBy}
       items={VIDEO_SORT_OPTIONS}
       onChange={handleSorting}
@@ -341,9 +340,8 @@ export const MyVideosView = () => {
           )}
           {!mdMatch && sortVisibleAndUploadButtonVisible && (
             <StyledSelect
-              size="small"
-              labelPosition="left"
-              label="Sort by"
+              size="medium"
+              inlineLabel="Sort by"
               value={sortVideosBy}
               items={VIDEO_SORT_OPTIONS}
               onChange={handleSorting}

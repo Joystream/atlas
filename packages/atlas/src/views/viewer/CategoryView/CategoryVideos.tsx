@@ -90,9 +90,9 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
 
   const sortingNode = (
     <StyledSelect
-      size="small"
+      size="medium"
       value={sortVideosBy}
-      valueLabel="Sort by: "
+      inlineLabel="Sort by"
       items={ADAPTED_SORT_OPTIONS}
       onChange={handleSorting}
     />
@@ -111,7 +111,7 @@ export const CategoryVideos: FC<{ categoryId: string }> = ({ categoryId }) => {
             {smMatch ? (
               <StyledSelect
                 onChange={handleSelectLanguage}
-                size="small"
+                size="medium"
                 value={language}
                 items={SELECT_LANGUAGE_ITEMS}
               />
