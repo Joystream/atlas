@@ -178,6 +178,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
       setReplyCommentInputText('')
       setHighlightedCommentId?.(newCommentId || null)
       onReplyPosted?.(newCommentId || '')
+      setRepliesOpen?.(true)
       setReplyInputOpen(false)
     }
 
@@ -190,7 +191,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
         replyCommentInputRef.current?.focus()
       }
       setReplyInputOpen(true)
-      setRepliesOpen?.(true)
     }
 
     const handleOnEditClick = () => {
