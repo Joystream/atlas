@@ -6,22 +6,16 @@ import { RadioInput } from '../RadioInput'
 export type RadioButtonProps = Partial<{
   selectedValue: string | number
   label: string
-  helperText?: string
+  caption?: string
   className?: string
   error?: boolean
 }> &
   React.InputHTMLAttributes<HTMLInputElement>
 
 export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
-  ({ value, selectedValue, label, helperText, className, disabled, error, onChange, ...props }, ref) => {
+  ({ value, selectedValue, label, caption, className, disabled, error, onChange, ...props }, ref) => {
     return (
-      <RadioAndCheckboxBase
-        disabled={disabled}
-        className={className}
-        label={label}
-        error={error}
-        helperText={helperText}
-      >
+      <RadioAndCheckboxBase disabled={disabled} className={className} label={label} error={error} helperText={caption}>
         <RadioInput
           {...props}
           ref={ref}

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { cVar, square } from '@/styles'
+import { cVar, sizes, square, zIndex } from '@/styles'
 
 type StyledRadioInputProps = {
   error?: boolean
@@ -17,10 +17,12 @@ export const StyledRadioInput = styled.div<StyledRadioInputProps>`
   justify-content: center;
   align-items: center;
   background-clip: content-box;
-  padding: 4px;
+  padding: ${sizes(1)};
   box-sizing: border-box;
   border: 1px solid ${({ error }) => cVar(error ? 'colorBorderError' : 'colorBorderAlpha')};
   transition: all ${cVar('animationTransitionFast')};
+
+  /* highlight */
 
   ::before {
     content: '';
@@ -36,6 +38,8 @@ export const StyledRadioInput = styled.div<StyledRadioInputProps>`
     transition: all ${cVar('animationTransitionFast')};
   }
 
+  /* inner dot */
+
   ::after {
     ${square('8px')};
 
@@ -50,6 +54,11 @@ export const StyledRadioInput = styled.div<StyledRadioInputProps>`
 `
 
 const hoverStyles = css`
+  :checked {
+    + ${StyledRadioInput} {
+      background-color: ${cVar('colorBackgroundPrimaryStrong')};
+    }
+  }
   + ${StyledRadioInput} {
     ::before {
       background-color: ${cVar('colorBackgroundStrongAlpha')};
@@ -65,8 +74,8 @@ export const Input = styled.input<{ error?: boolean }>`
   left: 0;
   margin: auto;
   opacity: 0;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  z-index: 999;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  z-index: ${zIndex.overlay};
 
   :disabled:not(:checked) {
     + ${StyledRadioInput} {

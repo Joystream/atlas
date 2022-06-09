@@ -13,7 +13,7 @@ export default {
   },
   args: {
     label: 'Hello there',
-    helperText: 't100',
+    caption: 't100',
     disabled: false,
     error: false,
     selected: false,

@@ -16,7 +16,7 @@ export default {
   },
   args: {
     label: 'Hello there',
-    helperText: 't100',
+    caption: 't100',
     disabled: false,
     error: false,
   },
@@ -32,17 +32,17 @@ const Template: Story = (args) => {
   const ITEMS = [
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
       value: '1',
     },
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
       value: '2',
     },
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
       value: '3',
     },
   ]

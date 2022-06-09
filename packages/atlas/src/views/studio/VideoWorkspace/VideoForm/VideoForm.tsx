@@ -16,7 +16,7 @@ import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
 import { Input } from '@/components/_inputs/Input'
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
-import { RadioButton } from '@/components/_inputs/RadioButton'
+import { RadioButtonGroup } from '@/components/_inputs/RadioButtonGroup'
 import { Select, SelectItem } from '@/components/_inputs/Select'
 import { Switch } from '@/components/_inputs/Switch'
 import { TextArea } from '@/components/_inputs/TextArea'
@@ -47,7 +47,6 @@ import {
   InputsContainer,
   MoreSettingsDescription,
   MoreSettingsSection,
-  RadioButtonsContainer,
   RadioCardButtonsContainer,
   StyledBanner,
   StyledMultiFileSelect,
@@ -419,21 +418,16 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           validate: (value) => value !== null,
         }}
         render={({ field: { value, onChange, ref } }) => (
-          <RadioButtonsContainer>
-            <RadioButton
-              ref={ref}
-              value="true"
-              label="Enable comments"
-              onChange={() => onChange(true)}
-              selectedValue={value?.toString()}
-            />
-            <RadioButton
-              value="false"
-              label="Disable comments"
-              onChange={() => onChange(false)}
-              selectedValue={value?.toString()}
-            />
-          </RadioButtonsContainer>
+          <RadioButtonGroup
+            ref={ref}
+            options={[
+              { label: 'Enable comments', value: 'true' },
+              { label: 'Disable comments', value: 'false' },
+            ]}
+            error={!!errors.isExplicit}
+            onChange={(event) => onChange(event.target.value)}
+            value={value?.toString() || 'true'}
+          />
         )}
       />
     </FormField>
@@ -676,27 +670,18 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                 validate: (value) => value !== null,
               }}
               render={({ field: { value, onChange, ref } }) => (
-                <RadioButtonsContainer>
-                  <RadioButton
-                    ref={ref}
-                    value="false"
-                    label="All audiences"
-                    onChange={() => onChange(false)}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                    disabled={videoFieldsLocked}
-                  />
-                  <RadioButton
-                    value="true"
-                    label="Mature"
-                    onChange={() => onChange(true)}
-                    selectedValue={value?.toString()}
-                    error={!!errors.isExplicit}
-                    helperText={errors.isExplicit ? 'Content rating must be selected' : ''}
-                    disabled={videoFieldsLocked}
-                  />
-                </RadioButtonsContainer>
+                <RadioButtonGroup
+                  ref={ref}
+                  options={[
+                    { label: 'All audiences', value: 'false' },
+                    { label: 'Mature', value: 'true' },
+                  ]}
+                  error={!!errors.isExplicit}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value.toString()}
+                  disabled={videoFieldsLocked}
+                  caption={errors.isExplicit ? 'Content rating must be selected' : ''}
+                />
               )}
             />
           </FormField>

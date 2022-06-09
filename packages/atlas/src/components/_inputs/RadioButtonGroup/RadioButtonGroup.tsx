@@ -11,33 +11,33 @@ export type RadioButtonGroupProps = {
   name?: string
   disabled?: boolean
   error?: boolean
+  caption?: string
+  className?: string
 }
 
-export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
-  options,
-  value,
-  onChange,
-  name,
-  disabled,
-  error,
-}) => {
-  return (
-    <Wrapper>
-      {options.map((option) => (
-        <RadioButton
-          disabled={disabled}
-          error={error}
-          name={name}
-          key={`radio-button-group-${option.id}`}
-          label="test"
-          onChange={onChange}
-          selectedValue={value}
-          {...option}
-        />
-      ))}
-    </Wrapper>
-  )
-}
+export const RadioButtonGroup = React.forwardRef<HTMLDivElement, RadioButtonGroupProps>(
+  ({ options, value, onChange, name, disabled, error, caption, className }) => {
+    return (
+      <Wrapper className={className}>
+        {options.map((option) => (
+          <RadioButton
+            disabled={disabled}
+            error={error}
+            name={name}
+            key={`radio-button-group-${option.value}`}
+            label="test"
+            onChange={onChange}
+            selectedValue={value}
+            caption={caption || option.caption}
+            {...option}
+          />
+        ))}
+      </Wrapper>
+    )
+  }
+)
+
+RadioButtonGroup.displayName = 'RadioButtonGroup'
 
 export const Wrapper = styled.div`
   display: grid;
