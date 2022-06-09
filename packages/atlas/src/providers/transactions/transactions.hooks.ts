@@ -77,14 +77,18 @@ export const useTransaction = (): HandleTransactionFn => {
       }
 
       // get transactions with getState() - this way the hook doesn't subscribe to state changes and can restrict re-renders of consumers
-      const transactionAlreadyPending = Object.values(useTransactionManagerStore.getState().transactions)[0]
+      const pendingTransactions = Object.values(useTransactionManagerStore.getState().transactions)
+      const anyPendingTransactions = pendingTransactions.length > 0
+      const anyUnsignedTransaction = pendingTransactions.some((tx) => tx.status === ExtrinsicStatus.Unsigned)
 
-      if (transactionAlreadyPending && !allowMultiple) {
-        const isUnsigned = transactionAlreadyPending.status === ExtrinsicStatus.Unsigned
+      // don't continue if:
+      // 1. there is any transaction waiting for signature, OR
+      // 2. there is any transaction in progress and `allowMultiple` is false
+      if (anyUnsignedTransaction || (anyPendingTransactions && !allowMultiple)) {
         openOngoingTransactionModal({
-          title: isUnsigned ? 'Sign outstanding transactions' : 'Wait for other transactions',
+          title: anyUnsignedTransaction ? 'Sign outstanding transactions' : 'Wait for other transactions',
           type: 'informative',
-          description: isUnsigned
+          description: anyUnsignedTransaction
             ? 'You have outstanding blockchain transactions waiting for you to sign them in Polkadot. Please, sign or cancel previous transactions in Polkadot to continue.'
             : 'You have other blockchain transactions which are still being processed. Please, try again in about a minute.',
           primaryButton: {

@@ -84,9 +84,9 @@ const _CommentThread: React.FC<CommentThreadProps> = ({
       )}
       {repliesOpen && (
         <>
-          {replies?.map((comment, idx) => (
+          {replies?.map((comment) => (
             <Comment
-              key={`${comment.id}-${idx}`}
+              key={comment.id}
               highlighted={comment.id === highlightedCommentId}
               commentId={comment.id}
               video={video}
