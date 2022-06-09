@@ -14,7 +14,7 @@ import { useMemberAvatar } from '@/providers/assets'
 import { createLookup } from '@/utils/data'
 import { SentryLogger } from '@/utils/logs'
 
-import { MemberBadgesWrapper, StyledMemberBadge, StyledSelectedText } from './MemberComboBox.styles'
+import { MemberBadgesWrapper, StyledOutputPill, StyledSelectedText } from './MemberComboBox.styles'
 
 import { ComboBox } from '../ComboBox'
 
@@ -102,7 +102,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
         placeholder={selectedMembers.length ? 'Enter another member handle' : 'Enter member handle'}
         notFoundNode={notFoundNode}
         resetOnSelect
-        loading={isLoading}
+        processing={isLoading}
         error={isError || error}
         onSelectedItemChange={handleSelect}
         onInputValueChange={(val) => {
@@ -118,7 +118,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
           </StyledSelectedText>
         )}
         {selectedMembers.map((member) => (
-          <MemberBadgeWithResolvedAsset
+          <StyledOutputPillWithResolvedAsset
             key={member.id}
             member={member}
             onDeleteClick={() => handleDeleteClick(member.id)}
@@ -138,19 +138,20 @@ const AvatarWithResolvedAsset: FC<AvatarWithResolvedAssetProps> = ({ member }) =
   return <Avatar assetUrl={url} loading={isLoadingAsset} />
 }
 
-type MemberBadgeWithResolvedAssetProps = {
+type StyledOutputPillWithResolvedAssetProps = {
   member: BasicMembershipFieldsFragment
   onDeleteClick: () => void
 }
 
-const MemberBadgeWithResolvedAsset: FC<MemberBadgeWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
+const StyledOutputPillWithResolvedAsset: FC<StyledOutputPillWithResolvedAssetProps> = ({ member, onDeleteClick }) => {
   const { url, isLoadingAsset } = useMemberAvatar(member)
   return (
-    <StyledMemberBadge
+    <StyledOutputPill
       handle={member.handle}
       onDeleteClick={onDeleteClick}
       avatarUri={url}
       isLoadingAvatar={isLoadingAsset}
+      withAvatar
     />
   )
 }

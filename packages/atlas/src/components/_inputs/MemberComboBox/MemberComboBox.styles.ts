@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { MemberBadge } from '@/components/MemberBadge'
+import { OutputPill } from '@/components/OutputPill'
 import { Text } from '@/components/Text'
 import { sizes } from '@/styles'
 
@@ -14,7 +14,7 @@ export const StyledSelectedText = styled(Text)`
   align-self: center;
 `
 
-export const StyledMemberBadge = styled(MemberBadge)`
+export const StyledOutputPill = styled(OutputPill)`
   margin-left: ${sizes(4)};
   margin-bottom: ${sizes(4)};
 `

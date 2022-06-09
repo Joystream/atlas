@@ -15,7 +15,7 @@ type ModifiedListItemProps = ListItemProps & {
 
 export type ComboBoxProps<T = unknown> = {
   items?: (ModifiedListItemProps & T)[]
-  loading?: boolean
+  processing?: boolean
   onSelectedItemChange?: (item?: ModifiedListItemProps & T) => void
   onInputValueChange?: (item?: string) => void | Promise<void>
   resetOnSelect?: boolean
@@ -27,7 +27,7 @@ export type ComboBoxProps<T = unknown> = {
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
   const {
-    loading,
+    processing,
     items = [],
     onSelectedItemChange,
     onInputValueChange,
@@ -72,7 +72,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
     },
   })
 
-  const noItemsFound = isOpen && !error && inputItems.length === 0 && !loading && notFoundNode
+  const noItemsFound = isOpen && !error && inputItems.length === 0 && !processing && notFoundNode
 
   // This function will calculate the position of dropdown when TextField's helper text is present
   const getTextFieldBottomEdgePosition = () => {
@@ -91,7 +91,7 @@ export const ComboBox = <T extends unknown>(props: ComboBoxProps<T>) => {
           {...textFieldProps}
           error={error || !!noItemsFound}
           {...getInputProps({ ref: textFieldRef })}
-          nodeEnd={loading && <Loader variant="small" />}
+          nodeEnd={processing && <Loader variant="small" />}
         />
       </div>
       <ListWrapper {...getMenuProps()} topPosition={getTextFieldBottomEdgePosition()}>

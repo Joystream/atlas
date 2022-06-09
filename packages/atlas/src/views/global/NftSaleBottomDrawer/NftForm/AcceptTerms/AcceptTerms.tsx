@@ -13,7 +13,7 @@ import {
   MembersList,
   Row,
   StyledInformation,
-  StyledMemberBadge,
+  StyledOutputPill,
   Title,
   WhiteListRow,
 } from './AcceptTerms.styles'
@@ -190,7 +190,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
 
 export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragment }> = ({ member }) => {
   const { isLoadingAsset, url } = useMemberAvatar(member)
-  return <StyledMemberBadge avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} />
+  return <StyledOutputPill avatarUri={url} isLoadingAvatar={isLoadingAsset} handle={member.handle} withAvatar />
 }
 
 export const TitleText: FC<PropsWithChildren> = ({ children }) => (
