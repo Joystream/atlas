@@ -72,6 +72,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
               thumbnail={{
                 loading: thumbnailLoading,
                 thumbnailUrl: thumbnailUrl,
+                type: 'video',
               }}
               creator={{ name: nft?.video.channel.title, assetUrl: avatarUrl }}
               owner={{ name: nft?.ownerMember?.handle, assetUrl: memberAvatarUrl }}
