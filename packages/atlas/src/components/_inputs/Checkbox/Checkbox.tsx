@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SvgActionMinus } from '@/components/_icons'
 
-import { Checkmark, Container, Input, StyledGlyphCheck } from './Checkbox.styles'
+import { CheckboxInput, Checkmark, Container, StyledGlyphCheck } from './Checkbox.styles'
 
 import { RadioAndCheckboxBase } from '../RadioAndCheckboxBase'
 
@@ -57,7 +57,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         }}
       >
         <Container>
-          <Input
+          <CheckboxInput
             name={name}
             ref={ref}
             type="checkbox"

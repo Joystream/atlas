@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { SvgActionCheck } from '@/components/_icons'
-import { cVar, sizes } from '@/styles'
+import { cVar, sizes, square, zIndex } from '@/styles'
 
 export const Container = styled.div`
   position: relative;
@@ -15,11 +15,11 @@ export const Container = styled.div`
 `
 
 export const Checkmark = styled.div<{ error: boolean }>`
+  ${square('16px')};
+
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
   transition: all ${cVar('animationTransitionFast')};
   border: 1px solid ${({ error }) => cVar(error ? 'colorBorderError' : 'colorBorderAlpha')};
   border-radius: ${cVar('radiusSmall')};
@@ -38,10 +38,10 @@ export const Checkmark = styled.div<{ error: boolean }>`
   }
 `
 
-type InputProps = {
+type CheckboxInputProps = {
   error: boolean
 }
-const hoverCheckedStyles = ({ error }: InputProps) => css`
+const hoverCheckedStyles = ({ error }: CheckboxInputProps) => css`
   + ${Checkmark} {
     background-color: ${cVar(error ? 'colorBackgroundErrorStrong' : 'colorBackgroundPrimaryStrong')};
 
@@ -57,16 +57,16 @@ const hoverUncheckedStyles = css`
     }
   }
 `
-export const Input = styled.input<InputProps>`
+export const CheckboxInput = styled.input<CheckboxInputProps>`
+  ${square('100%')};
+
   top: 0;
   left: 0;
   margin: 0;
   opacity: 0;
-  width: 100%;
-  height: 100%;
   position: absolute;
   cursor: inherit;
-  z-index: 999;
+  z-index: ${zIndex.overlay};
 
   :disabled:not(:checked) {
     + ${Checkmark} {
