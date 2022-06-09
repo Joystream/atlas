@@ -74,7 +74,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
   const { comment: commentFromUrl, loading: commentFromUrlLoading } = useComment(
     { commentId: commentIdQueryParam || '' },
     {
-      skip: !commentIdQueryParam || (comments && comments.length === 1),
+      skip: !commentIdQueryParam,
     }
   )
   const { comment: parentCommentFromUrl, loading: parentCommentFromUrlLoading } = useComment(
