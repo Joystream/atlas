@@ -248,7 +248,6 @@ export const Comment: React.FC<CommentProps> = React.memo(
           isMemberAvatarLoading={isMemberAvatarLoading}
           value={editCommentInputText}
           hasInitialValueChanged={comment?.text !== editCommentInputText}
-          withoutOutlineBox
           onFocus={handleOpenSignInDialog}
           onComment={() => handleUpdateComment()}
           onChange={(e) => setEditCommentInputText(e.target.value)}
@@ -303,7 +302,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
               onComment={handleComment}
               hasInitialValueChanged={!!replyCommentInputText}
               value={replyCommentInputText}
-              withoutOutlineBox
+              isInput
               onChange={(event) => setReplyCommentInputText(event.target.value)}
               indented
               onCancel={() => {
