@@ -1,13 +1,13 @@
+import styled from '@emotion/styled'
 import { FC, useRef } from 'react'
 
 import { List } from '@/components/List'
 import { ListItemProps } from '@/components/ListItem'
-
-import { ContextMenuSizes, StyledContainer } from './ContextMenu.styles'
+import { ListItemSizes } from '@/components/ListItem/ListItem.styles'
 
 import { Popover, PopoverImperativeHandle, PopoverProps } from '../Popover'
 
-export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ContextMenuSizes } & Omit<
+export type ContextMenuProps = { items: ListItemProps[]; scrollable?: boolean; size?: ListItemSizes } & Omit<
   PopoverProps,
   'content' | 'instanceRef'
 >
@@ -22,8 +22,9 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   const contextMenuInstanceRef = useRef<PopoverImperativeHandle>(null)
   return (
     <Popover hideOnClick ref={contextMenuInstanceRef} {...rest}>
-      <StyledContainer scrollable={scrollable} size={size}>
+      <StyledContainer>
         <List
+          scrollable={scrollable}
           size={size}
           items={items.map((item) => ({
             ...item,
@@ -37,3 +38,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({
     </Popover>
   )
 }
+
+export const StyledContainer = styled.div`
+  width: 192px;
+`

@@ -122,6 +122,7 @@ export const _Select = <T extends unknown>(
         <SelectMenu {...getMenuProps()}>
           {isOpen && (
             <List
+              scrollable
               items={items.map((item, index) => {
                 return item.hideInMenu
                   ? null

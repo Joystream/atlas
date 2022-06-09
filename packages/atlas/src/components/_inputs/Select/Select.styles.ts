@@ -22,7 +22,6 @@ export const InlineLabel = styled(Text)`
 export const ValueAndPlaceholderText = styled(Text)`
   text-overflow: ellipsis;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 ${sizes(1)};
 `
