@@ -10,11 +10,17 @@ import {
   SvgAlertsSuccess24,
   SvgAlertsWarning24,
 } from '@/components/_icons'
+import { Spinner } from '@/components/_loaders/Spinner'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { cVar, media, sizes, transitions, zIndex } from '@/styles'
 
 import { SnackbarIconType, useSnackbarStore } from './store'
+
+const StyledSpinner = styled(Spinner)`
+  margin-bottom: 0;
+  margin-top: ${sizes(1)};
+`
 
 const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   info: <SvgAlertsInformative24 />,
@@ -22,6 +28,7 @@ const ICON_TYPE_TO_ICON: Record<SnackbarIconType, ReactNode> = {
   error: <SvgAlertsError24 />,
   warning: <SvgAlertsWarning24 />,
   uploading: <SvgActionUpload />,
+  loading: <StyledSpinner size="small" />,
 }
 
 const SNACKBARS_LIMIT = 3
@@ -35,14 +42,15 @@ export const Snackbars: React.FC = () => {
     cookiesAccepted: state.cookiesAccepted,
   }))
   const bottomNavOpen = useBottomNavStore((state) => state.open)
+  const nonStickedSnackbars = snackbars.filter((snackbar) => !snackbar.sticked)
 
   useEffect(() => {
-    if (snackbars.length > SNACKBARS_LIMIT) {
+    if (nonStickedSnackbars.length > SNACKBARS_LIMIT) {
       setTimeout(() => {
-        closeSnackbar(snackbars[0].id)
+        closeSnackbar(nonStickedSnackbars[0].id)
       }, 500)
     }
-  }, [snackbars, closeSnackbar])
+  }, [nonStickedSnackbars, closeSnackbar])
 
   return (
     <SnackbarsContainer cookiesBannerOpen={cookiesAccepted === undefined} bottomNavOpen={bottomNavOpen}>

@@ -166,7 +166,7 @@ export const TabsContainer = styled.div<TabsContainerProps>`
   background-color: #000;
 
   ${media.sm} {
-    align-items: center;
+    align-items: flex-start;
     box-shadow: ${cVar('effectDividersBottom')};
   }
 

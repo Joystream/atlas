@@ -57,8 +57,8 @@ export const SelectButton = styled.button<SelectButtonProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: ${({ isOpen, error, disabled }) =>
-    `1px solid ${
+  box-shadow: ${({ isOpen, error, disabled }) =>
+    `0 0 0 1px ${
       isOpen ? oldColors.blue[500] : error && !disabled ? oldColors.secondary.alert[100] : oldColors.gray[200]
     }`};
   font: ${cVar('typographyDesktopT200')} !important;

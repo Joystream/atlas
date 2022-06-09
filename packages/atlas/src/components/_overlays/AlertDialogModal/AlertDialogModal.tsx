@@ -1,0 +1,95 @@
+import React, { FormEvent } from 'react'
+
+import { Text } from '@/components/Text'
+import { ButtonProps } from '@/components/_buttons/Button'
+import {
+  SvgAlertsInformative24,
+  SvgAlertsInformative32,
+  SvgAlertsWarning24,
+  SvgAlertsWarning32,
+} from '@/components/_icons'
+import { Dialog } from '@/components/_overlays/Dialog'
+import { Modal, ModalProps } from '@/components/_overlays/Modal'
+import { useMediaMatch } from '@/hooks/useMediaMatch'
+
+import { HeaderIconContainer, InformativeIconWrapper } from './AlertDialogModal.styles'
+
+type DialogButtonProps = {
+  text: string
+  disabled?: boolean
+  onClick?: (e: React.MouseEvent) => void
+} & Omit<ButtonProps, 'children'>
+
+export type AlertDialogProps = {
+  title?: React.ReactNode
+  description?: React.ReactNode
+  primaryButton?: DialogButtonProps
+  secondaryButton?: DialogButtonProps
+  className?: string
+  onSubmit?: (e?: FormEvent) => void
+  type?: 'destructive' | 'warning' | 'informative'
+  noIcon?: boolean
+  headerIcon?: React.ReactNode
+  onExitClick?: () => void
+  dividers?: boolean
+  children?: React.ReactNode
+}
+
+export type AlertDialogModalProps = Pick<ModalProps, 'show'> & AlertDialogProps
+
+export const AlertDialogModal: React.FC<AlertDialogModalProps> = ({
+  show,
+  onExitClick,
+  primaryButton,
+  secondaryButton,
+  description,
+  title,
+  children,
+  type = 'informative',
+  noIcon,
+  headerIcon,
+  ...dialogProps
+}) => {
+  const smMatch = useMediaMatch('sm')
+  const isInformative = type === 'informative'
+  const primaryButtonColor = isInformative ? 'primary' : type
+
+  return (
+    <Modal show={show} onExitClick={onExitClick}>
+      <Dialog
+        {...dialogProps}
+        primaryButton={primaryButton ? { ...primaryButton, variant: primaryButtonColor } : undefined}
+        secondaryButton={secondaryButton}
+      >
+        <>
+          {!noIcon &&
+            (headerIcon || (
+              <HeaderIconContainer>
+                <InformativeIconWrapper variant={type}>
+                  {smMatch ? (
+                    isInformative ? (
+                      <SvgAlertsInformative32 />
+                    ) : (
+                      <SvgAlertsWarning32 />
+                    )
+                  ) : isInformative ? (
+                    <SvgAlertsInformative24 />
+                  ) : (
+                    <SvgAlertsWarning24 />
+                  )}
+                </InformativeIconWrapper>
+              </HeaderIconContainer>
+            ))}
+          {title && (
+            <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
+              {title}
+            </Text>
+          )}
+          <Text variant="t200" secondary>
+            {description}
+          </Text>
+        </>
+      </Dialog>
+    </Modal>
+  )
+}

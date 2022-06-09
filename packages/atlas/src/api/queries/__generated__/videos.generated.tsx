@@ -24,7 +24,16 @@ export type GetVideoQuery = {
     isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
+    isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
+    reactions: Array<{
+      __typename?: 'VideoReaction'
+      id: string
+      createdAt: Date
+      reaction: Types.VideoReactionOptions
+      memberId: string
+    }>
     category?: { __typename?: 'VideoCategory'; id: string } | null
     language?: { __typename?: 'Language'; iso: string } | null
     mediaMetadata?: {
@@ -537,7 +546,16 @@ export type GetVideosConnectionQuery = {
         isFeatured: boolean
         hasMarketing?: boolean | null
         isCensored: boolean
+        isCommentSectionEnabled: boolean
+        commentsCount: number
         publishedBeforeJoystream?: Date | null
+        reactions: Array<{
+          __typename?: 'VideoReaction'
+          id: string
+          createdAt: Date
+          reaction: Types.VideoReactionOptions
+          memberId: string
+        }>
         category?: { __typename?: 'VideoCategory'; id: string } | null
         language?: { __typename?: 'Language'; iso: string } | null
         mediaMetadata?: {
@@ -1047,7 +1065,16 @@ export type GetVideosQuery = {
     isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
+    isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
+    reactions: Array<{
+      __typename?: 'VideoReaction'
+      id: string
+      createdAt: Date
+      reaction: Types.VideoReactionOptions
+      memberId: string
+    }>
     category?: { __typename?: 'VideoCategory'; id: string } | null
     language?: { __typename?: 'Language'; iso: string } | null
     mediaMetadata?: {
@@ -1846,7 +1873,16 @@ export type GetMostViewedVideosConnectionQuery = {
         isFeatured: boolean
         hasMarketing?: boolean | null
         isCensored: boolean
+        isCommentSectionEnabled: boolean
+        commentsCount: number
         publishedBeforeJoystream?: Date | null
+        reactions: Array<{
+          __typename?: 'VideoReaction'
+          id: string
+          createdAt: Date
+          reaction: Types.VideoReactionOptions
+          memberId: string
+        }>
         category?: { __typename?: 'VideoCategory'; id: string } | null
         language?: { __typename?: 'Language'; iso: string } | null
         mediaMetadata?: {
@@ -2353,7 +2389,16 @@ export type GetTop10VideosThisWeekQuery = {
     isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
+    isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
+    reactions: Array<{
+      __typename?: 'VideoReaction'
+      id: string
+      createdAt: Date
+      reaction: Types.VideoReactionOptions
+      memberId: string
+    }>
     category?: { __typename?: 'VideoCategory'; id: string } | null
     language?: { __typename?: 'Language'; iso: string } | null
     mediaMetadata?: {
@@ -2857,7 +2902,16 @@ export type GetTop10VideosThisMonthQuery = {
     isFeatured: boolean
     hasMarketing?: boolean | null
     isCensored: boolean
+    isCommentSectionEnabled: boolean
+    commentsCount: number
     publishedBeforeJoystream?: Date | null
+    reactions: Array<{
+      __typename?: 'VideoReaction'
+      id: string
+      createdAt: Date
+      reaction: Types.VideoReactionOptions
+      memberId: string
+    }>
     category?: { __typename?: 'VideoCategory'; id: string } | null
     language?: { __typename?: 'Language'; iso: string } | null
     mediaMetadata?: {

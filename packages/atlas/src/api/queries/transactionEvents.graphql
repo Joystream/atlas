@@ -1,0 +1,15 @@
+query GetMetaprotocolTransactionStatusEvents($transactionHash: String!) {
+  metaprotocolTransactionStatusEvents(where: { inExtrinsic_eq: $transactionHash }) {
+    inExtrinsic
+    inBlock
+    status {
+      __typename
+      ... on MetaprotocolTransactionErrored {
+        message
+      }
+      ... on MetaprotocolTransactionSuccessful {
+        ...MetaprotocolTransactionSuccessFields
+      }
+    }
+  }
+}

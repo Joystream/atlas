@@ -73,7 +73,7 @@ export const MoreVideos: React.FC<MoreVideosProps> = ({
         ) : (
           <CategoryLink name={categoryName} id={categoryId} textVariant="h400" />
         )}
-        <Button to={linkUrl} variant="secondary" icon={<SvgActionChevronR />} iconOnly />
+        <Button to={linkUrl} variant="secondary" icon={<SvgActionChevronR />} />
       </MoreFrom>
       <LayoutGrid>{gridContent}</LayoutGrid>
       <SeeMoreButton to={linkUrl} variant="tertiary" icon={<SvgActionChevronR />} iconPlacement="right" size="large">

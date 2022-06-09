@@ -8,9 +8,10 @@ import { Banner } from '@/components/Banner'
 import { Information } from '@/components/Information'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
+import { Tooltip } from '@/components/Tooltip'
 import { ViewErrorFallback } from '@/components/ViewErrorFallback'
-import { Button } from '@/components/_buttons/Button'
-import { SvgActionChevronB, SvgActionChevronT } from '@/components/_icons'
+import { TextButton } from '@/components/_buttons/Button'
+import { SvgActionChevronB, SvgActionChevronT, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { Datepicker } from '@/components/_inputs/Datepicker'
 import { FormField } from '@/components/_inputs/FormField'
@@ -44,6 +45,8 @@ import {
   DeleteVideoButton,
   DescriptionTextArea,
   ExtendedMarginFormField,
+  FileValidationBanner,
+  FileValidationText,
   FormWrapper,
   InputsContainer,
   MoreSettingsDescription,
@@ -63,12 +66,15 @@ import { StyledSvgWarning, YellowText } from '../VideoWorkspace.style'
 const CUSTOM_LICENSE_CODE = 1000
 const SCROLL_TIMEOUT = 700
 const MINT_NFT_TIMEOUT = 1200
+const MIN_TITLE_LENGTH = 3
+const MAX_TITLE_LENGTH = 60
 const knownLicensesOptions: SelectItem<License['code']>[] = knownLicenses.map((license) => ({
   name: license.name,
   value: license.code,
   badgeText: license.code === DEFAULT_LICENSE_ID ? 'Default' : undefined,
   tooltipText: license.description,
   tooltipHeaderText: license.longName,
+  tooltipMultiline: true,
 }))
 
 type VideoFormProps = {
@@ -80,7 +86,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
   const [moreSettingsVisible, setMoreSettingsVisible] = useState(false)
   const [cachedEditedVideoId, setCachedEditedVideoId] = useState('')
   const [royaltiesFieldEnabled, setRoyaltiesFieldEnabled] = useState(false)
+  const [titleTooltipVisible, setTitleTooltipVisible] = useState(true)
   const mintNftFormFieldRef = useRef<HTMLDivElement>(null)
+  const titleInputRef = useRef<HTMLTextAreaElement>(null)
 
   const { editedVideoInfo } = useVideoWorkspace()
   const { tabData, loading: tabDataLoading, error: tabDataError } = useVideoWorkspaceData()
@@ -111,7 +119,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     formState: { errors, dirtyFields, isDirty, touchedFields, isValid },
   } = useForm<VideoWorkspaceVideoFormFields>({
     shouldFocusError: true,
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
 
   const videoFieldsLocked = tabData?.mintNft && isEdit
@@ -126,7 +134,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     mediaAsset,
     thumbnailAsset,
     hasUnsavedAssets,
-  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields)
+  } = useVideoFormAssets(watch, getValues, setValue, dirtyFields, trigger, errors)
 
   // manage draft saving
   const { flushDraftSave } = useVideoFormDraft(watch, dirtyFields)
@@ -202,6 +210,9 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         ...((isNew || dirtyFields.isExplicit) && data.isExplicit != null ? { isExplicit: data.isExplicit } : {}),
         ...((isNew || dirtyFields.language) && data.language != null ? { language: data.language } : {}),
         ...(isNew || anyLicenseFieldsDirty ? { license } : {}),
+        ...((isNew || dirtyFields.enableComments) && data.enableComments != null
+          ? { enableComments: data.enableComments }
+          : {}),
         ...((isNew || dirtyFields.publishedBeforeJoystream) && data.publishedBeforeJoystream != null
           ? {
               publishedBeforeJoystream: formatISO(data.publishedBeforeJoystream),
@@ -246,11 +257,12 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           : {}),
       }
 
-      const nftMetadata: NftIssuanceInputMetadata | undefined = data.mintNft
-        ? {
-            royalty: data.nftRoyaltiesPercent || undefined,
-          }
-        : undefined
+      const nftMetadata: NftIssuanceInputMetadata | undefined =
+        data.mintNft && !videoFieldsLocked
+          ? {
+              royalty: data.nftRoyaltiesPercent || undefined,
+            }
+          : undefined
 
       onSubmit({
         metadata,
@@ -264,6 +276,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     createSubmitHandler,
     dirtyFields,
     editedVideoInfo,
+    videoFieldsLocked,
     flushDraftSave,
     isNew,
     onSubmit,
@@ -272,20 +285,26 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     videoHashPromise,
   ])
 
-  const actionBarPrimaryText = watch('mintNft') ? 'Publish & mint' : !isEdit ? 'Publish & upload' : 'Publish changes'
+  const actionBarPrimaryText = watch('mintNft')
+    ? !isEdit
+      ? 'Publish & mint'
+      : 'Publish changes'
+    : !isEdit
+    ? 'Publish & upload'
+    : 'Publish changes'
 
   const isFormValid = (isEdit || !!mediaAsset) && !!thumbnailAsset && isValid
   const formStatus: VideoWorkspaceFormStatus = useMemo(
     () => ({
       hasUnsavedAssets,
       isDirty,
-      isDisabled: isEdit ? isDirty || !!mintNft : isFormValid,
+      isDisabled: isEdit ? !isDirty : false,
       actionBarPrimaryText,
       isValid: isFormValid,
       triggerFormSubmit: handleSubmit,
       triggerReset: reset,
     }),
-    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, mintNft, reset]
+    [actionBarPrimaryText, handleSubmit, hasUnsavedAssets, isDirty, isEdit, isFormValid, reset]
   )
 
   // sent updates on form status to VideoWorkspace
@@ -392,15 +411,69 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
     </>
   )
 
+  const alwaysEditableFormFields = (
+    <ExtendedMarginFormField
+      title="Comments"
+      description="Disabling the comments section does not allow for posting new comments under this video and hides any existing comments made in the past."
+    >
+      <Controller
+        name="enableComments"
+        control={control}
+        defaultValue={true}
+        rules={{
+          validate: (value) => value !== null,
+        }}
+        render={({ field: { value, onChange, ref } }) => (
+          <RadioButtonsContainer>
+            <RadioButton
+              ref={ref}
+              value="true"
+              label="Enable comments"
+              onChange={() => onChange(true)}
+              selectedValue={value?.toString()}
+            />
+            <RadioButton
+              value="false"
+              label="Disable comments"
+              onChange={() => onChange(false)}
+              selectedValue={value?.toString()}
+            />
+          </RadioButtonsContainer>
+        )}
+      />
+    </ExtendedMarginFormField>
+  )
+
   return (
     <FormWrapper as="form" onSubmit={handleSubmit}>
       <Controller
         name="assets"
         control={control}
+        rules={{
+          validate: (value) => {
+            if (!!value.video.id && !!value.thumbnail.cropId) {
+              return true
+            }
+            if (!value.video.id) {
+              return 'Select video file'
+            }
+            if (!value.thumbnail.cropId) {
+              return 'Select image file'
+            }
+          },
+        }}
         render={() => (
           // don't remove this div
           // without this element position sticky won't work
           <div>
+            {errors.assets && (
+              <FileValidationBanner
+                id="assets-banner"
+                dismissable={false}
+                icon={<SvgAlertsWarning24 width={24} height={24} />}
+                description={<FileValidationText variant="t200">{errors.assets.message}</FileValidationText>}
+              />
+            )}
             <StyledMultiFileSelect
               files={files}
               onVideoChange={handleVideoFileChange}
@@ -416,18 +489,30 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
         <Controller
           name="title"
           control={control}
-          rules={textFieldValidation({ name: 'Video Title', minLength: 3, maxLength: 60, required: true })}
+          rules={textFieldValidation({
+            name: 'Video title',
+            minLength: MIN_TITLE_LENGTH,
+            maxLength: MAX_TITLE_LENGTH,
+            required: true,
+          })}
           render={({ field: { value, onChange } }) => (
             <StyledTitleArea
+              ref={titleInputRef}
               onChange={onChange}
               value={value}
-              min={3}
-              max={60}
-              placeholder="Video title"
+              min={MIN_TITLE_LENGTH}
+              max={MAX_TITLE_LENGTH}
+              placeholder="Enter video title"
               disabled={videoFieldsLocked}
+              error={!!errors.title}
+              onFocus={() => setTitleTooltipVisible(false)}
+              onBlur={() => setTitleTooltipVisible(true)}
+              helperText={errors.title && errors.title.message}
             />
           )}
         />
+        {titleTooltipVisible && <Tooltip text="Click to edit" placement="top-start" reference={titleInputRef} />}
+        {videoFieldsLocked && alwaysEditableFormFields}
         {!videoFieldsLocked && videoEditFields}
         <SwitchFormField title="Mint NFT" ref={mintNftFormFieldRef}>
           <SwitchNftWrapper>
@@ -453,8 +538,8 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
             />
             <Information
               placement="top"
-              arrowDisabled
               text="Minting an NFT creates a record of ownership on the blockchain that can be put on sale. This will not impact your intellectual rights of the video."
+              multiline
             />
           </SwitchNftWrapper>
           {watch('mintNft') && (
@@ -493,7 +578,10 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
                   disabled: videoFieldsLocked,
                 }}
                 title="Set creator's royalties"
-                infoTooltip={{ text: 'Setting royalties lets you earn commission from every sale of this NFT.' }}
+                infoTooltip={{
+                  text: 'Setting royalties lets you earn commission from every sale of this NFT.',
+                  multiline: true,
+                }}
               >
                 <TextField
                   type="number"
@@ -519,15 +607,14 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
           )}
         </SwitchFormField>
         <MoreSettingsHeader>
-          <Button
+          <TextButton
             size="large"
             iconPlacement="right"
-            textOnly
             icon={moreSettingsVisible ? <SvgActionChevronT /> : <SvgActionChevronB />}
             onClick={() => setMoreSettingsVisible(!moreSettingsVisible)}
           >
             {getHiddenSectionLabel()}
-          </Button>
+          </TextButton>
           <MoreSettingsDescription as="p" variant="t200" secondary visible={!moreSettingsVisible}>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
@@ -584,7 +671,7 @@ export const VideoForm: React.FC<VideoFormProps> = React.memo(({ onSubmit, setFo
               />
             </FormField>
           )}
-
+          {!videoFieldsLocked && alwaysEditableFormFields}
           <ExtendedMarginFormField
             title="Content rating"
             description="If the content you are publishing contains explicit material (sex, violence, etc.), please mark it as mature."

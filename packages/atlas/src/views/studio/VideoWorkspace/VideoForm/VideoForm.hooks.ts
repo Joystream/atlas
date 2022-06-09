@@ -1,7 +1,14 @@
 import { formatISO, isValid as isDateValid } from 'date-fns'
 import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FieldNamesMarkedBoolean, UseFormGetValues, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import {
+  FieldErrors,
+  FieldNamesMarkedBoolean,
+  UseFormGetValues,
+  UseFormSetValue,
+  UseFormTrigger,
+  UseFormWatch,
+} from 'react-hook-form'
 
 import { ImageInputFile, VideoInputFile } from '@/components/_inputs/MultiFileSelect'
 import { useAssetStore, useRawAsset } from '@/providers/assets'
@@ -20,7 +27,9 @@ export const useVideoFormAssets = (
   watch: UseFormWatch<VideoWorkspaceVideoFormFields>,
   getValues: UseFormGetValues<VideoWorkspaceVideoFormFields>,
   setValue: UseFormSetValue<VideoWorkspaceVideoFormFields>,
-  dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceVideoFormFields>
+  dirtyFields: FieldNamesMarkedBoolean<VideoWorkspaceVideoFormFields>,
+  trigger: UseFormTrigger<VideoWorkspaceVideoFormFields>,
+  errors: FieldErrors<VideoWorkspaceVideoFormFields>
 ) => {
   const [thumbnailHashPromise, setThumbnailHashPromise] = useState<Promise<string> | null>(null)
   const [videoHashPromise, setVideoHashPromise] = useState<Promise<string> | null>(null)
@@ -84,8 +93,22 @@ export const useVideoFormAssets = (
         video: updatedVideo,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
+      if (!dirtyFields.title && video?.title) {
+        const removedUnnecessaryCharacters = video.title.replace(/\.[^.]+$/, '').replace(/_/g, ' ')
+        setValue(
+          'title',
+          removedUnnecessaryCharacters.charAt(0).toUpperCase() + removedUnnecessaryCharacters.slice(1),
+          {
+            shouldDirty: true,
+          }
+        )
+      }
+
+      if (errors.assets) {
+        trigger('assets')
+      }
     },
-    [addAsset, getValues, setValue]
+    [errors, trigger, addAsset, dirtyFields.title, getValues, setValue]
   )
 
   const handleThumbnailFileChange = useCallback(
@@ -116,8 +139,9 @@ export const useVideoFormAssets = (
         thumbnail: updatedThumbnail,
       }
       setValue('assets', updatedAssets, { shouldDirty: true })
+      trigger('assets')
     },
-    [addAsset, getValues, setValue]
+    [addAsset, getValues, setValue, trigger]
   )
 
   const files = useMemo(

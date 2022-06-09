@@ -6,7 +6,7 @@ import { GetBidsDocument } from '@/api/queries/__generated__/bids.generated'
 import { NftSaleType } from '@/joystream-lib'
 import { useConfirmationModal } from '@/providers/confirmationModal'
 import { useJoystream } from '@/providers/joystream'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 
 export const useNftTransactions = () => {
@@ -60,8 +60,8 @@ export const useNftTransactions = () => {
       openModal({
         title: 'Remove from sale?',
         description: 'Are you sure you want to remove this NFT from sale? You can put it back on sale anytime.',
+        type: 'warning',
         primaryButton: {
-          variant: 'destructive',
           text: 'Remove',
           onClick: () => {
             handleCancelTransaction()

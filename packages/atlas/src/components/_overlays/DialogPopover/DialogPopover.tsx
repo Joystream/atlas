@@ -3,18 +3,45 @@ import React, { forwardRef } from 'react'
 import { DialogProps } from '@/components/_overlays/Dialog'
 import { Popover, PopoverImperativeHandle, PopoverProps } from '@/components/_overlays/Popover'
 
-import { StyledDialog } from './DialogPopover.styles'
+import { PopoverWidth, StyledDialog } from './DialogPopover.styles'
 
 type DialogPopoverProps = Omit<PopoverProps, 'content'> &
-  Pick<DialogProps, 'title' | 'dividers' | 'primaryButton' | 'secondaryButton' | 'children'>
+  Pick<
+    DialogProps,
+    | 'title'
+    | 'dividers'
+    | 'primaryButton'
+    | 'secondaryButton'
+    | 'children'
+    | 'additionalActionsNode'
+    | 'additionalActionsNodeMobilePosition'
+    | 'noContentPadding'
+  > & {
+    popoverWidth?: PopoverWidth
+  }
 
 const _DialogPopover: React.ForwardRefRenderFunction<PopoverImperativeHandle, DialogPopoverProps> = (
-  { title, dividers, primaryButton, secondaryButton, children, ...popoverProps },
+  {
+    title,
+    dividers,
+    primaryButton,
+    secondaryButton,
+    children,
+    popoverWidth = 'default',
+    additionalActionsNode,
+    additionalActionsNodeMobilePosition,
+    noContentPadding,
+    ...popoverProps
+  },
   ref
 ) => {
   return (
     <Popover {...popoverProps} ref={ref} flipEnabled={false}>
       <StyledDialog
+        noContentPadding={noContentPadding}
+        popoverWidth={popoverWidth}
+        additionalActionsNode={additionalActionsNode}
+        additionalActionsNodeMobilePosition={additionalActionsNodeMobilePosition}
         title={title}
         dividers={dividers}
         primaryButton={primaryButton}

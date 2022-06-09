@@ -60,7 +60,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     description: `We detected that you selected a different file than the one you uploaded previously. Select the same file to continue the upload or edit ${
       asset.parentObject.type === 'channel' ? 'your channel' : 'the video'
     } to use the new file.`,
-    iconType: 'warning',
+    type: 'warning',
     primaryButton: {
       text: 'Reselect file',
       onClick: () => {
@@ -85,7 +85,7 @@ export const UploadStatus: React.FC<UploadStatusProps> = ({ isLast = false, asse
     title: 'Missing asset details',
     description:
       "It seems you've published this asset from a different device or you've cleared your browser history. All image assets require crop data to reconstruct, otherwise they end up being different files. Please try re-uploading from the original device or overwrite this asset.",
-    iconType: 'warning',
+    type: 'warning',
     secondaryButton: {
       text: 'Close',
       onClick: () => {

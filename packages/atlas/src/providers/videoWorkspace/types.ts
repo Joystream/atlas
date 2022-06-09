@@ -3,6 +3,7 @@ import { NftIssuanceInputMetadata, VideoAssets, VideoInputMetadata } from '@/joy
 import { AssetDimensions, ImageCropData } from '@/types/cropper'
 
 export type VideoWorkspaceVideoAssets = {
+  message?: string
   video: {
     id: string | null
   } & MediaInputMetadata
@@ -39,6 +40,7 @@ export type VideoWorkspaceVideoFormFields = {
   isExplicit: boolean
   mintNft: boolean
   nftRoyaltiesPercent?: number
+  enableComments?: boolean
   publishedBeforeJoystream: Date | null
   assets: VideoWorkspaceVideoAssets
 }

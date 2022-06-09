@@ -1,14 +1,14 @@
 // based on https://github.com/jonsuh/hamburgers licensed under MIT
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { oldColors, square } from '@/styles'
 
 type HamburgerInnerProps = {
   active: boolean
 }
 
-export const Hamburger = styled(IconButton)`
+export const Hamburger = styled(Button)`
   ${square(48)};
 `
 

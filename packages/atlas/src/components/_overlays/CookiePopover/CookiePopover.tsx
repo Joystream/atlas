@@ -1,6 +1,7 @@
 import React from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
 import { useBottomNavStore } from '@/providers/bottomNav'
 import { usePersonalDataStore } from '@/providers/personalData'
 import { transitions } from '@/styles'
@@ -25,14 +26,6 @@ export const CookiePopover: React.FC = () => {
       <StyledDialog
         bottomNavOpen={open}
         size="compact"
-        description={
-          <>
-            We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
-            <StyledAnchor href="https://www.joystream.org/privacy-policy/">
-              You can read more about it here.
-            </StyledAnchor>
-          </>
-        }
         title={
           <>
             <CookieEmoticon>🍪</CookieEmoticon>We use cookies
@@ -46,9 +39,14 @@ export const CookiePopover: React.FC = () => {
           text: 'Decline',
           onClick: () => setCookiesAccepted(false),
           variant: 'tertiary',
-          textOnly: true,
+          _textOnly: true,
         }}
-      />
+      >
+        <Text variant="t200" secondary>
+          We use cookies and other tracking technologies to improve your experience and provide analytics.{' '}
+          <StyledAnchor href="https://www.joystream.org/privacy-policy/">You can read more about it here.</StyledAnchor>
+        </Text>
+      </StyledDialog>
     </CSSTransition>
   )
 }

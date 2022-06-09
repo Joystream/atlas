@@ -25,6 +25,8 @@ import { CreateEditChannelView, MyUploadsView, MyVideosView, VideoWorkspace } fr
 
 import { StudioWelcomeView } from './StudioWelcomeView'
 
+import { NotFoundView } from '../viewer/NotFoundView'
+
 const ENTRY_POINT_ROUTE = absoluteRoutes.studio.index()
 
 const StudioLayout = () => {
@@ -54,7 +56,7 @@ const StudioLayout = () => {
   useEffect(() => {
     if (!isAllowedBrowser()) {
       openUnsupportedBrowserDialog({
-        iconType: 'warning',
+        type: 'warning',
         title: 'Unsupported browser detected',
         description:
           'It seems the browser you are using is not fully supported by Joystream Studio. Some of the features may not be accessible. For the best experience, please use a recent version of Chrome, Firefox or Edge.',
@@ -143,6 +145,7 @@ const StudioLayout = () => {
                   <PrivateRoute element={<NotificationsView />} isAuth={channelSet} redirectTo={ENTRY_POINT_ROUTE} />
                 }
               />
+              <Route path="*" element={<NotFoundView />} />
             </Routes>
           </MainContainer>
           {channelSet && <VideoWorkspace />}

@@ -6,13 +6,13 @@ import { FormField } from '@/components/_inputs/FormField'
 import { TextField } from '@/components/_inputs/TextField'
 import { useBlockTimeEstimation } from '@/hooks/useBlockTimeEstimation'
 import { useMsTimestamp } from '@/hooks/useMsTimestamp'
-import { useJoystream } from '@/providers/joystream'
+import { useJoystreamStore } from '@/providers/joystream'
 
 export const PlaygroundEstimatingBlockTime = () => {
   const [datetimeLocal, setDatetimeLocal] = useState('')
   const [blockNumber, setBlockNumber] = useState(0)
 
-  const { currentBlock } = useJoystream()
+  const { currentBlock } = useJoystreamStore()
   const { convertBlockToMsTimestamp, convertMsTimestampToBlock } = useBlockTimeEstimation()
   const msTimestamp = useMsTimestamp()
 

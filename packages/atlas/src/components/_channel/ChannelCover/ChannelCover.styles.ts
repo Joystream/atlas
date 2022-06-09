@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgIllustrativeFileFailed } from '@/components/_icons'
 import { SvgBgPattern } from '@/components/_illustrations'
 import { cVar, media, oldColors, sizes, transitions, zIndex } from '@/styles'
@@ -68,7 +68,7 @@ export const EditCoverDesktopOverlay = styled.div`
   }
 `
 
-export const EditCoverMobileButton = styled(IconButton)`
+export const EditCoverMobileButton = styled(Button)`
   position: absolute;
   left: var(--size-global-horizontal-padding);
   top: ${sizes(1)};

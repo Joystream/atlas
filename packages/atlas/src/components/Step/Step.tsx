@@ -1,6 +1,8 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 
 import { CircularProgress } from '@/components/CircularProgress'
+import { Text } from '@/components/Text'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionCheck, SvgActionLock, SvgActionTrash } from '@/components/_icons'
 
 import {
@@ -14,9 +16,6 @@ import {
   StepVariant,
   StepWrapper,
 } from './Step.styles'
-
-import { Text } from '../Text'
-import { IconButton } from '../_buttons/IconButton'
 
 export type StepProps = {
   title: string
@@ -88,9 +87,12 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
           </StepDetails>
         </StepStatus>
         {((onDelete && variant === 'completed' && !isLoading) || disabled) && (
-          <IconButton variant="tertiary" disabled={disabled} onClick={() => !disabled && onDelete?.()}>
-            {disabled ? <SvgActionLock /> : <SvgActionTrash />}
-          </IconButton>
+          <Button
+            icon={disabled ? <SvgActionLock /> : <SvgActionTrash />}
+            variant="tertiary"
+            disabled={disabled}
+            onClick={() => !disabled && onDelete?.()}
+          />
         )}
       </StepWrapper>
     )

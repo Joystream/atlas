@@ -3,7 +3,6 @@ import styled from '@emotion/styled'
 import { animated } from 'react-spring'
 
 import { Text } from '@/components/Text'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { media, oldColors, sizes, transitions } from '@/styles'
 
 type DragAndDropAreaProps = {
@@ -106,10 +105,6 @@ export const Thumbnail = styled(animated.img, { shouldForwardProp: (prop) => pro
   display: block;
   opacity: ${({ isLoading }) => (isLoading ? 0.1 : 1)};
   transition: opacity 400ms ease-out;
-`
-
-export const DismissButton = styled(IconButton)`
-  margin-left: 10px;
 `
 
 export const Title = styled(Text)`

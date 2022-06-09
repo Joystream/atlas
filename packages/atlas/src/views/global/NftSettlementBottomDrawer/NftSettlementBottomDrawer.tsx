@@ -12,7 +12,7 @@ import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useJoystream } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { formatTokens } from '@/utils/number'
 

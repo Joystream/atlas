@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Button } from '@/components/_buttons/Button'
-import { IconButton } from '@/components/_buttons/IconButton'
 import { cVar, media, square } from '@/styles'
 
 import { ARROWS_MARGINS, PAGINATION_BUTTON_WIDTH } from './constants'
@@ -22,7 +21,7 @@ export const PaginationWrapper = styled.div`
   }
 `
 
-export const ChevronButton = styled(IconButton)`
+export const ChevronButton = styled(Button)`
   user-select: none;
 
   &:first-of-type {

@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronB } from '@/components/_icons'
+import { Footer, FooterButtonsContainer } from '@/components/_overlays/Dialog/Dialog.styles'
 import { QUERY_PARAMS } from '@/config/routes'
 import { transitions } from '@/styles'
 import { urlParams } from '@/utils/url'
 
-import { StepFooter, StepWrapper } from './SignInSteps.styles'
-import { ContinueButton, ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.styles'
+import { StepWrapper } from './SignInSteps.styles'
+import { ScrollButton, TermsBox, TermsOverlay, TextWrapper } from './TermsStep.styles'
 
 import { TermsOfService } from '../../TermsOfService'
 
@@ -36,29 +38,31 @@ export const TermsStep: React.FC = () => {
   }
 
   return (
-    <StepWrapper>
-      <TermsBox ref={termsBoxRef} onScroll={(e) => setScrollPosition(e.currentTarget.scrollTop)}>
-        <TextWrapper>
-          <TermsOfService />
-        </TextWrapper>
-        <TermsOverlay>
-          <CSSTransition
-            in={!hasScrolledToBottom}
-            timeout={parseInt(transitions.timings.loading)}
-            classNames={transitions.names.fade}
-            unmountOnExit
-          >
-            <ScrollButton variant="secondary" onClick={handleScrollToBottom}>
-              <SvgActionChevronB />
-            </ScrollButton>
-          </CSSTransition>
-        </TermsOverlay>
-      </TermsBox>
-      <StepFooter>
-        <ContinueButton to={{ search: urlParams({ [QUERY_PARAMS.LOGIN]: 'member' }) }} disabled={!hasScrolledToBottom}>
-          Accept terms
-        </ContinueButton>
-      </StepFooter>
-    </StepWrapper>
+    <>
+      <StepWrapper>
+        <TermsBox ref={termsBoxRef} onScroll={(e) => setScrollPosition(e.currentTarget.scrollTop)}>
+          <TextWrapper>
+            <TermsOfService />
+          </TextWrapper>
+          <TermsOverlay>
+            <CSSTransition
+              in={!hasScrolledToBottom}
+              timeout={parseInt(transitions.timings.loading)}
+              classNames={transitions.names.fade}
+              unmountOnExit
+            >
+              <ScrollButton icon={<SvgActionChevronB />} variant="secondary" onClick={handleScrollToBottom} />
+            </CSSTransition>
+          </TermsOverlay>
+        </TermsBox>
+      </StepWrapper>
+      <Footer dividers>
+        <FooterButtonsContainer>
+          <Button to={{ search: urlParams({ [QUERY_PARAMS.LOGIN]: 'member' }) }} disabled={!hasScrolledToBottom}>
+            Accept terms
+          </Button>
+        </FooterButtonsContainer>
+      </Footer>
+    </>
   )
 }

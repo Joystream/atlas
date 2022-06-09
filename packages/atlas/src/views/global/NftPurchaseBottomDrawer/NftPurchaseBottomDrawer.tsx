@@ -20,10 +20,10 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { useNftState } from '@/hooks/useNftState'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
-import { useJoystream, useTokenPrice } from '@/providers/joystream'
+import { useJoystream, useJoystreamStore, useTokenPrice } from '@/providers/joystream'
 import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
-import { useTransaction } from '@/providers/transactionManager'
+import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
@@ -74,9 +74,9 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
   const {
     joystream,
     proxyCallback,
-    currentBlock,
     chainState: { nftPlatformFeePercentage },
   } = useJoystream()
+  const { currentBlock } = useJoystreamStore()
   const handleTransaction = useTransaction()
   const { activeMemberId } = useUser()
 
@@ -329,6 +329,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     {endAtBlock && (
                       <Information
                         text={`On blockchain, duration is expressed in number of blocks. This auction ends at block ${endAtBlock}.`}
+                        multiline
                         placement="top"
                       />
                     )}
@@ -459,6 +460,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
               <Information
                 placement="top"
                 text="Revenue split shows the proceedings from this sale based on royalties set up by the creator"
+                multiline
               />
             </FlexWrapper>
             <PaymentSplitWrapper>

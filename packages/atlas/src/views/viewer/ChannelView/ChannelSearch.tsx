@@ -82,9 +82,7 @@ export const ChannelSearch: React.FC<SearchProps> = ({
         placeholder="Search"
         type="search"
       />
-      <SearchButton onClick={toggleSearchInput} variant="tertiary">
-        <SvgActionSearch />
-      </SearchButton>
+      <SearchButton icon={<SvgActionSearch />} onClick={toggleSearchInput} variant="tertiary" />
     </SearchContainerForm>
   )
 }

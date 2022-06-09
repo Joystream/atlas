@@ -105,7 +105,6 @@ const _Popover: React.ForwardRefRenderFunction<PopoverImperativeHandle | undefin
 
 const TriggerContainer = styled.div`
   height: max-content;
-  width: max-content;
 `
 
 const ContentContainer = styled.div`

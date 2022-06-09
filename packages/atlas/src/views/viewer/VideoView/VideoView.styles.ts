@@ -7,6 +7,7 @@ import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { CallToActionWrapper } from '@/components/_buttons/CallToActionButton'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
+import { ReactionStepper } from '@/components/_video/ReactionStepper'
 import { cVar, media, sizes } from '@/styles'
 
 type CinematicView = {
@@ -77,18 +78,45 @@ export const PlayerSkeletonLoader = styled(SkeletonLoader)`
   top: 0;
 `
 
+const titleContainerPadding = sizes(6)
+
 export const TitleContainer = styled.div`
-  padding-bottom: ${sizes(6)};
-  border-bottom: 1px solid ${cVar('colorCoreNeutral700')};
+  border-bottom: 1px solid ${cVar('colorBorderMuted')};
+  margin: 0 calc(-1 * var(--size-global-horizontal-padding));
+  padding: 0 var(--size-global-horizontal-padding) ${titleContainerPadding} var(--size-global-horizontal-padding);
+
+  ${media.md} {
+    margin: 0;
+    padding: 0 0 ${titleContainerPadding} 0;
+  }
+`
+
+export const VideoUtils = styled.div`
+  display: grid;
+  margin-top: ${sizes(2)};
+  grid-template: 'meta meta' 1fr 'reactions link' / 1fr auto;
+  justify-items: baseline;
+  gap: ${sizes(4)};
+  ${media.md} {
+    align-items: center;
+    margin-top: ${sizes(4)};
+    grid-template: 'meta reactions link' 1fr / 1fr auto;
+  }
 `
 
 export const Meta = styled(Text)`
   display: block;
-  margin-top: ${sizes(2)};
+  grid-area: meta;
+  grid-column: 1 / span 2;
+`
 
-  ${media.md} {
-    margin-top: ${sizes(4)};
-  }
+export const StyledReactionStepper = styled(ReactionStepper)`
+  grid-area: reactions;
+  margin-bottom: -${titleContainerPadding};
+`
+
+export const CopyLink = styled(Button)`
+  grid-area: link;
 `
 
 export const TitleText = styled(Text)`
@@ -136,4 +164,43 @@ export const SeeMoreButton = styled(Button)`
 
 export const StyledCallToActionWrapper = styled(CallToActionWrapper)`
   margin-top: ${sizes(16)};
+`
+
+export const DescriptionLink = styled(Button)`
+  word-break: break-all;
+`
+
+export const CommentsSectionWrapper = styled.div`
+  margin-top: ${sizes(16)};
+`
+
+export const CommentsSectionHeader = styled.div`
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 220px;
+  align-items: center;
+  margin-bottom: ${sizes(12)};
+  padding-bottom: ${sizes(4)};
+  box-shadow: ${cVar('effectDividersBottom')};
+
+  ${media.md} {
+    padding-left: ${sizes(14)};
+  }
+`
+
+export const CommentWrapper = styled.div`
+  display: grid;
+  margin-top: ${sizes(8)};
+  gap: ${sizes(8)};
+  margin-bottom: ${sizes(6)};
+
+  ${media.md} {
+    margin-bottom: 0;
+  }
+`
+
+export const LoadMoreCommentsWrapper = styled.div`
+  margin-bottom: ${sizes(8)};
+  padding-bottom: ${sizes(8)};
+  box-shadow: ${cVar('effectDividersBottom')};
 `

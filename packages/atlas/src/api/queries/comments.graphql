@@ -1,0 +1,97 @@
+query GetComment($commentId: ID!) {
+  commentByUniqueInput(where: { id: $commentId }) {
+    ...CommentFields
+  }
+}
+
+query GetCommentRepliesConnection(
+  $first: Int
+  $after: String
+  $parentCommentId: ID!
+  $orderBy: [CommentOrderByInput!] = [createdAt_ASC]
+) {
+  commentsConnection(
+    first: $first
+    after: $after
+    where: { parentComment: { id_eq: $parentCommentId }, status_eq: VISIBLE }
+    orderBy: $orderBy
+  ) {
+    edges {
+      cursor
+      node {
+        ...CommentFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+query GetUserCommentsAndVideoCommentsConnection(
+  $first: Int
+  $after: String
+  $memberId: ID
+  $videoId: ID
+  $orderBy: [CommentOrderByInput!] = [createdAt_DESC]
+) {
+  userComments: comments(
+    where: {
+      # get comments which are not a reply to a comment
+      parentComment: { id_eq: null }
+      video: { id_eq: $videoId }
+      author: { id_eq: $memberId }
+      # if comment is deleted(has status Deleted or Moderated) and has no replies don't show the comment
+      OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+    }
+    orderBy: [createdAt_DESC]
+  ) {
+    ...CommentFields
+  }
+
+  videoCommentsConnection: commentsConnection(
+    first: $first
+    after: $after
+    where: {
+      video: { id_eq: $videoId }
+      parentComment: { id_eq: null }
+      OR: [{ status_eq: VISIBLE }, { repliesCount_gt: 0 }]
+    }
+    orderBy: $orderBy
+  ) {
+    edges {
+      cursor
+      node {
+        ...CommentFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+
+query GetUserCommentsReactions($memberId: ID!, $videoId: ID!) {
+  commentReactions(where: { member: { id_eq: $memberId }, video: { id_eq: $videoId } }, limit: 1000) {
+    reactionId
+    commentId
+  }
+}
+
+query GetCommentEdits($commentId: ID!) {
+  commentTextUpdatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    newText
+  }
+
+  commentCreatedEvents(where: { comment: { id_eq: $commentId } }) {
+    id
+    createdAt
+    text
+  }
+}

@@ -45,9 +45,7 @@ export const ChannelCover: React.FC<ChannelCoverProps> = ({
                 assetUrl ? 'Edit ' : 'Add '
               } cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
-            <EditCoverMobileButton onClick={onCoverEditClick} variant="tertiary">
-              <SvgActionImageFile />
-            </EditCoverMobileButton>
+            <EditCoverMobileButton icon={<SvgActionImageFile />} onClick={onCoverEditClick} variant="tertiary" />
           </EditableControls>
         )}
         <Media>

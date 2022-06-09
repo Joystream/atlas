@@ -74,8 +74,8 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                       variant="secondary"
                       size="small"
                       onClick={handleFollowButtonClick}
-                      onMouseOut={() => setActiveDisabled(false)}
-                      onMouseMove={() => setActiveDisabled(true)}
+                      onMouseLeave={() => setActiveDisabled(false)}
+                      onMouseEnter={() => setActiveDisabled(true)}
                     >
                       {isFollowing ? 'Unfollow' : 'Follow'}
                     </FollowButton>

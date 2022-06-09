@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Pill } from '@/components/Pill'
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { SvgActionClose } from '@/components/_icons'
 
 import { Tab, TabContainer, TabTitle, Tabbar } from './DrawerHeader.styles'
@@ -21,9 +21,7 @@ export const DrawerHeader: React.FC<DrawerHeaderProps> = React.memo(({ onCloseCl
           <TabTitle variant="t200">{title}</TabTitle>
         </Tab>
       </TabContainer>
-      <IconButton variant="tertiary" onClick={onCloseClick}>
-        <SvgActionClose />
-      </IconButton>
+      <Button variant="tertiary" onClick={onCloseClick} icon={<SvgActionClose />} />
     </Tabbar>
   )
 })

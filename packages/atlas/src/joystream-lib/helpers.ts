@@ -105,6 +105,7 @@ const extractExtrinsicErrorMsg = (registry: Registry, event: Event) => {
 type RawExtrinsicResult = {
   events: GenericEvent[]
   blockHash: Hash
+  transactionHash: string
 }
 
 export const sendExtrinsicAndParseEvents = (
@@ -117,7 +118,11 @@ export const sendExtrinsicAndParseEvents = (
   new Promise<RawExtrinsicResult>((resolve, reject) => {
     let unsub: () => void
     let transactionInfo: string
-    tx.signAndSend(accountId, (result) => {
+
+    // { nonce: -1 } takes txs pending in the pool into account when sending a tx
+    // see more here: https://polkadot.js.org/docs/api/cookbook/tx/#how-do-i-take-the-pending-tx-pool-into-account-in-my-nonce
+    tx.signAndSend(accountId, { nonce: -1 }, (result) => {
+      const extrinsicsHash = tx.hash.toHex()
       const { status, isError, events: rawEvents } = result
 
       if (isError) {
@@ -134,6 +139,7 @@ export const sendExtrinsicAndParseEvents = (
           rawEvents.map((event) => event.event.method).join(', '),
           `on network: ${endpoint}`,
           `in block: ${hash}`,
+          `extrinsic hash: ${extrinsicsHash}`,
           `more details at: https://polkadot.js.org/apps/?rpc=${endpoint}#/explorer/query/${hash}`,
         ].join('\n')
       }
@@ -144,7 +150,7 @@ export const sendExtrinsicAndParseEvents = (
 
         try {
           const events = parseExtrinsicEvents(registry, rawEvents)
-          resolve({ events, blockHash: status.asFinalized })
+          resolve({ events, blockHash: status.asFinalized, transactionHash: extrinsicsHash })
         } catch (error) {
           reject(error)
         }

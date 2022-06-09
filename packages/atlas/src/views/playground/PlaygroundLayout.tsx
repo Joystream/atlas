@@ -20,10 +20,12 @@ import {
   PlaygroundEstimatingBlockTime,
   PlaygroundImageDownsizing,
   PlaygroundIndirectSignInDialog,
+  PlaygroundMinimizedTransaction,
   PlaygroundNftExtrinsics,
   PlaygroundNftPurchase,
   PlaygroundNftSettleAuction,
   PlaygroundNftWhitelistMembers,
+  PlaygroundReactionsComments,
   PlaygroundTokenPrice,
 } from './Playgrounds'
 
@@ -36,6 +38,12 @@ const playgroundRoutes = [
   { path: 'tjoy-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
   { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
+  {
+    path: 'minimized-transaction',
+    element: <PlaygroundMinimizedTransaction />,
+    name: 'Minimized transaction snackbar',
+  },
+  { path: 'reactions-comments', element: <PlaygroundReactionsComments />, name: 'Reactions & comments' },
 ]
 
 const PlaygroundLayout = () => {

@@ -39,4 +39,5 @@ export const StyledContainer = styled.div<StyledContainerProps>`
   border-radius: ${cVar('radiusSmall')};
   overflow: auto;
   padding: ${sizes(1)} 0;
+  box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};
 `

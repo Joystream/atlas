@@ -14,6 +14,7 @@ export type PersonalDataStoreState = {
   cachedVolume: number
   cinematicView: boolean
   cookiesAccepted?: boolean
+  reactionPopoverDismissed: boolean
 }
 
 const WHITELIST = [
@@ -25,6 +26,7 @@ const WHITELIST = [
   'cachedVolume',
   'cinematicView',
   'cookiesAccepted',
+  'reactionPopoverDismissed',
 ] as (keyof PersonalDataStoreState)[]
 
 export type PersonalDataStoreActions = {
@@ -37,6 +39,7 @@ export type PersonalDataStoreActions = {
   setCachedVolume: (volume: number) => void
   setCinematicView: (cinematicView: boolean) => void
   setCookiesAccepted: (accept: boolean) => void
+  setReactionPopoverDismission: (reactionPopoverDismissed: boolean) => void
 }
 
 const initialState: PersonalDataStoreState = {
@@ -48,6 +51,7 @@ const initialState: PersonalDataStoreState = {
   currentVolume: 1,
   cinematicView: false,
   cookiesAccepted: undefined,
+  reactionPopoverDismissed: false,
 }
 
 export const usePersonalDataStore = createStore<PersonalDataStoreState, PersonalDataStoreActions>(
@@ -112,6 +116,10 @@ export const usePersonalDataStore = createStore<PersonalDataStoreState, Personal
       setCookiesAccepted: (accept) =>
         set((state) => {
           state.cookiesAccepted = accept
+        }),
+      setReactionPopoverDismission: (reactionPopoverDismissed) =>
+        set((state) => {
+          state.reactionPopoverDismissed = reactionPopoverDismissed
         }),
     }),
   },

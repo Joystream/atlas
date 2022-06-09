@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
+import { EmojiWrapper } from '@/components/EmojiWrapper'
 import { Text } from '@/components/Text'
-import { Button } from '@/components/_buttons/Button'
+import { TextButton } from '@/components/_buttons/Button'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { cVar, media, sizes } from '@/styles'
 
@@ -20,7 +21,11 @@ export const DescriptionTitle = styled(Text)`
   margin-bottom: ${sizes(2)};
 `
 
-export const DescriptionBody = styled.div<{ detailsExpanded?: boolean }>`
+type DetailsExpandedProps = {
+  detailsExpanded?: boolean
+}
+
+export const DescriptionBody = styled(EmojiWrapper)<DetailsExpandedProps>`
   overflow: hidden;
   text-overflow: ellipsis;
   /* stylelint-disable-next-line value-no-vendor-prefix */
@@ -28,10 +33,13 @@ export const DescriptionBody = styled.div<{ detailsExpanded?: boolean }>`
   -webkit-line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   line-clamp: ${({ detailsExpanded }) => (detailsExpanded ? 'unset' : 3)};
   -webkit-box-orient: vertical;
+  color: ${cVar('colorText')}; /* needed for proper ellipsis color */
 `
 
-export const DescriptionCopy = styled(Text)`
-  display: block;
+export const DescriptionCopy = styled(Text)<DetailsExpandedProps>`
+  /* this fixes Safari issue with line-clamp - it works only for inline elements
+  once the description is expanded we don't need clamp anymore */
+  display: ${({ detailsExpanded }) => (detailsExpanded ? 'block' : 'inline')};
   word-break: break-word;
 `
 
@@ -62,7 +70,7 @@ export const LicenseCustomText = styled(Text)`
   margin-top: ${sizes(2)};
 `
 
-export const ExpandButton = styled(Button)`
+export const ExpandButton = styled(TextButton)`
   display: block;
   margin-bottom: ${sizes(8)};
 `
@@ -75,7 +83,7 @@ export const CategoryWrapper = styled.div`
   }
 `
 
-export const DescriptionLink = styled(Button)`
+export const DescriptionLink = styled(TextButton)`
   word-break: break-all;
 `
 

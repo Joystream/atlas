@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { TabItem } from '@/components/Tabs'
-import { Button } from '@/components/_buttons/Button'
+import { Button, TextButton } from '@/components/_buttons/Button'
 import { SvgActionClose, SvgActionNewTab, SvgAlertsWarning24 } from '@/components/_icons'
 import { Checkbox } from '@/components/_inputs/Checkbox'
 import { FormField } from '@/components/_inputs/FormField'
@@ -73,19 +73,17 @@ export const AdminOverlay: React.FC = () => {
 
   return (
     <Container>
-      <CloseButton variant="tertiary" onClick={handleCloseClick} size="small">
-        <SvgActionClose />
-      </CloseButton>
+      <CloseButton icon={<SvgActionClose />} variant="tertiary" onClick={handleCloseClick} size="small" />
       <HorizontalSpacedContainer>
-        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
+        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.viewer.index()}>
           Home
-        </Button>
-        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.studio.index()}>
+        </TextButton>
+        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.studio.index()}>
           Studio
-        </Button>
-        <Button textOnly variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.playground.index()}>
+        </TextButton>
+        <TextButton variant="tertiary" icon={<SvgActionNewTab />} to={absoluteRoutes.playground.index()}>
           Playground
-        </Button>
+        </TextButton>
       </HorizontalSpacedContainer>
       <StyledTabs tabs={TABS} onSelectTab={handleTabSelect} selected={selectedTabIdx} />
       {selectedTabIdx === 0 && <EnvTab />}

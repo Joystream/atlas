@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import { DialogModal, DialogModalProps } from '@/components/_overlays/DialogModal'
+import { AlertDialogModal, AlertDialogModalProps } from '@/components/_overlays/AlertDialogModal'
 import { createId } from '@/utils/createId'
 
 type ConfirmationModalContextValue = {
@@ -47,7 +47,7 @@ export const ConfirmationModalProvider: React.FC = ({ children }) => {
   )
 }
 
-export const useConfirmationModal = (modalProps?: DialogModalProps) => {
+export const useConfirmationModal = (modalProps?: AlertDialogModalProps) => {
   const ctx = useContext(ConfirmationModalContext)
   if (ctx === undefined) {
     throw new Error('useConfirmationModal must be used within a ConfirmationModalProvider')
@@ -57,15 +57,25 @@ export const useConfirmationModal = (modalProps?: DialogModalProps) => {
 
   const modalId = useRef(createId()).current
 
-  const _openModal = useCallback(
-    (args?: DialogModalProps) =>
-      openModal(modalId, ({ in: inAnimation }) => <DialogModal {...(args || modalProps)} show={inAnimation} />),
-    [modalProps, modalId, openModal]
-  )
-
   const _closeModal = useCallback(() => {
     closeModal(modalId)
   }, [closeModal, modalId])
+
+  const _openModal = useCallback(
+    (args?: AlertDialogModalProps) =>
+      openModal(modalId, ({ in: inAnimation }) => {
+        const _args = args || modalProps
+        const handleClick = _args?.onExitClick
+          ? () => {
+              _args?.onExitClick?.()
+              _closeModal()
+            }
+          : undefined
+
+        return <AlertDialogModal {..._args} onExitClick={handleClick} show={inAnimation} />
+      }),
+    [openModal, modalId, modalProps, _closeModal]
+  )
 
   return [_openModal, _closeModal]
 }

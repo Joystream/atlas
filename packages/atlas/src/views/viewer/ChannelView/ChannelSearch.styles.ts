@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-import { IconButton } from '@/components/_buttons/IconButton'
+import { Button } from '@/components/_buttons/Button'
 import { TextField } from '@/components/_inputs/TextField'
 import { cVar, media, sizes, transitions } from '@/styles'
 
@@ -28,11 +28,11 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
     border-radius: 0;
 
     ${media.sm} {
-      ${({ isOpen }) => isOpen === false && 'border: none !important'};
+      ${({ isOpen }) => isOpen === false && 'box-shadow: none !important'};
     }
 
     :focus {
-      border: 1px solid ${cVar('colorCoreNeutral50')};
+      box-shadow: 0 0 0 1px ${cVar('colorCoreNeutral50')};
     }
 
     ::-webkit-search-cancel-button,
@@ -43,7 +43,7 @@ export const StyledTextField = styled(TextField)<TextFieldProps>`
   }
 `
 
-export const SearchButton = styled(IconButton)`
+export const SearchButton = styled(Button)`
   position: absolute;
 `
 
