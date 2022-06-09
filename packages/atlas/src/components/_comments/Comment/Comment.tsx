@@ -84,13 +84,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
             setIsCommentProcessing(true)
             closeModal()
             isChannelOwner
-              ? await moderateComment(
-                  comment.id,
-                  video?.channel.id,
-                  comment.author.handle,
-                  video.title || '',
-                  video?.id
-                )
+              ? await moderateComment(comment.id, video?.channel.id, comment.author.handle, video?.id)
               : await deleteComment(comment.id, video?.title || '', video?.id)
             setIsCommentProcessing(false)
           },
@@ -148,6 +142,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
         videoId: video.id,
         commentBody: editCommentInputText ?? '',
         commentId: comment.id,
+        videoTitle: video.title,
       })
       setEditCommentInputIsProcessing(false)
 
@@ -160,7 +155,7 @@ export const Comment: React.FC<CommentProps> = React.memo(
     const handleCommentReaction = async (commentId: string, reactionId: ReactionId) => {
       if (authorized) {
         setProcessingReactionsIds((previous) => [...previous, reactionId])
-        await reactToComment(commentId, video?.id || '', reactionId)
+        await reactToComment(commentId, video?.id || '', reactionId, comment?.author.handle || '')
         setProcessingReactionsIds((previous) => previous.filter((r) => r !== reactionId))
       } else {
         openSignInDialog({ onConfirm: signIn })
@@ -176,6 +171,8 @@ export const Comment: React.FC<CommentProps> = React.memo(
         videoId: video.id,
         commentBody: replyCommentInputText,
         parentCommentId: comment.id,
+        videoTitle: video.title,
+        commentAuthorHandle: comment.author.handle,
       })
       setReplyCommentInputIsProcessing(false)
       setReplyCommentInputText('')

@@ -24,9 +24,10 @@ export const TransactionsManager: React.FC = () => {
   const [lastIndexedBlock, setLastIndexedBlock] = useState(0)
   const { displaySnackbar, closeSnackbar } = useSnackbar()
 
-  const anyMinimizedTransactionsPendingSignature = Object.values(transactions).some(
+  const anyMinimizedTransactionsPendingSignature = Object.values(transactions).find(
     (tx) => tx.isMinimized && tx.status === ExtrinsicStatus.Unsigned
   )
+
   const [cachedAnyMinimizedTransactionPendingSignature, setCachedAnyMinimizedTransactionPendingSignature] =
     useState(false)
 
@@ -34,16 +35,16 @@ export const TransactionsManager: React.FC = () => {
 
   // manage minimized signature snackbar
   useEffect(() => {
-    if (anyMinimizedTransactionsPendingSignature === cachedAnyMinimizedTransactionPendingSignature) {
+    if (!!anyMinimizedTransactionsPendingSignature === cachedAnyMinimizedTransactionPendingSignature) {
       return
     }
-    setCachedAnyMinimizedTransactionPendingSignature(anyMinimizedTransactionsPendingSignature)
+    setCachedAnyMinimizedTransactionPendingSignature(!!anyMinimizedTransactionsPendingSignature)
 
     if (anyMinimizedTransactionsPendingSignature) {
       displaySnackbar({
         customId: METAPROTOCOL_SNACKBAR_ID,
         title: 'Continue in Polkadot',
-        description: 'To leave your comment or reaction you need to sign the transaction in Polkadot extension.',
+        description: `${anyMinimizedTransactionsPendingSignature.unsignedMessage} you need to sign the transaction in Polkadot extension.`,
         iconType: 'loading',
         sticked: true,
       })

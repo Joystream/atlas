@@ -126,10 +126,14 @@ export const useReactionTransactions = () => {
       parentCommentId,
       videoId,
       commentBody,
+      videoTitle,
+      commentAuthorHandle,
     }: {
       parentCommentId?: string
       videoId: string
       commentBody: string
+      videoTitle?: string | null
+      commentAuthorHandle?: string
     }) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
@@ -167,8 +171,11 @@ export const useReactionTransactions = () => {
           }
         },
         minimized: {
-          errorMessage: 'Failed to post video comment',
+          errorMessage: parentCommentId
+            ? `Your reply to the comment from "${commentAuthorHandle}" was not posted.`
+            : `Your comment to the video "${videoTitle}" has not been posted.`,
         },
+        unsignedMessage: parentCommentId ? 'To leave your reply' : 'To leave your comment',
       })
 
       return newCommentId
@@ -186,7 +193,7 @@ export const useReactionTransactions = () => {
   )
 
   const reactToComment = useCallback(
-    async (commentId: string, videoId: string, reactionId: ReactionId) => {
+    async (commentId: string, videoId: string, reactionId: ReactionId, commentAuthorHandle: string) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('No joystream instance')
         return
@@ -201,18 +208,29 @@ export const useReactionTransactions = () => {
             proxyCallback(updateStatus)
           ),
         minimized: {
-          errorMessage: 'Failed to react to comment',
+          errorMessage: `Your reaction to the comment from "${commentAuthorHandle}" has not been posted.`,
         },
         allowMultiple: true,
         onTxSync: async () => Promise.all([refetchComment(commentId), refetchReactions(videoId)]),
         onError: async () => refetchReactions(videoId),
+        unsignedMessage: 'To add your reaction',
       })
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchComment, refetchReactions]
   )
 
   const updateComment = useCallback(
-    async ({ commentId, videoId, commentBody }: { commentId: string; videoId: string; commentBody: string }) => {
+    async ({
+      commentId,
+      videoId,
+      commentBody,
+      videoTitle,
+    }: {
+      commentId: string
+      videoId: string
+      commentBody: string
+      videoTitle?: string | null
+    }) => {
       if (!joystream || !activeMemberId || !videoId) {
         ConsoleLogger.error('no joystream or active member')
         return false
@@ -225,8 +243,9 @@ export const useReactionTransactions = () => {
           ).editVideoComment(activeMemberId, commentId, commentBody, proxyCallback(updateStatus)),
         onTxSync: async () => refetchEdits(commentId),
         minimized: {
-          errorMessage: 'Failed to udpate video comment',
+          errorMessage: `Your comment to the video "${videoTitle}" has not been edited.`,
         },
+        unsignedMessage: 'To edit your comment',
       })
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchEdits]
@@ -243,26 +262,21 @@ export const useReactionTransactions = () => {
           (await joystream.extrinsics).deleteVideoComment(activeMemberId, commentId, proxyCallback(updateStatus)),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
-          description: `Your comment to the video ${videoTitle} has been deleted`,
+          description: 'Your comment has been deleted.',
           actionText: 'Go to video',
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          errorMessage: 'Failed to delete comment',
+          errorMessage: `Your comment to the video "${videoTitle}" has not been deleted.`,
         },
+        unsignedMessage: 'To delete your comment',
       })
     },
     [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const moderateComment = useCallback(
-    async (
-      commentId: string,
-      channelId: string,
-      commentAuthorHandle?: string,
-      videoTitle?: string,
-      videoId?: string
-    ) => {
+    async (commentId: string, channelId: string, commentAuthorHandle?: string, videoId?: string) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('no joystream or active member')
         return
@@ -278,20 +292,21 @@ export const useReactionTransactions = () => {
           ),
         snackbarSuccessMessage: {
           title: 'Comment deleted',
-          description: `${commentAuthorHandle}'s comment to your video ${videoTitle} has been deleted`,
+          description: `Comment from "${commentAuthorHandle}" to your video has been deleted.`,
           actionText: 'Go to video',
           onActionClick: () => navigate(absoluteRoutes.viewer.video(videoId)),
         },
         minimized: {
-          errorMessage: 'Failed to delete comment',
+          errorMessage: `Comment from "${commentAuthorHandle}" to your video has not been deleted.`,
         },
+        unsignedMessage: `To delete comment from "${commentAuthorHandle}"`,
       })
     },
     [activeMemberId, handleTransaction, joystream, navigate, proxyCallback]
   )
 
   const likeOrDislikeVideo = useCallback(
-    (videoId: string, reaction: VideoReaction) => {
+    (videoId: string, reaction: VideoReaction, videoTitle?: string | null) => {
       if (!joystream || !activeMemberId) {
         ConsoleLogger.error('No joystream instance')
         return Promise.reject(false)
@@ -301,11 +316,12 @@ export const useReactionTransactions = () => {
         txFactory: async (updateStatus) =>
           (await joystream.extrinsics).reactToVideo(activeMemberId, videoId, reaction, proxyCallback(updateStatus)),
         minimized: {
-          errorMessage: 'Failed to react to video',
+          errorMessage: `Reaction to the video "${videoTitle || ''}" was not posted.`,
         },
         onTxSync: async () => {
           await refetchVideo(videoId)
         },
+        unsignedMessage: 'To add your reaction',
       })
     },
     [activeMemberId, handleTransaction, joystream, proxyCallback, refetchVideo]

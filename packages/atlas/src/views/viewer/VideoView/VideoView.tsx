@@ -176,13 +176,13 @@ export const VideoView: React.FC = () => {
         return false
       } else if (video?.id) {
         setVideoReactionProcessing(true)
-        const reacted = await likeOrDislikeVideo(video.id, reaction)
+        const reacted = await likeOrDislikeVideo(video.id, reaction, video.title)
         setVideoReactionProcessing(false)
         return reacted
       }
       return false
     },
-    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video?.id]
+    [authorized, likeOrDislikeVideo, openSignInDialog, signIn, video]
   )
 
   // use Media Session API to provide rich metadata to the browser

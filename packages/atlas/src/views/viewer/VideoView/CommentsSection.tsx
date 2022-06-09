@@ -136,6 +136,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ disabled, vide
       videoId,
       commentBody: commentInputText,
       parentCommentId,
+      videoTitle: video?.title,
     })
     setCommentInputIsProcessing(false)
     if (newCommentId) {
