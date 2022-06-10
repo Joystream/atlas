@@ -42,7 +42,6 @@ const Template: Story<BottomDrawerProps> = (args) => {
         title={args.title}
         titleLabel={args.titleLabel}
         actionBar={{
-          variant: 'edit',
           primaryButton: {
             text: 'Submit',
             disabled: !actionBarOpen,

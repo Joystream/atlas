@@ -1,23 +1,19 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
 import { Tooltip, TooltipProps } from '@/components/Tooltip'
 import { ButtonProps } from '@/components/_buttons/Button'
-import { SvgActionInformative, SvgControlsCancel } from '@/components/_icons'
+import { SvgActionInformative } from '@/components/_icons'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { transitions } from '@/styles'
 
 import {
   ActionBarContainer,
-  ActionBarVariant,
   ActionButtonPrimary,
   ActionButtonPrimaryTooltip,
   DetailsIconWrapper,
   DraftsBadgeContainer,
-  EditSecondaryButton,
-  NFTBottomWrapper,
-  NFTTopWrapper,
   SecondaryButton,
   StyledPrimaryText,
   StyledSecondaryText,
@@ -28,126 +24,61 @@ export type ActionDialogButtonProps = {
   tooltip?: TooltipProps
 } & Omit<ButtonProps, 'children'>
 
-type ActionDialogDraftBadge = {
+type ActionDialogInfoBadge = {
   text: string
   tooltip?: TooltipProps
 }
 
 export type ActionBarProps = {
-  variant?: ActionBarVariant
-  primaryButton: ActionDialogButtonProps
   primaryText?: string
   secondaryText?: string
+  infoBadge?: ActionDialogInfoBadge
+  primaryButton: ActionDialogButtonProps
+  secondaryButton?: ActionDialogButtonProps
+  isActive?: boolean
   className?: string
-  secondaryButton?: ActionDialogButtonProps & { visible?: boolean }
-  draftBadge?: ActionDialogDraftBadge
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ primaryText, secondaryText, className, primaryButton, secondaryButton, draftBadge, variant = 'new' }, ref) => {
+  ({ primaryText, isActive = true, secondaryText, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
-
-    const textNode = (
-      <>
-        <StyledPrimaryText variant={!smMatch ? 'h300' : 'h400'}>{primaryText}</StyledPrimaryText>
-        <StyledSecondaryText variant="t200" secondary>
-          {secondaryText}
-        </StyledSecondaryText>
-      </>
-    )
-
-    const primaryButtonNode = (
-      <ActionButtonPrimaryTooltip placement="top-end" {...primaryButton?.tooltip}>
-        <ActionButtonPrimary {...primaryButton} size="large" type="submit">
-          {primaryButton.text}
-        </ActionButtonPrimary>
-      </ActionButtonPrimaryTooltip>
-    )
-
-    const secondaryButtonNode = (
-      <CSSTransition
-        in={secondaryButton?.visible}
-        timeout={parseInt(transitions.timings.sharp)}
-        classNames={transitions.names.fade}
-        mountOnEnter
-        unmountOnExit
-      >
-        <SecondaryButton {...secondaryButton} variant="secondary" size="large">
-          {secondaryButton?.text}
-        </SecondaryButton>
-      </CSSTransition>
-    )
-
-    const draftNode = draftBadge ? (
-      <Tooltip placement="top-end" {...draftBadge?.tooltip}>
-        <DraftsBadgeContainer>
-          <Text variant="t200" secondary>
-            {draftBadge?.text}
-          </Text>
-          <DetailsIconWrapper>
-            <SvgActionInformative />
-          </DetailsIconWrapper>
-        </DraftsBadgeContainer>
-      </Tooltip>
-    ) : null
-
-    const getActionBarVariant = (variant: ActionBarVariant) => {
-      switch (variant) {
-        case 'new':
-          return (
-            <>
-              {textNode}
-              {draftNode}
-              {primaryButtonNode}
-            </>
-          )
-        case 'edit':
-          return (
-            <>
-              {textNode}
-              <EditSecondaryButton
-                {...secondaryButton}
-                icon={!smMatch ? <SvgControlsCancel width={16} height={16} /> : undefined}
-                variant={!smMatch ? 'tertiary' : 'secondary'}
-                size={!smMatch ? 'small' : 'large'}
-                iconPlacement="right"
-              >
-                {secondaryButton?.text}
-              </EditSecondaryButton>
-              {primaryButtonNode}
-            </>
-          )
-        case 'nft':
-          return smMatch ? (
-            <>
-              {textNode}
-              {draftNode}
-              {secondaryButtonNode}
-              {primaryButtonNode}
-            </>
-          ) : (
-            <>
-              <NFTTopWrapper>
-                {textNode}
-                {draftNode}
-              </NFTTopWrapper>
-              <NFTBottomWrapper>
-                {secondaryButtonNode}
-                {primaryButtonNode}
-              </NFTBottomWrapper>
-            </>
-          )
-      }
-    }
+    const infoBadgeRef = useRef(null)
 
     return (
-      <ActionBarContainer
-        variant={variant}
-        ref={ref}
-        className={className}
-        isActive={variant === 'edit' ? !primaryButton?.disabled : true}
-      >
-        {getActionBarVariant(variant)}
+      <ActionBarContainer ref={ref} className={className} isActive={isActive}>
+        <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>{primaryText}</StyledPrimaryText>
+        <StyledSecondaryText variant="t100" secondary>
+          {secondaryText}
+        </StyledSecondaryText>
+        {infoBadge ? (
+          <>
+            <DraftsBadgeContainer ref={infoBadgeRef}>
+              <Text variant={smMatch ? 't200' : 't100'} secondary>
+                {infoBadge?.text}
+              </Text>
+              <DetailsIconWrapper>
+                <SvgActionInformative />
+              </DetailsIconWrapper>
+            </DraftsBadgeContainer>
+            <Tooltip reference={infoBadgeRef} placement="top-end" {...infoBadge?.tooltip} />
+          </>
+        ) : null}
+        <CSSTransition
+          in={!!secondaryButton}
+          timeout={parseInt(transitions.timings.sharp)}
+          classNames={transitions.names.fade}
+          mountOnEnter
+          unmountOnExit
+        >
+          <SecondaryButton {...secondaryButton} variant="secondary" size={smMatch ? 'large' : 'medium'}>
+            {secondaryButton?.text}
+          </SecondaryButton>
+        </CSSTransition>
+        <ActionButtonPrimaryTooltip placement="top-end" {...primaryButton?.tooltip}>
+          <ActionButtonPrimary {...primaryButton} size={smMatch ? 'large' : 'medium'} type="submit">
+            {primaryButton.text}
+          </ActionButtonPrimary>
+        </ActionButtonPrimaryTooltip>
       </ActionBarContainer>
     )
   }

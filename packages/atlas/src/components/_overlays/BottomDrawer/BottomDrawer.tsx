@@ -35,7 +35,7 @@ export const BottomDrawer: FC<BottomDrawerProps> = ({
   const [cachedIsOpen, setCachedIsOpen] = useState(false)
   const { incrementOverlaysOpenCount, decrementOverlaysOpenCount } = useOverlayManager()
 
-  const actionBarActive = actionBarProps?.variant === 'edit' ? !actionBarProps.primaryButton?.disabled : true
+  const actionBarActive = actionBarProps?.isActive ?? true
   const { ref: actionBarRef, height: _actionBarHeight } = useResizeObserver({ box: 'border-box' })
   const actionBarHeight = actionBarActive ? _actionBarHeight : 0
 

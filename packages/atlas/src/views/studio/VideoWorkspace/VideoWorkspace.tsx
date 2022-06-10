@@ -47,7 +47,7 @@ export const VideoWorkspace: FC = memo(() => {
   }, [formStatus?.hasUnsavedAssets, openWarningDialog, setIsWorkspaceOpen])
 
   const actionBarProps: ActionBarProps = {
-    variant: isEdit ? 'edit' : 'new',
+    isActive: isEdit ? !formStatus?.isDisabled : true,
     primaryText: `Fee: 0 ${JOY_CURRENCY_TICKER}`,
     secondaryText:
       'For the time being no fees are required for blockchain transactions. This will change in the future.',
@@ -63,14 +63,14 @@ export const VideoWorkspace: FC = memo(() => {
           },
       text: formStatus?.actionBarPrimaryText,
     },
-    secondaryButton: isEdit
-      ? {
-          visible: formStatus?.isDirty,
-          text: isEdit ? 'Cancel' : undefined,
-          onClick: () => formStatus?.triggerReset?.(),
-        }
-      : undefined,
-    draftBadge: !isEdit
+    secondaryButton:
+      isEdit && formStatus?.isDirty
+        ? {
+            text: isEdit ? 'Cancel' : undefined,
+            onClick: () => formStatus?.triggerReset?.(),
+          }
+        : undefined,
+    infoBadge: !isEdit
       ? {
           text: mdMatch ? 'Drafts are saved automatically' : 'Saving drafts',
           tooltip: {

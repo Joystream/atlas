@@ -120,7 +120,6 @@ export const EditMembershipView: FC = () => {
             type: 'submit',
           }}
           secondaryButton={{
-            visible: true,
             text: 'Cancel',
             to: absoluteRoutes.viewer.member(activeMembership?.handle),
           }}

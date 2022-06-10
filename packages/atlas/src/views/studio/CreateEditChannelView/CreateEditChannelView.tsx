@@ -524,7 +524,6 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
                 primaryText="Fee: 0 Joy"
-                variant={newChannel ? 'new' : 'edit'}
                 secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
@@ -546,11 +545,14 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
                       }
                     : undefined,
                 }}
-                secondaryButton={{
-                  visible: !newChannel && isDirty && nodeConnectionStatus === 'connected',
-                  text: 'Cancel',
-                  onClick: () => reset(),
-                }}
+                secondaryButton={
+                  !newChannel && isDirty && nodeConnectionStatus === 'connected'
+                    ? {
+                        text: 'Cancel',
+                        onClick: () => reset(),
+                      }
+                    : undefined
+                }
               />
             </ActionBarTransactionWrapper>
           </CSSTransition>
