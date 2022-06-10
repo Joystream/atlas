@@ -48,7 +48,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
       <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
       {channel ? (
-        <ChannelTitle variant="h300" secondary={true}>
+        <ChannelTitle variant="h300" color="default">
           {channel.title}
         </ChannelTitle>
       ) : (
@@ -79,7 +79,7 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h100" secondary>
+        <ChannelsTitle variant="h100" color="default">
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>

@@ -85,7 +85,7 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
               {title}
             </Text>
           )}
-          <Text variant="t200" secondary>
+          <Text variant="t200" color="default">
             {description}
           </Text>
         </>

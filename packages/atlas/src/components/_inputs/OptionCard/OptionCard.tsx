@@ -1,7 +1,6 @@
 import { FC, PropsWithChildren, ReactNode, forwardRef } from 'react'
 
 import { Text } from '@/components/Text'
-import { cVar } from '@/styles'
 
 import {
   IconContainer,
@@ -47,13 +46,13 @@ export const OptionCardBase: FC<OptionCardProps> = ({
               {icon}
             </IconContainer>
           )}
-          <OptionCardTitle color={error ? cVar('colorTextError') : undefined} variant="h400">
+          <OptionCardTitle color={error ? 'error' : undefined} variant="h400">
             {label}
           </OptionCardTitle>
         </TitleIconWrapper>
         {children}
       </InputAndTitleWrapper>
-      <Text variant="t100" secondary>
+      <Text variant="t100" color="default">
         {helperText}
       </Text>
     </OptionCardLabel>

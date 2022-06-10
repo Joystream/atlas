@@ -46,7 +46,7 @@ export const NoConnectionIndicator: FC<NoConnectionIndicatorProps> = ({
           ) : (
             nodeConnectionStatus === 'disconnected' && <Text variant="t200">No node connection</Text>
           )}
-          <Text variant="t200" secondary>
+          <Text variant="t200" color="default">
             Wait for connection to restore
           </Text>
         </TextWrapper>

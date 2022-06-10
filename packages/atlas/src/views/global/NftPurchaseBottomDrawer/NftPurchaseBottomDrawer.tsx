@@ -27,7 +27,6 @@ import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
-import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
@@ -303,26 +302,20 @@ export const NftPurchaseBottomDrawer: FC = () => {
               </Text>
               {type === 'english_auction' && (
                 <FlexWrapper>
-                  <Text variant="h200" secondary>
+                  <Text variant="h200" color="default">
                     Ending in:
                   </Text>
                   <Text
                     variant="h200"
                     margin={{ left: 2, right: 2 }}
-                    color={
-                      auctionEnded
-                        ? cVar('colorTextMuted', true)
-                        : timeLeftUnderMinute
-                        ? cVar('colorTextError')
-                        : undefined
-                    }
+                    color={auctionEnded ? 'muted' : timeLeftUnderMinute ? 'error' : undefined}
                   >
                     {!auctionEnded
                       ? !timeLeftUnderMinute
                         ? formatDurationShort(timeLeftSeconds, true)
                         : 'Under 1 min'
                       : 'Auction ended'}
-                    <Text variant="h200" as="span" secondary>
+                    <Text variant="h200" as="span" color="default">
                       {' '}
                       / {pluralizeNoun(blocksLeft && blocksLeft > 0 ? blocksLeft : 0, 'block')}
                     </Text>
@@ -345,7 +338,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   {topBidder && !!topBidAmount ? (
                     <ActiveBidWrapper>
                       <ActionBarCell>
-                        <Text variant="h100" secondary margin={{ bottom: 2 }}>
+                        <Text variant="h100" color="default" margin={{ bottom: 2 }}>
                           Top bid
                         </Text>
                         <FlexWrapper>
@@ -355,13 +348,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                           </TokenWrapper>
                           <BidAmount variant="h400" value={topBidAmount} format="short" />
                         </FlexWrapper>
-                        <Text variant="t100" secondary margin={{ top: 1 }}>
+                        <Text variant="t100" color="default" margin={{ top: 1 }}>
                           {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
                         </Text>
                       </ActionBarCell>
                       {userBid && (
                         <ActionBarCell>
-                          <Text variant="h100" secondary margin={{ bottom: 2 }}>
+                          <Text variant="h100" color="default" margin={{ bottom: 2 }}>
                             Your Bid
                           </Text>
                           <FlexWrapper>
@@ -371,7 +364,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                             </TokenWrapper>
                             <BidAmount variant="h400" value={Number(userBid.amount)} format="short" />
                           </FlexWrapper>
-                          <Text variant="t100" secondary margin={{ top: 1 }}>
+                          <Text variant="t100" color="default" margin={{ top: 1 }}>
                             You
                           </Text>
                         </ActionBarCell>
@@ -380,7 +373,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   ) : (
                     <ActiveBidWrapper>
                       <ActionBarCell>
-                        <Text variant="h100" secondary margin={{ bottom: 2 }}>
+                        <Text variant="h100" color="default" margin={{ bottom: 2 }}>
                           Top bid
                         </Text>
                         <Text variant="h400">No bids yet</Text>
@@ -391,13 +384,13 @@ export const NftPurchaseBottomDrawer: FC = () => {
                 {!auctionEnded && (
                   <MinimumBidWrapper>
                     <MinimumBid>
-                      <Text variant="h300" secondary>
+                      <Text variant="h300" color="default">
                         Minimum bid
                       </Text>
                       <JoyTokenIcon variant="gray" size={24} /> <Text variant="h400">{minimumBid}</Text>
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
-                      <Text variant="t100" secondary>
+                      <Text variant="t100" color="default">
                         Buy now: <NumberFormat variant="t100" value={auctionBuyNowPrice} withToken />
                       </Text>
                     )}
@@ -456,7 +449,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
             ) : (
               <MinimumBidWrapper>
                 <MinimumBid>
-                  <Text variant="h300" secondary>
+                  <Text variant="h300" color="default">
                     Price:
                   </Text>
                   <JoyTokenIcon variant="silver" size={24} />{' '}
@@ -475,34 +468,34 @@ export const NftPurchaseBottomDrawer: FC = () => {
             </FlexWrapper>
             <PaymentSplitWrapper>
               <div>
-                <Text variant="h300" secondary>
+                <Text variant="h300" color="default">
                   Owner
                 </Text>
                 <PaymentSplitValues>
                   <Avatar size="bid" assetUrl={ownerMemberAvatarUrl} />
-                  <Text variant="h400" secondary margin={{ left: 2 }}>
+                  <Text variant="h400" color="default" margin={{ left: 2 }}>
                     {ownerRoyalty}%
                   </Text>
                 </PaymentSplitValues>
               </div>
               <div>
-                <Text variant="h300" secondary>
+                <Text variant="h300" color="default">
                   Creator
                 </Text>
                 <PaymentSplitValues>
                   <Avatar size="bid" assetUrl={creatorAvatarUrl} />
-                  <Text variant="h400" secondary margin={{ left: 2 }}>
+                  <Text variant="h400" color="default" margin={{ left: 2 }}>
                     {creatorRoyalty}%
                   </Text>
                 </PaymentSplitValues>
               </div>
               <div>
-                <Text variant="h300" secondary>
+                <Text variant="h300" color="default">
                   Platform
                 </Text>
                 <PaymentSplitValues>
                   <SvgJoystreamLogoShort height={24} viewBox="0 0 26 32" />
-                  <Text variant="h400" secondary margin={{ left: 2 }}>
+                  <Text variant="h400" color="default" margin={{ left: 2 }}>
                     {nftPlatformFeePercentage}%
                   </Text>
                 </PaymentSplitValues>
@@ -513,7 +506,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
               Price breakdown
             </Text>
             <Row>
-              <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
+              <Text variant="t100" color={insufficientFoundsError ? 'error' : 'default'}>
                 Your balance
               </Text>
               {accountBalance != null ? (
@@ -521,15 +514,14 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   value={accountBalance}
                   withToken
                   variant="t100"
-                  secondary
-                  color={insufficientFoundsError ? cVar('colorTextError') : undefined}
+                  color={insufficientFoundsError ? 'error' : 'default'}
                 />
               ) : (
                 <SkeletonLoader width={82} height={16} />
               )}
             </Row>
             <Row>
-              <Text variant="t100" secondary>
+              <Text variant="t100" color="default">
                 {type === 'buy_now' || isBuyNowClicked ? 'Price' : bid ? 'Your bid' : ''}
               </Text>
               {(bid > 0 || isBuyNowClicked || type === 'buy_now') && (
@@ -537,20 +529,20 @@ export const NftPurchaseBottomDrawer: FC = () => {
                   value={type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice}
                   withToken
                   variant="t100"
-                  secondary
+                  color="default"
                 />
               )}
             </Row>
             {(bid || type === 'buy_now') && (
               <>
                 <Row>
-                  <Text variant="t100" secondary>
+                  <Text variant="t100" color="default">
                     Transaction fee
                   </Text>
-                  <NumberFormat value={TRANSACTION_FEE} withToken variant="t100" secondary />
+                  <NumberFormat value={TRANSACTION_FEE} withToken variant="t100" color="default" />
                 </Row>
                 <Row>
-                  <Text variant="h500" secondary>
+                  <Text variant="h500" color="default">
                     You will pay
                   </Text>
                   <NumberFormat
@@ -564,7 +556,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
             {type === 'open_auction' && bidLockingTime && (
               <Messages>
                 <SvgAlertsWarning24 />
-                <Text variant="t200" secondary margin={{ left: 2 }}>
+                <Text variant="t200" color="default" margin={{ left: 2 }}>
                   Your bid can be withdrawn if it’s not accepted by the owner within{' '}
                   {formatDuration(intervalToDuration({ start: 0, end: bidLockingTime }))} from placing it.
                 </Text>
@@ -573,7 +565,7 @@ export const NftPurchaseBottomDrawer: FC = () => {
             {type === 'english_auction' && !isBuyNowClicked && (
               <Messages>
                 <SvgAlertsWarning24 />
-                <Text variant="t200" secondary margin={{ left: 2 }}>
+                <Text variant="t200" color="default" margin={{ left: 2 }}>
                   After placing your bid, you will not be able to withdraw it. If someone places higher bid, your bid
                   will be returned automatically.
                 </Text>

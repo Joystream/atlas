@@ -119,7 +119,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionBuyNow />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text variant="t100" color="default">
                       NFTs bought
                     </Text>
                     <Text variant="t300">{activitiesTotalCounts.nftsBoughts}</Text>
@@ -128,7 +128,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                 <OverviewItem>
                   <StyledIconWrapper icon={<SvgActionSell />} size="large" />
                   <OverviewTextContainer>
-                    <Text variant="t100" secondary>
+                    <Text variant="t100" color="default">
                       NFTs sold
                     </Text>
                     <Text variant="t300">{activitiesTotalCounts.nftsSold}</Text>
@@ -138,7 +138,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionMint />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text variant="t100" color="default">
                         NFTs created
                       </Text>
                       <Text variant="t300">{activitiesTotalCounts.nftsIssued}</Text>
@@ -147,7 +147,7 @@ export const MemberActivity: FC<MemberActivityProps> = ({ memberId, sort = 'crea
                   <OverviewItem>
                     <StyledIconWrapper icon={<SvgActionBid />} size="large" />
                     <OverviewTextContainer>
-                      <Text variant="t100" secondary>
+                      <Text variant="t100" color="default">
                         Bid placed
                       </Text>
                       <Text variant="t300">{activitiesTotalCounts.nftsBidded}</Text>

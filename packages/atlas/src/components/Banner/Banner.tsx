@@ -43,7 +43,7 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, i
       {description && (
         <BannerDescription withTitle={!!title}>
           {icon && !title && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText as="p" variant="t200" secondary>
+          <BannerText as="p" variant="t200" color="default">
             {description}
           </BannerText>
           {!title && dismissable && (

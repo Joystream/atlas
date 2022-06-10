@@ -80,7 +80,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
       />
       <TextContainer>
         <CopyContainer>
-          <Text variant={size === 'medium' ? 'h300' : 'h200'} secondary>
+          <Text variant={size === 'medium' ? 'h300' : 'h200'} color="default">
             {text}
             {' by '}
             <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)}>
@@ -90,7 +90,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
             </OwnerHandle>
           </Text>
         </CopyContainer>
-        <Text variant="t100" secondary>
+        <Text variant="t100" color="default">
           {formatDateTime(date)}
         </Text>
       </TextContainer>
@@ -107,7 +107,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
               classNames={transitions.names.fade}
             >
               {dollarValue ? (
-                <NumberFormat format="dollar" variant="t100" secondary value={dollarValue} align="end" />
+                <NumberFormat format="dollar" variant="t100" color="default" value={dollarValue} align="end" />
               ) : (
                 '‌'
               )}

@@ -35,7 +35,7 @@ export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
   const isArray = Array.isArray(members)
   return (
     <MembersWrapper>
-      <Caption variant="t200" secondary>
+      <Caption variant="t200" color="default">
         {caption}
       </Caption>
       {isArray && avatars && (
@@ -46,7 +46,7 @@ export const Members: FC<MembersProps> = ({ caption, members, loading }) => {
             size="small"
             avatarStrokeColor={cVar('colorBackgroundStrong', true)}
           />
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             {avatars.length > 3 && `+${avatars.length - 3}`}
           </Text>
         </AvatarGroupWrapper>

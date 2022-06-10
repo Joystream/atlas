@@ -137,7 +137,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
           }
           secondaryText={
             convertToUSD(buyNowPrice) ? (
-              <NumberFormat secondary format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
+              <NumberFormat color="default" format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
             ) : undefined
           }
         />
@@ -156,13 +156,13 @@ export const NftWidget: FC<NftWidgetProps> = ({
             <Button variant={secondary ? 'secondary' : undefined} fullWidth size={buttonSize} onClick={onWithdrawBid}>
               Withdraw last bid
             </Button>
-            <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
+            <Text as="p" margin={{ top: 2 }} variant="t100" color="default" align="center">
               You bid{' '}
               <NumberFormat
                 value={Number(bidFromPreviousAuction?.amount)}
                 format="short"
                 variant="t100"
-                secondary
+                color="default"
                 withToken
               />{' '}
               on {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
@@ -172,7 +172,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
       ) : null
 
     const BidPlacingInfoText = () => (
-      <Text as="p" variant="t100" secondary align="center">
+      <Text as="p" variant="t100" color="default" align="center">
         Placing a bid will withdraw your last bid
       </Text>
     )
@@ -192,7 +192,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                       value={nftStatus.lastSalePrice}
                       format="short"
                       variant={contentTextVariant}
-                      secondary
+                      color="default"
                     />
                   </>
                 }
@@ -203,7 +203,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 size={size}
                 label="status"
                 content={
-                  <Text variant={contentTextVariant} secondary>
+                  <Text variant={contentTextVariant} color="default">
                     Not for sale
                   </Text>
                 }
@@ -339,7 +339,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
             {nftStatus.type === 'english' ? (
               <BidPlacingInfoText />
             ) : (
-              <Text as="p" variant="t100" secondary align="center">
+              <Text as="p" variant="t100" color="default" align="center">
                 {nftStatus.canWithdrawBid ? `Your last bid: ` : `Your last bid (`}
                 <NumberFormat value={nftStatus.userBidAmount} format="short" withToken />
                 {nftStatus.canWithdrawBid
@@ -370,7 +370,8 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 secondaryText={
                   !isLoadingPrice && nftStatus.topBidAmount ? (
                     <>
-                      <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.topBidAmount) ?? 0} /> from{' '}
+                      <NumberFormat color="default" format="dollar" value={convertToUSD(nftStatus.topBidAmount) ?? 0} />{' '}
+                      from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
@@ -390,7 +391,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                 }
                 secondaryText={
                   convertToUSD(nftStatus.startingPrice) ? (
-                    <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.startingPrice) ?? 0} />
+                    <NumberFormat color="default" format="dollar" value={convertToUSD(nftStatus.startingPrice) ?? 0} />
                   ) : undefined
                 }
               />
@@ -405,7 +406,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   loading={!nftStatus.auctionPlannedEndDate}
                   content={
                     nftStatus.auctionPlannedEndDate && (
-                      <Text variant={contentTextVariant} secondary>
+                      <Text variant={contentTextVariant} color="default">
                         {formatDateTime(nftStatus.auctionPlannedEndDate)}
                       </Text>
                     )
@@ -426,7 +427,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
                   loading={!nftStatus.startsAtDate}
                   content={
                     nftStatus.startsAtDate && (
-                      <Text variant={contentTextVariant} secondary>
+                      <Text variant={contentTextVariant} color="default">
                         {nftStatus.auctionBeginsInDays > 1 && formatDateTime(nftStatus.startsAtDate)}
                         {nftStatus.auctionBeginsInDays === 1 && `Tomorrow at ${formatTime(nftStatus.startsAtDate)}`}
                         {nftStatus.auctionBeginsInDays < 1 &&
@@ -552,7 +553,7 @@ export const NftWidget: FC<NftWidgetProps> = ({
     <Container ref={ref}>
       <NftOwnerContainer data-size={size}>
         <OwnerAvatar assetUrl={ownerAvatarUri} size="small" />
-        <OwnerLabel variant="t100" secondary>
+        <OwnerLabel variant="t100" color="default">
           This NFT is owned by
         </OwnerLabel>
         <OwnerHandle to={ownerHandle ? absoluteRoutes.viewer.member(ownerHandle) : ''}>

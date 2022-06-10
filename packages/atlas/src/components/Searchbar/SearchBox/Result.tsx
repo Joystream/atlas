@@ -60,10 +60,10 @@ export const Result: FC<ResultProps> = ({ video, channel, query, selected, handl
           <ResultThumbnail src={thumbnailUrl || ''} rounded={!!channel} />
         )}
         <div>
-          <Title secondary={!selected} variant="t200-strong">
+          <Title color={!selected ? 'default' : undefined} variant="t200-strong">
             <ResultTitle title={title} query={query} />
           </Title>
-          <Text secondary variant="t100">
+          <Text color="default" variant="t100">
             {video ? video.channel?.title : `${channel?.follows} ${channel?.follows === 1 ? 'Follower' : 'Followers'}`}
           </Text>
         </div>

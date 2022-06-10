@@ -3,9 +3,31 @@ import styled from '@emotion/styled'
 
 import { cVar, sizes } from '@/styles'
 
+type ColorVariant =
+  | 'default'
+  | 'muted'
+  | 'strong'
+  | 'primary'
+  | 'error'
+  | 'success'
+  | 'caution'
+  | 'neutral200Lighten'
+  | 'inherit'
+
+const mappedColors = {
+  default: cVar('colorText'),
+  muted: cVar('colorTextMuted'),
+  strong: cVar('colorTextStrong'),
+  primary: cVar('colorTextPrimary'),
+  error: cVar('colorTextError'),
+  success: cVar('colorTextSuccess'),
+  caution: cVar('colorTextCaution'),
+  neutral200Lighten: cVar('colorCoreNeutral200Lighten'),
+  inherit: 'inherit',
+}
+
 export type TextBaseProps = {
-  color?: string
-  secondary?: boolean
+  color?: ColorVariant
   clampAfterLine?: number
   margin?: MarginProps
   align?: AlignProps
@@ -46,8 +68,8 @@ const clampStyles = ({ clampAfterLine }: TextBaseProps) => css`
   overflow: hidden;
 `
 
-const baseStyles = ({ color, secondary, clampAfterLine, margin, align }: TextBaseProps) => css`
-  color: ${color ? color : secondary ? cVar('colorText') : cVar('colorTextStrong')};
+const baseStyles = ({ color = 'strong', clampAfterLine, margin, align }: TextBaseProps) => css`
+  color: ${mappedColors[color]};
 
   ${clampAfterLine && clampStyles({ clampAfterLine })}
   ${marginStyles({ margin })}

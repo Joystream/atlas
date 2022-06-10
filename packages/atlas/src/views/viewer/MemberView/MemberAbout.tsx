@@ -5,7 +5,6 @@ import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
 import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { PIONEER_MEMBER_URL } from '@/config/urls'
-import { cVar } from '@/styles'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -29,7 +28,7 @@ export const MemberAbout = () => {
         {!!member?.metadata.about && (
           <TextContainer withDivider={!!member?.channels.length}>
             <Text variant="h500">About me</Text>
-            <Text variant="t300" secondary>
+            <Text variant="t300" color="default">
               {member.metadata.about}
             </Text>
           </TextContainer>
@@ -51,14 +50,14 @@ export const MemberAbout = () => {
         <DetailsText variant="h500">Details</DetailsText>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Join date
           </Text>
           <Text variant="t300">{member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Num. of channels
           </Text>
           <NumberFormat format="short" value={member?.channels.length ? member?.channels.length : 0} variant="t300" />
@@ -69,7 +68,7 @@ export const MemberAbout = () => {
           variant="t300-strong"
           href={`${PIONEER_MEMBER_URL}/${member?.id}`}
           target="_blank"
-          color={cVar('colorCoreBlue300')}
+          color="primary"
         >
           Learn more
         </Anchor>

@@ -78,10 +78,10 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             </StepNumber>
           )}
           <StepDetails>
-            <Overhead variant="t100" secondary>
+            <Overhead variant="t100" color="default">
               Step {number}
             </Overhead>
-            <StepTitle variant="t100-strong" secondary={variant !== 'current'}>
+            <StepTitle variant="t100-strong" color={variant !== 'current' ? 'default' : undefined}>
               {title}
             </StepTitle>
           </StepDetails>

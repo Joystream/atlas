@@ -89,7 +89,7 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" secondary onClick={handleCopyAddress}>
+                <StyledText variant="t300" color="default" onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy account address" placement="top">
                     {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}

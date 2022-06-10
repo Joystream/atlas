@@ -52,7 +52,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
                   {video.description?.split('\n').map((line, idx) => (
                     <DescriptionCopy
                       variant={mdMatch ? 't300' : 't200'}
-                      secondary
+                      color="default"
                       key={idx}
                       detailsExpanded={detailsExpanded}
                     >
@@ -78,11 +78,11 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
             <>
               <DescriptionTitle variant="h100">License</DescriptionTitle>
               {foundLicense && (
-                <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                <Text variant={mdMatch ? 't300' : 't200'} color="default">
                   {foundLicense.name}
                 </Text>
               )}
-              <LicenseCustomText as="p" variant="t100" secondary>
+              <LicenseCustomText as="p" variant="t100" color="default">
                 {video.license?.customText}
               </LicenseCustomText>
             </>
@@ -96,7 +96,7 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
               <DescriptionTitle variant="h100">Category</DescriptionTitle>
               <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
                 {categoryData?.icon}
-                <Text variant={mdMatch ? 't300' : 't200'} secondary>
+                <Text variant={mdMatch ? 't300' : 't200'} color="default">
                   {video?.category?.name}
                 </Text>
               </Category>

@@ -33,7 +33,7 @@ export const CommentBody: FC<CommentBodyProps> = ({ children }) => {
   return (
     <>
       <EmojiWrapper>
-        <StyledCommentText ref={commentBodyRef} commentExpanded={commentExpanded} variant="t200" secondary>
+        <StyledCommentText ref={commentBodyRef} commentExpanded={commentExpanded} variant="t200" color="default">
           {trimmedComment}
         </StyledCommentText>
       </EmojiWrapper>

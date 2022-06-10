@@ -170,13 +170,13 @@ export const UploadStatusGroup: FC<UploadStatusGroupProps> = ({ uploads, size = 
         </Thumbnail>
         <AssetsInfoContainer>
           <AssetGroupTitleText variant="t300-strong">{assetsGroupTitleText}</AssetGroupTitleText>
-          <Text variant="t200" secondary>
+          <Text variant="t200" color="default">
             {assetsGroupNumberText}
           </Text>
         </AssetsInfoContainer>
         <UploadInfoContainer>
           {size === 'large' && (
-            <Text variant="t200" secondary>
+            <Text variant="t200" color="default">
               {renderAssetsGroupInfo()}
             </Text>
           )}

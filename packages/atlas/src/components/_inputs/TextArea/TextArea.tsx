@@ -1,7 +1,6 @@
 import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'react'
 
 import { Text } from '@/components/Text'
-import { cVar } from '@/styles'
 
 import { CustomBorder, StyledText, StyledTextArea, TextAreaContainer, TextAreaWrapper } from './TextArea.styles'
 
@@ -72,17 +71,8 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
         <CustomBorder disabled={disabled} />
       </TextAreaContainer>
       {counter && maxLength ? (
-        <StyledText disabled={disabled} variant="t100" color={cVar('colorTextMuted')}>
-          <Text
-            variant="t100"
-            color={
-              charactersCount
-                ? charactersCount > maxLength
-                  ? cVar('colorTextError')
-                  : cVar('colorTextStrong')
-                : cVar('colorTextMuted')
-            }
-          >
+        <StyledText disabled={disabled} variant="t100" color="muted">
+          <Text variant="t100" color={charactersCount ? (charactersCount > maxLength ? 'error' : 'strong') : 'muted'}>
             {charactersCount}
           </Text>{' '}
           / {maxLength}

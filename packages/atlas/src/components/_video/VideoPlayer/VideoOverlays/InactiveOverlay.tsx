@@ -17,7 +17,7 @@ export const InactiveOverlay: FC = () => {
         <OverlayHeading variant={smMatch ? 'h600' : 'h400'}>
           This video hasn&apos;t finished uploading yet...
         </OverlayHeading>
-        <OverlayContent variant={smMatch ? 't300' : 't200'} secondary>
+        <OverlayContent variant={smMatch ? 't300' : 't200'} color="default">
           Please try again in a few minutes
         </OverlayContent>
       </InnerContainer>

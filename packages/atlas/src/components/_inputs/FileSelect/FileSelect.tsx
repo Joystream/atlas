@@ -159,11 +159,11 @@ export const FileSelect: FC<FileSelectProps> = ({
           <InnerContainer key={item} style={style} isLoading={isLoading}>
             {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
             <Title variant="h400">{title}</Title>
-            <Paragraph variant="t200" as="p" secondary>
+            <Paragraph variant="t200" as="p" color="default">
               {paragraph}
             </Paragraph>
             <ButtonsGroup>
-              <DragDropText variant="t100" secondary>
+              <DragDropText variant="t100" color="default">
                 Drag and drop or
               </DragDropText>
               <Button size="medium" onClick={() => open()} icon={<SvgActionUpload />}>

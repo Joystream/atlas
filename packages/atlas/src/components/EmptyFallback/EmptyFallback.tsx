@@ -26,7 +26,7 @@ export const EmptyFallback: FC<EmptyFallbackProps> = ({
     <Message>
       {title && <Title variant={variant === 'large' ? 'h500' : 't300'}>{title}</Title>}
       {variant === 'large' && subtitle && (
-        <Subtitle variant="t200" secondary>
+        <Subtitle variant="t200" color="default">
           {subtitle}
         </Subtitle>
       )}

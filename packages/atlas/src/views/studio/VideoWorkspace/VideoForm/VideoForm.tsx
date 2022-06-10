@@ -611,7 +611,7 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           >
             {getHiddenSectionLabel()}
           </TextButton>
-          <MoreSettingsDescription as="p" variant="t200" secondary>
+          <MoreSettingsDescription as="p" variant="t200" color="default">
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
               : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}

@@ -11,7 +11,6 @@ import { Input } from '@/components/_inputs/Input'
 import { MemberComboBox } from '@/components/_inputs/MemberComboBox'
 import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { useTokenPrice } from '@/providers/joystream'
-import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
 
 import {
@@ -151,7 +150,7 @@ export const SetUp: FC<SetUpProps> = ({
   return (
     <>
       <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
-      <Text variant="t300" secondary>
+      <Text variant="t300" color="default">
         {selectedType && headerText[selectedType].caption}
       </Text>
       <StyledForm onSubmit={handleSubmit}>
@@ -257,14 +256,14 @@ export const SetUp: FC<SetUpProps> = ({
             </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
-                <Text variant="t200-strong" color={cVar('colorTextMuted', true)}>
+                <Text variant="t200-strong" color="muted">
                   Total:
                 </Text>
                 &nbsp;
                 <Text variant="t200-strong">{totalDaysAndHours}</Text>
                 &nbsp;
-                <Text variant="t200-strong" secondary>
-                  / <NumberFormat secondary value={numberOfBlocks} /> blocks
+                <Text variant="t200-strong" color="default">
+                  / <NumberFormat color="default" value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"

@@ -29,7 +29,7 @@ export const MintNftFirstTimeModal: FC<MintNftFirstTimeModalProps> = ({ show, on
         }}
         actionDivider
       >
-        <Text variant="t200" secondary>
+        <Text variant="t200" color="default">
           Now that you've minted your first NFT, you can put it on sale by choosing "Start sale" from your video
           options.
         </Text>

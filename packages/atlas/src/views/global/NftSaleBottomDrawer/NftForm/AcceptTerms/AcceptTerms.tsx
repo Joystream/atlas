@@ -139,7 +139,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
-                <Text variant="h400" secondary>
+                <Text variant="h400" color="default">
                   &nbsp;/ <NumberFormat value={durationBlocks} variant="h400" /> blocks
                 </Text>
               </Description>
@@ -189,7 +189,7 @@ export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragmen
 }
 
 export const TitleText: FC<PropsWithChildren> = ({ children }) => (
-  <Text variant="h300" secondary>
+  <Text variant="h300" color="default">
     {children}
   </Text>
 )

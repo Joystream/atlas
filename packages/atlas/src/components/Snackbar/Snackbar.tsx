@@ -52,7 +52,7 @@ export const Snackbar: FC<SnackbarProps> = ({
         <SnackbarContent>
           <Text variant="h200">{title}</Text>
           {description && (
-            <SnackbarDescription variant="t100" secondary>
+            <SnackbarDescription variant="t100" color="default">
               {description}
             </SnackbarDescription>
           )}

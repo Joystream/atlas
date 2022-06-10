@@ -29,7 +29,7 @@ export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, second
   }
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
+      <Label variant="h100" color="default">
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
@@ -40,7 +40,7 @@ export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, second
           classNames={transitions.names.fade}
         >
           <SecondaryText data-size={size}>
-            <Text as="div" variant="t100" secondary>
+            <Text as="div" variant="t100" color="default">
               {secondaryText ?? '‌'}
             </Text>
           </SecondaryText>
@@ -73,42 +73,42 @@ export const NftTimerItem: FC<{ size: Size; time?: Date }> = ({ size, time }) =>
 
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" secondary>
+      <Label variant="h100" color="default">
         Auction ends in
       </Label>
       <InfoItemContent data-size={size}>
         <div>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'error' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[0]}
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            color={lessThanAMinuteLeft ? 'error' : 'default'}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             :
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'error' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[1]}
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : cVar('colorText')}
+            color={lessThanAMinuteLeft ? 'error' : 'default'}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             :
           </Text>
           <Text
             as="span"
-            color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
+            color={lessThanAMinuteLeft ? 'error' : undefined}
             variant={size === 'small' ? 'h400' : 'h600'}
           >
             {hoursMinutesSecondsArray[2]}
@@ -116,17 +116,12 @@ export const NftTimerItem: FC<{ size: Size; time?: Date }> = ({ size, time }) =>
         </div>
       </InfoItemContent>
       {lessThanAMinuteLeft && (
-        <TimerSecondaryText
-          color={lessThanAMinuteLeft ? cVar('colorTextError') : undefined}
-          as="p"
-          variant="t100"
-          data-size={size}
-        >
+        <TimerSecondaryText color={lessThanAMinuteLeft ? 'error' : undefined} as="p" variant="t100" data-size={size}>
           Less than a minute
         </TimerSecondaryText>
       )}
       {moreThan72HLeft && (
-        <TimerSecondaryText secondary as="p" variant="t100" data-size={size}>
+        <TimerSecondaryText color="default" as="p" variant="t100" data-size={size}>
           {formatDateTime(time)}
         </TimerSecondaryText>
       )}

@@ -77,24 +77,24 @@ export const AccountStep: FC<AccountStepProps> = ({
             <StyledStepWrapper>
               <AccountStepImg />
               <StepTitle variant="h500">Create blockchain account</StepTitle>
-              <SubTitle variant="t200" secondary>
+              <SubTitle variant="t200" color="default">
                 Use the Polkadot extension to generate your personal keypair. Follow these instructions:
               </SubTitle>
               <OrderedSteps>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="default" variant="t100" as="li">
                   Open the extension popup with the icon in your browser bar
                 </OrderedStep>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="default" variant="t100" as="li">
                   Click the plus icon
                 </OrderedStep>
-                <OrderedStep secondary variant="t100" as="li">
+                <OrderedStep color="default" variant="t100" as="li">
                   Continue with instructions presented on the screen
                 </OrderedStep>
               </OrderedSteps>
             </StyledStepWrapper>
             <StepFooter>
               <BottomBarIcon />
-              <Text variant="t200" secondary>
+              <Text variant="t200" color="default">
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
@@ -108,7 +108,7 @@ export const AccountStep: FC<AccountStepProps> = ({
                 <StyledJoystreamLogo />
               </IconGroup>
               <StepTitle variant="h500">Connect account</StepTitle>
-              <StepSubTitle variant="t200" secondary>
+              <StepSubTitle variant="t200" color="default">
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
@@ -150,7 +150,7 @@ export const AccountBar: FC<AccountBarProps> = ({ name, id, onSelect, selectedVa
         <StyledPolkadotIdenticon id={id} />
         <div>
           <Text variant="t300-strong">{name}</Text>
-          <AccountAddress secondary variant="t100">
+          <AccountAddress color="default" variant="t100">
             {id}
           </AccountAddress>
         </div>

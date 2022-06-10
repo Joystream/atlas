@@ -79,7 +79,7 @@ export const FeaturedVideoCategoryCard: FC<FeaturedVideoCategoryCardProps> = ({
 
             {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <FeaturedVideoText variant="t100" secondary>
+                <FeaturedVideoText variant="t100" color="default">
                   Featured video
                 </FeaturedVideoText>
                 <Text variant="h300">{videoTitle}</Text>

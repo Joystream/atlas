@@ -155,7 +155,7 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
                 text="To publish a comment you need to sign a transaction. For now, no fees are involved."
                 multiline
               />
-              <Text variant="t100" secondary margin={{ left: 1, right: 4 }}>
+              <Text variant="t100" color="default" margin={{ left: 1, right: 4 }}>
                 {smMatch && 'We store comments on blockchain'}
               </Text>
             </Flex>

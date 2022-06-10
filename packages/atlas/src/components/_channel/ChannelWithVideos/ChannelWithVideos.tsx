@@ -81,8 +81,8 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = memo(({ channelId }
           {isLoading ? (
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
-            <ChannelFollows variant="t200" secondary>
-              <NumberFormat secondary value={channel?.follows || 0} /> followers
+            <ChannelFollows variant="t200" color="default">
+              <NumberFormat color="default" value={channel?.follows || 0} /> followers
             </ChannelFollows>
           )}
           {isLoading ? (

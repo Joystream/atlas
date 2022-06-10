@@ -92,7 +92,11 @@ export const NotificationsView = () => {
 
       {selectedNotifications.length > 0 && (
         <FloatingActionBar data-bottom-nav-open={open}>
-          <Text variant="t300" secondary margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}>
+          <Text
+            variant="t300"
+            color="default"
+            margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}
+          >
             <NumberFormat value={selectedNotifications.length} format="short" variant="t300" /> item(s) selected
           </Text>
           {!smMatch && closeButtonNode}
@@ -124,7 +128,7 @@ const NotificationsEmptyFallback = () => {
       <NotificationEmptyRectangle opacity={0.8} />
       <NotificationEmptyRectangleWithText>
         <NotificationEmptyRectangle opacity={0.5} absolute />
-        <Text variant="h500" secondary>
+        <Text variant="h500" color="default">
           You don’t have any notifications
         </Text>
       </NotificationEmptyRectangleWithText>

@@ -60,7 +60,7 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
-                  <Text variant="t100" secondary>
+                  <Text variant="t100" color="default">
                     Failed upload
                   </Text>
                 </FailedUploadContainer>

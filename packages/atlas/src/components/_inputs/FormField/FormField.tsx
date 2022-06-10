@@ -2,7 +2,6 @@ import { PropsWithChildren, forwardRef, memo, useRef } from 'react'
 
 import { Text } from '@/components/Text'
 import { TooltipProps } from '@/components/Tooltip'
-import { cVar } from '@/styles'
 
 import {
   ChildrenWrapper,
@@ -103,7 +102,7 @@ export const FormField = memo(
                     </label>
                   )}
                   {optional && (
-                    <OptionalText variant="t200" secondary>
+                    <OptionalText variant="t200" color="default">
                       (optional)
                     </OptionalText>
                   )}
@@ -113,12 +112,12 @@ export const FormField = memo(
               {description &&
                 (description instanceof Array ? (
                   description.map((p, idx) => (
-                    <FormFieldDescription secondary key={idx} variant="t200">
+                    <FormFieldDescription color="default" key={idx} variant="t200">
                       {p}
                     </FormFieldDescription>
                   ))
                 ) : (
-                  <FormFieldDescription secondary variant="t200">
+                  <FormFieldDescription color="default" variant="t200">
                     {description}
                   </FormFieldDescription>
                 ))}
@@ -132,7 +131,7 @@ export const FormField = memo(
           {error ? (
             <FormFieldFooter>
               <StyledSvgActionWarning />
-              <Text variant="t100" color={cVar('colorTextError')}>
+              <Text variant="t100" color="error">
                 {error}
               </Text>
             </FormFieldFooter>

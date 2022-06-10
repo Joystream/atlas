@@ -15,7 +15,6 @@ import useResizeObserver from 'use-resize-observer'
 import { Text } from '@/components/Text'
 import { Button, ButtonProps } from '@/components/_buttons/Button'
 import { Loader } from '@/components/_loaders/Loader'
-import { cVar } from '@/styles'
 import { ConsoleLogger } from '@/utils/logs'
 
 import { InputContainer, NodeContainer, TextInput } from './Input.styles'
@@ -77,7 +76,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   const isNodeEndText = nodeEnd && typeof nodeEnd === 'string'
 
   const renderedNodeStart = isNodeStartText ? (
-    <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
+    <Text variant={size === 'large' ? 't300' : 't200'} color="muted">
       {nodeStart}
     </Text>
   ) : (
@@ -85,7 +84,7 @@ const InputComponent: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   )
 
   const renderedNodeEnd = isNodeEndText ? (
-    <Text variant={size === 'large' ? 't300' : 't200'} color={cVar('colorTextMuted')}>
+    <Text variant={size === 'large' ? 't300' : 't200'} color="muted">
       {nodeEnd}
     </Text>
   ) : (

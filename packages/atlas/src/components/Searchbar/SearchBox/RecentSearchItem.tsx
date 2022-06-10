@@ -44,7 +44,7 @@ export const RecentSearchItem: FC<RecentSearchItemProps> = memo(
           <ClockWrapper>
             <SvgActionClock />
           </ClockWrapper>
-          <Title secondary={!selected} variant="t200-strong">
+          <Title color={!selected ? 'default' : undefined} variant="t200-strong">
             <ResultTitle title={title} query={query} />
           </Title>
         </RecentSearchItemWrapper>

@@ -33,7 +33,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         {!!channel?.description && (
           <TextContainer>
             <Text variant="h500">Description</Text>
-            <Text variant="t300" secondary>
+            <Text variant="t300" color="default">
               {channel.description}
             </Text>
           </TextContainer>
@@ -45,7 +45,7 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         <DetailsMember>
           <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />
           <MemberContainer>
-            <Text variant="t100" secondary>
+            <Text variant="t100" color="default">
               Owned by member
             </Text>
             <MemberLink to={absoluteRoutes.viewer.member(channel?.ownerMember?.handle)} variant="secondary">
@@ -55,14 +55,14 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </DetailsMember>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Joined on
           </Text>
           <Text variant="t300">{channel?.createdAt ? formatDate(new Date(channel.createdAt)) : ''}</Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Num. of views
           </Text>
           {typeof channel?.views === 'number' ? (
@@ -73,14 +73,14 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Num. of videos
           </Text>
           <Text variant="t300">{videoCount}</Text>
         </Details>
 
         <Details>
-          <Text variant="t100" secondary>
+          <Text variant="t100" color="default">
             Language
           </Text>
           <Text variant="t300">

@@ -95,7 +95,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
                     {customTitle || displayedChannel?.title}
                   </StyledText>
                   {followButton && (
-                    <Follows as="p" variant="t100" secondary>
+                    <Follows as="p" variant="t100" color="default">
                       {displayedChannel.follows} {displayedChannel.follows === 1 ? 'follower' : 'followers'}
                     </Follows>
                   )}

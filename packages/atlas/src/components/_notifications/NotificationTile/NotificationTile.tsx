@@ -121,7 +121,7 @@ export const NotificationTile: FC<NotificationProps> = ({
             !loading ? (
               <>
                 {member && (
-                  <Text as="span" variant="t200-strong" secondary>
+                  <Text as="span" variant="t200-strong" color="default">
                     {`${member.handle} `}
                   </Text>
                 )}
@@ -164,7 +164,7 @@ export const NotificationTile: FC<NotificationProps> = ({
         <Content>
           <Title>
             {member && (
-              <Text as="span" variant="h300" secondary>
+              <Text as="span" variant="h300" color="default">
                 {`${member.handle} `}
               </Text>
             )}
@@ -172,7 +172,7 @@ export const NotificationTile: FC<NotificationProps> = ({
               {getNotificationText(notification)}
             </Text>
           </Title>
-          <Text variant="t200" secondary>
+          <Text variant="t200" color="default">
             {formattedDate} • {video.title}
           </Text>
         </Content>
