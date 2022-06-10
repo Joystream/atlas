@@ -12,7 +12,7 @@ export const RadioAndCheckboxLabel = styled.label<{ disabled?: boolean; hasLabel
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `
 
-export const StyledHelperText = styled(Text)<{ error?: boolean }>`
+export const CaptionText = styled(Text)<{ error?: boolean }>`
   margin: 0;
   grid-column-start: 2;
 `

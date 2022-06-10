@@ -15,7 +15,7 @@ export type RadioButtonProps = Partial<{
 export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
   ({ value, selectedValue, label, caption, className, disabled, error, onChange, ...props }, ref) => {
     return (
-      <RadioAndCheckboxBase disabled={disabled} className={className} label={label} error={error} helperText={caption}>
+      <RadioAndCheckboxBase disabled={disabled} className={className} label={label} error={error} caption={caption}>
         <RadioInput
           {...props}
           ref={ref}
