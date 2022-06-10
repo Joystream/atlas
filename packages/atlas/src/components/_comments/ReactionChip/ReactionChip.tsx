@@ -1,10 +1,9 @@
 import React from 'react'
 
-import { Text } from '@/components/Text'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Loader } from '@/components/_loaders/Loader'
 import { REACTION_TYPE, ReactionId } from '@/config/reactions'
 import { pluralizeNoun } from '@/utils/misc'
-import { formatNumberShort } from '@/utils/number'
 
 import { ReactionChipButton, StyledEmojiWrapper } from './ReactionChip.styles'
 
@@ -44,9 +43,7 @@ export const ReactionChip: React.FC<ReactionChipProps> = ({
         {isProcessing ? (
           <Loader variant="xsmall" />
         ) : (
-          <Text variant="t100" secondary={!active}>
-            {formatNumberShort(count)}
-          </Text>
+          <NumberFormat variant="t100" secondary={!active} format="short" value={count} />
         )}
       </ReactionChipButton>
     </div>

@@ -2,6 +2,7 @@ import React, { FC, useMemo, useState } from 'react'
 
 import { useBasicChannel, useChannelPreviewVideos } from '@/api/hooks'
 import { Grid } from '@/components/Grid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { VideoTileViewer } from '@/components/_video/VideoTileViewer'
@@ -10,7 +11,6 @@ import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useVideoGridRows } from '@/hooks/useVideoGridRows'
 import { useAsset } from '@/providers/assets'
 import { SentryLogger } from '@/utils/logs'
-import { formatNumberShort } from '@/utils/number'
 
 import { ChannelCardAnchor, ChannelFollows, FollowButton, InfoWrapper, StyledAvatar } from './ChannelWithVideos.styles'
 
@@ -82,7 +82,7 @@ export const ChannelWithVideos: FC<ChannelWithVideosProps> = React.memo(({ chann
             <SkeletonLoader width="80px" height="20px" bottomSpace="8px" />
           ) : (
             <ChannelFollows variant="t200" secondary>
-              {formatNumberShort(channel?.follows || 0)} followers
+              <NumberFormat secondary value={channel?.follows || 0} /> followers
             </ChannelFollows>
           )}
           {isLoading ? (

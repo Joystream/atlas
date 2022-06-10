@@ -2,11 +2,11 @@ import React from 'react'
 
 import { AllChannelFieldsFragment } from '@/api/queries'
 import { GridItem } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { languages } from '@/config/languages'
 import { absoluteRoutes } from '@/config/routes'
 import { useMemberAvatar } from '@/providers/assets'
-import { formatNumberShort } from '@/utils/number'
 import { formatDate } from '@/utils/time'
 
 import {
@@ -65,7 +65,11 @@ export const ChannelAbout: React.FC<ChannelAboutProps> = ({ channel }) => {
           <Text variant="t100" secondary>
             Num. of views
           </Text>
-          <Text variant="t300">{typeof channel?.views === 'number' ? formatNumberShort(channel.views) : ''}</Text>
+          {typeof channel?.views === 'number' ? (
+            <NumberFormat variant="t300" value={channel.views} format="short" />
+          ) : (
+            ''
+          )}
         </Details>
 
         <Details>

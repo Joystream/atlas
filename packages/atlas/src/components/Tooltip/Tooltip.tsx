@@ -1,4 +1,4 @@
-import Tippy from '@tippyjs/react/headless'
+import Tippy, { TippyProps } from '@tippyjs/react/headless'
 import React, { useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 
@@ -28,7 +28,7 @@ export type TooltipProps = {
   showOnCreate?: boolean
   multiline?: boolean
   className?: string
-}
+} & Pick<TippyProps, 'delay'>
 
 export const Tooltip: React.FC<TooltipProps> = ({
   text,
@@ -45,6 +45,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   showOnCreate,
   multiline,
   className,
+  ...tippyProps
 }) => {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -74,6 +75,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <Tippy
+      {...tippyProps}
       delay={delay}
       onMount={() => setIsVisible(true)}
       hideOnClick={hideOnClick}

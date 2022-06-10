@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicChannelFieldsFragment } from '@/api/queries'
+import { NumberFormat } from '@/components/NumberFormat'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useAsset } from '@/providers/assets'
 import { cVar, transitions } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   ChannelCardAnchor,
@@ -67,7 +67,7 @@ export const ChannelCard: React.FC<ChannelCardProps> = ({
                 <>
                   <ChannelTitle variant={mdMatch ? 'h300' : 't200-strong'}>{channel.title}</ChannelTitle>
                   <ChannelFollows variant={mdMatch ? 't200' : 't100'} secondary>
-                    {formatNumberShort(channel.follows || 0)} followers
+                    <NumberFormat format="short" value={channel.follows || 0} secondary /> followers
                   </ChannelFollows>
                   {withFollowButton && (
                     <FollowButton

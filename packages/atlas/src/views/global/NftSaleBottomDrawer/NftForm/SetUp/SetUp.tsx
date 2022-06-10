@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -12,7 +13,6 @@ import { OptionCardRadio } from '@/components/_inputs/OptionCard'
 import { useTokenPrice } from '@/providers/joystream'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
-import { formatNumber } from '@/utils/number'
 
 import {
   AuctionDatePickerWrapper,
@@ -161,7 +161,14 @@ export const SetUp: React.FC<SetUpProps> = ({
               {...register('buyNowPrice', { valueAsNumber: true })}
               type="number"
               nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-              nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
+              nodeEnd={
+                !!buyNowPrice && (
+                  <Pill
+                    variant="overlay"
+                    label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                  />
+                )
+              }
               error={!!errors.buyNowPrice}
               onBlur={handleNumberInputBlur}
             />
@@ -259,7 +266,7 @@ export const SetUp: React.FC<SetUpProps> = ({
                 <Text variant="t200-strong">{totalDaysAndHours}</Text>
                 &nbsp;
                 <Text variant="t200-strong" secondary>
-                  / {formatNumber(numberOfBlocks)} blocks
+                  / <NumberFormat secondary value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"
@@ -284,7 +291,14 @@ export const SetUp: React.FC<SetUpProps> = ({
                 type="number"
                 defaultValue={chainState.nftMinStartingPrice?.toString()}
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={!!startingPrice && <Pill variant="overlay" label={`${convertToUSD(startingPrice)}`} />}
+                nodeEnd={
+                  !!startingPrice && (
+                    <Pill
+                      variant="overlay"
+                      label={<NumberFormat format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                    />
+                  )
+                }
                 disabled={!activeInputs.includes('startingPrice')}
                 error={!!errors.startingPrice}
                 onBlur={handleNumberInputBlur}
@@ -309,7 +323,14 @@ export const SetUp: React.FC<SetUpProps> = ({
                 placeholder="—"
                 type="number"
                 nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                nodeEnd={!!buyNowPrice && <Pill variant="overlay" label={`${convertToUSD(buyNowPrice)}`} />}
+                nodeEnd={
+                  !!buyNowPrice && (
+                    <Pill
+                      variant="overlay"
+                      label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    />
+                  )
+                }
                 disabled={!activeInputs.includes('buyNowPrice')}
                 error={!!errors.buyNowPrice}
                 onBlur={(event) => {

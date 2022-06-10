@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from '@/components/Avatar'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { cVar, sizes } from '@/styles'
@@ -61,7 +62,7 @@ export const VideoMetaContainer = styled.div`
   width: 100%;
 `
 
-export const Views = styled.span`
+export const Views = styled(NumberFormat)`
   white-space: nowrap;
 `
 

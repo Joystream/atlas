@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { SvgActionShow } from '@/components/_icons'
 import { VideoThumbnail, VideoThumbnailProps } from '@/components/_video/VideoThumbnail'
 import { useGetNftSlot } from '@/hooks/useGetNftSlot'
 import { EnglishTimerState } from '@/hooks/useNftState'
-import { formatNumberShort } from '@/utils/number'
 import { formatDurationShort } from '@/utils/time'
 
 import { Container } from './NftTile.styles'
@@ -104,7 +104,12 @@ export const NftTile: React.FC<NftTileProps> = ({
           topLeft: views
             ? {
                 element: (
-                  <Pill label={formatNumberShort(views)} size="medium" icon={<SvgActionShow />} variant="overlay" />
+                  <Pill
+                    label={<NumberFormat color="inherit" value={views} format="short" />}
+                    size="medium"
+                    icon={<SvgActionShow />}
+                    variant="overlay"
+                  />
                 ),
               }
             : undefined,

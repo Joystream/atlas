@@ -6,6 +6,7 @@ import { AllBidFieldsFragment, BasicBidFieldsFragment } from '@/api/queries'
 import { Avatar } from '@/components/Avatar'
 import { Banner } from '@/components/Banner'
 import { GridItem } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgAlertsInformative24 } from '@/components/_icons'
@@ -16,7 +17,6 @@ import { useMsTimestamp } from '@/hooks/useMsTimestamp'
 import { EnglishTimerState } from '@/hooks/useNftState'
 import { NftSaleType } from '@/joystream-lib'
 import { useTokenPrice } from '@/providers/joystream'
-import { formatNumberShort } from '@/utils/number'
 import { formatDateTime, formatDurationShort, formatTime } from '@/utils/time'
 
 import { NftHistory, NftHistoryEntry } from './NftHistory'
@@ -124,7 +124,7 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
     const buttonSize = size === 'small' ? 'medium' : 'large'
     const buttonColumnSpan = size === 'small' ? 1 : 2
     const timerColumnSpan = size === 'small' ? 1 : 2
-    const BuyNow = ({ buyNowPrice }: { buyNowPrice?: number }) =>
+    const BuyNow = React.memo(({ buyNowPrice }: { buyNowPrice?: number }) =>
       buyNowPrice ? (
         <NftInfoItem
           size={size}
@@ -132,12 +132,18 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
           content={
             <>
               <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-              <Text variant={contentTextVariant}>{formatNumberShort(buyNowPrice)}</Text>
+              <NumberFormat value={buyNowPrice} format="short" variant={contentTextVariant} />
             </>
           }
-          secondaryText={convertToUSD(buyNowPrice)}
+          secondaryText={
+            convertToUSD(buyNowPrice) ? (
+              <NumberFormat secondary format="dollar" value={convertToUSD(buyNowPrice) ?? 0} />
+            ) : undefined
+          }
         />
       ) : null
+    )
+    BuyNow.displayName = 'BuyNow'
     const InfoBanner = ({ title, description }: { title: string; description: string }) => (
       <GridItem colSpan={buttonColumnSpan}>
         <Banner id="" dismissable={false} icon={<SvgAlertsInformative24 />} {...{ title, description }} />
@@ -151,8 +157,9 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               Withdraw last bid
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
-              You bid {formatNumberShort(Number(bidFromPreviousAuction?.amount))} tJOY on{' '}
-              {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
+              You bid{' '}
+              <NumberFormat value={Number(bidFromPreviousAuction?.amount)} format="short" variant="t100" secondary />{' '}
+              tJOY on {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
             </Text>
           </GridItem>
         </>
@@ -175,9 +182,12 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 content={
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <Text variant={contentTextVariant} secondary>
-                      {formatNumberShort(nftStatus.lastSalePrice)}
-                    </Text>
+                    <NumberFormat
+                      value={nftStatus.lastSalePrice}
+                      format="short"
+                      variant={contentTextVariant}
+                      secondary
+                    />
                   </>
                 }
                 secondaryText={nftStatus.lastSaleDate && formatDateTime(nftStatus.lastSaleDate)}
@@ -348,13 +358,13 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                         <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
                       </TopBidderTokenContainer>
                     </TopBidderContainer>
-                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.topBidAmount)}</Text>
+                    <NumberFormat format="short" value={nftStatus.topBidAmount} variant={contentTextVariant} />
                   </>
                 }
                 secondaryText={
                   !isLoadingPrice && nftStatus.topBidAmount ? (
                     <>
-                      {convertToUSD(nftStatus.topBidAmount)} from{' '}
+                      <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.topBidAmount) ?? 0} /> from{' '}
                       <OwnerHandle to={absoluteRoutes.viewer.member(nftStatus.topBidderHandle)}>
                         <Text variant="t100">{nftStatus.isUserTopBidder ? 'you' : nftStatus.topBidderHandle}</Text>
                       </OwnerHandle>
@@ -369,10 +379,14 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
                 content={
                   <>
                     <JoyTokenIcon size={size === 'small' ? 16 : 24} variant="silver" />
-                    <Text variant={contentTextVariant}>{formatNumberShort(nftStatus.startingPrice)}</Text>
+                    <NumberFormat format="short" value={nftStatus.startingPrice} variant={contentTextVariant} />
                   </>
                 }
-                secondaryText={convertToUSD(nftStatus.startingPrice)}
+                secondaryText={
+                  convertToUSD(nftStatus.startingPrice) ? (
+                    <NumberFormat secondary format="dollar" value={convertToUSD(nftStatus.startingPrice) ?? 0} />
+                  ) : undefined
+                }
               />
             )}
             <BuyNow buyNowPrice={nftStatus.buyNowPrice} />

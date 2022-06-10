@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useNft } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
 import { Information } from '@/components/Information'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { SvgAlertsWarning24 } from '@/components/_icons'
@@ -28,7 +29,6 @@ import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
 import { cVar } from '@/styles'
 import { pluralizeNoun } from '@/utils/misc'
-import { formatNumberShort, formatTokens } from '@/utils/number'
 import { formatDateTime, formatDurationShort } from '@/utils/time'
 
 import {
@@ -353,7 +353,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                           <TokenWrapper>
                             <StyledJoyTokenIcon variant="gray" size={24} />
                           </TokenWrapper>
-                          <BidAmount variant="h400">{formatNumberShort(topBidAmount)}</BidAmount>
+                          <BidAmount variant="h400" value={topBidAmount} format="short" />
                         </FlexWrapper>
                         <Text variant="t100" secondary margin={{ top: 1 }}>
                           {topBidder.handle === userBid?.bidder.handle ? 'You' : topBidder.handle}
@@ -369,7 +369,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                             <TokenWrapper>
                               <StyledJoyTokenIcon variant="gray" size={24} />
                             </TokenWrapper>
-                            <BidAmount variant="h400">{formatNumberShort(Number(userBid.amount))}</BidAmount>
+                            <BidAmount variant="h400" value={Number(userBid.amount)} format="short" />
                           </FlexWrapper>
                           <Text variant="t100" secondary margin={{ top: 1 }}>
                             You
@@ -398,7 +398,7 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     </MinimumBid>
                     {auctionBuyNowPrice > 0 && (
                       <Text variant="t100" secondary>
-                        Buy now: {formatTokens(auctionBuyNowPrice, true)}
+                        Buy now: <NumberFormat variant="t100" value={auctionBuyNowPrice} withToken />
                       </Text>
                     )}
                   </MinimumBidWrapper>
@@ -428,7 +428,14 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                     disabled={auctionEnded}
                     placeholder={auctionEnded ? 'Auction ended' : 'Enter your bid'}
                     nodeStart={<JoyTokenIcon variant="gray" size={24} />}
-                    nodeEnd={!!bid && <Pill variant="default" label={`${convertToUSD(bid)}`} />}
+                    nodeEnd={
+                      !!bid && (
+                        <Pill
+                          variant="default"
+                          label={<NumberFormat format="dollar" value={convertToUSD(bid ?? 0) ?? 0} />}
+                        />
+                      )
+                    }
                     type="number"
                     error={!!errors.bid}
                     onBlur={(event) => {
@@ -510,9 +517,13 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 Your balance
               </Text>
               {accountBalance != null ? (
-                <Text variant="t100" secondary color={insufficientFoundsError ? cVar('colorTextError') : undefined}>
-                  {formatTokens(accountBalance, true)}
-                </Text>
+                <NumberFormat
+                  value={accountBalance}
+                  withToken
+                  variant="t100"
+                  secondary
+                  color={insufficientFoundsError ? cVar('colorTextError') : undefined}
+                />
               ) : (
                 <SkeletonLoader width={82} height={16} />
               )}
@@ -522,9 +533,12 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                 {type === 'buy_now' || isBuyNowClicked ? 'Price' : bid ? 'Your bid' : ''}
               </Text>
               {(bid > 0 || isBuyNowClicked || type === 'buy_now') && (
-                <Text variant="t100" secondary>
-                  {formatTokens(type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice, true)}
-                </Text>
+                <NumberFormat
+                  value={type !== 'buy_now' ? (isBuyNowClicked ? auctionBuyNowPrice : bid) : buyNowPrice}
+                  withToken
+                  variant="t100"
+                  secondary
+                />
               )}
             </Row>
             {(bid || type === 'buy_now') && (
@@ -533,17 +547,17 @@ export const NftPurchaseBottomDrawer: React.FC = () => {
                   <Text variant="t100" secondary>
                     Transaction fee
                   </Text>
-                  <Text variant="t100" secondary>
-                    {formatTokens(TRANSACTION_FEE, true)}
-                  </Text>
+                  <NumberFormat value={TRANSACTION_FEE} withToken variant="t100" secondary />
                 </Row>
                 <Row>
                   <Text variant="h500" secondary>
                     You will pay
                   </Text>
-                  <Text variant="h500">
-                    {formatTokens((type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + TRANSACTION_FEE, true)}
-                  </Text>
+                  <NumberFormat
+                    value={(type === 'buy_now' ? buyNowPrice : Number(bid) || 0) + TRANSACTION_FEE}
+                    withToken
+                    variant="h500"
+                  />
                 </Row>
               </>
             )}

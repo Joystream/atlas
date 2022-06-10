@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router'
 import { StorageDataObjectFieldsFragment } from '@/api/queries'
 import { EmptyFallback } from '@/components/EmptyFallback'
 import { GridItem, LayoutGrid } from '@/components/LayoutGrid/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { SvgActionBid, SvgActionBuyNow, SvgActionMint, SvgActionSell } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
 import { useAsset } from '@/providers/assets'
-import { formatTokens } from '@/utils/number'
 
 import { ActivityItem, ActivityItemProps } from './ActivityItem'
 import { ActivitiesRecord, useActivities } from './MemberActivity.hooks'
@@ -17,7 +17,6 @@ import {
   OverviewContainer,
   OverviewItem,
   OverviewTextContainer,
-  PriceText,
   StyledIconWrapper,
   StyledLink,
 } from './MemberActivity.styles'
@@ -27,7 +26,8 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Bid':
       return (
         <>
-          {activity.from.handle} placed a bid for <PriceText>{formatTokens(activity.bidAmount)}</PriceText>
+          {activity.from.handle} placed a bid for{' '}
+          <NumberFormat color="inherit" format="short" value={activity.bidAmount} withToken />
         </>
       )
     case 'Sale':
@@ -37,13 +37,14 @@ const getDescription = (activity: ActivitiesRecord) => {
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}
           </StyledLink>{' '}
-          NFT for <PriceText>{formatTokens(activity.price)}</PriceText>
+          NFT for <NumberFormat color="inherit" format="short" value={activity.price} withToken />
         </>
       )
     case 'Purchase':
       return (
         <>
-          {activity.from?.handle} purchased NFT for <PriceText>{formatTokens(activity.price)} </PriceText> from{' '}
+          {activity.from?.handle} purchased NFT for{' '}
+          <NumberFormat color="inherit" format="short" value={activity.price} withToken /> from{' '}
           <StyledLink to={absoluteRoutes.viewer.member(activity.to?.handle)} onClick={(e) => e.stopPropagation()}>
             {activity.to?.handle}{' '}
           </StyledLink>
@@ -55,7 +56,7 @@ const getDescription = (activity: ActivitiesRecord) => {
           {activity.from?.handle} listed NFT{' '}
           {activity.typeName === 'NftSellOrderMadeEvent' && activity.price && (
             <>
-              for <PriceText>{formatTokens(activity.price)}</PriceText>
+              for <NumberFormat color="inherit" format="short" value={activity.price} withToken />
             </>
           )}
         </>
@@ -69,7 +70,8 @@ const getDescription = (activity: ActivitiesRecord) => {
     case 'Price change':
       return (
         <>
-          {activity.from?.handle} changed price to <PriceText>{formatTokens(activity.price)}</PriceText>
+          {activity.from?.handle} changed price to{' '}
+          <NumberFormat color="inherit" format="short" value={activity.price} withToken />
         </>
       )
   }

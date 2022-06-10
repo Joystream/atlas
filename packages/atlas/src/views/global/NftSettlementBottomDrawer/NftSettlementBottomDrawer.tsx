@@ -3,6 +3,7 @@ import React from 'react'
 import { useNft } from '@/api/hooks'
 import confetti from '@/assets/animations/confetti.json'
 import { GridItem } from '@/components/LayoutGrid'
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { NftCard } from '@/components/_nft/NftCard'
@@ -14,7 +15,6 @@ import { useNftActions } from '@/providers/nftActions'
 import { useSnackbar } from '@/providers/snackbars'
 import { useTransaction } from '@/providers/transactions'
 import { useUser } from '@/providers/user'
-import { formatTokens } from '@/utils/number'
 
 import {
   Content,
@@ -94,7 +94,7 @@ export const NftSettlementBottomDrawer: React.FC = () => {
                 Settle auction
               </Button>
               <Text variant="t100" secondary margin={{ top: 4 }}>
-                Transaction fee: <Text variant="t100">{formatTokens(0)}</Text>
+                Transaction fee: <NumberFormat format="short" withToken variant="t100" value={0} />
               </Text>
             </Content>
           </StyledGridItem>

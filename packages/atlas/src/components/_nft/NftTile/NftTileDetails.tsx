@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Text } from '@/components/Text'
 import {
   SvgActionBid,
@@ -18,7 +19,6 @@ import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { ContextMenu, MenuItemProps } from '@/components/_overlays/ContextMenu'
 import { useClipboard } from '@/hooks/useClipboard'
 import { cVar } from '@/styles'
-import { formatNumberShort } from '@/utils/number'
 
 import {
   CaptionSkeletonWrapper,
@@ -216,7 +216,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
           <DetailsContent
             tileSize={tileSize}
             caption="Buy now"
-            content={formatNumberShort(buyNowPrice ?? 0)}
+            content={buyNowPrice ?? 0}
             icon={<JoyTokenIcon size={16} variant="regular" />}
           />
         )
@@ -227,14 +227,14 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               <DetailsContent
                 tileSize={tileSize}
                 caption="Top bid"
-                content={formatNumberShort(topBid)}
+                content={topBid}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             ) : (
               <DetailsContent
                 tileSize={tileSize}
                 caption="Min bid"
-                content={formatNumberShort(startingPrice ?? 0)}
+                content={startingPrice ?? 0}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             )}
@@ -242,7 +242,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
               <DetailsContent
                 tileSize={tileSize}
                 caption="Buy now"
-                content={formatNumberShort(buyNowPrice)}
+                content={buyNowPrice}
                 icon={<JoyTokenIcon size={16} variant="regular" />}
               />
             )}
@@ -317,7 +317,7 @@ export const NftTileDetails: React.FC<NftTileDetailsProps> = ({
 type DetailsContentProps = {
   caption: string
   icon: React.ReactNode
-  content: string | number
+  content: number | string
   secondary?: boolean
   tileSize: TileSize | undefined
 }
@@ -328,9 +328,18 @@ const DetailsContent: React.FC<DetailsContentProps> = React.memo(({ tileSize, ca
     </Text>
     <DetailsContentWrapper secondary={secondary}>
       {icon}{' '}
-      <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} secondary={secondary}>
-        {content}
-      </Text>
+      {typeof content === 'string' ? (
+        <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} secondary={secondary}>
+          {content}
+        </Text>
+      ) : (
+        <NumberFormat
+          value={content}
+          format="short"
+          variant={tileSize === 'medium' ? 'h300' : 'h200'}
+          secondary={secondary}
+        />
+      )}
     </DetailsContentWrapper>
   </div>
 ))

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
 
+import { NumberFormat } from '@/components/NumberFormat'
 import { Pill } from '@/components/Pill'
 import { Text } from '@/components/Text'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
@@ -51,7 +52,7 @@ export const ChangePriceDialog: React.FC<ChangePriceDialogProps> = ({ onModalClo
           type="text"
           onChange={(event) => setPrice(Number(event.target.value))}
           nodeStart={<JoyTokenIcon size={24} variant="gray" />}
-          nodeEnd={<Pill label={convertToUSD(price ?? 0)} />}
+          nodeEnd={<Pill label={<NumberFormat format="dollar" value={convertToUSD(price ?? 0) ?? 0} />} />}
         />
       </>
     </DialogModal>
