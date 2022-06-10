@@ -36,15 +36,15 @@ const Template: Story = (args) => {
   const ITEMS = [
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
     },
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
     },
     {
       label: args.label,
-      helperText: args.helperText,
+      caption: args.caption,
     },
   ]
 
