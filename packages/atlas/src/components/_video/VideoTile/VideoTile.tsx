@@ -42,7 +42,7 @@ export const VideoTile: React.FC<VideoTileProps> = React.memo(
     views,
     loadingThumbnail,
     loadingAvatar,
-    type,
+    type = 'video',
     playlistUrl,
   }) => {
     const [tileSize, setTileSize] = useState<'small' | 'medium'>()
