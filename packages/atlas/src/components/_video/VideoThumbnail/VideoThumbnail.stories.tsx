@@ -15,6 +15,7 @@ import {
   SvgIllustrativeReupload,
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { cVar } from '@/styles'
 
 import { VideoThumbnail, VideoThumbnailProps } from './VideoThumbnail'
@@ -40,7 +41,7 @@ export default {
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: '24K tJOY',
+                label: `24K ${JOY_CURRENCY_TICKER}`,
                 variant: 'overlay',
               },
             ]}
@@ -99,7 +100,7 @@ Playlist.args = {
             },
             {
               icon: <JoyTokenIcon size={16} variant="regular" />,
-              label: '24K tJOY',
+              label: `24K ${JOY_CURRENCY_TICKER}`,
               variant: 'overlay',
             },
           ]}

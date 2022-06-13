@@ -2,6 +2,7 @@ import { web3FromAddress } from '@polkadot/extension-dapp'
 import { ProxyMarked, Remote, proxy, wrap } from 'comlink'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { NODE_URL } from '@/config/urls'
 import { JoystreamLib } from '@/joystream-lib'
 import { useEnvironmentStore } from '@/providers/environment/store'
@@ -109,7 +110,7 @@ export const JoystreamProvider: React.FC = ({ children }) => {
 const useJoystreamUtilFns = () => {
   const [tokenPrice, setTokenPrice] = useState(0)
 
-  // fetch tJOY token price from the status server
+  // fetch token price from the status server
   useEffect(() => {
     const getPrice = async () => {
       try {
@@ -117,7 +118,7 @@ const useJoystreamUtilFns = () => {
         const json = await data.json()
         setTokenPrice(parseFloat(json.price))
       } catch (e) {
-        SentryLogger.error('Failed to fetch tJoy price', e)
+        SentryLogger.error(`Failed to fetch ${JOY_CURRENCY_TICKER} price`, e)
       }
     }
     getPrice()
