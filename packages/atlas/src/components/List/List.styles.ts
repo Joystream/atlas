@@ -38,7 +38,7 @@ export const ListWrapper = styled.ul`
   margin-top: 0;
   z-index: ${zIndex.globalOverlay};
   padding: ${sizes(1)} 0;
-  box-shadow: ${cVar('effectElevation16Layer1')};
+  box-shadow: ${cVar('effectElevation16Layer1')}, ${cVar('effectElevation16Layer2')};
   background-color: ${cVar('colorBackgroundStrong')};
   border-radius: ${cVar('radiusSmall')};
   list-style: none;
