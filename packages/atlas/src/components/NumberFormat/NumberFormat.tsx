@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import mergeRefs from 'react-merge-refs'
 
 import { Text, TextProps, TextVariant } from '@/components/Text'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { formatNumber } from '@/utils/number'
 
 import { Tooltip } from '../Tooltip'
@@ -45,7 +46,7 @@ export const NumberFormat = React.forwardRef<HTMLHeadingElement, NumberFormatPro
       <>
         <Text {...textProps} variant={variant} ref={mergeRefs([ref, textRef])}>
           {formattedValue}
-          {withToken && ` tJOY`}
+          {withToken && ` ${JOY_CURRENCY_TICKER}`}
         </Text>
         {hasTooltip && <StyledTooltip reference={textRef} placement="top" delay={[500, null]} text={tooltipText} />}
       </>

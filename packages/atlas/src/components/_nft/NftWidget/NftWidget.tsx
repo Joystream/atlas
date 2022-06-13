@@ -158,8 +158,14 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
             </Button>
             <Text as="p" margin={{ top: 2 }} variant="t100" secondary align="center">
               You bid{' '}
-              <NumberFormat value={Number(bidFromPreviousAuction?.amount)} format="short" variant="t100" secondary />{' '}
-              tJOY on {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
+              <NumberFormat
+                value={Number(bidFromPreviousAuction?.amount)}
+                format="short"
+                variant="t100"
+                secondary
+                withToken
+              />{' '}
+              on {formatDateTime(new Date(bidFromPreviousAuction.createdAt))}
             </Text>
           </GridItem>
         </>
@@ -334,11 +340,11 @@ export const NftWidget: React.FC<NftWidgetProps> = ({
               <BidPlacingInfoText />
             ) : (
               <Text as="p" variant="t100" secondary align="center">
+                {nftStatus.canWithdrawBid ? `Your last bid: ` : `Your last bid (`}
+                <NumberFormat value={nftStatus.userBidAmount} format="short" withToken />
                 {nftStatus.canWithdrawBid
-                  ? `Your last bid: ${nftStatus.userBidAmount} tJOY`
-                  : `Your last bid (${nftStatus.userBidAmount} tJOY) becomes withdrawable on ${formatDateTime(
-                      nftStatus.userBidUnlockDate
-                    )}`}
+                  ? ''
+                  : `) becomes withdrawable on ${formatDateTime(nftStatus.userBidUnlockDate)}`}
               </Text>
             )}
           </GridItem>

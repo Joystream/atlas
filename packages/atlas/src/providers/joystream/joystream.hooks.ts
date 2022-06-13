@@ -19,7 +19,7 @@ export const useTokenPrice = () => {
     },
     [tokenPrice]
   )
-  const convertToTJoy = useCallback(
+  const convertToTokenPrice = useCallback(
     (dollars: number) => {
       if (!tokenPrice) return 0
       return dollars / tokenPrice
@@ -30,7 +30,7 @@ export const useTokenPrice = () => {
 
   return {
     convertToUSD,
-    convertToTJoy,
+    convertToTokenPrice,
     isLoadingPrice,
   }
 }

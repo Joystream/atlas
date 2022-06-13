@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
@@ -47,7 +48,7 @@ export const VideoWorkspace: React.FC = React.memo(() => {
 
   const actionBarProps: ActionBarProps = {
     variant: isEdit ? 'edit' : 'new',
-    primaryText: 'Fee: 0 tJOY',
+    primaryText: `Fee: 0 ${JOY_CURRENCY_TICKER}`,
     secondaryText:
       'For the time being no fees are required for blockchain transactions. This will change in the future.',
     primaryButton: {

@@ -35,7 +35,7 @@ const playgroundRoutes = [
   { path: 'settling-auction', element: <PlaygroundNftSettleAuction />, name: 'NFT Settling an auction' },
   { path: 'whitelisting-members', element: <PlaygroundNftWhitelistMembers />, name: 'NFT Whitelisting members' },
   { path: 'block-time', element: <PlaygroundEstimatingBlockTime />, name: 'Estimating block time' },
-  { path: 'tjoy-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
+  { path: 'token-price', element: <PlaygroundTokenPrice />, name: 'Token price' },
   { path: 'indirect-signin-dialog', element: <PlaygroundIndirectSignInDialog />, name: 'Indirect sign in dialog' },
   { path: 'image-downsizing', element: <PlaygroundImageDownsizing />, name: 'Image downsizing' },
   {

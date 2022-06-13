@@ -22,6 +22,7 @@ import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useSubscribeAccountBalance } from '@/hooks/useSubscribeAccountBalance'
 import { useAsset, useMemberAvatar } from '@/providers/assets'
 import { useUser } from '@/providers/user'
@@ -36,13 +37,13 @@ import {
   Divider,
   Filter,
   InnerContainer,
-  LearnAboutTjoyLink,
+  LearnAboutLink,
   MemberHandleText,
   MemberInfoContainer,
   SectionContainer,
   StyledAvatar,
   SwitchMemberItemListContainer,
-  TjoyContainer,
+  UserBalance,
 } from './MemberDropdown.styles'
 
 export type MemberDropdownProps = {
@@ -182,19 +183,19 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
                         <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
-                        <TjoyContainer>
+                        <BalanceContainer>
                           {accountBalance !== undefined ? (
                             <>
-                              <BalanceContainer>
+                              <UserBalance>
                                 <JoyTokenIcon size={16} variant="regular" />
                                 <NumberFormat variant="t200-strong" value={accountBalance} format="short" />
-                              </BalanceContainer>
+                              </UserBalance>
                             </>
                           ) : (
                             <SkeletonLoader width={30} height={20} />
                           )}
                           <Divider />
-                          <LearnAboutTjoyLink
+                          <LearnAboutLink
                             variant="t100"
                             as="a"
                             // @ts-ignore our types don't allow this but its fine here
@@ -204,9 +205,9 @@ export const MemberDropdown = React.forwardRef<HTMLDivElement, MemberDropdownPro
                             secondary
                             color={cVar('colorCoreNeutral200Lighten')}
                           >
-                            Learn about tJOY
-                          </LearnAboutTjoyLink>
-                        </TjoyContainer>
+                            Learn about ${JOY_CURRENCY_TICKER}
+                          </LearnAboutLink>
+                        </BalanceContainer>
                       </div>
                     </MemberInfoContainer>
                   </BlurredBG>

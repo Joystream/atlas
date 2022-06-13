@@ -15,6 +15,7 @@ import {
   SvgIllustrativePlay,
 } from '@/components/_icons'
 import { JoyTokenIcon } from '@/components/_icons/JoyTokenIcon'
+import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { formatDateAgo } from '@/utils/time'
 
 import { VideoTile, VideoTileProps } from '.'
@@ -61,7 +62,7 @@ export default {
               },
               {
                 icon: <JoyTokenIcon size={16} variant="regular" />,
-                label: '24K tJOY',
+                label: `24K ${JOY_CURRENCY_TICKER}`,
                 variant: 'overlay',
               },
             ]}
