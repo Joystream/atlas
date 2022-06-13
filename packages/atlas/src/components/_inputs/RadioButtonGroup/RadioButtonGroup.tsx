@@ -16,9 +16,9 @@ export type RadioButtonGroupProps = {
 }
 
 export const RadioButtonGroup = forwardRef<HTMLDivElement, RadioButtonGroupProps>(
-  ({ options, value, onChange, name, disabled, error, caption, className }) => {
+  ({ options, value, onChange, name, disabled, error, caption, className }, ref) => {
     return (
-      <Wrapper className={className}>
+      <Wrapper className={className} ref={ref}>
         {options.map((option) => (
           <RadioButton
             disabled={disabled}

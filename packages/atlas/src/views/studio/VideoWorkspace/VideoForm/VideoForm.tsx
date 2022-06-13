@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns'
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FieldError, useForm } from 'react-hook-form'
 
 import { useCategories } from '@/api/hooks'
 import { License } from '@/api/queries'
@@ -460,7 +460,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 id="assets-banner"
                 dismissable={false}
                 icon={<SvgAlertsWarning24 width={24} height={24} />}
-                description={<FileValidationText variant="t200">{errors.assets.message}</FileValidationText>}
+                description={
+                  <FileValidationText variant="t200">{(errors?.assets as FieldError)?.message}</FileValidationText>
+                }
               />
             )}
             <StyledMultiFileSelect

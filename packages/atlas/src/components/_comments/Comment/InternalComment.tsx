@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { BasicMembershipFieldsFragment } from '@/api/queries'
