@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 
 import { useBasicChannel } from '@/api/hooks'
 import { Avatar } from '@/components/Avatar'
+import { Text } from '@/components/Text'
 import { SvgActionNewChannel } from '@/components/_icons'
 import { IconWrapper } from '@/components/_icons/IconWrapper'
 import { NavItem, NavItemProps } from '@/components/_navigation/NavItem'
@@ -13,7 +14,6 @@ import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  BrowseChannelsText,
   BrowseChannelsWrapper,
   ChannelTitle,
   ChannelsList,
@@ -79,7 +79,7 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle as="h4" variant="h100" color="default">
+        <ChannelsTitle as="h4" variant="h100" color="default" margin={{ top: 6, bottom: 4 }}>
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>
@@ -99,9 +99,9 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
         </ChannelsWrapper>
         <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
           <IconWrapper icon={<SvgActionNewChannel />} />
-          <BrowseChannelsText as="span" variant="h300">
+          <Text as="span" variant="h300" margin={{ left: 4 }} color="inherit">
             Browse channels
-          </BrowseChannelsText>
+          </Text>
         </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>

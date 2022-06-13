@@ -17,7 +17,6 @@ import {
   AuctionDatePickerWrapper,
   DaysSummary,
   DaysSummaryInfo,
-  Header,
   OptionCardRadioWrapper,
   StyledForm,
   StyledFormField,
@@ -149,9 +148,9 @@ export const SetUp: FC<SetUpProps> = ({
 
   return (
     <>
-      <Header as="h1" variant="h500">
+      <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
         {selectedType && headerText[selectedType].header}
-      </Header>
+      </Text>
       <Text as="p" variant="t300" color="default">
         {selectedType && headerText[selectedType].caption}
       </Text>

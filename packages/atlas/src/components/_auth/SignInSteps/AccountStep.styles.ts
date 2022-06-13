@@ -35,10 +35,6 @@ export const AccountStepImg = styled(SvgAccountCreationIllustration)`
   height: 210px;
 `
 
-export const SubTitle = styled(Text)`
-  margin-top: ${sizes(2)};
-`
-
 export const AccountsWrapper = styled.div`
   width: 100%;
   height: 200px;

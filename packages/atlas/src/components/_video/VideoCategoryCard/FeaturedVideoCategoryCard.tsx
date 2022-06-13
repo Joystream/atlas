@@ -13,7 +13,6 @@ import {
   FeaturedContainer,
   FeaturedContent,
   FeaturedIconCircle,
-  FeaturedVideoText,
   FeaturedVideoTitleContainer,
   PlayerContainer,
 } from './FeaturedVideoCategoryCard.style'
@@ -81,9 +80,9 @@ export const FeaturedVideoCategoryCard: FC<FeaturedVideoCategoryCardProps> = ({
 
             {!isLoading && (
               <FeaturedVideoTitleContainer variantCategory={variant}>
-                <FeaturedVideoText as="span" variant="t100" color="default">
+                <Text as="span" variant="t100" color="default">
                   Featured video
-                </FeaturedVideoText>
+                </Text>
                 <Text as="h4" variant="h300">
                   {videoTitle}
                 </Text>

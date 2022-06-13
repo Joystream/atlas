@@ -41,10 +41,8 @@ import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useVideoFormAssets, useVideoFormDraft } from './VideoForm.hooks'
 import {
   FileValidationBanner,
-  FileValidationText,
   FormWrapper,
   InputsContainer,
-  MoreSettingsDescription,
   MoreSettingsSection,
   RadioCardButtonsContainer,
   StyledBanner,
@@ -466,9 +464,9 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
                 dismissable={false}
                 icon={<SvgAlertsWarning24 width={24} height={24} />}
                 description={
-                  <FileValidationText as="span" variant="t200">
+                  <Text as="span" variant="t200">
                     {(errors?.assets as FieldError)?.message}
-                  </FileValidationText>
+                  </Text>
                 }
               />
             )}
@@ -613,11 +611,11 @@ export const VideoForm: FC<VideoFormProps> = memo(({ onSubmit, setFormStatus }) 
           >
             {getHiddenSectionLabel()}
           </TextButton>
-          <MoreSettingsDescription as="p" variant="t200" color="default">
+          <Text as="p" variant="t200" color="default" margin={{ top: 2 }}>
             {!videoFieldsLocked
               ? `License, content rating, published before, marketing${isEdit ? ', delete video' : ''}`
               : 'Description, video category, video language, video visibility, licence, content rating, published before, marketing'}
-          </MoreSettingsDescription>
+          </Text>
         </div>
         <MoreSettingsSection expanded={moreSettingsVisible}>
           {videoFieldsLocked && videoEditFields}

@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { Text } from '@/components/Text'
 import { SvgActionAuction, SvgActionBuyNow } from '@/components/_icons'
 
-import { Header, OptionsWrapper, StyledOptionCardRadio } from './ListingTypes.styles'
+import { OptionsWrapper, StyledOptionCardRadio } from './ListingTypes.styles'
 
 import { Listing } from '../NftForm.types'
 
@@ -15,9 +15,9 @@ type ListingTypeProps = {
 export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
   return (
     <>
-      <Header as="h1" variant="h500">
+      <Text as="h1" variant="h500" margin={{ bottom: 4 }}>
         Choose listing type
-      </Header>
+      </Text>
       <Text as="p" variant="t300" color="default">
         Choose the listing type for your NFT
       </Text>

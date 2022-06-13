@@ -11,7 +11,10 @@ type ColorVariant =
   | 'error'
   | 'success'
   | 'caution'
+  | 'neutral100'
+  | 'neutral200'
   | 'neutral200Lighten'
+  | 'neutral500'
   | 'inherit'
 
 const mappedColors = {
@@ -22,7 +25,10 @@ const mappedColors = {
   error: cVar('colorTextError'),
   success: cVar('colorTextSuccess'),
   caution: cVar('colorTextCaution'),
+  neutral100: cVar('colorCoreNeutral100'),
+  neutral200: cVar('colorCoreNeutral200'),
   neutral200Lighten: cVar('colorCoreNeutral200Lighten'),
+  neutral500: cVar('colorCoreNeutral500'),
   inherit: 'inherit',
 }
 

@@ -11,10 +11,6 @@ export const SwitchLabel = styled.label`
   cursor: pointer;
 `
 
-export const SwitchTitle = styled(Text)`
-  margin-left: ${sizes(2)};
-`
-
 export const FormFieldWrapper = styled.div`
   gap: ${sizes(4)};
   display: grid;
@@ -34,10 +30,6 @@ export const FormFieldTitleWrapper = styled.div`
 `
 
 export const StyledInformation = styled(Information)`
-  margin-left: ${sizes(1)};
-`
-
-export const OptionalText = styled(Text)`
   margin-left: ${sizes(1)};
 `
 

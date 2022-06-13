@@ -1,5 +1,6 @@
 import { ForwardRefRenderFunction, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionPan, SvgActionZoomIn, SvgActionZoomOut } from '@/components/_icons'
 import { DialogModalProps } from '@/components/_overlays/DialogModal'
@@ -8,7 +9,6 @@ import { validateImage } from '@/utils/image'
 import { SentryLogger } from '@/utils/logs'
 
 import {
-  AlignInfo,
   AlignInfoContainer,
   CropContainer,
   HiddenInput,
@@ -144,9 +144,9 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
       >
         <AlignInfoContainer>
           <SvgActionPan />
-          <AlignInfo as="span" variant="t200">
+          <Text as="span" variant="t200" margin={{ left: 2 }}>
             Drag and adjust image position
-          </AlignInfo>
+          </Text>
         </AlignInfoContainer>
         {editedImageHref && (
           <CropContainer rounded={imageType === 'avatar'} disabled={cropEditDisabled}>

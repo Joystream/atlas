@@ -18,11 +18,9 @@ import {
   DescriptionCopy,
   DescriptionLink,
   DescriptionSkeletonLoader,
-  DescriptionTitle,
   DetailsWrapper,
   ExpandButton,
   LicenceCategoryWrapper,
-  LicenseCustomText,
 } from './VideoDetails.styles'
 
 type VideoDetailsProps = {
@@ -45,9 +43,9 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         {video ? (
           video?.description && (
             <>
-              <DescriptionTitle as="h2" variant="h100">
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
                 Description
-              </DescriptionTitle>
+              </Text>
               <DescriptionBody detailsExpanded={detailsExpanded}>
                 {/* div below allows line-clamp to work properly for nested paragraphs */}
                 <div>
@@ -79,17 +77,17 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         <GridItem>
           {video ? (
             <>
-              <DescriptionTitle as="h2" variant="h100">
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
                 License
-              </DescriptionTitle>
+              </Text>
               {foundLicense && (
                 <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">
                   {foundLicense.name}
                 </Text>
               )}
-              <LicenseCustomText as="p" variant="t100" color="default">
+              <Text as="p" variant="t100" color="default" margin={{ top: 2 }}>
                 {video.license?.customText}
-              </LicenseCustomText>
+              </Text>
             </>
           ) : (
             <SkeletonLoader height={12} width={200} />
@@ -98,9 +96,9 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         <CategoryWrapper>
           {video ? (
             <>
-              <DescriptionTitle as="h2" variant="h100">
+              <Text as="h2" variant="h100" margin={{ bottom: 2 }}>
                 Category
-              </DescriptionTitle>
+              </Text>
               <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
                 {categoryData?.icon}
                 <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">

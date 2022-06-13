@@ -4,7 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useBasicChannel } from '@/api/hooks'
 import { BasicChannelFieldsFragment } from '@/api/queries'
 import { AvatarSize } from '@/components/Avatar'
-import { TextVariant } from '@/components/Text'
+import { Text, TextVariant } from '@/components/Text'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { useHandleFollowChannel } from '@/hooks/useHandleFollowChannel'
@@ -12,15 +12,7 @@ import { useAsset } from '@/providers/assets'
 import { transitions } from '@/styles'
 import { SentryLogger } from '@/utils/logs'
 
-import {
-  Container,
-  FollowButton,
-  Follows,
-  StyledAvatar,
-  StyledLink,
-  StyledText,
-  TitleWrapper,
-} from './ChannelLink.styles'
+import { Container, FollowButton, StyledAvatar, StyledLink, TitleWrapper } from './ChannelLink.styles'
 
 export type ChannelLinkProps = {
   id?: string
@@ -91,13 +83,13 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             {displayedChannel ? (
               <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
-                  <StyledText as="span" variant={_textVariant} isSecondary={!!textSecondary}>
+                  <Text as="span" variant={_textVariant} color={textSecondary ? 'neutral200' : undefined}>
                     {customTitle || displayedChannel?.title}
-                  </StyledText>
+                  </Text>
                   {followButton && (
-                    <Follows as="p" variant="t100" color="default">
+                    <Text as="p" variant="t100" color="default" margin={{ top: 1 }}>
                       {displayedChannel.follows} {displayedChannel.follows === 1 ? 'follower' : 'followers'}
-                    </Follows>
+                    </Text>
                   )}
                 </StyledLink>
                 {followButton && (

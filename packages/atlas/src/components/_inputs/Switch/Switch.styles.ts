@@ -1,8 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
-import { cVar, sizes } from '@/styles'
+import { cVar } from '@/styles'
 
 export const SwitchLabel = styled.label<{ disabled?: boolean }>`
   display: inline-flex;
@@ -124,9 +123,6 @@ export const SwitchCheckbox = styled.input`
       ${hoverCheckedStyles};
     }
   }
-`
-export const LabelText = styled(Text)`
-  margin-left: ${sizes(2)};
 `
 
 export const SwitchWrapper = styled.div`

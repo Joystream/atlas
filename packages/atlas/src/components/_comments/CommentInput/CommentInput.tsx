@@ -14,7 +14,6 @@ import {
   ButtonsContainer,
   Container,
   CustomPlaceholder,
-  CustomPlaceholderHandle,
   Flex,
   StyledCommentRow,
   StyledTextArea,
@@ -137,13 +136,13 @@ export const CommentInput = forwardRef<HTMLTextAreaElement, CommentInputProps>(
               disabled={processing}
               data-processing={processing}
             />
-            <CustomPlaceholder as="p" variant="t200">
+            <CustomPlaceholder as="p" variant="t200" color="muted">
               Leave a public {reply ? 'reply' : 'comment'} as
               {memberHandle ? (
-                <CustomPlaceholderHandle as="span" variant="t200-strong">
+                <Text as="span" variant="t200-strong" color="inherit">
                   {' '}
                   {memberHandle}
-                </CustomPlaceholderHandle>
+                </Text>
               ) : (
                 '...'
               )}

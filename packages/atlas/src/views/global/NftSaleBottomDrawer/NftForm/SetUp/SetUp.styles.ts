@@ -1,13 +1,8 @@
 import styled from '@emotion/styled'
 
 import { Information } from '@/components/Information'
-import { Text } from '@/components/Text'
 import { FormField } from '@/components/_inputs/FormField'
 import { media, sizes } from '@/styles'
-
-export const Header = styled(Text)`
-  margin-bottom: ${sizes(4)};
-`
 
 export const StyledForm = styled.form`
   display: grid;

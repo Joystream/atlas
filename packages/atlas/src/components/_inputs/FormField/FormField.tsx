@@ -10,11 +10,9 @@ import {
   FormFieldHeader,
   FormFieldTitleWrapper,
   FormFieldWrapper,
-  OptionalText,
   StyledInformation,
   StyledSvgActionWarning,
   SwitchLabel,
-  SwitchTitle,
 } from './FormField.styles'
 
 import { Switch, SwitchProps } from '../Switch'
@@ -90,9 +88,9 @@ export const FormField = memo(
                   {switchable ? (
                     <SwitchLabel>
                       <Switch {...switchProps} />
-                      <SwitchTitle as="span" variant="h300">
+                      <Text as="span" variant="h300" margin={{ left: 2 }}>
                         {label}
-                      </SwitchTitle>
+                      </Text>
                     </SwitchLabel>
                   ) : (
                     <label onClick={handleFocusOnClick}>
@@ -102,9 +100,9 @@ export const FormField = memo(
                     </label>
                   )}
                   {optional && (
-                    <OptionalText as="span" variant="t200" color="default">
+                    <Text as="span" variant="t200" color="default" margin={{ left: 1 }}>
                       (optional)
-                    </OptionalText>
+                    </Text>
                   )}
                   {tooltip && <StyledInformation {...tooltip} />}
                 </FormFieldTitleWrapper>

@@ -32,19 +32,12 @@ export const BrowseChannelsWrapper = styled(Link)`
   }
 `
 
-export const BrowseChannelsText = styled(Text)`
-  color: inherit;
-  margin-left: ${sizes(4)};
-`
-
 export const ChannelTitle = styled(Text)`
   padding-left: ${sizes(4)};
   color: inherit !important;
 `
 
 export const ChannelsTitle = styled(Text)`
-  margin-top: ${sizes(6)};
-  margin-bottom: ${sizes(4)};
   padding-left: ${NAVBAR_LEFT_PADDING}px;
   width: calc(var(--size-sidenav-width-expanded) - ${NAVBAR_LEFT_PADDING}px);
 `

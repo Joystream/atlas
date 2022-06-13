@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 
-import { Text } from '@/components/Text'
 import { Button, TextButton } from '@/components/_buttons/Button'
 import { cVar, sizes, zIndex } from '@/styles'
 
@@ -59,10 +58,6 @@ export const SnackbarContent = styled.div`
   padding: ${sizes(1.5)} 0 ${sizes(1.5)} ${sizes(1.5)};
   width: 100%;
   align-items: flex-start;
-`
-
-export const SnackbarDescription = styled(Text)`
-  margin-top: ${sizes(2)};
 `
 
 export const StyledInnerWrapper = styled.div`

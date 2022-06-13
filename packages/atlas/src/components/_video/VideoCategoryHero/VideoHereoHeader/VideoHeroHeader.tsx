@@ -1,13 +1,14 @@
 import { FC, ReactNode } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionChevronL } from '@/components/_icons'
 import { SkeletonLoader } from '@/components/_loaders/SkeletonLoader'
 import { absoluteRoutes } from '@/config/routes'
 import { transitions } from '@/styles'
 
-import { Divider, StyledVideoHeroHeader, VideoHeroHeaderTitle } from './VideoHeroHeader.style'
+import { Divider, StyledVideoHeroHeader } from './VideoHeroHeader.style'
 
 type VideoHeroHeaderProps = {
   loading?: boolean
@@ -33,9 +34,9 @@ export const VideoHeroHeader: FC<VideoHeroHeaderProps> = ({ loading, icon, title
           {!loading ? (
             <>
               {icon}
-              <VideoHeroHeaderTitle as="h1" variant="h400">
+              <Text as="h1" variant="h400" margin={{ left: 2 }}>
                 {title}
-              </VideoHeroHeaderTitle>
+              </Text>
             </>
           ) : (
             <SkeletonLoader height={24} width={160} />

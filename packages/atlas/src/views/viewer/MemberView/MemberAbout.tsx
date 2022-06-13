@@ -11,7 +11,6 @@ import {
   Anchor,
   ChannelsOwnedContainerGrid,
   Details,
-  DetailsText,
   StyledChannelCard,
   StyledLayoutGrid,
   TextContainer,
@@ -51,9 +50,9 @@ export const MemberAbout = () => {
         )}
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText as="h3" variant="h500">
+        <Text as="h3" variant="h500" margin={{ bottom: 4 }}>
           Details
-        </DetailsText>
+        </Text>
 
         <Details>
           <Text as="p" variant="t100" color="default">

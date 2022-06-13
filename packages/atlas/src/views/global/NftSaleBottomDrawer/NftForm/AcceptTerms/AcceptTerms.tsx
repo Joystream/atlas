@@ -10,7 +10,6 @@ import { formatDateTime } from '@/utils/time'
 import {
   Description,
   Divider,
-  Header,
   MembersList,
   Row,
   StyledInformation,
@@ -43,9 +42,9 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
 
   return (
     <>
-      <Header as="h1" variant="h500">
+      <Text as="h1" variant="h500" margin={{ bottom: 8 }}>
         Review listing terms
-      </Header>
+      </Text>
       <Divider />
       <Text as="h2" variant="h400">
         Listing terms

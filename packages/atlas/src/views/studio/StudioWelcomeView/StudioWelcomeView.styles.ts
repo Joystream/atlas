@@ -31,10 +31,6 @@ export const Header = styled.header`
   max-width: 550px;
 `
 
-export const StyledHero = styled(Text)`
-  margin-top: ${sizes(8)};
-`
-
 export const StyledSignInIllustrationSVG = styled(SvgSigninIllustration)`
   margin-top: 60px;
   align-self: center;

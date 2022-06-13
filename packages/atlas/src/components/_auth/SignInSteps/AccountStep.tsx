@@ -22,7 +22,6 @@ import {
   StyledRadioButton,
   StyledSpinner,
   StyledStepWrapper,
-  SubTitle,
 } from './AccountStep.styles'
 import {
   BottomBarIcon,
@@ -79,9 +78,9 @@ export const AccountStep: FC<AccountStepProps> = ({
               <StepTitle as="h1" variant="h500">
                 Create blockchain account
               </StepTitle>
-              <SubTitle as="p" variant="t200" color="default">
+              <Text as="p" variant="t200" color="default" margin={{ top: 2 }}>
                 Use the Polkadot extension to generate your personal keypair. Follow these instructions:
-              </SubTitle>
+              </Text>
               <OrderedSteps>
                 <OrderedStep color="default" variant="t100" as="li">
                   Open the extension popup with the icon in your browser bar

@@ -19,7 +19,6 @@ import {
   DragAndDropArea,
   DragDropText,
   InnerContainer,
-  Paragraph,
   SelectedFileInfo,
   SelectedFileInfoBackground,
   SelectedFileInfoHeading,
@@ -167,9 +166,9 @@ export const FileSelect: FC<FileSelectProps> = ({
             <Title as="span" variant="h400">
               {title}
             </Title>
-            <Paragraph variant="t200" as="p" color="default">
+            <Text variant="t200" as="p" color="default" margin={{ top: 3 }}>
               {paragraph}
-            </Paragraph>
+            </Text>
             <ButtonsGroup>
               <DragDropText as="span" variant="t100" color="default">
                 Drag and drop or

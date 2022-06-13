@@ -2,6 +2,7 @@ import { FC } from 'react'
 import shallow from 'zustand/shallow'
 
 import { EmptyFallback } from '@/components/EmptyFallback'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { SvgActionUpload } from '@/components/_icons'
 import { absoluteRoutes } from '@/config/routes'
@@ -11,7 +12,7 @@ import { useUploadsStore } from '@/providers/uploadsManager/store'
 import { AssetUpload } from '@/providers/uploadsManager/types'
 import { useUser } from '@/providers/user'
 
-import { StyledText, UploadsContainer } from './MyUploadsView.styles'
+import { UploadsContainer } from './MyUploadsView.styles'
 import { UploadStatusGroup } from './UploadStatusGroup'
 import { UploadStatusGroupSkeletonLoader } from './UploadStatusGroup/UploadStatusGroupSkeletonLoader'
 
@@ -49,9 +50,9 @@ export const MyUploadsView: FC = () => {
   return (
     <UploadsContainer>
       {headTags}
-      <StyledText as="h1" variant="h700">
+      <Text as="h1" variant="h700" margin={{ top: 12, bottom: 12 }}>
         My uploads
-      </StyledText>
+      </Text>
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (

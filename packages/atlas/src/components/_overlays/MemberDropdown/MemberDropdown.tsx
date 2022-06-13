@@ -58,7 +58,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
     const { pathname } = useLocation()
 
     const [isSwitchingMember, setIsSwitchingMember] = useState(false)
-    const [isAnimatingSwitchMember, setIsAnimatingSwitchMember] = useState(false)
+    const [isAnimatingSwitchMember] = useState(false)
     const navigate = useNavigate()
     const { channelId, activeMembership, setActiveUser, memberships } = useUser()
     const accountBalance = useSubscribeAccountBalance()
@@ -75,8 +75,6 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
         duration: 250,
         easing: easings.easeOutCirc,
       },
-      onRest: () => setIsAnimatingSwitchMember(false),
-      onStart: () => setIsAnimatingSwitchMember(true),
     })
 
     const { url: avatarUrl, isLoadingAsset: avatarLoading } = useMemberAvatar(activeMembership)

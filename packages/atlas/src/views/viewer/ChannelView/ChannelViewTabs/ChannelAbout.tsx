@@ -12,7 +12,6 @@ import { formatDate } from '@/utils/time'
 import {
   Details,
   DetailsMember,
-  DetailsText,
   MemberContainer,
   MemberLink,
   StyledAvatar,
@@ -42,9 +41,9 @@ export const ChannelAbout: FC<ChannelAboutProps> = ({ channel }) => {
         )}
       </GridItem>
       <GridItem colSpan={{ xxs: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText as="h3" variant="h400">
+        <Text as="h3" variant="h400" margin={{ bottom: 4 }}>
           Details
-        </DetailsText>
+        </Text>
 
         <DetailsMember>
           <StyledAvatar size="small" assetUrl={memberAvatarUrl} loading={memberAvatarLoading} />

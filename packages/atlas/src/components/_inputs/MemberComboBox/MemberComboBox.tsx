@@ -113,7 +113,7 @@ export const MemberComboBox: FC<MemberComboBoxProps> = ({
       />
       <MemberBadgesWrapper>
         {selectedMembers.length > 0 && (
-          <StyledSelectedText as="span" variant="t200-strong">
+          <StyledSelectedText as="span" variant="t200-strong" margin={{ bottom: 4 }} color="muted">
             Selected:{' '}
           </StyledSelectedText>
         )}
