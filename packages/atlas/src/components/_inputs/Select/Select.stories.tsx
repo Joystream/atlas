@@ -20,13 +20,13 @@ export default {
     disabled: false,
   },
   argTypes: {
-    items: { control: { disable: true } },
-    value: { control: { disable: true } },
-    icon: { control: { disable: true } },
-    className: { control: { disable: true } },
-    containerRef: { control: { disable: true } },
-    ref: { control: { disable: true } },
-    onChange: { control: { disable: true } },
+    items: { table: { disable: true } },
+    value: { table: { disable: true } },
+    icon: { table: { disable: true } },
+    className: { table: { disable: true } },
+    containerRef: { table: { disable: true } },
+    ref: { table: { disable: true } },
+    onChange: { table: { disable: true } },
   },
 } as Meta<SelectProps>
 
