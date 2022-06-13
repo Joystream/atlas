@@ -3,13 +3,13 @@ import React from 'react'
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 
-import { RadioAndCheckboxLabel, StyledHelperText } from './RadioAndCheckboxBase.styles'
+import { CaptionText, RadioAndCheckboxLabel } from './RadioAndCheckboxBase.styles'
 
 type RadioAndCheckboxBaseProps = {
   disabled?: boolean
   className?: string
   label?: string
-  helperText?: string
+  caption?: string
   error?: boolean
   onClick?: (e: React.MouseEvent) => void
 }
@@ -18,7 +18,7 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
   disabled,
   children,
   label,
-  helperText,
+  caption,
   error,
   className,
   onClick,
@@ -31,10 +31,10 @@ export const RadioAndCheckboxBase: React.FC<RadioAndCheckboxBaseProps> = ({
           {label}
         </Text>
       )}
-      {helperText && (
-        <StyledHelperText variant="t100" color={error ? cVar('colorTextError') : undefined} secondary>
-          {helperText}
-        </StyledHelperText>
+      {caption && (
+        <CaptionText variant="t100" color={error ? cVar('colorTextError') : undefined} secondary>
+          {caption}
+        </CaptionText>
       )}
     </RadioAndCheckboxLabel>
   )

@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
-import { CustomRadioInput, activeState, hoverState } from '@/components/_inputs/RadioInput/RadioInput.styles'
 import { cVar, sizes } from '@/styles'
 
 type OptionCardLabelProps = {
@@ -66,9 +65,6 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
 
   :hover {
     border: 1px solid ${getOptionCardBorderColorHover};
-    ${CustomRadioInput} {
-      ${({ checked, disabled, error }) => !disabled && !error && hoverState(checked)};
-    }
 
     ${IconContainer} {
       * path {
@@ -80,9 +76,6 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
 
   :active {
     border: 1px solid ${getOptionCardBorderColorActive};
-    ${CustomRadioInput} {
-      ${({ checked, disabled, error }) => !disabled && !error && activeState(checked)};
-    }
   }
 `
 

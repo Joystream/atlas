@@ -17,11 +17,6 @@ export const RadioCardButtonsContainer = styled.div`
   }
 `
 
-export const RadioButtonsContainer = styled.div`
-  display: grid;
-  grid-row-gap: ${sizes(2)};
-`
-
 export const StyledMultiFileSelect = styled(MultiFileSelect)`
   ${media.md} {
     position: sticky;

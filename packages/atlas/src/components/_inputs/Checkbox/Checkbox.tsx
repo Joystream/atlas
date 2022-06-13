@@ -16,7 +16,7 @@ export interface CheckboxProps extends Omit<HTMLCheckboxProps, 'value' | 'onChan
   className?: string
   onChange?: (value: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
-  helperText?: string
+  caption?: string
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -32,7 +32,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       error = false,
       className,
       label,
-      helperText,
+      caption,
       ...props
     },
     ref
@@ -68,7 +68,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         disabled={disabled}
         label={label}
         error={error}
-        helperText={helperText}
+        caption={caption}
         onClick={(e) => {
           e.stopPropagation()
         }}
