@@ -2753,10 +2753,6 @@ __metadata:
     downshift: ^6.1.7
     emotion-normalize: ^11.0.1
     esbuild-register: ^3.3.2
-    eslint-plugin-jest-dom: ^4.0.2
-    eslint-plugin-react: ^7.30.0
-    eslint-plugin-react-hooks: ^4.5.0
-    eslint-plugin-unused-imports: ^2.0.0
     glider-js: ^1.7.7
     graphql: ^16.5.0
     graphql-tag: ^2.12.6
@@ -18587,6 +18583,10 @@ resolve@^2.0.0-next.3:
     "@typescript-eslint/parser": ^5.26.0
     eslint: ^8.16.0
     eslint-config-prettier: ^8.5.0
+    eslint-plugin-jest-dom: ^4.0.2
+    eslint-plugin-react: ^7.30.0
+    eslint-plugin-react-hooks: ^4.5.0
+    eslint-plugin-unused-imports: ^2.0.0
     husky: ^8.0.1
     lint-staged: ^12.4.2
     prettier: ~2.6.2
