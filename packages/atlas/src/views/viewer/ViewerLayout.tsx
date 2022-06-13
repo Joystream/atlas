@@ -64,9 +64,9 @@ export const ViewerLayout: React.FC = () => {
 
   return (
     <>
-      <Modal show={isLoading} noBoxShadow>
+      <StyledModal show={isLoading} noBoxShadow>
         <Loader variant="xlarge" />
-      </Modal>
+      </StyledModal>
       <TopbarViewer />
       <SidenavViewer />
       <MainContainer>
@@ -116,6 +116,15 @@ export const ViewerLayout: React.FC = () => {
     </>
   )
 }
+
+const StyledModal = styled(Modal)`
+  height: 100vh;
+  top: unset;
+  left: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 const MainContainer = styled.main`
   position: relative;
