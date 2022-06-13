@@ -46,7 +46,7 @@ export const OptionCardBase: FC<OptionCardProps> = ({
               {icon}
             </IconContainer>
           )}
-          <OptionCardTitle as="span" color={error ? 'colorTextError' : undefined} variant="h400">
+          <OptionCardTitle as="span" color={error ? 'colorTextError' : undefined} variant="h300">
             {label}
           </OptionCardTitle>
         </TitleIconWrapper>
@@ -73,6 +73,7 @@ export const OptionCardRadio = forwardRef<HTMLInputElement, OptionCardProps & Ra
       >
         <RadioInput
           {...props}
+          error={error}
           ref={ref}
           selectedValue={selectedValue}
           value={value}
@@ -97,7 +98,7 @@ export const OptionCardCheckbox = forwardRef<HTMLInputElement, OptionCardProps &
         error={error}
         className={className}
       >
-        <Checkbox {...props} ref={ref} value={value} disabled={disabled} onChange={onChange} />
+        <Checkbox {...props} error={error} ref={ref} value={value} disabled={disabled} onChange={onChange} />
       </OptionCardBase>
     )
   }

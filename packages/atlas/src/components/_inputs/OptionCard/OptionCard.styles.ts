@@ -59,12 +59,15 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   display: flex;
   flex-direction: column;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  border: 1px solid ${getOptionCardBorderColor};
+  box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColor};
   transition: background-color ${cVar('animationTransitionFast')}, border-color ${cVar('animationTransitionFast')};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  background: ${cVar('colorBackgroundMutedAlpha')};
 
+  :focus-within,
   :hover {
-    border: 1px solid ${getOptionCardBorderColorHover};
+    background: ${cVar('colorBackgroundAlpha')};
+    box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorHover};
 
     ${IconContainer} {
       * path {
@@ -75,7 +78,7 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   }
 
   :active {
-    border: 1px solid ${getOptionCardBorderColorActive};
+    box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorActive};
   }
 `
 
@@ -84,7 +87,7 @@ export const InputAndTitleWrapper = styled.div`
   grid-template-columns: 1fr auto;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${sizes(4)};
+  margin-bottom: ${sizes(2)};
 `
 
 export const TitleIconWrapper = styled.div`
