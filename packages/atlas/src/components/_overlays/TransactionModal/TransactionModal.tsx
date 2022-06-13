@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import Lottie from 'react-lottie-player'
 import { CSSTransition } from 'react-transition-group'
 
 import { Text } from '@/components/Text'
@@ -14,7 +15,6 @@ import {
   PolkadotLogoWrapper,
   Step,
   StepsBar,
-  StyledLottie,
   StyledModal,
   StyledPolkadotLogo,
   StyledTransactionIllustration,
@@ -105,7 +105,7 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
           </PolkadotLogoWrapper>
         </CSSTransition>
         {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && (
-          <StyledLottie
+          <Lottie
             loop={stepDetails?.animation?.loop}
             animationData={stepDetails?.animation?.data}
             play

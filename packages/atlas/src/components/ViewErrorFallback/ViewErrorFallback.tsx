@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FallbackRender } from '@sentry/react/dist/errorboundary'
+import { FallbackRender } from '@sentry/react/types/errorboundary'
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
