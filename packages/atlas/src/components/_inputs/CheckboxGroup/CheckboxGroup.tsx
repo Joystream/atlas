@@ -7,13 +7,20 @@ import { sizes } from '@/styles'
 export type CheckboxGroupProps = {
   options: CheckboxProps[]
   onChange?: (id: number, event: React.ChangeEvent<HTMLInputElement>) => void
-  value: number[]
+  checkedIds: number[]
   name?: string
   disabled?: boolean
   error?: boolean
 }
 
-export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ options, value, onChange, name, disabled, error }) => {
+export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
+  options,
+  checkedIds,
+  onChange,
+  name,
+  disabled,
+  error,
+}) => {
   return (
     <Wrapper>
       {options.map((option, idx) => (
@@ -22,10 +29,9 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ options, value, on
           error={error}
           name={name}
           key={`radio-button-group-${idx}`}
-          label="test"
           onChange={(_, event) => onChange?.(idx, event)}
           {...option}
-          value={value.includes(idx)}
+          value={checkedIds.includes(idx)}
         />
       ))}
     </Wrapper>

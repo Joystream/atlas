@@ -10,7 +10,7 @@ export default {
     className: { table: { disable: true } },
     selectedValue: { table: { disable: true } },
     options: { table: { disable: true } },
-    value: { table: { disable: true } },
+    checkedIds: { table: { disable: true } },
     onChange: { table: { disable: true } },
     name: { table: { disable: true } },
   },
@@ -48,7 +48,7 @@ const Template: Story = (args) => {
     },
   ]
 
-  return <CheckboxGroup {...args} name="radio-group" options={ITEMS} onChange={handleChange} value={selected} />
+  return <CheckboxGroup {...args} name="radio-group" options={ITEMS} onChange={handleChange} checkedIds={selected} />
 }
 
 export const Default = Template.bind({})
