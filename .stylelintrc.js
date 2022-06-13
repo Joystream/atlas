@@ -3,7 +3,6 @@ module.exports = {
   defaultSeverity: 'warning',
   customSyntax: '@stylelint/postcss-css-in-js',
   rules: {
-    'declaration-block-no-redundant-longhand-properties': null,
     'no-empty-source': null,
     'function-name-case': null,
     'custom-property-empty-line-before': null,

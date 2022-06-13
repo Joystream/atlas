@@ -28,11 +28,14 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
     'secondary-button primary-button' auto / auto 1fr;
 
   ${media.sm} {
-    padding: ${sizes(4)} ${sizes(8)};
     grid-template: 'primary-text badge secondary-button primary-button' auto / 1fr max-content max-content max-content;
   }
+
   ${media.lg} {
     padding: ${sizes(4)} ${sizes(8)};
+  }
+
+  ${media.lg} {
     grid-template: 'primary-text secondary-text badge secondary-button primary-button' auto / max-content 1fr max-content max-content max-content;
   }
 `
@@ -67,13 +70,13 @@ export const ActionButtonPrimary = styled(Button)`
 
   ${media.sm} {
     &:first-of-type {
-      grid-column-start: 3;
+      grid-column: 3;
     }
   }
 
   ${media.lg} {
     &:first-of-type {
-      grid-column-start: 4;
+      grid-column: 4;
     }
   }
 `
