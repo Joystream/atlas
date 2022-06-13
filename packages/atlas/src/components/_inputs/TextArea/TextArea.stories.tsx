@@ -8,16 +8,15 @@ import { TextArea, TextAreaProps } from './TextArea'
 export default {
   title: 'inputs/TextArea',
   component: TextArea,
+  args: {},
   argTypes: {
     value: { table: { disable: true } },
-    label: {
-      defaultValue: 'Some label',
-    },
-    placeholder: {
-      defaultValue: 'Some placeholder',
-    },
+    className: { table: { disable: true } },
+    onChange: { table: { disable: true } },
+    onBlur: { table: { disable: true } },
+    spellcheck: { table: { disable: true } },
   },
-} as Meta
+} as Meta<TextAreaProps>
 
 const Template: Story<TextAreaProps> = (args) => <TextArea {...args} />
 
@@ -40,6 +39,12 @@ export const Default = Template.bind({})
 Default.argTypes = {
   value: { table: { disable: false } },
 }
+export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
+
 export const WithControlledInput = TemplateWithControlledInput.bind({})
 
-export const WithUncontrolledInput = TemplateWithUncontrolledInput.bind({})
+export const WithCounter = Template.bind({})
+WithCounter.args = {
+  counter: true,
+  maxLength: 30,
+}
