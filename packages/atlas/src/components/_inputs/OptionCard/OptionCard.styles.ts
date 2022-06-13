@@ -12,9 +12,9 @@ type OptionCardLabelProps = {
 
 const getOptionCardBorderColor = ({ checked, error }: OptionCardLabelProps) => {
   if (error) {
-    return cVar('colorCoreRed500')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue500')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
   return cVar('colorBorderAlpha')
 }
@@ -24,9 +24,9 @@ const getOptionCardBorderColorHover = ({ checked, error, disabled }: OptionCardL
     return 'inherit'
   }
   if (error) {
-    return cVar('colorCoreRed300')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue300')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
   return cVar('colorBorderStrongAlpha')
 }
@@ -36,11 +36,11 @@ const getOptionCardBorderColorActive = ({ checked, error, disabled }: OptionCard
     return 'inherit'
   }
   if (error) {
-    return cVar('colorCoreRed700')
-  } else if (checked && !error) {
-    return cVar('colorCoreBlue700')
+    return cVar('colorBorderError')
+  } else if (checked) {
+    return cVar('colorBorderPrimary')
   }
-  return cVar('colorBorderMutedAlpha')
+  return cVar('colorBorderStrongAlpha')
 }
 
 const IconStyles = ({ error, checked, disabled }: OptionCardLabelProps) => css`
@@ -64,18 +64,21 @@ export const OptionCardLabel = styled.label<OptionCardLabelProps>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   background: ${cVar('colorBackgroundMutedAlpha')};
 
-  :focus-within,
-  :hover {
-    background: ${cVar('colorBackgroundAlpha')};
-    box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorHover};
+  ${({ disabled, checked, error }) =>
+    !disabled &&
+    css`
+      :focus-within,
+      :hover {
+        background: ${cVar('colorBackgroundAlpha')};
+        box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorHover({ checked, error, disabled })};
 
-    ${IconContainer} {
-      * path {
-        fill: ${({ error, disabled }) =>
-          error ? cVar('colorTextError') : !disabled ? cVar('colorTextStrong') : cVar('colorText')};
+        ${IconContainer} {
+          * path {
+            fill: ${error ? cVar('colorTextError') : !disabled ? cVar('colorTextStrong') : cVar('colorText')};
+          }
+        }
       }
-    }
-  }
+    `}
 
   :active {
     box-shadow: inset 0 -1px 0 0 ${getOptionCardBorderColorActive};
