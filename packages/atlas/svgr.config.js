@@ -7,6 +7,7 @@ module.exports = {
   typescript: true,
   memo: true,
   prettier: true,
+  jsxRuntime: 'automatic',
   svgoConfig: {
     plugins: [
       {
