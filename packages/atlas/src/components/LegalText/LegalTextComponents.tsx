@@ -14,7 +14,7 @@ const _LegalParagraph = styled(Text)`
 
 type LegalParagraphProps = PropsWithChildren<{ header?: boolean }>
 export const LegalParagraph: FC<LegalParagraphProps> = ({ header, ...props }) => (
-  <_LegalParagraph variant={header ? 'h300' : 't200'} color={!header ? 'default' : undefined} {...props} />
+  <_LegalParagraph as="h2" variant={header ? 'h300' : 't200'} color={!header ? 'default' : undefined} {...props} />
 )
 // wrapper so we can use a specific element to render
 const _StyledText = styled(Text)`

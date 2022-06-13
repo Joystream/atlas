@@ -48,7 +48,7 @@ export const ChannelNavItem: FC<NavItemProps & ChannelNavItemProps> = ({
     <NavItem to={to} expanded={expanded} itemName={itemName} onClick={onClick} isSecondary={isSecondary}>
       <Avatar loading={!channel} size="default" assetUrl={avatarPhotoUrl} />
       {channel ? (
-        <ChannelTitle variant="h300" color="default">
+        <ChannelTitle as="p" variant="h300" color="default">
           {channel.title}
         </ChannelTitle>
       ) : (
@@ -79,7 +79,7 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
       classNames={transitions.names.fade}
     >
       <FollowedChannelsWrapper>
-        <ChannelsTitle variant="h100" color="default">
+        <ChannelsTitle as="h4" variant="h100" color="default">
           Followed channels
         </ChannelsTitle>
         <ChannelsWrapper>
@@ -99,7 +99,9 @@ export const FollowedChannels: FC<FollowedChannelsProps> = ({
         </ChannelsWrapper>
         <BrowseChannelsWrapper to={absoluteRoutes.viewer.channels()} onClick={onClick}>
           <IconWrapper icon={<SvgActionNewChannel />} />
-          <BrowseChannelsText variant="h300">Browse channels</BrowseChannelsText>
+          <BrowseChannelsText as="span" variant="h300">
+            Browse channels
+          </BrowseChannelsText>
         </BrowseChannelsWrapper>
       </FollowedChannelsWrapper>
     </CSSTransition>

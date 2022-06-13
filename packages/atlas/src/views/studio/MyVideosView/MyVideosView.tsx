@@ -278,7 +278,9 @@ export const MyVideosView = () => {
   return (
     <LimitedWidthContainer>
       {headTags}
-      <StyledText variant="h700">My videos</StyledText>
+      <StyledText as="h1" variant="h700">
+        My videos
+      </StyledText>
       {!smMatch && sortVisibleAndUploadButtonVisible && (
         <MobileButton
           size="large"

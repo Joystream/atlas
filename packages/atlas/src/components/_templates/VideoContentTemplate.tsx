@@ -21,7 +21,11 @@ export const VideoContentTemplate: FC<VideoContentTemplateProps> = ({ children, 
 
   return (
     <StyledViewWrapper big>
-      {title && <Header variant="h600">{title}</Header>}
+      {title && (
+        <Header as="h1" variant="h600">
+          {title}
+        </Header>
+      )}
       {children}
       {cta && <CallToActionWrapper>{ctaContent}</CallToActionWrapper>}
     </StyledViewWrapper>

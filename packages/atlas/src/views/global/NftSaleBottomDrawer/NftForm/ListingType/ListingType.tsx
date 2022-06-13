@@ -15,8 +15,10 @@ type ListingTypeProps = {
 export const ListingType: FC<ListingTypeProps> = ({ selectedType, onSelectType }) => {
   return (
     <>
-      <Header variant="h500">Choose listing type</Header>
-      <Text variant="t300" color="default">
+      <Header as="h1" variant="h500">
+        Choose listing type
+      </Header>
+      <Text as="p" variant="t300" color="default">
         Choose the listing type for your NFT
       </Text>
       <OptionsWrapper>

@@ -21,13 +21,21 @@ export const PlaygroundEstimatingBlockTime = () => {
   return (
     <div>
       <div>
-        <Text variant="h700">Current state</Text>
-        <Text variant="h300">Current block number: {currentBlock}</Text>
-        <Text variant="h300">Current time: {new Date(msTimestamp).toLocaleString()}</Text>
+        <Text as="p" variant="h700">
+          Current state
+        </Text>
+        <Text as="p" variant="h300">
+          Current block number: {currentBlock}
+        </Text>
+        <Text as="p" variant="h300">
+          Current time: {new Date(msTimestamp).toLocaleString()}
+        </Text>
       </div>
       <br />
       <div>
-        <Text variant="h700">Convert block to time</Text>
+        <Text as="p" variant="h700">
+          Convert block to time
+        </Text>
         <FormField label="Change number of block">
           <Input
             type="number"
@@ -35,12 +43,16 @@ export const PlaygroundEstimatingBlockTime = () => {
             onChange={(e) => setBlockNumber(Number(e.currentTarget.value))}
           />
         </FormField>
-        <Text variant="h500">Results:</Text>
-        <Text variant="h300">Block number: {blockNumber}</Text>
-        <Text variant="h300">
+        <Text as="p" variant="h500">
+          Results:
+        </Text>
+        <Text as="p" variant="h300">
+          Block number: {blockNumber}
+        </Text>
+        <Text as="p" variant="h300">
           Date: {blockNumberMsTimeStamp ? new Date(blockNumberMsTimeStamp).toLocaleString() : null}{' '}
         </Text>
-        <Text variant="h300">
+        <Text as="p" variant="h300">
           Timeleft:{' '}
           {blockNumberMsTimeStamp
             ? formatDistanceToNowStrict(new Date(blockNumberMsTimeStamp), { addSuffix: true })
@@ -49,7 +61,9 @@ export const PlaygroundEstimatingBlockTime = () => {
       </div>
       <br />
       <div>
-        <Text variant="h700">Convert time to block</Text>
+        <Text as="p" variant="h700">
+          Convert time to block
+        </Text>
         <FormField label="Change date">
           <input
             type="datetime-local"
@@ -58,9 +72,15 @@ export const PlaygroundEstimatingBlockTime = () => {
             onChange={(e) => setDatetimeLocal(e.currentTarget.value)}
           />
         </FormField>
-        <Text variant="h500">Results:</Text>
-        <Text variant="h300">Block number: {convertMsTimestampToBlock(Date.parse(datetimeLocal))}</Text>
-        <Text variant="h300">Date: {datetimeLocal}</Text>
+        <Text as="p" variant="h500">
+          Results:
+        </Text>
+        <Text as="p" variant="h300">
+          Block number: {convertMsTimestampToBlock(Date.parse(datetimeLocal))}
+        </Text>
+        <Text as="p" variant="h300">
+          Date: {datetimeLocal}
+        </Text>
       </div>
     </div>
   )

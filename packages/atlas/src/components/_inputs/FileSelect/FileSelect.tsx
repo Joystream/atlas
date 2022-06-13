@@ -140,8 +140,14 @@ export const FileSelect: FC<FileSelectProps> = ({
               <SelectedFileInfoBackground />
               <SelectedFileInfoInnerContainer style={{ transform: styles.transform, x: styles.x }}>
                 <SvgIllustrativeFileSelected />
-                <SelectedFileInfoHeading variant="t100">selected</SelectedFileInfoHeading>
-                {acceptedFiles.length !== 0 && <Text variant="t200">{acceptedFiles[0].name}</Text>}
+                <SelectedFileInfoHeading as="span" variant="t100">
+                  selected
+                </SelectedFileInfoHeading>
+                {acceptedFiles.length !== 0 && (
+                  <Text as="span" variant="t200">
+                    {acceptedFiles[0].name}
+                  </Text>
+                )}
               </SelectedFileInfoInnerContainer>
             </SelectedFileInfo>
           )
@@ -158,12 +164,14 @@ export const FileSelect: FC<FileSelectProps> = ({
         ) : (
           <InnerContainer key={item} style={style} isLoading={isLoading}>
             {fileType === 'video' ? <SvgIllustrativeVideo /> : <SvgIllustrativeImage />}
-            <Title variant="h400">{title}</Title>
+            <Title as="span" variant="h400">
+              {title}
+            </Title>
             <Paragraph variant="t200" as="p" color="default">
               {paragraph}
             </Paragraph>
             <ButtonsGroup>
-              <DragDropText variant="t100" color="default">
+              <DragDropText as="span" variant="t100" color="default">
                 Drag and drop or
               </DragDropText>
               <Button size="medium" onClick={() => open()} icon={<SvgActionUpload />}>

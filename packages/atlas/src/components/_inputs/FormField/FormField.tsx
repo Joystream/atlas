@@ -102,7 +102,7 @@ export const FormField = memo(
                     </label>
                   )}
                   {optional && (
-                    <OptionalText variant="t200" color="default">
+                    <OptionalText as="span" variant="t200" color="default">
                       (optional)
                     </OptionalText>
                   )}
@@ -112,12 +112,12 @@ export const FormField = memo(
               {description &&
                 (description instanceof Array ? (
                   description.map((p, idx) => (
-                    <FormFieldDescription color="default" key={idx} variant="t200">
+                    <FormFieldDescription as="span" color="default" key={idx} variant="t200">
                       {p}
                     </FormFieldDescription>
                   ))
                 ) : (
-                  <FormFieldDescription color="default" variant="t200">
+                  <FormFieldDescription as="span" color="default" variant="t200">
                     {description}
                   </FormFieldDescription>
                 ))}
@@ -131,7 +131,7 @@ export const FormField = memo(
           {error ? (
             <FormFieldFooter>
               <StyledSvgActionWarning />
-              <Text variant="t100" color="error">
+              <Text as="span" variant="t100" color="error">
                 {error}
               </Text>
             </FormFieldFooter>

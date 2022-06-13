@@ -308,7 +308,9 @@ export const NftTileDetails: FC<NftTileDetailsProps> = ({
       {loading ? (
         <SkeletonLoader width="55.6%" height={24} />
       ) : (
-        <Title variant={tileSize === 'medium' ? 'h400' : 'h300'}>{title}</Title>
+        <Title as="h3" variant={tileSize === 'medium' ? 'h400' : 'h300'}>
+          {title}
+        </Title>
       )}
       <Details>{getDetails}</Details>
     </Content>
@@ -324,17 +326,18 @@ type DetailsContentProps = {
 }
 const DetailsContent: FC<DetailsContentProps> = memo(({ tileSize, caption, icon, content, secondary }) => (
   <div>
-    <Text variant={tileSize === 'medium' ? 't200' : 't100'} color="default">
+    <Text as="span" variant={tileSize === 'medium' ? 't200' : 't100'} color="default">
       {caption}
     </Text>
     <DetailsContentWrapper secondary={secondary}>
       {icon}{' '}
       {typeof content === 'string' ? (
-        <Text variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'default' : undefined}>
+        <Text as="span" variant={tileSize === 'medium' ? 'h300' : 'h200'} color={secondary ? 'default' : undefined}>
           {content}
         </Text>
       ) : (
         <NumberFormat
+          as="span"
           value={content}
           format="short"
           variant={tileSize === 'medium' ? 'h300' : 'h200'}

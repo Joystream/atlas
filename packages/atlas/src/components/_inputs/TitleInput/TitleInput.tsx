@@ -72,11 +72,11 @@ export const TitleInput = forwardRef<HTMLTextAreaElement, TitleInputProps>(
           ref={ref}
         />
         <TitleAreaInfo visible={footerVisible || error || !!value?.length}>
-          <MinMaxChars variant="t100">
+          <MinMaxChars as="span" variant="t100">
             Min {min} chars • Max {max} chars
           </MinMaxChars>
-          <CounterText variant="t100">
-            <CharactersCounter hasValue={!!value?.length} variant="t100">
+          <CounterText as="span" variant="t100">
+            <CharactersCounter as="span" hasValue={!!value?.length} variant="t100">
               {value?.length || 0} &nbsp;
             </CharactersCounter>
             / {max}

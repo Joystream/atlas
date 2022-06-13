@@ -87,7 +87,7 @@ export const VideoHero: FC<VideoHeroProps> = ({
                 >
                   {videoHeroData ? (
                     <Link to={absoluteRoutes.viewer.video(videoHeroData.video?.id)}>
-                      <TitleText isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
+                      <TitleText as="h1" isCategory={isCategory} variant={smMatch ? 'h700' : 'h500'}>
                         {videoHeroData.heroTitle}
                       </TitleText>
                     </Link>

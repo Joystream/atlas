@@ -144,7 +144,9 @@ const ImageCropModalComponent: ForwardRefRenderFunction<ImageCropModalImperative
       >
         <AlignInfoContainer>
           <SvgActionPan />
-          <AlignInfo variant="t200">Drag and adjust image position</AlignInfo>
+          <AlignInfo as="span" variant="t200">
+            Drag and adjust image position
+          </AlignInfo>
         </AlignInfoContainer>
         {editedImageHref && (
           <CropContainer rounded={imageType === 'avatar'} disabled={cropEditDisabled}>

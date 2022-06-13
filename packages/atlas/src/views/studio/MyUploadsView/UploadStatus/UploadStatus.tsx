@@ -210,7 +210,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     if (uploadStatus?.lastStatus === 'error') {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="t200" color="default" size={size}>
+          <StatusText as="span" variant="t200" color="default" size={size}>
             {failedStatusText}
           </StatusText>
           <RetryButton size="small" variant="secondary" icon={<SvgActionUpload />} onClick={handleChangeHost}>
@@ -222,7 +222,7 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
     if (!uploadStatus?.lastStatus) {
       return (
         <FailedStatusWrapper>
-          <StatusText variant="t200" color="default" size={size}>
+          <StatusText as="span" variant="t200" color="default" size={size}>
             {failedStatusText}
           </StatusText>
           <div {...getRootProps()}>
@@ -272,21 +272,23 @@ export const UploadStatus: FC<UploadStatusProps> = ({ isLast = false, asset, siz
           <FileInfo size={size}>
             <FileInfoType warning={isReconnecting && size === 'compact'}>
               {isVideo ? <SvgActionVideoFile /> : <SvgActionImageFile />}
-              <Text variant="t200">{fileTypeText}</Text>
+              <Text as="span" variant="t200">
+                {fileTypeText}
+              </Text>
             </FileInfoType>
             {size === 'compact' && isReconnecting ? (
-              <Text variant="t200" color="default">
+              <Text as="span" variant="t200" color="default">
                 Trying to reconnect...({uploadStatus.retries})
               </Text>
             ) : (
               <FileInfoDetails size={size}>
                 {assetDimension && (
-                  <Text variant="t200" color="default">
+                  <Text as="span" variant="t200" color="default">
                     {assetDimension}
                   </Text>
                 )}
                 {assetSize && (
-                  <Text variant="t200" color="default">
+                  <Text as="span" variant="t200" color="default">
                     {assetSize}
                   </Text>
                 )}

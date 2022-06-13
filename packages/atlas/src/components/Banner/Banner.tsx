@@ -28,7 +28,9 @@ export const Banner: FC<BannerProps> = ({ title, description, className, icon, i
       {title && (
         <BannerHeader>
           {icon && <IconWrapper>{icon}</IconWrapper>}
-          <BannerText variant="h400">{title}</BannerText>
+          <BannerText as="h3" variant="h400">
+            {title}
+          </BannerText>
           {dismissable && (
             <CloseButton
               icon={<SvgActionClose />}

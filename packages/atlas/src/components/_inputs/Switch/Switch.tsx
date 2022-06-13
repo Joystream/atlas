@@ -26,7 +26,11 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           />
           <SwitchSlider />
         </SwitchWrapper>
-        {label && <LabelText variant="t200">{label}</LabelText>}
+        {label && (
+          <LabelText as="span" variant="t200">
+            {label}
+          </LabelText>
+        )}
       </SwitchLabel>
     )
   }

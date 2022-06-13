@@ -49,7 +49,9 @@ export const NewNftSales: FC = () => {
   return (
     <section>
       <NftHeader>
-        <Text variant="h500">New NFTs on sale</Text>
+        <Text as="h2" variant="h500">
+          New NFTs on sale
+        </Text>
         <Button
           icon={<SvgActionChevronR />}
           iconPlacement="right"

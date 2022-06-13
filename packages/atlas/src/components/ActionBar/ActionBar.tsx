@@ -44,8 +44,8 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
         <FeeContainer>
-          <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>
-            Fee: <NumberFormat format="short" withToken value={fee ?? 0} />
+          <StyledPrimaryText as="span" variant={smMatch ? 'h400' : 'h200'}>
+            Fee: <NumberFormat as="span" format="short" withToken value={fee ?? 0} />
           </StyledPrimaryText>
           <StyledInformation
             multiline
@@ -57,7 +57,7 @@ export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
         </FeeContainer>
         {infoBadge ? (
           <DraftsBadgeContainer>
-            <Text align="right" variant={smMatch ? 't200' : 't100'} color="default">
+            <Text as="span" align="right" variant={smMatch ? 't200' : 't100'} color="default">
               {infoBadge?.text}
             </Text>
             <StyledInformation multiline placement="top-end" {...infoBadge.tooltip} />

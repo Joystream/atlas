@@ -233,9 +233,15 @@ export const ChannelView: FC = () => {
           <TitleContainer>
             {channel ? (
               <>
-                <Title variant={smMatch ? 'h700' : 'h600'}>{channel.title}</Title>
-                <SubTitle variant="t300" color="default">
-                  {channel.follows ? <NumberFormat value={channel.follows} format="short" variant="t300" /> : 0}{' '}
+                <Title as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                  {channel.title}
+                </Title>
+                <SubTitle as="p" variant="t300" color="default">
+                  {channel.follows ? (
+                    <NumberFormat as="span" value={channel.follows} format="short" variant="t300" />
+                  ) : (
+                    0
+                  )}{' '}
                   Followers
                 </SubTitle>
               </>

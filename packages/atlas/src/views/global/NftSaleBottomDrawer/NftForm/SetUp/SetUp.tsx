@@ -149,8 +149,10 @@ export const SetUp: FC<SetUpProps> = ({
 
   return (
     <>
-      <Header variant="h500">{selectedType && headerText[selectedType].header}</Header>
-      <Text variant="t300" color="default">
+      <Header as="h1" variant="h500">
+        {selectedType && headerText[selectedType].header}
+      </Header>
+      <Text as="p" variant="t300" color="default">
         {selectedType && headerText[selectedType].caption}
       </Text>
       <StyledForm onSubmit={handleSubmit}>
@@ -164,7 +166,7 @@ export const SetUp: FC<SetUpProps> = ({
                 !!buyNowPrice && (
                   <Pill
                     variant="overlay"
-                    label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                    label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
                   />
                 )
               }
@@ -256,14 +258,16 @@ export const SetUp: FC<SetUpProps> = ({
             </AuctionDatePickerWrapper>
             {numberOfBlocks > 0 && (
               <DaysSummary>
-                <Text variant="t200-strong" color="muted">
+                <Text as="span" variant="t200-strong" color="muted">
                   Total:
                 </Text>
                 &nbsp;
-                <Text variant="t200-strong">{totalDaysAndHours}</Text>
+                <Text as="span" variant="t200-strong">
+                  {totalDaysAndHours}
+                </Text>
                 &nbsp;
-                <Text variant="t200-strong" color="default">
-                  / <NumberFormat color="default" value={numberOfBlocks} /> blocks
+                <Text as="span" variant="t200-strong" color="default">
+                  / <NumberFormat as="span" color="default" value={numberOfBlocks} /> blocks
                 </Text>
                 <DaysSummaryInfo
                   text="On blockchain, duration is expressed in number of blocks"
@@ -292,7 +296,7 @@ export const SetUp: FC<SetUpProps> = ({
                   !!startingPrice && (
                     <Pill
                       variant="overlay"
-                      label={<NumberFormat format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(startingPrice ?? 0) ?? 0} />}
                     />
                   )
                 }
@@ -324,7 +328,7 @@ export const SetUp: FC<SetUpProps> = ({
                   !!buyNowPrice && (
                     <Pill
                       variant="overlay"
-                      label={<NumberFormat format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
+                      label={<NumberFormat as="span" format="dollar" value={convertToUSD(buyNowPrice ?? 0) ?? 0} />}
                     />
                   )
                 }

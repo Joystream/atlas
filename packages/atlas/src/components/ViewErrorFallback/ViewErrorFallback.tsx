@@ -36,8 +36,10 @@ export const ViewErrorFallback: FC<ViewErrorFallbackProps> = ({ onResetClick }) 
     <Container>
       <AnimatedError />
       <Message>
-        <Header variant="h600">Oops! An error occurred.</Header>
-        <Text variant="t300" color="default">
+        <Header as="h1" variant="h600">
+          Oops! An error occurred.
+        </Header>
+        <Text as="p" variant="t300" color="default">
           Something bad happened and the app broke. This has been logged and we&apos;ll try to resolve it as soon as
           possible. You can find support in our Discord community.
         </Text>

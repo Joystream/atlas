@@ -84,12 +84,14 @@ export const MembershipInfo: FC<MembershipInfoProps> = ({
               {loading ? (
                 <SkeletonLoader width={200} height={smMatch ? 56 : 40} bottomSpace={8} />
               ) : (
-                <StyledHandle variant={smMatch ? 'h700' : 'h600'}>{handle || '\xa0'}</StyledHandle>
+                <StyledHandle as="h1" variant={smMatch ? 'h700' : 'h600'}>
+                  {handle || '\xa0'}
+                </StyledHandle>
               )}
               {loading || !address ? (
                 <SkeletonLoader width={140} height={24} />
               ) : (
-                <StyledText variant="t300" color="default" onClick={handleCopyAddress}>
+                <StyledText as="p" variant="t300" color="default" onClick={handleCopyAddress}>
                   {shortenAddress(address, 6, 4)}
                   <Tooltip text="Copy account address" placement="top">
                     {copyButtonClicked ? <StyledSvgActionCheck /> : <StyledSvgActionCopy />}

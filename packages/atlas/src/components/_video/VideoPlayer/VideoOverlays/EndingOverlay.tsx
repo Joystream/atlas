@@ -127,10 +127,12 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
           >
             <VideoThumbnail src={thumbnailUrl} />
             <VideoInfo>
-              <Text variant={mdMatch ? 't300' : 't200'} color="default">
+              <Text as="span" variant={mdMatch ? 't300' : 't200'} color="default">
                 Up next
               </Text>
-              <Heading variant={mdMatch ? 'h500' : 'h400'}>{randomNextVideo.title}</Heading>
+              <Heading as="h3" variant={mdMatch ? 'h500' : 'h400'}>
+                {randomNextVideo.title}
+              </Heading>
               <StyledChannelLink
                 onClick={stopPropagationx}
                 id={channelId}
@@ -165,7 +167,7 @@ export const EndingOverlay: FC<EndingOverlayProps> = ({
         <Container>
           <InnerContainer>
             <VideoInfo noNextVideo>
-              <SubHeading variant={mdMatch ? 't300' : 't200'} color="default">
+              <SubHeading as="span" variant={mdMatch ? 't300' : 't200'} color="default">
                 You’ve finished watching a video from
               </SubHeading>
               <StyledChannelLink

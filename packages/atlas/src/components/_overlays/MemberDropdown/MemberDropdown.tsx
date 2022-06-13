@@ -182,13 +182,15 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                       <StyledAvatar size="fill" assetUrl={avatarUrl} loading={avatarLoading} />
                       <div>
                         {/* Using invisible unicode character ZERO WIDTH NON-JOINER (U+200C) to preserve the space while member handle loads */}
-                        <MemberHandleText variant="h400">{activeMembership?.handle ?? '‌‌ '}</MemberHandleText>
+                        <MemberHandleText as="span" variant="h400">
+                          {activeMembership?.handle ?? '‌‌ '}
+                        </MemberHandleText>
                         <BalanceContainer>
                           {accountBalance !== undefined ? (
                             <>
                               <UserBalance>
                                 <JoyTokenIcon size={16} variant="regular" />
-                                <NumberFormat variant="t200-strong" value={accountBalance} format="short" />
+                                <NumberFormat as="span" variant="t200-strong" value={accountBalance} format="short" />
                               </UserBalance>
                             </>
                           ) : (
@@ -240,7 +242,7 @@ export const MemberDropdown = forwardRef<HTMLDivElement, MemberDropdownProps>(
                   </SectionContainer>
                   {publisher && (
                     <SectionContainer>
-                      <ChannelsSectionTitle variant="t100" color="default">
+                      <ChannelsSectionTitle as="span" variant="t100" color="default">
                         Your channels
                       </ChannelsSectionTitle>
                       {activeMembership?.channels.map((channel) => (

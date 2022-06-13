@@ -8,7 +8,7 @@ export type TextProps = {
   variant: TextVariant
   className?: string
   clampAfterLine?: number
-  as?: keyof JSX.IntrinsicElements
+  as: keyof JSX.IntrinsicElements
 } & TextBaseProps &
   DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
 

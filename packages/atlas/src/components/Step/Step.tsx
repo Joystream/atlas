@@ -74,14 +74,20 @@ export const Step = forwardRef<HTMLDivElement, StepProps>(
             </ProgressContainer>
           ) : (
             <StepNumber stepVariant={variant}>
-              {variant === 'completed' || disabled ? <SvgActionCheck /> : <Text variant="t200">{number}</Text>}
+              {variant === 'completed' || disabled ? (
+                <SvgActionCheck />
+              ) : (
+                <Text as="span" variant="t200">
+                  {number}
+                </Text>
+              )}
             </StepNumber>
           )}
           <StepDetails>
-            <Overhead variant="t100" color="default">
+            <Overhead as="span" variant="t100" color="default">
               Step {number}
             </Overhead>
-            <StepTitle variant="t100-strong" color={variant !== 'current' ? 'default' : undefined}>
+            <StepTitle as="span" variant="t100-strong" color={variant !== 'current' ? 'default' : undefined}>
               {title}
             </StepTitle>
           </StepDetails>

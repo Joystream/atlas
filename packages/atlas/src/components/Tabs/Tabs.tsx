@@ -136,6 +136,7 @@ export const Tabs: FC<TabsProps> = memo(
               ref={selected === idx ? tabRef : null}
             >
               <Text
+                as="span"
                 color={selected !== idx ? 'default' : undefined}
                 variant={selected === idx ? 't200-strong' : 't200'}
                 align="center"

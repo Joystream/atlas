@@ -43,9 +43,13 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
 
   return (
     <>
-      <Header variant="h500">Review listing terms</Header>
+      <Header as="h1" variant="h500">
+        Review listing terms
+      </Header>
       <Divider />
-      <Text variant="h400">Listing terms</Text>
+      <Text as="h2" variant="h400">
+        Listing terms
+      </Text>
       <Row>
         <Title>
           <TitleText>Listing type</TitleText>
@@ -72,7 +76,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
             <StyledInformation text="Only bids higher than this value will be accepted" placement="top" multiline />
           </Title>
           <Description>
-            <NumberFormat value={formData.startingPrice} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.startingPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -91,7 +95,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
             />
           </Title>
           <Description>
-            <NumberFormat value={formData.buyNowPrice} variant="h400" withToken />
+            <NumberFormat as="span" value={formData.buyNowPrice} variant="h400" withToken />
           </Description>
         </Row>
       )}
@@ -139,8 +143,8 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
               </Title>
               <Description>
                 <DescriptionText>{totalDaysAndHours}</DescriptionText>
-                <Text variant="h400" color="default">
-                  &nbsp;/ <NumberFormat value={durationBlocks} variant="h400" /> blocks
+                <Text as="span" variant="h400" color="default">
+                  &nbsp;/ <NumberFormat as="span" value={durationBlocks} variant="h400" /> blocks
                 </Text>
               </Description>
             </Row>
@@ -165,7 +169,9 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
         </WhiteListRow>
       )}
       <Divider />
-      <Text variant="h400">Transaction</Text>
+      <Text as="h2" variant="h400">
+        Transaction
+      </Text>
       <Row>
         <Title>
           <TitleText>Fee</TitleText>
@@ -176,7 +182,7 @@ export const AcceptTerms: FC<AcceptTermsProps> = ({ selectedType, formData }) =>
           />
         </Title>
         <Description>
-          <NumberFormat value={0} format="short" withToken variant="h400" />
+          <NumberFormat as="span" value={0} format="short" withToken variant="h400" />
         </Description>
       </Row>
     </>
@@ -189,9 +195,13 @@ export const MemberWithResolvedAvatar: FC<{ member: BasicMembershipFieldsFragmen
 }
 
 export const TitleText: FC<PropsWithChildren> = ({ children }) => (
-  <Text variant="h300" color="default">
+  <Text as="span" variant="h300" color="default">
     {children}
   </Text>
 )
 
-export const DescriptionText: FC<PropsWithChildren> = ({ children }) => <Text variant="h400">{children}</Text>
+export const DescriptionText: FC<PropsWithChildren> = ({ children }) => (
+  <Text as="span" variant="h400">
+    {children}
+  </Text>
+)

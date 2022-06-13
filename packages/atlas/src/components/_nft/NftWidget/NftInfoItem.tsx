@@ -29,7 +29,7 @@ export const NftInfoItem: FC<NftInfoItemProps> = ({ size, label, content, second
   }
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" color="default">
+      <Label as="span" variant="h100" color="default">
         {label}
       </Label>
       <InfoItemContent data-size={size}>{content}</InfoItemContent>
@@ -73,7 +73,7 @@ export const NftTimerItem: FC<{ size: Size; time?: Date }> = ({ size, time }) =>
 
   return (
     <InfoItemContainer data-size={size}>
-      <Label variant="h100" color="default">
+      <Label as="span" variant="h100" color="default">
         Auction ends in
       </Label>
       <InfoItemContent data-size={size}>

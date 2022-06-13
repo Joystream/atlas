@@ -74,7 +74,13 @@ export const ExpandableChannelsList: FC<ExpandableChannelsListProps> = ({
       <GridHeadingContainer>
         {title && (
           <TitleContainer>
-            {loading ? <SkeletonLoader height={23} width={250} /> : <Text variant="h500">{title}</Text>}
+            {loading ? (
+              <SkeletonLoader height={23} width={250} />
+            ) : (
+              <Text as="h2" variant="h500">
+                {title}
+              </Text>
+            )}
             {languageSelector && (
               <LanguageSelectWrapper>
                 <Select items={languages} value={selectedLanguage} size="medium" onChange={handleLanguageSelect} />

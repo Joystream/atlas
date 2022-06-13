@@ -93,7 +93,9 @@ export const ControlsIndicator: FC<ControlsIndicatorProps> = ({ player, isLoadin
         <ControlsIndicatorWrapper>
           <ControlsIndicatorIconWrapper>{indicator?.icon}</ControlsIndicatorIconWrapper>
           <ControlsIndicatorTooltip>
-            <Text variant="t100">{indicator?.description}</Text>
+            <Text as="span" variant="t100">
+              {indicator?.description}
+            </Text>
           </ControlsIndicatorTooltip>
         </ControlsIndicatorWrapper>
       </CSSTransition>

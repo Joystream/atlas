@@ -39,7 +39,9 @@ export const ProgressDrawer: FC<ProgressDrawerProps> = ({ steps, className }) =>
                   <SvgActionCheck />
                 </CSSTransition>
               </StepState>
-              <Text variant="t200">{step.title}</Text>
+              <Text as="span" variant="t200">
+                {step.title}
+              </Text>
             </StepInnerContainer>
             <CSSTransition in={!step.completed} timeout={100} classNames={transitions.names.fade} unmountOnExit>
               <SvgActionChevronR />
@@ -51,7 +53,7 @@ export const ProgressDrawer: FC<ProgressDrawerProps> = ({ steps, className }) =>
         <StepsProgressContainer>
           <CircularProgresaBarContainer>
             <StyledCircularProgress value={stepsCompletedNumber} maxValue={steps.length} />
-            <StepsCompletedText variant="t200">
+            <StepsCompletedText as="span" variant="t200">
               {stepsCompletedNumber}/{steps.length}
             </StepsCompletedText>
           </CircularProgresaBarContainer>

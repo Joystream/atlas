@@ -45,14 +45,14 @@ export const ChangePriceDialog: FC<ChangePriceDialogProps> = ({ onModalClose, is
       }}
     >
       <>
-        <Text variant="t200" color="default">
+        <Text as="p" variant="t200" color="default">
           You can update the price of this NFT anytime.
         </Text>
         <StyledTextField
           type="text"
           onChange={(event) => setPrice(Number(event.target.value))}
           nodeStart={<JoyTokenIcon size={24} variant="gray" />}
-          nodeEnd={<Pill label={<NumberFormat format="dollar" value={convertToUSD(price ?? 0) ?? 0} />} />}
+          nodeEnd={<Pill label={<NumberFormat as="span" format="dollar" value={convertToUSD(price ?? 0) ?? 0} />} />}
         />
       </>
     </DialogModal>

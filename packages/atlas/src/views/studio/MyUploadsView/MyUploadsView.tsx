@@ -49,7 +49,9 @@ export const MyUploadsView: FC = () => {
   return (
     <UploadsContainer>
       {headTags}
-      <StyledText variant="h700">My uploads</StyledText>
+      <StyledText as="h1" variant="h700">
+        My uploads
+      </StyledText>
       {isSyncing ? (
         placeholderItems
       ) : hasUploads ? (

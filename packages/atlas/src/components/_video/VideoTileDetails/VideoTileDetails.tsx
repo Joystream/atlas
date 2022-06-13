@@ -85,7 +85,7 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
               <SkeletonLoader height={24} width="60%" />
             ) : (
               <LinkWrapper to={videoHref}>
-                <VideoTitle onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
+                <VideoTitle as="h3" onClick={onVideoTitleClick} variant={size === 'medium' ? 'h400' : 'h300'}>
                   {videoTitle}
                 </VideoTitle>
               </LinkWrapper>
@@ -111,7 +111,8 @@ export const VideoTileDetails: FC<VideoTileDetailsProps> = ({
                         ? videoSubTitle
                         : createdAt && (
                             <>
-                              {formatVideoDate(createdAt)} • <Views value={views ?? 0} format="short" color="default" />
+                              {formatVideoDate(createdAt)} •{' '}
+                              <Views as="span" value={views ?? 0} format="short" color="default" />
                               &nbsp;views
                             </>
                           )}

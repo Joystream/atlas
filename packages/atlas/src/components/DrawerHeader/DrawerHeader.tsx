@@ -18,7 +18,9 @@ export const DrawerHeader: FC<DrawerHeaderProps> = memo(({ onCloseClick, title, 
       <TabContainer>
         <Tab>
           {label && <Pill label={label} size="small" />}
-          <TabTitle variant="t200">{title}</TabTitle>
+          <TabTitle as="span" variant="t200">
+            {title}
+          </TabTitle>
         </Tab>
       </TabContainer>
       <Button variant="tertiary" onClick={onCloseClick} icon={<SvgActionClose />} />

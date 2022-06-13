@@ -8,8 +8,12 @@ export const PlaceHolder: FC = () => {
   return (
     <PlaceHolderWrapper>
       <StyledSvgActionInformative />
-      <PlaceholderTitle variant="t100-strong">This is a placeholder for children.</PlaceholderTitle>
-      <PlaceholderDescription variant="t100">Children will be placed here</PlaceholderDescription>
+      <PlaceholderTitle as="p" variant="t100-strong">
+        This is a placeholder for children.
+      </PlaceholderTitle>
+      <PlaceholderDescription as="p" variant="t100">
+        Children will be placed here
+      </PlaceholderDescription>
     </PlaceHolderWrapper>
   )
 }

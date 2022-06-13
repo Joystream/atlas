@@ -44,7 +44,9 @@ export const PlayerControlButton: FC<PlayerControlButtonProps> = ({
       {children}
       {!isDisabled && (
         <ControlButtonTooltip tooltipPosition={tooltipPosition}>
-          <ControlButtonTooltipText variant="t100">{tooltipText}</ControlButtonTooltipText>
+          <ControlButtonTooltipText as="span" variant="t100">
+            {tooltipText}
+          </ControlButtonTooltipText>
         </ControlButtonTooltip>
       )}
     </ControlButton>

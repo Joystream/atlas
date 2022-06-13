@@ -45,12 +45,15 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         {video ? (
           video?.description && (
             <>
-              <DescriptionTitle variant="h100">Description</DescriptionTitle>
+              <DescriptionTitle as="h2" variant="h100">
+                Description
+              </DescriptionTitle>
               <DescriptionBody detailsExpanded={detailsExpanded}>
                 {/* div below allows line-clamp to work properly for nested paragraphs */}
                 <div>
                   {video.description?.split('\n').map((line, idx) => (
                     <DescriptionCopy
+                      as="p"
                       variant={mdMatch ? 't300' : 't200'}
                       color="default"
                       key={idx}
@@ -76,9 +79,11 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         <GridItem>
           {video ? (
             <>
-              <DescriptionTitle variant="h100">License</DescriptionTitle>
+              <DescriptionTitle as="h2" variant="h100">
+                License
+              </DescriptionTitle>
               {foundLicense && (
-                <Text variant={mdMatch ? 't300' : 't200'} color="default">
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">
                   {foundLicense.name}
                 </Text>
               )}
@@ -93,10 +98,12 @@ export const VideoDetails: FC<VideoDetailsProps> = ({ video, categoryData }) => 
         <CategoryWrapper>
           {video ? (
             <>
-              <DescriptionTitle variant="h100">Category</DescriptionTitle>
+              <DescriptionTitle as="h2" variant="h100">
+                Category
+              </DescriptionTitle>
               <Category to={absoluteRoutes.viewer.category(categoryData?.id)}>
                 {categoryData?.icon}
-                <Text variant={mdMatch ? 't300' : 't200'} color="default">
+                <Text as="p" variant={mdMatch ? 't300' : 't200'} color="default">
                   {video?.category?.name}
                 </Text>
               </Category>

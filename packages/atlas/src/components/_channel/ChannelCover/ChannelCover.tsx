@@ -41,7 +41,7 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
           <EditableControls>
             <EditCoverDesktopOverlay onClick={onCoverEditClick}>
               <SvgActionImage />
-              <EditButtonMessage variant="t200-strong">{`${
+              <EditButtonMessage as="span" variant="t200-strong">{`${
                 assetUrl ? 'Edit ' : 'Add '
               } cover image`}</EditButtonMessage>
             </EditCoverDesktopOverlay>
@@ -60,7 +60,7 @@ export const ChannelCover: FC<ChannelCoverProps> = ({
               ) : hasCoverUploadFailed ? (
                 <FailedUploadContainer>
                   <StyledSvgIllustrativeFileFailed />
-                  <Text variant="t100" color="default">
+                  <Text as="span" variant="t100" color="default">
                     Failed upload
                   </Text>
                 </FailedUploadContainer>

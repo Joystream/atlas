@@ -254,16 +254,18 @@ export const VideoView: FC = () => {
       {headTags}
       <TitleContainer>
         {video ? (
-          <TitleText variant={mdMatch ? 'h500' : 'h400'}>{video.title}</TitleText>
+          <TitleText as="h1" variant={mdMatch ? 'h500' : 'h400'}>
+            {video.title}
+          </TitleText>
         ) : (
           <SkeletonLoader height={mdMatch ? 56 : 32} width={400} />
         )}
         <VideoUtils>
-          <Meta variant={mdMatch ? 't300' : 't100'} color="default">
+          <Meta as="p" variant={mdMatch ? 't300' : 't100'} color="default">
             {video ? (
               <>
-                {formatVideoDate(video.createdAt)} • <NumberFormat format="full" value={video.views} color="default" />{' '}
-                views
+                {formatVideoDate(video.createdAt)} •{' '}
+                <NumberFormat as="span" format="full" value={video.views} color="default" /> views
               </>
             ) : (
               <SkeletonLoader height={24} width={200} />

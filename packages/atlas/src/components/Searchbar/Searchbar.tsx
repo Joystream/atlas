@@ -234,7 +234,7 @@ export const Searchbar = forwardRef<HTMLDivElement, SearchbarProps>(
             {!query && !searchOpen && (
               <>
                 <SearchButton icon={<SvgActionSearch />} variant="tertiary" onClick={onClick} />
-                <SearchHelper variant="t100" color="default">
+                <SearchHelper as="span" variant="t100" color="default">
                   Press <ShortcutIndicator>/</ShortcutIndicator>
                 </SearchHelper>
               </>

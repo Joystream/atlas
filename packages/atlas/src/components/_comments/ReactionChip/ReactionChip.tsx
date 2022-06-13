@@ -43,7 +43,7 @@ export const ReactionChip: FC<ReactionChipProps> = ({
         {isProcessing ? (
           <Loader variant="xsmall" />
         ) : (
-          <NumberFormat variant="t100" color={!active ? 'default' : undefined} format="short" value={count} />
+          <NumberFormat as="span" variant="t100" color={!active ? 'default' : undefined} format="short" value={count} />
         )}
       </ReactionChipButton>
     </div>

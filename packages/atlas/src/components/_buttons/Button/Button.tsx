@@ -76,7 +76,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
           </ButtonIconWrapper>
         )}
         {children && (
-          <Text variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
+          <Text as="span" variant={BUTTON_SIZE_TO_TEXT_VARIANT[size]} color="inherit">
             {children}
           </Text>
         )}

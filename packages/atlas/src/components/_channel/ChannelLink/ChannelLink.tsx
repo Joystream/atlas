@@ -91,7 +91,7 @@ export const ChannelLink: FC<ChannelLinkProps> = ({
             {displayedChannel ? (
               <TitleWrapper followButton={followButton}>
                 <StyledLink onClick={onClick} to={absoluteRoutes.viewer.channel(id)} disabled={!id || noLink}>
-                  <StyledText variant={_textVariant} isSecondary={!!textSecondary}>
+                  <StyledText as="span" variant={_textVariant} isSecondary={!!textSecondary}>
                     {customTitle || displayedChannel?.title}
                   </StyledText>
                   {followButton && (

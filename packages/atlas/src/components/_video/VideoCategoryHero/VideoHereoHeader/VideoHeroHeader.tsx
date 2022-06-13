@@ -33,7 +33,9 @@ export const VideoHeroHeader: FC<VideoHeroHeaderProps> = ({ loading, icon, title
           {!loading ? (
             <>
               {icon}
-              <VideoHeroHeaderTitle variant="h400">{title}</VideoHeroHeaderTitle>
+              <VideoHeroHeaderTitle as="h1" variant="h400">
+                {title}
+              </VideoHeroHeaderTitle>
             </>
           ) : (
             <SkeletonLoader height={24} width={160} />

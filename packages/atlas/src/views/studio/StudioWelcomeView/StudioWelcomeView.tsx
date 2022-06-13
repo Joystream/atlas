@@ -32,8 +32,10 @@ export const StudioWelcomeView: FC = () => {
       {headTags}
       <StyledContainer>
         <Header>
-          <StyledHero variant="h800">Welcome to Joystream Studio</StyledHero>
-          <SubTitle variant="t300" color="default">
+          <StyledHero as="h1" variant="h800">
+            Welcome to Joystream Studio
+          </StyledHero>
+          <SubTitle as="p" variant="t300" color="default">
             Start your journey as a Joystream content creator. Manage your channels, publish video content, issue NFTs,
             and more!
           </SubTitle>

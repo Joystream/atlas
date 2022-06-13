@@ -15,7 +15,9 @@ export const ErrorOverlay: FC = () => {
         <AnimationWrapper>
           <StyledAnimatedError />
         </AnimationWrapper>
-        <OverlayHeading variant={smMatch ? 'h600' : 'h400'}>Aw, shucks!</OverlayHeading>
+        <OverlayHeading as="h3" variant={smMatch ? 'h600' : 'h400'}>
+          Aw, shucks!
+        </OverlayHeading>
         <OverlayContent as="p" variant={smMatch ? 't300' : 't200'} color="default">
           The video could not be played because the data is corrupted or the encoding is not supported. This issue has
           been logged. If you need support, reach out to our community on Discord.

@@ -76,8 +76,10 @@ export const AccountStep: FC<AccountStepProps> = ({
           <>
             <StyledStepWrapper>
               <AccountStepImg />
-              <StepTitle variant="h500">Create blockchain account</StepTitle>
-              <SubTitle variant="t200" color="default">
+              <StepTitle as="h1" variant="h500">
+                Create blockchain account
+              </StepTitle>
+              <SubTitle as="p" variant="t200" color="default">
                 Use the Polkadot extension to generate your personal keypair. Follow these instructions:
               </SubTitle>
               <OrderedSteps>
@@ -94,7 +96,7 @@ export const AccountStep: FC<AccountStepProps> = ({
             </StyledStepWrapper>
             <StepFooter>
               <BottomBarIcon />
-              <Text variant="t200" color="default">
+              <Text as="span" variant="t200" color="default">
                 Make sure to safely save your seed phrase!
               </Text>
             </StepFooter>
@@ -107,8 +109,10 @@ export const AccountStep: FC<AccountStepProps> = ({
                 <SvgControlsConnect />
                 <StyledJoystreamLogo />
               </IconGroup>
-              <StepTitle variant="h500">Connect account</StepTitle>
-              <StepSubTitle variant="t200" color="default">
+              <StepTitle as="h1" variant="h500">
+                Connect account
+              </StepTitle>
+              <StepSubTitle as="p" variant="t200" color="default">
                 Select Polkadot account which you want to use to manage your new Joystream membership:
               </StepSubTitle>
               <AccountsWrapper>
@@ -149,8 +153,10 @@ export const AccountBar: FC<AccountBarProps> = ({ name, id, onSelect, selectedVa
       <AccountInfo>
         <StyledPolkadotIdenticon id={id} />
         <div>
-          <Text variant="t300-strong">{name}</Text>
-          <AccountAddress color="default" variant="t100">
+          <Text as="span" variant="t300-strong">
+            {name}
+          </Text>
+          <AccountAddress as="span" color="default" variant="t100">
             {id}
           </AccountAddress>
         </div>

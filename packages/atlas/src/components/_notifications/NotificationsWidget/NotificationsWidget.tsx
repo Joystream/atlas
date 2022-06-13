@@ -41,7 +41,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
     <Popover hideOnClick ref={popoverRef} {...rest} onShow={handleShow} onHide={handleHide}>
       <Wrapper>
         <Header>
-          <Text variant="h400">Notifications</Text>
+          <Text as="h3" variant="h400">
+            Notifications
+          </Text>
           <Button variant="secondary" size="small" onClick={() => markNotificationsAsRead(notifications)}>
             Mark all as read
           </Button>
@@ -71,7 +73,9 @@ export const NotificationsWidget: FC<NotificationsWidgetProps> = ({ ...rest }) =
           to={absoluteRoutes.viewer.notifications()}
           onClick={popoverRef.current?.hide}
         >
-          <Text variant="t100">Go to notification center</Text>
+          <Text as="span" variant="t100">
+            Go to notification center
+          </Text>
         </StyledButton>
       </Wrapper>
     </Popover>

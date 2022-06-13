@@ -27,15 +27,19 @@ export const MemberAbout = () => {
       <GridItem colSpan={{ base: 12, sm: 8 }} rowStart={{ base: 2, sm: 1 }}>
         {!!member?.metadata.about && (
           <TextContainer withDivider={!!member?.channels.length}>
-            <Text variant="h500">About me</Text>
-            <Text variant="t300" color="default">
+            <Text as="h2" variant="h500">
+              About me
+            </Text>
+            <Text as="p" variant="t300" color="default">
               {member.metadata.about}
             </Text>
           </TextContainer>
         )}
         {!!member?.channels.length && (
           <div>
-            <Text variant="h500">Channels owned</Text>
+            <Text as="h2" variant="h500">
+              Channels owned
+            </Text>
             <ChannelsOwnedContainerGrid>
               {member?.channels.map((channel) => (
                 <GridItem key={channel.id} colSpan={{ base: 6, lg: 3 }}>
@@ -47,20 +51,29 @@ export const MemberAbout = () => {
         )}
       </GridItem>
       <GridItem colSpan={{ base: 12, sm: 3 }} colStart={{ sm: -4 }}>
-        <DetailsText variant="h500">Details</DetailsText>
+        <DetailsText as="h3" variant="h500">
+          Details
+        </DetailsText>
 
         <Details>
-          <Text variant="t100" color="default">
+          <Text as="p" variant="t100" color="default">
             Join date
           </Text>
-          <Text variant="t300">{member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}</Text>
+          <Text as="span" variant="t300">
+            {member?.createdAt ? formatDate(new Date(member.createdAt)) : ''}
+          </Text>
         </Details>
 
         <Details>
-          <Text variant="t100" color="default">
+          <Text as="p" variant="t100" color="default">
             Num. of channels
           </Text>
-          <NumberFormat format="short" value={member?.channels.length ? member?.channels.length : 0} variant="t300" />
+          <NumberFormat
+            as="span"
+            format="short"
+            value={member?.channels.length ? member?.channels.length : 0}
+            variant="t300"
+          />
         </Details>
 
         <Anchor

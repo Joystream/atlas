@@ -57,7 +57,7 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
       <RadioInput selectedValue={selectedValue?.id} value={bidder.id} onChange={() => onSelect?.(bidder.id, amount)} />
       {xsMatch && <Avatar assetUrl={url} loading={isLoadingAsset} size="small" />}
       <div>
-        <Text variant="h300" color={!selected ? 'default' : undefined} margin={{ bottom: 1 }}>
+        <Text as="p" variant="h300" color={!selected ? 'default' : undefined} margin={{ bottom: 1 }}>
           {bidder?.handle}
         </Text>
         <Text as="p" color="default" variant="t100">
@@ -67,7 +67,7 @@ export const BidRow: FC<BidRowProps> = ({ bidder, createdAt, amount, amountUSD, 
       <Price>
         <TokenPrice>
           <JoyTokenIcon variant={selected ? 'regular' : 'gray'} />
-          <Text variant="h300" margin={{ left: 1 }} color={!selected ? 'default' : undefined}>
+          <Text as="p" variant="h300" margin={{ left: 1 }} color={!selected ? 'default' : undefined}>
             {amount}
           </Text>
         </TokenPrice>

@@ -24,7 +24,11 @@ export const Gallery: FC<GalleryProps> = ({ title, className, seeAllUrl, ...caro
     <Container className={className}>
       <GridHeadingContainer>
         <TitleContainer>
-          {title && <Text variant="h500">{title}</Text>}
+          {title && (
+            <Text as="h2" variant="h500">
+              {title}
+            </Text>
+          )}
           {seeAllUrl && (
             <SeeAllLink
               iconPlacement="left"

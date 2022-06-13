@@ -42,11 +42,17 @@ export const NoConnectionIndicator: FC<NoConnectionIndicatorProps> = ({
         </IconWrapper>
         <TextWrapper>
           {!isConnectedToInternet ? (
-            <Text variant="h400">No network connection</Text>
+            <Text as="span" variant="h400">
+              No network connection
+            </Text>
           ) : (
-            nodeConnectionStatus === 'disconnected' && <Text variant="t200">No node connection</Text>
+            nodeConnectionStatus === 'disconnected' && (
+              <Text as="span" variant="t200">
+                No node connection
+              </Text>
+            )
           )}
-          <Text variant="t200" color="default">
+          <Text as="span" variant="t200" color="default">
             Wait for connection to restore
           </Text>
         </TextWrapper>

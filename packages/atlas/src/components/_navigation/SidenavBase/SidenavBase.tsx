@@ -100,13 +100,13 @@ const SidenavBase: FC<SidenavProps> = ({
             <ButtonGroup>{buttonsContent}</ButtonGroup>
             <LegalLinksWrapper>
               <LegalLink to={absoluteRoutes.legal.termsOfService()} target="_blank">
-                <Text variant="t100" color="inherit">
+                <Text as="span" variant="t100" color="inherit">
                   Terms of Service
                 </Text>
               </LegalLink>
               <span>•</span>
               <LegalLink to={absoluteRoutes.legal.copyright()} target="_blank">
-                <Text variant="t100" color="inherit">
+                <Text as="span" variant="t100" color="inherit">
                   Copyright Policy
                 </Text>
               </LegalLink>

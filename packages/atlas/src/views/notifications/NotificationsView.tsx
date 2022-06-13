@@ -56,7 +56,9 @@ export const NotificationsView = () => {
     <StyledLayoutGrid>
       <GridItem colSpan={{ xxs: 12, md: 10, lg: 8 }} colStart={{ md: 2, lg: 3 }}>
         <Header>
-          <Text variant={smMatch ? 'h700' : 'h600'}>Notifications</Text>
+          <Text as="h1" variant={smMatch ? 'h700' : 'h600'}>
+            Notifications
+          </Text>
           {!!unreadNumber && (
             <>
               <StyledPill label={`${unreadNumber} unread`} />
@@ -93,11 +95,13 @@ export const NotificationsView = () => {
       {selectedNotifications.length > 0 && (
         <FloatingActionBar data-bottom-nav-open={open}>
           <Text
+            as="span"
             variant="t300"
             color="default"
             margin={{ right: smMatch ? 8 : undefined, left: !smMatch ? 4 : undefined }}
           >
-            <NumberFormat value={selectedNotifications.length} format="short" variant="t300" /> item(s) selected
+            <NumberFormat as="span" value={selectedNotifications.length} format="short" variant="t300" /> item(s)
+            selected
           </Text>
           {!smMatch && closeButtonNode}
           <Button size="large" variant="tertiary" onClick={() => selectAllNotifications(notifications)}>
@@ -128,7 +132,7 @@ const NotificationsEmptyFallback = () => {
       <NotificationEmptyRectangle opacity={0.8} />
       <NotificationEmptyRectangleWithText>
         <NotificationEmptyRectangle opacity={0.5} absolute />
-        <Text variant="h500" color="default">
+        <Text as="p" variant="h500" color="default">
           You don’t have any notifications
         </Text>
       </NotificationEmptyRectangleWithText>

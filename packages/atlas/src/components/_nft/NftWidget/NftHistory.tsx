@@ -36,7 +36,9 @@ export const NftHistory: FC<NftHistoryProps> = ({ size, width, historyItems }) =
   return (
     <>
       <NftHistoryHeader data-open={isOpen} data-size={size} onClick={toggleIsOpen}>
-        <Text variant={size === 'small' ? 'h300' : 'h400'}>History</Text>
+        <Text as="h3" variant={size === 'small' ? 'h300' : 'h400'}>
+          History
+        </Text>
         <StyledChevronButton data-open={isOpen} variant="tertiary" icon={<SvgActionChevronB />} />
       </NftHistoryHeader>
       {isOpen && (
@@ -80,7 +82,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
       />
       <TextContainer>
         <CopyContainer>
-          <Text variant={size === 'medium' ? 'h300' : 'h200'} color="default">
+          <Text as="span" variant={size === 'medium' ? 'h300' : 'h200'} color="default">
             {text}
             {' by '}
             <OwnerHandle to={absoluteRoutes.viewer.member(member?.handle)}>
@@ -90,7 +92,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
             </OwnerHandle>
           </Text>
         </CopyContainer>
-        <Text variant="t100" color="default">
+        <Text as="span" variant="t100" color="default">
           {formatDateTime(date)}
         </Text>
       </TextContainer>
@@ -98,7 +100,7 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
         <ValueContainer>
           <JoyPlusIcon>
             <JoyTokenIcon size={16} variant="silver" />
-            <NumberFormat format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
+            <NumberFormat as="span" format="short" value={joyAmount} variant={size === 'medium' ? 'h300' : 'h200'} />
           </JoyPlusIcon>
           <SwitchTransition>
             <CSSTransition
@@ -107,7 +109,14 @@ export const HistoryItem: FC<HistoryItemProps> = ({ size, member, date, joyAmoun
               classNames={transitions.names.fade}
             >
               {dollarValue ? (
-                <NumberFormat format="dollar" variant="t100" color="default" value={dollarValue} align="end" />
+                <NumberFormat
+                  as="span"
+                  format="dollar"
+                  variant="t100"
+                  color="default"
+                  value={dollarValue}
+                  align="end"
+                />
               ) : (
                 '‌'
               )}

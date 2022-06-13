@@ -111,7 +111,7 @@ Playlist.args = {
       element: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <SvgActionPlay />
-          <Text margin={{ left: 2 }} variant="t200-strong">
+          <Text as="span" margin={{ left: 2 }} variant="t200-strong">
             Play all videos
           </Text>
         </div>

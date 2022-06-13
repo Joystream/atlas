@@ -81,11 +81,11 @@ export const AlertDialogModal: FC<AlertDialogModalProps> = ({
               </HeaderIconContainer>
             ))}
           {title && (
-            <Text variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
+            <Text as="h1" variant={smMatch ? 'h500' : 'h400'} margin={{ bottom: 2 }}>
               {title}
             </Text>
           )}
-          <Text variant="t200" color="default">
+          <Text as="p" variant="t200" color="default">
             {description}
           </Text>
         </>
