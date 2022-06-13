@@ -149,6 +149,6 @@ export const getExtrisincStatusDetails = (status: ExtrinsicStatus, errorCode?: E
       }
     }
     default:
-      return {}
+      return null
   }
 }

@@ -63,7 +63,7 @@ export const NftSettlementBottomDrawer: FC = () => {
   const isOpen = currentAction === 'settle'
   return (
     <BottomDrawer isOpen={isOpen} onClose={closeNftAction}>
-      <StyledLottie play={isOpen} loop={false} animationData={confetti} />
+      <StyledLottie play={isOpen} data={confetti} />
       <StyledLimitedContainer>
         <StyledLayoutGrid>
           <GridItem rowStart={{ base: 2, sm: 1 }} colSpan={{ base: 12, sm: 6, md: 5, lg: 4 }} colStart={{ lg: 3 }}>

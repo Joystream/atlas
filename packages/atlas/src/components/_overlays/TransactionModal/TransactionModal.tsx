@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
-import Lottie from 'react-lottie-player'
 import { CSSTransition } from 'react-transition-group'
 
+import { LottiePlayer } from '@/components/LottiePlayer/LottiePlayer'
 import { Text } from '@/components/Text'
 import { SvgActionCheck } from '@/components/_icons'
 import { Dialog } from '@/components/_overlays/Dialog'
@@ -104,11 +104,10 @@ export const TransactionModal: FC<TransactionModalProps> = ({ onClose, status, c
             </Text>
           </PolkadotLogoWrapper>
         </CSSTransition>
-        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && (
-          <Lottie
-            loop={stepDetails?.animation?.loop}
-            animationData={stepDetails?.animation?.data}
-            play
+        {!polkadotLogoVisible && status !== ExtrinsicStatus.Completed && stepDetails && (
+          <LottiePlayer
+            loop={stepDetails.animation.loop}
+            data={stepDetails.animation.data}
             onComplete={() =>
               !stepDetails?.animation?.loop && status === ExtrinsicStatus.Unsigned && setPolkadotLogoVisible(true)
             }

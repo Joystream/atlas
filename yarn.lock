@@ -2619,6 +2619,7 @@ __metadata:
     "@joystream/types": 0.19.3
     "@livesession/sdk": ^1.1.4
     "@loadable/component": ^5.15.2
+    "@lottiefiles/react-lottie-player": ^3.4.7
     "@polkadot/extension-dapp": ~0.40.4
     "@rollup/plugin-babel": ^5.3.1
     "@rollup/plugin-inject": ^4.0.4
@@ -2679,7 +2680,6 @@ __metadata:
     react-hook-form: ^7.32.0
     react-hooks-testing-library: ^0.6.0
     react-intersection-observer: ^9.2.2
-    react-lottie-player: ^1.4.3
     react-merge-refs: ^1.1.0
     react-number-format: ^4.9.3
     react-router: ^6.3.0
@@ -2848,6 +2848,17 @@ __metadata:
   peerDependencies:
     react: ">=16.3.0"
   checksum: dd027f3f9fb684613506fe48dcb656367a13731c139134fb71c2bc1734df4218fdb64e5ca80fa2575fdf52e1be0e0a2ec770f0ca77275706e66d1074d0835401
+  languageName: node
+  linkType: hard
+
+"@lottiefiles/react-lottie-player@npm:^3.4.7":
+  version: 3.4.7
+  resolution: "@lottiefiles/react-lottie-player@npm:3.4.7"
+  dependencies:
+    lottie-web: ^5.7.8
+  peerDependencies:
+    react: 16 - 18
+  checksum: cffabececafbe3cbf09b54c5d2c45fdeed32cf7156fa5cae1ba2f4218048cbef239c23ed19e36b94a1b4b41c4518f77269865b9f7111ab2f4bf1ba2b59f4ef76
   languageName: node
   linkType: hard
 
@@ -14621,10 +14632,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lottie-web@npm:^5.7.6":
-  version: 5.7.13
-  resolution: "lottie-web@npm:5.7.13"
-  checksum: 1b26e88d0e12df10afed9f5c686887ddb30b5cc8ca9d4268b1b0ddc78a794d6d6d7cc8573a87ab51c9d9bd60ac493582b1d002586425df4e5d9c638c682e3c01
+"lottie-web@npm:^5.7.8":
+  version: 5.9.4
+  resolution: "lottie-web@npm:5.9.4"
+  checksum: b7da159779791c92dc45bd7861bf37babef43a7139a6b12d0c1596773fbc338562e4547df766a42ce73516fe82ec790e8ddcebe7d4c9d7fa2ee4d42e0072904c
   languageName: node
   linkType: hard
 
@@ -17615,19 +17626,6 @@ fsevents@^1.2.7:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
-  languageName: node
-  linkType: hard
-
-"react-lottie-player@npm:^1.4.3":
-  version: 1.4.3
-  resolution: "react-lottie-player@npm:1.4.3"
-  dependencies:
-    fast-deep-equal: ^3.1.3
-    lottie-web: ^5.7.6
-    rfdc: ^1.3.0
-  peerDependencies:
-    react: ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: cae46ad1418077512b48aeb9e62b9e25248a3946f71fb8d5d060cc2cb49c59b384e3d1d618a1411c04c6a308091d664261d2a889cb2c13f75cf8443ba27b31c4
   languageName: node
   linkType: hard
 

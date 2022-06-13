@@ -1,12 +1,11 @@
-import styled from '@emotion/styled'
 import { FC } from 'react'
-import Lottie from 'react-lottie-player'
 
 import loaderLargeAnimation from '@/assets/animations/loader-L.json'
 import loaderMediumAnimation from '@/assets/animations/loader-M.json'
 import loaderSmallAnimation from '@/assets/animations/loader-S.json'
 import LoaderXSmallAnimation from '@/assets/animations/loader-XS.json'
 import loaderPlayerAnimation from '@/assets/animations/loader-player.json'
+import { LottiePlayer } from '@/components/LottiePlayer'
 
 type LoaderVariant = 'xlarge' | 'large' | 'compact' | 'medium' | 'small' | 'xsmall' | 'player'
 type LoaderProps = {
@@ -30,12 +29,5 @@ const VARIANT_TO_CONFIG: Record<LoaderVariant, LoaderConfig> = {
 
 export const Loader: FC<LoaderProps> = ({ variant = 'medium', className }) => {
   const config = VARIANT_TO_CONFIG[variant]
-  return <StyledLottie play animationData={config.data} size={config.size} className={className} />
+  return <LottiePlayer data={config.data} size={config.size} className={className} />
 }
-
-const StyledLottie = styled(Lottie, {
-  shouldForwardProp: (prop) => prop !== 'size',
-})<{ size: number }>`
-  width: ${({ size }) => `${size}px`};
-  height: ${({ size }) => `${size}px`};
-`
