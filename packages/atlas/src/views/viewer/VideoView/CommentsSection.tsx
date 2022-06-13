@@ -200,9 +200,8 @@ export const CommentsSection: FC<CommentsSectionProps> = ({ disabled, video, vid
       <CommentsSectionHeader ref={commentsSectionHeaderRef}>
         <Text variant="h400">{loading || !video?.commentsCount ? 'Comments' : `${video.commentsCount} comments`}</Text>
         <Select
-          size="small"
-          labelPosition="left"
-          label={mdMatch ? 'Sort by' : ''}
+          size="medium"
+          inlineLabel={mdMatch ? 'Sort by' : ''}
           value={sortCommentsBy}
           items={COMMENTS_SORT_OPTIONS}
           onChange={handleSorting}

@@ -89,7 +89,7 @@ const ReactToVideo: FC<CommonProps> = ({ videoId }) => {
         value={videoReaction}
         onChange={(value) => value && setVideoReaction(value)}
         items={reactionItems}
-        label="Reaction type"
+        inlineLabel="Reaction type"
       />
       <Button onClick={handleLike}>React</Button>
     </div>
@@ -140,7 +140,7 @@ const ReactToComment: FC<CommonProps> = () => {
         value={commentReaction}
         onChange={(value) => value && setCommentReaction(value)}
         items={reactionItems}
-        label="Reaction type"
+        inlineLabel="Reaction type"
       />
       <Button onClick={handleLike}>React</Button>
     </div>
