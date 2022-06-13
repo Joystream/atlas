@@ -22,20 +22,17 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
   &.${transitions.names.fade}-enter-active {
     transition: opacity ${transitions.timings.loading} ${transitions.easing} 800ms !important;
   }
-  ${media.sm} {
-    padding: ${sizes(4)} ${sizes(8)};
-  }
-  ${media.lg} {
-    padding: ${sizes(4)} ${sizes(8)};
-  }
 
   grid-template:
     'primary-text badge' auto
     'secondary-button primary-button' auto / auto 1fr;
+
   ${media.sm} {
+    padding: ${sizes(4)} ${sizes(8)};
     grid-template: 'primary-text badge secondary-button primary-button' auto / 1fr max-content max-content max-content;
   }
   ${media.lg} {
+    padding: ${sizes(4)} ${sizes(8)};
     grid-template: 'primary-text secondary-text badge secondary-button primary-button' auto / max-content 1fr max-content max-content max-content;
   }
 `
