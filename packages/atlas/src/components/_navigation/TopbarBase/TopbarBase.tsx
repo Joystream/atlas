@@ -16,7 +16,7 @@ export const TopbarBase: FC<TopbarBaseProps> = ({ children, fullLogoNode, logoLi
   const mdMatch = useMediaMatch('md')
 
   return (
-    <Header className={className}>
+    <Header className={className} data-scroll-lock-fill-gap>
       {!noLogo && <LogoLink to={logoLinkUrl}>{mdMatch ? fullLogoNode : <SvgJoystreamLogoShort />}</LogoLink>}
       {children}
     </Header>
