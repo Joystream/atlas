@@ -23,6 +23,11 @@ export default {
     onFocus: { table: { disable: true } },
     onBlur: { table: { disable: true } },
   },
+  args: {
+    disabled: false,
+    error: false,
+    indeterminate: false,
+  },
 } as Meta
 
 const SingleTemplate: Story<CheckboxProps> = (args) => (

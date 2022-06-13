@@ -25,7 +25,6 @@ export const RadioButtonGroup = React.forwardRef<HTMLDivElement, RadioButtonGrou
             error={error}
             name={name}
             key={`radio-button-group-${option.value}`}
-            label="test"
             onChange={onChange}
             selectedValue={value}
             caption={caption || option.caption}

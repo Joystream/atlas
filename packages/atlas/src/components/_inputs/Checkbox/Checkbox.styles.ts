@@ -1,10 +1,10 @@
 import { css } from '@emotion/react'
-import styled from '@emotion/styled/'
+import styled from '@emotion/styled'
 
 import { SvgActionCheck } from '@/components/_icons'
-import { cVar, sizes, transitions } from '@/styles'
+import { cVar, sizes, square, zIndex } from '@/styles'
 
-export const Container = styled.div<CheckboxStateProps>`
+export const Container = styled.div`
   position: relative;
   width: max-content;
   padding: ${sizes(2)};
@@ -12,88 +12,147 @@ export const Container = styled.div<CheckboxStateProps>`
   cursor: pointer;
   border-radius: 100%;
   color: ${cVar('colorCoreNeutral300')};
-  transition: background ${transitions.timings.loading} ${transitions.easing};
+`
 
-  :hover {
-    background: ${({ disabled }) => !disabled && cVar('colorCoreNeutral700Lighten')};
-    box-shadow: ${({ disabled }) => !disabled && cVar('colorCoreNeutral700Lighten')};
+export const Checkmark = styled.div<{ error: boolean }>`
+  ${square('16px')};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all ${cVar('animationTransitionFast')};
+  border: 1px solid ${({ error }) => cVar(error ? 'colorBorderError' : 'colorBorderAlpha')};
+  border-radius: ${cVar('radiusSmall')};
+  position: relative;
+
+  ::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -9px;
+    bottom: -9px;
+    left: -9px;
+    right: -9px;
+    z-index: -1;
+    border-radius: 50%;
   }
 `
 
-const selectedStyles = (props: CheckboxStateProps) =>
-  props.selected
-    ? css`
-        background-color: ${props.selected ? cVar('colorCoreBlue500') : 'transparent'};
-        border: 1px solid ${cVar('colorCoreBlue500')};
-      `
-    : null
-const disabledStyles = (props: CheckboxStateProps) =>
-  props.disabled
-    ? [
-        css`
-          cursor: not-allowed;
-          opacity: 0.5;
-          border: 1px solid ${cVar('colorCoreNeutral300')};
-          background-color: ${cVar('colorCoreNeutral400')};
-        `,
-        props.selected &&
-          css`
-            background-color: ${cVar('colorCoreNeutral700')};
-            border: 1px solid ${cVar('colorCoreNeutral700')};
-            color: ${cVar('colorCoreNeutral400')};
-          `,
-      ]
-    : null
-const errorStyles = (props: CheckboxStateProps) =>
-  props.error
-    ? [
-        css`
-          border: 1px solid ${cVar('colorCoreRed400')};
-        `,
-        props.selected &&
-          css`
-            background-color: ${cVar('colorCoreRed400')};
-          `,
-      ]
-    : null
-export type CheckboxStateProps = {
-  selected: boolean
-  disabled: boolean
+type CheckboxInputProps = {
   error: boolean
-  isFocused: boolean
 }
-export const InnerContainer = styled.div<CheckboxStateProps>`
-  transition: all 0.125s ease;
-  color: ${cVar('colorCoreBaseWhite')};
-  border: 1px solid ${cVar('colorCoreNeutral300')};
-  border-radius: 2px;
-  ${selectedStyles};
-  ${errorStyles};
-  ${disabledStyles};
+const hoverCheckedStyles = ({ error }: CheckboxInputProps) => css`
+  + ${Checkmark} {
+    background-color: ${cVar(error ? 'colorBackgroundErrorStrong' : 'colorBackgroundPrimaryStrong')};
 
-  &:active {
-    border: 1px solid ${cVar('colorCoreNeutral100')};
+    ::before {
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
+    }
   }
 `
+const hoverUncheckedStyles = css`
+  + ${Checkmark} {
+    ::before {
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
+    }
+  }
+`
+export const CheckboxInput = styled.input<CheckboxInputProps>`
+  ${square('100%')};
 
-export const Input = styled.input`
   top: 0;
   left: 0;
   margin: 0;
   opacity: 0;
-  width: 100%;
-  height: 100%;
   position: absolute;
   cursor: inherit;
-`
+  z-index: ${zIndex.overlay};
 
-export const Checkmark = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 1px;
+  :disabled:not(:checked) {
+    + ${Checkmark} {
+      background-color: ${cVar('colorBackgroundAlpha')};
+      border: 1px solid ${cVar('colorBorderMutedAlpha')};
+    }
+  }
+
+  :disabled:checked {
+    + ${Checkmark} {
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
+      border: 0;
+
+      path {
+        fill: ${cVar('colorTextMuted')};
+      }
+    }
+  }
+
+  :checked:disabled {
+    + ${Checkmark} {
+      background-color: ${cVar('colorBackgroundStrongAlpha')};
+    }
+  }
+
+  :checked:not(:disabled) {
+    :hover {
+      ${hoverCheckedStyles}
+    }
+
+    :active {
+      + ${Checkmark} {
+        background-color: ${({ error }) => cVar(error ? 'colorBackgroundErrorMuted' : 'colorBackgroundPrimaryMuted')};
+
+        ::before {
+          background-color: ${cVar('colorBackgroundAlpha')};
+        }
+      }
+    }
+
+    + ${Checkmark} {
+      background-color: ${({ error }) => cVar(error ? 'colorBackgroundError' : 'colorBackgroundPrimary')};
+      border: 0;
+
+      ::before {
+        top: -8px;
+        bottom: -8px;
+        left: -8px;
+        right: -8px;
+      }
+    }
+  }
+
+  :active:not(:checked):not(:disabled) {
+    + ${Checkmark} {
+      border: 1px solid ${cVar('colorBorderStrongAlpha')};
+
+      ::before {
+        background-color: ${cVar('colorBackgroundAlpha')};
+      }
+    }
+  }
+
+  :hover:not(:disabled):not(:active) {
+    ${hoverUncheckedStyles}
+  }
+
+  @supports selector(:focus-visible) {
+    :focus-visible:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
+
+    :focus-visible:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
+    }
+  }
+
+  @supports selector(not(:focus-visible)) {
+    :focus:not(:disabled):not(:checked) {
+      ${hoverUncheckedStyles};
+    }
+
+    :focus:checked:not(:disabled):not(:active) {
+      ${hoverCheckedStyles};
+    }
+  }
 `
 
 export const StyledGlyphCheck = styled(SvgActionCheck)`
