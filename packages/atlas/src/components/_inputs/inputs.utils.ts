@@ -81,9 +81,12 @@ export const getBaseInputStyles = ({ error }: { error?: boolean }) => css`
     ${sharedInputStyles.disabled};
   }
 
-  :hover:not(:disabled) {
-    ${sharedInputStyles.hover};
-  }
+  ${!error &&
+  css`
+    :hover:not(:disabled) {
+      ${sharedInputStyles.hover};
+    }
+  `};
 
   :focus:not(:disabled) {
     ${sharedInputStyles.focus};

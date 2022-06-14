@@ -17,13 +17,14 @@ export const SelectMenuWrapper = styled.div`
 
 export const InlineLabel = styled(Text)`
   white-space: nowrap;
+  margin-right: ${sizes(1)};
 `
 
 export const ValueAndPlaceholderText = styled(Text)`
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-right: ${sizes(2)};
   white-space: nowrap;
-  margin: 0 ${sizes(2)};
 `
 
 type SelectButtonProps = {
@@ -36,6 +37,7 @@ type SelectButtonProps = {
 export const NodeContainer = styled.div<{ isOpen?: boolean }>`
   display: flex;
   align-items: center;
+  margin-right: ${sizes(2)};
 
   > svg > path {
     fill: ${({ isOpen }) => (isOpen ? cVar('colorTextStrong') : cVar('colorText'))};
@@ -66,8 +68,8 @@ export const SelectButton = styled.button<SelectButtonProps>`
 
   /* overwrite hover styles when input is open */
 
-  :hover:not(:disabled) {
-    ${({ isOpen }) => (isOpen ? sharedInputStyles.focus : sharedInputStyles.hover)};
+  :hover:not(:disabled):not(:focus) {
+    ${({ isOpen, error }) => (isOpen ? sharedInputStyles.focus : error ? null : sharedInputStyles.hover)};
   }
 `
 

@@ -18,8 +18,10 @@ export default {
     items,
     size: 'large',
     disabled: false,
+    error: false,
   },
   argTypes: {
+    size: { control: { type: 'select', options: ['medium', 'large'] } },
     items: { table: { disable: true } },
     value: { table: { disable: true } },
     icon: { table: { disable: true } },
