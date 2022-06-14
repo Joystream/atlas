@@ -123,8 +123,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
       setActiveUser({ accountId: accountIdRef.current })
       closeCreatingMemberDialog()
       const errorMessage =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (error.isAxiosError && ((error as AxiosError).response?.data as any)?.error) || 'Unknown error'
+        (error?.isAxiosError && (error as AxiosError<NewMemberResponse>).response?.data?.error) || 'Unknown error'
       openErrorDialog({
         type: 'destructive',
         title: 'Something went wrong...',
@@ -183,6 +182,7 @@ export const CreateMemberModal: FC<CreateMemberModalProps> = ({ show, selectedAc
 type NewMemberResponse = {
   memberId: MemberId
   block: number
+  error?: string
 }
 export const createNewMember = async (accountId: string, inputs: Inputs) => {
   try {
