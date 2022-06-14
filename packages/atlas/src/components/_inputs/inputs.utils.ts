@@ -9,7 +9,14 @@ export type NodeWidthProps = {
   rightNodeWidth?: number
 }
 
-export const sharedInputStyles = {
+export const inputBorderColors = {
+  default: cVar('colorBorderAlpha'),
+  hover: cVar('colorBorderStrongAlpha'),
+  error: cVar('colorBorderError'),
+  focus: cVar('colorBorderPrimary'),
+}
+
+export const getSharedInputStyles = (ignoreBoxShadow?: boolean) => ({
   default: css`
     /* inherit from Text component font size and color */
     font-size: inherit;
@@ -22,7 +29,7 @@ export const sharedInputStyles = {
     background-color: ${cVar('colorBackgroundMutedAlpha')};
     transition: ${cVar('animationTransitionFast')};
     transition-property: background-color, color, box-shadow;
-    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderAlpha')};
+    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.default};
 
     ::placeholder {
       font: inherit;
@@ -34,10 +41,10 @@ export const sharedInputStyles = {
   `,
   hover: css`
     background-color: ${cVar('colorBackgroundAlpha')};
-    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderStrongAlpha')};
+    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.hover};
   `,
   error: css`
-    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderError')};
+    box-shadow: inset 0 -1px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.error};
   `,
   disabled: css`
     opacity: 0.5;
@@ -46,9 +53,9 @@ export const sharedInputStyles = {
   `,
   focus: css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
-    box-shadow: inset 0 -2px 0 0 ${cVar('colorBorderPrimary')};
+    box-shadow: inset 0 -2px 0 0 ${ignoreBoxShadow ? 'transparent' : inputBorderColors.focus};
   `,
-}
+})
 
 export const horizontalPadding = {
   medium: sizes(4, true),
@@ -74,23 +81,20 @@ export const getInputPadding = ({ inputSize, leftNodeWidth, rightNodeWidth }: Ge
   `
 }
 
-export const getBaseInputStyles = ({ error }: { error?: boolean }) => css`
-  ${sharedInputStyles.default};
+export const getBaseInputStyles = ({ error, ignoreBoxShadow }: { error?: boolean; ignoreBoxShadow?: boolean }) => css`
+  ${getSharedInputStyles(ignoreBoxShadow).default};
 
   :disabled {
-    ${sharedInputStyles.disabled};
+    ${getSharedInputStyles(ignoreBoxShadow).disabled};
   }
 
-  ${!error &&
-  css`
-    :hover:not(:disabled) {
-      ${sharedInputStyles.hover};
-    }
-  `};
+  :hover:not(:disabled) {
+    ${getSharedInputStyles(ignoreBoxShadow).hover};
+  }
 
   :focus:not(:disabled) {
-    ${sharedInputStyles.focus};
+    ${getSharedInputStyles(ignoreBoxShadow).focus};
   }
 
-  ${error && sharedInputStyles.error};
+  ${error && getSharedInputStyles(ignoreBoxShadow).error};
 `

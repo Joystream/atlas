@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { InputSize, getBaseInputStyles } from '../inputs.utils'
+import { InputSize, getBaseInputStyles, inputBorderColors } from '../inputs.utils'
 
 export const TextAreaWrapper = styled.div`
   display: inline-block;
@@ -22,13 +22,48 @@ const baseStyles = {
   `,
 }
 
+export const TextAreaContainer = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+`
+
+export const CustomBorder = styled.div`
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  background-color: ${inputBorderColors.default};
+  width: 100%;
+  height: 1px;
+  transition: ${cVar('animationTransitionFast')};
+  transition-property: transform, background-color;
+`
+
 export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: boolean }>`
   width: 100%;
   resize: vertical;
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: unset;
 
-  ${getBaseInputStyles}
+  ${({ error }) => getBaseInputStyles({ error, ignoreBoxShadow: true })}
+
+  :hover:not(:disabled) + ${CustomBorder} {
+    background-color: ${inputBorderColors.hover};
+  }
+
+  :focus:not(:disabled) + ${CustomBorder} {
+    background-color: ${inputBorderColors.focus};
+    transform: scaleY(2);
+  }
+
+  ${({ error }) =>
+    error &&
+    css`
+      + ${CustomBorder} {
+        background-color: ${inputBorderColors.error};
+      }
+    `};
 
   ${({ inputSize }) => baseStyles[inputSize]}
 

@@ -3,7 +3,7 @@ import { ChangeEvent, ForwardRefRenderFunction, forwardRef, useState } from 'rea
 import { Text } from '@/components/Text'
 import { cVar } from '@/styles'
 
-import { StyledText, StyledTextArea, TextAreaWrapper } from './TextArea.styles'
+import { CustomBorder, StyledText, StyledTextArea, TextAreaContainer, TextAreaWrapper } from './TextArea.styles'
 
 import { InputSize } from '../inputs.utils'
 
@@ -55,19 +55,22 @@ const TextAreaComponent: ForwardRefRenderFunction<HTMLTextAreaElement, TextAreaP
 
   return (
     <TextAreaWrapper>
-      <StyledTextArea
-        name={name}
-        ref={ref}
-        error={error}
-        inputSize={size}
-        disabled={disabled}
-        placeholder={placeholder}
-        onChange={handleOnChange}
-        value={value}
-        rows={_rows}
-        spellCheck={spellcheck}
-        onBlur={onBlur}
-      />
+      <TextAreaContainer>
+        <StyledTextArea
+          name={name}
+          ref={ref}
+          error={error}
+          inputSize={size}
+          disabled={disabled}
+          placeholder={placeholder}
+          onChange={handleOnChange}
+          value={value}
+          rows={_rows}
+          spellCheck={spellcheck}
+          onBlur={onBlur}
+        />
+        <CustomBorder />
+      </TextAreaContainer>
       {counter && maxLength ? (
         <StyledText disabled={disabled} variant="t100" color={cVar('colorTextMuted')}>
           <Text
