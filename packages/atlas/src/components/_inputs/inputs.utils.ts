@@ -22,7 +22,7 @@ export const sharedInputStyles = {
     background-color: ${cVar('colorBackgroundMutedAlpha')};
     transition: ${cVar('animationTransitionFast')};
     transition-property: background-color, color, box-shadow;
-    box-shadow: inset 0 -2px 0 0 ${cVar('colorBorder')};
+    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderAlpha')};
 
     ::placeholder {
       font: inherit;
@@ -34,6 +34,7 @@ export const sharedInputStyles = {
   `,
   hover: css`
     background-color: ${cVar('colorBackgroundAlpha')};
+    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderStrongAlpha')};
   `,
   error: css`
     box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderError')};
@@ -45,7 +46,7 @@ export const sharedInputStyles = {
   `,
   focus: css`
     background-color: ${cVar('colorBackgroundMutedAlpha')};
-    box-shadow: inset 0 -1px 0 0 ${cVar('colorBorderPrimary')};
+    box-shadow: inset 0 -2px 0 0 ${cVar('colorBorderPrimary')};
   `,
 }
 

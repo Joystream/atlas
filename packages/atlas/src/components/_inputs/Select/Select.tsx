@@ -134,7 +134,7 @@ export const _Select = <T extends unknown>(
                       ...getItemProps({ item: item.value, index, onClick: item.onClick }),
                     }
               })}
-              size={size}
+              size={size === 'medium' ? 'small' : 'medium'}
             />
           )}
         </SelectMenu>

@@ -23,7 +23,7 @@ export const ValueAndPlaceholderText = styled(Text)`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  margin: 0 ${sizes(1)};
+  margin: 0 ${sizes(2)};
 `
 
 type SelectButtonProps = {
@@ -55,6 +55,12 @@ export const SelectButton = styled.button<SelectButtonProps>`
   ${getBaseInputStyles}
 
   ${({ isOpen }) => isOpen && sharedInputStyles.focus};
+
+  /* overwrite hover styles when input is open */
+
+  :hover:not(:disabled) {
+    ${({ isOpen }) => (isOpen ? sharedInputStyles.focus : sharedInputStyles.hover)};
+  }
 
   :focus {
     ${NodeContainer} {
