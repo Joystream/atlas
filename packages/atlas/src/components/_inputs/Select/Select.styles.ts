@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { InputSize, getBaseInputStyles, getInputPadding, sharedInputStyles } from '../inputs.utils'
+import { InputSize, getBaseInputStyles, getInputPadding, getSharedInputStyles } from '../inputs.utils'
 
 export const SelectWrapper = styled.div`
   width: 100%;
@@ -56,7 +56,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   ${getInputPadding};
   ${getBaseInputStyles}
 
-  ${({ isOpen }) => isOpen && sharedInputStyles.focus};
+  ${({ isOpen }) => isOpen && getSharedInputStyles().focus};
 
   :focus {
     ${NodeContainer} {
@@ -69,7 +69,7 @@ export const SelectButton = styled.button<SelectButtonProps>`
   /* overwrite hover styles when input is open */
 
   :hover:not(:disabled):not(:focus) {
-    ${({ isOpen, error }) => (isOpen ? sharedInputStyles.focus : error ? null : sharedInputStyles.hover)};
+    ${({ isOpen, error }) => (isOpen ? getSharedInputStyles().focus : error ? null : getSharedInputStyles().hover)};
   }
 `
 
