@@ -31,7 +31,7 @@ export const ActionBarContainer = styled.div<ActionBarContainerProps>`
     grid-template: 'primary-text badge secondary-button primary-button' auto / 1fr max-content max-content max-content;
   }
 
-  ${media.lg} {
+  ${media.md} {
     padding: ${sizes(4)} ${sizes(8)};
   }
 
@@ -64,8 +64,7 @@ export const ActionButtonPrimary = styled(Button)`
   grid-area: primary-button;
 
   &:first-of-type {
-    grid-column-end: span 2;
-    grid-column-start: 1;
+    grid-column: 1 / span 2;
   }
 
   ${media.sm} {
