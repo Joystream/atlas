@@ -52,8 +52,15 @@ export const createStore = <TState extends object, TActions extends object>(
     const config = opts.persist
     const persistedStoreConfig = persist(imerStoreConfig, {
       name: config.key,
-      whitelist: config.whitelist,
       version: config.version,
+      partialize: (state) => {
+        return (Object.keys(state) as (keyof TState)[]).reduce((acc, stateKey) => {
+          if (config.whitelist.includes(stateKey)) {
+            acc[stateKey] = state[stateKey]
+          }
+          return acc
+        }, {} as DeepPartial<CommonStore<TState, TActions>>)
+      },
       migrate: (oldState, oldVersion) => {
         const rawStorageValue = window.localStorage.getItem(config.key)
         const storageValue = rawStorageValue ? JSON.parse(rawStorageValue) : {}
