@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useEffect, useState } from 'react'
 
 import { ActionBarProps } from '@/components/ActionBar'
 import { BottomDrawer } from '@/components/_overlays/BottomDrawer'
-import { JOY_CURRENCY_TICKER } from '@/config/token'
 import { useDisplayDataLostWarning } from '@/hooks/useDisplayDataLostWarning'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { VideoWorkspaceFormStatus, useVideoWorkspace, useVideoWorkspaceData } from '@/providers/videoWorkspace'
@@ -48,9 +47,7 @@ export const VideoWorkspace: FC = memo(() => {
 
   const actionBarProps: ActionBarProps = {
     isActive: isEdit ? !formStatus?.isDisabled : true,
-    primaryText: `Fee: 0 ${JOY_CURRENCY_TICKER}`,
-    secondaryText:
-      'For the time being no fees are required for blockchain transactions. This will change in the future.',
+    fee: 0,
     primaryButton: {
       disabled: formStatus?.isDisabled,
       onClick: formStatus?.triggerFormSubmit,

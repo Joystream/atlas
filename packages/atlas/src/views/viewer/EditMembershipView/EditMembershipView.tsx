@@ -112,8 +112,7 @@ export const EditMembershipView: FC = () => {
         </Wrapper>
         <StyledActionBar
           ref={actionBarRef}
-          primaryText="Fee: 0 Joy"
-          secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+          fee={0}
           primaryButton={{
             disabled: !isDirty || !isValid || isValidating,
             text: 'Publish changes',

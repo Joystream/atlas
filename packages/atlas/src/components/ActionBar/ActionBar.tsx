@@ -19,6 +19,8 @@ import {
   StyledSecondaryText,
 } from './ActionBar.styles'
 
+import { NumberFormat } from '../NumberFormat'
+
 export type ActionDialogButtonProps = {
   text?: string
   tooltip?: TooltipProps
@@ -30,8 +32,7 @@ type ActionDialogInfoBadge = {
 }
 
 export type ActionBarProps = {
-  primaryText?: string
-  secondaryText?: string
+  fee?: number
   infoBadge?: ActionDialogInfoBadge
   primaryButton: ActionDialogButtonProps
   secondaryButton?: ActionDialogButtonProps
@@ -40,15 +41,17 @@ export type ActionBarProps = {
 }
 
 export const ActionBar = forwardRef<HTMLDivElement, ActionBarProps>(
-  ({ primaryText, isActive = true, secondaryText, className, primaryButton, secondaryButton, infoBadge }, ref) => {
+  ({ fee, isActive = true, className, primaryButton, secondaryButton, infoBadge }, ref) => {
     const smMatch = useMediaMatch('sm')
     const infoBadgeRef = useRef(null)
 
     return (
       <ActionBarContainer ref={ref} className={className} isActive={isActive}>
-        <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>{primaryText}</StyledPrimaryText>
+        <StyledPrimaryText variant={smMatch ? 'h400' : 'h200'}>
+          Fee: <NumberFormat format="short" withToken value={fee ?? 0} />
+        </StyledPrimaryText>
         <StyledSecondaryText variant="t100" secondary>
-          {secondaryText}
+          Every change to the blockchain requires making a nominal transaction.
         </StyledSecondaryText>
         {infoBadge ? (
           <>

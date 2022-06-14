@@ -19,8 +19,7 @@ export default {
         text: 'Drafts system can only store video metadata. Selected files (video, thumbnail) will not be saved as part of the draft.',
       },
     },
-    primaryText: 'Fee: 0.2 Joy',
-    secondaryText: 'Every change to the blockchain requires making a nominal transaction.',
+    fee: 100,
   } as ActionBarProps,
   argTypes: {
     onClick: { table: { disable: true } },

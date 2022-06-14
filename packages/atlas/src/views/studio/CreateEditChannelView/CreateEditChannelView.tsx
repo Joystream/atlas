@@ -523,8 +523,7 @@ export const CreateEditChannelView: FC<CreateEditChannelViewProps> = ({ newChann
             <ActionBarTransactionWrapper ref={actionBarRef}>
               {!channelId && progressDrawerSteps?.length ? <StyledProgressDrawer steps={progressDrawerSteps} /> : null}
               <ActionBar
-                primaryText="Fee: 0 Joy"
-                secondaryText="For the time being no fees are required for blockchain transactions. This will change in the future."
+                fee={0}
                 primaryButton={{
                   text: newChannel ? 'Create channel' : 'Publish changes',
                   disabled: isDisabled,
