@@ -1,14 +1,26 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 import { Text } from '@/components/Text'
 import { cVar, sizes } from '@/styles'
 
-import { InputSize, getBaseInputStyles, getInputPadding } from '../inputs.utils'
+import { InputSize, getBaseInputStyles } from '../inputs.utils'
 
 export const TextAreaWrapper = styled.div`
   display: inline-block;
   width: 100%;
 `
+
+const baseStyles = {
+  medium: css`
+    padding: ${sizes(3)} ${sizes(4)};
+    font: ${cVar('typographyDesktopT200')};
+  `,
+  large: css`
+    padding: ${sizes(4)} ${sizes(5)};
+    font: ${cVar('typographyDesktopT300')};
+  `,
+}
 
 export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: boolean }>`
   width: 100%;
@@ -18,10 +30,16 @@ export const StyledTextArea = styled.textarea<{ inputSize: InputSize; error?: bo
 
   ${getBaseInputStyles}
 
-  ${getInputPadding}
+  ${({ inputSize }) => baseStyles[inputSize]}
 
   ::-webkit-scrollbar-corner {
     background: ${cVar('colorCoreNeutral800Lighten')};
+  }
+
+  ::placeholder {
+    font: inherit;
+    opacity: 1;
+    color: ${cVar('colorTextMuted')};
   }
 
   ::-webkit-resizer {
